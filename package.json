@@ -22,6 +22,7 @@
     "grunt-open": "^0.2.3",
     "matchdep": "^0.3.0",
     "read-yaml": "^1.0.0",
+    "shelljs": "^0.5.0",
     "web3": "^0.3.4",
     "wrench": "^1.5.8"
   },
