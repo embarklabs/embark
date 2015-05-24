@@ -44,6 +44,19 @@ program.command('blockchain [env]').description('run blockchain').action(functio
   exec('grunt blockchain:' + env);
 });
 
+program.command('demo').description('create a working dapp with a SimpleStorage contract').action(function() {
+  var boilerPath = path.join(__dirname + '/../boilerplate');
+  var demoPath   = path.join(__dirname + '/../demo');
+
+  var targetDir = "./embark_demo";
+  wrench.copyDirSyncRecursive(boilerPath, targetDir);
+  wrench.copyDirSyncRecursive(demoPath, targetDir + "/app", {forceDelete: true});
+
+  cd(targetDir);
+  exec('npm install');
+  console.log('\n\ninit complete');
+});
+
 program.parse(process.argv)
 
 if (!process.argv.slice(2).length) {
