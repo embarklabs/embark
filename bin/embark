@@ -1,0 +1,52 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var path = require('path');
+var wrench = require('wrench');
+var grunt = require('grunt');
+require('shelljs/global');
+
+program
+  .version('0.0.1')
+
+program.command('new [name]').description('New application').action(function(name) {
+  if (name === undefined) {
+    console.log("please specify the app name");
+    exit;
+  }
+  var prefPath = path.join(__dirname + '/../boilerplate');
+
+  var targetDir = "./" + name;
+  wrench.copyDirSyncRecursive(prefPath, targetDir);
+  cd(targetDir);
+  exec('npm install');
+  console.log('\n\ninit complete');
+});
+
+program.command('deploy [env]').description('deploy contracts').action(function(env_) {
+  var env = env_ || 'development';
+  exec("grunt deploy_contracts:" + env);
+});
+
+program.command('build [env]').description('build dapp').action(function(env_) {
+  var env = env_ || 'development';
+  exec('grunt build:' + env);
+});
+
+program.command('run [env]').description('run dapp').action(function(env_) {
+  var env = env_ || 'development';
+  exec('grunt deploy:' + env);
+});
+
+program.command('blockchain [env]').description('run blockchain').action(function(env_) {
+  var env = env_ || 'development';
+
+  exec('grunt blockchain:' + env);
+});
+
+program.parse(process.argv)
+
+if (!process.argv.slice(2).length) {
+  program.outputHelp();
+}
+
