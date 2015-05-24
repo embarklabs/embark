@@ -7,7 +7,7 @@ var grunt = require('grunt');
 require('shelljs/global');
 
 program
-  .version('0.0.1')
+  .version('0.0.2')
 
 program.command('new [name]').description('New application').action(function(name) {
   if (name === undefined) {
