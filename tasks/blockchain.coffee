@@ -1,7 +1,6 @@
 module.exports = (grunt) ->
   readYaml = require('read-yaml')
   require('shelljs/global')
-  sh = require('execSync')
 
   grunt.registerTask "blockchain", "deploy ethereum node", (env_)  =>
     env = env_ || "development"
@@ -44,16 +43,17 @@ module.exports = (grunt) ->
     if account.init
       grunt.log.writeln("=== initializating account")
 
-      result = exec(cmd + "account list")
       grunt.log.writeln("running: #{cmd} account list")
+      result = exec(cmd + "account list")
+      grunt.log.writeln("finished")
       grunt.log.writeln("=== output is #{result.output}")
       if result.output.indexOf("Fatal") < 0
         grunt.log.writeln("=== already initialized")
         address = result.output.match(/{(\w+)}/)[1]
       else
         grunt.log.writeln("running: #{cmd} account new")
-        output = sh.exec(cmd + " account new")
-        address = output.stdout.match(/{(\w+)}/)[1]
+        output = exec(cmd + " account new")
+        address = output.output.match(/{(\w+)}/)[1]
 
     if address isnt undefined
       cmd += "--unlock #{address} "
