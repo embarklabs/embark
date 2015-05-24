@@ -1,0 +1,31 @@
+{
+  "name": "embark-framework",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "embark": "./bin/embark"
+  },
+  "dependencies": {
+    "commander": "^2.8.1",
+    "compression": "^1.4.3",
+    "execSync": "^1.0.2",
+    "express": "^4.12.3",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-coffee": "^0.13.0",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-contrib-uglify": "^0.9.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-open": "^0.2.3",
+    "matchdep": "^0.3.0",
+    "read-yaml": "^1.0.0",
+    "web3": "^0.3.4",
+    "wrench": "^1.5.8"
+  },
+  "author": "Iuri Matias <iuri.matias@gmail.com>",
+  "contributors": [],
+  "license": "ISC"
+}
