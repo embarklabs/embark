@@ -1,5 +1,7 @@
 What is embark
 ======
+
+[![Join the chat at https://gitter.im/iurimatias/embark-framework](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/iurimatias/embark-framework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Embark is a framework that allows you to easily develop and deploy DApps. Embark automatically deploys your contracts and makes them available in your JS code. Embark watches for changes, and if you update a contract, Embark will automatically redeploy the contracts (if needed) and the dapp.
 
 Installation
