@@ -1,6 +1,6 @@
 {
   "name": "app_name",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "",
   "main": "Gruntfile.js",
   "scripts": {
@@ -10,7 +10,7 @@
   "license": "ISC",
   "homepage": "",
   "devDependencies": {
-    "embark-framework": "^0.0.8",
+    "embark-framework": "^0.1.1",
     "commander": "^2.8.1",
     "compression": "^1.4.3",
     "express": "^4.12.3",
