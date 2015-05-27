@@ -4,7 +4,7 @@ Embark is a framework that allows you to easily develop and deploy DApps. Embark
 
 Installation
 ======
-Requirements: geth, solc, node and npm
+Requirements: geth (0.9.25), solc (0.9.23), node (0.12.2) and npm
 
 ```Bash
 $ npm install -g embark-framework grunt-cli
