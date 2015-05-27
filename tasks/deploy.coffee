@@ -25,16 +25,31 @@ module.exports = (grunt) ->
       source = grunt.file.read(contractFile)
 
       grunt.log.writeln("deploying #{contractFile}")
-      contract = web3.eth.compile.solidity(source)
-      contractAddress = web3.eth.sendTransaction({from: primaryAddress, data: contract.code})
-      grunt.log.writeln("deployed at #{contractAddress}")
+      compiled_contracts = web3.eth.compile.solidity(source)
 
-      abi = JSON.stringify(contract.info.abiDefinition)
-      className = source.match(/contract (\w+)(?=\s[is|{])/g)[0].replace("contract ","")
+      #TODO: refactor this into a common method
+      if compiled_contracts.info is undefined
+        for className, contract of compiled_contracts
+          contractAddress = web3.eth.sendTransaction({from: primaryAddress, data: contract.code})
+          grunt.log.writeln("deployed #{className} at #{contractAddress}")
 
-      result += "var #{className}Abi = #{abi};"
-      result += "var #{className}Contract = web3.eth.contract(#{className}Abi);"
-      result += "var #{className} = new #{className}Contract('#{contractAddress}');";
+          abi = JSON.stringify(contract.info.abiDefinition)
+
+          result += "var #{className}Abi = #{abi};"
+          result += "var #{className}Contract = web3.eth.contract(#{className}Abi);"
+          result += "var #{className} = new #{className}Contract('#{contractAddress}');";
+      else
+        #for geth < 0.9.23
+        contract = compiled_contracts
+        contractAddress = web3.eth.sendTransaction({from: primaryAddress, data: contract.code})
+        grunt.log.writeln("deployed at #{contractAddress}")
+
+        abi = JSON.stringify(contract.info.abiDefinition)
+        className = source.match(/contract (\w+)(?=\s[is|{])/g)[0].replace("contract ","")
+
+        result += "var #{className}Abi = #{abi};"
+        result += "var #{className}Contract = web3.eth.contract(#{className}Abi);"
+        result += "var #{className} = new #{className}Contract('#{contractAddress}');";
 
     destFile = grunt.config.get("deploy.dest")
     grunt.file.write(destFile, result)
