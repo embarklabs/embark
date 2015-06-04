@@ -25,7 +25,8 @@
     "read-yaml": "^1.0.0",
     "shelljs": "^0.5.0",
     "web3": "^0.4.3",
-    "wrench": "^1.5.8"
+    "wrench": "^1.5.8",
+    "hashmerge": "^1.0.2"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
