@@ -30,7 +30,7 @@ module.exports = (grunt) ->
       #TODO: refactor this into a common method
       if compiled_contracts.info is undefined
         for className, contract of compiled_contracts
-          contractAddress = web3.eth.sendTransaction({from: primaryAddress, data: contract.code})
+          contractAddress = web3.eth.sendTransaction({from: primaryAddress, data: contract.code, gas: 100000})
           grunt.log.writeln("deployed #{className} at #{contractAddress}")
 
           abi = JSON.stringify(contract.info.abiDefinition)
