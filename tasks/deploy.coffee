@@ -6,7 +6,7 @@ module.exports = (grunt) ->
     blockchainConfig = readYaml.sync("config/blockchain.yml")
     rpcHost   = blockchainConfig[env || "development"].rpc_host
     rpcPort   = blockchainConfig[env || "development"].rpc_port
-    gasLimit  = blockchainConfig[env || "development"].gas_limit || 1000000
+    gasLimit  = blockchainConfig[env || "development"].gas_limit || 100000
 
     try
       web3.setProvider(new web3.providers.HttpProvider("http://#{rpcHost}:#{rpcPort}"))
