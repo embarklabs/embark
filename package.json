@@ -24,7 +24,7 @@
     "matchdep": "^0.3.0",
     "read-yaml": "^1.0.0",
     "shelljs": "^0.5.0",
-    "web3": "^0.4.3",
+    "web3": "^0.5.0",
     "wrench": "^1.5.8"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
