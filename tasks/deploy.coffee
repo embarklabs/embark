@@ -37,7 +37,7 @@ module.exports = (grunt) ->
 
           result += "var #{className}Abi = #{abi};"
           result += "var #{className}Contract = web3.eth.contract(#{className}Abi);"
-          result += "var #{className} = new #{className}Contract('#{contractAddress}');";
+          result += "var #{className} = #{className}Contract.at('#{contractAddress}');";
       else
         #for geth < 0.9.23
         contract = compiled_contracts
@@ -49,7 +49,7 @@ module.exports = (grunt) ->
 
         result += "var #{className}Abi = #{abi};"
         result += "var #{className}Contract = web3.eth.contract(#{className}Abi);"
-        result += "var #{className} = new #{className}Contract('#{contractAddress}');";
+        result += "var #{className} = #{className}Contract.at('#{contractAddress}');";
 
     destFile = grunt.config.get("deploy.dest")
     grunt.file.write(destFile, result)
