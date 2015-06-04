@@ -1,6 +1,6 @@
 module.exports = (grunt) ->
 
-  grunt.initConfig
+  @embarkConfig =
     files:
       web3:
         "node_modules/embark-framework/js/web3.js"
@@ -95,4 +95,8 @@ module.exports = (grunt) ->
     deploy:
       contracts: '<%= files.contracts.src %>'
       dest: 'generated/tmp/abi.js'
+
+  @initEmbarkConfig = (userConfig) =>
+    hashmerge = require('hashmerge')
+    hashmerge(@embarkConfig, userConfig)
 
