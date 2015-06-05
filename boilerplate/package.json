@@ -10,7 +10,7 @@
   "license": "ISC",
   "homepage": "",
   "devDependencies": {
-    "embark-framework": "^0.2.0",
+    "embark-framework": "^0.2.1",
     "commander": "^2.8.1",
     "compression": "^1.4.3",
     "express": "^4.12.3",
