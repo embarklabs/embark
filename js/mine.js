@@ -10,9 +10,9 @@ setInterval(function() {
     console.log("=== start mining");
     admin.miner.start();
   }
-  else if (web3.eth.mining && minimalAmount && minimalAmount) {
+  else if (web3.eth.mining && minimalAmount && !pendingTransactions) {
     if (minimalAmount) { console.log("=== minimal ether amount reached") }
-    if (pendingTransactions) { console.log("=== no pending transactions") }
+    if (!pendingTransactions) { console.log("=== no pending transactions") }
     console.log("=== stop mining");
     admin.miner.stop();
   }
