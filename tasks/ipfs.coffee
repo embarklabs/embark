@@ -16,4 +16,5 @@ module.exports = (grunt) ->
     dir_hash = dir_row.split(" ")[1]
 
     grunt.log.writeln("=== DApp available at http://localhost:8080/ipfs/#{dir_hash}/")
+    grunt.log.writeln("=== DApp available at http://gateway.ipfs.io/ipfs/#{dir_hash}/")
 
