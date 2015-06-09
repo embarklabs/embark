@@ -8,6 +8,7 @@
   "bin": {
     "embark": "./bin/embark"
   },
+  "main": "./index.js",
   "dependencies": {
     "commander": "^2.8.1",
     "compression": "^1.4.3",
