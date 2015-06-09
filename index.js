@@ -7,4 +7,3 @@ var express = require('express');
 var compression = require('compression');
 var commander = require('commander');
 var wrench = require('wrench');
-console.log("dude!!!");
