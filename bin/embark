@@ -30,12 +30,17 @@ program.command('deploy [env]').description('deploy contracts').action(function(
 
 program.command('build [env]').description('build dapp').action(function(env_) {
   var env = env_ || 'development';
+  exec("grunt clean");
+  exec("grunt deploy_contracts:" + env);
   exec('grunt build:' + env);
 });
 
-program.command('release ipfs [env]').description('build dapp and make it available in ipfs').action(function(env_) {
+program.command('ipfs [env]').description('build dapp and make it available in ipfs').action(function(env_) {
   var env = env_ || 'development';
-  exec('grunt release_ipfs:' + env);
+  if (exec("grunt clean").code != 0) { exit(); }
+  if (exec("grunt deploy_contracts:" + env).code != 0) { exit(); }
+  if (exec('grunt build:' + env).code != 0) { exit(); }
+  if (exec('grunt ipfs:' + env).code != 0) { exit(); }
 });
 
 program.command('run [env]').description('run dapp').action(function(env_) {
