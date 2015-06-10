@@ -51,7 +51,3 @@ module.exports = (grunt) ->
     )
   )
 
-  # loading external tasks (aka: plugins)
-  # Loads all plugins that match "grunt-", in this case all of our current plugins
-  require('matchdep').filterAll('grunt-*').forEach(grunt.loadNpmTasks)
-
