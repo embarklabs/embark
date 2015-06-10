@@ -7,6 +7,7 @@ module.exports = (grunt) ->
     rpcHost   = blockchainConfig[env || "development"].rpc_host
     rpcPort   = blockchainConfig[env || "development"].rpc_port
     gasLimit  = blockchainConfig[env || "development"].gas_limit || 100000
+    gasPrice  = blockchainConfig[env || "development"].gas_price || 10000000000000
 
     try
       web3.setProvider(new web3.providers.HttpProvider("http://#{rpcHost}:#{rpcPort}"))
@@ -31,7 +32,7 @@ module.exports = (grunt) ->
       #TODO: refactor this into a common method
       if compiled_contracts.info is undefined
         for className, contract of compiled_contracts
-          contractAddress = web3.eth.sendTransaction({from: primaryAddress, data: contract.code, gas: gasLimit})
+          contractAddress = web3.eth.sendTransaction({from: primaryAddress, data: contract.code, gas: gasLimit, gasPrice: gasPrice})
           grunt.log.writeln("deployed #{className} at #{contractAddress}")
 
           abi = JSON.stringify(contract.info.abiDefinition)
