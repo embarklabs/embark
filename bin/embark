@@ -6,6 +6,12 @@ var wrench = require('wrench');
 var grunt = require('grunt');
 require('shelljs/global');
 
+var run = function(cmd) {
+  if (exec(cmd).code != 0) {
+    exit();
+  }
+}
+
 program
   .version('0.2.1')
 
@@ -19,39 +25,39 @@ program.command('new [name]').description('New application').action(function(nam
   var targetDir = "./" + name;
   wrench.copyDirSyncRecursive(prefPath, targetDir);
   cd(targetDir);
-  exec('npm install');
+  run('npm install');
   console.log('\n\ninit complete');
 });
 
 program.command('deploy [env]').description('deploy contracts').action(function(env_) {
   var env = env_ || 'development';
-  exec("grunt deploy_contracts:" + env);
+  run("grunt deploy_contracts:" + env);
 });
 
 program.command('build [env]').description('build dapp').action(function(env_) {
   var env = env_ || 'development';
-  exec("grunt clean");
-  exec("grunt deploy_contracts:" + env);
-  exec('grunt build:' + env);
+  run("grunt clean");
+  run("grunt deploy_contracts:" + env);
+  run('grunt build:' + env);
 });
 
 program.command('ipfs [env]').description('build dapp and make it available in ipfs').action(function(env_) {
   var env = env_ || 'development';
-  if (exec("grunt clean").code != 0) { exit(); }
-  if (exec("grunt deploy_contracts:" + env).code != 0) { exit(); }
-  if (exec('grunt build:' + env).code != 0) { exit(); }
-  if (exec('grunt ipfs:' + env).code != 0) { exit(); }
+  run("grunt clean")
+  run("grunt deploy_contracts:" + env)
+  run('grunt build:' + env)
+  run('grunt ipfs:' + env)
 });
 
 program.command('run [env]').description('run dapp').action(function(env_) {
   var env = env_ || 'development';
-  exec('grunt deploy:' + env);
+  run('grunt deploy:' + env);
 });
 
 program.command('blockchain [env]').description('run blockchain').action(function(env_) {
   var env = env_ || 'development';
 
-  exec('grunt blockchain:' + env);
+  run('grunt blockchain:' + env);
 });
 
 program.command('demo').description('create a working dapp with a SimpleStorage contract').action(function() {
@@ -63,7 +69,7 @@ program.command('demo').description('create a working dapp with a SimpleStorage 
   wrench.copyDirSyncRecursive(demoPath, targetDir + "/app", {forceDelete: true});
 
   cd(targetDir);
-  exec('npm install');
+  run('npm install');
   console.log('\n\ninit complete');
 });
 
