@@ -21,6 +21,7 @@
     "grunt-cli": "^0.1.13",
     "matchdep": "^0.3.0",
     "python": "^0.0.4",
-    "methodmissing": "^0.0.3"
+    "methodmissing": "^0.0.3",
+    "sync-me": "^0.1.1"
   }
 }

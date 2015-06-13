@@ -2,9 +2,11 @@ var python = require('python').shell;
 var web3 = require('web3');
 var fs = require('fs');
 var mm = require('methodmissing');
+var sync = require('sync-me');
 
 py_exec = function(cmd) {
-  python(cmd, function() {});
+  console.log("python: " + cmd);
+  return sync(python, cmd)[1];
 }
 
 py_exec("from ethertdd import EvmContract")
@@ -39,10 +41,9 @@ TestContractWrapper = (function() {
       arg_list.push(value);
     }
 
-    console.log(this.className + "_contract." + method + "(" + arg_list.join(",") + ")")
-    python(this.className + "_contract." + method + "(" + arg_list.join(",") + ")", function(err, data) {
-      console.log("res: " + data);
-    })
+    data = py_exec(this.className + "_contract." + method + "(" + arg_list.join(",") + ")");
+    console.log("res: " + data);
+    return data;
   };
 
   return TestContractWrapper;
@@ -52,7 +53,7 @@ TestContractWrapper = (function() {
 TestContract = function(contract, className) {
   var wrapper = new TestContractWrapper(contract, className);
   var Obj = mm(wrapper, function (key, args) {
-    wrapper.execCmd(key, args)
+    return wrapper.execCmd(key, args);
   });
   return Obj;
 }
