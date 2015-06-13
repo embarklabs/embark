@@ -1,4 +1,6 @@
-SimpleStorage = require('embark-framework').Tests();
+var Tests = require('embark-framework').Tests;
+
+SimpleStorage = Tests.request("SimpleStorage");
 
 SimpleStorage.set(100);
 
