@@ -7,3 +7,10 @@ var express = require('express');
 var compression = require('compression');
 var commander = require('commander');
 var wrench = require('wrench');
+console.log("embark required");
+
+embark = {}
+embark.Tests = require('./lib/test.js');
+
+module.exports = embark;
+
