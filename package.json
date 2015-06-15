@@ -31,7 +31,10 @@
     "web3": "^0.5.0",
     "wrench": "^1.5.8",
     "hashmerge": "^1.0.2",
-    "python": "^0.0.4"
+    "sync-me": "^0.1.1",
+    "python": "^0.0.4",
+    "methodmissing": "^0.0.3",
+    "jasmine": "^2.3.1"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
