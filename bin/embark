@@ -66,7 +66,8 @@ program.command('demo').description('create a working dapp with a SimpleStorage 
 
   var targetDir = "./embark_demo";
   wrench.copyDirSyncRecursive(boilerPath, targetDir);
-  wrench.copyDirSyncRecursive(demoPath, targetDir + "/app", {forceDelete: true});
+  wrench.copyDirSyncRecursive(demoPath + "/app",  targetDir + "/app",  {forceDelete: true});
+  wrench.copyDirSyncRecursive(demoPath + "/spec", targetDir + "/spec", {forceDelete: true});
 
   cd(targetDir);
   run('npm install');

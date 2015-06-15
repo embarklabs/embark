@@ -12,8 +12,6 @@ var syncMe = require('sync-me');
 var methodmissing = require('methodmissing');
 var jasmine = require('jasmine');
 
-console.log("embark required");
-
 embark = {}
 embark.Tests = require('./lib/test.js');
 
