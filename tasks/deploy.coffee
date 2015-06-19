@@ -4,6 +4,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask "deploy_contracts", "deploy code", (env)  =>
     blockchainConfig = readYaml.sync("config/blockchain.yml")
+    contractsConfig  = readYaml.sync("config/contracts.yml")[env || "development"]
     rpcHost   = blockchainConfig[env || "development"].rpc_host
     rpcPort   = blockchainConfig[env || "development"].rpc_port
     gasLimit  = blockchainConfig[env || "development"].gas_limit || 100000
@@ -29,25 +30,27 @@ module.exports = (grunt) ->
       grunt.log.writeln("deploying #{contractFile}")
       compiled_contracts = web3.eth.compile.solidity(source)
 
-      #TODO: refactor this into a common method
-      if compiled_contracts.info is undefined
-        for className, contract of compiled_contracts
-          contractAddress = web3.eth.sendTransaction({from: primaryAddress, data: contract.code, gas: gasLimit, gasPrice: gasPrice})
-          grunt.log.writeln("deployed #{className} at #{contractAddress}")
+      for className, contract of compiled_contracts
+        contractGasLimit = contractsConfig[className].gasLimit || gasLimit
+        contractGasPrice = contractsConfig[className].gasPrice || gasPrice
 
-          abi = JSON.stringify(contract.info.abiDefinition)
+        args = contractsConfig[className].args
 
-          result += "var #{className}Abi = #{abi};"
-          result += "var #{className}Contract = web3.eth.contract(#{className}Abi);"
-          result += "var #{className} = #{className}Contract.at('#{contractAddress}');";
-      else
-        #for geth < 0.9.23
-        contract = compiled_contracts
-        contractAddress = web3.eth.sendTransaction({from: primaryAddress, data: contract.code, gas: gasLimit})
-        grunt.log.writeln("deployed at #{contractAddress}")
+        contractObject = web3.eth.contract(contract.info.abiDefinition)
+        #contractAddress = web3.eth.sendTransaction({from: primaryAddress, data: contract.code, gas: contractGasLimit, gasPrice: contractGasPrice})
+        #contractAddress = contractObject.new(150, {from: primaryAddress, data: contract.code, gas: contractGasLimit, gasPrice: contractGasPrice}).address
+        contractAddress = contractObject.new.apply(contractObject, [args, {from: primaryAddress, data: contract.code, gas: contractGasLimit, gasPrice: contractGasPrice}]).address
+
+        if (web3.eth.getCode(contractAddress) is "0x") {
+          console.log "contract #{className} was not deployed, try adjusting the gas costs"
+          exit
+        }
+
+        console.log "address is #{contractAddress}"
+
+        grunt.log.writeln("deployed #{className} at #{contractAddress}")
 
         abi = JSON.stringify(contract.info.abiDefinition)
-        className = source.match(/contract (\w+)(?=\s[is|{])/g)[0].replace("contract ","")
 
         result += "var #{className}Abi = #{abi};"
         result += "var #{className}Contract = web3.eth.contract(#{className}Abi);"
