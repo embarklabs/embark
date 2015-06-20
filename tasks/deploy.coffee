@@ -37,14 +37,10 @@ module.exports = (grunt) ->
         args = contractsConfig[className].args
 
         contractObject = web3.eth.contract(contract.info.abiDefinition)
-        #contractAddress = web3.eth.sendTransaction({from: primaryAddress, data: contract.code, gas: contractGasLimit, gasPrice: contractGasPrice})
-        #contractAddress = contractObject.new(150, {from: primaryAddress, data: contract.code, gas: contractGasLimit, gasPrice: contractGasPrice}).address
-        contractAddress = contractObject.new.apply(contractObject, [args, {from: primaryAddress, data: contract.code, gas: contractGasLimit, gasPrice: contractGasPrice}]).address
 
-        if (web3.eth.getCode(contractAddress) is "0x") {
-          console.log "contract #{className} was not deployed, try adjusting the gas costs"
-          exit
-        }
+        contractParams = args
+        contractParams.push({from: primaryAddress, data: contract.code, gas: contractGasLimit, gasPrice: contractGasPrice})
+        contractAddress = contractObject.new.apply(contractObject, contractParams).address
 
         console.log "address is #{contractAddress}"
 
