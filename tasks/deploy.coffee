@@ -31,14 +31,14 @@ module.exports = (grunt) ->
       compiled_contracts = web3.eth.compile.solidity(source)
 
       for className, contract of compiled_contracts
-        contractGasLimit = contractsConfig[className].gasLimit || gasLimit
-        contractGasPrice = contractsConfig[className].gasPrice || gasPrice
+        contractGasLimit = contractsConfig?[className]?.gasLimit || gasLimit
+        contractGasPrice = contractsConfig?[className]?.gasPrice || gasPrice
 
-        args = contractsConfig[className].args
+        args = contractsConfig?[className]?.args
 
         contractObject = web3.eth.contract(contract.info.abiDefinition)
 
-        contractParams = args
+        contractParams = args || []
         contractParams.push({from: primaryAddress, data: contract.code, gas: contractGasLimit, gasPrice: contractGasPrice})
         contractAddress = contractObject.new.apply(contractObject, contractParams).address
 
