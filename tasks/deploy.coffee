@@ -7,7 +7,7 @@ module.exports = (grunt) ->
     contractsConfig  = readYaml.sync("config/contracts.yml")[env || "development"]
     rpcHost   = blockchainConfig[env || "development"].rpc_host
     rpcPort   = blockchainConfig[env || "development"].rpc_port
-    gasLimit  = blockchainConfig[env || "development"].gas_limit || 100000
+    gasLimit  = blockchainConfig[env || "development"].gas_limit || 500000
     gasPrice  = blockchainConfig[env || "development"].gas_price || 10000000000000
 
     try
