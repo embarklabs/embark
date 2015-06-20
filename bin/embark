@@ -54,9 +54,12 @@ program.command('run [env]').description('run dapp').action(function(env_) {
   run('grunt deploy:' + env);
 });
 
+program.command('spec').description('run specs').action(function() {
+  run('jasmine');
+});
+
 program.command('blockchain [env]').description('run blockchain').action(function(env_) {
   var env = env_ || 'development';
-
   run('grunt blockchain:' + env);
 });
 
