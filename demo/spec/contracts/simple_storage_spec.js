@@ -6,7 +6,7 @@ describe("SimpleStorage", function() {
   });
 
   it("should set constructor value", function() {
-    expect(SimpleStorage.foo()).toEqual('150');
+    expect(SimpleStorage.storedData()).toEqual('150');
   });
 
   it("set storage value", function() {
