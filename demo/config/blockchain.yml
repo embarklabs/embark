@@ -5,7 +5,7 @@ development:
   minerthreads: 1
   datadir: /tmp/embark
   mine_when_needed: true
-  gas_limit: 100000
+  gas_limit: 500000
   gas_price: 10000000000000
   console: false
   account:
