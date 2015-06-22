@@ -11,6 +11,8 @@ With Embark you can:
 * Easily deploy to & use decentralized systems such as IPFS.
 * Quickly create advanced DApps using multiple contracts.
 
+See the [Wiki](https://github.com/iurimatias/embark-framework/wiki) for more details.
+
 Installation
 ======
 Requirements: geth (0.9.29), solc (0.9.23), node (0.12.2) and npm
@@ -20,6 +22,8 @@ For specs: pyethereum, ethertdd.py
 ```Bash
 $ npm install -g embark-framework grunt-cli
 ```
+
+See [Complete Installation Instructions](https://github.com/iurimatias/embark-framework/wiki/Installation).
 
 Usage - Demo
 ======
