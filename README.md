@@ -83,7 +83,12 @@ Embark will automatically take care of deployment for you and set all needed JS 
 ```Javascript
 # app/contracts/simple_storage.sol
 contract SimpleStorage {
-  uint storedData;
+  uint public storedData;
+
+  function SimpleStorage(uint initialValue) {
+    storedData = initialValue;
+  }
+
   function set(uint x) {
     storedData = x;
   }
@@ -98,6 +103,7 @@ Will automatically be available in Javascript as:
 # app/js/index.js
 SimpleStorage.set(100);
 SimpleStorage.get();
+SimpleStorage.storedData();
 ```
 
 You can specify for each contract and environment its gas costs and arguments:
