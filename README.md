@@ -190,6 +190,9 @@ The environment is a specific blockchain configuration that can be managed at co
       address: 0x123
 ```
 
+See [Configuration](https://github.com/iurimatias/embark-framework/wiki/Configuration).
+
+
 Deploying only contracts
 ======
 Although embark run will automatically deploy contracts, you can choose to only deploy the contracts to a specific environment
