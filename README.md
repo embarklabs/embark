@@ -166,11 +166,14 @@ Embark uses [Jasmine](https://jasmine.github.io/2.3/introduction.html) by defaul
 
 Working with different chains
 ======
-You can specify which environment to deploy to
+You can specify which environment to deploy to:
 
-$ embark blockchain staging
-$ embark run staging
-the environment is a specific blockchain configuration that can be managed at config/blockchain.yml
+
+```$ embark blockchain staging```
+
+```$ embark run staging```
+
+The environment is a specific blockchain configuration that can be managed at config/blockchain.yml
 
 ```Yaml
 # config/blockchain.yml
