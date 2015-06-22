@@ -13,7 +13,7 @@ var run = function(cmd) {
 }
 
 program
-  .version('0.3.0')
+  .version('0.4.0')
 
 program.command('new [name]').description('New application').action(function(name) {
   if (name === undefined) {
