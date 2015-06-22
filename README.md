@@ -2,11 +2,20 @@ What is embark
 ======
 
 [![Join the chat at https://gitter.im/iurimatias/embark-framework](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/iurimatias/embark-framework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-Embark is a framework that allows you to easily develop and deploy DApps. Embark automatically deploys your contracts and makes them available in your JS code. Embark watches for changes, and if you update a contract, Embark will automatically redeploy the contracts (if needed) and the dapp.
+
+Embark is a framework that allows you to easily develop and deploy DApps.
+
+With Embark you can:
+* Automatically deploy contracts and make them available in your JS code. Embark watches for changes, and if you update a contract, Embark will automatically redeploy the contracts (if needed) and the dapp.
+* Do Test Driven Development with Contracts using Javascript.
+* Easily deploy to & use decentralized systems such as IPFS.
+* Quickly create advanced DApps using multiple contracts.
 
 Installation
 ======
-Requirements: geth (0.9.25), solc (0.9.23), node (0.12.2) and npm
+Requirements: geth (0.9.29), solc (0.9.23), node (0.12.2) and npm
+
+For specs: pyethereum, ethertdd.py
 
 ```Bash
 $ npm install -g embark-framework grunt-cli
@@ -49,14 +58,17 @@ DApp Structure
 
 ```Bash
   app/
-  |___ contracts/ #solidity contracts
-  |___ html/
-  |___ css/
-  |___ js/
+    |___ contracts/ #solidity contracts
+    |___ html/
+    |___ css/
+    |___ js/
   config/
     |___ blockchain.yml #environments configuration
+    |___ contracts.yml  #contracts configuration
     |___ server.yml     #server configuration
-```    
+  spec/
+    |___ contracts/ #contracts tests
+```
 
 Solidity files in the contracts directory will automatically be deployed with embark run. Changes in any files will automatically be reflected in app, changes to contracts will result in a redeployment and update of their JS Bindings
 
@@ -83,6 +95,70 @@ Will automatically be available in Javascript as:
 SimpleStorage.set(100);
 SimpleStorage.get();
 ```
+
+You can specify for each contract and environment its gas costs and arguments:
+
+```Yaml
+# config/contracts.yml
+  development:
+    SimpleStorage:
+      gas_limit: 500000
+      gas_price: 10000000000000
+      args:
+        - 100
+  ...
+```
+
+If you are using multiple contracts, you can pass a reference to another contract as ```$ContractName```, Embark will automatically replace this with the correct address for the contract.
+
+
+```Yaml
+# config/contracts.yml
+  development:
+    SimpleStorage:
+      args:
+        - 100
+        - $MyStorage
+    MyStorage:
+       args:
+         - "initial string"
+    MyMainContract:
+      args:
+        - $SimpleStorage
+  ...
+```
+
+Tests
+======
+
+You can run specs with ```embark spec```, it will run any files ending *_spec.js under ```spec/```.
+
+Embark includes a testing lib to fastly run & test your contracts in a EVM. 
+
+```Javascript
+# spec/contracts/simple_storage_spec.js
+EmbarkSpec = require('embark-framework').Tests;
+
+describe("SimpleStorage", function() {
+  beforeAll(function() {
+    // equivalent to initializing SimpleStorage with param 150
+    SimpleStorage = EmbarkSpec.request("SimpleStorage", [150]);
+  });
+
+  it("should set constructor value", function() {
+    expect(SimpleStorage.storedData()).toEqual('150');
+  });
+
+  it("set storage value", function() {
+    SimpleStorage.set(100);
+    expect(SimpleStorage.get()).toEqual('100');
+  });
+
+})
+```
+
+Embark uses [Jasmine](https://jasmine.github.io/2.3/introduction.html) by default, but you can use any testing framework you want.
+
 
 Working with different chains
 ======
