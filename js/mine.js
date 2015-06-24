@@ -1,20 +1,35 @@
 
 setInterval(function() {
+  var miner_var;
+
+  if (admin.miner === undefined) {
+    miner_var = miner;
+  }
+  else {
+    miner_var = admin.miner;
+  }
 
   var minimalAmount = (web3.eth.getBalance(web3.eth.coinbase) >= 1500000000000000000);
-  var pendingTransactions = web3.eth.pendingTransactions().length > 0;
-
-  if(!web3.eth.mining && (!minimalAmount || pendingTransactions)) {
-    if (!minimalAmount) { console.log("=== minimal ether amount not reached yet") }
-    if (pendingTransactions) { console.log("=== there are pending transactions") }
-    console.log("=== start mining");
-    admin.miner.start();
+  var pendingTransactions = function() {
+    if (web3.eth.pendingTransactions === undefined) {
+      return txpool.status.pending || txpool.status.queued;
+    }
+    else {
+      return web3.eth.pendingTransactions().length > 0;
+    }
   }
-  else if (web3.eth.mining && minimalAmount && !pendingTransactions) {
+
+  if(!web3.eth.mining && (!minimalAmount || pendingTransactions())) {
+    if (!minimalAmount) { console.log("=== minimal ether amount not reached yet") }
+    if (pendingTransactions()) { console.log("=== there are pending transactions") }
+    console.log("=== start mining");
+    miner_var.start();
+  }
+  else if (web3.eth.mining && minimalAmount && !pendingTransactions()) {
     if (minimalAmount) { console.log("=== minimal ether amount reached") }
-    if (!pendingTransactions) { console.log("=== no pending transactions") }
+    if (!pendingTransactions()) { console.log("=== no pending transactions") }
     console.log("=== stop mining");
-    admin.miner.stop();
+    miner_var.stop();
   }
 }, 1000)
 
