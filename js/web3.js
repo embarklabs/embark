@@ -264,6 +264,13 @@ var coder = new SolidityCoder([
         outputFormatter: f.formatOutputBytes
     }),
     new SolidityType({
+        name: 'string',
+        match: 'strict',
+        mode: 'bytes',
+        inputFormatter: f.formatInputString,
+        outputFormatter: f.formatOutputString
+    }),
+    new SolidityType({
         name: 'real',
         match: 'prefix',
         mode: 'value',
@@ -328,25 +335,39 @@ var formatInputInt = function (value) {
 };
 
 /**
- * Formats input value to byte representation of string
+ * Formats input bytes
  *
  * @method formatInputBytes
  * @param {String}
  * @returns {SolidityParam}
  */
 var formatInputBytes = function (value) {
-    var result = utils.fromAscii(value, c.ETH_PADDING).substr(2);
+    var result = utils.padRight(utils.toHex(value).substr(2), 64);
     return new SolidityParam(result);
+};
+
+/**
+ * Formats input bytes
+ *
+ * @method formatDynamicInputBytes
+ * @param {String}
+ * @returns {SolidityParam}
+ */
+var formatInputDynamicBytes = function (value) {
+    value = utils.toHex(value);
+    var result = utils.padRight((value).substr(2), 64);
+    var length = Math.floor(value.length / 2 - 1);
+    return new SolidityParam(formatInputInt(length).value + result, 32);
 };
 
 /**
  * Formats input value to byte representation of string
  *
- * @method formatInputDynamicBytes
+ * @method formatInputString
  * @param {String}
  * @returns {SolidityParam}
  */
-var formatInputDynamicBytes = function (value) {
+var formatInputString = function (value) {
     var result = utils.fromAscii(value, c.ETH_PADDING).substr(2);
     return new SolidityParam(formatInputInt(value.length).value + result, 32);
 };
@@ -450,27 +471,38 @@ var formatOutputBool = function (param) {
 };
 
 /**
- * Should be used to format output string
+ * Should be used to format output bytes
  *
  * @method formatOutputBytes
  * @param {SolidityParam} left-aligned hex representation of string
- * @returns {String} ascii string
+ * @returns {String} hex string
  */
 var formatOutputBytes = function (param) {
-    // length might also be important!
-    return utils.toAscii(param.staticPart());
+    return '0x' + param.staticPart();
+};
+
+/**
+ * Should be used to format output bytes
+ *
+ * @method formatOutputDynamicBytes
+ * @param {SolidityParam} left-aligned hex representation of string
+ * @returns {String} hex string
+ */
+var formatOutputDynamicBytes = function (param) {
+    var length = (new BigNumber(param.dynamicPart().slice(0, 64), 16)).toNumber() * 2;
+    return '0x' + param.dynamicPart().substr(64, length);
 };
 
 /**
  * Should be used to format output string
  *
- * @method formatOutputDynamicBytes
+ * @method formatOutputString
  * @param {SolidityParam} left-aligned hex representation of string
  * @returns {String} ascii string
  */
-var formatOutputDynamicBytes = function (param) {
-    // length might also be important!
-    return utils.toAscii(param.dynamicPart().slice(64));
+var formatOutputString = function (param) {
+    var length = (new BigNumber(param.dynamicPart().slice(0, 64), 16)).toNumber() * 2;
+    return utils.toAscii(param.dynamicPart().substr(64, length));
 };
 
 /**
@@ -489,6 +521,7 @@ module.exports = {
     formatInputInt: formatInputInt,
     formatInputBytes: formatInputBytes,
     formatInputDynamicBytes: formatInputDynamicBytes,
+    formatInputString: formatInputString,
     formatInputBool: formatInputBool,
     formatInputReal: formatInputReal,
     formatOutputInt: formatOutputInt,
@@ -498,6 +531,7 @@ module.exports = {
     formatOutputBool: formatOutputBool,
     formatOutputBytes: formatOutputBytes,
     formatOutputDynamicBytes: formatOutputDynamicBytes,
+    formatOutputString: formatOutputString,
     formatOutputAddress: formatOutputAddress
 };
 
@@ -764,26 +798,34 @@ if (typeof XMLHttpRequest === 'undefined') {
 /// required to define ETH_BIGNUMBER_ROUNDING_MODE
 var BigNumber = require('bignumber.js');
 
-var ETH_UNITS = [ 
-    'wei', 
-    'Kwei', 
-    'Mwei', 
-    'Gwei', 
-    'szabo', 
-    'finney', 
-    'ether', 
-    'grand', 
-    'Mether', 
-    'Gether', 
-    'Tether', 
-    'Pether', 
-    'Eether', 
-    'Zether', 
-    'Yether', 
-    'Nether', 
-    'Dether', 
-    'Vether', 
-    'Uether' 
+var ETH_UNITS = [
+    'wei',
+    'kwei',
+    'Mwei',
+    'Gwei',
+    'szabo',
+    'finney',
+    'femtoether',
+    'picoether',
+    'nanoether',
+    'microether',
+    'milliether',
+    'nano',
+    'micro',
+    'milli',
+    'ether',
+    'grand',
+    'Mether',
+    'Gether',
+    'Tether',
+    'Pether',
+    'Eether',
+    'Zether',
+    'Yether',
+    'Nether',
+    'Dether',
+    'Vether',
+    'Uether'
 ];
 
 module.exports = {
@@ -791,7 +833,7 @@ module.exports = {
     ETH_SIGNATURE_LENGTH: 4,
     ETH_UNITS: ETH_UNITS,
     ETH_BIGNUMBER_ROUNDING_MODE: { ROUNDING_MODE: BigNumber.ROUND_DOWN },
-    ETH_POLLING_TIMEOUT: 1000,
+    ETH_POLLING_TIMEOUT: 1000/2,
     defaultBlock: 'latest',
     defaultAccount: undefined
 };
@@ -838,7 +880,7 @@ module.exports = function (str, isNew) {
 };
 
 
-},{"./utils":7,"crypto-js/sha3":33}],7:[function(require,module,exports){
+},{"./utils":7,"crypto-js/sha3":34}],7:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -877,22 +919,30 @@ module.exports = function (str, isNew) {
 var BigNumber = require('bignumber.js');
 
 var unitMap = {
-    'wei':      '1',
-    'kwei':     '1000',
-    'ada':      '1000',
-    'mwei':     '1000000',
-    'babbage':  '1000000',
-    'gwei':     '1000000000',
-    'shannon':  '1000000000',
-    'szabo':    '1000000000000',
-    'finney':   '1000000000000000',
-    'ether':    '1000000000000000000',
-    'kether':   '1000000000000000000000',
-    'grand':    '1000000000000000000000',
-    'einstein': '1000000000000000000000',
-    'mether':   '1000000000000000000000000',
-    'gether':   '1000000000000000000000000000',
-    'tether':   '1000000000000000000000000000000'
+    'wei':          '1',
+    'kwei':         '1000',
+    'ada':          '1000',
+    'femtoether':   '1000',
+    'mwei':         '1000000',
+    'babbage':      '1000000',
+    'picoether':    '1000000',
+    'gwei':         '1000000000',
+    'shannon':      '1000000000',
+    'nanoether':    '1000000000',
+    'nano':         '1000000000',
+    'szabo':        '1000000000000',
+    'microether':   '1000000000000',
+    'micro':        '1000000000000',
+    'finney':       '1000000000000000',
+    'milliether':    '1000000000000000',
+    'milli':         '1000000000000000',
+    'ether':        '1000000000000000000',
+    'kether':       '1000000000000000000000',
+    'grand':        '1000000000000000000000',
+    'einstein':     '1000000000000000000000',
+    'mether':       '1000000000000000000000000',
+    'gether':       '1000000000000000000000000000',
+    'tether':       '1000000000000000000000000000000'
 };
 
 /**
@@ -906,6 +956,19 @@ var unitMap = {
  */
 var padLeft = function (string, chars, sign) {
     return new Array(chars - string.length + 1).join(sign ? sign : "0") + string;
+};
+
+/**
+ * Should be called to pad string to expected length
+ *
+ * @method padRight
+ * @param {String} string to be padded
+ * @param {Number} characters that result string should have
+ * @param {String} sign, by default 0
+ * @returns {String} right aligned string
+ */
+var padRight = function (string, chars, sign) {
+    return string + (new Array(chars - string.length + 1).join(sign ? sign : "0"));
 };
 
 /** 
@@ -924,10 +987,6 @@ var toAscii = function(hex) {
     }
     for (; i < l; i+=2) {
         var code = parseInt(hex.substr(i, 2), 16);
-        if (code === 0) {
-            break;
-        }
-
         str += String.fromCharCode(code);
     }
 
@@ -1037,7 +1096,7 @@ var fromDecimal = function (value) {
  * @return {String}
  */
 var toHex = function (val) {
-    /*jshint maxcomplexity:7 */
+    /*jshint maxcomplexity: 8 */
 
     if (isBoolean(val))
         return fromDecimal(+val);
@@ -1051,9 +1110,11 @@ var toHex = function (val) {
     // if its a negative number, pass it through fromDecimal
     if (isString(val)) {
         if (val.indexOf('-0x') === 0)
-           return fromDecimal(val);
+            return fromDecimal(val);
         else if (!isFinite(val))
             return fromAscii(val);
+        else if(val.indexOf('0x') === 0)
+            return val;
     }
 
     return fromDecimal(val);
@@ -1080,13 +1141,14 @@ var getValueOfUnit = function (unit) {
  * Takes a number of wei and converts it to any other ether unit.
  *
  * Possible units are:
- * - kwei/ada
- * - mwei/babbage
- * - gwei/shannon
- * - szabo
- * - finney
- * - ether
- * - kether/grand/einstein
+ *   SI Short   SI Full        Effigy       Other
+ * - kwei       femtoether     ada
+ * - mwei       picoether      babbage
+ * - gwei       nanoether      shannon      nano
+ * - --         microether     szabo        micro
+ * - --         milliether     finney       milli
+ * - ether      --             --
+ * - kether                    einstein     grand 
  * - mether
  * - gether
  * - tether
@@ -1106,13 +1168,14 @@ var fromWei = function(number, unit) {
  * Takes a number of a unit and converts it to wei.
  *
  * Possible units are:
- * - kwei/ada
- * - mwei/babbage
- * - gwei/shannon
- * - szabo
- * - finney
- * - ether
- * - kether/grand/einstein
+ *   SI Short   SI Full        Effigy       Other
+ * - kwei       femtoether     ada
+ * - mwei       picoether      babbage       
+ * - gwei       nanoether      shannon      nano
+ * - --         microether     szabo        micro
+ * - --         milliether     finney       milli
+ * - ether      --             --
+ * - kether                    einstein     grand 
  * - mether
  * - gether
  * - tether
@@ -1302,6 +1365,7 @@ var isIBAN = function (iban) {
 
 module.exports = {
     padLeft: padLeft,
+    padRight: padRight,
     toHex: toHex,
     toDecimal: toDecimal,
     fromDecimal: fromDecimal,
@@ -1330,7 +1394,7 @@ module.exports = {
 
 },{"bignumber.js":"bignumber.js"}],8:[function(require,module,exports){
 module.exports={
-    "version": "0.5.0"
+    "version": "0.7.0"
 }
 
 },{}],9:[function(require,module,exports){
@@ -1416,32 +1480,25 @@ var setupProperties = function (obj, properties) {
 /// setups web3 object, and it's in-browser executed methods
 var web3 = {};
 web3.providers = {};
+web3.currentProvider = null;
 web3.version = {};
 web3.version.api = version.version;
 web3.eth = {};
 
 /*jshint maxparams:4 */
-web3.eth.filter = function (fil, eventParams, options, formatter) {
-
-    // if its event, treat it differently
-    // TODO: simplify and remove
-    if (fil._isEvent) {
-        return fil(eventParams, options);
-    }
-
-    // what outputLogFormatter? that's wrong
-    //return new Filter(fil, watches.eth(), formatters.outputLogFormatter);
-    return new Filter(fil, watches.eth(), formatter || formatters.outputLogFormatter);
+web3.eth.filter = function (fil, callback) {
+    return new Filter(fil, watches.eth(), formatters.outputLogFormatter, callback);
 };
 /*jshint maxparams:3 */
 
 web3.shh = {};
-web3.shh.filter = function (fil) {
-    return new Filter(fil, watches.shh(), formatters.outputPostFormatter);
+web3.shh.filter = function (fil, callback) {
+    return new Filter(fil, watches.shh(), formatters.outputPostFormatter, callback);
 };
 web3.net = {};
 web3.db = {};
 web3.setProvider = function (provider) {
+    this.currentProvider = provider;
     RequestManager.getInstance().setProvider(provider);
 };
 web3.reset = function () {
@@ -1485,6 +1542,23 @@ Object.defineProperty(web3.eth, 'defaultAccount', {
     }
 });
 
+
+// EXTEND
+web3._extend = function(extension){
+    /*jshint maxcomplexity: 6 */
+
+    if(extension.property && !web3[extension.property])
+        web3[extension.property] = {};
+
+    setupMethods(web3[extension.property] || web3, extension.methods || []);
+    setupProperties(web3[extension.property] || web3, extension.properties || []);
+};
+web3._extend.formatters = formatters;
+web3._extend.utils = utils;
+web3._extend.Method = require('./web3/method');
+web3._extend.Property = require('./web3/property');
+
+
 /// setups all api methods
 setupProperties(web3, web3Properties);
 setupMethods(web3.net, net.methods);
@@ -1497,7 +1571,90 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-},{"./utils/config":5,"./utils/sha3":6,"./utils/utils":7,"./version.json":8,"./web3/batch":10,"./web3/db":12,"./web3/eth":14,"./web3/filter":16,"./web3/formatters":17,"./web3/net":24,"./web3/property":25,"./web3/requestmanager":27,"./web3/shh":28,"./web3/watches":30}],10:[function(require,module,exports){
+},{"./utils/config":5,"./utils/sha3":6,"./utils/utils":7,"./version.json":8,"./web3/batch":11,"./web3/db":13,"./web3/eth":15,"./web3/filter":17,"./web3/formatters":18,"./web3/method":23,"./web3/net":25,"./web3/property":26,"./web3/requestmanager":28,"./web3/shh":29,"./web3/watches":31}],10:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** 
+ * @file allevents.js
+ * @author Marek Kotewicz <marek@ethdev.com>
+ * @date 2014
+ */
+
+var sha3 = require('../utils/sha3');
+var SolidityEvent = require('./event');
+var formatters = require('./formatters');
+var utils = require('../utils/utils');
+var Filter = require('./filter');
+var watches = require('./watches');
+
+var AllSolidityEvents = function (json, address) {
+    this._json = json;
+    this._address = address;
+};
+
+AllSolidityEvents.prototype.encode = function (options) {
+    options = options || {};
+    var result = {};
+
+    ['fromBlock', 'toBlock'].filter(function (f) {
+        return options[f] !== undefined;
+    }).forEach(function (f) {
+        result[f] = formatters.inputBlockNumberFormatter(options[f]);
+    });
+
+    result.topics = [null, null, null, null, null]; // match all topics
+    result.address = this._address;
+
+    return result;
+};
+
+AllSolidityEvents.prototype.decode = function (data) {
+    data.data = data.data || '';
+    data.topics = data.topics || [];
+
+    var eventTopic = data.topics[0].slice(2);
+    var match = this._json.filter(function (j) {
+        return eventTopic === sha3(utils.transformToFullName(j));
+    })[0];
+
+    if (!match) { // cannot find matching event?
+        console.warn('cannot find event for log');
+        return data;
+    }
+
+    var event = new SolidityEvent(match, this._address);
+    return event.decode(data);
+};
+
+AllSolidityEvents.prototype.execute = function (options, callback) {
+    var o = this.encode(options);
+    var formatter = this.decode.bind(this);
+    return new Filter(o, watches.eth(), formatter, callback);
+};
+
+AllSolidityEvents.prototype.attachToContract = function (contract) {
+    var execute = this.execute.bind(this);
+    contract.allEvents = execute;
+};
+
+module.exports = AllSolidityEvents;
+
+
+},{"../utils/sha3":6,"../utils/utils":7,"./event":16,"./filter":17,"./formatters":18,"./watches":31}],11:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1560,7 +1717,7 @@ Batch.prototype.execute = function () {
 module.exports = Batch;
 
 
-},{"./requestmanager":27}],11:[function(require,module,exports){
+},{"./requestmanager":28}],12:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1588,6 +1745,7 @@ var utils = require('../utils/utils');
 var coder = require('../solidity/coder');
 var SolidityEvent = require('./event');
 var SolidityFunction = require('./function');
+var AllEvents = require('./allevents');
 
 /**
  * Should be called to encode constructor params
@@ -1633,9 +1791,14 @@ var addFunctionsToContract = function (contract, abi) {
  * @param {Array} abi
  */
 var addEventsToContract = function (contract, abi) {
-    abi.filter(function (json) {
+    var events = abi.filter(function (json) {
         return json.type === 'event';
-    }).map(function (json) {
+    });
+
+    var All = new AllEvents(events, contract.address);
+    All.attachToContract(contract);
+    
+    events.map(function (json) {
         return new SolidityEvent(json, contract.address);
     }).forEach(function (e) {
         e.attachToContract(contract);
@@ -1742,7 +1905,7 @@ var Contract = function (abi, address) {
 module.exports = contract;
 
 
-},{"../solidity/coder":1,"../utils/utils":7,"../web3":9,"./event":15,"./function":18}],12:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/utils":7,"../web3":9,"./allevents":10,"./event":16,"./function":19}],13:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1800,7 +1963,7 @@ module.exports = {
     methods: methods
 };
 
-},{"./method":22}],13:[function(require,module,exports){
+},{"./method":23}],14:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1840,7 +2003,7 @@ module.exports = {
 };
 
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2003,6 +2166,13 @@ var getTransactionCount = new Method({
     outputFormatter: utils.toDecimal
 });
 
+var sendRawTransaction = new Method({
+    name: 'sendRawTransaction',
+    call: 'eth_sendRawTransaction',
+    params: 1,
+    inputFormatter: []
+});
+
 var sendTransaction = new Method({
     name: 'sendTransaction',
     call: 'eth_sendTransaction',
@@ -2069,6 +2239,7 @@ var methods = [
     getTransactionCount,
     call,
     estimateGas,
+    sendRawTransaction,
     sendTransaction,
     compileSolidity,
     compileLLL,
@@ -2117,7 +2288,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":7,"./formatters":17,"./method":22,"./property":25}],15:[function(require,module,exports){
+},{"../utils/utils":7,"./formatters":18,"./method":23,"./property":26}],16:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2142,9 +2313,10 @@ module.exports = {
 
 var utils = require('../utils/utils');
 var coder = require('../solidity/coder');
-var web3 = require('../web3');
 var formatters = require('./formatters');
 var sha3 = require('../utils/sha3');
+var Filter = require('./filter');
+var watches = require('./watches');
 
 /**
  * This prototype should be used to create event filters
@@ -2290,10 +2462,21 @@ SolidityEvent.prototype.decode = function (data) {
  * @param {Object} options
  * @return {Object} filter object
  */
-SolidityEvent.prototype.execute = function (indexed, options) {
+SolidityEvent.prototype.execute = function (indexed, options, callback) {
+
+    if (utils.isFunction(arguments[arguments.length - 1])) {
+        callback = arguments[arguments.length - 1];
+        if(arguments.length === 2)
+            options = null;
+        if(arguments.length === 1) {
+            options = null;
+            indexed = {};
+        }
+    }
+    
     var o = this.encode(indexed, options);
     var formatter = this.decode.bind(this);
-    return web3.eth.filter(o, undefined, undefined, formatter);
+    return new Filter(o, watches.eth(), formatter, callback);
 };
 
 /**
@@ -2314,7 +2497,7 @@ SolidityEvent.prototype.attachToContract = function (contract) {
 module.exports = SolidityEvent;
 
 
-},{"../solidity/coder":1,"../utils/sha3":6,"../utils/utils":7,"../web3":9,"./formatters":17}],16:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/sha3":6,"../utils/utils":7,"./filter":17,"./formatters":18,"./watches":31}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2391,21 +2574,36 @@ var getOptions = function (options) {
     }; 
 };
 
-var Filter = function (options, methods, formatter) {
-    var implementation = {};
-    methods.forEach(function (method) {
-        method.attachToObject(implementation);
-    });
-    this.options = getOptions(options);
-    this.implementation = implementation;
-    this.callbacks = [];
-    this.formatter = formatter;
-    this.filterId = this.implementation.newFilter(this.options);
+/**
+Adds the callback and sets up the methods, to iterate over the results.
+
+@method getLogsAtStart
+@param {Object} self
+@param {funciton} 
+*/
+var getLogsAtStart = function(self, callback){
+    // call getFilterLogs for the first watch callback start
+    if (!utils.isString(self.options)) {
+        self.get(function (err, messages) {
+            // don't send all the responses to all the watches again... just to self one
+            if (err) {
+                callback(err);
+            }
+
+            messages.forEach(function (message) {
+                callback(null, message);
+            });
+        });
+    }
 };
 
-Filter.prototype.watch = function (callback) {
-    this.callbacks.push(callback);
-    var self = this;
+/**
+Adds the callback and sets up the methods, to iterate over the results.
+
+@method pollFilter
+@param {Object} self
+*/
+var pollFilter = function(self) {
 
     var onMessage = function (error, messages) {
         if (error) {
@@ -2422,29 +2620,62 @@ Filter.prototype.watch = function (callback) {
         });
     };
 
-    // call getFilterLogs on start
-    if (!utils.isString(this.options)) {
-        this.get(function (err, messages) {
-            // don't send all the responses to all the watches again... just to this one
-            if (err) {
-                callback(err);
-            }
+    RequestManager.getInstance().startPolling({
+        method: self.implementation.poll.call,
+        params: [self.filterId],
+    }, self.filterId, onMessage, self.stopWatching.bind(self));
 
-            messages.forEach(function (message) {
-                callback(null, message);
+};
+
+var Filter = function (options, methods, formatter, callback) {
+    var self = this;
+    var implementation = {};
+    methods.forEach(function (method) {
+        method.attachToObject(implementation);
+    });
+    this.options = getOptions(options);
+    this.implementation = implementation;
+    this.callbacks = [];
+    this.pollFilters = [];
+    this.formatter = formatter;
+    this.implementation.newFilter(this.options, function(error, id){
+        if(error) {
+            self.callbacks.forEach(function(cb){
+                cb(error);
             });
-        });
+        } else {
+            self.filterId = id;
+            // get filter logs at start
+            self.callbacks.forEach(function(cb){
+                getLogsAtStart(self, cb);
+            });
+            pollFilter(self);
+
+
+            // start to watch immediately
+            if(callback) {
+                return self.watch(callback);
+            }
+        }
+    });
+
+};
+
+Filter.prototype.watch = function (callback) {
+    this.callbacks.push(callback);
+
+    if(this.filterId) {
+        getLogsAtStart(this, callback);
+        pollFilter(this);
     }
 
-    RequestManager.getInstance().startPolling({
-        method: this.implementation.poll.call,
-        params: [this.filterId],
-    }, this.filterId, onMessage, this.stopWatching.bind(this));
+    return this;
 };
 
 Filter.prototype.stopWatching = function () {
     RequestManager.getInstance().stopPolling(this.filterId);
-    this.implementation.uninstallFilter(this.filterId);
+    // remove filter async
+    this.implementation.uninstallFilter(this.filterId, function(){});
     this.callbacks = [];
 };
 
@@ -2466,12 +2697,14 @@ Filter.prototype.get = function (callback) {
             return self.formatter ? self.formatter(log) : log;
         });
     }
+
+    return this;
 };
 
 module.exports = Filter;
 
 
-},{"../utils/utils":7,"./formatters":17,"./requestmanager":27}],17:[function(require,module,exports){
+},{"../utils/utils":7,"./formatters":18,"./requestmanager":28}],18:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2563,8 +2796,10 @@ var inputTransactionFormatter = function (options){
  * @returns {Object} transaction
 */
 var outputTransactionFormatter = function (tx){
-    tx.blockNumber = utils.toDecimal(tx.blockNumber);
-    tx.transactionIndex = utils.toDecimal(tx.transactionIndex);
+    if(tx.blockNumber !== null)
+        tx.blockNumber = utils.toDecimal(tx.blockNumber);
+    if(tx.transactionIndex !== null)
+        tx.transactionIndex = utils.toDecimal(tx.transactionIndex);
     tx.nonce = utils.toDecimal(tx.nonce);
     tx.gas = utils.toDecimal(tx.gas);
     tx.gasPrice = utils.toBigNumber(tx.gasPrice);
@@ -2586,7 +2821,8 @@ var outputBlockFormatter = function(block) {
     block.gasUsed = utils.toDecimal(block.gasUsed);
     block.size = utils.toDecimal(block.size);
     block.timestamp = utils.toDecimal(block.timestamp);
-    block.number = utils.toDecimal(block.number);
+    if(block.number !== null)
+        block.number = utils.toDecimal(block.number);
 
     block.difficulty = utils.toBigNumber(block.difficulty);
     block.totalDifficulty = utils.toBigNumber(block.totalDifficulty);
@@ -2609,13 +2845,12 @@ var outputBlockFormatter = function(block) {
  * @returns {Object} log
 */
 var outputLogFormatter = function(log) {
-    if (log === null) { // 'pending' && 'latest' filters are nulls
-        return null;
-    }
-
-    log.blockNumber = utils.toDecimal(log.blockNumber);
-    log.transactionIndex = utils.toDecimal(log.transactionIndex);
-    log.logIndex = utils.toDecimal(log.logIndex);
+    if(log.blockNumber !== null)
+        log.blockNumber = utils.toDecimal(log.blockNumber);
+    if(log.transactionIndex !== null)
+        log.transactionIndex = utils.toDecimal(log.transactionIndex);
+    if(log.logIndex !== null)
+        log.logIndex = utils.toDecimal(log.logIndex);
 
     return log;
 };
@@ -2691,7 +2926,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":5,"../utils/utils":7}],18:[function(require,module,exports){
+},{"../utils/config":5,"../utils/utils":7}],19:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2717,6 +2952,7 @@ module.exports = {
 var web3 = require('../web3');
 var coder = require('../solidity/coder');
 var utils = require('../utils/utils');
+var formatters = require('./formatters');
 var sha3 = require('../utils/sha3');
 
 /**
@@ -2737,6 +2973,12 @@ var SolidityFunction = function (json, address) {
 SolidityFunction.prototype.extractCallback = function (args) {
     if (utils.isFunction(args[args.length - 1])) {
         return args.pop(); // modify the args array!
+    }
+};
+
+SolidityFunction.prototype.extractDefaultBlock = function (args) {
+    if (args.length > this._inputTypes.length && !utils.isObject(args[args.length -1])) {
+        return formatters.inputDefaultBlockNumberFormatter(args.pop()); // modify the args array!
     }
 };
 
@@ -2791,15 +3033,17 @@ SolidityFunction.prototype.unpackOutput = function (output) {
 SolidityFunction.prototype.call = function () {
     var args = Array.prototype.slice.call(arguments).filter(function (a) {return a !== undefined; });
     var callback = this.extractCallback(args);
+    var defaultBlock = this.extractDefaultBlock(args);
     var payload = this.toPayload(args);
 
+
     if (!callback) {
-        var output = web3.eth.call(payload);
+        var output = web3.eth.call(payload, defaultBlock);
         return this.unpackOutput(output);
     } 
         
     var self = this;
-    web3.eth.call(payload, function (error, output) {
+    web3.eth.call(payload, defaultBlock, function (error, output) {
         callback(error, self.unpackOutput(output));
     });
 };
@@ -2918,7 +3162,7 @@ SolidityFunction.prototype.attachToContract = function (contract) {
 module.exports = SolidityFunction;
 
 
-},{"../solidity/coder":1,"../utils/sha3":6,"../utils/utils":7,"../web3":9}],19:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/sha3":6,"../utils/utils":7,"../web3":9,"./formatters":18}],20:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2945,7 +3189,8 @@ module.exports = SolidityFunction;
 
 "use strict";
 
-var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore:line
+// resolves the problem for electron/atom shell environments, which use node integration, but have no process variable available
+var XMLHttpRequest = (typeof window !== 'undefined' && window.XMLHttpRequest) ? window.XMLHttpRequest : require('xmlhttprequest').XMLHttpRequest; // jshint ignore:line
 var errors = require('./errors');
 
 var HttpProvider = function (host) {
@@ -2956,6 +3201,8 @@ HttpProvider.prototype.send = function (payload) {
     var request = new XMLHttpRequest();
 
     request.open('POST', this.host, false);
+    request.setRequestHeader('Content-type','application/json');
+    request.setRequestHeader('Connection','Keep-Alive');
     
     try {
         request.send(JSON.stringify(payload));
@@ -2999,7 +3246,8 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
     };
 
     request.open('POST', this.host, true);
-
+    request.setRequestHeader('Content-type','application/json');
+    
     try {
         request.send(JSON.stringify(payload));
     } catch(error) {
@@ -3010,7 +3258,7 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
 module.exports = HttpProvider;
 
 
-},{"./errors":13,"xmlhttprequest":4}],20:[function(require,module,exports){
+},{"./errors":14,"xmlhttprequest":4}],21:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3120,7 +3368,7 @@ ICAP.prototype.address = function () {
 module.exports = ICAP;
 
 
-},{"../utils/utils":7}],21:[function(require,module,exports){
+},{"../utils/utils":7}],22:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3213,7 +3461,7 @@ Jsonrpc.prototype.toBatchPayload = function (messages) {
 module.exports = Jsonrpc;
 
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3387,7 +3635,7 @@ Method.prototype.send = function () {
 module.exports = Method;
 
 
-},{"../utils/utils":7,"./errors":13,"./requestmanager":27}],23:[function(require,module,exports){
+},{"../utils/utils":7,"./errors":14,"./requestmanager":28}],24:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3435,7 +3683,7 @@ var abi = [
 module.exports = contract(abi).at(address);
 
 
-},{"./contract":11}],24:[function(require,module,exports){
+},{"./contract":12}],25:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3485,7 +3733,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":7,"./property":25}],25:[function(require,module,exports){
+},{"../utils/utils":7,"./property":26}],26:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3603,7 +3851,7 @@ Property.prototype.getAsync = function (callback) {
 module.exports = Property;
 
 
-},{"./requestmanager":27}],26:[function(require,module,exports){
+},{"./requestmanager":28}],27:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3638,7 +3886,7 @@ QtSyncProvider.prototype.send = function (payload) {
 module.exports = QtSyncProvider;
 
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3684,9 +3932,9 @@ var RequestManager = function (provider) {
     arguments.callee._singletonInstance = this;
 
     this.provider = provider;
-    this.polls = [];
+    this.polls = {};
     this.timeout = null;
-    this.poll();
+    this.isPolling = false;
 };
 
 /**
@@ -3781,6 +4029,11 @@ RequestManager.prototype.sendBatch = function (data, callback) {
  */
 RequestManager.prototype.setProvider = function (p) {
     this.provider = p;
+
+    if (this.provider && !this.isPolling) {
+        this.poll();
+        this.isPolling = true;
+    }
 };
 
 /*jshint maxparams:4 */
@@ -3797,7 +4050,7 @@ RequestManager.prototype.setProvider = function (p) {
  * @todo cleanup number of params
  */
 RequestManager.prototype.startPolling = function (data, pollId, callback, uninstall) {
-    this.polls.push({data: data, id: pollId, callback: callback, uninstall: uninstall});
+    this.polls['poll_'+ pollId] = {data: data, id: pollId, callback: callback, uninstall: uninstall};
 };
 /*jshint maxparams:3 */
 
@@ -3808,24 +4061,19 @@ RequestManager.prototype.startPolling = function (data, pollId, callback, uninst
  * @param {Number} pollId
  */
 RequestManager.prototype.stopPolling = function (pollId) {
-    for (var i = this.polls.length; i--;) {
-        var poll = this.polls[i];
-        if (poll.id === pollId) {
-            this.polls.splice(i, 1);
-        }
-    }
+    delete this.polls['poll_'+ pollId];
 };
 
 /**
- * Should be called to reset polling mechanism of request manager
+ * Should be called to reset the polling mechanism of the request manager
  *
  * @method reset
  */
 RequestManager.prototype.reset = function () {
-    this.polls.forEach(function (poll) {
-        poll.uninstall(poll.id); 
-    });
-    this.polls = [];
+    for (var key in this.polls) {
+        this.polls[key].uninstall();
+    }
+    this.polls = {};
 
     if (this.timeout) {
         clearTimeout(this.timeout);
@@ -3840,9 +4088,10 @@ RequestManager.prototype.reset = function () {
  * @method poll
  */
 RequestManager.prototype.poll = function () {
+    /*jshint maxcomplexity: 6 */
     this.timeout = setTimeout(this.poll.bind(this), c.ETH_POLLING_TIMEOUT);
 
-    if (!this.polls.length) {
+    if (Object.keys(this.polls).length === 0) {
         return;
     }
 
@@ -3851,9 +4100,18 @@ RequestManager.prototype.poll = function () {
         return;
     }
 
-    var payload = Jsonrpc.getInstance().toBatchPayload(this.polls.map(function (data) {
-        return data.data;
-    }));
+    var pollsData = [];
+    var pollsKeys = [];
+    for (var key in this.polls) {
+        pollsData.push(this.polls[key].data);
+        pollsKeys.push(key);
+    }
+
+    if (pollsData.length === 0) {
+        return;
+    }
+
+    var payload = Jsonrpc.getInstance().toBatchPayload(pollsData);
 
     var self = this;
     this.provider.sendAsync(payload, function (error, results) {
@@ -3861,14 +4119,21 @@ RequestManager.prototype.poll = function () {
         if (error) {
             return;
         }
-            
+
         if (!utils.isArray(results)) {
             throw errors.InvalidResponse(results);
         }
 
         results.map(function (result, index) {
-            result.callback = self.polls[index].callback;
-            return result;
+            var key = pollsKeys[index];
+            // make sure the filter is still installed after arrival of the request
+            if (self.polls[key]) {
+                result.callback = self.polls[key].callback;
+                return result;
+            } else
+                return false;
+        }).filter(function (result) {
+            return !!result; 
         }).filter(function (result) {
             var valid = Jsonrpc.getInstance().isValidResponse(result);
             if (!valid) {
@@ -3886,7 +4151,7 @@ RequestManager.prototype.poll = function () {
 module.exports = RequestManager;
 
 
-},{"../utils/config":5,"../utils/utils":7,"./errors":13,"./jsonrpc":21}],28:[function(require,module,exports){
+},{"../utils/config":5,"../utils/utils":7,"./errors":14,"./jsonrpc":22}],29:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3956,7 +4221,7 @@ module.exports = {
 };
 
 
-},{"./formatters":17,"./method":22}],29:[function(require,module,exports){
+},{"./formatters":18,"./method":23}],30:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4052,7 +4317,7 @@ var deposit = function (from, address, value, client, callback) {
 module.exports = transfer;
 
 
-},{"../web3":9,"./contract":11,"./icap":20,"./namereg":23}],30:[function(require,module,exports){
+},{"../web3":9,"./contract":12,"./icap":21,"./namereg":24}],31:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4084,11 +4349,11 @@ var eth = function () {
 
         switch(type) {
             case 'latest':
-                args.pop();
+                args.shift();
                 this.params = 0;
                 return 'eth_newBlockFilter';
             case 'pending':
-                args.pop();
+                args.shift();
                 this.params = 0;
                 return 'eth_newPendingTransactionFilter';
             default:
@@ -4168,9 +4433,9 @@ module.exports = {
 };
 
 
-},{"./method":22}],31:[function(require,module,exports){
+},{"./method":23}],32:[function(require,module,exports){
 
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -4398,14 +4663,11 @@ module.exports = {
 	                    var thatByte = (thatWords[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
 	                    thisWords[(thisSigBytes + i) >>> 2] |= thatByte << (24 - ((thisSigBytes + i) % 4) * 8);
 	                }
-	            } else if (thatWords.length > 0xffff) {
+	            } else {
 	                // Copy one word at a time
 	                for (var i = 0; i < thatSigBytes; i += 4) {
 	                    thisWords[(thisSigBytes + i) >>> 2] = thatWords[i >>> 2];
 	                }
-	            } else {
-	                // Copy all words at once
-	                thisWords.push.apply(thisWords, thatWords);
 	            }
 	            this.sigBytes += thatSigBytes;
 
@@ -4916,7 +5178,7 @@ module.exports = {
 	return CryptoJS;
 
 }));
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -5240,7 +5502,7 @@ module.exports = {
 	return CryptoJS.SHA3;
 
 }));
-},{"./core":32,"./x64-core":34}],34:[function(require,module,exports){
+},{"./core":33,"./x64-core":35}],35:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -5545,7 +5807,7 @@ module.exports = {
 	return CryptoJS;
 
 }));
-},{"./core":32}],"bignumber.js":[function(require,module,exports){
+},{"./core":33}],"bignumber.js":[function(require,module,exports){
 /*! bignumber.js v2.0.7 https://github.com/MikeMcl/bignumber.js/LICENCE */
 
 ;(function (global) {
@@ -8230,7 +8492,7 @@ module.exports = {
     }
 })(this);
 
-},{"crypto":31}],"web3":[function(require,module,exports){
+},{"crypto":32}],"web3":[function(require,module,exports){
 var web3 = require('./lib/web3');
 web3.providers.HttpProvider = require('./lib/web3/httpprovider');
 web3.providers.QtSyncProvider = require('./lib/web3/qtsync');
@@ -8246,7 +8508,5 @@ if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
 module.exports = web3;
 
 
-},{"./lib/web3":9,"./lib/web3/contract":11,"./lib/web3/httpprovider":19,"./lib/web3/namereg":23,"./lib/web3/qtsync":26,"./lib/web3/transfer":29}]},{},["web3"])
-
-
+},{"./lib/web3":9,"./lib/web3/contract":12,"./lib/web3/httpprovider":20,"./lib/web3/namereg":24,"./lib/web3/qtsync":27,"./lib/web3/transfer":30}]},{},["web3"])
 //# sourceMappingURL=web3.js.map
