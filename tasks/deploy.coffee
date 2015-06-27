@@ -48,8 +48,8 @@ module.exports = (grunt) ->
         contractDB[className] = contract
 
     all_contracts.sort (a,b) =>
-      contract_1 = contractDependencies[a]
-      contract_2 = contractDependencies[b]
+      contract_1 = contractDependencies[a]? or []
+      contract_2 = contractDependencies[b]? or []
 
       if a in contract_1 and b in contract_2
         grunt.log.writeln("looks like you have a circular dependency between #{a} and #{b}")
