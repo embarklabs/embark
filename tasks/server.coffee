@@ -1,11 +1,11 @@
 module.exports = (grunt) ->
   express = require("express")
   compression = require("compression")
-  readYaml = require('read-yaml');
-
-  serverConfig = readYaml.sync("config/server.yml")
+  readYaml = require('read-yaml')
 
   grunt.registerTask "server", "static file development server", =>
+    serverConfig = readYaml.sync("config/server.yml")
+
     webPort = serverConfig.port || 8000
     webHost = serverConfig.host || 'localhost'
     webRoot = "generated/dapp"
