@@ -1,6 +1,6 @@
 {
   "name": "embark-framework",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -8,7 +8,7 @@
   "bin": {
     "embark": "./bin/embark"
   },
-  "main": "./index.js",
+  "main": "./lib/index.js",
   "directories": {
     "lib": "./lib"
   },
@@ -38,5 +38,11 @@
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "grunt-mocha-test": "^0.12.7",
+    "mocha": "^2.2.5",
+    "mocha-sinon": "^1.1.4",
+    "sinon": "^1.15.4"
+  }
 }
