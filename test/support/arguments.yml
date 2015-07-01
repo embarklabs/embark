@@ -1,0 +1,14 @@
+development:
+  Wallet:
+    args:
+      - $AnotherStorage
+  SimpleStorage:
+    args:
+      - 100
+  AnotherStorage:
+    args:
+      - 100
+  Wallets:
+    args:
+      - $Wallet
+staging:

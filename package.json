@@ -34,7 +34,8 @@
     "sync-me": "^0.1.1",
     "python": "^0.0.4",
     "methodmissing": "^0.0.3",
-    "jasmine": "^2.3.1"
+    "jasmine": "^2.3.1",
+    "toposort": "^0.2.10"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],

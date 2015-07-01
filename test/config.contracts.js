@@ -56,6 +56,25 @@ describe('embark.config.contracts', function() {
         assert.deepEqual(contractsConfig.all_contracts, [ "SimpleStorage", "AnotherStorage" ]);
       });
     });
+
+    context("contracts as arguments to other contracts", function() {
+      before(function() {
+        files = [
+          'test/support/contracts/wallet.sol',
+          'test/support/contracts/simple_storage.sol',
+          'test/support/contracts/another_storage.sol',
+          'test/support/contracts/wallets.sol'
+        ]
+        contractsConfig = new Config.Contracts(files, blockchainConfig, web3);
+        contractsConfig.loadConfigFile('test/support/arguments.yml');
+        contractsConfig.compileContracts('development');
+      });
+
+      it('add contracts to a list', function() {
+        assert.deepEqual(contractsConfig.all_contracts, [ "SimpleStorage", "AnotherStorage", "Wallet", "Wallets" ]);
+      });
+    });
   });
+
 });
 
