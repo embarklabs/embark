@@ -9,13 +9,16 @@ setInterval(function() {
     miner_var = admin.miner;
   }
 
-  var minimalAmount = (web3.eth.getBalance(web3.eth.coinbase) >= 1500000000000000000);
+  var minimalAmount = (web3.eth.getBalance(web3.eth.coinbase) >= 15000000000000000000);
   var pendingTransactions = function() {
     if (web3.eth.pendingTransactions === undefined) {
       return txpool.status.pending || txpool.status.queued;
     }
-    else {
+    else if (typeof web3.eth.pendingTransactions === "function")  {
       return web3.eth.pendingTransactions().length > 0;
+    }
+    else {
+      return web3.eth.getBlock('pending').transactions.length > 0;
     }
   }
 
