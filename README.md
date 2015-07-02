@@ -15,7 +15,7 @@ See the [Wiki](https://github.com/iurimatias/embark-framework/wiki) for more det
 
 Installation
 ======
-Requirements: geth (0.9.29), solc (0.9.23), node (0.12.2) and npm
+Requirements: geth (0.9.32, warning: 0.9.34 not supported at the moment), solc (0.9.23), node (0.12.2) and npm
 
 For specs: pyethereum, ethertdd.py
 
