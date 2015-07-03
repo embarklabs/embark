@@ -11,8 +11,9 @@ describe('embark.deploy', function() {
     'test/support/contracts/wallets.sol'
   ];
   var blockchainConfig = (new Config.Blockchain()).loadConfigFile('test/support/blockchain.yml').config("development");
-  var contractsConfig = new Config.Contracts(files, blockchainConfig, web3);
+  var contractsConfig = new Config.Contracts(blockchainConfig, web3);
   contractsConfig.loadConfigFile('test/support/arguments.yml');
+  contractsConfig.init(files);
   var deploy = new Deploy('development', files, blockchainConfig, contractsConfig);
 
   describe('#deploy_contracts', function() {

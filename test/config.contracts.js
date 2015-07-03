@@ -6,14 +6,10 @@ require('mocha-sinon');
 
 describe('embark.config.contracts', function() {
   var blockchainConfig = (new Config.Blockchain()).loadConfigFile('test/support/blockchain.yml').config("development");
-  //sinon.stub(web3, "setProvider");
-  //sinon.stub(web3.eth.compile, "solidity", function() {
-  //  return "compiled_code";
-  //});
 
   describe('#loadConfigFile', function() {
     it('should read and load yml file', function() {
-      var contractsConfig = new Config.Contracts([], blockchainConfig, web3);
+      var contractsConfig = new Config.Contracts(blockchainConfig, web3);
       contractsConfig.loadConfigFile('test/support/contracts.yml');
 
       assert.equal(contractsConfig.contractConfig.hasOwnProperty('development'), true)
@@ -47,8 +43,9 @@ describe('embark.config.contracts', function() {
           'test/support/contracts/simple_storage.sol',
           'test/support/contracts/another_storage.sol'
         ]
-        contractsConfig = new Config.Contracts(files, blockchainConfig, web3);
+        contractsConfig = new Config.Contracts(blockchainConfig, web3);
         contractsConfig.loadConfigFile('test/support/contracts.yml');
+        contractsConfig.init(files);
         contractsConfig.compileContracts();
       });
 
@@ -65,8 +62,9 @@ describe('embark.config.contracts', function() {
           'test/support/contracts/another_storage.sol',
           'test/support/contracts/wallets.sol'
         ]
-        contractsConfig = new Config.Contracts(files, blockchainConfig, web3);
+        contractsConfig = new Config.Contracts(blockchainConfig, web3);
         contractsConfig.loadConfigFile('test/support/arguments.yml');
+        contractsConfig.init(files);
         contractsConfig.compileContracts('development');
       });
 
