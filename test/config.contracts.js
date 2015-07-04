@@ -74,6 +74,23 @@ describe('embark.config.contracts', function() {
         assert.deepEqual(contractsConfig.all_contracts, [ "SimpleStorage", "AnotherStorage", "Wallet", "Wallets" ]);
       });
     });
+
+    context("contracts instances", function() {
+      before(function() {
+        files = [
+          'test/support/contracts/simple_storage.sol'
+        ]
+        contractsConfig = new Config.Contracts(blockchainConfig, compiler);
+        contractsConfig.loadConfigFile('test/support/instances.yml');
+        contractsConfig.init(files);
+        contractsConfig.compileContracts('development');
+      });
+
+      it('add contracts to a list', function() {
+        assert.deepEqual(contractsConfig.all_contracts, [ "SimpleStorage", "BarStorage", "FooStorage" ]);
+      });
+    });
+
   });
 
 });

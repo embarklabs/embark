@@ -1,0 +1,11 @@
+development:
+  SimpleStorage:
+    args:
+      - 100
+  BarStorage:
+    instanceOf: SimpleStorage
+  FooStorage:
+    instanceOf: SimpleStorage
+    args:
+      - 200
+staging:
