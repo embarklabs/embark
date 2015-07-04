@@ -39,8 +39,8 @@ describe('embark.deploy', function() {
       "AnotherStorage": "0x234"
     }
     deploy.contractDB = {
-      "SimpleStorage": {info: {abiDefinition: 123}},
-      "AnotherStorage": {info: {abiDefinition: 234}}
+      "SimpleStorage":  {compiled: {info: {abiDefinition: 123}}},
+      "AnotherStorage": {compiled: {info: {abiDefinition: 234}}}
     }
 
     it("should deploy contracts", function() {
