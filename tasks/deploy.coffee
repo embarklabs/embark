@@ -8,5 +8,9 @@ module.exports = (grunt) ->
     destFile = grunt.config.get("deploy.dest");
 
     Embark = require('embark-framework')
-    Embark.Deploy.deployContracts(env, contractFiles, destFile)
+    Embark.init()
+    Embark.blockchainConfig.loadConfigFile('config/blockchain.yml')
+    Embark.contractsConfig.loadConfigFile('config/contracts.yml')
+    abi = Embark.deployContracts(env, contractFiles, destFile)
+    grunt.file.write(destFile, abi);
 

@@ -1,4 +1,12 @@
-EmbarkSpec = require('embark-framework').Tests;
+var Embark = require('embark-framework');
+Embark.init();
+Embark.blockchainConfig.loadConfigFile('config/blockchain.yml');
+Embark.contractsConfig.loadConfigFile('config/contracts.yml');
+
+var files = ["app/contracts/simple_storage.sol"];
+
+Embark.contractsConfig.init(files);
+var EmbarkSpec = Embark.tests(files);
 
 describe("SimpleStorage", function() {
   beforeAll(function() {
