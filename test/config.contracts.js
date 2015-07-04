@@ -1,15 +1,17 @@
 var Config = require('../lib/config/config.js');
+var Compiler = require('../lib/compiler.js');
 var assert = require('assert');
 var sinon = require('sinon');
-var web3 = require('web3');
 require('mocha-sinon');
 
 describe('embark.config.contracts', function() {
-  var blockchainConfig = (new Config.Blockchain()).loadConfigFile('test/support/blockchain.yml').config("development");
+  var _blockchainConfig = (new Config.Blockchain()).loadConfigFile('test/support/blockchain.yml');
+  var blockchainConfig = _blockchainConfig.config("development");
+  var compiler = new Compiler(_blockchainConfig);
 
   describe('#loadConfigFile', function() {
     it('should read and load yml file', function() {
-      var contractsConfig = new Config.Contracts(blockchainConfig, web3);
+      var contractsConfig = new Config.Contracts(blockchainConfig, compiler);
       contractsConfig.loadConfigFile('test/support/contracts.yml');
 
       assert.equal(contractsConfig.contractConfig.hasOwnProperty('development'), true)
@@ -23,7 +25,7 @@ describe('embark.config.contracts', function() {
 
   describe('#loadConfig', function() {
     it('should load config', function() {
-      var contractsConfig = new Config.Contracts([], blockchainConfig, web3);
+      var contractsConfig = new Config.Contracts([], blockchainConfig, compiler);
       var hsh = {
         development: {},
         staging: {}
@@ -43,7 +45,7 @@ describe('embark.config.contracts', function() {
           'test/support/contracts/simple_storage.sol',
           'test/support/contracts/another_storage.sol'
         ]
-        contractsConfig = new Config.Contracts(blockchainConfig, web3);
+        contractsConfig = new Config.Contracts(blockchainConfig, compiler);
         contractsConfig.loadConfigFile('test/support/contracts.yml');
         contractsConfig.init(files);
         contractsConfig.compileContracts();
@@ -62,7 +64,7 @@ describe('embark.config.contracts', function() {
           'test/support/contracts/another_storage.sol',
           'test/support/contracts/wallets.sol'
         ]
-        contractsConfig = new Config.Contracts(blockchainConfig, web3);
+        contractsConfig = new Config.Contracts(blockchainConfig, compiler);
         contractsConfig.loadConfigFile('test/support/arguments.yml');
         contractsConfig.init(files);
         contractsConfig.compileContracts('development');

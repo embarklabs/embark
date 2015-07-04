@@ -1,7 +1,7 @@
 var Config = require('../lib/config/config.js');
 var Test = require('../lib/test.js');
+var Compiler = require('../lib/compiler.js');
 var assert = require('assert');
-var web3 = require('web3');
 
 //var contractFiles = grunt.file.expand("./app/contracts/**/*.sol")
 
@@ -9,8 +9,10 @@ describe('embark.test', function() {
   var files = [
     'test/support/contracts/simple_storage.sol'
   ]
-  var blockchainConfig = (new Config.Blockchain()).loadConfigFile('test/support/blockchain.yml').config("development");
-  var contractsConfig = new Config.Contracts(blockchainConfig, web3);
+  var _blockchainConfig = (new Config.Blockchain()).loadConfigFile('test/support/blockchain.yml');
+  var blockchainConfig = _blockchainConfig.config("development");
+  var compiler = new Compiler(_blockchainConfig);
+  var contractsConfig = new Config.Contracts(blockchainConfig, compiler);
   contractsConfig.loadConfigFile('test/support/contracts.yml');
   contractsConfig.init(files);
 
