@@ -1,0 +1,13 @@
+development:
+  SimpleStorage:
+    address: 0x123
+    args:
+      - 100
+  BarStorage:
+    address: 0x234
+    instanceOf: SimpleStorage
+  FooStorage:
+    instanceOf: SimpleStorage
+    args:
+      - 200
+staging:

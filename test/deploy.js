@@ -24,18 +24,17 @@ describe('embark.deploy', function() {
       'test/support/contracts/wallets.sol'
     ];
 
-    var deploy = setDeployConfig({
-      files: files,
-      blockchain: 'test/support/blockchain.yml',
-      contracts: 'test/support/arguments.yml'
-    });
-
     describe('#deploy_contracts', function() {
+      var deploy = setDeployConfig({
+        files: files,
+        blockchain: 'test/support/blockchain.yml',
+        contracts: 'test/support/arguments.yml'
+      });
       deploy.deploy_contracts("development");
 
       it("should deploy contracts", function() {
         var all_contracts = ['Wallet', 'SimpleStorage', 'AnotherStorage', 'Wallets'];
-        for(var i=0; i < all_contracts; i++) {
+        for(var i=0; i < all_contracts.length; i++) {
           var className = all_contracts[i];
 
           assert.equal(deploy.deployedContracts.hasOwnProperty(className), true);
@@ -45,6 +44,11 @@ describe('embark.deploy', function() {
     });
 
     describe('#generate_abi_file', function() {
+      var deploy = setDeployConfig({
+        files: files,
+        blockchain: 'test/support/blockchain.yml',
+        contracts: 'test/support/arguments.yml'
+      });
       deploy.deployedContracts = {
         "SimpleStorage": "0x123",
         "AnotherStorage": "0x234"
@@ -67,22 +71,51 @@ describe('embark.deploy', function() {
       'test/support/contracts/simple_storage.sol'
     ];
 
-    var deploy = setDeployConfig({
-      files: files,
-      blockchain: 'test/support/blockchain.yml',
-      contracts: 'test/support/instances.yml'
-    });
-
     describe('#deploy_contracts', function() {
+      var deploy = setDeployConfig({
+        files: files,
+        blockchain: 'test/support/blockchain.yml',
+        contracts: 'test/support/instances.yml'
+      });
       deploy.deploy_contracts("development");
 
       it("should deploy contracts", function() {
-        var all_contracts = ['Wallet', 'SimpleStorage', 'AnotherStorage', 'Wallets'];
-        for(var i=0; i < all_contracts; i++) {
+        var all_contracts = ['SimpleStorage', 'BarStorage', 'FooStorage'];
+        for(var i=0; i < all_contracts.length; i++) {
           var className = all_contracts[i];
 
           assert.equal(deploy.deployedContracts.hasOwnProperty(className), true);
         }
+      });
+
+    });
+
+  });
+
+  describe('contracts with addresses defined', function() {
+    var files = [
+      'test/support/contracts/simple_storage.sol'
+    ];
+
+    describe('#deploy_contracts', function() {
+      var deploy = setDeployConfig({
+        files: files,
+        blockchain: 'test/support/blockchain.yml',
+        contracts: 'test/support/address.yml'
+      });
+      deploy.deploy_contracts("development");
+
+      it("should not deploy contracts with addresses defined", function() {
+        var expected_deploys = ['SimpleStorage', 'BarStorage', 'FooStorage'];
+
+        for(var i=0; i < expected_deploys.length; i++) {
+          var className = expected_deploys[i];
+
+          assert.equal(deploy.deployedContracts.hasOwnProperty(className), true);
+        }
+
+        assert.equal(deploy.deployedContracts['SimpleStorage'], '0x123');
+        assert.equal(deploy.deployedContracts['BarStorage'], '0x234');
       });
 
     });
