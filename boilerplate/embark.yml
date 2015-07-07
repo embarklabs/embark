@@ -1,5 +1,5 @@
-type: "grunt"
-contracts: ["app/contracts/**"]
-output: "generated/tmp/abi.js"
-blockchainConfig: "config/blockchain.yml"
-contractsConfig: "config/contracts.yml"
+type: "grunt" #other options: meteor, manual
+#contracts: ["app/contracts/**"]
+#output: "generated/tmp/abi.js"
+#blockchainConfig: "config/blockchain.yml"
+#contractsConfig: "config/contracts.yml"
