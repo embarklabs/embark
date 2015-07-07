@@ -1,0 +1,5 @@
+type: "grunt"
+contracts: ["app/contracts/**"]
+output: "generated/tmp/abi.js"
+blockchainConfig: "config/blockchain.yml"
+contractsConfig: "config/contracts.yml"

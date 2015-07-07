@@ -5,6 +5,7 @@ var path = require('path');
 var wrench = require('wrench');
 var grunt = require('grunt');
 require('shelljs/global');
+var readYaml = require('read-yaml');
 
 var run = function(cmd) {
   if (exec(cmd).code != 0) {
@@ -27,6 +28,20 @@ program.command('new [name]').description('New application').action(function(nam
   cd(targetDir);
   run('npm install');
   console.log('\n\ninit complete');
+});
+
+program.command('meteor [env]').description('experimental meteor cmd').action(function(env_) {
+  var env = env_ || 'development';
+  var embarkConfig = readYaml.sync("./embark.yml");
+
+  contractFiles = grunt.file.expand(embarkConfig.contracts);
+  destFile = embarkConfig.output
+  Embark = require('embark-framework')
+  Embark.init()
+  Embark.blockchainConfig.loadConfigFile(embarkConfig.blockchainConfig)
+  Embark.contractsConfig.loadConfigFile(embarkConfig.contractsConfig)
+  abi = Embark.deployContracts(env, contractFiles, destFile)
+  grunt.file.write(destFile, abi);
 });
 
 program.command('deploy [env]').description('deploy contracts').action(function(env_) {
