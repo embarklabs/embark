@@ -61,7 +61,7 @@ describe('embark.deploy', function() {
       it("should deploy contracts", function() {
         var result = deploy.generate_abi_file();
 
-        assert.strictEqual(result, "web3.setProvider(new web3.providers.HttpProvider('http://localhost:8101'));web3.eth.defaultAccount = web3.eth.accounts[0];var SimpleStorageAbi = 123;var SimpleStorageContract = web3.eth.contract(SimpleStorageAbi);var SimpleStorage = SimpleStorageContract.at('0x123');var AnotherStorageAbi = 234;var AnotherStorageContract = web3.eth.contract(AnotherStorageAbi);var AnotherStorage = AnotherStorageContract.at('0x234');");
+        assert.strictEqual(result, "web3.setProvider(new web3.providers.HttpProvider('http://localhost:8101'));web3.eth.defaultAccount = web3.eth.accounts[0];SimpleStorageAbi = 123;SimpleStorageContract = web3.eth.contract(SimpleStorageAbi);SimpleStorage = SimpleStorageContract.at('0x123');AnotherStorageAbi = 234;AnotherStorageContract = web3.eth.contract(AnotherStorageAbi);AnotherStorage = AnotherStorageContract.at('0x234');");
       });
     });
   });
