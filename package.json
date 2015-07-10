@@ -28,6 +28,7 @@
     "hashmerge": "^1.0.2",
     "jasmine": "^2.3.1",
     "matchdep": "^0.3.0",
+    "meteor-build-client": "^0.1.6",
     "methodmissing": "^0.0.3",
     "python": "^0.0.4",
     "read-yaml": "^1.0.0",
