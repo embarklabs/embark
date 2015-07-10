@@ -1,0 +1,29 @@
+<head>
+  <title>Embark - SimpleStorage Demo</title>
+</head>
+<body>
+  <h3>Embark - SimpleStorage Demo</h3>
+
+  {{> set_value}}
+
+  {{> current_value}}
+
+  <div class="logs">
+  </div>
+
+</body>
+
+<template name="current_value">
+  <div>
+    <button class="get">Get Value</button>
+    <br>value is <span class="value">{{value}}</span>
+  </div>
+</template>
+
+<template name="set_value">
+  <div>
+    <input type="text" class="text" value="10">
+    <button class="set">Set Value</button>
+  </div>
+</template>
+
