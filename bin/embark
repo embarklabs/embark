@@ -51,31 +51,80 @@ program.command('deploy [env]').description('deploy contracts').action(function(
 
 program.command('build [env]').description('build dapp').action(function(env_) {
   var env = env_ || 'development';
-  run("grunt clean");
-  run("grunt deploy_contracts:" + env);
-  run('grunt build:' + env);
+  var embarkConfig = readYaml.sync("./embark.yml");
+
+  if (embarkConfig.type === "grunt") {
+    run("grunt clean");
+    run("grunt deploy_contracts:" + env);
+    run('grunt build:' + env);
+  }
+  else if (embarkConfig.type === "meteor") {
+    //deploy
+    run("meteor-build-client ./build -p ''");
+  }
 });
 
 program.command('ipfs [env]').description('build dapp and make it available in ipfs').action(function(env_) {
   var env = env_ || 'development';
-  run("grunt clean")
-  run("grunt deploy_contracts:" + env)
-  run('grunt build:' + env)
-  run('grunt ipfs:' + env)
+  var embarkConfig = readYaml.sync("./embark.yml");
+
+  if (embarkConfig.type === "grunt") {
+    run("grunt clean")
+    run("grunt deploy_contracts:" + env)
+    run('grunt build:' + env)
+    run('grunt ipfs:' + env)
+  }
+  else if (embarkConfig.type === "meteor") {
+    //deploy
+    //build
+    Embark = require('embark-framework')
+    Embark.release.ipfs("build/")
+  }
+  else {
+    console.log("command not available in manual mode yet");
+  }
 });
 
 program.command('run [env]').description('run dapp').action(function(env_) {
   var env = env_ || 'development';
-  run('grunt deploy:' + env);
+  var embarkConfig = readYaml.sync("./embark.yml");
+
+  if (embarkConfig.type === "grunt") {
+    run('grunt deploy:' + env);
+  }
+  else {
+    console.log("command not available in meteor or manual mode yet");
+  }
 });
 
 program.command('spec').description('run specs').action(function() {
-  run('jasmine');
+  var embarkConfig = readYaml.sync("./embark.yml");
+
+  if (embarkConfig.type === "grunt") {
+    run('jasmine');
+  }
+  else {
+    console.log("command not available in meteor or manual mode yet");
+  }
 });
 
 program.command('blockchain [env]').description('run blockchain').action(function(env_) {
   var env = env_ || 'development';
-  run('grunt blockchain:' + env);
+  var embarkConfig = readYaml.sync("./embark.yml");
+
+  if (embarkConfig.type === "grunt") {
+    run('grunt blockchain:' + env);
+  }
+  else {
+    Embark.init()
+    Embark.blockchainConfig.loadConfigFile(embarkConfig.blockchainConfig)
+    Embark.contractsConfig.loadConfigFile(embarkConfig.contractsConfig)
+
+    //TODO: better with --exec, but need to fix console bug first
+    wrench.copyDirSyncRecursive(__dirname + "/../js", "/tmp", {forceDelete: true});
+
+    Embark.startBlockchain(env, true);
+  }
 });
 
 program.command('demo').description('create a working dapp with a SimpleStorage contract').action(function() {
@@ -90,6 +139,14 @@ program.command('demo').description('create a working dapp with a SimpleStorage 
 
   cd(targetDir);
   run('npm install');
+  console.log('\n\ninit complete');
+});
+
+program.command('meteor_demo').description('create a working meteor dapp with a SimpleStorage contract').action(function() {
+  var boilerPath = path.join(__dirname + '/../demo_meteor');
+
+  var targetDir = "./embark_demo";
+  wrench.copyDirSyncRecursive(boilerPath, targetDir);
   console.log('\n\ninit complete');
 });
 
