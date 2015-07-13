@@ -58,6 +58,10 @@ program.command('build [env]').description('build dapp').action(function(env_) {
     run("grunt deploy_contracts:" + env);
     run('grunt build:' + env);
   }
+  else if (embarkConfig.type === "meteor") {
+    //deploy
+    run("meteor-build-client ./build -p ''");
+  }
 });
 
 program.command('ipfs [env]').description('build dapp and make it available in ipfs').action(function(env_) {
@@ -70,8 +74,14 @@ program.command('ipfs [env]').description('build dapp and make it available in i
     run('grunt build:' + env)
     run('grunt ipfs:' + env)
   }
+  else if (embarkConfig.type === "meteor") {
+    //deploy
+    //build
+    Embark = require('embark-framework')
+    Embark.release.ipfs("build/")
+  }
   else {
-    console.log("command not available in meteor or manual mode yet");
+    console.log("command not available in manual mode yet");
   }
 });
 
