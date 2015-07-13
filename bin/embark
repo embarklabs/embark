@@ -142,6 +142,14 @@ program.command('demo').description('create a working dapp with a SimpleStorage 
   console.log('\n\ninit complete');
 });
 
+program.command('meteor_demo').description('create a working meteor dapp with a SimpleStorage contract').action(function() {
+  var boilerPath = path.join(__dirname + '/../demo_meteor');
+
+  var targetDir = "./embark_demo";
+  wrench.copyDirSyncRecursive(boilerPath, targetDir);
+  console.log('\n\ninit complete');
+});
+
 program.parse(process.argv)
 
 if (!process.argv.slice(2).length) {
