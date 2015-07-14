@@ -94,6 +94,7 @@ program.command('run [env]').description('run dapp').action(function(env_) {
   }
   else {
     console.log("command not available in meteor or manual mode yet");
+    console.log("try instead embark run");
   }
 });
 
