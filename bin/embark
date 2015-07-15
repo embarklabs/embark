@@ -14,7 +14,7 @@ var run = function(cmd) {
   }
 }
 
-var deploy = fnction(embarkConfig) {
+var deploy = function(embarkConfig) {
   contractFiles = grunt.file.expand(embarkConfig.contracts);
   destFile = embarkConfig.output
   Embark.init()
