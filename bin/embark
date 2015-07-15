@@ -25,7 +25,7 @@ var deploy = function(embarkConfig) {
 }
 
 program
-  .version('0.6.0')
+  .version('0.6.1')
 
 program.command('new [name]').description('New application').action(function(name) {
   if (name === undefined) {
