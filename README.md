@@ -138,6 +138,39 @@ If you are using multiple contracts, you can pass a reference to another contrac
   ...
 ```
 
+You can now deploy many instances of the same contract. e.g
+
+
+```Yaml
+# config/contracts.yml
+  development:
+    Currency:
+      args:
+        - 100
+    Usd:
+      instanceOf: Currency
+      args:
+        - "initial string"
+    MyCoin:
+      instanceOf: Currency
+      args:
+        - $SimpleStorage
+  ...
+```
+
+Contracts addresses can be defined, If an address is defined the contract wouldn't be deployed but its defined address will be used instead.
+
+
+```Yaml
+  development:
+    UserStorage:
+      address: 0x123456
+    UserManagement:
+       args:
+         - $UserStorage
+  ...
+```
+
 Tests
 ======
 
