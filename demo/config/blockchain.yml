@@ -21,3 +21,13 @@ staging:
   account:
     init: false
     address: 
+production:
+  rpc_host: localhost
+  rpc_port: 8101
+  rpc_whitelist: "*"
+  datadir: default
+  network_id: 1
+  console: true
+  account:
+    init: false
+    address: 
