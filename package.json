@@ -14,8 +14,6 @@
   },
   "dependencies": {
     "commander": "^2.8.1",
-    "compression": "^1.4.3",
-    "express": "^4.12.3",
     "grunt": "^0.4.5",
     "hashmerge": "^1.0.2",
     "jasmine": "^2.3.1",
