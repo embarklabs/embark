@@ -14,7 +14,7 @@ var run = function(cmd) {
   }
 }
 
-var deploy = function(embarkConfig) {
+var deploy = function(env, embarkConfig) {
   contractFiles = grunt.file.expand(embarkConfig.contracts);
   destFile = embarkConfig.output
   Embark.init()
@@ -25,7 +25,7 @@ var deploy = function(embarkConfig) {
 }
 
 program
-  .version('0.6.1')
+  .version('0.7.0')
 
 program.command('new [name]').description('New application').action(function(name) {
   if (name === undefined) {
@@ -49,7 +49,7 @@ program.command('deploy [env]').description('deploy contracts').action(function(
     run("grunt deploy_contracts:" + env);
   }
   else {
-    deploy();
+    deploy(env, embarkConfig);
   }
 });
 
@@ -63,7 +63,7 @@ program.command('build [env]').description('build dapp').action(function(env_) {
     run('grunt build:' + env);
   }
   else if (embarkConfig.type === "meteor") {
-    deploy();
+    deploy(env, embarkConfig);
     run("meteor-build-client ./build -p ''");
   }
 });
@@ -79,7 +79,7 @@ program.command('ipfs [env]').description('build dapp and make it available in i
     run('grunt ipfs:' + env)
   }
   else if (embarkConfig.type === "meteor") {
-    deploy();
+    deploy(env, embarkConfig);
     run("meteor-build-client ./build -p ''");
     Embark.release.ipfs("build/")
   }
@@ -97,7 +97,7 @@ program.command('run [env]').description('run dapp').action(function(env_) {
   }
   else {
     console.log("command not available in meteor or manual mode yet");
-    console.log("try instead embark run");
+    console.log("try instead embark deploy; if using meteor then follow that with 'meteor'");
   }
 });
 
@@ -126,7 +126,7 @@ program.command('blockchain [env]').description('run blockchain').action(functio
     Embark.contractsConfig.loadConfigFile(embarkConfig.contractsConfig)
 
     //TODO: better with --exec, but need to fix console bug first
-    wrench.copyDirSyncRecursive(__dirname + "/../js", "/tmp", {forceDelete: true});
+    wrench.copyDirSyncRecursive(__dirname + "/../js", "/tmp/js", {forceDelete: true});
 
     Embark.startBlockchain(env, true);
   }

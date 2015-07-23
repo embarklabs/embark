@@ -1,6 +1,7 @@
 module.exports = (grunt) ->
 
   grunt.loadNpmTasks "grunt-embark"
+  grunt.loadTasks "tasks"
 
   grunt.initConfig(
     files:
@@ -102,4 +103,7 @@ module.exports = (grunt) ->
   # loading external tasks (aka: plugins)
   # Loads all plugins that match "grunt-", in this case all of our current plugins
   require('matchdep').filterAll('grunt-*').forEach(grunt.loadNpmTasks)
+
+  grunt.registerTask "deploy", ["coffee", "deploy_contracts", "concat", "copy", "server", "watch"]
+  grunt.registerTask "build", ["clean", "deploy_contracts", "coffee", "concat", "uglify", "copy"]
 
