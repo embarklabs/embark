@@ -1,6 +1,6 @@
 module.exports = (grunt) ->
   express = require('express')
-  compress = require('compress')
+  compression = require('compression')
   readYaml = require('read-yaml')
 
   grunt.registerTask "server", "static file development server", =>
