@@ -1,6 +1,6 @@
 {
   "name": "embark-framework",
-  "version": "0.6.1",
+  "version": "0.6.3",
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
