@@ -41,6 +41,7 @@ describe('embark.config.blockchain', function() {
           rpc_whitelist: "*",
           network_id: 0,
           minerthreads: 1,
+          genesis_block: 'config/genesis.json',
           datadir: '/tmp/embark',
           mine_when_needed: true,
           gas_limit: 123,
@@ -63,6 +64,7 @@ describe('embark.config.blockchain', function() {
         gasPrice: 100,
         rpcWhitelist: "*",
         minerthreads: 1,
+        genesisBlock: 'config/genesis.json',
         datadir: '/tmp/embark',
         networkId: 0,
         port: "30303",
@@ -103,6 +105,7 @@ describe('embark.config.blockchain', function() {
         gasPrice: 10000000000000,
         rpcWhitelist: "*",
         minerthreads: 1,
+        genesisBlock: undefined,
         datadir: '/tmp/embark',
         networkId: 0,
         port: "30303",
@@ -122,4 +125,3 @@ describe('embark.config.blockchain', function() {
   });
 
 });
-
