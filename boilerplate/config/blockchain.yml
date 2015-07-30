@@ -6,6 +6,7 @@ development:
   genesis_block: config/genesis.json
   datadir: /tmp/embark
   mine_when_needed: true
+  max_peers: 0
   gas_limit: 500000
   gas_price: 10000000000000
   console: false
@@ -18,6 +19,7 @@ staging:
   rpc_whitelist: "*"
   datadir: default
   network_id: 0
+  max_peers: 4
   console: true
   account:
     init: false
@@ -28,6 +30,7 @@ production:
   rpc_whitelist: "*"
   datadir: default
   network_id: 1
+  max_peers: 4
   console: true
   account:
     init: false
