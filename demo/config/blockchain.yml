@@ -3,7 +3,7 @@ development:
   rpc_port: 8101
   rpc_whitelist: "*"
   minerthreads: 1
-  genesis_block: config/genesis.json
+  genesis_block: config/genesis/dev_genesis.json
   datadir: /tmp/embark
   mine_when_needed: true
   gas_limit: 500000
