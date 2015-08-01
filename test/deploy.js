@@ -9,7 +9,7 @@ setDeployConfig = function(config) {
   var compiler = new Compiler(_blockchainConfig);
   var contractsConfig = new Config.Contracts(blockchainConfig, compiler);
   contractsConfig.loadConfigFile(config.contracts);
-  contractsConfig.init(config.files);
+  contractsConfig.init(config.files, 'development');
   compiler.init('development');
   return new Deploy('development', config.files, blockchainConfig, contractsConfig);
 }

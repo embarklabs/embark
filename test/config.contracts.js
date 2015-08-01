@@ -47,7 +47,7 @@ describe('embark.config.contracts', function() {
         ]
         contractsConfig = new Config.Contracts(blockchainConfig, compiler);
         contractsConfig.loadConfigFile('test/support/contracts.yml');
-        contractsConfig.init(files);
+        contractsConfig.init(files, 'development');
         contractsConfig.compileContracts();
       });
 
@@ -66,7 +66,7 @@ describe('embark.config.contracts', function() {
         ]
         contractsConfig = new Config.Contracts(blockchainConfig, compiler);
         contractsConfig.loadConfigFile('test/support/arguments.yml');
-        contractsConfig.init(files);
+        contractsConfig.init(files, 'development');
         contractsConfig.compileContracts('development');
       });
 
@@ -82,7 +82,7 @@ describe('embark.config.contracts', function() {
         ]
         contractsConfig = new Config.Contracts(blockchainConfig, compiler);
         contractsConfig.loadConfigFile('test/support/instances.yml');
-        contractsConfig.init(files);
+        contractsConfig.init(files, 'development');
         contractsConfig.compileContracts('development');
       });
 
@@ -99,7 +99,7 @@ describe('embark.config.contracts', function() {
         ]
         contractsConfig = new Config.Contracts(blockchainConfig, compiler);
         contractsConfig.loadConfigFile('test/support/arguments2.yml');
-        contractsConfig.init(files);
+        contractsConfig.init(files, 'development');
         contractsConfig.compileContracts('development');
       });
 

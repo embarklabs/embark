@@ -5,7 +5,7 @@ Embark.contractsConfig.loadConfigFile('config/contracts.yml');
 
 var files = ["app/contracts/simple_storage.sol"];
 
-Embark.contractsConfig.init(files);
+Embark.contractsConfig.init(files, 'development');
 var EmbarkSpec = Embark.tests(files);
 
 describe("SimpleStorage", function() {

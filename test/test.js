@@ -14,7 +14,7 @@ describe('embark.test', function() {
   var compiler = new Compiler(_blockchainConfig);
   var contractsConfig = new Config.Contracts(blockchainConfig, compiler);
   contractsConfig.loadConfigFile('test/support/contracts.yml');
-  contractsConfig.init(files);
+  contractsConfig.init(files, 'development');
 
   describe('simple test', function() {
     var embarkSpec = new Test(contractsConfig, files);
