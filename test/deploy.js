@@ -66,6 +66,33 @@ describe('embark.deploy', function() {
     });
   });
 
+  describe('contracts as arguments to other contracts with stubs', function() {
+    var files = [
+      'test/support/contracts/crowdsale.sol',
+      'test/support/contracts/token.sol'
+    ];
+
+    describe('#deploy_contracts', function() {
+      var deploy = setDeployConfig({
+        files: files,
+        blockchain: 'test/support/blockchain.yml',
+        contracts: 'test/support/arguments2.yml'
+      });
+      deploy.deploy_contracts("development");
+
+      it("should deploy contracts", function() {
+        var all_contracts = ['token', 'Crowdsale'];
+        for(var i=0; i < all_contracts.length; i++) {
+          var className = all_contracts[i];
+
+          assert.equal(deploy.deployedContracts.hasOwnProperty(className), true);
+        }
+      });
+
+    });
+
+  });
+
   describe('contracts instances', function() {
     var files = [
       'test/support/contracts/simple_storage.sol'

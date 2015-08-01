@@ -1,0 +1,13 @@
+development:
+  token:
+    args:
+  Crowdsale:
+    stubs:
+      - token
+    args:
+      - 0x123
+      - 100000000000000000000
+      - 30
+      - 20000000000000000
+      - $token
+staging:
