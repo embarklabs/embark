@@ -64,7 +64,7 @@ module.exports = (grunt) ->
         tasks: ["concat"]
 
       css:
-        files: ["<%= concat.css.src %>"]
+        files: ["<%= files.css.src %>"]
         tasks: ["concat"]
 
       coffee:
