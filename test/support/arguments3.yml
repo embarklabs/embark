@@ -1,0 +1,11 @@
+development:
+  DataSource:
+    args:
+  Manager:
+    stubs:
+      - DataSource
+    args:
+      - $DataSource
+    onDeploy:
+      - DataSource.set(5)
+staging:

@@ -2,6 +2,7 @@ var Config = require('../lib/config/config.js');
 var Deploy = require('../lib/deploy.js');
 var Compiler = require('../lib/compiler.js');
 var assert = require('assert');
+var web3 = require('web3');
 
 setDeployConfig = function(config) {
   var _blockchainConfig = (new Config.Blockchain()).loadConfigFile(config.blockchain);
@@ -113,6 +114,45 @@ describe('embark.deploy', function() {
 
           assert.equal(deploy.deployedContracts.hasOwnProperty(className), true);
         }
+      });
+
+    });
+
+  });
+
+  describe('contracts deploy script', function() {
+    var files = [
+      'test/support/contracts/data_source.sol',
+      'test/support/contracts/manager.sol'
+    ];
+
+    describe('#deploy_contracts', function() {
+      var deploy = setDeployConfig({
+        files: files,
+        blockchain: 'test/support/blockchain.yml',
+        contracts: 'test/support/arguments3.yml'
+      });
+      deploy.deploy_contracts("development");
+
+      it("should deploy contracts", function() {
+        var all_contracts = ['DataSource', 'Manager'];
+        for(var i=0; i < all_contracts.length; i++) {
+          var className = all_contracts[i];
+
+          assert.equal(deploy.deployedContracts.hasOwnProperty(className), true);
+        }
+      });
+
+      it("should execute deploy changes", function() {
+        web3.setProvider(new web3.providers.HttpProvider('http://localhost:8101'));
+        web3.eth.defaultAccount = web3.eth.accounts[0];
+
+        data_source_abi     = deploy.contractDB['DataSource'].compiled.info.abiDefinition;
+        data_source_address = deploy.deployedContracts['DataSource'];
+
+        DataSource = web3.eth.contract(data_source_abi).at(data_source_address);
+
+        assert.equal(DataSource.storeData().toNumber(), 5);
       });
 
     });
