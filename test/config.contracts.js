@@ -47,7 +47,7 @@ describe('embark.config.contracts', function() {
         ]
         contractsConfig = new Config.Contracts(blockchainConfig, compiler);
         contractsConfig.loadConfigFile('test/support/contracts.yml');
-        contractsConfig.init(files);
+        contractsConfig.init(files, 'development');
         contractsConfig.compileContracts();
       });
 
@@ -66,7 +66,7 @@ describe('embark.config.contracts', function() {
         ]
         contractsConfig = new Config.Contracts(blockchainConfig, compiler);
         contractsConfig.loadConfigFile('test/support/arguments.yml');
-        contractsConfig.init(files);
+        contractsConfig.init(files, 'development');
         contractsConfig.compileContracts('development');
       });
 
@@ -82,12 +82,29 @@ describe('embark.config.contracts', function() {
         ]
         contractsConfig = new Config.Contracts(blockchainConfig, compiler);
         contractsConfig.loadConfigFile('test/support/instances.yml');
-        contractsConfig.init(files);
+        contractsConfig.init(files, 'development');
         contractsConfig.compileContracts('development');
       });
 
       it('add contracts to a list', function() {
         assert.deepEqual(contractsConfig.all_contracts, [ "SimpleStorage", "BarStorage", "FooStorage" ]);
+      });
+    });
+
+    context("contracts as arguments to other contracts with stubs", function() {
+      before(function() {
+        files = [
+          'test/support/contracts/crowdsale.sol',
+          'test/support/contracts/token.sol'
+        ]
+        contractsConfig = new Config.Contracts(blockchainConfig, compiler);
+        contractsConfig.loadConfigFile('test/support/arguments2.yml');
+        contractsConfig.init(files, 'development');
+        contractsConfig.compileContracts('development');
+      });
+
+      it('add contracts to a list', function() {
+        assert.deepEqual(contractsConfig.all_contracts, [ "token", "Crowdsale" ]);
       });
     });
 

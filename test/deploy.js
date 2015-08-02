@@ -9,7 +9,7 @@ setDeployConfig = function(config) {
   var compiler = new Compiler(_blockchainConfig);
   var contractsConfig = new Config.Contracts(blockchainConfig, compiler);
   contractsConfig.loadConfigFile(config.contracts);
-  contractsConfig.init(config.files);
+  contractsConfig.init(config.files, 'development');
   compiler.init('development');
   return new Deploy('development', config.files, blockchainConfig, contractsConfig);
 }
@@ -64,6 +64,33 @@ describe('embark.deploy', function() {
         assert.strictEqual(result, "web3.setProvider(new web3.providers.HttpProvider('http://localhost:8101'));web3.eth.defaultAccount = web3.eth.accounts[0];SimpleStorageAbi = 123;SimpleStorageContract = web3.eth.contract(SimpleStorageAbi);SimpleStorage = SimpleStorageContract.at('0x123');AnotherStorageAbi = 234;AnotherStorageContract = web3.eth.contract(AnotherStorageAbi);AnotherStorage = AnotherStorageContract.at('0x234');");
       });
     });
+  });
+
+  describe('contracts as arguments to other contracts with stubs', function() {
+    var files = [
+      'test/support/contracts/crowdsale.sol',
+      'test/support/contracts/token.sol'
+    ];
+
+    describe('#deploy_contracts', function() {
+      var deploy = setDeployConfig({
+        files: files,
+        blockchain: 'test/support/blockchain.yml',
+        contracts: 'test/support/arguments2.yml'
+      });
+      deploy.deploy_contracts("development");
+
+      it("should deploy contracts", function() {
+        var all_contracts = ['token', 'Crowdsale'];
+        for(var i=0; i < all_contracts.length; i++) {
+          var className = all_contracts[i];
+
+          assert.equal(deploy.deployedContracts.hasOwnProperty(className), true);
+        }
+      });
+
+    });
+
   });
 
   describe('contracts instances', function() {

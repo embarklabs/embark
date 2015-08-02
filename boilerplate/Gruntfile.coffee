@@ -64,7 +64,7 @@ module.exports = (grunt) ->
         tasks: ["concat"]
 
       css:
-        files: ["<%= concat.css.src %>"]
+        files: ["<%= files.css.src %>"]
         tasks: ["concat"]
 
       coffee:
@@ -73,6 +73,10 @@ module.exports = (grunt) ->
 
       contracts:
         files: ["<%= files.contracts.src %>"]
+        tasks: ["deploy", "concat", "copy"]
+
+      config:
+        files: ["config/blockchain.yml", "config/contracts.yml"]
         tasks: ["deploy", "concat", "copy"]
 
     copy:

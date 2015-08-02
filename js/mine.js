@@ -1,14 +1,15 @@
+var miner_var;
+
+if (admin.miner === undefined) {
+  miner_var = miner;
+}
+else {
+  miner_var = admin.miner;
+}
+
+miner_var.setEtherbase(web3.eth.accounts[0]);
 
 setInterval(function() {
-  var miner_var;
-
-  if (admin.miner === undefined) {
-    miner_var = miner;
-  }
-  else {
-    miner_var = admin.miner;
-  }
-
   var minimalAmount = (web3.eth.getBalance(web3.eth.coinbase) >= 15000000000000000000);
   var pendingTransactions = function() {
     if (web3.eth.pendingTransactions === undefined || web3.eth.pendingTransactions === null) {
