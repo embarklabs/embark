@@ -75,6 +75,10 @@ module.exports = (grunt) ->
         files: ["<%= files.contracts.src %>"]
         tasks: ["deploy", "concat", "copy"]
 
+      config:
+        files: ["config/blockchain.yml", "config/contracts.yml"]
+        tasks: ["deploy", "concat", "copy"]
+
     copy:
       html:
         files:
