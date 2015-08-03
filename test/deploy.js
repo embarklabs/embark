@@ -135,7 +135,7 @@ describe('embark.deploy', function() {
       deploy.deploy_contracts("development");
 
       it("should deploy contracts", function() {
-        var all_contracts = ['DataSource', 'Manager'];
+        var all_contracts = ['DataSource', 'MyDataSource', 'Manager'];
         for(var i=0; i < all_contracts.length; i++) {
           var className = all_contracts[i];
 
@@ -149,10 +149,17 @@ describe('embark.deploy', function() {
 
         data_source_abi     = deploy.contractDB['DataSource'].compiled.info.abiDefinition;
         data_source_address = deploy.deployedContracts['DataSource'];
+        my_data_source_abi     = deploy.contractDB['MyDataSource'].compiled.info.abiDefinition;
+        my_data_source_address = deploy.deployedContracts['MyDataSource'];
+        manager_abi     = deploy.contractDB['Manager'].compiled.info.abiDefinition;
+        manager_address = deploy.deployedContracts['Manager'];
 
         DataSource = web3.eth.contract(data_source_abi).at(data_source_address);
+        MyDataSource = web3.eth.contract(my_data_source_abi).at(my_data_source_address);
+        ManagerSource = web3.eth.contract(manager_abi).at(manager_address);
 
         assert.equal(DataSource.storeData().toNumber(), 5);
+        assert.equal(Manager.data().toString(), my_data_source_address);
       });
 
     });
