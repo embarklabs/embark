@@ -11,9 +11,23 @@ describe('embark.chain_manager', function() {
     chainManager.init('development', blockchainConfig);
 
     it('should initialize chain', function() {
-      assert.equal(chainManager.chainManagerConfig['0x629e768beb87dc8c54a475d310a7196e86c97d0006e5a6d34a8217726c90223f'] != undefined, true);
-      assert.equal(chainManager.chainManagerConfig['0x629e768beb87dc8c54a475d310a7196e86c97d0006e5a6d34a8217726c90223f'].contracts.length, 0);
+      var chain = chainManager.chainManagerConfig['0x629e768beb87dc8c54a475d310a7196e86c97d0006e5a6d34a8217726c90223f']
+      assert.equal(chain != undefined, true);
+    });
+  });
+
+  describe('#addContract', function() {
+
+    it('should register a contract in the chain', function() {
+      chainManager.addContract("Foo", "123456", "0x123");
+
+      var chain = chainManager.chainManagerConfig['0x629e768beb87dc8c54a475d310a7196e86c97d0006e5a6d34a8217726c90223f']
+      var contract = chain.contracts["d7190eb194ff9494625514b6d178c87f99c5973e28c398969d2233f2960a573e"]
+
+      assert.equal(contract.name, "Foo");
+      assert.equal(contract.address, "0x123");
     });
 
   });
+
 });
