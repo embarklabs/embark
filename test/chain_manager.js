@@ -30,4 +30,15 @@ describe('embark.chain_manager', function() {
 
   });
 
+  describe('#getContract', function() {
+
+    it('should a contract in the chain', function() {
+      var contract = chainManager.getContract("123456");
+
+      assert.equal(contract.name, "Foo");
+      assert.equal(contract.address, "0x123");
+    });
+
+  });
+
 });
