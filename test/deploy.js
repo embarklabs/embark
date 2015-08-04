@@ -9,10 +9,11 @@ setDeployConfig = function(config) {
   var blockchainConfig = _blockchainConfig.config("development");
   var compiler = new Compiler(_blockchainConfig);
   var contractsConfig = new Config.Contracts(blockchainConfig, compiler);
+  var chainManager = (new ChainManager()).loadConfigFile('./test/support/chain_manager.json');
   contractsConfig.loadConfigFile(config.contracts);
   contractsConfig.init(config.files, 'development');
   compiler.init('development');
-  return new Deploy('development', config.files, blockchainConfig, contractsConfig);
+  return new Deploy('development', config.files, blockchainConfig, contractsConfig, chainManager);
 }
 
 describe('embark.deploy', function() {
