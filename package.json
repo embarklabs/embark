@@ -1,6 +1,6 @@
 {
   "name": "embark-framework",
-  "version": "0.7.3",
+  "version": "0.8.0",
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,6 +17,7 @@
     "grunt": "^0.4.5",
     "hashmerge": "^1.0.2",
     "jasmine": "^2.3.1",
+    "js-sha3": "^0.3.1",
     "meteor-build-client": "^0.1.6",
     "methodmissing": "^0.0.3",
     "mkdirp": "^0.5.1",

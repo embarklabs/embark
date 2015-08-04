@@ -1,0 +1,15 @@
+development:
+  DataSource:
+    args:
+  MyDataSource:
+    args:
+    instanceOf: DataSource
+  Manager:
+    stubs:
+      - DataSource
+    args:
+      - $DataSource
+    onDeploy:
+      - DataSource.set(5)
+      - Manager.update($MyDataSource)
+staging:
