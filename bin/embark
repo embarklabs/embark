@@ -32,7 +32,7 @@ var deploy = function(env, embarkConfig) {
 }
 
 program
-  .version('0.7.3')
+  .version('0.8.0')
 
 program.command('new [name]').description('New application').action(function(name) {
   if (name === undefined) {
