@@ -1,6 +1,7 @@
 var Config = require('../lib/config/config.js');
 var Deploy = require('../lib/deploy.js');
 var Compiler = require('../lib/compiler.js');
+var ChainManager = require('../lib/chain_manager.js');
 var assert = require('assert');
 var web3 = require('web3');
 
