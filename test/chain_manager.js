@@ -15,7 +15,7 @@ describe('embark.chain_manager', function() {
     chainManager.init('development', blockchainConfig);
 
     it('should initialize chain', function() {
-      var chain = chainManager.chainManagerConfig['0x629e768beb87dc8c54a475d310a7196e86c97d0006e5a6d34a8217726c90223f']
+      var chain = chainManager.chainManagerConfig['0xcd9c11da1e46f86ce40a38b6ef84cfdfa6ea92598a27538f0e87da6d7a5c73d5']
       assert.equal(chain != undefined, true);
     });
   });
@@ -23,10 +23,11 @@ describe('embark.chain_manager', function() {
   describe('#addContract', function() {
 
     it('should register a contract in the chain', function() {
-      chainManager.addContract("Foo", "123456", "0x123");
+      chainManager.addContract("Foo", "123456", [], "0x123");
 
-      var chain = chainManager.chainManagerConfig['0x629e768beb87dc8c54a475d310a7196e86c97d0006e5a6d34a8217726c90223f']
-      var contract = chain.contracts["d7190eb194ff9494625514b6d178c87f99c5973e28c398969d2233f2960a573e"]
+      console.log(chainManager.chainManagerConfig);
+      var chain = chainManager.chainManagerConfig['0xcd9c11da1e46f86ce40a38b6ef84cfdfa6ea92598a27538f0e87da6d7a5c73d5']
+      var contract = chain.contracts["d5d91a8825c5c253dff531ddda2354c4014f5699b7bcbea70207cfdcb37b6c8b"]
 
       assert.equal(contract.name, "Foo");
       assert.equal(contract.address, "0x123");
@@ -37,7 +38,7 @@ describe('embark.chain_manager', function() {
   describe('#getContract', function() {
 
     it('should a contract in the chain', function() {
-      var contract = chainManager.getContract("123456");
+      var contract = chainManager.getContract("Foo", "123456", []);
 
       assert.equal(contract.name, "Foo");
       assert.equal(contract.address, "0x123");
@@ -52,7 +53,7 @@ describe('embark.chain_manager', function() {
 
       var chainFile = './test/support/chain_manager.json';
       var content = fs.readFileSync(chainFile).toString();
-      assert.equal(content, '{"0x629e768beb87dc8c54a475d310a7196e86c97d0006e5a6d34a8217726c90223f":{"contracts":{"d7190eb194ff9494625514b6d178c87f99c5973e28c398969d2233f2960a573e":{"name":"Foo","address":"0x123"}}}}');
+      assert.equal(content, '{"0xcd9c11da1e46f86ce40a38b6ef84cfdfa6ea92598a27538f0e87da6d7a5c73d5":{"contracts":{"d5d91a8825c5c253dff531ddda2354c4014f5699b7bcbea70207cfdcb37b6c8b\":{"name":"Foo","address":"0x123"}}}}');
     });
 
   });
