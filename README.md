@@ -180,7 +180,15 @@ Embark includes a testing lib to fastly run & test your contracts in a EVM.
 
 ```Javascript
 # spec/contracts/simple_storage_spec.js
-EmbarkSpec = require('embark-framework').Tests;
+Embark = require('embark-framework');
+Embark.init();
+Embark.blockchainConfig.loadConfigFile('config/blockchain.yml');
+Embark.contractsConfig.loadConfigFile('config/contracts.yml');
+
+var files = ['app/contracts/simpleStorage.sol'];
+Embark.contractsConfig.init(files, 'development');
+
+var EmbarkSpec = Embark.tests(files);
 
 describe("SimpleStorage", function() {
   beforeAll(function() {
