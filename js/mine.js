@@ -20,6 +20,7 @@
 
     defaults = {
       interval_ms: 15000,
+      initial_ether: 15000000000000000000,
       mine_pending_txns: true,
       mine_periodically: true,
       mine_normally: false,
@@ -40,8 +41,33 @@
     }
     miner_obj.stop();
 
-    if (config.mine_periodically) start_periodic_mining(config, miner_obj);
-    if (config.mine_pending_txns) start_transaction_mining(config, miner_obj);
+    fundAccount(config, miner_obj, function () {
+      if (config.mine_periodically) start_periodic_mining(config, miner_obj);
+      if (config.mine_pending_txns) start_transaction_mining(config, miner_obj);
+    });
+  };
+
+  var fundAccount = function (config, miner_obj, cb) {
+    var accountFunded = function () {
+      return (eth.getBalance(eth.coinbase) >= config.initial_ether);
+    }
+
+    if (accountFunded()) {
+      return cb();
+    }
+
+    console.log("== Funding account");
+    miner_obj.start();
+
+    var blockWatcher = web3.eth.filter("latest").watch(function () {
+      if (accountFunded()) {
+        console.log("== Account funded");
+
+        blockWatcher.stop();
+        miner_obj.stop();
+        cb();
+      }
+    });
   };
 
   var pendingTransactions = function() {
