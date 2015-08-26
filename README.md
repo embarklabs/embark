@@ -23,6 +23,16 @@ For specs: pyethereum, ethertdd.py
 $ npm install -g embark-framework grunt-cli
 ```
 
+If you get EACCES (access denied) errors, it is not recommended to use sudo, please try this:
+
+```Bash
+$ mkdir ~/npm-global
+$ npm config set prefix ~/npm-global
+$ echo 'export PATH="$PATH:$HOME/npm-global/bin"' >>~/.bashrc
+$ source ~/.bashrc
+$ npm install -g embark-framework grunt-cli
+```
+
 See [Complete Installation Instructions](https://github.com/iurimatias/embark-framework/wiki/Installation).
 
 Usage - Demo
