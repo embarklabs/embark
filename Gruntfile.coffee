@@ -23,7 +23,7 @@ module.exports = (grunt) ->
         src: ['test/**/*.js']
 
   grunt.loadTasks "tasks"
-  require('matchdep').filterAll('grunt-*').forEach(grunt.loadNpmTasks)
+  require('matchdep').filterAll(['grunt-*','!grunt-cli']).forEach(grunt.loadNpmTasks)
 
   grunt.registerTask 'default', ['clean']
   grunt.registerTask 'build', ['clean', 'coffee']
