@@ -23,7 +23,7 @@ For specs: pyethereum, ethertdd.py
 $ npm install -g embark-framework grunt-cli
 ```
 
-If you get EACCES (access denied) errors, it is not recommended to use sudo, please try this:
+If you get EACCES (access denied) errors, don't use sudo, try this:
 
 ```Bash
 $ mkdir ~/npm-global
