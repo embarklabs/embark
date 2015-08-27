@@ -10,7 +10,7 @@ describe('embark.blockchain', function() {
     var blockchain = new Blockchain(blockchainConfig);
 
     it('should return correct cmd', function() {
-      assert.strictEqual(blockchain.generate_basic_command(), "geth --datadir=\"/tmp/embark\" --logfile=\"/tmp/embark.log\" --port 30303 --rpc --rpcport 8101 --networkid "+blockchainConfig.networkId+" --rpccorsdomain \"*\" --minerthreads \"1\" --mine --genesis=\"config/genesis.json\" --maxpeers 4 --password config/password ");
+      assert.strictEqual(blockchain.generate_basic_command(), "geth --datadir=\"/tmp/embark\" --logfile=\"/tmp/embark.log\" --port 30303 --rpc --rpcport 8101 --rpcaddr localhost --networkid "+blockchainConfig.networkId+" --rpccorsdomain \"*\" --minerthreads \"1\" --mine --genesis=\"config/genesis.json\" --rpcapi \"eth,web3\" --maxpeers 4 --password config/password ");
     });
   });
 
