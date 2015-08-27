@@ -6,7 +6,7 @@ var wrench = require('wrench');
 var grunt = require('grunt');
 require('shelljs/global');
 var readYaml = require('read-yaml');
-var Embark = require('embark-framework');
+var Embark = require('..');
 
 var run = function(cmd) {
   if (exec(cmd).code != 0) {
