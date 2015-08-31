@@ -7,15 +7,17 @@ Embark is a framework that allows you to easily develop and deploy DApps.
 
 With Embark you can:
 * Automatically deploy contracts and make them available in your JS code. Embark watches for changes, and if you update a contract, Embark will automatically redeploy the contracts (if needed) and the dapp.
+* Use any build pipeline or tool you wish, including grunt and meteor.
 * Do Test Driven Development with Contracts using Javascript.
 * Easily deploy to & use decentralized systems such as IPFS.
+* Keep track of deployed contracts, deploy only when truly needed.
 * Quickly create advanced DApps using multiple contracts.
 
 See the [Wiki](https://github.com/iurimatias/embark-framework/wiki) for more details.
 
 Installation
 ======
-Requirements: geth (1.0.0), solc (0.9.23), node (0.12.2) and npm
+Requirements: geth (1.0.0), solc (0.1.0) or serpent (develop), node (0.12.2) and npm
 
 For specs: pyethereum, ethertdd.py
 
@@ -62,7 +64,7 @@ DApp Structure
 
 ```Bash
   app/
-    |___ contracts/ #solidity contracts
+    |___ contracts/ #solidity or serpent contracts
     |___ html/
     |___ css/
     |___ js/
@@ -74,7 +76,7 @@ DApp Structure
     |___ contracts/ #contracts tests
 ```
 
-Solidity files in the contracts directory will automatically be deployed with embark run. Changes in any files will automatically be reflected in app, changes to contracts will result in a redeployment and update of their JS Bindings
+Solidity/Serpent files in the contracts directory will automatically be deployed with embark run. Changes in any files will automatically be reflected in app, changes to contracts will result in a redeployment and update of their JS Bindings
 
 Using Contracts
 ======
@@ -168,6 +170,26 @@ Contracts addresses can be defined, If an address is defined the contract wouldn
     UserManagement:
        args:
          - $UserStorage
+  ...
+```
+
+You can also define contract interfaces (Stubs) and actions to do on deployment
+
+```Yaml
+  development:
+    DataSource:
+      args:
+    MyDataSource:
+      args:
+      instanceOf: DataSource
+    Manager:
+      stubs:
+        - DataSource
+      args:
+        - $MyDataSource
+      onDeploy:
+        - Manager.updateStorage($MyDataSource)
+        - MyDataSource.set(5)
   ...
 ```
 
