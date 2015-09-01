@@ -274,6 +274,20 @@ $ embark deploy privatenet
 
 embark deploy will deploy all contracts at app/contracts and return the resulting addresses
 
+Structuring Application
+======
+
+Embark is quite flexible and you can configure you're own directory structure using ```embark.yml```
+
+```Yaml
+# embark.yml
+  type: "manual" #other options: meteor, grunt
+  contracts: ["app/contracts/**/*.sol", "app/contracts/**/*.se"] # contracts files
+  output: "src/embark.js" # resulting javascript interface
+  blockchainConfig: "config/blockchain.yml" # blockchain config
+  contractsConfig: "config/contracts.yml" # contracts config
+```
+
 LiveReload Plugin
 ======
 
