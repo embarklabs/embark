@@ -288,6 +288,12 @@ Embark is quite flexible and you can configure you're own directory structure us
   contractsConfig: "config/contracts.yml" # contracts config
 ```
 
+Deploying to IPFS
+======
+
+To deploy a dapp to IPFS, all you need to do is run a local IPFS node and then run ```embark ipfs```.
+If you want to deploy to the live net then after configuring you account on ```config/blockchain.yml``` on the ```production``` environment then you can deploy to that chain by specifying the environment ```embark ipfs production```.
+
 LiveReload Plugin
 ======
 
