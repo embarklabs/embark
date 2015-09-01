@@ -51,6 +51,8 @@ This will automatically deploy the contracts, update their JS bindings and deplo
 
 Note that if you update your code it will automatically be re-deployed, contracts included. There is no need to restart embark, refreshing the page on the browser will do.
 
+note: for a demo using meteor do ```embark meteor_demo``` followed by ```embark deploy``` then ```meteor```
+
 Creating a new DApp
 ======
 
