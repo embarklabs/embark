@@ -285,10 +285,10 @@ Because embark is internally using grunt tasks, debugging is not straightforward
 - normally you would write something like `node-debug -p 7000 embark -- deploy`
 - This gives you nothing with embark. If you look at `deploy` command in [`./bin/embark`](https://github.com/iurimatias/embark-framework/blob/develop/bin/embark#L32-L35) you will notice that it internally runs grunt task `grunt deploy_contracts:[env]`
 - with this knowledge we can prepare proper command to start debugging
-- `node-debug -p 7000 grunt -- deploy_contracts:development`
--
+- ```node-debug -p 7000 grunt -- deploy_contracts:development```
 
- [here](https://github.com/iurimatias/embark-framework/blob/develop/tasks/tasks.coffee) is list of all debuggable grunt tasks
+
+[here](https://github.com/iurimatias/embark-framework/blob/develop/tasks/tasks.coffee) is list of all debuggable grunt tasks
 
 EACCESS Error
 ======
