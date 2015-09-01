@@ -1,5 +1,5 @@
 type: "grunt" #other options: meteor, manual
-#contracts: ["app/contracts/**/*.sol"]
+#contracts: ["app/contracts/**/*.sol", "app/contracts/**/*.se"]
 #output: "src/embark.js"
 #blockchainConfig: "config/blockchain.yml"
 #contractsConfig: "config/contracts.yml"
