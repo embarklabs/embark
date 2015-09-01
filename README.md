@@ -25,16 +25,6 @@ For specs: pyethereum, ethertdd.py
 $ npm install -g embark-framework grunt-cli
 ```
 
-If you get EACCES (access denied) errors, don't use sudo, try this:
-
-```Bash
-$ mkdir ~/npm-global
-$ npm config set prefix ~/npm-global
-$ echo 'export PATH="$PATH:$HOME/npm-global/bin"' >>~/.bashrc
-$ source ~/.bashrc
-$ npm install -g embark-framework grunt-cli
-```
-
 See [Complete Installation Instructions](https://github.com/iurimatias/embark-framework/wiki/Installation).
 
 Usage - Demo
@@ -296,4 +286,19 @@ Because embark is internally using grunt tasks, debugging is not straightforward
 - This gives you nothing with embark. If you look at `deploy` command in [`./bin/embark`](https://github.com/iurimatias/embark-framework/blob/develop/bin/embark#L32-L35) you will notice that it internally runs grunt task `grunt deploy_contracts:[env]`
 - with this knowledge we can prepare proper command to start debugging
 - `node-debug -p 7000 grunt -- deploy_contracts:development`
-- [here](https://github.com/iurimatias/embark-framework/blob/develop/tasks/tasks.coffee) is list of all debuggable grunt tasks
+-
+
+ [here](https://github.com/iurimatias/embark-framework/blob/develop/tasks/tasks.coffee) is list of all debuggable grunt tasks
+
+EACCESS Error
+======
+If you get EACCES (access denied) errors, don't use sudo, try this:
+
+```Bash
+$ mkdir ~/npm-global
+$ npm config set prefix ~/npm-global
+$ echo 'export PATH="$PATH:$HOME/npm-global/bin"' >>~/.bashrc
+$ source ~/.bashrc
+$ npm install -g embark-framework grunt-cli
+```
+
