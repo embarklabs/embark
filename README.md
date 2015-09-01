@@ -147,6 +147,7 @@ You can now deploy many instances of the same contract. e.g
 # config/contracts.yml
   development:
     Currency:
+      deploy: false
       args:
         - 100
     Usd:
