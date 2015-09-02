@@ -4,7 +4,7 @@
 (function() {
   var main = function () {
     /* TODO: Find a way to load mining config from YML.
-     
+
     if (!loadScript("config.js")) {
       console.log("== config.js not found");
     }
@@ -63,7 +63,7 @@
       if (accountFunded()) {
         console.log("== Account funded");
 
-        blockWatcher.stop();
+        blockWatcher.stopWatching();
         miner_obj.stop();
         cb();
       }
@@ -124,7 +124,7 @@
       console.log("== Pending transactions! Looking for next block...");
       miner_obj.start(config.threads);
     });
-    
+
     if (config.mine_periodically) return;
 
     web3.eth.filter("latest").watch(function () {
@@ -137,4 +137,3 @@
 
   main();
 })();
-
