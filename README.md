@@ -201,7 +201,7 @@ Tests
 
 You can run specs with ```embark spec```, it will run any files ending *_spec.js under ```spec/```.
 
-Embark includes a testing lib to fastly run & test your contracts in a EVM. 
+Embark includes a testing lib to fastly run & test your contracts in a EVM.
 
 ```Javascript
 # spec/contracts/simple_storage_spec.js
@@ -255,6 +255,7 @@ The environment is a specific blockchain configuration that can be managed at co
     rpc_port: 8101
     rpc_whitelist: "*"
     datadir: default
+    chains: chains_staging.json
     network_id: 0
     console: true
     account:
@@ -323,4 +324,3 @@ $ echo 'export PATH="$PATH:$HOME/npm-global/bin"' >>~/.bashrc
 $ source ~/.bashrc
 $ npm install -g embark-framework grunt-cli
 ```
-
