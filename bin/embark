@@ -17,15 +17,12 @@ var run = function(cmd) {
 var deploy = function(env, embarkConfig) {
   var contractFiles = grunt.file.expand(embarkConfig.contracts);
   var destFile = embarkConfig.output;
-  var chainFile = embarkConfig.chains;
 
   Embark.init();
   Embark.blockchainConfig.loadConfigFile(embarkConfig.blockchainConfig);
   Embark.contractsConfig.loadConfigFile(embarkConfig.contractsConfig);
 
-  if (chainFile === undefined) {
-    chainFile = './chains.json';
-  }
+  var chainFile = Embark.blockchainConfig.blockchainConfig[env].chains || embarkConfig.chains || './chains.json';
 
   abi = Embark.deployContracts(env, contractFiles, destFile, chainFile);
   grunt.file.write(destFile, abi);
