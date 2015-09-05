@@ -132,8 +132,7 @@ program.command('blockchain [env]').description('run blockchain').action(functio
     Embark.blockchainConfig.loadConfigFile(embarkConfig.blockchainConfig)
     Embark.contractsConfig.loadConfigFile(embarkConfig.contractsConfig)
 
-    //TODO: better with --exec, but need to fix console bug first
-    wrench.copyDirSyncRecursive(__dirname + "/../js", "/tmp/js", {forceDelete: true});
+    Embark.copyMinerJavascriptToTemp();
 
     Embark.startBlockchain(env, true);
   }
