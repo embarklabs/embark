@@ -6,7 +6,7 @@ var wrench = require('wrench');
 var grunt = require('grunt');
 require('shelljs/global');
 var readYaml = require('read-yaml');
-var Embark = require('embark-framework');
+var Embark = require('..');
 
 var run = function(cmd) {
   if (exec(cmd).code != 0) {
@@ -17,22 +17,19 @@ var run = function(cmd) {
 var deploy = function(env, embarkConfig) {
   var contractFiles = grunt.file.expand(embarkConfig.contracts);
   var destFile = embarkConfig.output;
-  var chainFile = embarkConfig.chains;
 
   Embark.init();
   Embark.blockchainConfig.loadConfigFile(embarkConfig.blockchainConfig);
   Embark.contractsConfig.loadConfigFile(embarkConfig.contractsConfig);
 
-  if (chainFile === undefined) {
-    chainFile = './chains.json';
-  }
+  var chainFile = Embark.blockchainConfig.blockchainConfig[env].chains || embarkConfig.chains || './chains.json';
 
   abi = Embark.deployContracts(env, contractFiles, destFile, chainFile);
   grunt.file.write(destFile, abi);
 }
 
 program
-  .version('0.8.4')
+  .version('0.9.1')
 
 program.command('new [name]').description('New application').action(function(name) {
   if (name === undefined) {
@@ -132,11 +129,22 @@ program.command('blockchain [env]').description('run blockchain').action(functio
     Embark.blockchainConfig.loadConfigFile(embarkConfig.blockchainConfig)
     Embark.contractsConfig.loadConfigFile(embarkConfig.contractsConfig)
 
-    //TODO: better with --exec, but need to fix console bug first
-    wrench.copyDirSyncRecursive(__dirname + "/../js", "/tmp/js", {forceDelete: true});
+    Embark.copyMinerJavascriptToTemp();
 
     Embark.startBlockchain(env, true);
   }
+});
+
+program.command('geth <env> [args...]').description('run geth with specified arguments').action(function(env_, args_) {
+  var env = env_ || 'development';
+  var embarkConfig = readYaml.sync("./embark.yml");
+  var args = args_.join(' ');
+
+  Embark.init()
+  Embark.blockchainConfig.loadConfigFile(embarkConfig.blockchainConfig)
+  Embark.contractsConfig.loadConfigFile(embarkConfig.contractsConfig)
+
+  Embark.geth(env, args);
 });
 
 program.command('demo').description('create a working dapp with a SimpleStorage contract').action(function() {
@@ -169,4 +177,3 @@ if (!process.argv.slice(2).length) {
 }
 
 exit();
-

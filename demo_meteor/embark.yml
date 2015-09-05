@@ -1,5 +1,5 @@
 type: "meteor"
-contracts: ["contracts/**/*.sol"]
+contracts: ["contracts/**/*.sol", "contracts/**/*.se"]
 output: "client/embark.js"
 blockchainConfig: "config/blockchain.yml"
 contractsConfig: "config/contracts.yml"

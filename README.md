@@ -7,15 +7,17 @@ Embark is a framework that allows you to easily develop and deploy DApps.
 
 With Embark you can:
 * Automatically deploy contracts and make them available in your JS code. Embark watches for changes, and if you update a contract, Embark will automatically redeploy the contracts (if needed) and the dapp.
+* Use any build pipeline or tool you wish, including grunt and meteor.
 * Do Test Driven Development with Contracts using Javascript.
 * Easily deploy to & use decentralized systems such as IPFS.
+* Keep track of deployed contracts, deploy only when truly needed.
 * Quickly create advanced DApps using multiple contracts.
 
 See the [Wiki](https://github.com/iurimatias/embark-framework/wiki) for more details.
 
 Installation
 ======
-Requirements: geth (1.0.0), solc (0.9.23), node (0.12.2) and npm
+Requirements: geth (1.0.0), solc (0.1.0) or serpent (develop), node (0.12.2) and npm
 
 For specs: pyethereum, ethertdd.py
 
@@ -49,6 +51,8 @@ This will automatically deploy the contracts, update their JS bindings and deplo
 
 Note that if you update your code it will automatically be re-deployed, contracts included. There is no need to restart embark, refreshing the page on the browser will do.
 
+note: for a demo using meteor do ```embark meteor_demo``` followed by ```embark deploy``` then ```meteor```
+
 Creating a new DApp
 ======
 
@@ -62,7 +66,7 @@ DApp Structure
 
 ```Bash
   app/
-    |___ contracts/ #solidity contracts
+    |___ contracts/ #solidity or serpent contracts
     |___ html/
     |___ css/
     |___ js/
@@ -74,7 +78,7 @@ DApp Structure
     |___ contracts/ #contracts tests
 ```
 
-Solidity files in the contracts directory will automatically be deployed with embark run. Changes in any files will automatically be reflected in app, changes to contracts will result in a redeployment and update of their JS Bindings
+Solidity/Serpent files in the contracts directory will automatically be deployed with embark run. Changes in any files will automatically be reflected in app, changes to contracts will result in a redeployment and update of their JS Bindings
 
 Using Contracts
 ======
@@ -145,6 +149,7 @@ You can now deploy many instances of the same contract. e.g
 # config/contracts.yml
   development:
     Currency:
+      deploy: false
       args:
         - 100
     Usd:
@@ -171,16 +176,44 @@ Contracts addresses can be defined, If an address is defined the contract wouldn
   ...
 ```
 
+You can also define contract interfaces (Stubs) and actions to do on deployment
+
+```Yaml
+  development:
+    DataSource:
+      args:
+    MyDataSource:
+      args:
+      instanceOf: DataSource
+    Manager:
+      stubs:
+        - DataSource
+      args:
+        - $MyDataSource
+      onDeploy:
+        - Manager.updateStorage($MyDataSource)
+        - MyDataSource.set(5)
+  ...
+```
+
 Tests
 ======
 
 You can run specs with ```embark spec```, it will run any files ending *_spec.js under ```spec/```.
 
-Embark includes a testing lib to fastly run & test your contracts in a EVM. 
+Embark includes a testing lib to fastly run & test your contracts in a EVM.
 
 ```Javascript
 # spec/contracts/simple_storage_spec.js
-EmbarkSpec = require('embark-framework').Tests;
+Embark = require('embark-framework');
+Embark.init();
+Embark.blockchainConfig.loadConfigFile('config/blockchain.yml');
+Embark.contractsConfig.loadConfigFile('config/contracts.yml');
+
+var files = ['app/contracts/simpleStorage.sol'];
+Embark.contractsConfig.init(files, 'development');
+
+var EmbarkSpec = Embark.tests(files);
 
 describe("SimpleStorage", function() {
   beforeAll(function() {
@@ -222,6 +255,7 @@ The environment is a specific blockchain configuration that can be managed at co
     rpc_port: 8101
     rpc_whitelist: "*"
     datadir: default
+    chains: chains_staging.json
     network_id: 0
     console: true
     account:
@@ -230,7 +264,6 @@ The environment is a specific blockchain configuration that can be managed at co
 ```
 
 See [Configuration](https://github.com/iurimatias/embark-framework/wiki/Configuration).
-
 
 Deploying only contracts
 ======
@@ -241,6 +274,26 @@ $ embark deploy privatenet
 ```
 
 embark deploy will deploy all contracts at app/contracts and return the resulting addresses
+
+Structuring Application
+======
+
+Embark is quite flexible and you can configure you're own directory structure using ```embark.yml```
+
+```Yaml
+# embark.yml
+  type: "manual" #other options: meteor, grunt
+  contracts: ["app/contracts/**/*.sol", "app/contracts/**/*.se"] # contracts files
+  output: "src/embark.js" # resulting javascript interface
+  blockchainConfig: "config/blockchain.yml" # blockchain config
+  contractsConfig: "config/contracts.yml" # contracts config
+```
+
+Deploying to IPFS
+======
+
+To deploy a dapp to IPFS, all you need to do is run a local IPFS node and then run ```embark ipfs```.
+If you want to deploy to the live net then after configuring you account on ```config/blockchain.yml``` on the ```production``` environment then you can deploy to that chain by specifying the environment ```embark ipfs production```.
 
 LiveReload Plugin
 ======
@@ -255,5 +308,19 @@ Because embark is internally using grunt tasks, debugging is not straightforward
 - normally you would write something like `node-debug -p 7000 embark -- deploy`
 - This gives you nothing with embark. If you look at `deploy` command in [`./bin/embark`](https://github.com/iurimatias/embark-framework/blob/develop/bin/embark#L32-L35) you will notice that it internally runs grunt task `grunt deploy_contracts:[env]`
 - with this knowledge we can prepare proper command to start debugging
-- `node-debug -p 7000 grunt -- deploy_contracts:development`
-- [here](https://github.com/iurimatias/embark-framework/blob/develop/tasks/tasks.coffee) is list of all debuggable grunt tasks
+- ```node-debug -p 7000 grunt -- deploy_contracts:development```
+
+
+[here](https://github.com/iurimatias/embark-framework/blob/develop/tasks/tasks.coffee) is list of all debuggable grunt tasks
+
+EACCESS Error
+======
+If you get EACCES (access denied) errors, don't use sudo, try this:
+
+```Bash
+$ mkdir ~/npm-global
+$ npm config set prefix ~/npm-global
+$ echo 'export PATH="$PATH:$HOME/npm-global/bin"' >>~/.bashrc
+$ source ~/.bashrc
+$ npm install -g embark-framework grunt-cli
+```

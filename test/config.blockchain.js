@@ -43,6 +43,7 @@ describe('embark.config.blockchain', function() {
           minerthreads: 1,
           genesis_block: 'config/genesis.json',
           datadir: '/tmp/embark',
+          chains: 'chains_development.json',
           mine_when_needed: true,
           gas_limit: 123,
           gas_price: 100,
@@ -63,9 +64,11 @@ describe('embark.config.blockchain', function() {
         gasLimit: 123,
         gasPrice: 100,
         rpcWhitelist: "*",
+        whisper: false,
         minerthreads: 1,
         genesisBlock: 'config/genesis.json',
         datadir: '/tmp/embark',
+        chains: 'chains_development.json',
         networkId: 0,
         maxPeers: 4,
         port: "30303",
@@ -87,12 +90,13 @@ describe('embark.config.blockchain', function() {
           network_id: 0,
           minerthreads: 1,
           datadir: '/tmp/embark',
+          chains: undefined,
           mine_when_needed: true,
           console: false,
           account: {
             init: true,
             password: 'config/password'
-          }
+          },
         },
         staging: {}
       };
@@ -105,9 +109,11 @@ describe('embark.config.blockchain', function() {
         gasLimit: 500000,
         gasPrice: 10000000000000,
         rpcWhitelist: "*",
+        whisper: false,
         minerthreads: 1,
         genesisBlock: undefined,
         datadir: '/tmp/embark',
+        chains: undefined,
         networkId: 0,
         maxPeers: 4,
         port: "30303",

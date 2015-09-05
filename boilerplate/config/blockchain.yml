@@ -5,6 +5,7 @@ development:
   minerthreads: 1
   genesis_block: config/genesis/dev_genesis.json
   datadir: /tmp/embark
+  chains: config/chains/development.json
   mine_when_needed: true
   max_peers: 0
   gas_limit: 500000

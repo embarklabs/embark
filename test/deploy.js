@@ -110,12 +110,13 @@ describe('embark.deploy', function() {
       deploy.deploy_contracts("development");
 
       it("should deploy contracts", function() {
-        var all_contracts = ['SimpleStorage', 'BarStorage', 'FooStorage'];
+        var all_contracts = ['BarStorage', 'FooStorage'];
         for(var i=0; i < all_contracts.length; i++) {
           var className = all_contracts[i];
 
           assert.equal(deploy.deployedContracts.hasOwnProperty(className), true);
         }
+        assert.notEqual(deploy.deployedContracts.hasOwnProperty('SimpleStorage'), true);
       });
 
     });

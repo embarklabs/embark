@@ -33,6 +33,7 @@ module.exports = (grunt) ->
       contracts:
         src: [
           "app/contracts/**/*.sol"
+          "app/contracts/**/*.se"
         ]
 
     coffee:
