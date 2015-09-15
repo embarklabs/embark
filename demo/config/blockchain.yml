@@ -19,6 +19,7 @@ staging:
   rpc_whitelist: "*"
   datadir: default
   network_id: 0
+  deploy_timeout: 45
   console: true
   account:
     init: false
