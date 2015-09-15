@@ -32,7 +32,7 @@ production:
   rpc_whitelist: "*"
   datadir: default
   network_id: 1
-  max_peers: 0
+  max_peers: 4
   console: true
   account:
     init: false
