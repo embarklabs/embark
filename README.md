@@ -101,7 +101,9 @@ contract SimpleStorage {
   }
 }
 ```
-Will automatically be available in Javascript as:
+Will automatically be available in Javascript as soon as you add 
+```<script src="generated/dapp/js/app.min.js"></script>```
+to your html file(s).
 
 ```Javascript
 # app/js/index.js
@@ -109,6 +111,7 @@ SimpleStorage.set(100);
 SimpleStorage.get();
 SimpleStorage.storedData();
 ```
+
 
 You can specify for each contract and environment its gas costs and arguments:
 
