@@ -1,5 +1,6 @@
 module.exports = (grunt) ->
 
+  grunt.option 'stack', true
   grunt.loadNpmTasks "grunt-embark"
   grunt.loadTasks "tasks"
 
@@ -111,4 +112,3 @@ module.exports = (grunt) ->
 
   grunt.registerTask "deploy", ["coffee", "deploy_contracts", "concat", "copy", "server", "watch"]
   grunt.registerTask "build", ["clean", "deploy_contracts", "coffee", "concat", "uglify", "copy"]
-
