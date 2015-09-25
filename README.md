@@ -258,6 +258,7 @@ The environment is a specific blockchain configuration that can be managed at co
     chains: chains_staging.json
     network_id: 0
     console: true
+    geth_extra_opts: --vmdebug
     account:
       init: false
       address: 0x123
