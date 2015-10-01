@@ -23,6 +23,9 @@ staging:
   network_id: 0
   max_peers: 4
   console: true
+  bootnodes: 
+    boot: false
+    enodes: [] #insert enode urls here. 
   account:
     init: false
     address:
@@ -34,6 +37,9 @@ production:
   network_id: 1
   max_peers: 4
   console: true
+  bootnodes: 
+    boot: false
+    enodes: []
   account:
     init: false
     address:
