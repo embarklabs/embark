@@ -15,7 +15,6 @@
   "dependencies": {
     "commander": "^2.8.1",
     "grunt": "^0.4.5",
-    "jasmine": "^2.3.1",
     "js-sha3": "^0.3.1",
     "meteor-build-client": "^0.1.6",
     "methodmissing": "^0.0.3",
