@@ -257,12 +257,12 @@ The environment is a specific blockchain configuration that can be managed at co
     datadir: default
     chains: chains_staging.json
     network_id: 0
-    console: true
     geth_extra_opts: --vmdebug
     account:
       init: false
       address: 0x123
 ```
+NOTE: To create a console interface either run a geth attach to your instance via RPC or IPC. 
 
 See [Configuration](https://github.com/iurimatias/embark-framework/wiki/Configuration).
 
