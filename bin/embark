@@ -14,7 +14,7 @@ var run = function(cmd) {
   }
 }
 
-var deploy = function(env, embarkConfig) {
+var deploy = function(env, embarkConfig, cb) {
   var contractFiles = grunt.file.expand(embarkConfig.contracts);
   var destFile = embarkConfig.output;
 
@@ -24,8 +24,10 @@ var deploy = function(env, embarkConfig) {
 
   var chainFile = Embark.blockchainConfig.blockchainConfig[env].chains || embarkConfig.chains || './chains.json';
 
-  abi = Embark.deployContracts(env, contractFiles, destFile, chainFile);
-  grunt.file.write(destFile, abi);
+  abi = Embark.deployContracts(env, contractFiles, destFile, chainFile, true, true, function(abi) {
+    grunt.file.write(destFile, abi);
+    cb();
+  });
 }
 
 program
@@ -53,7 +55,7 @@ program.command('deploy [env]').description('deploy contracts').action(function(
     run("grunt deploy_contracts:" + env);
   }
   else {
-    deploy(env, embarkConfig);
+    deploy(env, embarkConfig, function() {});
   }
 });
 
