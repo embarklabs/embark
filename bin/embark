@@ -112,7 +112,7 @@ program.command('spec').description('run tests').action(function() {
   var embarkConfig = readYaml.sync("./embark.yml");
 
   if (embarkConfig.type === "grunt") {
-    run('mocha');
+    run('mocha test/ --no-timeouts');
   }
   else {
     console.log("command not available in meteor or manual mode yet");
