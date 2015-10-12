@@ -1,6 +1,6 @@
 {
   "name": "embark-framework",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -24,7 +24,7 @@
     "toposort": "^0.2.10",
     "web3": "^0.8.1",
     "wrench": "^1.5.8",
-    "ethersim": "^0.1.0"
+    "ethersim": "^0.1.1"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
