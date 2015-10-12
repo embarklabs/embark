@@ -108,15 +108,16 @@ program.command('run [env]').description('run dapp').action(function(env_) {
   }
 });
 
-program.command('spec').description('run specs').action(function() {
+program.command('spec').description('run tests').action(function() {
   var embarkConfig = readYaml.sync("./embark.yml");
 
   if (embarkConfig.type === "grunt") {
-    run('jasmine');
+    run('mocha');
   }
   else {
     console.log("command not available in meteor or manual mode yet");
     console.log("note: you can use embark tests with any framework");
+    console.log("try running mocha test/");
   }
 });
 
@@ -158,7 +159,7 @@ program.command('demo').description('create a working dapp with a SimpleStorage 
   wrench.copyDirSyncRecursive(boilerPath, targetDir);
   wrench.copyDirSyncRecursive(demoPath + "/app",    targetDir + "/app",    {forceDelete: true});
   wrench.copyDirSyncRecursive(demoPath + "/config", targetDir + "/config", {forceDelete: true});
-  wrench.copyDirSyncRecursive(demoPath + "/spec",   targetDir + "/spec",   {forceDelete: true});
+  wrench.copyDirSyncRecursive(demoPath + "/test",   targetDir + "/test",   {forceDelete: true});
 
   cd(targetDir);
   run('npm install');
