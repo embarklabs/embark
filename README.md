@@ -20,7 +20,7 @@ See the [Wiki](https://github.com/iurimatias/embark-framework/wiki) for more det
 
 Installation
 ======
-Requirements: geth (1.0.0), node (0.12.2) and npm
+Requirements: geth (1.1.3 or higher), node (0.12.2) and npm
 Optional: serpent (develop) if using contracts with Serpent
 
 ```Bash
