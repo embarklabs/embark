@@ -24,7 +24,7 @@ Requirements: geth (1.0.0), node (0.12.2) and npm
 Optional: serpent (develop) if using contracts with Serpent
 
 ```Bash
-$ npm install -g embark-framework
+$ npm -g install embark-framework@1.0.0-beta.1
 ```
 
 See [Complete Installation Instructions](https://github.com/iurimatias/embark-framework/wiki/Installation).
