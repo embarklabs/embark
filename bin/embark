@@ -6,6 +6,7 @@ var wrench = require('wrench');
 var grunt = require('grunt');
 require('shelljs/global');
 var readYaml = require('read-yaml');
+var EtherSim = require('ethersim');
 var Embark = require('..');
 
 var run = function(cmd) {
@@ -172,10 +173,14 @@ program.command('meteor_demo').description('create a working meteor dapp with a 
   console.log('\n\ninit complete');
 });
 
+program.command('simulator').description('run a fast ethereum rpc simulator').action(function() {
+  EtherSim.startServer();
+});
+
 program.parse(process.argv)
 
 if (!process.argv.slice(2).length) {
   program.outputHelp();
 }
 
-exit();
+//exit();
