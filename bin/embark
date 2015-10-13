@@ -56,7 +56,7 @@ program.command('deploy [env]').description('deploy contracts').action(function(
     run("grunt deploy_contracts:" + env);
   }
   else {
-    deploy(env, embarkConfig, function() {});
+    deploy(env, embarkConfig, function() { exit(); });
   }
 });
 
