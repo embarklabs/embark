@@ -6,6 +6,7 @@ var wrench = require('wrench');
 var grunt = require('grunt');
 require('shelljs/global');
 var readYaml = require('read-yaml');
+var EtherSim = require('ethersim');
 var Embark = require('..');
 
 var run = function(cmd) {
@@ -14,7 +15,7 @@ var run = function(cmd) {
   }
 }
 
-var deploy = function(env, embarkConfig) {
+var deploy = function(env, embarkConfig, cb) {
   var contractFiles = grunt.file.expand(embarkConfig.contracts);
   var destFile = embarkConfig.output;
 
@@ -24,12 +25,14 @@ var deploy = function(env, embarkConfig) {
 
   var chainFile = Embark.blockchainConfig.blockchainConfig[env].chains || embarkConfig.chains || './chains.json';
 
-  abi = Embark.deployContracts(env, contractFiles, destFile, chainFile);
-  grunt.file.write(destFile, abi);
+  abi = Embark.deployContracts(env, contractFiles, destFile, chainFile, true, true, function(abi) {
+    grunt.file.write(destFile, abi);
+    cb();
+  });
 }
 
 program
-  .version('0.9.2')
+  .version('1.0.2');
 
 program.command('new [name]').description('New application').action(function(name) {
   if (name === undefined) {
@@ -53,7 +56,7 @@ program.command('deploy [env]').description('deploy contracts').action(function(
     run("grunt deploy_contracts:" + env);
   }
   else {
-    deploy(env, embarkConfig);
+    deploy(env, embarkConfig, function() { exit(); });
   }
 });
 
@@ -105,15 +108,16 @@ program.command('run [env]').description('run dapp').action(function(env_) {
   }
 });
 
-program.command('spec').description('run specs').action(function() {
+program.command('spec').description('run tests').action(function() {
   var embarkConfig = readYaml.sync("./embark.yml");
 
   if (embarkConfig.type === "grunt") {
-    run('jasmine');
+    run('mocha test/ --no-timeouts');
   }
   else {
     console.log("command not available in meteor or manual mode yet");
     console.log("note: you can use embark tests with any framework");
+    console.log("try running mocha test/");
   }
 });
 
@@ -155,7 +159,7 @@ program.command('demo').description('create a working dapp with a SimpleStorage 
   wrench.copyDirSyncRecursive(boilerPath, targetDir);
   wrench.copyDirSyncRecursive(demoPath + "/app",    targetDir + "/app",    {forceDelete: true});
   wrench.copyDirSyncRecursive(demoPath + "/config", targetDir + "/config", {forceDelete: true});
-  wrench.copyDirSyncRecursive(demoPath + "/spec",   targetDir + "/spec",   {forceDelete: true});
+  wrench.copyDirSyncRecursive(demoPath + "/test",   targetDir + "/test",   {forceDelete: true});
 
   cd(targetDir);
   run('npm install');
@@ -170,10 +174,14 @@ program.command('meteor_demo').description('create a working meteor dapp with a 
   console.log('\n\ninit complete');
 });
 
+program.command('simulator').description('run a fast ethereum rpc simulator').action(function() {
+  EtherSim.startServer();
+});
+
 program.parse(process.argv)
 
 if (!process.argv.slice(2).length) {
   program.outputHelp();
 }
 
-exit();
+//exit();
