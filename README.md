@@ -1,3 +1,5 @@
+This Readme applies to Embark 1.0.0 Beta which is currently under development. For the old version please check the old [readme](https://github.com/iurimatias/embark-framework/blob/0.9.3/README.md)
+
 What is embark
 ======
 
@@ -11,18 +13,18 @@ With Embark you can:
 * Do Test Driven Development with Contracts using Javascript.
 * Easily deploy to & use decentralized systems such as IPFS.
 * Keep track of deployed contracts, deploy only when truly needed.
+* Manage different chains (e.g testnet, private net, livenet)
 * Quickly create advanced DApps using multiple contracts.
 
 See the [Wiki](https://github.com/iurimatias/embark-framework/wiki) for more details.
 
 Installation
 ======
-Requirements: geth (1.0.0), solc (0.1.0) or serpent (develop), node (0.12.2) and npm
-
-For specs: pyethereum, ethertdd.py
+Requirements: geth (1.1.3 or higher), node (0.12.2) and npm
+Optional: serpent (develop) if using contracts with Serpent
 
 ```Bash
-$ npm install -g embark-framework grunt-cli
+$ npm -g install embark-framework
 ```
 
 See [Complete Installation Instructions](https://github.com/iurimatias/embark-framework/wiki/Installation).
@@ -35,11 +37,19 @@ You can easily create a sample working DApp with the following:
 $ embark demo
 $ cd embark_demo
 ```
-To run the ethereum node for development purposes simply run:
+
+To run a ethereum rpc simulator simply run:
+
+```Bash
+$ embark simulator
+```
+
+Or Alternatively, you can run a REAL ethereum node for development purposes:
 
 ```Bash
 $ embark blockchain
 ```
+
 By default embark blockchain will mine a minimum amount of ether and will only mine when new transactions come in. This is quite usefull to keep a low CPU. The option can be configured at config/blockchain.yml
 
 Then, in another command line:
@@ -199,42 +209,41 @@ You can also define contract interfaces (Stubs) and actions to do on deployment
 Tests
 ======
 
-You can run specs with ```embark spec```, it will run any files ending *_spec.js under ```spec/```.
+You can run specs with ```embark spec```, it will run any test files under ```test/```.
 
 Embark includes a testing lib to fastly run & test your contracts in a EVM.
 
 ```Javascript
-# spec/contracts/simple_storage_spec.js
-Embark = require('embark-framework');
-Embark.init();
-Embark.blockchainConfig.loadConfigFile('config/blockchain.yml');
-Embark.contractsConfig.loadConfigFile('config/contracts.yml');
+# test/simple_storage_spec.js
+var assert = require('assert');
+var Embark = require('embark-framework');
+var EmbarkSpec = Embark.initTests();
 
-var files = ['app/contracts/simpleStorage.sol'];
-Embark.contractsConfig.init(files, 'development');
-
-var EmbarkSpec = Embark.tests(files);
-
-describe("SimpleStorage", function() {
-  beforeAll(function() {
-    // equivalent to initializing SimpleStorage with param 150
-    SimpleStorage = EmbarkSpec.request("SimpleStorage", [150]);
+describe("SimpleStorage", function(done) {
+  before(function(done) {
+    EmbarkSpec.deployAll(done);
   });
 
-  it("should set constructor value", function() {
-    expect(SimpleStorage.storedData()).toEqual('150');
+  it("should set constructor value", function(done) {
+    SimpleStorage.storedData(function(err, result) {
+      assert.equal(result.toNumber(), 100);
+      done();
+    });
   });
 
-  it("set storage value", function() {
-    SimpleStorage.set(100);
-    expect(SimpleStorage.get()).toEqual('100');
+  it("set storage value", function(done) {
+    SimpleStorage.set(150, function() {
+      SimpleStorage.get(function(err, result) {
+        assert.equal(result.toNumber(), 150);
+        done();
+      });
+    });
   });
 
 })
 ```
 
-Embark uses [Jasmine](https://jasmine.github.io/2.3/introduction.html) by default, but you can use any testing framework you want.
-
+Embark uses [Mocha](http://mochajs.org/) by default, but you can use any testing framework you want.
 
 Working with different chains
 ======
@@ -258,6 +267,7 @@ The environment is a specific blockchain configuration that can be managed at co
     chains: chains_staging.json
     network_id: 0
     console: true
+    geth_extra_opts: --vmdebug
     account:
       init: false
       address: 0x123
