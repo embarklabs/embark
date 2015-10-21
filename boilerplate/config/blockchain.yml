@@ -26,6 +26,8 @@ staging:
   bootnodes: 
     boot: false
     enodes: [] #insert enode urls here. 
+  nat: #NAT port mapping mechanism (any|none|upnp|pmp|extip:<IP>) 
+  port: 30303
   account:
     init: false
     address:
@@ -40,6 +42,8 @@ production:
   bootnodes: 
     boot: false
     enodes: []
+  nat: #NAT port mapping mechanism (any|none|upnp|pmp|extip:<IP>) 
+  port: 30303
   account:
     init: false
     address:
