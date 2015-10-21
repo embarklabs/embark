@@ -10,7 +10,6 @@ development:
   max_peers: 0
   gas_limit: 500000
   gas_price: 10000000000000
-  console: false
   account:
     init: true
     password: config/password
@@ -22,7 +21,6 @@ staging:
   datadir: default
   network_id: 0
   max_peers: 4
-  console: true
   bootnodes: 
     boot: false
     enodes: [] #insert enode urls here. 
@@ -38,7 +36,6 @@ production:
   datadir: default
   network_id: 1
   max_peers: 4
-  console: true
   bootnodes: 
     boot: false
     enodes: []
