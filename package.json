@@ -23,6 +23,7 @@
     "solc": "^0.1.3-2",
     "toposort": "^0.2.10",
     "web3": "^0.8.1",
+    "bignumber.js": "debris/bignumber.js#master",
     "wrench": "^1.5.8",
     "ethersim": "^0.1.1"
   },
