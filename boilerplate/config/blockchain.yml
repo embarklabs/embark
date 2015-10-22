@@ -2,6 +2,7 @@ development:
   rpc_host: localhost
   rpc_port: 8101
   rpc_whitelist: "*"
+  mine: false
   minerthreads: 1
   genesis_block: config/genesis/dev_genesis.json
   datadir: /tmp/embark
@@ -19,6 +20,7 @@ staging:
   rpc_port: 8101
   rpc_whitelist: "*"
   datadir: default
+  mine: false
   network_id: 0
   max_peers: 4
   bootnodes: 
@@ -35,6 +37,7 @@ production:
   rpc_whitelist: "*"
   datadir: default
   network_id: 1
+  mine: false
   max_peers: 4
   bootnodes: 
     boot: false
