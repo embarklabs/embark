@@ -2,6 +2,7 @@ development:
   rpc_host: localhost
   rpc_port: 8101
   rpc_whitelist: "*"
+  mine: false
   minerthreads: 1
   genesis_block: config/genesis/dev_genesis.json
   datadir: /tmp/embark
@@ -10,7 +11,6 @@ development:
   max_peers: 0
   gas_limit: 500000
   gas_price: 10000000000000
-  console: false
   account:
     init: true
     password: config/password
@@ -20,12 +20,14 @@ staging:
   rpc_port: 8101
   rpc_whitelist: "*"
   datadir: default
+  mine: false
   network_id: 0
   max_peers: 4
-  console: true
   bootnodes: 
     boot: false
     enodes: [] #insert enode urls here. 
+  nat: any #NAT port mapping mechanism (any|none|upnp|pmp|extip:<IP>) 
+  port: 30303
   account:
     init: false
     address:
@@ -35,11 +37,13 @@ production:
   rpc_whitelist: "*"
   datadir: default
   network_id: 1
+  mine: false
   max_peers: 4
-  console: true
   bootnodes: 
     boot: false
     enodes: []
+  nat: any #NAT port mapping mechanism (any|none|upnp|pmp|extip:<IP>) 
+  port: 30303
   account:
     init: false
     address:
