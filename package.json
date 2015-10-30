@@ -24,7 +24,7 @@
     "toposort": "^0.2.10",
     "web3": "^0.15.0",
     "wrench": "^1.5.8",
-    "ethersim": "^0.1.1"
+    "ethersim": "^0.1.6"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
