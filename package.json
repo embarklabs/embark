@@ -22,9 +22,9 @@
     "shelljs": "^0.5.0",
     "solc": "^0.1.6",
     "toposort": "^0.2.10",
-    "web3": "^0.15.0",
+    "web3": "^0.13.0",
     "wrench": "^1.5.8",
-    "ethersim": "^0.1.6"
+    "ethersim": "^0.1.5"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
