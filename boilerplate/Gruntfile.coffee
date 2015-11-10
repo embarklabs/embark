@@ -7,8 +7,11 @@ module.exports = (grunt) ->
   grunt.initConfig(
     files:
       web3:
-        "node_modules/embark-framework/js/web3.js"
-
+        src: [
+          "node_modules/embark-framework/js/web3.js",
+          "node_modules/embark-framework/js/bluebird.js",
+          "node_modules/embark-framework/js/ether-pudding.js"
+        ]
       js:
         src: [
           "app/js/**/*.js"
