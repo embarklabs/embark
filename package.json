@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "commander": "^2.8.1",
-    "ether-pudding": "^1.0.3",
+    "ether-pudding": "https://github.com/VoR0220/ether-pudding.git",
     "grunt": "^0.4.5",
     "js-sha3": "^0.3.1",
     "meteor-build-client": "^0.1.6",
