@@ -65,6 +65,8 @@ describe('embark.config.blockchain', function() {
         gasLimit: 123,
         gasPrice: 100,
         rpcWhitelist: "*",
+        testnet: false,
+        bootNodes: [],
         whisper: false,
         minerthreads: 1,
         genesisBlock: 'config/genesis.json',
@@ -76,6 +78,7 @@ describe('embark.config.blockchain', function() {
         port: "30303",
         console_toggle: false,
         mine_when_needed: true,
+        geth_extra_opts: [],
         account: {
           init: true,
           password: 'config/password'
@@ -111,6 +114,8 @@ describe('embark.config.blockchain', function() {
         gasLimit: 500000,
         gasPrice: 10000000000000,
         rpcWhitelist: "*",
+        testnet: false,
+        bootNodes: [],
         whisper: false,
         minerthreads: 1,
         genesisBlock: undefined,
@@ -122,6 +127,7 @@ describe('embark.config.blockchain', function() {
         port: "30303",
         console_toggle: false,
         mine_when_needed: true,
+        geth_extra_opts: [],
         account: {
           init: true,
           password: 'config/password'

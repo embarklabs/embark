@@ -5,6 +5,10 @@ var ChainManager = require('../lib/chain_manager.js');
 var assert = require('assert');
 var web3 = require('web3');
 
+// TODO: replace with ethersim
+var web3 = require('web3');
+web3.setProvider(new web3.providers.HttpProvider("http://localhost:8101"));
+
 setDeployConfig = function(config) {
   var _blockchainConfig = (new Config.Blockchain()).loadConfigFile(config.blockchain);
   var blockchainConfig = _blockchainConfig.config("development");

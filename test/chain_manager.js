@@ -4,6 +4,10 @@ var Blockchain = require('../lib/blockchain.js');
 var assert = require('assert');
 var fs = require('fs');
 
+// TODO: replace with ethersim
+var web3 = require('web3');
+web3.setProvider(new web3.providers.HttpProvider("http://localhost:8101"));
+
 describe('embark.chain_manager', function() {
   var chainFile = './test/support/chain_manager.json';
   fs.writeFileSync(chainFile, '{}');
@@ -12,7 +16,7 @@ describe('embark.chain_manager', function() {
   var blockchainConfig = (new Config.Blockchain()).loadConfigFile('test/support/blockchain.yml').config('development');
 
   describe('#init', function() {
-    chainManager.init('development', blockchainConfig);
+    chainManager.init('development', blockchainConfig, web3);
 
     it('should initialize chain', function() {
       var chain = chainManager.chainManagerConfig['0xcd9c11da1e46f86ce40a38b6ef84cfdfa6ea92598a27538f0e87da6d7a5c73d5']
