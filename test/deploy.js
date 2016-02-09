@@ -6,7 +6,8 @@ var assert = require('assert');
 var web3 = require('web3');
 
 // TODO: replace with ethersim
-var web3 = require('web3');
+var Web3 = require('web3');
+var web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider("http://localhost:8101"));
 
 setDeployConfig = function(config) {
@@ -18,7 +19,7 @@ setDeployConfig = function(config) {
   contractsConfig.loadConfigFile(config.contracts);
   contractsConfig.init(config.files, 'development');
   compiler.init('development');
-  return new Deploy('development', config.files, blockchainConfig, contractsConfig, chainManager);
+  return new Deploy('development', config.files, blockchainConfig, contractsConfig, chainManager, true, false, web3);
 }
 
 describe('embark.deploy', function() {
@@ -37,15 +38,20 @@ describe('embark.deploy', function() {
         blockchain: 'test/support/blockchain.yml',
         contracts: 'test/support/arguments.yml'
       });
-      deploy.deploy_contracts("development");
 
-      it("should deploy contracts", function() {
-        var all_contracts = ['Wallet', 'SimpleStorage', 'AnotherStorage', 'Wallets'];
-        for(var i=0; i < all_contracts.length; i++) {
-          var className = all_contracts[i];
+      it("should deploy contracts", function(done) {
 
-          assert.equal(deploy.deployedContracts.hasOwnProperty(className), true);
-        }
+        deploy.deploy_contracts("development", function() {
+          var all_contracts = ['Wallet', 'SimpleStorage', 'AnotherStorage', 'Wallets'];
+          for(var i=0; i < all_contracts.length; i++) {
+            var className = all_contracts[i];
+
+            assert.equal(deploy.deployedContracts.hasOwnProperty(className), true);
+          }
+
+          done();
+        });
+
       });
 
     });
@@ -66,7 +72,10 @@ describe('embark.deploy', function() {
       }
 
       it("should deploy contracts", function() {
-        var result = deploy.generate_abi_file();
+        var result = "";
+
+        result += deploy.generate_provider_file();
+        result += deploy.generate_abi_file();
 
         assert.strictEqual(result, "web3.setProvider(new web3.providers.HttpProvider('http://localhost:8101'));web3.eth.defaultAccount = web3.eth.accounts[0];SimpleStorageAbi = 123;SimpleStorageContract = web3.eth.contract(SimpleStorageAbi);SimpleStorage = SimpleStorageContract.at('0x123');AnotherStorageAbi = 234;AnotherStorageContract = web3.eth.contract(AnotherStorageAbi);AnotherStorage = AnotherStorageContract.at('0x234');");
       });
@@ -85,15 +94,20 @@ describe('embark.deploy', function() {
         blockchain: 'test/support/blockchain.yml',
         contracts: 'test/support/arguments2.yml'
       });
-      deploy.deploy_contracts("development");
 
-      it("should deploy contracts", function() {
-        var all_contracts = ['token', 'Crowdsale'];
-        for(var i=0; i < all_contracts.length; i++) {
-          var className = all_contracts[i];
+      it("should deploy contracts", function(done) {
+        deploy.deploy_contracts("development", function() {
 
-          assert.equal(deploy.deployedContracts.hasOwnProperty(className), true);
-        }
+          var all_contracts = ['token', 'Crowdsale'];
+          for(var i=0; i < all_contracts.length; i++) {
+            var className = all_contracts[i];
+
+            assert.equal(deploy.deployedContracts.hasOwnProperty(className), true);
+          }
+
+          done();
+        });
+
       });
 
     });
@@ -111,16 +125,20 @@ describe('embark.deploy', function() {
         blockchain: 'test/support/blockchain.yml',
         contracts: 'test/support/instances.yml'
       });
-      deploy.deploy_contracts("development");
 
-      it("should deploy contracts", function() {
-        var all_contracts = ['BarStorage', 'FooStorage'];
-        for(var i=0; i < all_contracts.length; i++) {
-          var className = all_contracts[i];
+      it("should deploy contracts", function(done) {
+        deploy.deploy_contracts("development", function() {
 
-          assert.equal(deploy.deployedContracts.hasOwnProperty(className), true);
-        }
-        assert.notEqual(deploy.deployedContracts.hasOwnProperty('SimpleStorage'), true);
+          var all_contracts = ['BarStorage', 'FooStorage'];
+          for(var i=0; i < all_contracts.length; i++) {
+            var className = all_contracts[i];
+
+            assert.equal(deploy.deployedContracts.hasOwnProperty(className), true);
+          }
+          assert.notEqual(deploy.deployedContracts.hasOwnProperty('SimpleStorage'), true);
+
+          done();
+        });
       });
 
     });
@@ -139,15 +157,18 @@ describe('embark.deploy', function() {
         blockchain: 'test/support/blockchain.yml',
         contracts: 'test/support/arguments3.yml'
       });
-      deploy.deploy_contracts("development");
 
-      it("should deploy contracts", function() {
-        var all_contracts = ['DataSource', 'MyDataSource', 'Manager'];
-        for(var i=0; i < all_contracts.length; i++) {
-          var className = all_contracts[i];
+      it("should deploy contracts", function(done) {
+        deploy.deploy_contracts("development", function() {
+          var all_contracts = ['DataSource', 'MyDataSource', 'Manager'];
+          for(var i=0; i < all_contracts.length; i++) {
+            var className = all_contracts[i];
 
-          assert.equal(deploy.deployedContracts.hasOwnProperty(className), true);
-        }
+            assert.equal(deploy.deployedContracts.hasOwnProperty(className), true);
+          }
+
+          done();
+        });
       });
 
       it("should execute deploy changes", function() {
@@ -184,19 +205,20 @@ describe('embark.deploy', function() {
         blockchain: 'test/support/blockchain.yml',
         contracts: 'test/support/address.yml'
       });
-      deploy.deploy_contracts("development");
 
-      it("should not deploy contracts with addresses defined", function() {
-        var expected_deploys = ['SimpleStorage', 'BarStorage', 'FooStorage'];
+      it("should not deploy contracts with addresses defined", function(done) {
+        deploy.deploy_contracts("development", function() {
+          var expected_deploys = ['SimpleStorage', 'BarStorage', 'FooStorage'];
 
-        for(var i=0; i < expected_deploys.length; i++) {
-          var className = expected_deploys[i];
+          for(var i=0; i < expected_deploys.length; i++) {
+            var className = expected_deploys[i];
 
-          assert.equal(deploy.deployedContracts.hasOwnProperty(className), true);
-        }
+            assert.equal(deploy.deployedContracts.hasOwnProperty(className), true);
+          }
 
-        assert.equal(deploy.deployedContracts['SimpleStorage'], '0x123');
-        assert.equal(deploy.deployedContracts['BarStorage'], '0x234');
+          assert.equal(deploy.deployedContracts['SimpleStorage'], '0x123');
+          assert.equal(deploy.deployedContracts['BarStorage'], '0x234');
+        });
       });
 
     });
