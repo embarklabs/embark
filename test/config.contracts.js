@@ -52,7 +52,8 @@ describe('embark.config.contracts', function() {
       });
 
       it('add contracts to a list', function() {
-        assert.deepEqual(contractsConfig.all_contracts, [ "SimpleStorage", "AnotherStorage" ]);
+        //assert.deepEqual(contractsConfig.all_contracts, [ "SimpleStorage", "AnotherStorage" ]);
+        assert.deepEqual(contractsConfig.all_contracts, [ "AnotherStorage", "SimpleStorage" ]);
       });
     });
 
