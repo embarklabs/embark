@@ -4,7 +4,8 @@ contract token {
 
   /* Initializes contract with initial supply tokens to the creator of the contract */
   function token(uint supply) {
-    coinBalanceOf[msg.sender] = (supply || 10000);
+    //coinBalanceOf[msg.sender] = (supply || 10000);
+    coinBalanceOf[msg.sender] = 10000;
   }
 
   /* Very simple trade function */
