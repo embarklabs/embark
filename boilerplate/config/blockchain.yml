@@ -1,8 +1,8 @@
 development:
   rpc_host: localhost
   rpc_port: 8101
-  rpc_whitelist: "*"
   mine: false
+  rpc_whitelist: localhost
   minerthreads: 1
   genesis_block: config/genesis/dev_genesis.json
   datadir: /tmp/embark
@@ -18,7 +18,7 @@ development:
 staging:
   rpc_host: localhost
   rpc_port: 8101
-  rpc_whitelist: "*"
+  rpc_whitelist: localhost
   datadir: default
   mine: false
   network_id: 0
@@ -34,7 +34,7 @@ staging:
 production:
   rpc_host: localhost
   rpc_port: 8101
-  rpc_whitelist: "*"
+  rpc_whitelist: localhost
   datadir: default
   network_id: 1
   mine: false
