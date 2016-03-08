@@ -39,7 +39,7 @@
         miner_obj.start(config.threads);
         return;
     }
-    miner_obj.stop();
+    miner_obj.stop(config.threads);
 
     fundAccount(config, miner_obj, function () {
       if (config.mine_periodically) start_periodic_mining(config, miner_obj);
@@ -64,7 +64,7 @@
         console.log("== Account funded");
 
         blockWatcher.stopWatching();
-        miner_obj.stop();
+        miner_obj.stop(config.threads);
         cb();
       }
     });
@@ -106,7 +106,7 @@
         next_block_in_ms = (config.interval_ms - ms_since_block);
       }
 
-      miner_obj.stop();
+      miner_obj.stop(config.threads);
       console.log("== Looking for next block in " + next_block_in_ms + "ms");
 
       setTimeout(function () {
@@ -130,7 +130,7 @@
     web3.eth.filter("latest").watch(function () {
       if (!pendingTransactions()) {
         console.log("== No transactions left. Stopping miner...");
-        miner_obj.stop();
+        miner_obj.stop(config.threads);
       }
     });
   };
