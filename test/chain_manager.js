@@ -20,7 +20,7 @@ describe('embark.chain_manager', function() {
     chainManager.init('development', blockchainConfig, web3);
 
     it('should initialize chain', function() {
-      var chain = chainManager.chainManagerConfig['0x021a83120c235da14ec41c513dabf7e56e5d8a820177df9da3d1fd2b9c2daf91']
+      var chain = chainManager.chainManagerConfig['0xc16b5bca90004b19e2d8d49b2fcaaa8a42c58ec46fe293a6962e6eeee084872c']
       assert.equal(chain != undefined, true);
     });
   });
@@ -31,7 +31,7 @@ describe('embark.chain_manager', function() {
       chainManager.addContract("Foo", "123456", [], "0x123");
 
       console.log(chainManager.chainManagerConfig);
-      var chain = chainManager.chainManagerConfig['0x021a83120c235da14ec41c513dabf7e56e5d8a820177df9da3d1fd2b9c2daf91']
+      var chain = chainManager.chainManagerConfig['0xc16b5bca90004b19e2d8d49b2fcaaa8a42c58ec46fe293a6962e6eeee084872c']
       var contract = chain.contracts["d5d91a8825c5c253dff531ddda2354c4014f5699b7bcbea70207cfdcb37b6c8b"]
 
       assert.equal(contract.name, "Foo");
@@ -58,7 +58,7 @@ describe('embark.chain_manager', function() {
 
       var chainFile = './test/support/chain_manager.json';
       var content = fs.readFileSync(chainFile).toString();
-      assert.equal(content, '{"0x021a83120c235da14ec41c513dabf7e56e5d8a820177df9da3d1fd2b9c2daf91":{"contracts":{"d5d91a8825c5c253dff531ddda2354c4014f5699b7bcbea70207cfdcb37b6c8b\":{"name":"Foo","address":"0x123"}}}}');
+      assert.equal(content, '{"0xc16b5bca90004b19e2d8d49b2fcaaa8a42c58ec46fe293a6962e6eeee084872c":{"contracts":{"d5d91a8825c5c253dff531ddda2354c4014f5699b7bcbea70207cfdcb37b6c8b\":{"name":"Foo","address":"0x123"}}}}');
     });
 
   });
