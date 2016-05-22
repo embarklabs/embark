@@ -39,7 +39,10 @@
         miner_obj.start(config.threads);
         return;
     }
-    miner_obj.stop(config.threads);
+
+    // TODO: check why it's no longer accepting this param
+    //miner_obj.stop(config.threads);
+    miner_obj.stop();
 
     fundAccount(config, miner_obj, function () {
       if (config.mine_periodically) start_periodic_mining(config, miner_obj);
