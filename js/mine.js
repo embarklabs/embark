@@ -36,7 +36,8 @@
     var miner_obj = (admin.miner === undefined) ? miner : admin.miner;
 
     if (config.mine_normally) {
-        miner_obj.start(config.threads);
+        //miner_obj.start(config.threads);
+        miner_obj.start();
         return;
     }
 
@@ -67,7 +68,8 @@
         console.log("== Account funded");
 
         blockWatcher.stopWatching();
-        miner_obj.stop(config.threads);
+        //miner_obj.stop(config.threads);
+        miner_obj.stop();
         cb();
       }
     });
@@ -89,7 +91,8 @@
     var last_mined_ms = Date.now();
     var timeout_set = false;
 
-    miner_obj.start(config.threads);
+    //miner_obj.start(config.threads);
+    miner_obj.start();
     web3.eth.filter("latest").watch(function () {
       if ((config.mine_pending_txns && pendingTransactions()) || timeout_set) {
         return;
@@ -109,13 +112,15 @@
         next_block_in_ms = (config.interval_ms - ms_since_block);
       }
 
-      miner_obj.stop(config.threads);
+      //miner_obj.stop(config.threads);
+      miner_obj.stop();
       console.log("== Looking for next block in " + next_block_in_ms + "ms");
 
       setTimeout(function () {
         console.log("== Looking for next block");
         timeout_set = false;
-        miner_obj.start(config.threads);
+        //miner_obj.start(config.threads);
+        miner_obj.start();
       }, next_block_in_ms);
     });
   };
@@ -125,7 +130,8 @@
       if (miner_obj.hashrate > 0) return;
 
       console.log("== Pending transactions! Looking for next block...");
-      miner_obj.start(config.threads);
+      //miner_obj.start(config.threads);
+      miner_obj.start();
     });
 
     if (config.mine_periodically) return;
@@ -133,7 +139,8 @@
     web3.eth.filter("latest").watch(function () {
       if (!pendingTransactions()) {
         console.log("== No transactions left. Stopping miner...");
-        miner_obj.stop(config.threads);
+        //miner_obj.stop(config.threads);
+        miner_obj.stop();
       }
     });
   };
