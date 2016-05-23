@@ -6,7 +6,7 @@ $(document).ready(function() {
     addToLog("SimpleStorage.set("+value+")");
   });
 
-  document.getElementsByClassName("get")[0].addEventListener('click', function() {
+  $("button.get").click(function() {
     var value = SimpleStorage.get().toNumber();
     $(".value").html(value);
     addToLog("SimpleStorage.get()");
