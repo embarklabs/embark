@@ -6,7 +6,6 @@ var wrench = require('wrench');
 var grunt = require('grunt');
 require('shelljs/global');
 var readYaml = require('read-yaml');
-var EtherSim = require('ethersim');
 var Embark = require('..');
 
 var run = function(cmd) {
@@ -175,6 +174,13 @@ program.command('meteor_demo').description('create a working meteor dapp with a 
 });
 
 program.command('simulator').description('run a fast ethereum rpc simulator').action(function() {
+  try {
+    var EtherSim = require('ethersim');
+  } catch(e) {
+    console.log('EtherSim not found; Please install it with "npm install ethersim --save"');
+    console.log('For more information see https://github.com/iurimatias/ethersim');
+    exit();
+  }
   EtherSim.startServer();
 });
 
