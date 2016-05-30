@@ -10,8 +10,7 @@
   "license": "ISC",
   "homepage": "",
   "devDependencies": {
-    "embark-framework": "^1.0.2",
-    "grunt-embark": "^0.5.1",
+    "embark-framework": "/Users/iurimatias/Projects/embark-framework",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-coffee": "^0.13.0",
     "grunt-contrib-concat": "^0.5.1",

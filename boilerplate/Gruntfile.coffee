@@ -1,8 +1,8 @@
 module.exports = (grunt) ->
 
   grunt.option 'stack', true
-  grunt.loadNpmTasks "grunt-embark"
   grunt.loadTasks "tasks"
+  grunt.loadTasks "node_modules/embark-framework/grunt-embark/tasks"
 
   grunt.initConfig(
     files:
@@ -114,3 +114,4 @@ module.exports = (grunt) ->
 
   grunt.registerTask "deploy", ["coffee", "deploy_contracts:"+env, "concat", "copy", "server", "watch"]
   grunt.registerTask "build", ["clean", "deploy_contracts:"+env, "coffee", "concat", "uglify", "copy"]
+
