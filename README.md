@@ -1,5 +1,3 @@
-This Readme applies to Embark 1.0.0 Beta which is currently under development. For the old version please check the old [readme](https://github.com/iurimatias/embark-framework/blob/0.9.3/README.md)
-
 What is embark
 ======
 
@@ -20,8 +18,8 @@ See the [Wiki](https://github.com/iurimatias/embark-framework/wiki) for more det
 
 Installation
 ======
-Requirements: geth (1.1.3 or higher), node (0.12.2) and npm
-Optional: serpent (develop) if using contracts with Serpent
+Requirements: geth (1.4.4 or higher), node (5.0.0) and npm
+Optional: serpent (develop) if using contracts with Serpent, ethersim if using the simulator or the test functionality
 
 ```Bash
 $ npm -g install embark-framework
