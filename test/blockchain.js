@@ -10,7 +10,7 @@ describe('embark.blockchain', function() {
     var blockchain = new Blockchain(blockchainConfig);
 
     it('should return correct cmd', function() {
-      assert.strictEqual(blockchain.generate_basic_command(), "geth --datadir=\"/tmp/embark\" --logfile=\"/tmp/embark.log\"  --port 30303 --rpc --rpcport 8101 --rpcaddr localhost --networkid "+blockchainConfig.networkId+" --rpccorsdomain * --minerthreads \"1\" --genesis=\"config/genesis.json\" --rpcapi \"eth,web3\" --maxpeers 4 --password config/password ");
+      assert.strictEqual(blockchain.generate_basic_command(), "geth --datadir=\"/tmp/embark\" --password config/password  --port 30303 --rpc --rpcport 8101 --rpcaddr localhost --networkid "+blockchainConfig.networkId+" --rpccorsdomain=\"*\" --minerthreads \"1\" --mine --rpcapi \"eth,web3\" --maxpeers 4 ");
     });
   });
 
@@ -19,7 +19,7 @@ describe('embark.blockchain', function() {
     blockchain.generate_basic_command = sinon.stub().returns("geth ");
 
     it('should generate command to list accounts', function() {
-      assert.equal(blockchain.list_command(), "geth account list ");
+      assert.equal(blockchain.list_command(), "geth --datadir=\"/tmp/embark\" --password config/password account list ");
     });
   });
 
@@ -28,7 +28,7 @@ describe('embark.blockchain', function() {
     blockchain.generate_basic_command = sinon.stub().returns("geth ");
 
     it('should generate command to create an account', function() {
-      assert.equal(blockchain.init_command(), "geth account new ");
+      assert.equal(blockchain.init_command(), "geth --datadir=\"/tmp/embark\" --password config/password account new ");
     });
   });
 
