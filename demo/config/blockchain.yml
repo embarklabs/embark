@@ -14,6 +14,7 @@ development:
     init: true
     password: config/password
 staging:
+  testnet: true
   rpc_host: localhost
   rpc_port: 8101
   rpc_whitelist: "*"

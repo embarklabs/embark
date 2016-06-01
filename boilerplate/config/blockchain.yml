@@ -1,49 +1,38 @@
 development:
   rpc_host: localhost
   rpc_port: 8101
-  mine: false
-  rpc_whitelist: localhost
+  rpc_whitelist: "*"
   minerthreads: 1
   genesis_block: config/genesis/dev_genesis.json
   datadir: /tmp/embark
   chains: config/chains/development.json
   mine_when_needed: true
-  max_peers: 0
   gas_limit: 500000
   gas_price: 10000000000000
+  console: false
   account:
     init: true
     password: config/password
-    num: 1
 staging:
+  testnet: true
   rpc_host: localhost
   rpc_port: 8101
-  rpc_whitelist: localhost
+  rpc_whitelist: "*"
   datadir: default
-  mine: false
   network_id: 0
-  max_peers: 4
-  bootnodes: 
-    boot: false
-    enodes: [] #insert enode urls here. 
-  nat: any #NAT port mapping mechanism (any|none|upnp|pmp|extip:<IP>) 
-  port: 30303
+  deploy_timeout: 45
+  console: true
   account:
     init: false
     address:
 production:
   rpc_host: localhost
   rpc_port: 8101
-  rpc_whitelist: localhost
+  rpc_whitelist: "*"
   datadir: default
   network_id: 1
-  mine: false
-  max_peers: 4
-  bootnodes: 
-    boot: false
-    enodes: []
-  nat: any #NAT port mapping mechanism (any|none|upnp|pmp|extip:<IP>) 
-  port: 30303
+  console: true
   account:
     init: false
     address:
+
