@@ -8,6 +8,8 @@ describe("SimpleStorage", function() {
     EmbarkSpec.sim.createAccounts(10, function() {
       EmbarkSpec.sim.setBalance(web3.eth.accounts[0], 1000000000000000000000, function() {
         EmbarkSpec.deployAll(done);
+        // or
+        // EmbarkSpec.deployContract('SimpleStorage', [100], done);
       });
     });
   });
@@ -28,4 +30,4 @@ describe("SimpleStorage", function() {
     });
   });
 
-})
+});
