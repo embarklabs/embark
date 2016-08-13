@@ -1,0 +1,9 @@
+{
+  "app": {
+    "contracts": ['app/contracts/**'],
+    "css": ['app/css/**'],
+    "js": ['app/js/**'],
+    "main": 'app/index.html'
+  },
+  "config": "config/"
+}

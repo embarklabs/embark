@@ -1,2 +1,3 @@
+.embark/
 node_modules/
-config/chains/development.json
+dist/

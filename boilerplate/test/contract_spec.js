@@ -13,6 +13,7 @@ describe("MyContract", function() {
     });
   });
 
+  // example usage
   //it("should set constructor value", function(done) {
   //  SimpleStorage.storedData(function(err, result) {
   //    assert.equal(result.toNumber(), 100);
