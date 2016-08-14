@@ -1,5 +1,7 @@
 {
   "default": {
+    "gasLimit": 500000,
+    "gasPrice": 10000000000000,
     "contracts": {
       "SimpleStorage": {
         "args": [
