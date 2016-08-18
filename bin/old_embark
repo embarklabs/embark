@@ -1,0 +1,193 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var path = require('path');
+var wrench = require('wrench');
+var grunt = require('grunt');
+require('shelljs/global');
+var readYaml = require('read-yaml');
+var Embark = require('..');
+
+var run = function(cmd) {
+  if (exec(cmd).code != 0) {
+    exit();
+  }
+}
+
+var deploy = function(env, embarkConfig, cb) {
+  var contractFiles = grunt.file.expand(embarkConfig.contracts);
+  var destFile = embarkConfig.output;
+
+  Embark.init();
+  Embark.blockchainConfig.loadConfigFile(embarkConfig.blockchainConfig);
+  Embark.contractsConfig.loadConfigFile(embarkConfig.contractsConfig);
+
+  var chainFile = Embark.blockchainConfig.blockchainConfig[env].chains || embarkConfig.chains || './chains.json';
+
+  abi = Embark.deployContracts(env, contractFiles, destFile, chainFile, true, true, function(abi) {
+    grunt.file.write(destFile, abi);
+    cb();
+  });
+}
+
+program
+  .version('1.2.0');
+
+program.command('new [name]').description('New application').action(function(name) {
+  if (name === undefined) {
+    console.log("please specify the app name");
+    exit;
+  }
+  var prefPath = path.join(__dirname + '/../boilerplate');
+
+  var targetDir = "./" + name;
+  wrench.copyDirSyncRecursive(prefPath, targetDir);
+  cd(targetDir);
+  run('npm install');
+  console.log('\n\ninit complete');
+});
+
+program.command('deploy [env]').description('deploy contracts').action(function(env_) {
+  var env = env_ || 'development';
+  var embarkConfig = readYaml.sync("./embark.yml");
+
+  if (embarkConfig.type === "grunt") {
+    run("grunt deploy_contracts:" + env);
+  }
+  else {
+    deploy(env, embarkConfig, function() { exit(); });
+  }
+});
+
+program.command('build [env]').description('build dapp').action(function(env_) {
+  var env = env_ || 'development';
+  var embarkConfig = readYaml.sync("./embark.yml");
+
+  if (embarkConfig.type === "grunt") {
+    run("grunt clean");
+    run("grunt deploy_contracts:" + env);
+    run('grunt build --env=' + env);
+  }
+  else if (embarkConfig.type === "meteor") {
+    deploy(env, embarkConfig);
+    run("meteor-build-client ./build -p ''");
+  }
+});
+
+program.command('ipfs [env]').description('build dapp and make it available in ipfs').action(function(env_) {
+  var env = env_ || 'development';
+  var embarkConfig = readYaml.sync("./embark.yml");
+
+  if (embarkConfig.type === "grunt") {
+    run("grunt clean")
+    run("grunt deploy_contracts:" + env)
+    run('grunt build --env=' + env)
+    run('grunt ipfs --env=' + env)
+  }
+  else if (embarkConfig.type === "meteor") {
+    deploy(env, embarkConfig);
+    run("meteor-build-client ./build -p ''");
+    Embark.release.ipfs("build/")
+  }
+  else {
+    console.log("command not available in manual mode yet");
+  }
+});
+
+program.command('run [env]').description('run dapp').action(function(env_) {
+  var env = env_ || 'development';
+  var embarkConfig = readYaml.sync("./embark.yml");
+
+  if (embarkConfig.type === "grunt") {
+    run('grunt deploy --env=' + env);
+  }
+  else {
+    console.log("command not available in meteor or manual mode yet");
+    console.log("try instead embark deploy; if using meteor then follow that with 'meteor'");
+  }
+});
+
+program.command('spec').description('run tests').action(function() {
+  var embarkConfig = readYaml.sync("./embark.yml");
+
+  if (embarkConfig.type === "grunt") {
+    run('mocha test/ --no-timeouts');
+  }
+  else {
+    console.log("command not available in meteor or manual mode yet");
+    console.log("note: you can use embark tests with any framework");
+    console.log("try running mocha test/");
+  }
+});
+
+program.command('blockchain [env]').description('run blockchain').action(function(env_) {
+  var env = env_ || 'development';
+  var embarkConfig = readYaml.sync("./embark.yml");
+
+  if (embarkConfig.type === "grunt") {
+    run('grunt blockchain:' + env);
+  }
+  else {
+    Embark.init()
+    Embark.blockchainConfig.loadConfigFile(embarkConfig.blockchainConfig)
+    Embark.contractsConfig.loadConfigFile(embarkConfig.contractsConfig)
+
+    Embark.copyMinerJavascriptToTemp();
+
+    Embark.startBlockchain(env, true);
+  }
+});
+
+program.command('geth <env> [args...]').description('run geth with specified arguments').action(function(env_, args_) {
+  var env = env_ || 'development';
+  var embarkConfig = readYaml.sync("./embark.yml");
+  var args = args_.join(' ');
+
+  Embark.init()
+  Embark.blockchainConfig.loadConfigFile(embarkConfig.blockchainConfig)
+  Embark.contractsConfig.loadConfigFile(embarkConfig.contractsConfig)
+
+  Embark.geth(env, args);
+});
+
+program.command('demo').description('create a working dapp with a SimpleStorage contract').action(function() {
+  var boilerPath = path.join(__dirname + '/../boilerplate');
+  var demoPath   = path.join(__dirname + '/../demo');
+
+  var targetDir = "./embark_demo";
+  wrench.copyDirSyncRecursive(boilerPath, targetDir);
+  wrench.copyDirSyncRecursive(demoPath + "/app",    targetDir + "/app",    {forceDelete: true});
+  wrench.copyDirSyncRecursive(demoPath + "/config", targetDir + "/config", {forceDelete: true});
+  wrench.copyDirSyncRecursive(demoPath + "/test",   targetDir + "/test",   {forceDelete: true});
+
+  cd(targetDir);
+  run('npm install');
+  console.log('\n\ninit complete');
+});
+
+program.command('meteor_demo').description('create a working meteor dapp with a SimpleStorage contract').action(function() {
+  var boilerPath = path.join(__dirname + '/../demo_meteor');
+
+  var targetDir = "./embark_demo";
+  wrench.copyDirSyncRecursive(boilerPath, targetDir);
+  console.log('\n\ninit complete');
+});
+
+program.command('simulator').description('run a fast ethereum rpc simulator').action(function() {
+  try {
+    var EtherSim = require('ethersim');
+  } catch(e) {
+    console.log('EtherSim not found; Please install it with "npm install ethersim --save"');
+    console.log('For more information see https://github.com/iurimatias/ethersim');
+    exit();
+  }
+  EtherSim.startServer();
+});
+
+program.parse(process.argv)
+
+if (!process.argv.slice(2).length) {
+  program.outputHelp();
+}
+
+//exit();

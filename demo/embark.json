@@ -2,7 +2,7 @@
   "contracts": ["app/contracts/**"],
   "app": {
     "css/app.css": ["app/css/**"],
-    "js/app.js": ["app/js/**"],
+    "js/app.js": ["embark.js", "app/js/**"],
     "index.html": "app/index.html"
   },
   "config": "config/"
