@@ -1,5 +1,5 @@
 
-EmbarkJS = {
+var EmbarkJS = {
 };
 
 options = {
@@ -74,4 +74,27 @@ EmbarkJS.Contract.prototype.deploy = function(args) {
   
   return promise;
 };
+
+EmbarkJS.Messages = {
+};
+
+EmbarkJS.Messages.setProvider = function(msgProvider) {
+};
+
+EmbarkJS.Messages.sendMessage = function(options) {
+};
+
+EmbarkJS.Messages.listenTo = function(options) {
+};
+
+EmbarkJS.Messages.Whisper = {
+};
+
+EmbarkJS.Messages.Whisper.sendMessage = function(options) {
+};
+
+EmbarkJS.Messages.Whisper.listenTo = function(options) {
+};
+
+
 
