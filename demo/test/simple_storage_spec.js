@@ -1,32 +1,43 @@
 var assert = require('assert');
-var Embark = require('embark-framework');
-var EmbarkSpec = Embark.initTests();
-var web3 = EmbarkSpec.web3;
+//var Embark = require('embark-framework');
+
+var SimpleStorage;
 
 describe("SimpleStorage", function() {
   before(function(done) {
-    EmbarkSpec.sim.createAccounts(10, function() {
-      EmbarkSpec.sim.setBalance(web3.eth.accounts[0], 1000000000000000000000, function() {
-        EmbarkSpec.deployAll(done);
-        // or
-        // EmbarkSpec.deployContract('SimpleStorage', [100], done);
-      });
+    var self = this;
+
+    var Embark = require('../../lib/index.js');
+    var EmbarkSpec = Embark.initTests();
+    //var web3 = EmbarkSpec.web3;
+
+    //var contracts = EmbarkSpec.deployAll(done);
+    //var SimpleStorage = contracts.SimpleStorage;
+    // or
+    EmbarkSpec.deployContract('SimpleStorage', [100], function(contract) {
+      SimpleStorage = contract;
+      done();
     });
   });
 
   it("should set constructor value", function(done) {
-    SimpleStorage.storedData(function(err, result) {
-      assert.equal(result.toNumber(), 100);
+    SimpleStorage.storedData()
+    .then(function(value) {
+      assert.equal(value.toNumber(), 100);
       done();
     });
   });
 
   it("set storage value", function(done) {
-    SimpleStorage.set(150, function() {
-      SimpleStorage.get(function(err, result) {
-        assert.equal(result.toNumber(), 150);
+    var self = this;
+    //console.log(SimpleStorage);
+    SimpleStorage.set(150)
+    .then(function() {
+      return SimpleStorage.get();
+    })
+    .then(function(value) {
+        assert.equal(value.toNumber(), 150);
         done();
-      });
     });
   });
 
