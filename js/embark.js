@@ -1,3 +1,6 @@
+if (typeof module !== 'undefined') {
+  var Promise = require('bluebird');
+}
 
 var EmbarkJS = {
 };
@@ -23,7 +26,7 @@ EmbarkJS.Contract = function(options) {
   this.code = options.code;
   this.web3 = options.web3 || web3;
 
-  var ContractClass = web3.eth.contract(this.abi);
+  var ContractClass = this.web3.eth.contract(this.abi);
 
   this._originalContractObject = ContractClass.at(this.address);
   this._methods = Object.getOwnPropertyNames(this._originalContractObject).filter(function (p) {
@@ -34,7 +37,6 @@ EmbarkJS.Contract = function(options) {
     }
     return false;
   });
-
 };
 
 EmbarkJS.Contract.prototype.deploy = function(args) {
@@ -44,13 +46,13 @@ EmbarkJS.Contract.prototype.deploy = function(args) {
   contractParams = args;
 
   contractParams.push({
-    from: web3.eth.accounts[0],
+    from: this.web3.eth.accounts[0],
     data: this.code,
     gasLimit: 500000,
     gasPrice: 10000000000000
   });
 
-  var contractObject = web3.eth.contract(this.abi);
+  var contractObject = this.web3.eth.contract(this.abi);
 
   var promise = new Promise(function(resolve, reject) {
     contractParams.push(function(err, transaction) {
@@ -97,4 +99,6 @@ EmbarkJS.Messages.Whisper.listenTo = function(options) {
 };
 
 
-
+if (typeof module !== 'undefined') {
+  module.exports = EmbarkJS;
+}
