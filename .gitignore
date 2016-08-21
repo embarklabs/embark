@@ -2,4 +2,5 @@ node_modules
 TODO
 .node-xmlhttprequest-sync-*
 demo/dist/
+demo/.embark/development/
 boilerplate/dist/
