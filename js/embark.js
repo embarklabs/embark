@@ -1,9 +1,12 @@
-if (typeof module !== 'undefined') {
-  var Promise = require('bluebird');
-}
+var Promise = require('bluebird');
+//var Ipfs = require('./ipfs.js');
 
 var EmbarkJS = {
 };
+
+
+Ipfs = IpfsApi;
+//EmbarkJS.Ipfs = Ipfs;
 
 options = {
   abi: {},
@@ -77,6 +80,81 @@ EmbarkJS.Contract.prototype.deploy = function(args) {
   return promise;
 };
 
+EmbarkJS.IPFS = 'ipfs';
+
+EmbarkJS.Storage = {
+};
+
+// EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'})<F37>
+//{server: ‘localhost’, port: ‘5001’};
+
+EmbarkJS.Storage.setProvider = function(provider, options) {
+  if (provider === 'ipfs') {
+    this.currentStorage = EmbarkJS.Storage.IPFS;
+    this.ipfsConnection = Ipfs(options.server, options.port);
+  } else {
+    throw Error('unknown provider');
+  }
+};
+
+EmbarkJS.Storage.saveText = function(text) {
+  var self = this;
+  var promise = new Promise(function(resolve, reject) {
+    self.ipfsConnection.add((new self.ipfsConnection.Buffer(text)), function(err, result) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result[0].path);
+      }
+    });
+  });
+
+  return promise;
+};
+
+EmbarkJS.Storage.uploadFile = function(inputSelector) {
+  var self = this;
+  var file = inputSelector[0].files[0];
+
+  var promise = new Promise(function(resolve, reject) {
+    var reader = new FileReader();
+    reader.onloadend = function() { 
+      var fileContent = reader.result;
+      var buffer = self.ipfsConnection.Buffer.from(fileContent);
+      self.ipfsConnection.add(buffer, function(err, result) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result[0].path);
+        }
+      });
+    };
+    reader.readAsArrayBuffer(file);
+  });
+
+  return promise;
+};
+
+EmbarkJS.Storage.get = function(hash) {
+  var self = this;
+  var ipfsHash = this.web3.toAscii(hash);
+
+  var promise = new Promise(function(resolve, reject) {
+    self.ipfsConnection.object.get([ipfsHash]).then(function(node) {
+      resolve(node.data);
+    });
+  });
+
+  return promise;
+};
+
+EmbarkJS.Storage.getUrl = function(hash) {
+  var self = this;
+  var ipfsHash = web3.toAscii(hash);
+
+  return 'http://localhost:8080/ipfs/' + ipfsHash;
+};
+
 EmbarkJS.Messages = {
 };
 
@@ -98,7 +176,4 @@ EmbarkJS.Messages.Whisper.sendMessage = function(options) {
 EmbarkJS.Messages.Whisper.listenTo = function(options) {
 };
 
-
-if (typeof module !== 'undefined') {
-  module.exports = EmbarkJS;
-}
+module.exports = EmbarkJS;
