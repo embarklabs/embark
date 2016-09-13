@@ -51,7 +51,7 @@ EmbarkJS.Contract.prototype.deploy = function(args) {
   contractParams.push({
     from: this.web3.eth.accounts[0],
     data: this.code,
-    gasLimit: 500000,
+    gas: 500000,
     gasPrice: 10000000000000
   });
 
