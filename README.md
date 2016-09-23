@@ -1,3 +1,5 @@
+note: This readme refers to version 1.2.0 of Embark. Not version 2.0 which will be released soon(ish).
+
 What is embark
 ======
 
