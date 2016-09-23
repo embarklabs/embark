@@ -20,4 +20,3 @@ $(document).ready(function() {
   });
 
 });
-window.abc = 5;
