@@ -25,6 +25,9 @@ Optional: serpent (develop) if using contracts with Serpent, ethersim if using t
 
 ```Bash
 $ npm -g install embark-framework
+
+# If you plan to use the simulator instead of a real ethereum node.
+$ npm -g install ethersim
 ```
 
 See [Complete Installation Instructions](https://github.com/iurimatias/embark-framework/wiki/Installation).
