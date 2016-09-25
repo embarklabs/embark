@@ -1,0 +1,30 @@
+{
+  "development": {
+    "networkType": "custom",
+    "genesisBlock": "config/development/genesis.json",
+    "datadir": ".embark/development/datadir",
+    "mineWhenNeeded": true,
+    "nodiscover": true,
+    "rpcHost": "localhost",
+    "rpcPort": 8545,
+    "account": {
+      "password": "config/development/password"
+    }
+  },
+  "testnet": {
+    "rpcHost": "localhost",
+    "rpcPort": 8545,
+    "networkType": "testnet"
+  },
+  "livenet": {
+    "networkType": "livenet"
+  },
+  "privatenet": {
+    "networkType": "custom",
+    "rpcHost": "localhost",
+    "rpcPort": 8545,
+    "datadir": "yourdatadir",
+    "networkId": "123",
+    "nodes": []
+  }
+}
