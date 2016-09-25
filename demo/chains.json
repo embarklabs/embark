@@ -1,0 +1,20 @@
+{
+  "0xb6cfeab83614da04c03db0fb8a6787a45d0be8d576fcc6f8f457a5a816d22ab3": {
+    "name":      "development",
+    "networkId": "",
+    "contracts": {
+      "288f087742d513019f59539bbf4f07b352e14327e0e7b8ed4bc7c33e34fbc192": {
+        "address": "0xab47369d82950224a1698d4a856cfa175ba9cf84",
+        "name":    "SimpleStorage"
+      },
+      "5a52b16abb7dfccfc675550d0daba1683a3cf7e80fb5f0e199301f7dd57237fb": {
+        "address": "0xbd2b5c34a2a85d3ae5e903e0015a07868c0d97c3",
+        "name":    "SimpleStorage"
+      },
+      "708fa6b699f419627ab3c4c2d9c82f8f1a6fab03c122d0a9ee55d2d0d0ad1e4b": {
+        "address": "0x7a72b8be758afe7d3e421e7d32c81c605fec333d",
+        "name":    "token"
+      }
+    }
+  }
+}
