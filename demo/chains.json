@@ -4,11 +4,11 @@
     "networkId": "",
     "contracts": {
       "5a52b16abb7dfccfc675550d0daba1683a3cf7e80fb5f0e199301f7dd57237fb": {
-        "address": "0x94ba5dc1241a41a13a2c62e7a65c7c455dae5380",
+        "address": "0x9b7d9cfed1dcc25ffa10cabf09ed69107634bcc7",
         "name":    "SimpleStorage"
       },
       "708fa6b699f419627ab3c4c2d9c82f8f1a6fab03c122d0a9ee55d2d0d0ad1e4b": {
-        "address": "0x57df57939ddf112aeaa4232d9e2ad20de40e9fb7",
+        "address": "0x3134e7b4b2bf08f50b299ad35a2271c6f5ebed5b",
         "name":    "token"
       }
     }
