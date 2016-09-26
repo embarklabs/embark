@@ -3,4 +3,5 @@ TODO
 .node-xmlhttprequest-sync-*
 demo/dist/
 demo/.embark/development/
+demo/config/production/password
 boilerplate/dist/
