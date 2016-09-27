@@ -1,8 +1,10 @@
 contract SimpleStorage {
   uint public storedData;
+  address public foo;
 
-  function SimpleStorage(uint initialValue) {
+  function SimpleStorage(uint initialValue, address addr) {
     storedData = initialValue;
+    foo = addr;
   }
 
   function set(uint x) {

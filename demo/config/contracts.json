@@ -2,9 +2,15 @@
   "default": {
     "gas": "auto",
     "contracts": {
-      "SimpleStorage": {
+      "token": {
         "args": [
           100
+        ]
+      },
+      "SimpleStorage": {
+        "args": [
+          100,
+          "$token"
         ]
       }
     }
