@@ -12,6 +12,13 @@
           100,
           "$token"
         ]
+      },
+      "SimpleStorage2": {
+        "instanceOf": "SimpleStorage",
+        "args": [
+          100,
+          "$token"
+        ]
       }
     }
   }
