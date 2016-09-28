@@ -3,6 +3,7 @@
     "gas": "auto",
     "contracts": {
       "token": {
+        "address": "0x123",
         "args": [
           100
         ]
