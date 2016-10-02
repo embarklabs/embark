@@ -12,6 +12,9 @@
         "args": [
           100,
           "$token"
+        ],
+        "onDeploy": [
+          "SimpleStorage.set(150)"
         ]
       },
       "SimpleStorage2": {
