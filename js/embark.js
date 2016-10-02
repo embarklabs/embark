@@ -4,23 +4,6 @@ var Promise = require('bluebird');
 var EmbarkJS = {
 };
 
-
-Ipfs = IpfsApi;
-//EmbarkJS.Ipfs = Ipfs;
-
-options = {
-  abi: {},
-  address: {},
-  code: "",
-  options: {},
-  web3: {},
-  deployPromise: {}
-};
-
-//result += "\n" + className + "Abi = " + abi + ";";
-//result += "\n" + className + "Contract = web3.eth.contract(" + className + "Abi);";
-//result += "\n" + className + " = " + className + "Contract.at('" + contract.deployedAddress + "');";
-
 EmbarkJS.Contract = function(options) {
   var self = this;
 
