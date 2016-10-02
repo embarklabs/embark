@@ -1,9 +1,0 @@
-{
-  "development": {
-    "rpcHost": "localhost",
-    "rpcPort": 8101,
-    "account": {
-      "password": "config/development/password"
-    }
-  }
-}
