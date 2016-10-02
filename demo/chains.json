@@ -6,12 +6,24 @@
         "address": "0x123",
         "name":    "token"
       },
+      "577bcb0c85129a6ff9e4dcde08f04e6f094e94c74a4423fc90e5947df9a21b82": {
+        "address": "0xb2f17f39c8a7d8f1745a68525a8450519f50b91c",
+        "name":    "SimpleStorage"
+      },
+      "708fa6b699f419627ab3c4c2d9c82f8f1a6fab03c122d0a9ee55d2d0d0ad1e4b": {
+        "address": "0x176a7f21ecdb8f88559b5a1e444821b2f9c5cf96",
+        "name":    "token"
+      },
       "e0d35d6564373021d9749a7a8815cf58cc5ca7b7edaf4740c1913898561531c3": {
-        "address": "0x9e3b27a53318d4dc0b6716afc5ad146480b86b64",
+        "address": "0x1cc76358b7e5a8debb43bd83f84718d3c1d98836",
         "name":    "SimpleStorage2"
       },
       "f3765f8b702ccb44eb19f1adecbf5a216175713fbd41d9fae100d8e3dfc5e74f": {
         "address": "0x6ecb595483da2c264ea5e039743340ebce8af0da",
+        "name":    "SimpleStorage"
+      },
+      "f3e14e1cd853fc03ed37f669b211591ef53a6e1b5e82e8bf08d04eed8dc6a12e": {
+        "address": "0x391ae9a75817e11d4dcb208431d3196fd50f1cc6",
         "name":    "SimpleStorage"
       }
     }
