@@ -2,26 +2,9 @@
   "default": {
     "gas": "auto",
     "contracts": {
-      "token": {
-        "address": "0x123",
-        "args": [
-          100
-        ]
-      },
       "SimpleStorage": {
         "args": [
-          100,
-          "$token"
-        ],
-        "onDeploy": [
-          "SimpleStorage.set(150)"
-        ]
-      },
-      "SimpleStorage2": {
-        "instanceOf": "SimpleStorage",
-        "args": [
-          100,
-          "$token"
+          100
         ]
       }
     }

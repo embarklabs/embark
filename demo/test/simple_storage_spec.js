@@ -1,12 +1,10 @@
 var assert = require('assert');
-//var Embark = require('embark-framework');
-var Embark = require('../../lib/index.js');
+var Embark = require('embark-framework');
 var EmbarkSpec = Embark.initTests();
 var web3 = EmbarkSpec.web3;
 
 describe("SimpleStorage", function() {
   before(function(done) {
-    //EmbarkSpec.deployContract('SimpleStorage', [100], done);
     var contractsConfig = {
       "SimpleStorage": {
         args: [100, '0x123']
