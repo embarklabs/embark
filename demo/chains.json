@@ -1,4 +1,38 @@
 {
+  "0x4d12c61541655bbf65aea06b4813a7a0f3317cb470623258f4e3909746f23cd6": {
+    "name": "development",
+    "contracts": {
+      "2ac097aa929aece4724cc229cc7bd26c7dfa153f3274b5623936cb4a4dc12fa1": {
+        "address": "0x123",
+        "name":    "token"
+      },
+      "577bcb0c85129a6ff9e4dcde08f04e6f094e94c74a4423fc90e5947df9a21b82": {
+        "address": "0xaa5b04650f2705ef87d566cdfd0e45bfc19f43ce",
+        "name":    "SimpleStorage"
+      },
+      "e0d35d6564373021d9749a7a8815cf58cc5ca7b7edaf4740c1913898561531c3": {
+        "address": "0xdad08a3a58bb903ccebfbf1a4e55e45e7ec8d0e4",
+        "name":    "SimpleStorage2"
+      }
+    }
+  },
+  "0x8839bd592160ddb23170ad76688c12a73ce41d41a6437163de0fb080bbface0a": {
+    "name": "development",
+    "contracts": {
+      "2ac097aa929aece4724cc229cc7bd26c7dfa153f3274b5623936cb4a4dc12fa1": {
+        "address": "0x123",
+        "name":    "token"
+      },
+      "577bcb0c85129a6ff9e4dcde08f04e6f094e94c74a4423fc90e5947df9a21b82": {
+        "address": "0xc0008e20eb48abf2e3bacc3be0ee4f3b7ae42cfe",
+        "name":    "SimpleStorage"
+      },
+      "e0d35d6564373021d9749a7a8815cf58cc5ca7b7edaf4740c1913898561531c3": {
+        "address": "0x1246646162a64c6dbb6fd285a6bbffdfc093aa56",
+        "name":    "SimpleStorage2"
+      }
+    }
+  },
   "0xb6cfeab83614da04c03db0fb8a6787a45d0be8d576fcc6f8f457a5a816d22ab3": {
     "name": "development",
     "contracts": {
