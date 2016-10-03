@@ -26,6 +26,7 @@
     "meteor-build-client": "^0.1.6",
     "mkdirp": "^0.5.1",
     "read-yaml": "^1.0.0",
+    "request": "^2.75.0",
     "serve-static": "^1.11.1",
     "shelljs": "^0.5.0",
     "toposort": "^0.2.10",
