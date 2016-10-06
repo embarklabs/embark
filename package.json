@@ -1,7 +1,7 @@
 {
   "name": "embark-framework",
-  "version": "1.2.0",
-  "description": "",
+  "version": "2.0.0",
+  "description": "Embark is a framework that allows you to easily develop and deploy DApps",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,17 +13,24 @@
     "lib": "./lib"
   },
   "dependencies": {
+    "async": "^2.0.1",
+    "bignumber.js": "debris/bignumber.js#master",
+    "blessed": "^0.1.81",
+    "bluebird": "^3.4.1",
+    "chokidar": "^1.6.0",
+    "colors": "^1.1.2",
     "commander": "^2.8.1",
+    "finalhandler": "^0.5.0",
     "grunt": "^0.4.5",
-    "js-sha3": "^0.3.1",
+    "json-honey": "^0.4.1",
     "meteor-build-client": "^0.1.6",
     "mkdirp": "^0.5.1",
     "read-yaml": "^1.0.0",
+    "request": "^2.75.0",
+    "serve-static": "^1.11.1",
     "shelljs": "^0.5.0",
-    "solc": "^0.4.1",
     "toposort": "^0.2.10",
     "web3": "^0.15.0",
-    "bignumber.js": "debris/bignumber.js#master",
     "wrench": "^1.5.8"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
@@ -33,6 +40,7 @@
     "grunt-mocha-test": "^0.12.7",
     "mocha": "^2.2.5",
     "mocha-sinon": "^1.1.4",
-    "sinon": "^1.15.4"
+    "sinon": "^1.15.4",
+    "toposort": "^0.2.12"
   }
 }
