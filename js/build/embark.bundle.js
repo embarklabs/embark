@@ -51,23 +51,6 @@ var EmbarkJS =
 	var EmbarkJS = {
 	};
 
-
-	Ipfs = IpfsApi;
-	//EmbarkJS.Ipfs = Ipfs;
-
-	options = {
-	  abi: {},
-	  address: {},
-	  code: "",
-	  options: {},
-	  web3: {},
-	  deployPromise: {}
-	};
-
-	//result += "\n" + className + "Abi = " + abi + ";";
-	//result += "\n" + className + "Contract = web3.eth.contract(" + className + "Abi);";
-	//result += "\n" + className + " = " + className + "Contract.at('" + contract.deployedAddress + "');";
-
 	EmbarkJS.Contract = function(options) {
 	  var self = this;
 
@@ -98,7 +81,7 @@ var EmbarkJS =
 	  contractParams.push({
 	    from: this.web3.eth.accounts[0],
 	    data: this.code,
-	    gasLimit: 500000,
+	    gas: 500000,
 	    gasPrice: 10000000000000
 	  });
 
@@ -132,6 +115,7 @@ var EmbarkJS =
 	EmbarkJS.Storage = {
 	};
 
+	// EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'})<F37>
 	//{server: ‘localhost’, port: ‘5001’};
 
 	EmbarkJS.Storage.setProvider = function(provider, options) {
@@ -159,33 +143,152 @@ var EmbarkJS =
 	};
 
 	EmbarkJS.Storage.uploadFile = function(inputSelector) {
+	  var self = this;
+	  var file = inputSelector[0].files[0];
+
+	  var promise = new Promise(function(resolve, reject) {
+	    var reader = new FileReader();
+	    reader.onloadend = function() { 
+	      var fileContent = reader.result;
+	      var buffer = self.ipfsConnection.Buffer.from(fileContent);
+	      self.ipfsConnection.add(buffer, function(err, result) {
+	        if (err) {
+	          reject(err);
+	        } else {
+	          resolve(result[0].path);
+	        }
+	      });
+	    };
+	    reader.readAsArrayBuffer(file);
+	  });
+
+	  return promise;
 	};
 
 	EmbarkJS.Storage.get = function(hash) {
+	  var self = this;
+	  var ipfsHash = this.web3.toAscii(hash);
+
+	  var promise = new Promise(function(resolve, reject) {
+	    self.ipfsConnection.object.get([ipfsHash]).then(function(node) {
+	      resolve(node.data);
+	    });
+	  });
+
+	  return promise;
 	};
 
 	EmbarkJS.Storage.getUrl = function(hash) {
+	  var self = this;
+	  var ipfsHash = web3.toAscii(hash);
+
+	  return 'http://localhost:8080/ipfs/' + ipfsHash;
 	};
 
 	EmbarkJS.Messages = {
 	};
 
-	EmbarkJS.Messages.setProvider = function(msgProvider) {
+	EmbarkJS.Messages.setProvider = function(provider) {
+	  if (provider === 'whisper') {
+	    this.currentMessages = EmbarkJS.Messages.Whisper;
+	  } else {
+	    throw Error('unknown provider');
+	  }
 	};
 
 	EmbarkJS.Messages.sendMessage = function(options) {
+	  return EmbarkJS.Messages.Whisper.sendMessage(options);
 	};
 
 	EmbarkJS.Messages.listenTo = function(options) {
+	  return EmbarkJS.Messages.Whisper.listenTo(options);
 	};
 
 	EmbarkJS.Messages.Whisper = {
 	};
 
 	EmbarkJS.Messages.Whisper.sendMessage = function(options) {
+	  var topics = options.topic || options.topics;
+	  var data = options.data || options.payload;
+	  var identity = options.identity || web3.shh.newIdentity();
+	  var ttl = options.ttl || 100;
+	  var priority = options.priority || 1000;
+
+	  if (topics === undefined) {
+	    throw new Error("missing option: topic");
+	  }
+
+	  if (data === undefined) {
+	    throw new Error("missing option: data");
+	  }
+
+	  // do fromAscii to each topics unless it's already a string
+	  if (typeof topics === 'string') {
+	    topics = topics;
+	  } else {
+	    // TODO: replace with es6 + babel;
+	    var _topics = [];
+	    for (var i = 0; i < topics.length; i++) {
+	      _topics.push(web3.fromAscii(topics[i]));
+	    }
+	    topics = _topics;
+	  }
+
+	  var payload = JSON.stringify(data);
+
+	  var message = {
+	    from: identity,
+	    topics: [web3.fromAscii(topics)],
+	    payload: web3.fromAscii(payload),
+	    ttl: ttl,
+	    priority: priority
+	  };
+
+	  return web3.shh.post(message);
 	};
 
 	EmbarkJS.Messages.Whisper.listenTo = function(options) {
+	  var topics = options.topic || options.topics;
+
+	  if (typeof topics === 'string') {
+	    topics = [topics];
+	  } else {
+	    // TODO: replace with es6 + babel;
+	    var _topics = [];
+	    for (var i = 0; i < topics.length; i++) {
+	      _topics.push(web3.fromAscii(topics[i]));
+	    }
+	    topics = _topics;
+	  }
+
+	  var filterOptions = {
+	    topics: topics
+	  };
+
+	  var multiplePromise = function() {
+	    this.cb = function() {};
+	  };
+
+	  multiplePromise.prototype.then = function(cb) {
+	    this.cb = cb;
+	  };
+
+	  multiplePromise.prototype.error = function(err) {
+	    return err;
+	  };
+
+	  var promise = new multiplePromise();
+
+	  var filter = web3.shh.filter(filterOptions, function(err, result) {
+	    var payload = JSON.parse(web3.toAscii(result.payload));
+	    if (err) {
+	      promise.error(err);
+	    } else {
+	      promise.cb(payload);
+	    }
+	  });
+
+	  return promise;
 	};
 
 	module.exports = EmbarkJS;
@@ -220,7 +323,7 @@ var EmbarkJS =
 	 * 
 	 */
 	/**
-	 * bluebird build version 3.4.1
+	 * bluebird build version 3.4.6
 	 * Features enabled: core, race, call_get, generators, map, nodeify, promisify, props, reduce, settle, some, using, timers, filter, any, each
 	*/
 	!function(e){if(true)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Promise=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof _dereq_=="function"&&_dereq_;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof _dereq_=="function"&&_dereq_;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
@@ -634,7 +737,7 @@ var EmbarkJS =
 
 	    var promise = this;
 	    var child = promise;
-	    while (promise.isCancellable()) {
+	    while (promise._isCancellable()) {
 	        if (!promise._cancelBy(child)) {
 	            if (child._isFollowing()) {
 	                child._followee().cancel();
@@ -645,7 +748,7 @@ var EmbarkJS =
 	        }
 
 	        var parent = promise._cancellationParent;
-	        if (parent == null || !parent.isCancellable()) {
+	        if (parent == null || !parent._isCancellable()) {
 	            if (promise._isFollowing()) {
 	                promise._followee().cancel();
 	            } else {
@@ -654,6 +757,7 @@ var EmbarkJS =
 	            break;
 	        } else {
 	            if (promise._isFollowing()) promise._followee().cancel();
+	            promise._setWillBeCancelled();
 	            child = promise;
 	            promise = parent;
 	        }
@@ -691,8 +795,7 @@ var EmbarkJS =
 	};
 
 	Promise.prototype._cancel = function() {
-	    if (!this.isCancellable()) return;
-
+	    if (!this._isCancellable()) return;
 	    this._setCancelled();
 	    async.invoke(this._cancelPromises, this, undefined);
 	};
@@ -703,6 +806,10 @@ var EmbarkJS =
 
 	Promise.prototype._unsetOnCancel = function() {
 	    this._onCancelField = undefined;
+	};
+
+	Promise.prototype._isCancellable = function() {
+	    return this.isPending() && !this._isCancelled();
 	};
 
 	Promise.prototype.isCancellable = function() {
@@ -736,7 +843,7 @@ var EmbarkJS =
 	};
 
 	Promise.prototype._invokeInternalOnCancel = function() {
-	    if (this.isCancellable()) {
+	    if (this._isCancellable()) {
 	        this._doInvokeOnCancel(this._onCancel(), true);
 	        this._unsetOnCancel();
 	    }
@@ -875,6 +982,8 @@ var EmbarkJS =
 	var possiblyUnhandledRejection;
 	var bluebirdFramePattern =
 	    /[\\\/]bluebird[\\\/]js[\\\/](release|debug|instrumented)/;
+	var nodeFramePattern = /\((?:timers\.js):\d+:\d+\)/;
+	var parseLinePattern = /[\/<\(](.+?):(\d+):(\d+)\)?\s*$/;
 	var stackFramePattern = null;
 	var formatStack = null;
 	var indentStackFrames = false;
@@ -962,14 +1071,16 @@ var EmbarkJS =
 	Promise.onPossiblyUnhandledRejection = function (fn) {
 	    var domain = getDomain();
 	    possiblyUnhandledRejection =
-	        typeof fn === "function" ? (domain === null ? fn : domain.bind(fn))
+	        typeof fn === "function" ? (domain === null ?
+	                                            fn : util.domainBind(domain, fn))
 	                                 : undefined;
 	};
 
 	Promise.onUnhandledRejectionHandled = function (fn) {
 	    var domain = getDomain();
 	    unhandledRejectionHandled =
-	        typeof fn === "function" ? (domain === null ? fn : domain.bind(fn))
+	        typeof fn === "function" ? (domain === null ?
+	                                            fn : util.domainBind(domain, fn))
 	                                 : undefined;
 	};
 
@@ -1005,14 +1116,37 @@ var EmbarkJS =
 
 	var fireDomEvent = (function() {
 	    try {
-	        var event = document.createEvent("CustomEvent");
-	        event.initCustomEvent("testingtheevent", false, true, {});
-	        util.global.dispatchEvent(event);
-	        return function(name, event) {
-	            var domEvent = document.createEvent("CustomEvent");
-	            domEvent.initCustomEvent(name.toLowerCase(), false, true, event);
-	            return !util.global.dispatchEvent(domEvent);
-	        };
+	        if (typeof CustomEvent === "function") {
+	            var event = new CustomEvent("CustomEvent");
+	            util.global.dispatchEvent(event);
+	            return function(name, event) {
+	                var domEvent = new CustomEvent(name.toLowerCase(), {
+	                    detail: event,
+	                    cancelable: true
+	                });
+	                return !util.global.dispatchEvent(domEvent);
+	            };
+	        } else if (typeof Event === "function") {
+	            var event = new Event("CustomEvent");
+	            util.global.dispatchEvent(event);
+	            return function(name, event) {
+	                var domEvent = new Event(name.toLowerCase(), {
+	                    cancelable: true
+	                });
+	                domEvent.detail = event;
+	                return !util.global.dispatchEvent(domEvent);
+	            };
+	        } else {
+	            var event = document.createEvent("CustomEvent");
+	            event.initCustomEvent("testingtheevent", false, true, {});
+	            util.global.dispatchEvent(event);
+	            return function(name, event) {
+	                var domEvent = document.createEvent("CustomEvent");
+	                domEvent.initCustomEvent(name.toLowerCase(), false, true,
+	                    event);
+	                return !util.global.dispatchEvent(domEvent);
+	            };
+	        }
 	    } catch (e) {}
 	    return function() {
 	        return false;
@@ -1169,7 +1303,7 @@ var EmbarkJS =
 	}
 
 	function cancellationAttachCancellationCallback(onCancel) {
-	    if (!this.isCancellable()) return this;
+	    if (!this._isCancellable()) return this;
 
 	    var previousOnCancel = this._onCancel();
 	    if (previousOnCancel !== undefined) {
@@ -1260,8 +1394,41 @@ var EmbarkJS =
 	        if ((promise._bitField & 65535) === 0) return;
 
 	        if (name) name = name + " ";
+	        var handlerLine = "";
+	        var creatorLine = "";
+	        if (promiseCreated._trace) {
+	            var traceLines = promiseCreated._trace.stack.split("\n");
+	            var stack = cleanStack(traceLines);
+	            for (var i = stack.length - 1; i >= 0; --i) {
+	                var line = stack[i];
+	                if (!nodeFramePattern.test(line)) {
+	                    var lineMatches = line.match(parseLinePattern);
+	                    if (lineMatches) {
+	                        handlerLine  = "at " + lineMatches[1] +
+	                            ":" + lineMatches[2] + ":" + lineMatches[3] + " ";
+	                    }
+	                    break;
+	                }
+	            }
+
+	            if (stack.length > 0) {
+	                var firstUserLine = stack[0];
+	                for (var i = 0; i < traceLines.length; ++i) {
+
+	                    if (traceLines[i] === firstUserLine) {
+	                        if (i > 0) {
+	                            creatorLine = "\n" + traceLines[i - 1];
+	                        }
+	                        break;
+	                    }
+	                }
+
+	            }
+	        }
 	        var msg = "a promise was created in a " + name +
-	            "handler but was not returned from it";
+	            "handler " + handlerLine + "but was not returned from it, " +
+	            "see http://goo.gl/rRqMUw" +
+	            creatorLine;
 	        promise._warn(msg, true, promiseCreated);
 	    }
 	}
@@ -1783,8 +1950,8 @@ var EmbarkJS =
 	}
 
 	Promise.prototype.each = function (fn) {
-	    return this.mapSeries(fn)
-	            ._then(promiseAllThis, undefined, undefined, this, undefined);
+	    return PromiseReduce(this, fn, INTERNAL, 0)
+	              ._then(promiseAllThis, undefined, undefined, this, undefined);
 	};
 
 	Promise.prototype.mapSeries = function (fn) {
@@ -1792,12 +1959,13 @@ var EmbarkJS =
 	};
 
 	Promise.each = function (promises, fn) {
-	    return PromiseMapSeries(promises, fn)
-	            ._then(promiseAllThis, undefined, undefined, promises, undefined);
+	    return PromiseReduce(promises, fn, INTERNAL, 0)
+	              ._then(promiseAllThis, undefined, undefined, promises, undefined);
 	};
 
 	Promise.mapSeries = PromiseMapSeries;
 	};
+
 
 	},{}],12:[function(_dereq_,module,exports){
 	"use strict";
@@ -2075,7 +2243,7 @@ var EmbarkJS =
 	            var maybePromise = tryConvertToPromise(ret, promise);
 	            if (maybePromise instanceof Promise) {
 	                if (this.cancelPromise != null) {
-	                    if (maybePromise.isCancelled()) {
+	                    if (maybePromise._isCancelled()) {
 	                        var reason =
 	                            new CancellationError("late cancellation observer");
 	                        promise._attachExtraTrace(reason);
@@ -2301,9 +2469,13 @@ var EmbarkJS =
 	            this._yieldedPromise = maybePromise;
 	            maybePromise._proxy(this, null);
 	        } else if (((bitField & 33554432) !== 0)) {
-	            this._promiseFulfilled(maybePromise._value());
+	            Promise._async.invoke(
+	                this._promiseFulfilled, this, maybePromise._value()
+	            );
 	        } else if (((bitField & 16777216) !== 0)) {
-	            this._promiseRejected(maybePromise._reason());
+	            Promise._async.invoke(
+	                this._promiseRejected, this, maybePromise._reason()
+	            );
 	        } else {
 	            this._promiseCancelled();
 	        }
@@ -2350,7 +2522,8 @@ var EmbarkJS =
 	},{"./errors":12,"./util":36}],17:[function(_dereq_,module,exports){
 	"use strict";
 	module.exports =
-	function(Promise, PromiseArray, tryConvertToPromise, INTERNAL) {
+	function(Promise, PromiseArray, tryConvertToPromise, INTERNAL, async,
+	         getDomain) {
 	var util = _dereq_("./util");
 	var canEvaluate = util.canEvaluate;
 	var tryCatch = util.tryCatch;
@@ -2392,25 +2565,35 @@ var EmbarkJS =
 	        var name = "Holder$" + total;
 
 
-	        var code = "return function(tryCatch, errorObj, Promise) {           \n\
+	        var code = "return function(tryCatch, errorObj, Promise, async) {    \n\
 	            'use strict';                                                    \n\
 	            function [TheName](fn) {                                         \n\
 	                [TheProperties]                                              \n\
 	                this.fn = fn;                                                \n\
+	                this.asyncNeeded = true;                                     \n\
 	                this.now = 0;                                                \n\
 	            }                                                                \n\
+	                                                                             \n\
+	            [TheName].prototype._callFunction = function(promise) {          \n\
+	                promise._pushContext();                                      \n\
+	                var ret = tryCatch(this.fn)([ThePassedArguments]);           \n\
+	                promise._popContext();                                       \n\
+	                if (ret === errorObj) {                                      \n\
+	                    promise._rejectCallback(ret.e, false);                   \n\
+	                } else {                                                     \n\
+	                    promise._resolveCallback(ret);                           \n\
+	                }                                                            \n\
+	            };                                                               \n\
+	                                                                             \n\
 	            [TheName].prototype.checkFulfillment = function(promise) {       \n\
 	                var now = ++this.now;                                        \n\
 	                if (now === [TheTotal]) {                                    \n\
-	                    promise._pushContext();                                  \n\
-	                    var callback = this.fn;                                  \n\
-	                    var ret = tryCatch(callback)([ThePassedArguments]);      \n\
-	                    promise._popContext();                                   \n\
-	                    if (ret === errorObj) {                                  \n\
-	                        promise._rejectCallback(ret.e, false);               \n\
+	                    if (this.asyncNeeded) {                                  \n\
+	                        async.invoke(this._callFunction, this, promise);     \n\
 	                    } else {                                                 \n\
-	                        promise._resolveCallback(ret);                       \n\
+	                        this._callFunction(promise);                         \n\
 	                    }                                                        \n\
+	                                                                             \n\
 	                }                                                            \n\
 	            };                                                               \n\
 	                                                                             \n\
@@ -2419,7 +2602,7 @@ var EmbarkJS =
 	            };                                                               \n\
 	                                                                             \n\
 	            return [TheName];                                                \n\
-	        }(tryCatch, errorObj, Promise);                                      \n\
+	        }(tryCatch, errorObj, Promise, async);                               \n\
 	        ";
 
 	        code = code.replace(/\[TheName\]/g, name)
@@ -2428,8 +2611,8 @@ var EmbarkJS =
 	            .replace(/\[TheProperties\]/g, assignment)
 	            .replace(/\[CancellationCode\]/g, cancellationCode);
 
-	        return new Function("tryCatch", "errorObj", "Promise", code)
-	                           (tryCatch, errorObj, Promise);
+	        return new Function("tryCatch", "errorObj", "Promise", "async", code)
+	                           (tryCatch, errorObj, Promise, async);
 	    };
 
 	    var holderClasses = [];
@@ -2470,6 +2653,7 @@ var EmbarkJS =
 	                            maybePromise._then(callbacks[i], reject,
 	                                               undefined, ret, holder);
 	                            promiseSetters[i](maybePromise, holder);
+	                            holder.asyncNeeded = false;
 	                        } else if (((bitField & 33554432) !== 0)) {
 	                            callbacks[i].call(ret,
 	                                              maybePromise._value(), holder);
@@ -2482,7 +2666,14 @@ var EmbarkJS =
 	                        callbacks[i].call(ret, maybePromise, holder);
 	                    }
 	                }
+
 	                if (!ret._isFateSealed()) {
+	                    if (holder.asyncNeeded) {
+	                        var domain = getDomain();
+	                        if (domain !== null) {
+	                            holder.fn = util.domainBind(domain, holder.fn);
+	                        }
+	                    }
 	                    ret._setAsyncGuaranteed();
 	                    ret._setOnCancel(holder);
 	                }
@@ -2510,22 +2701,26 @@ var EmbarkJS =
 	var util = _dereq_("./util");
 	var tryCatch = util.tryCatch;
 	var errorObj = util.errorObj;
-	var EMPTY_ARRAY = [];
+	var async = Promise._async;
 
 	function MappingPromiseArray(promises, fn, limit, _filter) {
 	    this.constructor$(promises);
 	    this._promise._captureStackTrace();
 	    var domain = getDomain();
-	    this._callback = domain === null ? fn : domain.bind(fn);
+	    this._callback = domain === null ? fn : util.domainBind(domain, fn);
 	    this._preservedValues = _filter === INTERNAL
 	        ? new Array(this.length())
 	        : null;
 	    this._limit = limit;
 	    this._inFlight = 0;
-	    this._queue = limit >= 1 ? [] : EMPTY_ARRAY;
-	    this._init$(undefined, -2);
+	    this._queue = [];
+	    async.invoke(this._asyncInit, this, undefined);
 	}
 	util.inherits(MappingPromiseArray, PromiseArray);
+
+	MappingPromiseArray.prototype._asyncInit = function() {
+	    this._init$(undefined, -2);
+	};
 
 	MappingPromiseArray.prototype._init = function () {};
 
@@ -2931,7 +3126,8 @@ var EmbarkJS =
 	            if (util.isObject(item)) {
 	                catchInstances[j++] = item;
 	            } else {
-	                return apiRejection("expecting an object but got " + util.classString(item));
+	                return apiRejection("expecting an object but got " +
+	                    "A catch statement predicate " + util.classString(item));
 	            }
 	        }
 	        catchInstances.length = j;
@@ -3095,7 +3291,8 @@ var EmbarkJS =
 
 	        async.invoke(settler, target, {
 	            handler: domain === null ? handler
-	                : (typeof handler === "function" && domain.bind(handler)),
+	                : (typeof handler === "function" &&
+	                    util.domainBind(domain, handler)),
 	            promise: promise,
 	            receiver: receiver,
 	            value: value
@@ -3154,6 +3351,10 @@ var EmbarkJS =
 	Promise.prototype._setCancelled = function() {
 	    this._bitField = this._bitField | 65536;
 	    this._fireEvent("promiseCancelled", this);
+	};
+
+	Promise.prototype._setWillBeCancelled = function() {
+	    this._bitField = this._bitField | 8388608;
 	};
 
 	Promise.prototype._setAsyncGuaranteed = function() {
@@ -3227,11 +3428,11 @@ var EmbarkJS =
 	        this._receiver0 = receiver;
 	        if (typeof fulfill === "function") {
 	            this._fulfillmentHandler0 =
-	                domain === null ? fulfill : domain.bind(fulfill);
+	                domain === null ? fulfill : util.domainBind(domain, fulfill);
 	        }
 	        if (typeof reject === "function") {
 	            this._rejectionHandler0 =
-	                domain === null ? reject : domain.bind(reject);
+	                domain === null ? reject : util.domainBind(domain, reject);
 	        }
 	    } else {
 	        var base = index * 4 - 4;
@@ -3239,11 +3440,11 @@ var EmbarkJS =
 	        this[base + 3] = receiver;
 	        if (typeof fulfill === "function") {
 	            this[base + 0] =
-	                domain === null ? fulfill : domain.bind(fulfill);
+	                domain === null ? fulfill : util.domainBind(domain, fulfill);
 	        }
 	        if (typeof reject === "function") {
 	            this[base + 1] =
-	                domain === null ? reject : domain.bind(reject);
+	                domain === null ? reject : util.domainBind(domain, reject);
 	        }
 	    }
 	    this._setLength(index + 1);
@@ -3560,9 +3761,9 @@ var EmbarkJS =
 	_dereq_("./direct_resolve")(Promise);
 	_dereq_("./synchronous_inspection")(Promise);
 	_dereq_("./join")(
-	    Promise, PromiseArray, tryConvertToPromise, INTERNAL, debug);
+	    Promise, PromiseArray, tryConvertToPromise, INTERNAL, async, getDomain);
 	Promise.Promise = Promise;
-	Promise.version = "3.4.0";
+	Promise.version = "3.4.6";
 	_dereq_('./map.js')(Promise, PromiseArray, apiRejection, tryConvertToPromise, INTERNAL, debug);
 	_dereq_('./call_get.js')(Promise);
 	_dereq_('./using.js')(Promise, apiRejection, tryConvertToPromise, createContext, INTERNAL, debug);
@@ -3732,7 +3933,7 @@ var EmbarkJS =
 	};
 
 	PromiseArray.prototype._cancel = function() {
-	    if (this._isResolved() || !this._promise.isCancellable()) return;
+	    if (this._isResolved() || !this._promise._isCancellable()) return;
 	    this._values = null;
 	    this._promise._cancel();
 	};
@@ -4383,27 +4584,37 @@ var EmbarkJS =
 	function ReductionPromiseArray(promises, fn, initialValue, _each) {
 	    this.constructor$(promises);
 	    var domain = getDomain();
-	    this._fn = domain === null ? fn : domain.bind(fn);
+	    this._fn = domain === null ? fn : util.domainBind(domain, fn);
 	    if (initialValue !== undefined) {
 	        initialValue = Promise.resolve(initialValue);
 	        initialValue._attachCancellationCallback(this);
 	    }
 	    this._initialValue = initialValue;
 	    this._currentCancellable = null;
-	    this._eachValues = _each === INTERNAL ? [] : undefined;
+	    if(_each === INTERNAL) {
+	        this._eachValues = Array(this._length);
+	    } else if (_each === 0) {
+	        this._eachValues = null;
+	    } else {
+	        this._eachValues = undefined;
+	    }
 	    this._promise._captureStackTrace();
 	    this._init$(undefined, -5);
 	}
 	util.inherits(ReductionPromiseArray, PromiseArray);
 
 	ReductionPromiseArray.prototype._gotAccum = function(accum) {
-	    if (this._eachValues !== undefined && accum !== INTERNAL) {
+	    if (this._eachValues !== undefined && 
+	        this._eachValues !== null && 
+	        accum !== INTERNAL) {
 	        this._eachValues.push(accum);
 	    }
 	};
 
 	ReductionPromiseArray.prototype._eachComplete = function(value) {
-	    this._eachValues.push(value);
+	    if (this._eachValues !== null) {
+	        this._eachValues.push(value);
+	    }
 	    return this._eachValues;
 	};
 
@@ -4546,7 +4757,8 @@ var EmbarkJS =
 	    schedule = util.isRecentNode
 	                ? function(fn) { GlobalSetImmediate.call(global, fn); }
 	                : function(fn) { ProcessNextTick.call(process, fn); };
-	} else if (typeof NativePromise === "function") {
+	} else if (typeof NativePromise === "function" &&
+	           typeof NativePromise.resolve === "function") {
 	    var nativePromise = NativePromise.resolve();
 	    schedule = function(fn) {
 	        nativePromise.then(fn);
@@ -4554,7 +4766,7 @@ var EmbarkJS =
 	} else if ((typeof MutationObserver !== "undefined") &&
 	          !(typeof window !== "undefined" &&
 	            window.navigator &&
-	            window.navigator.standalone)) {
+	            (window.navigator.standalone || window.cordova))) {
 	    schedule = (function() {
 	        var div = document.createElement("div");
 	        var opts = {attributes: true};
@@ -4840,13 +5052,20 @@ var EmbarkJS =
 	    return (this._bitField & 50331648) !== 0;
 	};
 
-	PromiseInspection.prototype.isCancelled =
-	Promise.prototype._isCancelled = function() {
+	PromiseInspection.prototype.isCancelled = function() {
+	    return (this._bitField & 8454144) !== 0;
+	};
+
+	Promise.prototype.__isCancelled = function() {
 	    return (this._bitField & 65536) === 65536;
 	};
 
+	Promise.prototype._isCancelled = function() {
+	    return this._target().__isCancelled();
+	};
+
 	Promise.prototype.isCancelled = function() {
-	    return this._target()._isCancelled();
+	    return (this._target()._bitField & 8454144) !== 0;
 	};
 
 	Promise.prototype.isPending = function() {
@@ -5005,6 +5224,7 @@ var EmbarkJS =
 	        if (debug.cancellation()) {
 	            ret._setOnCancel(new HandleWrapper(handle));
 	        }
+	        ret._captureStackTrace();
 	    }
 	    ret._setAsyncGuaranteed();
 	    return ret;
@@ -5625,6 +5845,10 @@ var EmbarkJS =
 	    }
 	}
 
+	function domainBind(self, cb) {
+	    return self.bind(cb);
+	}
+
 	var ret = {
 	    isClass: isClass,
 	    isIdentifier: isIdentifier,
@@ -5657,7 +5881,8 @@ var EmbarkJS =
 	    isNode: isNode,
 	    env: env,
 	    global: globalObject,
-	    getNativePromise: getNativePromise
+	    getNativePromise: getNativePromise,
+	    domainBind: domainBind
 	};
 	ret.isRecentNode = ret.isNode && (function() {
 	    var version = process.versions.node.split(".").map(Number);
@@ -5678,14 +5903,83 @@ var EmbarkJS =
 /***/ function(module, exports) {
 
 	// shim for using process in browser
-
 	var process = module.exports = {};
+
+	// cached from whatever global is present so that test runners that stub it
+	// don't break things.  But we need to wrap it in a try catch in case it is
+	// wrapped in strict mode code which doesn't define any globals.  It's inside a
+	// function because try/catches deoptimize in certain engines.
+
+	var cachedSetTimeout;
+	var cachedClearTimeout;
+
+	(function () {
+	    try {
+	        cachedSetTimeout = setTimeout;
+	    } catch (e) {
+	        cachedSetTimeout = function () {
+	            throw new Error('setTimeout is not defined');
+	        }
+	    }
+	    try {
+	        cachedClearTimeout = clearTimeout;
+	    } catch (e) {
+	        cachedClearTimeout = function () {
+	            throw new Error('clearTimeout is not defined');
+	        }
+	    }
+	} ())
+	function runTimeout(fun) {
+	    if (cachedSetTimeout === setTimeout) {
+	        //normal enviroments in sane situations
+	        return setTimeout(fun, 0);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedSetTimeout(fun, 0);
+	    } catch(e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+	            return cachedSetTimeout.call(null, fun, 0);
+	        } catch(e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+	            return cachedSetTimeout.call(this, fun, 0);
+	        }
+	    }
+
+
+	}
+	function runClearTimeout(marker) {
+	    if (cachedClearTimeout === clearTimeout) {
+	        //normal enviroments in sane situations
+	        return clearTimeout(marker);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedClearTimeout(marker);
+	    } catch (e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+	            return cachedClearTimeout.call(null, marker);
+	        } catch (e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+	            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+	            return cachedClearTimeout.call(this, marker);
+	        }
+	    }
+
+
+
+	}
 	var queue = [];
 	var draining = false;
 	var currentQueue;
 	var queueIndex = -1;
 
 	function cleanUpNextTick() {
+	    if (!draining || !currentQueue) {
+	        return;
+	    }
 	    draining = false;
 	    if (currentQueue.length) {
 	        queue = currentQueue.concat(queue);
@@ -5701,7 +5995,7 @@ var EmbarkJS =
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = setTimeout(cleanUpNextTick);
+	    var timeout = runTimeout(cleanUpNextTick);
 	    draining = true;
 
 	    var len = queue.length;
@@ -5718,7 +6012,7 @@ var EmbarkJS =
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    clearTimeout(timeout);
+	    runClearTimeout(timeout);
 	}
 
 	process.nextTick = function (fun) {
@@ -5730,7 +6024,7 @@ var EmbarkJS =
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        setTimeout(drainQueue, 0);
+	        runTimeout(drainQueue);
 	    }
 	};
 

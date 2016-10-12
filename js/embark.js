@@ -141,22 +141,107 @@ EmbarkJS.Storage.getUrl = function(hash) {
 EmbarkJS.Messages = {
 };
 
-EmbarkJS.Messages.setProvider = function(msgProvider) {
+EmbarkJS.Messages.setProvider = function(provider) {
+  if (provider === 'whisper') {
+    this.currentMessages = EmbarkJS.Messages.Whisper;
+  } else {
+    throw Error('unknown provider');
+  }
 };
 
 EmbarkJS.Messages.sendMessage = function(options) {
+  return EmbarkJS.Messages.Whisper.sendMessage(options);
 };
 
 EmbarkJS.Messages.listenTo = function(options) {
+  return EmbarkJS.Messages.Whisper.listenTo(options);
 };
 
 EmbarkJS.Messages.Whisper = {
 };
 
 EmbarkJS.Messages.Whisper.sendMessage = function(options) {
+  var topics = options.topic || options.topics;
+  var data = options.data || options.payload;
+  var identity = options.identity || web3.shh.newIdentity();
+  var ttl = options.ttl || 100;
+  var priority = options.priority || 1000;
+
+  if (topics === undefined) {
+    throw new Error("missing option: topic");
+  }
+
+  if (data === undefined) {
+    throw new Error("missing option: data");
+  }
+
+  // do fromAscii to each topics unless it's already a string
+  if (typeof topics === 'string') {
+    topics = topics;
+  } else {
+    // TODO: replace with es6 + babel;
+    var _topics = [];
+    for (var i = 0; i < topics.length; i++) {
+      _topics.push(web3.fromAscii(topics[i]));
+    }
+    topics = _topics;
+  }
+
+  var payload = JSON.stringify(data);
+
+  var message = {
+    from: identity,
+    topics: [web3.fromAscii(topics)],
+    payload: web3.fromAscii(payload),
+    ttl: ttl,
+    priority: priority
+  };
+
+  return web3.shh.post(message);
 };
 
 EmbarkJS.Messages.Whisper.listenTo = function(options) {
+  var topics = options.topic || options.topics;
+
+  if (typeof topics === 'string') {
+    topics = [topics];
+  } else {
+    // TODO: replace with es6 + babel;
+    var _topics = [];
+    for (var i = 0; i < topics.length; i++) {
+      _topics.push(web3.fromAscii(topics[i]));
+    }
+    topics = _topics;
+  }
+
+  var filterOptions = {
+    topics: topics
+  };
+
+  var multiplePromise = function() {
+    this.cb = function() {};
+  };
+
+  multiplePromise.prototype.then = function(cb) {
+    this.cb = cb;
+  };
+
+  multiplePromise.prototype.error = function(err) {
+    return err;
+  };
+
+  var promise = new multiplePromise();
+
+  var filter = web3.shh.filter(filterOptions, function(err, result) {
+    var payload = JSON.parse(web3.toAscii(result.payload));
+    if (err) {
+      promise.error(err);
+    } else {
+      promise.cb(payload);
+    }
+  });
+
+  return promise;
 };
 
 module.exports = EmbarkJS;
