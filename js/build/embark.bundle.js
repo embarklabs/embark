@@ -265,19 +265,19 @@ var EmbarkJS =
 	    topics: topics
 	  };
 
-	  var multiplePromise = function() {
+	  var messageEvents = function() {
 	    this.cb = function() {};
 	  };
 
-	  multiplePromise.prototype.then = function(cb) {
+	  messageEvents.prototype.then = function(cb) {
 	    this.cb = cb;
 	  };
 
-	  multiplePromise.prototype.error = function(err) {
+	  messageEvents.prototype.error = function(err) {
 	    return err;
 	  };
 
-	  var promise = new multiplePromise();
+	  var promise = new messageEvents();
 
 	  var filter = web3.shh.filter(filterOptions, function(err, result) {
 	    var payload = JSON.parse(web3.toAscii(result.payload));
