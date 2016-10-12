@@ -74,7 +74,7 @@ EmbarkJS.Storage = {
 EmbarkJS.Storage.setProvider = function(provider, options) {
   if (provider === 'ipfs') {
     this.currentStorage = EmbarkJS.Storage.IPFS;
-    this.ipfsConnection = Ipfs(options.server, options.port);
+    this.ipfsConnection = IpfsApi(options.server, options.port);
   } else {
     throw Error('unknown provider');
   }
@@ -120,10 +120,11 @@ EmbarkJS.Storage.uploadFile = function(inputSelector) {
 
 EmbarkJS.Storage.get = function(hash) {
   var self = this;
-  var ipfsHash = this.web3.toAscii(hash);
+  // TODO: detect type, then convert if needed
+  //var ipfsHash = web3.toAscii(hash);
 
   var promise = new Promise(function(resolve, reject) {
-    self.ipfsConnection.object.get([ipfsHash]).then(function(node) {
+    self.ipfsConnection.object.get([hash]).then(function(node) {
       resolve(node.data);
     });
   });
@@ -132,10 +133,9 @@ EmbarkJS.Storage.get = function(hash) {
 };
 
 EmbarkJS.Storage.getUrl = function(hash) {
-  var self = this;
-  var ipfsHash = web3.toAscii(hash);
+  //var ipfsHash = web3.toAscii(hash);
 
-  return 'http://localhost:8080/ipfs/' + ipfsHash;
+  return 'http://localhost:8080/ipfs/' + hash;
 };
 
 EmbarkJS.Messages = {
