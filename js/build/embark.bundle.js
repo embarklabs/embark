@@ -146,6 +146,10 @@ var EmbarkJS =
 	  var self = this;
 	  var file = inputSelector[0].files[0];
 
+	  if (file === undefined) {
+	    throw new Error('no file found');
+	  }
+
 	  var promise = new Promise(function(resolve, reject) {
 	    var reader = new FileReader();
 	    reader.onloadend = function() { 
