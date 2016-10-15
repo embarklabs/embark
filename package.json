@@ -23,6 +23,7 @@
     "finalhandler": "^0.5.0",
     "grunt": "^0.4.5",
     "json-honey": "^0.4.1",
+    "merge": "^1.2.0",
     "meteor-build-client": "^0.1.6",
     "mkdirp": "^0.5.1",
     "read-yaml": "^1.0.0",
