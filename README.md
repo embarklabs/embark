@@ -62,8 +62,6 @@ This will automatically deploy the contracts, update their JS bindings and deplo
 
 Note that if you update your code it will automatically be re-deployed, contracts included. There is no need to restart embark, refreshing the page on the browser will do.
 
-note: for a demo using meteor do ```embark meteor_demo``` followed by ```embark deploy``` then ```meteor```
-
 Creating a new DApp
 ======
 
@@ -82,11 +80,10 @@ DApp Structure
     |___ css/
     |___ js/
   config/
-    |___ blockchain.yml #environments configuration
-    |___ contracts.yml  #contracts configuration
-    |___ server.yml     #server configuration
-  spec/
-    |___ contracts/ #contracts tests
+    |___ blockchain.json #environments configuration
+    |___ contracts.json  #contracts configuration
+  test/
+    |___ #contracts tests
 ```
 
 Solidity/Serpent files in the contracts directory will automatically be deployed with embark run. Changes in any files will automatically be reflected in app, changes to contracts will result in a redeployment and update of their JS Bindings
@@ -123,15 +120,20 @@ SimpleStorage.storedData();
 
 You can specify for each contract and environment its gas costs and arguments:
 
-```Yaml
-# config/contracts.yml
-  development:
-    SimpleStorage:
-      gas_limit: 500000
-      gas_price: 10000000000000
-      args:
-        - 100
-  ...
+```Json
+# config/contracts.json
+{
+  "development": {
+    "gas": "auto",
+    "contracts": {
+      "SimpleStorage": {
+        "args": [
+          100
+        ]
+      }
+    }
+  }
+}
 ```
 
 If you are using multiple contracts, you can pass a reference to another contract as ```$ContractName```, Embark will automatically replace this with the correct address for the contract.
@@ -210,19 +212,26 @@ You can also define contract interfaces (Stubs) and actions to do on deployment
 Tests
 ======
 
-You can run specs with ```embark spec```, it will run any test files under ```test/```.
+You can run specs with ```embark test```, it will run any test files under ```test/```.
 
 Embark includes a testing lib to fastly run & test your contracts in a EVM.
 
 ```Javascript
 # test/simple_storage_spec.js
+
 var assert = require('assert');
 var Embark = require('embark-framework');
 var EmbarkSpec = Embark.initTests();
+var web3 = EmbarkSpec.web3;
 
-describe("SimpleStorage", function(done) {
+describe("SimpleStorage", function() {
   before(function(done) {
-    EmbarkSpec.deployAll(done);
+    var contractsConfig = {
+      "SimpleStorage": {
+        args: [100]
+      }
+    };
+    EmbarkSpec.deployAll(contractsConfig, done);
   });
 
   it("should set constructor value", function(done) {
@@ -241,7 +250,7 @@ describe("SimpleStorage", function(done) {
     });
   });
 
-})
+});
 ```
 
 Embark uses [Mocha](http://mochajs.org/) by default, but you can use any testing framework you want.
