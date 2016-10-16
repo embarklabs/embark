@@ -209,6 +209,15 @@ You can also define contract interfaces (Stubs) and actions to do on deployment
   ...
 ```
 
+EmbarkJS
+======
+
+EmbarkJS - Storage
+======
+
+EmbarkJS - Communication
+======
+
 Tests
 ======
 
