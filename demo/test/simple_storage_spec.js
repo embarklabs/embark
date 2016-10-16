@@ -7,7 +7,7 @@ describe("SimpleStorage", function() {
   before(function(done) {
     var contractsConfig = {
       "SimpleStorage": {
-        args: [100, '0x123']
+        args: [100]
       }
     };
     EmbarkSpec.deployAll(contractsConfig, done);
