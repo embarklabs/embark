@@ -2,11 +2,6 @@
   "default": {
     "gas": "auto",
     "contracts": {
-      "SimpleStorage": {
-        "args": [
-          100
-        ]
-      }
     }
   }
 }
