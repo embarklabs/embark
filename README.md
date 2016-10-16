@@ -140,19 +140,31 @@ If you are using multiple contracts, you can pass a reference to another contrac
 
 
 ```Yaml
-# config/contracts.yml
-  development:
-    SimpleStorage:
-      args:
-        - 100
-        - $MyStorage
-    MyStorage:
-       args:
-         - "initial string"
-    MyMainContract:
-      args:
-        - $SimpleStorage
+# config/contracts.json
+{
   ...
+  "development": {
+    "contracts": {
+      "SimpleStorage": {
+        "args": [
+          100,
+          $MyStorage
+        ]
+      },
+      "MyStorage": {
+        "args": [
+          "initial string"
+        ]
+      },
+      "MyMainContract": {
+        "args": [
+          $SimpleStorage
+        ]
+      }
+    }
+  }
+  ...
+}
 ```
 
 You can now deploy many instances of the same contract. e.g
