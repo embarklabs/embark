@@ -5,29 +5,27 @@ What is embark
 
 [![Join the chat at https://gitter.im/iurimatias/embark-framework](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/iurimatias/embark-framework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Embark is a framework that allows you to easily develop and deploy DApps.
+Embark is a framework that allows you to easily develop and deploy  DApps.
 
 With Embark you can:
 * Automatically deploy contracts and make them available in your JS code. Embark watches for changes, and if you update a contract, Embark will automatically redeploy the contracts (if needed) and the dapp.
-* Use any build pipeline or tool you wish, including grunt and meteor.
+* Use any build pipeline or tool you wish, including grunt and meteor. (for 1.x, plugins coming soon for 2.x series) 
 * Do Test Driven Development with Contracts using Javascript.
 * Easily deploy to & use decentralized systems such as IPFS.
 * Keep track of deployed contracts, deploy only when truly needed.
 * Manage different chains (e.g testnet, private net, livenet)
-* Quickly create advanced DApps using multiple contracts.
-
-See the [Wiki](https://github.com/iurimatias/embark-framework/wiki) for more details.
+* Quickly create advanced DApps using multiple contracts that can interact with decentralized infrastructure for storage and comunication. 
 
 Installation
 ======
 Requirements: geth (1.4.4 or higher), node (5.0.0) and npm
-Optional: serpent (develop) if using contracts with Serpent, ethersim if using the simulator or the test functionality
+Optional: serpent (develop) if using contracts with Serpent, testrpc or ethersim if using the simulator or the test functionality
 
 ```Bash
-$ npm -g install embark-framework
+$ npm -g install embark
 
 # If you plan to use the simulator instead of a real ethereum node.
-$ npm -g install ethersim
+$ npm -g install testrpc
 ```
 
 See [Complete Installation Instructions](https://github.com/iurimatias/embark-framework/wiki/Installation).
@@ -306,34 +304,9 @@ Deploying to IPFS
 ======
 
 To deploy a dapp to IPFS, all you need to do is run a local IPFS node and then run ```embark ipfs```.
-If you want to deploy to the live net then after configuring you account on ```config/blockchain.yml``` on the ```production``` environment then you can deploy to that chain by specifying the environment ```embark ipfs production```.
+If you want to deploy to the livenet then after configuring you account on ```config/blockchain.json``` on the ```production``` environment then you can deploy to that chain by specifying the environment ```embark ipfs production```.
 
 LiveReload Plugin
 ======
 
 Embark works quite well with the LiveReload Plugin
-
-Debugging embark
-======
-Because embark is internally using grunt tasks, debugging is not straightforward. Example
-
-- you want to debug `embark deploy`
-- normally you would write something like `node-debug -p 7000 embark -- deploy`
-- This gives you nothing with embark. If you look at `deploy` command in [`./bin/embark`](https://github.com/iurimatias/embark-framework/blob/develop/bin/embark#L32-L35) you will notice that it internally runs grunt task `grunt deploy_contracts:[env]`
-- with this knowledge we can prepare proper command to start debugging
-- ```node-debug -p 7000 grunt -- deploy_contracts:development```
-
-
-[here](https://github.com/iurimatias/embark-framework/blob/develop/tasks/tasks.coffee) is list of all debuggable grunt tasks
-
-EACCESS Error
-======
-If you get EACCES (access denied) errors, don't use sudo, try this:
-
-```Bash
-$ mkdir ~/npm-global
-$ npm config set prefix ~/npm-global
-$ echo 'export PATH="$PATH:$HOME/npm-global/bin"' >>~/.bashrc
-$ source ~/.bashrc
-$ npm install -g embark-framework grunt-cli
-```
