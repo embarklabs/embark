@@ -170,21 +170,32 @@ If you are using multiple contracts, you can pass a reference to another contrac
 You can now deploy many instances of the same contract. e.g
 
 
-```Yaml
-# config/contracts.yml
-  development:
-    Currency:
-      deploy: false
-      args:
-        - 100
-    Usd:
-      instanceOf: Currency
-      args:
-        - "initial string"
-    MyCoin:
-      instanceOf: Currency
-      args:
-        - $SimpleStorage
+```Json
+# config/contracts.json
+{
+  "development": {
+    "contracts": {
+      "Currency": {
+        "deploy": false,
+        "args": [
+          100
+        ]
+      },
+      "Usd": {
+        "instanceOf": "Currency",
+        "args": [
+          200
+        ]
+      },
+      "MyCoin": {
+        "instanceOf": "Currency",
+        "args": [
+          200
+        ]
+      }
+    }
+  }
+}
   ...
 ```
 
