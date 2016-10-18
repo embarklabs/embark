@@ -10,7 +10,7 @@
   "license": "ISC",
   "homepage": "",
   "devDependencies": {
-    "embark-framework": "iurimatias/embark-framework#embark2",
+    "embark": "^2.0.0",
     "mocha": "^2.2.5"
   }
 }
