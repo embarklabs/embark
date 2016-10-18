@@ -212,7 +212,7 @@ Contracts addresses can be defined, If an address is defined the contract wouldn
       },
       "UserManagement": {
         "args": [
-          "\$UserStorage"
+          "$UserStorage"
         ]
       }
     }
@@ -225,6 +225,10 @@ EmbarkJS
 ======
 
 EmbarkJS is a javascript library meant to abstract and facilitate the development of DApps.
+
+** promises **
+
+methods in EmbarkJS contracts will be converted to promises
 
 ```Javascript
   var myContract = new EmbarkJS.Contract({abi: abiObject, address: "0x123"});
