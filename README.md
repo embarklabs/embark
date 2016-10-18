@@ -50,7 +50,7 @@ Or Alternatively, you can run a REAL ethereum node for development purposes:
 $ embark blockchain
 ```
 
-By default embark blockchain will mine a minimum amount of ether and will only mine when new transactions come in. This is quite usefull to keep a low CPU. The option can be configured at config/blockchain.yml
+By default embark blockchain will mine a minimum amount of ether and will only mine when new transactions come in. This is quite usefull to keep a low CPU. The option can be configured at config/blockchain.json
 
 Then, in another command line:
 
@@ -281,30 +281,26 @@ Working with different chains
 You can specify which environment to deploy to:
 
 
-```$ embark blockchain staging```
+```$ embark blockchain production```
 
-```$ embark run staging```
+```$ embark run production```
 
-The environment is a specific blockchain configuration that can be managed at config/blockchain.yml
+The environment is a specific blockchain configuration that can be managed at config/blockchain.json
 
-```Yaml
-# config/blockchain.yml
+```Json
+# config/blockchain.json
   ...
-  staging:
-    rpc_host: localhost
-    rpc_port: 8101
-    rpc_whitelist: "*"
-    datadir: default
-    chains: chains_staging.json
-    network_id: 0
-    console: true
-    geth_extra_opts: --vmdebug
-    account:
-      init: false
-      address: 0x123
+   "livenet": {
+    "networkType": "livenet",
+    "rpcHost": "localhost",
+    "rpcPort": 8545,
+    "rpcCorsDomain": "http://localhost:8000",
+    "account": {
+      "password": "config/production/password"
+    }
+  },
+  ...
 ```
-
-See [Configuration](https://github.com/iurimatias/embark-framework/wiki/Configuration).
 
 Deploying only contracts
 ======
@@ -319,15 +315,20 @@ embark deploy will deploy all contracts at app/contracts and return the resultin
 Structuring Application
 ======
 
-Embark is quite flexible and you can configure you're own directory structure using ```embark.yml```
+Embark is quite flexible and you can configure you're own directory structure using ```embark.json```
 
-```Yaml
-# embark.yml
-  type: "manual" #other options: meteor, grunt
-  contracts: ["app/contracts/**/*.sol", "app/contracts/**/*.se"] # contracts files
-  output: "src/embark.js" # resulting javascript interface
-  blockchainConfig: "config/blockchain.yml" # blockchain config
-  contractsConfig: "config/contracts.yml" # contracts config
+```Json
+# embark.json
+{
+  "contracts": ["app/contracts/**"],
+  "app": {
+    "css/app.css": ["app/css/**"],
+    "js/app.js": ["embark.js", "app/js/**"],
+    "index.html": "app/index.html"
+  },
+  "buildDir": "dist/",
+  "config": "config/"
+}
 ```
 
 Deploying to IPFS
