@@ -25,6 +25,12 @@ Table of Contents
 * [EmbarkJS](#embarkjs)
 * [EmbarkJS - Storage (IPFS)](#embarkjs---storage)
 * [EmbarkJS - Communication (Whisper)](#embarkjs---communication)
+* [Testing Contracts](#tests)
+* [Working with different chains](#working-with-different-chains)
+* [Custom Application Structure](#structuring-application)
+* [Deploying to IPFS](#deploying-to-ipfs)
+* [LiveReload Plugin](#livereload-plugin)
+* [Donations](#donations)
 
 Installation
 ======
