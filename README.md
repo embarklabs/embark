@@ -1,4 +1,3 @@
-note: This readme refers to version 1.2.0 of Embark. Not version 2.0 which will be released soon(ish).
 
 What is embark
 ======
@@ -139,7 +138,7 @@ You can specify for each contract and environment its gas costs and arguments:
 If you are using multiple contracts, you can pass a reference to another contract as ```$ContractName```, Embark will automatically replace this with the correct address for the contract.
 
 
-```Yaml
+```Json
 # config/contracts.json
 {
   ...
@@ -202,34 +201,24 @@ You can now deploy many instances of the same contract. e.g
 Contracts addresses can be defined, If an address is defined the contract wouldn't be deployed but its defined address will be used instead.
 
 
-```Yaml
-  development:
-    UserStorage:
-      address: 0x123456
-    UserManagement:
-       args:
-         - $UserStorage
+```Json
+# config/contracts.json
+{
   ...
-```
-
-You can also define contract interfaces (Stubs) and actions to do on deployment
-
-```Yaml
-  development:
-    DataSource:
-      args:
-    MyDataSource:
-      args:
-      instanceOf: DataSource
-    Manager:
-      stubs:
-        - DataSource
-      args:
-        - $MyDataSource
-      onDeploy:
-        - Manager.updateStorage($MyDataSource)
-        - MyDataSource.set(5)
+  "development": {
+    "contracts": {
+      "UserStorage": {
+        "address": "0x123456"
+      },
+      "UserManagement": {
+        "args": [
+          "$UserStorage"
+        ]
+      }
+    }
+  }
   ...
+}
 ```
 
 EmbarkJS
