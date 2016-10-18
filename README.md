@@ -302,16 +302,6 @@ The environment is a specific blockchain configuration that can be managed at co
   ...
 ```
 
-Deploying only contracts
-======
-Although embark run will automatically deploy contracts, you can choose to only deploy the contracts to a specific environment
-
-```Bash
-$ embark deploy privatenet
-```
-
-embark deploy will deploy all contracts at app/contracts and return the resulting addresses
-
 Structuring Application
 ======
 
