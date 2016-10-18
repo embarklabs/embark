@@ -62,8 +62,27 @@ This will automatically deploy the contracts, update their JS bindings and deplo
 
 Note that if you update your code it will automatically be re-deployed, contracts included. There is no need to restart embark, refreshing the page on the browser will do.
 
+Dashboard
+=====
+
+Embark 2 comes with a terminal dashboard.
+
+![Dashboard](http://i.imgur.com/s4OQZpu.jpg)
+
+The dashboard will tell you the state of your contracts, the enviroment you are using, and what embark is doing at the moment.
+
+**available services**
+
+Available Services will display the services available to your dapp in green, if one of these is down then it will be displayed in red.
+
+**logs and console**
+
+There is a console at the bottom which can be used to interact with contracts or with embark itself. type ```help``` to see a list of available commands, more commands will be added with each version of Embark.
+
 Creating a new DApp
 ======
+
+If you want to create a blank new app.
 
 ```Bash
 $ embark new AppName
@@ -420,3 +439,8 @@ LiveReload Plugin
 ======
 
 Embark works quite well with the LiveReload Plugin
+
+Donations
+======
+
+If you like Embark please consider donating to 0x8811FdF0F988f0CD1B7E9DE252ABfA5b18c1cDb1
