@@ -212,7 +212,7 @@ Contracts addresses can be defined, If an address is defined the contract wouldn
       },
       "UserManagement": {
         "args": [
-          "$UserStorage"
+          "\$UserStorage"
         ]
       }
     }
