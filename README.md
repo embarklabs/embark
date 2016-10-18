@@ -224,6 +224,13 @@ Contracts addresses can be defined, If an address is defined the contract wouldn
 EmbarkJS
 ======
 
+EmbarkJS is a javascript library meant to abstract and facilitate the development of DApps.
+
+```Javascript
+  var myContract = new EmbarkJS.Contract({abi: abiObject, address: "0x123"});
+  myContract.get().then(function(value) { console.log("value is " + value.toNumber) });
+```
+
 EmbarkJS - Storage
 ======
 
