@@ -226,20 +226,97 @@ EmbarkJS
 
 EmbarkJS is a javascript library meant to abstract and facilitate the development of DApps.
 
-** promises **
+**promises**
 
-methods in EmbarkJS contracts will be converted to promises
+methods in EmbarkJS contracts will be converted to promises.
 
 ```Javascript
   var myContract = new EmbarkJS.Contract({abi: abiObject, address: "0x123"});
   myContract.get().then(function(value) { console.log("value is " + value.toNumber) });
 ```
 
+**deployment**
+
+Client side deployment will be automatically available in Embark for existing contracts:
+
+```Javascript
+  var myContract = new EmbarkJS.Contract({abi: abiObject, code: code});
+  myContract.deploy().then(function(address) {});
+```
+
+or it can be manually definied as
+
+```Javascript
+  var myContract = new EmbarkJS.Contract({abi: abiObject, code: code});
+  myContract.deploy().then(function(address) {});
+```
+
 EmbarkJS - Storage
 ======
 
+**initialization**
+
+The current available storage is IPFS. it can be initialized as
+
+```Javascript
+  EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'})
+```
+
+**Saving Text**
+
+```Javascript
+  EmbarkJS.Storage.saveText("hello world").then(function(hash) {});
+```
+
+**Retrieving Data/Text**
+
+```Javascript
+  EmbarkJS.Storage.get(hash).then(function(content) {});
+```
+
+**Uploading a file**
+
+```HTML
+  <input type="file">
+```
+
+```Javascript
+  var input = $("input[type=file"]);
+  EmbarkJS.Storage.uploadFile(input).then(function(hash) {});
+```
+
+**Generate URL to file**
+
+```Javascript
+  EmbarkJS.Storage.getUrl(hash);
+```
+
 EmbarkJS - Communication
 ======
+
+**initialization**
+
+The current available communication is Whisper.
+
+**listening to messages**
+
+```Javascript
+  EmbarkJS.Messages.listenTo({topic: ["achannel", "anotherchannel"]}).then(function(message) { console.log("received: " + message); })
+```
+
+**sending messages**
+
+you can send plain text
+
+```Javascript
+  EmbarkJS.Messages.sendMessage({topic: "achannel", data: 'hello world'})
+```
+
+or an object
+
+```Javascript
+  EmbarkJS.Messages.sendMessage({topic: "achannel", data: {msg: 'hello world'}})
+```
 
 Tests
 ======
