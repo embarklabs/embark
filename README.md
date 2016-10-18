@@ -18,7 +18,13 @@ With Embark you can:
 Table of Contents
 ======
 [Installation](#installation)
-
+[Usage Demo](#usage---demo)
+[Dashboard](#dashboard)
+[Creating a new DApp](#creating-a-new-dapp)
+[Using and Configuring Contracts](#dapp-structure)
+[EmbarkJS](#embarkjs)
+[EmbarkJS - Storage (IPFS)](#embarkjs---storage)
+[EmbarkJS - Communication (Whisper)](#embarkjs---communication)
 
 Installation
 ======
