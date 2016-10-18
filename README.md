@@ -15,6 +15,11 @@ With Embark you can:
 * Manage different chains (e.g testnet, private net, livenet)
 * Quickly create advanced DApps using multiple contracts that can interact with decentralized infrastructure for storage and comunication. 
 
+Table of Contents
+======
+[Installation](#installation)
+
+
 Installation
 ======
 Requirements: geth (1.4.4 or higher), node (5.0.0) and npm
