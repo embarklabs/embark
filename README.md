@@ -18,7 +18,8 @@ With Embark you can:
 Installation
 ======
 Requirements: geth (1.4.4 or higher), node (5.0.0) and npm
-Optional: serpent (develop) if using contracts with Serpent, testrpc or ethersim if using the simulator or the test functionality
+Optional: serpent (develop) if using contracts with Serpent, testrpc or ethersim if using the simulator or the test functionality.
+Further: depending on the dapp stack you choose: [IPFS](https://ipfs.io/)
 
 ```Bash
 $ npm -g install embark
