@@ -42,7 +42,7 @@ Further: depending on the dapp stack you choose: [IPFS](https://ipfs.io/)
 $ npm -g install embark
 
 # If you plan to use the simulator instead of a real ethereum node.
-$ npm -g install testrpc
+$ npm -g install ethereumjs-testrpc
 ```
 
 See [Complete Installation Instructions](https://github.com/iurimatias/embark-framework/wiki/Installation).
