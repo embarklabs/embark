@@ -277,15 +277,14 @@ methods in EmbarkJS contracts will be converted to promises.
 Client side deployment will be automatically available in Embark for existing contracts:
 
 ```Javascript
-  var myContract = new EmbarkJS.Contract({abi: abiObject, code: code});
-  myContract.deploy().then(function(address) {});
+  SimpleStorage.deploy().then(function(anotherSimpleStorage) {});
 ```
 
 or it can be manually definied as
 
 ```Javascript
   var myContract = new EmbarkJS.Contract({abi: abiObject, code: code});
-  myContract.deploy().then(function(address) {});
+  myContract.deploy().then(function(anotherMyContractObject) {});
 ```
 
 EmbarkJS - Storage
