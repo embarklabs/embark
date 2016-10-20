@@ -56,16 +56,16 @@ $ embark demo
 $ cd embark_demo
 ```
 
-To run a ethereum rpc simulator simply run:
-
-```Bash
-$ embark simulator
-```
-
-Or Alternatively, you can run a REAL ethereum node for development purposes:
+You can run a REAL ethereum node for development purposes:
 
 ```Bash
 $ embark blockchain
+```
+
+Alternatively, to use an ethereum rpc simulator simply run:
+
+```Bash
+$ embark simulator
 ```
 
 By default embark blockchain will mine a minimum amount of ether and will only mine when new transactions come in. This is quite usefull to keep a low CPU. The option can be configured at config/blockchain.json
