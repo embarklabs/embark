@@ -47,6 +47,11 @@ $ npm -g install ethereumjs-testrpc
 
 See [Complete Installation Instructions](https://github.com/iurimatias/embark-framework/wiki/Installation).
 
+
+**updating from embark 1**
+
+Embark's npm package has changed from ```embark-framework``` to ```embark```, this sometimes can create conflicts. To update first uninstall embark-framework 1 to avoid any conflicts. ```npm uninstall -g embark-framework``` then ```npm install -g embark```
+
 Usage - Demo
 ======
 You can easily create a sample working DApp with the following:
