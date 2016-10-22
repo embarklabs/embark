@@ -1,5 +1,6 @@
 // https://github.com/nexusdev/erc20/blob/master/contracts/base.sol
 
+pragma solidity ^0.4.2;
 contract Token {
 
   event Transfer(address indexed from, address indexed to, uint value);
