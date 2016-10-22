@@ -1,0 +1,9 @@
+ratings:
+  paths:
+    - "lib/**/*"
+exclude_paths:
+  - "tests/"
+  - "old_tests/"
+  - "boilerplate/"
+  - "demo/"
+  - "js/"
