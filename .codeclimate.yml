@@ -1,9 +1,9 @@
 ratings:
   paths:
-    - "lib/**/*"
+  - "lib/**/*"
 exclude_paths:
-  - "tests/"
-  - "old_tests/"
-  - "boilerplate/"
-  - "demo/"
-  - "js/"
+- "tests/"
+- "old_tests/"
+- "boilerplate/"
+- "demo/"
+- "js/"
