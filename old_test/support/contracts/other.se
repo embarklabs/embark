@@ -1,0 +1,75 @@
+# This software (Augur) allows buying && selling event outcomes in ethereum
+# Copyright (C) 2015 Forecast Foundation 
+#    This program is free software; you can redistribute it &&/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is free software: you can redistribute it &&/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Any questions please contact joey@augur.net
+
+data cashcoinBalances[]
+
+def init():
+    # test initial funds
+    self.cashcoinBalances[tx.origin] = 100000*2^64
+
+# @return: cash balance of address
+def balance(address):
+    return(self.cashcoinBalances[address])
+
+# should send values as fixed point in UI (1 is 2^64, 4 is 4*2^64, .5 is 2^63, etc.)
+# so cashcoin fees could just go to root branch, or we could not have fees besides 
+# gas fee to do a send transaction
+# @return: value sent, 0 if fails
+def send(recver, value):
+    sender = tx.origin
+    senderBalance = self.cashcoinBalances[sender]
+    if(senderBalance >= value):
+        self.cashcoinBalances[sender] -= value
+        self.cashcoinBalances[recver] += value
+        return(value)
+    else:
+        return(0)
+
+# @return value of cash sent; fail is 0
+def sendFrom(recver, value, from):
+    if(from!=tx.origin):
+        return(0)
+    senderBalance = self.cashcoinBalances[from]
+    if(senderBalance >= value):
+        self.cashcoinBalances[from] -= value
+        self.cashcoinBalances[recver] += value
+        return(value)
+    else:
+        return(0)
+
+# make sure only coming from specific contracts
+def subtractCash(ID, amount):
+    #if(!self.whitelist.check(msg.sender)):
+    #    return(-1)
+    self.cashcoinBalances[ID] -= amount
+    return(1)
+
+def addCash(ID, amount):
+    #if(!self.whitelist.check(msg.sender)):
+    #    return(-1)
+    self.cashcoinBalances[ID] += amount
+    return(1)
+
+def setCash(address, balance):
+    #if !self.whitelist.check(msg.sender):
+    #    return(-1)
+    self.cashcoinBalances[address] = balance
+    return(1)

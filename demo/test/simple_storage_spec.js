@@ -1,10 +1,16 @@
 var assert = require('assert');
 var Embark = require('embark-framework');
 var EmbarkSpec = Embark.initTests();
+var web3 = EmbarkSpec.web3;
 
-describe("SimpleStorage", function(done) {
+describe("SimpleStorage", function() {
   before(function(done) {
-    EmbarkSpec.deployAll(done);
+    var contractsConfig = {
+      "SimpleStorage": {
+        args: [100]
+      }
+    };
+    EmbarkSpec.deployAll(contractsConfig, done);
   });
 
   it("should set constructor value", function(done) {
@@ -23,4 +29,4 @@ describe("SimpleStorage", function(done) {
     });
   });
 
-})
+});

@@ -1,0 +1,25 @@
+{
+  "default": {
+    "gas": "auto",
+    "contracts": {
+      "SimpleStorage": {
+        "args": [
+          100
+        ]
+      }
+    }
+  },
+  "myenv": {
+    "gas": "auto",
+    "contracts": {
+      "SimpleStorage": {
+        "gas": 123456
+      },
+      "Token": {
+        "args": [
+          200
+        ]
+      }
+    }
+  }
+}

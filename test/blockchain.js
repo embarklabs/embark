@@ -1,46 +1,59 @@
-var Config = require('../lib/config/config.js');
+/*globals describe, it*/
 var Blockchain = require('../lib/blockchain.js');
 var assert = require('assert');
-var sinon = require('sinon');
 
-describe('embark.blockchain', function() {
-  var blockchainConfig = (new Config.Blockchain()).loadConfigFile('test/support/blockchain.yml').config("development");
+describe('embark.Blockchain', function() {
+  //var Client = function() {};
+  //Client.prototype.name = "ClientName";
 
-  describe('#generate_basic_command', function() {
-    var blockchain = new Blockchain(blockchainConfig);
+  describe('#initializer', function() {
+    //var client = new Client();
 
-    it('should return correct cmd', function() {
-      assert.strictEqual(blockchain.generate_basic_command(), "geth --datadir=\"/tmp/embark\" --logfile=\"/tmp/embark.log\" --port 30303 --rpc --rpcport 8101 --rpcaddr localhost --networkid "+blockchainConfig.networkId+" --rpccorsdomain \"*\" --minerthreads \"1\" --mine --genesis=\"config/genesis.json\" --rpcapi \"eth,web3\" --maxpeers 4 --password config/password ");
-    });
-  });
+    describe('with empty config', function() {
+      it('should have a default config', function() {
+        var config = {
+          networkType: 'custom',
+          genesisBlock: false,
+          datadir: false,
+          mineWhenNeeded: false,
+          rpcHost: 'localhost',
+          rpcPort: 8545,
+          rpcCorsDomain: false,
+          networkId: 12301,
+          port: 30303,
+          nodiscover: false,
+          mine: false,
+          whisper: true,
+          account: {}
+        };
+        var blockchain = Blockchain(config, 'geth');
 
-  describe('#list_command', function() {
-    var blockchain = new Blockchain(blockchainConfig);
-    blockchain.generate_basic_command = sinon.stub().returns("geth ");
-
-    it('should generate command to list accounts', function() {
-      assert.equal(blockchain.list_command(), "geth account list ");
-    });
-  });
-
-  describe('#init_command', function() {
-    var blockchain = new Blockchain(blockchainConfig);
-    blockchain.generate_basic_command = sinon.stub().returns("geth ");
-
-    it('should generate command to create an account', function() {
-      assert.equal(blockchain.init_command(), "geth account new ");
-    });
-  });
-
-  describe('#run_command', function() {
-    describe('with mine when needed config set', function() {
-      var blockchain = new Blockchain(blockchainConfig);
-      blockchain.generate_basic_command = sinon.stub().returns("geth ");
-
-      it('should generate run command with script ', function() {
-        assert.equal(blockchain.run_command(), "geth js node_modules/embark-framework/js/mine.js");
+        assert.deepEqual(blockchain.config, config);
       });
     });
-  });
 
+    describe('with config', function() {
+      it('should take config params', function() {
+        var config = {
+          networkType: 'livenet',
+          genesisBlock: 'foo/bar/genesis.json',
+          datadir: '/foo/datadir/',
+          mineWhenNeeded: true,
+          rpcHost: 'someserver',
+          rpcPort: 12345,
+          rpcCorsDomain: true,
+          networkId: 1,
+          port: 123456,
+          nodiscover: true,
+          mine: true,
+          whisper: false,
+          account: {}
+        };
+        var blockchain = Blockchain(config, 'geth');
+
+        assert.deepEqual(blockchain.config, config);
+      });
+    });
+
+  });
 });

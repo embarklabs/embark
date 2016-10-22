@@ -1,3 +1,4 @@
+pragma solidity ^0.4.2;
 contract SimpleStorage {
   uint public storedData;
 
@@ -8,7 +9,9 @@ contract SimpleStorage {
   function set(uint x) {
     storedData = x;
   }
+
   function get() constant returns (uint retVal) {
     return storedData;
   }
+
 }
