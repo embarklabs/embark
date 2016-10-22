@@ -1,6 +1,6 @@
 ratings:
-  paths:
-  - "lib/**/*"
+    paths:
+    - "lib/**/*"
 exclude_paths:
 - "tests/"
 - "old_tests/"
