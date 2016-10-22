@@ -1,10 +1,10 @@
 
-What is embark
-======
-
 [![Join the chat at https://gitter.im/iurimatias/embark-framework](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/iurimatias/embark-framework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build
 Status](https://travis-ci.org/iurimatias/embark-framework.svg?branch=develop)](https://travis-ci.org/iurimatias/embark-framework)
+
+What is Embark
+======
 
 Embark is a framework that allows you to easily develop and deploy  DApps.
 
