@@ -39,6 +39,7 @@
   "contributors": [],
   "license": "ISC",
   "devDependencies": {
+    "grunt-cli": "^0.1.13",
     "grunt-mocha-test": "^0.12.7",
     "grunt-contrib-jshint": "^1.0.0",
     "matchdep": "^1.0.1",
