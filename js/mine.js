@@ -16,7 +16,7 @@
 
     In the meantime, just set an empty config object.
     */
-    config = {}
+    config = {};
 
     defaults = {
       interval_ms: 15000,
@@ -25,9 +25,9 @@
       mine_periodically: false,
       mine_normally: false,
       threads: 1
-    }
+    };
 
-    for (key in defaults) {
+    for (var key in defaults) {
       if (config[key] === undefined) {
         config[key] = defaults[key];
       }
@@ -54,7 +54,7 @@
   var fundAccount = function (config, miner_obj, cb) {
     var accountFunded = function () {
       return (eth.getBalance(eth.coinbase) >= config.initial_ether);
-    }
+    };
 
     if (accountFunded()) {
       return cb();
