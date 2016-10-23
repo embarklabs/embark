@@ -29,7 +29,7 @@ EmbarkJS.Contract.prototype.deploy = function(args) {
   var self = this;
   var contractParams;
 
-  contractParams = args;
+  contractParams = args || [];
 
   contractParams.push({
     from: this.web3.eth.accounts[0],
