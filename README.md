@@ -24,6 +24,7 @@ Table of Contents
 * [Usage Demo](#usage---demo)
 * [Dashboard](#dashboard)
 * [Creating a new DApp](#creating-a-new-dapp)
+* [Libraries and APIs available](#libraries-and-languages-available)
 * [Using and Configuring Contracts](#dapp-structure)
 * [EmbarkJS](#embarkjs)
 * [EmbarkJS - Storage (IPFS)](#embarkjs---storage)
@@ -131,6 +132,12 @@ DApp Structure
 ```
 
 Solidity/Serpent files in the contracts directory will automatically be deployed with embark run. Changes in any files will automatically be reflected in app, changes to contracts will result in a redeployment and update of their JS Bindings
+
+Libraries and languages available
+======
+
+* Smart Contracts: [Solidity](https://solidity.readthedocs.io/en/develop/) and [Serpent](https://github.com/ethereum/wiki/wiki/Serpent)
+* Client Side: [Web3.js](https://github.com/ethereum/wiki/wiki/JavaScript-API) and [EmbarkJS](#embarkjs)
 
 Using Contracts
 ======
