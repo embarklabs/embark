@@ -77,7 +77,7 @@ Alternatively, to use an ethereum rpc simulator simply run:
 $ embark simulator
 ```
 
-By default embark blockchain will mine a minimum amount of ether and will only mine when new transactions come in. This is quite usefull to keep a low CPU. The option can be configured at config/blockchain.json
+By default embark blockchain will mine a minimum amount of ether and will only mine when new transactions come in. This is quite usefull to keep a low CPU. The option can be configured at ```config/blockchain.json```. Note that running a real node requires at least 2GB of free ram, please take this into account if running it in a VM.
 
 Then, in another command line:
 
