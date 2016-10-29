@@ -2,6 +2,7 @@
 [![Join the chat at https://gitter.im/iurimatias/embark-framework](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/iurimatias/embark-framework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build
 Status](https://travis-ci.org/iurimatias/embark-framework.svg?branch=develop)](https://travis-ci.org/iurimatias/embark-framework)
+[![Code Climate](https://codeclimate.com/github/iurimatias/embark-framework/badges/gpa.svg)](https://codeclimate.com/github/iurimatias/embark-framework)
 
 What is Embark
 ======
@@ -23,6 +24,7 @@ Table of Contents
 * [Usage Demo](#usage---demo)
 * [Dashboard](#dashboard)
 * [Creating a new DApp](#creating-a-new-dapp)
+* [Libraries and APIs available](#libraries-and-languages-available)
 * [Using and Configuring Contracts](#dapp-structure)
 * [EmbarkJS](#embarkjs)
 * [EmbarkJS - Storage (IPFS)](#embarkjs---storage)
@@ -75,7 +77,7 @@ Alternatively, to use an ethereum rpc simulator simply run:
 $ embark simulator
 ```
 
-By default embark blockchain will mine a minimum amount of ether and will only mine when new transactions come in. This is quite usefull to keep a low CPU. The option can be configured at config/blockchain.json
+By default embark blockchain will mine a minimum amount of ether and will only mine when new transactions come in. This is quite usefull to keep a low CPU. The option can be configured at ```config/blockchain.json```. Note that running a real node requires at least 2GB of free ram, please take this into account if running it in a VM.
 
 Then, in another command line:
 
@@ -130,6 +132,16 @@ DApp Structure
 ```
 
 Solidity/Serpent files in the contracts directory will automatically be deployed with embark run. Changes in any files will automatically be reflected in app, changes to contracts will result in a redeployment and update of their JS Bindings
+
+Libraries and languages available
+======
+
+Embark can build and deploy contracts coded in Solidity or Serpent. It will make them available on the client side using EmbarkJS and Web3.js.
+
+Further documentation for these can be found below:
+
+* Smart Contracts: [Solidity](https://solidity.readthedocs.io/en/develop/) and [Serpent](https://github.com/ethereum/wiki/wiki/Serpent)
+* Client Side: [Web3.js](https://github.com/ethereum/wiki/wiki/JavaScript-API) and [EmbarkJS](#embarkjs)
 
 Using Contracts
 ======
