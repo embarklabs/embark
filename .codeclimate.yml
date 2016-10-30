@@ -8,6 +8,8 @@ engines:
                           enabled: false
                 global-require:
                           enabled: false
+                guard-for-in:
+                          enabled: false
 ratings:
     paths:
     - "lib/**/*"
