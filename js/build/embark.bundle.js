@@ -53,6 +53,7 @@ var EmbarkJS =
 
 	EmbarkJS.Contract = function(options) {
 	  var self = this;
+	  var i, abiElement;
 
 	  this.abi = options.abi;
 	  this.address = options.address;
@@ -61,10 +62,50 @@ var EmbarkJS =
 
 	  var ContractClass = this.web3.eth.contract(this.abi);
 
+	  this.eventList = [];
+
+	  if (this.abi) {
+	    for (i = 0; i < this.abi.length; i++) {
+	      abiElement = this.abi[i];
+	      if (abiElement.type === 'event') {
+	        this.eventList.push(abiElement.name);
+	      }
+	    }
+	  }
+
+	  var messageEvents = function() {
+	    this.cb = function() {};
+	  };
+
+	  messageEvents.prototype.then = function(cb) {
+	    this.cb = cb;
+	  };
+
+	  messageEvents.prototype.error = function(err) {
+	    return err;
+	  };
+
 	  this._originalContractObject = ContractClass.at(this.address);
 	  this._methods = Object.getOwnPropertyNames(this._originalContractObject).filter(function (p) {
 	    // TODO: check for forbidden properties
-	    if (typeof self._originalContractObject[p] === 'function') {
+	    if (self.eventList.indexOf(p) >= 0) {
+
+	      self[p] = function() {
+	        var promise = new messageEvents();
+	        var args = Array.prototype.slice.call(arguments);
+	        args.push(function(err, result) {
+	          if (err) {
+	            promise.error(err);
+	          } else {
+	            promise.cb(result);
+	          }
+	        });
+
+	        self._originalContractObject[p].apply(self._originalContractObject[p], args);
+	        return promise;
+	      };
+	      return true;
+	    } else if (typeof self._originalContractObject[p] === 'function') {
 	      self[p] = Promise.promisify(self._originalContractObject[p]);
 	      return true;
 	    }
