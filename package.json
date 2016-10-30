@@ -1,6 +1,6 @@
 {
   "name": "embark",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "Embark is a framework that allows you to easily develop and deploy DApps",
   "scripts": {
     "test": "grunt jshint && mocha test/ --no-timeouts"
