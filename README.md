@@ -384,7 +384,7 @@ Embark includes a testing lib to fastly run & test your contracts in a EVM.
 # test/simple_storage_spec.js
 
 var assert = require('assert');
-var Embark = require('embark-framework');
+var Embark = require('embark');
 var EmbarkSpec = Embark.initTests();
 var web3 = EmbarkSpec.web3;
 
