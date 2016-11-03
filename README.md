@@ -169,8 +169,8 @@ Will automatically be available in Javascript as:
 ```Javascript
 # app/js/index.js
 SimpleStorage.set(100);
-SimpleStorage.get();
-SimpleStorage.storedData();
+SimpleStorage.get().then(function(value) { console.log(value.toNumber()) });
+SimpleStorage.storedData().then(function(value) { console.log(value.toNumber()) });
 ```
 
 You can specify for each contract and environment its gas costs and arguments:
