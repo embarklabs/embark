@@ -26,7 +26,7 @@
     "merge": "^1.2.0",
     "meteor-build-client": "^0.1.6",
     "mkdirp": "^0.5.1",
-    "solc": "^0.4.0",
+    "solc": "^0.4.4",
     "read-yaml": "^1.0.0",
     "request": "^2.75.0",
     "serve-static": "^1.11.1",
