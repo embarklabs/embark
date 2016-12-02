@@ -156,13 +156,16 @@ var EmbarkJS =
 	EmbarkJS.Storage = {
 	};
 
-	// EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'})<F37>
-	//{server: ‘localhost’, port: ‘5001’};
+	// EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'})
 
 	EmbarkJS.Storage.setProvider = function(provider, options) {
 	  if (provider === 'ipfs') {
 	    this.currentStorage = EmbarkJS.Storage.IPFS;
-	    this.ipfsConnection = IpfsApi(options.server, options.port);
+	    if (options === undefined) {
+	      this.ipfsConnection = IpfsApi('localhost', '5001');
+	    } else {
+	      this.ipfsConnection = IpfsApi(options.server, options.port);
+	    }
 	  } else {
 	    throw Error('unknown provider');
 	  }
@@ -170,6 +173,9 @@ var EmbarkJS =
 
 	EmbarkJS.Storage.saveText = function(text) {
 	  var self = this;
+	  if (!this.ipfsConnection) {
+	    this.setProvider('ipfs');
+	  }
 	  var promise = new Promise(function(resolve, reject) {
 	    self.ipfsConnection.add((new self.ipfsConnection.Buffer(text)), function(err, result) {
 	      if (err) {
@@ -189,6 +195,10 @@ var EmbarkJS =
 
 	  if (file === undefined) {
 	    throw new Error('no file found');
+	  }
+
+	  if (!this.ipfsConnection) {
+	    this.setProvider('ipfs');
 	  }
 
 	  var promise = new Promise(function(resolve, reject) {
@@ -214,6 +224,9 @@ var EmbarkJS =
 	  var self = this;
 	  // TODO: detect type, then convert if needed
 	  //var ipfsHash = web3.toAscii(hash);
+	  if (!this.ipfsConnection) {
+	    this.setProvider('ipfs');
+	  }
 
 	  var promise = new Promise(function(resolve, reject) {
 	    self.ipfsConnection.object.get([hash]).then(function(node) {
