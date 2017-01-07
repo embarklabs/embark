@@ -382,7 +382,6 @@ var EmbarkJS =
 	    throw new Error("missing option: data");
 	  }
 
-	  // do fromAscii to each topics unless it's already a string
 	  if (typeof topics === 'string') {
 	    topics = topics;
 	  } else {
@@ -390,8 +389,6 @@ var EmbarkJS =
 	    topics = topics.join(',');
 	  }
 
-	  // TODO: if it's array then join and send ot several
-	  // keep list of channels joined
 	  this.orbit.join(topics);
 
 	  var payload = JSON.stringify(data);
@@ -403,13 +400,13 @@ var EmbarkJS =
 	  var self = this;
 	  var topics = options.topic || options.topics;
 
-	  // do fromAscii to each topics unless it's already a string
 	  if (typeof topics === 'string') {
 	    topics = topics;
 	  } else {
-	    // TODO: better to just send to different channels instead
 	    topics = topics.join(',');
 	  }
+
+	  this.orbit.join(topics);
 
 	  var messageEvents = function() {
 	    this.cb = function() {};
@@ -425,10 +422,12 @@ var EmbarkJS =
 
 	  var promise = new messageEvents();
 
-	  this.orbit.events.on('message', (topics, message) => {
+	  this.orbit.events.on('message', (channel, message) => {
+	    // TODO: looks like sometimes it's receving messages from all topics
+	    if (topics !== channel) return;
 	    self.orbit.getPost(message.payload.value, true).then((post) => {
 	      var data = {
-	        topic: topics,
+	        topic: channel,
 	        data: post.content,
 	        from: post.meta.from.name,
 	        time: (new Date(post.meta.ts))
