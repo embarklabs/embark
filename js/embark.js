@@ -203,6 +203,7 @@ EmbarkJS.Messages.setProvider = function(provider, options) {
   var ipfs;
   if (provider === 'whisper') {
     this.currentMessages = EmbarkJS.Messages.Whisper;
+    this.currentMessages.identity = web3.shh.newIdentity();
   } else if (provider === 'orbit') {
     this.currentMessages = EmbarkJS.Messages.Orbit;
     if (options === undefined) {
@@ -231,7 +232,7 @@ EmbarkJS.Messages.Whisper = {
 EmbarkJS.Messages.Whisper.sendMessage = function(options) {
   var topics = options.topic || options.topics;
   var data = options.data || options.payload;
-  var identity = options.identity || web3.shh.newIdentity();
+  var identity = options.identity || this.identity || web3.shh.newIdentity();
   var ttl = options.ttl || 100;
   var priority = options.priority || 1000;
 
@@ -272,7 +273,7 @@ EmbarkJS.Messages.Whisper.listenTo = function(options) {
   var topics = options.topic || options.topics;
 
   if (typeof topics === 'string') {
-    topics = [topics];
+    topics = [web3.fromAscii(topics)];
   } else {
     // TODO: replace with es6 + babel;
     var _topics = [];
@@ -302,10 +303,17 @@ EmbarkJS.Messages.Whisper.listenTo = function(options) {
 
   var filter = web3.shh.filter(filterOptions, function(err, result) {
     var payload = JSON.parse(web3.toAscii(result.payload));
+    var data;
     if (err) {
       promise.error(err);
     } else {
-      promise.cb(payload);
+      data = {
+        topic: topics.map((t) => web3.toAscii(t)),
+        data: payload,
+        from: result.from,
+        time: (new Date(result.sent * 1000))
+      };
+      promise.cb(payload, data, result);
     }
   });
 
@@ -371,9 +379,14 @@ EmbarkJS.Messages.Orbit.listenTo = function(options) {
   var promise = new messageEvents();
 
   this.orbit.events.on('message', (topics, message) => {
-    // Get the actual content of the message
     self.orbit.getPost(message.payload.value, true).then((post) => {
-      promise.cb(post.content);
+      var data = {
+        topic: topics,
+        data: post.content,
+        from: post.meta.from.name,
+        time: (new Date(post.meta.ts))
+      };
+      promise.cb(post.content, data, post);
     });
   });
 
