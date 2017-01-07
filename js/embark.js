@@ -373,7 +373,7 @@ EmbarkJS.Messages.Orbit.listenTo = function(options) {
   this.orbit.events.on('message', (topics, message) => {
     // Get the actual content of the message
     self.orbit.getPost(message.payload.value, true).then((post) => {
-      promise.cb(post);
+      promise.cb(post.content);
     });
   });
 
