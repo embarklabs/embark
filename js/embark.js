@@ -199,20 +199,30 @@ EmbarkJS.Storage.getUrl = function(hash) {
 EmbarkJS.Messages = {
 };
 
-EmbarkJS.Messages.setProvider = function(provider) {
+EmbarkJS.Messages.setProvider = function(provider, options) {
+  var ipfs;
   if (provider === 'whisper') {
     this.currentMessages = EmbarkJS.Messages.Whisper;
+  } else if (provider === 'orbit') {
+    this.currentMessages = EmbarkJS.Messages.Orbit;
+    if (options === undefined) {
+      ipfs = HaadIpfsApi('localhost', '5001');
+    } else {
+      ipfs = HaadIpfsApi(options.server, options.port);
+    }
+    this.currentMessages.orbit = new Orbit(ipfs);
+    this.currentMessages.orbit.connect(web3.eth.accounts[0]);
   } else {
     throw Error('unknown provider');
   }
 };
 
 EmbarkJS.Messages.sendMessage = function(options) {
-  return EmbarkJS.Messages.Whisper.sendMessage(options);
+  return this.currentMessages.sendMessage(options);
 };
 
 EmbarkJS.Messages.listenTo = function(options) {
-  return EmbarkJS.Messages.Whisper.listenTo(options);
+  return this.currentMessages.listenTo(options);
 };
 
 EmbarkJS.Messages.Whisper = {
@@ -297,6 +307,74 @@ EmbarkJS.Messages.Whisper.listenTo = function(options) {
     } else {
       promise.cb(payload);
     }
+  });
+
+  return promise;
+};
+
+EmbarkJS.Messages.Orbit = {
+};
+
+EmbarkJS.Messages.Orbit.sendMessage = function(options) {
+  var topics = options.topic || options.topics;
+  var data = options.data || options.payload;
+
+  if (topics === undefined) {
+    throw new Error("missing option: topic");
+  }
+
+  if (data === undefined) {
+    throw new Error("missing option: data");
+  }
+
+  // do fromAscii to each topics unless it's already a string
+  if (typeof topics === 'string') {
+    topics = topics;
+  } else {
+    // TODO: better to just send to different channels instead
+    topics = topics.join(',');
+  }
+
+  // TODO: if it's array then join and send ot several
+  // keep list of channels joined
+  this.orbit.join(topics);
+
+  var payload = JSON.stringify(data);
+
+  this.orbit.send(topics, data);
+};
+
+EmbarkJS.Messages.Orbit.listenTo = function(options) {
+  var self = this;
+  var topics = options.topic || options.topics;
+
+  // do fromAscii to each topics unless it's already a string
+  if (typeof topics === 'string') {
+    topics = topics;
+  } else {
+    // TODO: better to just send to different channels instead
+    topics = topics.join(',');
+  }
+
+  var messageEvents = function() {
+    this.cb = function() {};
+  };
+
+  messageEvents.prototype.then = function(cb) {
+    this.cb = cb;
+  };
+
+  messageEvents.prototype.error = function(err) {
+    return err;
+  };
+
+  var promise = new messageEvents();
+
+  this.orbit.events.on('message', (topics, message) => {
+    // Get the actual content of the message
+    self.orbit.getPost(message.payload.value, true).then((post) => {
+      promise.cb(post);
+    });
   });
 
   return promise;

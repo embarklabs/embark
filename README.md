@@ -28,7 +28,7 @@ Table of Contents
 * [Using and Configuring Contracts](#dapp-structure)
 * [EmbarkJS](#embarkjs)
 * [EmbarkJS - Storage (IPFS)](#embarkjs---storage)
-* [EmbarkJS - Communication (Whisper)](#embarkjs---communication)
+* [EmbarkJS - Communication (Whisper/Orbit)](#embarkjs---communication)
 * [Testing Contracts](#tests)
 * [Working with different chains](#working-with-different-chains)
 * [Custom Application Structure](#structuring-application)
@@ -351,7 +351,7 @@ EmbarkJS - Communication
 
 **initialization**
 
-The current available communication is Whisper.
+The current available communications are Whisper and Orbit. Whisper is supported in go-ethereum. To run Orbit ```ipfs daemon --enable-pubsub-experiment```.
 
 **listening to messages**
 
