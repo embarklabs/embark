@@ -246,21 +246,21 @@ EmbarkJS.Messages.Whisper.sendMessage = function(options) {
 
   // do fromAscii to each topics unless it's already a string
   if (typeof topics === 'string') {
-    topics = topics;
+    _topics = [web3.fromAscii(topics)];
   } else {
     // TODO: replace with es6 + babel;
     var _topics = [];
     for (var i = 0; i < topics.length; i++) {
       _topics.push(web3.fromAscii(topics[i]));
     }
-    topics = _topics;
   }
+  topics = _topics;
 
   var payload = JSON.stringify(data);
 
   var message = {
     from: identity,
-    topics: [web3.fromAscii(topics)],
+    topics: topics,
     payload: web3.fromAscii(payload),
     ttl: ttl,
     priority: priority
@@ -273,15 +273,15 @@ EmbarkJS.Messages.Whisper.listenTo = function(options) {
   var topics = options.topic || options.topics;
 
   if (typeof topics === 'string') {
-    topics = [web3.fromAscii(topics)];
+    _topics = [topics];
   } else {
     // TODO: replace with es6 + babel;
     var _topics = [];
     for (var i = 0; i < topics.length; i++) {
-      _topics.push(web3.fromAscii(topics[i]));
+      _topics.push(topics[i]);
     }
-    topics = _topics;
   }
+  topics = _topics;
 
   var filterOptions = {
     topics: topics
@@ -308,7 +308,7 @@ EmbarkJS.Messages.Whisper.listenTo = function(options) {
       promise.error(err);
     } else {
       data = {
-        topic: topics.map((t) => web3.toAscii(t)),
+        topic: topics,
         data: payload,
         from: result.from,
         time: (new Date(result.sent * 1000))
