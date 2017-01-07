@@ -366,7 +366,7 @@ then set the provider:
 **listening to messages**
 
 ```Javascript
-  EmbarkJS.Messages.listenTo({topic: ["achannel", "anotherchannel"]}).then(function(message) { console.log("received: " + message); })
+  EmbarkJS.Messages.listenTo({topic: ["topic1", "topic2"]}).then(function(message) { console.log("received: " + message); })
 ```
 
 **sending messages**
@@ -374,14 +374,16 @@ then set the provider:
 you can send plain text
 
 ```Javascript
-  EmbarkJS.Messages.sendMessage({topic: "achannel", data: 'hello world'})
+  EmbarkJS.Messages.sendMessage({topic: "sometopic", data: 'hello world'})
 ```
 
 or an object
 
 ```Javascript
-  EmbarkJS.Messages.sendMessage({topic: "achannel", data: {msg: 'hello world'}})
+  EmbarkJS.Messages.sendMessage({topic: "sometopic", data: {msg: 'hello world'}})
 ```
+
+note: array of topics are considered an AND. In Whisper you can use another array for OR combinations of several topics e.g ```["topic1", ["topic2", "topic3"]]``` => ```topic1 AND (topic2 OR topic 3)```
 
 Tests
 ======
