@@ -351,7 +351,17 @@ EmbarkJS - Communication
 
 **initialization**
 
-The current available communications are Whisper and Orbit. Whisper is supported in go-ethereum. To run Orbit ```ipfs daemon --enable-pubsub-experiment```.
+For Whisper:
+
+```EmbarkJS.Messages.setProvider('whisper')```
+
+For Orbit:
+
+You'll need to use IPFS from master and run it as: ```ipfs daemon --enable-pubsub-experiment```.
+
+then set the provider:
+
+```EmbarkJS.Messages.setProvider('orbit', {server: 'localhost', port: 5001})```
 
 **listening to messages**
 
