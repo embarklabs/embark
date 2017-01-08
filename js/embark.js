@@ -1,4 +1,5 @@
-var Promise = require('bluebird');
+/*jshint esversion: 6 */
+var Promise = require('bluebird');  // jshint ignore: line
 //var Ipfs = require('./ipfs.js');
 
 var EmbarkJS = {
@@ -235,6 +236,7 @@ EmbarkJS.Messages.Whisper.sendMessage = function(options) {
   var identity = options.identity || this.identity || web3.shh.newIdentity();
   var ttl = options.ttl || 100;
   var priority = options.priority || 1000;
+  var _topics;
 
   if (topics === undefined) {
     throw new Error("missing option: topic");
@@ -249,7 +251,6 @@ EmbarkJS.Messages.Whisper.sendMessage = function(options) {
     _topics = [web3.fromAscii(topics)];
   } else {
     // TODO: replace with es6 + babel;
-    var _topics = [];
     for (var i = 0; i < topics.length; i++) {
       _topics.push(web3.fromAscii(topics[i]));
     }
@@ -271,12 +272,12 @@ EmbarkJS.Messages.Whisper.sendMessage = function(options) {
 
 EmbarkJS.Messages.Whisper.listenTo = function(options) {
   var topics = options.topic || options.topics;
+  var _topics;
 
   if (typeof topics === 'string') {
     _topics = [topics];
   } else {
     // TODO: replace with es6 + babel;
-    var _topics = [];
     for (var i = 0; i < topics.length; i++) {
       _topics.push(topics[i]);
     }
