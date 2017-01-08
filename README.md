@@ -353,15 +353,19 @@ EmbarkJS - Communication
 
 For Whisper:
 
-```EmbarkJS.Messages.setProvider('whisper')```
+```Javascript
+    EmbarkJS.Messages.setProvider('whisper')
+```
 
 For Orbit:
 
-You'll need to use IPFS from master and run it as: ```ipfs daemon --enable-pubsub-experiment```.
+You'll need to use IPFS from master and run it as: ```ipfs daemon --enable-pubsub-experiment```
 
 then set the provider:
 
-```EmbarkJS.Messages.setProvider('orbit', {server: 'localhost', port: 5001})```
+```Javascript
+  EmbarkJS.Messages.setProvider('orbit', {server: 'localhost', port: 5001})
+```
 
 **listening to messages**
 
