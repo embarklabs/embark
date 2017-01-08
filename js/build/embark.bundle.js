@@ -246,20 +246,31 @@ var EmbarkJS =
 	EmbarkJS.Messages = {
 	};
 
-	EmbarkJS.Messages.setProvider = function(provider) {
+	EmbarkJS.Messages.setProvider = function(provider, options) {
+	  var ipfs;
 	  if (provider === 'whisper') {
 	    this.currentMessages = EmbarkJS.Messages.Whisper;
+	    this.currentMessages.identity = web3.shh.newIdentity();
+	  } else if (provider === 'orbit') {
+	    this.currentMessages = EmbarkJS.Messages.Orbit;
+	    if (options === undefined) {
+	      ipfs = HaadIpfsApi('localhost', '5001');
+	    } else {
+	      ipfs = HaadIpfsApi(options.server, options.port);
+	    }
+	    this.currentMessages.orbit = new Orbit(ipfs);
+	    this.currentMessages.orbit.connect(web3.eth.accounts[0]);
 	  } else {
 	    throw Error('unknown provider');
 	  }
 	};
 
 	EmbarkJS.Messages.sendMessage = function(options) {
-	  return EmbarkJS.Messages.Whisper.sendMessage(options);
+	  return this.currentMessages.sendMessage(options);
 	};
 
 	EmbarkJS.Messages.listenTo = function(options) {
-	  return EmbarkJS.Messages.Whisper.listenTo(options);
+	  return this.currentMessages.listenTo(options);
 	};
 
 	EmbarkJS.Messages.Whisper = {
@@ -268,7 +279,7 @@ var EmbarkJS =
 	EmbarkJS.Messages.Whisper.sendMessage = function(options) {
 	  var topics = options.topic || options.topics;
 	  var data = options.data || options.payload;
-	  var identity = options.identity || web3.shh.newIdentity();
+	  var identity = options.identity || this.identity || web3.shh.newIdentity();
 	  var ttl = options.ttl || 100;
 	  var priority = options.priority || 1000;
 
@@ -282,21 +293,21 @@ var EmbarkJS =
 
 	  // do fromAscii to each topics unless it's already a string
 	  if (typeof topics === 'string') {
-	    topics = topics;
+	    _topics = [web3.fromAscii(topics)];
 	  } else {
 	    // TODO: replace with es6 + babel;
 	    var _topics = [];
 	    for (var i = 0; i < topics.length; i++) {
 	      _topics.push(web3.fromAscii(topics[i]));
 	    }
-	    topics = _topics;
 	  }
+	  topics = _topics;
 
 	  var payload = JSON.stringify(data);
 
 	  var message = {
 	    from: identity,
-	    topics: [web3.fromAscii(topics)],
+	    topics: topics,
 	    payload: web3.fromAscii(payload),
 	    ttl: ttl,
 	    priority: priority
@@ -309,15 +320,15 @@ var EmbarkJS =
 	  var topics = options.topic || options.topics;
 
 	  if (typeof topics === 'string') {
-	    topics = [topics];
+	    _topics = [topics];
 	  } else {
 	    // TODO: replace with es6 + babel;
 	    var _topics = [];
 	    for (var i = 0; i < topics.length; i++) {
-	      _topics.push(web3.fromAscii(topics[i]));
+	      _topics.push(topics[i]);
 	    }
-	    topics = _topics;
 	  }
+	  topics = _topics;
 
 	  var filterOptions = {
 	    topics: topics
@@ -339,11 +350,90 @@ var EmbarkJS =
 
 	  var filter = web3.shh.filter(filterOptions, function(err, result) {
 	    var payload = JSON.parse(web3.toAscii(result.payload));
+	    var data;
 	    if (err) {
 	      promise.error(err);
 	    } else {
-	      promise.cb(payload);
+	      data = {
+	        topic: topics,
+	        data: payload,
+	        from: result.from,
+	        time: (new Date(result.sent * 1000))
+	      };
+	      promise.cb(payload, data, result);
 	    }
+	  });
+
+	  return promise;
+	};
+
+	EmbarkJS.Messages.Orbit = {
+	};
+
+	EmbarkJS.Messages.Orbit.sendMessage = function(options) {
+	  var topics = options.topic || options.topics;
+	  var data = options.data || options.payload;
+
+	  if (topics === undefined) {
+	    throw new Error("missing option: topic");
+	  }
+
+	  if (data === undefined) {
+	    throw new Error("missing option: data");
+	  }
+
+	  if (typeof topics === 'string') {
+	    topics = topics;
+	  } else {
+	    // TODO: better to just send to different channels instead
+	    topics = topics.join(',');
+	  }
+
+	  this.orbit.join(topics);
+
+	  var payload = JSON.stringify(data);
+
+	  this.orbit.send(topics, data);
+	};
+
+	EmbarkJS.Messages.Orbit.listenTo = function(options) {
+	  var self = this;
+	  var topics = options.topic || options.topics;
+
+	  if (typeof topics === 'string') {
+	    topics = topics;
+	  } else {
+	    topics = topics.join(',');
+	  }
+
+	  this.orbit.join(topics);
+
+	  var messageEvents = function() {
+	    this.cb = function() {};
+	  };
+
+	  messageEvents.prototype.then = function(cb) {
+	    this.cb = cb;
+	  };
+
+	  messageEvents.prototype.error = function(err) {
+	    return err;
+	  };
+
+	  var promise = new messageEvents();
+
+	  this.orbit.events.on('message', (channel, message) => {
+	    // TODO: looks like sometimes it's receving messages from all topics
+	    if (topics !== channel) return;
+	    self.orbit.getPost(message.payload.value, true).then((post) => {
+	      var data = {
+	        topic: channel,
+	        data: post.content,
+	        from: post.meta.from.name,
+	        time: (new Date(post.meta.ts))
+	      };
+	      promise.cb(post.content, data, post);
+	    });
 	  });
 
 	  return promise;

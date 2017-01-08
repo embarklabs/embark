@@ -28,7 +28,7 @@ Table of Contents
 * [Using and Configuring Contracts](#dapp-structure)
 * [EmbarkJS](#embarkjs)
 * [EmbarkJS - Storage (IPFS)](#embarkjs---storage)
-* [EmbarkJS - Communication (Whisper)](#embarkjs---communication)
+* [EmbarkJS - Communication (Whisper/Orbit)](#embarkjs---communication)
 * [Testing Contracts](#tests)
 * [Working with different chains](#working-with-different-chains)
 * [Custom Application Structure](#structuring-application)
@@ -351,12 +351,22 @@ EmbarkJS - Communication
 
 **initialization**
 
-The current available communication is Whisper.
+For Whisper:
+
+```EmbarkJS.Messages.setProvider('whisper')```
+
+For Orbit:
+
+You'll need to use IPFS from master and run it as: ```ipfs daemon --enable-pubsub-experiment```.
+
+then set the provider:
+
+```EmbarkJS.Messages.setProvider('orbit', {server: 'localhost', port: 5001})```
 
 **listening to messages**
 
 ```Javascript
-  EmbarkJS.Messages.listenTo({topic: ["achannel", "anotherchannel"]}).then(function(message) { console.log("received: " + message); })
+  EmbarkJS.Messages.listenTo({topic: ["topic1", "topic2"]}).then(function(message) { console.log("received: " + message); })
 ```
 
 **sending messages**
@@ -364,14 +374,16 @@ The current available communication is Whisper.
 you can send plain text
 
 ```Javascript
-  EmbarkJS.Messages.sendMessage({topic: "achannel", data: 'hello world'})
+  EmbarkJS.Messages.sendMessage({topic: "sometopic", data: 'hello world'})
 ```
 
 or an object
 
 ```Javascript
-  EmbarkJS.Messages.sendMessage({topic: "achannel", data: {msg: 'hello world'}})
+  EmbarkJS.Messages.sendMessage({topic: "sometopic", data: {msg: 'hello world'}})
 ```
+
+note: array of topics are considered an AND. In Whisper you can use another array for OR combinations of several topics e.g ```["topic1", ["topic2", "topic3"]]``` => ```topic1 AND (topic2 OR topic 3)```
 
 Tests
 ======
