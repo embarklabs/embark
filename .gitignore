@@ -5,5 +5,5 @@ demo/dist/
 demo/.embark/development/
 demo/config/production/password
 boilerplate/dist/
-docs/_build
+docs/build
 docs/utils/__pycache_
