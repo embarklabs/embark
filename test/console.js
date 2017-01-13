@@ -9,7 +9,7 @@ describe('embark.Console', function() {
 
     describe('command: help', function() {
 
-      it('i should provide a help text', function(done) {
+      it('it should provide a help text', function(done) {
         console.executeCmd('help', function(output) {
           var lines = output.split('\n');
           assert.equal(lines[0], 'Welcome to Embark 2');
