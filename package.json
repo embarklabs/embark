@@ -12,6 +12,10 @@
   "directories": {
     "lib": "./lib"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iurimatias/embark-framework.git"
+  },
   "dependencies": {
     "async": "^2.0.1",
     "bignumber.js": "debris/bignumber.js#master",
@@ -21,31 +25,42 @@
     "colors": "^1.1.2",
     "commander": "^2.8.1",
     "finalhandler": "^0.5.0",
-    "grunt": "^0.4.5",
+    "grunt": "^1.0.1",
     "json-honey": "^0.4.1",
     "merge": "^1.2.0",
-    "meteor-build-client": "^0.1.6",
+    "meteor-build-client": "^0.4.1",
     "mkdirp": "^0.5.1",
-    "solc": "^0.4.7",
     "read-yaml": "^1.0.0",
     "request": "^2.75.0",
     "serve-static": "^1.11.1",
-    "shelljs": "^0.5.0",
-    "toposort": "^0.2.10",
+    "shelljs": "^0.7.6",
+    "solc": "^0.4.7",
+    "toposort": "^1.0.0",
     "web3": "^0.18.2",
     "wrench": "^1.5.8"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
-  "license": "ISC",
+  "keywords": [
+    "ethereum",
+    "dapps",
+    "ipfs",
+    "orbit",
+    "solidity",
+    "solc",
+    "blockchain",
+    "serverless"
+  ],
+  "homepage": "https://github.com/iurimatias/embark-framework",
+  "license": "MIT",
   "devDependencies": {
-    "grunt-cli": "^0.1.13",
-    "grunt-mocha-test": "^0.12.7",
+    "grunt-cli": "^1.2.0",
     "grunt-contrib-jshint": "^1.0.0",
+    "grunt-mocha-test": "^0.13.2",
     "matchdep": "^1.0.1",
-    "mocha": "^2.2.5",
+    "mocha": "^3.2.0",
     "mocha-sinon": "^1.1.4",
     "sinon": "^1.15.4",
-    "toposort": "^0.2.12"
+    "toposort": "^1.0.0"
   }
 }

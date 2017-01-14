@@ -11,6 +11,6 @@
   "homepage": "",
   "devDependencies": {
     "embark": "^2.2.1",
-    "mocha": "^2.2.5"
+    "mocha": "^3.2.0"
   }
 }
