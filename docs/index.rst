@@ -6,6 +6,8 @@
 Welcome to embark's documentation!
 ==================================
 
+This is a work in progress, feel free to contribute!
+
 .. toctree::
    :maxdepth: 2
 
@@ -32,4 +34,3 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
-Hello World!
