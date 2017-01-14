@@ -8,9 +8,22 @@ Welcome to embark's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
-
+   installation.rst
+   usage.rst
+   dashboard.rst
+   creating-a-new-dapp.rst
+   libraries-and-languages-available.rst
+   using-contracts.rst
+   embarkjs.rst
+   embarkjs-storage.rst
+   embarkjs-communication.rst
+   tests.rst
+   working-with-different-chains.rst
+   structuring-application.rst
+   deploying-to-ipfs.rst
+   deploying-to-swarm.rst
+   donations.rst
 
 Indices and tables
 ==================

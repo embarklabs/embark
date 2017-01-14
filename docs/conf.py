@@ -50,8 +50,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Embark'
-copyright = u'2017, Iuri Matias <iuri.matias@gmail.com>'
-author = u'Iuri Matias <iuri.matiasl@gmail.com>'
+copyright = u'2017, Iuri Matias'
+author = u'Iuri Matias'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -131,7 +131,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'Embark.tex', u'Embark Documentation',
-     u'Iuri Matias \\textless{}iuri.matias@gmail.com\\textgreater{}', 'manual'),
+     u'Iuri Matias \\textless{}\\textgreater{}', 'manual'),
 ]
 
 
