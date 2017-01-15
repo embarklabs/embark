@@ -21,7 +21,19 @@ Extending functionality with plugins
 
 The ```embark``` object then provides an api to extend different functionality of embark.
 
-**embark.registerClientWeb3Provider(options)**
+**embark.pluginConfig**
+
+Object containing the config for the plugin specified in embark.json, for e.g with:
+
+.. code:: json
+
+    "plugins": {
+      "embark-babel": { "files": ["**/*.js", "!**/jquery.min.js"], "presets": ["es2015", "react"] }
+    }
+
+``embark.pluginConfig`` will contain ``{ "files": ["**/*.js", "!**/jquery.min.js"], "presets": ["es2015", "react"] }``
+
+**embark.registerClientWeb3Provider(callback(options))**
 
 This call can be used to override the default web3 object generation. it's useful if you want to add a plugin to interact with services like http://infura.io or if you want to use your own web3.js library extension.
 
@@ -32,7 +44,7 @@ options available:
 
 expected return: ``string``
 
-**embark.registerContractsGeneration(options)**
+**embark.registerContractsGeneration(callback(options))**
 
 By default Embark will use EmbarkJS to declare contracts in javascript. You can override and use your own client side library.
 
@@ -48,9 +60,11 @@ options available:
 
 expected return: ``string``
 
-**embark.registerPipeline(options)**
+**embark.registerPipeline(matchingFiles, callback(options))**
 
 This call will return the content of the current asset file so the plugin can transform it in some way. Typically this is used to implement pipeline plugins such as Babel, JSX, sass to css, etc..
+
+``matchingFiles`` is an array of matching files the plugin should be called for e.g [``**/*.js``, ``!vendor/jquery.js``] matches all javascript files except vendor/jquery.js
 
 options available:
  * targetFile - filename to be generated
