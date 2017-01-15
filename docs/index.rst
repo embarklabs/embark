@@ -25,6 +25,7 @@ This is a work in progress, feel free to contribute!
    structuring-application.rst
    deploying-to-ipfs.rst
    deploying-to-swarm.rst
+   plugins.rst
    donations.rst
 
 Indices and tables
