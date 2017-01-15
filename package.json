@@ -33,7 +33,7 @@
     "read-yaml": "^1.0.0",
     "request": "^2.75.0",
     "serve-static": "^1.11.1",
-    "shelljs": "^0.7.6",
+    "shelljs": "^0.5.0",
     "solc": "^0.4.8",
     "toposort": "^1.0.0",
     "web3": "^0.18.2",
