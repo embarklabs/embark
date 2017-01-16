@@ -1,6 +1,4 @@
 #!/usr/bin/env node
 
-console.log("starting embark...");
-
 var Embark = require('..');
 Embark.process(process.argv);
