@@ -108,3 +108,21 @@ expected return: ``string``
         });
     }
 
+**embark.registerConsoleCommand(callback(options))**
+
+This call is used to extend the console with custom commands.
+
+expected return: ``string`` (output to print in console) or ``boolean`` (skip command if false)
+
+.. code:: javascript
+
+    module.exports = function(embark) {
+        embark.registerConsoleCommand(function(cmd, options) {
+          if (cmd === "hello") {
+            return "hello there!";
+          }
+          // continue to embark or next plugin;
+          return false;
+        });
+    }
+

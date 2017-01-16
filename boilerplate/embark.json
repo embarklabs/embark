@@ -7,5 +7,5 @@
   },
   "buildDir": "dist/",
   "config": "config/",
-  "plugins": []
+  "plugins": {}
 }
