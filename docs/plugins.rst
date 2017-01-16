@@ -3,8 +3,10 @@ Extending functionality with plugins
 
 **To add a plugin to embark:**
 
-1. Add the package to package.json 
-2. Then add the package to the list of ``plugins:`` in embark.json
+1. Add the npm package to package.json 
+   e.g ``npm install embark-babel --save``
+2. Then add the package to ``plugins:`` in embark.json
+   e.g ``"plugins": { "embark-babel": {} }``
 
 **Creating a plugin:**
 
@@ -35,7 +37,7 @@ Object containing the config for the plugin specified in embark.json, for e.g wi
 
 **embark.registerClientWeb3Provider(callback(options))**
 
-This call can be used to override the default web3 object generation. it's useful if you want to add a plugin to interact with services like http://infura.io or if you want to use your own web3.js library extension.
+This call can be used to override the default web3 object generation in the dapp. it's useful if you want to add a plugin to interact with services like http://infura.io or if you want to use your own web3.js library extension.
 
 options available:
  * rpcHost - configured rpc Host to connect to
@@ -44,9 +46,20 @@ options available:
 
 expected return: ``string``
 
+example:
+
+.. code:: javascript
+
+    module.exports = function(embark) {
+        embark.registerClientWeb3Provider(function(options) {
+            return "web3 = new Web3(new Web3.providers.HttpProvider('http://" + options.rpcHost + ":" + options.rpcPort + "');";
+        });
+    }
+
+
 **embark.registerContractsGeneration(callback(options))**
 
-By default Embark will use EmbarkJS to declare contracts in javascript. You can override and use your own client side library.
+By default Embark will use EmbarkJS to declare contracts in the dapp. You can override and use your own client side library.
 
 options available:
  * contracts - Hash of objects containing all the deployed contracts. (key: contractName, value: contract object)
@@ -60,6 +73,18 @@ options available:
 
 expected return: ``string``
 
+.. code:: javascript
+
+    module.exports = function(embark) {
+        embark.registerContractsGeneration(function(options) {
+          for(var className in this.contractsManager.contracts) {
+            var abi = JSON.stringify(contract.abiDefinition);
+
+            return className + " = " + web3.eth.contract(" + abi + ").at('" + contract.deployedAddress + "');";
+          }
+        });
+    }
+
 **embark.registerPipeline(matchingFiles, callback(options))**
 
 This call will return the content of the current asset file so the plugin can transform it in some way. Typically this is used to implement pipeline plugins such as Babel, JSX, sass to css, etc..
@@ -71,4 +96,15 @@ options available:
  * source - content of the file
 
 expected return: ``string``
+
+.. code:: javascript
+
+    var babel = require("babel-core");
+    require("babel-preset-react");
+
+    module.exports = function(embark) {
+        embark.registerPipeline(["**/*.js", "**/*.jsx"], function(options) {
+          return babel.transform(options.source, {minified: true, presets: ['react']}).code;
+        });
+    }
 
