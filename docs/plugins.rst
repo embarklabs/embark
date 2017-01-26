@@ -21,7 +21,18 @@ Extending functionality with plugins
     module.exports = function(embark) {
     }
 
-The ```embark``` object then provides an api to extend different functionality of embark.
+The ``embark`` object then provides an api to extend different functionality of embark.
+
+**Usecases examples**
+
+* plugin to add support for es6, jsx, coffescript, etc (``embark.registerPipeline``)
+* plugin to add standard contracts or a contract framework (``embark.registerContractConfiguration`` and ``embark.addContractFile``)
+* plugin to make some contracts available in all environments for use by other contracts or the dapp itself e.g a Token, a DAO, ENS, etc.. (``embark.registerContractConfiguration`` and ``embark.addContractFile``)
+* plugin to add a libraries such as react or boostrap (``embark.addFileToPipeline``)
+* plugin to specify a particular web3 initialization for special provider uses (``embark.registerClientWeb3Provider``)
+* plugin to create a different contract wrapper (``embark.registerContractsGeneration``)
+* plugin to add new console commands (``embark.registerConsoleCommand``)
+* plugin to add support for another contract language such as viper, LLL, etc (``embark.registerCompiler``)
 
 **embark.pluginConfig**
 
@@ -34,6 +45,97 @@ Object containing the config for the plugin specified in embark.json, for e.g wi
     }
 
 ``embark.pluginConfig`` will contain ``{ "files": ["**/*.js", "!**/jquery.min.js"], "presets": ["es2015", "react"] }``
+
+**embark.registerPipeline(matchingFiles, callback(options))**
+
+This call will return the content of the current asset file so the plugin can transform it in some way. Typically this is used to implement pipeline plugins such as Babel, JSX, sass to css, etc..
+
+``matchingFiles`` is an array of matching files the plugin should be called for e.g [``**/*.js``, ``!vendor/jquery.js``] matches all javascript files except vendor/jquery.js
+
+options available:
+ * targetFile - filename to be generated
+ * source - content of the file
+
+expected return: ``string``
+
+.. code:: javascript
+
+    var babel = require("babel-core");
+    require("babel-preset-react");
+
+    module.exports = function(embark) {
+        embark.registerPipeline(["**/*.js", "**/*.jsx"], function(options) {
+          return babel.transform(options.source, {minified: true, presets: ['react']}).code;
+        });
+    }
+
+**embark.registerContractConfiguration(contractsConfig)**
+
+This call is used to specify a configure of one or more contracts in one or
+several environments. This is useful for specifying the different configurations
+a contract might have depending on the enviroment. For instance in the code
+bellow, the ``DGDToken`` contract code will redeployed with the arguments
+``100`` in any environment, except for the livenet since it's already deployed
+there at a particular address.
+
+Typically this call is used in combination with ``embark.addContractFile``
+
+``contractsConfig`` is an object in the same structure as the one found in the
+contracts configuration at ``config/contracts.json``. The users own
+configuration will be merged with the one specified in the plugins.
+
+.. code:: javascript
+
+    module.exports = function(embark) {
+        embark.registerContractConfiguration({
+          "default": {
+            "contracts": {
+              "DGDToken": {
+                "args": [
+                  100
+                ]
+              }
+            }
+          },
+          "livenet": {
+            "contracts": {
+              "DGDToken": {
+                "address": "0xe0b7927c4af23765cb51314a0e0521a9645f0e2a"
+              }
+            }
+          }
+        });
+    }
+
+**embark.addContractFile(file)**
+
+Typically this call is used in combination with ``embark.registerContractConfiguration``. If you want to make the contract available but not automatically deployed without the user specifying so you can use ``registerContractConfiguration`` to set the contract config to ``deploy: false``, this is particularly useful for when the user is meant to extend the contract being given (e.g ``contract MyToken is StandardToken``)
+
+``file`` is the contract file to add to embark, the path should relative to the plugin.
+
+.. code:: javascript
+
+    module.exports = function(embark) {
+        embark.addContractFile("./DGDToken.sol");
+    }
+
+**embark.addFileToPipeline(file, options)**
+
+This call is used to add a file to the pipeline so it's included with the dapp on the client side.
+
+``file`` is the file to add to the pipeline, the path should relative to the plugin.
+
+``options`` available:
+ * skipPipeline - If true it will not apply transformations to the file. For
+   example if you have a babel plugin to transform es6 code or a minifier plugin, setting this to
+   true will not apply the plugin on this file.
+
+.. code:: javascript
+
+    module.exports = function(embark) {
+        embark.addFileToPipeline("./jquery.js", {skipPipeline: true});
+    }
+
 
 **embark.registerClientWeb3Provider(callback(options))**
 
@@ -85,29 +187,6 @@ expected return: ``string``
         });
     }
 
-**embark.registerPipeline(matchingFiles, callback(options))**
-
-This call will return the content of the current asset file so the plugin can transform it in some way. Typically this is used to implement pipeline plugins such as Babel, JSX, sass to css, etc..
-
-``matchingFiles`` is an array of matching files the plugin should be called for e.g [``**/*.js``, ``!vendor/jquery.js``] matches all javascript files except vendor/jquery.js
-
-options available:
- * targetFile - filename to be generated
- * source - content of the file
-
-expected return: ``string``
-
-.. code:: javascript
-
-    var babel = require("babel-core");
-    require("babel-preset-react");
-
-    module.exports = function(embark) {
-        embark.registerPipeline(["**/*.js", "**/*.jsx"], function(options) {
-          return babel.transform(options.source, {minified: true, presets: ['react']}).code;
-        });
-    }
-
 **embark.registerConsoleCommand(callback(options))**
 
 This call is used to extend the console with custom commands.
@@ -123,6 +202,59 @@ expected return: ``string`` (output to print in console) or ``boolean`` (skip co
           }
           // continue to embark or next plugin;
           return false;
+        });
+    }
+
+**embark.registerCompiler(extension, callback(options))**
+
+expected return: ``hash`` of compiled contracts
+
+ * Hash of objects containing the compiled contracts. (key: contractName, value: contract object)
+
+  * code - contract bytecode (string)
+
+  * runtimeBytecode - contract runtimeBytecode (string)
+
+  * gasEstimates - gas estimates for constructor and methods (hash)
+   * e.g ``{"creation":[20131,38200],"external":{"get()":269,"set(uint256)":20163,"storedData()":224},"internal":{}}``
+  * functionHashes - object with methods and their corresponding hash identifier (hash)
+   * e.g ``{"get()":"6d4ce63c","set(uint256)":"60fe47b1","storedData()":"2a1afcd9"}``
+  * abiDefinition - contract abi (array of objects)
+   * e.g ``[{"constant":true,"inputs":[],"name":"storedData","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"}, etc...``
+
+below a possible implementation of a solcjs plugin:
+
+.. code:: javascript
+
+    var solc = require('solc');
+
+    module.exports = function(embark) {
+        embark.registerCompiler(".sol", function(contractFiles) {
+          // prepare input for solc
+          var input = {};
+          for (var i = 0; i < contractFiles.length; i++) {
+            var filename = contractFiles[i].filename.replace('app/contracts/','');
+            input[filename] = contractFiles[i].content.toString();
+          }
+
+          // compile files
+          var output = solc.compile({sources: input}, 1);
+
+          // generate the compileObject expected by embark
+          var json = output.contracts;
+          var compiled_object = {};
+          for (var className in json) {
+            var contract = json[className];
+
+            compiled_object[className] = {};
+            compiled_object[className].code            = contract.bytecode;
+            compiled_object[className].runtimeBytecode = contract.runtimeBytecode;
+            compiled_object[className].gasEstimates    = contract.gasEstimates;
+            compiled_object[className].functionHashes  = contract.functionHashes;
+            compiled_object[className].abiDefinition   = JSON.parse(contract.interface);
+          }
+
+          return compiled_object;
         });
     }
 
