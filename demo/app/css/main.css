@@ -3,3 +3,12 @@ div {
   margin: 15px;
 }
 
+.logs {
+  background-color: black;
+  font-size: 14px;
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 8px;
+}
+
