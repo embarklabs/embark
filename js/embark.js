@@ -267,12 +267,12 @@ EmbarkJS.Messages.Whisper.sendMessage = function(options) {
     priority: priority
   };
 
-  return web3.shh.post(message);
+  return web3.shh.post(message, function() {});
 };
 
 EmbarkJS.Messages.Whisper.listenTo = function(options) {
   var topics = options.topic || options.topics;
-  var _topics;
+  var _topics = [];
 
   if (typeof topics === 'string') {
     _topics = [topics];
@@ -300,6 +300,10 @@ EmbarkJS.Messages.Whisper.listenTo = function(options) {
     return err;
   };
 
+  messageEvents.prototype.stop = function() {
+    this.filter.stopWatching();
+  };
+
   var promise = new messageEvents();
 
   var filter = web3.shh.filter(filterOptions, function(err, result) {
@@ -317,6 +321,8 @@ EmbarkJS.Messages.Whisper.listenTo = function(options) {
       promise.cb(payload, data, result);
     }
   });
+
+  promise.filter = filter;
 
   return promise;
 };
