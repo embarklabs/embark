@@ -71,7 +71,15 @@ $(document).ready(function() {
 // Communication (Whisper) example
 // ===========================
 $(document).ready(function() {
-  EmbarkJS.Messages.setProvider('whisper');
+
+  $("#communication .error").hide();
+  web3.version.getWhisper(function(err, res) {
+    if (err) {
+      $("#communication .error").show();
+    } else {
+      EmbarkJS.Messages.setProvider('whisper');
+    }
+  });
 
   $("#communication button.listenToChannel").click(function() {
     var channel = $("#communication .listen input.channel").val();
