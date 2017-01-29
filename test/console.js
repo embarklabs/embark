@@ -1,9 +1,11 @@
 /*globals describe, it*/
 var Console = require('../lib/console.js');
+var Plugins = require('../lib/plugins.js');
 var assert = require('assert');
 
 describe('embark.Console', function() {
-  var console = new Console();
+  var plugins = new Plugins({plugins: {}});
+  var console = new Console({plugins: plugins});
 
   describe('#executeCmd', function() {
 

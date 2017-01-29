@@ -8,7 +8,7 @@ var readFile = function(file) {
 };
 
 describe('embark.Compiler', function() {
-  var compiler = new Compiler();
+  var compiler = new Compiler({});
 
   describe('#compile_solidity', function() {
     var compiledContracts = compiler.compile_solidity([
