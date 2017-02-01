@@ -1,8 +1,11 @@
 
-What is embark
-======
-
 [![Join the chat at https://gitter.im/iurimatias/embark-framework](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/iurimatias/embark-framework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build
+Status](https://travis-ci.org/iurimatias/embark-framework.svg?branch=develop)](https://travis-ci.org/iurimatias/embark-framework)
+[![Code Climate](https://codeclimate.com/github/iurimatias/embark-framework/badges/gpa.svg)](https://codeclimate.com/github/iurimatias/embark-framework)
+
+What is Embark
+======
 
 Embark is a framework that allows you to easily develop and deploy  DApps.
 
@@ -21,10 +24,11 @@ Table of Contents
 * [Usage Demo](#usage---demo)
 * [Dashboard](#dashboard)
 * [Creating a new DApp](#creating-a-new-dapp)
+* [Libraries and APIs available](#libraries-and-languages-available)
 * [Using and Configuring Contracts](#dapp-structure)
 * [EmbarkJS](#embarkjs)
 * [EmbarkJS - Storage (IPFS)](#embarkjs---storage)
-* [EmbarkJS - Communication (Whisper)](#embarkjs---communication)
+* [EmbarkJS - Communication (Whisper/Orbit)](#embarkjs---communication)
 * [Testing Contracts](#tests)
 * [Working with different chains](#working-with-different-chains)
 * [Custom Application Structure](#structuring-application)
@@ -34,7 +38,7 @@ Table of Contents
 
 Installation
 ======
-Requirements: geth (1.4.4 or higher), node (5.0.0) and npm
+Requirements: geth (1.5.5 or higher), node (5.0.0) and npm
 Optional: serpent (develop) if using contracts with Serpent, testrpc or ethersim if using the simulator or the test functionality.
 Further: depending on the dapp stack you choose: [IPFS](https://ipfs.io/)
 
@@ -61,19 +65,19 @@ $ embark demo
 $ cd embark_demo
 ```
 
-To run a ethereum rpc simulator simply run:
-
-```Bash
-$ embark simulator
-```
-
-Or Alternatively, you can run a REAL ethereum node for development purposes:
+You can run a REAL ethereum node for development purposes:
 
 ```Bash
 $ embark blockchain
 ```
 
-By default embark blockchain will mine a minimum amount of ether and will only mine when new transactions come in. This is quite usefull to keep a low CPU. The option can be configured at config/blockchain.json
+Alternatively, to use an ethereum rpc simulator simply run:
+
+```Bash
+$ embark simulator
+```
+
+By default embark blockchain will mine a minimum amount of ether and will only mine when new transactions come in. This is quite usefull to keep a low CPU. The option can be configured at ```config/blockchain.json```. Note that running a real node requires at least 2GB of free ram, please take this into account if running it in a VM.
 
 Then, in another command line:
 
@@ -129,6 +133,16 @@ DApp Structure
 
 Solidity/Serpent files in the contracts directory will automatically be deployed with embark run. Changes in any files will automatically be reflected in app, changes to contracts will result in a redeployment and update of their JS Bindings
 
+Libraries and languages available
+======
+
+Embark can build and deploy contracts coded in Solidity or Serpent. It will make them available on the client side using EmbarkJS and Web3.js.
+
+Further documentation for these can be found below:
+
+* Smart Contracts: [Solidity](https://solidity.readthedocs.io/en/develop/) and [Serpent](https://github.com/ethereum/wiki/wiki/Serpent)
+* Client Side: [Web3.js](https://github.com/ethereum/wiki/wiki/JavaScript-API) and [EmbarkJS](#embarkjs)
+
 Using Contracts
 ======
 Embark will automatically take care of deployment for you and set all needed JS bindings. For example, the contract below:
@@ -155,8 +169,8 @@ Will automatically be available in Javascript as:
 ```Javascript
 # app/js/index.js
 SimpleStorage.set(100);
-SimpleStorage.get();
-SimpleStorage.storedData();
+SimpleStorage.get().then(function(value) { console.log(value.toNumber()) });
+SimpleStorage.storedData().then(function(value) { console.log(value.toNumber()) });
 ```
 
 You can specify for each contract and environment its gas costs and arguments:
@@ -337,12 +351,26 @@ EmbarkJS - Communication
 
 **initialization**
 
-The current available communication is Whisper.
+For Whisper:
+
+```Javascript
+    EmbarkJS.Messages.setProvider('whisper')
+```
+
+For Orbit:
+
+You'll need to use IPFS from master and run it as: ```ipfs daemon --enable-pubsub-experiment```
+
+then set the provider:
+
+```Javascript
+  EmbarkJS.Messages.setProvider('orbit', {server: 'localhost', port: 5001})
+```
 
 **listening to messages**
 
 ```Javascript
-  EmbarkJS.Messages.listenTo({topic: ["achannel", "anotherchannel"]}).then(function(message) { console.log("received: " + message); })
+  EmbarkJS.Messages.listenTo({topic: ["topic1", "topic2"]}).then(function(message) { console.log("received: " + message); })
 ```
 
 **sending messages**
@@ -350,14 +378,16 @@ The current available communication is Whisper.
 you can send plain text
 
 ```Javascript
-  EmbarkJS.Messages.sendMessage({topic: "achannel", data: 'hello world'})
+  EmbarkJS.Messages.sendMessage({topic: "sometopic", data: 'hello world'})
 ```
 
 or an object
 
 ```Javascript
-  EmbarkJS.Messages.sendMessage({topic: "achannel", data: {msg: 'hello world'}})
+  EmbarkJS.Messages.sendMessage({topic: "sometopic", data: {msg: 'hello world'}})
 ```
+
+note: array of topics are considered an AND. In Whisper you can use another array for OR combinations of several topics e.g ```["topic1", ["topic2", "topic3"]]``` => ```topic1 AND (topic2 OR topic 3)```
 
 Tests
 ======
@@ -370,7 +400,7 @@ Embark includes a testing lib to fastly run & test your contracts in a EVM.
 # test/simple_storage_spec.js
 
 var assert = require('assert');
-var Embark = require('embark-framework');
+var Embark = require('embark');
 var EmbarkSpec = Embark.initTests();
 var web3 = EmbarkSpec.web3;
 
@@ -450,16 +480,13 @@ Embark is quite flexible and you can configure you're own directory structure us
 }
 ```
 
-Deploying to IPFS
+Deploying to IPFS and Swarm
 ======
 
-To deploy a dapp to IPFS, all you need to do is run a local IPFS node and then run ```embark ipfs```.
+To deploy a dapp to IPFS, all you need to do is run a local IPFS node and then run ```embark upload ipfs```.
 If you want to deploy to the livenet then after configuring you account on ```config/blockchain.json``` on the ```production``` environment then you can deploy to that chain by specifying the environment ```embark ipfs production```.
 
-LiveReload Plugin
-======
-
-Embark works quite well with the LiveReload Plugin
+To deploy a dapp to SWARM, all you need to do is run a local SWARM node and then run ```embark upload swarm```.
 
 Donations
 ======

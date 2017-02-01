@@ -53,6 +53,7 @@ var EmbarkJS =
 
 	EmbarkJS.Contract = function(options) {
 	  var self = this;
+	  var i, abiElement;
 
 	  this.abi = options.abi;
 	  this.address = options.address;
@@ -61,10 +62,50 @@ var EmbarkJS =
 
 	  var ContractClass = this.web3.eth.contract(this.abi);
 
+	  this.eventList = [];
+
+	  if (this.abi) {
+	    for (i = 0; i < this.abi.length; i++) {
+	      abiElement = this.abi[i];
+	      if (abiElement.type === 'event') {
+	        this.eventList.push(abiElement.name);
+	      }
+	    }
+	  }
+
+	  var messageEvents = function() {
+	    this.cb = function() {};
+	  };
+
+	  messageEvents.prototype.then = function(cb) {
+	    this.cb = cb;
+	  };
+
+	  messageEvents.prototype.error = function(err) {
+	    return err;
+	  };
+
 	  this._originalContractObject = ContractClass.at(this.address);
 	  this._methods = Object.getOwnPropertyNames(this._originalContractObject).filter(function (p) {
 	    // TODO: check for forbidden properties
-	    if (typeof self._originalContractObject[p] === 'function') {
+	    if (self.eventList.indexOf(p) >= 0) {
+
+	      self[p] = function() {
+	        var promise = new messageEvents();
+	        var args = Array.prototype.slice.call(arguments);
+	        args.push(function(err, result) {
+	          if (err) {
+	            promise.error(err);
+	          } else {
+	            promise.cb(result);
+	          }
+	        });
+
+	        self._originalContractObject[p].apply(self._originalContractObject[p], args);
+	        return promise;
+	      };
+	      return true;
+	    } else if (typeof self._originalContractObject[p] === 'function') {
 	      self[p] = Promise.promisify(self._originalContractObject[p]);
 	      return true;
 	    }
@@ -76,7 +117,7 @@ var EmbarkJS =
 	  var self = this;
 	  var contractParams;
 
-	  contractParams = args;
+	  contractParams = args || [];
 
 	  contractParams.push({
 	    from: this.web3.eth.accounts[0],
@@ -115,13 +156,16 @@ var EmbarkJS =
 	EmbarkJS.Storage = {
 	};
 
-	// EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'})<F37>
-	//{server: ‘localhost’, port: ‘5001’};
+	// EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'})
 
 	EmbarkJS.Storage.setProvider = function(provider, options) {
 	  if (provider === 'ipfs') {
 	    this.currentStorage = EmbarkJS.Storage.IPFS;
-	    this.ipfsConnection = IpfsApi(options.server, options.port);
+	    if (options === undefined) {
+	      this.ipfsConnection = IpfsApi('localhost', '5001');
+	    } else {
+	      this.ipfsConnection = IpfsApi(options.server, options.port);
+	    }
 	  } else {
 	    throw Error('unknown provider');
 	  }
@@ -129,6 +173,9 @@ var EmbarkJS =
 
 	EmbarkJS.Storage.saveText = function(text) {
 	  var self = this;
+	  if (!this.ipfsConnection) {
+	    this.setProvider('ipfs');
+	  }
 	  var promise = new Promise(function(resolve, reject) {
 	    self.ipfsConnection.add((new self.ipfsConnection.Buffer(text)), function(err, result) {
 	      if (err) {
@@ -148,6 +195,10 @@ var EmbarkJS =
 
 	  if (file === undefined) {
 	    throw new Error('no file found');
+	  }
+
+	  if (!this.ipfsConnection) {
+	    this.setProvider('ipfs');
 	  }
 
 	  var promise = new Promise(function(resolve, reject) {
@@ -173,6 +224,9 @@ var EmbarkJS =
 	  var self = this;
 	  // TODO: detect type, then convert if needed
 	  //var ipfsHash = web3.toAscii(hash);
+	  if (!this.ipfsConnection) {
+	    this.setProvider('ipfs');
+	  }
 
 	  var promise = new Promise(function(resolve, reject) {
 	    self.ipfsConnection.object.get([hash]).then(function(node) {
@@ -192,20 +246,31 @@ var EmbarkJS =
 	EmbarkJS.Messages = {
 	};
 
-	EmbarkJS.Messages.setProvider = function(provider) {
+	EmbarkJS.Messages.setProvider = function(provider, options) {
+	  var ipfs;
 	  if (provider === 'whisper') {
 	    this.currentMessages = EmbarkJS.Messages.Whisper;
+	    this.currentMessages.identity = web3.shh.newIdentity();
+	  } else if (provider === 'orbit') {
+	    this.currentMessages = EmbarkJS.Messages.Orbit;
+	    if (options === undefined) {
+	      ipfs = HaadIpfsApi('localhost', '5001');
+	    } else {
+	      ipfs = HaadIpfsApi(options.server, options.port);
+	    }
+	    this.currentMessages.orbit = new Orbit(ipfs);
+	    this.currentMessages.orbit.connect(web3.eth.accounts[0]);
 	  } else {
 	    throw Error('unknown provider');
 	  }
 	};
 
 	EmbarkJS.Messages.sendMessage = function(options) {
-	  return EmbarkJS.Messages.Whisper.sendMessage(options);
+	  return this.currentMessages.sendMessage(options);
 	};
 
 	EmbarkJS.Messages.listenTo = function(options) {
-	  return EmbarkJS.Messages.Whisper.listenTo(options);
+	  return this.currentMessages.listenTo(options);
 	};
 
 	EmbarkJS.Messages.Whisper = {
@@ -214,7 +279,7 @@ var EmbarkJS =
 	EmbarkJS.Messages.Whisper.sendMessage = function(options) {
 	  var topics = options.topic || options.topics;
 	  var data = options.data || options.payload;
-	  var identity = options.identity || web3.shh.newIdentity();
+	  var identity = options.identity || this.identity || web3.shh.newIdentity();
 	  var ttl = options.ttl || 100;
 	  var priority = options.priority || 1000;
 
@@ -228,21 +293,21 @@ var EmbarkJS =
 
 	  // do fromAscii to each topics unless it's already a string
 	  if (typeof topics === 'string') {
-	    topics = topics;
+	    _topics = [web3.fromAscii(topics)];
 	  } else {
 	    // TODO: replace with es6 + babel;
 	    var _topics = [];
 	    for (var i = 0; i < topics.length; i++) {
 	      _topics.push(web3.fromAscii(topics[i]));
 	    }
-	    topics = _topics;
 	  }
+	  topics = _topics;
 
 	  var payload = JSON.stringify(data);
 
 	  var message = {
 	    from: identity,
-	    topics: [web3.fromAscii(topics)],
+	    topics: topics,
 	    payload: web3.fromAscii(payload),
 	    ttl: ttl,
 	    priority: priority
@@ -255,15 +320,15 @@ var EmbarkJS =
 	  var topics = options.topic || options.topics;
 
 	  if (typeof topics === 'string') {
-	    topics = [topics];
+	    _topics = [topics];
 	  } else {
 	    // TODO: replace with es6 + babel;
 	    var _topics = [];
 	    for (var i = 0; i < topics.length; i++) {
-	      _topics.push(web3.fromAscii(topics[i]));
+	      _topics.push(topics[i]);
 	    }
-	    topics = _topics;
 	  }
+	  topics = _topics;
 
 	  var filterOptions = {
 	    topics: topics
@@ -285,11 +350,90 @@ var EmbarkJS =
 
 	  var filter = web3.shh.filter(filterOptions, function(err, result) {
 	    var payload = JSON.parse(web3.toAscii(result.payload));
+	    var data;
 	    if (err) {
 	      promise.error(err);
 	    } else {
-	      promise.cb(payload);
+	      data = {
+	        topic: topics,
+	        data: payload,
+	        from: result.from,
+	        time: (new Date(result.sent * 1000))
+	      };
+	      promise.cb(payload, data, result);
 	    }
+	  });
+
+	  return promise;
+	};
+
+	EmbarkJS.Messages.Orbit = {
+	};
+
+	EmbarkJS.Messages.Orbit.sendMessage = function(options) {
+	  var topics = options.topic || options.topics;
+	  var data = options.data || options.payload;
+
+	  if (topics === undefined) {
+	    throw new Error("missing option: topic");
+	  }
+
+	  if (data === undefined) {
+	    throw new Error("missing option: data");
+	  }
+
+	  if (typeof topics === 'string') {
+	    topics = topics;
+	  } else {
+	    // TODO: better to just send to different channels instead
+	    topics = topics.join(',');
+	  }
+
+	  this.orbit.join(topics);
+
+	  var payload = JSON.stringify(data);
+
+	  this.orbit.send(topics, data);
+	};
+
+	EmbarkJS.Messages.Orbit.listenTo = function(options) {
+	  var self = this;
+	  var topics = options.topic || options.topics;
+
+	  if (typeof topics === 'string') {
+	    topics = topics;
+	  } else {
+	    topics = topics.join(',');
+	  }
+
+	  this.orbit.join(topics);
+
+	  var messageEvents = function() {
+	    this.cb = function() {};
+	  };
+
+	  messageEvents.prototype.then = function(cb) {
+	    this.cb = cb;
+	  };
+
+	  messageEvents.prototype.error = function(err) {
+	    return err;
+	  };
+
+	  var promise = new messageEvents();
+
+	  this.orbit.events.on('message', (channel, message) => {
+	    // TODO: looks like sometimes it's receving messages from all topics
+	    if (topics !== channel) return;
+	    self.orbit.getPost(message.payload.value, true).then((post) => {
+	      var data = {
+	        topic: channel,
+	        data: post.content,
+	        from: post.meta.from.name,
+	        time: (new Date(post.meta.ts))
+	      };
+	      promise.cb(post.content, data, post);
+	    });
 	  });
 
 	  return promise;
@@ -5907,83 +6051,14 @@ var EmbarkJS =
 /***/ function(module, exports) {
 
 	// shim for using process in browser
+
 	var process = module.exports = {};
-
-	// cached from whatever global is present so that test runners that stub it
-	// don't break things.  But we need to wrap it in a try catch in case it is
-	// wrapped in strict mode code which doesn't define any globals.  It's inside a
-	// function because try/catches deoptimize in certain engines.
-
-	var cachedSetTimeout;
-	var cachedClearTimeout;
-
-	(function () {
-	    try {
-	        cachedSetTimeout = setTimeout;
-	    } catch (e) {
-	        cachedSetTimeout = function () {
-	            throw new Error('setTimeout is not defined');
-	        }
-	    }
-	    try {
-	        cachedClearTimeout = clearTimeout;
-	    } catch (e) {
-	        cachedClearTimeout = function () {
-	            throw new Error('clearTimeout is not defined');
-	        }
-	    }
-	} ())
-	function runTimeout(fun) {
-	    if (cachedSetTimeout === setTimeout) {
-	        //normal enviroments in sane situations
-	        return setTimeout(fun, 0);
-	    }
-	    try {
-	        // when when somebody has screwed with setTimeout but no I.E. maddness
-	        return cachedSetTimeout(fun, 0);
-	    } catch(e){
-	        try {
-	            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-	            return cachedSetTimeout.call(null, fun, 0);
-	        } catch(e){
-	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-	            return cachedSetTimeout.call(this, fun, 0);
-	        }
-	    }
-
-
-	}
-	function runClearTimeout(marker) {
-	    if (cachedClearTimeout === clearTimeout) {
-	        //normal enviroments in sane situations
-	        return clearTimeout(marker);
-	    }
-	    try {
-	        // when when somebody has screwed with setTimeout but no I.E. maddness
-	        return cachedClearTimeout(marker);
-	    } catch (e){
-	        try {
-	            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-	            return cachedClearTimeout.call(null, marker);
-	        } catch (e){
-	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-	            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-	            return cachedClearTimeout.call(this, marker);
-	        }
-	    }
-
-
-
-	}
 	var queue = [];
 	var draining = false;
 	var currentQueue;
 	var queueIndex = -1;
 
 	function cleanUpNextTick() {
-	    if (!draining || !currentQueue) {
-	        return;
-	    }
 	    draining = false;
 	    if (currentQueue.length) {
 	        queue = currentQueue.concat(queue);
@@ -5999,7 +6074,7 @@ var EmbarkJS =
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = runTimeout(cleanUpNextTick);
+	    var timeout = setTimeout(cleanUpNextTick);
 	    draining = true;
 
 	    var len = queue.length;
@@ -6016,7 +6091,7 @@ var EmbarkJS =
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    runClearTimeout(timeout);
+	    clearTimeout(timeout);
 	}
 
 	process.nextTick = function (fun) {
@@ -6028,7 +6103,7 @@ var EmbarkJS =
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        runTimeout(drainQueue);
+	        setTimeout(drainQueue, 0);
 	    }
 	};
 

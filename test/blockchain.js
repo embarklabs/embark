@@ -22,6 +22,7 @@ describe('embark.Blockchain', function() {
           networkId: 12301,
           port: 30303,
           nodiscover: false,
+          maxpeers: 25,
           mine: false,
           whisper: true,
           account: {}
@@ -45,6 +46,7 @@ describe('embark.Blockchain', function() {
           networkId: 1,
           port: 123456,
           nodiscover: true,
+          maxpeers: 25,
           mine: true,
           whisper: false,
           account: {}
