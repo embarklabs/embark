@@ -38,7 +38,7 @@ Table of Contents
 
 Installation
 ======
-Requirements: geth (1.5.5 or higher), node (5.0.0) and npm
+Requirements: geth (1.5.8 or higher), node (6.9.1 or higher is recommended) and npm
 Optional: serpent (develop) if using contracts with Serpent, testrpc or ethersim if using the simulator or the test functionality.
 Further: depending on the dapp stack you choose: [IPFS](https://ipfs.io/)
 
@@ -58,6 +58,9 @@ Embark's npm package has changed from ```embark-framework``` to ```embark```, th
 
 Usage - Demo
 ======
+
+![Embark Demo screenshot](http://i.imgur.com/a9ddSjn.png)
+
 You can easily create a sample working DApp with the following:
 
 ```Bash
