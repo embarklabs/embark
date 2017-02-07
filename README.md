@@ -7,7 +7,7 @@ Status](https://travis-ci.org/iurimatias/embark-framework.svg?branch=develop)](h
 What is Embark
 ======
 
-Embark is a framework that allows you to easily develop and deploy Decentralized Applications (DApps). A Decentralized Application is serverless html5 application that uses one or more decentralized technologies. Embark currently integrates with EVM blockchains (Ethereum), IPFS, Whisper and Orbit. Swarm is supported for deployment.
+Embark is a framework that allows you to easily develop and deploy Decentralized Applications (DApps). A Decentralized Application is serverless html5 application that uses one or more decentralized technologies. Embark currently integrates with EVM blockchains (Ethereum), Decentralized Storages (IPFS), and Decentralizaed communication platforms (Whisper and Orbit). Swarm is supported for deployment.
 
 With Embark you can:
 * Automatically deploy contracts and make them available in your JS code. Embark watches for changes, and if you update a contract, Embark will automatically redeploy the contracts (if needed) and the dapp.
