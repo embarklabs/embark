@@ -1,8 +1,8 @@
 Installation
 ============
 
-Requirements: geth (1.5.5 or higher), node (5.0.0) and npm Optional:
-serpent (develop) if using contracts with Serpent, testrpc or ethersim
+Requirements: geth (1.5.8 or higher), node (6.9.1 or higher is recommended) and npm
+serpent (develop) if using contracts with Serpent, testrpc (3.0 or higher) 
 if using the simulator or the test functionality. Further: depending on
 the dapp stack you choose: `IPFS <https://ipfs.io/>`__
 
