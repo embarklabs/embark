@@ -20,6 +20,7 @@ With Embark you can:
 * Do Test Driven Development with Contracts using Javascript.
 * Keep track of deployed contracts, deploy only when truly needed.
 * Manage different chains (e.g testnet, private net, livenet)
+* Easily manage complex systems of interdependent contracts.
 
 **Decentralized Storage (IPFS)**
 * Easily Store & Retrieve Data on the DApp through EmbarkJS. Includin uploading and retrieving files.
