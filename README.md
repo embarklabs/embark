@@ -523,7 +523,7 @@ It's possible to extend Embarks functionality with plugins. For example the foll
 * plugin to add new console commands (``embark.registerConsoleCommand``)
 * plugin to add support for another contract language such as viper, LLL, etc (``embark.registerCompiler``)
 
-For more information please see the [plugin documentation](http://embark.readthedocs.io/en/latest/plugins.html)
+For more information on how to develop your own plugin please see the [plugin documentation](http://embark.readthedocs.io/en/latest/plugins.html)
 
 Donations
 ======
