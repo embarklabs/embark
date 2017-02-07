@@ -49,7 +49,7 @@ Table of Contents
 * [Working with different chains](#working-with-different-chains)
 * [Custom Application Structure](#structuring-application)
 * [Deploying to IPFS](#deploying-to-ipfs)
-* [LiveReload Plugin](#livereload-plugin)
+* [Extending Functionality with Plugins](#plugins)
 * [Donations](#donations)
 
 Installation
@@ -506,6 +506,22 @@ To deploy a dapp to IPFS, all you need to do is run a local IPFS node and then r
 If you want to deploy to the livenet then after configuring you account on ```config/blockchain.json``` on the ```production``` environment then you can deploy to that chain by specifying the environment ```embark ipfs production```.
 
 To deploy a dapp to SWARM, all you need to do is run a local SWARM node and then run ```embark upload swarm```.
+
+Plugins
+======
+
+It's possible to extend Embarks functionality with plugins. For example the follow is possible:
+
+* plugin to add support for es6, jsx, coffescript, etc (``embark.registerPipeline``)
+* plugin to add standard contracts or a contract framework (``embark.registerContractConfiguration`` and ``embark.addContractFile``)
+* plugin to make some contracts available in all environments for use by other contracts or the dapp itself e.g a Token, a DAO, ENS, etc.. (``embark.registerContractConfiguration`` and ``embark.addContractFile``)
+* plugin to add a libraries such as react or boostrap (``embark.addFileToPipeline``)
+* plugin to specify a particular web3 initialization for special provider uses (``embark.registerClientWeb3Provider``)
+* plugin to create a different contract wrapper (``embark.registerContractsGeneration``)
+* plugin to add new console commands (``embark.registerConsoleCommand``)
+* plugin to add support for another contract language such as viper, LLL, etc (``embark.registerCompiler``)
+
+For more information please see the [plugin documentation](http://embark.readthedocs.io/en/latest/plugins.html)
 
 Donations
 ======
