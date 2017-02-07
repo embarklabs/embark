@@ -7,16 +7,31 @@ Status](https://travis-ci.org/iurimatias/embark-framework.svg?branch=develop)](h
 What is Embark
 ======
 
-Embark is a framework that allows you to easily develop and deploy Decentralized Applications (DApps). A Decentralized Application is serverless html5 application that uses one or more decentralized technologies. Embark currently integrates with EVM blockchains (Ethereum), Decentralized Storages (IPFS), and Decentralizaed communication platforms (Whisper and Orbit). Swarm is supported for deployment.
+Embark is a framework that allows you to easily develop and deploy Decentralized Applications (DApps).
+
+A Decentralized Application is serverless html5 application that uses one or more decentralized technologies.
+
+Embark currently integrates with EVM blockchains (Ethereum), Decentralized Storages (IPFS), and Decentralizaed communication platforms (Whisper and Orbit). Swarm is supported for deployment.
 
 With Embark you can:
+
+**Blockchain (Ethereum)**
 * Automatically deploy contracts and make them available in your JS code. Embark watches for changes, and if you update a contract, Embark will automatically redeploy the contracts (if needed) and the dapp.
-* Use any build pipeline or tool you wish, including grunt and meteor. (for 1.x, plugins coming soon for 2.x series) 
 * Do Test Driven Development with Contracts using Javascript.
-* Easily deploy to & use decentralized systems such as IPFS and Swarm.
 * Keep track of deployed contracts, deploy only when truly needed.
 * Manage different chains (e.g testnet, private net, livenet)
-* Quickly create advanced DApps using multiple contracts that can interact with decentralized infrastructure for storage and comunication. 
+
+**Decentralized Storage (IPFS)**
+* Easily Store & Retrieve Data on the DApp through EmbarkJS. Includin uploading and retrieving files.
+* Deploy the full application to IPFS or Swarm.
+
+
+**Decentralized Communication (Whisper, Orbit)**
+* Easily send/receive messages through channels in P2P through Whisper or Orbit.
+
+**Web Technologies**
+* Integrate with any web technology including React, Foundation, etc..
+* Use any build pipeline or tool you wish, including grunt and meteor. (for 1.x, plugins coming soon for 2.x series)
 
 Table of Contents
 ======
