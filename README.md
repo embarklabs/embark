@@ -459,9 +459,9 @@ Working with different chains
 You can specify which environment to deploy to:
 
 
-```$ embark blockchain production```
+```$ embark blockchain livenet```
 
-```$ embark run production```
+```$ embark run livenet```
 
 The environment is a specific blockchain configuration that can be managed at config/blockchain.json
 
@@ -474,7 +474,7 @@ The environment is a specific blockchain configuration that can be managed at co
     "rpcPort": 8545,
     "rpcCorsDomain": "http://localhost:8000",
     "account": {
-      "password": "config/production/password"
+      "password": "config/livenet/password"
     }
   },
   ...
@@ -505,7 +505,7 @@ Deploying to IPFS and Swarm
 ======
 
 To deploy a dapp to IPFS, all you need to do is run a local IPFS node and then run ```embark upload ipfs```.
-If you want to deploy to the livenet then after configuring you account on ```config/blockchain.json``` on the ```production``` environment then you can deploy to that chain by specifying the environment ```embark ipfs production```.
+If you want to deploy to the livenet then after configuring you account on ```config/blockchain.json``` on the ```livenet``` environment then you can deploy to that chain by specifying the environment ```embark ipfs livenet```.
 
 To deploy a dapp to SWARM, all you need to do is run a local SWARM node and then run ```embark upload swarm```.
 

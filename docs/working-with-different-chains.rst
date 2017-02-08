@@ -3,9 +3,9 @@ Working with different chains
 
 You can specify which environment to deploy to:
 
-``$ embark blockchain production``
+``$ embark blockchain livenet``
 
-``$ embark run production``
+``$ embark run livenet``
 
 The environment is a specific blockchain configuration that can be
 managed at config/blockchain.json
@@ -20,7 +20,7 @@ managed at config/blockchain.json
         "rpcPort": 8545,
         "rpcCorsDomain": "http://localhost:8000",
         "account": {
-          "password": "config/production/password"
+          "password": "config/livenet/password"
         }
       },
       ...
