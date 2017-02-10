@@ -4,11 +4,12 @@
     "css/app.css": ["app/css/**"],
     "images/": ["app/images/**"],
     "js/app.js": ["embark.js", "app/js/_vendor/jquery.min.js", "app/js/_vendor/bootstrap.min.js", "app/js/**"],
-    "index.html": "app/index.html"
+    "index.html": "app/index.html",
+    "test.html": "app/test.html"
   },
   "buildDir": "dist/",
   "config": "config/",
   "plugins": {
-    "embark-babel": {}
+    "embark-babel": {"files": ["**/*.js", "**/*.jsx", "!**/_vendor/*.js"]}
   }
 }
