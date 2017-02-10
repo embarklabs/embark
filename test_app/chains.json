@@ -1,0 +1,15 @@
+{
+  "0xb6cfeab83614da04c03db0fb8a6787a45d0be8d576fcc6f8f457a5a816d22ab3": {
+    "name": "development",
+    "contracts": {
+      "0x54e0e43bdd12bfce76988ea8f9e936bcdbfff7d5ba494a2522666c4cd57c1490": {
+        "address": "0x5520587bfafb95e2ef4ed26bb56571050fd3e1b2",
+        "name":    "SimpleStorage"
+      },
+      "0x5bfc346ae2758ec398e301cd18b5b42e31817ef2c0eba0de8d921eee73310477": {
+        "address": "0x042cc0d1ea786d15ad62a025c63fbd47ebdf3237",
+        "name":    "AnotherStorage"
+      }
+    }
+  }
+}

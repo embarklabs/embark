@@ -7,3 +7,7 @@ demo/config/production/password
 boilerplate/dist/
 docs/_build
 docs/utils/__pycache_
+test_app/dist/
+test_app/.embark/development/
+test_app/config/production/password
+test_app/node_modules/
