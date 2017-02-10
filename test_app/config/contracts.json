@@ -21,11 +21,19 @@
       },
       "MyToken2": {
         "instanceOf": "Token",
-        "args": [2000]
+        "args": [200]
       },
       "AlreadyDeployedToken": {
         "address": "0x123",
         "instanceOf": "Token"
+      }
+    }
+  },
+  "development": {
+    "contracts": {
+      "MyToken2": {
+        "instanceOf": "Token",
+        "args": [2000]
       }
     }
   }
