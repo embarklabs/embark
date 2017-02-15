@@ -167,6 +167,7 @@ Embark will automatically take care of deployment for you and set all needed JS 
 
 ```Javascript
 # app/contracts/simple_storage.sol
+pragma solidity ^0.4.7;
 contract SimpleStorage {
   uint public storedData;
 
