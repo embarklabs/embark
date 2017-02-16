@@ -76,8 +76,11 @@ $(document).ready(function() {
   web3.version.getWhisper(function(err, res) {
     if (err) {
       $("#communication .error").show();
+      $("#communication-controls").hide();
++     $("#status-communication").addClass('status-offline');
     } else {
       EmbarkJS.Messages.setProvider('whisper');
+      $("#status-communication").addClass('status-online');
     }
   });
 
@@ -98,4 +101,3 @@ $(document).ready(function() {
   });
 
 });
-

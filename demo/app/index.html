@@ -10,7 +10,7 @@
     <ul class="nav nav-tabs" role="tablist" id="myTabs">
       <li role="presentation" class="active"><a href="#blockchain" aria-controls="blockchain" role="tab" data-toggle="tab">Blockchain</a></li>
       <li role="presentation"><a href="#storage" aria-controls="storage" role="tab" data-toggle="tab">Decentralized Storage (IPFS)</a></li>
-      <li role="presentation"><a href="#communication" aria-controls="communication" role="tab" data-toggle="tab">P2P communication (whisper/orbit)</a></li>
+      <li role="presentation"><a href="#communication" aria-controls="communication" role="tab" data-toggle="tab">P2P communication (whisper/orbit)<span class="pull-right" id="status-communication"></span></a></li>
     </ul>
 
     <div class="tab-content">
@@ -75,8 +75,8 @@
 
       </div>
       <div role="tabpanel" class="tab-pane" id="communication">
-        <span class="error">The node you are using does not support whisper</span>
-
+        <div class="error alert alert-danger" role="alert">The node you are using does not support whisper</div>
+        <div id="communication-controls">
         <h3>Listen To channel</h3>
         <div class="form-group form-inline listen">
           <input type="text" class="channel text form-control" placeholder="channel">
@@ -97,7 +97,7 @@
         <div class="logs">
           <br> EmbarkJS.Messages.setProvider('whisper')
         </div>
-
+      </div>
       </div>
     </div>
 
