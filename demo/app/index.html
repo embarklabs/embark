@@ -9,8 +9,8 @@
 
     <ul class="nav nav-tabs" role="tablist" id="myTabs">
       <li role="presentation" class="active"><a href="#blockchain" aria-controls="blockchain" role="tab" data-toggle="tab">Blockchain</a></li>
-      <li role="presentation"><a href="#storage" aria-controls="storage" role="tab" data-toggle="tab">Decentralized Storage (IPFS)</a></li>
-      <li role="presentation"><a href="#communication" aria-controls="communication" role="tab" data-toggle="tab">P2P communication (whisper/orbit)<span class="pull-right" id="status-communication"></span></a></li>
+      <li role="presentation"><a href="#storage" aria-controls="storage" role="tab" data-toggle="tab">Decentralized Storage (IPFS)<span class="pull-right" id="status-storage"></a></li>
+      <li role="presentation"><a href="#communication" aria-controls="communication" role="tab" data-toggle="tab">P2P communication (Whisper/Orbit)<span class="pull-right" id="status-communication"></span></a></li>
     </ul>
 
     <div class="tab-content">
@@ -37,7 +37,8 @@
         </div>
       </div>
       <div role="tabpanel" class="tab-pane" id="storage">
-        note: You need to have an IPFS node running
+        <div class="error alert alert-danger" role="alert">The node you are using does not support IPFS. Please ensure <a href="https://github.com/ipfs/js-ipfs-api#cors" target="_blank">CORS</a> is setup for the IPFS node.</div>
+        <div id="storage-controls">
 
         <h3>Save text to IPFS</h3>
         <div class="form-group form-inline">
@@ -72,10 +73,10 @@
         <div class="logs">
           <br> EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'})
         </div>
-
+      </div>
       </div>
       <div role="tabpanel" class="tab-pane" id="communication">
-        <div class="error alert alert-danger" role="alert">The node you are using does not support whisper</div>
+        <div class="error alert alert-danger" role="alert">The node you are using does not support Whisper</div>
         <div id="communication-controls">
         <h3>Listen To channel</h3>
         <div class="form-group form-inline listen">
