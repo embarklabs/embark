@@ -14,6 +14,7 @@ describe('embark.Blockchain', function() {
         var config = {
           networkType: 'custom',
           genesisBlock: false,
+          geth_bin: 'geth',
           datadir: false,
           mineWhenNeeded: false,
           rpcHost: 'localhost',
@@ -41,6 +42,7 @@ describe('embark.Blockchain', function() {
         var config = {
           networkType: 'livenet',
           genesisBlock: 'foo/bar/genesis.json',
+          geth_bin: 'geth',
           datadir: '/foo/datadir/',
           mineWhenNeeded: true,
           rpcHost: 'someserver',
