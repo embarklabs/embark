@@ -33,6 +33,6 @@
     "rpcPort": 8545,
     "datadir": "yourdatadir",
     "networkId": "123",
-    "nodes": []
+    "bootnodes": ""
   }
 }

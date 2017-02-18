@@ -25,7 +25,8 @@ describe('embark.Blockchain', function() {
           maxpeers: 25,
           mine: false,
           whisper: true,
-          account: {}
+          account: {},
+          bootnodes: ""
         };
         var blockchain = Blockchain(config, 'geth');
 
@@ -49,7 +50,8 @@ describe('embark.Blockchain', function() {
           maxpeers: 25,
           mine: true,
           whisper: false,
-          account: {}
+          account: {},
+          bootnodes: ""
         };
         var blockchain = Blockchain(config, 'geth');
 
