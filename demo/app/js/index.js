@@ -30,6 +30,21 @@ $(document).ready(function() {
 $(document).ready(function() {
   EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'});
 
+  $("#storage .error").hide();
+  EmbarkJS.Storage.ipfsConnection.ping()
+    .then(function(){
+        $("#status-storage").addClass('status-online');
+        $("#storage-controls").show();
+    })
+    .catch(function(err) {
+      if(err){
+        console.log("IPFS Connection Error => " + err.message);
+        $("#storage .error").show();
+        $("#status-storage").addClass('status-offline');
+        $("#storage-controls").hide();
+      }
+  });
+
   $("#storage button.setIpfsText").click(function() {
     var value = $("#storage input.ipfsText").val();
     EmbarkJS.Storage.saveText(value).then(function(hash) {
@@ -76,8 +91,11 @@ $(document).ready(function() {
   web3.version.getWhisper(function(err, res) {
     if (err) {
       $("#communication .error").show();
+      $("#communication-controls").hide();
++     $("#status-communication").addClass('status-offline');
     } else {
       EmbarkJS.Messages.setProvider('whisper');
+      $("#status-communication").addClass('status-online');
     }
   });
 
@@ -98,4 +116,3 @@ $(document).ready(function() {
   });
 
 });
-
