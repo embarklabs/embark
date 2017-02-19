@@ -1,5 +1,5 @@
 /*globals describe, it*/
-var ABIGenerator = require('../lib/abi.js');
+var ABIGenerator = require('../lib/contracts/abi.js');
 var assert = require('assert');
 
 // TODO: instead 'eval' the code with a fake web3 object

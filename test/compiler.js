@@ -1,5 +1,5 @@
 /*globals describe, it*/
-var Compiler = require('../lib/compiler.js');
+var Compiler = require('../lib/contracts/compiler.js');
 var assert = require('assert');
 var fs = require('fs');
 

@@ -1,5 +1,5 @@
 /*globals describe, it*/
-var Blockchain = require('../lib/blockchain.js');
+var Blockchain = require('../lib/cmds/blockchain/blockchain.js');
 var assert = require('assert');
 
 describe('embark.Blockchain', function() {

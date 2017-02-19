@@ -1,6 +1,6 @@
 /*globals describe, it*/
-var ContractsManager = require('../lib/contracts.js');
-var Logger = require('../lib/logger.js');
+var ContractsManager = require('../lib/contracts/contracts.js');
+var Logger = require('../lib/core/logger.js');
 var assert = require('assert');
 var fs = require('fs');
 

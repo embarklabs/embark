@@ -1,6 +1,6 @@
 /*globals describe, it*/
-var Config = require('../lib/config.js');
-var Plugins = require('../lib/plugins.js');
+var Config = require('../lib/core/config.js');
+var Plugins = require('../lib/core/plugins.js');
 var assert = require('assert');
 var fs = require('fs');
 
