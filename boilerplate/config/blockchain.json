@@ -1,5 +1,6 @@
 {
   "development": {
+    "enabled": true,
     "networkType": "custom",
     "genesisBlock": "config/development/genesis.json",
     "datadir": ".embark/development/datadir",
@@ -14,6 +15,7 @@
     }
   },
   "testnet": {
+    "enabled": true,
     "networkType": "testnet",
     "light": true,
     "rpcHost": "localhost",
@@ -24,6 +26,7 @@
     }
   },
   "livenet": {
+    "enabled": true,
     "networkType": "livenet",
     "light": true,
     "rpcHost": "localhost",
@@ -34,6 +37,7 @@
     }
   },
   "privatenet": {
+    "enabled": true,
     "networkType": "custom",
     "rpcHost": "localhost",
     "rpcPort": 8545,
