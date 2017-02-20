@@ -15,11 +15,17 @@
   },
   "testnet": {
     "networkType": "testnet",
+    "light": true,
     "rpcHost": "localhost",
-    "rpcPort": 8545
+    "rpcPort": 8545,
+    "rpcCorsDomain": "http://localhost:8000",
+    "account": {
+      "password": "config/testnet/password"
+    }
   },
   "livenet": {
     "networkType": "livenet",
+    "light": true,
     "rpcHost": "localhost",
     "rpcPort": 8545,
     "rpcCorsDomain": "http://localhost:8000",
