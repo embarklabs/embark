@@ -204,6 +204,13 @@ EmbarkJS.Messages.setProvider = function(provider, options) {
   var ipfs;
   if (provider === 'whisper') {
     this.currentMessages = EmbarkJS.Messages.Whisper;
+    if (web3 === undefined) {
+      if (options === undefined) {
+        web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+      } else {
+        web3 = new Web3(new Web3.providers.HttpProvider("http://" + options.server + ':' + options.port));
+      }
+    }
     this.currentMessages.identity = web3.shh.newIdentity();
   } else if (provider === 'orbit') {
     this.currentMessages = EmbarkJS.Messages.Orbit;

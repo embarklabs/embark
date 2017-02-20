@@ -1,5 +1,6 @@
 {
   "development": {
+    "enabled": false,
     "networkType": "custom",
     "genesisBlock": "config/development/genesis.json",
     "datadir": ".embark/development/datadir",
