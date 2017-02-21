@@ -483,7 +483,7 @@ The environment is a specific blockchain configuration that can be managed at co
 Structuring Application
 ======
 
-Embark is quite flexible and you can configure you're own directory structure using ```embark.json```
+Embark is quite flexible and you can configure your own directory structure using ```embark.json```
 
 ```Json
 # embark.json
@@ -512,7 +512,7 @@ To deploy a dapp to SWARM, all you need to do is run a local SWARM node and then
 Plugins
 ======
 
-It's possible to extend Embarks functionality with plugins. For example the follow is possible:
+It's possible to extend Embarks functionality with plugins. For example the following is possible:
 
 * plugin to add support for es6, jsx, coffescript, etc (``embark.registerPipeline``)
 * plugin to add standard contracts or a contract framework (``embark.registerContractConfiguration`` and ``embark.addContractFile``)
