@@ -150,17 +150,17 @@ var EmbarkJS =
 	  });
 	};
 
-	EmbarkJS.Contract.prototype.deploy = function(args) {
+	EmbarkJS.Contract.prototype.deploy = function(args, _options) {
 	  var self = this;
 	  var contractParams;
+	  var options = _options || {};
 
 	  contractParams = args || [];
 
 	  contractParams.push({
 	    from: this.web3.eth.accounts[0],
 	    data: this.code,
-	    gas: 500000,
-	    gasPrice: 10000000000000
+	    gas: options.gas || 800000
 	  });
 
 	  var contractObject = this.web3.eth.contract(this.abi);
