@@ -122,7 +122,7 @@ var EmbarkJS =
 
 	  contractParams.push({
 	    from: this.web3.eth.accounts[0],
-	    data: this.code,
+	    data: '0x' + this.code,
 	    gas: 500000,
 	    gasPrice: 10000000000000
 	  });
