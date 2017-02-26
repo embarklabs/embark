@@ -9,6 +9,7 @@ contract Token {
   mapping( address => uint ) _balances;
   mapping( address => mapping( address => uint ) ) _approvals;
   uint public _supply;
+  //uint public _supply2;
   function Token( uint initial_balance ) {
     _balances[msg.sender] = initial_balance;
     _supply = initial_balance;
