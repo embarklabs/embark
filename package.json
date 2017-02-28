@@ -18,7 +18,6 @@
   },
   "dependencies": {
     "async": "^2.0.1",
-    "bignumber.js": "debris/bignumber.js#master",
     "blessed": "^0.1.81",
     "chokidar": "^1.6.0",
     "colors": "^1.1.2",
