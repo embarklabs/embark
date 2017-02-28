@@ -60,7 +60,44 @@ EmbarkJS.Contract = function(options) {
       };
       return true;
     } else if (typeof self._originalContractObject[p] === 'function') {
-      self[p] = Promise.promisify(self._originalContractObject[p]);
+      self[p] = function(_args) {
+        var args = Array.prototype.slice.call(arguments);
+        var fn = self._originalContractObject[p];
+        var props = self.abi.find((x) => x.name == p);
+
+        var promise = new Promise(function(resolve, reject) {
+          args.push(function(err, transaction) {
+            promise.tx = transaction;
+            if (err) {
+              return reject(err);
+            }
+
+            var getConfirmation = function() {
+              self.web3.eth.getTransactionReceipt(transaction, function(err, receipt) {
+                if (err) {
+                  return reject(err);
+                }
+
+                if (receipt !== null) {
+                  return resolve(receipt);
+                }
+
+                setTimeout(getConfirmation, 1000);
+              });
+            };
+
+            if (typeof(transaction) !== "string" || props.constant) {
+              resolve(transaction);
+            } else {
+              getConfirmation();
+            }
+          });
+
+          fn.apply(fn, args);
+        });
+
+        return promise;
+      };
       return true;
     }
     return false;
@@ -84,16 +121,12 @@ EmbarkJS.Contract.prototype.deploy = function(args) {
 
   var promise = new Promise(function(resolve, reject) {
     contractParams.push(function(err, transaction) {
-      console.log("callback");
       if (err) {
-        console.log("error");
         reject(err);
       } else if (transaction.address !== undefined) {
-        console.log("address contract: " + transaction.address);
         resolve(new EmbarkJS.Contract({abi: self.abi, code: self.code, address: transaction.address}));
       }
     });
-    console.log(contractParams);
 
     // returns promise
     // deploys contract

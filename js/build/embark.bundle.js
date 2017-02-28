@@ -107,7 +107,44 @@ var EmbarkJS =
 	      };
 	      return true;
 	    } else if (typeof self._originalContractObject[p] === 'function') {
-	      self[p] = Promise.promisify(self._originalContractObject[p]);
+	      self[p] = function(_args) {
+	        var args = Array.prototype.slice.call(arguments);
+	        var fn = self._originalContractObject[p];
+	        var props = self.abi.find((x) => x.name == p);
+
+	        var promise = new Promise(function(resolve, reject) {
+	          args.push(function(err, transaction) {
+	            promise.tx = transaction;
+	            if (err) {
+	              return reject(err);
+	            }
+
+	            var getConfirmation = function() {
+	              self.web3.eth.getTransactionReceipt(transaction, function(err, receipt) {
+	                if (err) {
+	                  return reject(err);
+	                }
+
+	                if (receipt !== null) {
+	                  return resolve(receipt);
+	                }
+
+	                setTimeout(getConfirmation, 1000);
+	              });
+	            };
+
+	            if (typeof(transaction) !== "string" || props.constant) {
+	              resolve(transaction);
+	            } else {
+	              getConfirmation();
+	            }
+	          });
+
+	          fn.apply(fn, args);
+	        });
+
+	        return promise;
+	      };
 	      return true;
 	    }
 	    return false;
@@ -131,16 +168,12 @@ var EmbarkJS =
 
 	  var promise = new Promise(function(resolve, reject) {
 	    contractParams.push(function(err, transaction) {
-	      console.log("callback");
 	      if (err) {
-	        console.log("error");
 	        reject(err);
 	      } else if (transaction.address !== undefined) {
-	        console.log("address contract: " + transaction.address);
 	        resolve(new EmbarkJS.Contract({abi: self.abi, code: self.code, address: transaction.address}));
 	      }
 	    });
-	    console.log(contractParams);
 
 	    // returns promise
 	    // deploys contract
@@ -251,6 +284,13 @@ var EmbarkJS =
 	  var ipfs;
 	  if (provider === 'whisper') {
 	    this.currentMessages = EmbarkJS.Messages.Whisper;
+	    if (web3 === undefined) {
+	      if (options === undefined) {
+	        web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+	      } else {
+	        web3 = new Web3(new Web3.providers.HttpProvider("http://" + options.server + ':' + options.port));
+	      }
+	    }
 	    this.currentMessages.identity = web3.shh.newIdentity();
 	  } else if (provider === 'orbit') {
 	    this.currentMessages = EmbarkJS.Messages.Orbit;

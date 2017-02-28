@@ -14,4 +14,8 @@ contract SimpleStorage {
     return storedData;
   }
 
+  function getS() constant returns (string d) {
+    return "hello";
+  }
+
 }
