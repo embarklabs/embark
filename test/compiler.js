@@ -22,7 +22,7 @@ describe('embark.Compiler', function() {
       compiler.compile_solidity([
         readFile('test/contracts/simple_storage.sol'),
         readFile('test/contracts/token.sol')
-      ], function(compiledContracts) {
+      ], function(err, compiledContracts) {
         assert.deepEqual(compiledContracts, expectedObject);
         done();
       });
