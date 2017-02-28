@@ -1,5 +1,4 @@
 /*jshint esversion: 6 */
-var Promise = require('bluebird');  // jshint ignore: line
 //var Ipfs = require('./ipfs.js');
 
 var EmbarkJS = {
