@@ -142,8 +142,6 @@ EmbarkJS.IPFS = 'ipfs';
 EmbarkJS.Storage = {
 };
 
-// EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'})
-
 EmbarkJS.Storage.setProvider = function(provider, options) {
   if (provider === 'ipfs') {
     this.currentStorage = EmbarkJS.Storage.IPFS;
@@ -236,7 +234,7 @@ EmbarkJS.Messages.setProvider = function(provider, options) {
   var ipfs;
   if (provider === 'whisper') {
     this.currentMessages = EmbarkJS.Messages.Whisper;
-    if (web3 === undefined) {
+    if (typeof variable === 'undefined') {
       if (options === undefined) {
         web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
       } else {

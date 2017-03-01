@@ -28,7 +28,8 @@ $(document).ready(function() {
 // Storage (IPFS) example
 // ===========================
 $(document).ready(function() {
-  EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'});
+  // automatic set if config/storage.json has "enabled": true and "provider": "ipfs"
+  //EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'});
 
   $("#storage .error").hide();
   EmbarkJS.Storage.ipfsConnection.ping()

@@ -28,7 +28,7 @@ $(document).ready(function() {
 // Storage (IPFS) example
 // ===========================
 $(document).ready(function() {
-  EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'});
+  //EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'});
 
   $("#storage button.setIpfsText").click(function() {
     var value = $("#storage input.ipfsText").val();
@@ -73,13 +73,13 @@ $(document).ready(function() {
 $(document).ready(function() {
 
   $("#communication .error").hide();
-  web3.version.getWhisper(function(err, res) {
-    if (err) {
-      $("#communication .error").show();
-    } else {
-      EmbarkJS.Messages.setProvider('whisper');
-    }
-  });
+  //web3.version.getWhisper(function(err, res) {
+  //  if (err) {
+  //    $("#communication .error").show();
+  //  } else {
+  //    EmbarkJS.Messages.setProvider('whisper');
+  //  }
+  //});
 
   $("#communication button.listenToChannel").click(function() {
     var channel = $("#communication .listen input.channel").val();
