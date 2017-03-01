@@ -15,6 +15,7 @@ describe('embark.Config', function() {
     it('should load blockchain config correctly', function() {
       config.loadBlockchainConfigFile();
       var expectedConfig = {
+        "enabled": true,
         "networkType": "custom",
         "genesisBlock": "config/development/genesis.json",
         "datadir": ".embark/development/datadir",
