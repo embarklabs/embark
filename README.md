@@ -31,7 +31,7 @@ With Embark you can:
 
 **Web Technologies**
 * Integrate with any web technology including React, Foundation, etc..
-* Use any build pipeline or tool you wish, including grunt and meteor. (for 1.x, plugins coming soon for 2.x series)
+* Use any build pipeline or tool you wish, including grunt, gulp and webpack.
 
 Table of Contents
 ======
