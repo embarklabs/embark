@@ -1,7 +1,7 @@
 Using Embark with Grunt
 ====================================
 
-** 1. Edit embark.json **
+**1. Edit embark.json**
 
 Edit ``embark.json`` to have the line ``"js/app.js": ["embark.js"]``, this will make embark create the file containing the contracts initilization to ``dist/app.js``.
 
@@ -18,8 +18,7 @@ Edit ``embark.json`` to have the line ``"js/app.js": ["embark.js"]``, this will 
       }
     }
 
-** 2. add the generated file to Grunt config file so it's included with the
-other assets **
+**2. add the generated file to Grunt config file so it's included with the other assets**
 
 .. code:: coffee
 
