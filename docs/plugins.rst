@@ -33,6 +33,7 @@ The ``embark`` object then provides an api to extend different functionality of 
 * plugin to create a different contract wrapper (``embark.registerContractsGeneration``)
 * plugin to add new console commands (``embark.registerConsoleCommand``)
 * plugin to add support for another contract language such as viper, LLL, etc (``embark.registerCompiler``)
+* plugin that executes certain actions when contracts are deployed (``embark.events.on``)
 
 **embark.pluginConfig**
 
@@ -205,9 +206,9 @@ expected return: ``string`` (output to print in console) or ``boolean`` (skip co
         });
     }
 
-**embark.registerCompiler(extension, callback(options))**
+**embark.registerCompiler(extension, callback(contractFiles, doneCallback))**
 
-expected return: ``hash`` of compiled contracts
+expected doneCallback arguments: ``err`` and  ``hash`` of compiled contracts
 
  * Hash of objects containing the compiled contracts. (key: contractName, value: contract object)
 
@@ -229,7 +230,7 @@ below a possible implementation of a solcjs plugin:
     var solc = require('solc');
 
     module.exports = function(embark) {
-        embark.registerCompiler(".sol", function(contractFiles) {
+        embark.registerCompiler(".sol", function(contractFiles, cb) {
           // prepare input for solc
           var input = {};
           for (var i = 0; i < contractFiles.length; i++) {
@@ -254,7 +255,39 @@ below a possible implementation of a solcjs plugin:
             compiled_object[className].abiDefinition   = JSON.parse(contract.interface);
           }
 
-          return compiled_object;
+          cb(null, compiled_object);
+        });
+    }
+
+**embark.logger**
+
+To print messages to the embark log is it better to use ``embark.logger``
+instead of ``console``.
+
+e.g ``embark.logger.info("hello")``
+
+**embark.events.on(eventName, callback(*args))**
+
+This call is used to listen and react to events that happen in Embark such as contract deployment
+
+* eventName - name of event to listen to
+  * available events:
+    * "contractsDeployed" - triggered when contracts have been deployed
+    * "file-add", "file-change", "file-remove", "file-event" - triggered on
+      a file change, args is (filetype, path)
+    * "abi", "abi-vanila", "abi-contracts-vanila" - triggered when contracts
+      have been deployed and returns the generated JS code
+
+.. code:: javascript
+
+    module.exports = function(embark) {
+        embark.events.on("contractsDeployed", function() {
+          embark.logger.info("plugin says: your contracts have been deployed");
+        });
+        embark.events.on("file-changed", function(filetype, path) {
+          if (type === 'contract') {
+            embark.logger.info("plugin says: you just changed the contract at " + path);
+          }
         });
     }
 
