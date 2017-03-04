@@ -17,6 +17,7 @@ This is a work in progress, feel free to contribute!
    creating-a-new-dapp.rst
    libraries-and-languages-available.rst
    using-contracts.rst
+   configuring-storage.rst
    embarkjs.rst
    embarkjs-storage.rst
    embarkjs-communication.rst

@@ -1,4 +1,4 @@
-Using Contracts
+Configuring & Using Contracts
 ===============
 
 Embark will automatically take care of deployment for you and set all
