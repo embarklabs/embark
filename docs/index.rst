@@ -18,6 +18,7 @@ This is a work in progress, feel free to contribute!
    libraries-and-languages-available.rst
    using-contracts.rst
    configuring-storage.rst
+   configuring-communication.rst
    embarkjs.rst
    embarkjs-storage.rst
    embarkjs-communication.rst

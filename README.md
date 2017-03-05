@@ -16,6 +16,7 @@ With Embark you can:
 
 **Blockchain (Ethereum)**
 * Automatically deploy contracts and make them available in your JS code. Embark watches for changes, and if you update a contract, Embark will automatically redeploy the contracts (if needed) and the dapp.
+* Contracts are available in JS with Promises.
 * Do Test Driven Development with Contracts using Javascript.
 * Keep track of deployed contracts, deploy only when truly needed.
 * Manage different chains (e.g testnet, private net, livenet)

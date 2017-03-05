@@ -1,5 +1,5 @@
-Tests
-=====
+Testing Ethereum Contracts
+==========================
 
 You can run specs with ``embark test``, it will run any test files under
 ``test/``.

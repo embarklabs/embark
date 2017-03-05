@@ -1,5 +1,5 @@
-EmbarkJS - Storage
-==================
+EmbarkJS - Storage (IPFS)
+=========================
 
 **initialization**
 

@@ -1,5 +1,5 @@
-EmbarkJS - Communication
-========================
+EmbarkJS - Communication (Whisper, Orbit)
+=========================================
 
 **initialization**
 

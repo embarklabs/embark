@@ -1,7 +1,7 @@
 Configuring Storage (IPFS)
 ==========================
 
-Embark will check your prefered storage configuration in the file ``config/storage.json``. This file will contain the prefered configuration for each environment. With ```default``` being the configuration fields that applies to every environment. Each of those can be individually overriden in a per environment basis.
+Embark will check your prefered storage configuration in the file ``config/storage.json``. This file will contain the prefered configuration for each environment. With ``default`` being the configuration fields that applies to every environment. Each of those can be individually overriden in a per environment basis.
 
 e.g :
 
