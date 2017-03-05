@@ -277,6 +277,9 @@ This call is used to listen and react to events that happen in Embark such as co
       a file change, args is (filetype, path)
     * "abi", "abi-vanila", "abi-contracts-vanila" - triggered when contracts
       have been deployed and returns the generated JS code
+    *  "outputDone" - triggered when dapp is (re)generated
+    * "firstDeploymentDone" - triggered when the dapp is deployed and generated
+      for the first time
 
 .. code:: javascript
 
