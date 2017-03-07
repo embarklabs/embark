@@ -57,7 +57,7 @@ var EmbarkJS =
 
 	  this.abi = options.abi;
 	  this.address = options.address;
-	  this.code = options.code;
+	  this.code = '0x' + options.code;
 	  this.web3 = options.web3 || web3;
 
 	  var ContractClass = this.web3.eth.contract(this.abi);
@@ -278,6 +278,7 @@ var EmbarkJS =
 	};
 
 	EmbarkJS.Messages.setProvider = function(provider, options) {
+	  var self = this;
 	  var ipfs;
 	  if (provider === 'whisper') {
 	    this.currentMessages = EmbarkJS.Messages.Whisper;
@@ -288,7 +289,13 @@ var EmbarkJS =
 	        web3 = new Web3(new Web3.providers.HttpProvider("http://" + options.server + ':' + options.port));
 	      }
 	    }
-	    this.currentMessages.identity = web3.shh.newIdentity();
+	    web3.version.getWhisper(function(err, res) {
+	      if (err) {
+	        console.log("whisper not available");
+	      } else {
+	        self.currentMessages.identity = web3.shh.newIdentity();
+	      }
+	    });
 	  } else if (provider === 'orbit') {
 	    this.currentMessages = EmbarkJS.Messages.Orbit;
 	    if (options === undefined) {
