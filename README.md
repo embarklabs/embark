@@ -311,6 +311,12 @@ methods in EmbarkJS contracts will be converted to promises.
   myContract.get().then(function(value) { console.log("value is " + value.toNumber) });
 ```
 
+events:
+
+```Javascript
+  myContract.eventName({from: web3.eth.accounts}, 'latest').then(function(event) { console.log(event) });
+```
+
 **deployment**
 
 Client side deployment will be automatically available in Embark for existing contracts:
@@ -365,6 +371,8 @@ The current available storage is IPFS. it can be initialized as
 ```Javascript
   EmbarkJS.Storage.getUrl(hash);
 ```
+
+note: if not using localhost, the cors needs to be set as ```ipfs --json API.HTTPHeaders.Access-Control-Allow-Origin '["your-host-name-port"]```
 
 EmbarkJS - Communication
 ======
