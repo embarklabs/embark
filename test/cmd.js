@@ -7,7 +7,7 @@ describe('embark.Cmd', function () {
   describe('#new', function () {
     it('it should not create an app without a name', function (done) {
       cmd.newApp(undefined, function (output) {
-        let lines = output.split('\n');
+        var lines = output.split('\n');
         assert.equal(lines[0], 'please specify your app Name');
         assert.equal(lines[1], 'e.g embark new MyApp');
         assert.equal(lines[2], 'e.g embark new --help for more information');
@@ -16,9 +16,9 @@ describe('embark.Cmd', function () {
     });
 
     it('it should create an app with a name', function (done) {
-      let appname = 'deleteapp';
+      var appname = 'deleteapp';
       cmd.newApp(appname, function (output) {
-        let lines = output.split('\n');
+        var lines = output.split('\n');
         assert.equal(lines[0], 'Initializing Embark Template....');
         assert.equal(lines[1], 'Installing packages.. this can take a few seconds');
         assert.equal(lines[2], 'Init complete');
