@@ -9,6 +9,8 @@ var readFile = function(file) {
 };
 
 describe('embark.Contratcs', function() {
+  this.timeout(15000);
+
   describe('simple', function() {
     var contractsManager = new ContractsManager({
       contractFiles:  [
