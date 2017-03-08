@@ -21,8 +21,7 @@ module.exports = (grunt) ->
     mochaTest:
       test:
         src: ['test/**/*.js']
-      options:
-        timeout: 0
+
     jshint:
       all: ['bin/embark', 'lib/**/*.js', 'js/mine.js', 'js/embark.js']
 

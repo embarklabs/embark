@@ -5,7 +5,7 @@ var assert = require('assert');
 // TODO: instead 'eval' the code with a fake web3 object
 // and check the generate code interacts as expected
 describe('embark.ABIGenerator', function() {
-
+  this.timeout(0);
   describe('#generateProvider', function() {
     var generator = new ABIGenerator({blockchainConfig: {rpcHost: 'somehost', rpcPort: '1234'}, contractsManager: {}});
 
