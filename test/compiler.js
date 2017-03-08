@@ -12,6 +12,7 @@ describe('embark.Compiler', function() {
   var compiler = new Compiler({logger: new TestLogger({})});
 
   describe('#compile_solidity', function() {
+    this.timeout(0);
 
     var expectedObject = {};
 
