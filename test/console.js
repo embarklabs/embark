@@ -2,7 +2,7 @@
 var Console = require('../lib/dashboard/console.js');
 var Plugins = require('../lib/core/plugins.js');
 var assert = require('assert');
-var version = require('../package.json')['version'];
+var version = require('../package.json').version;
 
 describe('embark.Console', function() {
   var plugins = new Plugins({plugins: {}});
