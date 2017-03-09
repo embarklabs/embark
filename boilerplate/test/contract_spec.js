@@ -5,6 +5,7 @@ var web3 = EmbarkSpec.web3;
 
 //describe("SimpleStorage", function() {
 //  before(function(done) {
+//    this.timeout(0);
 //    var contractsConfig = {
 //      "SimpleStorage": {
 //        args: [100, '0x123']

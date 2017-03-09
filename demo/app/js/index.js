@@ -93,7 +93,7 @@ $(document).ready(function() {
     if (err) {
       $("#communication .error").show();
       $("#communication-controls").hide();
-+     $("#status-communication").addClass('status-offline');
+      $("#status-communication").addClass('status-offline');
     } else {
       EmbarkJS.Messages.setProvider('whisper');
       $("#status-communication").addClass('status-online');

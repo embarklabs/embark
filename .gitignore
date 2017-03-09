@@ -12,3 +12,4 @@ test_app/.embark/development/
 test_app/config/production/password
 test_app/node_modules/
 test_app/chains.json
+.idea

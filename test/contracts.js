@@ -9,6 +9,7 @@ var readFile = function(file) {
 };
 
 describe('embark.Contratcs', function() {
+
   describe('simple', function() {
     var contractsManager = new ContractsManager({
       contractFiles:  [
