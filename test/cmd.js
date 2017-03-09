@@ -32,7 +32,7 @@ describe('embark.Cmd', function () {
       cmd.newApp(undefined, function (output) {
         var lines = output.split('\n');
         console.log(lines);
-        process.stdout.write(appname);
+        process.stdin.write(appname + '\n');
         assert.equal(lines[0], pl[0]);
         done();
       });
