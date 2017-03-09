@@ -6,5 +6,6 @@
     "index.html": "app/index.html"
   },
   "buildDir": "dist/",
-  "config": "config/"
+  "config": "config/",
+  "plugins": {}
 }

@@ -1,4 +1,3 @@
-
 [![Join the chat at https://gitter.im/iurimatias/embark-framework](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/iurimatias/embark-framework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build
 Status](https://travis-ci.org/iurimatias/embark-framework.svg?branch=develop)](https://travis-ci.org/iurimatias/embark-framework)
@@ -7,16 +6,33 @@ Status](https://travis-ci.org/iurimatias/embark-framework.svg?branch=develop)](h
 What is Embark
 ======
 
-Embark is a framework that allows you to easily develop and deploy  DApps.
+Embark is a framework that allows you to easily develop and deploy Decentralized Applications (DApps).
+
+A Decentralized Application is serverless html5 application that uses one or more decentralized technologies.
+
+Embark currently integrates with EVM blockchains (Ethereum), Decentralized Storages (IPFS), and Decentralizaed communication platforms (Whisper and Orbit). Swarm is supported for deployment.
 
 With Embark you can:
+
+**Blockchain (Ethereum)**
 * Automatically deploy contracts and make them available in your JS code. Embark watches for changes, and if you update a contract, Embark will automatically redeploy the contracts (if needed) and the dapp.
-* Use any build pipeline or tool you wish, including grunt and meteor. (for 1.x, plugins coming soon for 2.x series) 
+* Contracts are available in JS with Promises.
 * Do Test Driven Development with Contracts using Javascript.
-* Easily deploy to & use decentralized systems such as IPFS.
 * Keep track of deployed contracts, deploy only when truly needed.
 * Manage different chains (e.g testnet, private net, livenet)
-* Quickly create advanced DApps using multiple contracts that can interact with decentralized infrastructure for storage and comunication. 
+* Easily manage complex systems of interdependent contracts.
+
+**Decentralized Storage (IPFS)**
+* Easily Store & Retrieve Data on the DApp through EmbarkJS. Includin uploading and retrieving files.
+* Deploy the full application to IPFS or Swarm.
+
+
+**Decentralized Communication (Whisper, Orbit)**
+* Easily send/receive messages through channels in P2P through Whisper or Orbit.
+
+**Web Technologies**
+* Integrate with any web technology including React, Foundation, etc..
+* Use any build pipeline or tool you wish, including grunt, gulp and webpack.
 
 Table of Contents
 ======
@@ -28,18 +44,18 @@ Table of Contents
 * [Using and Configuring Contracts](#dapp-structure)
 * [EmbarkJS](#embarkjs)
 * [EmbarkJS - Storage (IPFS)](#embarkjs---storage)
-* [EmbarkJS - Communication (Whisper)](#embarkjs---communication)
+* [EmbarkJS - Communication (Whisper/Orbit)](#embarkjs---communication)
 * [Testing Contracts](#tests)
 * [Working with different chains](#working-with-different-chains)
 * [Custom Application Structure](#structuring-application)
 * [Deploying to IPFS](#deploying-to-ipfs)
-* [LiveReload Plugin](#livereload-plugin)
+* [Extending Functionality with Plugins](#plugins)
 * [Donations](#donations)
 
 Installation
 ======
-Requirements: geth (1.4.4 or higher), node (5.0.0) and npm
-Optional: serpent (develop) if using contracts with Serpent, testrpc or ethersim if using the simulator or the test functionality.
+Requirements: geth (1.5.8 or higher), node (6.9.1 or higher is recommended) and npm
+Optional: testrpc (3.0 or higher) if using the simulator or the test functionality.
 Further: depending on the dapp stack you choose: [IPFS](https://ipfs.io/)
 
 ```Bash
@@ -58,6 +74,9 @@ Embark's npm package has changed from ```embark-framework``` to ```embark```, th
 
 Usage - Demo
 ======
+
+![Embark Demo screenshot](http://i.imgur.com/a9ddSjn.png)
+
 You can easily create a sample working DApp with the following:
 
 ```Bash
@@ -136,7 +155,7 @@ Solidity/Serpent files in the contracts directory will automatically be deployed
 Libraries and languages available
 ======
 
-Embark can build and deploy contracts coded in Solidity or Serpent. It will make them available on the client side using EmbarkJS and Web3.js.
+Embark can build and deploy contracts coded in Solidity. It will make them available on the client side using EmbarkJS and Web3.js.
 
 Further documentation for these can be found below:
 
@@ -149,6 +168,7 @@ Embark will automatically take care of deployment for you and set all needed JS 
 
 ```Javascript
 # app/contracts/simple_storage.sol
+pragma solidity ^0.4.7;
 contract SimpleStorage {
   uint public storedData;
 
@@ -169,8 +189,8 @@ Will automatically be available in Javascript as:
 ```Javascript
 # app/js/index.js
 SimpleStorage.set(100);
-SimpleStorage.get();
-SimpleStorage.storedData();
+SimpleStorage.get().then(function(value) { console.log(value.toNumber()) });
+SimpleStorage.storedData().then(function(value) { console.log(value.toNumber()) });
 ```
 
 You can specify for each contract and environment its gas costs and arguments:
@@ -291,6 +311,12 @@ methods in EmbarkJS contracts will be converted to promises.
   myContract.get().then(function(value) { console.log("value is " + value.toNumber) });
 ```
 
+events:
+
+```Javascript
+  myContract.eventName({from: web3.eth.accounts}, 'latest').then(function(event) { console.log(event) });
+```
+
 **deployment**
 
 Client side deployment will be automatically available in Embark for existing contracts:
@@ -346,17 +372,33 @@ The current available storage is IPFS. it can be initialized as
   EmbarkJS.Storage.getUrl(hash);
 ```
 
+note: if not using localhost, the cors needs to be set as ```ipfs --json API.HTTPHeaders.Access-Control-Allow-Origin '["your-host-name-port"]```
+
 EmbarkJS - Communication
 ======
 
 **initialization**
 
-The current available communication is Whisper.
+For Whisper:
+
+```Javascript
+    EmbarkJS.Messages.setProvider('whisper')
+```
+
+For Orbit:
+
+You'll need to use IPFS from master and run it as: ```ipfs daemon --enable-pubsub-experiment```
+
+then set the provider:
+
+```Javascript
+  EmbarkJS.Messages.setProvider('orbit', {server: 'localhost', port: 5001})
+```
 
 **listening to messages**
 
 ```Javascript
-  EmbarkJS.Messages.listenTo({topic: ["achannel", "anotherchannel"]}).then(function(message) { console.log("received: " + message); })
+  EmbarkJS.Messages.listenTo({topic: ["topic1", "topic2"]}).then(function(message) { console.log("received: " + message); })
 ```
 
 **sending messages**
@@ -364,14 +406,16 @@ The current available communication is Whisper.
 you can send plain text
 
 ```Javascript
-  EmbarkJS.Messages.sendMessage({topic: "achannel", data: 'hello world'})
+  EmbarkJS.Messages.sendMessage({topic: "sometopic", data: 'hello world'})
 ```
 
 or an object
 
 ```Javascript
-  EmbarkJS.Messages.sendMessage({topic: "achannel", data: {msg: 'hello world'}})
+  EmbarkJS.Messages.sendMessage({topic: "sometopic", data: {msg: 'hello world'}})
 ```
+
+note: array of topics are considered an AND. In Whisper you can use another array for OR combinations of several topics e.g ```["topic1", ["topic2", "topic3"]]``` => ```topic1 AND (topic2 OR topic 3)```
 
 Tests
 ======
@@ -424,9 +468,9 @@ Working with different chains
 You can specify which environment to deploy to:
 
 
-```$ embark blockchain production```
+```$ embark blockchain livenet```
 
-```$ embark run production```
+```$ embark run livenet```
 
 The environment is a specific blockchain configuration that can be managed at config/blockchain.json
 
@@ -439,7 +483,7 @@ The environment is a specific blockchain configuration that can be managed at co
     "rpcPort": 8545,
     "rpcCorsDomain": "http://localhost:8000",
     "account": {
-      "password": "config/production/password"
+      "password": "config/livenet/password"
     }
   },
   ...
@@ -448,7 +492,7 @@ The environment is a specific blockchain configuration that can be managed at co
 Structuring Application
 ======
 
-Embark is quite flexible and you can configure you're own directory structure using ```embark.json```
+Embark is quite flexible and you can configure your own directory structure using ```embark.json```
 
 ```Json
 # embark.json
@@ -456,24 +500,39 @@ Embark is quite flexible and you can configure you're own directory structure us
   "contracts": ["app/contracts/**"],
   "app": {
     "css/app.css": ["app/css/**"],
+    "images/": ["app/images/**"],
     "js/app.js": ["embark.js", "app/js/**"],
     "index.html": "app/index.html"
   },
   "buildDir": "dist/",
-  "config": "config/"
+  "config": "config/",
+  "plugins": {}
 }
 ```
 
-Deploying to IPFS
+Deploying to IPFS and Swarm
 ======
 
-To deploy a dapp to IPFS, all you need to do is run a local IPFS node and then run ```embark ipfs```.
-If you want to deploy to the livenet then after configuring you account on ```config/blockchain.json``` on the ```production``` environment then you can deploy to that chain by specifying the environment ```embark ipfs production```.
+To deploy a dapp to IPFS, all you need to do is run a local IPFS node and then run ```embark upload ipfs```.
+If you want to deploy to the livenet then after configuring you account on ```config/blockchain.json``` on the ```livenet``` environment then you can deploy to that chain by specifying the environment ```embark ipfs livenet```.
 
-LiveReload Plugin
+To deploy a dapp to SWARM, all you need to do is run a local SWARM node and then run ```embark upload swarm```.
+
+Plugins
 ======
 
-Embark works quite well with the LiveReload Plugin
+It's possible to extend Embarks functionality with plugins. For example the following is possible:
+
+* plugin to add support for es6, jsx, coffescript, etc (``embark.registerPipeline``)
+* plugin to add standard contracts or a contract framework (``embark.registerContractConfiguration`` and ``embark.addContractFile``)
+* plugin to make some contracts available in all environments for use by other contracts or the dapp itself e.g a Token, a DAO, ENS, etc.. (``embark.registerContractConfiguration`` and ``embark.addContractFile``)
+* plugin to add a libraries such as react or boostrap (``embark.addFileToPipeline``)
+* plugin to specify a particular web3 initialization for special provider uses (``embark.registerClientWeb3Provider``)
+* plugin to create a different contract wrapper (``embark.registerContractsGeneration``)
+* plugin to add new console commands (``embark.registerConsoleCommand``)
+* plugin to add support for another contract language such as viper, LLL, etc (``embark.registerCompiler``)
+
+For more information on how to develop your own plugin please see the [plugin documentation](http://embark.readthedocs.io/en/latest/plugins.html)
 
 Donations
 ======

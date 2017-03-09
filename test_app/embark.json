@@ -1,0 +1,19 @@
+{
+  "contracts": ["app/contracts/**"],
+  "app": {
+    "css/app.css": ["app/css/**"],
+    "images/": ["app/images/**"],
+    "js/app.js": ["embark.js", "app/js/_vendor/jquery.min.js", "app/js/_vendor/bootstrap.min.js", "app/js/**", "!app/js/test.js"],
+    "js/embark.js": ["embark.js"],
+    "js/abi.js": "abi.js",
+    "js/test.js": ["embark.js", "app/js/_vendor/jquery.min.js", "app/js/_vendor/async.min.js", "app/js/test.js"],
+    "index.html": "app/index.html",
+    "test.html": "app/test.html",
+    "test2.html": "app/test2.html"
+  },
+  "buildDir": "dist/",
+  "config": "config/",
+  "plugins": {
+    "embark-babel": {"files": ["**/*.js", "**/*.jsx", "!**/_vendor/*.js"]}
+  }
+}

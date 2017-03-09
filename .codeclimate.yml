@@ -8,12 +8,16 @@ engines:
                           enabled: false
                 global-require:
                           enabled: false
+                guard-for-in:
+                          enabled: false
 ratings:
     paths:
     - "lib/**/*"
 exclude_paths:
-- "tests/"
+- "test/"
 - "old_test/"
 - "boilerplate/"
 - "demo/"
 - "js/"
+- "test_app/"
+- "docs/"

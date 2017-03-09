@@ -1,5 +1,6 @@
 /*globals describe, it*/
-var Config = require('../lib/config.js');
+var Config = require('../lib/core/config.js');
+var Plugins = require('../lib/core/plugins.js');
 var assert = require('assert');
 var fs = require('fs');
 
@@ -8,11 +9,13 @@ describe('embark.Config', function() {
     env: 'myenv',
     configDir: './test/test1/config/'
   });
+  config.plugins = new Plugins({plugins: {}});
 
   describe('#loadBlockchainConfigFile', function() {
     it('should load blockchain config correctly', function() {
       config.loadBlockchainConfigFile();
       var expectedConfig = {
+        "enabled": true,
         "networkType": "custom",
         "genesisBlock": "config/development/genesis.json",
         "datadir": ".embark/development/datadir",

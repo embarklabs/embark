@@ -1,5 +1,5 @@
 /*globals describe, it*/
-var ABIGenerator = require('../lib/abi.js');
+var ABIGenerator = require('../lib/contracts/abi.js');
 var assert = require('assert');
 
 // TODO: instead 'eval' the code with a fake web3 object
@@ -7,7 +7,7 @@ var assert = require('assert');
 describe('embark.ABIGenerator', function() {
 
   describe('#generateProvider', function() {
-    var generator = new ABIGenerator({rpcHost: 'somehost', rpcPort: '1234'}, {});
+    var generator = new ABIGenerator({blockchainConfig: {rpcHost: 'somehost', rpcPort: '1234'}, contractsManager: {}});
 
     it('should generate code to connect to a provider', function() {
       var providerCode = "\nif (typeof web3 !== 'undefined' && typeof Web3 !== 'undefined') {\n\tweb3 = new Web3(web3.currentProvider);\n} else if (typeof Web3 !== 'undefined') {\n\tweb3 = new Web3(new Web3.providers.HttpProvider(\"http://somehost:1234\"));\n}\nweb3.eth.defaultAccount = web3.eth.accounts[0];";
@@ -17,7 +17,7 @@ describe('embark.ABIGenerator', function() {
   });
 
   describe('#generateContracts', function() {
-    var generator = new ABIGenerator({}, {
+    var generator = new ABIGenerator({blockchainConfig: {}, contractsManager: {
       contracts: {
         SimpleStorage: {
           abiDefinition: [{"constant":true,"inputs":[],"name":"storedData","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"x","type":"uint256"}],"name":"set","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"retVal","type":"uint256"}],"payable":false,"type":"function"},{"inputs":[{"name":"initialValue","type":"uint256"}],"type":"constructor"}],
@@ -32,7 +32,7 @@ describe('embark.ABIGenerator', function() {
           code: '123456'
         }
       }
-    });
+    }});
 
     describe('with EmbarkJS', function() {
       var withEmbarkJS = true;

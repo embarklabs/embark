@@ -1,0 +1,40 @@
+{
+  "default": {
+    "gas": "auto",
+    "contracts": {
+      "SimpleStorage": {
+        "args": [
+          100
+        ]
+      },
+      "AnotherStorage": {
+        "args": [
+          "$SimpleStorage"
+        ]
+      },
+      "Token": {
+        "deploy": false,
+        "args": [1000]
+      },
+      "MyToken": {
+        "instanceOf": "Token"
+      },
+      "MyToken2": {
+        "instanceOf": "Token",
+        "args": [200]
+      },
+      "AlreadyDeployedToken": {
+        "address": "0x123",
+        "instanceOf": "Token"
+      }
+    }
+  },
+  "development": {
+    "contracts": {
+      "MyToken2": {
+        "instanceOf": "Token",
+        "args": [2000]
+      }
+    }
+  }
+}

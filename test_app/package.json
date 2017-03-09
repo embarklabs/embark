@@ -1,0 +1,20 @@
+{
+  "name": "test_app",
+  "version": "0.0.1",
+  "description": "",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "",
+  "devDependencies": {
+    "embark": "../",
+    "mocha": "^2.2.5"
+  },
+  "dependencies": {
+    "embark-babel": "^1.0.0",
+    "ethereumjs-testrpc": "^3.0.3"
+  }
+}
