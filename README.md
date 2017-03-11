@@ -49,7 +49,7 @@ Table of Contents
 * [Testing Contracts](#tests)
 * [Working with different chains](#working-with-different-chains)
 * [Custom Application Structure](#structuring-application)
-* [Deploying to IPFS](#deploying-to-ipfs)
+* [Deploying to IPFS](#deploying-to-ipfs-and-swarm)
 * [Extending Functionality with Plugins](#plugins)
 * [Donations](#donations)
 
@@ -147,6 +147,9 @@ DApp Structure
   config/
     |___ blockchain.json #environments configuration
     |___ contracts.json  #contracts configuration
+    |___ storage.json #storage configuration
+    |___ webserver.json #webserver configuration
+    |___ communication.json #communication configuration
   test/
     |___ #contracts tests
 ```
@@ -323,14 +326,20 @@ events:
 Client side deployment will be automatically available in Embark for existing contracts:
 
 ```Javascript
-  SimpleStorage.deploy().then(function(anotherSimpleStorage) {});
+  SimpleStorage.deploy([args], {options}).then(function(anotherSimpleStorage) {});
 ```
 
 or it can be manually definied as
 
 ```Javascript
   var myContract = new EmbarkJS.Contract({abi: abiObject, code: code});
-  myContract.deploy().then(function(anotherMyContractObject) {});
+  myContract.deploy([args], {options}).then(function(anotherMyContractObject) {});
+```
+
+so you can define your gas as
+
+```Javascript
+  myContract.deploy([100, "seconde argument"], {gas: 800000}).then(function(anotherMyContractObject) {});
 ```
 
 EmbarkJS - Storage
