@@ -20,11 +20,17 @@ existing contracts:
 
 .. code:: javascript
 
-      SimpleStorage.deploy().then(function(anotherSimpleStorage) {});
+      SimpleStorage.deploy([args], {options}).then(function(anotherSimpleStorage) {});
 
 or it can be manually definied as
 
 .. code:: javascript
 
       var myContract = new EmbarkJS.Contract({abi: abiObject, code: code});
-      myContract.deploy().then(function(anotherMyContractObject) {});
+      myContract.deploy([args], {options}).then(function(anotherMyContractObject) {});
+
+so you can define your gas as
+
+.. code:: javascript
+
+      myContract.deploy([100, "seconde argument"], {gas: 800000}).then(function(anotherMyContractObject) {});
