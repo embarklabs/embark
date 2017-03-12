@@ -2,8 +2,8 @@ var Embark = require('../lib/index');
 var Cmd = require('../lib/cmd');
 
 describe('embark.Cmd', function () {
+  this.timeout(0);
   var cmd = new Cmd(Embark);
-
   describe('#new', function () {
     it('it should not create an app without a name', function (done) {
       cmd.newApp(undefined, function (output) {
@@ -27,4 +27,15 @@ describe('embark.Cmd', function () {
       done();
     });
   });
+
+  // describe("#help", function () {
+  //   it('it should spit out helpful text if no arguments are supplied', function (done) {
+  //     cmd.process([], function (output) {
+  //       var lines = output.split('\n');
+  //       assert.equal(lines[0], '\n');
+  //       assert.equal(lines[1], 'Usage:');
+  //       done();
+  //     });
+  //   })
+  // })
 });
