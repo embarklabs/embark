@@ -42,7 +42,7 @@ Table of Contents
 * [Dashboard](#dashboard)
 * [Creating a new DApp](#creating-a-new-dapp)
 * [Libraries and APIs available](#libraries-and-languages-available)
-* [Using and Configuring Contracts](#dapp-structure)
+* [Using and Configuring Contracts](#using-contracts)
 * [EmbarkJS](#embarkjs)
 * [EmbarkJS - Storage (IPFS)](#embarkjs---storage)
 * [EmbarkJS - Communication (Whisper/Orbit)](#embarkjs---communication)
@@ -227,7 +227,7 @@ If you are using multiple contracts, you can pass a reference to another contrac
       "SimpleStorage": {
         "args": [
           100,
-          $MyStorage
+          "$MyStorage"
         ]
       },
       "MyStorage": {
@@ -237,7 +237,7 @@ If you are using multiple contracts, you can pass a reference to another contrac
       },
       "MyMainContract": {
         "args": [
-          $SimpleStorage
+          "$SimpleStorage"
         ]
       }
     }
