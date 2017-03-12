@@ -133,17 +133,19 @@ EmbarkJS.Contract.prototype.deploy = function(args, _options) {
     contractObject["new"].apply(contractObject, contractParams);
   });
 
-  
+
   return promise;
 };
 
-EmbarkJS.IPFS = 'ipfs';
-
 EmbarkJS.Storage = {
+  IPFS : 'ipfs'
 };
 
 EmbarkJS.Storage.setProvider = function(provider, options) {
-  if (provider === 'ipfs') {
+  if (provider.toLowerCase() === EmbarkJS.Storage.IPFS) {
+    //I don't think currentStorage is used anywhere, this might not be needed
+    //for now until additional storage providers are supported. But keeping it
+    //anyways
     this.currentStorage = EmbarkJS.Storage.IPFS;
     if (options === undefined) {
       this.ipfsConnection = IpfsApi('localhost', '5001');
@@ -151,7 +153,7 @@ EmbarkJS.Storage.setProvider = function(provider, options) {
       this.ipfsConnection = IpfsApi(options.server, options.port);
     }
   } else {
-    throw Error('unknown provider');
+    throw Error('Unknown storage provider');
   }
 };
 
@@ -187,7 +189,7 @@ EmbarkJS.Storage.uploadFile = function(inputSelector) {
 
   var promise = new Promise(function(resolve, reject) {
     var reader = new FileReader();
-    reader.onloadend = function() { 
+    reader.onloadend = function() {
       var fileContent = reader.result;
       var buffer = self.ipfsConnection.Buffer.from(fileContent);
       self.ipfsConnection.add(buffer, function(err, result) {
