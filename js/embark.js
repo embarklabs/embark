@@ -217,6 +217,8 @@ EmbarkJS.Storage.get = function(hash) {
   var promise = new Promise(function(resolve, reject) {
     self.ipfsConnection.object.get([hash]).then(function(node) {
       resolve(node.data);
+    }).catch(function (err){
+      reject(err);
     });
   });
 
