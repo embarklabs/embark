@@ -10,7 +10,7 @@
   "license": "ISC",
   "homepage": "",
   "devDependencies": {
-    "embark": "../",
+    "embark": "file:../",
     "mocha": "^2.2.5"
   },
   "dependencies": {

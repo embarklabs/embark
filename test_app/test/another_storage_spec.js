@@ -1,8 +1,5 @@
 var assert = require('assert');
-var Embark = require('embark');
-//TODO: this path is temporary to handle the scope of Embark within an app
-var EmbarkSpec = require('../node_modules/embark/lib/core/test.js');
-var web3 = EmbarkSpec.web3;
+var EmbarkSpec = require('embark/lib/core/test.js');
 
 describe("AnotherStorage", function() {
   before(function(done) {

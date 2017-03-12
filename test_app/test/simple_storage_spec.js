@@ -1,7 +1,5 @@
 var assert = require('assert');
-var Embark = require('embark');
-var EmbarkSpec = require('../node_modules/embark/lib/core/test.js');
-var web3 = EmbarkSpec.web3;
+var EmbarkSpec = require('embark/lib/core/test.js');
 
 describe("SimpleStorage", function() {
   before(function(done) {
