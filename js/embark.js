@@ -138,11 +138,40 @@ EmbarkJS.Contract.prototype.deploy = function(args, _options) {
 };
 
 EmbarkJS.Storage = {
-  IPFS : 'ipfs'
+};
+
+EmbarkJS.Storage.Providers = {
+  IPFS : 'ipfs',
+  SWARM: 'swarm'
+};
+
+EmbarkJS.Storage.IPFS = {
+};
+
+EmbarkJS.Storage.IPFS.saveText = function(text) {
+  var self = this;
+  if (!this.ipfsConnection) {
+    this.setProvider('ipfs');
+  }
+  var promise = new Promise(function(resolve, reject) {
+    self.ipfsConnection.add((new self.ipfsConnection.Buffer(text)), function(err, result) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result[0].path);
+      }
+    });
+  });
+
+  return promise;
+};
+
+EmbarkJS.Storage.saveText = function(text) {
+  return this.currentStorage.sendMessage(text);
 };
 
 EmbarkJS.Storage.setProvider = function(provider, options) {
-  if (provider.toLowerCase() === EmbarkJS.Storage.IPFS) {
+  if (provider.toLowerCase() === EmbarkJS.Storage.Providers.IPFS) {
     //I don't think currentStorage is used anywhere, this might not be needed
     //for now until additional storage providers are supported. But keeping it
     //anyways
@@ -152,7 +181,17 @@ EmbarkJS.Storage.setProvider = function(provider, options) {
     } else {
       this.ipfsConnection = IpfsApi(options.server, options.port);
     }
-  } else {
+  }
+  else if (provider.toLowerCase() === EmbarkJS.Storage.SWARM){
+    throw Error('Swarm not implemented');
+    this.currentStorage = EmbarkJS.Storage.SWARM;
+    if (options === undefined) {
+      //Connect to default Swarm node
+    } else {
+      //Connect using options
+    }
+  }
+  else {
     throw Error('Unknown storage provider');
   }
 };
@@ -263,7 +302,7 @@ EmbarkJS.Messages.setProvider = function(provider, options) {
     this.currentMessages.orbit = new Orbit(ipfs);
     this.currentMessages.orbit.connect(web3.eth.accounts[0]);
   } else {
-    throw Error('unknown provider');
+    throw Error('Unknown message provider');
   }
 };
 
