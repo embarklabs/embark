@@ -74,6 +74,10 @@ var EmbarkJS =
 /*jshint esversion: 6 */
 //var Ipfs = require('./ipfs.js');
 
+//=========================================================
+// Embark Smart Contracts
+//=========================================================
+
 var EmbarkJS = {
 };
 
@@ -210,6 +214,10 @@ EmbarkJS.Contract.prototype.deploy = function(args, _options) {
   return promise;
 };
 
+//=========================================================
+// Embark Storage
+//=========================================================
+
 EmbarkJS.Storage = {
 };
 
@@ -221,27 +229,35 @@ EmbarkJS.Storage.Providers = {
 EmbarkJS.Storage.IPFS = {
 };
 
-EmbarkJS.Storage.IPFS.saveText = function(text) {
-  var self = this;
-  if (!this.ipfsConnection) {
-    this.setProvider('ipfs');
-  }
-  var promise = new Promise(function(resolve, reject) {
-    self.ipfsConnection.add((new self.ipfsConnection.Buffer(text)), function(err, result) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(result[0].path);
-      }
-    });
-  });
+EmbarkJS.Storage.connect = function(provider){
+    var self = this;
+    if (provider.toLowerCase() === EmbarkJS.Storage.Providers.IPFS) {
+      var promise = new Promise(function(resolve, reject) {
+          resolve(self.currentStorage.ipfsConnection);
+      });
+    }
+    else {
+      reject('Storage provider not supported');
+    }
 
-  return promise;
+    return promise;
 };
 
 EmbarkJS.Storage.saveText = function(text) {
-  return this.currentStorage.sendMessage(text);
+  return this.currentStorage.saveText(text);
 };
+
+EmbarkJS.Storage.get = function(hash) {
+  return this.currentStorage.get(hash);
+};
+
+EmbarkJS.Storage.uploadFile = function(inputSelector){
+  return this.currentStorage.uploadFile(inputSelector);
+}
+
+EmbarkJS.Storage.getUrl = function(hash){
+  return this.currentStorage.getUrl(hash);
+}
 
 EmbarkJS.Storage.setProvider = function(provider, options) {
   if (provider.toLowerCase() === EmbarkJS.Storage.Providers.IPFS) {
@@ -249,11 +265,17 @@ EmbarkJS.Storage.setProvider = function(provider, options) {
     //for now until additional storage providers are supported. But keeping it
     //anyways
     this.currentStorage = EmbarkJS.Storage.IPFS;
-    if (options === undefined) {
-      this.ipfsConnection = IpfsApi('localhost', '5001');
-    } else {
-      this.ipfsConnection = IpfsApi(options.server, options.port);
+    try{
+      if (options === undefined) {
+        this.currentStorage.ipfsConnection = IpfsApi('localhost', '5001');
+      } else {
+        this.currentStorage.ipfsConnection = IpfsApi(options.server, options.port);
+      }
     }
+    catch(err){
+      this.currentStorage.ipfsConnection = null;
+    }
+
   }
   else if (provider.toLowerCase() === EmbarkJS.Storage.SWARM){
     throw Error('Swarm not implemented');
@@ -269,12 +291,16 @@ EmbarkJS.Storage.setProvider = function(provider, options) {
   }
 };
 
-EmbarkJS.Storage.saveText = function(text) {
+EmbarkJS.Storage.IPFS.saveText = function(text) {
   var self = this;
-  if (!this.ipfsConnection) {
-    this.setProvider('ipfs');
+  if (!self.ipfsConnection) {
+    EmbarkJS.Storage.setProvider(EmbarkJS.Storage.Providers.IPFS);
   }
   var promise = new Promise(function(resolve, reject) {
+    if (!self.ipfsConnection){
+      var connectionError = new Error('No IPFS connection');
+      reject(connectionError);
+    }
     self.ipfsConnection.add((new self.ipfsConnection.Buffer(text)), function(err, result) {
       if (err) {
         reject(err);
@@ -287,7 +313,29 @@ EmbarkJS.Storage.saveText = function(text) {
   return promise;
 };
 
-EmbarkJS.Storage.uploadFile = function(inputSelector) {
+EmbarkJS.Storage.IPFS.get = function(hash) {
+  var self = this;
+  // TODO: detect type, then convert if needed
+  //var ipfsHash = web3.toAscii(hash);
+  if (!self.ipfsConnection) {
+    EmbarkJS.Storage.setProvider(EmbarkJS.Storage.Providers.IPFS);
+  }
+  var promise = new Promise(function(resolve, reject) {
+    if (!self.ipfsConnection){
+      var connectionError = new Error('No IPFS connection');
+      reject(connectionError);
+    }
+    self.ipfsConnection.object.get([hash]).then(function(node) {
+      resolve(node.data);
+    }).catch(function (err){
+      reject(err);
+    });
+  });
+
+  return promise;
+};
+
+EmbarkJS.Storage.IPFS.uploadFile = function(inputSelector) {
   var self = this;
   var file = inputSelector[0].files[0];
 
@@ -295,11 +343,15 @@ EmbarkJS.Storage.uploadFile = function(inputSelector) {
     throw new Error('no file found');
   }
 
-  if (!this.ipfsConnection) {
-    this.setProvider('ipfs');
+  if (!self.ipfsConnection) {
+    EmbarkJS.Storage.setProvider(EmbarkJS.Storage.Providers.IPFS);
   }
 
   var promise = new Promise(function(resolve, reject) {
+    if (!self.ipfsConnection){
+      var connectionError = new Error('No IPFS connection');
+      reject(connectionError);
+    }
     var reader = new FileReader();
     reader.onloadend = function() {
       var fileContent = reader.result;
@@ -318,30 +370,15 @@ EmbarkJS.Storage.uploadFile = function(inputSelector) {
   return promise;
 };
 
-EmbarkJS.Storage.get = function(hash) {
-  var self = this;
-  // TODO: detect type, then convert if needed
-  //var ipfsHash = web3.toAscii(hash);
-  if (!this.ipfsConnection) {
-    this.setProvider('ipfs');
-  }
-
-  var promise = new Promise(function(resolve, reject) {
-    self.ipfsConnection.object.get([hash]).then(function(node) {
-      resolve(node.data);
-    }).catch(function (err){
-      reject(err);
-    });
-  });
-
-  return promise;
-};
-
-EmbarkJS.Storage.getUrl = function(hash) {
+EmbarkJS.Storage.IPFS.getUrl = function(hash) {
   //var ipfsHash = web3.toAscii(hash);
 
   return 'http://localhost:8080/ipfs/' + hash;
 };
+
+//=========================================================
+// Embark Messaging
+//=========================================================
 
 EmbarkJS.Messages = {
 };
