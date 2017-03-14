@@ -231,14 +231,15 @@ EmbarkJS.Storage.IPFS = {
 
 EmbarkJS.Storage.connect = function(provider){
     var self = this;
-    if (provider.toLowerCase() === EmbarkJS.Storage.Providers.IPFS) {
-      var promise = new Promise(function(resolve, reject) {
-          resolve(self.currentStorage.ipfsConnection);
-      });
-    }
-    else {
-      reject('Storage provider not supported');
-    }
+    var promise = new Promise(function(resolve, reject) {
+      if (provider.toLowerCase() === EmbarkJS.Storage.Providers.IPFS) {
+        resolve(self.currentStorage.ipfsConnection);
+      }
+      else {
+        var error = new Error(provider + ' storage provider not supported');
+        reject(error);
+      };
+    });
 
     return promise;
 };
