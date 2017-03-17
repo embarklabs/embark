@@ -32,18 +32,28 @@ $(document).ready(function() {
   //EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'});
 
   $("#storage .error").hide();
-  EmbarkJS.Storage.ipfsConnection.ping()
+  EmbarkJS.Storage.setProvider('ipfs')
     .then(function(){
-        $("#status-storage").addClass('status-online');
-        $("#storage-controls").show();
+      console.log('Provider set to IPFS');
+      EmbarkJS.Storage.ipfsConnection.ping()
+        .then(function(){
+            $("#status-storage").addClass('status-online');
+            $("#storage-controls").show();
+        })
+        .catch(function(err) {
+          if(err){
+            console.log("IPFS Connection Error => " + err.message);
+            $("#storage .error").show();
+            $("#status-storage").addClass('status-offline');
+            $("#storage-controls").hide();
+          }
+        });
     })
-    .catch(function(err) {
-      if(err){
-        console.log("IPFS Connection Error => " + err.message);
-        $("#storage .error").show();
-        $("#status-storage").addClass('status-offline');
-        $("#storage-controls").hide();
-      }
+    .catch(function(err){
+      console.log('Failed to set IPFS as Provider:', err.message);
+      $("#storage .error").show();
+      $("#status-storage").addClass('status-offline');
+      $("#storage-controls").hide();
     });
 
   $("#storage button.setIpfsText").click(function() {
