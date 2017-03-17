@@ -438,12 +438,11 @@ Embark includes a testing lib to fastly run & test your contracts in a EVM.
 # test/simple_storage_spec.js
 
 var assert = require('assert');
-var Embark = require('embark');
-var EmbarkSpec = Embark.initTests();
-var web3 = EmbarkSpec.web3;
+var EmbarkSpec = require('embark/lib/core/test.js');
 
 describe("SimpleStorage", function() {
   before(function(done) {
+    this.timeout(0);
     var contractsConfig = {
       "SimpleStorage": {
         args: [100]
@@ -469,6 +468,7 @@ describe("SimpleStorage", function() {
   });
 
 });
+
 ```
 
 Embark uses [Mocha](http://mochajs.org/) by default, but you can use any testing framework you want.
