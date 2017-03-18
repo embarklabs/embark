@@ -167,11 +167,11 @@ EmbarkJS.Storage.get = function(hash) {
 
 EmbarkJS.Storage.uploadFile = function(inputSelector) {
     return this.currentStorage.uploadFile(inputSelector);
-}
+};
 
 EmbarkJS.Storage.getUrl = function(hash) {
     return this.currentStorage.getUrl(hash);
-}
+};
 
 EmbarkJS.Storage.setProvider = function(provider, options) {
     var self = this;
