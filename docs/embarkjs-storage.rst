@@ -13,13 +13,25 @@ The current available storage is IPFS. it can be initialized as
 
 .. code:: javascript
 
-      EmbarkJS.Storage.saveText("hello world").then(function(hash) {});
+      EmbarkJS.Storage.saveText("hello world")
+        .then(function(hash) {})
+        .catch(function(err) {
+            if(err){
+              console.log("IPFS saveText Error => " + err.message);
+            }
+        });
 
 **Retrieving Data/Text**
 
 .. code:: javascript
 
-      EmbarkJS.Storage.get(hash).then(function(content) {});
+      EmbarkJS.Storage.get(hash)
+        .then(function(content) {})
+        .catch(function(err) {
+            if(err){
+              console.log("IPFS get Error => " + err.message);
+            }
+        });
 
 **Uploading a file**
 
@@ -30,7 +42,13 @@ The current available storage is IPFS. it can be initialized as
 .. code:: javascript
 
       var input = $("input[type=file"]);
-      EmbarkJS.Storage.uploadFile(input).then(function(hash) {});
+      EmbarkJS.Storage.uploadFile(input)
+        .then(function(hash) {})
+        .catch(function(err) {
+            if(err){
+              console.log("IPFS uploadFile Error => " + err.message);
+            }
+        });
 
 **Generate URL to file**
 

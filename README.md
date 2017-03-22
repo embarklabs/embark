@@ -1,4 +1,5 @@
-[![Join the chat at https://gitter.im/iurimatias/embark-framework](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/iurimatias/embark-framework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![npm](https://img.shields.io/npm/dm/embark.svg)]()
+[![Gitter](https://img.shields.io/gitter/room/iurimatias/embark-framework.svg)]()
 [![Build
 Status](https://travis-ci.org/iurimatias/embark-framework.svg?branch=develop)](https://travis-ci.org/iurimatias/embark-framework)
 [![Code Climate](https://codeclimate.com/github/iurimatias/embark-framework/badges/gpa.svg)](https://codeclimate.com/github/iurimatias/embark-framework)
@@ -41,14 +42,14 @@ Table of Contents
 * [Dashboard](#dashboard)
 * [Creating a new DApp](#creating-a-new-dapp)
 * [Libraries and APIs available](#libraries-and-languages-available)
-* [Using and Configuring Contracts](#dapp-structure)
+* [Using and Configuring Contracts](#using-contracts)
 * [EmbarkJS](#embarkjs)
 * [EmbarkJS - Storage (IPFS)](#embarkjs---storage)
 * [EmbarkJS - Communication (Whisper/Orbit)](#embarkjs---communication)
 * [Testing Contracts](#tests)
 * [Working with different chains](#working-with-different-chains)
 * [Custom Application Structure](#structuring-application)
-* [Deploying to IPFS](#deploying-to-ipfs)
+* [Deploying to IPFS](#deploying-to-ipfs-and-swarm)
 * [Extending Functionality with Plugins](#plugins)
 * [Donations](#donations)
 
@@ -144,8 +145,11 @@ DApp Structure
     |___ css/
     |___ js/
   config/
-    |___ blockchain.json #environments configuration
-    |___ contracts.json  #contracts configuration
+    |___ blockchain.json #rpc and blockchain configuration
+    |___ contracts.json  #ethereum contracts configuration
+    |___ storage.json  #ipfs configuration
+    |___ communication.json  #whisper/orbit configuration
+    |___ webserver.json  #dev webserver configuration
   test/
     |___ #contracts tests
 ```
@@ -223,7 +227,7 @@ If you are using multiple contracts, you can pass a reference to another contrac
       "SimpleStorage": {
         "args": [
           100,
-          $MyStorage
+          "$MyStorage"
         ]
       },
       "MyStorage": {
@@ -233,7 +237,7 @@ If you are using multiple contracts, you can pass a reference to another contrac
       },
       "MyMainContract": {
         "args": [
-          $SimpleStorage
+          "$SimpleStorage"
         ]
       }
     }
@@ -322,14 +326,20 @@ events:
 Client side deployment will be automatically available in Embark for existing contracts:
 
 ```Javascript
-  SimpleStorage.deploy().then(function(anotherSimpleStorage) {});
+  SimpleStorage.deploy([args], {options}).then(function(anotherSimpleStorage) {});
 ```
 
 or it can be manually definied as
 
 ```Javascript
   var myContract = new EmbarkJS.Contract({abi: abiObject, code: code});
-  myContract.deploy().then(function(anotherMyContractObject) {});
+  myContract.deploy([args], {options}).then(function(anotherMyContractObject) {});
+```
+
+so you can define your gas as
+
+```Javascript
+  myContract.deploy([100, "seconde argument"], {gas: 800000}).then(function(anotherMyContractObject) {});
 ```
 
 EmbarkJS - Storage
@@ -428,12 +438,11 @@ Embark includes a testing lib to fastly run & test your contracts in a EVM.
 # test/simple_storage_spec.js
 
 var assert = require('assert');
-var Embark = require('embark');
-var EmbarkSpec = Embark.initTests();
-var web3 = EmbarkSpec.web3;
+var EmbarkSpec = require('embark/lib/core/test.js');
 
 describe("SimpleStorage", function() {
   before(function(done) {
+    this.timeout(0);
     var contractsConfig = {
       "SimpleStorage": {
         args: [100]
@@ -459,6 +468,7 @@ describe("SimpleStorage", function() {
   });
 
 });
+
 ```
 
 Embark uses [Mocha](http://mochajs.org/) by default, but you can use any testing framework you want.

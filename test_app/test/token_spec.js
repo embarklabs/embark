@@ -1,10 +1,9 @@
 var assert = require('assert');
-var Embark = require('embark');
-var EmbarkSpec = Embark.initTests();
-var web3 = EmbarkSpec.web3;
+var EmbarkSpec = require('embark/lib/core/test.js');
 
 describe("Token", function() {
   before(function(done) {
+    this.timeout(0);
     var contractsConfig = {
       "SimpleStorage": {
         args: [100]
