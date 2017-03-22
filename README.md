@@ -9,9 +9,9 @@ What is Embark
 
 Embark is a framework that allows you to easily develop and deploy Decentralized Applications (DApps).
 
-A Decentralized Application is serverless html5 application that uses one or more decentralized technologies.
+A Decentralized Application is a serverless html5 application that uses one or more decentralized technologies.
 
-Embark currently integrates with EVM blockchains (Ethereum), Decentralized Storages (IPFS), and Decentralizaed communication platforms (Whisper and Orbit). Swarm is supported for deployment.
+Embark currently integrates with EVM blockchains (Ethereum), Decentralized Storages (IPFS), and Decentralized communication platforms (Whisper and Orbit). Swarm is supported for deployment.
 
 With Embark you can:
 
@@ -19,12 +19,12 @@ With Embark you can:
 * Automatically deploy contracts and make them available in your JS code. Embark watches for changes, and if you update a contract, Embark will automatically redeploy the contracts (if needed) and the dapp.
 * Contracts are available in JS with Promises.
 * Do Test Driven Development with Contracts using Javascript.
-* Keep track of deployed contracts, deploy only when truly needed.
+* Keep track of deployed contracts; deploy only when truly needed.
 * Manage different chains (e.g testnet, private net, livenet)
 * Easily manage complex systems of interdependent contracts.
 
 **Decentralized Storage (IPFS)**
-* Easily Store & Retrieve Data on the DApp through EmbarkJS. Includin uploading and retrieving files.
+* Easily Store & Retrieve Data on the DApp through EmbarkJS. Including uploading and retrieving files.
 * Deploy the full application to IPFS or Swarm.
 
 
@@ -69,7 +69,7 @@ $ npm -g install ethereumjs-testrpc
 See [Complete Installation Instructions](https://github.com/iurimatias/embark-framework/wiki/Installation).
 
 
-**updating from embark 1**
+**updating from Embark 1**
 
 Embark's npm package has changed from ```embark-framework``` to ```embark```, this sometimes can create conflicts. To update first uninstall embark-framework 1 to avoid any conflicts. ```npm uninstall -g embark-framework``` then ```npm install -g embark```
 
@@ -97,7 +97,7 @@ Alternatively, to use an ethereum rpc simulator simply run:
 $ embark simulator
 ```
 
-By default embark blockchain will mine a minimum amount of ether and will only mine when new transactions come in. This is quite usefull to keep a low CPU. The option can be configured at ```config/blockchain.json```. Note that running a real node requires at least 2GB of free ram, please take this into account if running it in a VM.
+By default Embark blockchain will mine a minimum amount of ether and will only mine when new transactions come in. This is quite useful to keep a low CPU. The option can be configured at ```config/blockchain.json```. Note that running a real node requires at least 2GB of free ram, please take this into account if running it in a VM.
 
 Then, in another command line:
 
@@ -106,7 +106,7 @@ $ embark run
 ```
 This will automatically deploy the contracts, update their JS bindings and deploy your DApp to a local server at http://localhost:8000
 
-Note that if you update your code it will automatically be re-deployed, contracts included. There is no need to restart embark, refreshing the page on the browser will do.
+Note that if you update your code, it will automatically be re-deployed, contracts included. There is no need to restart embark, refreshing the page on the browser will do.
 
 Dashboard
 =====
@@ -115,20 +115,20 @@ Embark 2 comes with a terminal dashboard.
 
 ![Dashboard](http://i.imgur.com/s4OQZpu.jpg)
 
-The dashboard will tell you the state of your contracts, the enviroment you are using, and what embark is doing at the moment.
+The dashboard will tell you the state of your contracts, the environment you are using, and what Embark is doing at the moment.
 
 **available services**
 
-Available Services will display the services available to your dapp in green, if one of these is down then it will be displayed in red.
+Available Services will display the services available to your dapp in green. If a service is down, then it will be displayed in red.
 
 **logs and console**
 
-There is a console at the bottom which can be used to interact with contracts or with embark itself. type ```help``` to see a list of available commands, more commands will be added with each version of Embark.
+There is a console at the bottom which can be used to interact with contracts or with Embark itself. Type ```help``` to see a list of available commands.  More commands will be added with each version of Embark.
 
 Creating a new DApp
 ======
 
-If you want to create a blank new app.
+If you want to create a blank new app:
 
 ```Bash
 $ embark new AppName
@@ -154,7 +154,7 @@ DApp Structure
     |___ #contracts tests
 ```
 
-Solidity/Serpent files in the contracts directory will automatically be deployed with embark run. Changes in any files will automatically be reflected in app, changes to contracts will result in a redeployment and update of their JS Bindings
+Solidity/Serpent files in the contracts directory will automatically be deployed with Embark run. Changes in any files will automatically be reflected in app, changes to contracts will result in a redeployment and update of their JS Bindings
 
 Libraries and languages available
 ======
@@ -278,7 +278,7 @@ You can now deploy many instances of the same contract. e.g
   ...
 ```
 
-Contracts addresses can be defined, If an address is defined the contract wouldn't be deployed but its defined address will be used instead.
+Contracts addresses can be defined. If an address is defined, Embark uses the defined address instead of deploying the contract.
 
 
 ```Json
@@ -347,7 +347,7 @@ EmbarkJS - Storage
 
 **initialization**
 
-The current available storage is IPFS. it can be initialized as
+The current available storage is IPFS. It can be initialized as
 
 ```Javascript
   EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'})
@@ -432,7 +432,7 @@ Tests
 
 You can run specs with ```embark test```, it will run any test files under ```test/```.
 
-Embark includes a testing lib to fastly run & test your contracts in a EVM.
+Embark includes a testing lib to rapidly run & test your contracts in a EVM.
 
 ```Javascript
 # test/simple_storage_spec.js
@@ -531,20 +531,20 @@ To deploy a dapp to SWARM, all you need to do is run a local SWARM node and then
 Plugins
 ======
 
-It's possible to extend Embarks functionality with plugins. For example the following is possible:
+It's possible to extend Embark's functionality with plugins. For example, the following is possible:
 
 * plugin to add support for es6, jsx, coffescript, etc (``embark.registerPipeline``)
 * plugin to add standard contracts or a contract framework (``embark.registerContractConfiguration`` and ``embark.addContractFile``)
 * plugin to make some contracts available in all environments for use by other contracts or the dapp itself e.g a Token, a DAO, ENS, etc.. (``embark.registerContractConfiguration`` and ``embark.addContractFile``)
-* plugin to add a libraries such as react or boostrap (``embark.addFileToPipeline``)
+* plugin to add a libraries such as react or bootstrap (``embark.addFileToPipeline``)
 * plugin to specify a particular web3 initialization for special provider uses (``embark.registerClientWeb3Provider``)
 * plugin to create a different contract wrapper (``embark.registerContractsGeneration``)
 * plugin to add new console commands (``embark.registerConsoleCommand``)
 * plugin to add support for another contract language such as viper, LLL, etc (``embark.registerCompiler``)
 
-For more information on how to develop your own plugin please see the [plugin documentation](http://embark.readthedocs.io/en/latest/plugins.html)
+For more information on how to develop your own plugin, please see the [plugin documentation](http://embark.readthedocs.io/en/latest/plugins.html)
 
 Donations
 ======
 
-If you like Embark please consider donating to 0x8811FdF0F988f0CD1B7E9DE252ABfA5b18c1cDb1
+If you like Embark, please consider donating to 0x8811FdF0F988f0CD1B7E9DE252ABfA5b18c1cDb1
