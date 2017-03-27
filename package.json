@@ -48,16 +48,33 @@
   "homepage": "https://github.com/iurimatias/embark-framework",
   "license": "MIT",
   "devDependencies": {
+    "eslint": "^3.17.1",
+    "eslint-config-google": "^0.7.1",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-coffee": "^1.0.0",
     "grunt-contrib-jshint": "^1.0.0",
+    "grunt-eslint": "^19.0.0",
     "grunt-mocha-test": "^0.13.2",
     "matchdep": "^1.0.1",
     "mocha": "^3.2.0",
     "mocha-sinon": "^1.1.4",
     "sinon": "^1.15.4",
     "toposort": "^1.0.0"
+  },
+  "eslintConfig": {
+    "extends": "google",
+    "rules": {
+      "comma-dangle": [
+        "error",
+        "never"
+      ],
+      "max-len": [
+        "error",
+        120
+      ],
+      "no-var": "off"
+    }
   }
 }
