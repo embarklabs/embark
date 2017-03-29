@@ -71,6 +71,7 @@
     "-W058": true,
     "-W014": true,
     "expr": true,
-    "esversion": 6
+    "esversion": 6,
+    "unused": false
   }
 }
