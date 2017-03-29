@@ -23,7 +23,8 @@ module.exports = (grunt) ->
         src: ['test/**/*.js']
 
     jshint:
-      all: ['bin/embark', 'lib/**/*.js', 'js/mine.js', 'js/embark.js']
+      all: ['bin/embark', 'lib/**/*.js', 'js/mine.js', 'js/embark.js'],
+      options: grunt.file.readJSON('package.json').jshintConfig
 
   grunt.loadTasks "tasks"
   require('matchdep').filterAll(['grunt-*','!grunt-cli']).forEach(grunt.loadNpmTasks)
