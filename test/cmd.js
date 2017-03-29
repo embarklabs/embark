@@ -32,6 +32,7 @@ describe('embark.Cmd', function () {
         assert.equal(lines[2], pl[2]);
         assert.equal(lines[3], 'App ready at ./' + appname);
        });
+      done();
     });
 
     it('it should prompt when given an empty app name', function (done) {
@@ -44,8 +45,8 @@ describe('embark.Cmd', function () {
         console.log(lines);
         sendLine(appname + '\n');
         assert.equal(lines[0], pl[0]);
-        done();
       });
+      done();
     });
-  })
+  });
 });
