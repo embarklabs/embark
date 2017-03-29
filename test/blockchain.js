@@ -1,17 +1,17 @@
 /*globals describe, it*/
-var Blockchain = require('../lib/cmds/blockchain/blockchain.js');
-var assert = require('assert');
+let Blockchain = require('../lib/cmds/blockchain/blockchain.js');
+let assert = require('assert');
 
 describe('embark.Blockchain', function() {
-  //var Client = function() {};
+  //let Client = function() {};
   //Client.prototype.name = "ClientName";
 
   describe('#initializer', function() {
-    //var client = new Client();
+    //let client = new Client();
 
     describe('with empty config', function() {
       it('should have a default config', function() {
-        var config = {
+        let config = {
           networkType: 'custom',
           genesisBlock: false,
           geth_bin: 'geth',
@@ -31,7 +31,7 @@ describe('embark.Blockchain', function() {
           account: {},
           bootnodes: ""
         };
-        var blockchain = Blockchain(config, 'geth');
+        let blockchain = Blockchain(config, 'geth');
 
         assert.deepEqual(blockchain.config, config);
       });
@@ -39,7 +39,7 @@ describe('embark.Blockchain', function() {
 
     describe('with config', function() {
       it('should take config params', function() {
-        var config = {
+        let config = {
           networkType: 'livenet',
           genesisBlock: 'foo/bar/genesis.json',
           geth_bin: 'geth',
@@ -59,7 +59,7 @@ describe('embark.Blockchain', function() {
           account: {},
           bootnodes: ""
         };
-        var blockchain = Blockchain(config, 'geth');
+        let blockchain = Blockchain(config, 'geth');
 
         assert.deepEqual(blockchain.config, config);
       });
