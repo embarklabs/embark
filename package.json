@@ -67,11 +67,13 @@
     "white": true,
     "node": true,
     "undef": true,
-    "unused": true,
     "-W058": true,
     "-W014": true,
     "expr": true,
     "esversion": 6,
-    "unused": false
+    "unused": false,
+    "globals": {
+      "node": true
+    }
   }
 }
