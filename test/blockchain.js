@@ -1,6 +1,7 @@
 /*globals describe, it*/
-let Blockchain = require('../lib/cmds/blockchain/blockchain.js');
-let assert = require('assert');
+const Blockchain = require('../lib/cmds/blockchain/blockchain');
+// let BlockchainClient = require('../lib/cmds/blockchain/blockchain_client');
+const assert = require('assert');
 
 describe('embark.Blockchain', function() {
   //let Client = function() {};
@@ -12,26 +13,28 @@ describe('embark.Blockchain', function() {
     describe('with empty config', function() {
       it('should have a default config', function() {
         let config = {
-          networkType: 'custom',
-          genesisBlock: false,
-          geth_bin: 'geth',
-          datadir: false,
-          mineWhenNeeded: false,
-          rpcHost: 'localhost',
-          rpcPort: 8545,
-          rpcApi: ['eth', 'web3', 'net'],
-          rpcCorsDomain: false,
-          networkId: 12301,
-          port: 30303,
-          nodiscover: false,
-          maxpeers: 25,
-          mine: false,
-          vmdebug: false,
-          whisper: true,
-          account: {},
-          bootnodes: ""
-        };
-        let blockchain = Blockchain(config, 'geth');
+          blockchainConfig: {
+            networkType: 'custom',
+            genesisBlock: false,
+            geth_bin: 'geth',
+            datadir: false,
+            mineWhenNeeded: false,
+            rpcHost: 'localhost',
+            rpcPort: 8545,
+            rpcApi: ['eth', 'web3', 'net'],
+            rpcCorsDomain: false,
+            networkId: 12301,
+            port: 30303,
+            nodiscover: false,
+            maxpeers: 25,
+            mine: false,
+            vmdebug: false,
+            whisper: true,
+            account: {},
+            bootnodes: "",
+          }
+        }
+        let blockchain = new Blockchain(config, 'geth');
 
         assert.deepEqual(blockchain.config, config);
       });
@@ -59,7 +62,7 @@ describe('embark.Blockchain', function() {
           account: {},
           bootnodes: ""
         };
-        let blockchain = Blockchain(config, 'geth');
+        let blockchain = new Blockchain(config, 'geth');
 
         assert.deepEqual(blockchain.config, config);
       });

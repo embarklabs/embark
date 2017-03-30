@@ -9,7 +9,7 @@ let readFile = function(file) {
 };
 
 describe('embark.Contratcs', function() {
-
+  this.timeout(0);
   describe('simple', function() {
     let contractsManager = new ContractsManager({
       contractFiles:  [
