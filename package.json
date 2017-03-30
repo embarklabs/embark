@@ -31,6 +31,8 @@
     "shelljs": "^0.5.0",
     "solc": "0.4.8",
     "toposort": "^1.0.0",
+    "underscore": "^1.8.3",
+    "underscore.string": "^3.3.4",
     "web3": "^0.18.2"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
@@ -59,5 +61,19 @@
     "mocha-sinon": "^1.1.4",
     "sinon": "^1.15.4",
     "toposort": "^1.0.0"
+  },
+  "jshintConfig": {
+    "indent": 2,
+    "white": true,
+    "node": true,
+    "undef": true,
+    "-W058": true,
+    "-W014": true,
+    "expr": true,
+    "esversion": 6,
+    "unused": false,
+    "globals": {
+      "node": true
+    }
   }
 }
