@@ -11,7 +11,7 @@ describe('embark.Blockchain', function () {
     //let client = new Client();
 
     describe('with empty config', function () {
-      it('should have a default config', function () {
+      it('should have a default config', function (done) {
         let config = {
           networkType: 'custom',
           genesisBlock: false,
@@ -35,11 +35,12 @@ describe('embark.Blockchain', function () {
         let blockchain = new Blockchain(config, 'geth');
 
         assert.deepEqual(blockchain.config, config);
+        done();
       });
     });
 
     describe('with config', function () {
-      it('should take config params', function () {
+      it('should take config params', function (done) {
         let config = {
           networkType: 'livenet',
           genesisBlock: 'foo/bar/genesis.json',
@@ -63,6 +64,7 @@ describe('embark.Blockchain', function () {
         let blockchain = new Blockchain(config, 'geth');
 
         assert.deepEqual(blockchain.config, config);
+        done();
       });
     });
 
