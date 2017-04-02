@@ -144,6 +144,29 @@ EmbarkJS.Contract.prototype.deploy = function(args, _options) {
     return promise;
 };
 
+EmbarkJS.Contract.prototype.new = EmbarkJS.Contract.prototype.deploy;
+
+EmbarkJS.Contract.prototype.at = function(address) {
+  return new EmbarkJS.Contract({ abi: this.abi, code: this.code, address: address });
+};
+
+EmbarkJS.Contract.prototype.send = function(value, unit, _options) {
+  var options, wei;
+  if (typeof unit === 'object') {
+    options = unit;
+    wei = value;
+  } else {
+    options = _options || {};
+    wei = this.web3.toWei(value, unit);
+  }
+
+  options.to = this.address;
+  options.value = wei;
+  console.log(options);
+
+  this.web3.eth.sendTransaction(options);
+};
+
 //=========================================================
 // Embark Storage
 //=========================================================
