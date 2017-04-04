@@ -235,7 +235,7 @@ EmbarkJS.Messages.setProvider = function(provider, options) {
   var ipfs;
   if (provider === 'whisper') {
     this.currentMessages = EmbarkJS.Messages.Whisper;
-    if (typeof variable === 'undefined') {
+    if (typeof variable === 'undefined' && typeof(web3) === 'undefined') {
       if (options === undefined) {
         web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
       } else {
