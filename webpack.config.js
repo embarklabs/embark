@@ -3,7 +3,7 @@ module.exports = {
   output: {
     libraryTarget: 'var',
     library: 'EmbarkJS',
-    path: './js/build',
+    path: __dirname + '/js/build',
     filename: 'embark.bundle.js'
   }
 };

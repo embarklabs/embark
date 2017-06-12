@@ -3,7 +3,8 @@
   "version": "2.4.3",
   "description": "Embark is a framework that allows you to easily develop and deploy DApps",
   "scripts": {
-    "test": "grunt jshint && mocha test/ --no-timeouts"
+    "test": "grunt jshint && mocha test/ --no-timeouts",
+    "install": "webpack"
   },
   "bin": {
     "embark": "./bin/embark"
@@ -33,7 +34,8 @@
     "toposort": "^1.0.0",
     "underscore": "^1.8.3",
     "underscore.string": "^3.3.4",
-    "web3": "^0.18.2"
+    "web3": "^0.18.2",
+    "webpack": "^2.6.1"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
