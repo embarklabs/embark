@@ -30,6 +30,7 @@
     "merge": "^1.2.0",
     "orbit-db": "^0.17.3",
     "promptly": "^2.1.0",
+    "orbit-db": "^0.17.3",
     "serve-static": "^1.11.1",
     "shelljs": "^0.5.0",
     "solc": "0.4.11",
