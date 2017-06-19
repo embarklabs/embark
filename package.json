@@ -1,6 +1,6 @@
 {
   "name": "embark",
-  "version": "2.4.0",
+  "version": "2.4.3",
   "description": "Embark is a framework that allows you to easily develop and deploy DApps",
   "scripts": {
     "test": "grunt jshint && mocha test/ --no-timeouts"
@@ -29,7 +29,7 @@
     "promptly": "^2.1.0",
     "serve-static": "^1.11.1",
     "shelljs": "^0.5.0",
-    "solc": "0.4.8",
+    "solc": "0.4.11",
     "toposort": "^1.0.0",
     "underscore": "^1.8.3",
     "underscore.string": "^3.3.4",
