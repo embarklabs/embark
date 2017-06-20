@@ -30,15 +30,13 @@
     "merge": "^1.2.0",
     "orbit-db": "^0.17.3",
     "promptly": "^2.1.0",
-    "orbit-db": "^0.17.3",
     "serve-static": "^1.11.1",
     "shelljs": "^0.5.0",
     "solc": "0.4.11",
     "toposort": "^1.0.0",
     "underscore": "^1.8.3",
     "underscore.string": "^3.3.4",
-    "web3": "^0.18.2",
-    "webpack": "^2.6.1"
+    "web3": "^0.18.2"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
@@ -65,7 +63,8 @@
     "mocha": "^3.2.0",
     "mocha-sinon": "^1.1.4",
     "sinon": "^1.15.4",
-    "toposort": "^1.0.0"
+    "toposort": "^1.0.0",
+    "webpack": "^2.6.1"
   },
   "jshintConfig": {
     "indent": 2,
