@@ -4,7 +4,7 @@
   "description": "Embark is a framework that allows you to easily develop and deploy DApps",
   "scripts": {
     "test": "grunt jshint && mocha test/ --no-timeouts",
-    "prepublish": "webpack"
+    "prepare": "webpack"
   },
   "bin": {
     "embark": "./bin/embark"
