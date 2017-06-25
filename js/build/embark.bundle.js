@@ -372,6 +372,8 @@ var EmbarkJS =
 	        web3.version.getWhisper(function(err, res) {
 	            if (err) {
 	                console.log("whisper not available");
+	            } else if (web3.version.whisper >= 5) {
+	                console.log("this version of whisper is not supported yet; try a version of geth bellow 1.6.1");
 	            } else {
 	                self.currentMessages.identity = web3.shh.newIdentity();
 	            }
