@@ -16,6 +16,6 @@
   "dependencies": {
     "embark-babel": "^1.0.0",
     "embark-service": "./extensions/embark-service",
-    "ethereumjs-testrpc": "https://github.com/iurimatias/testrpc.git#master"
+    "ethereumjs-testrpc": "^3.0.3"
   }
 }
