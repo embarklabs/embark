@@ -33,7 +33,7 @@
     "toposort": "^1.0.0",
     "underscore": "^1.8.3",
     "underscore.string": "^3.3.4",
-    "web3": "^0.18.2"
+    "web3": "^0.19.1"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
