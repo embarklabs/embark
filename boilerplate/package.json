@@ -9,7 +9,7 @@
   "license": "ISC",
   "homepage": "",
   "devDependencies": {
-    "embark": "^2.4.3",
+    "embark": "^2.5.0",
     "mocha": "^2.2.5"
   }
 }
