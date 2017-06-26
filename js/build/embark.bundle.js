@@ -386,7 +386,11 @@ var EmbarkJS =
 	            ipfs = HaadIpfsApi(options.server, options.port);
 	        }
 	        this.currentMessages.orbit = new Orbit(ipfs);
-	        this.currentMessages.orbit.connect(web3.eth.accounts[0]);
+	        if (typeof(web3) === "undefined") {
+	          this.currentMessages.orbit.connect(Math.random().toString(36).substring(2));
+	        } else {
+	          this.currentMessages.orbit.connect(web3.eth.accounts[0]);
+	        }
 	    } else {
 	        throw Error('Unknown message provider');
 	    }
