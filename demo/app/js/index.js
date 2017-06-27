@@ -114,9 +114,13 @@ $(document).ready(function() {
 $(document).ready(function() {
 
   $("#communication .error").hide();
-  web3.version.getWhisper(function(err, res) {
+  web3.version.getWhisper(function(err, version) {
     if (err) {
       $("#communication .error").show();
+      $("#communication-controls").hide();
+      $("#status-communication").addClass('status-offline');
+    } else if (version >= 5) {
+      $("#communication .errorVersion").show();
       $("#communication-controls").hide();
       $("#status-communication").addClass('status-offline');
     } else {
