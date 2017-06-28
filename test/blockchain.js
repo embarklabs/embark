@@ -1,17 +1,18 @@
 /*globals describe, it*/
-var Blockchain = require('../lib/cmds/blockchain/blockchain.js');
-var assert = require('assert');
+const Blockchain = require('../lib/cmds/blockchain/blockchain');
 
-describe('embark.Blockchain', function() {
-  //var Client = function() {};
+const assert = require('assert');
+
+describe('embark.Blockchain', function () {
+  //let Client = function() {};
   //Client.prototype.name = "ClientName";
 
-  describe('#initializer', function() {
-    //var client = new Client();
+  describe('#initializer', function () {
+    //let client = new Client();
 
-    describe('with empty config', function() {
-      it('should have a default config', function() {
-        var config = {
+    describe('with empty config', function () {
+      it('should have a default config', function (done) {
+        let config = {
           networkType: 'custom',
           genesisBlock: false,
           geth_bin: 'geth',
@@ -31,15 +32,16 @@ describe('embark.Blockchain', function() {
           account: {},
           bootnodes: ""
         };
-        var blockchain = Blockchain(config, 'geth');
+        let blockchain = new Blockchain(config, 'geth');
 
         assert.deepEqual(blockchain.config, config);
+        done();
       });
     });
 
-    describe('with config', function() {
-      it('should take config params', function() {
-        var config = {
+    describe('with config', function () {
+      it('should take config params', function (done) {
+        let config = {
           networkType: 'livenet',
           genesisBlock: 'foo/bar/genesis.json',
           geth_bin: 'geth',
@@ -59,9 +61,10 @@ describe('embark.Blockchain', function() {
           account: {},
           bootnodes: ""
         };
-        var blockchain = Blockchain(config, 'geth');
+        let blockchain = new Blockchain(config, 'geth');
 
         assert.deepEqual(blockchain.config, config);
+        done();
       });
     });
 

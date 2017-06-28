@@ -28,23 +28,59 @@ $(document).ready(function() {
 // Storage (IPFS) example
 // ===========================
 $(document).ready(function() {
+  // automatic set if config/storage.json has "enabled": true and "provider": "ipfs"
   //EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'});
+
+  $("#storage .error").hide();
+  EmbarkJS.Storage.setProvider('ipfs')
+    .then(function(){
+      console.log('Provider set to IPFS');
+      EmbarkJS.Storage.ipfsConnection.ping()
+        .then(function(){
+            $("#status-storage").addClass('status-online');
+            $("#storage-controls").show();
+        })
+        .catch(function(err) {
+          if(err){
+            console.log("IPFS Connection Error => " + err.message);
+            $("#storage .error").show();
+            $("#status-storage").addClass('status-offline');
+            $("#storage-controls").hide();
+          }
+        });
+    })
+    .catch(function(err){
+      console.log('Failed to set IPFS as Provider:', err.message);
+      $("#storage .error").show();
+      $("#status-storage").addClass('status-offline');
+      $("#storage-controls").hide();
+    });
 
   $("#storage button.setIpfsText").click(function() {
     var value = $("#storage input.ipfsText").val();
     EmbarkJS.Storage.saveText(value).then(function(hash) {
       $("span.textHash").html(hash);
       $("input.textHash").val(hash);
+      addToLog("#storage", "EmbarkJS.Storage.saveText('" + value + "').then(function(hash) { })");
+    })
+    .catch(function(err) {
+      if(err){
+        console.log("IPFS saveText Error => " + err.message);
+      }
     });
-    addToLog("#storage", "EmbarkJS.Storage.saveText('" + value + "').then(function(hash) { })");
   });
 
   $("#storage button.loadIpfsHash").click(function() {
     var value = $("#storage input.textHash").val();
     EmbarkJS.Storage.get(value).then(function(content) {
       $("span.ipfsText").html(content);
+      addToLog("#storage", "EmbarkJS.Storage.get('" + value + "').then(function(content) { })");
+    })
+    .catch(function(err) {
+      if(err){
+        console.log("IPFS get Error => " + err.message);
+      }
     });
-    addToLog("#storage", "EmbarkJS.Storage.get('" + value + "').then(function(content) { })");
   });
 
   $("#storage button.uploadFile").click(function() {
@@ -52,8 +88,13 @@ $(document).ready(function() {
     EmbarkJS.Storage.uploadFile(input).then(function(hash) {
       $("span.fileIpfsHash").html(hash);
       $("input.fileIpfsHash").val(hash);
+      addToLog("#storage", "EmbarkJS.Storage.uploadFile($('input[type=file]')).then(function(hash) { })");
+    })
+    .catch(function(err) {
+      if(err){
+        console.log("IPFS uploadFile Error => " + err.message);
+      }
     });
-    addToLog("#storage", "EmbarkJS.Storage.uploadFile($('input[type=file]')).then(function(hash) { })");
   });
 
   $("#storage button.loadIpfsFile").click(function() {
@@ -73,13 +114,21 @@ $(document).ready(function() {
 $(document).ready(function() {
 
   $("#communication .error").hide();
-  //web3.version.getWhisper(function(err, res) {
-  //  if (err) {
-  //    $("#communication .error").show();
-  //  } else {
-  //    EmbarkJS.Messages.setProvider('whisper');
-  //  }
-  //});
+  $("#communication .errorVersion").hide();
+  web3.version.getWhisper(function(err, version) {
+    if (err) {
+      $("#communication .error").show();
+      $("#communication-controls").hide();
+      $("#status-communication").addClass('status-offline');
+    } else if (version >= 5) {
+      $("#communication .errorVersion").show();
+      $("#communication-controls").hide();
+      $("#status-communication").addClass('status-offline');
+    } else {
+      EmbarkJS.Messages.setProvider('whisper');
+      $("#status-communication").addClass('status-online');
+    }
+  });
 
   $("#communication button.listenToChannel").click(function() {
     var channel = $("#communication .listen input.channel").val();
@@ -98,4 +147,3 @@ $(document).ready(function() {
   });
 
 });
-

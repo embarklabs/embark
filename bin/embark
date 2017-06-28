@@ -1,4 +1,4 @@
 #!/usr/bin/env node
-
-var Embark = require('..');
-Embark.process(process.argv);
+var Cmd = require('../lib/cmd');
+var cli = new Cmd();
+cli.process(process.argv);

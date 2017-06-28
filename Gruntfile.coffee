@@ -21,8 +21,16 @@ module.exports = (grunt) ->
     mochaTest:
       test:
         src: ['test/**/*.js']
+
     jshint:
-      all: ['bin/embark', 'lib/**/*.js', 'js/mine.js', 'js/embark.js']
+      all: ['bin/embark', 'lib/**/*.js']
+      options: grunt.file.readJSON('package.json').jshintConfig
+      with_overrides:
+        options:
+          undef: false
+          esversion: 5
+        files:
+          src: ['js/mine.js', 'js/embark.js']
 
   grunt.loadTasks "tasks"
   require('matchdep').filterAll(['grunt-*','!grunt-cli']).forEach(grunt.loadNpmTasks)

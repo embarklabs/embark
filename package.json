@@ -1,6 +1,6 @@
 {
   "name": "embark",
-  "version": "2.4.2",
+  "version": "2.5.0",
   "description": "Embark is a framework that allows you to easily develop and deploy DApps",
   "scripts": {
     "test": "grunt jshint && mocha test/ --no-timeouts"
@@ -26,11 +26,14 @@
     "fs-extra": "^2.0.0",
     "globule": "^1.1.0",
     "merge": "^1.2.0",
+    "promptly": "^2.1.0",
     "serve-static": "^1.11.1",
     "shelljs": "^0.5.0",
-    "solc": "0.4.8",
+    "solc": "0.4.11",
     "toposort": "^1.0.0",
-    "web3": "^0.18.2"
+    "underscore": "^1.8.3",
+    "underscore.string": "^3.3.4",
+    "web3": "^0.19.1"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
@@ -49,6 +52,8 @@
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-coffee": "^1.0.0",
     "grunt-contrib-jshint": "^1.0.0",
     "grunt-mocha-test": "^0.13.2",
     "matchdep": "^1.0.1",
@@ -56,5 +61,19 @@
     "mocha-sinon": "^1.1.4",
     "sinon": "^1.15.4",
     "toposort": "^1.0.0"
+  },
+  "jshintConfig": {
+    "indent": 2,
+    "white": true,
+    "node": true,
+    "undef": true,
+    "-W058": true,
+    "-W014": true,
+    "expr": true,
+    "esversion": 6,
+    "unused": false,
+    "globals": {
+      "node": true
+    }
   }
 }

@@ -1,16 +1,17 @@
 /*globals describe, it*/
-var ContractsManager = require('../lib/contracts/contracts.js');
-var Logger = require('../lib/core/logger.js');
-var assert = require('assert');
-var fs = require('fs');
+let ContractsManager = require('../lib/contracts/contracts.js');
+let Logger = require('../lib/core/logger.js');
+let assert = require('assert');
+let fs = require('fs');
 
-var readFile = function(file) {
+let readFile = function(file) {
   return {filename: file, content: fs.readFileSync(file).toString()};
 };
 
 describe('embark.Contratcs', function() {
+  this.timeout(0);
   describe('simple', function() {
-    var contractsManager = new ContractsManager({
+    let contractsManager = new ContractsManager({
       contractFiles:  [
         readFile('test/contracts/simple_storage.sol'),
         readFile('test/contracts/token.sol')
@@ -40,7 +41,7 @@ describe('embark.Contratcs', function() {
             throw err;
           }
 
-          var contracts = contractsManager.listContracts();
+          let contracts = contractsManager.listContracts();
           assert.equal(contracts.length, 2);
 
           assert.equal(contracts[0].deploy, true);
@@ -69,7 +70,7 @@ describe('embark.Contratcs', function() {
   });
 
   describe('config with contract instances', function() {
-    var contractsManager = new ContractsManager({
+    let contractsManager = new ContractsManager({
       contractFiles:  [
         readFile('test/contracts/simple_storage.sol'),
         readFile('test/contracts/token_storage.sol')
@@ -109,7 +110,7 @@ describe('embark.Contratcs', function() {
             throw err;
           }
 
-          var contracts = contractsManager.listContracts();
+          let contracts = contractsManager.listContracts();
           assert.equal(contracts.length, 4);
 
           assert.equal(contracts[0].className, "MySimpleStorage");
@@ -126,7 +127,7 @@ describe('embark.Contratcs', function() {
           //assert.equal(contracts[3].code, '');
           //assert.equal(contracts[3].runtimeBytecode, '');
 
-          var parentContract = contracts[2];
+          let parentContract = contracts[2];
 
           //MySimpleStorage
           assert.equal(contracts[0].deploy, true);

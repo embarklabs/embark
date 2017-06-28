@@ -10,11 +10,12 @@
   "license": "ISC",
   "homepage": "",
   "devDependencies": {
-    "embark": "../",
+    "embark": "file:../",
     "mocha": "^2.2.5"
   },
   "dependencies": {
     "embark-babel": "^1.0.0",
+    "embark-service": "./extensions/embark-service",
     "ethereumjs-testrpc": "^3.0.3"
   }
 }
