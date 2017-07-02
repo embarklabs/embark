@@ -7,7 +7,7 @@
     "js/embark.js": ["embark.js"],
     "js/abi.js": "abi.js",
     "js/test.js": ["embark.js", "app/js/_vendor/jquery.min.js", "app/js/_vendor/async.min.js", "app/js/test.js"],
-    "js/token.js": ["$Token", "app/js/token_test.js"],
+    "js/mytoken.js": ["$MyToken", "app/js/token_test.js"],
     "index.html": "app/index.html",
     "test.html": "app/test.html",
     "test2.html": "app/test2.html"
