@@ -12,7 +12,8 @@
     "test.html": "app/test.html",
     "test2.html": "app/test2.html",
     "js/myweb3.js": "web3-0.18.js",
-    "js/web3.js": "web3.js"
+    "js/web3.js": "web3.js",
+    "js/all_contracts.js": "$ALL_CONTRACTS"
   },
   "buildDir": "dist/",
   "config": "config/",
