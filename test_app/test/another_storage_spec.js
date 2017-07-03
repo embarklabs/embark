@@ -1,4 +1,4 @@
-describe("AnotherStorage", function() {
+contract("AnotherStorage", function() {
   before(function(done) {
     this.timeout(0);
     var contractsConfig = {
