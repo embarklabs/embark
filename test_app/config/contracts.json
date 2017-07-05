@@ -1,5 +1,17 @@
 {
   "default": {
+    "versions": {
+      "web3.js": "0.19.1",
+      "solc": "0.4.11"
+    },
+    "deployment": {
+      "host": "localhost",
+      "port": 8545
+    },
+    "dappConnection": [
+      "$WEB3",
+      "localhost:8545"
+    ],
     "gas": "auto",
     "contracts": {
       "SimpleStorage": {

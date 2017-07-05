@@ -33,6 +33,7 @@
     "serve-static": "^1.11.1",
     "shelljs": "^0.5.0",
     "solc": "0.4.11",
+    "tar": "^3.1.5",
     "toposort": "^1.0.0",
     "underscore": "^1.8.3",
     "underscore.string": "^3.3.4",

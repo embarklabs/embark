@@ -9,8 +9,7 @@
   "author": "",
   "license": "ISC",
   "homepage": "",
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "dependencies": {
     "embark-babel": "^1.0.0",
     "embark-service": "./extensions/embark-service",
