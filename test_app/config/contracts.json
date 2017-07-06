@@ -11,7 +11,9 @@
     },
     "dappConnection": [
       "$WEB3",
-      "localhost:8545"
+      "http://localhost:8550",
+      "http://localhost:8545",
+      "http://localhost:8550"
     ],
     "gas": "auto",
     "contracts": {
