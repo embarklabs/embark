@@ -7,10 +7,10 @@ let assert = require('assert');
 describe('embark.ABIGenerator', function() {
   this.timeout(0);
   describe('#generateProvider', function() {
-    let generator = new ABIGenerator({blockchainConfig: {rpcHost: 'somehost', rpcPort: '1234'}, contractsManager: {}});
+    let generator = new ABIGenerator({contractsConfig: {"dappConnection": [ "$WEB3", "http://somehost:1234" ] }, contractsManager: {}});
 
     it('should generate code to connect to a provider', function() {
-      var providerCode = "\nvar whenEnvIsLoaded = function(cb) {\n  if (typeof document !== 'undefined' && document !== null) {\n      document.addEventListener('DOMContentLoaded', cb);\n  } else {\n    cb();\n  }\n}\nwhenEnvIsLoaded(function() {\nif (typeof web3 !== 'undefined' && typeof Web3 !== 'undefined') {\n\tweb3 = new Web3(web3.currentProvider);\n} else if (typeof Web3 !== 'undefined') {\n\tweb3 = new Web3(new Web3.providers.HttpProvider(\"http://somehost:1234\"));\n}\nweb3.eth.defaultAccount = web3.eth.accounts[0];\n})"
+      var providerCode = "\nvar whenEnvIsLoaded = function(cb) {\n  if (typeof document !== 'undefined' && document !== null) {\n      document.addEventListener('DOMContentLoaded', cb);\n  } else {\n    cb();\n  }\n}\nwhenEnvIsLoaded(function() {\nif (typeof web3 !== 'undefined' && typeof Web3 !== 'undefined') {\n\tweb3 = new Web3(web3.currentProvider);\n} else if (typeof Web3 !== 'undefined' && !web3.isConnected()) {\n\tweb3 = new Web3(new Web3.providers.HttpProvider(\"http://somehost:1234\"));\n}\nweb3.eth.defaultAccount = web3.eth.accounts[0];\n})";
 
       assert.equal(generator.generateProvider(), providerCode);
     });

@@ -1,11 +1,12 @@
 /*globals describe, it*/
 let ContractsManager = require('../lib/contracts/contracts.js');
 let Logger = require('../lib/core/logger.js');
+let File = require('../lib/core/file.js');
 let assert = require('assert');
 let fs = require('fs');
 
 let readFile = function(file) {
-  return {filename: file, content: fs.readFileSync(file).toString()};
+  return new File({filename: file, type: 'dapp_file', path: file});
 };
 
 describe('embark.Contratcs', function() {
@@ -17,6 +18,19 @@ describe('embark.Contratcs', function() {
         readFile('test/contracts/token.sol')
       ],
       contractsConfig: {
+        "versions": {
+          "web3.js": "0.19.1",
+          "solc": "0.4.11"
+        },
+        "deployment": {
+          "host": "localhost",
+          "port": 8545,
+          "type": "rpc"
+        },
+        "dappConnection": [
+          "$WEB3",
+          "localhost:8545"
+        ],
         "gas": "auto",
         "contracts": {
           "Token": {
@@ -76,6 +90,19 @@ describe('embark.Contratcs', function() {
         readFile('test/contracts/token_storage.sol')
       ],
       contractsConfig: {
+        "versions": {
+          "web3.js": "0.19.1",
+          "solc": "0.4.11"
+        },
+        "deployment": {
+          "host": "localhost",
+          "port": 8545,
+          "type": "rpc"
+        },
+        "dappConnection": [
+          "$WEB3",
+          "localhost:8545"
+        ],
         "gas": "auto",
         "contracts": {
           "TokenStorage": {

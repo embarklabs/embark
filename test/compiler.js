@@ -1,15 +1,16 @@
 /*globals describe, it*/
 let Compiler = require('../lib/contracts/compiler.js');
 let TestLogger = require('../lib/core/test_logger.js');
+let File = require('../lib/core/file.js');
 let assert = require('assert');
 let fs = require('fs');
 
 let readFile = function(file) {
-  return {filename: file, content: fs.readFileSync(file).toString()};
+  return new File({filename: file, type: 'dapp_file', path: file});
 };
 
 describe('embark.Compiler', function() {
-  let compiler = new Compiler({logger: new TestLogger({})});
+  let compiler = new Compiler({logger: new TestLogger({}), solcVersion: '0.4.11'});
 
   describe('#compile_solidity', function() {
     this.timeout(0);
