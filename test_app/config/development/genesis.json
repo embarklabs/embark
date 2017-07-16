@@ -1,5 +1,7 @@
 {
-    "config": {},
+    "config": {
+      "homesteadBlock": 1
+    },
     "nonce": "0x0000000000000042",
     "difficulty": "0x0",
     "alloc": {

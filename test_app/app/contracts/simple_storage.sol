@@ -12,7 +12,7 @@ contract SimpleStorage {
     storedData = x;
   }
 
-  function set2(uint x, uint y) {
+  function set2(uint x, uint unusedGiveWarning) {
     storedData = x;
   }
 
