@@ -1,6 +1,6 @@
 pragma solidity ^0.4.11;
 
-library AMyLib {
+library ZAMyLib {
 
   function add(uint _a, uint _b) returns (uint _c) {
     return _a + _b;
@@ -11,7 +11,7 @@ library AMyLib {
 contract Test {
 
   function testAdd() constant returns (uint _result) {
-    return AMyLib.add(1, 2);
+    return ZAMyLib.add(1, 2);
   }
 
 }
