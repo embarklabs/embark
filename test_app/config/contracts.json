@@ -17,6 +17,9 @@
     ],
     "gas": "auto",
     "contracts": {
+      "Ownable": {
+        "deploy": false
+      },
       "SimpleStorage": {
         "args": [
           100

@@ -1,5 +1,8 @@
 pragma solidity ^0.4.7;
-contract SimpleStorage {
+
+import "ownable.sol";
+
+contract SimpleStorage is Ownable {
   uint public storedData;
 
   function() payable { }
@@ -12,7 +15,7 @@ contract SimpleStorage {
     storedData = x;
   }
 
-  function set2(uint x, uint unusedGiveWarning) {
+  function set2(uint x, uint unusedGiveWarning) onlyOwner {
     storedData = x;
   }
 
