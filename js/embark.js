@@ -313,26 +313,70 @@ EmbarkJS.Storage.IPFS.getUrl = function(hash) {
 
 EmbarkJS.Messages = {};
 
+EmbarkJS.Messages.web3CompatibleWithV5 = function() {
+  var _web3 = new Web3();
+  if (typeof(_web3.version) === "string") {
+    return true;
+  } else {
+    return parseInt(_web3.version.api.split('.')[1], 10) >= 20;
+  }
+};
+
+EmbarkJS.Messages.isNewWeb3 = function() {
+  var _web3 = new Web3();
+  if (typeof(_web3.version) === "string") {
+    return true;
+  } else {
+    return parseInt(_web3.version.api.split('.')[0], 10) >= 1;
+  }
+};
+
+EmbarkJS.Messages.getWhisperVersion = function(cb) {
+  if (this.isNewWeb3()) {
+    this.currentMessages.web3.shh.getVersion(function(err, version) {
+      cb(err, version);
+    });
+  } else {
+    this.currentMessages.web3.version.getWhisper(function(err, res) {
+      cb(err, web3.version.whisper);
+    });
+  }
+};
+
 EmbarkJS.Messages.setProvider = function(provider, options) {
     var self = this;
     var ipfs;
     if (provider === 'whisper') {
         this.currentMessages = EmbarkJS.Messages.Whisper;
         if (typeof variable === 'undefined' && typeof(web3) === 'undefined') {
+            let provider;
             if (options === undefined) {
-                web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+                provider = "localhost:8546";
             } else {
-                web3 = new Web3(new Web3.providers.HttpProvider("http://" + options.server + ':' + options.port));
+                provider = options.server + ':' + options.port;
+            }
+            if (this.isNewWeb3()) {
+              // TODO: add current Provider
+              self.currentMessages.web3 = new Web3(new Web3.providers.WebsocketProvider("ws://" + provider));
+            } else {
+              self.currentMessages.web3 = new Web3(new Web3.providers.HttpProvider("http://" + provider));
             }
         }
-        web3.version.getWhisper(function(err, res) {
+        console.log("getting whisper version");
+        self.getWhisperVersion(function(err, version) {
             if (err) {
                 console.log("whisper not available");
-            } else if (web3.version.whisper >= 5) {
-                console.log("this version of whisper is not supported yet; try a version of geth bellow 1.6.1");
+            } else if (version >= 5) {
+                if (self.web3CompatibleWithV5()) {
+                  self.currentMessages.web3.shh.newSymKey().then((id) => {self.currentMessages.symKeyID = id;});
+                  self.currentMessages.web3.shh.newKeyPair().then((id) => {self.currentMessages.sig = id;});
+                } else {
+                  console.log("this version of whisper is not supported yet; try a version of geth bellow 1.6.1");
+                }
             } else {
-                self.currentMessages.identity = web3.shh.newIdentity();
+                self.currentMessages.identity = self.currentMessages.web3.shh.newIdentity();
             }
+            self.currentMessages.whisperVersion = self.currentMessages.web3.version.whisper;
         });
     } else if (provider === 'orbit') {
         this.currentMessages = EmbarkJS.Messages.Orbit;
@@ -365,7 +409,10 @@ EmbarkJS.Messages.Whisper = {};
 EmbarkJS.Messages.Whisper.sendMessage = function(options) {
     var topics = options.topic || options.topics;
     var data = options.data || options.payload;
-    var identity = options.identity || this.identity || web3.shh.newIdentity();
+    var identity;
+    if (!EmbarkJS.Messages.isNewWeb3()) {
+      identity = options.identity || this.identity || web3.shh.newIdentity();
+    }
     var ttl = options.ttl || 100;
     var priority = options.priority || 1000;
     var _topics;
@@ -378,85 +425,129 @@ EmbarkJS.Messages.Whisper.sendMessage = function(options) {
         throw new Error("missing option: data");
     }
 
-    // do fromAscii to each topics unless it's already a string
-    if (typeof topics === 'string') {
-        _topics = [web3.fromAscii(topics)];
+    if (EmbarkJS.Messages.isNewWeb3()) {
+      topics = this.web3.utils.toHex(topics).slice(0, 10);
     } else {
+      if (typeof topics === 'string') {
+        _topics = [EmbarkJS.Utils.fromAscii(topics)];
+      } else {
         // TODO: replace with es6 + babel;
         for (var i = 0; i < topics.length; i++) {
-            _topics.push(web3.fromAscii(topics[i]));
+          _topics.push(EmbarkJS.Utils.fromAscii(topics[i]));
         }
+      }
+      topics = _topics;
     }
-    topics = _topics;
 
     var payload = JSON.stringify(data);
 
-    var message = {
+    var message;
+    if (EmbarkJS.Messages.isNewWeb3()) {
+       message = {
+        symKeyID: this.symKeyID, // encrypts using the sym key ID
+        sig: this.sig, // signs the message using the keyPair ID
+        ttl: 10,
+        topic: topics,
+        payload: EmbarkJS.Utils.fromAscii('hello'),
+        powTime: 3,
+        powTarget: 0.5
+      };
+   } else {
+      message = {
         from: identity,
         topics: topics,
-        payload: web3.fromAscii(payload),
+        payload: EmbarkJS.Utils.fromAscii(payload),
         ttl: ttl,
         priority: priority
-    };
+      };
+    }
 
-    return web3.shh.post(message, function() {});
+    return this.web3.shh.post(message, function() {});
 };
 
 EmbarkJS.Messages.Whisper.listenTo = function(options) {
-    var topics = options.topic || options.topics;
-    var _topics = [];
+  var topics = options.topic || options.topics;
+  var _topics = [];
 
+  var messageEvents = function() {
+    this.cb = function() {};
+  };
+
+  messageEvents.prototype.then = function(cb) {
+    this.cb = cb;
+  };
+
+  messageEvents.prototype.error = function(err) {
+    return err;
+  };
+
+  messageEvents.prototype.stop = function() {
+    this.filter.stopWatching();
+  };
+
+  if (EmbarkJS.Messages.isNewWeb3()) {
+    topics = [this.web3.utils.toHex(topics).slice(0, 10)];
+  } else {
     if (typeof topics === 'string') {
-        _topics = [topics];
+      _topics = [topics];
     } else {
-        // TODO: replace with es6 + babel;
-        for (var i = 0; i < topics.length; i++) {
-            _topics.push(topics[i]);
-        }
+      // TODO: replace with es6 + babel;
+      for (var i = 0; i < topics.length; i++) {
+        _topics.push(topics[i]);
+      }
     }
     topics = _topics;
+  }
 
-    var filterOptions = {
+  if (EmbarkJS.Messages.isNewWeb3()) {
+    let promise = new messageEvents();
+
+    let filter = this.web3.shh.subscribe("messages", {
+        symKeyID: this.symKeyID,
         topics: topics
-    };
-
-    var messageEvents = function() {
-        this.cb = function() {};
-    };
-
-    messageEvents.prototype.then = function(cb) {
-        this.cb = cb;
-    };
-
-    messageEvents.prototype.error = function(err) {
-        return err;
-    };
-
-    messageEvents.prototype.stop = function() {
-        this.filter.stopWatching();
-    };
-
-    var promise = new messageEvents();
-
-    var filter = web3.shh.filter(filterOptions, function(err, result) {
-        var payload = JSON.parse(web3.toAscii(result.payload));
-        var data;
-        if (err) {
-            promise.error(err);
-        } else {
-            data = {
-                topic: topics,
-                data: payload,
-                from: result.from,
-                time: (new Date(result.sent * 1000))
-            };
-            promise.cb(payload, data, result);
-        }
+    }).on('data', function(result) {
+      var payload = JSON.parse(EmbarkJS.Utils.toAscii(result.payload));
+      var data;
+      data = {
+        topic: result.topic,
+        data: payload,
+        //from: result.from,
+        time: result.timestamp
+      };
+      promise.cb(payload, data, result);
     });
 
     promise.filter = filter;
 
     return promise;
+
+  } else {
+    var filterOptions = {
+      topics: topics
+    };
+
+    let promise = new messageEvents();
+
+    let filter = this.web3.shh.filter(filterOptions, function(err, result) {
+      var payload = JSON.parse(EmbarkJS.Utils.toAscii(result.payload));
+      var data;
+      if (err) {
+        promise.error(err);
+      } else {
+        data = {
+          topic: topics,
+          data: payload,
+          from: result.from,
+          time: (new Date(result.sent * 1000))
+        };
+        promise.cb(payload, data, result);
+      }
+    });
+
+    promise.filter = filter;
+
+    return promise;
+  }
 };
 
 EmbarkJS.Messages.Orbit = {};
@@ -528,6 +619,13 @@ EmbarkJS.Messages.Orbit.listenTo = function(options) {
     });
 
     return promise;
+};
+
+EmbarkJS.Utils = {
+  fromAscii: function(str) {
+    var _web3 = new Web3();
+    return _web3.utils ? _web3.utils.fromAscii(str) : _web3.fromAscii(str);
+  }
 };
 
 module.exports = EmbarkJS;
