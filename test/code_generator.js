@@ -1,13 +1,13 @@
 /*globals describe, it*/
-let ABIGenerator = require('../lib/contracts/abi.js');
+let CodeGenerator = require('../lib/contracts/code_generator.js');
 let assert = require('assert');
 
 // TODO: instead 'eval' the code with a fake web3 object
 // and check the generate code interacts as expected
-describe('embark.ABIGenerator', function() {
+describe('embark.CodeGenerator', function() {
   this.timeout(0);
   describe('#generateProvider', function() {
-    let generator = new ABIGenerator({contractsConfig: {"dappConnection": [ "$WEB3", "http://somehost:1234" ] }, contractsManager: {}});
+    let generator = new CodeGenerator({contractsConfig: {"dappConnection": [ "$WEB3", "http://somehost:1234" ] }, contractsManager: {}});
 
     it('should generate code to connect to a provider', function() {
       var providerCode = "\nvar whenEnvIsLoaded = function(cb) {\n  if (typeof document !== 'undefined' && document !== null) {\n      document.addEventListener('DOMContentLoaded', cb);\n  } else {\n    cb();\n  }\n}\nwhenEnvIsLoaded(function() {\nif (typeof web3 !== 'undefined' && typeof Web3 !== 'undefined') {\n\tweb3 = new Web3(web3.currentProvider);\n} if (typeof Web3 !== 'undefined' && ((typeof web3 === 'undefined') || (typeof web3 !== 'undefined' && !web3.isConnected()))) {\n\tweb3 = new Web3(new Web3.providers.HttpProvider(\"http://somehost:1234\"));\n}\nweb3.eth.defaultAccount = web3.eth.accounts[0];\n})";
@@ -17,7 +17,7 @@ describe('embark.ABIGenerator', function() {
   });
 
   describe('#generateContracts', function() {
-    let generator = new ABIGenerator({blockchainConfig: {}, contractsManager: {
+    let generator = new CodeGenerator({blockchainConfig: {}, contractsManager: {
       contracts: {
         SimpleStorage: {
           abiDefinition: [{"constant":true,"inputs":[],"name":"storedData","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"x","type":"uint256"}],"name":"set","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"retVal","type":"uint256"}],"payable":false,"type":"function"},{"inputs":[{"name":"initialValue","type":"uint256"}],"type":"constructor"}],
