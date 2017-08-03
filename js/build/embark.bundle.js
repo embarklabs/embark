@@ -383,9 +383,6 @@ EmbarkJS.Storage.IPFS.uploadFile = function(inputSelector) {
 };
 
 EmbarkJS.Storage.IPFS.getUrl = function(hash) {
-    //var ipfsHash = web3.toAscii(hash);
-
-    //return 'http://localhost:8080/ipfs/' + hash;
     return (self.getUrl || "http://localhost:8080/ipfs/") + hash;
 };
 
@@ -399,18 +396,16 @@ EmbarkJS.Messages.web3CompatibleWithV5 = function() {
   var _web3 = new Web3();
   if (typeof(_web3.version) === "string") {
     return true;
-  } else {
-    return parseInt(_web3.version.api.split('.')[1], 10) >= 20;
   }
+  return parseInt(_web3.version.api.split('.')[1], 10) >= 20;
 };
 
 EmbarkJS.Messages.isNewWeb3 = function() {
   var _web3 = new Web3();
   if (typeof(_web3.version) === "string") {
     return true;
-  } else {
-    return parseInt(_web3.version.api.split('.')[0], 10) >= 1;
   }
+  return parseInt(_web3.version.api.split('.')[0], 10) >= 1;
 };
 
 EmbarkJS.Messages.getWhisperVersion = function(cb) {
