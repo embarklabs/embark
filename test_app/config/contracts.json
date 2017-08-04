@@ -1,7 +1,7 @@
 {
   "default": {
     "versions": {
-      "web3.js": "1.0.0",
+      "web3.js": "0.20.0",
       "solc": "0.4.11"
     },
     "deployment": {
