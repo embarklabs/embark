@@ -389,7 +389,7 @@ EmbarkJS - Communication
 
 **initialization**
 
-For Whisper:
+For Whisper (note: currently requires geth 1.6.0):
 
 ```Javascript
     EmbarkJS.Messages.setProvider('whisper')
