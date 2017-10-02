@@ -1,4 +1,4 @@
-[![npm](https://img.shields.io/npm/dm/embark.svg)](npmjs.com/package/embark)
+[![npm](https://img.shields.io/npm/dm/embark.svg)](https://npmjs.com/package/embark)
 [![Gitter](https://img.shields.io/gitter/room/iurimatias/embark-framework.svg)](https://gitter.im/iurimatias/embark-framework)
 [![Build
 Status](https://travis-ci.org/iurimatias/embark-framework.svg?branch=develop)](https://travis-ci.org/iurimatias/embark-framework)
