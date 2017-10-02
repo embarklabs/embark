@@ -1,5 +1,5 @@
-[![npm](https://img.shields.io/npm/dm/embark.svg)]()
-[![Gitter](https://img.shields.io/gitter/room/iurimatias/embark-framework.svg)]()
+[![npm](https://img.shields.io/npm/dm/embark.svg)](npmjs.com/package/embark)
+[![Gitter](https://img.shields.io/gitter/room/iurimatias/embark-framework.svg)](https://gitter.im/iurimatias/embark-framework)
 [![Build
 Status](https://travis-ci.org/iurimatias/embark-framework.svg?branch=develop)](https://travis-ci.org/iurimatias/embark-framework)
 [![Code Climate](https://codeclimate.com/github/iurimatias/embark-framework/badges/gpa.svg)](https://codeclimate.com/github/iurimatias/embark-framework)
