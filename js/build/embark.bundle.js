@@ -89,6 +89,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 var EmbarkJS = {};
 
+EmbarkJS.isNewWeb3 = function() {
+  var _web3 = new Web3();
+  if (typeof(_web3.version) === "string") {
+    return true;
+  }
+  return parseInt(_web3.version.api.split('.')[0], 10) >= 1;
+};
+
 EmbarkJS.Contract = function(options) {
     var self = this;
     var i, abiElement;
@@ -98,94 +106,107 @@ EmbarkJS.Contract = function(options) {
     this.code = '0x' + options.code;
     this.web3 = options.web3 || web3;
 
-    var ContractClass = this.web3.eth.contract(this.abi);
+    if (EmbarkJS.isNewWeb3()) {
+      // TODO:
+      // add default **from** address
+      // add gasPrice
+      var ContractClass = new this.web3.eth.Contract(this.abi, this.address);
+      ContractClass.setProvider(this.web3.currentProvider);
 
-    this.eventList = [];
+      return ContractClass;
 
-    if (this.abi) {
+    } else {
+
+
+      var ContractClass = this.web3.eth.contract(this.abi);
+
+      this.eventList = [];
+
+      if (this.abi) {
         for (i = 0; i < this.abi.length; i++) {
-            abiElement = this.abi[i];
-            if (abiElement.type === 'event') {
-                this.eventList.push(abiElement.name);
-            }
+          abiElement = this.abi[i];
+          if (abiElement.type === 'event') {
+            this.eventList.push(abiElement.name);
+          }
         }
-    }
+      }
 
-    var messageEvents = function() {
+      var messageEvents = function() {
         this.cb = function() {};
-    };
+      };
 
-    messageEvents.prototype.then = function(cb) {
+      messageEvents.prototype.then = function(cb) {
         this.cb = cb;
-    };
+      };
 
-    messageEvents.prototype.error = function(err) {
+      messageEvents.prototype.error = function(err) {
         return err;
-    };
+      };
 
-    this._originalContractObject = ContractClass.at(this.address);
-    this._methods = Object.getOwnPropertyNames(this._originalContractObject).filter(function(p) {
+      this._originalContractObject = ContractClass.at(this.address);
+      this._methods = Object.getOwnPropertyNames(this._originalContractObject).filter(function(p) {
         // TODO: check for forbidden properties
         if (self.eventList.indexOf(p) >= 0) {
 
-            self[p] = function() {
-                var promise = new messageEvents();
-                var args = Array.prototype.slice.call(arguments);
-                args.push(function(err, result) {
-                    if (err) {
-                        promise.error(err);
-                    } else {
-                        promise.cb(result);
-                    }
-                });
+          self[p] = function() {
+            var promise = new messageEvents();
+            var args = Array.prototype.slice.call(arguments);
+            args.push(function(err, result) {
+              if (err) {
+                promise.error(err);
+              } else {
+                promise.cb(result);
+              }
+            });
 
-                self._originalContractObject[p].apply(self._originalContractObject[p], args);
-                return promise;
-            };
-            return true;
+            self._originalContractObject[p].apply(self._originalContractObject[p], args);
+            return promise;
+          };
+          return true;
         } else if (typeof self._originalContractObject[p] === 'function') {
-            self[p] = function(_args) {
-                var args = Array.prototype.slice.call(arguments);
-                var fn = self._originalContractObject[p];
-                var props = self.abi.find((x) => x.name == p);
+          self[p] = function(_args) {
+            var args = Array.prototype.slice.call(arguments);
+            var fn = self._originalContractObject[p];
+            var props = self.abi.find((x) => x.name == p);
 
-                var promise = new Promise(function(resolve, reject) {
-                    args.push(function(err, transaction) {
-                        promise.tx = transaction;
-                        if (err) {
-                            return reject(err);
-                        }
+            var promise = new Promise(function(resolve, reject) {
+              args.push(function(err, transaction) {
+                promise.tx = transaction;
+                if (err) {
+                  return reject(err);
+                }
 
-                        var getConfirmation = function() {
-                            self.web3.eth.getTransactionReceipt(transaction, function(err, receipt) {
-                                if (err) {
-                                    return reject(err);
-                                }
+                var getConfirmation = function() {
+                  self.web3.eth.getTransactionReceipt(transaction, function(err, receipt) {
+                    if (err) {
+                      return reject(err);
+                    }
 
-                                if (receipt !== null) {
-                                    return resolve(receipt);
-                                }
+                    if (receipt !== null) {
+                      return resolve(receipt);
+                    }
 
-                                setTimeout(getConfirmation, 1000);
-                            });
-                        };
+                    setTimeout(getConfirmation, 1000);
+                  });
+                };
 
-                        if (typeof(transaction) !== "string" || props.constant) {
-                            resolve(transaction);
-                        } else {
-                            getConfirmation();
-                        }
-                    });
+                if (typeof(transaction) !== "string" || props.constant) {
+                  resolve(transaction);
+                } else {
+                  getConfirmation();
+                }
+              });
 
-                    fn.apply(fn, args);
-                });
+              fn.apply(fn, args);
+            });
 
-                return promise;
-            };
-            return true;
+            return promise;
+          };
+          return true;
         }
         return false;
-    });
+      });
+    }
 };
 
 EmbarkJS.Contract.prototype.deploy = function(args, _options) {
