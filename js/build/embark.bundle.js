@@ -114,7 +114,6 @@ EmbarkJS.Contract = function(options) {
       ContractClass.setProvider(this.web3.currentProvider);
 
       return ContractClass;
-
     } else {
 
 

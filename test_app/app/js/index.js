@@ -11,15 +11,31 @@ $(document).ready(function() {
 
   $("#blockchain button.set").click(function() {
     var value = parseInt($("#blockchain input.text").val(), 10);
-    SimpleStorage.set(value);
-    addToLog("#blockchain", "SimpleStorage.set(" + value + ")");
+
+    // If web3.js 1.0 is being used
+    if (EmbarkJS.isNewWeb3()) {
+      SimpleStorage.methods.set(value).send({from: web3.eth.defaultAccount});
+      addToLog("#blockchain", "SimpleStorage.methods.set(value).send({from: web3.eth.defaultAccount})");
+    } else {
+      SimpleStorage.set(value);
+      addToLog("#blockchain", "SimpleStorage.set(" + value + ")");
+    }
+
   });
 
   $("#blockchain button.get").click(function() {
-    SimpleStorage.get().then(function(value) {
-      $("#blockchain .value").html(value.toNumber());
-    });
-    addToLog("#blockchain", "SimpleStorage.get()");
+    // If web3.js 1.0 is being used
+    if (EmbarkJS.isNewWeb3()) {
+      SimpleStorage.methods.get().call(function(err, value) {
+        $("#blockchain .value").html(value);
+      });
+      addToLog("#blockchain", "SimpleStorage.methods.get(console.log)");
+    } else {
+      SimpleStorage.get().then(function(value) {
+        $("#blockchain .value").html(value.toNumber());
+      });
+      addToLog("#blockchain", "SimpleStorage.get()");
+    }
   });
 
 });
