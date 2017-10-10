@@ -1,3 +1,5 @@
+![Embark]()
+
 [![npm](https://img.shields.io/npm/dm/embark.svg)]()
 [![Gitter](https://img.shields.io/gitter/room/iurimatias/embark-framework.svg)]()
 [![Build
