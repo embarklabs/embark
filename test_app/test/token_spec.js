@@ -28,7 +28,7 @@ describe("Token", function() {
   });
 
   it("not deploy Token", function(done) {
-    assert.equal(Token.address, "undefined");
+    assert.equal(Token.address, "");
     done();
   });
 
