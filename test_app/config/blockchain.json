@@ -12,7 +12,8 @@
     "rpcCorsDomain": "http://localhost:8000",
     "account": {
       "password": "config/development/password"
-    }
+    },
+    "wsOrigins": "http://localhost:8000"
   },
   "testnet": {
     "networkType": "testnet",
