@@ -5,25 +5,25 @@ import "ownable.sol";
 contract SimpleStorage is Ownable {
   uint public storedData;
 
-  function() payable { }
+  function() public payable { }
 
-  function SimpleStorage(uint initialValue) {
+  function SimpleStorage(uint initialValue) public {
     storedData = initialValue;
   }
 
-  function set(uint x) {
+  function set(uint x) public {
     storedData = x;
   }
 
-  function set2(uint x, uint unusedGiveWarning) onlyOwner {
+  function set2(uint x, uint unusedGiveWarning) public onlyOwner {
     storedData = x;
   }
 
-  function get() constant returns (uint retVal) {
+  function get() public view returns (uint retVal) {
     return storedData;
   }
 
-  function getS() constant returns (string d) {
+  function getS() public pure returns (string d) {
     return "hello";
   }
 

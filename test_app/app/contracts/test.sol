@@ -2,7 +2,7 @@ pragma solidity ^0.4.11;
 
 library ZAMyLib {
 
-  function add(uint _a, uint _b) returns (uint _c) {
+  function add(uint _a, uint _b) public pure returns (uint _c) {
     return _a + _b;
   }
 
@@ -10,7 +10,7 @@ library ZAMyLib {
 
 contract Test {
 
-  function testAdd() constant returns (uint _result) {
+  function testAdd() public pure returns (uint _result) {
     return ZAMyLib.add(1, 2);
   }
 
