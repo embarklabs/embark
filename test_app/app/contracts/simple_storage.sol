@@ -1,4 +1,4 @@
-pragma solidity ^0.4.7;
+pragma solidity ^0.4.18;
 
 import "ownable.sol";
 
