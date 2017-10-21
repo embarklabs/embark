@@ -43,9 +43,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -100,6 +97,7 @@ EmbarkJS.isNewWeb3 = function() {
 EmbarkJS.Contract = function(options) {
     var self = this;
     var i, abiElement;
+    var ContractClass;
 
     this.abi = options.abi;
     this.address = options.address;
@@ -110,14 +108,12 @@ EmbarkJS.Contract = function(options) {
       // TODO:
       // add default **from** address
       // add gasPrice
-      var ContractClass = new this.web3.eth.Contract(this.abi, this.address);
+      ContractClass = new this.web3.eth.Contract(this.abi, this.address);
       ContractClass.setProvider(this.web3.currentProvider);
 
       return ContractClass;
     } else {
-
-
-      var ContractClass = this.web3.eth.contract(this.abi);
+      ContractClass = this.web3.eth.contract(this.abi);
 
       this.eventList = [];
 
@@ -444,7 +440,7 @@ EmbarkJS.Messages.setProvider = function(provider, options) {
     var self = this;
     var ipfs;
     if (provider === 'whisper') {
-        this.providerName = 'whisper'
+        this.providerName = 'whisper';
         this.currentMessages = EmbarkJS.Messages.Whisper;
         let provider;
         if (options === undefined) {
@@ -473,7 +469,7 @@ EmbarkJS.Messages.setProvider = function(provider, options) {
             self.currentMessages.whisperVersion = self.currentMessages.web3.version.whisper;
         });
     } else if (provider === 'orbit') {
-        this.providerName = 'orbit'
+        this.providerName = 'orbit';
         this.currentMessages = EmbarkJS.Messages.Orbit;
         if (options === undefined) {
             ipfs = HaadIpfsApi('localhost', '5001');
@@ -502,11 +498,12 @@ EmbarkJS.Messages.listenTo = function(options) {
 EmbarkJS.Messages.Whisper = {};
 
 EmbarkJS.Messages.Whisper.sendMessage = function(options) {
+  var topics, data, ttl, priority, payload;
   if (EmbarkJS.Messages.isNewWeb3()) {
-    var topics = options.topic || options.topics;
-    var data = options.data || options.payload;
-    var ttl = options.ttl || 100;
-    var priority = options.priority || 1000;
+    topics = options.topic || options.topics;
+    data = options.data || options.payload;
+    ttl = options.ttl || 100;
+    priority = options.priority || 1000;
     var powTime = options.powTime || 3;
     var powTarget = options.powTarget || 0.5;
 
@@ -520,7 +517,7 @@ EmbarkJS.Messages.Whisper.sendMessage = function(options) {
 
     topics = this.web3.utils.toHex(topics).slice(0, 10);
 
-    var payload = JSON.stringify(data);
+    payload = JSON.stringify(data);
 
     let message = {
       symKeyID: this.symKeyID, // encrypts using the sym key ID
@@ -534,11 +531,11 @@ EmbarkJS.Messages.Whisper.sendMessage = function(options) {
 
     this.web3.shh.post(message, function() { });
   } else {
-    var topics = options.topic || options.topics;
-    var data = options.data || options.payload;
+    topics = options.topic || options.topics;
+    data = options.data || options.payload;
+    ttl = options.ttl || 100;
+    priority = options.priority || 1000;
     var identity = options.identity || this.identity || web3.shh.newIdentity();
-    var ttl = options.ttl || 100;
-    var priority = options.priority || 1000;
     var _topics;
 
     if (topics === undefined) {
@@ -556,7 +553,7 @@ EmbarkJS.Messages.Whisper.sendMessage = function(options) {
     }
     topics = _topics;
 
-    var payload = JSON.stringify(data);
+    payload = JSON.stringify(data);
 
     var message;
     message = {
@@ -567,13 +564,14 @@ EmbarkJS.Messages.Whisper.sendMessage = function(options) {
       priority: priority
     };
 
-    return EmbarkJS.Messages.currentMessages.web3.shh.post(message, function() { console.log("message sent") });
+    return EmbarkJS.Messages.currentMessages.web3.shh.post(message, function() { });
   }
 };
 
 EmbarkJS.Messages.Whisper.listenTo = function(options) {
+  var topics, _topics, messageEvents;
   if (EmbarkJS.Messages.isNewWeb3()) {
-    var messageEvents = function() {
+    messageEvents = function() {
       this.cb = function() {};
     };
 
@@ -589,8 +587,8 @@ EmbarkJS.Messages.Whisper.listenTo = function(options) {
       this.filter.stopWatching();
     };
 
-    var topics = options.topic || options.topics;
-    var _topics = [];
+    topics = options.topic || options.topics;
+    _topics = [];
 
     let promise = new messageEvents();
 
@@ -621,10 +619,10 @@ EmbarkJS.Messages.Whisper.listenTo = function(options) {
 
     return promise;
   } else {
-    var topics = options.topic || options.topics;
-    var _topics = [];
+    topics = options.topic || options.topics;
+    _topics = [];
 
-    var messageEvents = function() {
+    messageEvents = function() {
       this.cb = function() {};
     };
 
@@ -673,7 +671,7 @@ EmbarkJS.Messages.Whisper.listenTo = function(options) {
 
     return promise;
   }
-}
+};
 
 EmbarkJS.Messages.Orbit = {};
 
