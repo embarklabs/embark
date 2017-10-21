@@ -12,7 +12,6 @@
   "devDependencies": {},
   "dependencies": {
     "embark-babel": "^1.0.0",
-    "embark-service": "./extensions/embark-service",
-    "ethereumjs-testrpc": "^3.9.2"
+    "embark-service": "./extensions/embark-service"
   }
 }
