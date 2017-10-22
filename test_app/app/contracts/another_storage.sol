@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.11;
 contract AnotherStorage {
   address public simpleStorageAddress;
   address simpleStorageAddress2;
