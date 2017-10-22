@@ -55,7 +55,7 @@ Table of Contents
 
 Installation
 ======
-Requirements: geth (1.6.5 or higher recommended, 1.6.0 or lower for whisper support), node (6.9.1 or higher is recommended) and npm
+Requirements: geth (1.6.5 or higher recommended, 1.6.0 or lower for whisper v1 support; whisper v5 support coming soon), node (6.9.1 or higher is recommended) and npm
 Optional: testrpc (3.0 or higher) if using the simulator or the test functionality.
 Further: depending on the dapp stack you choose: [IPFS](https://ipfs.io/)
 
