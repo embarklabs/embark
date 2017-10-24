@@ -1,7 +1,25 @@
 {
   "default": {
+    "versions": {
+      "web3.js": "1.0.0-beta",
+      "solc": "0.4.17"
+    },
+    "deployment": {
+      "host": "localhost",
+      "port": 8545,
+      "type": "rpc"
+    },
+    "dappConnection": [
+      "$WEB3",
+      "http://localhost:8550",
+      "http://localhost:8545",
+      "http://localhost:8550"
+    ],
     "gas": "auto",
     "contracts": {
+      "Ownable": {
+        "deploy": false
+      },
       "SimpleStorage": {
         "args": [
           100
@@ -24,7 +42,7 @@
         "args": [200]
       },
       "AlreadyDeployedToken": {
-        "address": "0x123",
+        "address": "0xece374063fe5cc7efbaca0a498477cada94e5ad6",
         "instanceOf": "Token"
       }
     }

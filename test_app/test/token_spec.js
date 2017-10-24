@@ -1,6 +1,3 @@
-var assert = require('assert');
-var EmbarkSpec = require('embark/lib/core/test.js');
-
 describe("Token", function() {
   before(function(done) {
     this.timeout(0);
@@ -31,7 +28,7 @@ describe("Token", function() {
   });
 
   it("not deploy Token", function(done) {
-    assert.equal(Token.address, "undefined");
+    assert.equal(Token.address, "");
     done();
   });
 

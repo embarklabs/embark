@@ -1,9 +1,9 @@
 {
   "name": "embark",
-  "version": "2.4.3",
+  "version": "2.6.0",
   "description": "Embark is a framework that allows you to easily develop and deploy DApps",
   "scripts": {
-    "test": "grunt jshint && mocha test/ --no-timeouts",
+    "test": "grunt jshint && mocha test/ --no-timeouts && cd test_app/ && npm install && ../bin/embark test",
     "prepare": "webpack"
   },
   "bin": {
@@ -23,20 +23,25 @@
     "chokidar": "^1.6.0",
     "colors": "^1.1.2",
     "commander": "^2.8.1",
+    "ejs": "^2.5.7",
+    "ethereumjs-testrpc": "3.9.2",
     "finalhandler": "^0.5.0",
+    "follow-redirects": "^1.2.4",
     "fs-extra": "^2.0.0",
     "globule": "^1.1.0",
     "ipfs-api": "^14.0.3",
     "merge": "^1.2.0",
+    "mocha": "^2.2.5",
     "orbit-db": "^0.17.3",
     "promptly": "^2.1.0",
     "serve-static": "^1.11.1",
     "shelljs": "^0.5.0",
-    "solc": "0.4.11",
+    "solc": "0.4.17",
+    "tar": "^3.1.5",
     "toposort": "^1.0.0",
     "underscore": "^1.8.3",
     "underscore.string": "^3.3.4",
-    "web3": "^0.18.2"
+    "web3": "^0.19.1"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],

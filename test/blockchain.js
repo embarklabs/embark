@@ -30,7 +30,11 @@ describe('embark.Blockchain', function () {
           vmdebug: false,
           whisper: true,
           account: {},
-          bootnodes: ""
+          bootnodes: "",
+          wsApi: [ "eth", "web3", "net", "shh" ],
+          wsHost: "localhost",
+          wsOrigins: false,
+          wsPort: 8546
         };
         let blockchain = new Blockchain(config, 'geth');
 
@@ -59,7 +63,11 @@ describe('embark.Blockchain', function () {
           vmdebug: false,
           whisper: false,
           account: {},
-          bootnodes: ""
+          bootnodes: "",
+          wsApi: [ "eth", "web3", "net", "shh" ],
+          wsHost: "localhost",
+          wsOrigins: false,
+          wsPort: 8546
         };
         let blockchain = new Blockchain(config, 'geth');
 

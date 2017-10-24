@@ -11,7 +11,7 @@ methods in EmbarkJS contracts will be converted to promises.
 .. code:: javascript
 
       var myContract = new EmbarkJS.Contract({abi: abiObject, address: "0x123"});
-      myContract.get().then(function(value) { console.log("value is " + value.toNumber) });
+      myContract.get().then(function(value) { console.log("value is " + value.toNumber()) });
 
 **deployment**
 

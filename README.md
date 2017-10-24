@@ -1,5 +1,7 @@
-[![npm](https://img.shields.io/npm/dm/embark.svg)]()
-[![Gitter](https://img.shields.io/gitter/room/iurimatias/embark-framework.svg)]()
+![Embark](https://github.com/iurimatias/embark-framework/raw/develop/logo.png)
+
+[![npm](https://img.shields.io/npm/dm/embark.svg)](https://npmjs.com/package/embark)
+[![Gitter](https://img.shields.io/gitter/room/iurimatias/embark-framework.svg)](https://gitter.im/iurimatias/embark-framework)
 [![Build
 Status](https://travis-ci.org/iurimatias/embark-framework.svg?branch=develop)](https://travis-ci.org/iurimatias/embark-framework)
 [![Code Climate](https://codeclimate.com/github/iurimatias/embark-framework/badges/gpa.svg)](https://codeclimate.com/github/iurimatias/embark-framework)
@@ -55,7 +57,7 @@ Table of Contents
 
 Installation
 ======
-Requirements: geth (1.5.8 or higher), node (6.9.1 or higher is recommended) and npm
+Requirements: geth (1.6.5 or higher recommended, 1.6.0 or lower for whisper v1 support; whisper v5 support coming soon), node (6.9.1 or higher is recommended) and npm
 Optional: testrpc (3.0 or higher) if using the simulator or the test functionality.
 Further: depending on the dapp stack you choose: [IPFS](https://ipfs.io/)
 
@@ -389,7 +391,7 @@ EmbarkJS - Communication
 
 **initialization**
 
-For Whisper:
+For Whisper (note: currently requires geth 1.6.0):
 
 ```Javascript
     EmbarkJS.Messages.setProvider('whisper')
@@ -549,4 +551,4 @@ For more information on how to develop your own plugin, please see the [plugin d
 Donations
 ======
 
-If you like Embark, please consider donating to 0x8811FdF0F988f0CD1B7E9DE252ABfA5b18c1cDb1
+If you like Embark, please consider donating to 0xFA239D14c7117C3D2370B2a4c4238534391fadd9

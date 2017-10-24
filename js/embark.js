@@ -7,103 +7,122 @@
 
 var EmbarkJS = {};
 
+EmbarkJS.isNewWeb3 = function() {
+  var _web3 = new Web3();
+  if (typeof(_web3.version) === "string") {
+    return true;
+  }
+  return parseInt(_web3.version.api.split('.')[0], 10) >= 1;
+};
+
 EmbarkJS.Contract = function(options) {
     var self = this;
     var i, abiElement;
+    var ContractClass;
 
     this.abi = options.abi;
     this.address = options.address;
     this.code = '0x' + options.code;
     this.web3 = options.web3 || web3;
 
-    var ContractClass = this.web3.eth.contract(this.abi);
+    if (EmbarkJS.isNewWeb3()) {
+      // TODO:
+      // add default **from** address
+      // add gasPrice
+      ContractClass = new this.web3.eth.Contract(this.abi, this.address);
+      ContractClass.setProvider(this.web3.currentProvider);
 
-    this.eventList = [];
+      return ContractClass;
+    } else {
+      ContractClass = this.web3.eth.contract(this.abi);
 
-    if (this.abi) {
+      this.eventList = [];
+
+      if (this.abi) {
         for (i = 0; i < this.abi.length; i++) {
-            abiElement = this.abi[i];
-            if (abiElement.type === 'event') {
-                this.eventList.push(abiElement.name);
-            }
+          abiElement = this.abi[i];
+          if (abiElement.type === 'event') {
+            this.eventList.push(abiElement.name);
+          }
         }
-    }
+      }
 
-    var messageEvents = function() {
+      var messageEvents = function() {
         this.cb = function() {};
-    };
+      };
 
-    messageEvents.prototype.then = function(cb) {
+      messageEvents.prototype.then = function(cb) {
         this.cb = cb;
-    };
+      };
 
-    messageEvents.prototype.error = function(err) {
+      messageEvents.prototype.error = function(err) {
         return err;
-    };
+      };
 
-    this._originalContractObject = ContractClass.at(this.address);
-    this._methods = Object.getOwnPropertyNames(this._originalContractObject).filter(function(p) {
+      this._originalContractObject = ContractClass.at(this.address);
+      this._methods = Object.getOwnPropertyNames(this._originalContractObject).filter(function(p) {
         // TODO: check for forbidden properties
         if (self.eventList.indexOf(p) >= 0) {
 
-            self[p] = function() {
-                var promise = new messageEvents();
-                var args = Array.prototype.slice.call(arguments);
-                args.push(function(err, result) {
-                    if (err) {
-                        promise.error(err);
-                    } else {
-                        promise.cb(result);
-                    }
-                });
+          self[p] = function() {
+            var promise = new messageEvents();
+            var args = Array.prototype.slice.call(arguments);
+            args.push(function(err, result) {
+              if (err) {
+                promise.error(err);
+              } else {
+                promise.cb(result);
+              }
+            });
 
-                self._originalContractObject[p].apply(self._originalContractObject[p], args);
-                return promise;
-            };
-            return true;
+            self._originalContractObject[p].apply(self._originalContractObject[p], args);
+            return promise;
+          };
+          return true;
         } else if (typeof self._originalContractObject[p] === 'function') {
-            self[p] = function(_args) {
-                var args = Array.prototype.slice.call(arguments);
-                var fn = self._originalContractObject[p];
-                var props = self.abi.find((x) => x.name == p);
+          self[p] = function(_args) {
+            var args = Array.prototype.slice.call(arguments);
+            var fn = self._originalContractObject[p];
+            var props = self.abi.find((x) => x.name == p);
 
-                var promise = new Promise(function(resolve, reject) {
-                    args.push(function(err, transaction) {
-                        promise.tx = transaction;
-                        if (err) {
-                            return reject(err);
-                        }
+            var promise = new Promise(function(resolve, reject) {
+              args.push(function(err, transaction) {
+                promise.tx = transaction;
+                if (err) {
+                  return reject(err);
+                }
 
-                        var getConfirmation = function() {
-                            self.web3.eth.getTransactionReceipt(transaction, function(err, receipt) {
-                                if (err) {
-                                    return reject(err);
-                                }
+                var getConfirmation = function() {
+                  self.web3.eth.getTransactionReceipt(transaction, function(err, receipt) {
+                    if (err) {
+                      return reject(err);
+                    }
 
-                                if (receipt !== null) {
-                                    return resolve(receipt);
-                                }
+                    if (receipt !== null) {
+                      return resolve(receipt);
+                    }
 
-                                setTimeout(getConfirmation, 1000);
-                            });
-                        };
+                    setTimeout(getConfirmation, 1000);
+                  });
+                };
 
-                        if (typeof(transaction) !== "string" || props.constant) {
-                            resolve(transaction);
-                        } else {
-                            getConfirmation();
-                        }
-                    });
+                if (typeof(transaction) !== "string" || props.constant) {
+                  resolve(transaction);
+                } else {
+                  getConfirmation();
+                }
+              });
 
-                    fn.apply(fn, args);
-                });
+              fn.apply(fn, args);
+            });
 
-                return promise;
-            };
-            return true;
+            return promise;
+          };
+          return true;
         }
         return false;
-    });
+      });
+    }
 };
 
 EmbarkJS.Contract.prototype.deploy = function(args, _options) {
@@ -208,8 +227,10 @@ EmbarkJS.Storage.setProvider = function(provider, options) {
             try {
                 if (options === undefined) {
                     self.ipfsConnection = IpfsApi('localhost', '5001');
+                    self.getUrl = "http://localhost:8080/ipfs/";
                 } else {
                     self.ipfsConnection = IpfsApi(options.server, options.port);
+                    self.getUrl = options.getUrl || "http://localhost:8080/ipfs/";
                 }
                 resolve(self);
             } catch (err) {
@@ -299,9 +320,7 @@ EmbarkJS.Storage.IPFS.uploadFile = function(inputSelector) {
 };
 
 EmbarkJS.Storage.IPFS.getUrl = function(hash) {
-    //var ipfsHash = web3.toAscii(hash);
-
-    return 'http://localhost:8080/ipfs/' + hash;
+    return (self.getUrl || "http://localhost:8080/ipfs/") + hash;
 };
 
 //=========================================================
@@ -310,34 +329,80 @@ EmbarkJS.Storage.IPFS.getUrl = function(hash) {
 
 EmbarkJS.Messages = {};
 
+EmbarkJS.Messages.web3CompatibleWithV5 = function() {
+  var _web3 = new Web3();
+  if (typeof(_web3.version) === "string") {
+    return true;
+  }
+  return parseInt(_web3.version.api.split('.')[1], 10) >= 20;
+};
+
+EmbarkJS.Messages.isNewWeb3 = function() {
+  var _web3 = new Web3();
+  if (typeof(_web3.version) === "string") {
+    return true;
+  }
+  return parseInt(_web3.version.api.split('.')[0], 10) >= 1;
+};
+
+EmbarkJS.Messages.getWhisperVersion = function(cb) {
+  if (this.isNewWeb3()) {
+    this.currentMessages.web3.shh.getVersion(function(err, version) {
+      cb(err, version);
+    });
+  } else {
+    this.currentMessages.web3.version.getWhisper(function(err, res) {
+      cb(err, web3.version.whisper);
+    });
+  }
+};
+
 EmbarkJS.Messages.setProvider = function(provider, options) {
     var self = this;
     var ipfs;
     if (provider === 'whisper') {
+        this.providerName = 'whisper';
         this.currentMessages = EmbarkJS.Messages.Whisper;
-        if (typeof variable === 'undefined') {
-            if (options === undefined) {
-                web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-            } else {
-                web3 = new Web3(new Web3.providers.HttpProvider("http://" + options.server + ':' + options.port));
-            }
+        let provider;
+        if (options === undefined) {
+            provider = "localhost:8546";
+        } else {
+            provider = options.server + ':' + options.port;
         }
-        web3.version.getWhisper(function(err, res) {
+        if (this.isNewWeb3()) {
+          self.currentMessages.web3 = new Web3(new Web3.providers.WebsocketProvider("ws://" + provider));
+        } else {
+          self.currentMessages.web3 = new Web3(new Web3.providers.HttpProvider("http://" + provider));
+        }
+        self.getWhisperVersion(function(err, version) {
             if (err) {
                 console.log("whisper not available");
+            } else if (version >= 5) {
+                if (self.web3CompatibleWithV5()) {
+                  self.currentMessages.web3.shh.newSymKey().then((id) => {self.currentMessages.symKeyID = id;});
+                  self.currentMessages.web3.shh.newKeyPair().then((id) => {self.currentMessages.sig = id;});
+                } else {
+                  console.log("this version of whisper in this node");
+                }
             } else {
-                self.currentMessages.identity = web3.shh.newIdentity();
+                self.currentMessages.identity = self.currentMessages.web3.shh.newIdentity();
             }
+            self.currentMessages.whisperVersion = self.currentMessages.web3.version.whisper;
         });
     } else if (provider === 'orbit') {
+        this.providerName = 'orbit';
         this.currentMessages = EmbarkJS.Messages.Orbit;
         if (options === undefined) {
             ipfs = HaadIpfsApi('localhost', '5001');
         } else {
-            ipfs = HaadIpfsApi(options.server, options.port);
+            ipfs = HaadIpfsApi(options.host, options.port);
         }
         this.currentMessages.orbit = new Orbit(ipfs);
-        this.currentMessages.orbit.connect(web3.eth.accounts[0]);
+        if (typeof(web3) === "undefined") {
+          this.currentMessages.orbit.connect(Math.random().toString(36).substring(2));
+        } else {
+          this.currentMessages.orbit.connect(web3.eth.accounts[0]);
+        }
     } else {
         throw Error('Unknown message provider');
     }
@@ -354,100 +419,179 @@ EmbarkJS.Messages.listenTo = function(options) {
 EmbarkJS.Messages.Whisper = {};
 
 EmbarkJS.Messages.Whisper.sendMessage = function(options) {
-    var topics = options.topic || options.topics;
-    var data = options.data || options.payload;
-    var identity = options.identity || this.identity || web3.shh.newIdentity();
-    var ttl = options.ttl || 100;
-    var priority = options.priority || 1000;
-    var _topics;
+  var topics, data, ttl, priority, payload;
+  if (EmbarkJS.Messages.isNewWeb3()) {
+    topics = options.topic || options.topics;
+    data = options.data || options.payload;
+    ttl = options.ttl || 100;
+    priority = options.priority || 1000;
+    var powTime = options.powTime || 3;
+    var powTarget = options.powTarget || 0.5;
 
     if (topics === undefined) {
-        throw new Error("missing option: topic");
+      throw new Error("missing option: topic");
     }
 
     if (data === undefined) {
-        throw new Error("missing option: data");
+      throw new Error("missing option: data");
     }
 
-    // do fromAscii to each topics unless it's already a string
+    topics = this.web3.utils.toHex(topics).slice(0, 10);
+
+    payload = JSON.stringify(data);
+
+    let message = {
+      symKeyID: this.symKeyID, // encrypts using the sym key ID
+      sig: this.sig, // signs the message using the keyPair ID
+      ttl: ttl,
+      topic: topics,
+      payload: EmbarkJS.Utils.fromAscii(payload),
+      powTime: powTime,
+      powTarget: powTarget
+    };
+
+    this.web3.shh.post(message, function() { });
+  } else {
+    topics = options.topic || options.topics;
+    data = options.data || options.payload;
+    ttl = options.ttl || 100;
+    priority = options.priority || 1000;
+    var identity = options.identity || this.identity || web3.shh.newIdentity();
+    var _topics;
+
+    if (topics === undefined) {
+      throw new Error("missing option: topic");
+    }
+
+    if (data === undefined) {
+      throw new Error("missing option: data");
+    }
+
     if (typeof topics === 'string') {
-        _topics = [web3.fromAscii(topics)];
+      _topics = [EmbarkJS.Utils.fromAscii(topics)];
     } else {
-        // TODO: replace with es6 + babel;
-        for (var i = 0; i < topics.length; i++) {
-            _topics.push(web3.fromAscii(topics[i]));
-        }
+      _topics = topics.map((t) => EmbarkJS.Utils.fromAscii(t));
     }
     topics = _topics;
 
-    var payload = JSON.stringify(data);
+    payload = JSON.stringify(data);
 
-    var message = {
-        from: identity,
-        topics: topics,
-        payload: web3.fromAscii(payload),
-        ttl: ttl,
-        priority: priority
+    var message;
+    message = {
+      from: identity,
+      topics: topics,
+      payload: EmbarkJS.Utils.fromAscii(payload),
+      ttl: ttl,
+      priority: priority
     };
 
-    return web3.shh.post(message, function() {});
+    return EmbarkJS.Messages.currentMessages.web3.shh.post(message, function() { });
+  }
 };
 
 EmbarkJS.Messages.Whisper.listenTo = function(options) {
-    var topics = options.topic || options.topics;
-    var _topics = [];
-
-    if (typeof topics === 'string') {
-        _topics = [topics];
-    } else {
-        // TODO: replace with es6 + babel;
-        for (var i = 0; i < topics.length; i++) {
-            _topics.push(topics[i]);
-        }
-    }
-    topics = _topics;
-
-    var filterOptions = {
-        topics: topics
-    };
-
-    var messageEvents = function() {
-        this.cb = function() {};
+  var topics, _topics, messageEvents;
+  if (EmbarkJS.Messages.isNewWeb3()) {
+    messageEvents = function() {
+      this.cb = function() {};
     };
 
     messageEvents.prototype.then = function(cb) {
-        this.cb = cb;
+      this.cb = cb;
     };
 
     messageEvents.prototype.error = function(err) {
-        return err;
+      return err;
     };
 
     messageEvents.prototype.stop = function() {
-        this.filter.stopWatching();
+      this.filter.stopWatching();
     };
 
-    var promise = new messageEvents();
+    topics = options.topic || options.topics;
+    _topics = [];
 
-    var filter = web3.shh.filter(filterOptions, function(err, result) {
-        var payload = JSON.parse(web3.toAscii(result.payload));
-        var data;
-        if (err) {
-            promise.error(err);
-        } else {
-            data = {
-                topic: topics,
-                data: payload,
-                from: result.from,
-                time: (new Date(result.sent * 1000))
-            };
-            promise.cb(payload, data, result);
-        }
+    let promise = new messageEvents();
+
+    // listenTo
+    if (typeof topics === 'string') {
+      topics = [this.web3.utils.toHex(topics).slice(0, 10)];
+    } else {
+      topics = topics.map((t) => this.web3.utils.toHex(t).slice(0, 10));
+    }
+
+    let filter = this.web3.shh.subscribe("messages", {
+      symKeyID: this.symKeyID,
+      topics: topics
+    }).on('data', function(result) {
+      var payload = JSON.parse(EmbarkJS.Utils.toAscii(result.payload));
+      var data;
+      data = {
+        topic: result.topic,
+        data: payload,
+        //from: result.from,
+        time: result.timestamp
+      };
+
+      promise.cb(payload, data, result);
     });
 
     promise.filter = filter;
 
     return promise;
+  } else {
+    topics = options.topic || options.topics;
+    _topics = [];
+
+    messageEvents = function() {
+      this.cb = function() {};
+    };
+
+    messageEvents.prototype.then = function(cb) {
+      this.cb = cb;
+    };
+
+    messageEvents.prototype.error = function(err) {
+      return err;
+    };
+
+    messageEvents.prototype.stop = function() {
+      this.filter.stopWatching();
+    };
+
+    if (typeof topics === 'string') {
+      _topics = [topics];
+    } else {
+      _topics = topics.map((t) => EmbarkJS.Utils.fromAscii(t));
+    }
+    topics = _topics;
+
+    var filterOptions = {
+      topics: topics
+    };
+
+    let promise = new messageEvents();
+
+    let filter = this.web3.shh.filter(filterOptions, function(err, result) {
+      var payload = JSON.parse(EmbarkJS.Utils.toAscii(result.payload));
+      var data;
+      if (err) {
+        promise.error(err);
+      } else {
+        data = {
+          topic: topics,
+          data: payload,
+          from: result.from,
+          time: (new Date(result.sent * 1000))
+        };
+        promise.cb(payload, data, result);
+      }
+    });
+
+    promise.filter = filter;
+
+    return promise;
+  }
 };
 
 EmbarkJS.Messages.Orbit = {};
@@ -519,6 +663,17 @@ EmbarkJS.Messages.Orbit.listenTo = function(options) {
     });
 
     return promise;
+};
+
+EmbarkJS.Utils = {
+  fromAscii: function(str) {
+    var _web3 = new Web3();
+    return _web3.utils ? _web3.utils.fromAscii(str) : _web3.fromAscii(str);
+  },
+  toAscii: function(str) {
+    var _web3 = new Web3();
+    return _web3.utils.toAscii(str);
+  }
 };
 
 module.exports = EmbarkJS;

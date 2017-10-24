@@ -1,6 +1,3 @@
-var assert = require('assert');
-var EmbarkSpec = require('embark/lib/core/test.js');
-
 describe("SimpleStorage", function() {
   before(function(done) {
     this.timeout(0);
