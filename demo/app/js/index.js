@@ -11,15 +11,31 @@ $(document).ready(function() {
 
   $("#blockchain button.set").click(function() {
     var value = parseInt($("#blockchain input.text").val(), 10);
-    SimpleStorage.set(value);
-    addToLog("#blockchain", "SimpleStorage.set(" + value + ")");
+
+    // If web3.js 1.0 is being used
+    if (EmbarkJS.isNewWeb3()) {
+      SimpleStorage.methods.set(value).send({from: web3.eth.defaultAccount});
+      addToLog("#blockchain", "SimpleStorage.methods.set(value).send({from: web3.eth.defaultAccount})");
+    } else {
+      SimpleStorage.set(value);
+      addToLog("#blockchain", "SimpleStorage.set(" + value + ")");
+    }
+
   });
 
   $("#blockchain button.get").click(function() {
-    SimpleStorage.get().then(function(value) {
-      $("#blockchain .value").html(value.toNumber());
-    });
-    addToLog("#blockchain", "SimpleStorage.get()");
+    // If web3.js 1.0 is being used
+    if (EmbarkJS.isNewWeb3()) {
+      SimpleStorage.methods.get().call(function(err, value) {
+        $("#blockchain .value").html(value);
+      });
+      addToLog("#blockchain", "SimpleStorage.methods.get(console.log)");
+    } else {
+      SimpleStorage.get().then(function(value) {
+        $("#blockchain .value").html(value.toNumber());
+      });
+      addToLog("#blockchain", "SimpleStorage.get()");
+    }
   });
 
 });
@@ -32,28 +48,18 @@ $(document).ready(function() {
   //EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'});
 
   $("#storage .error").hide();
-  EmbarkJS.Storage.setProvider('ipfs')
+  EmbarkJS.Storage.ipfsConnection.ping()
     .then(function(){
-      console.log('Provider set to IPFS');
-      EmbarkJS.Storage.ipfsConnection.ping()
-        .then(function(){
-            $("#status-storage").addClass('status-online');
-            $("#storage-controls").show();
-        })
-        .catch(function(err) {
-          if(err){
-            console.log("IPFS Connection Error => " + err.message);
-            $("#storage .error").show();
-            $("#status-storage").addClass('status-offline');
-            $("#storage-controls").hide();
-          }
-        });
+        $("#status-storage").addClass('status-online');
+        $("#storage-controls").show();
     })
-    .catch(function(err){
-      console.log('Failed to set IPFS as Provider:', err.message);
-      $("#storage .error").show();
-      $("#status-storage").addClass('status-offline');
-      $("#storage-controls").hide();
+    .catch(function(err) {
+      if(err){
+        console.log("IPFS Connection Error => " + err.message);
+        $("#storage .error").show();
+        $("#status-storage").addClass('status-offline');
+        $("#storage-controls").hide();
+      }
     });
 
   $("#storage button.setIpfsText").click(function() {
@@ -114,20 +120,19 @@ $(document).ready(function() {
 $(document).ready(function() {
 
   $("#communication .error").hide();
-  web3.version.getWhisper(function(err, version) {
-    if (err) {
-      $("#communication .error").show();
-      $("#communication-controls").hide();
-      $("#status-communication").addClass('status-offline');
-    } else if (version >= 5) {
-      $("#communication .errorVersion").show();
-      $("#communication-controls").hide();
-      $("#status-communication").addClass('status-offline');
-    } else {
-      EmbarkJS.Messages.setProvider('whisper');
-      $("#status-communication").addClass('status-online');
-    }
-  });
+  $("#communication .errorVersion").hide();
+  if (EmbarkJS.Messages.providerName === 'whisper') {
+    EmbarkJS.Messages.getWhisperVersion(function(err, version) {
+      if (err) {
+        $("#communication .error").show();
+        $("#communication-controls").hide();
+        $("#status-communication").addClass('status-offline');
+      } else {
+        EmbarkJS.Messages.setProvider('whisper');
+        $("#status-communication").addClass('status-online');
+      }
+    });
+  }
 
   $("#communication button.listenToChannel").click(function() {
     var channel = $("#communication .listen input.channel").val();
