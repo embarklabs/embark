@@ -57,8 +57,8 @@ Table of Contents
 
 Installation
 ======
-Requirements: geth (1.6.5 or higher recommended, 1.6.0 or lower for whisper v1 support; whisper v5 support coming soon), node (6.9.1 or higher is recommended) and npm
-Optional: testrpc (3.0 or higher) if using the simulator or the test functionality.
+Requirements: geth (1.6.7 or higher recommended), node (6.9.1 or higher is recommended) and npm
+Optional: testrpc (3.0 or higher) if using the simulator
 Further: depending on the dapp stack you choose: [IPFS](https://ipfs.io/)
 
 ```Bash
@@ -174,18 +174,18 @@ Embark will automatically take care of deployment for you and set all needed JS 
 
 ```Javascript
 # app/contracts/simple_storage.sol
-pragma solidity ^0.4.7;
+pragma solidity ^0.4.17;
 contract SimpleStorage {
   uint public storedData;
 
-  function SimpleStorage(uint initialValue) {
+  function SimpleStorage(uint initialValue) public {
     storedData = initialValue;
   }
 
-  function set(uint x) {
+  function set(uint x) public {
     storedData = x;
   }
-  function get() constant returns (uint retVal) {
+  function get() view returns (uint retVal) {
     return storedData;
   }
 }
@@ -194,9 +194,9 @@ Will automatically be available in Javascript as:
 
 ```Javascript
 # app/js/index.js
-SimpleStorage.set(100);
-SimpleStorage.get().then(function(value) { console.log(value.toNumber()) });
-SimpleStorage.storedData().then(function(value) { console.log(value.toNumber()) });
+SimpleStorage.methods.set(100).send({from: web3.eth.defaultAccount});
+SimpleStorage.methods.get().call().then(function(value) { console.log(value.toNumber()) });
+SimpleStorage.methods.storedData().then(function(value) { console.log(value.toNumber()) });
 ```
 
 You can specify for each contract and environment its gas costs and arguments:
@@ -303,6 +303,45 @@ Contracts addresses can be defined. If an address is defined, Embark uses the de
 }
 ```
 
+You can Also specify which versions of solc and web3.js to use:
+
+```Json
+# config/contracts.json
+{
+  ...
+  "development": {
+    "versions": {
+      "web3.js": "1.0.0-beta",
+      "solc": "0.4.17"
+    }
+  }
+  ...
+}
+```
+
+You specify which node the contracts should be deploy to and the order of nodes
+the dapp should connect to. $WEB3 means the dapp will try to use an existing
+web3 object first if available.
+
+```Json
+# config/contracts.json
+{
+  ...
+  "development": {
+    "deployment": {
+      "host": "localhost",
+      "port": 8545,
+      "type": "rpc"
+    },
+    "dappConnection": [
+      "$WEB3",
+      "http://localhost:8545"
+    ]
+  }
+  ...
+}
+```
+
 EmbarkJS
 ======
 
@@ -310,17 +349,15 @@ EmbarkJS is a javascript library meant to abstract and facilitate the developmen
 
 **promises**
 
-methods in EmbarkJS contracts will be converted to promises.
-
 ```Javascript
   var myContract = new EmbarkJS.Contract({abi: abiObject, address: "0x123"});
-  myContract.get().then(function(value) { console.log("value is " + value.toNumber) });
+  myContract.methods.get().call().then(function(value) { console.log("value is " + value.toNumber) });
 ```
 
 events:
 
 ```Javascript
-  myContract.eventName({from: web3.eth.accounts}, 'latest').then(function(event) { console.log(event) });
+  myContract.events.eventName({from: web3.eth.accounts}, 'latest').then(function(event) { console.log(event) });
 ```
 
 **deployment**
@@ -391,7 +428,7 @@ EmbarkJS - Communication
 
 **initialization**
 
-For Whisper (note: currently requires geth 1.6.0):
+For Whisper (note: currently requires geth 1.6.0 or higher):
 
 ```Javascript
     EmbarkJS.Messages.setProvider('whisper')
@@ -438,12 +475,6 @@ Embark includes a testing lib to rapidly run & test your contracts in a EVM.
 
 ```Javascript
 # test/simple_storage_spec.js
-
-var assert = require('assert');
-var Embark = require('embark');
-var EmbarkSpec = Embark.initTests();
-var web3 = EmbarkSpec.web3;
-
 describe("SimpleStorage", function() {
   before(function(done) {
     this.timeout(0);
