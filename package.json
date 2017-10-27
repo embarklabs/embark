@@ -3,7 +3,8 @@
   "version": "2.6.0",
   "description": "Embark is a framework that allows you to easily develop and deploy DApps",
   "scripts": {
-    "test": "grunt jshint && mocha test/ --no-timeouts && cd test_app/ && npm install && ../bin/embark test"
+    "test": "grunt jshint && mocha test/ --no-timeouts && cd test_app/ && npm install && ../bin/embark test",
+    "prepare": "webpack"
   },
   "bin": {
     "embark": "./bin/embark"
@@ -28,8 +29,10 @@
     "follow-redirects": "^1.2.4",
     "fs-extra": "^2.0.0",
     "globule": "^1.1.0",
+    "ipfs-api": "git+https://github.com/atfornes/js-ipfs-api.git#withDag",
     "merge": "^1.2.0",
     "mocha": "^2.2.5",
+    "orbit-db": "^0.17.3",
     "promptly": "^2.1.0",
     "serve-static": "^1.11.1",
     "shelljs": "^0.5.0",
@@ -65,7 +68,8 @@
     "mocha": "^3.2.0",
     "mocha-sinon": "^1.1.4",
     "sinon": "^1.15.4",
-    "toposort": "^1.0.0"
+    "toposort": "^1.0.0",
+    "webpack": "^2.6.1"
   },
   "jshintConfig": {
     "indent": 2,
