@@ -4,7 +4,6 @@
 [![Gitter](https://img.shields.io/gitter/room/iurimatias/embark-framework.svg)](https://gitter.im/iurimatias/embark-framework)
 [![Build
 Status](https://travis-ci.org/iurimatias/embark-framework.svg?branch=develop)](https://travis-ci.org/iurimatias/embark-framework)
-[![Code Climate](https://codeclimate.com/github/iurimatias/embark-framework/badges/gpa.svg)](https://codeclimate.com/github/iurimatias/embark-framework)
 
 What is Embark
 ======
