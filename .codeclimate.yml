@@ -10,6 +10,18 @@ engines:
                           enabled: false
                 guard-for-in:
                           enabled: false
+                for-direction:
+                          enabled: false
+                getter-return:
+                          enabled: false
+                no-buffer-constructor:
+                          enabled: false
+                padding-line-between-statements:
+                          enabled: false
+                semi-style:
+                          enabled: false
+                switch-colon-spacing:
+                          enabled: false
 ratings:
     paths:
     - "lib/**/*"
