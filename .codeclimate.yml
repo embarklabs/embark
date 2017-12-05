@@ -38,3 +38,6 @@ exclude_paths:
 checks:
   similar-code:
     enabled: false
+  method-lines:
+    config:
+        threshold: 35
