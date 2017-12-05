@@ -22,6 +22,8 @@ engines:
                           enabled: false
                 switch-colon-spacing:
                           enabled: false
+                array-bracket-newline:
+                          enabled: false
 ratings:
     paths:
     - "lib/**/*"
