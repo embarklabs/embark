@@ -21,3 +21,6 @@ exclude_paths:
 - "js/"
 - "test_app/"
 - "docs/"
+checks:
+  similar-code:
+    enabled: false
