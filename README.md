@@ -420,7 +420,7 @@ The current available storage is IPFS. It can be initialized as
   EmbarkJS.Storage.getUrl(hash);
 ```
 
-note: if not using localhost, the cors needs to be set as ```ipfs --json API.HTTPHeaders.Access-Control-Allow-Origin '["your-host-name-port"]```
+note: if not using localhost, the cors needs to be set as ```ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["your-host-name-port"]```
 
 EmbarkJS - Communication
 ======
