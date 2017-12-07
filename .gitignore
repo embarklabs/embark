@@ -1,5 +1,6 @@
 node_modules
 TODO
+NOTES
 .node-xmlhttprequest-sync-*
 demo/dist/
 demo/.embark/development/
