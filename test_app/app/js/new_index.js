@@ -1,5 +1,15 @@
 /*globals $, SimpleStorage, document*/
 
+import $ from './_vendor/jquery.min';
+//import EmbarkJS from 'Embark/EmbarkJS';
+
+import Test2 from 'MyLib';
+
+import test3 from './foo';
+import './foo.css';
+
+window.test_3 = test3;
+
 var addToLog = function(id, txt) {
   $(id + " .logs").append("<br>" + txt);
 };
@@ -8,6 +18,9 @@ var addToLog = function(id, txt) {
 // Blockchain example
 // ===========================
 $(document).ready(function() {
+  console.log([1,2,3].map(v => v + 1));
+  alert('hello');
+  window.test_2 = Test2;
 
   $("#blockchain button.set").click(function() {
     var value = parseInt($("#blockchain input.text").val(), 10);
