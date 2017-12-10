@@ -1,10 +1,3 @@
-/*jshint esversion: 6 */
-//var Ipfs = require('./ipfs.js');
-
-//=========================================================
-// Embark Smart Contracts
-//=========================================================
-
 var EmbarkJS = {};
 
 EmbarkJS.isNewWeb3 = function() {
