@@ -1,11 +1,12 @@
 var EmbarkJS = {};
 
 EmbarkJS.isNewWeb3 = function() {
-  var _web3 = new Web3();
-  if (typeof(_web3.version) === "string") {
-    return true;
-  }
-  return parseInt(_web3.version.api.split('.')[0], 10) >= 1;
+  return true;
+  //var _web3 = new Web3();
+  //if (typeof(_web3.version) === "string") {
+  //  return true;
+  //}
+  //return parseInt(_web3.version.api.split('.')[0], 10) >= 1;
 };
 
 EmbarkJS.Contract = function(options) {
@@ -16,7 +17,10 @@ EmbarkJS.Contract = function(options) {
     this.abi = options.abi;
     this.address = options.address;
     this.code = '0x' + options.code;
-    this.web3 = options.web3 || web3;
+    //this.web3 = options.web3 || web3;
+    this.web3 = options.web3 || window.web3;
+    console.log("set web3");
+    console.log(this.web3);
 
     if (EmbarkJS.isNewWeb3()) {
       // TODO:
