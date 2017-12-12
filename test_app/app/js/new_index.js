@@ -8,12 +8,12 @@ import $ from './_vendor/jquery.min';
 //console.log("finished importing web3");
 import EmbarkJS from 'Embark/EmbarkJS';
 import SimpleStorage from 'Embark/contracts/SimpleStorage';
-import web3 from 'Embark/web3';
+//import web3 from 'Embark/web3';
 
 console.log("SimpleStorage")
 console.log(SimpleStorage);
 
-console.log(EmbarkJS);
+//console.log(EmbarkJS);
 window.SimpleStorage = SimpleStorage;
 
 import test3 from './foo';
