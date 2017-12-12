@@ -1,13 +1,14 @@
 /*globals $, SimpleStorage, document*/
 
 import $ from './_vendor/jquery.min';
-import web3 from 'Embark/web3';
-console.log("new_index");
-console.log(web3);
+//import web3 from 'Embark/web3';
+//console.log("new_index");
+//console.log(web3);
 //window.web3 = web3;
 //console.log("finished importing web3");
 import EmbarkJS from 'Embark/EmbarkJS';
 import SimpleStorage from 'Embark/contracts/SimpleStorage';
+//import web3 from 'Embark/web3';
 
 console.log("SimpleStorage")
 console.log(SimpleStorage);
