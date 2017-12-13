@@ -30,7 +30,7 @@
     "follow-redirects": "^1.2.4",
     "fs-extra": "^2.0.0",
     "globule": "^1.1.0",
-    "ipfs-api": "6.0.2",
+    "ipfs-api": "17.2.4",
     "merge": "^1.2.0",
     "mocha": "^2.2.5",
     "orbit-db": "^0.17.3",

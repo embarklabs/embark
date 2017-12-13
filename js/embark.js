@@ -280,8 +280,8 @@ EmbarkJS.Storage.IPFS.get = function(hash) {
             var connectionError = new Error('No IPFS connection. Please ensure to call Embark.Storage.setProvider()');
             reject(connectionError);
         }
-        EmbarkJS.Storage.ipfsConnection.object.get([hash]).then(function(node) {
-            resolve(node.data);
+        EmbarkJS.Storage.ipfsConnection.object.get(hash).then(function(node) {
+            resolve(node.data.toString());
         }).catch(function(err) {
             reject(err);
         });
