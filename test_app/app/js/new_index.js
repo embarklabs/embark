@@ -125,40 +125,40 @@ $(document).ready(function() {
 
 });
 
-////// ===========================
-////// Communication (Whisper) example
-////// ===========================
-////$(document).ready(function() {
-////
-////  $("#communication .error").hide();
-////  $("#communication .errorVersion").hide();
-////  if (EmbarkJS.Messages.providerName === 'whisper') {
-////    EmbarkJS.Messages.getWhisperVersion(function(err, version) {
-////      if (err) {
-////        $("#communication .error").show();
-////        $("#communication-controls").hide();
-////        $("#status-communication").addClass('status-offline');
-////      } else {
-////        EmbarkJS.Messages.setProvider('whisper');
-////        $("#status-communication").addClass('status-online');
-////      }
-////    });
-////  }
-////
-////  $("#communication button.listenToChannel").click(function() {
-////    var channel = $("#communication .listen input.channel").val();
-////    $("#communication #subscribeList").append("<br> subscribed to " + channel + " now try sending a message");
-////    EmbarkJS.Messages.listenTo({topic: [channel]}).then(function(message) {
-////      $("#communication #messagesList").append("<br> channel: " + channel + " message: " + message);
-////    });
-////    addToLog("#communication", "EmbarkJS.Messages.listenTo({topic: ['" + channel + "']}).then(function(message) {})");
-////  });
-////
-////  $("#communication button.sendMessage").click(function() {
-////    var channel = $("#communication .send input.channel").val();
-////    var message = $("#communication .send input.message").val();
-////    EmbarkJS.Messages.sendMessage({topic: channel, data: message});
-////    addToLog("#communication", "EmbarkJS.Messages.sendMessage({topic: '" + channel + "', data: '" + message + "'})");
-////  });
-////
-////});
+// ===========================
+// Communication (Whisper) example
+// ===========================
+$(document).ready(function() {
+
+  $("#communication .error").hide();
+  $("#communication .errorVersion").hide();
+  if (EmbarkJS.Messages.providerName === 'whisper') {
+    EmbarkJS.Messages.getWhisperVersion(function(err, version) {
+      if (err) {
+        $("#communication .error").show();
+        $("#communication-controls").hide();
+        $("#status-communication").addClass('status-offline');
+      } else {
+        EmbarkJS.Messages.setProvider('whisper');
+        $("#status-communication").addClass('status-online');
+      }
+    });
+  }
+
+  $("#communication button.listenToChannel").click(function() {
+    var channel = $("#communication .listen input.channel").val();
+    $("#communication #subscribeList").append("<br> subscribed to " + channel + " now try sending a message");
+    EmbarkJS.Messages.listenTo({topic: [channel]}).then(function(message) {
+      $("#communication #messagesList").append("<br> channel: " + channel + " message: " + message);
+    });
+    addToLog("#communication", "EmbarkJS.Messages.listenTo({topic: ['" + channel + "']}).then(function(message) {})");
+  });
+
+  $("#communication button.sendMessage").click(function() {
+    var channel = $("#communication .send input.channel").val();
+    var message = $("#communication .send input.message").val();
+    EmbarkJS.Messages.sendMessage({topic: channel, data: message});
+    addToLog("#communication", "EmbarkJS.Messages.sendMessage({topic: '" + channel + "', data: '" + message + "'})");
+  });
+
+});
