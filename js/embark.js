@@ -3,12 +3,11 @@
 var EmbarkJS = {};
 
 EmbarkJS.isNewWeb3 = function() {
-  return true;
-  //var _web3 = new Web3();
-  //if (typeof(_web3.version) === "string") {
-  //  return true;
-  //}
-  //return parseInt(_web3.version.api.split('.')[0], 10) >= 1;
+  var _web3 = new Web3();
+  if (typeof(_web3.version) === "string") {
+    return true;
+  }
+  return parseInt(_web3.version.api.split('.')[0], 10) >= 1;
 };
 
 EmbarkJS.Contract = function(options) {
