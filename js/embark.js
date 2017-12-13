@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 var EmbarkJS = {};
 
 EmbarkJS.isNewWeb3 = function() {
