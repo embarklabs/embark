@@ -213,6 +213,8 @@ EmbarkJS.Storage.getUrl = function(hash) {
 };
 
 EmbarkJS.Storage.setProvider = function(provider, options) {
+    console.log("setting provider");
+    console.log(arguments);
     var self = this;
     var promise = new Promise(function(resolve, reject) {
         if (provider.toLowerCase() === EmbarkJS.Storage.Providers.IPFS) {
@@ -229,8 +231,10 @@ EmbarkJS.Storage.setProvider = function(provider, options) {
                     self.ipfsConnection = IpfsApi(options.server, options.port);
                     self._getUrl = options.getUrl || "http://localhost:8080/ipfs/";
                 }
+                window.ipfsConnection = self.ipfsConnection;
                 resolve(self);
             } catch (err) {
+                console.log(err);
                 self.ipfsConnection = null;
                 reject(new Error('Failed to connect to IPFS'));
             }
@@ -673,4 +677,6 @@ EmbarkJS.Utils = {
   }
 };
 
-module.exports = EmbarkJS;
+//module.exports = EmbarkJS;
+
+export default EmbarkJS;

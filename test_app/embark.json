@@ -2,6 +2,8 @@
   "contracts": ["app/contracts/**"],
   "app": {
     "js/webpack_test.js": "app/js/index.js",
+    "js/jquery.js": "app/js/_vendor/jquery.min.js",
+    "js/bootstrap.js": "app/js/_vendor/bootstrap.min.js",
     "css/app.css": ["app/css/**"],
     "images/": ["app/images/**"],
     "js/app.js": ["app/js/_vendor/jquery.min.js", "app/js/_vendor/bootstrap.min.js", "app/js/**", "!app/js/test.js", "!app/js/foo.js", "!app/js/foo.css", "!app/js/new_index.js"],

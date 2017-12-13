@@ -2,27 +2,13 @@
 
 import $ from './_vendor/jquery.min';
 //import web3 from 'Embark/web3';
-//console.log("new_index");
-//console.log(web3);
-//window.web3 = web3;
-//console.log("finished importing web3");
 import EmbarkJS from 'Embark/EmbarkJS';
+window.EmbarkJS = EmbarkJS;
 import SimpleStorage from 'Embark/contracts/SimpleStorage';
-//import web3 from 'Embark/web3';
-
-console.log("SimpleStorage")
-console.log(SimpleStorage);
-
-//console.log(EmbarkJS);
-window.SimpleStorage = SimpleStorage;
 
 import test3 from './foo';
 import './foo.css';
 
-console.log(test3);
-
-////window.test_3 = test3;
-////
 var addToLog = function(id, txt) {
   $(id + " .logs").append("<br>" + txt);
 };
@@ -32,7 +18,7 @@ var addToLog = function(id, txt) {
 // ===========================
 $(document).ready(function() {
   console.log([1,2,3].map(v => v + 1));
-  alert('hello');
+  //alert('hello');
 
   $("#blockchain button.set").click(function() {
     var value = parseInt($("#blockchain input.text").val(), 10);
@@ -65,80 +51,80 @@ $(document).ready(function() {
 
 });
 
-////// ===========================
-////// Storage (IPFS) example
-////// ===========================
-////$(document).ready(function() {
-////  // automatic set if config/storage.json has "enabled": true and "provider": "ipfs"
-////  //EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'});
-////
-////  $("#storage .error").hide();
-////  EmbarkJS.Storage.ipfsConnection.ping()
-////    .then(function(){
-////        $("#status-storage").addClass('status-online');
-////        $("#storage-controls").show();
-////    })
-////    .catch(function(err) {
-////      if(err){
-////        console.log("IPFS Connection Error => " + err.message);
-////        $("#storage .error").show();
-////        $("#status-storage").addClass('status-offline');
-////        $("#storage-controls").hide();
-////      }
-////    });
-////
-////  $("#storage button.setIpfsText").click(function() {
-////    var value = $("#storage input.ipfsText").val();
-////    EmbarkJS.Storage.saveText(value).then(function(hash) {
-////      $("span.textHash").html(hash);
-////      $("input.textHash").val(hash);
-////      addToLog("#storage", "EmbarkJS.Storage.saveText('" + value + "').then(function(hash) { })");
-////    })
-////    .catch(function(err) {
-////      if(err){
-////        console.log("IPFS saveText Error => " + err.message);
-////      }
-////    });
-////  });
-////
-////  $("#storage button.loadIpfsHash").click(function() {
-////    var value = $("#storage input.textHash").val();
-////    EmbarkJS.Storage.get(value).then(function(content) {
-////      $("span.ipfsText").html(content);
-////      addToLog("#storage", "EmbarkJS.Storage.get('" + value + "').then(function(content) { })");
-////    })
-////    .catch(function(err) {
-////      if(err){
-////        console.log("IPFS get Error => " + err.message);
-////      }
-////    });
-////  });
-////
-////  $("#storage button.uploadFile").click(function() {
-////    var input = $("#storage input[type=file]");
-////    EmbarkJS.Storage.uploadFile(input).then(function(hash) {
-////      $("span.fileIpfsHash").html(hash);
-////      $("input.fileIpfsHash").val(hash);
-////      addToLog("#storage", "EmbarkJS.Storage.uploadFile($('input[type=file]')).then(function(hash) { })");
-////    })
-////    .catch(function(err) {
-////      if(err){
-////        console.log("IPFS uploadFile Error => " + err.message);
-////      }
-////    });
-////  });
-////
-////  $("#storage button.loadIpfsFile").click(function() {
-////    var hash = $("#storage input.fileIpfsHash").val();
-////    var url = EmbarkJS.Storage.getUrl(hash);
-////    var link = '<a href="' + url + '" target="_blank">' + url + '</a>';
-////    $("span.ipfsFileUrl").html(link);
-////    $(".ipfsImage").attr('src', url);
-////    addToLog("#storage", "EmbarkJS.Storage.getUrl('" + hash + "')");
-////  });
-////
-////});
-////
+// ===========================
+// Storage (IPFS) example
+// ===========================
+$(document).ready(function() {
+  // automatic set if config/storage.json has "enabled": true and "provider": "ipfs"
+  //EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'});
+
+  $("#storage .error").hide();
+  EmbarkJS.Storage.ipfsConnection.ping()
+    .then(function(){
+        $("#status-storage").addClass('status-online');
+        $("#storage-controls").show();
+    })
+    .catch(function(err) {
+      if(err){
+        console.log("IPFS Connection Error => " + err.message);
+        $("#storage .error").show();
+        $("#status-storage").addClass('status-offline');
+        $("#storage-controls").hide();
+      }
+    });
+
+  $("#storage button.setIpfsText").click(function() {
+    var value = $("#storage input.ipfsText").val();
+    EmbarkJS.Storage.saveText(value).then(function(hash) {
+      $("span.textHash").html(hash);
+      $("input.textHash").val(hash);
+      addToLog("#storage", "EmbarkJS.Storage.saveText('" + value + "').then(function(hash) { })");
+    })
+    .catch(function(err) {
+      if(err){
+        console.log("IPFS saveText Error => " + err.message);
+      }
+    });
+  });
+
+  $("#storage button.loadIpfsHash").click(function() {
+    var value = $("#storage input.textHash").val();
+    EmbarkJS.Storage.get(value).then(function(content) {
+      $("span.ipfsText").html(content);
+      addToLog("#storage", "EmbarkJS.Storage.get('" + value + "').then(function(content) { })");
+    })
+    .catch(function(err) {
+      if(err){
+        console.log("IPFS get Error => " + err.message);
+      }
+    });
+  });
+
+  $("#storage button.uploadFile").click(function() {
+    var input = $("#storage input[type=file]");
+    EmbarkJS.Storage.uploadFile(input).then(function(hash) {
+      $("span.fileIpfsHash").html(hash);
+      $("input.fileIpfsHash").val(hash);
+      addToLog("#storage", "EmbarkJS.Storage.uploadFile($('input[type=file]')).then(function(hash) { })");
+    })
+    .catch(function(err) {
+      if(err){
+        console.log("IPFS uploadFile Error => " + err.message);
+      }
+    });
+  });
+
+  $("#storage button.loadIpfsFile").click(function() {
+    var hash = $("#storage input.fileIpfsHash").val();
+    var url = EmbarkJS.Storage.getUrl(hash);
+    var link = '<a href="' + url + '" target="_blank">' + url + '</a>';
+    $("span.ipfsFileUrl").html(link);
+    $(".ipfsImage").attr('src', url);
+    addToLog("#storage", "EmbarkJS.Storage.getUrl('" + hash + "')");
+  });
+
+});
+
 ////// ===========================
 ////// Communication (Whisper) example
 ////// ===========================
