@@ -1,5 +1,14 @@
 /*globals $, SimpleStorage, document*/
 
+import $ from './_vendor/jquery.min';
+import EmbarkJS from 'Embark/EmbarkJS';
+import SimpleStorage from 'Embark/contracts/SimpleStorage';
+
+window.EmbarkJS = EmbarkJS;
+window.SimpleStorage = SimpleStorage;
+
+import './foo.css';
+
 var addToLog = function(id, txt) {
   $(id + " .logs").append("<br>" + txt);
 };
@@ -8,6 +17,7 @@ var addToLog = function(id, txt) {
 // Blockchain example
 // ===========================
 $(document).ready(function() {
+  console.log([1,2,3].map(v => v + 1));
 
   $("#blockchain button.set").click(function() {
     var value = parseInt($("#blockchain input.text").val(), 10);
@@ -48,19 +58,19 @@ $(document).ready(function() {
   //EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'});
 
   $("#storage .error").hide();
-  EmbarkJS.Storage.ipfsConnection.ping()
-    .then(function(){
+  //EmbarkJS.Storage.ipfsConnection.version()
+  //  .then(function(){
         $("#status-storage").addClass('status-online');
         $("#storage-controls").show();
-    })
-    .catch(function(err) {
-      if(err){
-        console.log("IPFS Connection Error => " + err.message);
-        $("#storage .error").show();
-        $("#status-storage").addClass('status-offline');
-        $("#storage-controls").hide();
-      }
-    });
+   // })
+   // .catch(function(err) {
+   //   if(err){
+   //     console.log("IPFS Connection Error => " + err.message);
+   //     $("#storage .error").show();
+   //     $("#status-storage").addClass('status-offline');
+   //     $("#storage-controls").hide();
+   //   }
+   // });
 
   $("#storage button.setIpfsText").click(function() {
     var value = $("#storage input.ipfsText").val();
