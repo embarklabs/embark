@@ -20,8 +20,6 @@ EmbarkJS.Contract = function(options) {
     this.code = '0x' + options.code;
     //this.web3 = options.web3 || web3;
     this.web3 = options.web3 || window.web3;
-    console.log("set web3");
-    console.log(this.web3);
 
     if (EmbarkJS.isNewWeb3()) {
       // TODO:
@@ -214,8 +212,6 @@ EmbarkJS.Storage.getUrl = function(hash) {
 };
 
 EmbarkJS.Storage.setProvider = function(provider, options) {
-    console.log("setting provider");
-    console.log(arguments);
     var self = this;
     var promise = new Promise(function(resolve, reject) {
         if (provider.toLowerCase() === EmbarkJS.Storage.Providers.IPFS) {
@@ -232,7 +228,6 @@ EmbarkJS.Storage.setProvider = function(provider, options) {
                     self.ipfsConnection = IpfsApi(options.server, options.port);
                     self._getUrl = options.getUrl || "http://localhost:8080/ipfs/";
                 }
-                window.ipfsConnection = self.ipfsConnection;
                 resolve(self);
             } catch (err) {
                 console.log(err);
@@ -677,7 +672,5 @@ EmbarkJS.Utils = {
     return _web3.utils.toAscii(str);
   }
 };
-
-//module.exports = EmbarkJS;
 
 export default EmbarkJS;
