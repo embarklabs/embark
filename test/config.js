@@ -34,8 +34,36 @@ describe('embark.Config', function() {
 
   describe('#loadContractsConfigFile', function() {
     it('should load contract config correctly', function() {
-        config.loadContractsConfigFile();
-        let expectedConfig = {
+      config.loadContractsConfigFile();
+      let expectedConfig = {
+        "gas": "auto",
+        "contracts": {
+          "SimpleStorage": {
+            "args": [
+              100
+            ],
+            "gas": 123456
+          },
+          "Token": {
+            "args": [
+              200
+            ]
+          }
+        },
+        "versions": {
+          "web3.js": "0.19.1",
+          "solc": "0.4.11"
+        },
+        "deployment": {
+          "host": "localhost",
+          "port": 8545,
+          "type": "rpc"
+        },
+        "dappConnection": [
+          "$WEB3",
+          "http://localhost:8545"
+        ],
+        "default": {
           "gas": "auto",
           "contracts": {
             "SimpleStorage": {
@@ -49,10 +77,24 @@ describe('embark.Config', function() {
                 200
               ]
             }
-          }
-        };
+          },
+        },
+        "myenv": {
+          "gas": "auto",
+          "contracts": {
+            "SimpleStorage": {
+              "gas": 123456
+            },
+            "Token": {
+              "args": [
+                200
+              ]
+            }
+          },
+        }
+      };
 
-        assert.deepEqual(config.contractsConfig, expectedConfig);
+      assert.deepEqual(config.contractsConfig, expectedConfig);
     });
   });
 
