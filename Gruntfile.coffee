@@ -22,19 +22,8 @@ module.exports = (grunt) ->
       test:
         src: ['test/**/*.js']
 
-    jshint:
-      all: ['bin/embark', 'lib/**/*.js']
-      options: grunt.file.readJSON('package.json').jshintConfig
-      with_overrides:
-        options:
-          undef: false
-          esversion: 5
-        files:
-          src: ['js/mine.js', 'js/embark.js']
-
   grunt.loadTasks "tasks"
   require('matchdep').filterAll(['grunt-*','!grunt-cli']).forEach(grunt.loadNpmTasks)
 
   grunt.registerTask 'default', ['clean']
   grunt.registerTask 'build', ['clean', 'coffee']
-

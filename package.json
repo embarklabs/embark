@@ -70,7 +70,6 @@
     "grunt-cli": "^1.2.0",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-coffee": "^1.0.0",
-    "grunt-contrib-jshint": "^1.0.0",
     "grunt-mocha-test": "^0.13.2",
     "matchdep": "^1.0.1",
     "mocha": "^3.2.0",
@@ -78,19 +77,5 @@
     "sinon": "^1.15.4",
     "toposort": "^1.0.0",
     "webpack": "^2.6.1"
-  },
-  "jshintConfig": {
-    "indent": 2,
-    "white": true,
-    "node": true,
-    "undef": true,
-    "-W058": true,
-    "-W014": true,
-    "expr": true,
-    "esversion": 6,
-    "unused": false,
-    "globals": {
-      "node": true
-    }
   }
 }
