@@ -3,7 +3,7 @@
   "version": "2.6.1",
   "description": "Embark is a framework that allows you to easily develop and deploy DApps",
   "scripts": {
-    "lint": "./node_modules/.bin/eslint lib/",
+    "lint": "./node_modules/eslint/bin/eslint.js lib/",
     "test": "mocha test/ --no-timeouts",
     "testdapp": "cd test_app/ && npm install && ../bin/embark test",
     "fulltest": "npm run lint && npm run test && npm run testdapp",
