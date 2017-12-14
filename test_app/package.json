@@ -11,7 +11,9 @@
   "homepage": "",
   "devDependencies": {},
   "dependencies": {
+    "bootstrap": "^3.3.6",
     "embark-babel": "^1.0.0",
-    "embark-service": "./extensions/embark-service"
+    "embark-service": "./extensions/embark-service",
+    "jquery": "^1.11.3"
   }
 }

@@ -26,6 +26,7 @@
     "css-loader": "^0.28.7",
     "ejs": "^2.5.7",
     "ethereumjs-testrpc": "3.9.2",
+    "file-loader": "^1.1.5",
     "finalhandler": "^0.5.0",
     "follow-redirects": "^1.2.4",
     "fs-extra": "^2.0.0",
@@ -43,6 +44,7 @@
     "toposort": "^1.0.0",
     "underscore": "^1.8.3",
     "underscore.string": "^3.3.4",
+    "url-loader": "^0.6.2",
     "web3": "^0.19.1"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",

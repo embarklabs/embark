@@ -1,6 +1,10 @@
 /*globals $, SimpleStorage, document*/
 
-import $ from './_vendor/jquery.min';
+//import $ from './_vendor/jquery.min';
+import $ from 'jquery';
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'bootstrap/dist/js/bootstrap.min.js';
 import EmbarkJS from 'Embark/EmbarkJS';
 import SimpleStorage from 'Embark/contracts/SimpleStorage';
 
