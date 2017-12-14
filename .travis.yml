@@ -5,3 +5,7 @@ node_js:
 addons:
     code_climate:
         repo_token: 7454b1a666015e244c384d19f48c34e35d1ae58c3aa428ec542f10bbcb848358
+script:
+    - npm run lint
+    - npm run test
+    - npm run testdapp
