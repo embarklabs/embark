@@ -227,10 +227,10 @@ EmbarkJS.Storage.setProvider = function(provider, options) {
             try {
                 if (options === undefined) {
                     self.ipfsConnection = IpfsApi('localhost', '5001');
-                    self.getUrl = "http://localhost:8080/ipfs/";
+                    self._getUrl = "http://localhost:8080/ipfs/";
                 } else {
                     self.ipfsConnection = IpfsApi(options.server, options.port);
-                    self.getUrl = options.getUrl || "http://localhost:8080/ipfs/";
+                    self._getUrl = options.getUrl || "http://localhost:8080/ipfs/";
                 }
                 resolve(self);
             } catch (err) {
@@ -320,7 +320,7 @@ EmbarkJS.Storage.IPFS.uploadFile = function(inputSelector) {
 };
 
 EmbarkJS.Storage.IPFS.getUrl = function(hash) {
-    return (self.getUrl || "http://localhost:8080/ipfs/") + hash;
+    return (self._getUrl || "http://localhost:8080/ipfs/") + hash;
 };
 
 //=========================================================

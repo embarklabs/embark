@@ -43,6 +43,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -306,10 +309,10 @@ EmbarkJS.Storage.setProvider = function(provider, options) {
             try {
                 if (options === undefined) {
                     self.ipfsConnection = IpfsApi('localhost', '5001');
-                    self.getUrl = "http://localhost:8080/ipfs/";
+                    self._getUrl = "http://localhost:8080/ipfs/";
                 } else {
                     self.ipfsConnection = IpfsApi(options.server, options.port);
-                    self.getUrl = options.getUrl || "http://localhost:8080/ipfs/";
+                    self._getUrl = options.getUrl || "http://localhost:8080/ipfs/";
                 }
                 resolve(self);
             } catch (err) {
@@ -399,7 +402,7 @@ EmbarkJS.Storage.IPFS.uploadFile = function(inputSelector) {
 };
 
 EmbarkJS.Storage.IPFS.getUrl = function(hash) {
-    return (self.getUrl || "http://localhost:8080/ipfs/") + hash;
+    return (self._getUrl || "http://localhost:8080/ipfs/") + hash;
 };
 
 //=========================================================
