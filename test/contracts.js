@@ -17,6 +17,7 @@ describe('embark.Contratcs', function() {
         readFile('test/contracts/simple_storage.sol'),
         readFile('test/contracts/token.sol')
       ],
+      contractDirectories: ['app/contracts'],
       contractsConfig: {
         "versions": {
           "web3.js": "1.0.0-beta",
@@ -89,6 +90,7 @@ describe('embark.Contratcs', function() {
         readFile('test/contracts/simple_storage.sol'),
         readFile('test/contracts/token_storage.sol')
       ],
+      contractDirectories: ['app/contracts'],
       contractsConfig: {
         "versions": {
           "web3.js": "1.0.0-beta",

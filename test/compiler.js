@@ -10,7 +10,7 @@ let readFile = function(file) {
 };
 
 describe('embark.Compiler', function() {
-  let compiler = new Compiler({logger: new TestLogger({}), solcVersion: '0.4.17'});
+  let compiler = new Compiler({logger: new TestLogger({}), solcVersion: '0.4.17', contractDirectories: ['app/contracts/']});
 
   describe('#compile_solidity', function() {
     this.timeout(0);
