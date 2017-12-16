@@ -9,7 +9,7 @@ let readFile = function(file) {
   return new File({filename: file, type: 'dapp_file', path: file});
 };
 
-describe('embark.Contratcs', function() {
+describe('embark.Contracts', function() {
   this.timeout(0);
   describe('simple', function() {
     let contractsManager = new ContractsManager({
