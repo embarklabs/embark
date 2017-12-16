@@ -1,5 +1,6 @@
 /*globals describe, it*/
 let Compiler = require('../lib/contracts/compiler.js');
+let SolidityCompiler = require('../lib/modules/solidity');
 let TestLogger = require('../lib/core/test_logger.js');
 let File = require('../lib/core/file.js');
 let assert = require('assert');
@@ -9,8 +10,14 @@ let readFile = function(file) {
   return new File({filename: file, type: 'dapp_file', path: file});
 };
 
+var apiObject = {
+  registerCompiler: function() {},
+  logger: new TestLogger({})
+};
+
 describe('embark.Compiler', function() {
-  let compiler = new Compiler({logger: new TestLogger({}), solcVersion: '0.4.17', contractDirectories: ['app/contracts/']});
+  //let compiler = new Compiler({logger: new TestLogger({})});
+  let compiler = new SolidityCompiler(apiObject, {solcVersion: '0.4.17', contractDirectories: ['app/contracts/']});
 
   describe('#compile_solidity', function() {
     this.timeout(0);

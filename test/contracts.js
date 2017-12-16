@@ -2,17 +2,27 @@
 let ContractsManager = require('../lib/contracts/contracts.js');
 let Logger = require('../lib/core/logger.js');
 let File = require('../lib/core/file.js');
+let TestLogger = require('../lib/core/test_logger.js');
 let assert = require('assert');
 let fs = require('fs');
+
+//let SolidityCompiler = require('../lib/modules/solidity');
+let Plugins = require('../lib/core/plugins.js');
 
 let readFile = function(file) {
   return new File({filename: file, type: 'dapp_file', path: file});
 };
 
-describe('embark.Contratcs', function() {
+describe('embark.Contracts', function() {
   this.timeout(0);
   describe('simple', function() {
+    let plugins = new Plugins({
+      logger: new TestLogger({})
+    });
+    plugins.loadInternalPlugin('Solidity', {solcVersion: '0.4.17', contractDirectories: ['app/contracts/']});
+
     let contractsManager = new ContractsManager({
+      plugins: plugins,
       contractFiles:  [
         readFile('test/contracts/simple_storage.sol'),
         readFile('test/contracts/token.sol')
@@ -85,7 +95,13 @@ describe('embark.Contratcs', function() {
   });
 
   describe('config with contract instances', function() {
+    let plugins = new Plugins({
+      logger: new TestLogger({})
+    });
+    plugins.loadInternalPlugin('Solidity', {solcVersion: '0.4.17', contractDirectories: ['app/contracts/']});
+
     let contractsManager = new ContractsManager({
+      plugins: plugins,
       contractFiles:  [
         readFile('test/contracts/simple_storage.sol'),
         readFile('test/contracts/token_storage.sol')
