@@ -19,7 +19,7 @@ describe('embark.Contracts', function() {
     let plugins = new Plugins({
       logger: new TestLogger({})
     });
-    plugins.loadInternalPlugin('Solidity', {solcVersion: '0.4.17', contractDirectories: ['app/contracts/']});
+    plugins.loadInternalPlugin('solidity', {solcVersion: '0.4.17', contractDirectories: ['app/contracts/']});
 
     let contractsManager = new ContractsManager({
       plugins: plugins,
@@ -98,7 +98,7 @@ describe('embark.Contracts', function() {
     let plugins = new Plugins({
       logger: new TestLogger({})
     });
-    plugins.loadInternalPlugin('Solidity', {solcVersion: '0.4.17', contractDirectories: ['app/contracts/']});
+    plugins.loadInternalPlugin('solidity', {solcVersion: '0.4.17', contractDirectories: ['app/contracts/']});
 
     let contractsManager = new ContractsManager({
       plugins: plugins,
