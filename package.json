@@ -39,6 +39,7 @@
     "merge": "^1.2.0",
     "mocha": "^2.2.5",
     "orbit-db": "^0.17.3",
+    "parse-json": "^4.0.0",
     "promptly": "^2.1.0",
     "serve-static": "^1.11.1",
     "shelljs": "^0.5.0",
