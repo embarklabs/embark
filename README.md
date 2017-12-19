@@ -209,7 +209,9 @@ You can specify for each contract and environment its gas costs and arguments:
       "SimpleStorage": {
         "args": [
           100
-        ]
+        ],
+        "deploy": false,
+        "gas": 10000000
       }
     }
   }
