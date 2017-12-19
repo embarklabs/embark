@@ -210,15 +210,14 @@ You can specify for each contract and environment its gas costs and arguments:
         "args": [
           100
         ],
-        "deploy": false,
-        "gas": 10000000
+        "gas": 800000
       }
     }
   }
 }
 ```
 
-If you are using multiple contracts, you can pass a reference to another contract as ```$ContractName```, Embark will automatically replace this with the correct address for the contract.
+If you are using multiple contracts, you can pass a reference to another contract as ```$ContractName```, Embark will automatically replace this with the correct address for the contract. You can also specify interfaces and choose to not deploy contracts (for e.g in case they are interfaces)
 
 
 ```Json
@@ -242,6 +241,9 @@ If you are using multiple contracts, you can pass a reference to another contrac
         "args": [
           "$SimpleStorage"
         ]
+      },
+      "MyContractInterface": {
+        "deploy": false
       }
     }
   }
