@@ -17,3 +17,4 @@ test_app/chains.json
 .eslintrc.json
 .embark/
 NOTES
+npm-debug.log
