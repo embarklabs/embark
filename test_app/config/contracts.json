@@ -36,7 +36,7 @@
       },
       "Test": {
         "onDeploy": [
-          "Test.changeAddress(web3.eth.accounts[0])"
+          "Test.changeAddress('$MyToken')"
         ]
       },
       "MyToken": {

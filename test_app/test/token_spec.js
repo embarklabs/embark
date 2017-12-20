@@ -22,6 +22,11 @@ describe("Token", function() {
       "AlreadyDeployedToken": {
         "address": "0x123",
         instanceOf: "Token"
+      },
+      "Test": {
+        onDeploy: [
+          "Test.changeAddress('$MyToken', function(){})"
+        ]
       }
     };
     EmbarkSpec.deployAll(contractsConfig, done);
@@ -55,6 +60,13 @@ describe("Token", function() {
   it("get right address", function(done) {
     assert.equal(AlreadyDeployedToken.address, "0x123");
     done();
+  });
+
+  it("should use onDeploy", function(done) {
+    Test.addr(function(err, result) {
+      assert.equal(result, MyToken.address)
+      done();
+    });
   });
 
 });
