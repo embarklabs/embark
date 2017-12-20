@@ -9,9 +9,14 @@ library ZAMyLib {
 }
 
 contract Test {
+  address public addr;
 
   function testAdd() public pure returns (uint _result) {
     return ZAMyLib.add(1, 2);
+  }
+
+  function changeAddress(address _addr) public {
+    addr = _addr;
   }
 
 }
