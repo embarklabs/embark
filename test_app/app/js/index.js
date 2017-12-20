@@ -7,9 +7,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 //import 'bootstrap/dist/js/bootstrap.min.js';
 import EmbarkJS from 'Embark/EmbarkJS';
 import SimpleStorage from 'Embark/contracts/SimpleStorage';
+import Test from 'Embark/contracts/Test';
 
 window.EmbarkJS = EmbarkJS;
 window.SimpleStorage = SimpleStorage;
+window.Test = Test;
 
 import './foo.css';
 
