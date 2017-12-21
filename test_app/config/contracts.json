@@ -53,7 +53,11 @@
       "MyToken3": {
         "instanceOf": "Tokn"
       }
-    }
+    },
+    "afterDeploy": [
+      "Test.changeAddress('$MyToken')",
+      "Test.changeAddress(web3.eth.accounts[1])"
+    ]
   },
   "development": {
     "contracts": {
