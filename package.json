@@ -28,7 +28,7 @@
     "commander": "^2.8.1",
     "css-loader": "^0.28.7",
     "ejs": "^2.5.7",
-    "ethereumjs-testrpc": "3.9.2",
+    "ethereumjs-testrpc": "^6.0.3",
     "file-loader": "^1.1.5",
     "finalhandler": "^0.5.0",
     "follow-redirects": "^1.2.4",

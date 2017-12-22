@@ -6,7 +6,7 @@ describe("SimpleStorage", function() {
         args: [100]
       }
     };
-    EmbarkSpec.deployAll(contractsConfig, done);
+    EmbarkSpec.deployAll(contractsConfig, () => { done() });
   });
 
   it("should set constructor value", function(done) {

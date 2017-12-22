@@ -29,7 +29,7 @@ describe("Token", function() {
         ]
       }
     };
-    EmbarkSpec.deployAll(contractsConfig, done);
+    EmbarkSpec.deployAll(contractsConfig, () => { done() });
   });
 
   it("not deploy Token", function(done) {

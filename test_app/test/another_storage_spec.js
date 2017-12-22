@@ -20,7 +20,7 @@ contract("AnotherStorage", function() {
         args: [2000]
       }
     };
-    EmbarkSpec.deployAll(contractsConfig, done);
+    EmbarkSpec.deployAll(contractsConfig, () => { done() });
   });
 
   it("set SimpleStorage address", function(done) {
