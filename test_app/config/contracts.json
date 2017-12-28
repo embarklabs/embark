@@ -56,7 +56,7 @@
     },
     "afterDeploy": [
       "Test.changeAddress('$MyToken')",
-      "Test.changeAddress(web3.eth.accounts[1])"
+      "Test.changeAddress(web3.eth.accounts[0])"
     ]
   },
   "development": {
