@@ -228,37 +228,15 @@ EmbarkJS.Messages.registerProvider = function(providerName, obj) {
 };
 
 EmbarkJS.Messages.setProvider = function(provider, options) {
-  var self = this;
-  var ipfs;
-  if (provider === 'whisper') {
-    let providerObj = this.Providers[provider];
+  let providerObj = this.Providers[provider];
 
-    if (!providerObj) {
-      throw new Error('Unknown storage provider');
-    } 
+  if (!providerObj) {
+    throw new Error('Unknown messages provider');
+  }
 
-    this.currentMessages = providerObj;
+  this.currentMessages = providerObj;
 
-    return providerObj.setProvider(options);
-
-  } else if (provider === 'orbit') {
-
-    this.providerName = 'orbit';
-    this.currentMessages = EmbarkJS.Messages.Orbit;
-    if (options === undefined) {
-      ipfs = HaadIpfsApi('localhost', '5001');
-    } else {
-      ipfs = HaadIpfsApi(options.host, options.port);
-    }
-    this.currentMessages.orbit = new Orbit(ipfs);
-    if (typeof(web3) === "undefined") {
-      this.currentMessages.orbit.connect(Math.random().toString(36).substring(2));
-    } else {
-      this.currentMessages.orbit.connect(web3.eth.accounts[0]);
-    }
-  } else {
-        throw Error('Unknown message provider');
-    }
+  return providerObj.setProvider(options);
 };
 
 EmbarkJS.Messages.sendMessage = function(options) {
