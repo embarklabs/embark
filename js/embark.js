@@ -238,65 +238,42 @@ EmbarkJS.Messages.isNewWeb3 = function() {
   return parseInt(_web3.version.api.split('.')[0], 10) >= 1;
 };
 
-EmbarkJS.Messages.getWhisperVersion = function(cb) {
-  if (this.isNewWeb3()) {
-    this.currentMessages.web3.shh.getVersion(function(err, version) {
-      cb(err, version);
-    });
-  } else {
-    this.currentMessages.web3.version.getWhisper(function(err, res) {
-      cb(err, web3.version.whisper);
-    });
-  }
+EmbarkJS.Messages.Providers = {};
+
+EmbarkJS.Messages.registerProvider = function(providerName, obj) {
+  EmbarkJS.Messages.Providers[providerName] = obj;
 };
 
 EmbarkJS.Messages.setProvider = function(provider, options) {
     var self = this;
     var ipfs;
-    if (provider === 'whisper') {
-        this.providerName = 'whisper';
-        this.currentMessages = EmbarkJS.Messages.Whisper;
-        let provider;
-        if (options === undefined) {
-            provider = "localhost:8546";
-        } else {
-            provider = options.server + ':' + options.port;
-        }
-        if (this.isNewWeb3()) {
-          self.currentMessages.web3 = new Web3(new Web3.providers.WebsocketProvider("ws://" + provider));
-        } else {
-          self.currentMessages.web3 = new Web3(new Web3.providers.HttpProvider("http://" + provider));
-        }
-        self.getWhisperVersion(function(err, version) {
-            if (err) {
-                console.log("whisper not available");
-            } else if (version >= 5) {
-                if (self.web3CompatibleWithV5()) {
-                  self.currentMessages.web3.shh.newSymKey().then((id) => {self.currentMessages.symKeyID = id;});
-                  self.currentMessages.web3.shh.newKeyPair().then((id) => {self.currentMessages.sig = id;});
-                } else {
-                  console.log("this version of whisper in this node");
-                }
-            } else {
-                self.currentMessages.identity = self.currentMessages.web3.shh.newIdentity();
-            }
-            self.currentMessages.whisperVersion = self.currentMessages.web3.version.whisper;
-        });
-    } else if (provider === 'orbit') {
-        this.providerName = 'orbit';
-        this.currentMessages = EmbarkJS.Messages.Orbit;
-        if (options === undefined) {
-            ipfs = HaadIpfsApi('localhost', '5001');
-        } else {
-            ipfs = HaadIpfsApi(options.host, options.port);
-        }
-        this.currentMessages.orbit = new Orbit(ipfs);
-        if (typeof(web3) === "undefined") {
-          this.currentMessages.orbit.connect(Math.random().toString(36).substring(2));
-        } else {
-          this.currentMessages.orbit.connect(web3.eth.accounts[0]);
-        }
+  if (provider === 'whisper') {
+    let provider = this.Providers[provider];
+
+    if (!provider) {
+      throw new Error('Unknown storage provider');
+    } 
+
+    this.currentMessages = provider;
+
+    return provider.setProvider(options);
+
+  } else if (provider === 'orbit') {
+
+    this.providerName = 'orbit';
+    this.currentMessages = EmbarkJS.Messages.Orbit;
+    if (options === undefined) {
+      ipfs = HaadIpfsApi('localhost', '5001');
     } else {
+      ipfs = HaadIpfsApi(options.host, options.port);
+    }
+    this.currentMessages.orbit = new Orbit(ipfs);
+    if (typeof(web3) === "undefined") {
+      this.currentMessages.orbit.connect(Math.random().toString(36).substring(2));
+    } else {
+      this.currentMessages.orbit.connect(web3.eth.accounts[0]);
+    }
+  } else {
         throw Error('Unknown message provider');
     }
 };

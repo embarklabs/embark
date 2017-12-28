@@ -1,6 +1,48 @@
-EmbarkJS.Messages.Whisper = {};
+let __embarkWhisper = {};
 
-EmbarkJS.Messages.Whisper.sendMessage = function(options) {
+__embarkWhisper.setProvider = function(options) {
+  const self = this;
+  let provider;
+  if (options === undefined) {
+    provider = "localhost:8546";
+  } else {
+    provider = options.server + ':' + options.port;
+  }
+  if (EmbarkJS.isNewWeb3()) {
+    self.web3 = new Web3(new Web3.providers.WebsocketProvider("ws://" + provider));
+  } else {
+    self.web3 = new Web3(new Web3.providers.HttpProvider("http://" + provider));
+  }
+  self.getWhisperVersion(function(err, version) {
+    if (err) {
+      console.log("whisper not available");
+    } else if (version >= 5) {
+      if (self.web3CompatibleWithV5()) {
+        self.web3.shh.newSymKey().then((id) => {self.currentMessages.symKeyID = id;});
+        self.web3.shh.newKeyPair().then((id) => {self.currentMessages.sig = id;});
+      } else {
+        console.log("this version of whisper in this node");
+      }
+    } else {
+      self.currentMessages.identity = self.currentMessages.web3.shh.newIdentity();
+    }
+    self.currentMessages.whisperVersion = self.currentMessages.web3.version.whisper;
+  });
+};
+
+__embarkWhisper.getWhisperVersion = function(cb) {
+  if (this.isNewWeb3()) {
+    this.currentMessages.web3.shh.getVersion(function(err, version) {
+      cb(err, version);
+    });
+  } else {
+    this.currentMessages.web3.version.getWhisper(function(err, res) {
+      cb(err, web3.version.whisper);
+    });
+  }
+};
+
+__embarkWhisper.sendMessage = function(options) {
   var topics, data, ttl, priority, payload;
   if (EmbarkJS.Messages.isNewWeb3()) {
     topics = options.topic || options.topics;
@@ -67,11 +109,11 @@ EmbarkJS.Messages.Whisper.sendMessage = function(options) {
       priority: priority
     };
 
-    return EmbarkJS.Messages.currentMessages.web3.shh.post(message, function() { });
+    return this.web3.shh.post(message, function() { });
   }
 };
 
-EmbarkJS.Messages.Whisper.listenTo = function(options) {
+__embarkWhisper.listenTo = function(options) {
   var topics, _topics, messageEvents;
   if (EmbarkJS.Messages.isNewWeb3()) {
     messageEvents = function() {
@@ -175,3 +217,5 @@ EmbarkJS.Messages.Whisper.listenTo = function(options) {
     return promise;
   }
 };
+
+EmbarkJS.Storage.registerProvider('whisper', __embarkWhisper);
