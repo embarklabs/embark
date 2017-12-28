@@ -177,7 +177,6 @@ EmbarkJS.Contract.prototype.send = function(value, unit, _options) {
 
   options.to = this.address;
   options.value = wei;
-  console.log(options);
 
   this.web3.eth.sendTransaction(options);
 };
@@ -209,34 +208,18 @@ EmbarkJS.Storage.registerProvider = function(providerName, obj) {
 };
 
 EmbarkJS.Storage.setProvider = function(provider, options) {
-  let provider = this.Providers[provider];
+  let providerObj = this.Providers[provider];
 
-  if (!provider) {
+  if (!providerObj) {
     throw new Error('Unknown storage provider');
   } 
 
-  this.currentStorage = provider;
+  this.currentStorage = providerObj;
 
-  return provider.setProvider(options);
+  return providerObj.setProvider(options);
 };
 
 EmbarkJS.Messages = {};
-
-EmbarkJS.Messages.web3CompatibleWithV5 = function() {
-  var _web3 = new Web3();
-  if (typeof(_web3.version) === "string") {
-    return true;
-  }
-  return parseInt(_web3.version.api.split('.')[1], 10) >= 20;
-};
-
-EmbarkJS.Messages.isNewWeb3 = function() {
-  var _web3 = new Web3();
-  if (typeof(_web3.version) === "string") {
-    return true;
-  }
-  return parseInt(_web3.version.api.split('.')[0], 10) >= 1;
-};
 
 EmbarkJS.Messages.Providers = {};
 
@@ -245,18 +228,18 @@ EmbarkJS.Messages.registerProvider = function(providerName, obj) {
 };
 
 EmbarkJS.Messages.setProvider = function(provider, options) {
-    var self = this;
-    var ipfs;
+  var self = this;
+  var ipfs;
   if (provider === 'whisper') {
-    let provider = this.Providers[provider];
+    let providerObj = this.Providers[provider];
 
-    if (!provider) {
+    if (!providerObj) {
       throw new Error('Unknown storage provider');
     } 
 
-    this.currentMessages = provider;
+    this.currentMessages = providerObj;
 
-    return provider.setProvider(options);
+    return providerObj.setProvider(options);
 
   } else if (provider === 'orbit') {
 

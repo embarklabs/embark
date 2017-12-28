@@ -18,25 +18,33 @@ __embarkWhisper.setProvider = function(options) {
       console.log("whisper not available");
     } else if (version >= 5) {
       if (self.web3CompatibleWithV5()) {
-        self.web3.shh.newSymKey().then((id) => {self.currentMessages.symKeyID = id;});
-        self.web3.shh.newKeyPair().then((id) => {self.currentMessages.sig = id;});
+        self.web3.shh.newSymKey().then((id) => {self.symKeyID = id;});
+        self.web3.shh.newKeyPair().then((id) => {self.sig = id;});
       } else {
         console.log("this version of whisper in this node");
       }
     } else {
-      self.currentMessages.identity = self.currentMessages.web3.shh.newIdentity();
+      self.identity = self.web3.shh.newIdentity();
     }
-    self.currentMessages.whisperVersion = self.currentMessages.web3.version.whisper;
+    self.whisperVersion = self.web3.version.whisper;
   });
 };
 
+__embarkWhisper.web3CompatibleWithV5 = function() {
+  var _web3 = new Web3();
+  if (typeof(_web3.version) === "string") {
+    return true;
+  }
+  return parseInt(_web3.version.api.split('.')[1], 10) >= 20;
+};
+
 __embarkWhisper.getWhisperVersion = function(cb) {
-  if (this.isNewWeb3()) {
-    this.currentMessages.web3.shh.getVersion(function(err, version) {
+  if (EmbarkJS.isNewWeb3()) {
+    this.web3.shh.getVersion(function(err, version) {
       cb(err, version);
     });
   } else {
-    this.currentMessages.web3.version.getWhisper(function(err, res) {
+    this.web3.version.getWhisper(function(err, res) {
       cb(err, web3.version.whisper);
     });
   }
@@ -44,7 +52,7 @@ __embarkWhisper.getWhisperVersion = function(cb) {
 
 __embarkWhisper.sendMessage = function(options) {
   var topics, data, ttl, priority, payload;
-  if (EmbarkJS.Messages.isNewWeb3()) {
+  if (EmbarkJS.isNewWeb3()) {
     topics = options.topic || options.topics;
     data = options.data || options.payload;
     ttl = options.ttl || 100;
@@ -115,7 +123,7 @@ __embarkWhisper.sendMessage = function(options) {
 
 __embarkWhisper.listenTo = function(options) {
   var topics, _topics, messageEvents;
-  if (EmbarkJS.Messages.isNewWeb3()) {
+  if (EmbarkJS.isNewWeb3()) {
     messageEvents = function() {
       this.cb = function() {};
     };
@@ -218,4 +226,4 @@ __embarkWhisper.listenTo = function(options) {
   }
 };
 
-EmbarkJS.Storage.registerProvider('whisper', __embarkWhisper);
+EmbarkJS.Messages.registerProvider('whisper', __embarkWhisper);
