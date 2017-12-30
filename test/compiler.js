@@ -14,7 +14,6 @@ var solcVersion = "0.4.17";
 
 var TestEvents = {
   request: (cmd, cb) => {
-    console.log("hello!");
     cb(solcVersion)
   }
 };
