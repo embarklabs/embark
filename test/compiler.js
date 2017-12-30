@@ -10,14 +10,24 @@ let readFile = function(file) {
   return new File({filename: file, type: 'dapp_file', path: file});
 };
 
+var solcVersion = "0.4.17";
+
+var TestEvents = {
+  request: (cmd, cb) => {
+    console.log("hello!");
+    cb(solcVersion)
+  }
+};
+
 var apiObject = {
   registerCompiler: function() {},
-  logger: new TestLogger({})
+  logger: new TestLogger({}),
+  events: TestEvents
 };
 
 describe('embark.Compiler', function() {
   //let compiler = new Compiler({logger: new TestLogger({})});
-  let compiler = new SolidityCompiler(apiObject, {solcVersion: '0.4.17', contractDirectories: ['app/contracts/']});
+  let compiler = new SolidityCompiler(apiObject, {contractDirectories: ['app/contracts/']});
 
   describe('#compile_solidity', function() {
     this.timeout(0);
