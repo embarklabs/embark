@@ -5,6 +5,7 @@ NOTES
 demo/dist/
 demo/.embark/development/
 demo/config/production/password
+demo/node_modules/
 boilerplate/dist/
 docs/_build
 docs/utils/__pycache_
