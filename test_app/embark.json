@@ -6,7 +6,7 @@
     "css/app.css": ["app/css/**"],
     "images/": ["app/images/**"],
     "js/app.js": ["app/js/index.js"],
-    "js/test.js": ["app/js/_vendor/jquery.min.js", "app/js/_vendor/async.min.js", "app/js/test.js"],
+    "js/test.js": ["app/js/_vendor/jquery.min.js", "app/js/_vendor/async.min.js", "app/js/test.js", "app/js/non_existant_file.js"],
     "index.html": "app/index.html",
     "test.html": "app/test.html",
     "test2.html": "app/test2.html"
