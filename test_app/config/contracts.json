@@ -36,7 +36,7 @@
       },
       "Test": {
         "onDeploy": [
-          "Test.changeAddress('$MyToken')"
+          "Test.methods.changeAddress('$MyToken')"
         ]
       },
       "MyToken": {
@@ -55,8 +55,8 @@
       }
     },
     "afterDeploy": [
-      "Test.changeAddress('$MyToken')",
-      "Test.changeAddress(web3.eth.accounts[0])"
+      "Test.methods.changeAddress('$MyToken')",
+      "web3.eth.getAccounts((err, accounts) => Test.methods.changeAddress(accounts[0]))"
     ]
   },
   "development": {

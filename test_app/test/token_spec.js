@@ -1,4 +1,5 @@
 describe("Token", function() {
+  this.timeout(0);
   before(function(done) {
     this.timeout(0);
     var contractsConfig = {
@@ -20,12 +21,12 @@ describe("Token", function() {
         args: [2000]
       },
       "AlreadyDeployedToken": {
-        "address": "0x123",
+        "address": "0xCAFECAFECAFECAFECAFECAFECAFECAFECAFECAFE",
         instanceOf: "Token"
       },
       "Test": {
         onDeploy: [
-          "Test.changeAddress('$MyToken', function(){})"
+          "Test.methods.changeAddress('$MyToken').send({from: web3.eth.defaultAccount})"
         ]
       }
     };
@@ -38,32 +39,32 @@ describe("Token", function() {
   });
 
   it("not deploy MyToken and MyToken2", function(done) {
-    assert.notEqual(MyToken.address, "undefined");
-    assert.notEqual(MyToken2.address, "undefined");
+    assert.notEqual(MyToken.address, "");
+    assert.notEqual(MyToken2.address, "");
     done();
   });
 
   it("set MyToken Balance correctly", function(done) {
-      MyToken._supply(function(err, result) {
-        assert.equal(result.toNumber(), 1000);
-        done();
-      });
+    MyToken.methods._supply().call().then(function(result) {
+      assert.equal(result, 1000);
+      done();
+    });
   });
 
   it("set MyToken2 Balance correctly", function(done) {
-      MyToken2._supply(function(err, result) {
-        assert.equal(result.toNumber(), 2000);
-        done();
-      });
+    MyToken2.methods._supply().call().then(function(result) {
+      assert.equal(result, 2000);
+      done();
+    });
   });
 
   it("get right address", function(done) {
-    assert.equal(AlreadyDeployedToken.address, "0x123");
+    assert.equal(AlreadyDeployedToken.address, "0xCAFECAFECAFECAFECAFECAFECAFECAFECAFECAFE");
     done();
   });
 
   it("should use onDeploy", function(done) {
-    Test.addr(function(err, result) {
+    Test.methods.addr().call().then(function(result) {
       assert.equal(result, MyToken.address)
       done();
     });
