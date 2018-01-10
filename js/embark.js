@@ -188,19 +188,31 @@ EmbarkJS.Storage.Providers = {
 };
 
 EmbarkJS.Storage.saveText = function(text) {
-    return this.currentStorage.saveText(text);
+  if (!this.currentStorage) {
+    throw new Error('Storage provider not set; e.g EmbarkJS.Storage.setProvider("ipfs")');
+  }
+  return this.currentStorage.saveText(text);
 };
 
 EmbarkJS.Storage.get = function(hash) {
-    return this.currentStorage.get(hash);
+  if (!this.currentStorage) {
+    throw new Error('Storage provider not set; e.g EmbarkJS.Storage.setProvider("ipfs")');
+  }
+  return this.currentStorage.get(hash);
 };
 
 EmbarkJS.Storage.uploadFile = function(inputSelector) {
-    return this.currentStorage.uploadFile(inputSelector);
+  if (!this.currentStorage) {
+    throw new Error('Storage provider not set; e.g EmbarkJS.Storage.setProvider("ipfs")');
+  }
+  return this.currentStorage.uploadFile(inputSelector);
 };
 
 EmbarkJS.Storage.getUrl = function(hash) {
-    return this.currentStorage.getUrl(hash);
+  if (!this.currentStorage) {
+    throw new Error('Storage provider not set; e.g EmbarkJS.Storage.setProvider("ipfs")');
+  }
+  return this.currentStorage.getUrl(hash);
 };
 
 EmbarkJS.Storage.registerProvider = function(providerName, obj) {
@@ -240,11 +252,17 @@ EmbarkJS.Messages.setProvider = function(provider, options) {
 };
 
 EmbarkJS.Messages.sendMessage = function(options) {
-    return this.currentMessages.sendMessage(options);
+  if (!this.currentMessages) {
+    throw new Error('Messages provider not set; e.g EmbarkJS.Messages.setProvider("whisper")');
+  }
+  return this.currentMessages.sendMessage(options);
 };
 
 EmbarkJS.Messages.listenTo = function(options) {
-    return this.currentMessages.listenTo(options);
+  if (!this.currentMessages) {
+    throw new Error('Messages provider not set; e.g EmbarkJS.Messages.setProvider("whisper")');
+  }
+  return this.currentMessages.listenTo(options);
 };
 
 EmbarkJS.Utils = {
