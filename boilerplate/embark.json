@@ -1,5 +1,5 @@
 {
-  "contracts": ["app/contracts/**"],
+  "contracts": ["contracts/**"],
   "app": {
     "css/app.css": ["app/css/**"],
     "js/app.js": ["app/js/index.js"],
