@@ -13,7 +13,11 @@
     "account": {
       "password": "config/development/password"
     },
-    "wsOrigins": "http://localhost:8000"
+    "wsOrigins": "http://localhost:8000",
+    "wsRPC": true,
+    "wsHost": "localhost",
+    "wsPort": 8546
+  },
   },
   "testnet": {
     "enabled": true,
