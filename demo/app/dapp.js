@@ -6,6 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import EmbarkJS from 'Embark/EmbarkJS';
 import SimpleStorage from 'Embark/contracts/SimpleStorage';
 
+import './dapp.css';
+
 var addToLog = function(id, txt) {
   $(id + " .logs").append("<br>" + txt);
 };
