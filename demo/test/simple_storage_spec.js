@@ -1,4 +1,5 @@
 describe("SimpleStorage", function() {
+  this.timeout(0);
   before(function(done) {
     this.timeout(0);
     var contractsConfig = {
@@ -6,20 +7,20 @@ describe("SimpleStorage", function() {
         args: [100]
       }
     };
-    EmbarkSpec.deployAll(contractsConfig, done);
+    EmbarkSpec.deployAll(contractsConfig, () => { done() });
   });
 
   it("should set constructor value", function(done) {
-    SimpleStorage.storedData(function(err, result) {
-      assert.equal(result.toNumber(), 100);
+    SimpleStorage.methods.storedData().call().then(function(result) {
+      assert.equal(result, 100);
       done();
     });
   });
 
   it("set storage value", function(done) {
-    SimpleStorage.set(150, function() {
-      SimpleStorage.get(function(err, result) {
-        assert.equal(result.toNumber(), 150);
+    SimpleStorage.methods.set(150).send().then(function() {
+      SimpleStorage.methods.get().call().then(function(result) {
+        assert.equal(result, 150);
         done();
       });
     });
