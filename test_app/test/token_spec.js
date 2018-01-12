@@ -26,7 +26,7 @@ describe("Token", function() {
       },
       "Test": {
         onDeploy: [
-          "Test.methods.changeAddress('$MyToken').send({from: web3.eth.defaultAccount})"
+          "Test.methods.changeAddress('$MyToken').send()"
         ]
       }
     };
