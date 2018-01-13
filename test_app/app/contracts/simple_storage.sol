@@ -13,6 +13,9 @@ contract SimpleStorage is Ownable {
 
   function set(uint x) public {
     storedData = x;
+    for(uint i = 0; i < 1000; i++) {
+      storedData += i;
+    }
   }
 
   function set2(uint x, uint unusedGiveWarning) public onlyOwner {

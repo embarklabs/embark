@@ -34,7 +34,7 @@ contract("SimpleStorage", function() {
   it("set storage value", function(done) {
     SimpleStorage.methods.set(150).send().then(function() {
       SimpleStorage.methods.get().call().then(function(result) {
-        assert.equal(result, 150);
+        assert.equal(result, 499650);
         done();
       });
     });
