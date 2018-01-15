@@ -18,7 +18,6 @@
     "wsHost": "localhost",
     "wsPort": 8546
   },
-  },
   "testnet": {
     "enabled": true,
     "networkType": "testnet",
