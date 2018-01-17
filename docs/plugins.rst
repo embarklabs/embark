@@ -3,7 +3,7 @@ Extending functionality with plugins
 
 **To add a plugin to embark:**
 
-1. Add the npm package to package.json 
+1. Add the npm package to package.json
    e.g ``npm install embark-babel --save``
 2. Then add the package to ``plugins:`` in embark.json
    e.g ``"plugins": { "embark-babel": {} }``
@@ -29,6 +29,7 @@ The ``embark`` object then provides an api to extend different functionality of 
 * plugin to add standard contracts or a contract framework (``embark.registerContractConfiguration`` and ``embark.addContractFile``)
 * plugin to make some contracts available in all environments for use by other contracts or the dapp itself e.g a Token, a DAO, ENS, etc.. (``embark.registerContractConfiguration`` and ``embark.addContractFile``)
 * plugin to add a libraries such as react or boostrap (``embark.addFileToPipeline``)
+* plugin to process contract's binary code before deployment (``embark.beforeDeploy``)
 * plugin to specify a particular web3 initialization for special provider uses (``embark.registerClientWeb3Provider``)
 * plugin to create a different contract wrapper (``embark.registerContractsGeneration``)
 * plugin to add new console commands (``embark.registerConsoleCommand``)
@@ -137,6 +138,30 @@ This call is used to add a file to the pipeline so it's included with the dapp o
         embark.addFileToPipeline("./jquery.js", {skipPipeline: true});
     }
 
+**embark.registerBeforeDeploy(callback(options))**
+
+This call can be used to add handler to process contract code after it was generated, but immediately before it is going to be deployed.
+It is useful to replace placeholders with dynamic values.
+
+options available:
+ * embarkDeploy - instance of Deploy class. Has following fields: web3, contractsManager, logger, env, chainConfig, gasLimit.
+ * pluginConfig - plugin configuration object from embark.json
+ * deploymentAccount - address of account which will be used to deploy this contract
+ * contract - contract object.
+ * callback - callback function that handler must call with result object as the only argument. Result object must have field contractCode with (un)modified code from contract.code
+
+expected return: ignored
+
+example:
+
+.. code:: javascript
+
+    module.exports = function(embark) {
+      embark.registerBeforeDeploy(function(options) {
+        return options.contract.code.replace(/deaddeaddeaddeaddeaddeaddeaddeaddeaddead/ig, 'c0dec0dec0dec0dec0dec0dec0dec0dec0dec0de');
+      });
+    }
+
 
 **embark.registerClientWeb3Provider(callback(options))**
 
@@ -165,7 +190,7 @@ example:
 By default Embark will use EmbarkJS to declare contracts in the dapp. You can override and use your own client side library.
 
 options available:
- * contracts - Hash of objects containing all the deployed contracts. (key: contractName, value: contract object)
+  * contracts - Hash of objects containing all the deployed contracts. (key: contractName, value: contract object)
   * abiDefinition
   * code
   * deployedAddress
@@ -210,18 +235,15 @@ expected return: ``string`` (output to print in console) or ``boolean`` (skip co
 
 expected doneCallback arguments: ``err`` and  ``hash`` of compiled contracts
 
- * Hash of objects containing the compiled contracts. (key: contractName, value: contract object)
-
+  * Hash of objects containing the compiled contracts. (key: contractName, value: contract object)
   * code - contract bytecode (string)
-
   * runtimeBytecode - contract runtimeBytecode (string)
-
   * gasEstimates - gas estimates for constructor and methods (hash)
-   * e.g ``{"creation":[20131,38200],"external":{"get()":269,"set(uint256)":20163,"storedData()":224},"internal":{}}``
+  * e.g ``{"creation":[20131,38200],"external":{"get()":269,"set(uint256)":20163,"storedData()":224},"internal":{}}``
   * functionHashes - object with methods and their corresponding hash identifier (hash)
-   * e.g ``{"get()":"6d4ce63c","set(uint256)":"60fe47b1","storedData()":"2a1afcd9"}``
+  * e.g ``{"get()":"6d4ce63c","set(uint256)":"60fe47b1","storedData()":"2a1afcd9"}``
   * abiDefinition - contract abi (array of objects)
-   * e.g ``[{"constant":true,"inputs":[],"name":"storedData","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"}, etc...``
+  * e.g ``[{"constant":true,"inputs":[],"name":"storedData","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"}, etc...``
 
 below a possible implementation of a solcjs plugin:
 
@@ -271,15 +293,12 @@ e.g ``embark.logger.info("hello")``
 This call is used to listen and react to events that happen in Embark such as contract deployment
 
 * eventName - name of event to listen to
-  * available events:
-    * "contractsDeployed" - triggered when contracts have been deployed
-    * "file-add", "file-change", "file-remove", "file-event" - triggered on
-      a file change, args is (filetype, path)
-    * "abi", "abi-vanila", "abi-contracts-vanila" - triggered when contracts
-      have been deployed and returns the generated JS code
-    *  "outputDone" - triggered when dapp is (re)generated
-    * "firstDeploymentDone" - triggered when the dapp is deployed and generated
-      for the first time
+   * available events:
+      * "contractsDeployed" - triggered when contracts have been deployed
+      * "file-add", "file-change", "file-remove", "file-event" - triggered on a file change, args is (filetype, path)
+      * "abi", "abi-vanila", "abi-contracts-vanila" - triggered when contracts have been deployed and returns the generated JS code
+      *  "outputDone" - triggered when dapp is (re)generated
+      * "firstDeploymentDone" - triggered when the dapp is deployed and generated for the first time
 
 .. code:: javascript
 
@@ -293,4 +312,3 @@ This call is used to listen and react to events that happen in Embark such as co
           }
         });
     }
-
