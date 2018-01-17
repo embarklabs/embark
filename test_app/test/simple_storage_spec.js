@@ -5,9 +5,9 @@ contract("SimpleStorage", function() {
   before(function(done) {
     this.timeout(0);
 
-    config({
-      node: "http://localhost:8545"
-    });
+    //config({
+    //  node: "http://localhost:8545"
+    //});
 
     var contractsConfig = {
       "SimpleStorage": {
