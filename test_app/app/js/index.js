@@ -1,12 +1,9 @@
 /*globals $, SimpleStorage, document*/
 
-//import React, { Component } from 'react';
+import React, { Component } from 'react';
 import EmbarkJS from 'Embark/EmbarkJS';
 import SimpleStorage from 'Embark/contracts/SimpleStorage';
 import Test from 'Embark/contracts/Test';
-
-import React from 'react';
-let Component = React.Component;
 
 import ReactDOM from 'react-dom';
 
