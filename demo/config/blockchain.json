@@ -17,7 +17,9 @@
     "wsOrigins": "http://localhost:8000",
     "wsRPC": true,
     "wsHost": "localhost",
-    "wsPort": 8546
+    "wsPort": 8546,
+    "simulatorMnemonic": "example exile argue silk regular smile grass bomb merge arm assist farm",
+    "simulatorBlocktime": 0
   },
   "testnet": {
     "enabled": true,
