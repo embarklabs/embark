@@ -158,7 +158,9 @@ example:
 
     module.exports = function(embark) {
       embark.registerBeforeDeploy(function(options) {
-        return options.contract.code.replace(/deaddeaddeaddeaddeaddeaddeaddeaddeaddead/ig, 'c0dec0dec0dec0dec0dec0dec0dec0dec0dec0de');
+        var code = options.contract.code.replace(/deaddeaddeaddeaddeaddeaddeaddeaddeaddead/ig, 'c0dec0dec0dec0dec0dec0dec0dec0dec0dec0de');
+        options.callback({ contractCode: code });
+        return; // ignored
       });
     }
 
