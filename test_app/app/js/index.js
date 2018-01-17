@@ -56,8 +56,8 @@ $(document).ready(function() {
 
     // If web3.js 1.0 is being used
     if (EmbarkJS.isNewWeb3()) {
-      SimpleStorage.methods.set(value).send({from: web3.eth.defaultAccount});
-      addToLog("#blockchain", "SimpleStorage.methods.set(value).send({from: web3.eth.defaultAccount})");
+      SimpleStorage.methods.set(value).send({from: web3.eth.defaultAccount, gas: 5300000});
+      addToLog("#blockchain", "SimpleStorage.methods.set(value).send({from: web3.eth.defaultAccount, gas: 5300000})");
     } else {
       SimpleStorage.set(value);
       addToLog("#blockchain", "SimpleStorage.set(" + value + ")");
