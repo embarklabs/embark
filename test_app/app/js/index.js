@@ -9,9 +9,15 @@ import ReactDOM from 'react-dom';
 
 //import $ from './_vendor/jquery.min';
 import $ from 'jquery';
-import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/css/bootstrap-theme.css';
+//import 'bootstrap/dist/css/bootstrap.min.css';
 //import 'bootstrap/dist/js/bootstrap.min.js';
+
+//import 'react-bootstrap/dist/react-bootstrap.min.js';
+
+import { Navbar, Jumbotron, Button } from 'react-bootstrap';
 
 window.EmbarkJS = EmbarkJS;
 window.SimpleStorage = SimpleStorage;
@@ -21,20 +27,7 @@ window.React = React;
 
 import './foo.css';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
-}
+import App from './app.js';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
