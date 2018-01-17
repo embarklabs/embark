@@ -13,6 +13,7 @@
     "account": {
       "password": "config/development/password"
     },
+    "targetGasLimit": 8000000,
     "wsOrigins": "http://localhost:8000",
     "wsRPC": true,
     "wsHost": "localhost",
