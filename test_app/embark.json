@@ -14,7 +14,6 @@
   "buildDir": "dist/",
   "config": "config/",
   "plugins": {
-    "embark-babel": {"files": ["**/*.js", "**/*.jsx", "!**/_vendor/*.js"]},
     "embark-service": {}
   }
 }

@@ -12,8 +12,9 @@
   "devDependencies": {},
   "dependencies": {
     "bootstrap": "^3.3.6",
-    "embark-babel": "^1.0.0",
     "embark-service": "./extensions/embark-service",
-    "jquery": "^1.11.3"
+    "jquery": "^1.11.3",
+    "react": "^16.0.0",
+    "react-dom": "^16.2.0"
   }
 }

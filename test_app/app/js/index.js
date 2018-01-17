@@ -1,19 +1,45 @@
 /*globals $, SimpleStorage, document*/
 
+//import React, { Component } from 'react';
+import EmbarkJS from 'Embark/EmbarkJS';
+import SimpleStorage from 'Embark/contracts/SimpleStorage';
+import Test from 'Embark/contracts/Test';
+
+import React from 'react';
+let Component = React.Component;
+
+import ReactDOM from 'react-dom';
+
 //import $ from './_vendor/jquery.min';
 import $ from 'jquery';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 //import 'bootstrap/dist/js/bootstrap.min.js';
-import EmbarkJS from 'Embark/EmbarkJS';
-import SimpleStorage from 'Embark/contracts/SimpleStorage';
-import Test from 'Embark/contracts/Test';
 
 window.EmbarkJS = EmbarkJS;
 window.SimpleStorage = SimpleStorage;
 window.Test = Test;
 
+window.React = React;
+
 import './foo.css';
+
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <h1 className="App-title">Welcome to React</h1>
+        </header>
+        <p className="App-intro">
+          To get started, edit <code>src/App.js</code> and save to reload.
+        </p>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(<App />, document.getElementById('root'));
 
 var addToLog = function(id, txt) {
   $(id + " .logs").append("<br>" + txt);
