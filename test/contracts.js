@@ -72,7 +72,8 @@ describe('embark.Contracts', function() {
           assert.equal(contracts[0].deploy, true);
           assert.deepEqual(contracts[0].args, [100]);
           assert.equal(contracts[0].className, "Token");
-          assert.deepEqual(contracts[0].gas, 725000);
+          //assert.deepEqual(contracts[0].gas, 725000);
+          assert.deepEqual(contracts[0].gas, 'auto');
           //assert.equal(contracts[0].gasPrice, []); // TODO: test this one
           assert.equal(contracts[0].type, 'file');
           //assert.equal(contracts[0].abiDefinition, '');
@@ -82,7 +83,8 @@ describe('embark.Contracts', function() {
           assert.equal(contracts[1].deploy, true);
           assert.deepEqual(contracts[1].args, [200]);
           assert.equal(contracts[1].className, "SimpleStorage");
-          assert.deepEqual(contracts[1].gas, 725000);
+          //assert.deepEqual(contracts[1].gas, 725000);
+          assert.deepEqual(contracts[1].gas, 'auto');
           //assert.equal(contracts[1].gasPrice, []); // TODO: test this one
           assert.equal(contracts[1].type, 'file');
           //assert.equal(contracts[1].abiDefinition, '');
@@ -166,7 +168,8 @@ describe('embark.Contracts', function() {
           // TokenStorage
           assert.equal(contracts[3].deploy, true);
           assert.deepEqual(contracts[3].args, [100, '$SimpleStorage']);
-          assert.deepEqual(contracts[3].gas, 725000);
+          //assert.deepEqual(contracts[3].gas, 725000);
+          assert.deepEqual(contracts[3].gas, 'auto');
           assert.equal(contracts[3].type, 'file');
           //assert.equal(contracts[3].abiDefinition, '');
           //assert.equal(contracts[3].code, '');
@@ -177,7 +180,8 @@ describe('embark.Contracts', function() {
           //MySimpleStorage
           assert.equal(contracts[0].deploy, true);
           assert.deepEqual(contracts[0].args, [300]);
-          assert.deepEqual(contracts[0].gas, 725000);
+          //assert.deepEqual(contracts[0].gas, 725000);
+          assert.deepEqual(contracts[0].gas, 'auto');
           assert.equal(contracts[0].type, 'instance');
           assert.equal(contracts[0].abiDefinition, parentContract.abiDefinition);
           assert.equal(contracts[0].code, parentContract.code);
@@ -186,7 +190,8 @@ describe('embark.Contracts', function() {
           // SimpleStorage
           assert.equal(contracts[2].deploy, true);
           assert.deepEqual(contracts[2].args, [200]);
-          assert.deepEqual(contracts[2].gas, 725000);
+          //assert.deepEqual(contracts[2].gas, 725000);
+          assert.deepEqual(contracts[2].gas, 'auto');
           assert.equal(contracts[2].type, 'file');
           //assert.equal(contracts[2].abiDefinition, '');
           //assert.equal(contracts[2].code, '');
@@ -195,7 +200,8 @@ describe('embark.Contracts', function() {
           // AnotherSimpleStorage
           assert.equal(contracts[1].deploy, true);
           assert.deepEqual(contracts[1].args, [200]);
-          assert.deepEqual(contracts[1].gas, 725000);
+          //assert.deepEqual(contracts[1].gas, 725000);
+          assert.deepEqual(contracts[1].gas, 'auto');
           assert.equal(contracts[1].type, 'instance');
           assert.equal(contracts[1].abiDefinition, parentContract.abiDefinition);
           assert.equal(contracts[1].code, parentContract.code);
