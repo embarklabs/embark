@@ -21,6 +21,7 @@
         "deploy": false
       },
       "SimpleStorage": {
+        "fromIndex": 1,
         "args": [
           100
         ]
