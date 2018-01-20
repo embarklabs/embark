@@ -1,7 +1,7 @@
 /*globals describe, it*/
 let Compiler = require('../lib/contracts/compiler.js');
 let SolidityCompiler = require('../lib/modules/solidity');
-let TestLogger = require('../lib/core/test_logger.js');
+let TestLogger = require('../lib/tests/test_logger.js');
 let File = require('../lib/core/file.js');
 let assert = require('assert');
 let fs = require('fs');

@@ -2,7 +2,7 @@
 let ContractsManager = require('../lib/contracts/contracts.js');
 let Logger = require('../lib/core/logger.js');
 let File = require('../lib/core/file.js');
-let TestLogger = require('../lib/core/test_logger.js');
+let TestLogger = require('../lib/tests/test_logger.js');
 let assert = require('assert');
 let fs = require('fs');
 
