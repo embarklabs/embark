@@ -1,5 +1,5 @@
 Configuring & Using Contracts
-===============
+=============================
 
 Embark will automatically take care of deployment for you and set all
 needed JS bindings. For example, the contract below:
@@ -112,6 +112,39 @@ You can now deploy many instances of the same contract. e.g
       }
     }
       ...
+
+Account from which you want to deploy a contract can be specified using "from" or "fromIndex" parameters.
+
+| "from" - should be account address string.
+| "fromIndex" - should be index in accounts array as retrieved by web3.eth.getAccounts() .
+
+If both "from" and "fromIndex" are specified, the "from" will be used.
+
+Example:
+
+      .. code:: json
+
+          # config/contracts.json
+          {
+            "development": {
+              "contracts": {
+                "Currency": {
+                  "deploy": true,
+                  "from": '0xfeedaa0e295b09cd84d6ea2cce390eb443bcfdfc',
+                  "args": [
+                    100
+                  ]
+                },
+                "MyStorage": {
+                  "fromIndex": 0,
+                  "args": [
+                    "initial string"
+                  ]
+                },
+              }
+            }
+          }
+            ...
 
 Contracts addresses can be defined, If an address is defined the
 contract wouldn't be deployed but its defined address will be used
