@@ -11,6 +11,7 @@
     },
     "dappConnection": [
       "$WEB3",
+      "ws://localhost:8546",
       "http://localhost:8550",
       "http://localhost:8545",
       "http://localhost:8550"
@@ -21,7 +22,7 @@
         "deploy": false
       },
       "SimpleStorage": {
-        "fromIndex": 1,
+        "fromIndex": 0,
         "args": [
           100
         ]

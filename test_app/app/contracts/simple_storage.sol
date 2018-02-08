@@ -2,6 +2,14 @@ pragma solidity ^0.4.17;
 
 import "ownable.sol";
 
+library Assert {
+  event TestEvent(bool passed, string message);
+
+  function triggerEvent(bool passed, string message) internal {
+    TestEvent(passed, message);
+  }
+}
+
 contract SimpleStorage is Ownable {
   uint public storedData;
 
@@ -16,6 +24,7 @@ contract SimpleStorage is Ownable {
     for(uint i = 0; i < 1000; i++) {
       storedData += i;
     }
+    Assert.triggerEvent(true, "hi");
   }
 
   function set2(uint x, uint unusedGiveWarning) public onlyOwner {
