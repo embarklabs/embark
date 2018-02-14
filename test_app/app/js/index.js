@@ -21,7 +21,7 @@ import 'bootstrap/dist/css/bootstrap-theme.css';
 import { Navbar, Jumbotron, Button } from 'react-bootstrap';
 
 window.EmbarkJS = EmbarkJS;
-window.SimpleStorage = SimpleStorage;
+//window.SimpleStorage = SimpleStorage;
 window.Test = Test;
 window.Assert = Assert;
 
