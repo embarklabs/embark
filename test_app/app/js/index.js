@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import EmbarkJS from 'Embark/EmbarkJS';
-import SimpleStorage from 'Embark/contracts/SimpleStorage';
+//import SimpleStorage from 'Embark/contracts/SimpleStorage';
 import Test from 'Embark/contracts/Test';
 import Assert from 'Embark/contracts/Assert';
 
