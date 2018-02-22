@@ -401,7 +401,7 @@ EmbarkJS.Messages.setProvider = function(provider, options) {
         if (typeof(web3) === "undefined") {
           this.currentMessages.orbit.connect(Math.random().toString(36).substring(2));
         } else {
-          this.currentMessages.orbit.connect(web3.eth.accounts[0]);
+          this.currentMessages.orbit.connect(web3.eth.defaultAccount);
         }
     } else {
         throw Error('Unknown message provider');
