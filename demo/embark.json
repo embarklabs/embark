@@ -2,7 +2,6 @@
   "contracts": ["contracts/**"],
   "app": {
     "js/dapp.js": ["app/dapp.js"],
-    "js/jquery.js": ["app/js/_vendor/jquery.js"],
     "index.html": "app/index.html",
     "images/": ["app/images/**"]
   },
