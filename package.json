@@ -74,6 +74,7 @@
     "i18n": "0.8.3",
 =======
     "express": "^4.16.2",
+    "express-ws": "^3.0.0",
     "file-loader": "^1.1.5",
     "finalhandler": "^1.1.1",
     "follow-redirects": "^1.2.4",
