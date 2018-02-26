@@ -1,29 +1,22 @@
 Welcome to Embark!
 
 <script>
+  var ws = new WebSocket("ws://localhost:8000/embark/logs");
 
-var ws = new WebSocket("ws://localhost:8000/logs");
+  ws.onopen = function() {
+  };
 
-ws.onopen = function() {
-  // Web Socket is connected, send data using send()
-  ws.send("Message to send");
-  alert("Message is sent...");
-};
+  ws.onmessage = function (evt) {
+    var received_msg = evt.data;
+    console.log(received_msg);
+  };
 
-ws.onmessage = function (evt) {
-  var received_msg = evt.data;
-  console.log(received_msg);
-  //alert("Message is received...");
-};
+  ws.onclose = function() {
+    console.log("Connection is closed...");
+  };
 
-ws.onclose = function() {
-  // websocket is closed.
-  alert("Connection is closed...");
-};
-
-window.onbeforeunload = function(event) {
-  socket.close();
-};
-
+  window.onbeforeunload = function(event) {
+    ws.close();
+  };
 </script>
 
