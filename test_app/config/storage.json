@@ -16,5 +16,13 @@
     "host": "localhost",
     "port": 5001,
     "getUrl": "http://localhost:8080/ipfs/"
+  },
+  "livenet": {
+    "enabled": true,
+    "provider": "ipfs",
+    "host": "ipfs.infura.io",
+    "protocol": "https",
+    "port": false,
+    "getUrl": "https://ipfs.infura.io/ipfs/"
   }
 }
