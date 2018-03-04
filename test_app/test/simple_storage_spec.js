@@ -26,6 +26,12 @@ contract("SimpleStorage", function() {
       "MyToken2": {
         instanceOf: "Token",
         args: [2000]
+      },
+      "SomeContract": {
+        "args": [
+          ["$MyToken2", "$SimpleStorage"],
+          100
+        ]
       }
     };
     EmbarkSpec.deployAll(contractsConfig, () => { done() });

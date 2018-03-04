@@ -1,4 +1,4 @@
-contract("AnotherStorage", function() {
+contract("SomeContract", function() {
   this.timeout(0);
   before(function(done) {
     this.timeout(0);
@@ -30,11 +30,19 @@ contract("AnotherStorage", function() {
     EmbarkSpec.deployAll(contractsConfig, () => { done() });
   });
 
+  it("set MyToken2 address", function(done) {
+    SomeContract.methods.addr_1().call().then(function(address) {
+      assert.equal(address, MyToken2.options.address);
+      done();
+    });
+  });
+
   it("set SimpleStorage address", function(done) {
-    AnotherStorage.methods.simpleStorageAddress().call().then(function(result) {
-      assert.equal(result.toString(), SimpleStorage.options.address);
+    SomeContract.methods.addr_2().call().then(function(address) {
+      assert.equal(address, SimpleStorage.options.address);
       done();
     });
   });
 
 });
+

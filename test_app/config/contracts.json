@@ -54,6 +54,12 @@
       },
       "MyToken3": {
         "instanceOf": "Tokn"
+      },
+      "SomeContract": {
+        "args": [
+          ["$MyToken2", "$SimpleStorage"],
+          100
+        ]
       }
     },
     "afterDeploy": [

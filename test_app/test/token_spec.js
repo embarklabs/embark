@@ -35,6 +35,12 @@ describe("Token", function() {
         onDeploy: [
           "Test.methods.changeAddress('$MyToken').send()"
         ]
+      },
+      "SomeContract": {
+        "args": [
+          ["$MyToken2", "$SimpleStorage"],
+          100
+        ]
       }
     };
     EmbarkSpec.deployAll(contractsConfig, () => { done() });
