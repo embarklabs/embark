@@ -55,6 +55,12 @@
       "MyToken3": {
         "instanceOf": "Tokn"
       },
+      "ContractArgs": {
+        "args": {
+          "initialValue": 123,
+          "_addresses": ["$MyToken2", "$SimpleStorage"]
+        }
+      },
       "SomeContract": {
         "args": [
           ["$MyToken2", "$SimpleStorage"],
