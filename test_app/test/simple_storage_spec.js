@@ -27,6 +27,12 @@ contract("SimpleStorage", function() {
         instanceOf: "Token",
         args: [2000]
       },
+      "ContractArgs": {
+        "args": {
+          "initialValue": 123,
+          "_addresses": ["$MyToken2", "$SimpleStorage"]
+        }
+      },
       "SomeContract": {
         "args": [
           ["$MyToken2", "$SimpleStorage"],

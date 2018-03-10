@@ -36,6 +36,12 @@ describe("Token", function() {
           "Test.methods.changeAddress('$MyToken').send()"
         ]
       },
+      "ContractArgs": {
+        "args": {
+          "initialValue": 123,
+          "_addresses": ["$MyToken2", "$SimpleStorage"]
+        }
+      },
       "SomeContract": {
         "args": [
           ["$MyToken2", "$SimpleStorage"],
