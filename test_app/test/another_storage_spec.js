@@ -8,29 +8,6 @@ contract("AnotherStorage", function() {
       },
       "AnotherStorage": {
         args: ["$SimpleStorage"]
-      },
-      "Token": {
-        deploy: false,
-        args: [1000]
-      },
-      "MyToken": {
-        instanceOf: "Token"
-      },
-      "MyToken2": {
-        instanceOf: "Token",
-        args: [2000]
-      },
-      "ContractArgs": {
-        "args": {
-          "initialValue": 123,
-          "_addresses": ["$MyToken2", "$SimpleStorage"]
-        }
-      },
-      "SomeContract": {
-        "args": [
-          ["$MyToken2", "$SimpleStorage"],
-          100
-        ]
       }
     };
     EmbarkSpec.deployAll(contractsConfig, () => { done() });

@@ -2,8 +2,12 @@ contract("Test", function() {
   before(function(done) {
     this.timeout(0);
     var contractsConfig = {
+      "Test2": {
+      },
       "Test": {
         "gas": 2000000
+      },
+      "ZAMyLib": {
       },
       "ZAMyLib2": {
         "deploy": true

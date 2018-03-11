@@ -10,6 +10,10 @@ describe("Token", function() {
     //});
 
     var contractsConfig = {
+      "ZAMyLib": {
+      },
+      "Token": {
+      },
       "SimpleStorage": {
         args: [100]
       },
