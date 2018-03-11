@@ -6,25 +6,13 @@ contract("SomeContract", function() {
       "SimpleStorage": {
         args: [100]
       },
-      "AnotherStorage": {
-        args: ["$SimpleStorage"]
-      },
       "Token": {
         deploy: false,
         args: [1000]
       },
-      "MyToken": {
-        instanceOf: "Token"
-      },
       "MyToken2": {
         instanceOf: "Token",
         args: [2000]
-      },
-      "ContractArgs": {
-        "args": {
-          "initialValue": 123,
-          "_addresses": ["$MyToken2", "$SimpleStorage"]
-        }
       },
       "SomeContract": {
         "args": [
