@@ -44,6 +44,12 @@
       "AlreadyDeployedToken": {
         "address": "0xece374063fe5cc7efbaca0a498477cada94e5ad6",
         "instanceOf": "Token"
+      },
+      "SomeContract": {
+        "args": [
+          ["$MyToken2", "$SimpleStorage"],
+          100
+        ]
       }
     }
   },

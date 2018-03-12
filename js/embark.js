@@ -230,7 +230,7 @@ EmbarkJS.Storage.setProvider = function(provider, options) {
                     self.currentStorage._getUrl = options.getUrl || "http://localhost:8080/ipfs/";
                 } else {
                     var ipfsOptions = {host: options.server, protocol: 'http'};
-                    if (options.protocol) {
+                    if (options.protocol && options.protocol !== 'undefined') {
                       ipfsOptions.protocol = options.protocol;
                     }
                     if (options.port && options.port !== 'false') {

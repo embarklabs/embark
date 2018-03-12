@@ -7,7 +7,7 @@
 		exports["EmbarkJS"] = factory();
 	else
 		root["EmbarkJS"] = factory();
-})(this, function() {
+})(typeof self !== 'undefined' ? self : this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -42,9 +42,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
 /******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
@@ -312,7 +309,7 @@ EmbarkJS.Storage.setProvider = function(provider, options) {
                     self.currentStorage._getUrl = options.getUrl || "http://localhost:8080/ipfs/";
                 } else {
                     var ipfsOptions = {host: options.server, protocol: 'http'};
-                    if (options.protocol) {
+                    if (options.protocol && options.protocol !== 'undefined') {
                       ipfsOptions.protocol = options.protocol;
                     }
                     if (options.port && options.port !== 'false') {
