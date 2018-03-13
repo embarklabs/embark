@@ -1,6 +1,5 @@
 pragma solidity ^0.4.24;
 contract AnotherStorage {
-
   address public simpleStorageAddress;
   address simpleStorageAddress2;
   address ens;
