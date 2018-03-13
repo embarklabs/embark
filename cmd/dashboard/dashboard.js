@@ -27,6 +27,35 @@ class Dashboard {
 
     monitor = new Monitor({env: this.env, events: this.events});
     this.logger.logFunction = monitor.logEntry;
+    let plugin = this.plugins.createPlugin('dashboard', {});
+    plugin.registerAPICall(
+      'ws',
+      '/embark/dashboard',
+      (ws, req) => {
+        let dashboardState = { contractsState: [], environment: "", status: "", availableServices: [] };
+
+        // TODO: doesn't feel quite right, should be refactored into a shared
+        // dashboard state
+        self.events.request('setDashboardState');
+
+        self.events.on('contractsState', (contracts) => {
+          dashboardState.contractsState = [];
+
+          contracts.forEach(function (row) {
+            dashboardState.contractsState.push({contractName: row[0], address: row[1], status: row[2]});
+          });
+          ws.send(JSON.stringify(dashboardState));
+        });
+        self.events.on('status', (status) => {
+          dashboardState.status = status;
+          ws.send(JSON.stringify(dashboardState));
+        });
+        self.events.on('servicesState', (servicesState) => {
+          dashboardState.availableServices = servicesState;
+          ws.send(JSON.stringify(dashboardState));
+        });
+      }
+    );
 
     this.events.on('contractsState', monitor.setContracts);
     this.events.on('status', monitor.setStatus.bind(monitor));
