@@ -22,3 +22,9 @@ There is a console at the bottom which can be used to interact with
 contracts or with embark itself. type ``help`` to see a list of
 available commands, more commands will be added with each version of
 Embark.
+
+**without the dashboard**
+
+if you prefer to only see the logs, you can disable the dashboard with the
+nodashboard option ``embark run --nodashboard``
+
