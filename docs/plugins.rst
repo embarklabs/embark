@@ -395,6 +395,7 @@ This call is used so the plugin can make a certain file available as a library
 to a user
 
 .. code:: javascript
+
     var path = require('path')
 
     module.exports = function(embark) {
