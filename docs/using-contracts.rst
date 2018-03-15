@@ -27,9 +27,11 @@ Will automatically be available in Javascript as:
 .. code:: javascript
 
     # app/js/index.js
-    SimpleStorage.set(100);
-    SimpleStorage.get().then(function(value) { console.log(value.toNumber()) });
-    SimpleStorage.storedData().then(function(value) { console.log(value.toNumber()) });
+    import SimpleStorage from 'Embark/contracts/SimpleStorage';
+
+    SimpleStorage.methods.set(100).send();
+    SimpleStorage.methods.get().call().then(function(value) { console.log(value) });
+    SimpleStorage.methods.storedData().call().then(function(value) { console.log(value) });
 
 You can specify for each contract and environment its gas costs and
 arguments:
@@ -44,7 +46,8 @@ arguments:
           "SimpleStorage": {
             "args": [
               100
-            ]
+            ],
+            "gas": 800000
           }
         }
       }
@@ -53,6 +56,7 @@ arguments:
 If you are using multiple contracts, you can pass a reference to another
 contract as ``$ContractName``, Embark will automatically replace this
 with the correct address for the contract.
+You can also specify interfaces and choose to not deploy contracts (for e.g in case they are interfaces)
 
 .. code:: json
 
@@ -76,6 +80,9 @@ with the correct address for the contract.
             "args": [
               "$SimpleStorage"
             ]
+          },
+          "MyContractInteface": {
+            "deploy": false
           }
         }
       }
@@ -169,3 +176,4 @@ instead.
       }
       ...
     }
+

@@ -29,6 +29,7 @@ This is a work in progress, feel free to contribute!
    deploying-to-swarm.rst
    plugins.rst
    using-embark-with-grunt.rst
+   other.rst
    donations.rst
 
 Indices and tables

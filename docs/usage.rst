@@ -42,3 +42,36 @@ and deploy your DApp to a local server at http://localhost:8000
 Note that if you update your code it will automatically be re-deployed,
 contracts included. There is no need to restart embark, refreshing the
 page on the browser will do.
+
+embark run options
+============
+
+**Dashboard**
+
+* ``--nodashboard`` - simple mode, disables the dashboard
+* ``--no-color`` - no colors in case it's needed for compatbility purposes
+
+**Web Server**
+
+* ``-p [port]`` or ``--port [port]`` - port to run the dev webserver (default: 8000)
+* ``-b [host]`` or ``--host [host]`` - host to run the dev webserver (default: localhost)
+* ``--noserver`` - disable the development webserver
+
+**Log File**
+
+* ``--logfile [logfile]`` - filename to output logs (default: none)
+
+embark simulator options
+============
+
+**RPC Server**
+
+* ``-p [port]`` or ``--port [port]`` - port to run the rpc simulator (default: 8545)
+* ``-b [host]`` or ``--host [host]`` - host to run the rpc simulator (default: localhost)
+
+**Other Options**
+
+* ``--accounts [numAccounts]`` - number of accounts (default: 10)
+* ``--defaultBalanceEther [balance]`` - Amount of ether to assign each test account (default: 100)
+* ``--gasLimit [gasLimit]`` - custom gas limit (default: 8000000)
+

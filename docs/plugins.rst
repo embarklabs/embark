@@ -28,13 +28,16 @@ The ``embark`` object then provides an api to extend different functionality of 
 * plugin to add support for es6, jsx, coffescript, etc (``embark.registerPipeline``)
 * plugin to add standard contracts or a contract framework (``embark.registerContractConfiguration`` and ``embark.addContractFile``)
 * plugin to make some contracts available in all environments for use by other contracts or the dapp itself e.g a Token, a DAO, ENS, etc.. (``embark.registerContractConfiguration`` and ``embark.addContractFile``)
-* plugin to add a libraries such as react or boostrap (``embark.addFileToPipeline``)
+* plugin to add a libraries such as react or boostrap (``embark.addFileToPipeline``, ``embark.registerImportFile``)
 * plugin to process contract's binary code before deployment (``embark.beforeDeploy``)
 * plugin to specify a particular web3 initialization for special provider uses (``embark.registerClientWeb3Provider``)
 * plugin to create a different contract wrapper (``embark.registerContractsGeneration``)
 * plugin to add new console commands (``embark.registerConsoleCommand``)
 * plugin to add support for another contract language such as viper, LLL, etc (``embark.registerCompiler``)
 * plugin that executes certain actions when contracts are deployed (``embark.events.on``)
+* plugin that registers a service in embark (``embark.registerServiceCheck``)
+* plugin that adds support to upload the dapp somewhere (``embark.registerUploadCommand``)
+* plugin that extends EmbarkJS (``embark.addCodeToEmbarkJS``, ``embark.addProviderInit``)
 
 **embark.pluginConfig**
 
@@ -298,9 +301,11 @@ This call is used to listen and react to events that happen in Embark such as co
    * available events:
       * "contractsDeployed" - triggered when contracts have been deployed
       * "file-add", "file-change", "file-remove", "file-event" - triggered on a file change, args is (filetype, path)
-      * "abi", "abi-vanila", "abi-contracts-vanila" - triggered when contracts have been deployed and returns the generated JS code
+      * "code", "code-vanila", "code-contracts-vanila" - triggered when contracts have been deployed and returns the generated JS code
       *  "outputDone" - triggered when dapp is (re)generated
       * "firstDeploymentDone" - triggered when the dapp is deployed and generated for the first time
+      * "check:backOnline:serviceName" - triggered when the service with ``serviceName`` comes back online
+      * "check:backOffline:serviceName" - triggered when the service with ``serviceName`` comes back offline
 
 .. code:: javascript
 
@@ -314,3 +319,85 @@ This call is used to listen and react to events that happen in Embark such as co
           }
         });
     }
+
+**embark.registerServiceCheck(serviceName, callback({name, status}), time)**
+
+This call is used to register a service in embark so it's periodically checked.
+It will be displayed in the Embark Dashboard, and will also trigger events such as ``check:backOnline:yourServiceName`` and ``check:backOffline:yourServiceName``
+
+* serviceName - name of service (string)
+* callback:
+  * "name" - name/text to display (string)
+  * "status" - status of the service (string, "on" or "off" or "warn")
+* time (optional) - ms interval to call the callback (default: 5000 ms)
+
+.. code:: javascript
+
+    module.exports = function(embark) {
+        embark.registerServiceCheck("MyServer", function(cb) {
+          if (myServiceOnline()) {
+            return cb({name: "MyServer Online", status: "on"});
+          } else {
+            return cb({name: "MyServer Offline", status: "off"});
+          }
+        });
+    }
+
+**embark.registerUploadCommand(cmdName, callback)**
+
+This call is used to add a new cmd to ``embark upload`` to upload the dapp to
+a new storage service
+
+.. code:: javascript
+
+    module.exports = function(embark) {
+        embark.registerUploadCommand("ipfs", function() {
+          run("ipfs add -r dist/");
+        });
+    }
+
+**embark.addCodeToEmbarkJS(code)**
+
+This call is used to add code to the embark.js library. It's typically used to
+extend it with new functionality, new storage providers, new communication
+providers, etc..
+
+.. code:: javascript
+
+    module.exports = function(embark) {
+        embark.addCodeToEmbarkJS("alert('hello world!')");
+    }
+
+**embark.addProviderInit(providerType, code, initCondition(config))**
+
+This call is used to add code to be executed in the initialization under the
+condition that ```initCondition``` returns true. For example this can be used to
+set the storage provider of EmbarkJS to ipfs if ipfs is enabled as a provider in
+the config
+
+* providerType - type of provider (string, "storage" or "communication")
+* code - code to add (string)
+* callback:
+  * "config" - config of the ``providerType``
+
+.. code:: javascript
+
+    module.exports = function(embark) {
+        let code = "\nEmbarkJS.Storage.setProvider('ipfs')";
+        embark.addProviderInit('storage', code, (storageConfig) => {
+          return (storageConfig.provider === 'ipfs' && storageConfig.enabled === true);
+        });
+    }
+
+**embark.registerImportFile(importName, importLocation)**
+
+This call is used so the plugin can make a certain file available as a library
+to a user
+
+.. code:: javascript
+    var path = require('path')
+
+    module.exports = function(embark) {
+        embark.registerImportFile("my-lib", path.join(__dirname, "my-lib.js"));
+    }
+

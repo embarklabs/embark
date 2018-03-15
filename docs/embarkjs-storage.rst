@@ -55,3 +55,8 @@ The current available storage is IPFS. it can be initialized as
 .. code:: javascript
 
       EmbarkJS.Storage.getUrl(hash);
+
+**configuring IPFS**
+
+note: if not using localhost, the cors needs to be set as ```ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["your-host-name-port"]```
+

@@ -25,11 +25,8 @@ DApp Structure
 
 .. code:: bash
 
-      app/
-        |___ contracts/ #solidity smart contracts
-        |___ html/
-        |___ css/
-        |___ js/
+      app/ # dapp code
+      contracts/ #smart contracts
       config/
         |___ blockchain.json #rpc and blockchain configuration
         |___ contracts.json  #ethereum contracts configuration
@@ -38,5 +35,9 @@ DApp Structure
         |___ webserver.json  #dev webserver configuration
       test/
         |___ #contracts tests
+      dist/
+        |___ # build folder
+      chains.json #keeps track of deployments in each chain
 
 Solidity files in the contracts directory will automatically be deployed with ``embark run``. Changes in any files will automatically be reflected in app, changes to contracts will result in a redeployment and update of their JS Bindings
+

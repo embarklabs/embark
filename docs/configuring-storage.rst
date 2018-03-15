@@ -14,7 +14,10 @@ e.g :
         "provider": "ipfs",
         "available_providers": ["ipfs"],
         "host": "localhost",
-        "port": 5001
+        "port": 5001,
+        "versions": {
+          "ipfs-api": "17.2.4"
+        }
       },
       "development": {
         "enabled": true,
@@ -30,4 +33,5 @@ options available:
   * ``provider`` (string: "ipfs") desired provider to automatically connect to on the dapp. e.g in the example above, seting this to ``"ipfs"`` will automaticaly add ``EmbarkJS.setProvider('ipfs', {server: 'localhost', 5001})`` to the generated code
   * ``available_providers`` (array: ["ipfs"]) list of storages to be supported on the dapp. This will affect what's available with the EmbarkJS library on the dapp.
   * ``host`` and ``port`` of the ipfs node to connect to.
+  * ``versions`` (object) key-value hash of library and its desired version
 

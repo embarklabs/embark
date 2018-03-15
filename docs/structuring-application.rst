@@ -8,12 +8,12 @@ structure using ``embark.json``
 
     # embark.json
     {
-      "contracts": ["app/contracts/**"],
+      "contracts": ["contracts/**"],
       "app": {
+        "js/app.js": ["app/dapp.js"],
+        "index.html": "app/index.html",
         "css/app.css": ["app/css/**"],
-        "images/": ["app/images/**"],
-        "js/app.js": ["embark.js", "app/js/**"],
-        "index.html": "app/index.html"
+        "images/": ["app/images/**"]
       },
       "buildDir": "dist/",
       "config": "config/",
