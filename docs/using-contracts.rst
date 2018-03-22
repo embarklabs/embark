@@ -47,7 +47,8 @@ arguments:
             "args": [
               100
             ],
-            "gas": 800000
+            "gas": 800000,
+            "gasPrice": 5
           }
         }
       }
@@ -177,3 +178,23 @@ instead.
       ...
     }
 
+You can specify actions to do after the deployment of a contract using the "onDeploy" parameter.
+
+| "onDeploy" - should be an array of javascript instructions that will be evaluated and executed
+
+.. code:: json
+
+    # config/contracts.json
+    {
+      "development": {
+        "gas": "auto",
+        "contracts": {
+          "SimpleStorage": {
+            "args": [
+              100
+            ],
+            "onDeploy": ["SimpleStorage.methods.set(150).send()"]
+          }
+        }
+      }
+    }

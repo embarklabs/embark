@@ -1,8 +1,8 @@
 Testing Ethereum Contracts
 ==========================
 
-You can run specs with ``embark test``, it will run any test files under
-``test/``.
+You can run specs with ``embark test``, it will run all the test files under
+``test/``. You can run a specific test file with ``embark test <path/test_filename.js>
 
 Embark includes a testing lib to fastly run & test your contracts in a
 EVM.
@@ -120,3 +120,48 @@ and initialize the testing functionality. Below is an example using mocha:
 
 ``mocha test/simple_storage_spec.js --no-timeouts``
 
+**accessing accounts**
+
+The callback used in the function ``deployAll`` will let you access the accounts configured in the EVM. 
+You can assign them to a variable and use them in your tests.
+
+.. code:: javascript
+
+    var accountArr;
+    EmbarkSpec.deployAll(contractsConfig, (accounts) => {
+      accountArr = accounts;
+      done();
+    });
+
+**creating contract instances in your tests**
+
+Embark handles the deployment of your contracts through the function ``deployAll``. 
+However you can use ``web3.eth.contract`` for creating instances of your contracts manually.
+
+.. code:: javascript
+
+    var simpleStorageJson = require('../dist/contracts/SimpleStorage.json');
+    var accountArr;
+    var simpleStorage;
+    
+    describe("SimpleStorage", function() {
+      this.timeout(0);
+      before(function(done) {
+        EmbarkSpec.deployAll({}, (accounts) => {
+          accountArr = accounts;
+          done();
+        });
+      });
+    
+      it("should deploy a contract instance", function(done) {
+        var simpleStorageContract = new web3.eth.Contract(simpleStorageJson.abi);
+        simpleStorageContract.deploy({data: simpleStorageJson.code, arguments: [100]})
+          .send({from: accountArr[0], gas: 5000000, gasPrice: 1})
+          .then(function(contractInstance){
+            simpleStorage = contractInstance;
+            simpleStorage.setProvider(web3.currentProvider);
+            assert(simpleStorage.options.address != null);
+           })
+          .finally(done);
+      });
+    });
