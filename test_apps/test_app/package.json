@@ -1,0 +1,23 @@
+{
+  "name": "test_app",
+  "version": "0.0.1",
+  "description": "",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "",
+  "devDependencies": {
+    "babel-code-frame": "^6.26.0"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "embark-service": "./extensions/embark-service",
+    "jquery": "^1.11.3",
+    "react": "^16.0.0",
+    "react-bootstrap": "^0.32.0",
+    "react-dom": "^16.2.0"
+  }
+}

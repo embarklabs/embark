@@ -1,0 +1,50 @@
+
+div {
+  margin: 15px;
+}
+
+.logs {
+  background-color: black;
+  font-size: 14px;
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.tab-content {
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  padding: 10px;
+  margin: 0px;
+}
+
+.nav-tabs {
+  margin-bottom: 0;
+}
+
+.status-offline {
+  vertical-align: middle;
+  margin-left: 5px;
+  margin-top: 4px;
+  width: 12px;
+  height: 12px;
+  background: red;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+.status-online {
+  vertical-align: middle;
+  margin-left: 5px;
+  margin-top: 4px;
+  width: 12px;
+  height: 12px;
+  background: mediumseagreen;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
