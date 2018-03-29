@@ -1,0 +1,90 @@
+{
+  "contract_name": "SomeContract",
+  "address": "0x0cF81703e069e71306BE83323f2444f8ACCd4b0E",
+  "code": "6060604052341561000f57600080fd5b6040516101dc3803806101dc83398101604052808051820191906020018051915082905060008151811061003f57fe5b9060200190602002015160008054600160a060020a031916600160a060020a03929092169190911790558160018151811061007657fe5b9060200190602002015160018054600160a060020a031916600160a060020a039290921691909117905560025550610129806100b36000396000f30060606040526004361060525763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416633fa4f245811460545780636b79ff5b146076578063fc25626f1460af575b005b3415605e57600080fd5b606460bf565b60405190815260200160405180910390f35b3415608057600080fd5b608660c5565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b341560b957600080fd5b608660e1565b60025481565b60005473ffffffffffffffffffffffffffffffffffffffff1681565b60015473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820687fd659f9ca4e7caf8e4d554e4b03614f4433b5e8d449af9909e67e3b0c42ae0029",
+  "runtime_bytecode": "60606040526004361060525763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416633fa4f245811460545780636b79ff5b146076578063fc25626f1460af575b005b3415605e57600080fd5b606460bf565b60405190815260200160405180910390f35b3415608057600080fd5b608660c5565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b341560b957600080fd5b608660e1565b60025481565b60005473ffffffffffffffffffffffffffffffffffffffff1681565b60015473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820687fd659f9ca4e7caf8e4d554e4b03614f4433b5e8d449af9909e67e3b0c42ae0029",
+  "real_runtime_bytecode": "60606040526004361060525763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416633fa4f245811460545780636b79ff5b146076578063fc25626f1460af575b005b3415605e57600080fd5b606460bf565b60405190815260200160405180910390f35b3415608057600080fd5b608660c5565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b341560b957600080fd5b608660e1565b60025481565b60005473ffffffffffffffffffffffffffffffffffffffff1681565b60015473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820687fd659f9ca4e7caf8e4d554e4b03614f4433b5e8d449af9909e67e3b0c42ae0029",
+  "swarm_hash": "687fd659f9ca4e7caf8e4d554e4b03614f4433b5e8d449af9909e67e3b0c42ae",
+  "gas_estimates": {
+    "creation": {
+      "codeDepositCost": "59400",
+      "executionCost": "infinite",
+      "totalCost": "infinite"
+    },
+    "external": {
+      "": "126",
+      "addr_1()": "410",
+      "addr_2()": "432",
+      "value()": "373"
+    }
+  },
+  "function_hashes": {
+    "addr_1()": "6b79ff5b",
+    "addr_2()": "fc25626f",
+    "value()": "3fa4f245"
+  },
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "value",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "addr_1",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "addr_2",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "_addresses",
+          "type": "address[]"
+        },
+        {
+          "name": "initialValue",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "fallback"
+    }
+  ]
+}

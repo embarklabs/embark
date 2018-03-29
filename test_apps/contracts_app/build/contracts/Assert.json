@@ -1,0 +1,38 @@
+{
+  "contract_name": "Assert",
+  "address": "0xCFC27E55Af92f932FA52190613fCe0191c4A1153",
+  "code": "60606040523415600e57600080fd5b603580601b6000396000f3006060604052600080fd00a165627a7a72305820e199c6ed628993d1a790168511d9f0a36d6a180028664d9d9533d968364233550029",
+  "runtime_bytecode": "6060604052600080fd00a165627a7a72305820e199c6ed628993d1a790168511d9f0a36d6a180028664d9d9533d968364233550029",
+  "real_runtime_bytecode": "6060604052600080fd00a165627a7a72305820e199c6ed628993d1a790168511d9f0a36d6a180028664d9d9533d968364233550029",
+  "swarm_hash": "e199c6ed628993d1a790168511d9f0a36d6a180028664d9d9533d96836423355",
+  "gas_estimates": {
+    "creation": {
+      "codeDepositCost": "10600",
+      "executionCost": "61",
+      "totalCost": "10661"
+    },
+    "internal": {
+      "triggerEvent(bool,string memory)": "infinite"
+    }
+  },
+  "function_hashes": {},
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "passed",
+          "type": "bool"
+        },
+        {
+          "indexed": false,
+          "name": "message",
+          "type": "string"
+        }
+      ],
+      "name": "TestEvent",
+      "type": "event"
+    }
+  ]
+}
