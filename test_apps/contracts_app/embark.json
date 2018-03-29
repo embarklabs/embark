@@ -2,8 +2,5 @@
   "contracts": ["contracts/**"],
   "app": {},
   "buildDir": "build/",
-  "config": "config2/",
-  "plugins": {
-    "embark-service": {}
-  }
+  "config": "./"
 }
