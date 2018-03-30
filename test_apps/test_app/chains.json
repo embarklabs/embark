@@ -1,253 +1,5 @@
 {
-  "0x72820315e7168f6f4891000ae8d366aa6e64a2e0a7648b05b18d952dd7b475ff": {
-    "contracts": {
-      "0x79f903ab722af0e1fec06f910aa64dc71fd3023e232a946b35432f757d951bc0": {
-        "name": "AlreadyDeployedToken",
-        "address": "0xece374063fe5cc7efbaca0a498477cada94e5ad6"
-      },
-      "0x43a7fdb062a49169e579493c0404cac3eb7c7e35144853e801081fc6364398c3": {
-        "name": "Assert",
-        "address": "0x4Ecfa18e475b4F217DC42A4a259278b00338a25a"
-      },
-      "0x45b875328c08f3f01de18f3a4f42ae9917cc47b0d284d8eef1ed46b0593540ae": {
-        "name": "ContractArgs",
-        "address": "0x87D6CeAb780C32F45f259724650E5b2B98DF29c3"
-      },
-      "0x43e7107e99a2be83020800a2278a01673572a3aa69c48580361b848e989c509b": {
-        "name": "ZAMyLib2",
-        "address": "0x607F0f839217d9066962c79Bd22DD2A511CAC37e"
-      },
-      "0x263ad11c8ac793bd948abc51ed63bf456ae958deb8c09413250d312732a479da": {
-        "name": "Test2",
-        "address": "0xa86f068F9e7Be2f603e6B6196FA9659FCe8A0b57"
-      },
-      "0x21ec9fef260b27aeb3220343703c4e9754a312c6be64dc09170c322302ae438f": {
-        "name": "MyToken2",
-        "address": "0x589779894F444a42FbbfdFda035F9f3967149c08"
-      },
-      "0xc10f570bb3ab32a609d2406d7d81994a6f4fabda7f7cd2c3a4df44934d6502f6": {
-        "name": "SimpleStorage",
-        "address": "0x72B19204e0f1D318E41A90a2907C377FE3670D51"
-      },
-      "0xf923326d69c0ac17de37926bc0c36e57f5b2485fe6fadf958ada014610cd01fd": {
-        "name": "SomeContract",
-        "address": "0x5b2d8270D0068C1E5A714fea1B50642b305C06bd"
-      },
-      "0x44e732146c5700a2e4cead0a5cd5d94047fbf6b5149ab7d7814fc874d66d4649": {
-        "name": "MyToken",
-        "address": "0x9766f9364F0832589AFcaF7387aB43b6f5AA96b9"
-      },
-      "0xa5fec182f96887e8f82e36ad2ebbea945f26e5c96dcdc66977247365f9045899": {
-        "name": "ZAMyLib",
-        "address": "0x8dE0ca96f288D91a84B89701465AFD004B69C470"
-      },
-      "0xcbb235f7fb59ae45ac86c7109080d34dcf60d72ce334a1b5f896fd871e216867": {
-        "name": "Test",
-        "address": "0x976b67838e893A1AD6e2a7fc68b3df5462A3d7b7"
-      },
-      "0x4f149fd3d62e8d24542c8d508a8b419d03838808b860dbcd5e82680ba91727ee": {
-        "name": "AnotherStorage",
-        "address": "0x148001ae8D7a5833Ecdbd0ec490796fdF4235505"
-      }
-    },
-    "name": "development"
-  },
-  "0xbd9229383cb995c9041f12d0ed3a3479f38d05c34cd4d3dd972b31c1fddb978b": {
-    "contracts": {
-      "0x79f903ab722af0e1fec06f910aa64dc71fd3023e232a946b35432f757d951bc0": {
-        "name": "AlreadyDeployedToken",
-        "address": "0xece374063fe5cc7efbaca0a498477cada94e5ad6"
-      },
-      "0x43a7fdb062a49169e579493c0404cac3eb7c7e35144853e801081fc6364398c3": {
-        "name": "Assert",
-        "address": "0xD309079E12C616f1333175D037A078c889760451"
-      },
-      "0x45b875328c08f3f01de18f3a4f42ae9917cc47b0d284d8eef1ed46b0593540ae": {
-        "name": "ContractArgs",
-        "address": "0x49e2a14a3E13FA555B47f2eE80e4250A1c5E6D4b"
-      },
-      "0x43e7107e99a2be83020800a2278a01673572a3aa69c48580361b848e989c509b": {
-        "name": "ZAMyLib2",
-        "address": "0xF917baE4284443662230e51313a838EDf7b1d477"
-      },
-      "0x263ad11c8ac793bd948abc51ed63bf456ae958deb8c09413250d312732a479da": {
-        "name": "Test2",
-        "address": "0x72949D7d7b2c3f7016fF2b48669485f59aA45ea5"
-      },
-      "0x21ec9fef260b27aeb3220343703c4e9754a312c6be64dc09170c322302ae438f": {
-        "name": "MyToken2",
-        "address": "0x16a9ea7916FAAAE38d9ef07dE6CE7abCf4C5B39d"
-      },
-      "0xc10f570bb3ab32a609d2406d7d81994a6f4fabda7f7cd2c3a4df44934d6502f6": {
-        "name": "SimpleStorage",
-        "address": "0xBAB1e7ab34B6de4BbA91865CaAEBf1282Ea15E77"
-      },
-      "0x30dfcaf8930098e8f1d51c99f1739235011f4cb31cf29c8e7593b2d84a13534f": {
-        "name": "SomeContract",
-        "address": "0xc0c748D1096821B60CdB470a4aC54bb57a43a149"
-      },
-      "0x44e732146c5700a2e4cead0a5cd5d94047fbf6b5149ab7d7814fc874d66d4649": {
-        "name": "MyToken",
-        "address": "0xd48C299d58fD5171234FeE3ABE00d51b128fD10d"
-      },
-      "0xa5fec182f96887e8f82e36ad2ebbea945f26e5c96dcdc66977247365f9045899": {
-        "name": "ZAMyLib",
-        "address": "0x70FF00ddf8e6135C52C492d368Fd50c02b16D759"
-      },
-      "0xcbb235f7fb59ae45ac86c7109080d34dcf60d72ce334a1b5f896fd871e216867": {
-        "name": "Test",
-        "address": "0x9473A926a115097368c4E941745361ff2780e626"
-      },
-      "0x6ed12184b4c1a117e5c6040ef7ba270dd19c5303f89e1ba07d40ccc9094d1bef": {
-        "name": "AnotherStorage",
-        "address": "0x10C53867C17eDc04a92008B9aDE42Cd51397b68F"
-      }
-    },
-    "name": "development"
-  },
-  "0xaf15a99b63e24757cebcdcbd1aa386d863e04c902a614a5129f8be82ffc892ce": {
-    "contracts": {
-      "0x79f903ab722af0e1fec06f910aa64dc71fd3023e232a946b35432f757d951bc0": {
-        "name": "AlreadyDeployedToken",
-        "address": "0xece374063fe5cc7efbaca0a498477cada94e5ad6"
-      },
-      "0x43a7fdb062a49169e579493c0404cac3eb7c7e35144853e801081fc6364398c3": {
-        "name": "Assert",
-        "address": "0x372288011682a9ae1F7b7A783B5B89C600fe014B"
-      },
-      "0x45b875328c08f3f01de18f3a4f42ae9917cc47b0d284d8eef1ed46b0593540ae": {
-        "name": "ContractArgs",
-        "address": "0xa2D7eDe07C2c9092641d95a9d07d910E6A861857"
-      },
-      "0x43e7107e99a2be83020800a2278a01673572a3aa69c48580361b848e989c509b": {
-        "name": "ZAMyLib2",
-        "address": "0xD92A24BD010Df9668DE03e452505C0C1DBc3AaCc"
-      },
-      "0x263ad11c8ac793bd948abc51ed63bf456ae958deb8c09413250d312732a479da": {
-        "name": "Test2",
-        "address": "0x1E0F5cA4Bdf406Fa8b72234511b6F789FC5383D9"
-      },
-      "0x21ec9fef260b27aeb3220343703c4e9754a312c6be64dc09170c322302ae438f": {
-        "name": "MyToken2",
-        "address": "0xc7Ce790F06952a21bc3E29079929d72404Ff02C1"
-      },
-      "0xc10f570bb3ab32a609d2406d7d81994a6f4fabda7f7cd2c3a4df44934d6502f6": {
-        "name": "SimpleStorage",
-        "address": "0x998f4ACDdcE5Ca2CAf9e2A48a35E728f7F2b3c64"
-      },
-      "0x5424fc725f0ba178b606596bfd56f6438ab5182d20c3d39c01c824ce729c5a17": {
-        "name": "SomeContract",
-        "address": "0x899f6D2d878303fB715de145a412a3a329c66f72"
-      },
-      "0x44e732146c5700a2e4cead0a5cd5d94047fbf6b5149ab7d7814fc874d66d4649": {
-        "name": "MyToken",
-        "address": "0xE567d9CBaf22d27a5C67C1421B7ADE1D7E5B9279"
-      },
-      "0xa5fec182f96887e8f82e36ad2ebbea945f26e5c96dcdc66977247365f9045899": {
-        "name": "ZAMyLib",
-        "address": "0x757dFfbEbc92cb6cb457ff0aE52147840e2aDA6A"
-      },
-      "0xcbb235f7fb59ae45ac86c7109080d34dcf60d72ce334a1b5f896fd871e216867": {
-        "name": "Test",
-        "address": "0x1741BB896eE47e2Fb757FF2b99811346537A4D6c"
-      },
-      "0x9d16daf36e60ee15055f39a1c15597a9ed4d06f431f4f4fa7baa1a1fb13b62c5": {
-        "name": "AnotherStorage",
-        "address": "0xb7cF0E659253bc3bAdD636356790383896222C8C"
-      }
-    },
-    "name": "development"
-  },
-  "0x895dd3027dedd81d3dfd66da65bc72bdda7c94a6ab3ef7f9844b7f80e88ecdbb": {
-    "contracts": {
-      "0x79f903ab722af0e1fec06f910aa64dc71fd3023e232a946b35432f757d951bc0": {
-        "name": "AlreadyDeployedToken",
-        "address": "0xece374063fe5cc7efbaca0a498477cada94e5ad6"
-      },
-      "0x43a7fdb062a49169e579493c0404cac3eb7c7e35144853e801081fc6364398c3": {
-        "name": "Assert",
-        "address": "0x8db41B9F057Acfa544E0038f4891bde1a26eb218"
-      },
-      "0x45b875328c08f3f01de18f3a4f42ae9917cc47b0d284d8eef1ed46b0593540ae": {
-        "name": "ContractArgs",
-        "address": "0xF1b2103E43C307CF327E015380240DDE094DB6D2"
-      },
-      "0x43e7107e99a2be83020800a2278a01673572a3aa69c48580361b848e989c509b": {
-        "name": "ZAMyLib2",
-        "address": "0xEF8b4a610079c0bB9cE1b2fD36Df4c94f17Fee68"
-      },
-      "0x263ad11c8ac793bd948abc51ed63bf456ae958deb8c09413250d312732a479da": {
-        "name": "Test2",
-        "address": "0x3c093A77D5c5Dc3b793Df350Dc225072261201a9"
-      },
-      "0x21ec9fef260b27aeb3220343703c4e9754a312c6be64dc09170c322302ae438f": {
-        "name": "MyToken2",
-        "address": "0xD190B54d5618b6A7D1343CB2f2E1A6689DAFad8C"
-      },
-      "0xc10f570bb3ab32a609d2406d7d81994a6f4fabda7f7cd2c3a4df44934d6502f6": {
-        "name": "SimpleStorage",
-        "address": "0xF9816748F8185Aca4F0ccC8F1A2B870DB0279B52"
-      },
-      "0x86e2e623978a4693bfa49767193a2f546c589213ca398e4801e1be93436e9965": {
-        "name": "SomeContract",
-        "address": "0x75cE8579Aff2F22801B4Ab67Db6B9496F1AFbB28"
-      },
-      "0x44e732146c5700a2e4cead0a5cd5d94047fbf6b5149ab7d7814fc874d66d4649": {
-        "name": "MyToken",
-        "address": "0x4C1290302C36939550DEBDb2116c584FDb84cBfA"
-      },
-      "0xa5fec182f96887e8f82e36ad2ebbea945f26e5c96dcdc66977247365f9045899": {
-        "name": "ZAMyLib",
-        "address": "0x759ce044ef0E86dE4780d5023E47860c25C9e493"
-      },
-      "0xcbb235f7fb59ae45ac86c7109080d34dcf60d72ce334a1b5f896fd871e216867": {
-        "name": "Test",
-        "address": "0xAD93FEc10691521de0290159E4D0412f24881F98"
-      },
-      "0x2d151cdba2d74d42a8d04da95fd1a8e376a9209793aeec62cb467c62d7c24815": {
-        "name": "AnotherStorage",
-        "address": "0x06Af6E548985Ae0406ed9632C40B1158fD4fA9F2"
-      },
-      "0x0e0275c10e511f694564b0c4e3def28e38fe6ba0c1f26ab6c1cb86fdd73a3287": {
-        "name": "Assert",
-        "address": "0x16afe4373cF5604E9A68Ab075c96ec4d35b4899a"
-      },
-      "0x53a9493497f8764439f2b6062994f8fe3d3c5a66450099244c0f8f32185a15df": {
-        "name": "ContractArgs",
-        "address": "0xF80b4e0562a3bc5Eb1CCc0315F7dC6b771CE4Dec"
-      },
-      "0xd1b69fd42ab462fb8af1009558bf53dbcc873ee43b3f759afcd54aabb4640338": {
-        "name": "ZAMyLib2",
-        "address": "0x5d72Da0c801AAEB628Fe4d5E9509f1a47C352230"
-      },
-      "0x0d2c4116b7b36aec94353056c6f2ffd4179b1121b98d89164106df61d617d427": {
-        "name": "Test2",
-        "address": "0x2CE5fDed00eC8f4451D02De6E446B35D8BdA0c40"
-      },
-      "0x6cefd24d92c98376fa48a4b79fa31b4411bff757599d56154a46369cca076f5c": {
-        "name": "SimpleStorage",
-        "address": "0x4E09b82B9c4bC99903a970FB3c6F2c7Ee09c0f94"
-      },
-      "0x8f2608ad94100e469ed2ed1c0b19e674c6952bbc76b2969c51b7e473f31dc917": {
-        "name": "SomeContract",
-        "address": "0xbd2a6708717e36BadB018473c282cf15187C5DC5"
-      },
-      "0x926ab20d492caa04f4c9b91ae0394da1a49689e1984278a8161d1b96332ba8e5": {
-        "name": "ZAMyLib",
-        "address": "0xc902922B18E4Ce3311A1585E472169A45d5addA8"
-      },
-      "0xba49165b12f1fbd15c17caf1b3d55d30b9607f1d74102732106ce1575df4bb1d": {
-        "name": "Test",
-        "address": "0x0bb6D11BdA472a77947CA54160C478EB656190E8"
-      },
-      "0x01ebbfdb113eb2e485a246c5fd98dbd8b78152c489ca8135eaae0dba7ef57519": {
-        "name": "AnotherStorage",
-        "address": "0x3D68bc66F0fC8D13beDd164042371c29527B46EF"
-      }
-    },
-    "name": "development"
-  },
-  "0x9d41dc2207c7fe6525d412f931ecda49b914da5dce0be4d32f5041c36fccd9db": {
+  "0xdb731f3622ef37b4da8db36903de029220dba74c41185f8429f916058b86559f": {
     "contracts": {
       "0x79f903ab722af0e1fec06f910aa64dc71fd3023e232a946b35432f757d951bc0": {
         "name": "AlreadyDeployedToken",
@@ -255,100 +7,47 @@
       },
       "0x0e0275c10e511f694564b0c4e3def28e38fe6ba0c1f26ab6c1cb86fdd73a3287": {
         "name": "Assert",
-        "address": "0xF8e129d5027150371Ce9F2E0456244AdE5344B16"
+        "address": "0x185a3e8ECbB676A10Ef9e976a773115088b06eF4"
       },
       "0x53a9493497f8764439f2b6062994f8fe3d3c5a66450099244c0f8f32185a15df": {
         "name": "ContractArgs",
-        "address": "0x56c6cb35C27205f3dc4e9F7042514e315fbD4698"
+        "address": "0x532b97B94AfB0697a5eC99C6e8FcA2101E5578bB"
       },
       "0xd1b69fd42ab462fb8af1009558bf53dbcc873ee43b3f759afcd54aabb4640338": {
         "name": "ZAMyLib2",
-        "address": "0x6981C4C907B61B65Dc5320de16fb247f8Ed058f7"
+        "address": "0xEB67F3383CaCABAF470BE3F40944dD91DE92e668"
       },
       "0x0d2c4116b7b36aec94353056c6f2ffd4179b1121b98d89164106df61d617d427": {
         "name": "Test2",
-        "address": "0xFFfeE5AbaDAa853FBF18DF6135fA53D570294547"
+        "address": "0x222427A6F3A11c1b3f59EE58Efb80359bDf391aa"
       },
       "0x21ec9fef260b27aeb3220343703c4e9754a312c6be64dc09170c322302ae438f": {
         "name": "MyToken2",
-        "address": "0xBC6667fb518871FD0efc3C233367941a9C81136C"
+        "address": "0xBf8556e4A2C8B51286194aDeC702D57715046951"
       },
       "0x6cefd24d92c98376fa48a4b79fa31b4411bff757599d56154a46369cca076f5c": {
         "name": "SimpleStorage",
-        "address": "0x9DaD2dA0148d5c8e8cc5cCDefE61583C3ca8daBE"
+        "address": "0x30024FB1f241d870dc2eF00BbdcCd0329A118225"
       },
-      "0x04da6bdbbb01369d76fc62a954d9debb10bbb457957c041148e2475cdc3ddffa": {
+      "0x331a90ca80f22d993b4405a1b7015bece65a4c15bd0788d7158371658e4ae927": {
         "name": "SomeContract",
-        "address": "0x1B6782Fcdd369be19A9e1E3270993711fd9cc600"
+        "address": "0x35d86a9814Df97d3ad77eDC1af6a25362Fe127eD"
       },
       "0x44e732146c5700a2e4cead0a5cd5d94047fbf6b5149ab7d7814fc874d66d4649": {
         "name": "MyToken",
-        "address": "0xAf3DAD7F3894349eF4FDfAFd8A7d41B049605167"
+        "address": "0x0D5f4f6C37754A48E4b42A8dB9EdBfA251CBA856"
       },
       "0x926ab20d492caa04f4c9b91ae0394da1a49689e1984278a8161d1b96332ba8e5": {
         "name": "ZAMyLib",
-        "address": "0xF22D6EC1d2e09A9b3D33649E0b5fF4A3369cc5B9"
+        "address": "0x9A5d4e1F82719f6baE8e8A861f40f23C6DBD882E"
       },
       "0xba49165b12f1fbd15c17caf1b3d55d30b9607f1d74102732106ce1575df4bb1d": {
         "name": "Test",
-        "address": "0x5658777E87dBdC45E3039Fc6b2fbB98075CBff1B"
+        "address": "0xF21A02F66Cf003087CA6de92d123d341dfE960E1"
       },
-      "0xdc40c276c6ffaccab11ed135ad1b27822456151058ad622e7b81182e2cd7617e": {
+      "0xfd57fa6564506520aca310d192545943ed56e90e2805cd6ee75da921e3e2b8c3": {
         "name": "AnotherStorage",
-        "address": "0xF14211c7cEf238286FA1019bfC0B33c1d59bB16d"
-      }
-    },
-    "name": "development"
-  },
-  "0x2d42bfc8e599949a9c1ba2f2b3b8dd337653f7572bc7cb9d4b8c67cfcdaf85fa": {
-    "contracts": {
-      "0x79f903ab722af0e1fec06f910aa64dc71fd3023e232a946b35432f757d951bc0": {
-        "name": "AlreadyDeployedToken",
-        "address": "0xece374063fe5cc7efbaca0a498477cada94e5ad6"
-      },
-      "0x0e0275c10e511f694564b0c4e3def28e38fe6ba0c1f26ab6c1cb86fdd73a3287": {
-        "name": "Assert",
-        "address": "0x43766Fa2a1612a31d16148364238FD681F56569d"
-      },
-      "0x53a9493497f8764439f2b6062994f8fe3d3c5a66450099244c0f8f32185a15df": {
-        "name": "ContractArgs",
-        "address": "0x1dd94D1C0F775239498676772C942B687780599c"
-      },
-      "0xd1b69fd42ab462fb8af1009558bf53dbcc873ee43b3f759afcd54aabb4640338": {
-        "name": "ZAMyLib2",
-        "address": "0xdE2856b6c433C7b5C41CE7C2E918788643D2d507"
-      },
-      "0x0d2c4116b7b36aec94353056c6f2ffd4179b1121b98d89164106df61d617d427": {
-        "name": "Test2",
-        "address": "0xFf40bB59716e7D84238fFB0bbE766f8D4954455C"
-      },
-      "0x21ec9fef260b27aeb3220343703c4e9754a312c6be64dc09170c322302ae438f": {
-        "name": "MyToken2",
-        "address": "0xFd958962FDF763bFc33e2d02D497075F4069D476"
-      },
-      "0x6cefd24d92c98376fa48a4b79fa31b4411bff757599d56154a46369cca076f5c": {
-        "name": "SimpleStorage",
-        "address": "0xf06B15d8eF571eF4bE5Fe51c310EAa952089B6AD"
-      },
-      "0xf855ad01705745e324292843c2fcd25d9c199fda7f40a8a104a010bd722d24b4": {
-        "name": "SomeContract",
-        "address": "0x84f92D023ee8Bdc04B8dD3353a7Eb4d67381C8da"
-      },
-      "0x44e732146c5700a2e4cead0a5cd5d94047fbf6b5149ab7d7814fc874d66d4649": {
-        "name": "MyToken",
-        "address": "0x78060A2fc7F6062948Bc9B1ffF9D44b1e6C2af3C"
-      },
-      "0x926ab20d492caa04f4c9b91ae0394da1a49689e1984278a8161d1b96332ba8e5": {
-        "name": "ZAMyLib",
-        "address": "0xd4d4cAeea122EA36e64187C91685572c47390FD1"
-      },
-      "0xba49165b12f1fbd15c17caf1b3d55d30b9607f1d74102732106ce1575df4bb1d": {
-        "name": "Test",
-        "address": "0x610Da846012A1Ec4beB082136e63779A3c05279B"
-      },
-      "0xb3e3400994923c528ad8a0a031987bd20f10d13920194950577bd394999438ab": {
-        "name": "AnotherStorage",
-        "address": "0xB8B78d98D55A01503E76e9e53c733824c5C4A076"
+        "address": "0xB15621bf3Ae28033aEE4A422A39c362c5322377b"
       }
     },
     "name": "development"

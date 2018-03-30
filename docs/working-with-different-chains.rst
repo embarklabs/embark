@@ -53,7 +53,9 @@ gasLimit
     # config/development/genesis.json
      {
         "config": {
-          "homesteadBlock": 1
+          "homesteadBlock": 0,
+          "byzantiumBlock": 0,
+          "daoForkSupport": true
         },
         "nonce": "0x0000000000000042",
         "difficulty": "0x0",
