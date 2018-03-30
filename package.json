@@ -37,7 +37,7 @@
     "ejs": "^2.5.8",
     "ethereumjs-testrpc": "^6.0.3",
     "file-loader": "^1.1.5",
-    "finalhandler": "^0.5.0",
+    "finalhandler": "^1.1.1",
     "follow-redirects": "^1.2.4",
     "fs-extra": "^2.0.0",
     "globule": "^1.1.0",

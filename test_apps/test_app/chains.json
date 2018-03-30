@@ -51,5 +51,58 @@
       }
     },
     "name": "development"
+  },
+  "0xd5242650ebc8bf7188c00bad41ebe251972c10fc9760684d0c8f6fa3583a079a": {
+    "contracts": {
+      "0x79f903ab722af0e1fec06f910aa64dc71fd3023e232a946b35432f757d951bc0": {
+        "name": "AlreadyDeployedToken",
+        "address": "0xece374063fe5cc7efbaca0a498477cada94e5ad6"
+      },
+      "0x0e0275c10e511f694564b0c4e3def28e38fe6ba0c1f26ab6c1cb86fdd73a3287": {
+        "name": "Assert",
+        "address": "0x9D86AE3b00C0E1954C1AAecB63A721138aF3C61f"
+      },
+      "0x53a9493497f8764439f2b6062994f8fe3d3c5a66450099244c0f8f32185a15df": {
+        "name": "ContractArgs",
+        "address": "0x7d080FE2e2E81cfA933aa5a0C07660CCbc0F67E8"
+      },
+      "0xd1b69fd42ab462fb8af1009558bf53dbcc873ee43b3f759afcd54aabb4640338": {
+        "name": "ZAMyLib2",
+        "address": "0x4a3e77391B3B6F44107AA3eF7321D2b7beA644ce"
+      },
+      "0x0d2c4116b7b36aec94353056c6f2ffd4179b1121b98d89164106df61d617d427": {
+        "name": "Test2",
+        "address": "0x869409Df3631476E4F3aaB023B09eb8924B39AA0"
+      },
+      "0x21ec9fef260b27aeb3220343703c4e9754a312c6be64dc09170c322302ae438f": {
+        "name": "MyToken2",
+        "address": "0x7E0F1F6d1BaA18b2BF88196f3a89e8CED5946CeB"
+      },
+      "0x6cefd24d92c98376fa48a4b79fa31b4411bff757599d56154a46369cca076f5c": {
+        "name": "SimpleStorage",
+        "address": "0xE21d9850D73F4e4A76560ca78f9C12b96C62a9c9"
+      },
+      "0x004c7b854f903d72feb021309d31899e044ecc54c477034acd8a3a5fb57d5d2d": {
+        "name": "SomeContract",
+        "address": "0x174209EC7826C02B3EE20E9ACd92b1C5682Decd9"
+      },
+      "0x44e732146c5700a2e4cead0a5cd5d94047fbf6b5149ab7d7814fc874d66d4649": {
+        "name": "MyToken",
+        "address": "0xEac6Cd2E828DC034A747D9Bd9E9664685Ab911EF"
+      },
+      "0x926ab20d492caa04f4c9b91ae0394da1a49689e1984278a8161d1b96332ba8e5": {
+        "name": "ZAMyLib",
+        "address": "0x83642bc74117d0861615f00A638325BcF8641D65"
+      },
+      "0xba49165b12f1fbd15c17caf1b3d55d30b9607f1d74102732106ce1575df4bb1d": {
+        "name": "Test",
+        "address": "0x8ed732EC9F618426957985EC9cE98c19A7F46867"
+      },
+      "0x54d523d07cc78237a285484d048f51483938b25ff98c86051e4b55114a42d1c2": {
+        "name": "AnotherStorage",
+        "address": "0xc639aFbf0E594AD57aeB8e9D7B8be0311d9254B4"
+      }
+    },
+    "name": "development"
   }
 }
