@@ -1,9 +1,5 @@
 {
   "default": {
-    "versions": {
-      "web3.js": "1.0.0-beta.27",
-      "solc": "0.4.18"
-    },
     "deployment": {
       "host": "localhost",
       "port": 8545,

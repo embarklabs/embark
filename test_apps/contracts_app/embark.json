@@ -2,5 +2,9 @@
   "contracts": ["contracts/**"],
   "app": {},
   "buildDir": "build/",
-  "config": "./"
+  "config": "./",
+  "versions": {
+    "web3.js": "1.0.0-beta",
+    "solc": "0.4.17"
+  }
 }

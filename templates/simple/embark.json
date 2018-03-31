@@ -3,5 +3,8 @@
   "app": {},
   "buildDir": "build/",
   "config": "./",
+  "versions": {
+    "solc": "0.4.17"
+  },
   "plugins": {}
 }

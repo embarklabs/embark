@@ -1,8 +1,5 @@
 {
   "default": {
-    "versions": {
-      "ipfs-api": "17.2.6"
-    },
     "enabled": true,
     "available_providers": ["ipfs"],
     "ipfs_bin": "ipfs",
