@@ -2,7 +2,12 @@
   "contracts": ["contracts/**"],
   "app": {},
   "buildDir": "build/",
-  "config": "./",
+  "config": {
+    "contracts": "contracts.json",
+    "storage": false,
+    "communication": false,
+    "webserver": false
+  },
   "versions": {
     "solc": "0.4.17"
   },
