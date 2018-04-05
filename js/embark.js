@@ -25,6 +25,7 @@ EmbarkJS.Contract = function(options) {
       // add gasPrice
       ContractClass = new this.web3.eth.Contract(this.abi, this.address);
       ContractClass.setProvider(this.web3.currentProvider);
+      ContractClass.options.data = this.code;
 
       return ContractClass;
     } else {

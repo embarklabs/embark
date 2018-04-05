@@ -1,0 +1,50 @@
+{
+  "contract_name": "AnotherStorage",
+  "address": "0xbd1470c4E242141Ce45c82A570755bfe9965e99C",
+  "code": "6060604052341561000f57600080fd5b60405160208061010f8339810160405280805160008054600160a060020a03909216600160a060020a0319909216919091179055505060bc806100536000396000f300606060405263ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416633610eb0e8114603b57600080fd5b3415604557600080fd5b604b6074565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b60005473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820aa2dd4341eb309d7ab52796cab3bf8c9a7e2da0b6ab9b4d9bdd1411b90d116ca0029",
+  "runtime_bytecode": "606060405263ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416633610eb0e8114603b57600080fd5b3415604557600080fd5b604b6074565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b60005473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820aa2dd4341eb309d7ab52796cab3bf8c9a7e2da0b6ab9b4d9bdd1411b90d116ca0029",
+  "real_runtime_bytecode": "606060405263ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416633610eb0e8114603b57600080fd5b3415604557600080fd5b604b6074565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b60005473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820aa2dd4341eb309d7ab52796cab3bf8c9a7e2da0b6ab9b4d9bdd1411b90d116ca0029",
+  "swarm_hash": "aa2dd4341eb309d7ab52796cab3bf8c9a7e2da0b6ab9b4d9bdd1411b90d116ca",
+  "gas_estimates": {
+    "creation": {
+      "codeDepositCost": "37600",
+      "executionCost": "20517",
+      "totalCost": "58117"
+    },
+    "external": {
+      "simpleStorageAddress()": "367"
+    }
+  },
+  "function_hashes": {
+    "simpleStorageAddress()": "3610eb0e"
+  },
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "simpleStorageAddress",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function",
+      "signature": "0x3610eb0e"
+    },
+    {
+      "inputs": [
+        {
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor",
+      "signature": "constructor"
+    }
+  ]
+}

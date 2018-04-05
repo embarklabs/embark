@@ -8,4 +8,5 @@ addons:
 script:
     - npm run lint
     - npm run test
-    - npm run testdapp
+    - npm run testdapp_1
+    - npm run testdapp_2

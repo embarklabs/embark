@@ -1,0 +1,5 @@
+.embark/
+node_modules/
+dist/
+config/production/password
+config/livenet/password

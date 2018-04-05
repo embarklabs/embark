@@ -30,10 +30,11 @@ ratings:
 exclude_paths:
 - "test/"
 - "old_test/"
-- "boilerplate/"
-- "demo/"
+- "templates/boilerplate/"
+- "templates/demo/"
 - "js/"
-- "test_app/"
+- "test_apps/test_app/"
+- "test_apps/contracts_app/"
 - "docs/"
 checks:
   similar-code:
