@@ -1,10 +1,8 @@
 /*globals describe, it*/
-let Compiler = require('../lib/contracts/compiler.js');
 let SolidityCompiler = require('../lib/modules/solidity');
 let TestLogger = require('../lib/tests/test_logger.js');
 let File = require('../lib/core/file.js');
 let assert = require('assert');
-let fs = require('fs');
 
 let readFile = function(file) {
   return new File({filename: file, type: 'dapp_file', path: file});
@@ -14,7 +12,7 @@ var solcVersion = "0.4.17";
 
 var TestEvents = {
   request: (cmd, cb) => {
-    cb(solcVersion)
+    cb(solcVersion);
   }
 };
 
