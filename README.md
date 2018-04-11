@@ -2,8 +2,8 @@
 
 [![npm](https://img.shields.io/npm/dm/embark.svg)](https://npmjs.com/package/embark)
 [![Gitter](https://img.shields.io/gitter/room/embark-framework/Lobby.svg)](https://gitter.im/embark-framework/Lobby)
-[![Build
-Status](https://travis-ci.org/embark-framework/embark.svg?branch=develop)](https://travis-ci.org/embark-framework/embark)
+[![Build Status](https://travis-ci.org/embark-framework/embark.svg?branch=develop)](https://travis-ci.org/embark-framework/embark)
+[![Build status](https://ci.appveyor.com/api/projects/status/nnq38x2hi3q11o44/branch/develop?svg=true)](https://ci.appveyor.com/project/iurimatias/embark/branch/develop)
 
 What is Embark
 ======
