@@ -16,7 +16,7 @@
   "config": "config/",
   "versions": {
     "web3.js": "1.0.0-beta.27",
-    "solc": "0.4.17",
+    "solc": "0.4.21",
     "ipfs-api": "17.2.6"
   },
   "plugins": {
