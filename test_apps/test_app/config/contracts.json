@@ -62,6 +62,12 @@
           ["$MyToken2", "$SimpleStorage"],
           100
         ]
+      },
+      "SimpleStorageTest": {
+        "file": "./some_folder/test_contract.sol",
+        "args": [
+          1000
+        ]
       }
     },
     "afterDeploy": [
