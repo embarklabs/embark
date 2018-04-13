@@ -160,12 +160,17 @@ Solidity/Serpent files in the contracts directory will automatically be deployed
 Libraries and languages available
 ======
 
-Embark can build and deploy contracts coded in Solidity. It will make them available on the client side using EmbarkJS and Web3.js.
+Embark can build and deploy contracts coded in Solidity and now also in Vyper. It will make them available on the client side using EmbarkJS and Web3.js.
 
 Further documentation for these can be found below:
 
-* Smart Contracts: [Solidity](https://solidity.readthedocs.io/en/develop/) and [Serpent](https://github.com/ethereum/wiki/wiki/Serpent)
+* Smart Contracts:
+    * [Solidity](https://solidity.readthedocs.io/en/develop/)
+    * [Vyper](https://vyper.readthedocs.io/en/latest/index.html)
+    * [Serpent](https://github.com/ethereum/wiki/wiki/Serpent)
 * Client Side: [Web3.js](https://github.com/ethereum/wiki/wiki/JavaScript-API) and [EmbarkJS](#embarkjs)
+
+However, to use Vyper, you need to have Vyper installed on you computer beforehand. Meaning that doing `vyper contract.v.py` is possible.
 
 Using Contracts
 ======
