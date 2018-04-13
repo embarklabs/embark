@@ -1,3 +1,12 @@
+import $ from 'jquery';
+import AlreadyDeployedToken from 'Embark/contracts/AlreadyDeployedToken';
+import AnotherStorage from 'Embark/contracts/AnotherStorage';
+import async from 'async';
+import MyToken from 'Embark/contracts/MyToken';
+import MyToken2 from 'Embark/contracts/MyToken2';
+import SimpleStorage from 'Embark/contracts/SimpleStorage';
+import Token from 'Embark/contracts/Token';
+
 
 $(document).ready(function() {
 
