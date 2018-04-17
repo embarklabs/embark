@@ -3,6 +3,7 @@ const Config = require('../lib/core/config.js');
 const Plugins = require('../lib/core/plugins.js');
 const assert = require('assert');
 const TestLogger = require('../lib/tests/test_logger.js');
+const path = require('path');
 
 describe('embark.Config', function () {
   let config = new Config({
@@ -128,4 +129,14 @@ describe('embark.Config', function () {
     });
   });
 
+  describe('#loadContractOnTheWeb', function () {
+    it('should get the right url for a https://github file', async function () {
+      const filePath = await config.loadContractOnTheWeb(
+        'test_apps/test_app/.embark/contracts',
+        {file: 'https://github.com/embark-framework/embark/blob/master/test_app/app/contracts/simple_storage.sol'}
+      );
+      assert.strictEqual(filePath,
+        path.normalize('C:/dev/embark/test_apps/test_app/.embark/contracts/simple_storage.sol'));
+    });
+  });
 });
