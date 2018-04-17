@@ -13,11 +13,9 @@ contract("AnotherStorage", function() {
     EmbarkSpec.deployAll(contractsConfig, () => { done() });
   });
 
-  it("set SimpleStorage address", function(done) {
-    AnotherStorage.methods.simpleStorageAddress().call().then(function(result) {
-      assert.equal(result.toString(), SimpleStorage.options.address);
-      done();
-    });
+  it("set SimpleStorage address", async function() {
+    let result = await AnotherStorage.methods.simpleStorageAddress().call();
+    assert.equal(result.toString(), SimpleStorage.options.address);
   });
 
 });
