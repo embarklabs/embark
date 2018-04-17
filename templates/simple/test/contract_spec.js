@@ -10,20 +10,15 @@
 //    EmbarkSpec.deployAll(contractsConfig, () => { done() });
 //  });
 //
-//  it("should set constructor value", function(done) {
-//    SimpleStorage.methods.storedData().call().then(function(result) {
-//      assert.equal(result, 100);
-//      done();
-//    });
+//  it("should set constructor value", async function() {
+//    let result = await SimpleStorage.methods.storedData().call();
+//    assert.equal(result, 100);
 //  });
 //
-//  it("set storage value", function(done) {
-//    SimpleStorage.methods.set(150).send().then(function() {
-//      SimpleStorage.methods.get().call().then(function(result) {
-//        assert.equal(result, 150);
-//        done();
-//      });
-//    });
+//  it("set storage value", async function() {
+//    await SimpleStorage.methods.set(150).send();
+//    let result = await SimpleStorage.methods.get().call();
+//    assert.equal(result, 150);
 //  });
 //
 //});

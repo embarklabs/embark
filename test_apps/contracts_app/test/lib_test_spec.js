@@ -14,11 +14,9 @@ contract("Test", function() {
     EmbarkSpec.deployAll(contractsConfig, () => { done() });
   });
 
-  it("should call library correctly", function(done) {
-    Test2.methods.testAdd().call().then(function(result) {
-      assert.equal(result, 3);
-      done();
-    });
+  it("should call library correctly", async function() {
+    let result = await Test2.methods.testAdd().call();
+    assert.equal(result, 3);
   });
 
 });

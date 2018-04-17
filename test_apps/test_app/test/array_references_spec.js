@@ -24,18 +24,14 @@ contract("SomeContract", function() {
     EmbarkSpec.deployAll(contractsConfig, () => { done() });
   });
 
-  it("set MyToken2 address", function(done) {
-    SomeContract.methods.addr_1().call().then(function(address) {
-      assert.equal(address, MyToken2.options.address);
-      done();
-    });
+  it("set MyToken2 address", async function() {
+    let address = await SomeContract.methods.addr_1().call();
+    assert.equal(address, MyToken2.options.address);
   });
 
-  it("set SimpleStorage address", function(done) {
-    SomeContract.methods.addr_2().call().then(function(address) {
-      assert.equal(address, SimpleStorage.options.address);
-      done();
-    });
+  it("set SimpleStorage address", async function() {
+    let address = await SomeContract.methods.addr_2().call();
+    assert.equal(address, SimpleStorage.options.address);
   });
 
 });

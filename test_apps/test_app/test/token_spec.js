@@ -56,41 +56,32 @@ describe("Token", function() {
     EmbarkSpec.deployAll(contractsConfig, () => { done() });
   });
 
-  it("not deploy Token", function(done) {
+  it("not deploy Token", function() {
     assert.equal(Token.address, "");
-    done();
   });
 
-  it("not deploy MyToken and MyToken2", function(done) {
+  it("not deploy MyToken and MyToken2", function() {
     assert.notEqual(MyToken.address, "");
     assert.notEqual(MyToken2.address, "");
-    done();
   });
 
-  it("set MyToken Balance correctly", function(done) {
-    MyToken.methods._supply().call().then(function(result) {
-      assert.equal(result, 1000);
-      done();
-    });
+  it("set MyToken Balance correctly", async function() {
+    let result = await MyToken.methods._supply().call();
+    assert.equal(result, 1000);
   });
 
-  it("set MyToken2 Balance correctly", function(done) {
-    MyToken2.methods._supply().call().then(function(result) {
-      assert.equal(result, 2000);
-      done();
-    });
+  it("set MyToken2 Balance correctly", async function() {
+    let result = await MyToken2.methods._supply().call();
+    assert.equal(result, 2000);
   });
 
-  it("get right address", function(done) {
+  it("get right address", function() {
     assert.equal(AlreadyDeployedToken.address, "0xCAFECAFECAFECAFECAFECAFECAFECAFECAFECAFE");
-    done();
   });
 
-  it("should use onDeploy", function(done) {
-    Test.methods.addr().call().then(function(result) {
-      assert.equal(result, MyToken.address)
-      done();
-    });
+  it("should use onDeploy", async function() {
+    let result = await Test.methods.addr().call();
+    assert.equal(result, MyToken.address)
   });
 
 });
