@@ -3,7 +3,6 @@ const Config = require('../lib/core/config.js');
 const Plugins = require('../lib/core/plugins.js');
 const assert = require('assert');
 const TestLogger = require('../lib/tests/test_logger.js');
-const path = require('path');
 
 describe('embark.Config', function () {
   let config = new Config({
@@ -129,17 +128,6 @@ describe('embark.Config', function () {
     });
   });
 
-  describe('#loadContractOnTheWeb', function () {
-    it('should download the file correctly', async function () {
-      const filePath = await config.loadContractOnTheWeb(
-        'test_apps/test_app/.embark/contracts',
-        {file: 'https://github.com/embark-framework/embark/blob/master/test_app/app/contracts/simple_storage.sol'}
-      );
-      assert.strictEqual(filePath,
-        path.normalize('C:/dev/embark/test_apps/test_app/.embark/contracts/simple_storage.sol'));
-    });
-  });
-
   describe('#loadExternalContractsFiles', function () {
     it('should create the right list of files and download', function () {
       config.contractsFiles = [];
@@ -153,14 +141,14 @@ describe('embark.Config', function () {
       ];
       const expected = [
         {
-          "filename": path.normalize("C:/dev/embark/.embark/contracts/simple_storage.sol"),
+          "filename": ".embark/contracts/simple_storage.sol",
           "type": "http",
           "path": "https://raw.githubusercontent.com/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol",
           "basedir": "",
           "resolver": undefined
         },
         {
-          "filename": path.normalize("C:/dev/embark/.embark/contracts/ERC725.sol"),
+          "filename": ".embark/contracts/ERC725.sol",
           "type": "http",
           "path": "https://raw.githubusercontent.com/status-im/contracts/master/contracts/identity/ERC725.sol",
           "basedir": "",

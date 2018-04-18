@@ -71,6 +71,9 @@
         "args": [
           1000
         ]
+      },
+      "ERC725": {
+        "file": "https://github.com/status-im/contracts/blob/master/contracts/identity/ERC725.sol"
       }
     },
     "afterDeploy": [
