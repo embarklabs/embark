@@ -1,3 +1,4 @@
+/*global describe, it, before*/
 
 describe("Token", function() {
 

@@ -5,7 +5,7 @@ let File = require('../lib/core/file.js');
 let assert = require('assert');
 
 let readFile = function(file) {
-  return new File({filename: file, type: 'dapp_file', path: file});
+  return new File({filename: file, type: File.types.dapp_file, path: file});
 };
 
 var solcVersion = "0.4.17";
