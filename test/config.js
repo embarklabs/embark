@@ -130,13 +130,33 @@ describe('embark.Config', function () {
   });
 
   describe('#loadContractOnTheWeb', function () {
-    it('should get the right url for a https://github file', async function () {
+    it('should download the file correctly', async function () {
       const filePath = await config.loadContractOnTheWeb(
         'test_apps/test_app/.embark/contracts',
         {file: 'https://github.com/embark-framework/embark/blob/master/test_app/app/contracts/simple_storage.sol'}
       );
       assert.strictEqual(filePath,
         path.normalize('C:/dev/embark/test_apps/test_app/.embark/contracts/simple_storage.sol'));
+    });
+  });
+
+  describe('#loadExternalContractsFiles', function () {
+    it('should create the right list of files and download', async function () {
+      config.contractsFiles = [];
+      config.contractsConfig.contracts = [
+        {
+          file: 'https://github.com/embark-framework/embark/blob/master/test_app/app/contracts/simple_storage.sol'
+        },
+        {
+          file: 'github.com/status-im/contracts/contracts/identity/ERC725.sol'
+        }
+      ];
+      await config.loadExternalContractsFiles();
+      assert.deepEqual(config.contractsFiles,
+        [
+          path.normalize('C:/dev/embark/.embark/contracts/simple_storage.sol'),
+          path.normalize('C:/dev/embark/.embark/contracts/ERC725.sol')
+        ]);
     });
   });
 });
