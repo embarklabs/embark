@@ -4,13 +4,12 @@ let Logger = require('../lib/core/logger.js');
 let File = require('../lib/core/file.js');
 let TestLogger = require('../lib/tests/test_logger.js');
 let assert = require('assert');
-let fs = require('fs');
 
 //let SolidityCompiler = require('../lib/modules/solidity');
 let Plugins = require('../lib/core/plugins.js');
 
 let readFile = function(file) {
-  return new File({filename: file, type: 'dapp_file', path: file});
+  return new File({filename: file, type: File.types.dapp_file, path: file});
 };
 
 describe('embark.Contracts', function() {

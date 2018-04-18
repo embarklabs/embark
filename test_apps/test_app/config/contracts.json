@@ -63,9 +63,6 @@
           100
         ]
       },
-      "ERC20": {
-        "file": "zeppelin-solidity/contracts/token/ERC20/ERC20.sol"
-      },
       "SimpleStorageTest": {
         "file": "./some_folder/test_contract.sol",
         "args": [
