@@ -141,7 +141,7 @@ describe('embark.Config', function () {
   });
 
   describe('#loadExternalContractsFiles', function () {
-    it('should create the right list of files and download', async function () {
+    it('should create the right list of files and download', function () {
       config.contractsFiles = [];
       config.contractsConfig.contracts = [
         {
@@ -151,12 +151,24 @@ describe('embark.Config', function () {
           file: 'github.com/status-im/contracts/contracts/identity/ERC725.sol'
         }
       ];
-      await config.loadExternalContractsFiles();
-      assert.deepEqual(config.contractsFiles,
-        [
-          path.normalize('C:/dev/embark/.embark/contracts/simple_storage.sol'),
-          path.normalize('C:/dev/embark/.embark/contracts/ERC725.sol')
-        ]);
+      const expected = [
+        {
+          "filename": path.normalize("C:/dev/embark/.embark/contracts/simple_storage.sol"),
+          "type": "http",
+          "path": "https://raw.githubusercontent.com/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol",
+          "basedir": "",
+          "resolver": undefined
+        },
+        {
+          "filename": path.normalize("C:/dev/embark/.embark/contracts/ERC725.sol"),
+          "type": "http",
+          "path": "https://raw.githubusercontent.com/status-im/contracts/master/contracts/identity/ERC725.sol",
+          "basedir": "",
+          "resolver": undefined
+        }
+      ];
+      config.loadExternalContractsFiles();
+      assert.deepEqual(config.contractsFiles, expected);
     });
   });
 });
