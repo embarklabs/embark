@@ -158,14 +158,14 @@ describe('embark.Config', function () {
       ];
       const expected = [
         {
-          "filename": ".embark/contracts/simple_storage.sol",
+          "filename": ".embark/contracts/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol",
           "type": "http",
           "path": "https://raw.githubusercontent.com/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol",
           "basedir": "",
           "resolver": undefined
         },
         {
-          "filename": ".embark/contracts/ERC725.sol",
+          "filename": ".embark/contracts/status-im/contracts/master/contracts/identity/ERC725.sol",
           "type": "http",
           "path": "https://raw.githubusercontent.com/status-im/contracts/master/contracts/identity/ERC725.sol",
           "basedir": "",
