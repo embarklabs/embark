@@ -59,72 +59,89 @@ describe('embark.Config', function () {
 
   describe('#getExternalContractUrl', function () {
     it('should get the right url for a https://github file', function () {
-      const url = config.getExternalContractUrl(
+      const fileObj = config.getExternalContractUrl(
         {file: 'https://github.com/embark-framework/embark/blob/master/test_app/app/contracts/simple_storage.sol'}
       );
-      assert.strictEqual(url,
-        'https://raw.githubusercontent.com/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol');
+      assert.deepEqual(fileObj,
+        {
+          filePath: 'embark-framework/embark/master/test_app/app/contracts/simple_storage.sol',
+          url: 'https://raw.githubusercontent.com/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol'
+        });
     });
 
     it('should fail for a malformed https://github file', function () {
-      const url = config.getExternalContractUrl(
+      const fileObj = config.getExternalContractUrl(
         {file: 'https://github/embark-framework/embark/blob/master/test_app/app/contracts/simple_storage.sol'}
       );
-      assert.strictEqual(url, '');
+      assert.strictEqual(fileObj, null);
     });
 
     it('should get the right url for a git:// file with no branch #', function () {
-      const url = config.getExternalContractUrl(
+      const fileObj = config.getExternalContractUrl(
         {file: 'git://github.com/status-im/contracts/contracts/identity/ERC725.sol'}
       );
-      console.log(url);
-      assert.strictEqual(url,
-        'https://raw.githubusercontent.com/status-im/contracts/master/contracts/identity/ERC725.sol');
+      assert.deepEqual(fileObj,
+        {
+          filePath: 'status-im/contracts/master/contracts/identity/ERC725.sol',
+          url: 'https://raw.githubusercontent.com/status-im/contracts/master/contracts/identity/ERC725.sol'
+        });
     });
 
     it('should get the right url for a git:// file with a branch #', function () {
-      const url = config.getExternalContractUrl(
+      const fileObj = config.getExternalContractUrl(
         {file: 'git://github.com/status-im/contracts/contracts/identity/ERC725.sol#myBranch'}
       );
-      assert.strictEqual(url,
-        'https://raw.githubusercontent.com/status-im/contracts/myBranch/contracts/identity/ERC725.sol');
+      assert.deepEqual(fileObj,
+        {
+          filePath: 'status-im/contracts/myBranch/contracts/identity/ERC725.sol',
+          url: 'https://raw.githubusercontent.com/status-im/contracts/myBranch/contracts/identity/ERC725.sol'
+        });
     });
 
     it('should fail when the git:// file is malformed', function () {
-      const url = config.getExternalContractUrl(
+      const fileObj = config.getExternalContractUrl(
         {file: 'git://github.com/identity/ERC725.sol#myBranch'}
       );
-      assert.strictEqual(url, '');
+      assert.strictEqual(fileObj, null);
     });
 
     it('should get the right url with a github.com file without branch #', function () {
-      const url = config.getExternalContractUrl(
+      const fileObj = config.getExternalContractUrl(
         {file: 'github.com/status-im/contracts/contracts/identity/ERC725.sol'}
       );
-      assert.strictEqual(url,
-        'https://raw.githubusercontent.com/status-im/contracts/master/contracts/identity/ERC725.sol');
+      assert.deepEqual(fileObj,
+        {
+          filePath: 'status-im/contracts/master/contracts/identity/ERC725.sol',
+          url: 'https://raw.githubusercontent.com/status-im/contracts/master/contracts/identity/ERC725.sol'
+        });
     });
 
     it('should get the right url with a github.com file with branch #', function () {
-      const url = config.getExternalContractUrl(
+      const fileObj = config.getExternalContractUrl(
         {file: 'github.com/status-im/contracts/contracts/identity/ERC725.sol#theBranch'}
       );
-      assert.strictEqual(url,
-        'https://raw.githubusercontent.com/status-im/contracts/theBranch/contracts/identity/ERC725.sol');
+      assert.deepEqual(fileObj,
+        {
+          filePath: 'status-im/contracts/theBranch/contracts/identity/ERC725.sol',
+          url: 'https://raw.githubusercontent.com/status-im/contracts/theBranch/contracts/identity/ERC725.sol'
+        });
     });
 
     it('should fail with a malformed github.com url', function () {
-      const url = config.getExternalContractUrl(
+      const fileObj = config.getExternalContractUrl(
         {file: 'github/status-im/contracts/contracts/identity/ERC725.sol#theBranch'}
       );
-      assert.strictEqual(url, '');
+      assert.strictEqual(fileObj, null);
     });
 
     it('should succeed with a generic http url', function () {
-      const url = config.getExternalContractUrl(
+      const fileObj = config.getExternalContractUrl(
         {file: 'http://myurl.com/myFile.sol'}
       );
-      assert.strictEqual(url, 'http://myurl.com/myFile.sol');
+      assert.deepEqual(fileObj, {
+        filePath: 'myFile.sol',
+        url: 'http://myurl.com/myFile.sol'
+      });
     });
   });
 
@@ -141,14 +158,14 @@ describe('embark.Config', function () {
       ];
       const expected = [
         {
-          "filename": ".embark/contracts/simple_storage.sol",
+          "filename": ".embark/contracts/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol",
           "type": "http",
           "path": "https://raw.githubusercontent.com/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol",
           "basedir": "",
           "resolver": undefined
         },
         {
-          "filename": ".embark/contracts/ERC725.sol",
+          "filename": ".embark/contracts/status-im/contracts/master/contracts/identity/ERC725.sol",
           "type": "http",
           "path": "https://raw.githubusercontent.com/status-im/contracts/master/contracts/identity/ERC725.sol",
           "basedir": "",
