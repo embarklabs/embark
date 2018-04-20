@@ -43,6 +43,7 @@
     "globule": "^1.1.0",
     "http-shutdown": "^1.2.0",
     "ipfs-api": "17.2.4",
+    "live-plugin-manager": "^0.11.0",
     "merge": "^1.2.0",
     "mocha": "^2.2.5",
     "orbit-db": "^0.17.3",
