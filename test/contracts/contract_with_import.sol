@@ -1,7 +1,7 @@
 pragma solidity ^0.4.7;
+import "./ownable.sol";
 contract SimpleStorage {
   uint public storedData;
-  import "./ownable.sol";
 
   function SimpleStorage(uint initialValue) {
     storedData = initialValue;
