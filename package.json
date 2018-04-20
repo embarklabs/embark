@@ -43,7 +43,7 @@
     "globule": "^1.1.0",
     "http-shutdown": "^1.2.0",
     "ipfs-api": "17.2.4",
-    "live-plugin-manager": "^0.11.0",
+    "live-plugin-manager": "https://github.com/iurimatias/live-plugin-manager.git",
     "merge": "^1.2.0",
     "mocha": "^2.2.5",
     "orbit-db": "^0.17.3",
@@ -61,7 +61,7 @@
     "underscore.string": "^3.3.4",
     "url-loader": "^0.6.2",
     "viz.js": "^1.8.1",
-    "web3": "1.0.0-beta.34",
+    "web3": "1.0.0-beta.32",
     "webpack": "^3.10.0",
     "window-size": "^1.1.0"
   },
