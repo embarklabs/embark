@@ -38,7 +38,7 @@ describe('embark.Config', function () {
     it('should load contract config correctly', function () {
       config.loadContractsConfigFile();
       let expectedConfig = {
-        versions: {'web3.js': '1.0.0-beta', solc: '0.4.17'},
+        versions: {'web3': '1.0.0-beta', solc: '0.4.17'},
         deployment: {host: 'localhost', port: 8545, type: 'rpc'},
         dappConnection: ['$WEB3', 'localhost:8545'],
         "gas": "auto",
