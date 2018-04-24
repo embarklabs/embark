@@ -5,6 +5,7 @@ import { Tabs, Tab } from 'react-bootstrap';
 import EmbarkJS from 'Embark/EmbarkJS';
 import Blockchain from './components/blockchain';
 import Whisper from './components/whisper';
+import Storage from './components/storage';
 
 import './dapp.css';
 
@@ -14,14 +15,16 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      whisperEnabled: false
+      whisperEnabled: false,
+      storageEnabled: false
     }
   }
 
   componentDidMount(){ 
-    // TODO Verify if whisper & swarm are available
+    // TODO Verify if whisper & swarm/ipfs are available
     this.setState({
-      whisperEnabled: false
+      whisperEnabled: false,
+      storageEnabled: false
     });
   }
 
@@ -40,8 +43,8 @@ class App extends React.Component {
         <Tab eventKey={1} title="Blockchain">
           <Blockchain />
         </Tab>
-        <Tab eventKey={2} title="Decentralized Storage (IPFS)">
-          Tab 2 content
+        <Tab eventKey={2} title={this._renderStatus('Decentralized Storage', this.state.storageEnabled)}>
+          <Storage />
         </Tab>
         <Tab eventKey={3} title={this._renderStatus('P2P communication (Whisper/Orbit)', this.state.whisperEnabled)}>
           <Whisper enabled={this.state.whisperEnabled} />
