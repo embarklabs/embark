@@ -1,3 +1,11 @@
 {
-  "httpContractsDirectory": ".embark/contracts/"
+  "httpContractsDirectory": ".embark/contracts/",
+  "contexts": {
+    "simulator": "simulator",
+    "blockchain": "blockchain",
+    "any": "any"
+  },
+  "events": {
+    "contextChange": "contextChange"
+  }
 }
