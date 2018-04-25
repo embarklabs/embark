@@ -19,4 +19,12 @@ module.exports = function (embark) {
     }
   });
   embark.addContractFile("./contracts/pluginSimpleStorage.sol");
+
+  embark.addFileToPipeline('./fileInPipeline.js');
+  embark.addFileToPipeline('./fileInPipeline.js', 'js/fileInPipeline.js');
+
+  embark.registerBeforeDeploy(function(options, callback) {
+    // Just calling register to prove it works. We don't actually want to change the contracts
+    callback({contractCode: options.contract.code});
+  });
 };
