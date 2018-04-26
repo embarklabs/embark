@@ -7,7 +7,7 @@
     "nodiscover": true,
     "rpcHost": "localhost",
     "rpcPort": 8545,
-    "rpcCorsDomain": "auto",
+    "rpcCorsDomain": "http://localhost:8000",
     "account": {
       "password": "config/development/password"
     }
