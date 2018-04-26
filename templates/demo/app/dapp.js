@@ -21,10 +21,30 @@ class App extends React.Component {
   }
 
   componentDidMount(){ 
-    // TODO Verify if whisper & swarm/ipfs are available
+    let _this = this;
+
+    setTimeout(() => {
+      if (EmbarkJS.isNewWeb3()) {
+        EmbarkJS.Messages.Providers.whisper.getWhisperVersion(function(err, version){ 
+          if(!err)
+              _this.setState({whisperEnabled: true})
+            else
+              console.log(err);
+        });
+      } else {
+        if (EmbarkJS.Messages.providerName === 'whisper') {
+          EmbarkJS.Messages.getWhisperVersion(function(err, version) {
+            if(!err)
+              _this.setState({whisperEnabled: true})
+            else
+              console.log(err);
+          });
+        }
+      }
+    }, 500);
+
     this.setState({
-      whisperEnabled: false,
-      storageEnabled: false
+      storageEnabled: true
     });
   }
 
