@@ -74,6 +74,12 @@
       },
       "Identity": {
         "file": "https://github.com/status-im/contracts/blob/master/contracts/identity/Identity.sol"
+      },
+      "SimpleStorageWithHttpImport": {
+        "fromIndex": 0,
+        "args": [
+          100
+        ]
       }
     },
     "afterDeploy": [
