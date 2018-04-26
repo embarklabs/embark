@@ -32,24 +32,16 @@ module.exports = function (embark) {
     return "web3 = new Web3(new Web3.providers.HttpProvider('http://" + options.rpcHost + ":" + options.rpcPort + "'));";
   });
 
-  /*embark.registerContractsGeneration(function (options) {
-    const contractGenerations = [];
-    Object.keys(options.contracts).map(className => {
-      const contract = options.contracts[className];
-      const abi = JSON.stringify(contract.abiDefinition);
-
-      contractGenerations.push(`${className} = new this.web3.eth.contract('${abi}').at('${contract.deployedAddress}')`);
-    });
-    return contractGenerations.join('\n');
-    // return '';
-  });*/
-
   embark.registerConsoleCommand((cmd) => {
     if (cmd === "hello") {
       return "hello there!";
     }
     // continue to embark or next plugin;
     return false;
+  });
+
+  embark.events.on("contractsDeployed", function() {
+    embark.logger.info("plugin says: your contracts have been deployed");
   });
 
 };
