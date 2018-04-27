@@ -21,30 +21,28 @@ class App extends React.Component {
   }
 
   componentDidMount(){ 
-    let _this = this;
-
-    setTimeout(() => {
+    __embarkContext.execWhenReady(() => {
       if (EmbarkJS.isNewWeb3()) {
-        EmbarkJS.Messages.Providers.whisper.getWhisperVersion(function(err, version){ 
+        EmbarkJS.Messages.Providers.whisper.getWhisperVersion((err, version) => { 
           if(!err)
-              _this.setState({whisperEnabled: true})
+              this.setState({whisperEnabled: true})
             else
               console.log(err);
         });
       } else {
         if (EmbarkJS.Messages.providerName === 'whisper') {
-          EmbarkJS.Messages.getWhisperVersion(function(err, version) {
+          EmbarkJS.Messages.getWhisperVersion((err, version) => {
             if(!err)
-              _this.setState({whisperEnabled: true})
+              this.setState({whisperEnabled: true})
             else
               console.log(err);
           });
         }
       }
-    }, 500);
 
-    this.setState({
-      storageEnabled: true
+      this.setState({
+        storageEnabled: true
+      });
     });
   }
 
