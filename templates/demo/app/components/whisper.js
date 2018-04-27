@@ -6,9 +6,6 @@ class Whisper extends React.Component {
 
     constructor(props) {
       super(props);
-      
-      this.sendMessage = this.sendMessage.bind(this);
-      this.listenToChannel = this.listenToChannel.bind(this);
 
       this.state = {
           listenTo: '',
@@ -28,23 +25,21 @@ class Whisper extends React.Component {
     sendMessage(e){
         e.preventDefault();
         EmbarkJS.Messages.sendMessage({topic: this.state.channel, data: this.state.message});
-        this._addToLog("EmbarkJS.Messages.sendMessage({topic: '" + this.state.channel + "', data: '" + this.state.message + "'})");
+        this.addToLog("EmbarkJS.Messages.sendMessage({topic: '" + this.state.channel + "', data: '" + this.state.message + "'})");
     }
 
     listenToChannel(e){
         e.preventDefault();
 
-        let listenTo = this.state.listenTo;
+        this.state.subscribedChannels.push(`subscribed to ${this.state.listenTo} now try sending a message`);
 
-        this.state.subscribedChannels.push(`subscribed to ${listenTo} now try sending a message`);
+        EmbarkJS.Messages.listenTo({topic: [this.state.listenTo]})
+            .then(message => this.state.messageList.push(`channel: ${this.state.listenTo}  message: ${message}`))
 
-        EmbarkJS.Messages.listenTo({topic: [listenTo]})
-            .then(message => this.state.messageList.push(`channel: ${listenTo}  message: ${message}`))
-
-        this._addToLog("EmbarkJS.Messages.listenTo({topic: ['" + this.state.channel + "']}).then(function(message) {})");
+        this.addToLog("EmbarkJS.Messages.listenTo({topic: ['" + this.state.listenTo + "']}).then(function(message) {})");
     }
 
-    _addToLog(txt){
+    addToLog(txt){
         this.state.logs.push(txt);
         this.setState({logs: this.state.logs});
     }
@@ -53,7 +48,7 @@ class Whisper extends React.Component {
         return (
        <React.Fragment>
             {
-                !this.state.enabled ?
+                !this.props.enabled ?
                 <React.Fragment>
                 <Alert bsStyle="warning">The node you are using does not support Whisper</Alert>
                 <Alert bsStyle="warning">The node uses an unsupported version of Whisper</Alert>
@@ -67,8 +62,7 @@ class Whisper extends React.Component {
                         defaultValue={this.state.listenTo}
                         placeholder="channel"
                         onChange={e => this.handleChange(e, 'listenTo')} />
-                    {' '}
-                    <Button bsStyle="primary" onClick={this.listenToChannel}>Start Listening</Button>
+                    <Button bsStyle="primary" onClick={(e) => this.listenToChannel(e)}>Start Listening</Button>
                     <div id="subscribeList">
                     { this.state.subscribedChannels.map((item, i) => <p key={i}>{item}</p>) }
                     </div>
@@ -87,14 +81,12 @@ class Whisper extends React.Component {
                         defaultValue={this.state.channel}
                         placeholder="channel"
                         onChange={e => this.handleChange(e, 'channel')} />
-                    {' '}
                     <FormControl
                         type="text"
                         defaultValue={this.state.message}
                         placeholder="message"
                         onChange={e => this.handleChange(e, 'message')} />
-                    {' '}
-                    <Button bsStyle="primary" onClick={this.sendMessage}>Send Message</Button>
+                    <Button bsStyle="primary" onClick={(e) => this.sendMessage(e)}>Send Message</Button>
                 </FormGroup>
             </Form>
 

@@ -64,7 +64,7 @@ class App extends React.Component {
           <Blockchain />
         </Tab>
         <Tab eventKey={2} title={this._renderStatus('Decentralized Storage', this.state.storageEnabled)}>
-          <Storage />
+          <Storage enabled={this.state.storageEnabled} />
         </Tab>
         <Tab eventKey={3} title={this._renderStatus('P2P communication (Whisper/Orbit)', this.state.whisperEnabled)}>
           <Whisper enabled={this.state.whisperEnabled} />

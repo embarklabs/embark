@@ -8,10 +8,6 @@ class Blockchain extends React.Component {
     constructor(props) {
       super(props);
   
-      this.setValue = this.setValue.bind(this);
-      this.getValue = this.getValue.bind(this);
-      this.handleChange = this.handleChange.bind(this);
-  
       this.state = {
         valueSet: 10,
         valueGet: "",
@@ -65,9 +61,9 @@ class Blockchain extends React.Component {
               <FormControl
                 type="text"
                 defaultValue={this.state.valueSet}
-                onChange={this.handleChange}/>
+                onChange={(e) => this.handleChange(e)} />
               {' '}
-              <Button bsStyle="primary" onClick={this.setValue}>Set Value</Button>
+              <Button bsStyle="primary" onClick={(e) => this.setValue(e)}>Set Value</Button>
               <HelpBlock>Once you set the value, the transaction will need to be mined and then the value will be updated on the blockchain.</HelpBlock>
             </FormGroup>
           </Form>
@@ -76,7 +72,7 @@ class Blockchain extends React.Component {
           <Form inline>
             <FormGroup>
               <HelpBlock>current value is <span className="value">{this.state.valueGet}</span></HelpBlock>
-              <Button bsStyle="primary" onClick={this.getValue}>Get Value</Button>
+              <Button bsStyle="primary" onClick={(e) => this.getValue(e)}>Get Value</Button>
               <HelpBlock>Click the button to get the current value. The initial value is 100.</HelpBlock>
             </FormGroup>
           </Form>

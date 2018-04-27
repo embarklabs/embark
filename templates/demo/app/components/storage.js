@@ -16,14 +16,9 @@ class Storage extends React.Component {
           fileHash: '',
           imageToDownload: '',
           url: '',
-          logs: []
+          logs: [],
+          storageError: ''
       };
-
-      this.setText = this.setText.bind(this);
-      this.loadHash = this.loadHash.bind(this);
-      this.uploadFile = this.uploadFile.bind(this);
-      this.handleFileUpload = this.handleFileUpload.bind(this);
-      this.loadFile = this.loadFile.bind(this);
     }
 
     handleChange(e, name){
@@ -35,7 +30,7 @@ class Storage extends React.Component {
         this.setState({ fileToUpload: [e.target] });
     }
 
-    _addToLog(txt){
+    addToLog(txt){
         this.state.logs.push(txt);
         this.setState({logs: this.state.logs});
     }
@@ -43,18 +38,18 @@ class Storage extends React.Component {
     setText(e){
         e.preventDefault();
         
-        let _this = this;
-
         EmbarkJS.Storage.saveText(this.state.textToSave)
-            .then(function(hash) {
-                _this.setState({
+            .then((hash) => {
+                this.setState({
                     generatedHash: hash,
-                    loadText: hash
+                    loadText: hash,
+                    storageError: ''
                 });
-                _this._addToLog("EmbarkJS.Storage.saveText('" + _this.state.textToSave + "').then(function(hash) { })");
+                this.addToLog("EmbarkJS.Storage.saveText('" + this.state.textToSave + "').then(function(hash) { })");
                 })
-            .catch(function(err) {
+            .catch((err) => {
                 if(err){
+                    this.setState({storageError: err.message});
                     console.log("Storage saveText Error => " + err.message);
                 }
             });
@@ -63,15 +58,14 @@ class Storage extends React.Component {
     loadHash(e){
         e.preventDefault();
 
-        let _this = this;
-
         EmbarkJS.Storage.get(this.state.loadText)
-            .then(function(content) {
-                _this.setState({storedText: content});
-                _this._addToLog("EmbarkJS.Storage.get('" + _this.state.loadText + "').then(function(content) { })");
+            .then((content) => {
+                this.setState({storedText: content, storageError: ''});
+                this.addToLog("EmbarkJS.Storage.get('" + this.state.loadText + "').then(function(content) { })");
             })
-            .catch(function(err) {
+            .catch((err) => {
                 if(err){
+                    this.setState({storageError: err.message})
                     console.log("Storage get Error => " + err.message);
                 }
             });
@@ -80,18 +74,18 @@ class Storage extends React.Component {
     uploadFile(e){
         e.preventDefault();
 
-        let _this = this;
-
         EmbarkJS.Storage.uploadFile(this.state.fileToUpload)
-            .then(function(hash) {
-                _this.setState({
+            .then((hash) => {
+                this.setState({
                     fileHash: hash,
-                    imageToDownload: hash
+                    imageToDownload: hash,
+                    storageError: ''
                 });
-                _this._addToLog("EmbarkJS.Storage.uploadFile(this.state.fileToUpload).then(function(hash) { })");
+                this.addToLog("EmbarkJS.Storage.uploadFile(this.state.fileToUpload).then(function(hash) { })");
                 })
-            .catch(function(err) {
+            .catch((err) => {
                 if(err){
+                    this.setState({storageError: err.message});
                     console.log("Storage uploadFile Error => " + err.message);
                 }
             });
@@ -100,7 +94,7 @@ class Storage extends React.Component {
     loadFile(e){
         let _url = EmbarkJS.Storage.getUrl(this.state.imageToDownload);
         this.setState({url: _url})
-        this._addToLog("EmbarkJS.Storage.getUrl('" + this.state.imageToDownload + "')");
+        this.addToLog("EmbarkJS.Storage.getUrl('" + this.state.imageToDownload + "')");
     }
 
     render(){
@@ -111,7 +105,11 @@ class Storage extends React.Component {
                 <Alert bsStyle="warning">The node you are using does not support IPFS. Please ensure <a href="https://github.com/ipfs/js-ipfs-api#cors" target="_blank">CORS</a> is setup for the IPFS node.</Alert>
                 </React.Fragment> : ''
             }
-
+            {
+                this.state.storageError !== '' ?
+                <Alert bsStyle="danger">{this.state.storageError}</Alert>
+                : ''
+            }
             <h3>Save text to storage</h3>
             <Form inline>
                 <FormGroup>
@@ -119,11 +117,11 @@ class Storage extends React.Component {
                         type="text"
                         defaultValue={this.state.textToSave}
                         onChange={e => this.handleChange(e, 'textToSave')} />
-                    <Button bsStyle="primary" onClick={this.setText}>Save Text</Button>
+                    <Button bsStyle="primary" onClick={(e) => this.setText(e)}>Save Text</Button>
                     <HelpBlock>generated Hash: <span className="textHash">{this.state.generatedHash}</span></HelpBlock>
                 </FormGroup>
             </Form> 
-            
+           
             <h3>Load text from storage given an hash</h3>
             <Form inline>
                 <FormGroup>
@@ -131,7 +129,7 @@ class Storage extends React.Component {
                         type="text"
                         value={this.state.loadText}
                         onChange={e => this.handleChange(e, 'loadText')} />
-                    <Button bsStyle="primary" onClick={this.loadHash}>Load</Button>
+                    <Button bsStyle="primary" onClick={(e) => this.loadHash(e)}>Load</Button>
                     <HelpBlock>result: <span className="textHash">{this.state.storedText}</span></HelpBlock>
                 </FormGroup>
             </Form>
@@ -141,8 +139,8 @@ class Storage extends React.Component {
                 <FormGroup>
                     <FormControl
                         type="file"
-                        onChange={this.handleFileUpload} />
-                    <Button bsStyle="primary" onClick={this.uploadFile}>Upload</Button>
+                        onChange={(e) => this.handleFileUpload(e)} />
+                    <Button bsStyle="primary" onClick={(e) => this.uploadFile(e)}>Upload</Button>
                     <HelpBlock>generated hash: <span className="fileHash">{this.state.fileHash}</span></HelpBlock>
                 </FormGroup>
             </Form>
@@ -154,7 +152,7 @@ class Storage extends React.Component {
                         type="text"
                         value={this.state.imageToDownload}
                         onChange={e => this.handleChange(e, 'imageToDownload')} />
-                    <Button bsStyle="primary" onClick={this.loadFile}>Download</Button>
+                    <Button bsStyle="primary" onClick={(e) => this.loadFile(e)}>Download</Button>
                     <HelpBlock>file available at: <span><a href={this.state.url} target="_blank">{this.state.url}</a></span></HelpBlock>
                     <HelpBlock><img src={this.state.url} /></HelpBlock>
                 </FormGroup>
