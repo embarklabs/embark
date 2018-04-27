@@ -62,7 +62,6 @@ class Blockchain extends React.Component {
                 type="text"
                 defaultValue={this.state.valueSet}
                 onChange={(e) => this.handleChange(e)} />
-              {' '}
               <Button bsStyle="primary" onClick={(e) => this.setValue(e)}>Set Value</Button>
               <HelpBlock>Once you set the value, the transaction will need to be mined and then the value will be updated on the blockchain.</HelpBlock>
             </FormGroup>
