@@ -3,11 +3,13 @@ const Config = require('../lib/core/config.js');
 const Plugins = require('../lib/core/plugins.js');
 const assert = require('assert');
 const TestLogger = require('../lib/tests/test_logger.js');
+const Events = require('../lib/core/events');
 
 describe('embark.Config', function () {
   let config = new Config({
     env: 'myenv',
-    configDir: './test/test1/config/'
+    configDir: './test/test1/config/',
+    events: new Events()
   });
   config.plugins = new Plugins({plugins: {}});
   config.logger = new TestLogger({});
