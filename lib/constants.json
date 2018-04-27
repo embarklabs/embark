@@ -13,6 +13,7 @@
     "any": "any"
   },
   "events": {
-    "contractFilesChanged": "contractFilesChanged"
+    "contractFilesChanged": "contractFilesChanged",
+    "contractConfigChanged": "contractConfigChanged"
   }
 }
