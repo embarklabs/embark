@@ -3,6 +3,7 @@ let ContractsManager = require('../lib/contracts/contracts.js');
 let Logger = require('../lib/core/logger.js');
 let File = require('../lib/core/file.js');
 let TestLogger = require('../lib/tests/test_logger.js');
+let Events = require('../lib/core/events');
 let assert = require('assert');
 
 //let SolidityCompiler = require('../lib/modules/solidity');
@@ -55,7 +56,8 @@ describe('embark.Contracts', function() {
           }
         }
       },
-      logger: new Logger({})
+      logger: new Logger({}),
+      events: new Events()
     });
 
     describe('#build', function() {
@@ -146,7 +148,8 @@ describe('embark.Contracts', function() {
           }
         }
       },
-      logger: new Logger({})
+      logger: new Logger({}),
+      events: new Events()
     });
 
     describe('#build', function() {
