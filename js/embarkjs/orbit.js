@@ -85,3 +85,11 @@ EmbarkJS.Messages.Orbit.listenTo = function(options) {
     return promise;
 };
 
+// TODO: needs a real check for availability
+// TODO: not tested as orbit is not loaded and therefore the provider is not available
+EmbarkJS.Messages.Orbit.isAvailable = function(){
+    return new Promise((resolve) => {
+        if(!this.orbit) resolve(false);
+        resolve(true);
+    });
+}

@@ -1,7 +1,7 @@
 {
   "default": {
     "enabled": true,
-    "available_providers": ["ipfs"],
+    "available_providers": ["ipfs", "swarm"],
     "ipfs_bin": "ipfs",
     "provider": "ipfs",
     "host": "localhost",
@@ -9,10 +9,10 @@
   },
   "development": {
     "enabled": true,
-    "provider": "ipfs",
-    "host": "localhost",
-    "port": 5001,
-    "getUrl": "http://localhost:8080/ipfs/"
+    "provider": "swarm",
+    "host": "swarm-gateways.net",
+    "port": 80,
+    "getUrl": "http://swarm-gateways.net/bzzr:/"
   },
   "livenet": {
     "enabled": true,
