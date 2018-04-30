@@ -27,6 +27,7 @@ describe('embark.Config', function () {
         "rpcHost": "localhost",
         "rpcPort": 8545,
         "rpcCorsDomain": "http://localhost:8000",
+        "wsOrigins": "auto",
         "account": {
           "password": "config/development/password"
         }
