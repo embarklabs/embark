@@ -182,9 +182,7 @@ EmbarkJS.Contract.prototype.send = function(value, unit, _options) {
 
 EmbarkJS.Storage = {};
 
-EmbarkJS.Storage.Providers = {
-    SWARM: 'swarm'
-};
+EmbarkJS.Storage.Providers = {};
 
 EmbarkJS.Storage.saveText = function(text) {
   if (!this.currentStorage) {
@@ -230,6 +228,10 @@ EmbarkJS.Storage.setProvider = function(provider, options) {
   return providerObj.setProvider(options);
 };
 
+EmbarkJS.Storage.isAvailable = function(){
+  return this.currentStorage.isAvailable();
+};
+
 EmbarkJS.Messages = {};
 
 EmbarkJS.Messages.Providers = {};
@@ -248,6 +250,10 @@ EmbarkJS.Messages.setProvider = function(provider, options) {
   this.currentMessages = providerObj;
 
   return providerObj.setProvider(options);
+};
+
+EmbarkJS.Messages.isAvailable = function(){
+  return this.currentMessages.isAvailable();
 };
 
 EmbarkJS.Messages.sendMessage = function(options) {
