@@ -263,11 +263,11 @@ EmbarkJS.Messages.sendMessage = function(options) {
   return this.currentMessages.sendMessage(options);
 };
 
-EmbarkJS.Messages.listenTo = function(options) {
+EmbarkJS.Messages.listenTo = function(options, callback) {
   if (!this.currentMessages) {
     throw new Error('Messages provider not set; e.g EmbarkJS.Messages.setProvider("whisper")');
   }
-  return this.currentMessages.listenTo(options);
+  return this.currentMessages.listenTo(options, callback);
 };
 
 EmbarkJS.Utils = {
