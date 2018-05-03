@@ -55,7 +55,7 @@
     "request": "^2.85.0",
     "serve-static": "^1.11.1",
     "shelljs": "^0.5.0",
-    "solc": "0.4.17",
+    "solc": "0.4.23",
     "style-loader": "^0.19.0",
     "tar": "^3.1.5",
     "toposort": "^1.0.0",
