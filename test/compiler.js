@@ -8,7 +8,7 @@ let readFile = function(file) {
   return new File({filename: file, type: File.types.dapp_file, path: file});
 };
 
-var solcVersion = "0.4.17";
+var solcVersion = "0.4.23";
 
 var TestEvents = {
   request: (cmd, cb) => {
