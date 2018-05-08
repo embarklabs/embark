@@ -9,6 +9,9 @@
         "sourceType": "module",
         "ecmaVersion": 2017
     },
+    "globals": {
+      "__": true
+    },
     "rules": {
         "accessor-pairs": "error",
         "array-bracket-newline": "error",
