@@ -21,6 +21,7 @@
     "url": "https://github.com/iurimatias/embark-framework.git"
   },
   "dependencies": {
+    "ascii-table": "0.0.9",
     "async": "^2.0.1",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
