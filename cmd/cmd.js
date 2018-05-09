@@ -329,7 +329,6 @@ class Cmd {
       .command('scaffold [contract] [environment]')
       .option('--framework <framework>', 'UI framework to use. (default: react)')
       .action(function(contract, env, options){
-        
         let environment = env || 'development';
 
         if(contract === undefined){
@@ -342,7 +341,7 @@ class Cmd {
         });
         
         options.contract = contract;
-        options.framework =  options.framework || 'react';
+        options.framework = options.framework || 'react';
         options.env = environment;
         embark.scaffold(options);
       });
