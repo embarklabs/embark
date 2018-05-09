@@ -15,5 +15,12 @@
   "events": {
     "contractFilesChanged": "contractFilesChanged",
     "contractConfigChanged": "contractConfigChanged"
+  },
+  "pipeline": {
+    "init": "init",
+    "build": "build",
+    "initiated": "initiated",
+    "built": "built",
+    "log": "log"
   }
 }
