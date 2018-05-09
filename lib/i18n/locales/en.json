@@ -69,5 +69,11 @@
 	"instantiated web3.js object configured to the current environment": "instantiated web3.js object configured to the current environment",
 	"to immediatly exit (alias: exit)": "to immediatly exit (alias: exit)",
 	"The web3 object and the interfaces for the deployed contracts and their methods are also available": "The web3 object and the interfaces for the deployed contracts and their methods are also available",
-	"versions in use": "versions in use"
+	"versions in use": "versions in use",
+	"language to use (default: en)": "language to use (default: en)",
+	"executing": "executing",
+	"writing file": "writing file",
+	"errors found while generating": "errors found while generating",
+	"Looking for documentation? You can find it at": "Looking for documentation? You can find it at",
+	"Ready": "Ready"
 }
