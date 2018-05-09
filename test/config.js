@@ -22,6 +22,7 @@ describe('embark.Config', function () {
         "networkType": "custom",
         "genesisBlock": "config/development/genesis.json",
         "datadir": ".embark/development/datadir",
+        "isDev": true,
         "mineWhenNeeded": true,
         "nodiscover": true,
         "rpcHost": "localhost",
