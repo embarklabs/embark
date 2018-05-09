@@ -4,6 +4,7 @@
     "networkType": "custom",
     "genesisBlock": "development/genesis.json",
     "datadir": ".embark/development/datadir",
+    "isDev": true,
     "mineWhenNeeded": true,
     "nodiscover": true,
     "maxpeers": 0,
