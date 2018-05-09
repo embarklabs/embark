@@ -46,6 +46,7 @@ class Cmd {
     this.reset();
     this.ejectWebpack();
     this.graph();
+    this.scaffold();
     this.upload();
     this.versionCmd();
     this.helpCmd();
@@ -320,6 +321,29 @@ class Cmd {
           skipEvents: options.skipEvents,
           output: options.output || process.env['DEFAULT_DIAGRAM_PATH']
         });
+      });
+  }
+
+  scaffold() {
+    program
+      .command('scaffold [contract] [environment]')
+      .option('--framework', 'UI framework to use. (default: react)')
+      .action(function(contract, env, options){
+        let environment = env || 'development';
+
+        if(contract === undefined){
+          console.log("contract name is required");
+          process.exit(0);
+        }
+
+        embark.initConfig(environment, {
+          embarkConfig: 'embark.json', interceptLogs: false
+        });
+        
+        options.contract = contract;
+        options.framework = options.framework || 'react';
+        options.env = environment;
+        embark.scaffold(options);
       });
   }
 
