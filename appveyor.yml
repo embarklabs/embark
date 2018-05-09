@@ -1,0 +1,26 @@
+# Test against the latest version of this Node.js version
+environment:
+  nodejs_version: "8"
+
+# Install scripts. (runs after repo cloning)
+install:
+  # Get the latest stable version of Node.js or io.js
+  - ps: Install-Product node $env:nodejs_version
+  # install modules
+  - npm install -g npm@5.7
+  - npm install
+
+# Post-install test scripts.
+test_script:
+  # Output useful info for debugging.
+  - node --version
+  - npm --version
+  - npm run lint
+  - npm run test
+  # tmp fix due to windows npm5 issue
+  - cd test_apps/test_app/extensions/embark-service && npm install
+  - npm run testdapp_1
+  - npm run testdapp_2
+
+# Don't actually build.
+build: off

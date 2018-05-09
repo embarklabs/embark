@@ -1,0 +1,94 @@
+{
+  "contract_name": "SomeContract",
+  "address": "0x8Ceaf75fff52a769582ca880E0be830B95D1C5FC",
+  "code": "6060604052341561000f57600080fd5b6040516101da3803806101da83398101604052808051820191906020018051915082905060008151811061003f57fe5b9060200190602002015160008054600160a060020a031916600160a060020a03929092169190911790558160018151811061007657fe5b9060200190602002015160018054600160a060020a031916600160a060020a039290921691909117905560025550610127806100b36000396000f3006060604052361560505763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416633fa4f245811460525780636b79ff5b146074578063fc25626f1460ad575b005b3415605c57600080fd5b606260bd565b60405190815260200160405180910390f35b3415607e57600080fd5b608460c3565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b341560b757600080fd5b608460df565b60025481565b60005473ffffffffffffffffffffffffffffffffffffffff1681565b60015473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a7230582009157ecead8ad8ed45f0c217be7423629f8b7e97649637aff999fcc9f10ae07a0029",
+  "runtime_bytecode": "6060604052361560505763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416633fa4f245811460525780636b79ff5b146074578063fc25626f1460ad575b005b3415605c57600080fd5b606260bd565b60405190815260200160405180910390f35b3415607e57600080fd5b608460c3565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b341560b757600080fd5b608460df565b60025481565b60005473ffffffffffffffffffffffffffffffffffffffff1681565b60015473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a7230582009157ecead8ad8ed45f0c217be7423629f8b7e97649637aff999fcc9f10ae07a0029",
+  "real_runtime_bytecode": "6060604052361560505763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416633fa4f245811460525780636b79ff5b146074578063fc25626f1460ad575b005b3415605c57600080fd5b606260bd565b60405190815260200160405180910390f35b3415607e57600080fd5b608460c3565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b341560b757600080fd5b608460df565b60025481565b60005473ffffffffffffffffffffffffffffffffffffffff1681565b60015473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a7230582009157ecead8ad8ed45f0c217be7423629f8b7e97649637aff999fcc9f10ae07a0029",
+  "swarm_hash": "09157ecead8ad8ed45f0c217be7423629f8b7e97649637aff999fcc9f10ae07a",
+  "gas_estimates": {
+    "creation": {
+      "codeDepositCost": "59000",
+      "executionCost": "infinite",
+      "totalCost": "infinite"
+    },
+    "external": {
+      "": "123",
+      "addr_1()": "407",
+      "addr_2()": "429",
+      "value()": "370"
+    }
+  },
+  "function_hashes": {
+    "addr_1()": "6b79ff5b",
+    "addr_2()": "fc25626f",
+    "value()": "3fa4f245"
+  },
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "value",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function",
+      "signature": "0x3fa4f245"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "addr_1",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function",
+      "signature": "0x6b79ff5b"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "addr_2",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function",
+      "signature": "0xfc25626f"
+    },
+    {
+      "inputs": [
+        {
+          "name": "_addresses",
+          "type": "address[]"
+        },
+        {
+          "name": "initialValue",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor",
+      "signature": "constructor"
+    },
+    {
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "fallback"
+    }
+  ]
+}

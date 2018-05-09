@@ -1,0 +1,28 @@
+{
+  "contracts": ["app/contracts/**"],
+  "app": {
+    "js/webpack_test.js": "app/js/index.js",
+    "css/app.css": ["app/css/**"],
+    "images/": ["app/images/**"],
+    "js/app.js": ["embark.js", "app/js/_vendor/jquery.min.js", "app/js/_vendor/bootstrap.min.js", "app/js/**", "!app/js/test.js", "!app/js/foo.js", "!app/js/foo.css", "!app/js/new_index.js"],
+    "js/new_app.js": ["app/js/new_index.js"],
+    "js/embark.js": ["embark.js"],
+    "js/abi.js": "abi.js",
+    "js/test.js": ["embark.js", "app/js/_vendor/jquery.min.js", "app/js/_vendor/async.min.js", "app/js/test.js"],
+    "js/mytoken.js": ["$MyToken", "app/js/token_test.js"],
+    "index.html": "app/index.html",
+    "new_index.html": "app/new_index.html",
+    "test.html": "app/test.html",
+    "test2.html": "app/test2.html",
+    "js/myweb3.js": "web3-0.18.js",
+    "js/web3.js": "web3.js",
+    "js/all_contracts.js": "$ALL_CONTRACTS",
+    "js/only_embark.js": "$EMBARK_JS"
+  },
+  "buildDir": "dist/",
+  "config": "config/",
+  "plugins": {
+    "embark-babel": {"files": ["**/*.js", "**/*.jsx", "!**/_vendor/*.js"]},
+    "embark-service": {}
+  }
+}

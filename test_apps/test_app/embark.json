@@ -1,0 +1,25 @@
+{
+  "contracts": ["app/contracts/**", "contracts/**"],
+  "app": {
+    "js/jquery.js": "app/js/_vendor/jquery.min.js",
+    "js/bootstrap.js": "app/js/_vendor/bootstrap.min.js",
+    "css/app.css": ["app/css/**"],
+    "images/": ["app/images/**"],
+    "js/app.js": ["app/js/index.js"],
+    "js/test.js": ["app/js/_vendor/jquery.min.js", "app/js/_vendor/async.min.js", "app/js/test.js", "app/js/non_existant_file.js"],
+    "index.html": "app/index.html",
+    "test.html": "app/test.html",
+    "test2.html": "app/test2.html",
+    "test3.html": "app/test3.haml"
+  },
+  "buildDir": "dist/",
+  "config": "config/",
+  "versions": {
+    "solc": "0.4.18",
+    "web3": "1.0.0-beta.34",
+    "ipfs-api": "17.2.7"
+  },
+  "plugins": {
+    "embark-service": {}
+  }
+}

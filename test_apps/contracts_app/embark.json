@@ -1,0 +1,15 @@
+{
+  "contracts": ["contracts/**"],
+  "app": {},
+  "buildDir": "build/",
+  "config": {
+    "contracts": "contracts.json",
+    "storage": false,
+    "communication": false,
+    "webserver": false
+  },
+  "versions": {
+    "web3": "1.0.0-beta",
+    "solc": "0.4.17"
+  }
+}

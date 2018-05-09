@@ -10,14 +10,35 @@ engines:
                           enabled: false
                 guard-for-in:
                           enabled: false
+                for-direction:
+                          enabled: false
+                getter-return:
+                          enabled: false
+                no-buffer-constructor:
+                          enabled: false
+                padding-line-between-statements:
+                          enabled: false
+                semi-style:
+                          enabled: false
+                switch-colon-spacing:
+                          enabled: false
+                array-bracket-newline:
+                          enabled: false
 ratings:
     paths:
     - "lib/**/*"
 exclude_paths:
 - "test/"
 - "old_test/"
-- "boilerplate/"
-- "demo/"
+- "templates/boilerplate/"
+- "templates/demo/"
 - "js/"
-- "test_app/"
+- "test_apps/test_app/"
+- "test_apps/contracts_app/"
 - "docs/"
+checks:
+  similar-code:
+    enabled: false
+  method-lines:
+    config:
+        threshold: 35

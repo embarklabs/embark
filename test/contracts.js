@@ -2,25 +2,36 @@
 let ContractsManager = require('../lib/contracts/contracts.js');
 let Logger = require('../lib/core/logger.js');
 let File = require('../lib/core/file.js');
+let TestLogger = require('../lib/tests/test_logger.js');
+let Events = require('../lib/core/events');
 let assert = require('assert');
-let fs = require('fs');
+
+//let SolidityCompiler = require('../lib/modules/solidity');
+let Plugins = require('../lib/core/plugins.js');
 
 let readFile = function(file) {
-  return new File({filename: file, type: 'dapp_file', path: file});
+  return new File({filename: file, type: File.types.dapp_file, path: file});
 };
 
-describe('embark.Contratcs', function() {
+describe('embark.Contracts', function() {
   this.timeout(0);
   describe('simple', function() {
+    let plugins = new Plugins({
+      logger: new TestLogger({})
+    });
+    plugins.loadInternalPlugin('solidity', {solcVersion: '0.4.17', contractDirectories: ['app/contracts/']});
+
     let contractsManager = new ContractsManager({
+      plugins: plugins,
       contractFiles:  [
         readFile('test/contracts/simple_storage.sol'),
         readFile('test/contracts/token.sol')
       ],
+      contractDirectories: ['app/contracts'],
       contractsConfig: {
         "versions": {
-          "web3.js": "0.19.1",
-          "solc": "0.4.11"
+          "web3.js": "1.0.0-beta",
+          "solc": "0.4.17"
         },
         "deployment": {
           "host": "localhost",
@@ -45,7 +56,8 @@ describe('embark.Contratcs', function() {
           }
         }
       },
-      logger: new Logger({})
+      logger: new Logger({}),
+      events: new Events()
     });
 
     describe('#build', function() {
@@ -61,7 +73,8 @@ describe('embark.Contratcs', function() {
           assert.equal(contracts[0].deploy, true);
           assert.deepEqual(contracts[0].args, [100]);
           assert.equal(contracts[0].className, "Token");
-          assert.deepEqual(contracts[0].gas, 725000);
+          //assert.deepEqual(contracts[0].gas, 725000);
+          assert.deepEqual(contracts[0].gas, 'auto');
           //assert.equal(contracts[0].gasPrice, []); // TODO: test this one
           assert.equal(contracts[0].type, 'file');
           //assert.equal(contracts[0].abiDefinition, '');
@@ -71,7 +84,8 @@ describe('embark.Contratcs', function() {
           assert.equal(contracts[1].deploy, true);
           assert.deepEqual(contracts[1].args, [200]);
           assert.equal(contracts[1].className, "SimpleStorage");
-          assert.deepEqual(contracts[1].gas, 725000);
+          //assert.deepEqual(contracts[1].gas, 725000);
+          assert.deepEqual(contracts[1].gas, 'auto');
           //assert.equal(contracts[1].gasPrice, []); // TODO: test this one
           assert.equal(contracts[1].type, 'file');
           //assert.equal(contracts[1].abiDefinition, '');
@@ -84,15 +98,22 @@ describe('embark.Contratcs', function() {
   });
 
   describe('config with contract instances', function() {
+    let plugins = new Plugins({
+      logger: new TestLogger({})
+    });
+    plugins.loadInternalPlugin('solidity', {solcVersion: '0.4.17', contractDirectories: ['app/contracts/']});
+
     let contractsManager = new ContractsManager({
+      plugins: plugins,
       contractFiles:  [
         readFile('test/contracts/simple_storage.sol'),
         readFile('test/contracts/token_storage.sol')
       ],
+      contractDirectories: ['app/contracts'],
       contractsConfig: {
         "versions": {
-          "web3.js": "0.19.1",
-          "solc": "0.4.11"
+          "web3.js": "1.0.0-beta",
+          "solc": "0.4.17"
         },
         "deployment": {
           "host": "localhost",
@@ -127,7 +148,8 @@ describe('embark.Contratcs', function() {
           }
         }
       },
-      logger: new Logger({})
+      logger: new Logger({}),
+      events: new Events()
     });
 
     describe('#build', function() {
@@ -148,7 +170,8 @@ describe('embark.Contratcs', function() {
           // TokenStorage
           assert.equal(contracts[3].deploy, true);
           assert.deepEqual(contracts[3].args, [100, '$SimpleStorage']);
-          assert.deepEqual(contracts[3].gas, 725000);
+          //assert.deepEqual(contracts[3].gas, 725000);
+          assert.deepEqual(contracts[3].gas, 'auto');
           assert.equal(contracts[3].type, 'file');
           //assert.equal(contracts[3].abiDefinition, '');
           //assert.equal(contracts[3].code, '');
@@ -159,7 +182,8 @@ describe('embark.Contratcs', function() {
           //MySimpleStorage
           assert.equal(contracts[0].deploy, true);
           assert.deepEqual(contracts[0].args, [300]);
-          assert.deepEqual(contracts[0].gas, 725000);
+          //assert.deepEqual(contracts[0].gas, 725000);
+          assert.deepEqual(contracts[0].gas, 'auto');
           assert.equal(contracts[0].type, 'instance');
           assert.equal(contracts[0].abiDefinition, parentContract.abiDefinition);
           assert.equal(contracts[0].code, parentContract.code);
@@ -168,7 +192,8 @@ describe('embark.Contratcs', function() {
           // SimpleStorage
           assert.equal(contracts[2].deploy, true);
           assert.deepEqual(contracts[2].args, [200]);
-          assert.deepEqual(contracts[2].gas, 725000);
+          //assert.deepEqual(contracts[2].gas, 725000);
+          assert.deepEqual(contracts[2].gas, 'auto');
           assert.equal(contracts[2].type, 'file');
           //assert.equal(contracts[2].abiDefinition, '');
           //assert.equal(contracts[2].code, '');
@@ -177,7 +202,8 @@ describe('embark.Contratcs', function() {
           // AnotherSimpleStorage
           assert.equal(contracts[1].deploy, true);
           assert.deepEqual(contracts[1].args, [200]);
-          assert.deepEqual(contracts[1].gas, 725000);
+          //assert.deepEqual(contracts[1].gas, 725000);
+          assert.deepEqual(contracts[1].gas, 'auto');
           assert.equal(contracts[1].type, 'instance');
           assert.equal(contracts[1].abiDefinition, parentContract.abiDefinition);
           assert.equal(contracts[1].code, parentContract.code);

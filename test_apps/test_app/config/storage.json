@@ -1,0 +1,25 @@
+{
+  "default": {
+    "enabled": true,
+    "available_providers": ["ipfs", "swarm"],
+    "ipfs_bin": "ipfs",
+    "provider": "ipfs",
+    "host": "localhost",
+    "port": 5001
+  },
+  "development": {
+    "enabled": true,
+    "provider": "swarm",
+    "host": "swarm-gateways.net",
+    "port": 80,
+    "getUrl": "http://swarm-gateways.net/bzzr:/"
+  },
+  "livenet": {
+    "enabled": true,
+    "provider": "ipfs",
+    "host": "ipfs.infura.io",
+    "protocol": "https",
+    "port": false,
+    "getUrl": "https://ipfs.infura.io/ipfs/"
+  }
+}

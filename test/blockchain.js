@@ -34,7 +34,11 @@ describe('embark.Blockchain', function () {
           wsApi: [ "eth", "web3", "net", "shh" ],
           wsHost: "localhost",
           wsOrigins: false,
-          wsPort: 8546
+          wsPort: 8546,
+          wsRPC: true,
+          targetGasLimit: false,
+          fast: false,
+          light: false
         };
         let blockchain = new Blockchain(config, 'geth');
 
@@ -67,7 +71,11 @@ describe('embark.Blockchain', function () {
           wsApi: [ "eth", "web3", "net", "shh" ],
           wsHost: "localhost",
           wsOrigins: false,
-          wsPort: 8546
+          wsPort: 8546,
+          wsRPC: true,
+          targetGasLimit: false,
+          fast: false,
+          light: false
         };
         let blockchain = new Blockchain(config, 'geth');
 

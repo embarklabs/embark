@@ -1,0 +1,19 @@
+{
+  "httpContractsDirectory": ".embark/contracts/",
+  "contexts": {
+    "simulator": "simulator",
+    "blockchain": "blockchain",
+    "templateGeneration": "templateGeneration",
+    "run": "run",
+    "upload": "upload",
+    "build": "build",
+    "graph": "graph",
+    "test": "test",
+    "reset": "reset",
+    "any": "any"
+  },
+  "events": {
+    "contractFilesChanged": "contractFilesChanged",
+    "contractConfigChanged": "contractConfigChanged"
+  }
+}

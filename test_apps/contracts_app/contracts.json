@@ -1,0 +1,84 @@
+{
+  "default": {
+    "versions": {
+      "web3": "1.0.0-beta.27",
+      "solc": "0.4.17"
+    },
+    "deployment": {
+      "host": "localhost",
+      "port": 8545,
+      "type": "rpc"
+    },
+    "dappConnection": [
+      "$WEB3",
+      "ws://localhost:8546",
+      "http://localhost:8550",
+      "http://localhost:8545",
+      "http://localhost:8550"
+    ],
+    "gas": "auto",
+    "contracts": {
+      "Ownable": {
+        "deploy": false
+      },
+      "SimpleStorage": {
+        "fromIndex": 0,
+        "args": [
+          100
+        ]
+      },
+      "AnotherStorage": {
+        "args": [
+          "$SimpleStorage"
+        ]
+      },
+      "Token": {
+        "deploy": false,
+        "args": [1000]
+      },
+      "Test": {
+        "onDeploy": [
+          "Test.methods.changeAddress('$MyToken')"
+        ]
+      },
+      "MyToken": {
+        "instanceOf": "Token"
+      },
+      "MyToken2": {
+        "instanceOf": "Token",
+        "args": [200]
+      },
+      "AlreadyDeployedToken": {
+        "address": "0xece374063fe5cc7efbaca0a498477cada94e5ad6",
+        "instanceOf": "Token"
+      },
+      "MyToken3": {
+        "instanceOf": "Tokn"
+      },
+      "ContractArgs": {
+        "args": {
+          "initialValue": 123,
+          "_addresses": ["$MyToken2", "$SimpleStorage"]
+        }
+      },
+      "SomeContract": {
+        "args": [
+          ["$MyToken2", "$SimpleStorage"],
+          100
+        ]
+      }
+    },
+    "afterDeploy": [
+      "Test.methods.changeAddress('$MyToken')",
+      "web3.eth.getAccounts((err, accounts) => Test.methods.changeAddress(accounts[0]))"
+    ]
+  },
+  "development": {
+    "contracts": {
+      "MyToken2": {
+        "instanceOf": "Token",
+        "args": [2000]
+      }
+    }
+  }
+}
