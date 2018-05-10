@@ -44,6 +44,7 @@
     "follow-redirects": "^1.2.4",
     "fs-extra": "^2.0.0",
     "globule": "^1.1.0",
+    "hard-source-webpack-plugin": "^0.6.6",
     "http-shutdown": "^1.2.0",
     "ipfs-api": "17.2.4",
     "live-plugin-manager": "https://github.com/iurimatias/live-plugin-manager.git",
