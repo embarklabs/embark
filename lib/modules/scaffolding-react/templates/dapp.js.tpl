@@ -187,7 +187,11 @@ class {{contractName}}UI extends React.Component {
     }
 
     render(){
-        return (<h2>Test</h2>);
+        return (<div>
+            {{#each functions}}
+            <{{capitalize name}}_{{@index}}_Form />
+            {{/each}}
+        </div>);
     }
 }
 
