@@ -48,7 +48,6 @@
     "ipfs-api": "17.2.4",
     "live-plugin-manager": "https://github.com/iurimatias/live-plugin-manager.git",
     "merge": "^1.2.0",
-    "mocha": "^2.2.5",
     "orbit-db": "^0.17.3",
     "parse-json": "^4.0.0",
     "promptly": "^2.1.0",
