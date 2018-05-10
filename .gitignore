@@ -24,3 +24,4 @@ test_apps/contracts_app/chains.json
 .embark/
 NOTES
 npm-debug.log
+.tern-port
