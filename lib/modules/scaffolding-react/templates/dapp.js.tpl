@@ -179,6 +179,19 @@ class {{contractName}}UI extends React.Component {
 }
 
 
+class {{contractName}}UI extends React.Component {
+    constructor (props) {
+        super(props);
+        this.state = {
+        };
+    }
+
+    render(){
+        return (<h2>Test</h2>);
+    }
+}
+
+
 ReactDOM.render(<div>
         <h1>{{title}}</h1>
         <{{contractName}}UI />
