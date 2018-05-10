@@ -71,6 +71,7 @@
     "http-proxy": "1.17.0",
     "http-shutdown": "1.2.0",
     "i18n": "0.8.3",
+    "handlebars": "^4.0.11",
     "ipfs-api": "17.2.4",
     "is-valid-domain": "0.0.5",
     "istanbul": "0.4.5",
