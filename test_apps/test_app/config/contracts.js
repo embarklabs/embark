@@ -1,4 +1,4 @@
-{
+module.exports = {
   "default": {
     "deployment": {
       "host": "localhost",
@@ -95,4 +95,4 @@
       }
     }
   }
-}
+};
