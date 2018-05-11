@@ -3,7 +3,7 @@ import {{contractName}} from 'Embark/contracts/{{contractName}}';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { FormGroup, ControlLabel, FormControl, Checkbox, Button, Alert } from 'react-bootstrap';
+import { FormGroup, ControlLabel, FormControl, Checkbox, Button, Alert, InputGroup } from 'react-bootstrap';
 
 
 {{#each functions}}
@@ -18,12 +18,14 @@ class {{capitalize name}}_{{@index}}_Form extends React.Component {
                 {{/each}}
             },
             {{/if}}
+            {{#if payable}}
+            value: 0,
+            {{/if}}
             {{#ifview stateMutability}}
             output: null,
             {{/ifview}}
             error: null,
-            mined: null,
-            loading: false
+            mined: null
         };
     }
 
@@ -39,8 +41,8 @@ class {{capitalize name}}_{{@index}}_Form extends React.Component {
 
     async handleClick(e){
         e.preventDefault();
-        this.setState({output: null, error: null, receipt: null, loading: true});
-
+        this.setState({output: null, error: null, receipt: null});
+        
         try {
         {{#ifview stateMutability}}
             {{../contractName}}.methods{{methodname ../functions name inputs}}({{#each inputs}}this.state.input.{{name}}{{#unless @last}}, {{/unless}}{{/each}})
@@ -51,31 +53,34 @@ class {{capitalize name}}_{{@index}}_Form extends React.Component {
             {{#each outputs}}
                         {{emptyname name @index}}: result[{{@index}}]{{#unless @last}},{{/unless}}
             {{/each}}
-                    }, loading: false}); 
+                    }}); 
             {{else}}
-                    this.setState({output: result, loading: false});  
+                    this.setState({output: result});  
             {{/iflengthgt}} 
                     })
                 .catch((err) => {
-                    this.setState({error: err.message, loading: false});
+                    this.setState({error: err.message});
                 });
         {{else}}
             {{../contractName}}.methods{{methodname ../functions name inputs}}({{#each inputs}}this.state.input.{{name}}{{#unless @last}}, {{/unless}}{{/each}})
                 .send({
+                    {{#if payable}}
+                    value: this.state.value,
+                    {{/if}}
                     from: web3.eth.defaultAccount
                 })
                 .then((_receipt) => {
                     console.log(_receipt);
-                    this.setState({receipt: _receipt, loading: false})
+                    this.setState({receipt: _receipt})
                     })
                 .catch((err) => {
                     console.log(err);
-                    this.setState({error: err.message, loading: false});
+                    this.setState({error: err.message});
                 });
             // TODO payable
         {{/ifview}}
         } catch(err) {
-            this.setState({error: err.message, loading: false});
+            this.setState({error: err.message});
         }
         
         // TODO validate
@@ -104,13 +109,28 @@ class {{capitalize name}}_{{@index}}_Form extends React.Component {
                 </FormGroup>
                 {{/each}}      
             {{/if}}
+            {{#if payable}}
+                <FormGroup>
+                    <ControlLabel>Value</ControlLabel>
+                    <InputGroup>
+                        <InputGroup.Addon>Ξ</InputGroup.Addon>
+                        <FormControl 
+                            type="text"
+                            defaultValue={ this.state.value }
+                            placeholder="{{type}}"
+                            onChange={(e) => { this.setState({value: e.target.value}); }}
+                        />
+                        <InputGroup.Addon>wei</InputGroup.Addon>
+                    </InputGroup>
+                </FormGroup>
+            {{/if}}
             {
                 this.state.error != null ?
                 <Alert bsStyle="danger">{this.state.error}</Alert>
                 : ''
             }
             {{#ifview stateMutability}}
-                <Button disabled={this.state.loading} type="submit" bsStyle="primary" onClick={(e) => this.handleClick(e)}>Call</Button>
+                <Button type="submit" bsStyle="primary" onClick={(e) => this.handleClick(e)}>Call</Button>
                 {
                     this.state.output != null ?
                     <React.Fragment>
@@ -128,10 +148,12 @@ class {{capitalize name}}_{{@index}}_Form extends React.Component {
                     : ''
                 }
             {{else}}
-                <Button disabled={this.state.loading} type="submit" bsStyle="primary" onClick={(e) => this.handleClick(e)}>{this.state.loading ? 'Sending...' : 'Send'}</Button>
+                <Button type="submit" bsStyle="primary" onClick={(e) => this.handleClick(e)}>Send</Button>
                 {
                 this.state.receipt != null ?
-                <Alert bsStyle={this.state.receipt.status == "0x1" ? 'success' : 'danger'}>{this.state.receipt.status == "0x1" ? 'Success' : 'Failure / Revert'} - Transaction Hash: {this.state.receipt.transactionHash}</Alert>
+                <React.Fragment>
+                    <Alert bsStyle={this.state.receipt.status == "0x1" ? 'success' : 'danger'}>{this.state.receipt.status == "0x1" ? 'Success' : 'Failure / Revert'} - Transaction Hash: {this.state.receipt.transactionHash}</Alert>
+                </React.Fragment>
                 : ''
                 }
             {{/ifview}}
