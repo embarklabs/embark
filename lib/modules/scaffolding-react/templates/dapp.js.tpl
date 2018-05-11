@@ -3,7 +3,7 @@ import {{contractName}} from 'Embark/contracts/{{contractName}}';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { FormGroup, ControlLabel, FormControl, Checkbox, Button } from 'react-bootstrap';
+import { FormGroup, ControlLabel, FormControl, Checkbox, Button, Alert } from 'react-bootstrap';
 
 
 {{#each functions}}
@@ -21,7 +21,7 @@ class {{capitalize name}}_{{@index}}_Form extends React.Component {
             {{#ifview stateMutability}}
             output: null,
             {{/ifview}}
-            message: ''
+            error: null
         };
     }
 
@@ -37,22 +37,29 @@ class {{capitalize name}}_{{@index}}_Form extends React.Component {
 
     async handleClick(e){
         e.preventDefault();
-        this.setState({output: null});
+        this.setState({output: null, error: null});
 
         {{#ifview stateMutability}}
-        {{../contractName}}.methods{{methodname ../functions name inputs}}({{#each inputs}}this.state.input.{{name}}{{#unless @last}}, {{/unless}}{{/each}})
-            .call()
-            .then((result) => {
-        {{#iflengthgt outputs 1}}
-                this.setState({output: {
-        {{#each outputs}}
-                    {{emptyname name @index}}: result[{{@index}}]{{#unless @last}},{{/unless}}
-        {{/each}}
-                }}); 
-        {{else}}
-                this.setState({output: result});  
-        {{/iflengthgt}} 
-            });
+        try {
+            {{../contractName}}.methods{{methodname ../functions name inputs}}({{#each inputs}}this.state.input.{{name}}{{#unless @last}}, {{/unless}}{{/each}})
+                .call()
+                .then((result) => {
+            {{#iflengthgt outputs 1}}
+                    this.setState({output: {
+            {{#each outputs}}
+                        {{emptyname name @index}}: result[{{@index}}]{{#unless @last}},{{/unless}}
+            {{/each}}
+                    }}); 
+            {{else}}
+                    this.setState({output: result});  
+            {{/iflengthgt}} 
+                    })
+                .catch((err) => {
+                    this.setState({error: err.message});
+                });
+        } catch(err) {
+            this.setState({error: err.message});
+        }
 
         // TODO show on screen
         {{/ifview}}
@@ -63,6 +70,11 @@ class {{capitalize name}}_{{@index}}_Form extends React.Component {
     render(){
         return <div className="formSection">
             <h3>{{name}}</h3>
+            {
+                this.state.error != null ?
+                <Alert bsStyle="danger">{this.state.error}</Alert>
+                : ''
+            }
             <form>
             {{#if inputs.length}}
                 {{#each inputs}}
