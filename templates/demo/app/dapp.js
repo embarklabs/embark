@@ -21,7 +21,7 @@ class App extends React.Component {
   }
 
   componentDidMount(){ 
-    __embarkContext.execWhenReady(() => {
+    EmbarkJS.onReady(() => {
       if (EmbarkJS.isNewWeb3()) {
         EmbarkJS.Messages.Providers.whisper.getWhisperVersion((err, version) => { 
           if(!err)
