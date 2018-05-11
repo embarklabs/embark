@@ -2,9 +2,10 @@
   "development": {
     "enabled": true,
     "networkType": "custom",
+    "networkId": "1337",
+    "isDev": true,
     "genesisBlock": "development/genesis.json",
     "datadir": ".embark/development/datadir",
-    "isDev": true,
     "mineWhenNeeded": true,
     "nodiscover": true,
     "maxpeers": 0,
