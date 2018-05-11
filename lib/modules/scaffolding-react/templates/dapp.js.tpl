@@ -86,11 +86,6 @@ class {{capitalize name}}Form{{@index}} extends React.Component {
     render(){
         return <div className="formSection">
             <h3>{{name}}</h3>
-            {
-                this.state.error != null ?
-                <Alert bsStyle="danger">{this.state.error}</Alert>
-                : ''
-            }
             <form>
             {{#if inputs.length}}
                 {{#each inputs}}
