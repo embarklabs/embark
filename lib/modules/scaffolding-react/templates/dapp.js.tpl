@@ -3,7 +3,7 @@ import {{contractName}} from 'Embark/contracts/{{contractName}}';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap';
+import { FormGroup, ControlLabel, FormControl, Checkbox, Button } from 'react-bootstrap';
 
 
 {{#each functions}}
@@ -14,7 +14,7 @@ class {{capitalize name}}_{{@index}}_Form extends React.Component {
             {{#if inputs.length}}
             input: {
                 {{#each inputs}}
-                {{name}}: ''{{#unless @last}},{{/unless}}
+                {{name}}: {{#ifeq type 'bool'}}false{{else}}''{{/ifeq}}{{#unless @last}},{{/unless}}
                 {{/each}}
             },
             {{/if}}
@@ -26,28 +26,33 @@ class {{capitalize name}}_{{@index}}_Form extends React.Component {
     }
 
     handleChange(e, name){
-        this.state[name] = e.target.value;
+        this.state.input[name] = e.target.value;
+        this.setState(this.state);
+    }
+
+    handleCheckbox(e, name){
+        this.state.input[name] = e.target.checked;
         this.setState(this.state);
     }
 
     async handleClick(e){
         e.preventDefault();
-
-        {{#ifview stateMutability}}
         this.setState({output: null});
 
-        let result = await {{../contractName}}.methods{{methodname ../functions name inputs}}({{#each inputs}}this.state.{{name}}{{#unless @last}}, {{/unless}}{{/each}}).call();
-        {{#ifarrlengthgt outputs 1}}
-        this.setState({output: {
+        {{#ifview stateMutability}}
+        {{../contractName}}.methods{{methodname ../functions name inputs}}({{#each inputs}}this.state.input.{{name}}{{#unless @last}}, {{/unless}}{{/each}})
+            .call()
+            .then((result) => {
+        {{#iflengthgt outputs 1}}
+                this.setState({output: {
         {{#each outputs}}
-            {{emptyname name @index}}: result[{{@index}}]{{#unless @last}},{{/unless}}
+                    {{emptyname name @index}}: result[{{@index}}]{{#unless @last}},{{/unless}}
         {{/each}}
-        }}); 
+                }}); 
         {{else}}
-        this.setState({output: result});  
-        {{/ifarrlengthgt}} 
-
-
+                this.setState({output: result});  
+        {{/iflengthgt}} 
+            });
 
         // TODO show on screen
         {{/ifview}}
@@ -63,12 +68,18 @@ class {{capitalize name}}_{{@index}}_Form extends React.Component {
                 {{#each inputs}}
                     <FormGroup>
                         <ControlLabel>{{name}}</ControlLabel>
+                        {{#ifeq type 'bool'}}
+                        <Checkbox
+                            onClick={(e) => this.handleCheckbox(e, '{{name}}')}
+                        />
+                        {{else}}
                         <FormControl
                             type="text"
                             defaultValue={ this.state.input.{{name}} }
                             placeholder="{{type}}"
                             onChange={(e) => this.handleChange(e, '{{name}}')}
                         />
+                        {{/ifeq}}
                     </FormGroup>
                 {{/each}}      
             {{/if}}
@@ -78,15 +89,15 @@ class {{capitalize name}}_{{@index}}_Form extends React.Component {
                     this.state.output != null ?
                     <React.Fragment>
                         <h4>Results</h4>
-                        {{#ifarrlengthgt outputs 1}}
+                        {{#iflengthgt outputs 1}}
                         <ul>
                         {{#each outputs}}
                             <li>{{emptyname name @index}}: { this.state.output.{{emptyname name @index}} }</li>
                         {{/each}}
                         </ul>
                         {{else}}
-                        {this.state.output}
-                        {{/ifarrlengthgt}}
+                        {this.state.output.toString()}
+                        {{/iflengthgt}}
                     </React.Fragment>
                     : ''
                 }
