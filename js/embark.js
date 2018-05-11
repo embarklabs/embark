@@ -1,4 +1,6 @@
-var EmbarkJS = {};
+var EmbarkJS = {
+  onReady: __embarkContext.execWhenReady
+};
 
 EmbarkJS.isNewWeb3 = function() {
   var _web3 = new Web3();
