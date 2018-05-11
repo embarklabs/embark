@@ -25,8 +25,7 @@ class {{capitalize name}}Form{{@index}} extends React.Component {
             output: null,
             {{/ifview}}
             error: null,
-            mined: null,
-            loading: false
+            mined: null
         };
     }
 
@@ -54,13 +53,13 @@ class {{capitalize name}}Form{{@index}} extends React.Component {
             {{#each outputs}}
                         {{emptyname name @index}}: result[{{@index}}]{{#unless @last}},{{/unless}}
             {{/each}}
-                    }, loading: false}); 
+                    }}); 
             {{else}}
-                    this.setState({output: result, loading: false});  
+                    this.setState({output: result});  
             {{/iflengthgt}} 
                     })
                 .catch((err) => {
-                    this.setState({error: err.message, loading: false});
+                    this.setState({error: err.message});
                 });
         {{else}}
             {{../contractName}}.methods{{methodname ../functions name inputs}}({{#each inputs}}this.state.input.{{name}}{{#unless @last}}, {{/unless}}{{/each}})
@@ -72,15 +71,15 @@ class {{capitalize name}}Form{{@index}} extends React.Component {
                 })
                 .then((_receipt) => {
                     console.log(_receipt);
-                    this.setState({receipt: _receipt, loading: false})
+                    this.setState({receipt: _receipt})
                     })
                 .catch((err) => {
                     console.log(err);
-                    this.setState({error: err.message, loading: false});
+                    this.setState({error: err.message});
                 });
         {{/ifview}}
         } catch(err) {
-            this.setState({error: err.message, loading: false});
+            this.setState({error: err.message});
         }
     }
 
@@ -128,7 +127,7 @@ class {{capitalize name}}Form{{@index}} extends React.Component {
                 : ''
             }
             {{#ifview stateMutability}}
-                <Button disabled={this.state.loading} type="submit" bsStyle="primary" onClick={(e) => this.handleClick(e)}>Call</Button>
+                <Button type="submit" bsStyle="primary" onClick={(e) => this.handleClick(e)}>Call</Button>
                 {
                     this.state.output != null ?
                     <React.Fragment>
@@ -146,7 +145,7 @@ class {{capitalize name}}Form{{@index}} extends React.Component {
                     : ''
                 }
             {{else}}
-                <Button disabled={this.state.loading} type="submit" bsStyle="primary" onClick={(e) => this.handleClick(e)}>{this.state.loading ? 'Sending...' : 'Send'}</Button>
+                <Button type="submit" bsStyle="primary" onClick={(e) => this.handleClick(e)}>Send</Button>
                 {
                 this.state.receipt != null ?
                 <React.Fragment>
