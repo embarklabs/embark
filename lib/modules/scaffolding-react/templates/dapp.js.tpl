@@ -21,7 +21,8 @@ class {{capitalize name}}_{{@index}}_Form extends React.Component {
             {{#ifview stateMutability}}
             output: null,
             {{/ifview}}
-            error: null
+            error: null,
+            mined: null
         };
     }
 
@@ -37,10 +38,10 @@ class {{capitalize name}}_{{@index}}_Form extends React.Component {
 
     async handleClick(e){
         e.preventDefault();
-        this.setState({output: null, error: null});
+        this.setState({output: null, error: null, receipt: null});
 
-        {{#ifview stateMutability}}
         try {
+        {{#ifview stateMutability}}
             {{../contractName}}.methods{{methodname ../functions name inputs}}({{#each inputs}}this.state.input.{{name}}{{#unless @last}}, {{/unless}}{{/each}})
                 .call()
                 .then((result) => {
@@ -57,44 +58,56 @@ class {{capitalize name}}_{{@index}}_Form extends React.Component {
                 .catch((err) => {
                     this.setState({error: err.message});
                 });
+        {{else}}
+            {{../contractName}}.methods{{methodname ../functions name inputs}}({{#each inputs}}this.state.input.{{name}}{{#unless @last}}, {{/unless}}{{/each}})
+                .send({
+                    from: web3.eth.defaultAccount
+                })
+                .then((_receipt) => {
+                    console.log(_receipt);
+                    this.setState({receipt: _receipt})
+                    })
+                .catch((err) => {
+                    console.log(err);
+                    this.setState({error: err.message});
+                });
+            // TODO payable
+        {{/ifview}}
         } catch(err) {
             this.setState({error: err.message});
         }
-
-        // TODO show on screen
-        {{/ifview}}
-
+        
         // TODO validate
     }
 
     render(){
         return <div className="formSection">
             <h3>{{name}}</h3>
+            <form>
+            {{#if inputs.length}}
+                {{#each inputs}}
+                <FormGroup>
+                    <ControlLabel>{{name}}</ControlLabel>
+                    {{#ifeq type 'bool'}}
+                    <Checkbox
+                        onClick={(e) => this.handleCheckbox(e, '{{name}}')}
+                    />
+                    {{else}}
+                    <FormControl
+                        type="text"
+                        defaultValue={ this.state.input.{{name}} }
+                        placeholder="{{type}}"
+                        onChange={(e) => this.handleChange(e, '{{name}}')}
+                    />
+                    {{/ifeq}}
+                </FormGroup>
+                {{/each}}      
+            {{/if}}
             {
                 this.state.error != null ?
                 <Alert bsStyle="danger">{this.state.error}</Alert>
                 : ''
             }
-            <form>
-            {{#if inputs.length}}
-                {{#each inputs}}
-                    <FormGroup>
-                        <ControlLabel>{{name}}</ControlLabel>
-                        {{#ifeq type 'bool'}}
-                        <Checkbox
-                            onClick={(e) => this.handleCheckbox(e, '{{name}}')}
-                        />
-                        {{else}}
-                        <FormControl
-                            type="text"
-                            defaultValue={ this.state.input.{{name}} }
-                            placeholder="{{type}}"
-                            onChange={(e) => this.handleChange(e, '{{name}}')}
-                        />
-                        {{/ifeq}}
-                    </FormGroup>
-                {{/each}}      
-            {{/if}}
             {{#ifview stateMutability}}
                 <Button type="submit" bsStyle="primary" onClick={(e) => this.handleClick(e)}>Call</Button>
                 {
@@ -113,7 +126,13 @@ class {{capitalize name}}_{{@index}}_Form extends React.Component {
                     </React.Fragment>
                     : ''
                 }
-               
+            {{else}}
+                <Button type="submit" bsStyle="primary" onClick={(e) => this.handleClick(e)}>Send</Button>
+                {
+                this.state.receipt != null ?
+                <Alert bsStyle={this.state.receipt.status == "0x1" ? 'success' : 'danger'}>{this.state.receipt.status == "0x1" ? 'Success' : 'Failure / Revert'} - Transaction Hash: {this.state.receipt.transactionHash}</Alert>
+                : ''
+                }
             {{/ifview}}
             </form>
         </div>;
