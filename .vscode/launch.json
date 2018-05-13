@@ -26,6 +26,20 @@
         ],
         "console": "integratedTerminal",
         "internalConsoleOptions": "neverOpen"
+    },
+    {
+        "type": "node",
+        "request": "launch",
+        "name": "Embark test test_app dapp",
+        "cwd": "${workspaceFolder}/test_apps/test_app/",
+        "autoAttachChildProcesses": true,
+        //"preLaunchTask": "npm_install",
+        "program": "${workspaceFolder}/bin/embark",
+        "args": [
+            "test"
+        ],
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
     }
   ]
 }

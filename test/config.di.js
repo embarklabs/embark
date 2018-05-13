@@ -8,28 +8,28 @@ const container = require('../lib/ioc/container');
 
 describe('embark.Config', () => {
   let config;
-    before(function() {
-      // create a snapshot so each unit test can modify 
-      // it without breaking other unit tests
-      container.snapshot();
+  before(function() {
+    // create a snapshot so each unit test can modify 
+    // it without breaking other unit tests
+    container.snapshot();
 
-      // inject testing bindings
-      container.bind('context').toConstantValue([constants.contexts.upload, constants.contexts.build]);
-      container.bind('env').toConstantValue('myenv');
-      container.bind('configDir').toConstantValue('./test/test1/config/');
-      container.bind('autoLoadAllConfigs').toConstantValue(false);
+    // inject testing bindings
+    container.bind('context').toConstantValue([constants.contexts.test]);
+    container.bind('env').toConstantValue('myenv');
+    container.bind('configDir').toConstantValue('./test/test1/config/');
+    container.bind('autoLoadAllConfigs').toConstantValue(false);
 
-      // if we need to mock any instances, this is where we'd inject them!
+    // if we need to mock any instances, this is where we'd inject them!
 
-      // set up our tests
-      config = container.resolve(Config);
-    });
-    
-    after(() => {
-      // Restore to last snapshot so each unit test 
-      // takes a clean copy of the application container
-      container.restore();
-    });
+    // set up our tests
+    config = container.resolve(Config);
+  });
+  
+  after(() => {
+    // Restore to last snapshot so each unit test 
+    // takes a clean copy of the application container
+    container.restore();
+  });
   // let config = new Config({
   //   env: 'myenv',
   //   configDir: './test/test1/config/',
@@ -40,7 +40,7 @@ describe('embark.Config', () => {
 
   describe('#loadBlockchainConfigFile', function () {
     it('should load blockchain config correctly', function () {
-      config.loadBlockchainConfigFile(); // this is now called in the constructor so this should be loaded already
+      config.loadBlockchainConfigFile(); 
       let expectedConfig = {
         "enabled": true,
         "networkType": "custom",
