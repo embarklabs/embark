@@ -1,5 +1,4 @@
 /*global describe, it, before*/
-const Config = require('../../../lib/core/config.js');
 
 describe("Token", function() {
 
@@ -7,7 +6,6 @@ describe("Token", function() {
   before(function(done) {
     this.timeout(0);
 
-    let config = container.get(Config);
 
     //config({
     //  node: "http://localhost:8545"
