@@ -75,5 +75,15 @@
 	"writing file": "writing file",
 	"errors found while generating": "errors found while generating",
 	"Looking for documentation? You can find it at": "Looking for documentation? You can find it at",
-	"Ready": "Ready"
+	"Ready": "Ready",
+	"Graph will not include undeployed contracts": "Graph will not include undeployed contracts",
+	"Graph will not include functions": "Graph will not include functions",
+	"Graph will not include events": "Graph will not include events",
+	"Embark Blockchain Using: %s": "Embark Blockchain Using: %s",
+	"running: %s": "running: %s",
+	"Initializing Embark Template....": "Initializing Embark Template....",
+	"Init complete": "Init complete",
+	"App ready at ": "App ready at ",
+	"already initialized": "already initialized",
+	"deployed at": "deployed at"
 }
