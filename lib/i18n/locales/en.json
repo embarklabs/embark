@@ -85,5 +85,8 @@
 	"Init complete": "Init complete",
 	"App ready at ": "App ready at ",
 	"already initialized": "already initialized",
-	"deployed at": "deployed at"
+	"deployed at": "deployed at",
+	"executing onDeploy commands": "executing onDeploy commands",
+	"executing: ": "executing: ",
+	"no config file found at %s using default config": "no config file found at %s using default config"
 }
