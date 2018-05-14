@@ -88,5 +88,9 @@
 	"deployed at": "deployed at",
 	"executing onDeploy commands": "executing onDeploy commands",
 	"executing: ": "executing: ",
-	"no config file found at %s using default config": "no config file found at %s using default config"
+	"no config file found at %s using default config": "no config file found at %s using default config",
+	"Development blockchain has changed to use the --dev option.": "Development blockchain has changed to use the --dev option.",
+	"You can reset your workspace to fix the problem with": "You can reset your workspace to fix the problem with",
+	"Otherwise, you can change your data directory in blockchain.json (datadir)": "Otherwise, you can change your data directory in blockchain.json (datadir)",
+	"tip: you can resize the terminal or disable the dashboard with": "tip: you can resize the terminal or disable the dashboard with"
 }
