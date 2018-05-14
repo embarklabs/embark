@@ -32,7 +32,7 @@ describe('embark.provider', function () {
         privateKey: 'myKey'
       });
 
-      assert.deepEqual(account, {key: 'myKey'});
+      assert.deepEqual(account, {key: '0xmyKey'});
     });
 
     it('should return two accounts from the keys in the file', function () {
@@ -41,8 +41,8 @@ describe('embark.provider', function () {
       });
 
       assert.deepEqual(account, [
-        {key: 'key1'},
-        {key: 'key2'}
+        {key: '0xkey1'},
+        {key: '0xkey2'}
       ]);
     });
 
