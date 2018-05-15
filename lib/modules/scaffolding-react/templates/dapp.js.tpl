@@ -6,32 +6,6 @@ import ReactDOM from 'react-dom';
 import { FormGroup, ControlLabel, FormControl, Checkbox, Button, Alert, InputGroup } from 'react-bootstrap';
 
 
-class {{contractName}}UI extends React.Component {
-    constructor (props) {
-        super(props);
-        this.state = {
-        };
-    }
-
-    render(){
-        return (<div>
-            {{#each functions}}
-            <{{capitalize name}}Form{{@index}} />
-            {{/each}}
-        </div>);
-    }
-}
-
-
-ReactDOM.render(<div>
-        <h1>{{title}}</h1>
-        <{{contractName}}UI />
-    </div>,
-    document.getElementById('app')
-);
-
-
-
 {{#each functions}}
 class {{capitalize name}}Form{{@index}} extends React.Component {
     constructor(props){
@@ -186,3 +160,29 @@ class {{capitalize name}}Form{{@index}} extends React.Component {
 }
 
 {{/each}}
+
+
+class {{contractName}}UI extends React.Component {
+    constructor (props) {
+        super(props);
+        this.state = {
+        };
+    }
+
+    render(){
+        return (<div>
+            {{#each functions}}
+            <{{capitalize name}}Form{{@index}} />
+            {{/each}}
+        </div>);
+    }
+}
+
+
+ReactDOM.render(<div>
+        <h1>{{title}}</h1>
+        <{{contractName}}UI />
+    </div>,
+    document.getElementById('app')
+);
+
