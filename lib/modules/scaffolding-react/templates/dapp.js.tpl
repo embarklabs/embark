@@ -6,8 +6,34 @@ import ReactDOM from 'react-dom';
 import { FormGroup, ControlLabel, FormControl, Checkbox, Button, Alert, InputGroup } from 'react-bootstrap';
 
 
+class {{contractName}}UI extends React.Component {
+    constructor (props) {
+        super(props);
+        this.state = {
+        };
+    }
+
+    render(){
+        return (<div>
+            {{#each functions}}
+            <{{capitalize name}}Form{{@index}} />
+            {{/each}}
+        </div>);
+    }
+}
+
+
+ReactDOM.render(<div>
+        <h1>{{title}}</h1>
+        <{{contractName}}UI />
+    </div>,
+    document.getElementById('app')
+);
+
+
+
 {{#each functions}}
-class {{capitalize name}}_{{@index}}_Form extends React.Component {
+class {{capitalize name}}Form{{@index}} extends React.Component {
     constructor(props){
         super(props);
         this.state = {
@@ -77,13 +103,10 @@ class {{capitalize name}}_{{@index}}_Form extends React.Component {
                     console.log(err);
                     this.setState({error: err.message});
                 });
-            // TODO payable
         {{/ifview}}
         } catch(err) {
             this.setState({error: err.message});
         }
-        
-        // TODO validate
     }
 
     render(){
@@ -163,28 +186,3 @@ class {{capitalize name}}_{{@index}}_Form extends React.Component {
 }
 
 {{/each}}
-
-
-class {{contractName}}UI extends React.Component {
-    constructor (props) {
-        super(props);
-        this.state = {
-        };
-    }
-
-    render(){
-        return (<div>
-            {{#each functions}}
-            <{{capitalize name}}_{{@index}}_Form />
-            {{/each}}
-        </div>);
-    }
-}
-
-
-ReactDOM.render(<div>
-        <h1>{{title}}</h1>
-        <{{contractName}}UI />
-    </div>,
-    document.getElementById('app')
-);
