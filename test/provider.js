@@ -53,7 +53,7 @@ describe('embark.provider', function () {
 
 
       assert.deepEqual(account,
-        [{key: Buffer.from('f942d5d524ec07158df4354402bfba8d928c99d0ab34d0799a6158d56156d986', 'hex')}]);
+        [{key: "0xf942d5d524ec07158df4354402bfba8d928c99d0ab34d0799a6158d56156d986"}]);
     });
 
     it('should return two accounts from the mnemonic using numAddresses', function () {
@@ -64,8 +64,8 @@ describe('embark.provider', function () {
 
       assert.deepEqual(account,
         [
-          {key: Buffer.from('f942d5d524ec07158df4354402bfba8d928c99d0ab34d0799a6158d56156d986', 'hex')},
-          {key: Buffer.from('88f37cfbaed8c0c515c62a17a3a1ce2f397d08bbf20dcc788b69f11b5a5c9791', 'hex')}
+          {key: "0xf942d5d524ec07158df4354402bfba8d928c99d0ab34d0799a6158d56156d986"},
+          {key: "0x88f37cfbaed8c0c515c62a17a3a1ce2f397d08bbf20dcc788b69f11b5a5c9791"}
         ]);
     });
 
