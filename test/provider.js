@@ -1,7 +1,7 @@
 /*global describe, it, before*/
 const assert = require('assert');
 const sinon = require('sinon');
-const Provider = require('../lib/core/provider');
+const Provider = require('../lib/contracts/provider');
 let TestLogger = require('../lib/tests/test_logger.js');
 
 describe('embark.provider', function () {
