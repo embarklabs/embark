@@ -14,7 +14,6 @@ describe('embark.Config', () => {
     container.snapshot();
 
     // inject testing bindings
-    container.bind('context').toConstantValue([constants.contexts.test]);
     container.bind('env').toConstantValue('myenv');
     container.bind('configDir').toConstantValue('./test/test1/config/');
     container.bind('autoLoadAllConfigs').toConstantValue(false);
@@ -30,14 +29,14 @@ describe('embark.Config', () => {
     // takes a clean copy of the application container
     container.restore();
   });
-  // let config = new Config({
-  //   env: 'myenv',
-  //   configDir: './test/test1/config/',
-  //   events: new Events()
-  // });
-  // config.plugins = new Plugins({plugins: {}});
-  // config.logger = new TestLogger({});
-
+    // let config = new Config({
+      //   env: 'myenv',
+      //   configDir: './test/test1/config/',
+      //   events: new Events()
+      // });
+      // config.plugins = new Plugins({plugins: {}});
+      // config.logger = new TestLogger({});
+      
   describe('#loadBlockchainConfigFile', function () {
     it('should load blockchain config correctly', function () {
       config.loadBlockchainConfigFile(); 

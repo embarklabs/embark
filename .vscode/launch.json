@@ -40,6 +40,16 @@
         ],
         "console": "integratedTerminal",
         "internalConsoleOptions": "neverOpen"
+    },
+    {
+        "type": "node",
+        "request": "launch",
+        "name": "Embark test",
+        "autoAttachChildProcesses": true,
+        //"preLaunchTask": "npm_install",
+        "program": "${workspaceFolder}/lib/tests/test_embark",
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
     }
   ]
 }
