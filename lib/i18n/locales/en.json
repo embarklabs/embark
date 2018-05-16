@@ -94,5 +94,10 @@
 	"Otherwise, you can change your data directory in blockchain.json (datadir)": "Otherwise, you can change your data directory in blockchain.json (datadir)",
 	"tip: you can resize the terminal or disable the dashboard with": "tip: you can resize the terminal or disable the dashboard with",
 	"help": "help",
-	"quit": "quit"
+	"quit": "quit",
+	"Error Compiling/Building contracts: ": "Error Compiling/Building contracts: ",
+	"{{className}} has code associated to it but it's configured as an instanceOf {{parentContractName}}": "{{className}} has code associated to it but it's configured as an instanceOf {{parentContractName}}",
+	"downloading {{packageName}} {{version}}....": "downloading {{packageName}} {{version}}....",
+	"Swarm node is offline...": "Swarm node is offline...",
+	"Swarm node detected...": "Swarm node detected..."
 }
