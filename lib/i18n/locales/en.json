@@ -96,7 +96,7 @@
 	"help": "help",
 	"quit": "quit",
 	"Error Compiling/Building contracts: ": "Error Compiling/Building contracts: ",
-	"file not found, creating it...": "file not found, creating it..."
+	"file not found, creating it...": "file not found, creating it...",
 	"{{className}} has code associated to it but it's configured as an instanceOf {{parentContractName}}": "{{className}} has code associated to it but it's configured as an instanceOf {{parentContractName}}",
 	"downloading {{packageName}} {{version}}....": "downloading {{packageName}} {{version}}....",
 	"Swarm node is offline...": "Swarm node is offline...",
