@@ -94,5 +94,19 @@
 	"Otherwise, you can change your data directory in blockchain.json (datadir)": "Otherwise, you can change your data directory in blockchain.json (datadir)",
 	"tip: you can resize the terminal or disable the dashboard with": "tip: you can resize the terminal or disable the dashboard with",
 	"help": "help",
-	"quit": "quit"
+	"quit": "quit",
+	"Cannot find file %s Please ensure you are running this command inside the Dapp folder": "Cannot find file %s Please ensure you are running this command inside the Dapp folder",
+	"reset done!": "reset done!",
+	"file not found, creating it...": "file not found, creating it...",
+	"downloading {{packageName}} {{version}}....": "downloading {{packageName}} {{version}}....",
+	"Cannot upload: {{platform}} node is not running on {{url}}.": "Cannot upload: {{platform}} node is not running on {{url}}.",
+	"finished deploying": "finished deploying",
+	"adding %s to ipfs": "adding %s to ipfs",
+	"DApp available at": "DApp available at",
+	"successfully uploaded to ipfs": "successfully uploaded to ipfs",
+	"finished building DApp and deploying to": "finished building DApp and deploying to",
+	"No Blockchain node found": "No Blockchain node found",
+	"Ethereum node detected": "Ethereum node detected",
+	"{{className}} has code associated to it but it's configured as an instanceOf {{parentContractName}}": "{{className}} has code associated to it but it's configured as an instanceOf {{parentContractName}}",
+	"Deployment Done": "Deployment Done"
 }
