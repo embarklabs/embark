@@ -108,5 +108,12 @@
 	"No Blockchain node found": "No Blockchain node found",
 	"Ethereum node detected": "Ethereum node detected",
 	"{{className}} has code associated to it but it's configured as an instanceOf {{parentContractName}}": "{{className}} has code associated to it but it's configured as an instanceOf {{parentContractName}}",
-	"Deployment Done": "Deployment Done"
+	"Deployment Done": "Deployment Done",
+	"Installing packages...": "Installing packages...",
+	"Next steps:": "Next steps:",
+	"open another console in the same directory and run": "open another console in the same directory and run",
+	"For more info go to http://embark.status.im": "For more info go to http://embark.status.im",
+	"unknown command": "unknown command",
+	"deploying to swarm!": "deploying to swarm!",
+	"adding %s to swarm": "adding %s to swarm"
 }
