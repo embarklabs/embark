@@ -13,6 +13,9 @@ describe('embark.AccountParser', function () {
             return {key};
           })
         }
+      },
+      utils: {
+        isHexStrict: sinon.stub().returns(true)
       }
     };
     const testLogger = new TestLogger({});
