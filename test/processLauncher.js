@@ -14,14 +14,14 @@ describe('ProcessWrapper', () => {
     });
   });
 
-  describe('subscribeTo', () => {
+  describe('on', () => {
 
     beforeEach(() => {
       processLauncher.subscriptions = {};
     });
 
     it('should create an array for the key value', function () {
-      processLauncher.subscribeTo('test', 'value', 'myCallback');
+      processLauncher.on('test', 'value', 'myCallback');
       assert.deepEqual(processLauncher.subscriptions, {
         "test": [
           {
@@ -33,8 +33,8 @@ describe('ProcessWrapper', () => {
     });
 
     it('should add another value to the key', () => {
-      processLauncher.subscribeTo('test', 'value', 'myCallback');
-      processLauncher.subscribeTo('test', 'value2', 'myCallback2');
+      processLauncher.on('test', 'value', 'myCallback');
+      processLauncher.on('test', 'value2', 'myCallback2');
       assert.deepEqual(processLauncher.subscriptions, {
         "test": [
           {
@@ -134,6 +134,40 @@ describe('ProcessWrapper', () => {
       };
       processLauncher._checkSubscriptions({test: 'value'});
       assert.strictEqual(callback.callCount, 1);
+    });
+
+    it('should call the callback and remove the sub', function () {
+      const callback = sinon.stub();
+      processLauncher.subscriptions = {
+        "test": [
+          {
+            "callback": callback,
+            "value": "value",
+            "once": true
+          }
+        ]
+      };
+      processLauncher._checkSubscriptions({test: 'value'});
+      assert.strictEqual(callback.callCount, 1);
+      assert.deepEqual(processLauncher.subscriptions, {test: []});
+    });
+
+    it('should call the callback twice', function () {
+      const callback = sinon.stub();
+      processLauncher.subscriptions = {
+        "test": [
+          {
+            "callback": callback,
+            "value": "value"
+          },
+          {
+            "callback": callback,
+            "value": "value"
+          }
+        ]
+      };
+      processLauncher._checkSubscriptions({test: 'value'});
+      assert.strictEqual(callback.callCount, 2);
     });
   });
 });
