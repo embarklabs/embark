@@ -115,5 +115,8 @@
 	"For more info go to http://embark.status.im": "For more info go to http://embark.status.im",
 	"unknown command": "unknown command",
 	"deploying to swarm!": "deploying to swarm!",
-	"adding %s to swarm": "adding %s to swarm"
+	"adding %s to swarm": "adding %s to swarm",
+	"Error Compiling/Building contracts: ": "Error Compiling/Building contracts: ",
+	"Swarm node is offline...": "Swarm node is offline...",
+	"Swarm node detected...": "Swarm node detected..."
 }
