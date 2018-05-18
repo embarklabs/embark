@@ -15,7 +15,6 @@ describe('embark.Blockchain', function () {
         let config = {
           networkType: 'custom',
           genesisBlock: false,
-          accountsConfig: {},
           geth_bin: 'geth',
           datadir: false,
           mineWhenNeeded: false,
@@ -32,7 +31,7 @@ describe('embark.Blockchain', function () {
           whisper: true,
           account: {},
           bootnodes: "",
-          wsApi: [ "eth", "web3", "net", "shh" ],
+          wsApi: ["eth", "web3", "net", "shh"],
           wsHost: "localhost",
           wsOrigins: false,
           wsPort: 8546,
@@ -41,7 +40,7 @@ describe('embark.Blockchain', function () {
           fast: false,
           light: false
         };
-        let blockchain = new Blockchain(config, {}, 'geth');
+        let blockchain = new Blockchain(config, 'geth');
 
         assert.deepEqual(blockchain.config, config);
         done();
@@ -55,7 +54,6 @@ describe('embark.Blockchain', function () {
           genesisBlock: 'foo/bar/genesis.json',
           geth_bin: 'geth',
           datadir: '/foo/datadir/',
-          accountsConfig: {},
           mineWhenNeeded: true,
           rpcHost: 'someserver',
           rpcPort: 12345,
@@ -70,7 +68,7 @@ describe('embark.Blockchain', function () {
           whisper: false,
           account: {},
           bootnodes: "",
-          wsApi: [ "eth", "web3", "net", "shh" ],
+          wsApi: ["eth", "web3", "net", "shh"],
           wsHost: "localhost",
           wsOrigins: false,
           wsPort: 8546,
@@ -79,7 +77,7 @@ describe('embark.Blockchain', function () {
           fast: false,
           light: false
         };
-        let blockchain = new Blockchain(config, {}, 'geth');
+        let blockchain = new Blockchain(config, 'geth');
 
         assert.deepEqual(blockchain.config, config);
         done();
