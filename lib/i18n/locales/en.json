@@ -109,5 +109,10 @@
 	"{{className}} has code associated to it but it's configured as an instanceOf {{parentContractName}}": "{{className}} has code associated to it but it's configured as an instanceOf {{parentContractName}}",
 	"downloading {{packageName}} {{version}}....": "downloading {{packageName}} {{version}}....",
 	"Swarm node is offline...": "Swarm node is offline...",
-	"Swarm node detected...": "Swarm node detected..."
+	"Swarm node detected...": "Swarm node detected...",
+	"Cannot find file %s Please ensure you are running this command inside the Dapp folder": "Cannot find file %s Please ensure you are running this command inside the Dapp folder",
+	"finished building": "finished building",
+	"compiling Vyper contracts": "compiling Vyper contracts",
+	"Vyper exited with error code ": "Vyper exited with error code ",
+	"attempted to deploy %s without specifying parameters": "attempted to deploy %s without specifying parameters"
 }
