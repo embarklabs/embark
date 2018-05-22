@@ -1,5 +1,6 @@
 /*globals describe, it*/
 let ContractsManager = require('../lib/contracts/contracts.js');
+let Compiler = require('../lib/contracts/compiler.js');
 let Logger = require('../lib/core/logger.js');
 let File = require('../lib/core/file.js');
 let TestLogger = require('../lib/tests/test_logger.js');
@@ -28,6 +29,12 @@ describe('embark.Contracts', function() {
       events: TestEvents
     });
     plugins.loadInternalPlugin('solidity', {solcVersion: '0.4.17', contractDirectories: ['app/contracts/']});
+
+    let compiler = new Compiler({plugins: plugins, logger: plugins.logger});
+    let events = new Events();
+    events.setCommandHandler("compiler:contracts", function(contractFiles, cb) {
+      compiler.compile_contracts(contractFiles, cb);
+    });
 
     let contractsManager = new ContractsManager({
       plugins: plugins,
@@ -65,7 +72,7 @@ describe('embark.Contracts', function() {
         }
       },
       logger: new Logger({}),
-      events: new Events()
+      events: events
     });
 
     describe('#build', function() {
@@ -111,6 +118,12 @@ describe('embark.Contracts', function() {
       events: TestEvents
     });
     plugins.loadInternalPlugin('solidity', {solcVersion: '0.4.17', contractDirectories: ['app/contracts/']});
+
+    let compiler = new Compiler({plugins: plugins, logger: plugins.logger});
+    let events = new Events();
+    events.setCommandHandler("compiler:contracts", function(contractFiles, cb) {
+      compiler.compile_contracts(contractFiles, cb);
+    });
 
     let contractsManager = new ContractsManager({
       plugins: plugins,
@@ -158,7 +171,7 @@ describe('embark.Contracts', function() {
         }
       },
       logger: new Logger({}),
-      events: new Events()
+      events: events
     });
 
     describe('#build', function() {
