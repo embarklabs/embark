@@ -29,12 +29,7 @@ describe('embark.CodeGenerator', function() {
       }
     ]
 
-    let generator = new CodeGenerator({blockchainConfig: {}, contractsManager: {
-      contracts: {
-        SimpleStorage: contracts[0],
-        Foo: contracts[1]
-      }
-    }});
+    let generator = new CodeGenerator({blockchainConfig: {}});
 
     describe('with EmbarkJS', function() {
       let withEmbarkJS = true;
