@@ -38,7 +38,8 @@ describe('embark.Blockchain', function () {
           wsRPC: true,
           targetGasLimit: false,
           fast: false,
-          light: false
+          light: false,
+          verbosity: undefined
         };
         let blockchain = new Blockchain(config, 'geth');
 
@@ -75,7 +76,8 @@ describe('embark.Blockchain', function () {
           wsRPC: true,
           targetGasLimit: false,
           fast: false,
-          light: false
+          light: false,
+          verbosity: undefined
         };
         let blockchain = new Blockchain(config, 'geth');
 
