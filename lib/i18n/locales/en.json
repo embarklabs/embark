@@ -121,5 +121,7 @@
 	"DApp available at": "DApp available at",
 	"successfully uploaded to ipfs": "successfully uploaded to ipfs",
 	"finished building DApp and deploying to": "finished building DApp and deploying to",
-	"instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)": "instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)"
+	"instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)": "instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)",
+	"Starting Blockchain node in another process": "Starting Blockchain node in another process",
+	"Blockchain node is ready": "Blockchain node is ready"
 }
