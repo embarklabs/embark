@@ -13,11 +13,19 @@ let readFile = function(file) {
   return new File({filename: file, type: File.types.dapp_file, path: file});
 };
 
+const currentSolcVersion = require('../package.json').dependencies.solc;
+const TestEvents = {
+  request: (cmd, cb) => {
+    cb(currentSolcVersion);
+  }
+};
+
 describe('embark.Contracts', function() {
   this.timeout(0);
   describe('simple', function() {
     let plugins = new Plugins({
-      logger: new TestLogger({})
+      logger: new TestLogger({}),
+      events: TestEvents
     });
     plugins.loadInternalPlugin('solidity', {solcVersion: '0.4.17', contractDirectories: ['app/contracts/']});
 
@@ -99,7 +107,8 @@ describe('embark.Contracts', function() {
 
   describe('config with contract instances', function() {
     let plugins = new Plugins({
-      logger: new TestLogger({})
+      logger: new TestLogger({}),
+      events: TestEvents
     });
     plugins.loadInternalPlugin('solidity', {solcVersion: '0.4.17', contractDirectories: ['app/contracts/']});
 
