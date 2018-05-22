@@ -117,5 +117,6 @@
 	"finished building DApp and deploying to": "finished building DApp and deploying to",
 	"Type": "Type",
 	"to see the list of available commands": "to see the list of available commands",
-	"instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)": "instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)"
+	"instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)": "instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)",
+	"reset done!": "reset done!"
 }
