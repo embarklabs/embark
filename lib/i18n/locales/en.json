@@ -123,5 +123,6 @@
 	"Starting Blockchain node in another process": "Starting Blockchain node in another process",
 	"Blockchain node is ready": "Blockchain node is ready",
 	"terminating due to error": "terminating due to error",
-	"Unable to start the blockchain process. Is Geth installed?": "Unable to start the blockchain process. Is Geth installed?"
+	"Unable to start the blockchain process. Is Geth installed?": "Unable to start the blockchain process. Is Geth installed?",
+	"Cannot upload: {{platform}} node is not running on {{protocol}}://{{host}}:{{port}}.": "Cannot upload: {{platform}} node is not running on {{protocol}}://{{host}}:{{port}}."
 }
