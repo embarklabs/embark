@@ -17,6 +17,8 @@
     "contractConfigChanged": "contractConfigChanged"
   },
   "process": {
+    "processLaunchRequest": "process:launch-request",
+    "processLaunchComplete": "process:launch-complete",
     "log": "log",
     "events": {
       "on": "on",
