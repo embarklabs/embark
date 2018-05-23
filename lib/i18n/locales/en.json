@@ -122,5 +122,6 @@
 	"successfully uploaded to ipfs": "successfully uploaded to ipfs",
 	"Starting Blockchain node in another process": "Starting Blockchain node in another process",
 	"Blockchain node is ready": "Blockchain node is ready",
-	"terminating due to error": "terminating due to error"
+	"terminating due to error": "terminating due to error",
+	"Unable to start the blockchain process. Is Geth installed?": "Unable to start the blockchain process. Is Geth installed?"
 }
