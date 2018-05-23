@@ -10,7 +10,8 @@ describe('ProcessWrapper', () => {
   before(() => {
     sinon.stub(ProcessLauncher.prototype, '_subscribeToMessages');
     processLauncher = new ProcessLauncher({
-      logger: new TestLogger({})
+      logger: new TestLogger({}),
+      modulePath: 'test.js'
     });
   });
 

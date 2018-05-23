@@ -124,5 +124,8 @@
 	"Blockchain node is ready": "Blockchain node is ready",
 	"terminating due to error": "terminating due to error",
 	"Unable to start the blockchain process. Is Geth installed?": "Unable to start the blockchain process. Is Geth installed?",
-	"Cannot upload: {{platform}} node is not running on {{protocol}}://{{host}}:{{port}}.": "Cannot upload: {{platform}} node is not running on {{protocol}}://{{host}}:{{port}}."
+	"Cannot upload: {{platform}} node is not running on {{protocol}}://{{host}}:{{port}}.": "Cannot upload: {{platform}} node is not running on {{protocol}}://{{host}}:{{port}}.",
+	"Error while downloading the file": "Error while downloading the file",
+	"Error while loading the content of ": "Error while loading the content of ",
+	"no contracts found": "no contracts found"
 }
