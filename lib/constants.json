@@ -29,5 +29,10 @@
     "build": "build",
     "initiated": "initiated",
     "built": "built"
+  },
+  "blockchain": {
+    "blockchainReady": "blockchainReady",
+    "init": "init",
+    "initiated": "initiated"
   }
 }
