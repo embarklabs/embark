@@ -114,5 +114,7 @@
 	"Couldn't connect to an Ethereum node are you sure it's on?": "Couldn't connect to an Ethereum node are you sure it's on?",
 	"make sure you have an Ethereum node or simulator running. e.g '%s'": "make sure you have an Ethereum node or simulator running. e.g '%s'",
 	"Embark is building, please wait...": "Embark is building, please wait...",
-	"finished building DApp and deploying to": "finished building DApp and deploying to"
+	"finished building DApp and deploying to": "finished building DApp and deploying to",
+	"Type": "Type",
+	"to see the list of available commands": "to see the list of available commands"
 }
