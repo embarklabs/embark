@@ -36,5 +36,9 @@
     "blockchainReady": "blockchainReady",
     "init": "init",
     "initiated": "initiated"
+  },
+  "storage": {
+    "init": "init",
+    "initiated": "initiated"
   }
 }
