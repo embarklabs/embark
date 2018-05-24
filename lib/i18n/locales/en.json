@@ -134,5 +134,7 @@
 	"Storage process for swarm ended before the end of this process. Code: 0": "Storage process for swarm ended before the end of this process. Code: 0",
 	"deploying to swarm!": "deploying to swarm!",
 	"adding %s to swarm": "adding %s to swarm",
-	"error uploading to swarm": "error uploading to swarm"
+	"error uploading to swarm": "error uploading to swarm",
+	"Starting ipfs process": "Starting ipfs process",
+	"Storage process for ipfs ended before the end of this process. Code: 0": "Storage process for ipfs ended before the end of this process. Code: 0"
 }
