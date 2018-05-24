@@ -137,5 +137,6 @@
 	"error uploading to swarm": "error uploading to swarm",
 	"Starting ipfs process": "Starting ipfs process",
 	"Storage process for ipfs ended before the end of this process. Code: 0": "Storage process for ipfs ended before the end of this process. Code: 0",
-	"successfully uploaded to swarm": "successfully uploaded to swarm"
+	"successfully uploaded to swarm": "successfully uploaded to swarm",
+	"ipfs process started": "ipfs process started"
 }
