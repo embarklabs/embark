@@ -131,5 +131,8 @@
 	"IPFS node detected": "IPFS node detected",
 	"No process file for this storage type exists. Please start the process locally.": "No process file for this storage type exists. Please start the process locally.",
 	"Starting swarm process": "Starting swarm process",
-	"Storage process for swarm ended before the end of this process. Code: 0": "Storage process for swarm ended before the end of this process. Code: 0"
+	"Storage process for swarm ended before the end of this process. Code: 0": "Storage process for swarm ended before the end of this process. Code: 0",
+	"deploying to swarm!": "deploying to swarm!",
+	"adding %s to swarm": "adding %s to swarm",
+	"error uploading to swarm": "error uploading to swarm"
 }
