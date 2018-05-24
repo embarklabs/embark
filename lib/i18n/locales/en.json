@@ -138,6 +138,7 @@
 	"Starting ipfs process": "Starting ipfs process",
 	"Storage process for ipfs ended before the end of this process. Code: 0": "Storage process for ipfs ended before the end of this process. Code: 0",
 	"successfully uploaded to swarm": "successfully uploaded to swarm",
+	"ipfs process started": "ipfs process started",
 	"WARNING! DApp path length is too long: ": "WARNING! DApp path length is too long: ",
 	"This is known to cause issues with starting geth, please consider reducing your DApp path's length to 66 characters or less.": "This is known to cause issues with starting geth, please consider reducing your DApp path's length to 66 characters or less.",
 	"Installing packages...": "Installing packages...",
