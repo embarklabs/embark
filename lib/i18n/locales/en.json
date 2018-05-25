@@ -127,5 +127,16 @@
 	"Cannot upload: {{platform}} node is not running on {{protocol}}://{{host}}:{{port}}.": "Cannot upload: {{platform}} node is not running on {{protocol}}://{{host}}:{{port}}.",
 	"Error while downloading the file": "Error while downloading the file",
 	"Error while loading the content of ": "Error while loading the content of ",
-	"no contracts found": "no contracts found"
+	"no contracts found": "no contracts found",
+	"IPFS node detected": "IPFS node detected",
+	"No process file for this storage type exists. Please start the process locally.": "No process file for this storage type exists. Please start the process locally.",
+	"Starting swarm process": "Starting swarm process",
+	"Storage process for swarm ended before the end of this process. Code: 0": "Storage process for swarm ended before the end of this process. Code: 0",
+	"deploying to swarm!": "deploying to swarm!",
+	"adding %s to swarm": "adding %s to swarm",
+	"error uploading to swarm": "error uploading to swarm",
+	"Starting ipfs process": "Starting ipfs process",
+	"Storage process for ipfs ended before the end of this process. Code: 0": "Storage process for ipfs ended before the end of this process. Code: 0",
+	"successfully uploaded to swarm": "successfully uploaded to swarm",
+	"ipfs process started": "ipfs process started"
 }
