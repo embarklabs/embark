@@ -54,6 +54,7 @@
     "merge": "^1.2.0",
     "orbit-db": "^0.17.3",
     "os-locale": "^2.1.0",
+    "p-iteration": "^1.1.7",
     "parse-json": "^4.0.0",
     "promptly": "^2.1.0",
     "propose": "0.0.5",

@@ -127,5 +127,10 @@
 	"Cannot upload: {{platform}} node is not running on {{protocol}}://{{host}}:{{port}}.": "Cannot upload: {{platform}} node is not running on {{protocol}}://{{host}}:{{port}}.",
 	"Error while downloading the file": "Error while downloading the file",
 	"Error while loading the content of ": "Error while loading the content of ",
-	"no contracts found": "no contracts found"
+	"no contracts found": "no contracts found",
+	"IPFS node is offline": "IPFS node is offline",
+	"IPFS node detected": "IPFS node detected",
+	"Webserver is offline": "Webserver is offline",
+	"DApp path length is too long: \"": "DApp path length is too long: \"",
+	"This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less.": "This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less."
 }
