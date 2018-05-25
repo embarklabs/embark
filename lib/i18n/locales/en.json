@@ -132,6 +132,9 @@
 	"IPFS node detected": "IPFS node detected",
 	"Webserver is offline": "Webserver is offline",
 	"DApp path length is too long: \"": "DApp path length is too long: \"",
+	"This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less.": "This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less."
+	"no contracts found": "no contracts found",
+	"DApp path length is too long: \"": "DApp path length is too long: \"",
 	"This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less.": "This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less.",
 	"deploying to swarm!": "deploying to swarm!",
 	"adding %s to swarm": "adding %s to swarm",

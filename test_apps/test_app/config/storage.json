@@ -20,10 +20,10 @@
   "development": {
     "enabled": true,
     "upload": {
-      "provider": "swarm",
+      "provider": "ipfs",
       "host": "localhost",
-      "port": 8500,
-      "getUrl": "http://localhost:8500/bzzr:/"
+      "port": 5001,
+      "getUrl": "http://localhost:8080/ipfs/"
     }
   },
   "livenet": {

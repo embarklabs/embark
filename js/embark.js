@@ -230,6 +230,18 @@ EmbarkJS.Storage.setProvider = function(provider, options) {
   return providerObj.setProvider(options);
 };
 
+EmbarkJS.Storage.setProviders = function(provider, dappConnOptions) {
+  let providerObj = this.Providers[provider];
+
+  if (!providerObj) {
+    throw new Error('Unknown storage provider');
+  } 
+
+  this.currentStorage = providerObj;
+
+  return providerObj.setProviders(dappConnOptions);
+};
+
 EmbarkJS.Storage.isAvailable = function(){
   if (!this.currentStorage) {
     throw new Error('Storage provider not set; e.g EmbarkJS.Storage.setProvider("ipfs")');
