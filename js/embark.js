@@ -272,6 +272,51 @@ EmbarkJS.Messages.listenTo = function(options, callback) {
   return this.currentMessages.listenTo(options, callback);
 };
 
+EmbarkJS.Names = {};
+
+EmbarkJS.Names.Providers = {};
+
+EmbarkJS.Names.registerProvider = function(providerName, obj) {
+  EmbarkJS.Names.Providers[providerName] = obj;
+}
+
+EmbarkJS.Names.setProvider = function(provider, options) {
+  let providerObj = this.Providers[provider];
+
+  if (!providerObj) {
+    throw new Error('Unknown name system provider');
+  }
+
+  this.currentNameSystems = providerObj;
+
+  return providerObj.setProvider(options);
+};
+
+// resolve resolves a name into an identifier of some kind
+EmbarkJS.Names.resolve = function(name) {
+  if (!this.currentNameSystems) {
+    throw new Error('Name system provider not set; e.g EmbarkJS.Names.setProvider("ens")');
+  }
+  return this.currentNameSystems.resolve(name);
+}
+
+// the reverse of resolve, resolves using an identifier to get to a name
+EmbarkJS.Names.lookup = function(identifier) {
+  if (!this.currentNameSystems) {
+    throw new Error('Name system provider not set; e.g EmbarkJS.Names.setProvider("ens")');
+  }
+  return this.currentNameSystems.lookup(name);
+}
+
+// To Implement
+
+/*
+// register a name 
+EmbarkJS.Names.register = function(name, options) {
+  
+}
+*/
+
 EmbarkJS.Utils = {
   fromAscii: function(str) {
     var _web3 = new Web3();
