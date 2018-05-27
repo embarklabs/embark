@@ -132,5 +132,11 @@
 	"This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less.": "This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less.",
 	"DApp path length is too long: ": "DApp path length is too long: ",
 	"WARNING! DApp path length is too long: ": "WARNING! DApp path length is too long: ",
-	"This is known to cause issues with starting geth, please consider reducing your DApp path's length to 66 characters or less.": "This is known to cause issues with starting geth, please consider reducing your DApp path's length to 66 characters or less."
+	"This is known to cause issues with starting geth, please consider reducing your DApp path's length to 66 characters or less.": "This is known to cause issues with starting geth, please consider reducing your DApp path's length to 66 characters or less.",
+	"Installing packages...": "Installing packages...",
+	"Next steps:": "Next steps:",
+	"open another console in the same directory and run": "open another console in the same directory and run",
+	"For more info go to http://embark.status.im": "For more info go to http://embark.status.im",
+	"%s is not installed on your machine": "%s is not installed on your machine",
+	"You can install it by visiting: %s": "You can install it by visiting: %s"
 }
