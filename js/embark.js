@@ -305,7 +305,7 @@ EmbarkJS.Names.lookup = function(identifier) {
   if (!this.currentNameSystems) {
     throw new Error('Name system provider not set; e.g EmbarkJS.Names.setProvider("ens")');
   }
-  return this.currentNameSystems.lookup(name);
+  return this.currentNameSystems.lookup(identifier);
 }
 
 // To Implement
