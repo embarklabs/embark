@@ -139,5 +139,8 @@
 	"For more info go to http://embark.status.im": "For more info go to http://embark.status.im",
 	"%s is not installed on your machine": "%s is not installed on your machine",
 	"You can install it by visiting: %s": "You can install it by visiting: %s",
-	"IPFS node is offline": "IPFS node is offline"
+	"IPFS node is offline": "IPFS node is offline",
+	"Starting ipfs process": "Starting ipfs process",
+	"ipfs process started": "ipfs process started",
+	"IPFS node detected": "IPFS node detected"
 }
