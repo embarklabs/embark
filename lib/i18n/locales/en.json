@@ -135,6 +135,8 @@
 	"deploying to swarm!": "deploying to swarm!",
 	"adding %s to swarm": "adding %s to swarm",
 	"error uploading to swarm": "error uploading to swarm",
+	"Starting ipfs process": "Starting ipfs process",
+	"Storage process for ipfs ended before the end of this process. Code: 0": "Storage process for ipfs ended before the end of this process. Code: 0",
 	"WARNING! DApp path length is too long: ": "WARNING! DApp path length is too long: ",
 	"This is known to cause issues with starting geth, please consider reducing your DApp path's length to 66 characters or less.": "This is known to cause issues with starting geth, please consider reducing your DApp path's length to 66 characters or less.",
 	"Installing packages...": "Installing packages...",
