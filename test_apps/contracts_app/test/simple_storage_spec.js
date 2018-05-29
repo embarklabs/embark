@@ -1,31 +1,33 @@
+/*global contract, before, it, embark, web3*/
+const assert = require('assert');
+const SimpleStorage = embark.require('contracts/SimpleStorage');
 
-contract("SimpleStorage", function() {
-
+contract("SimpleStorage", function () {
   this.timeout(0);
-  before(function(done) {
-    this.timeout(0);
 
-    //config({
-    //  node: "http://localhost:8545"
-    //});
-
-    var contractsConfig = {
-      "SimpleStorage": {
-        args: [100]
+  before(function (done) {
+    const contractsConfig = {
+      contracts: {
+        "SimpleStorage": {
+          args: [100]
+        }
       }
     };
-    EmbarkSpec.deployAll(contractsConfig, () => { done() });
+    embark.config(contractsConfig, () => {
+      done();
+    });
   });
 
-  it("should set constructor value", async function() {
-    let result = await SimpleStorage.methods.storedData().call();
-    assert.equal(result, 100);
+  it("should set constructor value", async function () {
+    let result = await SimpleStorage.contract.methods.storedData().call();
+    assert.strictEqual(parseInt(result, 10), 100);
   });
 
-  it("set storage value", async function() {
-    await SimpleStorage.methods.set(150).send();
-    let result = await SimpleStorage.methods.get().call();
-    assert.equal(result, 499650);
+  it("set storage value", async function () {
+    // TODO Solve from
+    await SimpleStorage.contract.methods.set(150).send({from: web3.eth.defaultAccount});
+    let result = await SimpleStorage.contract.methods.get().call();
+    assert.strictEqual(parseInt(result, 10), 499650);
   });
 
 });
