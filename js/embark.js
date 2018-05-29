@@ -44,6 +44,8 @@ EmbarkJS.Contract = function(options) {
         }
       }
 
+      ContractClass.abi = ContractClass.options.abi;
+
       var messageEvents = function() {
         this.cb = function() {};
       };
