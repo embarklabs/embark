@@ -28,11 +28,9 @@ EmbarkJS.Contract = function(options) {
       ContractClass = new this.web3.eth.Contract(this.abi, this.address);
       ContractClass.setProvider(this.web3.currentProvider);
       ContractClass.options.data = this.code;
-
+      ContractClass = this.web3.eth.contract(this.abi);
       return ContractClass;
     } else {
-      ContractClass = this.web3.eth.contract(this.abi);
-
       this.eventList = [];
 
       if (this.abi) {
