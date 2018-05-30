@@ -25,7 +25,7 @@ contract("SimpleStorage", function () {
 
   it("set storage value", async function () {
     // TODO Solve from
-    await SimpleStorage.methods.set(150).send({from: web3.eth.defaultAccount});
+    await SimpleStorage.methods.set(150).send();
     let result = await SimpleStorage.methods.get().call();
     assert.strictEqual(parseInt(result, 10), 499650);
   });
