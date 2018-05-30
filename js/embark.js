@@ -43,7 +43,7 @@ EmbarkJS.Contract = function(options) {
           }
         }
       }
-      
+
       var messageEvents = function() {
         this.cb = function() {};
       };
