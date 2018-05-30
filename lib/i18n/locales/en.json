@@ -138,5 +138,8 @@
 	"open another console in the same directory and run": "open another console in the same directory and run",
 	"For more info go to http://embark.status.im": "For more info go to http://embark.status.im",
 	"%s is not installed on your machine": "%s is not installed on your machine",
-	"You can install it by visiting: %s": "You can install it by visiting: %s"
+	"You can install it by visiting: %s": "You can install it by visiting: %s",
+	"unknown command": "unknown command",
+	"Simulator not found; Please install it with \"%s\"": "Simulator not found; Please install it with \"%s\"",
+	"IMPORTANT: if you using a NodeJS version older than 6.9.1 then you need to install an older version of testrpc \"%s\"": "IMPORTANT: if you using a NodeJS version older than 6.9.1 then you need to install an older version of testrpc \"%s\""
 }
