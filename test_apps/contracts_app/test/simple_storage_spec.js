@@ -19,14 +19,14 @@ contract("SimpleStorage", function () {
   });
 
   it("should set constructor value", async function () {
-    let result = await SimpleStorage.contract.methods.storedData().call();
+    let result = await SimpleStorage.methods.storedData().call();
     assert.strictEqual(parseInt(result, 10), 100);
   });
 
   it("set storage value", async function () {
     // TODO Solve from
-    await SimpleStorage.contract.methods.set(150).send({from: web3.eth.defaultAccount});
-    let result = await SimpleStorage.contract.methods.get().call();
+    await SimpleStorage.methods.set(150).send({from: web3.eth.defaultAccount});
+    let result = await SimpleStorage.methods.get().call();
     assert.strictEqual(parseInt(result, 10), 499650);
   });
 
