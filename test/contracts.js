@@ -26,9 +26,12 @@ describe('embark.Contracts', function() {
   describe('simple', function() {
     let plugins = new Plugins({
       logger: new TestLogger({}),
-      events: TestEvents
+      events: TestEvents,
+      config: {
+        contractDirectories: ['app/contracts/']
+      }
     });
-    plugins.loadInternalPlugin('solidity', {solcVersion: '0.4.17', contractDirectories: ['app/contracts/']});
+    plugins.loadInternalPlugin('solidity');
 
     let compiler = new Compiler({plugins: plugins, logger: plugins.logger});
     let events = new Events();
@@ -115,9 +118,12 @@ describe('embark.Contracts', function() {
   describe('config with contract instances', function() {
     let plugins = new Plugins({
       logger: new TestLogger({}),
-      events: TestEvents
+      events: TestEvents,
+      config: {
+        contractDirectories: ['app/contracts/']
+      }
     });
-    plugins.loadInternalPlugin('solidity', {solcVersion: '0.4.17', contractDirectories: ['app/contracts/']});
+    plugins.loadInternalPlugin('solidity');
 
     let compiler = new Compiler({plugins: plugins, logger: plugins.logger});
     let events = new Events();
