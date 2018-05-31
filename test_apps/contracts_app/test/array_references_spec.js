@@ -31,12 +31,12 @@ contract("SomeContract", function() {
 
   it("set MyToken2 address", async function() {
     let address = await SomeContract.methods.addr_1().call();
-    assert.equal(address, MyToken2.options.address);
+    assert.strictEqual(address, MyToken2.options.address);
   });
 
   it("set SimpleStorage address", async function() {
     let address = await SomeContract.methods.addr_2().call();
-    assert.equal(address, SimpleStorage.options.address);
+    assert.strictEqual(address, SimpleStorage.options.address);
   });
 
 });
