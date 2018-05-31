@@ -17,7 +17,7 @@ describe("SimpleStorage", function() {
 
   it("set storage value", async function() {
     await SimpleStorage.methods.set(150).send();
-    let result = SimpleStorage.methods.get().call();
+    let result = await SimpleStorage.methods.get().call();
     assert.equal(result, 150);
   });
 
