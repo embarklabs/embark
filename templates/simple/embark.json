@@ -10,7 +10,7 @@
     "webserver": false
   },
   "versions": {
-    "solc": "0.4.23"
+    "solc": "0.4.24"
   },
   "plugins": {}
 }
