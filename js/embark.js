@@ -231,6 +231,9 @@ EmbarkJS.Storage.setProvider = function(provider, options) {
 };
 
 EmbarkJS.Storage.isAvailable = function(){
+  if (!this.currentStorage) {
+    throw new Error('Storage provider not set; e.g EmbarkJS.Storage.setProvider("ipfs")');
+  }
   return this.currentStorage.isAvailable();
 };
 

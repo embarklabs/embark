@@ -1,25 +1,39 @@
 {
   "default": {
     "enabled": true,
-    "available_providers": ["ipfs", "swarm"],
     "ipfs_bin": "ipfs",
-    "provider": "ipfs",
-    "host": "localhost",
-    "port": 5001
+
+    "available_providers": ["ipfs", "swarm"],
+
+    "upload": {
+      "provider": "ipfs",
+      "host": "localhost",
+      "port": 5001
+    },
+
+    "dappConnection": [
+      "$BZZ",
+      {"provider": "swarm", "host": "localhost", "port": 8500, "getUrl": "http://localhost:8500/bzzr:/"},
+      {"provider": "ipfs", "host": "localhost", "port": 5001, "getUrl": "http://localhost:8080/ipfs/"}
+    ]
   },
   "development": {
     "enabled": true,
-    "provider": "swarm",
-    "host": "swarm-gateways.net",
-    "port": false,
-    "getUrl": "http://swarm-gateways.net/bzzr:/"
+    "upload": {
+      "provider": "swarm",
+      "host": "localhost",
+      "port": 8500,
+      "getUrl": "http://localhost:8500/bzzr:/"
+    }
   },
   "livenet": {
     "enabled": true,
-    "provider": "ipfs",
-    "host": "ipfs.infura.io",
-    "protocol": "https",
-    "port": false,
-    "getUrl": "https://ipfs.infura.io/ipfs/"
+    "upload":{
+      "provider": "ipfs",
+      "host": "ipfs.infura.io",
+      "protocol": "https",
+      "port": false,
+      "getUrl": "https://ipfs.infura.io/ipfs/"
+    }
   }
 }
