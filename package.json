@@ -33,6 +33,7 @@
     "bip39": "^2.5.0",
     "blessed": "^0.1.81",
     "chokidar": "^2.0.3",
+    "clone-deep": "^4.0.0",
     "colors": "^1.1.2",
     "commander": "^2.15.1",
     "css-loader": "^0.28.11",
