@@ -126,29 +126,16 @@
 	"Unable to start the blockchain process. Is Geth installed?": "Unable to start the blockchain process. Is Geth installed?",
 	"Error while downloading the file": "Error while downloading the file",
 	"Error while loading the content of ": "Error while loading the content of ",
-	"no contracts found": "no contracts found",
 	"IPFS node is offline": "IPFS node is offline",
 	"IPFS node detected": "IPFS node detected",
 	"Webserver is offline": "Webserver is offline",
-	"DApp path length is too long: \"": "DApp path length is too long: \"",
-	"This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less.": "This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less.",
-	"deploying to swarm!": "deploying to swarm!",
-	"adding %s to swarm": "adding %s to swarm",
-	"successfully uploaded to swarm": "successfully uploaded to swarm",
 	"Installing packages...": "Installing packages...",
 	"Next steps:": "Next steps:",
 	"open another console in the same directory and run": "open another console in the same directory and run",
-	"For more info go to http://embark.status.im": "For more info go to http://embark.status.im"
-	"Cannot upload: {{platform}} node is not running on {{protocol}}://{{host}}{{port}}.": "Cannot upload: {{platform}} node is not running on {{protocol}}://{{host}}{{port}}."
-	"This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less.": "This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less."
-	"no contracts found": "no contracts found",
-	"DApp path length is too long: \"": "DApp path length is too long: \"",
-	"This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less.": "This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less.",
 	"deploying to swarm!": "deploying to swarm!",
 	"adding %s to swarm": "adding %s to swarm",
 	"successfully uploaded to swarm": "successfully uploaded to swarm",
-	"Cannot upload: {{platform}} node is not running on {{protocol}}://{{host}}{{port}}.": "Cannot upload: {{platform}} node is not running on {{protocol}}://{{host}}{{port}}."
-	"This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less.": "This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less."
+	"Cannot upload: {{plaform}} node is not running on {{protocol}}://{{host}}{{port}}.": "Cannot upload: {{platform}} node is not running on {{protocol}}://{{host}}{{port}}.",
 	"no contracts found": "no contracts found",
 	"DApp path length is too long: \"": "DApp path length is too long: \"",
 	"This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less.": "This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less.",
