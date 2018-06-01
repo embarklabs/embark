@@ -167,5 +167,7 @@
 	"Storage process for swarm ended before the end of this process. Code: 1": "Storage process for swarm ended before the end of this process. Code: 1",
 	"Storage process for ipfs ended before the end of this process. Code: 12": "Storage process for ipfs ended before the end of this process. Code: 12",
 	"Blockchain process ended before the end of this process. Code: %s": "Blockchain process ended before the end of this process. Code: %s",
-	"Cannot start {{platform}} node on {{protocol}}://{{host}}{{port}}.": "Cannot start {{platform}} node on {{protocol}}://{{host}}{{port}}."
+	"Cannot start {{platform}} node on {{protocol}}://{{host}}{{port}}.": "Cannot start {{platform}} node on {{protocol}}://{{host}}{{port}}.",
+	"Cannot upload: {{platform}} node is not running on {{url}}.": "Cannot upload: {{platform}} node is not running on {{url}}.",
+	"Cannot start {{platform}} node on {{url}}.": "Cannot start {{platform}} node on {{url}}."
 }
