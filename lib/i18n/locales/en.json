@@ -161,5 +161,10 @@
 	"Cannot upload: {{platform}} node is not running on {{url}}.": "Cannot upload: {{platform}} node is not running on {{url}}.",
 	"Cannot start {{platform}} node on {{url}}.": "Cannot start {{platform}} node on {{url}}.",
 	"Storage process for swarm ended before the end of this process. Code: 0": "Storage process for swarm ended before the end of this process. Code: 0",
-	"error uploading to swarm": "error uploading to swarm"
+	"error uploading to swarm": "error uploading to swarm",
+	"IPFS node detected": "IPFS node detected",
+	"Ethereum node detected": "Ethereum node detected",
+	"Starting swarm process": "Starting swarm process",
+	"Deployment Done": "Deployment Done",
+	"Name your app (default is %s):": "Name your app (default is %s):"
 }
