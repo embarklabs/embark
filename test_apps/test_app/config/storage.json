@@ -3,7 +3,7 @@
     "enabled": true,
     "ipfs_bin": "ipfs",
 
-    "available_providers": ["ipfs", "swarm"],
+    "available_providers": ["ipfs"],
 
     "upload": {
       "provider": "ipfs",
@@ -18,13 +18,6 @@
     ]
   },
   "development": {
-    "enabled": true,
-    "upload": {
-      "provider": "swarm",
-      "host": "localhost",
-      "port": 8500,
-      "getUrl": "http://localhost:8500/bzzr:/"
-    }
   },
   "livenet": {
     "enabled": true,
