@@ -2,6 +2,7 @@
 let SolidityCompiler = require('../lib/modules/solidity');
 let TestLogger = require('../lib/tests/test_logger.js');
 let File = require('../lib/core/file.js');
+let Ipc = require('../lib/core/ipc.js');
 let assert = require('assert');
 
 let readFile = function(file) {
@@ -16,6 +17,10 @@ var TestEvents = {
   }
 };
 
+let ipcObject = new Ipc({
+  ipcRole: 'none'
+});
+
 var apiObject = {
   registerCompiler: function() {},
   logger: new TestLogger({}),
@@ -27,7 +32,7 @@ var apiObject = {
 
 describe('embark.Compiler', function() {
   //let compiler = new Compiler({logger: new TestLogger({})});
-  let compiler = new SolidityCompiler(apiObject);
+  let compiler = new SolidityCompiler(apiObject, {ipc: ipcObject});
 
   describe('#compile_solidity', function() {
     this.timeout(0);

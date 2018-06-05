@@ -54,6 +54,7 @@
     "ipfs-api": "17.2.4",
     "live-plugin-manager": "https://github.com/iurimatias/live-plugin-manager.git",
     "merge": "^1.2.0",
+    "node-ipc": "^9.1.1",
     "os-locale": "^2.1.0",
     "p-iteration": "^1.1.7",
     "parse-json": "^4.0.0",
