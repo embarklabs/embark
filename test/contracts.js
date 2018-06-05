@@ -5,6 +5,7 @@ let Logger = require('../lib/core/logger.js');
 let File = require('../lib/core/file.js');
 let TestLogger = require('../lib/tests/test_logger.js');
 let Events = require('../lib/core/events');
+let Ipc = require('../lib/core/ipc.js');
 let assert = require('assert');
 
 //let SolidityCompiler = require('../lib/modules/solidity');
@@ -31,7 +32,10 @@ describe('embark.Contracts', function() {
         contractDirectories: ['app/contracts/']
       }
     });
-    plugins.loadInternalPlugin('solidity');
+    let ipcObject = new Ipc({
+      ipcRole: 'none'
+    });
+    plugins.loadInternalPlugin('solidity', {ipc: ipcObject});
 
     let compiler = new Compiler({plugins: plugins, logger: plugins.logger});
     let events = new Events();
@@ -123,7 +127,10 @@ describe('embark.Contracts', function() {
         contractDirectories: ['app/contracts/']
       }
     });
-    plugins.loadInternalPlugin('solidity');
+    let ipcObject = new Ipc({
+      ipcRole: 'none'
+    });
+    plugins.loadInternalPlugin('solidity', {ipc: ipcObject});
 
     let compiler = new Compiler({plugins: plugins, logger: plugins.logger});
     let events = new Events();
