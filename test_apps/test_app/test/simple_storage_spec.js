@@ -1,4 +1,4 @@
-/*global contract, config, it, embark*/
+/*global contract, config, it, embark, assert*/
 const SimpleStorage = embark.require('Embark/contracts/SimpleStorage');
 
 config({
