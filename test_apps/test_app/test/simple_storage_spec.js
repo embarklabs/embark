@@ -1,15 +1,16 @@
-/*global contract, config, it, embark, assert*/
+/*global contract, config, it, embark, assert, web3*/
 const SimpleStorage = embark.require('Embark/contracts/SimpleStorage');
+let accounts;
 
 config({
   contracts: {
     "SimpleStorage": {
       args: [100],
-      onDeploy: [
-        "SimpleStorage.methods.setRegistar(web3.eth.defaultAccount).send()"
-      ]
+      onDeploy: ["SimpleStorage.methods.setRegistar(web3.eth.defaultAccount).send()"]
     }
   }
+}, (err, theAccounts) => {
+  accounts = theAccounts;
 });
 
 contract("SimpleStorage", function () {
@@ -29,9 +30,10 @@ contract("SimpleStorage", function () {
   it("should set defaultAccount", async function () {
     let result = await SimpleStorage.methods.registar().call();
     assert.strictEqual(result, web3.eth.defaultAccount);
+    assert.strictEqual(accounts[0], web3.eth.defaultAccount);
   });
 
-  it("should alias contract address", async function () {
+  it("should alias contract address", function () {
     assert.strictEqual(SimpleStorage.options.address, SimpleStorage.address);
   });
 
