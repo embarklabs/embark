@@ -12,6 +12,7 @@ library Assert {
 
 contract SimpleStorage is Ownable {
   uint public storedData;
+  address public registar;
 
   function() public payable { }
 
@@ -37,6 +38,10 @@ contract SimpleStorage is Ownable {
 
   function getS() public pure returns (string d) {
     return "hello";
+  }
+
+  function setRegistar(address x) public {
+    registar = x;
   }
 
 }
