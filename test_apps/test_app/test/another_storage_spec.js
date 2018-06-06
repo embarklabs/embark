@@ -4,6 +4,13 @@ const AnotherStorage = embark.require('Embark/contracts/AnotherStorage');
 const SimpleStorage = embark.require('Embark/contracts/SimpleStorage');
 
 config({
+  deployment: {
+    "accounts": [
+      {
+        "mnemonic": "example exile argue silk regular smile grass bomb merge arm assist farm"
+      }
+    ]
+  },
   contracts: {
     "SimpleStorage": {
       args: [100]
