@@ -1,10 +1,10 @@
-/*global describe, config, it, embark*/
+/*global describe, config, it*/
 const assert = require('assert');
-const Token = embark.require('Embark/contracts/Token');
-const MyToken = embark.require('Embark/contracts/MyToken');
-const MyToken2 = embark.require('Embark/contracts/MyToken2');
-const AlreadyDeployedToken = embark.require('Embark/contracts/AlreadyDeployedToken');
-const Test = embark.require('Embark/contracts/Test');
+const Token = require('Embark/contracts/Token');
+const MyToken = require('Embark/contracts/MyToken');
+const MyToken2 = require('Embark/contracts/MyToken2');
+const AlreadyDeployedToken = require('Embark/contracts/AlreadyDeployedToken');
+const Test = require('Embark/contracts/Test');
 
 config({
   contracts: {
