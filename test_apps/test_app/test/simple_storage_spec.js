@@ -31,4 +31,8 @@ contract("SimpleStorage", function () {
     assert.strictEqual(result, web3.eth.defaultAccount);
   });
 
+  it("should alias contract address", async function () {
+    assert.strictEqual(SimpleStorage.options.address, SimpleStorage.address);
+  });
+
 });
