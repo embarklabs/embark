@@ -1,7 +1,7 @@
-/*global contract, config, it, embark, web3*/
+/*global contract, config, it, web3*/
 const assert = require('assert');
-const AnotherStorage = embark.require('Embark/contracts/AnotherStorage');
-const SimpleStorage = embark.require('Embark/contracts/SimpleStorage');
+const AnotherStorage = require('Embark/contracts/AnotherStorage');
+const SimpleStorage = require('Embark/contracts/SimpleStorage');
 
 let accounts;
 
