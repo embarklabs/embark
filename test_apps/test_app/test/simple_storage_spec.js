@@ -1,5 +1,5 @@
-/*global contract, config, it, embark, assert, web3*/
-const SimpleStorage = embark.require('Embark/contracts/SimpleStorage');
+/*global contract, config, it, assert, web3*/
+const SimpleStorage = require('Embark/contracts/SimpleStorage');
 let accounts;
 
 config({

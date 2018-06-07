@@ -1,6 +1,6 @@
-/*global contract, config, it, embark*/
+/*global contract, config, it*/
 const assert = require('assert');
-const SimpleStorage = embark.require('Embark/contracts/SimpleStorage');
+const SimpleStorage = require('Embark/contracts/SimpleStorage');
 
 config({
   contracts: {
