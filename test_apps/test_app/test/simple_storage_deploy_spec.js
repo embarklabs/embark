@@ -16,7 +16,7 @@ contract("SimpleStorage Deploy", function () {
   let SimpleStorageInstance;
 
   before(async function() {
-    SimpleStorageInstance = await SimpleStorage.deploy({data: SimpleStorage.options.data, arguments: [150]}).send();
+    SimpleStorageInstance = await SimpleStorage.deploy({arguments: [150]}).send();
   });
 
   it("should set constructor value", async function () {
