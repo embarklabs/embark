@@ -29,6 +29,12 @@ config({
 contract("AnotherStorage", function() {
   this.timeout(0);
 
+  it("should have account with balance", async function() {
+    let balance = await web3.eth.getBalance(accounts[0]);
+    assert.ok(parseInt(balance, 10) > 4900000000000000000);
+    assert.ok(parseInt(balance, 10) <= 5000000000000000000);
+  });
+
   it("set SimpleStorage address", async function() {
     let result = await AnotherStorage.methods.simpleStorageAddress().call();
     assert.equal(result.toString(), SimpleStorage.options.address);
