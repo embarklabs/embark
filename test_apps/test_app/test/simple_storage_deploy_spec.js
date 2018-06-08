@@ -2,7 +2,7 @@
 const SimpleStorage = embark.require('Embark/contracts/SimpleStorage');
 let accounts;
 
-config({}, (err, theAccounts) => {
+config((err, theAccounts) => {
   accounts = theAccounts;
 });
 
