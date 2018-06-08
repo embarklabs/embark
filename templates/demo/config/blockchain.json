@@ -12,6 +12,7 @@
     "rpcHost": "localhost",
     "rpcPort": 8545,
     "rpcCorsDomain": "auto",
+    "proxy": true,
     "account": {
       "password": "config/development/password"
     },
