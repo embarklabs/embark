@@ -30,6 +30,29 @@ EmbarkJS.Contract = function(options) {
       ContractClass.options.data = this.code;
       ContractClass.abi = ContractClass.options.abi;
       ContractClass.address = this.address;
+
+      let originalMethods = Object.keys(ContractClass);
+
+      ContractClass._jsonInterface.forEach((abi) => {
+        if (originalMethods.indexOf(abi.name) >= 0) {
+          console.log(abi.name + " is a reserved word and cannot be used as a contract method, property or event");
+          return;
+        }
+        if (abi.constant) {
+          ContractClass[abi.name] = function() {
+            let ref = ContractClass.methods[abi.name];
+            let send = ref.apply(ref, ..arguments).send;
+            return send.apply(call, []);
+          };
+        } else {
+          ContractClass[abi.name] = function() {
+            let ref = ContractClass.methods[abi.name];
+            let call = ref.apply(ref, ..arguments).call;
+            return call.apply(call, []);
+          };
+        }
+      });
+
       return ContractClass;
     } else {
       ContractClass = this.web3.eth.contract(this.abi);
