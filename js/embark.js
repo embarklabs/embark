@@ -32,24 +32,54 @@ EmbarkJS.Contract = function(options) {
       ContractClass.address = this.address;
 
       let originalMethods = Object.keys(ContractClass);
+      let methods = [];
 
       ContractClass._jsonInterface.forEach((abi) => {
         if (originalMethods.indexOf(abi.name) >= 0) {
           console.log(abi.name + " is a reserved word and cannot be used as a contract method, property or event");
           return;
         }
-        if (abi.constant) {
+        methods.push(abi.name);
+
+        if (!abi.inputs) {
+          return;
+        }
+
+        let numExpectedInputs = abi.inputs.length;
+
+        if (abi.type === 'function' && abi.constant) {
           ContractClass[abi.name] = function() {
+            let options = {}, cb = null, args = Array.from(arguments || []).slice(0, numExpectedInputs);
+            if (typeof (arguments[numExpectedInputs]) === 'function') {
+              cb = arguments[numExpectedInputs];
+            } else if (typeof (arguments[numExpectedInputs]) === 'object') {
+              options = arguments[numExpectedInputs];
+              cb = arguments[numExpectedInputs + 1];
+            }
+
             let ref = ContractClass.methods[abi.name];
-            let send = ref.apply(ref, ..arguments).send;
-            return send.apply(call, []);
-          };
-        } else {
-          ContractClass[abi.name] = function() {
-            let ref = ContractClass.methods[abi.name];
-            let call = ref.apply(ref, ..arguments).call;
+            let call = ref.apply(ref, ...arguments).call;
             return call.apply(call, []);
           };
+        } else if (abi.type === 'function') {
+          ContractClass[abi.name] = function() {
+            let options = {}, cb = null, args = Array.from(arguments || []).slice(0, numExpectedInputs);
+            if (typeof (arguments[numExpectedInputs]) === 'function') {
+              cb = arguments[numExpectedInputs];
+            } else if (typeof (arguments[numExpectedInputs]) === 'object') {
+              options = arguments[numExpectedInputs];
+              cb = arguments[numExpectedInputs + 1];
+            }
+
+            let ref = ContractClass.methods[abi.name];
+            let send = ref.apply(ref, args).send;
+            return send.apply(send, [options, cb]);
+          };
+        } else if (abi.type === 'event') {
+          ContractClass[abi.name] = function(options, cb) {
+            let ref = ContractClass.events[abi.name];
+            return ref.apply(ref, [options, cb]);
+          }
         }
       });
 
