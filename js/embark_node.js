@@ -393,4 +393,4 @@ EmbarkJS.Utils = {
   }
 };
 
-export default EmbarkJS;
+module.exports = EmbarkJS;
