@@ -40,6 +40,11 @@ contract("AnotherStorage", function() {
     assert.equal(result.toString(), SimpleStorage.options.address);
   });
 
+  it("set SimpleStorage address with alternative syntax", async function() {
+    let result = await AnotherStorage.simpleStorageAddress();
+    assert.equal(result.toString(), SimpleStorage.options.address);
+  });
+
   it('should set the balance correctly', async function () {
     const balance = await web3.eth.getBalance(accounts[0]);
     assert.ok(balance < 5000000000000000000);

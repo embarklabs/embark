@@ -1,9 +1,14 @@
 var EmbarkJS = {
-  onReady: __embarkContext.execWhenReady
+  onReady: function(cb) {
+    if (typeof (__embarkContext) === 'undefined') {
+      return cb();
+    }
+    return __embarkContext.execWhenReady(cb);
+  }
 };
 
-EmbarkJS.isNewWeb3 = function() {
-  var _web3 = new Web3();
+EmbarkJS.isNewWeb3 = function(web3Obj) {
+  var _web3 = web3Obj || (new Web3());
   if (typeof(_web3.version) === "string") {
     return true;
   }
@@ -17,22 +22,24 @@ EmbarkJS.Contract = function(options) {
 
     this.abi = options.abi;
     this.address = options.address;
+    this.gas = options.gas;
     this.code = '0x' + options.code;
     //this.web3 = options.web3 || web3;
     this.web3 = options.web3;
     if (!this.web3 && typeof ('web3') !== 'undefined') {
       this.web3 = web3;
-    } else {
+    } else if (!this.web3) {
       this.web3 = window.web3;
     }
 
-    if (EmbarkJS.isNewWeb3()) {
+    if (EmbarkJS.isNewWeb3(this.web3)) {
       ContractClass = new this.web3.eth.Contract(this.abi, this.address);
       ContractClass.setProvider(this.web3.currentProvider);
       ContractClass.options.data = this.code;
       ContractClass.options.from = this.from;
       ContractClass.abi = ContractClass.options.abi;
       ContractClass.address = this.address;
+      ContractClass.gas = this.gas;
 
       let originalMethods = Object.keys(ContractClass);
 
@@ -386,4 +393,5 @@ EmbarkJS.Utils = {
   }
 };
 
-export default EmbarkJS;
+//export default EmbarkJS;
+module.exports = EmbarkJS;
