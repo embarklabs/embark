@@ -19,27 +19,28 @@ EmbarkJS.Contract = function(options) {
     this.address = options.address;
     this.code = '0x' + options.code;
     //this.web3 = options.web3 || web3;
-    this.web3 = options.web3 || window.web3;
+    this.web3 = options.web3;
+    if (!this.web3 && typeof ('web3') !== 'undefined') {
+      this.web3 = web3;
+    } else {
+      this.web3 = window.web3;
+    }
 
     if (EmbarkJS.isNewWeb3()) {
-      // TODO:
-      // add default **from** address
-      // add gasPrice
       ContractClass = new this.web3.eth.Contract(this.abi, this.address);
       ContractClass.setProvider(this.web3.currentProvider);
       ContractClass.options.data = this.code;
+      ContractClass.options.from = this.from;
       ContractClass.abi = ContractClass.options.abi;
       ContractClass.address = this.address;
 
       let originalMethods = Object.keys(ContractClass);
-      let methods = [];
 
       ContractClass._jsonInterface.forEach((abi) => {
         if (originalMethods.indexOf(abi.name) >= 0) {
           console.log(abi.name + " is a reserved word and cannot be used as a contract method, property or event");
           return;
         }
-        methods.push(abi.name);
 
         if (!abi.inputs) {
           return;
