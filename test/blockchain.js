@@ -1,5 +1,6 @@
 /*globals describe, it*/
 const Blockchain = require('../lib/cmds/blockchain/blockchain');
+const constants = require('../lib/constants.json');
 
 const assert = require('assert');
 
@@ -39,10 +40,15 @@ describe('embark.Blockchain', function () {
           targetGasLimit: false,
           fast: false,
           light: false,
-          verbosity: undefined
+          verbosity: undefined,
+          proxy: true
         };
         let blockchain = new Blockchain(config, 'geth');
 
+        if(config.proxy){
+          config.wsPort += constants.blockchain.servicePortOnProxy;
+          config.rpcPort += constants.blockchain.servicePortOnProxy;
+        }
         assert.deepEqual(blockchain.config, config);
         done();
       });
@@ -77,9 +83,15 @@ describe('embark.Blockchain', function () {
           targetGasLimit: false,
           fast: false,
           light: false,
-          verbosity: undefined
+          verbosity: undefined,
+          proxy: true
         };
         let blockchain = new Blockchain(config, 'geth');
+
+        if(config.proxy){
+          config.wsPort += constants.blockchain.servicePortOnProxy;
+          config.rpcPort += constants.blockchain.servicePortOnProxy;
+        }
 
         assert.deepEqual(blockchain.config, config);
         done();
