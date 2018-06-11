@@ -19,8 +19,8 @@
     "wsOrigins": "auto",
     "wsRPC": true,
     "wsHost": "localhost",
-    "wsPort": 8546
-
+    "wsPort": 8546,
+    "proxy": true
   },
   "testnet": {
     "networkType": "testnet",
