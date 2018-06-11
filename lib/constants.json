@@ -35,7 +35,8 @@
   "blockchain": {
     "blockchainReady": "blockchainReady",
     "init": "init",
-    "initiated": "initiated"
+    "initiated": "initiated",
+    "servicePortOnProxy": 10
   },
   "storage": {
     "init": "init",
