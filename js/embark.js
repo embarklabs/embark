@@ -26,7 +26,7 @@ EmbarkJS.Contract = function(options) {
     this.code = '0x' + options.code;
     //this.web3 = options.web3 || web3;
     this.web3 = options.web3;
-    if (!this.web3 && typeof ('web3') !== 'undefined') {
+    if (!this.web3 && typeof (web3) !== 'undefined') {
       this.web3 = web3;
     } else if (!this.web3) {
       this.web3 = window.web3;
