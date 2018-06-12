@@ -37,4 +37,15 @@ contract("SimpleStorage", function () {
     assert.strictEqual(SimpleStorage.options.address, SimpleStorage.address);
   });
 
+  it('listens to events', function (done) {
+    SimpleStorage.once('EventOnSet2', async function(error, _result){
+      assert.strictEqual(error, null);
+      let result = await SimpleStorage.methods.get().call();
+      assert.strictEqual(parseInt(result, 10), 150);
+      done();
+    });
+
+    SimpleStorage.methods.set2(150, 100).send();
+  });
+
 });

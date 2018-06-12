@@ -13,6 +13,7 @@ library Assert {
 contract SimpleStorage is Ownable {
   uint public storedData;
   address public registar;
+  event EventOnSet2(bool passed, string message);
 
   function() public payable { }
 
@@ -30,6 +31,7 @@ contract SimpleStorage is Ownable {
 
   function set2(uint x, uint unusedGiveWarning) public onlyOwner {
     storedData = x;
+    emit EventOnSet2(true, "hi");
   }
 
   function get() public view returns (uint retVal) {
