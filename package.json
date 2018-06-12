@@ -65,6 +65,7 @@
     "request": "^2.85.0",
     "serve-static": "^1.11.1",
     "shelljs": "^0.5.0",
+    "simples": "^0.8.8",
     "solc": "0.4.24",
     "string-replace-async": "^1.2.1",
     "style-loader": "^0.19.0",
