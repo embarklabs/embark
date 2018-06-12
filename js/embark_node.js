@@ -376,9 +376,9 @@ EmbarkJS.Names.lookup = function(identifier) {
 // To Implement
 
 /*
-// register a name
+// register a name 
 EmbarkJS.Names.register = function(name, options) {
-
+  
 }
 */
 
@@ -393,4 +393,4 @@ EmbarkJS.Utils = {
   }
 };
 
-export default EmbarkJS;
+module.exports = EmbarkJS;
