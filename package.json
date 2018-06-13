@@ -46,7 +46,7 @@
     "finalhandler": "^1.1.1",
     "follow-redirects": "^1.2.4",
     "fs-extra": "^2.0.0",
-    "ganache-cli": "^6.1.0",
+    "ganache-cli": "6.1.0",
     "globule": "^1.1.0",
     "hard-source-webpack-plugin": "^0.6.6",
     "http-proxy": "^1.17.0",
