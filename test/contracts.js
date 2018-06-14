@@ -51,6 +51,10 @@ describe('embark.Contracts', function() {
       cb([]);
     });
 
+    events.setCommandHandler("blockchain:gasPrice", (cb) => {
+      cb(null, 100);
+    });
+
     let contractsConfig = {
       "versions": {
         "web3.js": "1.0.0-beta",
@@ -154,6 +158,10 @@ describe('embark.Contracts', function() {
 
     events.setCommandHandler("config:contractsFiles", (cb) => {
       cb([]);
+    });
+
+    events.setCommandHandler("blockchain:gasPrice", (cb) => {
+      cb(null, 100);
     });
 
     let contractsConfig = {
