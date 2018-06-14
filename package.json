@@ -31,7 +31,6 @@
     "babel-preset-es2017": "6.24.1",
     "babel-preset-react": "^6.24.1",
     "bip39": "^2.5.0",
-    "neo-blessed": "^0.2.0",
     "chokidar": "^2.0.3",
     "clone-deep": "^4.0.0",
     "colors": "^1.1.2",
