@@ -43,6 +43,43 @@ describe('embark.Contracts', function() {
       compiler.compile_contracts(contractFiles, cb);
     });
 
+    events.setCommandHandler("config:contractsConfig", function(cb) {
+      cb(contractsConfig);
+    });
+
+    events.setCommandHandler("config:contractsFiles", (cb) => {
+      cb([]);
+    });
+
+    let contractsConfig = {
+      "versions": {
+        "web3.js": "1.0.0-beta",
+        "solc": "0.4.17"
+      },
+      "deployment": {
+        "host": "localhost",
+        "port": 8545,
+        "type": "rpc"
+      },
+      "dappConnection": [
+        "$WEB3",
+        "localhost:8545"
+      ],
+      "gas": "auto",
+      "contracts": {
+        "Token": {
+          "args": [
+            100
+          ]
+        },
+        "SimpleStorage": {
+          "args": [
+            200
+          ]
+        }
+      }
+    };
+
     let contractsManager = new ContractsManager({
       plugins: plugins,
       contractFiles:  [
@@ -50,34 +87,7 @@ describe('embark.Contracts', function() {
         readFile('test/contracts/token.sol')
       ],
       contractDirectories: ['app/contracts'],
-      contractsConfig: {
-        "versions": {
-          "web3.js": "1.0.0-beta",
-          "solc": "0.4.17"
-        },
-        "deployment": {
-          "host": "localhost",
-          "port": 8545,
-          "type": "rpc"
-        },
-        "dappConnection": [
-          "$WEB3",
-          "localhost:8545"
-        ],
-        "gas": "auto",
-        "contracts": {
-          "Token": {
-            "args": [
-              100
-            ]
-          },
-          "SimpleStorage": {
-            "args": [
-              200
-            ]
-          }
-        }
-      },
+      contractsConfig: contractsConfig,
       logger: new Logger({}),
       events: events
     });
@@ -138,6 +148,53 @@ describe('embark.Contracts', function() {
       compiler.compile_contracts(contractFiles, cb);
     });
 
+    events.setCommandHandler("config:contractsConfig", function(cb) {
+      cb(contractsConfig);
+    });
+
+    events.setCommandHandler("config:contractsFiles", (cb) => {
+      cb([]);
+    });
+
+    let contractsConfig = {
+      "versions": {
+        "web3.js": "1.0.0-beta",
+        "solc": "0.4.17"
+      },
+      "deployment": {
+        "host": "localhost",
+        "port": 8545,
+        "type": "rpc"
+      },
+      "dappConnection": [
+        "$WEB3",
+        "localhost:8545"
+      ],
+      "gas": "auto",
+      "contracts": {
+        "TokenStorage": {
+          "args": [
+            100,
+            "$SimpleStorage"
+          ]
+        },
+        "MySimpleStorage": {
+          "instanceOf": "SimpleStorage",
+          "args": [
+            300
+          ]
+        },
+        "SimpleStorage": {
+          "args": [
+            200
+          ]
+        },
+        "AnotherSimpleStorage": {
+          "instanceOf": "SimpleStorage"
+        }
+      }
+    }
+
     let contractsManager = new ContractsManager({
       plugins: plugins,
       contractFiles:  [
@@ -145,44 +202,7 @@ describe('embark.Contracts', function() {
         readFile('test/contracts/token_storage.sol')
       ],
       contractDirectories: ['app/contracts'],
-      contractsConfig: {
-        "versions": {
-          "web3.js": "1.0.0-beta",
-          "solc": "0.4.17"
-        },
-        "deployment": {
-          "host": "localhost",
-          "port": 8545,
-          "type": "rpc"
-        },
-        "dappConnection": [
-          "$WEB3",
-          "localhost:8545"
-        ],
-        "gas": "auto",
-        "contracts": {
-          "TokenStorage": {
-            "args": [
-              100,
-              "$SimpleStorage"
-            ]
-          },
-          "MySimpleStorage": {
-            "instanceOf": "SimpleStorage",
-            "args": [
-              300
-            ]
-          },
-          "SimpleStorage": {
-            "args": [
-              200
-            ]
-          },
-          "AnotherSimpleStorage": {
-            "instanceOf": "SimpleStorage"
-          }
-        }
-      },
+      contractsConfig: contractsConfig,
       logger: new Logger({}),
       events: events
     });
