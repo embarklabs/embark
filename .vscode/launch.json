@@ -1,0 +1,147 @@
+{ 
+    // Use IntelliSense to learn about possible attributes. 
+    // Hover to view descriptions of existing attributes. 
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387 
+    "version": "0.2.0", 
+    "configurations": [ 
+         
+        { 
+            "type": "node", 
+            "request": "launch", 
+            "name": "Embark: Mocha All", 
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha", 
+            "args": [ 
+                "--colors", 
+                "--no-timeouts", 
+                "${workspaceFolder}/test/" 
+            ], 
+            "console": "integratedTerminal", 
+            "internalConsoleOptions": "neverOpen" 
+        }, 
+        { 
+            "type": "node", 
+            "request": "launch", 
+            "name": "Embark: Mocha Current File", 
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha", 
+            "args": [ 
+                "--colors", 
+                "--no-timeouts", 
+                "${file}" 
+            ], 
+            "console": "integratedTerminal", 
+            "internalConsoleOptions": "neverOpen" 
+        }, 
+        { 
+            "type": "node", 
+            "request": "launch", 
+            "name": "Embark: embark test", 
+            "autoAttachChildProcesses": true, 
+            //"preLaunchTask": "npm_install", 
+            "program": "${workspaceFolder}/lib/tests/test_embark", 
+            "console": "integratedTerminal", 
+            "internalConsoleOptions": "neverOpen" 
+        }, 
+        { 
+            "type": "node", 
+            "request": "launch", 
+            "name": "Test app: Embark test", 
+            "cwd": "${workspaceFolder}/test_apps/test_app/", 
+            "autoAttachChildProcesses": true, 
+            //"preLaunchTask": "npm_install", 
+            "program": "${workspaceFolder}/bin/embark", 
+            "args": [ 
+                "test" 
+            ], 
+            "console": "integratedTerminal", 
+            "internalConsoleOptions": "neverOpen" 
+        }, 
+        { 
+            "type": "node", 
+            "request": "launch", 
+            "name": "Test app: Embark new testapp123", 
+            "cwd": "${workspaceFolder}/test_apps/test_app/", 
+            "autoAttachChildProcesses": true, 
+            //"preLaunchTask": "npm_install", 
+            "program": "${workspaceFolder}/bin/embark", 
+            "args": [ 
+                "new", 
+                "testapp123" 
+            ], 
+            "console": "integratedTerminal", 
+            "internalConsoleOptions": "neverOpen" 
+        }, 
+        { 
+            "type": "node", 
+            "request": "launch", 
+            "name": "Test app: Embark upload", 
+            "cwd": "${workspaceFolder}/test_apps/test_app/", 
+            "autoAttachChildProcesses": true, 
+            //"preLaunchTask": "npm_install", 
+            "program": "${workspaceFolder}/bin/embark", 
+            "args": [ 
+                "upload" 
+            ], 
+            "console": "integratedTerminal", 
+            "internalConsoleOptions": "neverOpen" 
+        }, 
+        { 
+            "type": "node", 
+            "request": "launch", 
+            "name": "Test app: Embark run", 
+            "cwd": "${workspaceFolder}/test_apps/test_app/", 
+            "autoAttachChildProcesses": true, 
+            //"preLaunchTask": "npm_install", 
+            "program": "${workspaceFolder}/bin/embark", 
+            "args": [ 
+                "run", 
+                "--nodashboard" 
+            ], 
+            "console": "integratedTerminal", 
+            "internalConsoleOptions": "neverOpen" 
+        }, 
+        { 
+            "type": "node", 
+            "request": "launch", 
+            "name": "Embark demo from main repo: Embark run", 
+            "cwd": "${workspaceFolder}/../../embk-fw/embark/embark_demo/", 
+            "autoAttachChildProcesses": true, 
+            //"preLaunchTask": "npm_install", 
+            "program": "${workspaceFolder}/bin/embark", 
+            "args": [ 
+                "run"
+            ], 
+            "console": "integratedTerminal", 
+            "internalConsoleOptions": "neverOpen" 
+        }, 
+        { 
+            "type": "node", 
+            "request": "launch", 
+            "name": "Embark demo from dapp-bin: Embark run", 
+            "cwd": "${workspaceFolder}/../../embk-fw/dapp-bin/embark_demo/", 
+            "autoAttachChildProcesses": false,
+            //"preLaunchTask": "npm_install", 
+            "program": "${workspaceFolder}/bin/embark", 
+            "args": [ 
+                "run",
+                "--nodashboard"
+            ], 
+            "console": "integratedTerminal", 
+            "internalConsoleOptions": "neverOpen" 
+        },
+        { 
+            "type": "node", 
+            "request": "launch", 
+            "name": "Embark react routes demo: Embark run", 
+            "cwd": "${workspaceFolder}/../../emizzle/embark-demo-react-routes/", 
+            "autoAttachChildProcesses": true, 
+            //"preLaunchTask": "npm_install", 
+            "program": "${workspaceFolder}/bin/embark", 
+            "args": [ 
+                "run"
+            ], 
+            "console": "integratedTerminal", 
+            "internalConsoleOptions": "neverOpen" 
+        }
+         
+    ] 
+}
