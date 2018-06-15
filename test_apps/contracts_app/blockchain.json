@@ -25,7 +25,22 @@
   "testnet": {
     "networkType": "testnet",
     "rpcHost": "localhost",
-    "rpcPort": 8545
+    "rpcPort": 8545,
+    "light": true,
+    "fast": true,
+    "account": {
+      "password": "config/ropsten/password"
+    }
+  },
+  "rinkeby": {
+    "networkType": "rinkeby",
+    "rpcHost": "localhost",
+    "rpcPort": 8545,
+    "light": true,
+    "fast": true,
+    "account": {
+      "password": "config/rinkeby/password"
+    }
   },
   "livenet": {
     "networkType": "livenet",
