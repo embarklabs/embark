@@ -5,4 +5,3 @@ Test App for integration testing purposes.
 ```../../bin/embark test``` to see tests are working as expected
 
 ```dist/index.html``` and ```dist/test.html``` to check different functionality
-
