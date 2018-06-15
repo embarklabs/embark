@@ -30,6 +30,14 @@
       "password": "config/development/password"
     }
   },
+  "rinkeby": {
+    "networkType": "rinkeby",
+    "rpcHost": "localhost",
+    "rpcPort": 8545,
+    "account": {
+      "password": "config/development/password"
+    }
+  },
   "livenet": {
     "networkType": "livenet",
     "rpcHost": "localhost",
