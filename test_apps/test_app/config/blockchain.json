@@ -25,7 +25,10 @@
   "testnet": {
     "networkType": "testnet",
     "rpcHost": "localhost",
-    "rpcPort": 8545
+    "rpcPort": 8545,
+    "account": {
+      "password": "config/development/password"
+    }
   },
   "livenet": {
     "networkType": "livenet",
