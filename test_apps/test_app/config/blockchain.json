@@ -26,8 +26,6 @@
     "networkType": "testnet",
     "rpcHost": "localhost",
     "rpcPort": 8545,
-    "light": true,
-    "fast": true,
     "account": {
       "password": "config/ropsten/password"
     }
@@ -36,8 +34,6 @@
     "networkType": "rinkeby",
     "rpcHost": "localhost",
     "rpcPort": 8545,
-    "light": true,
-    "fast": true,
     "account": {
       "password": "config/rinkeby/password"
     }
