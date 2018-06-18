@@ -1,6 +1,6 @@
 module.exports = {
-	default: {
+  default: {
     available_providers: ["ens"],
     provider: "ens"
   }
-}
+};

@@ -9,7 +9,12 @@ module.exports = {
       port: 5001
     },
     dappConnection: [
-      {provider: "ipfs", host: "localhost", port: 5001, getUrl: "http://localhost:8080/ipfs/"}
+      {
+        provider:"ipfs",
+        host: "localhost",
+        port: 5001,
+        getUrl: "http://localhost:8080/ipfs/"
+      }
     ]
   },
   development: {
@@ -21,4 +26,4 @@ module.exports = {
       getUrl: "http://localhost:8080/ipfs/"
     }
   }
-}
+};
