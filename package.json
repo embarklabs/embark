@@ -54,6 +54,7 @@
     "ipfs-api": "17.2.4",
     "live-plugin-manager-git-fix": "^0.12.1",
     "merge": "^1.2.0",
+    "mocha": "^3.2.0",
     "neo-blessed": "^0.2.0",
     "node-http-proxy": "^0.2.3",
     "node-ipc": "^9.1.1",
@@ -103,7 +104,6 @@
     "grunt-contrib-coffee": "^1.0.0",
     "grunt-mocha-test": "^0.13.2",
     "matchdep": "^1.0.1",
-    "mocha": "^3.2.0",
     "mocha-sinon": "^1.1.4",
     "sinon": "^4.5.0"
   }
