@@ -3,4 +3,4 @@ module.exports = {
     available_providers: ["ens"],
     provider: "ens"
   }
-}
+};
