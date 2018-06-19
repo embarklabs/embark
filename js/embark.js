@@ -36,7 +36,7 @@ EmbarkJS.Contract = function (options) {
     ContractClass = new this.web3.eth.Contract(this.abi, this.address);
     ContractClass.setProvider(this.web3.currentProvider);
     ContractClass.options.data = this.code;
-    ContractClass.options.from = this.from;
+    ContractClass.options.from = this.from || this.web3.eth.defaultAccount;
     ContractClass.abi = ContractClass.options.abi;
     ContractClass.address = this.address;
     ContractClass.gas = this.gas;

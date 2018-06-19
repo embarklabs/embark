@@ -1,12 +1,12 @@
 module.exports = {
   default: {
     enabled: true,
-    provider: "whisper",
-    available_providers: ["whisper"],
+    provider: "whisper", // Communication provider. Currently, Embark only supports whisper
+    available_providers: ["whisper"], // Array of available providers
     connection: {
-      host: "localhost",
-      port: 8546,
-      type: "ws"
+      host: "localhost", // Host of the blockchain node
+      port: 8546, // Port of the blockchain node
+      type: "ws" // Type of connection (ws or rpc)
     }
   }
-}
+};
