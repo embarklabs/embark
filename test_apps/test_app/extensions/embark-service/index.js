@@ -9,7 +9,6 @@ module.exports = function (embark) {
     return Haml.render(opts.source);
   });
 
-  embark.logger.info('patente', 'a goosee');
   embark.registerContractConfiguration({
     "default": {
       "contracts": {
