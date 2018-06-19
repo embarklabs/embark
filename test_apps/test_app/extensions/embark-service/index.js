@@ -9,6 +9,7 @@ module.exports = function (embark) {
     return Haml.render(opts.source);
   });
 
+  embark.logger.info('patente', 'a goosee');
   embark.registerContractConfiguration({
     "default": {
       "contracts": {
@@ -25,16 +26,8 @@ module.exports = function (embark) {
 
   embark.registerActionForEvent("deploy:contract:beforeDeploy", (params, cb) => {
     embark.logger.info("applying beforeDeploy plugin...");
-    //console.dir(params);
-    //console.dir(cb);
-    //console.dir('------------------');
     cb();
   });
-
-  // NOTE: uncommenting this will make dappConnection stop working
-  //embark.registerClientWeb3Provider(function(options) {
-  //  return "web3 = new Web3(new Web3.providers.HttpProvider('http://" + options.rpcHost + ":" + options.rpcPort + "'));";
-  //});
 
   embark.registerConsoleCommand((cmd) => {
     if (cmd === "hello") {
@@ -45,7 +38,7 @@ module.exports = function (embark) {
   });
 
   embark.events.on("contractsDeployed", function() {
-    embark.logger.info("plugin says: your contracts have been deployed");
+    embark.logger.info("plugin says:", ' your contracts have been deployed');
   });
 
 };
