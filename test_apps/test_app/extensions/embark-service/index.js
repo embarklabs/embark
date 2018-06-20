@@ -31,6 +31,7 @@ module.exports = function (embark) {
     cb();
   });
 
+  // NOTE: uncommenting this will make dappConnection stop working
   //embark.registerClientWeb3Provider(function(options) {
   //  return "web3 = new Web3(new Web3.providers.HttpProvider('http://" + options.rpcHost + ":" + options.rpcPort + "'));";
   //});
