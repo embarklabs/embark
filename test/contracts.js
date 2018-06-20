@@ -58,7 +58,7 @@ describe('embark.Contracts', function() {
     let contractsConfig = {
       "versions": {
         "web3.js": "1.0.0-beta",
-        "solc": "0.4.17"
+        "solc": "0.4.24"
       },
       "deployment": {
         "host": "localhost",
@@ -167,7 +167,7 @@ describe('embark.Contracts', function() {
     let contractsConfig = {
       "versions": {
         "web3.js": "1.0.0-beta",
-        "solc": "0.4.17"
+        "solc": "0.4.24"
       },
       "deployment": {
         "host": "localhost",
