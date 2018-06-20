@@ -3,7 +3,7 @@
   "app": {},
   "buildDir": "build/",
   "config": {
-    "contracts": "contracts.json",
+    "contracts": "contracts.js",
     "blockchain": false,
     "storage": false,
     "communication": false,

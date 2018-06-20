@@ -23,9 +23,12 @@ module.exports = function (embark) {
   embark.addFileToPipeline('./fileInPipeline.js');
   embark.addFileToPipeline('./fileInPipeline.js', 'js/fileInPipeline.js');
 
-  embark.registerBeforeDeploy(function (options, callback) {
-    // Just calling register to prove it works. We don't actually want to change the contracts
-    callback({contractCode: options.contract.code});
+  embark.registerActionForEvent("deploy:contract:beforeDeploy", (params, cb) => {
+    embark.logger.info("applying beforeDeploy plugin...");
+    //console.dir(params);
+    //console.dir(cb);
+    //console.dir('------------------');
+    cb();
   });
 
   //embark.registerClientWeb3Provider(function(options) {

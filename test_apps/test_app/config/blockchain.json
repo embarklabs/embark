@@ -19,13 +19,26 @@
     "wsOrigins": "auto",
     "wsRPC": true,
     "wsHost": "localhost",
-    "wsPort": 8546
-
+    "wsPort": 8546,
+    "proxy": true
   },
   "testnet": {
     "networkType": "testnet",
     "rpcHost": "localhost",
-    "rpcPort": 8545
+    "rpcPort": 8545,
+    "syncMode": "fast",
+    "account": {
+      "password": "config/ropsten/password"
+    }
+  },
+  "rinkeby": {
+    "networkType": "rinkeby",
+    "rpcHost": "localhost",
+    "rpcPort": 8545,
+    "syncMode": "fast",
+    "account": {
+      "password": "config/rinkeby/password"
+    }
   },
   "livenet": {
     "networkType": "livenet",

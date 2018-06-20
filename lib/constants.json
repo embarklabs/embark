@@ -15,5 +15,31 @@
   "events": {
     "contractFilesChanged": "contractFilesChanged",
     "contractConfigChanged": "contractConfigChanged"
+  },
+  "process": {
+    "processLaunchRequest": "process:launch-request",
+    "processLaunchComplete": "process:launch-complete",
+    "log": "log",
+    "events": {
+      "on": "on",
+      "request": "request",
+      "response": "response"
+    }
+  },
+  "pipeline": {
+    "init": "init",
+    "build": "build",
+    "initiated": "initiated",
+    "built": "built"
+  },
+  "blockchain": {
+    "blockchainReady": "blockchainReady",
+    "init": "init",
+    "initiated": "initiated",
+    "servicePortOnProxy": 10
+  },
+  "storage": {
+    "init": "init",
+    "initiated": "initiated"
   }
 }

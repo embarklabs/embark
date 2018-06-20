@@ -1,22 +1,23 @@
+/*global contract, config, it*/
+const assert = require('assert');
+const Test2 = require('Embark/contracts/Test2');
+
+config({
+  contracts: {
+    "Test2": {
+    },
+    "ZAMyLib": {
+    },
+    "ZAMyLib2": {
+      "deploy": true
+    }
+  }
+});
+
 contract("Test", function() {
-  before(function(done) {
-    this.timeout(0);
-    var contractsConfig = {
-      "Test2": {
-      },
-      "ZAMyLib": {
-      },
-      "ZAMyLib2": {
-        "deploy": true
-      }
-    };
-
-    EmbarkSpec.deployAll(contractsConfig, () => { done() });
-  });
-
   it("should call library correctly", async function() {
     let result = await Test2.methods.testAdd().call();
-    assert.equal(result, 3);
+    assert.strictEqual(parseInt(result, 10), 3);
   });
 
 });

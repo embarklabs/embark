@@ -15,9 +15,10 @@
   "buildDir": "dist/",
   "config": "config/",
   "versions": {
-    "solc": "0.4.18",
+    "solc": "0.4.24",
     "web3": "1.0.0-beta.34",
-    "ipfs-api": "17.2.7"
+    "ipfs-api": "17.2.7",
+    "p-iteration": "1.1.7"
   },
   "plugins": {
     "embark-service": {}

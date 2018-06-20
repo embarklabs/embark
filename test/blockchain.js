@@ -1,5 +1,6 @@
 /*globals describe, it*/
 const Blockchain = require('../lib/cmds/blockchain/blockchain');
+const constants = require('../lib/constants.json');
 
 const assert = require('assert');
 
@@ -20,7 +21,7 @@ describe('embark.Blockchain', function () {
           mineWhenNeeded: false,
           rpcHost: 'localhost',
           rpcPort: 8545,
-          rpcApi: ['eth', 'web3', 'net'],
+          rpcApi: ['eth', 'web3', 'net', 'debug'],
           rpcCorsDomain: false,
           networkId: 12301,
           port: 30303,
@@ -31,17 +32,22 @@ describe('embark.Blockchain', function () {
           whisper: true,
           account: {},
           bootnodes: "",
-          wsApi: [ "eth", "web3", "net", "shh" ],
+          wsApi: ["eth", "web3", "net", "shh", "debug"],
           wsHost: "localhost",
           wsOrigins: false,
           wsPort: 8546,
           wsRPC: true,
           targetGasLimit: false,
-          fast: false,
-          light: false
+          syncMode: undefined,
+          verbosity: undefined,
+          proxy: true
         };
         let blockchain = new Blockchain(config, 'geth');
 
+        if(config.proxy){
+          config.wsPort += constants.blockchain.servicePortOnProxy;
+          config.rpcPort += constants.blockchain.servicePortOnProxy;
+        }
         assert.deepEqual(blockchain.config, config);
         done();
       });
@@ -57,7 +63,7 @@ describe('embark.Blockchain', function () {
           mineWhenNeeded: true,
           rpcHost: 'someserver',
           rpcPort: 12345,
-          rpcApi: ['eth', 'web3', 'net'],
+          rpcApi: ['eth', 'web3', 'net', 'debug'],
           rpcCorsDomain: true,
           networkId: 1,
           port: 123456,
@@ -68,16 +74,22 @@ describe('embark.Blockchain', function () {
           whisper: false,
           account: {},
           bootnodes: "",
-          wsApi: [ "eth", "web3", "net", "shh" ],
+          wsApi: ["eth", "web3", "net", "shh", "debug"],
           wsHost: "localhost",
           wsOrigins: false,
           wsPort: 8546,
           wsRPC: true,
           targetGasLimit: false,
-          fast: false,
-          light: false
+          syncMode: undefined,
+          verbosity: undefined,
+          proxy: true
         };
         let blockchain = new Blockchain(config, 'geth');
+
+        if(config.proxy){
+          config.wsPort += constants.blockchain.servicePortOnProxy;
+          config.rpcPort += constants.blockchain.servicePortOnProxy;
+        }
 
         assert.deepEqual(blockchain.config, config);
         done();

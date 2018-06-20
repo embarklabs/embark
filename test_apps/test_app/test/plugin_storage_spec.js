@@ -1,22 +1,22 @@
-/*global contract, before, EmbarkSpec, PluginStorage, SimpleStorage, it*/
+/*global contract, config, it*/
 const assert = require('assert');
+const PluginStorage = require('Embark/contracts/PluginStorage');
+const SimpleStorage = require('Embark/contracts/SimpleStorage');
+
+config({
+  contracts: {
+    "SimpleStorage": {
+      args: [100]
+    },
+    "PluginStorage": {
+      args: ["$SimpleStorage"]
+    }
+  }
+});
+
 
 contract("PluginSimpleStorage", function () {
   this.timeout(0);
-
-  before((done) => {
-    const contractsConfig = {
-      "SimpleStorage": {
-        args: [100]
-      },
-      "PluginStorage": {
-        args: ["$SimpleStorage"]
-      }
-    };
-    EmbarkSpec.deployAll(contractsConfig, () => {
-      done();
-    });
-  });
 
   it("set SimpleStorage address", async function () {
     let result = await PluginStorage.methods.simpleStorageAddress().call();

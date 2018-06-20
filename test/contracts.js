@@ -1,9 +1,11 @@
 /*globals describe, it*/
 let ContractsManager = require('../lib/contracts/contracts.js');
+let Compiler = require('../lib/contracts/compiler.js');
 let Logger = require('../lib/core/logger.js');
 let File = require('../lib/core/file.js');
 let TestLogger = require('../lib/tests/test_logger.js');
 let Events = require('../lib/core/events');
+let Ipc = require('../lib/core/ipc.js');
 let assert = require('assert');
 
 //let SolidityCompiler = require('../lib/modules/solidity');
@@ -13,13 +15,74 @@ let readFile = function(file) {
   return new File({filename: file, type: File.types.dapp_file, path: file});
 };
 
+const currentSolcVersion = require('../package.json').dependencies.solc;
+const TestEvents = {
+  request: (cmd, cb) => {
+    cb(currentSolcVersion);
+  }
+};
+
 describe('embark.Contracts', function() {
   this.timeout(0);
   describe('simple', function() {
     let plugins = new Plugins({
-      logger: new TestLogger({})
+      logger: new TestLogger({}),
+      events: TestEvents,
+      config: {
+        contractDirectories: ['app/contracts/']
+      }
     });
-    plugins.loadInternalPlugin('solidity', {solcVersion: '0.4.17', contractDirectories: ['app/contracts/']});
+    let ipcObject = new Ipc({
+      ipcRole: 'none'
+    });
+    plugins.loadInternalPlugin('solidity', {ipc: ipcObject});
+
+    let compiler = new Compiler({plugins: plugins, logger: plugins.logger});
+    let events = new Events();
+    events.setCommandHandler("compiler:contracts", function(contractFiles, cb) {
+      compiler.compile_contracts(contractFiles, cb);
+    });
+
+    events.setCommandHandler("config:contractsConfig", function(cb) {
+      cb(contractsConfig);
+    });
+
+    events.setCommandHandler("config:contractsFiles", (cb) => {
+      cb([]);
+    });
+
+    events.setCommandHandler("blockchain:gasPrice", (cb) => {
+      cb(null, 100);
+    });
+
+    let contractsConfig = {
+      "versions": {
+        "web3.js": "1.0.0-beta",
+        "solc": "0.4.17"
+      },
+      "deployment": {
+        "host": "localhost",
+        "port": 8545,
+        "type": "rpc"
+      },
+      "dappConnection": [
+        "$WEB3",
+        "localhost:8545"
+      ],
+      "gas": "auto",
+      "contracts": {
+        "Token": {
+          "args": [
+            100
+          ]
+        },
+        "SimpleStorage": {
+          "args": [
+            200
+          ]
+        }
+      }
+    };
 
     let contractsManager = new ContractsManager({
       plugins: plugins,
@@ -28,36 +91,9 @@ describe('embark.Contracts', function() {
         readFile('test/contracts/token.sol')
       ],
       contractDirectories: ['app/contracts'],
-      contractsConfig: {
-        "versions": {
-          "web3.js": "1.0.0-beta",
-          "solc": "0.4.17"
-        },
-        "deployment": {
-          "host": "localhost",
-          "port": 8545,
-          "type": "rpc"
-        },
-        "dappConnection": [
-          "$WEB3",
-          "localhost:8545"
-        ],
-        "gas": "auto",
-        "contracts": {
-          "Token": {
-            "args": [
-              100
-            ]
-          },
-          "SimpleStorage": {
-            "args": [
-              200
-            ]
-          }
-        }
-      },
+      contractsConfig: contractsConfig,
       logger: new Logger({}),
-      events: new Events()
+      events: events
     });
 
     describe('#build', function() {
@@ -99,9 +135,73 @@ describe('embark.Contracts', function() {
 
   describe('config with contract instances', function() {
     let plugins = new Plugins({
-      logger: new TestLogger({})
+      logger: new TestLogger({}),
+      events: TestEvents,
+      config: {
+        contractDirectories: ['app/contracts/']
+      }
     });
-    plugins.loadInternalPlugin('solidity', {solcVersion: '0.4.17', contractDirectories: ['app/contracts/']});
+    let ipcObject = new Ipc({
+      ipcRole: 'none'
+    });
+    plugins.loadInternalPlugin('solidity', {ipc: ipcObject});
+
+    let compiler = new Compiler({plugins: plugins, logger: plugins.logger});
+    let events = new Events();
+    events.setCommandHandler("compiler:contracts", function(contractFiles, cb) {
+      compiler.compile_contracts(contractFiles, cb);
+    });
+
+    events.setCommandHandler("config:contractsConfig", function(cb) {
+      cb(contractsConfig);
+    });
+
+    events.setCommandHandler("config:contractsFiles", (cb) => {
+      cb([]);
+    });
+
+    events.setCommandHandler("blockchain:gasPrice", (cb) => {
+      cb(null, 100);
+    });
+
+    let contractsConfig = {
+      "versions": {
+        "web3.js": "1.0.0-beta",
+        "solc": "0.4.17"
+      },
+      "deployment": {
+        "host": "localhost",
+        "port": 8545,
+        "type": "rpc"
+      },
+      "dappConnection": [
+        "$WEB3",
+        "localhost:8545"
+      ],
+      "gas": "auto",
+      "contracts": {
+        "TokenStorage": {
+          "args": [
+            100,
+            "$SimpleStorage"
+          ]
+        },
+        "MySimpleStorage": {
+          "instanceOf": "SimpleStorage",
+          "args": [
+            300
+          ]
+        },
+        "SimpleStorage": {
+          "args": [
+            200
+          ]
+        },
+        "AnotherSimpleStorage": {
+          "instanceOf": "SimpleStorage"
+        }
+      }
+    }
 
     let contractsManager = new ContractsManager({
       plugins: plugins,
@@ -110,46 +210,9 @@ describe('embark.Contracts', function() {
         readFile('test/contracts/token_storage.sol')
       ],
       contractDirectories: ['app/contracts'],
-      contractsConfig: {
-        "versions": {
-          "web3.js": "1.0.0-beta",
-          "solc": "0.4.17"
-        },
-        "deployment": {
-          "host": "localhost",
-          "port": 8545,
-          "type": "rpc"
-        },
-        "dappConnection": [
-          "$WEB3",
-          "localhost:8545"
-        ],
-        "gas": "auto",
-        "contracts": {
-          "TokenStorage": {
-            "args": [
-              100,
-              "$SimpleStorage"
-            ]
-          },
-          "MySimpleStorage": {
-            "instanceOf": "SimpleStorage",
-            "args": [
-              300
-            ]
-          },
-          "SimpleStorage": {
-            "args": [
-              200
-            ]
-          },
-          "AnotherSimpleStorage": {
-            "instanceOf": "SimpleStorage"
-          }
-        }
-      },
+      contractsConfig: contractsConfig,
       logger: new Logger({}),
-      events: new Events()
+      events: events
     });
 
     describe('#build', function() {
