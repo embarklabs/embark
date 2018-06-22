@@ -34,6 +34,7 @@
   },
   "blockchain": {
     "blockchainReady": "blockchainReady",
+    "blockchainExit": "blockchainExit",
     "init": "init",
     "initiated": "initiated",
     "servicePortOnProxy": 10
