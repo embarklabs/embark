@@ -10,8 +10,7 @@
   "versions": {
     "web3": "1.0.0-beta",
     "solc": "0.4.24",
-    "ipfs-api": "17.2.4",
-    "p-iteration": "1.1.7"
+    "ipfs-api": "17.2.4"
   },
   "plugins": {
   }
