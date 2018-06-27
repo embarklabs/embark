@@ -91,6 +91,7 @@
     "parse-json": "4.0.0",
     "pkg-up": "2.0.0",
     "promptly": "2.2.0",
+    "node-http-proxy": "^0.2.3",
     "propose": "0.0.5",
     "remix-tests": "0.0.13",
     "request": "2.88.0",
