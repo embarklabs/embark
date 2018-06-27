@@ -38,6 +38,7 @@
     "css-loader": "^0.28.11",
     "deep-equal": "^1.0.1",
     "ejs": "^2.5.8",
+    "embark-web3-provider-engine": "14.0.7",
     "eth-ens-namehash": "^2.0.8",
     "eth-lib": "^0.2.8",
     "ethereumjs-wallet": "0.6.0",
@@ -60,7 +61,6 @@
     "node-ipc": "^9.1.1",
     "ora": "^2.1.0",
     "os-locale": "^2.1.0",
-    "p-iteration": "^1.1.7",
     "parse-json": "^4.0.0",
     "promptly": "^2.1.0",
     "propose": "0.0.5",
@@ -79,7 +79,6 @@
     "uuid": "^3.2.1",
     "viz.js": "^1.8.1",
     "web3": "1.0.0-beta.34",
-    "embark-web3-provider-engine": "14.0.7",
     "webpack": "^3.10.0",
     "window-size": "^1.1.0"
   },
