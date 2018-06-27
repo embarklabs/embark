@@ -3,7 +3,7 @@
     "enabled": true,
     "networkType": "custom",
     "networkId": "1337",
-    "isDev": true,
+    "isDev": false,
     "genesisBlock": "development/genesis.json",
     "datadir": ".embark/development/datadir",
     "mineWhenNeeded": true,
