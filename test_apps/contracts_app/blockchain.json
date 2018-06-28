@@ -3,8 +3,7 @@
     "enabled": true,
     "networkType": "custom",
     "networkId": "1337",
-    "isDev": false,
-    "genesisBlock": "development/genesis.json",
+    "isDev": true,
     "datadir": ".embark/development/datadir",
     "mineWhenNeeded": true,
     "nodiscover": true,
@@ -12,15 +11,32 @@
     "rpcHost": "localhost",
     "rpcPort": 8545,
     "rpcCorsDomain": "auto",
+    "targetGasLimit": 8000000,
+    "wsOrigins": "auto",
+    "wsRPC": true,
+    "wsHost": "localhost",
+    "wsPort": 8546
+  },
+  "privateNet": {
+    "networkType": "custom",
+    "networkId": "1337",
+    "isDev": false,
+    "genesisBlock": "privateNet/genesis.json",
+    "datadir": ".embark/privateNet/datadir",
+    "mineWhenNeeded": true,
+    "nodiscover": true,
+    "maxpeers": 0,
+    "rpcHost": "localhost",
+    "rpcPort": 8545,
+    "rpcCorsDomain": "auto",
     "account": {
-      "password": "development/password"
+      "password": "privateNet/password"
     },
     "targetGasLimit": 8000000,
     "wsOrigins": "auto",
     "wsRPC": true,
     "wsHost": "localhost",
     "wsPort": 8546
-
   },
   "testnet": {
     "networkType": "testnet",
