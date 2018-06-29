@@ -18,13 +18,13 @@
     "wsPort": 8546,
     "proxy": true
   },
-  "privateNet": {
+  "privatenet": {
     "enabled": true,
     "networkType": "custom",
     "networkId": "1337",
     "isDev": false,
-    "genesisBlock": "config/privateNet/genesis.json",
-    "datadir": ".embark/privateNet/datadir",
+    "genesisBlock": "config/privatenet/genesis.json",
+    "datadir": ".embark/privatenet/datadir",
     "mineWhenNeeded": true,
     "nodiscover": true,
     "maxpeers": 0,
@@ -34,7 +34,7 @@
     "account": {
       "numAccounts": 3,
       "balance": "5 ether",
-      "password": "config/privateNet/password"
+      "password": "config/privatenet/password"
     },
     "targetGasLimit": 8000000,
     "wsOrigins": "auto",
@@ -69,13 +69,5 @@
     "account": {
       "password": "config/livenet/password"
     }
-  },
-  "privatenet": {
-    "networkType": "custom",
-    "rpcHost": "localhost",
-    "rpcPort": 8545,
-    "datadir": "yourdatadir",
-    "networkId": "123",
-    "bootnodes": ""
   }
 }
