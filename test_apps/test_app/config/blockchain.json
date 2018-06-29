@@ -4,7 +4,6 @@
     "networkType": "custom",
     "networkId": "1337",
     "isDev": true,
-    "genesisBlock": "config/development/genesis.json",
     "datadir": ".embark/development/datadir",
     "mineWhenNeeded": true,
     "nodiscover": true,
@@ -12,8 +11,28 @@
     "rpcHost": "localhost",
     "rpcPort": 8545,
     "rpcCorsDomain": "auto",
+    "targetGasLimit": 8000000,
+    "wsOrigins": "auto",
+    "wsRPC": true,
+    "wsHost": "localhost",
+    "wsPort": 8546,
+    "proxy": true
+  },
+  "privateNet": {
+    "enabled": true,
+    "networkType": "custom",
+    "networkId": "1337",
+    "isDev": false,
+    "genesisBlock": "config/privateNet/genesis.json",
+    "datadir": ".embark/privateNet/datadir",
+    "mineWhenNeeded": true,
+    "nodiscover": true,
+    "maxpeers": 0,
+    "rpcHost": "localhost",
+    "rpcPort": 8545,
+    "rpcCorsDomain": "auto",
     "account": {
-      "password": "config/development/password"
+      "password": "config/privateNet/password"
     },
     "targetGasLimit": 8000000,
     "wsOrigins": "auto",
