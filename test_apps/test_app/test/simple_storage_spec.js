@@ -3,6 +3,11 @@ const SimpleStorage = require('Embark/contracts/SimpleStorage');
 let accounts;
 
 config({
+  deployment: {
+    type: 'ws',
+    host: 'localhost',
+    port: '8546'
+  },
   contracts: {
     "SimpleStorage": {
       args: [100],
@@ -38,14 +43,20 @@ contract("SimpleStorage", function () {
   });
 
   it('listens to events', function (done) {
-    SimpleStorage.once('EventOnSet2', async function(error, _result){
-      assert.strictEqual(error, null);
+    SimpleStorage.once('EventOnSet2', function(error, _result){
+      console.log('error', error);
+      console.log('result', _result);
+
+      /*assert.strictEqual(error, null);
       let result = await SimpleStorage.methods.get().call();
-      assert.strictEqual(parseInt(result, 10), 150);
-      done();
+      assert.strictEqual(parseInt(result, 10), 150);*/
+      done(error);
     });
 
-    SimpleStorage.methods.set2(150, 100).send();
+    console.log('TEST');
+    SimpleStorage.methods.set2(150, 100).send(() => {
+      console.log('Done');
+    });
   });
 
 });
