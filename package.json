@@ -38,7 +38,6 @@
     "css-loader": "^0.28.11",
     "deep-equal": "^1.0.1",
     "ejs": "^2.5.8",
-    "embark-web3-provider-engine": "14.0.7",
     "eth-ens-namehash": "^2.0.8",
     "eth-lib": "^0.2.8",
     "ethereumjs-wallet": "0.6.0",
