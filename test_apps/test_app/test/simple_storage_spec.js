@@ -4,11 +4,6 @@ let accounts;
 const Utils = require('embarkjs').Utils;
 
 config({
-  deployment: {
-    type: 'ws',
-    host: 'localhost',
-    port: '8546'
-  },
   contracts: {
     "SimpleStorage": {
       args: [100],
