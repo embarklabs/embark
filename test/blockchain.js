@@ -38,6 +38,7 @@ describe('embark.Blockchain', function () {
           wsPort: 8546,
           wsRPC: true,
           targetGasLimit: false,
+          syncmode: undefined,
           syncMode: undefined,
           verbosity: undefined,
           proxy: true
@@ -81,6 +82,7 @@ describe('embark.Blockchain', function () {
           wsRPC: true,
           targetGasLimit: false,
           syncMode: undefined,
+          syncmode: undefined,
           verbosity: undefined,
           proxy: true
         };
