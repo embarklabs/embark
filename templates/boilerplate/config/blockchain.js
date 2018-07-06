@@ -51,7 +51,7 @@ module.exports = {
   testnet: {
     enabled: true,
     networkType: "testnet",
-    light: true,
+    syncMode: "light",
     rpcHost: "localhost",
     rpcPort: 8545,
     rpcCorsDomain: "http://localhost:8000",
@@ -62,7 +62,7 @@ module.exports = {
   livenet: {
     enabled: true,
     networkType: "livenet",
-    light: true,
+    syncMode: "light",
     rpcHost: "localhost",
     rpcPort: 8545,
     rpcCorsDomain: "http://localhost:8000",
