@@ -36,6 +36,7 @@
     "colors": "^1.1.2",
     "commander": "^2.15.1",
     "css-loader": "^0.28.11",
+    "decompress": "^4.2.0",
     "deep-equal": "^1.0.1",
     "ejs": "^2.5.8",
     "eth-ens-namehash": "^2.0.8",
