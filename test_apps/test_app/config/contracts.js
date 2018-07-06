@@ -2,8 +2,8 @@ module.exports = {
   default: {
     deployment: {
       host: "localhost",
-      port: 8545,
-      type: "rpc"
+      port: 8546,
+      type: "ws"
     },
     dappConnection: [
       "$WEB3",
