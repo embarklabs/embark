@@ -302,8 +302,6 @@ EmbarkJS.Storage.isAvailable = function () {
   return this.currentStorage.isAvailable();
 };
 
-let __embarkStorage = {};
-
 EmbarkJS.Storage.setProviders = async function (dappConnOptions) {
   try {
     await detectSeries(dappConnOptions, async (dappConn, callback) => {
