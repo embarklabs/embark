@@ -92,6 +92,7 @@
     "remix-tests": "0.0.13",
     "request": "2.88.0",
     "sass-loader": "7.1.0",
+    "semver": "5.5.1",
     "serve-static": "1.13.2",
     "shelljs": "0.5.3",
     "simples": "0.8.8",
