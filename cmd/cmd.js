@@ -313,10 +313,6 @@ class Cmd {
       .description(__('generates documentation based on the smart contracts configured'))
       .action(function(env, options) {
         i18n.setOrDetectLocale(options.locale);
-        embark.initConfig(env || 'development', {
-          embarkConfig: 'embark.json',
-          interceptLogs: false
-        });
         embark.graph({
           env: env || 'development',
           logFile: options.logfile,
