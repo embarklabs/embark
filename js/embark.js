@@ -359,19 +359,19 @@ EmbarkJS.Names.setProvider = function (provider, options) {
 };
 
 // resolve resolves a name into an identifier of some kind
-EmbarkJS.Names.resolve = function (name) {
+EmbarkJS.Names.resolve = function (name, callback) {
   if (!this.currentNameSystems) {
     throw new Error('Name system provider not set; e.g EmbarkJS.Names.setProvider("ens")');
   }
-  return this.currentNameSystems.resolve(name);
+  return this.currentNameSystems.resolve(name, callback);
 };
 
 // the reverse of resolve, resolves using an identifier to get to a name
-EmbarkJS.Names.lookup = function (identifier) {
+EmbarkJS.Names.lookup = function (identifier, callback) {
   if (!this.currentNameSystems) {
     throw new Error('Name system provider not set; e.g EmbarkJS.Names.setProvider("ens")');
   }
-  return this.currentNameSystems.lookup(identifier);
+  return this.currentNameSystems.lookup(identifier, callback);
 };
 
 // To Implement
@@ -383,7 +383,7 @@ EmbarkJS.Names.register = function(name, options) {
     throw new Error('Name system provider not set; e.g EmbarkJS.Names.setProvider("ens")');
   }
   return this.currentNameSystems.register(name, options);
-}
+};
 
 EmbarkJS.Utils = {
   fromAscii: function (str) {
