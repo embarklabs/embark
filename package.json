@@ -99,12 +99,6 @@
   "license": "MIT",
   "devDependencies": {
     "eslint": "4.13.1",
-    "grunt": "^1.0.1",
-    "grunt-cli": "^1.2.0",
-    "grunt-contrib-clean": "^1.0.0",
-    "grunt-contrib-coffee": "^2.0.0",
-    "grunt-mocha-test": "^0.13.2",
-    "matchdep": "^1.0.1",
     "mocha-sinon": "^1.1.4",
     "sinon": "^4.5.0"
   }
