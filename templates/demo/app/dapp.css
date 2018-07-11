@@ -51,3 +51,7 @@ div {
 input.form-control {
   margin-right: 5px;
 }
+
+.alert-result {
+  margin-left: 0;
+}
