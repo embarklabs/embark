@@ -11,7 +11,7 @@
   },
   "bin": {
     "embark": "./bin/embark",
-    "embark-ganache-cli": "./node_modules/.bin/ganache-cli"
+    "ganache-cli-embark": "./node_modules/.bin/ganache-cli"
   },
   "main": "./lib/index.js",
   "directories": {
