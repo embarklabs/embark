@@ -1,7 +1,7 @@
 /*global describe, it, before, beforeEach*/
 const assert = require('assert');
 const sinon = require('sinon');
-const TestLogger = require('../lib/tests/test_logger.js');
+const TestLogger = require('../lib/tests/test_logger');
 const ProcessLauncher = require('../lib/process/processLauncher');
 
 describe('ProcessWrapper', () => {
