@@ -52,6 +52,7 @@ describe('embark.Blockchain', function () {
           config.rpcPort += constants.blockchain.servicePortOnProxy;
         }
         assert.deepEqual(blockchain.config, config);
+        blockchain.kill();
         done();
       });
     });
@@ -96,6 +97,7 @@ describe('embark.Blockchain', function () {
         }
 
         assert.deepEqual(blockchain.config, config);
+        blockchain.kill();
         done();
       });
     });
