@@ -10,8 +10,7 @@
     "fulltest": "npm run lint && npm run test && npm run testdapp_1 && npm run testdapp_2"
   },
   "bin": {
-    "embark": "./bin/embark",
-    "ganache-cli-embark": "./node_modules/.bin/ganache-cli"
+    "embark": "./bin/embark"
   },
   "main": "./lib/index.js",
   "directories": {
