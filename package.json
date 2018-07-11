@@ -11,8 +11,7 @@
     "test_dapp": "cross-env-shell \"cd test_apps/$DAPP && npm install && npm test\""
   },
   "bin": {
-    "embark": "./bin/embark",
-    "ganache-cli-embark": "./node_modules/.bin/ganache-cli"
+    "embark": "./bin/embark"
   },
   "main": "./lib/index.js",
   "directories": {
