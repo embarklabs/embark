@@ -59,7 +59,6 @@
     "mocha": "^5.2.0",
     "neo-blessed": "^0.2.0",
     "netcat": "^1.3.5",
-    "node-http-proxy": "^0.2.3",
     "node-ipc": "^9.1.1",
     "node-netcat": "^1.4.8",
     "ora": "^2.1.0",
