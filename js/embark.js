@@ -408,6 +408,10 @@ EmbarkJS.Names.lookup = function (identifier, callback) {
   return this.currentNameSystems.lookup(identifier, callback);
 };
 
+EmbarkJS.Names.isAvailable = function () {
+  return this.currentNameSystems.isAvailable();
+};
+
 // To Implement
 
 
