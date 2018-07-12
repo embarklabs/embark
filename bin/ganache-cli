@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+const path = require('path');
+const shelljs = require('shelljs');
+
+const ganache = path.join(__dirname, '../node_modules/.bin/ganache-cli');
+shelljs.exec(`${ganache} ${process.argv.slice(2).join(' ')}`, {async : true});
