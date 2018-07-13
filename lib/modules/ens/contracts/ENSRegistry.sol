@@ -16,7 +16,7 @@ contract ENSRegistry is ENS {
 
     // Permits modifications only by the owner of the specified node.
     modifier only_owner(bytes32 node) {
-        require(records[node].owner == msg.sender);
+        require(records[node].owner == 0 || records[node].owner == msg.sender);
         _;
     }
 
@@ -38,13 +38,21 @@ contract ENSRegistry is ENS {
     }
 
     /**
-     * @dev Transfers ownership of a subnode keccak256(node, label) to a new address. May only be called by the owner of the parent node.
+     * @dev Transfers ownership of a subnode sha3(node, label) to a new address. May only be called by the owner of the parent node.
      * @param node The parent node.
      * @param label The hash of the label specifying the subnode.
      * @param owner The address of the new owner.
      */
+    /*
     function setSubnodeOwner(bytes32 node, bytes32 label, address owner) public only_owner(node) {
         var subnode = keccak256(node, label);
+        NewOwner(node, label, owner);
+        records[subnode].owner = owner;
+    }
+    */
+
+    function setSubnodeOwner(bytes32 node, bytes32 label, address owner) public {
+        var subnode = sha3(node, label);
         NewOwner(node, label, owner);
         records[subnode].owner = owner;
     }
@@ -54,7 +62,7 @@ contract ENSRegistry is ENS {
      * @param node The node to update.
      * @param resolver The address of the resolver.
      */
-    function setResolver(bytes32 node, address resolver) public only_owner(node) {
+    function setResolver(bytes32 node, address resolver) public {
         NewResolver(node, resolver);
         records[node].resolver = resolver;
     }
