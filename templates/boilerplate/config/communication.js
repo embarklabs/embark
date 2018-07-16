@@ -21,7 +21,6 @@ module.exports = {
   privatenet: {
   },
 
-
   // merges with the settings in default
   // used with "embark run testnet"
   testnet: {
