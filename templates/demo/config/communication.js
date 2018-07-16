@@ -43,5 +43,4 @@ module.exports = {
       privateKey: "your_private_key" // Private Key to be used as a signing key and for message decryption
     }
     */
-  //}
 };
