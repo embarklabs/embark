@@ -3,6 +3,7 @@ const assert = require('assert');
 const sinon = require('sinon');
 const TestLogger = require('../lib/tests/test_logger');
 const ProcessLauncher = require('../lib/process/processLauncher');
+const path = require('path');
 
 describe('ProcessWrapper', () => {
   let processLauncher;
@@ -11,7 +12,7 @@ describe('ProcessWrapper', () => {
     sinon.stub(ProcessLauncher.prototype, '_subscribeToMessages');
     processLauncher = new ProcessLauncher({
       logger: new TestLogger({}),
-      modulePath: 'test.js'
+      modulePath: path.join(__dirname, 'test.js')
     });
   });
 
