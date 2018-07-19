@@ -2,6 +2,7 @@
 const assert = require('assert');
 const sinon = require('sinon');
 const AccountParser = require('../lib/contracts/accountParser');
+const utils = require('../lib/utils/utils');
 let TestLogger = require('../lib/tests/test_logger.js');
 const Web3 = require('web3');
 const i18n = require('../lib/i18n/i18n.js');
@@ -75,38 +76,38 @@ describe('embark.AccountParser', function () {
 
   describe('getHexBalance', () => {
     it('should return default if no balance', () => {
-      const hexBalance = AccountParser.getHexBalance(null, Web3);
+      const hexBalance = utils.getHexBalanceFromString(null, Web3);
 
       assert.strictEqual(hexBalance, 0xFFFFFFFFFFFFFFFFFF);
     });
 
     it('should return the balance string if already hexadecimal', () => {
-      const hexBalance = AccountParser.getHexBalance('0xFFF', Web3);
+      const hexBalance = utils.getHexBalanceFromString('0xFFF', Web3);
 
       assert.strictEqual(hexBalance, '0xFFF');
     });
 
     it('should convert to hex when decimal', () => {
-      const hexBalance = AccountParser.getHexBalance('500', Web3);
+      const hexBalance = utils.getHexBalanceFromString('500', Web3);
 
       assert.strictEqual(hexBalance, '0x1f4');
     });
 
     it('should convert to hex with eth string', () => {
-      const hexBalance = AccountParser.getHexBalance('4ether', Web3);
+      const hexBalance = utils.getHexBalanceFromString('4ether', Web3);
 
       assert.strictEqual(hexBalance, '0x3782dace9d900000');
     });
 
     it('should convert to hex with eth string with space', () => {
-      const hexBalance = AccountParser.getHexBalance('673 shannon', Web3);
+      const hexBalance = utils.getHexBalanceFromString('673 shannon', Web3);
 
       assert.strictEqual(hexBalance, '0x9cb1ed0a00');
     });
 
     it('should fail when string is not good', () => {
       try {
-        AccountParser.getHexBalance('nogood', Web3);
+        utils.getHexBalanceFromString('nogood', Web3);
         assert.fail('Should have failed at getHexBalance');
       } catch (e) {
         // Ok
