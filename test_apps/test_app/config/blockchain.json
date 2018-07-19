@@ -13,6 +13,8 @@
     "rpcPort": 8545,
     "rpcCorsDomain": "auto",
     "account": {
+      "numAccounts": 3,
+      "balance": "5 ether",
       "password": "config/development/password"
     },
     "targetGasLimit": 8000000,
