@@ -16,7 +16,7 @@
     "wsRPC": true,
     "wsHost": "localhost",
     "wsPort": 8546,
-    "proxy": true
+    "proxy": false
   },
   "privatenet": {
     "enabled": true,
