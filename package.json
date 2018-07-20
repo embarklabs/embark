@@ -80,7 +80,6 @@
     "viz.js": "^1.8.1",
     "web3": "1.0.0-beta.34",
     "webpack": "^4.16.1",
-    "webpack-bundle-analyzer": "^2.13.1",
     "window-size": "^1.1.0"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
