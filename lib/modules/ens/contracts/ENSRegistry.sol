@@ -15,8 +15,8 @@ contract ENSRegistry is ENS {
     mapping (bytes32 => Record) records;
 
     // Permits modifications only by the owner of the specified node.
-    modifier only_owner(bytes32 node) {
-        require(records[node].owner == 0 || records[node].owner == msg.sender);
+    modifier only_owner(bytes32 node, address owner) {
+        require(records[node].owner == 0 || records[node].owner == msg.sender || records[node].owner == owner);
         _;
     }
 
@@ -32,7 +32,7 @@ contract ENSRegistry is ENS {
      * @param node The node to transfer ownership of.
      * @param owner The address of the new owner.
      */
-    function setOwner(bytes32 node, address owner) public only_owner(node) {
+    function setOwner(bytes32 node, address owner) public only_owner(node, owner) {
         Transfer(node, owner);
         records[node].owner = owner;
     }
@@ -43,16 +43,8 @@ contract ENSRegistry is ENS {
      * @param label The hash of the label specifying the subnode.
      * @param owner The address of the new owner.
      */
-    /*
-    function setSubnodeOwner(bytes32 node, bytes32 label, address owner) public only_owner(node) {
+    function setSubnodeOwner(bytes32 node, bytes32 label, address owner) public only_owner(node, owner) {
         var subnode = keccak256(node, label);
-        NewOwner(node, label, owner);
-        records[subnode].owner = owner;
-    }
-    */
-
-    function setSubnodeOwner(bytes32 node, bytes32 label, address owner) public {
-        var subnode = sha3(node, label);
         NewOwner(node, label, owner);
         records[subnode].owner = owner;
     }
@@ -72,7 +64,7 @@ contract ENSRegistry is ENS {
      * @param node The node to update.
      * @param ttl The TTL in seconds.
      */
-    function setTTL(bytes32 node, uint64 ttl) public only_owner(node) {
+    function setTTL(bytes32 node, uint64 ttl) public only_owner(node, 0x0) {
         NewTTL(node, ttl);
         records[node].ttl = ttl;
     }
