@@ -7,6 +7,7 @@
     "run": "run",
     "upload": "upload",
     "build": "build",
+    "console": "console",
     "graph": "graph",
     "test": "test",
     "reset": "reset",
