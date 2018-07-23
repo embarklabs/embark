@@ -1,16 +1,42 @@
 let blessed = require("neo-blessed");
-let LightMonitor = require('./light_monitor');
+let CommandHistory = require('./command_history.js');
 
-class Monitor extends LightMonitor {
+class Monitor {
   constructor(_options) {
-    super(_options);
+    let options = _options || {};
+    this.env = options.env;
+    this.console = options.console;
+    this.history = new CommandHistory();
+    this.events = options.events;
 
+    this.color = options.color || "green";
+    this.minimal = options.minimal || false;
+
+    this.screen = blessed.screen({
+      smartCSR: true,
+      title: options.title || ("Embark " + options.version),
+      dockBorders: false,
+      fullUnicode: true,
+      autoPadding: true
+    });
+
+    this.layoutLog();
     this.layoutStatus();
     this.layoutModules();
+    this.layoutCmd();
 
+    this.screen.key(["C-c"], function () {
+      process.exit(0);
+    });
+
+    this.logEntry = this.logEntry.bind(this);
     this.setContracts = this.setContracts.bind(this);
     this.availableServices = this.availableServices.bind(this);
+
     this.status.setContent(this.env.green);
+
+    this.screen.render();
+    this.input.focus();
   }
 
   availableServices(_services) {
@@ -48,6 +74,11 @@ class Monitor extends LightMonitor {
     });
 
     this.moduleTable.setData(data);
+    this.screen.render();
+  }
+
+  logEntry() {
+    this.logText.log(...arguments);
     this.screen.render();
   }
 
@@ -133,7 +164,49 @@ class Monitor extends LightMonitor {
     this.screen.append(this.modules);
   }
 
+  layoutAssets() {
+    this.assets = blessed.box({
+      label: __("Asset Pipeline"),
+      tags: true,
+      padding: 1,
+      width: "50%",
+      height: "55%",
+      left: "50%",
+      top: "42%",
+      border: {
+        type: "line"
+      },
+      style: {
+        fg: -1,
+        border: {
+          fg: this.color
+        }
+      }
+    });
+
+    this.assetTable = blessed.table({
+      parent: this.assets,
+      height: "100%",
+      width: "100%-5",
+      align: "left",
+      pad: 1,
+      scrollable: true,
+      alwaysScroll: true,
+      scrollbar: {
+        ch: " ",
+        inverse: true
+      },
+      keys: false,
+      vi: false,
+      mouse: true,
+      data: [["Name", "Size"]]
+    });
+
+    this.screen.append(this.assets);
+  }
+
   layoutStatus() {
+
     this.wrapper = blessed.layout({
       width: "25%",
       height: "42%",
