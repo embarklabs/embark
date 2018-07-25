@@ -19,26 +19,18 @@ module.exports = {
       },
       SimpleStorage: {
         fromIndex: 0,
-        args: [
-          100
-        ],
-        onDeploy: [
-          "SimpleStorage.methods.setRegistar(web3.eth.defaultAccount).send()"
-        ]
+        args: [100],
+        onDeploy: ["SimpleStorage.methods.setRegistar(web3.eth.defaultAccount).send()"]
       },
       AnotherStorage: {
-        args: [
-          "$SimpleStorage"
-        ]
+        args: ["$SimpleStorage"]
       },
       Token: {
         deploy: false,
         args: [1000]
       },
       Test: {
-        onDeploy: [
-          "Test.methods.changeAddress('$MyToken')"
-        ]
+        onDeploy: ["Test.methods.changeAddress('$MyToken')"]
       },
       MyToken: {
         instanceOf: "Token"
@@ -71,18 +63,14 @@ module.exports = {
       },
       SimpleStorageTest: {
         file: "./some_folder/test_contract.sol",
-        args: [
-          1000
-        ]
+        args: [1000]
       },
       Identity: {
         file: "https://github.com/status-im/contracts/blob/master/contracts/identity/Identity.sol"
       },
       SimpleStorageWithHttpImport: {
         fromIndex: 0,
-        args: [
-          100
-        ]
+        args: [100]
       }
     },
     afterDeploy: [
