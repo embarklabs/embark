@@ -32,7 +32,7 @@ contract("ENS", function () {
   //   Wait for onDeploy to finish
     setTimeout(function () {
       done();
-    }, 50);
+    }, 100);
   });
 
   it("should have registered embark.eth", async function () {
