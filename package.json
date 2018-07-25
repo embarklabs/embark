@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/iurimatias/embark-framework.git"
+    "url": "https://github.com/embark-framework/embark.git"
   },
   "dependencies": {
     "ascii-table": "0.0.9",
@@ -94,7 +94,7 @@
     "blockchain",
     "serverless"
   ],
-  "homepage": "https://github.com/iurimatias/embark-framework",
+  "homepage": "https://embark.status.im/",
   "license": "MIT",
   "devDependencies": {
     "eslint": "4.13.1",
