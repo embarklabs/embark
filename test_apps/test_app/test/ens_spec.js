@@ -38,7 +38,7 @@ contract("ENS", function () {
       }
       clearInterval(wait);
       done();
-    }, 100);
+    }, 500);
   });
 
   it("should have registered embark.eth", async function () {
