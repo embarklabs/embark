@@ -17,28 +17,22 @@ config({
       "args": ["$ENSRegistry", rootNode],
       "onDeploy": [
         `ENSRegistry.methods.setOwner('${rootNode}', web3.eth.defaultAccount).send().then(() => {
-          ENSRegistry.methods.setResolver('${rootNode}', "$Resolver").send();
-          Resolver.methods.setAddr('${rootNode}', '${address}').send().then(() => {
-            global.ensTestReady = true;
-          });
-        });`
+              ENSRegistry.methods.setResolver('${rootNode}', "$Resolver").send();
+              Resolver.methods.setAddr('${rootNode}', '${address}').send();
+              })`
       ]
     }
   }
 });
 
 contract("ENS", function () {
-  this.timeout(1000);
+  this.timeout(0);
 
   before(function (done) {
   //   Wait for onDeploy to finish
-    const wait = setInterval(() => {
-      if (!global.ensTestReady) {
-        return;
-      }
-      clearInterval(wait);
+    setTimeout(function () {
       done();
-    }, 50);
+    }, 500);
   });
 
   it("should have registered embark.eth", async function () {
