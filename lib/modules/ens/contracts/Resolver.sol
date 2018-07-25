@@ -33,7 +33,8 @@ contract Resolver {
     mapping (bytes32 => Record) records;
 
     modifier only_owner(bytes32 node) {
-        require(ens.owner(node) == msg.sender);
+        address currentOwner = ens.owner(node);
+        require(currentOwner == 0 || currentOwner == msg.sender);
         _;
     }
 
@@ -51,11 +52,7 @@ contract Resolver {
      * @param node The node to update.
      * @param addr The address to set.
      */
-//    function setAddr(bytes32 node, address addr) public only_owner(node) {
-//        records[node].addr = addr;
-//        emit AddrChanged(node, addr);
-//    }
-    function setAddr(bytes32 node, address addr) public {
+    function setAddr(bytes32 node, address addr) public only_owner(node) {
         records[node].addr = addr;
         emit AddrChanged(node, addr);
     }
@@ -79,11 +76,7 @@ contract Resolver {
      * @param node The node to update.
      * @param name The name to set.
      */
-//    function setName(bytes32 node, string name) public only_owner(node) {
-//        records[node].name = name;
-//        emit NameChanged(node, name);
-//    }
-    function setName(bytes32 node, string name) public {
+    function setName(bytes32 node, string name) public only_owner(node) {
         records[node].name = name;
         emit NameChanged(node, name);
     }
