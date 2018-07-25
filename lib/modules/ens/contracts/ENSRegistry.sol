@@ -54,7 +54,7 @@ contract ENSRegistry is ENS {
      * @param node The node to update.
      * @param resolver The address of the resolver.
      */
-    function setResolver(bytes32 node, address resolver) public {
+    function setResolver(bytes32 node, address resolver) public only_owner(node, 0x0) {
         NewResolver(node, resolver);
         records[node].resolver = resolver;
     }
