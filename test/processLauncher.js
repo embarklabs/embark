@@ -2,8 +2,8 @@
 const assert = require('assert');
 const sinon = require('sinon');
 const TestLogger = require('../lib/tests/test_logger');
-const ProcessLauncher = require('../lib/process/processLauncher');
 const path = require('path');
+const ProcessLauncher = require('../lib/processes/processLauncher');
 
 describe('ProcessWrapper', () => {
   let processLauncher;

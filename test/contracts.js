@@ -1,6 +1,6 @@
 /*globals describe, it*/
 let ContractsManager = require('../lib/contracts/contracts.js');
-let Compiler = require('../lib/contracts/compiler.js');
+let Compiler = require('../lib/modules/compiler/');
 let Logger = require('../lib/core/logger.js');
 let File = require('../lib/core/file.js');
 let TestLogger = require('../lib/tests/test_logger.js');
@@ -37,11 +37,11 @@ describe('embark.Contracts', function() {
     });
     plugins.loadInternalPlugin('solidity', {ipc: ipcObject});
 
-    let compiler = new Compiler({plugins: plugins, logger: plugins.logger});
     let events = new Events();
-    events.setCommandHandler("compiler:contracts", function(contractFiles, cb) {
-      compiler.compile_contracts(contractFiles, cb);
-    });
+    let compiler = new Compiler({events: events, logger: plugins.logger}, {plugins: plugins});
+    //events.setCommandHandler("compiler:contracts", function(contractFiles, cb) {
+    //  compiler.compile_contracts(contractFiles, cb);
+    //});
 
     events.setCommandHandler("config:contractsConfig", function(cb) {
       cb(contractsConfig);
@@ -146,11 +146,8 @@ describe('embark.Contracts', function() {
     });
     plugins.loadInternalPlugin('solidity', {ipc: ipcObject});
 
-    let compiler = new Compiler({plugins: plugins, logger: plugins.logger});
     let events = new Events();
-    events.setCommandHandler("compiler:contracts", function(contractFiles, cb) {
-      compiler.compile_contracts(contractFiles, cb);
-    });
+    let compiler = new Compiler({events: events, logger: plugins.logger}, {plugins: plugins});
 
     events.setCommandHandler("config:contractsConfig", function(cb) {
       cb(contractsConfig);
