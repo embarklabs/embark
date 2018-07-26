@@ -1,6 +1,7 @@
 /*globals describe, it*/
 const Blockchain = require('../lib/cmds/blockchain/blockchain');
 const constants = require('../lib/constants.json');
+const {defaultHost} = require('../lib/utils/host');
 
 const assert = require('assert');
 
@@ -19,7 +20,7 @@ describe('embark.Blockchain', function () {
           geth_bin: 'geth',
           datadir: false,
           mineWhenNeeded: false,
-          rpcHost: 'localhost',
+          rpcHost: defaultHost,
           rpcPort: 8545,
           rpcApi: ['eth', 'web3', 'net', 'debug'],
           rpcCorsDomain: false,
@@ -33,7 +34,7 @@ describe('embark.Blockchain', function () {
           account: {},
           bootnodes: "",
           wsApi: ["eth", "web3", "net", "shh", "debug"],
-          wsHost: "localhost",
+          wsHost: defaultHost,
           wsOrigins: false,
           wsPort: 8546,
           wsRPC: true,
@@ -62,7 +63,7 @@ describe('embark.Blockchain', function () {
           geth_bin: 'geth',
           datadir: '/foo/datadir/',
           mineWhenNeeded: true,
-          rpcHost: 'someserver',
+          rpcHost: defaultHost,
           rpcPort: 12345,
           rpcApi: ['eth', 'web3', 'net', 'debug'],
           rpcCorsDomain: true,
@@ -76,9 +77,9 @@ describe('embark.Blockchain', function () {
           account: {},
           bootnodes: "",
           wsApi: ["eth", "web3", "net", "shh", "debug"],
-          wsHost: "localhost",
+          wsHost: defaultHost,
           wsOrigins: false,
-          wsPort: 8546,
+          wsPort: 12346,
           wsRPC: true,
           targetGasLimit: false,
           syncMode: undefined,
