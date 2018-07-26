@@ -16,7 +16,7 @@
     "bootstrap": "^3.3.6",
     "embark-service": "file:extensions/embark-service",
     "haml": "^0.4.3",
-    "jquery": "^1.11.3",
+    "jquery": "^3.3.1",
     "react": "^16.0.0",
     "react-bootstrap": "^0.32.0",
     "react-dom": "^16.2.0",
