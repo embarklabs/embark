@@ -10,7 +10,7 @@
   "license": "ISC",
   "homepage": "",
   "devDependencies": {
-    "babel-code-frame": "^6.26.0"
+    "@babel/code-frame": "^7.0.0-beta.54"
   },
   "dependencies": {
     "bootstrap": "^3.3.6",
