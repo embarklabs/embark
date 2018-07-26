@@ -39,9 +39,6 @@ describe('embark.Contracts', function() {
 
     let events = new Events();
     let compiler = new Compiler({events: events, logger: plugins.logger}, {plugins: plugins});
-    //events.setCommandHandler("compiler:contracts", function(contractFiles, cb) {
-    //  compiler.compile_contracts(contractFiles, cb);
-    //});
 
     events.setCommandHandler("config:contractsConfig", function(cb) {
       cb(contractsConfig);
