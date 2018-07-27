@@ -1,5 +1,5 @@
 /*globals describe, it*/
-let CodeGenerator = require('../lib/contracts/code_generator.js');
+let CodeGenerator = require('../lib/modules/code_generator');
 let assert = require('assert');
 
 function replaceCRLF(string) {
@@ -29,7 +29,14 @@ describe('embark.CodeGenerator', function() {
       }
     ]
 
-    let generator = new CodeGenerator({blockchainConfig: {}});
+    const TestEvents = {
+      request: (cmd, cb) => {
+        cb(currentSolcVersion);
+      },
+      setCommandHandler: () => {
+      }
+    };
+    let generator = new CodeGenerator({config: {blockchainConfig: {}}, events: TestEvents}, {});
 
     describe('with EmbarkJS', function() {
       let withEmbarkJS = true;
