@@ -40,7 +40,7 @@ With Embark you can:
 $ npm -g install embark
 
 # If you plan to use the simulator instead of a real ethereum node.
-$ npm -g install ethereumjs-testrpc
+$ npm -g install ganache-cli
 ```
 
 See [Complete Documentation](https://embark.status.im/docs/).
