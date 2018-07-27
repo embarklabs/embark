@@ -16,8 +16,7 @@ class ProcessManager {
 
     self.events.setCommandHandler('processes:launch', (name, cb) => {
       let process = self.processes[name];
-      if (process.state != 'unstarted') {
-        console.dir("=====> already started " + name);
+      if (process.state !== 'unstarted') {
         return cb();
       }
       process.state = 'starting';
