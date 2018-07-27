@@ -1,7 +1,7 @@
 /*global describe, it*/
 const assert = require('assert');
 const sinon = require('sinon');
-const AccountParser = require('../lib/contracts/accountParser');
+const AccountParser = require('../lib/utils/accountParser');
 let TestLogger = require('../lib/tests/test_logger.js');
 const Web3 = require('web3');
 const i18n = require('../lib/core/i18n/i18n.js');
