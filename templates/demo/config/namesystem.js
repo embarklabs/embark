@@ -1,6 +1,6 @@
 module.exports = {
   default: {
-    available_providers: ["ens"],
+    available_providers: ["ens", "ipns"],
     provider: "ens",
     register: {
       rootDomain: "embark.eth",
