@@ -44,7 +44,6 @@ class App extends React.Component {
           });
         }
       }
-      // EmbarkJS.Names.setProvider('ipns',{server: 'localhost', port: '5001'});
       this.setState({
         storageEnabled: EmbarkJS.Storage.isAvailable(),
         ensEnabled: EmbarkJS.Names.isAvailable(),
