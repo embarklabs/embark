@@ -108,15 +108,15 @@ class Storage extends React.Component {
       let isRegisterError = false;
       if (err) {
         isRegisterError = true;
-        responseRegister = "Name Register Error: " + err.message
+        responseRegister = "Name Register Error: " + (err.message || err)
       } else {
         responseRegister = name;
       }
 
       this.setState({
-        responseRegister: responseRegister,
         registering: false,
-        isRegisterError: isRegisterError
+        responseRegister,
+        isRegisterError
       });
     });
   }
@@ -130,15 +130,15 @@ class Storage extends React.Component {
       let isResolverError = false;
       if (err) {
         isResolverError = true;
-        responseResolver = "Name Resolve Error: " + err.message
+        responseResolver = "Name Resolve Error: " + (err.message || err)
       } else {
         responseResolver = path;
       }
 
       this.setState({
-        responseResolver: responseResolver,
         resolving: false,
-        isResolverError: isResolverError
+        responseResolver,
+        isResolverError
       });
     });
   }
