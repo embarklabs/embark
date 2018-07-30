@@ -15,10 +15,13 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
+    this.handleSelect = this.handleSelect.bind(this);
+
     this.state = {
+      activeKey: 1,
       whisperEnabled: false,
       storageEnabled: false,
-      ensEnabled: false
+      ensEnabled: false,
     };
   }
 
@@ -41,14 +44,14 @@ class App extends React.Component {
           });
         }
       }
-
+      // EmbarkJS.Names.setProvider('ipns',{server: 'localhost', port: '5001'});
       this.setState({
-        storageEnabled: true,
-        ensEnabled: EmbarkJS.Names.isAvailable()
+        storageEnabled: EmbarkJS.Storage.isAvailable(),
+        ensEnabled: EmbarkJS.Names.isAvailable(),
+        ensNameSystems: EmbarkJS.Names.currentNameSystems
       });
     });
   }
-
 
   _renderStatus(title, available) {
     let className = available ? 'pull-right status-online' : 'pull-right status-offline';
@@ -58,9 +61,18 @@ class App extends React.Component {
     </React.Fragment>;
   }
 
+  handleSelect(key) {
+    if (key == 2) {
+      EmbarkJS.Names.setProvider('ipns', {server: 'localhost', port: '5001'});
+    } else if (key == 4) {
+      EmbarkJS.Names.currentNameSystems = this.state.ensNameSystems
+    }
+    this.setState({ activeKey: key });
+  }
+
   render() {
     return (<div><h3>Embark - Usage Example</h3>
-      <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
+      <Tabs onSelect={this.handleSelect} activeKey={this.state.activeKey} id="uncontrolled-tab-example">
         <Tab eventKey={1} title="Blockchain">
           <Blockchain/>
         </Tab>
