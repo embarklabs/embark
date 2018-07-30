@@ -40,7 +40,7 @@
     "ejs": "^2.5.8",
     "eth-ens-namehash": "^2.0.8",
     "eth-lib": "^0.2.8",
-    "ethereumjs-wallet": "^0.6.0",
+    "ethereumjs-wallet": "0.6.0",
     "file-loader": "^1.1.5",
     "finalhandler": "^1.1.1",
     "follow-redirects": "^1.2.4",
