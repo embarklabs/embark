@@ -23,6 +23,7 @@ class App extends React.Component {
       whisperEnabled: false,
       storageEnabled: false,
       blockchainEnabled: false
+      ensEnabled: false,
     };
   }
 
