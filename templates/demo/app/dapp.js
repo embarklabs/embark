@@ -61,9 +61,9 @@ class App extends React.Component {
   }
 
   handleSelect(key) {
-    if (key == 2) {
+    if (key === 2) {
       EmbarkJS.Names.setProvider('ipns', {server: 'localhost', port: '5001'});
-    } else if (key == 4) {
+    } else if (key === 4) {
       EmbarkJS.Names.currentNameSystems = this.state.ensNameSystems
     }
     this.setState({ activeKey: key });
