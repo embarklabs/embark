@@ -18,8 +18,8 @@ class Storage extends React.Component {
       url: '',
       logs: [],
       storageError: '',
-      ipfsHash: '',
-      ipnsResolveName: '',
+      valueRegister: '',
+      valueResolver: '',
     };
   }
 
@@ -101,34 +101,45 @@ class Storage extends React.Component {
 
   ipnsRegister(e) {
     e.preventDefault();
-    this.setState({ ipnsRegistering: true });
-    EmbarkJS.Names.register(this.state.ipfsHash, (err, name) => {
+    this.setState({ registering: true, responseRegister: false });
+    this.addToLog("EmbarkJS.Names.register(this.state.ipfsHash).then(function(hash) { })");
+    EmbarkJS.Names.register(this.state.valueRegister, (err, name) => {
+      let responseRegister;
+      let isRegisterError = false;
       if (err) {
-        console.log("Name Register Error => " + err.message);
+        isRegisterError = true;
+        responseRegister = "Name Register Error: " + err.message
+      } else {
+        responseRegister = name;
       }
 
       this.setState({
-        ipnsResolveName: name,
-        ipnsName: name,
-        ipnsRegistering: false
+        responseRegister: responseRegister,
+        registering: false,
+        isRegisterError: isRegisterError
       });
-      this.addToLog("EmbarkJS.Names.register(this.state.ipfsHash).then(function(hash) { })");
     });
   }
 
   ipnsResolve(e) {
     e.preventDefault();
-    this.setState({ ipnsResolving: true });
-    EmbarkJS.Names.resolve(this.state.ipnsName, (err, path) => {
+    this.setState({ resolving: true, responseResolver: false });
+    this.addToLog("EmbarkJS.Names.resolve(this.state.ipnsName, function(err, path) { })");
+    EmbarkJS.Names.resolve(this.state.valueResolver, (err, path) => {
+      let responseResolver;
+      let isResolverError = false;
       if (err) {
-        console.log("Name Resolve Error => " + err.message);
+        isResolverError = true;
+        responseResolver = "Name Resolve Error: " + err.message
+      } else {
+        responseResolver = path;
       }
 
       this.setState({
-        ipfsPath: path,
-        ipnsResolving: false
+        responseResolver: responseResolver,
+        resolving: false,
+        isResolverError: isResolverError
       });
-      this.addToLog("EmbarkJS.Names.resolve(this.state.ipnsName, function(err, path) { })");
     });
   }
 
@@ -201,13 +212,16 @@ class Storage extends React.Component {
         <FormGroup>
           <FormControl
             type="text"
-            value={this.state.ipfsHash}
-            onChange={e => this.handleChange(e, 'ipfsHash')}/>
+            value={this.state.valueRegister}
+            onChange={e => this.handleChange(e, 'valueRegister')}/>
           <Button bsStyle="primary" onClick={(e) => this.ipnsRegister(e)}>
-            {this.state.ipnsRegistering ? 'Registering...' : 'Register' }
+            {this.state.registering ? 'Registering...' : 'Register' }
           </Button>
           <HelpBlock>It will take around 1 minute</HelpBlock>
-          <HelpBlock>registered at: <span>{this.state.ipnsName}</span></HelpBlock>
+          {this.state.responseRegister &&
+          <Alert className="alert-result" bsStyle={this.state.isRegisterError ? 'danger' : 'success'}>
+            <span className="value">{this.state.responseRegister}</span>
+          </Alert>}
         </FormGroup>
       </Form>
 
@@ -216,13 +230,16 @@ class Storage extends React.Component {
         <FormGroup>
           <FormControl
             type="text"
-            value={this.state.ipnsResolveName}
-            onChange={e => this.handleChange(e, 'ipnsResolveName')}/>
+            value={this.state.valueResolver}
+            onChange={e => this.handleChange(e, 'valueResolver')}/>
           <Button bsStyle="primary" onClick={(e) => this.ipnsResolve(e)}>
-            {this.state.ipnsResolving ? 'Resolving...' : 'Resolve' }
+            {this.state.resolving ? 'Resolving...' : 'Resolve' }
           </Button>
           <HelpBlock>It will take around 1 minute</HelpBlock>
-          <HelpBlock>IPFS path: <span>{this.state.ipfsPath}</span></HelpBlock>
+          {this.state.responseResolver &&
+          <Alert className="alert-result" bsStyle={this.state.isResolverError ? 'danger' : 'success'}>
+            <span className="value">{this.state.responseResolver}</span>
+          </Alert>}
         </FormGroup>
       </Form>
 
