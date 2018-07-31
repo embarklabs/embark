@@ -12,10 +12,7 @@ config({
         "mnemonic": "example exile argue silk regular smile grass bomb merge arm assist farm",
         balance: "5ether"
       }
-    ],
-    "host": "localhost",
-    "port": 8545,
-    "type": "rpc"
+    ]
   },
   contracts: {
     "SimpleStorage": {
