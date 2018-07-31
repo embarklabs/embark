@@ -38,7 +38,13 @@
     "blockchainExit": "blockchainExit",
     "init": "init",
     "initiated": "initiated",
-    "servicePortOnProxy": 10
+    "servicePortOnProxy": 10,
+    "networkIds": {
+      "mainnet": 1,
+      "testnet": 3,
+      "ropsten": 3,
+      "rinkeby": 4
+    }
   },
   "storage": {
     "init": "init",
