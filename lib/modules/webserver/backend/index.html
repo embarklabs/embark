@@ -30,6 +30,182 @@
     <link href="./assets/css/dashboard.css" rel="stylesheet" />
 
     <script src="./assets/js/jquery-3.3.1.min.js"></script>
+
+    <!-- 
+    <script src="./assets/js/dashboard.js"></script>
+    <link href="./assets/plugins/charts-c3/plugin.css" rel="stylesheet" />
+    <script src="./assets/plugins/charts-c3/plugin.js"></script>
+    <link href="./assets/plugins/maps-google/plugin.css" rel="stylesheet" />
+    <script src="./assets/plugins/maps-google/plugin.js"></script>
+    <script src="./assets/plugins/input-mask/plugin.js"></script>
+
+    -->
+
+  </head>
+  <body class="">
+    <div class="page">
+      <div class="page-main">
+        <div class="header">
+          <div class="container">
+            <div class="d-flex">
+              <a class="navbar-brand" href="./index.html">
+                <img src="./assets/images/logo.png" class="navbar-brand-img" alt="Embark">
+              </a>
+              <div class="ml-auto d-flex order-lg-2">
+                <div class="dropdown d-none d-md-flex">
+                  <a class="nav-link icon" data-toggle="dropdown">
+                    <i class="fe fe-bell"></i>
+                    <span class="nav-unread"></span>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                    <a href="#" class="dropdown-item d-flex">
+                      <span class="avatar mr-3 align-self-center" style="background-image: url(demo/faces/male/41.jpg)"></span>
+                      <div>
+                        <strong>Nathan</strong> pushed new commit: Fix page load performance issue.
+                        <div class="small text-muted">10 minutes ago</div>
+                      </div>
+                    </a>
+                    <a href="#" class="dropdown-item d-flex">
+                      <span class="avatar mr-3 align-self-center" style="background-image: url(demo/faces/female/1.jpg)"></span>
+                      <div>
+                        <strong>Alice</strong> started new task: Tabler UI design.
+                        <div class="small text-muted">1 hour ago</div>
+                      </div>
+                    </a>
+                    <a href="#" class="dropdown-item d-flex">
+                      <span class="avatar mr-3 align-self-center" style="background-image: url(demo/faces/female/18.jpg)"></span>
+                      <div>
+                        <strong>Rose</strong> deployed new version of NodeJS REST Api V3
+                        <div class="small text-muted">2 hours ago</div>
+                      </div>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item text-center text-muted-dark">Mark all as read</a>
+                  </div>
+                </div>
+                <div class="dropdown">
+                  <a href="#" class="nav-link pr-0" data-toggle="dropdown">
+                    <span class="avatar" style="background-image: url(./demo/faces/female/25.jpg)"></span>
+                    <span class="ml-2 d-none d-lg-block">
+                      <span class="text-default">Dade Murphy</span>
+                    </span>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                    <a class="dropdown-item" href="#">
+                      <i class="dropdown-icon fe fe-user"></i> Profile
+                    </a>
+                    <a class="dropdown-item" href="#">
+                      <i class="dropdown-icon fe fe-settings"></i> Settings
+                    </a>
+                    <a class="dropdown-item" href="#">
+                      <span class="float-right"><span class="badge badge-primary">6</span></span>
+                      <i class="dropdown-icon fe fe-mail"></i> Inbox
+                    </a>
+                    <a class="dropdown-item" href="#">
+                      <i class="dropdown-icon fe fe-send"></i> Message
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">
+                      <i class="dropdown-icon fe fe-help-circle"></i> Need help?
+                    </a>
+                    <a class="dropdown-item" href="#">
+                      <i class="dropdown-icon fe fe-log-out"></i> Sign out
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="header-nav d-none d-lg-flex">
+          <div class="container">
+            <div class="row align-items-center">
+              <div class="col">
+                <ul class="nav nav-tabs">
+                  <li class="nav-item">
+                    <a href="./index.html" class="nav-link active"><i class="fe fe-home"></i> Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="javascript:void(0)" class="nav-link"><i class="fe fe-box"></i> Contracts</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="./docs/index.html" class="nav-link"><i class="fe fe-file-text"></i> Documentation</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-3 ml-auto">
+                <form class="input-icon">
+                  <input type="search" class="form-control header-search" placeholder="Search&hellip;" tabindex="1">
+                  <div class="input-icon-addon">
+                    <i class="fe fe-search"></i>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="page-content">
+          <div class="container">
+            <div class="page-header">
+              <h1 class="page-title">
+                Dashboard
+              </h1>
+            </div>
+            <div class="row row-cards">
+              <div class="col-sm-6 col-lg-3">
+                <div class="card p-3">
+                  <div class="d-flex align-items-center">
+                    <span class="stamp stamp-md bg-blue mr-3">
+                      <i class="fe fa-cube"></i>
+                    </span>
+                    <div>
+                      <h4 class="m-0"><a href="javascript:void(0)">IPFS</a></h4>
+                      <small class="text-muted">version 2.5</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-lg-3">
+                <div class="card p-3">
+                  <div class="d-flex align-items-center">
+                    <span class="stamp stamp-md bg-green mr-3">
+                      <i class="fe fe-check"></i>
+                    </span>
+                    <div>
+                      <h4 class="m-0"><a href="javascript:void(0)">Ethereum</a></h4>
+                      <small class="text-muted">Geth 1.6.7-stable</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-lg-3">
+                <div class="card p-3">
+                  <div class="d-flex align-items-center">
+                    <span class="stamp stamp-md bg-red mr-3">
+                      <i class="fe fe-message-square"></i>
+                    </span>
+                    <div>
+                      <h4 class="m-0"><a href="javascript:void(0)">Whisper</a></h4>
+                      <small class="text-muted">V5</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-lg-3">
+                <div class="card p-3">
+                  <div class="d-flex align-items-center">
+                    <span class="stamp stamp-md bg-yellow mr-3">
+                      <i class="fe fe-server"></i>
+                    </span>
+                    <div>
+                      <h4 class="m-0"><a href="javascript:void(0)">Webserver</a></h4>
+                      <small class="text-muted">http://localhost:8000</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="row row-cards row-deck">
               <div class="col-12">
                 <div class="card">
@@ -55,6 +231,27 @@
                 </div>
               </div>
             </div>
+
+            <div class="row row-cards row-deck">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">Console</h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="log">
+                      <p>Welcome!</p>
+                    </div>
+                    <div class="command-line">
+                      <div class="form-group">
+                        <input type="text" class="form-control" name="example-text-input" placeholder="type a command (e.g help)" data-com.agilebits.onepassword.user-edited="yes">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <script>
 
               $.get( "/embark/contracts").done(function( data ) {
