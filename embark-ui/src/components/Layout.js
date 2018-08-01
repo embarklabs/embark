@@ -20,7 +20,7 @@ const Layout = (props) => (
       navItems: (
         <Nav.Item type="div" className="d-none d-md-flex">
           <Button
-            href="https://github.com/embark-fraework/embark"
+            href="https://github.com/embark-framework/embark"
             target="_blank"
             outline
             size="sm"
