@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {fetchProcesses} from '../actions';
+import {Tabs, Tab} from 'tabler-react';
 import PropTypes from 'prop-types';
 
 class ProcessesContainer extends Component {
@@ -26,8 +27,13 @@ class ProcessesContainer extends Component {
       );
     }
 
+    const processNames = Object.keys(processes.data);
     return (
-      <p>Loaded</p>
+      <Tabs initialTab={processNames[0]}>
+        {processNames.map(processName => {
+          return (<Tab key={processName} title={processName}>State: {processes.data[processName].state}</Tab>);
+        })}
+      </Tabs>
     );
   }
 }
