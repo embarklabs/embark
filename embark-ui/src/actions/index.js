@@ -16,7 +16,7 @@ export function fetchAccounts() {
 export function receiveAccounts(accounts) {
   return {
     type: RECEIVE_ACCOUNTS,
-    accounts: accounts
+    accounts
   };
 }
 
@@ -35,7 +35,7 @@ export function fetchProcesses() {
 export function receiveProcesses(processes) {
   return {
     type: RECEIVE_PROCESSES,
-    accounts: processes
+    processes
   };
 }
 

@@ -1,5 +1,6 @@
-import { combineReducers } from 'redux';
-import { RECEIVE_ACCOUNTS, RECEIVE_ACCOUNTS_ERROR } from "../actions";
+import {combineReducers} from 'redux';
+import {RECEIVE_ACCOUNTS, RECEIVE_ACCOUNTS_ERROR} from "../actions";
+import processesReducer from './processesReducer';
 
 function accounts(state = {}, action) {
   switch (action.type) {
@@ -10,7 +11,7 @@ function accounts(state = {}, action) {
     default:
       return state;
   }
-};
+}
 
-const rootReducer = combineReducers({accounts});
+const rootReducer = combineReducers({accounts, processes: processesReducer});
 export default rootReducer;

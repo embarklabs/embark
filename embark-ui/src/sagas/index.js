@@ -15,11 +15,9 @@ export function *watchFetchAccounts() {
   yield takeEvery(actions.FETCH_ACCOUNTS, fetchAccounts);
 }
 
-
 export function *fetchProcesses() {
   try {
     const processes = yield call(api.fetchProcesses);
-    console.log('Got processes', processes);
     yield put(actions.receiveProcesses(processes));
   } catch (e) {
     yield put(actions.receiveProcessesError());
@@ -31,5 +29,5 @@ export function *watchFetchProcesses() {
 }
 
 export default function *root() {
-  yield all([fork(watchFetchAccounts, watchFetchProcesses())]);
+  yield all([fork(watchFetchAccounts), fork(watchFetchProcesses)]);
 }

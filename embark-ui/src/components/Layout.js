@@ -1,14 +1,16 @@
 import React from 'react';
-import { NavLink, withRouter } from "react-router-dom";
-import { Site, Nav, Button, Container } from "tabler-react";
+import {NavLink, withRouter} from "react-router-dom";
+import {Site, Nav, Button, Container} from "tabler-react";
+import PropTypes from 'prop-types';
 
-import logo from'../images/logo.png';
+import logo from '../images/logo.png';
 
 const navBarItems = [
-  { value: "Home", to: "/embark", icon: "home", LinkComponent: withRouter(NavLink) },
-  { value: "Contracts", to: "/embark/contracts", icon: "box", LinkComponent: withRouter(NavLink) },
-  { value: "Explorer", to: "/embark/explorer/accounts", icon: "activity", LinkComponent: withRouter(NavLink) },
-  { value: "Documentation", to: "/embark/documentation", icon: "file-text", LinkComponent: withRouter(NavLink) },
+  {value: "Home", to: "/embark", icon: "home", LinkComponent: withRouter(NavLink)},
+  {value: "Contracts", to: "/embark/contracts", icon: "box", LinkComponent: withRouter(NavLink)},
+  {value: "Explorer", to: "/embark/explorer/accounts", icon: "activity", LinkComponent: withRouter(NavLink)},
+  {value: "Processes", to: "/embark/processes", icon: "cpu", LinkComponent: withRouter(NavLink)},
+  {value: "Documentation", to: "/embark/documentation", icon: "file-text", LinkComponent: withRouter(NavLink)}
 ];
 
 const Layout = (props) => (
@@ -32,12 +34,16 @@ const Layout = (props) => (
         </Nav.Item>
       )
     }}
-    navProps={{ itemsObjects: navBarItems}}
+    navProps={{itemsObjects: navBarItems}}
   >
     <Container>
       {props.children}
     </Container>
   </Site.Wrapper>
 );
+
+Layout.propTypes = {
+  children: PropTypes.element
+};
 
 export default Layout;
