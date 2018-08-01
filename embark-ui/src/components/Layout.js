@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, withRouter } from "react-router-dom";
-import { Site, Nav, Button } from "tabler-react";
+import { Site, Nav, Button, Container } from "tabler-react";
 
 import logo from'../images/logo.png';
 
@@ -34,7 +34,9 @@ const Layout = (props) => (
     }}
     navProps={{ itemsObjects: navBarItems}}
   >
-    {props.children}
+    <Container>
+      {props.children}
+    </Container>
   </Site.Wrapper>
 );
 
