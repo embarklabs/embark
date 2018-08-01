@@ -16,5 +16,5 @@ export function *watchFetchAccounts() {
 }
 
 export default function *root() {
-  yield all([fork(fetchAccounts)]);
+  yield all([fork(watchFetchAccounts)]);
 }
