@@ -4,6 +4,8 @@ import {fetchProcesses} from '../actions';
 import {Tabs, Tab} from 'tabler-react';
 import PropTypes from 'prop-types';
 
+import "./css/processContainer.css";
+
 class ProcessesContainer extends Component {
   componentDidMount() {
     this.props.fetchProcesses();
@@ -29,11 +31,13 @@ class ProcessesContainer extends Component {
 
     const processNames = Object.keys(processes.data);
     return (
-      <Tabs initialTab={processNames[0]}>
-        {processNames.map(processName => {
-          return (<Tab key={processName} title={processName}>State: {processes.data[processName].state}</Tab>);
-        })}
-      </Tabs>
+      <div className="processes-container">
+        <Tabs initialTab={processNames[0]}>
+          {processNames.map(processName => {
+            return (<Tab key={processName} title={processName}>State: {processes.data[processName].state}</Tab>);
+          })}
+        </Tabs>
+      </div>
     );
   }
 }
