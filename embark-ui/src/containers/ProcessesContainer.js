@@ -24,7 +24,7 @@ class ProcessesContainer extends Component {
     if (processes.error) {
       return (
         <h1>
-          <i>Error API...</i>
+          <i>Error loading processes: {processes.error.message || processes.error}</i>
         </h1>
       );
     }
