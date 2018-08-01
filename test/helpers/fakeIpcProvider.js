@@ -1,10 +1,7 @@
-var assert = require('assert');
-var _ = require('lodash');
+const assert = require('assert');
+const _ = require('lodash');
 
-
-
-
-var FakeIpcProvider = function IpcProvider() {
+const FakeIpcProvider = function IpcProvider() {
     var _this = this;
     this.countId = 1;
     this.notificationCount = 1;
@@ -31,7 +28,6 @@ var FakeIpcProvider = function IpcProvider() {
     this.validation = [];
     this.notificationCallbacks = [];
 };
-
 
 FakeIpcProvider.prototype.send = function (payload, callback) {
     var _this = this;
@@ -105,8 +101,6 @@ FakeIpcProvider.prototype.injectNotification = function (notification) {
 // FakeHttpProvider.prototype.injectResponse = function (response) {
 //     this.response = response;
 // };
-
-
 
 FakeIpcProvider.prototype.injectBatchResults = function (results, error) {
     var _this = this;

@@ -1,4 +1,4 @@
-/*global describe, it*/
+/*global describe, it, before*/
 const assert = require('assert');
 let TestLogger = require('../lib/tests/test_logger.js');
 const Web3 = require('web3');
@@ -53,36 +53,43 @@ describe('embark.DevFunds', function () {
 
   describe('#create, fund, and unlock accounts', function () {
     let provider = new FakeIpcProvider();
-    let devFunds = new DevFunds({blockchainConfig: config, provider: provider, logger: new TestLogger({})});
     const web3 = new Web3(provider);
+    let devFunds;
+
+    before(async () => {
+      provider.injectResult(['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855']); // getAccounts: return --dev account
+      devFunds = await DevFunds.new({blockchainConfig: config, provider: provider, logger: new TestLogger({})});
+    });
 
     it('should create correct number of accounts', function (done) {
-      provider.injectResult(['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855']); // getAccounts - return --dev account
-      devFunds.getCurrentAccounts(() => {
+      provider.injectResult('0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae'); // createAccount #1
+      provider.injectResult('0x22f4d0a3c12e86b4b5f39b213f7e19d048276dab'); // createAccount #2
 
-        provider.injectResult('0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae'); // createAccount #1
-        provider.injectResult('0x22f4d0a3c12e86b4b5f39b213f7e19d048276dab'); // createAccount #2
+      devFunds.createAccounts(config.account.numAccounts, 'test_password', (err) => {
+        assert.equal(err, null);
 
-        devFunds.createAccounts(config.account.numAccounts, 'test_password', (err) => {
-          assert.equal(err, null);
+        // TODO: make FakeIpcProvider smart enough to keep track of created accounts
+        provider.injectResult(['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae', '0x22f4d0a3c12e86b4b5f39b213f7e19d048276dab']);
 
-          // TODO: make FakeIpcProvider smart enough to keep track of created accounts
-          provider.injectResult(['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae', '0x22f4d0a3c12e86b4b5f39b213f7e19d048276dab']);
-
-          web3.eth.getAccounts().then((accts) => {
-            assert.equal(accts.length, config.account.numAccounts);
-            assert.strictEqual(accts[0], '0x47D33b27Bb249a2DBab4C0612BF9CaF4C1950855');
-            assert.strictEqual(accts[1], '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe');
-            assert.strictEqual(accts[2], '0x22F4d0A3C12E86b4b5F39B213f7e19D048276DAb');
-            done();
-          });
+        web3.eth.getAccounts().then((accts) => {
+          assert.equal(accts.length, config.account.numAccounts);
+          assert.strictEqual(accts[0], '0x47D33b27Bb249a2DBab4C0612BF9CaF4C1950855'); // --dev acct
+          assert.strictEqual(accts[1], '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe'); // created acct #1
+          assert.strictEqual(accts[2], '0x22F4d0A3C12E86b4b5F39B213f7e19D048276DAb'); // created acct #2
+          done();
         });
       });
     });
 
     it('should unlock accounts', function (done) {
-      provider.injectResult(true); // account #1 unlock result
-      provider.injectResult(true); // account #2 unlock result
+      if (devFunds.accounts.length === 0) {
+        assert.equal(true, true, "no accounts to unlock");
+        return done();
+      }
+
+      devFunds.accounts.forEach(_acct => {
+        provider.injectResult(true); // account unlock result
+      });
 
       devFunds.unlockAccounts(devFunds.password, (errUnlock) => {
         assert.equal(errUnlock, null);
@@ -92,13 +99,17 @@ describe('embark.DevFunds', function () {
 
     it('should fund accounts', function (done) {
 
-      provider.injectResult('1234567890'); // account #1 balance
-      provider.injectResult('1234567890'); // account #2 balance
-      // provider.injectResult('0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe'); // send tx #1
-      // provider.injectResult('0x22F4d0A3C12E86b4b5F39B213f7e19D048276DAb'); // send tx #2
+      if (devFunds.accounts.length === 0) {
+        assert.equal(true, true, "no accounts to fund");
+        return done();
+      }
+      devFunds.accounts.forEach(_acct => {
+        provider.injectResult('1234567890'); // account balance
+        // provider.injectResult('0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe'); // send tx response
+      });
 
       devFunds.fundAccounts(devFunds.balance, (errFundAccounts) => {
-        
+
         assert.equal(errFundAccounts, null);
 
         // inject response for web3.eth.getAccounts
