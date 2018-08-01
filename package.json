@@ -8,7 +8,8 @@
     "test:embark": "mocha test/ --no-timeouts --exit",
     "test:test_app": "cross-env DAPP=\"test_app\" npm run test_dapp",
     "test:contracts_app": "cross-env DAPP=\"contracts_app\" npm run test_dapp",
-    "test_dapp": "cross-env-shell \"cd test_apps/$DAPP && npm install && npm test\""
+    "test_dapp": "cross-env-shell \"cd test_apps/$DAPP && npm install && npm test\"",
+    "prepublish": "cd embark-ui && npm install && npm run build && cd -"
   },
   "bin": {
     "embark": "./bin/embark"
