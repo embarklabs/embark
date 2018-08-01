@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
+import "tabler-react/dist/Tabler.css";
+
 import AppContainer from './containers/AppContainer';
 import registerServiceWorker from './registerServiceWorker';
 import configureStore from './store/configureStore';
