@@ -125,15 +125,19 @@ export default function *root() {
 }
 
 export function *fetchContract(action) {
+  console.dir("** fetchContract");
+  console.dir(action);
   try {
-    const contract = yield call(api.fetchContract);
+    const contract = yield call(api.fetchContract, action.contractName);
     yield put(actions.receiveContract(contract));
   } catch (e) {
+    console.dir(e);
     yield put(actions.receiveContractError());
   }
 }
 
 export function *watchFetchContract() {
+  console.dir("** watchFetchContract");
   yield takeEvery(actions.FETCH_CONTRACT, fetchContract);
 }
 

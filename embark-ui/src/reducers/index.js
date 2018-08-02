@@ -5,6 +5,7 @@ import blocksReducer from './blocksReducer';
 import transactionsReducer from './transactionsReducer';
 import commandsReducer from './commandsReducer';
 import contractsReducer from './contractsReducer';
+import contractReducer from './contractReducer';
 
 const rootReducer = combineReducers({
   accounts: accountsReducer,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
   blocks: blocksReducer,
   transactions: transactionsReducer,
   commands: commandsReducer,
-  contracts: contractsReducer
+  contracts: contractsReducer,
+  contract: contractReducer
 });
 
 export default rootReducer;

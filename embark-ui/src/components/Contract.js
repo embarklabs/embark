@@ -13,13 +13,11 @@ const Contract = ({contract}) => (
         </tr>
       </thead>
       <tbody>
-        return (
-          <tr>
-            <td>{contract.name}</td>
-            <td>{contract.address}</td>
-            <td>{contract.deploy}</td>
-          </tr>
-        )
+        <tr>
+          <td>{contract.name || contract.className}</td>
+          <td>{contract.address || contract.deployedAddress}}</td>
+          <td>{contract.deploy.toString()}</td>
+        </tr>
       </tbody>
     </table>
   </React.Fragment>

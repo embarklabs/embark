@@ -1,6 +1,8 @@
 import {RECEIVE_CONTRACT, RECEIVE_CONTRACT_ERROR} from "../actions";
 
 export default function contract(state = {}, action) {
+  console.dir("** reducer");
+  console.dir(arguments);
   switch (action.type) {
     case RECEIVE_CONTRACT:
       return Object.assign({}, state, {data: action.contract.data});

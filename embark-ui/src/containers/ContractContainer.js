@@ -1,37 +1,46 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { fetchContract } from '../actions';
 import Contract from '../components/Contract';
+import { withRouter } from 'react-router'
 
 class ContractContainer extends Component {
   componentWillMount() {
     console.dir("----");
     console.dir(this.props);
-    console.dir(this.state);
-    this.props.fetchContract(this.props.contractName);
+    //console.dir(this.state);
+    //console.dir(this.props.match.params.contractName);
+    //console.dir(this.props.match.params.contractName);
+    //console.dir(this.props.fetchContract.toString());
+    this.props.fetchContract(this.props.match.params.contractName);
   }
 
   render() {
-    //const { contract } = this.props;
-    //if (!contracts.data) {
-    //  return (
-    //    <h1>
-    //      <i>Loading contracts...</i>
-    //    </h1>
-    //  )
-    //}
+    console.dir("||======>");
+    console.dir(this.props);
+    console.dir("||======>");
+    const { contract } = this.props;
+    if (!contract.data) {
+      return (
+        <h1>
+          <i>Loading contract...</i>
+        </h1>
+      )
+    }
 
-    //if (contracts.error) {
-    //  return (
-    //    <h1>
-    //      <i>Error API...</i>
-    //    </h1>
-    //  )
-    //}
+    if (contract.error) {
+      return (
+        <h1>
+          <i>Error API...</i>
+        </h1>
+      )
+    }
+
+    console.dir(contract);
 
     return (
-      //<Contract contract={contract} />
-      <div>hello</div>
+      <Contract contract={contract.data} />
     );
   }
 };
@@ -42,10 +51,11 @@ function mapStateToProps(state) {
   return { contract: state.contract }
 }
 
-export default connect(
-  mapStateToProps,
-  {
-    fetchContract
-  },
+export default compose(
+  connect(
+    mapStateToProps,
+    { fetchContract }
+  ),
+  withRouter
 )(ContractContainer)
 
