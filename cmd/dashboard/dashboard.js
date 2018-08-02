@@ -31,8 +31,8 @@ class Dashboard {
     plugin.registerAPICall(
       'ws',
       '/embark-api/dashboard',
-      (ws, req) => {
-        let dashboardState = { contractsState: [], environment: "", status: "", availableServices: [] };
+      (ws, _req) => {
+        let dashboardState = {contractsState: [], environment: "", status: "", availableServices: []};
 
         // TODO: doesn't feel quite right, should be refactored into a shared
         // dashboard state

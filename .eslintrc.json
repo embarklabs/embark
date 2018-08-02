@@ -67,7 +67,7 @@
         ],
         "dot-notation": "off",
         "eol-last": "error",
-        "eqeqeq": "off",
+        "eqeqeq": "error",
         "for-direction": "error",
         "func-call-spacing": "error",
         "func-name-matching": "error",

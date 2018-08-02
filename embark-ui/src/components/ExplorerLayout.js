@@ -3,7 +3,7 @@ import {NavLink, Route, Switch, withRouter} from 'react-router-dom';
 import {
   Page,
   Grid,
-  List,
+  List
 } from "tabler-react";
 
 import AccountsContainer from '../containers/AccountsContainer';

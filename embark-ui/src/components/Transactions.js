@@ -20,7 +20,8 @@ const Transactions = ({transactions}) => (
               {content: "From"},
               {content: "To"},
               {content: "Type"},
-              {content: "Hash"}]}
+              {content: "Hash"}
+            ]}
             bodyItems={
               transactions.map((transaction) => {
                 return ([
