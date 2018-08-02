@@ -40,7 +40,7 @@ const Accounts = ({accounts}) => (
 );
 
 Accounts.propTypes = {
-  accounts: PropTypes.object
+  accounts: PropTypes.arrayOf(PropTypes.object)
 };
 
 export default Accounts;

@@ -35,7 +35,7 @@ const Blocks = ({blocks}) => (
 );
 
 Blocks.propTypes = {
-  blocks: [PropTypes.object]
+  blocks: PropTypes.arrayOf(PropTypes.object)
 };
 
 export default Blocks;
