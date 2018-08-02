@@ -46,7 +46,7 @@ export function *fetchProcesses() {
     const processes = yield call(api.fetchProcesses);
     yield put(actions.receiveProcesses(processes));
   } catch (e) {
-    yield put(actions.receiveProcessesError());
+    yield put(actions.receiveProcessesError(e));
   }
 }
 
@@ -54,10 +54,24 @@ export function *watchFetchProcesses() {
   yield takeEvery(actions.FETCH_PROCESSES, fetchProcesses);
 }
 
+export function *fetchProcessLogs(action) {
+  try {
+    const logs = yield call(api.fetchProcessLogs, action.processName);
+    yield put(actions.receiveProcessLogs(action.processName, logs));
+  } catch (e) {
+    yield put(actions.receiveProcessLogsError(e));
+  }
+}
+
+export function *watchFetchProcessLogs() {
+  yield takeEvery(actions.FETCH_PROCESS_LOGS, fetchProcessLogs);
+}
+
 export default function *root() {
   yield all([
     fork(watchFetchAccounts),
     fork(watchFetchProcesses),
+    fork(watchFetchProcessLogs),
     fork(watchFetchBlocks),
     fork(watchFetchTransactions)
   ]);

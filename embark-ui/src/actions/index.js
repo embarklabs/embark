@@ -6,6 +6,10 @@ export const RECEIVE_ACCOUNTS_ERROR = 'RECEIVE_ACCOUNTS_ERROR';
 export const FETCH_PROCESSES = 'FETCH_PROCESSES';
 export const RECEIVE_PROCESSES = 'RECEIVE_PROCESSES';
 export const RECEIVE_PROCESSES_ERROR = 'RECEIVE_PROCESSES_ERROR';
+// Process logs
+export const FETCH_PROCESS_LOGS = 'FETCH_PROCESS_LOGS';
+export const RECEIVE_PROCESS_LOGS = 'RECEIVE_PROCESS_LOGS';
+export const RECEIVE_PROCESS_LOGS_ERROR = 'RECEIVE_PROCESS_LOGS_ERROR';
 // Blocks
 export const FETCH_BLOCKS = 'FETCH_BLOCKS';
 export const RECEIVE_BLOCKS = 'RECEIVE_BLOCKS';
@@ -47,9 +51,32 @@ export function receiveProcesses(processes) {
   };
 }
 
-export function receiveProcessesError() {
+export function receiveProcessesError(error) {
   return {
-    type: RECEIVE_PROCESSES_ERROR
+    type: RECEIVE_PROCESSES_ERROR,
+    error
+  };
+}
+
+export function fetchProcessLogs(processName) {
+  return {
+    type: FETCH_PROCESS_LOGS,
+    processName
+  };
+}
+
+export function receiveProcessLogs(processName, logs) {
+  return {
+    type: RECEIVE_PROCESS_LOGS,
+    processName,
+    logs
+  };
+}
+
+export function receiveProcessLogsError(error) {
+  return {
+    type: RECEIVE_PROCESS_LOGS_ERROR,
+    error
   };
 }
 

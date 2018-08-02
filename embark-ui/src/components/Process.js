@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {Tab} from "tabler-react";
+import connect from "react-redux/es/connect/connect";
+import {fetchProcessLogs} from "../actions";
 import constants from '../constants';
 import PropTypes from 'prop-types';
 
@@ -9,11 +10,15 @@ class Process extends Component {
     this.state = {
       logs: []
     };
+    this.gotOriginalLogs = false;
   }
 
   componentDidMount() {
     const self = this;
-    this.ws = new WebSocket(constants.wsEndpoint + 'process-logs/' + self.props.processName);
+
+    this.props.fetchProcessLogs(self.props.processName);
+
+    this.ws = new WebSocket(constants.wsEndpoint + '/process-logs/' + self.props.processName);
 
     this.ws.onmessage = function(evt) {
       const log = JSON.parse(evt.data);
@@ -33,6 +38,17 @@ class Process extends Component {
     };
   }
 
+  shouldComponentUpdate(nextProps, _nextState) {
+    if (!this.gotOriginalLogs && nextProps.logs && nextProps.logs[this.props.processName]) {
+      const logs = nextProps.logs[this.props.processName].concat(this.state.logs);
+      this.gotOriginalLogs = true;
+      this.setState({
+        logs
+      });
+    }
+    return true;
+  }
+
   componentWillUnmount() {
     this.ws.close();
     this.ws = null;
@@ -44,7 +60,7 @@ class Process extends Component {
         State: {this.props.state}
         <div className="logs">
           {
-            this.state.logs.map((item, i) => <p key={i} className={item.logLevel}>{item.msg}</p>)
+            this.state.logs.map((item, i) => <p key={i} className={item.logLevel}>{item.msg_clear || item.msg}</p>)
           }
         </div>
       </div>);
@@ -52,8 +68,19 @@ class Process extends Component {
 }
 
 Process.propTypes = {
-  processName: PropTypes.string,
-  state: PropTypes.string
+  processName: PropTypes.string.isRequired,
+  state: PropTypes.string.isRequired,
+  fetchProcessLogs: PropTypes.func,
+  logs: PropTypes.object
 };
 
-export default Process;
+function mapStateToProps(state) {
+  return {logs: state.processes.logs};
+}
+
+export default connect(
+  mapStateToProps,
+  {
+    fetchProcessLogs
+  }
+)(Process);
