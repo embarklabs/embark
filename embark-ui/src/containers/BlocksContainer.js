@@ -15,7 +15,9 @@ class BlocksContainer extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchBlocks();
+    if (!this.props.blocks.data) {
+      this.props.fetchBlocks();
+    }
   }
 
   loadMore() {
