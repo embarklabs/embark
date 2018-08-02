@@ -2,6 +2,19 @@ import * as actions from '../actions';
 import * as api from '../api';
 import {all, call, fork, put, takeEvery} from 'redux-saga/effects';
 
+export function *fetchBlocks() {
+  try {
+    const blocks = yield call(api.fetchBlocks);
+    yield put(actions.receiveBlocks(blocks));
+  } catch (e) {
+    yield put(actions.receiveBlocksError());
+  }
+}
+
+export function *watchFetchBlocks() {
+  yield takeEvery(actions.FETCH_BLOCKS, fetchBlocks);
+}
+
 export function *fetchAccounts() {
   try {
     const accounts = yield call(api.fetchAccounts);
@@ -29,5 +42,5 @@ export function *watchFetchProcesses() {
 }
 
 export default function *root() {
-  yield all([fork(watchFetchAccounts), fork(watchFetchProcesses)]);
+  yield all([fork(watchFetchAccounts), fork(watchFetchProcesses), fork(watchFetchBlocks)]);
 }

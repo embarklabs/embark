@@ -6,12 +6,14 @@ import history from '../history';
 import rootReducer from '../reducers';
 import saga from '../sagas';
 
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
 export default function configureStore() {
   const sagaMiddleware = createSagaMiddleware();
 
   const store = createStore(
     connectRouter(history)(rootReducer),
-    compose(
+    composeEnhancers(
       applyMiddleware(
         routerMiddleware(history),
         sagaMiddleware

@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {fetchProcesses} from '../actions';
 import {Tabs, Tab} from 'tabler-react';
 import PropTypes from 'prop-types';
+
+import {fetchProcesses} from '../actions';
+import Loading from '../components/Loading';
 
 import "./css/processContainer.css";
 
@@ -14,11 +16,7 @@ class ProcessesContainer extends Component {
   render() {
     const {processes} = this.props;
     if (!processes.data) {
-      return (
-        <h1>
-          <i>Loading processes...</i>
-        </h1>
-      );
+      return <Loading />;
     }
 
     if (processes.error) {
