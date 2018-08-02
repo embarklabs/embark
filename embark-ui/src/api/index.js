@@ -6,8 +6,8 @@ export function fetchAccounts() {
   return axios.get(`${BASE_URL}/blockchain/accounts`);
 }
 
-export function fetchBlocks() {
-  return axios.get(`${BASE_URL}/blockchain/blocks`);
+export function fetchBlocks(from) {
+  return axios.get(`${BASE_URL}/blockchain/blocks`, {params: {from}});
 }
 
 export function fetchProcesses() {

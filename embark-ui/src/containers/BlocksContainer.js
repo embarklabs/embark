@@ -5,10 +5,26 @@ import PropTypes from 'prop-types';
 import {fetchBlocks} from '../actions';
 import Blocks from '../components/Blocks';
 import Loading from '../components/Loading';
+import LoadMore from '../components/LoadMore';
 
 class BlocksContainer extends Component {
+
+  constructor(props) {
+    super(props);
+    this.loadMore = this.loadMore.bind(this);
+  }
+
   componentDidMount() {
     this.props.fetchBlocks();
+  }
+
+  loadMore() {
+    this.props.fetchBlocks(this.loadMoreFrom());
+  }
+
+  loadMoreFrom() {
+    let blocks = this.props.blocks.data;
+    return blocks[blocks.length - 1].number - 1;
   }
 
   render() {
@@ -26,7 +42,10 @@ class BlocksContainer extends Component {
     }
 
     return (
-      <Blocks blocks={blocks.data} />
+      <React.Fragment>
+        <Blocks blocks={blocks.data}/>
+        {(this.loadMoreFrom() >= 0) ? <LoadMore loadMore={this.loadMore} /> : <React.Fragment />}
+      </React.Fragment>
     );
   }
 }

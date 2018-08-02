@@ -49,9 +49,10 @@ export function receiveProcessesError() {
   };
 }
 
-export function fetchBlocks() {
+export function fetchBlocks(from) {
   return {
-    type: FETCH_BLOCKS
+    type: FETCH_BLOCKS,
+    from
   };
 }
 

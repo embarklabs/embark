@@ -2,9 +2,9 @@ import * as actions from '../actions';
 import * as api from '../api';
 import {all, call, fork, put, takeEvery} from 'redux-saga/effects';
 
-export function *fetchBlocks() {
+export function *fetchBlocks(payload) {
   try {
-    const blocks = yield call(api.fetchBlocks);
+    const blocks = yield call(api.fetchBlocks, payload.from);
     yield put(actions.receiveBlocks(blocks));
   } catch (e) {
     yield put(actions.receiveBlocksError());
