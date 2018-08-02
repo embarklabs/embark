@@ -20,24 +20,21 @@ class ProcessesContainer extends Component {
       return <Loading />;
     }
 
-    if (processes.error) {
-      return (
-        <h1>
-          <i>Error loading processes: {processes.error.message || processes.error}</i>
-        </h1>
-      );
-    }
-
     const processNames = Object.keys(processes.data);
     return (
       <div className="processes-container">
-        <Tabs initialTab={processNames[0]}>
+        {processes.error && <h1>
+          <i>Error: {processes.error.message || processes.error}</i>
+        </h1>}
+
+        {processNames && processNames.length && <Tabs initialTab={processNames[0]}>
           {processNames.map(processName => {
             return (<Tab key={processName} title={processName}>
               <Process processName={processName} state={processes.data[processName].state}/>
             </Tab>);
           })}
-        </Tabs>
+        </Tabs>}
+
       </div>
     );
   }
