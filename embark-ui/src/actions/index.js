@@ -78,6 +78,18 @@ export const RECEIVE_NEW_PROCESS_LOG = 'RECEIVE_NEW_PROCESS_LOG';
 export const RECEIVE_PROCESS_LOGS_ERROR = 'RECEIVE_PROCESS_LOGS_ERROR';
 // BlockHeader
 export const INIT_BLOCK_HEADER = 'INIT_BLOCK_HEADER';
+// Contracts
+export const FETCH_CONTRACTS = 'FETCH_CONTRACTS';
+export const RECEIVE_CONTRACTS = 'RECEIVE_CONTRACTS';
+export const RECEIVE_CONTRACTS_ERROR = 'RECEIVE_CONTRACTS_ERROR';
+// Contract
+export const FETCH_CONTRACT = 'FETCH_CONTRACT';
+export const RECEIVE_CONTRACT = 'RECEIVE_CONTRACT';
+export const RECEIVE_CONTRACT_ERROR = 'RECEIVE_CONTRACT_ERROR';
+// Contract Profile
+export const FETCH_CONTRACT_PROFILE = 'FETCH_CONTRACT_PROFILE';
+export const RECEIVE_CONTRACT_PROFILE = 'RECEIVE_CONTRACT_PROFILE';
+export const RECEIVE_CONTRACT_PROFILE_ERROR = 'RECEIVE_CONTRACT_PROFILE_ERROR';
 
 export function fetchProcessLogs(processName) {
   return {
@@ -113,3 +125,64 @@ export function initBlockHeader(){
     type: INIT_BLOCK_HEADER
   };
 }
+
+export function fetchContractProfile() {
+  return {
+    type: FETCH_CONTRACT_PROFILE
+  };
+}
+
+export function receiveContractProfile(profile) {
+  return {
+    type: RECEIVE_CONTRACT_PROFILE,
+    profile
+  };
+}
+
+export function receiveContractProfileError() {
+  return {
+    type: RECEIVE_CONTRACT_PROFILE_ERROR
+  };
+}
+
+export function fetchContract(contractName) {
+  return {
+    type: FETCH_CONTRACT,
+    contractName
+  };
+}
+
+export function receiveContract(contractName, contract) {
+  return {
+    type: RECEIVE_CONTRACT,
+    contractName,
+    contract
+  };
+}
+
+export function receiveContractError() {
+  return {
+    type: RECEIVE_CONTRACT_ERROR
+  };
+}
+
+
+export function fetchContracts() {
+  return {
+    type: FETCH_CONTRACTS
+  };
+}
+
+export function receiveContracts(contracts) {
+  return {
+    type: RECEIVE_CONTRACTS,
+    contracts
+  };
+}
+
+export function receiveContractsError() {
+  return {
+    type: RECEIVE_CONTRACTS_ERROR
+  };
+}
+
