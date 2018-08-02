@@ -8,6 +8,7 @@ import {
 
 import AccountsContainer from '../containers/AccountsContainer';
 import BlocksContainer from '../containers/BlocksContainer';
+import TransactionsContainer from '../containers/TransactionsContainer';
 
 const ExplorerLayout = () => (
   <Grid.Row>
@@ -31,6 +32,14 @@ const ExplorerLayout = () => (
           >
             Blocks
           </List.GroupItem>
+          <List.GroupItem
+            className="d-flex align-items-center"
+            to="/embark/explorer/transactions"
+            icon="activity"
+            RootComponent={withRouter(NavLink)}
+          >
+            Transactions
+          </List.GroupItem>
         </List.Group>
       </div>
     </Grid.Col>
@@ -38,6 +47,7 @@ const ExplorerLayout = () => (
       <Switch>
         <Route exact path="/embark/explorer/accounts" component={AccountsContainer} />
         <Route exact path="/embark/explorer/blocks" component={BlocksContainer} />
+        <Route exact path="/embark/explorer/transactions" component={TransactionsContainer} />
       </Switch>
     </Grid.Col>
   </Grid.Row>

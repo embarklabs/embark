@@ -8,7 +8,6 @@ import Loading from '../components/Loading';
 import LoadMore from '../components/LoadMore';
 
 class BlocksContainer extends Component {
-
   componentDidMount() {
     if (!this.props.blocks.data) {
       this.props.fetchBlocks();

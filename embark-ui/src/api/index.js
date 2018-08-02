@@ -10,6 +10,10 @@ export function fetchBlocks(from) {
   return axios.get(`${BASE_URL}/blockchain/blocks`, {params: {from}});
 }
 
+export function fetchTransactions(blockFrom) {
+  return axios.get(`${BASE_URL}/blockchain/transactions`, {params: {blockFrom}});
+}
+
 export function fetchProcesses() {
   return axios.get(`${BASE_URL}/processes`);
 }

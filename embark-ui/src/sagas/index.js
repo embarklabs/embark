@@ -2,6 +2,19 @@ import * as actions from '../actions';
 import * as api from '../api';
 import {all, call, fork, put, takeEvery} from 'redux-saga/effects';
 
+export function *fetchTransactions(payload) {
+  try {
+    const transactions = yield call(api.fetchTransactions, payload.blockFrom);
+    yield put(actions.receiveTransactions(transactions));
+  } catch (e) {
+    yield put(actions.receiveTransactionsError());
+  }
+}
+
+export function *watchFetchTransactions() {
+  yield takeEvery(actions.FETCH_TRANSACTIONS, fetchTransactions);
+}
+
 export function *fetchBlocks(payload) {
   try {
     const blocks = yield call(api.fetchBlocks, payload.from);
@@ -42,5 +55,10 @@ export function *watchFetchProcesses() {
 }
 
 export default function *root() {
-  yield all([fork(watchFetchAccounts), fork(watchFetchProcesses), fork(watchFetchBlocks)]);
+  yield all([
+    fork(watchFetchAccounts),
+    fork(watchFetchProcesses),
+    fork(watchFetchBlocks),
+    fork(watchFetchTransactions)
+  ]);
 }
