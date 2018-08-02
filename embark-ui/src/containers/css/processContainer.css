@@ -2,3 +2,26 @@
 .processes-container .nav-link {
   text-transform: capitalize;
 }
+
+.processes-container .logs {
+  margin:  10px 0;
+  background-color: #333333;
+  font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  font-size: 14px;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.processes-container .logs .error {
+  color: #dc3546;
+}
+.processes-container .logs .warn {
+  color: #fec107;
+}
+.processes-container .logs .debug {
+  color: #b7c1cc;
+}
+.processes-container .logs .trace {
+  color: #8f98a2;
+}
