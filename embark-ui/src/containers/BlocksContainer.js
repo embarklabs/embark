@@ -9,11 +9,6 @@ import LoadMore from '../components/LoadMore';
 
 class BlocksContainer extends Component {
 
-  constructor(props) {
-    super(props);
-    this.loadMore = this.loadMore.bind(this);
-  }
-
   componentDidMount() {
     if (!this.props.blocks.data) {
       this.props.fetchBlocks();
@@ -46,7 +41,7 @@ class BlocksContainer extends Component {
     return (
       <React.Fragment>
         <Blocks blocks={blocks.data}/>
-        {(this.loadMoreFrom() >= 0) ? <LoadMore loadMore={this.loadMore} /> : <React.Fragment />}
+        {(this.loadMoreFrom() >= 0) ? <LoadMore loadMore={() => this.loadMore()} /> : <React.Fragment />}
       </React.Fragment>
     );
   }
