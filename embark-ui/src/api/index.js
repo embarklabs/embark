@@ -66,8 +66,6 @@ export function webSocketBlockHeader() {
 }
 
 export function fetchContract(contractName) {
-  console.dir("api: fetchContract");
-  console.dir(contractName);
   return axios.get('http://localhost:8000/embark-api/contract/' + contractName);
 }
 
@@ -76,7 +74,5 @@ export function fetchContracts() {
 }
 
 export function fetchContractProfile(contractName) {
-  console.dir("api: fetchContractProfile");
-  console.dir(contractName);
   return axios.get('http://localhost:8000/embark-api/profiler/' + contractName);
 }

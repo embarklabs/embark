@@ -4,8 +4,6 @@ import {Route, Switch} from 'react-router-dom';
 import HomeContainer from './containers/HomeContainer';
 import AccountsContainer from './containers/AccountsContainer';
 import ContractsContainer from './containers/ContractsContainer';
-import ContractContainer from './containers/ContractContainer';
-import ContractProfileContainer from './containers/ContractProfileContainer';
 import NoMatch from './components/NoMatch';
 import ExplorerLayout from './components/ExplorerLayout';
 import ProcessesLayout from './components/ProcessesLayout';

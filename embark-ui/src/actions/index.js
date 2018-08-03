@@ -147,8 +147,6 @@ export function receiveContractProfileError() {
 }
 
 export function fetchContract(contractName) {
-  console.dir("== fetchContract");
-  console.dir(contractName);
   return {
     type: FETCH_CONTRACT,
     contractName
@@ -156,8 +154,6 @@ export function fetchContract(contractName) {
 }
 
 export function receiveContract(contract) {
-  console.dir("== receiveContract");
-  console.dir(contract);
   return {
     type: RECEIVE_CONTRACT,
     contract
@@ -165,7 +161,6 @@ export function receiveContract(contract) {
 }
 
 export function receiveContractError() {
-  console.dir("== receiveContractError");
   return {
     type: RECEIVE_CONTRACT_ERROR
   };

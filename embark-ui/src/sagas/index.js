@@ -128,19 +128,15 @@ export default function *root() {
 }
 
 export function *fetchContract(action) {
-  console.dir("** fetchContract");
-  console.dir(action);
   try {
     const contract = yield call(api.fetchContract, action.contractName);
     yield put(actions.receiveContract(contract));
   } catch (e) {
-    console.dir(e);
     yield put(actions.receiveContractError());
   }
 }
 
 export function *watchFetchContract() {
-  console.dir("** watchFetchContract");
   yield takeEvery(actions.FETCH_CONTRACT, fetchContract);
 }
 
@@ -158,19 +154,15 @@ export function *watchFetchContracts() {
 }
 
 export function *fetchContractProfile(action) {
-  console.dir("** fetchContractProfile");
-  console.dir(action);
   try {
     const profile = yield call(api.fetchContractProfile, action.contractName);
     yield put(actions.receiveContractProfile(profile));
   } catch (e) {
-    console.dir(e);
     yield put(actions.receiveContractError());
   }
 }
 
 export function *watchFetchContractProfile() {
-  console.dir("** watchFetchContractProfile");
   yield takeEvery(actions.FETCH_CONTRACT_PROFILE, fetchContractProfile);
 }
 

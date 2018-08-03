@@ -5,7 +5,6 @@ import {
   Card,
   Table
 } from "tabler-react";
-import {Link} from 'react-router-dom';
 
 const Contract = ({contract}) => (
   <Page.Content title="Contract">
