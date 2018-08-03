@@ -12,7 +12,7 @@
 <please upload images of the error to better showcase the problem.>
 
 #### Logs
-<please upload logs of the error to better showcase the problem.>
+<please upload logs of the error to better showcase the problem. You can use the following options: --nodashboard --logfile log.txt --loglevel trace>
 
 #### Context (Environment)
 * OS:
