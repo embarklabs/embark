@@ -36,7 +36,7 @@ class ContractContainer extends Component {
 
 function mapStateToProps(state) {
   return { contract: state.contract }
-}:
+};
 
 export default compose(
   connect(

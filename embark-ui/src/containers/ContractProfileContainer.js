@@ -11,17 +11,16 @@ class ContractProfileContainer extends Component {
   }
 
   render() {
-    //const { contract } = this.props;
-    const contract = this.props.contractProfile;
-    if (!contract.data) {
+    const { contractProfile } = this.props;
+    if (!contractProfile.data) {
       return (
         <h1>
-          <i>Loading contract...</i>
+          <i>Loading contract profile...</i>
         </h1>
       );
     }
 
-    if (contract.data.error) {
+    if (contractProfile.data.error) {
       return (
         <h1>
           <i>Error API...</i>
@@ -30,7 +29,7 @@ class ContractProfileContainer extends Component {
     }
 
     return (
-      <ContractProfile contract={contract.data} />
+      <ContractProfile contract={contractProfile.data} />
     );
   }
 }
