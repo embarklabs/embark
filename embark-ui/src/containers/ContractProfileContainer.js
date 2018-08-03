@@ -24,7 +24,7 @@ class ContractProfileContainer extends Component {
       )
     }
 
-    if (contract.error) {
+    if (contract.data.error) {
       return (
         <h1>
           <i>Error API...</i>

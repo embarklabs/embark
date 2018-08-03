@@ -17,7 +17,7 @@ const ContractLayout = (props) => (
         <List.Group transparent={true}>
           <List.GroupItem
             className="d-flex align-items-center"
-            to="/embark/explorer/accounts"
+            to={`/embark/contracts/${props.match.params.contractName}/deployment`}
             icon="users"
             RootComponent={withRouter(NavLink)}
           >
@@ -25,7 +25,7 @@ const ContractLayout = (props) => (
           </List.GroupItem>
           <List.GroupItem
             className="d-flex align-items-center"
-            to="/embark/explorer/blocks"
+            to={`/embark/contracts/${props.match.params.contractName}/functions`}
             icon="book-open"
             RootComponent={withRouter(NavLink)}
           >
@@ -33,7 +33,7 @@ const ContractLayout = (props) => (
           </List.GroupItem>
           <List.GroupItem
             className="d-flex align-items-center"
-            to="/embark/explorer/transactions"
+            to={`/embark/contracts/${props.match.params.contractName}/source`}
             icon="activity"
             RootComponent={withRouter(NavLink)}
           >
@@ -58,7 +58,5 @@ const ContractLayout = (props) => (
     </Grid.Col>
   </Grid.Row>
 );
-        // <Route exact path="/embark/explorer/blocks" component={BlocksContainer} />
-        // <Route exact path="/embark/explorer/transactions" component={TransactionsContainer} />
 
 export default withRouter(ContractLayout);
