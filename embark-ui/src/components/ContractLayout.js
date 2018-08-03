@@ -7,6 +7,7 @@ import {
 } from "tabler-react";
 
 import ContractContainer from '../containers/ContractContainer';
+import ContractProfileContainer from '../containers/ContractProfileContainer';
 
 const ContractLayout = (props) => (
   <Grid.Row>
@@ -51,12 +52,12 @@ const ContractLayout = (props) => (
     </Grid.Col>
     <Grid.Col md={9}>
       <Switch>
+        <Route exact path="/embark/contracts/:contractName/profiler" component={ContractProfileContainer} />
         <ContractContainer />
       </Switch>
     </Grid.Col>
   </Grid.Row>
 );
-        // <Route exact path="/embark/explorer/accounts" component={AccountsContainer} />
         // <Route exact path="/embark/explorer/blocks" component={BlocksContainer} />
         // <Route exact path="/embark/explorer/transactions" component={TransactionsContainer} />
 
