@@ -1,66 +1,46 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Tabs, Tab} from 'tabler-react';
 import PropTypes from 'prop-types';
-import {fetchProcesses, fetchProcessLogs, listenToProcessLogs} from '../actions';
-import Loading from '../components/Loading';
+import {fetchProcessLogs, listenToProcessLogs} from '../actions';
 
-import "./css/processContainer.css";
 import Process from "../components/Process";
 
 class ProcessesContainer extends Component {
   componentDidMount() {
-    this.props.fetchProcesses();
-  }
-
-  shouldComponentUpdate(nextProps, _nextState) {
-    if (!this.islistening && nextProps.processes && nextProps.processes.data) {
-      this.islistening = true;
-      Object.keys(nextProps.processes.data).forEach(processName => {
-        this.props.fetchProcessLogs(processName);
-        // Only start watching if we are not already watching
-        if (!this.props.processes.data ||
-          !this.props.processes.data[processName] ||
-          !this.props.processes.data[processName].isListening
-        ) {
-          this.props.listenToProcessLogs(processName);
-        }
-      });
+    // Get correct process name
+    const pathParts = this.props.match.path.split('/');
+    this.processName = pathParts[pathParts.length - 1];
+    // If we are not in a specific process page (eg: processes/ root), get first process
+    if (Object.keys(this.props.processes.data).indexOf(this.processName) < 0) {
+      this.processName = Object.keys(this.props.processes.data)[0];
     }
-    return true;
+
+    // Fetch logs for the process
+    this.props.fetchProcessLogs(this.processName);
+
+    // Only start watching if we are not already watching
+    if (!this.props.processes.data[this.processName].isListening) {
+      this.props.listenToProcessLogs(this.processName);
+    }
   }
 
   render() {
-    const {processes} = this.props;
-    if (!processes.data) {
-      return <Loading />;
+    if (!this.processName) {
+      return '';
     }
-
-    const processNames = Object.keys(processes.data);
     return (
       <div className="processes-container">
-        {processes.error && <h1>
-          <i>Error: {processes.error.message || processes.error}</i>
-        </h1>}
-
-        {processNames && processNames.length && <Tabs initialTab={processNames[0]}>
-          {processNames.map(processName => {
-            return (<Tab key={processName} title={processName}>
-              <Process processName={processName}
-                       state={processes.data[processName].state}
-                       logs={processes.data[processName].logs}/>
-            </Tab>);
-          })}
-        </Tabs>}
-
+        <Process processName={this.processName}
+                 state={this.props.processes.data[this.processName].state}
+                 logs={this.props.processes.data[this.processName].logs}/>
       </div>
     );
   }
 }
 
 ProcessesContainer.propTypes = {
+  match: PropTypes.object,
   processes: PropTypes.object,
-  fetchProcesses: PropTypes.func,
   fetchProcessLogs: PropTypes.func,
   listenToProcessLogs: PropTypes.func
 };
@@ -72,7 +52,6 @@ function mapStateToProps(state) {
 export default connect(
   mapStateToProps,
   {
-    fetchProcesses,
     fetchProcessLogs,
     listenToProcessLogs
   }

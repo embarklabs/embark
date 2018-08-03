@@ -1,9 +1,4 @@
-
-.processes-container .nav-link {
-  text-transform: capitalize;
-}
-
-.processes-container .logs {
+.logs {
   margin:  10px 0;
   background-color: #333333;
   font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
@@ -13,15 +8,19 @@
   border-radius: 8px;
 }
 
-.processes-container .logs .error {
+.logs .error {
   color: #dc3546;
 }
-.processes-container .logs .warn {
+.logs .warn {
   color: #fec107;
 }
-.processes-container .logs .debug {
+.logs .debug {
   color: #b7c1cc;
 }
-.processes-container .logs .trace {
+.logs .trace {
   color: #8f98a2;
+}
+
+.capitalize {
+  text-transform: capitalize;
 }
