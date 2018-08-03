@@ -15,7 +15,7 @@ class ContractsContainer extends Component {
         <h1>
           <i>Loading contracts...</i>
         </h1>
-      )
+      );
     }
 
     if (contracts.error) {
@@ -23,17 +23,17 @@ class ContractsContainer extends Component {
         <h1>
           <i>Error API...</i>
         </h1>
-      )
+      );
     }
 
     return (
       <Contracts contracts={contracts.data} />
     );
   }
-};
+}
 
 function mapStateToProps(state) {
-  return { contracts: state.contracts }
+  return { contracts: state.contracts };
 }
 
 export default connect(
@@ -41,5 +41,5 @@ export default connect(
   {
     fetchContracts
   },
-)(ContractsContainer)
+)(ContractsContainer);
 

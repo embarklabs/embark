@@ -30,7 +30,7 @@ const ContractProfile = ({contract}) => (
                   {content: method.mutability},
                   {content: `(${method.inputs.map((x) => x.type).join(',')})`},
                   {content: `(${method.outputs.map((x) => x.type).join(',')})`},
-                  {content: method.gasEstimates},
+                  {content: method.gasEstimates}
                 ]);
               })
             }
@@ -39,7 +39,7 @@ const ContractProfile = ({contract}) => (
       </Grid.Col>
     </Grid.Row>
   </Page.Content>
-)
+);
 
 export default ContractProfile;
 

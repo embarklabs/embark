@@ -218,8 +218,7 @@
         "nonblock-statement-body-position": "error",
         "object-curly-newline": "off",
         "object-curly-spacing": [
-            "error",
-            "never"
+            "off"
         ],
         "object-property-newline": "off",
         "object-shorthand": "off",

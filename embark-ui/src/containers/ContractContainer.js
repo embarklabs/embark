@@ -11,16 +11,13 @@ class ContractContainer extends Component {
   }
 
   render() {
-    console.dir("||======>");
-    console.dir(this.props);
-    console.dir("||======>");
-    const { contract } = this.props;
+    const {contract} = this.props;
     if (!contract.data) {
       return (
         <h1>
           <i>Loading contract...</i>
         </h1>
-      )
+      );
     }
 
     if (contract.error) {
@@ -28,10 +25,8 @@ class ContractContainer extends Component {
         <h1>
           <i>Error API...</i>
         </h1>
-      )
+      );
     }
-
-    console.dir(contract);
 
     return (
       <Contract contract={contract.data} />
@@ -41,13 +36,13 @@ class ContractContainer extends Component {
 
 function mapStateToProps(state) {
   return { contract: state.contract }
-}
+}:
 
 export default compose(
   connect(
     mapStateToProps,
-    { fetchContract }
+    {fetchContract}
   ),
   withRouter
-)(ContractContainer)
+)(ContractContainer);
 
