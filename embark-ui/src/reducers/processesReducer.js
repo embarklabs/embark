@@ -4,7 +4,7 @@ import {
   RECEIVE_PROCESS_LOGS,
   RECEIVE_PROCESS_LOGS_ERROR,
   RECEIVE_NEW_PROCESS_LOG,
-  IS_LISTENING_PROCESS_LOG
+  WATCH_NEW_PROCESS_LOGS
 } from "../actions";
 
 export default function processes(state = {}, action) {
@@ -38,7 +38,7 @@ export default function processes(state = {}, action) {
         }
       };
     }
-    case IS_LISTENING_PROCESS_LOG: {
+    case WATCH_NEW_PROCESS_LOGS: {
       return {
         ...state,
         data: {

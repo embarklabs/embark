@@ -94,7 +94,6 @@ export function *watchInitBlockHeader() {
 }
 
 export function *listenToProcessLogs(action) {
-  yield put({type: actions.IS_LISTENING_PROCESS_LOG, processName: action.processName});
   const socket = api.webSocketProcess(action.processName);
   const channel = yield call(createChannel, socket);
   while (true) {
