@@ -3,6 +3,19 @@ import * as api from '../api';
 import {eventChannel} from 'redux-saga';
 import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
 
+export function *fetchTransaction(payload) {
+  try {
+    const transaction = yield call(api.fetchTransaction, payload.hash);
+    yield put(actions.receiveTransaction(transaction));
+  } catch (e) {
+    yield put(actions.receiveTransactionError());
+  }
+}
+
+export function *watchFetchTransaction() {
+  yield takeEvery(actions.FETCH_TRANSACTION, fetchTransaction);
+}
+
 export function *fetchTransactions(payload) {
   try {
     const transactions = yield call(api.fetchTransactions, payload.blockFrom);
@@ -16,6 +29,19 @@ export function *watchFetchTransactions() {
   yield takeEvery(actions.FETCH_TRANSACTIONS, fetchTransactions);
 }
 
+export function *fetchBlock(payload) {
+  try {
+    const block = yield call(api.fetchBlock, payload.blockNumber);
+    yield put(actions.receiveBlock(block));
+  } catch (e) {
+    yield put(actions.receiveBlockError());
+  }
+}
+
+export function *watchFetchBlock() {
+  yield takeEvery(actions.FETCH_BLOCK, fetchBlock);
+}
+
 export function *fetchBlocks(payload) {
   try {
     const blocks = yield call(api.fetchBlocks, payload.from);
@@ -27,6 +53,19 @@ export function *fetchBlocks(payload) {
 
 export function *watchFetchBlocks() {
   yield takeEvery(actions.FETCH_BLOCKS, fetchBlocks);
+}
+
+export function *fetchAccount(payload) {
+  try {
+    const account = yield call(api.fetchAccounts, payload.address);
+    yield put(actions.receiveAccount(account));
+  } catch (e) {
+    yield put(actions.receiveAccountError());
+  }
+}
+
+export function *watchFetchAccount() {
+  yield takeEvery(actions.FETCH_ACCOUNT, fetchAccount);
 }
 
 export function *fetchAccounts() {
@@ -110,10 +149,13 @@ export default function *root() {
   yield all([
     fork(watchInitBlockHeader),
     fork(watchFetchAccounts),
+    fork(watchFetchAccount),
     fork(watchFetchProcesses),
     fork(watchFetchProcessLogs),
     fork(watchListenToProcessLogs),
     fork(watchFetchBlocks),
-    fork(watchFetchTransactions)
+    fork(watchFetchBlock),
+    fork(watchFetchTransactions),
+    fork(watchFetchTransaction)
   ]);
 }
