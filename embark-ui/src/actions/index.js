@@ -20,6 +20,8 @@ export const accounts = {
   failure: (error) => action(ACCOUNTS[FAILURE], {error})
 };
 
+// Fiddle
+export const FIDDLE_CODE_CHANGE = 'FIDDLE_CODE_CHANGE';
 export const ACCOUNT = createRequestTypes('ACCOUNT');
 export const account = {
   request: (address) => action(ACCOUNT[REQUEST], {address}),
@@ -143,8 +145,8 @@ export function listenToContractLogs() {
   };
 }
 
-export function initBlockHeader(){
+export function fiddleCodeChange(){
   return {
-    type: INIT_BLOCK_HEADER
+    type: FIDDLE_CODE_CHANGE
   };
 }

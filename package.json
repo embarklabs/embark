@@ -119,7 +119,8 @@
     "webpack": "4.19.0",
     "websocket": "1.0.28",
     "window-size": "1.1.1",
-    "webpack-bundle-analyzer": "^2.13.1"
+    "webpack-bundle-analyzer": "^2.13.1",
+    "react-scripts": "^1.1.4"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
