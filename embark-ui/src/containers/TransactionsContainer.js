@@ -9,9 +9,7 @@ import LoadMore from '../components/LoadMore';
 
 class TransactionsContainer extends Component {
   componentDidMount() {
-    if (!this.props.transactions.data) {
-      this.props.fetchTransactions();
-    }
+    this.props.fetchTransactions();
   }
 
   loadMore() {

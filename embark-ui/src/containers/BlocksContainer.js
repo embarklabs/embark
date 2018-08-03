@@ -9,9 +9,7 @@ import LoadMore from '../components/LoadMore';
 
 class BlocksContainer extends Component {
   componentDidMount() {
-    if (!this.props.blocks.data) {
-      this.props.fetchBlocks();
-    }
+    this.props.fetchBlocks();
   }
 
   loadMore() {

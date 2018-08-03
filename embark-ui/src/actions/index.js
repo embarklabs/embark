@@ -18,6 +18,8 @@ export const RECEIVE_BLOCKS_ERROR = 'RECEIVE_BLOCKS_ERROR';
 export const FETCH_TRANSACTIONS = 'FETCH_TRANSACTIONS';
 export const RECEIVE_TRANSACTIONS = 'RECEIVE_TRANSACTIONS';
 export const RECEIVE_TRANSACTIONS_ERROR = 'RECEIVE_TRANSACTIONS_ERROR';
+// BlockHeader
+export const INIT_BLOCK_HEADER = 'INIT_BLOCK_HEADER';
 
 export function fetchAccounts() {
   return {
@@ -117,5 +119,11 @@ export function receiveTransactions(transactions) {
 export function receiveTransactionsError() {
   return {
     type: RECEIVE_TRANSACTIONS_ERROR
+  };
+}
+
+export function initBlockHeader(){
+  return {
+    type: INIT_BLOCK_HEADER
   };
 }

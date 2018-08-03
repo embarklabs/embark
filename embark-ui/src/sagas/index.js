@@ -1,6 +1,7 @@
 import * as actions from '../actions';
 import * as api from '../api';
-import {all, call, fork, put, takeEvery} from 'redux-saga/effects';
+import {eventChannel} from 'redux-saga';
+import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
 
 export function *fetchTransactions(payload) {
   try {
@@ -67,8 +68,34 @@ export function *watchFetchProcessLogs() {
   yield takeEvery(actions.FETCH_PROCESS_LOGS, fetchProcessLogs);
 }
 
+function createChannel(socket) {
+  return eventChannel(emit => {
+    socket.onmessage = ((message) => {
+      emit(JSON.parse(message.data));
+    });
+    return () => {
+      socket.close();
+    };
+  });
+}
+
+export function *initBlockHeader() {
+  const socket = api.webSocketBlockHeader();
+  const channel = yield call(createChannel, socket);
+  while (true) {
+    yield take(channel);
+    yield put({type: actions.FETCH_BLOCKS});
+    yield put({type: actions.FETCH_TRANSACTIONS});
+  }
+}
+
+export function *watchInitBlockHeader() {
+  yield takeEvery(actions.INIT_BLOCK_HEADER, initBlockHeader);
+}
+
 export default function *root() {
   yield all([
+    fork(watchInitBlockHeader),
     fork(watchFetchAccounts),
     fork(watchFetchProcesses),
     fork(watchFetchProcessLogs),
