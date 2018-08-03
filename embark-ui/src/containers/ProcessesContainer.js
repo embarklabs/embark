@@ -2,8 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Tabs, Tab} from 'tabler-react';
 import PropTypes from 'prop-types';
-
-import {fetchProcesses} from '../actions';
+import {fetchProcesses, fetchProcessLogs, listenToProcessLogs} from '../actions';
 import Loading from '../components/Loading';
 
 import "./css/processContainer.css";
@@ -12,6 +11,23 @@ import Process from "../components/Process";
 class ProcessesContainer extends Component {
   componentDidMount() {
     this.props.fetchProcesses();
+  }
+
+  shouldComponentUpdate(nextProps, _nextState) {
+    if (!this.islistening && nextProps.processes && nextProps.processes.data) {
+      this.islistening = true;
+      Object.keys(nextProps.processes.data).forEach(processName => {
+        this.props.fetchProcessLogs(processName);
+        // Only start watching if we are not already watching
+        if (!this.props.processes.data ||
+          !this.props.processes.data[processName] ||
+          !this.props.processes.data[processName].isListening
+        ) {
+          this.props.listenToProcessLogs(processName);
+        }
+      });
+    }
+    return true;
   }
 
   render() {
@@ -30,7 +46,9 @@ class ProcessesContainer extends Component {
         {processNames && processNames.length && <Tabs initialTab={processNames[0]}>
           {processNames.map(processName => {
             return (<Tab key={processName} title={processName}>
-              <Process processName={processName} state={processes.data[processName].state}/>
+              <Process processName={processName}
+                       state={processes.data[processName].state}
+                       logs={processes.data[processName].logs}/>
             </Tab>);
           })}
         </Tabs>}
@@ -42,7 +60,9 @@ class ProcessesContainer extends Component {
 
 ProcessesContainer.propTypes = {
   processes: PropTypes.object,
-  fetchProcesses: PropTypes.func
+  fetchProcesses: PropTypes.func,
+  fetchProcessLogs: PropTypes.func,
+  listenToProcessLogs: PropTypes.func
 };
 
 function mapStateToProps(state) {
@@ -52,6 +72,8 @@ function mapStateToProps(state) {
 export default connect(
   mapStateToProps,
   {
-    fetchProcesses
+    fetchProcesses,
+    fetchProcessLogs,
+    listenToProcessLogs
   }
 )(ProcessesContainer);

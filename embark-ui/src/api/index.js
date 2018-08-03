@@ -21,6 +21,10 @@ export function fetchProcessLogs(processName) {
   return axios.get(`${constants.httpEndpoint}/process-logs/${processName}`);
 }
 
+export function webSocketProcess(processName) {
+  return new WebSocket(constants.wsEndpoint + '/process-logs/' + processName);
+}
+
 export function webSocketBlockHeader() {
   return new WebSocket(`${constants.wsEndpoint}/blockchain/blockHeader`);
 }

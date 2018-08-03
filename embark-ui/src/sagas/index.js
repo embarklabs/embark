@@ -93,12 +93,28 @@ export function *watchInitBlockHeader() {
   yield takeEvery(actions.INIT_BLOCK_HEADER, initBlockHeader);
 }
 
+export function *listenToProcessLogs(action) {
+  console.log('WATCH', action.processName);
+  yield put({type: actions.IS_LISTENING_PROCESS_LOG, processName: action.processName});
+  const socket = api.webSocketProcess(action.processName);
+  const channel = yield call(createChannel, socket);
+  while (true) {
+    const log = yield take(channel);
+    yield put({type: actions.RECEIVE_NEW_PROCESS_LOG, processName: action.processName, log});
+  }
+}
+
+export function *watchListenToProcessLogs() {
+  yield takeEvery(actions.WATCH_NEW_PROCESS_LOGS, listenToProcessLogs);
+}
+
 export default function *root() {
   yield all([
     fork(watchInitBlockHeader),
     fork(watchFetchAccounts),
     fork(watchFetchProcesses),
     fork(watchFetchProcessLogs),
+    fork(watchListenToProcessLogs),
     fork(watchFetchBlocks),
     fork(watchFetchTransactions)
   ]);
