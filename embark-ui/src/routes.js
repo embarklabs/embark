@@ -5,6 +5,7 @@ import HomeContainer from './containers/HomeContainer';
 import AccountsContainer from './containers/AccountsContainer';
 import ContractsContainer from './containers/ContractsContainer';
 import ContractContainer from './containers/ContractContainer';
+import ContractProfileContainer from './containers/ContractProfileContainer';
 import NoMatch from './components/NoMatch';
 import ExplorerLayout from './components/ExplorerLayout';
 import ProcessesLayout from './components/ProcessesLayout';
@@ -18,6 +19,7 @@ const routes = (
       <Route path="/embark/processes/" component={ProcessesLayout} />
       <Route path="/embark/explorer/accounts" component={AccountsContainer} />
       <Route path="/embark/processes" component={ProcessesContainer} />
+      <Route path="/embark/contracts/:contractName/profiler" component={ContractProfileContainer} />
       <Route path="/embark/contracts/:contractName" component={ContractLayout} />
       <Route path="/embark/contracts" component={ContractsContainer} />
       <Route component={NoMatch} />

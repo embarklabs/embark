@@ -76,5 +76,7 @@ export function fetchContracts() {
 }
 
 export function fetchContractProfile(contractName) {
+  console.dir("api: fetchContractProfile");
+  console.dir(contractName);
   return axios.get('http://localhost:8000/embark-api/profiler/' + contractName);
 }

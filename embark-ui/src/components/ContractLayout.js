@@ -8,7 +8,7 @@ import {
 
 import ContractContainer from '../containers/ContractContainer';
 
-const ContractLayout = () => (
+const ContractLayout = (props) => (
   <Grid.Row>
     <Grid.Col md={3}>
       <Page.Title className="my-5">Contract</Page.Title>
@@ -40,7 +40,7 @@ const ContractLayout = () => (
           </List.GroupItem>
           <List.GroupItem
             className="d-flex align-items-center"
-            to={withRouter(ContractContainer)}
+            to={`/embark/contracts/${props.match.params.contractName}/profiler`}
             icon="server"
             RootComponent={withRouter(NavLink)}
           >

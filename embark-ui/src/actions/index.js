@@ -126,16 +126,17 @@ export function initBlockHeader(){
   };
 }
 
-export function fetchContractProfile() {
+export function fetchContractProfile(contractName) {
   return {
-    type: FETCH_CONTRACT_PROFILE
+    type: FETCH_CONTRACT_PROFILE,
+    contractName
   };
 }
 
-export function receiveContractProfile(profile) {
+export function receiveContractProfile(contractProfile) {
   return {
     type: RECEIVE_CONTRACT_PROFILE,
-    profile
+    contractProfile
   };
 }
 

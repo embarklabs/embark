@@ -121,6 +121,9 @@ export default function *root() {
     fork(watchFetchBlocks),
     fork(watchFetchContracts),
     fork(watchFetchContract),
+    fork(watchFetchTransaction),
+    fork(watchFetchContractProfile),
+    fork(watchFetchTransactions)
   ]);
 }
 
@@ -153,3 +156,21 @@ export function *fetchContracts() {
 export function *watchFetchContracts() {
   yield takeEvery(actions.FETCH_CONTRACTS, fetchContracts);
 }
+
+export function *fetchContractProfile(action) {
+  console.dir("** fetchContractProfile");
+  console.dir(action);
+  try {
+    const profile = yield call(api.fetchContractProfile, action.contractName);
+    yield put(actions.receiveContractProfile(profile));
+  } catch (e) {
+    console.dir(e);
+    yield put(actions.receiveContractError());
+  }
+}
+
+export function *watchFetchContractProfile() {
+  console.dir("** watchFetchContractProfile");
+  yield takeEvery(actions.FETCH_CONTRACT_PROFILE, fetchContractProfile);
+}
+

@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { fetchContract } from '../actions';
-import Contract from '../components/Contract';
+import { fetchContractProfile } from '../actions';
+import ContractProfile from '../components/ContractProfile';
 import { withRouter } from 'react-router'
 
-class ContractContainer extends Component {
+class ContractProfileContainer extends Component {
   componentWillMount() {
-    this.props.fetchContract(this.props.match.params.contractName);
+    this.props.fetchContractProfile(this.props.match.params.contractName);
   }
 
   render() {
     console.dir("||======>");
     console.dir(this.props);
     console.dir("||======>");
-    const { contract } = this.props;
+    //const { contract } = this.props;
+    const contract = this.props.contractProfile;
     if (!contract.data) {
       return (
         <h1>
@@ -34,20 +35,25 @@ class ContractContainer extends Component {
     console.dir(contract);
 
     return (
-      <Contract contract={contract.data} />
+      <ContractProfile contract={contract.data} />
     );
   }
 };
 
 function mapStateToProps(state) {
-  return { contract: state.contract }
+  console.dir("-----------");
+  console.dir("-----------");
+  console.dir(state);
+  console.dir("-----------");
+  console.dir("-----------");
+  return { contractProfile: state.contractProfile }
 }
 
 export default compose(
   connect(
     mapStateToProps,
-    { fetchContract }
+    { fetchContractProfile }
   ),
   withRouter
-)(ContractContainer)
+)(ContractProfileContainer)
 
