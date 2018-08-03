@@ -10,6 +10,8 @@ import contractReducer from './contractReducer';
 const rootReducer = combineReducers({
   accounts: accountsReducer,
   processes: processesReducer,
+  contracts: contractsReducer,
+  contract: contractReducer,
   blocks: blocksReducer,
   transactions: transactionsReducer,
   commands: commandsReducer,
