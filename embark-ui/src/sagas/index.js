@@ -106,27 +106,6 @@ export function *watchListenToProcessLogs() {
   yield takeEvery(actions.WATCH_NEW_PROCESS_LOGS, listenToProcessLogs);
 }
 
-export default function *root() {
-  yield all([
-    fork(watchInitBlockHeader),
-    fork(watchFetchAccounts),
-    fork(watchFetchAccount),
-    fork(watchFetchProcesses),
-    fork(watchFetchProcessLogs),
-    fork(watchListenToProcessLogs),
-    fork(watchFetchBlock),
-    fork(watchFetchTransactions)
-    fork(watchFetchTransaction),
-    fork(watchPostCommand)
-    fork(watchFetchBlocks),
-    fork(watchFetchContracts),
-    fork(watchFetchContract),
-    fork(watchFetchTransaction),
-    fork(watchFetchContractProfile),
-    fork(watchFetchTransactions)
-  ]);
-}
-
 export function *fetchContract(action) {
   try {
     const contract = yield call(api.fetchContract, action.contractName);
@@ -170,11 +149,18 @@ export default function *root() {
   yield all([
     fork(watchInitBlockHeader),
     fork(watchFetchAccounts),
+    fork(watchFetchAccount),
     fork(watchFetchProcesses),
     fork(watchFetchProcessLogs),
+    fork(watchListenToProcessLogs),
+    fork(watchFetchBlock),
+    fork(watchFetchTransactions)
+    fork(watchFetchTransaction),
+    fork(watchPostCommand)
     fork(watchFetchBlocks),
     fork(watchFetchContracts),
     fork(watchFetchContract),
+    fork(watchFetchTransaction),
     fork(watchFetchContractProfile),
     fork(watchFetchTransactions)
   ]);
