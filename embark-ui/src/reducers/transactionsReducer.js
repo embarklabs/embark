@@ -1,4 +1,4 @@
-import {RECEIVE_TRANSACTION, RECEIVE_TRANSACTION_ERROR, RECEIVE_TRANSACTIONS, RECEIVE_TRANSACTIONS_ERROR} from "../actions";
+import * as actions from "../actions";
 
 const BN_FACTOR = 10000;
 
@@ -14,22 +14,22 @@ function filterTransaction(tx, index, self) {
 
 export default function transactions(state = {}, action) {
   switch (action.type) {
-    case RECEIVE_TRANSACTIONS:
+    case actions.TRANSACTIONS[actions.SUCCESS]:
       return {
-        ...state, data: [...action.transactions.data, ...state.data || []]
+        ...state, error: null, data: [...action.transactions.data, ...state.data || []]
           .filter(filterTransaction)
           .sort(sortTransaction)
       };
-    case RECEIVE_TRANSACTIONS_ERROR:
-      return Object.assign({}, state, {error: true});
-    case RECEIVE_TRANSACTION:
+    case actions.TRANSACTIONS[actions.FAILURE]:
+      return Object.assign({}, state, {error: action.error});
+    case actions.TRANSACTION[actions.SUCCESS]:
       return {
-        ...state, data: [action.transaction.data, ...state.data || []]
+        ...state, error: null, data: [action.transaction.data, ...state.data || []]
           .filter(filterTransaction)
           .sort(sortTransaction)
       };
-    case RECEIVE_TRANSACTION_ERROR:
-      return Object.assign({}, state, {error: true});
+    case actions.TRANSACTION[actions.FAILURE]:
+      return Object.assign({}, state, {error: action.error});
     default:
       return state;
   }

@@ -3,7 +3,7 @@ import * as api from '../api';
 import {eventChannel} from 'redux-saga';
 import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
 
-const {account, accounts} = actions;
+const {account, accounts, block, blocks, transaction, transactions} = actions;
 
 function *fetchEntity(entity, apiFn, id) {
   const {response, error} = yield call(apiFn, id);
@@ -15,58 +15,26 @@ function *fetchEntity(entity, apiFn, id) {
 }
 
 export const fetchAccount = fetchEntity.bind(null, account, api.fetchAccount);
+export const fetchBlock = fetchEntity.bind(null, block, api.fetchBlock);
+export const fetchTransaction = fetchEntity.bind(null, transaction, api.fetchTransaction);
 export const fetchAccounts = fetchEntity.bind(null, accounts, api.fetchAccounts);
-
-export function *fetchTransaction(payload) {
-  try {
-    const transaction = yield call(api.fetchTransaction, payload.hash);
-    yield put(actions.receiveTransaction(transaction));
-  } catch (e) {
-    yield put(actions.receiveTransactionError());
-  }
-}
+export const fetchBlocks = fetchEntity.bind(null, blocks, api.fetchBlocks);
+export const fetchTransactions = fetchEntity.bind(null, transactions, api.fetchTransactions);
 
 export function *watchFetchTransaction() {
-  yield takeEvery(actions.FETCH_TRANSACTION, fetchTransaction);
-}
-
-export function *fetchTransactions(payload) {
-  try {
-    const transactions = yield call(api.fetchTransactions, payload.blockFrom);
-    yield put(actions.receiveTransactions(transactions));
-  } catch (e) {
-    yield put(actions.receiveTransactionsError());
-  }
+  yield takeEvery(actions.TRANSACTION[actions.REQUEST], fetchTransaction);
 }
 
 export function *watchFetchTransactions() {
-  yield takeEvery(actions.FETCH_TRANSACTIONS, fetchTransactions);
-}
-
-export function *fetchBlock(payload) {
-  try {
-    const block = yield call(api.fetchBlock, payload.blockNumber);
-    yield put(actions.receiveBlock(block));
-  } catch (e) {
-    yield put(actions.receiveBlockError());
-  }
+  yield takeEvery(actions.TRANSACTIONS[actions.REQUEST], fetchTransactions);
 }
 
 export function *watchFetchBlock() {
-  yield takeEvery(actions.FETCH_BLOCK, fetchBlock);
-}
-
-export function *fetchBlocks(payload) {
-  try {
-    const blocks = yield call(api.fetchBlocks, payload.from);
-    yield put(actions.receiveBlocks(blocks));
-  } catch (e) {
-    yield put(actions.receiveBlocksError());
-  }
+  yield takeEvery(actions.BLOCK[actions.REQUEST], fetchBlock);
 }
 
 export function *watchFetchBlocks() {
-  yield takeEvery(actions.FETCH_BLOCKS, fetchBlocks);
+  yield takeEvery(actions.BLOCKS[actions.REQUEST], fetchBlocks);
 }
 
 export function *watchFetchAccount() {
@@ -119,8 +87,8 @@ export function *initBlockHeader() {
   const channel = yield call(createChannel, socket);
   while (true) {
     yield take(channel);
-    yield put({type: actions.FETCH_BLOCKS});
-    yield put({type: actions.FETCH_TRANSACTIONS});
+    yield put({type: actions.BLOCKS[actions.REQUEST]});
+    yield put({type: actions.TRANSACTIONS[actions.REQUEST]});
   }
 }
 

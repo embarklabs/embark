@@ -3,7 +3,8 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
 
-import {fetchTransaction} from '../actions';
+import {transaction as transactionAction} from '../actions';
+import Error from "../components/Error";
 import NoMatch from "../components/NoMatch";
 import Transaction from '../components/Transaction';
 
@@ -13,7 +14,10 @@ class TransactionContainer extends Component {
   }
 
   render() {
-    const {transaction} = this.props;
+    const {transaction, error} = this.props;
+    if (error) {
+      return <Error error={error} />;
+    }
     if (!transaction) {
       return <NoMatch />;
     }
@@ -27,6 +31,9 @@ class TransactionContainer extends Component {
 }
 
 function mapStateToProps(state, props) {
+  if(state.transactions.error) {
+    return {error: state.transactions.error};
+  }
   if(state.transactions.data) {
     return {transaction: state.transactions.data.find(transaction => transaction.hash === props.match.params.hash)};
   }
@@ -36,12 +43,13 @@ function mapStateToProps(state, props) {
 TransactionContainer.propTypes = {
   match: PropTypes.object,
   transaction: PropTypes.object,
-  fetchTransaction: PropTypes.func
+  fetchTransaction: PropTypes.func,
+  error: PropTypes.string
 };
 
 export default withRouter(connect(
   mapStateToProps,
   {
-    fetchTransaction
+    fetchTransaction: transactionAction.request
   }
 )(TransactionContainer));

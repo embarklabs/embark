@@ -7,6 +7,7 @@ import {account as accountAction} from '../actions';
 import Account from '../components/Account';
 import NoMatch from "../components/NoMatch";
 import Transactions from '../components/Transactions';
+import Error from '../components/Error';
 
 class AccountContainer extends Component {
   componentDidMount() {
@@ -14,7 +15,11 @@ class AccountContainer extends Component {
   }
 
   render() {
-    const {account} = this.props;
+    const {account, error} = this.props;
+    if (error) {
+      return <Error error={error} />;
+    }
+
     if (!account) {
       return <NoMatch />;
     }
@@ -29,6 +34,9 @@ class AccountContainer extends Component {
 }
 
 function mapStateToProps(state, props) {
+  if(state.accounts.error) {
+    return {error: state.accounts.error};
+  }
   if(state.accounts.data) {
     return {account: state.accounts.data.find(account => account.address === props.match.params.address)};
   }
@@ -38,7 +46,8 @@ function mapStateToProps(state, props) {
 AccountContainer.propTypes = {
   match: PropTypes.object,
   account: PropTypes.object,
-  fetchAccount: PropTypes.func
+  fetchAccount: PropTypes.func,
+  error: PropTypes.string
 };
 
 export default withRouter(connect(

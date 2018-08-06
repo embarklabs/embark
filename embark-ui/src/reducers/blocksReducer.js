@@ -1,4 +1,4 @@
-import {RECEIVE_BLOCK, RECEIVE_BLOCK_ERROR, RECEIVE_BLOCKS, RECEIVE_BLOCKS_ERROR} from "../actions";
+import * as actions from "../actions";
 
 function sortBlock(a, b) {
   return b.number - a.number;
@@ -10,22 +10,22 @@ function filterBlock(block, index, self) {
 
 export default function blocks(state = {}, action) {
   switch (action.type) {
-    case RECEIVE_BLOCKS:
+    case actions.BLOCKS[actions.SUCCESS]:
       return {
-        ...state, data: [...action.blocks.data, ...state.data || []]
+        ...state, error: null, data: [...action.blocks.data, ...state.data || []]
           .filter(filterBlock)
           .sort(sortBlock)
       };
-    case RECEIVE_BLOCKS_ERROR:
-      return Object.assign({}, state, {error: true});
-    case RECEIVE_BLOCK:
+    case actions.BLOCKS[actions.FAILURE]:
+      return Object.assign({}, state, {error: action.error});
+    case actions.BLOCK[actions.SUCCESS]:
       return {
-        ...state, data: [action.block.data, ...state.data || []]
+        ...state, error: null, data: [action.block.data, ...state.data || []]
           .filter(filterBlock)
           .sort(sortBlock)
       };
-    case RECEIVE_BLOCK_ERROR:
-      return Object.assign({}, state, {error: true});
+    case actions.BLOCK[actions.FAILURE]:
+      return Object.assign({}, state, {error: action.error});
     default:
       return state;
   }

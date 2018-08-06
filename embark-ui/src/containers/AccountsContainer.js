@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import {accounts as accountsAction} from '../actions';
 import Accounts from '../components/Accounts';
 import Loading from '../components/Loading';
+import Error from '../components/Error';
 
 class AccountsContainer extends Component {
   componentDidMount() {
@@ -13,16 +14,12 @@ class AccountsContainer extends Component {
 
   render() {
     const {accounts} = this.props;
-    if (!accounts.data) {
-      return <Loading />;
+    if (accounts.error) {
+      return <Error error={accounts.error} />;
     }
 
-    if (accounts.error) {
-      return (
-        <h1>
-          <i>Error API...</i>
-        </h1>
-      );
+    if (!accounts.data) {
+      return <Loading />;
     }
 
     return (

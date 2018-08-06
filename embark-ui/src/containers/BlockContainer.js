@@ -3,8 +3,9 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
 
-import {fetchBlock} from '../actions';
+import {block as blockAction} from '../actions';
 import Block from '../components/Block';
+import Error from "../components/Error";
 import NoMatch from "../components/NoMatch";
 import Transactions from '../components/Transactions';
 
@@ -14,7 +15,10 @@ class BlockContainer extends Component {
   }
 
   render() {
-    const {block} = this.props;
+    const {block, error} = this.props;
+    if (error) {
+      return <Error error={error} />;
+    }
     if (!block) {
       return <NoMatch />;
     }
@@ -29,6 +33,9 @@ class BlockContainer extends Component {
 }
 
 function mapStateToProps(state, props) {
+  if(state.blocks.error) {
+    return {error: state.blocks.error};
+  }
   if(state.blocks.data) {
     return {block: state.blocks.data.find(block => block.number.toString() === props.match.params.blockNumber)};
   }
@@ -38,12 +45,13 @@ function mapStateToProps(state, props) {
 BlockContainer.propTypes = {
   match: PropTypes.object,
   block: PropTypes.object,
-  fetchBlock: PropTypes.func
+  fetchBlock: PropTypes.func,
+  error: PropTypes.string
 };
 
 export default withRouter(connect(
   mapStateToProps,
   {
-    fetchBlock
+    fetchBlock: blockAction.request
   }
 )(BlockContainer));

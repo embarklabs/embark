@@ -2,10 +2,11 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {fetchTransactions} from '../actions';
+import {transactions as transactionsAction} from '../actions';
 import Transactions from '../components/Transactions';
 import Loading from '../components/Loading';
 import LoadMore from '../components/LoadMore';
+import Error from '../components/Error';
 
 class TransactionsContainer extends Component {
   componentDidMount() {
@@ -23,16 +24,12 @@ class TransactionsContainer extends Component {
 
   render() {
     const {transactions} = this.props;
-    if (!transactions.data) {
-      return <Loading />;
+    if (transactions.error) {
+      return <Error error={transactions.error} />;
     }
 
-    if (transactions.error) {
-      return (
-        <h1>
-          <i>Error API...</i>
-        </h1>
-      );
+    if (!transactions.data) {
+      return <Loading />;
     }
 
     return (
@@ -56,6 +53,6 @@ TransactionsContainer.propTypes = {
 export default connect(
   mapStateToProps,
   {
-    fetchTransactions
+    fetchTransactions: transactionsAction.request
   },
 )(TransactionsContainer);

@@ -19,20 +19,20 @@ export function fetchAccount(payload) {
   return get(`/blockchain/accounts/${payload.address}`);
 }
 
-export function fetchBlocks(from) {
-  return axios.get(`${constants.httpEndpoint}/blockchain/blocks`, {params: {from}});
+export function fetchBlocks(payload) {
+  return get('/blockchain/blocks', {params: payload});
 }
 
-export function fetchBlock(blockNumber) {
-  return axios.get(`${constants.httpEndpoint}/blockchain/blocks/${blockNumber}`);
+export function fetchBlock(payload) {
+  return get(`/blockchain/blocks/${payload.blockNumber}`);
 }
 
-export function fetchTransactions(blockFrom) {
-  return axios.get(`${constants.httpEndpoint}/blockchain/transactions`, {params: {blockFrom}});
+export function fetchTransactions(payload) {
+  return get('/blockchain/transactions', {params: payload});
 }
 
-export function fetchTransaction(hash) {
-  return axios.get(`${constants.httpEndpoint}/blockchain/transactions/${hash}`);
+export function fetchTransaction(payload) {
+  return get(`/blockchain/transactions/${payload.hash}`);
 }
 
 export function fetchProcesses() {

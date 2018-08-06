@@ -2,10 +2,11 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {fetchBlocks} from '../actions';
+import {blocks as blocksAction} from '../actions';
 import Blocks from '../components/Blocks';
 import Loading from '../components/Loading';
 import LoadMore from '../components/LoadMore';
+import Error from '../components/Error';
 
 class BlocksContainer extends Component {
   componentDidMount() {
@@ -23,16 +24,12 @@ class BlocksContainer extends Component {
 
   render() {
     const {blocks} = this.props;
-    if (!blocks.data) {
-      return <Loading />;
+    if (blocks.error) {
+      return <Error error={blocks.error} />;
     }
 
-    if (blocks.error) {
-      return (
-        <h1>
-          <i>Error API...</i>
-        </h1>
-      );
+    if (!blocks.data) {
+      return <Loading />;
     }
 
     return (
@@ -56,6 +53,6 @@ BlocksContainer.propTypes = {
 export default connect(
   mapStateToProps,
   {
-    fetchBlocks
+    fetchBlocks: blocksAction.request
   },
 )(BlocksContainer);
