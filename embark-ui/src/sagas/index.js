@@ -166,3 +166,17 @@ export function *watchFetchContractProfile() {
   yield takeEvery(actions.FETCH_CONTRACT_PROFILE, fetchContractProfile);
 }
 
+export default function *root() {
+  yield all([
+    fork(watchInitBlockHeader),
+    fork(watchFetchAccounts),
+    fork(watchFetchProcesses),
+    fork(watchFetchProcessLogs),
+    fork(watchFetchBlocks),
+    fork(watchFetchContracts),
+    fork(watchFetchContract),
+    fork(watchFetchContractProfile),
+    fork(watchFetchTransactions)
+  ]);
+}
+
