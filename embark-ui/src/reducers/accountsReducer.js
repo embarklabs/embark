@@ -1,4 +1,4 @@
-import {RECEIVE_ACCOUNTS, RECEIVE_ACCOUNTS_ERROR, RECEIVE_ACCOUNT, RECEIVE_ACCOUNT_ERROR} from "../actions";
+import * as actions from "../actions";
 
 function filterAccount(account, index, self) {
   return index === self.findIndex((a) => a.address === account.address);
@@ -6,19 +6,19 @@ function filterAccount(account, index, self) {
 
 export default function accounts(state = {}, action) {
   switch (action.type) {
-    case RECEIVE_ACCOUNTS:
+    case actions.ACCOUNTS[actions.SUCCESS]:
       return {
         ...state, data: [...action.accounts.data, ...state.data || []]
           .filter(filterAccount)
       };
-    case RECEIVE_ACCOUNTS_ERROR:
+    case actions.ACCOUNTS[actions.FAILURE]:
       return Object.assign({}, state, {error: true});
-    case RECEIVE_ACCOUNT:
+    case actions.ACCOUNT[actions.SUCCESS]:
       return {
         ...state, data: [action.account.data, ...state.data || []]
           .filter(filterAccount)
       };
-    case RECEIVE_ACCOUNT_ERROR:
+    case actions.ACCOUNT[actions.FAILURE]:
       return Object.assign({}, state, {error: true});
     default:
       return state;

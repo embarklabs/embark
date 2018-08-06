@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {fetchAccounts} from '../actions';
+import {accounts as accountsAction} from '../actions';
 import Accounts from '../components/Accounts';
 import Loading from '../components/Loading';
 
@@ -43,6 +43,6 @@ AccountsContainer.propTypes = {
 export default connect(
   mapStateToProps,
   {
-    fetchAccounts
+    fetchAccounts: accountsAction.request
   },
 )(AccountsContainer);

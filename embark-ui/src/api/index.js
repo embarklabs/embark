@@ -1,12 +1,22 @@
 import axios from "axios";
 import constants from '../constants';
 
-export function fetchAccounts() {
-  return axios.get(`${constants.httpEndpoint}/blockchain/accounts`);
+
+function get(path, params) {
+  return axios.get(constants.httpEndpoint + path, params)
+    .then((response) => {
+      return {response};
+    }).catch((error) => {
+      return {response: null, error: error.message || 'Something bad happened'};
+    });
 }
 
-export function fetchAccount(address) {
-  return axios.get(`${constants.httpEndpoint}/blockchain/accounts/${address}`);
+export function fetchAccounts() {
+  return get('/blockchain/accounts');
+}
+
+export function fetchAccount(payload) {
+  return get(`/blockchain/accounts/${payload.address}`);
 }
 
 export function fetchBlocks(from) {

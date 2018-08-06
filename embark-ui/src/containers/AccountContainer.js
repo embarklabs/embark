@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
 
-import {fetchAccount} from '../actions';
+import {account as accountAction} from '../actions';
 import Account from '../components/Account';
 import NoMatch from "../components/NoMatch";
 import Transactions from '../components/Transactions';
@@ -44,6 +44,6 @@ AccountContainer.propTypes = {
 export default withRouter(connect(
   mapStateToProps,
   {
-    fetchAccount
+    fetchAccount: accountAction.request
   }
 )(AccountContainer));

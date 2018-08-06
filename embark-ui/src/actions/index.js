@@ -1,10 +1,33 @@
 // Accounts
-export const FETCH_ACCOUNTS = 'FETCH_ACCOUNTS';
-export const RECEIVE_ACCOUNTS = 'RECEIVE_ACCOUNTS';
-export const RECEIVE_ACCOUNTS_ERROR = 'RECEIVE_ACCOUNTS_ERROR';
-export const FETCH_ACCOUNT = 'FETCH_ACCOUNT';
-export const RECEIVE_ACCOUNT = 'RECEIVE_ACCOUNT';
-export const RECEIVE_ACCOUNT_ERROR = 'RECEIVE_ACCOUNT_ERROR';
+export const REQUEST = 'REQUEST';
+export const SUCCESS = 'SUCCESS';
+export const FAILURE = 'FAILURE';
+
+function createRequestTypes(base) {
+  return [REQUEST, SUCCESS, FAILURE].reduce((acc, type) => {
+    acc[type] = `${base}_${type}`;
+    return acc;
+  }, {});
+}
+
+function action(type, payload = {}) {
+  return {type, ...payload};
+}
+
+export const ACCOUNTS = createRequestTypes('ACCOUNTS');
+export const accounts = {
+  request: () => action(ACCOUNTS[REQUEST]),
+  success: (accounts) => action(ACCOUNTS[SUCCESS], {accounts}),
+  failure: (error) => action(ACCOUNTS[FAILURE], {error})
+};
+
+export const ACCOUNT = createRequestTypes('ACCOUNT');
+export const account = {
+  request: (address) => action(ACCOUNT[REQUEST], {address}),
+  success: (account) => action(ACCOUNT[SUCCESS], {account}),
+  failure: (error) => action(ACCOUNT[FAILURE], {error})
+};
+
 // Processes
 export const FETCH_PROCESSES = 'FETCH_PROCESSES';
 export const RECEIVE_PROCESSES = 'RECEIVE_PROCESSES';
@@ -31,45 +54,6 @@ export const RECEIVE_TRANSACTION = 'RECEIVE_TRANSACTION';
 export const RECEIVE_TRANSACTION_ERROR = 'RECEIVE_TRANSACTION_ERROR';
 // BlockHeader
 export const INIT_BLOCK_HEADER = 'INIT_BLOCK_HEADER';
-
-export function fetchAccounts() {
-  return {
-    type: FETCH_ACCOUNTS
-  };
-}
-
-export function receiveAccounts(accounts) {
-  return {
-    type: RECEIVE_ACCOUNTS,
-    accounts
-  };
-}
-
-export function receiveAccountsError() {
-  return {
-    type: RECEIVE_ACCOUNTS_ERROR
-  };
-}
-
-export function fetchAccount(address) {
-  return {
-    type: FETCH_ACCOUNT,
-    address
-  };
-}
-
-export function receiveAccount(account) {
-  return {
-    type: RECEIVE_ACCOUNT,
-    account
-  };
-}
-
-export function receiveAccountError() {
-  return {
-    type: RECEIVE_ACCOUNT_ERROR
-  };
-}
 
 export function fetchProcesses() {
   return {
