@@ -1,5 +1,10 @@
 import React from 'react';
-import MonacoEditor from 'react-monaco-editor';
+import AceEditor from 'react-ace';
+
+import 'brace/mode/javascript';
+
+import 'brace/theme/tomorrow_night_blue';
+import 'ace-mode-solidity/build/remix-ide/mode-solidity';
 
 const Fiddle = ({code, options, editorDidMount, onChange}) => {
   options = options || {
@@ -9,15 +14,13 @@ const Fiddle = ({code, options, editorDidMount, onChange}) => {
     <React.Fragment>
       <h1>Fiddle</h1>
       <p>Play around with contract code and deploy against your running node.</p>
-      <MonacoEditor
-        height="1200"
-        language="sol"
-        theme="vs-dark"
-        value={code}
-        options={options}
-        onChange={onChange}
-        editorDidMount={editorDidMount}
-/>
+      <AceEditor
+        mode="solidity"
+        theme="tomorrow_night_blue"
+        name="blah1"
+        height="60em"
+        width="100%"
+      />
   </React.Fragment>
   );
 };
