@@ -22,7 +22,7 @@ export function fetchTransactions(blockFrom) {
 }
 
 export function fetchTransaction(hash) {
-  return axios.get(`${constants.httpEndpoint}/blockchain/transactions${hash}`);
+  return axios.get(`${constants.httpEndpoint}/blockchain/transactions/${hash}`);
 }
 
 export function fetchProcesses() {

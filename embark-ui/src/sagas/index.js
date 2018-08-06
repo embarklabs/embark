@@ -57,7 +57,7 @@ export function *watchFetchBlocks() {
 
 export function *fetchAccount(payload) {
   try {
-    const account = yield call(api.fetchAccounts, payload.address);
+    const account = yield call(api.fetchAccount, payload.address);
     yield put(actions.receiveAccount(account));
   } catch (e) {
     yield put(actions.receiveAccountError());

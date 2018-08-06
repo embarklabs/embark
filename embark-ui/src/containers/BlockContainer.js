@@ -21,7 +21,7 @@ class BlockContainer extends Component {
 
     return (
       <React.Fragment>
-        <Block blocks={block} />
+        <Block block={block} />
         <Transactions transactions={block.transactions} />
       </React.Fragment>
     );
@@ -30,9 +30,9 @@ class BlockContainer extends Component {
 
 function mapStateToProps(state, props) {
   if(state.blocks.data) {
-    return {block: state.blocks.data.find(block => block.number === props.match.params.blockNumber)};
+    return {block: state.blocks.data.find(block => block.number.toString() === props.match.params.blockNumber)};
   }
-  return null;
+  return {};
 }
 
 BlockContainer.propTypes = {

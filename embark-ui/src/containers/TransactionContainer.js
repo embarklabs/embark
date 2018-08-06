@@ -20,7 +20,7 @@ class TransactionContainer extends Component {
 
     return (
       <React.Fragment>
-        <Transaction transactions={transaction} />
+        <Transaction transaction={transaction} />
       </React.Fragment>
     );
   }
@@ -30,7 +30,7 @@ function mapStateToProps(state, props) {
   if(state.transactions.data) {
     return {transaction: state.transactions.data.find(transaction => transaction.hash === props.match.params.hash)};
   }
-  return null;
+  return {};
 }
 
 TransactionContainer.propTypes = {

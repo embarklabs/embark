@@ -32,7 +32,7 @@ function mapStateToProps(state, props) {
   if(state.accounts.data) {
     return {account: state.accounts.data.find(account => account.address === props.match.params.address)};
   }
-  return null;
+  return {};
 }
 
 AccountContainer.propTypes = {
