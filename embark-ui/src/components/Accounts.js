@@ -5,8 +5,8 @@ import {
   Card,
   Table
 } from "tabler-react";
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
 
 const Accounts = ({accounts}) => (
   <Page.Content title="Accounts">
@@ -25,7 +25,7 @@ const Accounts = ({accounts}) => (
             bodyItems={
               accounts.map((account) => {
                 return ([
-                  {content: account.address},
+                  {content: <Link to={`/embark/explorer/accounts/${account.address}`}>{account.address}</Link>},
                   {content: account.balance},
                   {content: account.transactionCount},
                   {content: account.index}

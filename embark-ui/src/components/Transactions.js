@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from "react-router-dom";
 import {
   Page,
   Grid,
@@ -16,20 +17,20 @@ const Transactions = ({transactions}) => (
             responsive
             className="card-table table-vcenter text-nowrap"
             headerItems={[
+              {content: "Hash"},
               {content: "Block Number"},
               {content: "From"},
               {content: "To"},
-              {content: "Type"},
-              {content: "Hash"}
+              {content: "Type"}
             ]}
             bodyItems={
               transactions.map((transaction) => {
                 return ([
+                  {content: <Link to={`/embark/explorer/transactions/${transaction.hash}`}>{transaction.hash}</Link>},
                   {content: transaction.blockNumber},
                   {content: transaction.from},
                   {content: transaction.to},
                   {content: transaction.to ? "Contract Call" : "Contract Creation"},
-                  {content: transaction.hash}
                 ]);
               })
             }
