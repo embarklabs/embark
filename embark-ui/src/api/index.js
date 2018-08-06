@@ -66,13 +66,13 @@ export function webSocketBlockHeader() {
 }
 
 export function fetchContract(contractName) {
-  return axios.get('http://localhost:8000/embark-api/contract/' + contractName);
+  return axios.get(`${constants.httpEndpoint}/contract/${contractName}`);
 }
 
 export function fetchContracts() {
-  return axios.get('http://localhost:8000/embark-api/contracts');
+  return axios.get(`${constants.httpEndpoint}/contracts`);
 }
 
 export function fetchContractProfile(contractName) {
-  return axios.get('http://localhost:8000/embark-api/profiler/' + contractName);
+  return axios.get(`${constants.httpEndpoint}/profiler/${contractName}`);
 }
