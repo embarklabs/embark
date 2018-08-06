@@ -114,7 +114,7 @@ class CommunicationContainer extends Component {
 
         <p>Javascript calls being made: </p>
         <div className="logs">
-          <p>EmbarkJS.Messages.setProvider&lpar;&apos;whisper&apos;&rpar;</p>
+          <p>EmbarkJS.Messages.setProvider&#x00028;&apos;whisper&apos;&#x00029;</p>
           {
             this.state.logs.map((item, i) => <p key={i}>{item}</p>)
           }
