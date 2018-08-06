@@ -36,7 +36,7 @@ function mapStateToProps(state, props) {
 }
 
 AccountContainer.propTypes = {
-  router: PropTypes.object,
+  match: PropTypes.object,
   account: PropTypes.object,
   fetchAccount: PropTypes.func
 };

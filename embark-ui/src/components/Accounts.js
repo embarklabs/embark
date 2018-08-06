@@ -5,7 +5,7 @@ import {
   Card,
   Table
 } from "tabler-react";
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 const Accounts = ({accounts}) => (

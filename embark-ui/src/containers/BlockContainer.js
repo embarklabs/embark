@@ -5,43 +5,38 @@ import {withRouter} from 'react-router-dom';
 
 import {fetchBlock} from '../actions';
 import Block from '../components/Block';
+import NoMatch from "../components/NoMatch";
 import Transactions from '../components/Transactions';
-import Loading from '../components/Loading';
 
 class BlockContainer extends Component {
   componentDidMount() {
-    this.props.fetchBlock(this.props.router.match.params.blockNumber);
+    this.props.fetchBlock(this.props.match.params.blockNumber);
   }
 
   render() {
     const {block} = this.props;
-    if (!block.data) {
-      return <Loading />;
-    }
-
-    if (block.error) {
-      return (
-        <h1>
-          <i>Error API...</i>
-        </h1>
-      );
+    if (!block) {
+      return <NoMatch />;
     }
 
     return (
       <React.Fragment>
-        <Block blocks={block.data} />
-        <Transactions transactions={block.data.transactions} />
+        <Block blocks={block} />
+        <Transactions transactions={block.transactions} />
       </React.Fragment>
     );
   }
 }
 
-function mapStateToProps(state) {
-  return {block: state.block};
+function mapStateToProps(state, props) {
+  if(state.blocks.data) {
+    return {block: state.blocks.data.find(block => block.number === props.match.params.blockNumber)};
+  }
+  return null;
 }
 
 BlockContainer.propTypes = {
-  router: PropTypes.object,
+  match: PropTypes.object,
   block: PropTypes.object,
   fetchBlock: PropTypes.func
 };
@@ -51,4 +46,4 @@ export default withRouter(connect(
   {
     fetchBlock
   }
-))(BlockContainer);
+)(BlockContainer));

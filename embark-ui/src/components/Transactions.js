@@ -30,7 +30,7 @@ const Transactions = ({transactions}) => (
                   {content: transaction.blockNumber},
                   {content: transaction.from},
                   {content: transaction.to},
-                  {content: transaction.to ? "Contract Call" : "Contract Creation"},
+                  {content: transaction.to ? "Contract Call" : "Contract Creation"}
                 ]);
               })
             }

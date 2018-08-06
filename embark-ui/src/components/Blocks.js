@@ -8,7 +8,6 @@ import {
 } from "tabler-react";
 import PropTypes from 'prop-types';
 
-
 const Blocks = ({blocks}) => (
   <Page.Content title="Blocks">
     <Grid.Row>

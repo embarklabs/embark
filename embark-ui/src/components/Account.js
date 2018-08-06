@@ -4,10 +4,10 @@ import {
 } from "tabler-react";
 import PropTypes from 'prop-types';
 
-
 const Account = ({account}) => (
   <Page.Content title={`Account ${account.address}`}>
-    <p>Hello</p>
+    <p>Balance: {account.balance}</p>
+    <p>Tx count: {account.transactionCount}</p>
   </Page.Content>
 );
 

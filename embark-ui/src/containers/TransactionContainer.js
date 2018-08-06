@@ -4,42 +4,37 @@ import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
 
 import {fetchTransaction} from '../actions';
+import NoMatch from "../components/NoMatch";
 import Transaction from '../components/Transaction';
-import Loading from '../components/Loading';
 
 class TransactionContainer extends Component {
   componentDidMount() {
-    this.props.fetchTransaction(this.props.router.match.params.hash);
+    this.props.fetchTransaction(this.props.match.params.hash);
   }
 
   render() {
     const {transaction} = this.props;
-    if (!transaction.data) {
-      return <Loading />;
-    }
-
-    if (transaction.error) {
-      return (
-        <h1>
-          <i>Error API...</i>
-        </h1>
-      );
+    if (!transaction) {
+      return <NoMatch />;
     }
 
     return (
       <React.Fragment>
-        <Transaction transactions={transaction.data} />
+        <Transaction transactions={transaction} />
       </React.Fragment>
     );
   }
 }
 
-function mapStateToProps(state) {
-  return {transaction: state.transaction};
+function mapStateToProps(state, props) {
+  if(state.transactions.data) {
+    return {transaction: state.transactions.data.find(transaction => transaction.hash === props.match.params.hash)};
+  }
+  return null;
 }
 
 TransactionContainer.propTypes = {
-  router: PropTypes.object,
+  match: PropTypes.object,
   transaction: PropTypes.object,
   fetchTransaction: PropTypes.func
 };
@@ -49,4 +44,4 @@ export default withRouter(connect(
   {
     fetchTransaction
   }
-))(TransactionContainer);
+)(TransactionContainer));
