@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import React from 'react';
 import {
   Page,
@@ -25,7 +26,7 @@ const Contracts = ({contracts}) => (
                 return ([
                   {content: <Link to={`contracts/${contract.name}`}>{contract.name}</Link>},
                   {content: contract.address},
-                  {content: contract.deploy}
+                  {content: contract.deploy.toString()}
                 ]);
               })
             }
@@ -35,6 +36,10 @@ const Contracts = ({contracts}) => (
     </Grid.Row>
   </Page.Content>
 );
+
+Contracts.propTypes = {
+  contracts: PropTypes.arrayOf(PropTypes.object)
+};
 
 export default Contracts;
 

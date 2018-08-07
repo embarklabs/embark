@@ -3,12 +3,13 @@ import * as api from '../api';
 import {eventChannel} from 'redux-saga';
 import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
 
-const {account, accounts, block, blocks, transaction, transactions, processes, commands} = actions;
+const {account, accounts, block, blocks, transaction, transactions, processes, commands, processLogs,
+       contracts, contract, contractProfile} = actions;
 
 function *doRequest(entity, apiFn, payload) {
   const {response, error} = yield call(apiFn, payload);
   if(response) {
-    yield put(entity.success(response));
+    yield put(entity.success(response.data, payload));
   } else if (error) {
     yield put(entity.failure(error));
   }
@@ -22,6 +23,10 @@ export const fetchBlocks = doRequest.bind(null, blocks, api.fetchBlocks);
 export const fetchTransactions = doRequest.bind(null, transactions, api.fetchTransactions);
 export const fetchProcesses = doRequest.bind(null, processes, api.fetchProcesses);
 export const postCommand = doRequest.bind(null, commands, api.postCommand);
+export const fetchProcessLogs = doRequest.bind(null, processLogs, api.fetchProcessLogs);
+export const fetchContracts = doRequest.bind(null, contracts, api.fetchContracts);
+export const fetchContract = doRequest.bind(null, contract, api.fetchContract);
+export const fetchContractProfile = doRequest.bind(null, contractProfile, api.fetchContractProfile);
 
 export function *watchFetchTransaction() {
   yield takeEvery(actions.TRANSACTION[actions.REQUEST], fetchTransaction);
@@ -55,17 +60,20 @@ export function *watchPostCommand() {
   yield takeEvery(actions.COMMANDS[actions.REQUEST], postCommand);
 }
 
-export function *fetchProcessLogs(action) {
-  try {
-    const logs = yield call(api.fetchProcessLogs, action.processName);
-    yield put(actions.receiveProcessLogs(action.processName, logs));
-  } catch (e) {
-    yield put(actions.receiveProcessLogsError(e));
-  }
+export function *watchFetchProcessLogs() {
+  yield takeEvery(actions.PROCESS_LOGS[actions.REQUEST], fetchProcessLogs);
 }
 
-export function *watchFetchProcessLogs() {
-  yield takeEvery(actions.FETCH_PROCESS_LOGS, fetchProcessLogs);
+export function *watchFetchContract() {
+  yield takeEvery(actions.CONTRACT[actions.REQUEST], fetchContract);
+}
+
+export function *watchFetchContracts() {
+  yield takeEvery(actions.CONTRACTS[actions.REQUEST], fetchContracts);
+}
+
+export function *watchFetchContractProfile() {
+  yield takeEvery(actions.CONTRACT_PROFILE[actions.REQUEST], fetchContractProfile);
 }
 
 function createChannel(socket) {
@@ -97,52 +105,13 @@ export function *listenToProcessLogs(action) {
   const socket = api.webSocketProcess(action.processName);
   const channel = yield call(createChannel, socket);
   while (true) {
-    const log = yield take(channel);
-    yield put({type: actions.RECEIVE_NEW_PROCESS_LOG, processName: action.processName, log});
+    const processLog = yield take(channel);
+    yield put(processLogs.success([processLog]));
   }
 }
 
 export function *watchListenToProcessLogs() {
   yield takeEvery(actions.WATCH_NEW_PROCESS_LOGS, listenToProcessLogs);
-}
-
-export function *fetchContract(action) {
-  try {
-    const contract = yield call(api.fetchContract, action.contractName);
-    yield put(actions.receiveContract(contract));
-  } catch (e) {
-    yield put(actions.receiveContractError());
-  }
-}
-
-export function *watchFetchContract() {
-  yield takeEvery(actions.FETCH_CONTRACT, fetchContract);
-}
-
-export function *fetchContracts() {
-  try {
-    const contracts = yield call(api.fetchContracts);
-    yield put(actions.receiveContracts(contracts));
-  } catch (e) {
-    yield put(actions.receiveContractsError());
-  }
-}
-
-export function *watchFetchContracts() {
-  yield takeEvery(actions.FETCH_CONTRACTS, fetchContracts);
-}
-
-export function *fetchContractProfile(action) {
-  try {
-    const profile = yield call(api.fetchContractProfile, action.contractName);
-    yield put(actions.receiveContractProfile(profile));
-  } catch (e) {
-    yield put(actions.receiveContractError());
-  }
-}
-
-export function *watchFetchContractProfile() {
-  yield takeEvery(actions.FETCH_CONTRACT_PROFILE, fetchContractProfile);
 }
 
 export default function *root() {

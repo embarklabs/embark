@@ -1,4 +1,3 @@
-// Accounts
 export const REQUEST = 'REQUEST';
 export const SUCCESS = 'SUCCESS';
 export const FAILURE = 'FAILURE';
@@ -24,7 +23,7 @@ export const accounts = {
 export const ACCOUNT = createRequestTypes('ACCOUNT');
 export const account = {
   request: (address) => action(ACCOUNT[REQUEST], {address}),
-  success: (account) => action(ACCOUNT[SUCCESS], {account}),
+  success: (account) => action(ACCOUNT[SUCCESS], {accounts: [account]}),
   failure: (error) => action(ACCOUNT[FAILURE], {error})
 };
 
@@ -38,7 +37,7 @@ export const blocks = {
 export const BLOCK = createRequestTypes('BLOCK');
 export const block = {
   request: (blockNumber) => action(BLOCK[REQUEST], {blockNumber}),
-  success: (block) => action(BLOCK[SUCCESS], {block}),
+  success: (block) => action(BLOCK[SUCCESS], {blocks: [block]}),
   failure: (error) => action(BLOCK[FAILURE], {error})
 };
 
@@ -52,7 +51,7 @@ export const transactions = {
 export const TRANSACTION = createRequestTypes('TRANSACTION');
 export const transaction = {
   request: (hash) => action(TRANSACTION[REQUEST], {hash}),
-  success: (transaction) => action(TRANSACTION[SUCCESS], {transaction}),
+  success: (transaction) => action(TRANSACTION[SUCCESS], {transactions: [transaction]}),
   failure: (error) => action(TRANSACTION[FAILURE], {error})
 };
 
@@ -66,37 +65,41 @@ export const processes = {
 export const COMMANDS = createRequestTypes('COMMANDS');
 export const commands = {
   post: (command) => action(COMMANDS[REQUEST], {command}),
-  success: (result) => action(COMMANDS[SUCCESS], {result}),
+  success: (command) => action(COMMANDS[SUCCESS], {commands: [command]}),
   failure: (error) => action(COMMANDS[FAILURE], {error})
 };
 
-// Process logs
-export const FETCH_PROCESS_LOGS = 'FETCH_PROCESS_LOGS';
-export const RECEIVE_PROCESS_LOGS = 'RECEIVE_PROCESS_LOGS';
-export const WATCH_NEW_PROCESS_LOGS = 'WATCH_NEW_PROCESS_LOGS';
-export const RECEIVE_NEW_PROCESS_LOG = 'RECEIVE_NEW_PROCESS_LOG';
-export const RECEIVE_PROCESS_LOGS_ERROR = 'RECEIVE_PROCESS_LOGS_ERROR';
-// BlockHeader
-export const INIT_BLOCK_HEADER = 'INIT_BLOCK_HEADER';
-// Contracts
-export const FETCH_CONTRACTS = 'FETCH_CONTRACTS';
-export const RECEIVE_CONTRACTS = 'RECEIVE_CONTRACTS';
-export const RECEIVE_CONTRACTS_ERROR = 'RECEIVE_CONTRACTS_ERROR';
-// Contract
-export const FETCH_CONTRACT = 'FETCH_CONTRACT';
-export const RECEIVE_CONTRACT = 'RECEIVE_CONTRACT';
-export const RECEIVE_CONTRACT_ERROR = 'RECEIVE_CONTRACT_ERROR';
-// Contract Profile
-export const FETCH_CONTRACT_PROFILE = 'FETCH_CONTRACT_PROFILE';
-export const RECEIVE_CONTRACT_PROFILE = 'RECEIVE_CONTRACT_PROFILE';
-export const RECEIVE_CONTRACT_PROFILE_ERROR = 'RECEIVE_CONTRACT_PROFILE_ERROR';
+export const PROCESS_LOGS = createRequestTypes('PROCESS_LOGS');
+export const processLogs = {
+  request: (processName) => action(PROCESS_LOGS[REQUEST], {processName}),
+  success: (processLogs) => action(PROCESS_LOGS[SUCCESS], {processLogs}),
+  failure: (error) => action(PROCESS_LOGS[FAILURE], {error})
+};
 
-export function fetchProcessLogs(processName) {
-  return {
-    type: FETCH_PROCESS_LOGS,
-    processName
-  };
-}
+export const CONTRACTS = createRequestTypes('CONTRACTS');
+export const contracts = {
+  request: () => action(CONTRACTS[REQUEST]),
+  success: (contracts) => action(CONTRACTS[SUCCESS], {contracts}),
+  failure: (error) => action(CONTRACTS[FAILURE], {error})
+};
+
+export const CONTRACT = createRequestTypes('CONTRACT');
+export const contract = {
+  request: (contractName) => action(CONTRACT[REQUEST], {contractName}),
+  success: (contract) => action(CONTRACT[SUCCESS], {contracts: [contract]}),
+  failure: (error) => action(CONTRACT[FAILURE], {error})
+};
+
+export const CONTRACT_PROFILE = createRequestTypes('CONTRACT_PROFILE');
+export const contractProfile = {
+  request: (contractName) => action(CONTRACT_PROFILE[REQUEST], {contractName}),
+  success: (contractProfile) => action(CONTRACT_PROFILE[SUCCESS], {contractProfiles: [contractProfile]}),
+  failure: (error) => action(CONTRACT_PROFILE[FAILURE], {error})
+};
+
+// Web Socket
+export const WATCH_NEW_PROCESS_LOGS = 'WATCH_NEW_PROCESS_LOGS';
+export const INIT_BLOCK_HEADER = 'INIT_BLOCK_HEADER';
 
 export function listenToProcessLogs(processName) {
   return {
@@ -105,84 +108,8 @@ export function listenToProcessLogs(processName) {
   };
 }
 
-export function receiveProcessLogs(processName, logs) {
-  return {
-    type: RECEIVE_PROCESS_LOGS,
-    processName,
-    logs
-  };
-}
-
-export function receiveProcessLogsError(error) {
-  return {
-    type: RECEIVE_PROCESS_LOGS_ERROR,
-    error
-  };
-}
-
 export function initBlockHeader(){
   return {
     type: INIT_BLOCK_HEADER
   };
 }
-
-export function fetchContractProfile(contractName) {
-  return {
-    type: FETCH_CONTRACT_PROFILE,
-    contractName
-  };
-}
-
-export function receiveContractProfile(contractProfile) {
-  return {
-    type: RECEIVE_CONTRACT_PROFILE,
-    contractProfile
-  };
-}
-
-export function receiveContractProfileError() {
-  return {
-    type: RECEIVE_CONTRACT_PROFILE_ERROR
-  };
-}
-
-export function fetchContract(contractName) {
-  return {
-    type: FETCH_CONTRACT,
-    contractName
-  };
-}
-
-export function receiveContract(contract) {
-  return {
-    type: RECEIVE_CONTRACT,
-    contract
-  };
-}
-
-export function receiveContractError() {
-  return {
-    type: RECEIVE_CONTRACT_ERROR
-  };
-}
-
-
-export function fetchContracts() {
-  return {
-    type: FETCH_CONTRACTS
-  };
-}
-
-export function receiveContracts(contracts) {
-  return {
-    type: RECEIVE_CONTRACTS,
-    contracts
-  };
-}
-
-export function receiveContractsError() {
-  return {
-    type: RECEIVE_CONTRACTS_ERROR
-  };
-}
-

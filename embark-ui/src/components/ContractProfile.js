@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import React from 'react';
 import {
   Page,
@@ -6,8 +7,8 @@ import {
   Table
 } from "tabler-react";
 
-const ContractProfile = ({contract}) => (
-  <Page.Content title={contract.name}>
+const ContractProfile = ({contractProfile}) => (
+  <Page.Content title={contractProfile.name}>
     <Grid.Row>
       <Grid.Col>
         <Card>
@@ -23,7 +24,7 @@ const ContractProfile = ({contract}) => (
               {content: "Gas Estimates"}
             ]}
             bodyItems={
-              contract.methods.map((method) => {
+              contractProfile.methods.map((method) => {
                 return ([
                   {content: method.name},
                   {content: (method.payable === true).toString()},
@@ -40,6 +41,10 @@ const ContractProfile = ({contract}) => (
     </Grid.Row>
   </Page.Content>
 );
+
+ContractProfile.propTypes = {
+  contractProfile: PropTypes.object
+};
 
 export default ContractProfile;
 

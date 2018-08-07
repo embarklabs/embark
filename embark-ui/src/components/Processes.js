@@ -11,15 +11,15 @@ function stampClasses(state){
   });
 }
 
-const Process = ({name, state}) => (
+const Process = ({process}) => (
   <Grid.Col sm={6} lg={3}>
     <Card className="p-3">
       <div className="d-flex align-items-center">
-        <span className={stampClasses(state)}>
+        <span className={stampClasses(process.state)}>
           <i className="fe fa-cube"></i>
         </span>
         <div>
-          <h4 className="text-capitalize m-0"><Link to={`/embark/processes/${name}`}>{name}</Link></h4>
+          <h4 className="text-capitalize m-0"><Link to={`/embark/processes/${process.name}`}>{process.name}</Link></h4>
         </div>
       </div>
     </Card>
@@ -27,18 +27,17 @@ const Process = ({name, state}) => (
 );
 
 Process.propTypes = {
-  name: PropTypes.string,
-  state: PropTypes.string
+  process: PropTypes.object
 };
 
 const Processes = ({processes}) => (
   <Grid.Row cards>
-    {Object.keys(processes).map((name) => <Process key={name} name={name} state={processes[name].state} />)}
+    {processes.map((process) => <Process key={process.name} process={process} />)}
   </Grid.Row>
 );
 
 Processes.propTypes = {
-  processes: PropTypes.object
+  processes: PropTypes.arrayOf(PropTypes.object)
 };
 
 export default Processes;

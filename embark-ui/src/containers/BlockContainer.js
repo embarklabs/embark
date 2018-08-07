@@ -5,9 +5,9 @@ import {withRouter} from 'react-router-dom';
 
 import {block as blockAction} from '../actions';
 import Block from '../components/Block';
-import Error from "../components/Error";
-import NoMatch from "../components/NoMatch";
+import DataWrapper from "../components/DataWrapper";
 import Transactions from '../components/Transactions';
+import {getBlock, getTransactionsByBlock} from "../reducers/selectors";
 
 class BlockContainer extends Component {
   componentDidMount() {
@@ -15,36 +15,30 @@ class BlockContainer extends Component {
   }
 
   render() {
-    const {block, error} = this.props;
-    if (error) {
-      return <Error error={error} />;
-    }
-    if (!block) {
-      return <NoMatch />;
-    }
-
     return (
-      <React.Fragment>
-        <Block block={block} />
-        <Transactions transactions={block.transactions} />
-      </React.Fragment>
+      <DataWrapper shouldRender={this.props.block !== undefined } {...this.props} render={({block, transactions}) => (
+        <React.Fragment>
+          <Block block={block} />
+          <Transactions transactions={transactions || []} />
+        </React.Fragment>
+      )} />
     );
   }
 }
 
 function mapStateToProps(state, props) {
-  if(state.blocks.error) {
-    return {error: state.blocks.error};
-  }
-  if(state.blocks.data) {
-    return {block: state.blocks.data.find(block => block.number.toString() === props.match.params.blockNumber)};
-  }
-  return {};
+  return {
+    block: getBlock(state, props.match.params.blockNumber),
+    transactions: getTransactionsByBlock(state, props.match.params.blockNumber),
+    error: state.errorMessage,
+    loading: state.loading
+  };
 }
 
 BlockContainer.propTypes = {
   match: PropTypes.object,
   block: PropTypes.object,
+  transactions: PropTypes.arrayOf(PropTypes.object),
   fetchBlock: PropTypes.func,
   error: PropTypes.string
 };

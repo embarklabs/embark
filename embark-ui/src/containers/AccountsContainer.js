@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 
 import {accounts as accountsAction} from '../actions';
 import Accounts from '../components/Accounts';
-import Loading from '../components/Loading';
-import Error from '../components/Error';
+import DataWrapper from "../components/DataWrapper";
+import {getAccounts} from "../reducers/selectors";
 
 class AccountsContainer extends Component {
   componentDidMount() {
@@ -13,28 +13,23 @@ class AccountsContainer extends Component {
   }
 
   render() {
-    const {accounts} = this.props;
-    if (accounts.error) {
-      return <Error error={accounts.error} />;
-    }
-
-    if (!accounts.data) {
-      return <Loading />;
-    }
-
     return (
-      <Accounts accounts={accounts.data} />
+      <DataWrapper shouldRender={this.props.accounts.length > 0} {...this.props} render={({accounts}) => (
+        <Accounts accounts={accounts} />
+      )} />
     );
   }
 }
 
 function mapStateToProps(state) {
-  return {accounts: state.accounts};
+  return {accounts: getAccounts(state), error: state.errorMessage, loading: state.loading};
 }
 
 AccountsContainer.propTypes = {
-  accounts: PropTypes.object,
-  fetchAccounts: PropTypes.func
+  accounts: PropTypes.arrayOf(PropTypes.object),
+  fetchAccounts: PropTypes.func,
+  error: PropTypes.string,
+  loading: PropTypes.bool
 };
 
 export default connect(

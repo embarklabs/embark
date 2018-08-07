@@ -1,45 +1,38 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { fetchContracts } from '../actions';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
+
+import {contracts as contractsAction} from '../actions';
 import Contracts from '../components/Contracts';
+import DataWrapper from "../components/DataWrapper";
+import {getContracts} from "../reducers/selectors";
 
 class ContractsContainer extends Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetchContracts();
   }
 
   render() {
-    const { contracts } = this.props;
-    if (!contracts.data) {
-      return (
-        <h1>
-          <i>Loading contracts...</i>
-        </h1>
-      );
-    }
-
-    if (contracts.error) {
-      return (
-        <h1>
-          <i>Error API...</i>
-        </h1>
-      );
-    }
-
     return (
-      <Contracts contracts={contracts.data} />
+      <DataWrapper shouldRender={this.props.contracts.length > 0} {...this.props} render={({contracts}) => (
+        <Contracts contracts={contracts} />
+      )} />
     );
   }
 }
 
 function mapStateToProps(state) {
-  return { contracts: state.contracts };
+  return {contracts: getContracts(state), error: state.errorMessage, loading: state.loading};
 }
+
+ContractsContainer.propTypes = {
+  contracts: PropTypes.object,
+  fetchContracts: PropTypes.func
+};
 
 export default connect(
   mapStateToProps,
   {
-    fetchContracts
+    fetchContracts: contractsAction.request
   },
 )(ContractsContainer);
-

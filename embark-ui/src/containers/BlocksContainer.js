@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 
 import {blocks as blocksAction} from '../actions';
 import Blocks from '../components/Blocks';
-import Loading from '../components/Loading';
-import LoadMore from '../components/LoadMore';
-import Error from '../components/Error';
+import DataWrapper from "../components/DataWrapper";
+import LoadMore from "../components/LoadMore";
+import {getBlocks} from "../reducers/selectors";
 
 class BlocksContainer extends Component {
   componentDidMount() {
@@ -18,23 +18,19 @@ class BlocksContainer extends Component {
   }
 
   loadMoreFrom() {
-    let blocks = this.props.blocks.data;
+    let blocks = this.props.blocks;
+    if (blocks.length === 0) {
+      return 0;
+    }
     return blocks[blocks.length - 1].number - 1;
   }
 
   render() {
-    const {blocks} = this.props;
-    if (blocks.error) {
-      return <Error error={blocks.error} />;
-    }
-
-    if (!blocks.data) {
-      return <Loading />;
-    }
-
     return (
       <React.Fragment>
-        <Blocks blocks={blocks.data}/>
+        <DataWrapper shouldRender={this.props.blocks.length > 0} {...this.props} render={({blocks}) => (
+          <Blocks blocks={blocks} />
+        )} />
         {(this.loadMoreFrom() >= 0) ? <LoadMore loadMore={() => this.loadMore()} /> : <React.Fragment />}
       </React.Fragment>
     );
@@ -42,12 +38,14 @@ class BlocksContainer extends Component {
 }
 
 function mapStateToProps(state) {
-  return {blocks: state.blocks};
+  return {blocks: getBlocks(state), error: state.errorMessage, loading: state.loading};
 }
 
 BlocksContainer.propTypes = {
-  blocks: PropTypes.object,
-  fetchBlocks: PropTypes.func
+  blocks: PropTypes.arrayOf(PropTypes.object),
+  fetchBlocks: PropTypes.func,
+  error: PropTypes.string,
+  loading: PropTypes.bool
 };
 
 export default connect(

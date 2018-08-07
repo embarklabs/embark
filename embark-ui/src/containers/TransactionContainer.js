@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
 
 import {transaction as transactionAction} from '../actions';
-import Error from "../components/Error";
-import NoMatch from "../components/NoMatch";
 import Transaction from '../components/Transaction';
+import DataWrapper from "../components/DataWrapper";
+import {getTransaction} from "../reducers/selectors";
 
 class TransactionContainer extends Component {
   componentDidMount() {
@@ -14,35 +14,26 @@ class TransactionContainer extends Component {
   }
 
   render() {
-    const {transaction, error} = this.props;
-    if (error) {
-      return <Error error={error} />;
-    }
-    if (!transaction) {
-      return <NoMatch />;
-    }
-
     return (
-      <React.Fragment>
+      <DataWrapper shouldRender={this.props.transaction !== undefined } {...this.props} render={({transaction}) => (
         <Transaction transaction={transaction} />
-      </React.Fragment>
+      )} />
     );
   }
 }
 
 function mapStateToProps(state, props) {
-  if(state.transactions.error) {
-    return {error: state.transactions.error};
-  }
-  if(state.transactions.data) {
-    return {transaction: state.transactions.data.find(transaction => transaction.hash === props.match.params.hash)};
-  }
-  return {};
+  return {
+    transaction: getTransaction(state, props.match.params.hash),
+    error: state.errorMessage,
+    loading: state.loading
+  };
 }
 
 TransactionContainer.propTypes = {
   match: PropTypes.object,
   transaction: PropTypes.object,
+  transactions: PropTypes.arrayOf(PropTypes.object),
   fetchTransaction: PropTypes.func,
   error: PropTypes.string
 };

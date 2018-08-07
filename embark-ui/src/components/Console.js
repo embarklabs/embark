@@ -36,8 +36,7 @@ class Console extends Component {
             </Card.Header>
             <Card.Body>
               <div>
-                {this.props.commandResults &&
-                  this.props.commandResults.map((result) => <CommandResult key={result} result={result} />)}
+                {this.props.commands.map((command, index) => <CommandResult key={index} result={command.result} />)}
               </div>
               <Form onSubmit={(event) => this.handleSubmit(event)}>
                 <Form.Input value={this.state.value}
@@ -55,7 +54,7 @@ class Console extends Component {
 
 Console.propTypes = {
   postCommand: PropTypes.func,
-  commandResults: PropTypes.arrayOf(PropTypes.string)
+  commands: PropTypes.arrayOf(PropTypes.object)
 };
 
 export default Console;

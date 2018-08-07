@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import React from 'react';
 import {NavLink, Route, Switch, withRouter} from 'react-router-dom';
 import {
@@ -58,5 +59,9 @@ const ContractLayout = (props) => (
     </Grid.Col>
   </Grid.Row>
 );
+
+ContractLayout.propTypes = {
+  match: PropTypes.object
+};
 
 export default withRouter(ContractLayout);

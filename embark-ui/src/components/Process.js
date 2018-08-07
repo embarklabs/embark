@@ -1,30 +1,26 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Page} from "tabler-react";
-import Loading from "./Loading";
 
 class Process extends Component {
   render() {
-    const logs = this.props.logs;
+    const {processLogs, process}= this.props;
     return (
-      <Page.Content className="text-capitalize" title={this.props.processName}>
-        <p className="text-capitalize">State: {this.props.state}</p>
-        {!logs &&
-        <Loading/>}
-        {logs &&
+      <Page.Content className="text-capitalize" title={process.name}>
+        <p className="text-capitalize">State: {process.state}</p>
         <div className="logs">
           {
-            logs.map((item, i) => <p key={i} className={item.logLevel}>{item.msg_clear || item.msg}</p>)
+            processLogs.map((item, i) => <p key={i} className={item.logLevel}>{item.msg_clear || item.msg}</p>)
           }
-        </div>}
-      </Page.Content>);
+        </div>
+      </Page.Content>
+    );
   }
 }
 
 Process.propTypes = {
-  processName: PropTypes.string.isRequired,
-  state: PropTypes.string.isRequired,
-  logs: PropTypes.array
+  process: PropTypes.object,
+  processLogs: PropTypes.arrayOf(PropTypes.object)
 };
 
 export default Process;

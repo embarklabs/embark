@@ -3,10 +3,10 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {transactions as transactionsAction} from '../actions';
+import LoadMore from "../components/LoadMore";
 import Transactions from '../components/Transactions';
-import Loading from '../components/Loading';
-import LoadMore from '../components/LoadMore';
-import Error from '../components/Error';
+import DataWrapper from "../components/DataWrapper";
+import {getTransactions} from "../reducers/selectors";
 
 class TransactionsContainer extends Component {
   componentDidMount() {
@@ -18,23 +18,19 @@ class TransactionsContainer extends Component {
   }
 
   loadMoreFrom() {
-    let transactions = this.props.transactions.data;
+    let transactions = this.props.transactions;
+    if (transactions.length === 0) {
+      return 0;
+    }
     return transactions[transactions.length - 1].blockNumber - 1;
   }
 
   render() {
-    const {transactions} = this.props;
-    if (transactions.error) {
-      return <Error error={transactions.error} />;
-    }
-
-    if (!transactions.data) {
-      return <Loading />;
-    }
-
     return (
       <React.Fragment>
-        <Transactions transactions={transactions.data}/>
+        <DataWrapper shouldRender={this.props.transactions.length > 0} {...this.props} render={({transactions}) => (
+          <Transactions transactions={transactions} />
+        )} />
         {(this.loadMoreFrom() > 0) ? <LoadMore loadMore={() => this.loadMore()} /> : <React.Fragment />}
       </React.Fragment>
     );
@@ -42,12 +38,14 @@ class TransactionsContainer extends Component {
 }
 
 function mapStateToProps(state) {
-  return {transactions: state.transactions};
+  return {transactions: getTransactions(state), error: state.errorMessage, loading: state.loading};
 }
 
 TransactionsContainer.propTypes = {
   transactions: PropTypes.object,
-  fetchTransactions: PropTypes.func
+  fetchTransactions: PropTypes.func,
+  error: PropTypes.string,
+  loading: PropTypes.bool
 };
 
 export default connect(

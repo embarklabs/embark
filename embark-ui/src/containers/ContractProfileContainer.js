@@ -1,48 +1,45 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { fetchContractProfile } from '../actions';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
+import {withRouter} from 'react-router-dom';
+
+import {contractProfile as contractProfileAction} from '../actions';
 import ContractProfile from '../components/ContractProfile';
-import { withRouter } from 'react-router';
+import DataWrapper from "../components/DataWrapper";
+import {getContractProfile} from "../reducers/selectors";
 
 class ContractProfileContainer extends Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetchContractProfile(this.props.match.params.contractName);
   }
 
   render() {
-    const { contractProfile } = this.props;
-    if (!contractProfile.data) {
-      return (
-        <h1>
-          <i>Loading contract profile...</i>
-        </h1>
-      );
-    }
-
-    if (contractProfile.data.error) {
-      return (
-        <h1>
-          <i>Error API...</i>
-        </h1>
-      );
-    }
-
     return (
-      <ContractProfile contract={contractProfile.data} />
+      <DataWrapper shouldRender={this.props.contractProfile !== undefined } {...this.props} render={({contractProfile}) => (
+        <ContractProfile contractProfile={contractProfile} />
+      )} />
     );
   }
 }
 
-function mapStateToProps(state) {
-  return { contractProfile: state.contractProfile };
+function mapStateToProps(state, props) {
+  return {
+    contractProfile: getContractProfile(state, props.match.params.contractName),
+    error: state.errorMessage,
+    loading: state.loading
+  };
 }
 
-export default compose(
-  connect(
-    mapStateToProps,
-    { fetchContractProfile }
-  ),
-  withRouter
-)(ContractProfileContainer);
+ContractProfileContainer.propTypes = {
+  match: PropTypes.object,
+  contractProfile: PropTypes.object,
+  fetchContractProfile: PropTypes.func,
+  error: PropTypes.string
+};
 
+export default withRouter(connect(
+  mapStateToProps,
+  {
+    fetchContractProfile: contractProfileAction.request
+  }
+)(ContractProfileContainer));

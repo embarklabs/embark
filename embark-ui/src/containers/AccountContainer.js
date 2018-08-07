@@ -5,9 +5,9 @@ import {withRouter} from 'react-router-dom';
 
 import {account as accountAction} from '../actions';
 import Account from '../components/Account';
-import NoMatch from "../components/NoMatch";
+import DataWrapper from "../components/DataWrapper";
 import Transactions from '../components/Transactions';
-import Error from '../components/Error';
+import {getAccount, getTransactionsByAccount} from "../reducers/selectors";
 
 class AccountContainer extends Component {
   componentDidMount() {
@@ -15,37 +15,30 @@ class AccountContainer extends Component {
   }
 
   render() {
-    const {account, error} = this.props;
-    if (error) {
-      return <Error error={error} />;
-    }
-
-    if (!account) {
-      return <NoMatch />;
-    }
-
     return (
-      <React.Fragment>
-        <Account account={account} />
-        <Transactions transactions={account.transactions || []} />
-      </React.Fragment>
+      <DataWrapper shouldRender={this.props.account !== undefined } {...this.props} render={({account, transactions}) => (
+        <React.Fragment>
+          <Account account={account} />
+          <Transactions transactions={transactions || []} />
+        </React.Fragment>
+      )} />
     );
   }
 }
 
 function mapStateToProps(state, props) {
-  if(state.accounts.error) {
-    return {error: state.accounts.error};
-  }
-  if(state.accounts.data) {
-    return {account: state.accounts.data.find(account => account.address === props.match.params.address)};
-  }
-  return {};
+  return {
+    account: getAccount(state, props.match.params.address),
+    transactions: getTransactionsByAccount(state, props.match.params.address),
+    error: state.errorMessage,
+    loading: state.loading
+  };
 }
 
 AccountContainer.propTypes = {
   match: PropTypes.object,
   account: PropTypes.object,
+  transactions: PropTypes.arrayOf(PropTypes.object),
   fetchAccount: PropTypes.func,
   error: PropTypes.string
 };

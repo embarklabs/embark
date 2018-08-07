@@ -1,48 +1,45 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { fetchContract } from '../actions';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
+import {withRouter} from 'react-router-dom';
+
+import {contract as contractAction} from '../actions';
 import Contract from '../components/Contract';
-import { withRouter } from 'react-router'
+import DataWrapper from "../components/DataWrapper";
+import {getContract} from "../reducers/selectors";
 
 class ContractContainer extends Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetchContract(this.props.match.params.contractName);
   }
 
   render() {
-    const {contract} = this.props;
-    if (!contract.data) {
-      return (
-        <h1>
-          <i>Loading contract...</i>
-        </h1>
-      );
-    }
-
-    if (contract.error) {
-      return (
-        <h1>
-          <i>Error API...</i>
-        </h1>
-      );
-    }
-
     return (
-      <Contract contract={contract.data} />
+      <DataWrapper shouldRender={this.props.contract !== undefined } {...this.props} render={({contract}) => (
+        <Contract contract={contract} />
+      )} />
     );
   }
+}
+
+function mapStateToProps(state, props) {
+  return {
+    contract: getContract(state, props.match.params.contractName),
+    error: state.errorMessage,
+    loading: state.loading
+  };
+}
+
+ContractContainer.propTypes = {
+  match: PropTypes.object,
+  contract: PropTypes.object,
+  fetchContract: PropTypes.func,
+  error: PropTypes.string
 };
 
-function mapStateToProps(state) {
-  return { contract: state.contract }
-};
-
-export default compose(
-  connect(
-    mapStateToProps,
-    {fetchContract}
-  ),
-  withRouter
-)(ContractContainer);
-
+export default withRouter(connect(
+  mapStateToProps,
+  {
+    fetchContract: contractAction.request
+  }
+)(ContractContainer));

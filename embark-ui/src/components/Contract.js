@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import React from 'react';
 import {
   Page,
@@ -32,6 +33,10 @@ const Contract = ({contract}) => (
     </Grid.Row>
   </Page.Content>
 );
+
+Contract.propTypes = {
+  contract: PropTypes.object
+};
 
 export default Contract;
 

@@ -1,40 +1,38 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import connect from "react-redux/es/connect/connect";
-import {NavLink, Route, Switch, withRouter} from 'react-router-dom';
+import {NavLink, Route, Switch, withRouter, Redirect} from 'react-router-dom';
 import {
   Page,
   Grid,
   List
 } from "tabler-react";
 
-import ProcessesContainer from '../containers/ProcessesContainer';
+import ProcessContainer from '../containers/ProcessContainer';
+import {getProcesses} from "../reducers/selectors";
 import Loading from "./Loading";
 
 const routePrefix = '/embark/processes';
 
 class ProcessesLayout extends Component {
-
-
   render() {
-    if (!this.props.processes || !this.props.processes.data) {
+    if (this.props.processes.length === 0) {
       return <Loading />;
     }
-    const processNames = Object.keys(this.props.processes.data) || [];
     return (<Grid.Row>
       <Grid.Col md={3}>
         <Page.Title className="my-5">Processes</Page.Title>
         <div>
           <List.Group transparent={true}>
-            {processNames.map((processName, index) => {
+            {this.props.processes.map((process, index) => {
               return (<List.GroupItem
                 className="d-flex align-items-center text-capitalize"
-                to={`${routePrefix}/${processName}`}
-                key={'process-' + processName}
+                to={`${routePrefix}/${process.name}`}
+                key={'process-' + process.name}
                 active={index === 0 && this.props.match.isExact === true}
                 RootComponent={withRouter(NavLink)}
               >
-                {processName}
+                {process.name}
               </List.GroupItem>);
             })}
 
@@ -43,10 +41,8 @@ class ProcessesLayout extends Component {
       </Grid.Col>
       <Grid.Col md={9}>
         <Switch>
-          <Route exact path={`${routePrefix}/`} component={ProcessesContainer} />
-          {processNames.map((processName, index) => {
-            return (<Route key={'procesRoute-' + index} exact path={`${routePrefix}/${processName}`} component={ProcessesContainer}/>);
-          })}
+          <Route exact path={`${routePrefix}/:processName`} component={() => <ProcessContainer />} />
+          <Redirect exact from={`${routePrefix}/`} to={`${routePrefix}/${this.props.processes[0].name}`} />
         </Switch>
       </Grid.Col>
     </Grid.Row>);
@@ -54,12 +50,12 @@ class ProcessesLayout extends Component {
 }
 
 ProcessesLayout.propTypes = {
-  processes: PropTypes.object,
+  processes: PropTypes.arrayOf(PropTypes.object),
   match: PropTypes.object
 };
 
 function mapStateToProps(state) {
-  return {processes: state.processes};
+  return {processes: getProcesses(state)};
 }
 
 export default connect(

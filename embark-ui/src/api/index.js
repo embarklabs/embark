@@ -53,8 +53,20 @@ export function fetchProcesses() {
   return get('/processes');
 }
 
-export function fetchProcessLogs(processName) {
-  return axios.get(`${constants.httpEndpoint}/process-logs/${processName}`);
+export function fetchProcessLogs(payload) {
+  return get(`/process-logs/${payload.processName}`);
+}
+
+export function fetchContracts() {
+  return get('/contracts');
+}
+
+export function fetchContract(payload) {
+  return get(`/contract/${payload.contractName}`);
+}
+
+export function fetchContractProfile(payload) {
+  return get(`/profiler/${payload.contractName}`);
 }
 
 export function webSocketProcess(processName) {
@@ -63,16 +75,4 @@ export function webSocketProcess(processName) {
 
 export function webSocketBlockHeader() {
   return new WebSocket(`${constants.wsEndpoint}/blockchain/blockHeader`);
-}
-
-export function fetchContract(contractName) {
-  return axios.get(`${constants.httpEndpoint}/contract/${contractName}`);
-}
-
-export function fetchContracts() {
-  return axios.get(`${constants.httpEndpoint}/contracts`);
-}
-
-export function fetchContractProfile(contractName) {
-  return axios.get(`${constants.httpEndpoint}/profiler/${contractName}`);
 }
