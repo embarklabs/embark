@@ -20,12 +20,12 @@ class CommunicationContainer extends Component {
 
   render() {
     let isEnabledMessage = '';
-    if (this.props.version === undefined || this.props.version === null) {
+    if (this.props.messages.version === undefined || this.props.messages.version === null) {
       isEnabledMessage =
         <Alert bsStyle="secondary "><Loader/> Checking Whisper support, please wait</Alert>;
-    } else if (!this.props.version) {
+    } else if (!this.props.messages.version) {
       isEnabledMessage = <Alert type="warning">The node you are using does not support Whisper</Alert>;
-    } else if (this.props.version === -1) {
+    } else if (this.props.messages.version === -1) {
       isEnabledMessage = <Alert type="warning">The node uses an unsupported version of Whisper</Alert>;
     }
 
@@ -34,8 +34,8 @@ class CommunicationContainer extends Component {
         {isEnabledMessage}
         <Communication listenToMessages={(channel) => this.listenToChannel(channel)}
                        sendMessage={(channel, message) => this.sendMessage(channel, message)}
-                       channels={this.props.channels}
-                       subscriptions={this.props.subscriptions}/>
+                       channels={this.props.messages.channels}
+                       subscriptions={this.props.messages.subscriptions}/>
       </Page.Content>
     );
   }
@@ -45,16 +45,12 @@ CommunicationContainer.propTypes = {
   messageSend: PropTypes.func,
   messageListen: PropTypes.func,
   communicationVersion: PropTypes.func,
-  channels: PropTypes.object,
-  subscriptions: PropTypes.array,
-  version: PropTypes.number
+  messages: PropTypes.object
 };
 
 function mapStateToProps(state) {
   return {
-    channels: state.messages.channels,
-    subscriptions: state.messages.subscriptions,
-    version: state.messages.version
+    messages: state.messages
   };
 }
 
