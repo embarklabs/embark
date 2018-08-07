@@ -10,7 +10,6 @@ class Communication extends Component {
       listenTo: '',
       channel: '',
       message: '',
-      subscribedChannels: [],
       messageList: []
     };
   }
@@ -28,13 +27,6 @@ class Communication extends Component {
 
   listenToChannel(e) {
     e.preventDefault();
-
-    const subscribedChannels = this.state.subscribedChannels;
-    subscribedChannels.push(this.state.listenTo);
-    this.setState({
-      subscribedChannels
-    });
-
     this.props.listenToMessages(this.state.listenTo);
   }
 
@@ -52,11 +44,11 @@ class Communication extends Component {
           <Button color="primary" onClick={(e) => this.listenToChannel(e)}>Start Listening</Button>
         </Form.FieldSet>
 
-        {this.state.subscribedChannels.length > 0 &&
+        {this.props.subscriptions && this.props.subscriptions.length > 0 &&
         <div id="subscribeList">
           <h4>Subscribed channels:</h4>
           <List>
-            {this.state.subscribedChannels.map((item, i) => <List.Item key={i}>{item}</List.Item>)}
+            {this.props.subscriptions.map((item, i) => <List.Item key={i}>{item}</List.Item>)}
           </List>
         </div>
         }
@@ -107,6 +99,7 @@ class Communication extends Component {
 Communication.propTypes = {
   sendMessage: PropTypes.func,
   listenToMessages: PropTypes.func,
+  subscriptions: PropTypes.array,
   channels: PropTypes.object
 };
 

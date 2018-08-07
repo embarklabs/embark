@@ -34,7 +34,8 @@ class CommunicationContainer extends Component {
         {isEnabledMessage}
         <Communication listenToMessages={(channel) => this.listenToChannel(channel)}
                        sendMessage={(channel, message) => this.sendMessage(channel, message)}
-                       channels={this.props.channels}/>
+                       channels={this.props.channels}
+                       subscriptions={this.props.subscriptions}/>
       </Page.Content>
     );
   }
@@ -45,12 +46,14 @@ CommunicationContainer.propTypes = {
   messageListen: PropTypes.func,
   communicationVersion: PropTypes.func,
   channels: PropTypes.object,
+  subscriptions: PropTypes.array,
   version: PropTypes.number
 };
 
 function mapStateToProps(state) {
   return {
     channels: state.messages.channels,
+    subscriptions: state.messages.subscriptions,
     version: state.messages.version
   };
 }
