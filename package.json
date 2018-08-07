@@ -102,6 +102,7 @@
   "devDependencies": {
     "eslint": "4.13.1",
     "mocha-sinon": "^1.1.4",
-    "sinon": "^4.5.0"
+    "sinon": "^4.5.0",
+    "chai": "4.1.2"
   }
 }
