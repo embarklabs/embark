@@ -5,44 +5,37 @@ import {fetchCodeCompilation} from '../actions';
 import Fiddle from '../components/Fiddle';
 
 class FiddleContainer extends Component {
-  componentWillMount() {
-    
+
+  constructor(props){
+    super(props)
+    this.state = { value: ''};
   }
 
+  onCodeChange(newValue) {
+    this.setState({value: newValue});
+    this.props.fetchCodeCompilation(newValue);
+  }
 
   render() {
-    const { compilationResult } = this.props;
-
-    const code = 'hello world';
-    console.log('rendering fiddle, compilation result = ' + compilationResult);
+    const { fiddles } = this.props;
 
     return (
       <React.Fragment>
-      <Fiddle onCodeChange={this.props.fetchCodeCompilation} />
+        <Fiddle value={this.state.value} onCodeChange={(n) => this.onCodeChange(n)} />
         <h2>Result</h2>
-        {
-          !compilationResult 
-          ? 
-            'No compilation results yet'
-            :
-            compilationResult.error 
-            ?
-              <i>Error API...</i>
-              :
-              compilationResult
-        }
+        <p>{ fiddles.data ? JSON.stringify(fiddles.data) : 'No compilation results yet'}</p>
       </React.Fragment>
     );
   }
 }
 function mapStateToProps(state) {
   return {
-    compilationResult: state.compilationResult
+    fiddles: state.fiddles
   };
 }
 
 FiddleContainer.propTypes = {
-  compilationResult: PropTypes.object,
+  fiddles: PropTypes.object,
   fetchCodeCompilation: PropTypes.func
 };
 

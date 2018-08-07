@@ -4,7 +4,7 @@ import 'brace/mode/javascript';
 import 'brace/theme/tomorrow_night_blue';
 import 'ace-mode-solidity/build/remix-ide/mode-solidity';
 
-const Fiddle = ({onCodeChange}) => {
+const Fiddle = ({onCodeChange, value}) => {
 
   return (
     <React.Fragment>
@@ -16,7 +16,8 @@ const Fiddle = ({onCodeChange}) => {
         name="blah1"
         height="60em"
         width="100%"
-        onChange={(e) => onCodeChange(e)}
+        onChange={onCodeChange}
+        value={value}
       />
   </React.Fragment>
   );

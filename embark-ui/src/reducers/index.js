@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux';
 import {REQUEST} from "../actions";
+import fiddleRecuder from './fiddleReducer';
 
 const BN_FACTOR = 10000;
 
@@ -86,7 +87,6 @@ function entities(state = entitiesDefaultState, action) {
 }
 
 function errorMessage(state = null, action) {
-  return action.error || state;
 }
 
 function loading(_state = false, action) {
@@ -96,7 +96,8 @@ function loading(_state = false, action) {
 const rootReducer = combineReducers({
   entities,
   loading,
-  errorMessage
+  errorMessage,
+  fiddles: fiddleRecuder
 });
 
 export default rootReducer;
