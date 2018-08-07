@@ -69,7 +69,7 @@ export function communicationVersion() {
 }
 
 export function sendMessage(payload) {
-  return post(`/communication/sendMessage`, payload);
+  return post(`/communication/sendMessage`, payload.body);
 }
 
 export function listenToChannel(channel) {
