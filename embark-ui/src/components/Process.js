@@ -7,8 +7,8 @@ class Process extends Component {
   render() {
     const logs = this.props.logs;
     return (
-      <Page.Content title={this.props.processName.charAt(0).toUpperCase() + this.props.processName.slice(1)}>
-        <p className="capitalize">State: {this.props.state}</p>
+      <Page.Content className="text-capitalize" title={this.props.processName}>
+        <p className="text-capitalize">State: {this.props.state}</p>
         {!logs &&
         <Loading/>}
         {logs &&

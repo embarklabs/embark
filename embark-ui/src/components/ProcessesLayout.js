@@ -28,7 +28,7 @@ class ProcessesLayout extends Component {
           <List.Group transparent={true}>
             {processNames.map((processName, index) => {
               return (<List.GroupItem
-                className="d-flex align-items-center capitalize"
+                className="d-flex align-items-center text-capitalize"
                 to={`${routePrefix}/${processName}`}
                 key={'process-' + processName}
                 active={index === 0 && this.props.match.isExact === true}

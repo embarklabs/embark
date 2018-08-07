@@ -1,8 +1,9 @@
+import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Page} from "tabler-react";
 
-import Status from '../components/Status';
+import Processes from '../components/Processes';
 import Console from '../components/Console';
 
 class HomeContainer extends Component {
@@ -10,14 +11,22 @@ class HomeContainer extends Component {
     return (
       <React.Fragment>
         <Page.Title className="my-5">Dashboard</Page.Title>
-        <Status />
+        {this.props.processes.data && <Processes processes={this.props.processes.data} />}
         <Console />
       </React.Fragment>
     );
   }
 }
 
+HomeContainer.propTypes = {
+  processes: PropTypes.object
+};
+
+function mapStateToProps(state) {
+  return {processes: state.processes};
+}
+
 export default connect(
-  null,
+  mapStateToProps,
   null,
 )(HomeContainer);
