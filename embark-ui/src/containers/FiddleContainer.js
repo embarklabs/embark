@@ -1,41 +1,35 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {fiddleCodeChange} from '../actions';
+import {fetchCodeCompilation} from '../actions';
 import Fiddle from '../components/Fiddle';
 
 class FiddleContainer extends Component {
   componentWillMount() {
-    //this.props.fetchAccounts();
+    
   }
 
-  render() {
-    // const { accounts } = this.props;
-    // if (!accounts.data) {
-    //   return (
-    //     <h1>
-    //       <i>Loading accounts...</i>
-    //     </h1>
-    //   )
-    // }
 
-    // if (accounts.error) {
-    //   return (
-    //     <h1>
-    //       <i>Error API...</i>
-    //     </h1>
-    //   )
-    // }
-    const options = {
-      selectOnLineNumbers: true,
-      roundedSelection: false,
-      readOnly: false,
-      cursorStyle: 'line',
-      automaticLayout: false,
-    };
+  render() {
+    const { compilationResult } = this.props;
+
     const code = 'hello world';
 
     return (
-      <Fiddle options={options} code={code} />
+      <React.Fragment>
+      <Fiddle code={code} onCodeChange={this.props.fetchCodeCompilation} />
+        <h2>Result</h2>
+        {
+          !compilationResult 
+          ? 
+            'No compilation results yet'
+            :
+            compilationResult.error 
+            ?
+              <i>Error API...</i>
+              :
+              compilationResult
+        }
+      </React.Fragment>
     );
   }
 }
@@ -49,6 +43,6 @@ function mapStateToProps(state) {
 export default connect(
   mapStateToProps,
   {
-    fiddleCodeChange
+    fetchCodeCompilation
   },
 )(FiddleContainer);

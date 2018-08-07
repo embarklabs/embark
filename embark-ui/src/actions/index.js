@@ -20,8 +20,6 @@ export const accounts = {
   failure: (error) => action(ACCOUNTS[FAILURE], {error})
 };
 
-// Fiddle
-export const FIDDLE_CODE_CHANGE = 'FIDDLE_CODE_CHANGE';
 export const ACCOUNT = createRequestTypes('ACCOUNT');
 export const account = {
   request: (address) => action(ACCOUNT[REQUEST], {address}),
@@ -145,8 +143,30 @@ export function listenToContractLogs() {
   };
 }
 
-export function fiddleCodeChange(){
+// Fiddle
+export const FETCH_COMPILE_CODE = 'FETCH_COMPILE_CODE';
+export const RECEIVE_COMPILE_CODE = 'RECEIVE_COMPILE_CODE';
+export const RECEIVE_COMPILE_CODE_ERROR = 'RECEIVE_COMPILE_CODE_ERROR';
+
+export function fetchCodeCompilation(codeToCompile){
   return {
-    type: FIDDLE_CODE_CHANGE
+    type: FETCH_COMPILE_CODE,
+    codeToCompile
   };
 }
+
+
+export function receiveCodeCompilation(compilationResult){
+  return {
+    type: RECEIVE_COMPILE_CODE,
+    compilationResult
+  };
+}
+
+export function receiveCodeCompilationError(){
+  return {
+    type: RECEIVE_COMPILE_CODE_ERROR
+  };
+}
+
+

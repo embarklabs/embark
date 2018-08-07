@@ -95,3 +95,7 @@ export function webSocketContractLogs() {
 export function webSocketBlockHeader() {
   return new WebSocket(`${constants.wsEndpoint}/blockchain/blockHeader`);
 }
+
+export function fetchCodeCompilation() {
+  return axios.post('http://localhost:8000/embark-api/contract/compile');
+}

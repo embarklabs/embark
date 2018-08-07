@@ -157,6 +157,19 @@ export function *watchCommunicationVersion() {
   yield takeEvery(actions.MESSAGE_VERSION[actions.REQUEST], fetchCommunicationVersion);
 }
 
+export function* fetchCodeCompilation() {
+  try {
+    const codeCompilationResult = yield call(api.fetchCodeCompilation);
+    yield put(actions.receiveCodeCompilation(codeCompilationResult));
+  } catch (e) {
+    yield put(actions.receiveCodeCompilationError(e));
+  }
+}
+
+export function* watchFetchCodeCompilation() {
+  yield takeEvery(actions.FETCH_COMPILE_CODE, fetchCodeCompilation);
+}
+
 export default function *root() {
   yield all([
     fork(watchInitBlockHeader),
@@ -177,7 +190,8 @@ export default function *root() {
     fork(watchSendMessage),
     fork(watchFetchContract),
     fork(watchFetchTransaction),
-    fork(watchFetchContractProfile)
+    fork(watchFetchContractProfile),
+    fork(watchFetchCodeCompilation)
   ]);
 }
 
