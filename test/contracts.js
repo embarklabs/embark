@@ -1,5 +1,5 @@
 /*globals describe, it*/
-let ContractsManager = require('../lib/contracts/contracts.js');
+let ContractsManager = require('../lib/modules/contracts/index.js');
 let Compiler = require('../lib/modules/compiler/');
 let Logger = require('../lib/core/logger.js');
 let File = require('../lib/core/file.js');
@@ -45,7 +45,10 @@ describe('embark.Contracts', function() {
     });
 
     events.setCommandHandler("config:contractsFiles", (cb) => {
-      cb([]);
+      cb([
+        readFile('test/contracts/simple_storage.sol'),
+        readFile('test/contracts/token.sol')
+      ]);
     });
 
     events.setCommandHandler("blockchain:gasPrice", (cb) => {
@@ -81,16 +84,13 @@ describe('embark.Contracts', function() {
       }
     };
 
-    let contractsManager = new ContractsManager({
-      plugins: plugins,
-      contractFiles:  [
-        readFile('test/contracts/simple_storage.sol'),
-        readFile('test/contracts/token.sol')
-      ],
-      contractDirectories: ['app/contracts'],
-      contractsConfig: contractsConfig,
+    let embarkObj = {
       logger: new Logger({}),
       events: events
+    };
+
+    let contractsManager = new ContractsManager(embarkObj, {
+      contractDirectories: ['app/contracts']
     });
 
     describe('#build', function() {
@@ -151,7 +151,10 @@ describe('embark.Contracts', function() {
     });
 
     events.setCommandHandler("config:contractsFiles", (cb) => {
-      cb([]);
+      cb([
+        readFile('test/contracts/simple_storage.sol'),
+        readFile('test/contracts/token_storage.sol')
+      ]);
     });
 
     events.setCommandHandler("blockchain:gasPrice", (cb) => {
@@ -197,16 +200,13 @@ describe('embark.Contracts', function() {
       }
     }
 
-    let contractsManager = new ContractsManager({
-      plugins: plugins,
-      contractFiles:  [
-        readFile('test/contracts/simple_storage.sol'),
-        readFile('test/contracts/token_storage.sol')
-      ],
-      contractDirectories: ['app/contracts'],
-      contractsConfig: contractsConfig,
+    let embarkObj = {
       logger: new Logger({}),
       events: events
+    }
+
+    let contractsManager = new ContractsManager(embarkObj, {
+      contractDirectories: ['app/contracts']
     });
 
     describe('#build', function() {
