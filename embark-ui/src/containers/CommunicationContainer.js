@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import connect from "react-redux/es/connect/connect";
-import {Alert, Icon, Page} from 'tabler-react';
+import {Alert, Loader, Page} from 'tabler-react';
 import {messageSend, messageListen, messageVersion} from "../actions";
 import Communication from "../components/Communication";
 
@@ -22,7 +22,7 @@ class CommunicationContainer extends Component {
     let isEnabledMessage = '';
     if (this.props.version === undefined || this.props.version === null) {
       isEnabledMessage =
-        <Alert bsStyle="secondary "><Icon name="refresh-cw"/> Checking Whisper support, please wait</Alert>;
+        <Alert bsStyle="secondary "><Loader/> Checking Whisper support, please wait</Alert>;
     } else if (!this.props.version) {
       isEnabledMessage = <Alert type="warning">The node you are using does not support Whisper</Alert>;
     } else if (this.props.version === -1) {
