@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import {fetchCodeCompilation} from '../actions';
 import Fiddle from '../components/Fiddle';
 
@@ -13,10 +14,11 @@ class FiddleContainer extends Component {
     const { compilationResult } = this.props;
 
     const code = 'hello world';
+    console.log('rendering fiddle, compilation result = ' + compilationResult);
 
     return (
       <React.Fragment>
-      <Fiddle code={code} onCodeChange={this.props.fetchCodeCompilation} />
+      <Fiddle onCodeChange={this.props.fetchCodeCompilation} />
         <h2>Result</h2>
         {
           !compilationResult 
@@ -34,11 +36,15 @@ class FiddleContainer extends Component {
   }
 }
 function mapStateToProps(state) {
-  return { 
-    code: state.code,
-    options: state.options
+  return {
+    compilationResult: state.compilationResult
   };
 }
+
+FiddleContainer.propTypes = {
+  compilationResult: PropTypes.object,
+  fetchCodeCompilation: PropTypes.func
+};
 
 export default connect(
   mapStateToProps,

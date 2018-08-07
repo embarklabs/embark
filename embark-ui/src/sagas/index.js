@@ -157,9 +157,9 @@ export function *watchCommunicationVersion() {
   yield takeEvery(actions.MESSAGE_VERSION[actions.REQUEST], fetchCommunicationVersion);
 }
 
-export function* fetchCodeCompilation() {
+export function* fetchCodeCompilation(action) {
   try {
-    const codeCompilationResult = yield call(api.fetchCodeCompilation);
+    const codeCompilationResult = yield call(api.fetchCodeCompilation, action.codeToCompile);
     yield put(actions.receiveCodeCompilation(codeCompilationResult));
   } catch (e) {
     yield put(actions.receiveCodeCompilationError(e));
