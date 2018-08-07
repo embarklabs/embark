@@ -16,7 +16,6 @@ const routes = (
       <Route path="/embark/explorer/" component={ExplorerLayout} />
       <Route path="/embark/processes/" component={ProcessesLayout} />
       <Route path="/embark/explorer/accounts" component={AccountsContainer} />
-      <Route path="/embark/processes" component={ProcessesContainer} />
       <Route path="/embark/contracts/:contractName" component={ContractLayout} />
       <Route path="/embark/contracts" component={ContractsContainer} />
       <Route component={NoMatch} />

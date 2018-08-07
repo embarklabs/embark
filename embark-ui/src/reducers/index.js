@@ -16,9 +16,7 @@ const rootReducer = combineReducers({
   contractProfile: contractProfileReducer,
   blocks: blocksReducer,
   transactions: transactionsReducer,
-  commands: commandsReducer,
-  contracts: contractsReducer,
-  contract: contractReducer
+  commands: commandsReducer
 });
 
 export default rootReducer;

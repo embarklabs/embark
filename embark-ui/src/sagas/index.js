@@ -154,9 +154,9 @@ export default function *root() {
     fork(watchFetchProcessLogs),
     fork(watchListenToProcessLogs),
     fork(watchFetchBlock),
-    fork(watchFetchTransactions)
+    fork(watchFetchTransactions),
     fork(watchFetchTransaction),
-    fork(watchPostCommand)
+    fork(watchPostCommand),
     fork(watchFetchBlocks),
     fork(watchFetchContracts),
     fork(watchFetchContract),
