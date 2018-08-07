@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
-import {Button, Form} from 'tabler-react';
+import {Button, Form, Card, Grid, List} from 'tabler-react';
 
 class Communication extends Component {
   constructor(props) {
@@ -11,8 +11,7 @@ class Communication extends Component {
       channel: '',
       message: '',
       subscribedChannels: [],
-      messageList: [],
-      logs: []
+      messageList: []
     };
   }
 
@@ -25,25 +24,18 @@ class Communication extends Component {
   sendMessage(e) {
     e.preventDefault();
     this.props.sendMessage(this.state.channel, this.state.message);
-    this.addToLog("EmbarkJS.Messages.sendMessage({topic: '" + this.state.channel + "', data: '" + this.state.message + "'})");
   }
 
   listenToChannel(e) {
     e.preventDefault();
 
     const subscribedChannels = this.state.subscribedChannels;
-    subscribedChannels.push(<span>Subscribed to <b>{this.state.listenTo}</b>. Now try sending a message</span>);
+    subscribedChannels.push(this.state.listenTo);
     this.setState({
       subscribedChannels
     });
 
     this.props.listenToMessages(this.state.listenTo);
-    this.addToLog("EmbarkJS.Messages.listenTo({topic: ['" + this.state.listenTo + "']}).then(function(message) {})");
-  }
-
-  addToLog(txt) {
-    this.state.logs.push(txt);
-    this.setState({logs: this.state.logs});
   }
 
   render() {
@@ -58,25 +50,36 @@ class Communication extends Component {
                         onChange={e => this.handleChange(e, 'listenTo')}/>
           </Form.Group>
           <Button color="primary" onClick={(e) => this.listenToChannel(e)}>Start Listening</Button>
-          <div id="subscribeList">
-            {this.state.subscribedChannels.map((item, i) => <p key={i}>{item}</p>)}
-          </div>
-          {this.props.channels && Boolean(Object.keys(this.props.channels).length) &&
-          <React.Fragment>
-            <p>Messages received:</p>
-            <div id="messagesList">
-              {Object.keys(this.props.channels).map((channelName, i) => {
-                return (<React.Fragment key={'channel-' + i}>
-                  <p><b>{channelName}</b></p>
-                  {this.props.channels[channelName].messages.map((message, f) => {
-                    return <p key={`${message}-${i}-${f}`}>{message}</p>;
-                  })}
-                </React.Fragment>);
-              })}
-            </div>
-          </React.Fragment>
-          }
         </Form.FieldSet>
+
+        {this.state.subscribedChannels.length > 0 &&
+        <div id="subscribeList">
+          <h4>Subscribed channels:</h4>
+          <List>
+            {this.state.subscribedChannels.map((item, i) => <List.Item key={i}>{item}</List.Item>)}
+          </List>
+        </div>
+        }
+
+        {this.props.channels && Boolean(Object.keys(this.props.channels).length) &&
+        <React.Fragment>
+          <h4>Messages received:</h4>
+
+          <Grid.Row messagesList>
+            {Object.keys(this.props.channels).map((channelName, i) => {
+              return (<Grid.Col md={4} key={`message-${i}`}>
+                <Card title={channelName}>
+                  <Card.Body>
+                    {this.props.channels[channelName].messages.map((message, f) => {
+                      return <p key={`message-${i}-${f}`}>{message}</p>;
+                    })}
+                  </Card.Body>
+                </Card>
+              </Grid.Col>);
+            })}
+          </Grid.Row>
+        </React.Fragment>
+        }
 
         <h3>Send Message</h3>
 
@@ -96,14 +99,6 @@ class Communication extends Component {
           <Button color="primary" onClick={(e) => this.sendMessage(e)}>Send Message</Button>
 
         </Form.FieldSet>
-
-        <p>Javascript calls being made: </p>
-        <div className="logs">
-          <p>EmbarkJS.Messages.setProvider&#x00028;&apos;whisper&apos;&#x00029;</p>
-          {
-            this.state.logs.map((item, i) => <p key={i}>{item}</p>)
-          }
-        </div>
       </React.Fragment>
     );
   }

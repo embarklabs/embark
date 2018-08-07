@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import connect from "react-redux/es/connect/connect";
-import {Alert, Icon} from 'tabler-react';
+import {Alert, Icon, Page} from 'tabler-react';
 import {messageSend, messageListen, messageVersion} from "../actions";
 import Communication from "../components/Communication";
 
@@ -30,12 +30,12 @@ class CommunicationContainer extends Component {
     }
 
     return (
-      <React.Fragment>
+      <Page.Content title="Communication explorer">
         {isEnabledMessage}
         <Communication listenToMessages={(channel) => this.listenToChannel(channel)}
                        sendMessage={(channel, message) => this.sendMessage(channel, message)}
                        channels={this.props.channels}/>
-      </React.Fragment>
+      </Page.Content>
     );
   }
 }
