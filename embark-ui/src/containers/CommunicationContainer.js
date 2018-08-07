@@ -74,7 +74,7 @@ class CommunicationContainer extends Component {
           <div id="subscribeList">
             {this.state.subscribedChannels.map((item, i) => <p key={i}>{item}</p>)}
           </div>
-          {this.props.messages && this.props.messages.channels && this.props.messages.channels.length &&
+          {this.props.messages && this.props.messages.channels && Boolean(Object.keys(this.props.messages.channels).length) &&
           <React.Fragment>
             <p>Messages received:</p>
             <div id="messagesList">
