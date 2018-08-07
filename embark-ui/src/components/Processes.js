@@ -38,7 +38,7 @@ const Processes = ({processes}) => (
 );
 
 Processes.propTypes = {
-  processes: PropTypes.object,
+  processes: PropTypes.object
 };
 
 export default Processes;

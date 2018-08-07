@@ -20,3 +20,7 @@
 .logs .trace {
   color: #8f98a2;
 }
+
+.text__new-line {
+  white-space: pre-line;
+}

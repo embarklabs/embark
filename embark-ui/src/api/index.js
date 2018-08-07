@@ -11,6 +11,20 @@ function get(path, params) {
     });
 }
 
+function post(path, params) {
+  return axios.post(constants.httpEndpoint + path, params)
+    .then((response) => {
+      return {response};
+    })
+    .catch((error) => {
+      return {response: null, error: error.message || 'Something bad happened'};
+    });
+}
+
+export function postCommand(payload) {
+  return post('/command', payload);
+}
+
 export function fetchAccounts() {
   return get('/blockchain/accounts');
 }

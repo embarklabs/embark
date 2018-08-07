@@ -63,6 +63,13 @@ export const processes = {
   failure: (error) => action(PROCESSES[FAILURE], {error})
 };
 
+export const COMMANDS = createRequestTypes('COMMANDS');
+export const commands = {
+  post: (command) => action(COMMANDS[REQUEST], {command}),
+  success: (result) => action(COMMANDS[SUCCESS], {result}),
+  failure: (error) => action(COMMANDS[FAILURE], {error})
+};
+
 // Process logs
 export const FETCH_PROCESS_LOGS = 'FETCH_PROCESS_LOGS';
 export const RECEIVE_PROCESS_LOGS = 'RECEIVE_PROCESS_LOGS';

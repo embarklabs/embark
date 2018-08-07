@@ -3,24 +3,25 @@ import * as api from '../api';
 import {eventChannel} from 'redux-saga';
 import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
 
-const {account, accounts, block, blocks, transaction, transactions, processes} = actions;
+const {account, accounts, block, blocks, transaction, transactions, processes, commands} = actions;
 
-function *fetchEntity(entity, apiFn, id) {
-  const {response, error} = yield call(apiFn, id);
+function *doRequest(entity, apiFn, payload) {
+  const {response, error} = yield call(apiFn, payload);
   if(response) {
     yield put(entity.success(response));
-  } else {
+  } else if (error) {
     yield put(entity.failure(error));
   }
 }
 
-export const fetchAccount = fetchEntity.bind(null, account, api.fetchAccount);
-export const fetchBlock = fetchEntity.bind(null, block, api.fetchBlock);
-export const fetchTransaction = fetchEntity.bind(null, transaction, api.fetchTransaction);
-export const fetchAccounts = fetchEntity.bind(null, accounts, api.fetchAccounts);
-export const fetchBlocks = fetchEntity.bind(null, blocks, api.fetchBlocks);
-export const fetchTransactions = fetchEntity.bind(null, transactions, api.fetchTransactions);
-export const fetchProcesses = fetchEntity.bind(null, processes, api.fetchProcesses);
+export const fetchAccount = doRequest.bind(null, account, api.fetchAccount);
+export const fetchBlock = doRequest.bind(null, block, api.fetchBlock);
+export const fetchTransaction = doRequest.bind(null, transaction, api.fetchTransaction);
+export const fetchAccounts = doRequest.bind(null, accounts, api.fetchAccounts);
+export const fetchBlocks = doRequest.bind(null, blocks, api.fetchBlocks);
+export const fetchTransactions = doRequest.bind(null, transactions, api.fetchTransactions);
+export const fetchProcesses = doRequest.bind(null, processes, api.fetchProcesses);
+export const postCommand = doRequest.bind(null, commands, api.postCommand);
 
 export function *watchFetchTransaction() {
   yield takeEvery(actions.TRANSACTION[actions.REQUEST], fetchTransaction);
@@ -48,6 +49,10 @@ export function *watchFetchAccounts() {
 
 export function *watchFetchProcesses() {
   yield takeEvery(actions.PROCESSES[actions.REQUEST], fetchProcesses);
+}
+
+export function *watchPostCommand() {
+  yield takeEvery(actions.COMMANDS[actions.REQUEST], postCommand);
 }
 
 export function *fetchProcessLogs(action) {
@@ -112,6 +117,7 @@ export default function *root() {
     fork(watchFetchBlocks),
     fork(watchFetchBlock),
     fork(watchFetchTransactions),
-    fork(watchFetchTransaction)
+    fork(watchFetchTransaction),
+    fork(watchPostCommand)
   ]);
 }
