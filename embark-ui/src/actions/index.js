@@ -56,10 +56,13 @@ export const transaction = {
   failure: (error) => action(TRANSACTION[FAILURE], {error})
 };
 
-// Processes
-export const FETCH_PROCESSES = 'FETCH_PROCESSES';
-export const RECEIVE_PROCESSES = 'RECEIVE_PROCESSES';
-export const RECEIVE_PROCESSES_ERROR = 'RECEIVE_PROCESSES_ERROR';
+export const PROCESSES = createRequestTypes('PROCESSES');
+export const processes = {
+  request: () => action(PROCESSES[REQUEST]),
+  success: (processes) => action(PROCESSES[SUCCESS], {processes}),
+  failure: (error) => action(PROCESSES[FAILURE], {error})
+};
+
 // Process logs
 export const FETCH_PROCESS_LOGS = 'FETCH_PROCESS_LOGS';
 export const RECEIVE_PROCESS_LOGS = 'RECEIVE_PROCESS_LOGS';
@@ -68,26 +71,6 @@ export const RECEIVE_NEW_PROCESS_LOG = 'RECEIVE_NEW_PROCESS_LOG';
 export const RECEIVE_PROCESS_LOGS_ERROR = 'RECEIVE_PROCESS_LOGS_ERROR';
 // BlockHeader
 export const INIT_BLOCK_HEADER = 'INIT_BLOCK_HEADER';
-
-export function fetchProcesses() {
-  return {
-    type: FETCH_PROCESSES
-  };
-}
-
-export function receiveProcesses(processes) {
-  return {
-    type: RECEIVE_PROCESSES,
-    processes
-  };
-}
-
-export function receiveProcessesError(error) {
-  return {
-    type: RECEIVE_PROCESSES_ERROR,
-    error
-  };
-}
 
 export function fetchProcessLogs(processName) {
   return {

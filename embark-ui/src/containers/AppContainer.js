@@ -6,7 +6,7 @@ import React, {Component} from 'react';
 import history from '../history';
 import Layout from '../components/Layout';
 import routes from '../routes';
-import {initBlockHeader, fetchProcesses} from '../actions';
+import {initBlockHeader, processes as processesAction} from '../actions';
 
 class AppContainer extends Component {
   componentDidMount() {
@@ -34,6 +34,6 @@ export default connect(
   null,
   {
     initBlockHeader,
-    fetchProcesses
+    fetchProcesses: processesAction.request
   },
 )(AppContainer);

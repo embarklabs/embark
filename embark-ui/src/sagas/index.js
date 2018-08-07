@@ -3,7 +3,7 @@ import * as api from '../api';
 import {eventChannel} from 'redux-saga';
 import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
 
-const {account, accounts, block, blocks, transaction, transactions} = actions;
+const {account, accounts, block, blocks, transaction, transactions, processes} = actions;
 
 function *fetchEntity(entity, apiFn, id) {
   const {response, error} = yield call(apiFn, id);
@@ -20,6 +20,7 @@ export const fetchTransaction = fetchEntity.bind(null, transaction, api.fetchTra
 export const fetchAccounts = fetchEntity.bind(null, accounts, api.fetchAccounts);
 export const fetchBlocks = fetchEntity.bind(null, blocks, api.fetchBlocks);
 export const fetchTransactions = fetchEntity.bind(null, transactions, api.fetchTransactions);
+export const fetchProcesses = fetchEntity.bind(null, processes, api.fetchProcesses);
 
 export function *watchFetchTransaction() {
   yield takeEvery(actions.TRANSACTION[actions.REQUEST], fetchTransaction);
@@ -45,17 +46,8 @@ export function *watchFetchAccounts() {
   yield takeEvery(actions.ACCOUNTS[actions.REQUEST], fetchAccounts);
 }
 
-export function *fetchProcesses() {
-  try {
-    const processes = yield call(api.fetchProcesses);
-    yield put(actions.receiveProcesses(processes));
-  } catch (e) {
-    yield put(actions.receiveProcessesError(e));
-  }
-}
-
 export function *watchFetchProcesses() {
-  yield takeEvery(actions.FETCH_PROCESSES, fetchProcesses);
+  yield takeEvery(actions.PROCESSES[actions.REQUEST], fetchProcesses);
 }
 
 export function *fetchProcessLogs(action) {

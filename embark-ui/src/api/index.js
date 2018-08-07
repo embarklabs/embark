@@ -36,7 +36,7 @@ export function fetchTransaction(payload) {
 }
 
 export function fetchProcesses() {
-  return axios.get(`${constants.httpEndpoint}/processes`);
+  return get('/processes');
 }
 
 export function fetchProcessLogs(processName) {

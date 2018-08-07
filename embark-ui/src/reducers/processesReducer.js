@@ -1,19 +1,12 @@
-import {
-  RECEIVE_PROCESSES,
-  RECEIVE_PROCESSES_ERROR,
-  RECEIVE_PROCESS_LOGS,
-  RECEIVE_PROCESS_LOGS_ERROR,
-  RECEIVE_NEW_PROCESS_LOG,
-  WATCH_NEW_PROCESS_LOGS
-} from "../actions";
+import * as actions from "../actions";
 
 export default function processes(state = {}, action) {
   switch (action.type) {
-    case RECEIVE_PROCESSES:
+    case actions.PROCESSES[actions.SUCCESS]:
       return Object.assign({}, state, {data: action.processes.data});
-    case RECEIVE_PROCESSES_ERROR:
+    case actions.PROCESSES[actions.FAILURE]:
       return Object.assign({}, state, {error: action.error});
-    case RECEIVE_PROCESS_LOGS:
+    case actions.RECEIVE_PROCESS_LOGS:
       return {
         ...state,
         data: {
@@ -24,7 +17,7 @@ export default function processes(state = {}, action) {
             }
         }
       };
-    case RECEIVE_NEW_PROCESS_LOG: {
+    case actions.RECEIVE_NEW_PROCESS_LOG: {
       const logs = state.data[action.processName].logs || [];
       logs.push(action.log);
       return {
@@ -38,7 +31,7 @@ export default function processes(state = {}, action) {
         }
       };
     }
-    case WATCH_NEW_PROCESS_LOGS: {
+    case actions.WATCH_NEW_PROCESS_LOGS: {
       return {
         ...state,
         data: {
@@ -50,7 +43,7 @@ export default function processes(state = {}, action) {
         }
       };
     }
-    case RECEIVE_PROCESS_LOGS_ERROR:
+    case actions.RECEIVE_PROCESS_LOGS_ERROR:
       return Object.assign({}, state, {error: action.error});
     default:
       return state;
