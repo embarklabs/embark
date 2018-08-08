@@ -1,4 +1,5 @@
-const {assert, expect} = require('chai');
+/*global describe, it*/
+const {assert} = require('chai');
 const fs = require('fs');
 const path = require('path');
 const sinon = require('sinon');
@@ -39,7 +40,7 @@ describe('ContractSources', () => {
 
     it('should throw an error when the file does not exist', (done) => {
       assert.throws(() => {
-        new ContractSources(['fixtures/404.sol'])
+        new ContractSources(['fixtures/404.sol']);
       }, 'Error loading fixtures/404.sol: ENOENT');
 
       done();
