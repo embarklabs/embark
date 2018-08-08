@@ -157,16 +157,19 @@ export function *watchCommunicationVersion() {
   yield takeEvery(actions.MESSAGE_VERSION[actions.REQUEST], fetchCommunicationVersion);
 }
 
-export function* fetchCodeCompilation(action) {
+export function *fetchCodeCompilation(action) {
   try {
-    const codeCompilationResult = yield call(api.fetchCodeCompilation, action.codeToCompile);
-    yield put(actions.receiveCodeCompilation(codeCompilationResult));
+    const compilationResponse = yield call(api.fetchCodeCompilation, action.codeToCompile);
+    if(compilationResponse.status !== 200){
+      yield put(actions.receiveCodeCompilationError(compilationResponse.data));
+    }
+    else yield put(actions.receiveCodeCompilation(compilationResponse.data));
   } catch (e) {
     yield put(actions.receiveCodeCompilationError(e));
   }
 }
 
-export function* watchFetchCodeCompilation() {
+export function *watchFetchCodeCompilation() {
   yield takeEvery(actions.FETCH_COMPILE_CODE, fetchCodeCompilation);
 }
 

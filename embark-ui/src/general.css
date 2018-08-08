@@ -24,3 +24,6 @@
 .text__new-line {
   white-space: pre-line;
 }
+.card.card-fullscreen{
+  z-index:4;
+}

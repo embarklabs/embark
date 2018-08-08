@@ -3,6 +3,7 @@ import AceEditor from 'react-ace';
 import 'brace/mode/javascript';
 import 'brace/theme/tomorrow_night_blue';
 import 'ace-mode-solidity/build/remix-ide/mode-solidity';
+import PropTypes from 'prop-types';
 
 const Fiddle = ({onCodeChange, value}) => {
 
@@ -21,6 +22,11 @@ const Fiddle = ({onCodeChange, value}) => {
       />
   </React.Fragment>
   );
+};
+
+Fiddle.propTypes = {
+  onCodeChange: PropTypes.func,
+  value: PropTypes.string
 };
 
 export default Fiddle;
