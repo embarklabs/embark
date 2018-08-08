@@ -13,10 +13,6 @@
     "reset": "reset",
     "any": "any"
   },
-  "events": {
-    "contractFilesChanged": "contractFilesChanged",
-    "contractConfigChanged": "contractConfigChanged"
-  },
   "process": {
     "processLaunchRequest": "process:launch-request",
     "processLaunchComplete": "process:launch-complete",
