@@ -1,5 +1,8 @@
+import PropTypes from "prop-types";
 import React, {Component} from 'react';
+import connect from "react-redux/es/connect/connect";
 import {Alert, Button, Form, Icon} from 'tabler-react';
+import {messageSend, messageListen} from "../actions";
 
 class CommunicationContainer extends Component {
   constructor(props) {
@@ -23,8 +26,7 @@ class CommunicationContainer extends Component {
 
   sendMessage(e) {
     e.preventDefault();
-    // TODO send message via API
-    console.log('Send', this.state.message);
+    this.props.messageSend({topic: this.state.channel, message: this.state.message});
     this.addToLog("EmbarkJS.Messages.sendMessage({topic: '" + this.state.channel + "', data: '" + this.state.message + "'})");
   }
 
@@ -37,20 +39,7 @@ class CommunicationContainer extends Component {
       subscribedChannels
     });
 
-    console.log('Listen to', this.state.listenTo);
-    // TODO listen to channel via API
-    /*EmbarkJS.Messages.listenTo({topic: [this.state.listenTo]}, (error, message) => {
-      const messageList = this.state.messageList;
-      if (error) {
-        messageList.push(<span className="alert-danger">Error: {error}</span>);
-      } else {
-        messageList.push(<span>Channel: <b>{message.topic}</b> |  Message: <b>{message.data}</b></span>);
-      }
-      this.setState({
-        messageList
-      });
-    });*/
-
+    this.props.messageListen(this.state.listenTo);
     this.addToLog("EmbarkJS.Messages.listenTo({topic: ['" + this.state.listenTo + "']}).then(function(message) {})");
   }
 
@@ -85,15 +74,24 @@ class CommunicationContainer extends Component {
           <div id="subscribeList">
             {this.state.subscribedChannels.map((item, i) => <p key={i}>{item}</p>)}
           </div>
-          <p>Messages received:</p>
-          <div id="messagesList">
-            {this.state.messageList.map((item, i) => <p key={i}>{item}</p>)}
-          </div>
+          {this.props.messages && this.props.messages.channels && this.props.messages.channels.length &&
+          <React.Fragment>
+            <p>Messages received:</p>
+            <div id="messagesList">
+              {Object.keys(this.props.messages.channels).map((channelName, i) => {
+                return (<React.Fragment key={'channel-' + i}>
+                  <p><b>{channelName}</b></p>
+                  {this.props.messages.channels[channelName].messages.map((message, f) => {
+                    return <p key={`${message}-${i}-${f}`}>{message}</p>;
+                  })}
+                </React.Fragment>);
+              })}
+            </div>
+          </React.Fragment>
+          }
         </Form.FieldSet>
 
-
         <h3>Send Message</h3>
-
 
         <Form.FieldSet>
           <Form.Group label="Whisper channel" isRequired>
@@ -124,4 +122,21 @@ class CommunicationContainer extends Component {
   }
 }
 
-export default CommunicationContainer;
+CommunicationContainer.propTypes = {
+  messageSend: PropTypes.func,
+  messageListen: PropTypes.func,
+  messages: PropTypes.object
+};
+
+function mapStateToProps(state) {
+  return {messages: state.messages};
+}
+
+export default connect(
+  mapStateToProps,
+  {
+    messageSend: messageSend.request,
+    messageListen: messageListen.request
+  }
+)(CommunicationContainer);
+

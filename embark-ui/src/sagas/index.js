@@ -4,7 +4,7 @@ import {eventChannel} from 'redux-saga';
 import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
 
 const {account, accounts, block, blocks, transaction, transactions, processes, commands, processLogs,
-       contracts, contract, contractProfile} = actions;
+       contracts, contract, contractProfile, messageSend} = actions;
 
 function *doRequest(entity, apiFn, payload) {
   const {response, error} = yield call(apiFn, payload);
@@ -114,6 +114,25 @@ export function *watchListenToProcessLogs() {
   yield takeEvery(actions.WATCH_NEW_PROCESS_LOGS, listenToProcessLogs);
 }
 
+export const sendMessage = doRequest.bind(null, messageSend, api.sendMessage);
+
+export function *watchSendMessage() {
+  yield takeEvery(actions.MESSAGE_SEND[actions.REQUEST], sendMessage);
+}
+
+export function *listenToMessages(action) {
+  const socket = api.listenToChannel(action.channel);
+  const channel = yield call(createChannel, socket);
+  while (true) {
+    const message = yield take(channel);
+    yield put({type: actions.MESSAGE_LISTEN[actions.SUCCESS], channel: action.channel, message});
+  }
+}
+
+export function *watchListenToMessages() {
+  yield takeEvery(actions.MESSAGE_LISTEN[actions.REQUEST], listenToMessages);
+}
+
 export default function *root() {
   yield all([
     fork(watchInitBlockHeader),
@@ -124,14 +143,14 @@ export default function *root() {
     fork(watchListenToProcessLogs),
     fork(watchFetchBlock),
     fork(watchFetchTransactions),
-    fork(watchFetchTransaction),
     fork(watchPostCommand),
     fork(watchFetchBlocks),
     fork(watchFetchContracts),
+    fork(watchListenToMessages),
+    fork(watchSendMessage),
     fork(watchFetchContract),
     fork(watchFetchTransaction),
-    fork(watchFetchContractProfile),
-    fork(watchFetchTransactions)
+    fork(watchFetchContractProfile)
   ]);
 }
 

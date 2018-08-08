@@ -1,7 +1,6 @@
 import axios from "axios";
 import constants from '../constants';
 
-
 function get(path, params) {
   return axios.get(constants.httpEndpoint + path, params)
     .then((response) => {
@@ -63,6 +62,14 @@ export function fetchContracts() {
 
 export function fetchContract(payload) {
   return get(`/contract/${payload.contractName}`);
+}
+
+export function sendMessage(payload) {
+  return post(`/communication/sendMessage`, payload);
+}
+
+export function listenToChannel(channel) {
+  return new WebSocket(`${constants.wsEndpoint}/communication/listenTo/${channel}`);
 }
 
 export function fetchContractProfile(payload) {
