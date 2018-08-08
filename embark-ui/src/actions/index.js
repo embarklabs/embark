@@ -74,6 +74,19 @@ export const processLogs = {
   request: (processName) => action(PROCESS_LOGS[REQUEST], {processName}),
   success: (processLogs) => action(PROCESS_LOGS[SUCCESS], {processLogs}),
   failure: (error) => action(PROCESS_LOGS[FAILURE], {error})
+export function initBlockHeader(){
+  return {
+    type: INIT_BLOCK_HEADER
+  };
+}
+
+export function fetchContractProfile(contractName) {
+  return {
+    type: FETCH_CONTRACT_PROFILE,
+    contractName
+  };
+}
+
 };
 
 
