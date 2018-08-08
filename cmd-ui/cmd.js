@@ -1,7 +1,7 @@
 const program = require('commander');
-const Embark = require('../lib/index');
+const EmbarkController = require('./cmd_controller.js');
 const i18n = require('../lib/core/i18n/i18n.js');
-let embark = new Embark;
+let embark = new EmbarkController;
 
 class Cmd {
   constructor() {
