@@ -9,6 +9,6 @@ try {
   }
 }
 
-var Cmd = require('../lib/cmd');
+var Cmd = require('../cmd-ui/cmd');
 var cli = new Cmd();
 cli.process(process.argv);
