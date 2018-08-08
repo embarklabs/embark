@@ -5,11 +5,11 @@ class Console {
     this.events = options.events;
     this.plugins = options.plugins;
     this.version = options.version;
-    this.contractsConfig = options.contractsConfig;
-  }
+    this.ipc = options.ipc;
 
-  runCode(code) {
-    this.events.request('runcode:eval', code);
+    if (this.ipc.isServer()) {
+      this.ipc.on('console:executeCmd', this.executeCmd.bind(this));
+    }
   }
 
   processEmbarkCmd (cmd) {
@@ -37,26 +37,25 @@ class Console {
   executeCmd(cmd, callback) {
     var pluginCmds = this.plugins.getPluginsProperty('console', 'console');
     for (let pluginCmd of pluginCmds) {
-      let pluginOutput = pluginCmd.call(this, cmd, {});
-      if (pluginOutput !== false && pluginOutput !== 'false' && pluginOutput !== undefined) return callback(pluginOutput);
+      let pluginResult = pluginCmd.call(this, cmd, {});
+      if (pluginResult.match()) {
+        return pluginResult.process(callback);
+      }
     }
 
     let output = this.processEmbarkCmd(cmd);
     if (output) {
-      return callback(output);
+      return callback(null, output);
     }
 
     try {
-      this.events.request('runcode:eval', cmd, (err, result) => {
-        callback(result);
-      });
+      this.events.request('runcode:eval', cmd, callback, true);
     }
     catch (e) {
-      if (e.message.indexOf('not defined') > 0) {
-        return callback(("error: " + e.message).red + ("\n" + __("Type") + " " + "help".bold + " " + __("to see the list of available commands")).cyan);
-      } else {
-        return callback(e.message);
+      if (this.ipc.connected && this.ipc.isClient()) {
+        return this.ipc.request('console:executeCmd', cmd, callback);
       }
+      return callback(e.message);
     }
   }
 }
