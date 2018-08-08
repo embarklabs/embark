@@ -65,6 +65,7 @@ class EmbarkController {
     let self = this;
     self.context = options.context || [constants.contexts.run, constants.contexts.build];
     let Dashboard = require('./dashboard/dashboard.js');
+    let REPL = require('./dashboard/repl.js');
 
     let webServerConfig = {
       enabled: options.runWebserver
@@ -101,6 +102,13 @@ class EmbarkController {
     async.parallel([
       function startDashboard(callback) {
         if (!options.useDashboard) {
+          new REPL({
+            env: engine.env,
+            plugins: engine.plugins,
+            version: engine.version,
+            events: engine.events,
+            ipc: engine.ipc
+          }).startConsole();
           return callback();
         }
 
@@ -109,7 +117,8 @@ class EmbarkController {
           logger: engine.logger,
           plugins: engine.plugins,
           version: self.version,
-          env: engine.env
+          env: engine.env,
+          ipc: engine.ipc
         });
         dashboard.start(function () {
           engine.logger.info(__('dashboard start'));
@@ -243,7 +252,7 @@ class EmbarkController {
 
   console(options) {
     this.context = options.context || [constants.contexts.run, constants.contexts.console];
-    const REPL = require('../lib/dashboard/repl.js');
+    const REPL = require('./dashboard/repl.js');
     const Engine = require('../lib/core/engine.js');
     const engine = new Engine({
       env: options.env,
@@ -253,7 +262,8 @@ class EmbarkController {
       embarkConfig: options.embarkConfig || 'embark.json',
       logFile: options.logFile,
       logLevel: options.logLevel,
-      context: this.context
+      context: this.context,
+      ipcRole: 'client'
     });
     engine.init();
     async.waterfall([
@@ -263,25 +273,58 @@ class EmbarkController {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
 
-        engine.startService("processManager");
-        engine.startService("serviceMonitor");
-        engine.startService("libraryManager");
-        engine.startService("codeRunner");
-        engine.startService("web3");
-        engine.startService("pipeline");
-        engine.startService("deployment", {onlyCompile: false});
-        engine.startService("storage");
-        engine.startService("codeGenerator");
-        engine.startService("fileWatcher");
+        engine.ipc.connect((err) => {
+          if (err) {
+            engine.startService("processManager");
+            engine.startService("serviceMonitor");
+            engine.startService("libraryManager");
+            engine.startService("codeRunner");
+            engine.startService("web3");
+            engine.startService("pipeline");
+            engine.startService("deployment");
+            engine.startService("storage");
+            engine.startService("codeGenerator");
+            engine.startService("webServer");
 
-        callback();
+            return callback();
+          }
+
+          engine.startService("codeRunner");
+          callback();
+        });
+      },
+      function web3IPC(callback) {
+        if(!engine.ipc.connected || engine.ipc.isServer()) {
+          return callback();
+        }
+        const Web3 = require('web3');
+        let web3 = new Web3();
+        engine.ipc.request("runcode:getCommands", null, (_, {web3Config, commands}) => {
+          web3.setProvider(web3Config.provider.host);
+          web3.eth.defaultAccount = web3Config.defaultAccount;
+          engine.events.emit("runcode:register", "web3", web3);
+          async.each(commands, ({varName, code}, next) => {
+            if (varName) {
+              engine.events.emit("runcode:register", varName, code);
+            } else {
+              engine.events.request("runcode:eval", code);
+            }
+            next();
+          }, callback);
+        });
       },
       function deploy(callback) {
+        if(engine.ipc.connected && engine.ipc.isClient()) {
+          return callback();
+        }
         engine.events.request('deploy:contracts', function (err) {
           callback(err);
         });
       },
       function waitForWriteFinish(callback) {
+        if(engine.ipc.connected && engine.ipc.isClient()) {
+          return callback();
+        }
         engine.logger.info("Finished deploying".underline);
         engine.events.once('outputDone', (err) => {
           engine.logger.info(__("finished building").underline);
@@ -293,7 +336,8 @@ class EmbarkController {
           env: engine.env,
           plugins: engine.plugins,
           version: engine.version,
-          events: engine.events
+          events: engine.events,
+          ipc: engine.ipc
         });
         repl.start(callback);
       }

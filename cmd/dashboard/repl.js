@@ -8,17 +8,21 @@ class REPL {
     this.env = options.env;
     this.plugins = options.plugins;
     this.events = options.events;
+    this.version = options.version;
+    this.ipc = options.ipc;
+  }
+
+  startConsole(){
     this.console = new Console({
       events: this.events,
       plugins: this.plugins,
-      version: options.version
+      version: this.version,
+      ipc: this.ipc
     });
   }
 
   enhancedEval(cmd, context, filename, callback) {
-    this.console.executeCmd(cmd.trim(), (result) => {
-      callback(null, result);
-    });
+    this.console.executeCmd(cmd.trim(), callback);
   }
 
   enhancedWriter(output) {
@@ -30,6 +34,7 @@ class REPL {
   }
 
   start(done) {
+    this.startConsole();
     this.replServer = repl.start({
       prompt: "Embark (" + this.env + ") > ",
       useGlobal: true,
