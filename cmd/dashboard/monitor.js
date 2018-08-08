@@ -368,7 +368,7 @@ class Monitor {
   executeCmd(cmd, cb) {
     const self = this;
     self.logText.log('console> '.bold.green + cmd);
-    self.console.executeCmd(cmd, function (result) {
+    self.console.executeCmd(cmd, function (_, result) {
       self.logText.log(result);
       if (cb) {
         cb(result);
