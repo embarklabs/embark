@@ -1,4 +1,4 @@
-let utils = require('../utils/utils.js');
+let utils = require('../../lib/utils/utils.js');
 
 class Console {
   constructor(options) {
