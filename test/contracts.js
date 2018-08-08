@@ -1,5 +1,5 @@
 /*globals describe, it*/
-let ContractsManager = require('../lib/modules/contracts/index.js');
+let ContractsManager = require('../lib/modules/contracts_manager/index.js');
 let Compiler = require('../lib/modules/compiler/');
 let Logger = require('../lib/core/logger.js');
 let File = require('../lib/core/file.js');
