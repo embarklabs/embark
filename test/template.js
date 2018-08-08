@@ -1,6 +1,6 @@
 /*globals describe, it*/
 const assert = require('assert');
-const TemplateGenerator = require('../lib/cmds/template_generator');
+const TemplateGenerator = require('../lib/utils/template_generator');
 
 describe('TemplateGenerator', function () {
   describe('getExternalProject', function () {
