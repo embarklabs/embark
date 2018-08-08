@@ -76,20 +76,6 @@ export const processLogs = {
   failure: (error) => action(PROCESS_LOGS[FAILURE], {error})
 };
 
-export const MESSAGE_LISTEN = createRequestTypes('MESSAGE_LISTEN');
-export const messageListen = {
-  request: (channel) => action(MESSAGE_LISTEN[REQUEST], {channel}),
-  success: (message) => action(MESSAGE_LISTEN[SUCCESS], {message}),
-  failure: (error) => action(MESSAGE_LISTEN[FAILURE], {error})
-};
-
-export const MESSAGE_SEND = createRequestTypes('MESSAGE_SEND');
-export const messageSend = {
-  request: (body) => action(MESSAGE_SEND[REQUEST], {body}),
-  success: () => action(MESSAGE_SEND[SUCCESS]),
-  failure: (error) => action(MESSAGE_SEND[FAILURE], {error})
-};
-
 
 export const CONTRACTS = createRequestTypes('CONTRACTS');
 export const contracts = {
@@ -128,3 +114,25 @@ export function initBlockHeader(){
     type: INIT_BLOCK_HEADER
   };
 }
+
+export const MESSAGE_VERSION = createRequestTypes('MESSAGE_VERSION');
+export const messageVersion = {
+  request: () => action(MESSAGE_VERSION[REQUEST]),
+  success: (version) => action(MESSAGE_VERSION[SUCCESS], {version}),
+  failure: (error) => action(MESSAGE_VERSION[FAILURE], {error})
+};
+
+
+export const MESSAGE_SEND = createRequestTypes('MESSAGE_SEND');
+export const messageSend = {
+  request: (body) => action(MESSAGE_SEND[REQUEST], {body}),
+  success: () => action(MESSAGE_SEND[SUCCESS]),
+  failure: (error) => action(MESSAGE_SEND[FAILURE], {error})
+};
+
+export const MESSAGE_LISTEN = createRequestTypes('MESSAGE_LISTEN');
+export const messageListen = {
+  request: (channel) => action(MESSAGE_LISTEN[REQUEST], {channel}),
+  success: (message) => action(MESSAGE_LISTEN[SUCCESS], {message}),
+  failure: (error) => action(MESSAGE_LISTEN[FAILURE], {error})
+};

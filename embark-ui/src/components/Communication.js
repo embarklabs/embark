@@ -61,14 +61,14 @@ class Communication extends Component {
           <div id="subscribeList">
             {this.state.subscribedChannels.map((item, i) => <p key={i}>{item}</p>)}
           </div>
-          {this.props.messages && this.props.messages.channels && Boolean(Object.keys(this.props.messages.channels).length) &&
+          {this.props.channels && Boolean(Object.keys(this.props.channels).length) &&
           <React.Fragment>
             <p>Messages received:</p>
             <div id="messagesList">
-              {Object.keys(this.props.messages.channels).map((channelName, i) => {
+              {Object.keys(this.props.channels).map((channelName, i) => {
                 return (<React.Fragment key={'channel-' + i}>
                   <p><b>{channelName}</b></p>
-                  {this.props.messages.channels[channelName].messages.map((message, f) => {
+                  {this.props.channels[channelName].messages.map((message, f) => {
                     return <p key={`${message}-${i}-${f}`}>{message}</p>;
                   })}
                 </React.Fragment>);
@@ -112,7 +112,7 @@ class Communication extends Component {
 Communication.propTypes = {
   sendMessage: PropTypes.func,
   listenToMessages: PropTypes.func,
-  messages: PropTypes.object
+  channels: PropTypes.object
 };
 
 export default Communication;

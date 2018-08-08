@@ -4,7 +4,7 @@ import {eventChannel} from 'redux-saga';
 import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
 
 const {account, accounts, block, blocks, transaction, transactions, processes, commands, processLogs,
-       contracts, contract, contractProfile, messageSend} = actions;
+       contracts, contract, contractProfile, messageSend, messageVersion} = actions;
 
 function *doRequest(entity, apiFn, payload) {
   const {response, error} = yield call(apiFn, payload);
@@ -133,6 +133,12 @@ export function *watchListenToMessages() {
   yield takeEvery(actions.MESSAGE_LISTEN[actions.REQUEST], listenToMessages);
 }
 
+export const fetchCommunicationVersion = doRequest.bind(null, messageVersion, api.communicationVersion);
+
+export function *watchCommunicationVersion() {
+  yield takeEvery(actions.MESSAGE_VERSION[actions.REQUEST], fetchCommunicationVersion);
+}
+
 export default function *root() {
   yield all([
     fork(watchInitBlockHeader),
@@ -144,6 +150,7 @@ export default function *root() {
     fork(watchFetchBlock),
     fork(watchFetchTransactions),
     fork(watchPostCommand),
+    fork(watchCommunicationVersion),
     fork(watchFetchBlocks),
     fork(watchFetchContracts),
     fork(watchListenToMessages),

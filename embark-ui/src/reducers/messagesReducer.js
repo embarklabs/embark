@@ -16,6 +16,12 @@ export default function messages(state = {channels: {}}, action) {
         }
       };
     }
+    case actions.MESSAGE_VERSION[actions.SUCCESS]: {
+      return {
+        ...state,
+        version: action.version.data
+      };
+    }
     default:
       return state;
   }

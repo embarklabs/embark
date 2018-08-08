@@ -2,10 +2,14 @@ import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import connect from "react-redux/es/connect/connect";
 import {Alert, Icon} from 'tabler-react';
-import {messageSend, messageListen} from "../actions";
+import {messageSend, messageListen, messageVersion} from "../actions";
 import Communication from "../components/Communication";
 
 class CommunicationContainer extends Component {
+  componentDidMount() {
+    this.props.communicationVersion();
+  }
+
   sendMessage(topic, message) {
     this.props.messageSend({topic, message});
   }
@@ -16,14 +20,13 @@ class CommunicationContainer extends Component {
 
   render() {
     let isEnabledMessage = '';
-    if (this.enabled === false) {
-      isEnabledMessage = <React.Fragment>
-        <Alert type="warning">The node you are using does not support Whisper</Alert>
-        <Alert type="warning">The node uses an unsupported version of Whisper</Alert>
-      </React.Fragment>;
-    } else if (!this.enabled) {
+    if (this.props.version === undefined || this.props.version === null) {
       isEnabledMessage =
         <Alert bsStyle="secondary "><Icon name="refresh-cw"/> Checking Whisper support, please wait</Alert>;
+    } else if (!this.props.version) {
+      isEnabledMessage = <Alert type="warning">The node you are using does not support Whisper</Alert>;
+    } else if (this.props.version === -1) {
+      isEnabledMessage = <Alert type="warning">The node uses an unsupported version of Whisper</Alert>;
     }
 
     return (
@@ -31,7 +34,7 @@ class CommunicationContainer extends Component {
         {isEnabledMessage}
         <Communication listenToMessages={(channel) => this.listenToChannel(channel)}
                        sendMessage={(channel, message) => this.sendMessage(channel, message)}
-                       messages={this.props.messages}/>
+                       channels={this.props.channels}/>
       </React.Fragment>
     );
   }
@@ -40,18 +43,24 @@ class CommunicationContainer extends Component {
 CommunicationContainer.propTypes = {
   messageSend: PropTypes.func,
   messageListen: PropTypes.func,
-  messages: PropTypes.object
+  communicationVersion: PropTypes.func,
+  channels: PropTypes.object,
+  version: PropTypes.number
 };
 
 function mapStateToProps(state) {
-  return {messages: state.messages};
+  return {
+    channels: state.messages.channels,
+    version: state.messages.version
+  };
 }
 
 export default connect(
   mapStateToProps,
   {
     messageSend: messageSend.request,
-    messageListen: messageListen.request
+    messageListen: messageListen.request,
+    communicationVersion: messageVersion.request
   }
 )(CommunicationContainer);
 
