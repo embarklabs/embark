@@ -64,7 +64,7 @@ class EmbarkController {
   run(options) {
     let self = this;
     self.context = options.context || [constants.contexts.run, constants.contexts.build];
-    let Dashboard = require('../lib/dashboard/dashboard.js');
+    let Dashboard = require('./dashboard/dashboard.js');
 
     let webServerConfig = {
       enabled: options.runWebserver
