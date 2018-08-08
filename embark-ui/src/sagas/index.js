@@ -4,7 +4,7 @@ import {eventChannel} from 'redux-saga';
 import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
 
 const {account, accounts, block, blocks, transaction, transactions, processes, commands, processLogs,
-       contracts, contract, contractProfile, messageSend, messageVersion} = actions;
+       contracts, contract, contractProfile, messageSend, messageVersion, messageListen} = actions;
 
 function *doRequest(entity, apiFn, payload) {
   const {response, error} = yield call(apiFn, payload);
@@ -125,7 +125,7 @@ export function *listenToMessages(action) {
   const channel = yield call(createChannel, socket);
   while (true) {
     const message = yield take(channel);
-    yield put({type: actions.MESSAGE_LISTEN[actions.SUCCESS], channel: action.channel, message});
+    yield put(messageListen.success([{channel: action.channel, message: message.data, time: message.time}]));
   }
 }
 

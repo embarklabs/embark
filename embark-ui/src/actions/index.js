@@ -97,6 +97,27 @@ export const contractProfile = {
   failure: (error) => action(CONTRACT_PROFILE[FAILURE], {error})
 };
 
+export const MESSAGE_VERSION = createRequestTypes('MESSAGE_VERSION');
+export const messageVersion = {
+  request: () => action(MESSAGE_VERSION[REQUEST]),
+  success: (messageVersion) => action(MESSAGE_VERSION[SUCCESS], {messageVersion}),
+  failure: (error) => action(MESSAGE_VERSION[FAILURE], {error})
+};
+
+export const MESSAGE_SEND = createRequestTypes('MESSAGE_SEND');
+export const messageSend = {
+  request: (body) => action(MESSAGE_SEND[REQUEST], {body}),
+  success: () => action(MESSAGE_SEND[SUCCESS]),
+  failure: (error) => action(MESSAGE_SEND[FAILURE], {error})
+};
+
+export const MESSAGE_LISTEN = createRequestTypes('MESSAGE_LISTEN');
+export const messageListen = {
+  request: (channel) => action(MESSAGE_LISTEN[REQUEST], {channel}),
+  success: (messages) => action(MESSAGE_LISTEN[SUCCESS], {messages}),
+  failure: (error) => action(MESSAGE_LISTEN[FAILURE], {error})
+};
+
 // Web Socket
 export const WATCH_NEW_PROCESS_LOGS = 'WATCH_NEW_PROCESS_LOGS';
 export const INIT_BLOCK_HEADER = 'INIT_BLOCK_HEADER';
@@ -113,25 +134,3 @@ export function initBlockHeader(){
     type: INIT_BLOCK_HEADER
   };
 }
-
-export const MESSAGE_VERSION = createRequestTypes('MESSAGE_VERSION');
-export const messageVersion = {
-  request: () => action(MESSAGE_VERSION[REQUEST]),
-  success: (version) => action(MESSAGE_VERSION[SUCCESS], {version}),
-  failure: (error) => action(MESSAGE_VERSION[FAILURE], {error})
-};
-
-
-export const MESSAGE_SEND = createRequestTypes('MESSAGE_SEND');
-export const messageSend = {
-  request: (body) => action(MESSAGE_SEND[REQUEST], {body}),
-  success: () => action(MESSAGE_SEND[SUCCESS]),
-  failure: (error) => action(MESSAGE_SEND[FAILURE], {error})
-};
-
-export const MESSAGE_LISTEN = createRequestTypes('MESSAGE_LISTEN');
-export const messageListen = {
-  request: (channel) => action(MESSAGE_LISTEN[REQUEST], {channel}),
-  success: (message) => action(MESSAGE_LISTEN[SUCCESS], {message}),
-  failure: (error) => action(MESSAGE_LISTEN[FAILURE], {error})
-};

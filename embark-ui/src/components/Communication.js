@@ -62,8 +62,8 @@ class Communication extends Component {
               return (<Grid.Col md={4} key={`message-${i}`}>
                 <Card title={channelName}>
                   <Card.Body>
-                    {this.props.channels[channelName].messages.map((message, f) => {
-                      return <p key={`message-${i}-${f}`}>{message}</p>;
+                    {this.props.channels[channelName].map((data, f) => {
+                      return <p key={`message-${i}-${f}`}>{data.message}</p>;
                     })}
                   </Card.Body>
                 </Card>

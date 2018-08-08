@@ -11,7 +11,10 @@ const entitiesDefaultState = {
   processLogs: [],
   contracts: [],
   contractProfiles: [],
-  commands: []
+  commands: [],
+  messages: [],
+  subscriptions: [],
+  messageVersion: null
 };
 
 const sorter = {
@@ -23,6 +26,9 @@ const sorter = {
   },
   processLogs: function(a, b) {
     return a.timestamp - b.timestamp;
+  },
+  messages: function(a, b) {
+    return a.time - b.time;
   }
 };
 
@@ -50,7 +56,10 @@ function entities(state = entitiesDefaultState, action) {
   for (let name of Object.keys(state)) {
     let filter = filtrer[name] || (() => true);
     let sort = sorter[name] || (() => true);
-    if (action[name] && action[name].length > 1) {
+    if (action[name] && !Array.isArray(action[name])) {
+      return {...state, [name]: action[name]};
+    }
+    if (action[name] && (!Array.isArray(action[name]) || action[name].length > 1)) {
       return {...state, [name]: [...action[name], ...state[name]].filter(filter).sort(sort)};
     }
     if (action[name] && action[name].length === 1) {
