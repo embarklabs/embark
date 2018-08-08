@@ -121,11 +121,11 @@ export function *watchSendMessage() {
 }
 
 export function *listenToMessages(action) {
-  const socket = api.listenToChannel(action.channel);
+  const socket = api.listenToChannel(action.messageChannels[0]);
   const channel = yield call(createChannel, socket);
   while (true) {
     const message = yield take(channel);
-    yield put(messageListen.success([{channel: action.channel, message: message.data, time: message.time}]));
+    yield put(messageListen.success([{channel: action.messageChannels[0], message: message.data, time: message.time}]));
   }
 }
 

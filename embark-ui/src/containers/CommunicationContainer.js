@@ -5,7 +5,7 @@ import {Alert, Loader, Page} from 'tabler-react';
 import {messageSend, messageListen, messageVersion} from "../actions";
 import Communication from "../components/Communication";
 import Loading from "../components/Loading";
-import {getMessageVersion, getMessages} from "../reducers/selectors";
+import {getMessageVersion, getMessages, getMessageChannels} from "../reducers/selectors";
 
 class CommunicationContainer extends Component {
   componentDidMount() {
@@ -40,7 +40,7 @@ class CommunicationContainer extends Component {
         <Communication listenToMessages={(channel) => this.listenToChannel(channel)}
                        sendMessage={(channel, message) => this.sendMessage(channel, message)}
                        channels={this.props.messages}
-                       subscriptions={this.props.messages.subscriptions}/>
+                       subscriptions={this.props.messageChannels}/>
       </Page.Content>
     );
   }
@@ -51,12 +51,14 @@ CommunicationContainer.propTypes = {
   messageListen: PropTypes.func,
   communicationVersion: PropTypes.func,
   messageVersion: PropTypes.number,
-  messages: PropTypes.object
+  messages: PropTypes.object,
+  messageChannels: PropTypes.array
 };
 
 function mapStateToProps(state) {
   return {
     messages: getMessages(state),
+    messageChannels: getMessageChannels(state),
     messageVersion: getMessageVersion(state)
   };
 }

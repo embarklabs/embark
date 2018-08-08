@@ -13,7 +13,7 @@ const entitiesDefaultState = {
   contractProfiles: [],
   commands: [],
   messages: [],
-  subscriptions: [],
+  messageChannels: [],
   messageVersion: null
 };
 

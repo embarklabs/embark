@@ -113,7 +113,7 @@ export const messageSend = {
 
 export const MESSAGE_LISTEN = createRequestTypes('MESSAGE_LISTEN');
 export const messageListen = {
-  request: (channel) => action(MESSAGE_LISTEN[REQUEST], {channel}),
+  request: (messageChannel) => action(MESSAGE_LISTEN[REQUEST], {messageChannels: [messageChannel]}),
   success: (messages) => action(MESSAGE_LISTEN[SUCCESS], {messages}),
   failure: (error) => action(MESSAGE_LISTEN[FAILURE], {error})
 };
