@@ -1,5 +1,5 @@
 /*globals describe, it*/
-let Console = require('../cmd-ui/dashboard/console.js');
+let Console = require('../cmd/dashboard/console.js');
 let Plugins = require('../lib/core/plugins.js');
 let assert = require('assert');
 let version = require('../package.json').version;
