@@ -1,5 +1,5 @@
 let Embark = require('../lib/index');
-let Cmd = require('../lib/cmd');
+let Cmd = require('../cmd/cmd');
 
 // Function to send a line to stdin
 function sendLine(line) {

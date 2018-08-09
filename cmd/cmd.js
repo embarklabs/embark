@@ -1,7 +1,7 @@
 const program = require('commander');
-const Embark = require('../lib/index');
-const i18n = require('./core/i18n/i18n.js');
-let embark = new Embark;
+const EmbarkController = require('./cmd_controller.js');
+const i18n = require('../lib/core/i18n/i18n.js');
+let embark = new EmbarkController;
 
 class Cmd {
   constructor() {
@@ -288,7 +288,7 @@ class Cmd {
     program
       .action(function (cmd) {
         console.log((__('unknown command') + ' "%s"').red, cmd);
-        let utils = require('./utils/utils.js');
+        let utils = require('../lib/utils/utils.js');
         let dictionary = ['new', 'demo', 'build', 'run', 'blockchain', 'simulator', 'test', 'upload', 'version'];
         let suggestion = utils.proposeAlternative(cmd, dictionary);
         if (suggestion) {
