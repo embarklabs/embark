@@ -14,7 +14,8 @@ var solcVersion = "0.4.24";
 var TestEvents = {
   request: (cmd, cb) => {
     cb(solcVersion);
-  }
+  },
+  emit: (_ev, _data) => {}
 };
 
 let ipcObject = new Ipc({
