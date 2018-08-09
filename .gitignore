@@ -9,6 +9,7 @@ templates/demo/node_modules/
 templates/boilerplate/dist/
 docs/_build
 docs/utils/__pycache_
+test/cli_shim/.cid
 test_apps/test_app/dist/
 test_apps/test_app/.embark/development/
 test_apps/test_app/config/production/password
