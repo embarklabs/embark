@@ -19,7 +19,8 @@ const currentSolcVersion = require('../package.json').dependencies.solc;
 const TestEvents = {
   request: (cmd, cb) => {
     cb(currentSolcVersion);
-  }
+  },
+  emit: (_ev, _data) => {}
 };
 
 describe('embark.Contracts', function() {
