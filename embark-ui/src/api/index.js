@@ -56,6 +56,10 @@ export function fetchProcessLogs(payload) {
   return get(`/process-logs/${payload.processName}`);
 }
 
+export function fetchContractLogs() {
+  return get(`/contracts/logs`);
+}
+
 export function fetchContracts() {
   return get('/contracts');
 }

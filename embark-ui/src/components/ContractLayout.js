@@ -8,6 +8,7 @@ import {
 } from "tabler-react";
 
 import ContractContainer from '../containers/ContractContainer';
+import ContractLoggerContainer from '../containers/ContractLoggerContainer';
 import ContractProfileContainer from '../containers/ContractProfileContainer';
 
 const ContractLayout = (props) => (
@@ -48,11 +49,20 @@ const ContractLayout = (props) => (
           >
             Profile
           </List.GroupItem>
+          <List.GroupItem
+            className="d-flex align-items-center"
+            to={`/embark/contracts/${props.match.params.contractName}/logger`}
+            icon="chevrons-right"
+            RootComponent={withRouter(NavLink)}
+          >
+            Logger
+          </List.GroupItem>
         </List.Group>
       </div>
     </Grid.Col>
     <Grid.Col md={9}>
       <Switch>
+        <Route exact path="/embark/contracts/:contractName/logger" component={ContractLoggerContainer} />
         <Route exact path="/embark/contracts/:contractName/profiler" component={ContractProfileContainer} />
         <ContractContainer />
       </Switch>

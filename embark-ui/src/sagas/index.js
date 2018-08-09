@@ -4,7 +4,7 @@ import {eventChannel} from 'redux-saga';
 import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
 
 const {account, accounts, block, blocks, transaction, transactions, processes, commands, processLogs,
-       contracts, contract, contractProfile, messageSend, messageVersion, messageListen} = actions;
+       contracts, contract, contractProfile, messageSend, messageVersion, messageListen, contractLogs} = actions;
 
 function *doRequest(entity, apiFn, payload) {
   const {response, error} = yield call(apiFn, payload);
@@ -24,6 +24,7 @@ export const fetchTransactions = doRequest.bind(null, transactions, api.fetchTra
 export const fetchProcesses = doRequest.bind(null, processes, api.fetchProcesses);
 export const postCommand = doRequest.bind(null, commands, api.postCommand);
 export const fetchProcessLogs = doRequest.bind(null, processLogs, api.fetchProcessLogs);
+export const fetchContractLogs = doRequest.bind(null, contractLogs, api.fetchContractLogs);
 export const fetchContracts = doRequest.bind(null, contracts, api.fetchContracts);
 export const fetchContract = doRequest.bind(null, contract, api.fetchContract);
 export const fetchContractProfile = doRequest.bind(null, contractProfile, api.fetchContractProfile);
@@ -62,6 +63,10 @@ export function *watchPostCommand() {
 
 export function *watchFetchProcessLogs() {
   yield takeEvery(actions.PROCESS_LOGS[actions.REQUEST], fetchProcessLogs);
+}
+
+export function *watchFetchContractLogs() {
+  yield takeEvery(actions.CONTRACT_LOGS[actions.REQUEST], fetchContractLogs);
 }
 
 export function *watchFetchContract() {
@@ -146,6 +151,7 @@ export default function *root() {
     fork(watchFetchAccount),
     fork(watchFetchProcesses),
     fork(watchFetchProcessLogs),
+    fork(watchFetchContractLogs),
     fork(watchListenToProcessLogs),
     fork(watchFetchBlock),
     fork(watchFetchTransactions),

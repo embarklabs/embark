@@ -11,6 +11,7 @@ const entitiesDefaultState = {
   processLogs: [],
   contracts: [],
   contractProfiles: [],
+  contractLogs: [],
   commands: [],
   messages: [],
   messageChannels: [],
@@ -25,6 +26,9 @@ const sorter = {
     return ((BN_FACTOR * b.blockNumber) + b.transactionIndex) - ((BN_FACTOR * a.blockNumber) + a.transactionIndex);
   },
   processLogs: function(a, b) {
+    return a.timestamp - b.timestamp;
+  },
+  contractLogs: function(a, b) {
     return a.timestamp - b.timestamp;
   },
   messages: function(a, b) {
