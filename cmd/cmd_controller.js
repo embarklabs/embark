@@ -23,9 +23,9 @@ class EmbarkController {
   }
 
   initConfig(env, options) {
-    let Events = require('../core/events.js');
-    let Logger = require('../core/logger.js');
-    let Config = require('../core/config.js');
+    let Events = require('../lib/core/events.js');
+    let Logger = require('../lib/core/logger.js');
+    let Config = require('../lib/core/config.js');
 
     this.events = new Events();
     this.logger = new Logger({logLevel: 'debug', events: this.events});
