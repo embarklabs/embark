@@ -25,8 +25,13 @@ class ENS extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     EmbarkJS.onReady(() => {
+      if (!web3.eth.defaultAccount) {
+        this.setState({
+          globalError: 'There is currently no default account. If Metamask is active, please sign in or deactivate it.'
+        });
+      }
       this.setState({
         addressRegister: web3.eth.defaultAccount,
         valueLookup: web3.eth.defaultAccount
@@ -102,6 +107,7 @@ class ENS extends React.Component {
 
   render() {
     return (<React.Fragment>
+        {this.state.globalError && <Alert bsStyle="danger">{this.state.globalError}</Alert>}
         <h3>Resolve a name</h3>
         <Form inline>
           <FormGroup>
