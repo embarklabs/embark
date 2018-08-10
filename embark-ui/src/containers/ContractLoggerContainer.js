@@ -8,7 +8,7 @@ import ContractLogger from '../components/ContractLogger';
 import DataWrapper from "../components/DataWrapper";
 import {getContractLogsByContract} from "../reducers/selectors";
 
-class ContractProfileContainer extends Component {
+class ContractLoggerContainer extends Component {
   componentDidMount() {
     if (this.props.contractLogs.length === 0) {
       this.props.listenToContractLogs();
@@ -31,7 +31,7 @@ function mapStateToProps(state, props) {
   };
 }
 
-ContractProfileContainer.propTypes = {
+ContractLoggerContainer.propTypes = {
   contractLogs: PropTypes.array,
   fetchContractLogs: PropTypes.func,
   listenToContractLogs: PropTypes.func,
@@ -44,4 +44,4 @@ export default withRouter(connect(
     fetchContractLogs: contractLogsAction.request,
     listenToContractLogs: listenToContractLogs
   }
-)(ContractProfileContainer));
+)(ContractLoggerContainer));
