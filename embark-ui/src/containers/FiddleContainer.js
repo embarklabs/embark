@@ -56,7 +56,6 @@ class FiddleContainer extends Component {
                 className="list-group-item list-group-item-action" 
                 onClick={(e) => { this._onErrorClick(e, annotation); }}
                 key={index} 
-                //ref={(item) => { this.refCallback(item, annotation); }}
                 >
                 <Badge color={errorType === "error" ? "danger" : errorType} className="mr-1" key={index}>
                   Line {errorRowCol.row}
