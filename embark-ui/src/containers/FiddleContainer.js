@@ -126,7 +126,7 @@ class FiddleContainer extends Component {
 
     return (
       <React.Fragment>
-        <h1>Fiddle</h1>
+        <h1 className="page-title">Fiddle</h1>
         <p>Play around with contract code and deploy against your running node.</p>
         {renderings}
       </React.Fragment>
