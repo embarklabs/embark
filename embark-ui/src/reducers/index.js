@@ -87,6 +87,7 @@ function entities(state = entitiesDefaultState, action) {
 }
 
 function errorMessage(state = null, action) {
+  return action.error || state;
 }
 
 function loading(_state = false, action) {
