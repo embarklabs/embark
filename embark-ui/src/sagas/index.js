@@ -4,8 +4,7 @@ import {eventChannel} from 'redux-saga';
 import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
 
 const {account, accounts, block, blocks, transaction, transactions, processes, commands, processLogs,
-       contracts, contract, contractProfile, messageSend, messageVersion, messageListen, contractLogs,
-       fiddle} = actions;
+       contracts, contract, contractProfile, messageSend, versions, plugins, messageListen, fiddle} = actions;
 
 function *doRequest(entity, apiFn, payload) {
   const {response, error} = yield call(apiFn, payload);
@@ -16,6 +15,8 @@ function *doRequest(entity, apiFn, payload) {
   }
 }
 
+export const fetchPlugins = doRequest.bind(null, plugins, api.fetchPlugins);
+export const fetchVersions = doRequest.bind(null, versions, api.fetchVersions);
 export const fetchAccount = doRequest.bind(null, account, api.fetchAccount);
 export const fetchBlock = doRequest.bind(null, block, api.fetchBlock);
 export const fetchTransaction = doRequest.bind(null, transaction, api.fetchTransaction);
@@ -30,6 +31,7 @@ export const fetchContracts = doRequest.bind(null, contracts, api.fetchContracts
 export const fetchContract = doRequest.bind(null, contract, api.fetchContract);
 export const fetchContractProfile = doRequest.bind(null, contractProfile, api.fetchContractProfile);
 export const fetchFiddle = doRequest.bind(null, fiddle, api.fetchFiddle);
+export const sendMessage = doRequest.bind(null, messageSend, api.sendMessage);
 
 export function *watchFetchTransaction() {
   yield takeEvery(actions.TRANSACTION[actions.REQUEST], fetchTransaction);
@@ -83,6 +85,18 @@ export function *watchFetchContractProfile() {
   yield takeEvery(actions.CONTRACT_PROFILE[actions.REQUEST], fetchContractProfile);
 }
 
+export function *watchFetchVersions() {
+  yield takeEvery(actions.VERSIONS[actions.REQUEST], fetchVersions);
+}
+
+export function *watchFetchPlugins() {
+  yield takeEvery(actions.PLUGINS[actions.REQUEST], fetchPlugins);
+}
+
+export function *watchSendMessage() {
+  yield takeEvery(actions.MESSAGE_SEND[actions.REQUEST], sendMessage);
+}
+
 function createChannel(socket) {
   return eventChannel(emit => {
     socket.onmessage = ((message) => {
@@ -134,8 +148,6 @@ export function *watchListenToContractLogs() {
   yield takeEvery(actions.WATCH_NEW_CONTRACT_LOGS, listenToContractLogs);
 }
 
-export const sendMessage = doRequest.bind(null, messageSend, api.sendMessage);
-
 export function *watchSendMessage() {
   yield takeEvery(actions.MESSAGE_SEND[actions.REQUEST], sendMessage);
 }
@@ -153,15 +165,10 @@ export function *watchListenToMessages() {
   yield takeEvery(actions.MESSAGE_LISTEN[actions.REQUEST], listenToMessages);
 }
 
-export const fetchCommunicationVersion = doRequest.bind(null, messageVersion, api.communicationVersion);
-
-export function *watchCommunicationVersion() {
-  yield takeEvery(actions.MESSAGE_VERSION[actions.REQUEST], fetchCommunicationVersion);
-}
-
 export function *watchFetchFiddle() {
   yield takeEvery(actions.FIDDLE[actions.REQUEST], fetchFiddle);
 }
+
 
 export default function *root() {
   yield all([
@@ -176,7 +183,8 @@ export default function *root() {
     fork(watchFetchBlock),
     fork(watchFetchTransactions),
     fork(watchPostCommand),
-    fork(watchCommunicationVersion),
+    fork(watchFetchVersions),
+    fork(watchFetchPlugins),
     fork(watchFetchBlocks),
     fork(watchFetchContracts),
     fork(watchListenToMessages),
@@ -187,4 +195,3 @@ export default function *root() {
     fork(watchFetchFiddle)
   ]);
 }
-

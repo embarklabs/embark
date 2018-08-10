@@ -104,11 +104,18 @@ export const contractProfile = {
   failure: (error) => action(CONTRACT_PROFILE[FAILURE], {error})
 };
 
-export const MESSAGE_VERSION = createRequestTypes('MESSAGE_VERSION');
-export const messageVersion = {
-  request: () => action(MESSAGE_VERSION[REQUEST]),
-  success: (messageVersion) => action(MESSAGE_VERSION[SUCCESS], {messageVersion}),
-  failure: (error) => action(MESSAGE_VERSION[FAILURE], {error})
+export const VERSIONS = createRequestTypes('VERSIONS');
+export const versions = {
+  request: () => action(VERSIONS[REQUEST]),
+  success: (versions) => action(VERSIONS[SUCCESS], {versions}),
+  failure: (error) => action(VERSIONS[FAILURE], {error})
+};
+
+export const PLUGINS = createRequestTypes('PLUGINS');
+export const plugins = {
+  request: () => action(PLUGINS[REQUEST]),
+  success: (plugins) => action(PLUGINS[SUCCESS], {plugins}),
+  failure: (error) => action(PLUGINS[FAILURE], {error})
 };
 
 export const MESSAGE_SEND = createRequestTypes('MESSAGE_SEND');

@@ -68,8 +68,12 @@ export function fetchContract(payload) {
   return get(`/contract/${payload.contractName}`);
 }
 
-export function communicationVersion() {
-  return get(`/communication/version`);
+export function fetchVersions() {
+  return get('/versions');
+}
+
+export function fetchPlugins() {
+  return get('/plugins');
 }
 
 export function sendMessage(payload) {

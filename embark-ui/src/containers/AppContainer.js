@@ -6,13 +6,22 @@ import React, {Component} from 'react';
 import history from '../history';
 import Layout from '../components/Layout';
 import routes from '../routes';
-import {contracts as contractsAction, initBlockHeader, processes as processesAction} from '../actions';
+
+import {
+  initBlockHeader,
+  contracts as contractsAction,
+  processes as processesAction,
+  versions as versionsAction,
+  plugins as pluginsAction
+} from '../actions';
 
 class AppContainer extends Component {
   componentDidMount() {
     this.props.initBlockHeader();
     this.props.fetchProcesses();
     this.props.fetchContracts();
+    this.props.fetchVersions();
+    this.props.fetchPlugins();
   }
 
   render() {
@@ -29,7 +38,9 @@ class AppContainer extends Component {
 AppContainer.propTypes = {
   initBlockHeader: PropTypes.func,
   fetchContracts: PropTypes.func,
-  fetchProcesses: PropTypes.func
+  fetchProcesses: PropTypes.func,
+  fetchPlugins: PropTypes.func,
+  fetchVersions: PropTypes.func
 };
 
 export default connect(
@@ -37,6 +48,8 @@ export default connect(
   {
     initBlockHeader,
     fetchProcesses: processesAction.request,
-    fetchContracts: contractsAction.request
+    fetchContracts: contractsAction.request,
+    fetchVersions: versionsAction.request,
+    fetchPlugins: pluginsAction.request
   },
 )(AppContainer);

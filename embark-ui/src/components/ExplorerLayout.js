@@ -10,9 +10,18 @@ import AccountsContainer from '../containers/AccountsContainer';
 import AccountContainer from '../containers/AccountContainer';
 import BlocksContainer from '../containers/BlocksContainer';
 import BlockContainer from '../containers/BlockContainer';
-import CommunicationContainer from '../containers/CommunicationContainer';
 import TransactionsContainer from '../containers/TransactionsContainer';
 import TransactionContainer from '../containers/TransactionContainer';
+import CommunicationContainer from '../containers/CommunicationContainer';
+import ENSContainer from '../containers/ENSContainer';
+
+const groupItems = [
+  {to: "/embark/explorer/accounts", icon: "users", value: "Accounts"},
+  {to: "/embark/explorer/blocks", icon: "book-open", value: "Blocks"},
+  {to: "/embark/explorer/transactions", icon: "activity", value: "Transactions"},
+  {to: "/embark/explorer/communication", icon: "phone-call", value: "Communication"},
+  {to: "/embark/explorer/ens", icon: "disc", value: "ENS"}
+];
 
 const className = "d-flex align-items-center";
 
@@ -22,38 +31,16 @@ const ExplorerLayout = () => (
       <Page.Title className="my-5">Explorer</Page.Title>
       <div>
         <List.Group transparent={true}>
-          <List.GroupItem
-            className={className}
-            to="/embark/explorer/accounts"
-            icon="users"
-            RootComponent={withRouter(NavLink)}
-          >
-            Accounts
-          </List.GroupItem>
-          <List.GroupItem
-            className={className}
-            to="/embark/explorer/blocks"
-            icon="book-open"
-            RootComponent={withRouter(NavLink)}
-          >
-            Blocks
-          </List.GroupItem>
-          <List.GroupItem
-            className={className}
-            to="/embark/explorer/transactions"
-            icon="activity"
-            RootComponent={withRouter(NavLink)}
-          >
-            Transactions
-          </List.GroupItem>
-          <List.GroupItem
-            className={className}
-            to="/embark/explorer/communication"
-            icon="phone-call"
-            RootComponent={withRouter(NavLink)}
-          >
-            Communication
-          </List.GroupItem>
+          {groupItems.map((groupItem) => (
+            <List.GroupItem
+              className={className}
+              to={groupItem.to}
+              icon={groupItem.icon}
+              RootComponent={withRouter(NavLink)}
+            >
+              {groupItem.value}
+            </List.GroupItem>
+          ))}
         </List.Group>
       </div>
     </Grid.Col>
@@ -63,9 +50,10 @@ const ExplorerLayout = () => (
         <Route exact path="/embark/explorer/accounts/:address" component={AccountContainer} />
         <Route exact path="/embark/explorer/blocks" component={BlocksContainer} />
         <Route exact path="/embark/explorer/blocks/:blockNumber" component={BlockContainer} />
-        <Route exact path="/embark/explorer/communication" component={CommunicationContainer} />
         <Route exact path="/embark/explorer/transactions" component={TransactionsContainer} />
         <Route exact path="/embark/explorer/transactions/:hash" component={TransactionContainer} />
+        <Route exact path="/embark/explorer/communication" component={CommunicationContainer} />
+        <Route exact path="/embark/explorer/ens" component={ENSContainer} />
       </Switch>
     </Grid.Col>
   </Grid.Row>

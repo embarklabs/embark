@@ -2,8 +2,9 @@ import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import connect from "react-redux/es/connect/connect";
 import {Alert, Loader, Page} from 'tabler-react';
-import {messageSend, messageListen} from "../actions";
+import {messageSend, messageListen, messageVersion} from "../actions";
 import Communication from "../components/Communication";
+import Loading from "../components/Loading";
 import {getMessages, getMessageChannels} from "../reducers/selectors";
 
 class CommunicationContainer extends Component {
@@ -26,6 +27,9 @@ class CommunicationContainer extends Component {
       isEnabledMessage = <Alert type="warning">The node uses an unsupported version of Whisper</Alert>;
     }
 
+    if (!this.props.messages) {
+      return <Loading/>;
+    }
     return (
       <Page.Content title="Communication explorer">
         {isEnabledMessage}
@@ -41,7 +45,7 @@ class CommunicationContainer extends Component {
 CommunicationContainer.propTypes = {
   messageSend: PropTypes.func,
   messageListen: PropTypes.func,
-  isWhisperEnabled: PropTypes.bool,
+  messageVersion: PropTypes.number,
   messages: PropTypes.object,
   messageChannels: PropTypes.array
 };
@@ -49,8 +53,7 @@ CommunicationContainer.propTypes = {
 function mapStateToProps(state) {
   return {
     messages: getMessages(state),
-    messageChannels: getMessageChannels(state),
-    isWhisperEnabled: isWhisperEnabled(state)
+    messageChannels: getMessageChannels(state)
   };
 }
 
@@ -58,7 +61,7 @@ export default connect(
   mapStateToProps,
   {
     messageSend: messageSend.request,
-    messageListen: messageListen.request,
+    messageListen: messageListen.request
   }
 )(CommunicationContainer);
 

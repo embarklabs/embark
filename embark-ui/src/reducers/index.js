@@ -15,8 +15,9 @@ const entitiesDefaultState = {
   commands: [],
   messages: [],
   messageChannels: [],
-  messageVersion: null,
-  fiddle: null
+  fiddle: null,
+  versions: [],
+  plugins: []
 };
 
 const sorter = {
@@ -61,10 +62,7 @@ function entities(state = entitiesDefaultState, action) {
   for (let name of Object.keys(state)) {
     let filter = filtrer[name] || (() => true);
     let sort = sorter[name] || (() => true);
-    if (action[name] && !Array.isArray(action[name])) {
-      return {...state, [name]: action[name]};
-    }
-    if (action[name] && (!Array.isArray(action[name]) || action[name].length > 1)) {
+    if (action[name] && action[name].length > 1) {
       return {...state, [name]: [...action[name], ...state[name]].filter(filter).sort(sort)};
     }
     if (action[name] && action[name].length === 1) {
