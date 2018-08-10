@@ -19,6 +19,14 @@ const ContractLayout = (props) => (
         <List.Group transparent={true}>
           <List.GroupItem
             className="d-flex align-items-center"
+            to={`/embark/contracts/${props.match.params.contractName}/overview`}
+            icon="corner-left-up"
+            RootComponent={withRouter(NavLink)}
+          >
+            Back to {props.match.params.contractName}
+          </List.GroupItem>
+          <List.GroupItem
+            className="d-flex align-items-center"
             to={`/embark/contracts/${props.match.params.contractName}/deployment`}
             icon="users"
             RootComponent={withRouter(NavLink)}

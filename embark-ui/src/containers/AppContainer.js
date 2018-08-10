@@ -6,12 +6,13 @@ import React, {Component} from 'react';
 import history from '../history';
 import Layout from '../components/Layout';
 import routes from '../routes';
-import {initBlockHeader, processes as processesAction} from '../actions';
+import {contracts as contractsAction, initBlockHeader, processes as processesAction} from '../actions';
 
 class AppContainer extends Component {
   componentDidMount() {
     this.props.initBlockHeader();
     this.props.fetchProcesses();
+    this.props.fetchContracts();
   }
 
   render() {
@@ -27,6 +28,7 @@ class AppContainer extends Component {
 
 AppContainer.propTypes = {
   initBlockHeader: PropTypes.func,
+  fetchContracts: PropTypes.func,
   fetchProcesses: PropTypes.func
 };
 
@@ -34,6 +36,7 @@ export default connect(
   null,
   {
     initBlockHeader,
-    fetchProcesses: processesAction.request
+    fetchProcesses: processesAction.request,
+    fetchContracts: contractsAction.request
   },
 )(AppContainer);

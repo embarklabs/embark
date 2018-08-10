@@ -13,8 +13,7 @@ const ContractLogger = ({contractName, contractLogs}) => (
           responsive
           className="card-table table-vcenter text-nowrap"
           headerItems={[
-            {content: "Function name"},
-            {content: "Params"},
+            {content: "call"},
             {content: "Transaction hash"},
             {content: "Gas Used"},
             {content: "Block number"},
@@ -23,8 +22,7 @@ const ContractLogger = ({contractName, contractLogs}) => (
           bodyItems={
             contractLogs.map((log) => {
               return ([
-                {content: log.functionName},
-                {content: log.paramString},
+                {content: `${log.name}.${log.functionName}(${log.paramString})`},
                 {content: log.transactionHash},
                 {content: log.gasUsed},
                 {content: log.blockNumber},

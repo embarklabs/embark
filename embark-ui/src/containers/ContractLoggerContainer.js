@@ -5,7 +5,7 @@ import {withRouter} from 'react-router-dom';
 import {contractLogs as contractLogsAction} from '../actions';
 
 import ContractLogger from '../components/ContractLogger';
-// import DataWrapper from "../components/DataWrapper";
+import DataWrapper from "../components/DataWrapper";
 import {getContractLogsByContract} from "../reducers/selectors";
 
 class ContractProfileContainer extends Component {
@@ -17,7 +17,9 @@ class ContractProfileContainer extends Component {
 
   render() {
     return (
-      <ContractLogger contractLogs={this.props.contractLogs} contractName={this.props.match.params.contractName}/>
+      <DataWrapper shouldRender={this.props.contractLogs !== undefined } {...this.props} render={() => (
+        <ContractLogger contractLogs={this.props.contractLogs} contractName={this.props.match.params.contractName}/>
+      )} />
     );
   }
 }

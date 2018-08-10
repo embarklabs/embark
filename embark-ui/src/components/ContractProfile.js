@@ -8,7 +8,7 @@ import {
 } from "tabler-react";
 
 const ContractProfile = ({contractProfile}) => (
-  <Page.Content title={contractProfile.name}>
+  <Page.Content title={contractProfile.name + ' Profile'}>
     <Grid.Row>
       <Grid.Col>
         <Card>
