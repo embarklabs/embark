@@ -294,6 +294,9 @@ class EmbarkController {
         });
       },
       function web3IPC(callback) {
+        // Do specific work in case we are connected to a socket:
+        //  - Setup Web3
+        //  - Apply history
         if(!engine.ipc.connected || engine.ipc.isServer()) {
           return callback();
         }
@@ -314,6 +317,7 @@ class EmbarkController {
         });
       },
       function deploy(callback) {
+        // Skip if we are connected to a websocket, the server will do it
         if(engine.ipc.connected && engine.ipc.isClient()) {
           return callback();
         }
@@ -322,6 +326,7 @@ class EmbarkController {
         });
       },
       function waitForWriteFinish(callback) {
+        // Skip if we are connected to a websocket, the server will do it
         if(engine.ipc.connected && engine.ipc.isClient()) {
           return callback();
         }
