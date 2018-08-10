@@ -193,7 +193,6 @@ contract x {
 
       var trace = JSON.parse(loadFixture('geth-debugtrace-output-h-5.json'));
       var coverage = cs.generateCodeCoverage(trace);
-      // dumpToFile(coverage, '/tmp/coverage.json');
 
       done();
     });
