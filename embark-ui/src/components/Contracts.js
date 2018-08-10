@@ -24,7 +24,7 @@ const Contracts = ({contracts}) => (
             bodyItems={
               contracts.map((contract) => {
                 return ([
-                  {content: <Link to={`contracts/${contract.name}`}>{contract.name}</Link>},
+                  {content: <Link to={`contracts/${contract.className}`}>{contract.className}</Link>},
                   {content: contract.address},
                   {content: contract.deploy.toString()}
                 ]);

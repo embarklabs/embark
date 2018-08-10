@@ -26,7 +26,7 @@ function mapStateToProps(state) {
 }
 
 ContractsContainer.propTypes = {
-  contracts: PropTypes.object,
+  contracts: PropTypes.array,
   fetchContracts: PropTypes.func
 };
 

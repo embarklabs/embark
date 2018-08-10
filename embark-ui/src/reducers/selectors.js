@@ -51,7 +51,7 @@ export function getContracts(state) {
 }
 
 export function getContract(state, contractName) {
-  return state.entities.contracts.find((contract => contract.name === contractName));
+  return state.entities.contracts.find((contract => contract.className === contractName));
 }
 
 export function getContractProfile(state, contractName) {

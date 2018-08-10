@@ -37,7 +37,7 @@ const filtrer = {
     return index === self.findIndex((t) => t.name === process.name);
   },
   contracts: function(contract, index, self) {
-    return index === self.findIndex((t) => t.name === contract.name);
+    return index === self.findIndex((t) => t.className === contract.className);
   },
   accounts: function(account, index, self) {
     return index === self.findIndex((t) => t.address === account.address);
