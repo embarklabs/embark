@@ -15,6 +15,7 @@
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
+    "react-scroll-to-component": "^1.0.2",
     "redux": "^4.0.0",
     "redux-saga": "^0.16.0",
     "tabler-react": "^1.18.0"

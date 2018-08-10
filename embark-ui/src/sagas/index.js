@@ -170,7 +170,7 @@ export function *fetchCodeCompilation(action) {
 }
 
 export function *watchFetchCodeCompilation() {
-  yield takeEvery(actions.FETCH_COMPILE_CODE, fetchCodeCompilation);
+  yield takeEvery(actions.COMPILE_CODE_REQUEST, fetchCodeCompilation);
 }
 
 export default function *root() {

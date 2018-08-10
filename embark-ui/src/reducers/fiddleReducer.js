@@ -1,11 +1,13 @@
-import {RECEIVE_COMPILE_CODE, RECEIVE_COMPILE_CODE_ERROR} from "../actions";
+import {COMPILE_CODE_REQUEST, COMPILE_CODE_FAILURE, COMPILE_CODE_SUCCESS} from "../actions";
 
 export default function processes(state = {}, action) {
   switch (action.type) {
-    case RECEIVE_COMPILE_CODE:
-      return Object.assign({}, state, {compilationResult: action.compilationResult});
-    case RECEIVE_COMPILE_CODE_ERROR:
-      return Object.assign({}, state, {error: true});
+    case COMPILE_CODE_REQUEST:
+    return {...state,  isFetching: true, compilationResult: action.compilationResult};
+    case COMPILE_CODE_SUCCESS:
+      return {...state,  isFetching: false, compilationResult: action.compilationResult};
+    case COMPILE_CODE_FAILURE:
+      return {...state,  isFetching: false, error: true};
     default:
       return state;
   }

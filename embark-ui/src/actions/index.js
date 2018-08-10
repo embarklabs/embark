@@ -144,13 +144,13 @@ export function listenToContractLogs() {
 }
 
 // Fiddle
-export const FETCH_COMPILE_CODE = 'FETCH_COMPILE_CODE';
-export const RECEIVE_COMPILE_CODE = 'RECEIVE_COMPILE_CODE';
-export const RECEIVE_COMPILE_CODE_ERROR = 'RECEIVE_COMPILE_CODE_ERROR';
+export const COMPILE_CODE_REQUEST = 'COMPILE_CODE_REQUEST';
+export const COMPILE_CODE_SUCCESS = 'COMPILE_CODE_SUCCESS';
+export const COMPILE_CODE_FAILURE = 'COMPILE_CODE_FAILURE';
 
 export function fetchCodeCompilation(codeToCompile){
   return {
-    type: FETCH_COMPILE_CODE,
+    type: COMPILE_CODE_REQUEST,
     codeToCompile
   };
 }
@@ -158,14 +158,14 @@ export function fetchCodeCompilation(codeToCompile){
 
 export function receiveCodeCompilation(compilationResult){
   return {
-    type: RECEIVE_COMPILE_CODE,
+    type: COMPILE_CODE_SUCCESS,
     compilationResult
   };
 }
 
 export function receiveCodeCompilationError(){
   return {
-    type: RECEIVE_COMPILE_CODE_ERROR
+    type: COMPILE_CODE_FAILURE
   };
 }
 

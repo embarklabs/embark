@@ -25,5 +25,43 @@
   white-space: pre-line;
 }
 .card.card-fullscreen{
-  z-index:4;
+  z-index:6;
+}
+.card.warnings-card, .card.errors-card{
+  text-transform: capitalize;
+}
+.card.warnings-card .list-group-item, .card.errors-card .list-group-item{
+  white-space: pre-line;
+}
+.card.warnings-card .card-options a, .card.errors-card .card-options a{
+  cursor:pointer;
+}
+.compilation-summary {
+  float:right;
+  margin-bottom:3px;
+  line-height:30px;
+  visibility: hidden;
+}
+.compilation-summary.visible{
+  visibility: visible;
+}
+.compilation-summary .badge-link:not(:last-child){
+  margin-right:5px;
+}
+.ace_editor {
+  margin-bottom:24px;
+}
+.loader, .loader:before, .loader:after{
+  width:1.2rem;
+  height:1.2rem;
+}
+.loader:before, .loader:after{
+  margin:-0.6rem 0 0 -0.6rem;
+}
+.loader, .loader-text{
+  display:inline-block;
+  vertical-align: middle;
+}
+.loader {
+  margin-right:5px;
 }
