@@ -5,6 +5,7 @@ class Console {
     this.events = options.events;
     this.plugins = options.plugins;
     this.version = options.version;
+    this.logger = options.logger;
     this.ipc = options.ipc;
 
     if (this.ipc.isServer()) {
@@ -38,7 +39,13 @@ class Console {
     var pluginCmds = this.plugins.getPluginsProperty('console', 'console');
     for (let pluginCmd of pluginCmds) {
       let pluginResult = pluginCmd.call(this, cmd, {});
-      if (pluginResult.match()) {
+      if(typeof pluginResult !== 'object'){
+        if (pluginResult !== false && pluginResult !== 'false' && pluginResult !== undefined) {
+          this.logger.warn("[DEPRECATED] In future versions of embark, we expect the console command to return an object " +
+            "having 2 functions: match and process.");
+          return callback(null, pluginResult);
+        }
+      } else if (pluginResult.match()) {
         return pluginResult.process(callback);
       }
     }
