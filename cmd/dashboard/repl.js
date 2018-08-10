@@ -5,6 +5,7 @@ const Console = require('./console.js');
 
 class REPL {
   constructor(options) {
+    this.logger = options.logger;
     this.env = options.env;
     this.plugins = options.plugins;
     this.events = options.events;
@@ -17,7 +18,8 @@ class REPL {
       events: this.events,
       plugins: this.plugins,
       version: this.version,
-      ipc: this.ipc
+      ipc: this.ipc,
+      logger: this.logger
     });
   }
 

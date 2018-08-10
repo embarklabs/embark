@@ -34,7 +34,8 @@ class Dashboard {
           events: self.events,
           plugins: self.plugins,
           version: self.version,
-          ipc: self.ipc
+          ipc: self.ipc,
+          logger: self.logger
         });
         callback();
       },

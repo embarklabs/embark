@@ -107,6 +107,7 @@ class EmbarkController {
             plugins: engine.plugins,
             version: engine.version,
             events: engine.events,
+            logger: engine.logger,
             ipc: engine.ipc
           }).startConsole();
           return callback();
@@ -342,6 +343,7 @@ class EmbarkController {
           plugins: engine.plugins,
           version: engine.version,
           events: engine.events,
+          logger: engine.logger,
           ipc: engine.ipc
         });
         repl.start(callback);
