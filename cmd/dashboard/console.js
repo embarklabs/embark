@@ -42,7 +42,7 @@ class Console {
       if(typeof pluginResult !== 'object'){
         if (pluginResult !== false && pluginResult !== 'false' && pluginResult !== undefined) {
           this.logger.warn("[DEPRECATED] In future versions of embark, we expect the console command to return an object " +
-            "having 2 functions: match and process.");
+            "having 2 functions: match and process. The documentation with example can be found here: https://embark.status.im/docs/plugin_reference.html#embark-registerConsoleCommand-callback-options");
           return callback(null, pluginResult);
         }
       } else if (pluginResult.match()) {
