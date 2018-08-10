@@ -88,6 +88,10 @@ export function webSocketProcess(processName) {
   return new WebSocket(constants.wsEndpoint + '/process-logs/' + processName);
 }
 
+export function webSocketContractLogs() {
+  return new WebSocket(constants.wsEndpoint + '/contracts/logs');
+}
+
 export function webSocketBlockHeader() {
   return new WebSocket(`${constants.wsEndpoint}/blockchain/blockHeader`);
 }

@@ -127,12 +127,19 @@ export const messageListen = {
 
 // Web Socket
 export const WATCH_NEW_PROCESS_LOGS = 'WATCH_NEW_PROCESS_LOGS';
+export const WATCH_NEW_CONTRACT_LOGS = 'WATCH_NEW_CONTRACT_LOGS';
 export const INIT_BLOCK_HEADER = 'INIT_BLOCK_HEADER';
 
 export function listenToProcessLogs(processName) {
   return {
     type: WATCH_NEW_PROCESS_LOGS,
     processName
+  };
+}
+
+export function listenToContractLogs() {
+  return {
+    type: WATCH_NEW_CONTRACT_LOGS
   };
 }
 

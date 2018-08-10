@@ -119,6 +119,19 @@ export function *watchListenToProcessLogs() {
   yield takeEvery(actions.WATCH_NEW_PROCESS_LOGS, listenToProcessLogs);
 }
 
+export function *listenToContractLogs() {
+  const socket = api.webSocketContractLogs();
+  const channel = yield call(createChannel, socket);
+  while (true) {
+    const contractLog = yield take(channel);
+    yield put(contractLogs.success([contractLog]));
+  }
+}
+
+export function *watchListenToContractLogs() {
+  yield takeEvery(actions.WATCH_NEW_CONTRACT_LOGS, listenToContractLogs);
+}
+
 export const sendMessage = doRequest.bind(null, messageSend, api.sendMessage);
 
 export function *watchSendMessage() {
@@ -153,6 +166,7 @@ export default function *root() {
     fork(watchFetchProcessLogs),
     fork(watchFetchContractLogs),
     fork(watchListenToProcessLogs),
+    fork(watchListenToContractLogs),
     fork(watchFetchBlock),
     fork(watchFetchTransactions),
     fork(watchPostCommand),
