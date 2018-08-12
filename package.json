@@ -67,6 +67,7 @@
     "ora": "^2.1.0",
     "os-locale": "^2.1.0",
     "parse-json": "^4.0.0",
+    "pkg-up": "^2.0.0",
     "promptly": "^2.1.0",
     "propose": "0.0.5",
     "request": "^2.85.0",
