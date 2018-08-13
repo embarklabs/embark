@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Badge} from 'tabler-react';
 
-const CompilerError = ({key, onClick,  errorType, row, errorMessage}) => (
+const CompilerError = ({ index, onClick,  errorType, row, errorMessage}) => (
   <a 
     href="#editor"
     className="list-group-item list-group-item-action" 
     onClick={onClick}
-    key={key} 
+    key={index} 
     >
-    <Badge color={errorType === "error" ? "danger" : errorType} className="mr-1" key={key}>
+    <Badge color={errorType === "error" ? "danger" : errorType} className="mr-1" key={index}>
       Line {row}
     </Badge>
     {errorMessage}
@@ -17,10 +17,10 @@ const CompilerError = ({key, onClick,  errorType, row, errorMessage}) => (
 );
 
 CompilerError.propTypes = {
-  key: PropTypes.string,
+  index: PropTypes.number,
   onClick: PropTypes.func,
   errorType: PropTypes.string,
-  row: PropTypes.number,
+  row: PropTypes.string,
   errorMessage: PropTypes.string
 };
 

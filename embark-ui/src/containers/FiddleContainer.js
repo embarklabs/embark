@@ -48,7 +48,8 @@ class FiddleContainer extends Component {
             node: 
             <CompilerError
               onClick={(e) => { this._onErrorClick(e, annotation); }}
-              key={index}
+              key={`${errorType}_${index}`}
+              index={index}
               errorType={errorType}
               row={errorRowCol.row}
               errorMessage={error.formattedMessage}/>,
