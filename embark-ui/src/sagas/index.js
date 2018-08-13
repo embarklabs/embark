@@ -4,7 +4,8 @@ import {eventChannel} from 'redux-saga';
 import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
 
 const {account, accounts, block, blocks, transaction, transactions, processes, commands, processLogs,
-       contracts, contract, contractProfile, messageSend, versions, plugins, messageListen, fiddle} = actions;
+       contracts, contract, contractProfile, messageSend, versions, plugins, messageListen, fiddle,
+       ensRecord, ensRecords} = actions;
 
 function *doRequest(entity, apiFn, payload) {
   const {response, error} = yield call(apiFn, payload);
@@ -32,6 +33,8 @@ export const fetchContract = doRequest.bind(null, contract, api.fetchContract);
 export const fetchContractProfile = doRequest.bind(null, contractProfile, api.fetchContractProfile);
 export const fetchFiddle = doRequest.bind(null, fiddle, api.fetchFiddle);
 export const sendMessage = doRequest.bind(null, messageSend, api.sendMessage);
+export const fetchENSRecord = doRequest.bind(null, ensRecord, api.fetchENSRecord);
+export const postENSRecord = doRequest.bind(null, ensRecords, api.postENSRecord);
 
 export function *watchFetchTransaction() {
   yield takeEvery(actions.TRANSACTION[actions.REQUEST], fetchTransaction);
@@ -95,6 +98,14 @@ export function *watchFetchPlugins() {
 
 export function *watchSendMessage() {
   yield takeEvery(actions.MESSAGE_SEND[actions.REQUEST], sendMessage);
+}
+
+export function *watchFetchENSRecord() {
+  yield takeEvery(actions.ENS_RECORD[actions.REQUEST], fetchENSRecord);
+}
+
+export function *watchPostENSRecords() {
+  yield takeEvery(actions.ENS_RECORDS[actions.REQUEST], postENSRecord);
 }
 
 function createChannel(socket) {
@@ -192,6 +203,8 @@ export default function *root() {
     fork(watchFetchContract),
     fork(watchFetchTransaction),
     fork(watchFetchContractProfile),
-    fork(watchFetchFiddle)
+    fork(watchFetchFiddle),
+    fork(watchFetchENSRecord),
+    fork(watchPostENSRecords)
   ]);
 }

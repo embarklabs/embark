@@ -80,12 +80,24 @@ export function sendMessage(payload) {
   return post(`/communication/sendMessage`, payload.body);
 }
 
-export function listenToChannel(channel) {
-  return new WebSocket(`${constants.wsEndpoint}/communication/listenTo/${channel}`);
-}
-
 export function fetchContractProfile(payload) {
   return get(`/profiler/${payload.contractName}`);
+}
+
+export function fetchENSRecord(payload) {
+  if (payload.name) {
+    return get('/ens/resolve', {params: payload});
+  } else {
+    return get('/ens/lookup', {params: payload});
+  }
+}
+
+export function postENSRecord(payload) {
+  return post('/ens/register', payload);
+}
+
+export function listenToChannel(channel) {
+  return new WebSocket(`${constants.wsEndpoint}/communication/listenTo/${channel}`);
 }
 
 export function webSocketProcess(processName) {

@@ -17,7 +17,8 @@ const entitiesDefaultState = {
   messageChannels: [],
   fiddle: null,
   versions: [],
-  plugins: []
+  plugins: [],
+  ensRecords: []
 };
 
 const sorter = {

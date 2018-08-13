@@ -132,6 +132,21 @@ export const messageListen = {
   failure: (error) => action(MESSAGE_LISTEN[FAILURE], {error})
 };
 
+export const ENS_RECORD = createRequestTypes('ENS_RECORD');
+export const ensRecord = {
+  resolve: (name) => action(ENS_RECORD[REQUEST], {name}),
+  lookup: (address) => action(ENS_RECORD[REQUEST], {address}),
+  success: (record, payload) => action(ENS_RECORD[SUCCESS], {ensRecords: [Object.assign(payload, record)]}),
+  failure: (error) => action(ENS_RECORD[FAILURE], {error})
+};
+
+export const ENS_RECORDS = createRequestTypes('ENS_RECORDS');
+export const ensRecords = {
+  post: (name, address) => action(ENSENS_RECORDS_RECORD[REQUEST], {name, address}),
+  success: (_record, payload) => action(ENS_RECORDS[SUCCESS], {ensRecords: [{name: payload.name, address: payload.address}]}),
+  failure: (error) => action(ENS_RECORDS[FAILURE], {error})
+};
+
 // Web Socket
 export const WATCH_NEW_PROCESS_LOGS = 'WATCH_NEW_PROCESS_LOGS';
 export const WATCH_NEW_CONTRACT_LOGS = 'WATCH_NEW_CONTRACT_LOGS';
