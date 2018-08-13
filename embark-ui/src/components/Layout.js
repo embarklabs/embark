@@ -10,8 +10,8 @@ const navBarItems = [
   {value: "Contracts", to: "/embark/contracts", icon: "box", LinkComponent: withRouter(NavLink)},
   {value: "Explorer", to: "/embark/explorer/accounts", icon: "activity", LinkComponent: withRouter(NavLink)},
   {value: "Processes", to: "/embark/processes", icon: "cpu", LinkComponent: withRouter(NavLink)},
-  {value: "Documentation", to: "/embark/documentation", icon: "file-text", LinkComponent: withRouter(NavLink)},
-  {value: "Fiddle", to: "/embark/fiddle", icon: "codepen", LinkComponent: withRouter(NavLink)}
+  {value: "Fiddle", to: "/embark/fiddle", icon: "codepen", LinkComponent: withRouter(NavLink)},
+  {value: "Documentation", to: "/embark/documentation", icon: "file-text", LinkComponent: withRouter(NavLink)}
 ];
 
 const Layout = (props) => (

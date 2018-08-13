@@ -1,6 +1,5 @@
 import {combineReducers} from 'redux';
 import {REQUEST} from "../actions";
-import fiddleRecuder from './fiddleReducer';
 
 const BN_FACTOR = 10000;
 
@@ -16,7 +15,8 @@ const entitiesDefaultState = {
   commands: [],
   messages: [],
   messageChannels: [],
-  messageVersion: null
+  messageVersion: null,
+  fiddle: null
 };
 
 const sorter = {
@@ -97,8 +97,7 @@ function loading(_state = false, action) {
 const rootReducer = combineReducers({
   entities,
   loading,
-  errorMessage,
-  fiddles: fiddleRecuder
+  errorMessage
 });
 
 export default rootReducer;

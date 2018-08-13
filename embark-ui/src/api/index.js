@@ -96,6 +96,6 @@ export function webSocketBlockHeader() {
   return new WebSocket(`${constants.wsEndpoint}/blockchain/blockHeader`);
 }
 
-export function fetchCodeCompilation(codeToCompile) {
-  return axios.post(constants.httpEndpoint + '/contract/compile', {code: codeToCompile});
+export function fetchFiddle(payload) {
+  return post('/contract/compile', {code: payload.codeToCompile});
 }

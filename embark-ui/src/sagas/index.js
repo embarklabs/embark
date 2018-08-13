@@ -4,7 +4,8 @@ import {eventChannel} from 'redux-saga';
 import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
 
 const {account, accounts, block, blocks, transaction, transactions, processes, commands, processLogs,
-       contracts, contract, contractProfile, messageSend, messageVersion, messageListen, contractLogs} = actions;
+       contracts, contract, contractProfile, messageSend, messageVersion, messageListen, contractLogs,
+       fiddle} = actions;
 
 function *doRequest(entity, apiFn, payload) {
   const {response, error} = yield call(apiFn, payload);
@@ -28,6 +29,7 @@ export const fetchContractLogs = doRequest.bind(null, contractLogs, api.fetchCon
 export const fetchContracts = doRequest.bind(null, contracts, api.fetchContracts);
 export const fetchContract = doRequest.bind(null, contract, api.fetchContract);
 export const fetchContractProfile = doRequest.bind(null, contractProfile, api.fetchContractProfile);
+export const fetchFiddle = doRequest.bind(null, fiddle, api.fetchFiddle);
 
 export function *watchFetchTransaction() {
   yield takeEvery(actions.TRANSACTION[actions.REQUEST], fetchTransaction);
@@ -157,20 +159,8 @@ export function *watchCommunicationVersion() {
   yield takeEvery(actions.MESSAGE_VERSION[actions.REQUEST], fetchCommunicationVersion);
 }
 
-export function *fetchCodeCompilation(action) {
-  try {
-    const compilationResponse = yield call(api.fetchCodeCompilation, action.codeToCompile);
-    if(compilationResponse.status !== 200){
-      yield put(actions.receiveCodeCompilationError(compilationResponse.data));
-    }
-    else yield put(actions.receiveCodeCompilation(compilationResponse.data));
-  } catch (e) {
-    yield put(actions.receiveCodeCompilationError(e));
-  }
-}
-
-export function *watchFetchCodeCompilation() {
-  yield takeEvery(actions.COMPILE_CODE_REQUEST, fetchCodeCompilation);
+export function *watchFetchFiddle() {
+  yield takeEvery(actions.FIDDLE[actions.REQUEST], fetchFiddle);
 }
 
 export default function *root() {
@@ -194,7 +184,7 @@ export default function *root() {
     fork(watchFetchContract),
     fork(watchFetchTransaction),
     fork(watchFetchContractProfile),
-    fork(watchFetchCodeCompilation)
+    fork(watchFetchFiddle)
   ]);
 }
 

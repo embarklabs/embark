@@ -1,57 +1,48 @@
 /* eslint {jsx-a11y/anchor-has-content:"off"} */
 import React, {Component} from 'react';
-import {Card, List, Badge} from 'tabler-react';
+import {Card, List, Badge, Icon} from 'tabler-react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 class FiddleResults extends Component {
 
-  static _removeClass(elems, className) {
-    for (let elem of elems) {
-      elem.className = elem.className.replace(className, '').replace('  ', ' ');
-    }
+  constructor(props){
+    super(props);
+
+    this.state = {
+      errorsCollapsed: false,
+      warningsCollapsed: false,
+      errorsFullscreen: false,
+      warningsFullscreen: false
+    };
   }
 
-  static _toggleClass(elems, className) {
-    for (let elem of elems) {
-      if (elem.className.indexOf(className) > -1) {
-        FiddleResults._removeClass([elem], className);
-      }
-      else {
-        elem.className = (elem.className.length > 0 ? elem.className + ' ' : '') + className;
-      }
-    }
-  }
-
-  _toggleCollapse(e) {
-    const collapsedClassName = 'card-collapsed';
+  _toggle(e, type){
     const className = e.currentTarget.parentElement.className.replace('card-options', '').replace(' ', '');
-    const elems = document.getElementsByClassName(className + '-card');
-    FiddleResults._toggleClass(elems, collapsedClassName);
-  }
-  
-  _toggleFullscreen(e) {
-    const collapsedClassName = 'card-collapsed';
-    const fullscreenClassName = 'card-fullscreen';
-    const className = e.currentTarget.parentElement.className.replace('card-options', '').replace(' ', '');
-    const elems = document.getElementsByClassName(className + '-card');
-    FiddleResults._toggleClass(elems, fullscreenClassName);
-    FiddleResults._removeClass(elems, collapsedClassName);
+    const updatedState = {};
+    updatedState[className + type] = !(this.state[className + type]);
+    this.setState(updatedState);
   }
 
   _getFormatted(errors, errorType){
     const color = (errorType === "error" ? "danger" : errorType);
+    const isFullscreen = Boolean(this.state[errorType + 'sFullscreen']);
+    const classes = classNames({
+      'card-fullscreen': Boolean(this.state[errorType + 'sFullscreen']),
+      'card-collapsed': Boolean(this.state[errorType + 'sCollapsed']) && !isFullscreen
+    });
     return <Card
       isCollapsible={true}
       isFullscreenable={true}
       statusColor={color}
       statusSide="true"
-      className={errorType + "s-card"}
+      className={errorType + "s-card " + classes}
       key={errorType + "s-card"}>
       <Card.Header>
         <Card.Title color={color}>{errorType + "s"} <Badge color={color}>{errors.length}</Badge></Card.Title>
         <Card.Options className={errorType + "s"}>
-          <Card.OptionsItem key="0" type="collapse" icon="chevron-up" onClick={this._toggleCollapse} />
-          <Card.OptionsItem key="1" type="fullscreen" icon="maximize" onClick={this._toggleFullscreen} />
+          <Card.OptionsItem key="0" type="collapse" icon="chevron-up" onClick={(e) => this._toggle(e, 'Collapsed')}/>
+          <Card.OptionsItem key="1" type="fullscreen" icon="maximize" onClick={(e) => this._toggle(e, 'Fullscreen')} />
         </Card.Options>
       </Card.Header>
       <Card.Body>
@@ -63,21 +54,42 @@ class FiddleResults extends Component {
   }
   
   render() {
-    const {warnings, errors} = this.props;
+    const {warnings, errors, fatal} = this.props;
 
     let renderings = [];
-    if (errors.length) renderings.push(
-      <React.Fragment key="errors">
-        <a id="errors" aria-hidden="true"/>
-        {this._getFormatted(errors, "error")}
-      </React.Fragment>
-    );
-    if (warnings.length) renderings.push(
-      <React.Fragment key="warnings">
-        <a id="warnings" aria-hidden="true"/>
-        {this._getFormatted(warnings, "warning")}
-      </React.Fragment>
-    );
+    if(fatal){
+      renderings.push(
+        <React.Fragment key="fatal">
+          <a id="fatal" aria-hidden="true"/>
+          <Card
+            statusColor="danger"
+            statusSide="true"
+            className="fatal-card"
+            key="fatal-card">
+            <Card.Header>
+              <Card.Title color="danger"><Icon name="slash"/> Failed to compile</Card.Title>
+            </Card.Header>
+            <Card.Body>
+                {fatal}
+            </Card.Body>
+          </Card>
+        </React.Fragment>
+      );
+    }
+    else{
+      if (errors.length) renderings.push(
+        <React.Fragment key="errors">
+          <a id="errors" aria-hidden="true"/>
+          {this._getFormatted(errors, "error")}
+        </React.Fragment>
+      );
+      if (warnings.length) renderings.push(
+        <React.Fragment key="warnings">
+          <a id="warnings" aria-hidden="true"/>
+          {this._getFormatted(warnings, "warning")}
+        </React.Fragment>
+      );
+    }
 
     return (
       <React.Fragment>
@@ -89,7 +101,8 @@ class FiddleResults extends Component {
 
 FiddleResults.propTypes = {
   errors: PropTypes.array,
-  warnings: PropTypes.array
+  warnings: PropTypes.array,
+  fatal: PropTypes.string
 };
 
 export default FiddleResults;

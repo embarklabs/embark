@@ -3,12 +3,13 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {fetchCodeCompilation} from '../actions';
+import {fiddle as fiddleAction} from '../actions';
 import Fiddle from '../components/Fiddle';
 import FiddleResults from '../components/FiddleResults';
-import FiddleReultsSummary from '../components/FiddleResultsSummary';
-import {Badge} from 'tabler-react';
+import FiddleResultsSummary from '../components/FiddleResultsSummary';
 import scrollToComponent from 'react-scroll-to-component';
+import {getFiddle} from "../reducers/selectors";
+import CompilerError from "../components/CompilerError";
 
 class FiddleContainer extends Component {
 
@@ -22,17 +23,11 @@ class FiddleContainer extends Component {
     this.editor = null;
   }
 
-  componentDidMount() {
-    if (this.state.value) {
-      this.props.fetchCodeCompilation(this.state.value);
-    }
-  }
-
   _onCodeChange(newValue) {
     this.setState({value: newValue});
     if (this.compileTimeout) clearTimeout(this.compileTimeout);
     this.compileTimeout = setTimeout(() => {
-      this.props.fetchCodeCompilation(newValue);
+      this.props.fetchFiddle(newValue);
     }, 1000);
 
   }
@@ -51,17 +46,12 @@ class FiddleContainer extends Component {
           errors.push({
             solcError: error,
             node: 
-              <a 
-                href="#editor"
-                className="list-group-item list-group-item-action" 
-                onClick={(e) => { this._onErrorClick(e, annotation); }}
-                key={index} 
-                >
-                <Badge color={errorType === "error" ? "danger" : errorType} className="mr-1" key={index}>
-                  Line {errorRowCol.row}
-                </Badge>
-                {error.formattedMessage}
-              </a>,
+            <CompilerError
+              onClick={(e) => { this._onErrorClick(e, annotation); }}
+              key={index}
+              errorType={errorType}
+              row={errorRowCol.row}
+              errorMessage={error.formattedMessage}/>,
             annotation: annotation
           });
         }
@@ -84,22 +74,22 @@ class FiddleContainer extends Component {
   }
 
   render() {
-    const {fiddles} = this.props;
+    const {fiddle, loading, error} = this.props;
     let renderings = [];
     let warnings = [];
     let errors = [];
-    if (fiddles.compilationResult) {
-      warnings = this._getFormattedErrors(fiddles.compilationResult.errors, "warning");
-      errors = this._getFormattedErrors(fiddles.compilationResult.errors, "error");
-      
+    if (fiddle && fiddle.errors) {
+      warnings = this._getFormattedErrors(fiddle.errors, "warning");
+      errors = this._getFormattedErrors(fiddle.errors, "error");
     }
     renderings.push(
       <React.Fragment key="fiddle">
-        <FiddleReultsSummary
+        <FiddleResultsSummary
           errors={errors} 
           warnings={warnings} 
-          isFetching={fiddles.isFetching}
-          hasResult={Boolean(fiddles.compilationResult)}
+          isFetching={loading}
+          hasResult={Boolean(fiddle)}
+          fatal={error}
         />
         <Fiddle
           value={this.state.value} 
@@ -115,12 +105,13 @@ class FiddleContainer extends Component {
         />
       </React.Fragment>
     );
-    if (fiddles.compilationResult) {
+    if (fiddle || (this.state.value && error)) {
       renderings.push(
         <FiddleResults 
           key="results" 
           errors={errors} 
           warnings={warnings} 
+          fatal={error}
         />);
     }
 
@@ -134,19 +125,24 @@ class FiddleContainer extends Component {
   }
 }
 function mapStateToProps(state) {
-  return {
-    fiddles: state.fiddles
+  return { 
+    fiddle: getFiddle(state), 
+    error: state.errorMessage, 
+    loading: state.loading
   };
 }
 
 FiddleContainer.propTypes = {
-  fiddles: PropTypes.object,
-  fetchCodeCompilation: PropTypes.func
+  fiddle: PropTypes.object,
+  error: PropTypes.string,
+  fetchFiddle: PropTypes.func,
+  loading: PropTypes.bool
 };
 
 export default connect(
   mapStateToProps,
   {
-    fetchCodeCompilation
+    fetchFiddle: fiddleAction.request
+    //fetchBlock: blockAction.request
   },
 )(FiddleContainer);

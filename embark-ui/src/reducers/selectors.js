@@ -80,3 +80,7 @@ export function getMessages(state) {
   });
   return messages;
 }
+
+export function getFiddle(state){
+  return state.entities.fiddle;
+}

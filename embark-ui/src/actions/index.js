@@ -143,30 +143,17 @@ export function listenToContractLogs() {
   };
 }
 
-// Fiddle
-export const COMPILE_CODE_REQUEST = 'COMPILE_CODE_REQUEST';
-export const COMPILE_CODE_SUCCESS = 'COMPILE_CODE_SUCCESS';
-export const COMPILE_CODE_FAILURE = 'COMPILE_CODE_FAILURE';
-
-export function fetchCodeCompilation(codeToCompile){
+export function initBlockHeader(){
   return {
-    type: COMPILE_CODE_REQUEST,
-    codeToCompile
+    type: INIT_BLOCK_HEADER
   };
 }
 
-
-export function receiveCodeCompilation(compilationResult){
-  return {
-    type: COMPILE_CODE_SUCCESS,
-    compilationResult
-  };
-}
-
-export function receiveCodeCompilationError(){
-  return {
-    type: COMPILE_CODE_FAILURE
-  };
-}
+export const FIDDLE = createRequestTypes('FIDDLE');
+export const fiddle = {
+  request: (codeToCompile) => action(FIDDLE[REQUEST], {codeToCompile}),
+  success: (fiddle) => action(FIDDLE[SUCCESS], {fiddle}),
+  failure: (error) => action(FIDDLE[FAILURE], {error})
+};
 
 
