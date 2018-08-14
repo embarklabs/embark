@@ -30,11 +30,10 @@ class EnsRegister extends Component {
   }
 
   showResult() {
-    let ensRecord = this.props.ensRecords.find((record) => record.address === this.state.address && record.subdomain === this.state.subdomain);
-    if (ensRecord) {
-      return <Alert type="success">Successfully registered</Alert>;
+    if (this.props.ensErrors) {
+      return <Alert type="danger">An error happened: {this.props.ensErrors}</Alert>;
     } else {
-      return <Alert type="danger">An error happened</Alert>;
+      return <Alert type="success">Successfully registered</Alert>;
     }
   }
 
@@ -65,7 +64,8 @@ class EnsRegister extends Component {
 
 EnsRegister.propTypes = {
   register: PropTypes.func,
-  ensRecords: PropTypes.arrayOf(PropTypes.object)
+  ensRecords: PropTypes.arrayOf(PropTypes.object),
+  ensErrors: PropTypes.string
 };
 
 export default EnsRegister;

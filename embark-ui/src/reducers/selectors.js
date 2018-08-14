@@ -98,6 +98,10 @@ export function getEnsRecords(state) {
   return state.entities.ensRecords;
 }
 
+export function getEnsErrors(state) {
+  return state.errorEntities.ensRecords;
+}
+
 export function isEnsEnabled(state) {
   return Boolean(state.entities.plugins.find((plugin) => plugin.name === 'ens'));
 }

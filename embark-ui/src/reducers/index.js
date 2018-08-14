@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux';
-import {REQUEST} from "../actions";
+import {REQUEST, SUCCESS} from "../actions";
 
 const BN_FACTOR = 10000;
 const voidAddress = '0x0000000000000000000000000000000000000000';
@@ -95,6 +95,20 @@ function errorMessage(state = null, action) {
   return action.error || state;
 }
 
+/* eslint multiline-ternary: "off" */
+function errorEntities(state = {}, action) {
+  if (!action.type.endsWith(SUCCESS)) {
+    return state;
+  }
+  let newState = {};
+  for (let name of Object.keys(entitiesDefaultState)) {
+    if (action[name] && action[name].length > 0) {
+      newState[name] = action[name][0].error;
+    }
+  }
+  return {...state, ...newState};
+}
+
 function loading(_state = false, action) {
   return action.type.endsWith(REQUEST);
 }
@@ -102,7 +116,8 @@ function loading(_state = false, action) {
 const rootReducer = combineReducers({
   entities,
   loading,
-  errorMessage
+  errorMessage,
+  errorEntities
 });
 
 export default rootReducer;

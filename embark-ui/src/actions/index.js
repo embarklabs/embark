@@ -143,7 +143,7 @@ export const ensRecord = {
 export const ENS_RECORDS = createRequestTypes('ENS_RECORDS');
 export const ensRecords = {
   post: (subdomain, address) => action(ENS_RECORDS[REQUEST], {subdomain, address}),
-  success: (_record, payload) => action(ENS_RECORDS[SUCCESS], {ensRecords: [{subdomain: payload.subdomain, address: payload.address}]}),
+  success: (record) => action(ENS_RECORDS[SUCCESS], {ensRecords: [record]}),
   failure: (error) => action(ENS_RECORDS[FAILURE], {error})
 };
 

@@ -6,7 +6,7 @@ import {ensRecord, ensRecords} from "../actions";
 import EnsRegister from "../components/EnsRegister";
 import EnsLookup from "../components/EnsLookup";
 import EnsResolve from "../components/EnsResolve";
-import {getEnsRecords, isEnsEnabled} from "../reducers/selectors";
+import {getEnsRecords, isEnsEnabled, getEnsErrors} from "../reducers/selectors";
 
 class EnsContainer extends Component {
 
@@ -15,7 +15,7 @@ class EnsContainer extends Component {
       <React.Fragment>
         <EnsLookup lookup={this.props.lookup} ensRecords={this.props.ensRecords}/>
         <EnsResolve resolve={this.props.resolve} ensRecords={this.props.ensRecords}/>
-        <EnsRegister register={this.props.register} ensRecords={this.props.ensRecords}/>
+        <EnsRegister register={this.props.register} ensRecords={this.props.ensRecords} ensErrors={this.props.ensErrors}/>
       </React.Fragment>
     );
   }
@@ -38,12 +38,14 @@ EnsContainer.propTypes = {
   resolve: PropTypes.func,
   lookup: PropTypes.func,
   register: PropTypes.func,
-  isEnsEnabled: PropTypes.bool
+  isEnsEnabled: PropTypes.bool,
+  ensErrors: PropTypes.string
 };
 
 function mapStateToProps(state) {
   return {
     ensRecords: getEnsRecords(state),
+    ensErrors: getEnsErrors(state),
     isEnsEnabled: isEnsEnabled(state)
   };
 }
