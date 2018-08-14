@@ -84,7 +84,7 @@ export function fetchContractProfile(payload) {
   return get(`/profiler/${payload.contractName}`);
 }
 
-export function fetchENSRecord(payload) {
+export function fetchEnsRecord(payload) {
   if (payload.name) {
     return get('/ens/resolve', {params: payload});
   } else {
@@ -92,7 +92,7 @@ export function fetchENSRecord(payload) {
   }
 }
 
-export function postENSRecord(payload) {
+export function postEnsRecord(payload) {
   return post('/ens/register', payload);
 }
 

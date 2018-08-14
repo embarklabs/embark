@@ -33,8 +33,8 @@ export const fetchContract = doRequest.bind(null, contract, api.fetchContract);
 export const fetchContractProfile = doRequest.bind(null, contractProfile, api.fetchContractProfile);
 export const fetchFiddle = doRequest.bind(null, fiddle, api.fetchFiddle);
 export const sendMessage = doRequest.bind(null, messageSend, api.sendMessage);
-export const fetchENSRecord = doRequest.bind(null, ensRecord, api.fetchENSRecord);
-export const postENSRecord = doRequest.bind(null, ensRecords, api.postENSRecord);
+export const fetchEnsRecord = doRequest.bind(null, ensRecord, api.fetchEnsRecord);
+export const postEnsRecord = doRequest.bind(null, ensRecords, api.postEnsRecord);
 
 export function *watchFetchTransaction() {
   yield takeEvery(actions.TRANSACTION[actions.REQUEST], fetchTransaction);
@@ -100,12 +100,12 @@ export function *watchSendMessage() {
   yield takeEvery(actions.MESSAGE_SEND[actions.REQUEST], sendMessage);
 }
 
-export function *watchFetchENSRecord() {
-  yield takeEvery(actions.ENS_RECORD[actions.REQUEST], fetchENSRecord);
+export function *watchFetchEnsRecord() {
+  yield takeEvery(actions.ENS_RECORD[actions.REQUEST], fetchEnsRecord);
 }
 
-export function *watchPostENSRecords() {
-  yield takeEvery(actions.ENS_RECORDS[actions.REQUEST], postENSRecord);
+export function *watchPostEnsRecords() {
+  yield takeEvery(actions.ENS_RECORDS[actions.REQUEST], postEnsRecord);
 }
 
 function createChannel(socket) {

@@ -6,8 +6,9 @@ import {Page} from "tabler-react";
 import {commands as commandsAction} from "../actions";
 import DataWrapper from "../components/DataWrapper";
 import Processes from '../components/Processes';
+import Versions from '../components/Versions';
 import Console from '../components/Console';
-import {getProcesses, getCommands} from "../reducers/selectors";
+import {getProcesses, getCommands, getVersions} from "../reducers/selectors";
 
 class HomeContainer extends Component {
   render() {
@@ -17,6 +18,9 @@ class HomeContainer extends Component {
         <DataWrapper shouldRender={this.props.processes.length > 0 } {...this.props} render={({processes}) => (
           <Processes processes={processes} />
         )} />
+        <DataWrapper shouldRender={this.props.versions.length > 0 } {...this.props} render={({versions}) => (
+          <Versions versions={versions} />
+        )} />
         <Console postCommand={this.props.postCommand} commands={this.props.commands} />
       </React.Fragment>
     );
@@ -25,12 +29,16 @@ class HomeContainer extends Component {
 
 HomeContainer.propTypes = {
   processes: PropTypes.arrayOf(PropTypes.object),
+  versions: PropTypes.arrayOf(PropTypes.object),
   postCommand: PropTypes.func,
-  commands: PropTypes.arrayOf(PropTypes.object)
+  commands: PropTypes.arrayOf(PropTypes.object),
+  error: PropTypes.string,
+  loading: PropTypes.bool
 };
 
 function mapStateToProps(state) {
   return {
+    versions: getVersions(state),
     processes: getProcesses(state),
     commands: getCommands(state),
     error: state.errorMessage,

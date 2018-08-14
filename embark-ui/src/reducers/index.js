@@ -2,6 +2,7 @@ import {combineReducers} from 'redux';
 import {REQUEST} from "../actions";
 
 const BN_FACTOR = 10000;
+const voidAddress = '0x0000000000000000000000000000000000000000';
 
 const entitiesDefaultState = {
   accounts: [],
@@ -55,6 +56,11 @@ const filtrer = {
   transactions: function(tx, index, self) {
     return index === self.findIndex((t) => (
       t.blockNumber === tx.blockNumber && t.transactionIndex === tx.transactionIndex
+    ));
+  },
+  ensRecords: function(record, index, self) {
+    return record.name && record.address && record.address !== voidAddress && index === self.findIndex((r) => (
+      r.address=== record.address && r.name === record.name
     ));
   }
 };

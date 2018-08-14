@@ -62,8 +62,17 @@ export function getContractProfile(state, contractName) {
   return state.entities.contractProfiles.find((contractProfile => contractProfile.name === contractName));
 }
 
-export function getMessageVersion(state) {
-  return state.entities.messageVersion;
+export function getVersions(state) {
+  return state.entities.versions;
+}
+
+export function isWeb3Enabled(state) {
+  return Boolean(state.entities.versions.find((version) => version.name === 'web3'));
+}
+
+export function isOldWeb3(state) {
+  const web3 = state.entities.versions.find((version) => version.name === 'web3');
+  return web3 && parseInt(web3[0], 10) === 0;
 }
 
 export function getMessageChannels(state) {
@@ -81,6 +90,14 @@ export function getMessages(state) {
   return messages;
 }
 
-export function getFiddle(state){
+export function getFiddle(state) {
   return state.entities.fiddle;
+}
+
+export function getEnsRecords(state) {
+  return state.entities.ensRecords;
+}
+
+export function isEnsEnabled(state) {
+  return Boolean(state.entities.plugins.find((plugin) => plugin.name === 'ens'));
 }
