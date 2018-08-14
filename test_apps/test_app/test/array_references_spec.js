@@ -1,14 +1,10 @@
-/*global contract, config, it*/
+/*global contract, config, it, web3*/
 const assert = require('assert');
 const SomeContract = require('Embark/contracts/SomeContract');
-const SimpleStorage = require('Embark/contracts/SimpleStorage');
 const MyToken2 = require('Embark/contracts/MyToken2');
 
 config({
   contracts: {
-    "SimpleStorage": {
-      args: [100]
-    },
     "Token": {
       deploy: false,
       args: [1000]
@@ -19,7 +15,7 @@ config({
     },
     "SomeContract": {
       "args": [
-        ["$MyToken2", "$SimpleStorage"],
+        ["$MyToken2", "$accounts[0]"],
         100
       ]
     }
@@ -34,9 +30,9 @@ contract("SomeContract", function() {
     assert.strictEqual(address, MyToken2.options.address);
   });
 
-  it("set SimpleStorage address", async function() {
+  it("set account address", async function() {
     let address = await SomeContract.methods.addr_2().call();
-    assert.strictEqual(address, SimpleStorage.options.address);
+    assert.strictEqual(address, web3.eth.defaultAccount);
   });
 
 });
