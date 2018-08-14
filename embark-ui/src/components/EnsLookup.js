@@ -28,9 +28,9 @@ class EnsLookup extends Component {
   showResult() {
     let ensRecord = this.props.ensRecords.find((record) => record.address === this.state.address);
     if (ensRecord) {
-      return <Alert type="success">The name is: {ensRecord.name}</Alert>;
+      return <Alert type="success">The subdomain is: {ensRecord.subdomain}</Alert>;
     } else {
-      return <Alert type="danger">We could not find a name for this address</Alert>;
+      return <Alert type="danger">We could not find a subdomain for this address</Alert>;
     }
   }
 

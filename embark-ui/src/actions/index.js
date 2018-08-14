@@ -134,7 +134,7 @@ export const messageListen = {
 
 export const ENS_RECORD = createRequestTypes('ENS_RECORD');
 export const ensRecord = {
-  resolve: (name) => action(ENS_RECORD[REQUEST], {name}),
+  resolve: (subdomain) => action(ENS_RECORD[REQUEST], {subdomain}),
   lookup: (address) => action(ENS_RECORD[REQUEST], {address}),
   success: (record, payload) => action(ENS_RECORD[SUCCESS], {ensRecords: [Object.assign(payload, record)]}),
   failure: (error) => action(ENS_RECORD[FAILURE], {error})
@@ -142,11 +142,10 @@ export const ensRecord = {
 
 export const ENS_RECORDS = createRequestTypes('ENS_RECORDS');
 export const ensRecords = {
-  post: (name, address) => action(ENS_RECORDS[REQUEST], {name, address}),
-  success: (_record, payload) => action(ENS_RECORDS[SUCCESS], {ensRecords: [{name: payload.name, address: payload.address}]}),
+  post: (subdomain, address) => action(ENS_RECORDS[REQUEST], {subdomain, address}),
+  success: (_record, payload) => action(ENS_RECORDS[SUCCESS], {ensRecords: [{subdomain: payload.subdomain, address: payload.address}]}),
   failure: (error) => action(ENS_RECORDS[FAILURE], {error})
 };
-
 
 export const FIDDLE = createRequestTypes('FIDDLE');
 export const fiddle = {

@@ -11,7 +11,7 @@ class EnsRegister extends Component {
     super(props);
 
     this.state = {
-      name: '',
+      subdomain: '',
       address: '',
       showResult: false
     };
@@ -25,12 +25,12 @@ class EnsRegister extends Component {
   }
 
   handleRegister() {
-    this.props.register(this.state.name, this.state.address);
+    this.props.register(this.state.subdomain, this.state.address);
     this.setState({showResult: true});
   }
 
   showResult() {
-    let ensRecord = this.props.ensRecords.find((record) => record.address === this.state.address && record.name === this.state.name);
+    let ensRecord = this.props.ensRecords.find((record) => record.address === this.state.address && record.subdomain === this.state.subdomain);
     if (ensRecord) {
       return <Alert type="success">Successfully registered</Alert>;
     } else {
@@ -46,7 +46,7 @@ class EnsRegister extends Component {
           <Grid.Row>
             <Grid.Col md={6}>
               <Form.Group>
-                <Form.Input placeholder="Enter a name" onChange={e => this.handleChange(e, "name")}/>
+                <Form.Input placeholder="Enter a subdomain" onChange={e => this.handleChange(e, "subdomain")}/>
               </Form.Group>
             </Grid.Col>
             <Grid.Col md={6}>

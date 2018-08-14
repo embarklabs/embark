@@ -59,8 +59,8 @@ const filtrer = {
     ));
   },
   ensRecords: function(record, index, self) {
-    return record.name && record.address && record.address !== voidAddress && index === self.findIndex((r) => (
-      r.address=== record.address && r.name === record.name
+    return record.subdomain && record.address && record.address !== voidAddress && index === self.findIndex((r) => (
+      r.address=== record.address && r.subdomain === record.subdomain
     ));
   }
 };

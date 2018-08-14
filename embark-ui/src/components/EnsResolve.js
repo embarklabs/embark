@@ -11,26 +11,26 @@ class EnsResolve extends Component {
     super(props);
 
     this.state = {
-      name: '',
+      subdomain: '',
       showResult: false
     };
   }
 
   handleChange(e) {
-    this.setState({name: e.target.value, showResult: false});
+    this.setState({subdomain: e.target.value, showResult: false});
   }
 
   handleResolve() {
     this.setState({showResult: true});
-    this.props.resolve(this.state.name);
+    this.props.resolve(this.state.subdomain);
   }
 
   showResult() {
-    let ensRecord = this.props.ensRecords.find((record) => record.name === this.state.name);
+    let ensRecord = this.props.ensRecords.find((record) => record.subdomain === this.state.subdomain);
     if (ensRecord) {
       return <Alert type="success">The address is: {ensRecord.address}</Alert>;
     } else {
-      return <Alert type="danger">We could not find an address for this name</Alert>;
+      return <Alert type="danger">We could not find an address for this subdomain</Alert>;
     }
   }
 
