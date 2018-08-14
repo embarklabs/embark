@@ -33,6 +33,7 @@ const ExplorerLayout = () => (
         <List.Group transparent={true}>
           {groupItems.map((groupItem) => (
             <List.GroupItem
+              key={groupItem.value}
               className={className}
               to={groupItem.to}
               icon={groupItem.icon}

@@ -5,7 +5,7 @@ import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
 
 const {account, accounts, block, blocks, transaction, transactions, processes, commands, processLogs,
        contracts, contract, contractProfile, messageSend, versions, plugins, messageListen, fiddle,
-       ensRecord, ensRecords} = actions;
+       ensRecord, ensRecords, contractLogs} = actions;
 
 function *doRequest(entity, apiFn, payload) {
   const {response, error} = yield call(apiFn, payload);
@@ -108,6 +108,14 @@ export function *watchPostEnsRecords() {
   yield takeEvery(actions.ENS_RECORDS[actions.REQUEST], postEnsRecord);
 }
 
+export function *watchListenToMessages() {
+  yield takeEvery(actions.MESSAGE_LISTEN[actions.REQUEST], listenToMessages);
+}
+
+export function *watchFetchFiddle() {
+  yield takeEvery(actions.FIDDLE[actions.REQUEST], fetchFiddle);
+}
+
 function createChannel(socket) {
   return eventChannel(emit => {
     socket.onmessage = ((message) => {
@@ -159,10 +167,6 @@ export function *watchListenToContractLogs() {
   yield takeEvery(actions.WATCH_NEW_CONTRACT_LOGS, listenToContractLogs);
 }
 
-export function *watchSendMessage() {
-  yield takeEvery(actions.MESSAGE_SEND[actions.REQUEST], sendMessage);
-}
-
 export function *listenToMessages(action) {
   const socket = api.listenToChannel(action.messageChannels[0]);
   const channel = yield call(createChannel, socket);
@@ -171,15 +175,6 @@ export function *listenToMessages(action) {
     yield put(messageListen.success([{channel: action.messageChannels[0], message: message.data, time: message.time}]));
   }
 }
-
-export function *watchListenToMessages() {
-  yield takeEvery(actions.MESSAGE_LISTEN[actions.REQUEST], listenToMessages);
-}
-
-export function *watchFetchFiddle() {
-  yield takeEvery(actions.FIDDLE[actions.REQUEST], fetchFiddle);
-}
-
 
 export default function *root() {
   yield all([
@@ -204,7 +199,7 @@ export default function *root() {
     fork(watchFetchTransaction),
     fork(watchFetchContractProfile),
     fork(watchFetchFiddle),
-    fork(watchFetchENSRecord),
-    fork(watchPostENSRecords)
+    fork(watchFetchEnsRecord),
+    fork(watchPostEnsRecords)
   ]);
 }

@@ -16,7 +16,7 @@ class CommunicationContainer extends Component {
   }
 
   web3DisabledWarning() {
-    return <Alert type="warning">The node you are using does not support Whisper</Alert>
+    return <Alert type="warning">The node you are using does not support Whisper</Alert>;
   }
 
   web3Enabled() {
@@ -65,7 +65,7 @@ export default connect(
   mapStateToProps,
   {
     messageSend: messageSend.request,
-    messageListen: messageListen.request,
+    messageListen: messageListen.request
   }
 )(CommunicationContainer);
 
