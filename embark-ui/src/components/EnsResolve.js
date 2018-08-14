@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {
+  Alert,
   Button,
   Form
 } from "tabler-react";
@@ -10,16 +11,27 @@ class EnsResolve extends Component {
     super(props);
 
     this.state = {
-      name: ''
+      name: '',
+      showResult: false
     };
   }
 
   handleChange(e) {
-    this.setState({name: e.target.value});
+    this.setState({name: e.target.value, showResult: false});
   }
 
   handleResolve() {
+    this.setState({showResult: true});
     this.props.resolve(this.state.name);
+  }
+
+  showResult() {
+    let ensRecord = this.props.ensRecords.find((record) => record.name === this.state.name);
+    if (ensRecord) {
+      return <Alert type="success">The address is: {ensRecord.address}</Alert>;
+    } else {
+      return <Alert type="danger">We could not find an address for this name</Alert>;
+    }
   }
 
   render(){
@@ -31,6 +43,7 @@ class EnsResolve extends Component {
             <Form.Input placeholder="Enter a name" onChange={e => this.handleChange(e)}/>
           </Form.Group>
           <Button color="primary" onClick={() => this.handleResolve()}>Resolve</Button>
+          {this.state.showResult && this.showResult()}
         </Form.FieldSet>
       </React.Fragment>
     );
@@ -38,7 +51,8 @@ class EnsResolve extends Component {
 }
 
 EnsResolve.propTypes = {
-  resolve: PropTypes.func
+  resolve: PropTypes.func,
+  ensRecords: PropTypes.arrayOf(PropTypes.object)
 };
 
 export default EnsResolve;

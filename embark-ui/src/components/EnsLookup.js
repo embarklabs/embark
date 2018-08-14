@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {
+  Alert,
   Button,
   Form
 } from "tabler-react";
@@ -10,16 +11,27 @@ class EnsLookup extends Component {
     super(props);
 
     this.state = {
-      address: ''
+      address: '',
+      showResult: false
     };
   }
 
   handleChange(e) {
-    this.setState({address: e.target.value});
+    this.setState({address: e.target.value, showResult: false});
   }
 
   handleLookup() {
+    this.setState({showResult: true});
     this.props.lookup(this.state.address);
+  }
+
+  showResult() {
+    let ensRecord = this.props.ensRecords.find((record) => record.address === this.state.address);
+    if (ensRecord) {
+      return <Alert type="success">The name is: {ensRecord.name}</Alert>;
+    } else {
+      return <Alert type="danger">We could not find a name for this address</Alert>;
+    }
   }
 
   render(){
@@ -31,6 +43,7 @@ class EnsLookup extends Component {
             <Form.Input placeholder="Enter an address" onChange={e => this.handleChange(e)}/>
           </Form.Group>
           <Button color="primary" onClick={() => this.handleLookup()}>Lookup</Button>
+          {this.state.showResult && this.showResult()}
         </Form.FieldSet>
       </React.Fragment>
     );
@@ -38,7 +51,8 @@ class EnsLookup extends Component {
 }
 
 EnsLookup.propTypes = {
-  lookup: PropTypes.func
+  lookup: PropTypes.func,
+  ensRecords: PropTypes.arrayOf(PropTypes.object)
 };
 
 export default EnsLookup;

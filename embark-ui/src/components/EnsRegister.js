@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {
+  Alert,
   Button,
   Form, Grid
 } from "tabler-react";
@@ -11,18 +12,30 @@ class EnsRegister extends Component {
 
     this.state = {
       name: '',
-      address: ''
+      address: '',
+      showResult: false
     };
   }
 
   handleChange(e, name) {
     this.setState({
+      showResult: false,
       [name]: e.target.value
     });
   }
 
   handleRegister() {
     this.props.register(this.state.name, this.state.address);
+    this.setState({showResult: true});
+  }
+
+  showResult() {
+    let ensRecord = this.props.ensRecords.find((record) => record.address === this.state.address && record.name === this.state.name);
+    if (ensRecord) {
+      return <Alert type="success">Successfully registered</Alert>;
+    } else {
+      return <Alert type="danger">An error happened</Alert>;
+    }
   }
 
   render(){
@@ -44,13 +57,15 @@ class EnsRegister extends Component {
           </Grid.Row>
           <Button color="primary" onClick={() => this.handleRegister()}>Register</Button>
         </Form.FieldSet>
+        {this.state.showResult && this.showResult()}
       </React.Fragment>
     );
   }
 }
 
 EnsRegister.propTypes = {
-  register: PropTypes.func
+  register: PropTypes.func,
+  ensRecords: PropTypes.arrayOf(PropTypes.object)
 };
 
 export default EnsRegister;
