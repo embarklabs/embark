@@ -40,7 +40,7 @@ class EnsResolve extends Component {
         <h3>Resolve</h3>
         <Form.FieldSet>
           <Form.Group>
-            <Form.Input placeholder="Enter a name" onChange={e => this.handleChange(e)}/>
+            <Form.Input placeholder="Enter a subdomain" onChange={e => this.handleChange(e)}/>
           </Form.Group>
           <Button color="primary" onClick={() => this.handleResolve()}>Resolve</Button>
           {this.state.showResult && this.showResult()}
