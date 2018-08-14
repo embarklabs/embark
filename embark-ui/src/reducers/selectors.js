@@ -91,7 +91,7 @@ export function getMessages(state) {
 }
 
 export function getFiddle(state) {
-  return state.entities.fiddle;
+  return state.entities.fiddles[0];
 }
 
 export function getEnsRecords(state) {

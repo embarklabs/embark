@@ -42,7 +42,7 @@ function mapStateToProps(state) {
 }
 
 TransactionsContainer.propTypes = {
-  transactions: PropTypes.object,
+  transactions: PropTypes.arrayOf(PropTypes.object),
   fetchTransactions: PropTypes.func,
   error: PropTypes.string,
   loading: PropTypes.bool

@@ -16,7 +16,7 @@ const entitiesDefaultState = {
   commands: [],
   messages: [],
   messageChannels: [],
-  fiddle: null,
+  fiddles: [],
   versions: [],
   plugins: [],
   ensRecords: []

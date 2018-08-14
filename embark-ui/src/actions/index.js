@@ -147,6 +147,14 @@ export const ensRecords = {
   failure: (error) => action(ENS_RECORDS[FAILURE], {error})
 };
 
+
+export const FIDDLE = createRequestTypes('FIDDLE');
+export const fiddle = {
+  request: (codeToCompile) => action(FIDDLE[REQUEST], {codeToCompile}),
+  success: (fiddle) => action(FIDDLE[SUCCESS], {fiddles: [fiddle]}),
+  failure: (error) => action(FIDDLE[FAILURE], {error})
+};
+
 // Web Socket
 export const WATCH_NEW_PROCESS_LOGS = 'WATCH_NEW_PROCESS_LOGS';
 export const WATCH_NEW_CONTRACT_LOGS = 'WATCH_NEW_CONTRACT_LOGS';
@@ -170,12 +178,5 @@ export function initBlockHeader(){
     type: INIT_BLOCK_HEADER
   };
 }
-
-export const FIDDLE = createRequestTypes('FIDDLE');
-export const fiddle = {
-  request: (codeToCompile) => action(FIDDLE[REQUEST], {codeToCompile}),
-  success: (fiddle) => action(FIDDLE[SUCCESS], {fiddle}),
-  failure: (error) => action(FIDDLE[FAILURE], {error})
-};
 
 
