@@ -21,6 +21,7 @@ class Cmd {
     this.graph();
     this.upload();
     this.versionCmd();
+    this.helpCmd();
     this.otherCommands();
 
     //If no arguments are passed display help by default
@@ -280,6 +281,20 @@ class Cmd {
     .description(__('output the version number'))
     .action(function () {
       console.log(embark.version);
+      process.exit(0);
+    });
+  }
+
+  helpCmd() {
+    program
+    .command('help')
+    .description(__('output usage information and help information'))
+    .action(function () {
+      console.log("Documentation can be found at: ".green + "https://embark.status.im/docs/".underline.green);
+      console.log("");
+      console.log("Have an issue? submit it here: ".green + "https://github.com/embark-framework/embark/issues/new".underline.green);
+      console.log("or chat with us directly at: ".green + "https://gitter.im/embark-framework/Lobby".underline.green);
+      program.help();
       process.exit(0);
     });
   }
