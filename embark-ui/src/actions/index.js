@@ -134,7 +134,7 @@ export const messageListen = {
 
 export const ENS_RECORD = createRequestTypes('ENS_RECORD');
 export const ensRecord = {
-  resolve: (subdomain) => action(ENS_RECORD[REQUEST], {subdomain}),
+  resolve: (name) => action(ENS_RECORD[REQUEST], {name}),
   lookup: (address) => action(ENS_RECORD[REQUEST], {address}),
   success: (record, payload) => action(ENS_RECORD[SUCCESS], {ensRecords: [Object.assign(payload, record)]}),
   failure: (error) => action(ENS_RECORD[FAILURE], {error})

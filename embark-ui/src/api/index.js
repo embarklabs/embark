@@ -85,7 +85,7 @@ export function fetchContractProfile(payload) {
 }
 
 export function fetchEnsRecord(payload) {
-  if (payload.subdomain) {
+  if (payload.name) {
     return get('/ens/resolve', {params: payload});
   } else {
     return get('/ens/lookup', {params: payload});
