@@ -3,16 +3,6 @@ const constants = require('../lib/constants');
 
 require('colors');
 
-// TODO: can this moved somewhere else? (e.g webpackProcess.js)
-// Override process.chdir so that we have a partial-implementation PWD for Windows
-const realChdir = process.chdir;
-process.chdir = (...args) => {
-  if (!process.env.PWD) {
-    process.env.PWD = process.cwd();
-  }
-  realChdir(...args);
-};
-
 let version = require('../package.json').version;
 
 class EmbarkController {
