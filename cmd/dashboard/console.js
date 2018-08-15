@@ -56,7 +56,7 @@ class Console {
     }
 
     try {
-      this.events.request('runcode:eval', cmd, callback, true);
+      this.events.request('runcode:eval', cmd, callback);
     }
     catch (e) {
       if (this.ipc.connected && this.ipc.isClient()) {
