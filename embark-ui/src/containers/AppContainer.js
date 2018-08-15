@@ -9,7 +9,6 @@ import routes from '../routes';
 
 import {
   initBlockHeader,
-  contracts as contractsAction,
   processes as processesAction,
   versions as versionsAction,
   plugins as pluginsAction
@@ -19,7 +18,6 @@ class AppContainer extends Component {
   componentDidMount() {
     this.props.initBlockHeader();
     this.props.fetchProcesses();
-    this.props.fetchContracts();
     this.props.fetchVersions();
     this.props.fetchPlugins();
   }
@@ -37,7 +35,6 @@ class AppContainer extends Component {
 
 AppContainer.propTypes = {
   initBlockHeader: PropTypes.func,
-  fetchContracts: PropTypes.func,
   fetchProcesses: PropTypes.func,
   fetchPlugins: PropTypes.func,
   fetchVersions: PropTypes.func
@@ -48,7 +45,7 @@ export default connect(
   {
     initBlockHeader,
     fetchProcesses: processesAction.request,
-    fetchContracts: contractsAction.request,
+
     fetchVersions: versionsAction.request,
     fetchPlugins: pluginsAction.request
   },

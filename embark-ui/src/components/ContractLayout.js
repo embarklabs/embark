@@ -10,8 +10,9 @@ import {
 import ContractContainer from '../containers/ContractContainer';
 import ContractLoggerContainer from '../containers/ContractLoggerContainer';
 import ContractProfileContainer from '../containers/ContractProfileContainer';
+import ContractSourceContainer from '../containers/ContractSourceContainer';
 
-const ContractLayout = (props) => (
+const ContractLayout = ({match}) => (
   <Grid.Row>
     <Grid.Col md={3}>
       <Page.Title className="my-5">Contract</Page.Title>
@@ -19,15 +20,15 @@ const ContractLayout = (props) => (
         <List.Group transparent={true}>
           <List.GroupItem
             className="d-flex align-items-center"
-            to={`/embark/contracts/${props.match.params.contractName}/overview`}
+            to={`/embark/contracts/${match.params.contractName}/overview`}
             icon="corner-left-up"
             RootComponent={withRouter(NavLink)}
           >
-            Back to {props.match.params.contractName}
+            Back to {match.params.contractName}
           </List.GroupItem>
           <List.GroupItem
             className="d-flex align-items-center"
-            to={`/embark/contracts/${props.match.params.contractName}/deployment`}
+            to={`/embark/contracts/${match.params.contractName}/deployment`}
             icon="users"
             RootComponent={withRouter(NavLink)}
           >
@@ -35,7 +36,7 @@ const ContractLayout = (props) => (
           </List.GroupItem>
           <List.GroupItem
             className="d-flex align-items-center"
-            to={`/embark/contracts/${props.match.params.contractName}/functions`}
+            to={`/embark/contracts/${match.params.contractName}/functions`}
             icon="book-open"
             RootComponent={withRouter(NavLink)}
           >
@@ -43,7 +44,7 @@ const ContractLayout = (props) => (
           </List.GroupItem>
           <List.GroupItem
             className="d-flex align-items-center"
-            to={`/embark/contracts/${props.match.params.contractName}/source`}
+            to={`/embark/contracts/${match.params.contractName}/source`}
             icon="activity"
             RootComponent={withRouter(NavLink)}
           >
@@ -51,7 +52,7 @@ const ContractLayout = (props) => (
           </List.GroupItem>
           <List.GroupItem
             className="d-flex align-items-center"
-            to={`/embark/contracts/${props.match.params.contractName}/profiler`}
+            to={`/embark/contracts/${match.params.contractName}/profiler`}
             icon="server"
             RootComponent={withRouter(NavLink)}
           >
@@ -59,7 +60,7 @@ const ContractLayout = (props) => (
           </List.GroupItem>
           <List.GroupItem
             className="d-flex align-items-center"
-            to={`/embark/contracts/${props.match.params.contractName}/logger`}
+            to={`/embark/contracts/${match.params.contractName}/logger`}
             icon="chevrons-right"
             RootComponent={withRouter(NavLink)}
           >
@@ -70,9 +71,10 @@ const ContractLayout = (props) => (
     </Grid.Col>
     <Grid.Col md={9}>
       <Switch>
-        <Route exact path="/embark/contracts/:contractName/logger" component={ContractLoggerContainer} />
+        <Route exact path="/embark/contracts/:contractName/overview" component={ContractContainer} />
+        <Route exact path="/embark/contracts/:contractName/source" component={ContractSourceContainer} />
         <Route exact path="/embark/contracts/:contractName/profiler" component={ContractProfileContainer} />
-        <ContractContainer />
+        <Route exact path="/embark/contracts/:contractName/logger" component={ContractLoggerContainer} />
       </Switch>
     </Grid.Col>
   </Grid.Row>

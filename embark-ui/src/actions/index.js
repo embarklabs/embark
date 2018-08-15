@@ -104,6 +104,13 @@ export const contractProfile = {
   failure: (error) => action(CONTRACT_PROFILE[FAILURE], {error})
 };
 
+export const CONTRACT_FILE = createRequestTypes('CONTRACT_FILE');
+export const contractFile = {
+  request: (filename) => action(CONTRACT_FILE[REQUEST], {filename}),
+  success: (source, payload) => action(CONTRACT_FILE[SUCCESS], {contractFiles: [{source, filename: payload.filename}]}),
+  failure: (error) => action(CONTRACT_FILE[FAILURE], {error})
+};
+
 export const VERSIONS = createRequestTypes('VERSIONS');
 export const versions = {
   request: () => action(VERSIONS[REQUEST]),

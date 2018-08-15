@@ -14,7 +14,7 @@ class Fiddle extends React.Component {
 
   render() {
     const {onCodeChange, value, errors, warnings} = this.props;
-    const annotations = errors.map((error) => { return error.annotation; }).concat(warnings.map(warning => { return warning.annotation; }));
+    const annotations = errors && errors.map((error) => { return error.annotation; }).concat(warnings.map(warning => { return warning.annotation; }));
     return (
       <React.Fragment>
 

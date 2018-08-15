@@ -4,17 +4,20 @@ import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
 
 import {contract as contractAction} from '../actions';
-import Contract from '../components/Contract';
-import DataWrapper from "../components/DataWrapper";
+import ContractLayout from '../components/ContractLayout';
 import {getContract} from "../reducers/selectors";
 
-class ContractContainer extends Component {
+class ContractLayoutContainer extends Component {
+  componentDidMount() {
+    this.props.fetchContract(this.props.match.params.contractName);
+  }
+
   render() {
-    return (
-      <DataWrapper shouldRender={this.props.contract !== undefined } {...this.props} render={({contract}) => (
-        <Contract contract={contract} />
-      )} />
-    );
+    if (this.props.contract){
+      return <ContractLayout />;
+    } else {
+      return <React.Fragment />;
+    }
   }
 }
 
@@ -26,9 +29,10 @@ function mapStateToProps(state, props) {
   };
 }
 
-ContractContainer.propTypes = {
+ContractLayoutContainer.propTypes = {
   match: PropTypes.object,
   contract: PropTypes.object,
+  fetchContract: PropTypes.func,
   error: PropTypes.string
 };
 
@@ -37,4 +41,4 @@ export default withRouter(connect(
   {
     fetchContract: contractAction.request
   }
-)(ContractContainer));
+)(ContractLayoutContainer));

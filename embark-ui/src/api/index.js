@@ -96,6 +96,10 @@ export function postEnsRecord(payload) {
   return post('/ens/register', payload);
 }
 
+export function fetchContractFile(payload) {
+  return get('/files/contracts', {params: payload});
+}
+
 export function listenToChannel(channel) {
   return new WebSocket(`${constants.wsEndpoint}/communication/listenTo/${channel}`);
 }

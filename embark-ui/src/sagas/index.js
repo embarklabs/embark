@@ -5,7 +5,7 @@ import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
 
 const {account, accounts, block, blocks, transaction, transactions, processes, commands, processLogs,
        contracts, contract, contractProfile, messageSend, versions, plugins, messageListen, fiddle,
-       ensRecord, ensRecords, contractLogs} = actions;
+       ensRecord, ensRecords, contractLogs, contractFile} = actions;
 
 function *doRequest(entity, apiFn, payload) {
   const {response, error} = yield call(apiFn, payload);
@@ -31,6 +31,7 @@ export const fetchContractLogs = doRequest.bind(null, contractLogs, api.fetchCon
 export const fetchContracts = doRequest.bind(null, contracts, api.fetchContracts);
 export const fetchContract = doRequest.bind(null, contract, api.fetchContract);
 export const fetchContractProfile = doRequest.bind(null, contractProfile, api.fetchContractProfile);
+export const fetchContractFile = doRequest.bind(null, contractFile, api.fetchContractFile);
 export const fetchFiddle = doRequest.bind(null, fiddle, api.fetchFiddle);
 export const sendMessage = doRequest.bind(null, messageSend, api.sendMessage);
 export const fetchEnsRecord = doRequest.bind(null, ensRecord, api.fetchEnsRecord);
@@ -86,6 +87,10 @@ export function *watchFetchContracts() {
 
 export function *watchFetchContractProfile() {
   yield takeEvery(actions.CONTRACT_PROFILE[actions.REQUEST], fetchContractProfile);
+}
+
+export function *watchFetchContractFile() {
+  yield takeEvery(actions.CONTRACT_FILE[actions.REQUEST], fetchContractFile);
 }
 
 export function *watchFetchVersions() {
@@ -193,11 +198,12 @@ export default function *root() {
     fork(watchFetchPlugins),
     fork(watchFetchBlocks),
     fork(watchFetchContracts),
+    fork(watchFetchContractProfile),
+    fork(watchFetchContractFile),
     fork(watchListenToMessages),
     fork(watchSendMessage),
     fork(watchFetchContract),
     fork(watchFetchTransaction),
-    fork(watchFetchContractProfile),
     fork(watchFetchFiddle),
     fork(watchFetchEnsRecord),
     fork(watchPostEnsRecords)

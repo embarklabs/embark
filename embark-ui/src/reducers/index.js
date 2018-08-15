@@ -12,6 +12,7 @@ const entitiesDefaultState = {
   processLogs: [],
   contracts: [],
   contractProfiles: [],
+  contractFiles: [],
   contractLogs: [],
   commands: [],
   messages: [],
@@ -46,6 +47,9 @@ const filtrer = {
   },
   contracts: function(contract, index, self) {
     return index === self.findIndex((t) => t.className === contract.className);
+  },
+  contractFiles: function(contractFile, index, self) {
+    return index === self.findIndex((c) => c.filename === contractFile.filename);
   },
   accounts: function(account, index, self) {
     return index === self.findIndex((t) => t.address === account.address);
@@ -95,7 +99,6 @@ function errorMessage(state = null, action) {
   return action.error || state;
 }
 
-/* eslint multiline-ternary: "off" */
 function errorEntities(state = {}, action) {
   if (!action.type.endsWith(SUCCESS)) {
     return state;
