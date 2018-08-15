@@ -28,6 +28,14 @@ class Storage extends React.Component {
     this.setState(this.state);
   }
 
+  checkEnter(e, func) {
+    if (e.key !== 'Enter') {
+      return;
+    }
+    e.preventDefault();
+    func.apply(this, [e]);
+  }
+
   handleFileUpload(e) {
     this.setState({fileToUpload: [e.target]});
   }
@@ -159,7 +167,7 @@ class Storage extends React.Component {
           : ''
       }
       <h3>Save text to storage</h3>
-      <Form inline>
+      <Form inline onKeyDown={(e) => this.checkEnter(e, this.setText)}>
         <FormGroup>
           <FormControl
             type="text"
@@ -171,7 +179,7 @@ class Storage extends React.Component {
       </Form>
 
       <h3>Load text from storage given an hash</h3>
-      <Form inline>
+      <Form inline onKeyDown={(e) => this.checkEnter(e, this.loadHash)}>
         <FormGroup>
           <FormControl
             type="text"
@@ -194,7 +202,7 @@ class Storage extends React.Component {
       </Form>
 
       <h3>Get file or image from storage</h3>
-      <Form inline>
+      <Form inline onKeyDown={(e) => this.checkEnter(e, this.loadFile)}>
         <FormGroup>
           <FormControl
             type="text"
@@ -208,7 +216,7 @@ class Storage extends React.Component {
       </Form>
 
       <h3>Register to IPNS</h3>
-      <Form inline>
+      <Form inline onKeyDown={(e) => this.checkEnter(e, this.ipnsRegister)}>
         <FormGroup>
           <FormControl
             type="text"
@@ -226,7 +234,7 @@ class Storage extends React.Component {
       </Form>
 
       <h3>Resolve name</h3>
-      <Form inline>
+      <Form inline onKeyDown={(e) => this.checkEnter(e, this.ipnsResolve)}>
         <FormGroup>
           <FormControl
             type="text"
