@@ -62,7 +62,7 @@ class Console {
       if (this.ipc.connected && this.ipc.isClient()) {
         return this.ipc.request('console:executeCmd', cmd, callback);
       }
-      callback(e.message);
+      callback(e);
     }
   }
 }

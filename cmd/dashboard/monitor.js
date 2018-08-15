@@ -368,10 +368,11 @@ class Monitor {
   executeCmd(cmd, cb) {
     const self = this;
     self.logText.log('console> '.bold.green + cmd);
-    self.console.executeCmd(cmd, function (_err, result) {
-      self.logText.log(result);
+    self.console.executeCmd(cmd, function (err, result) {
+      let message = err || result;
+      self.logText.log(message);
       if (cb) {
-        cb(result);
+        cb(message);
       }
     });
   }
