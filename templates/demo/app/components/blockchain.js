@@ -47,7 +47,7 @@ class Blockchain extends React.Component {
 
     if (EmbarkJS.isNewWeb3()) {
       SimpleStorage.methods.get().call()
-        .then(_value => this.setState({ valueGet: _value }))
+        .then(_value => this.setState({ valueGet: _value }));
       this._addToLog("SimpleStorage.methods.get(console.log)");
     } else {
       SimpleStorage.get()
