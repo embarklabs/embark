@@ -43,6 +43,14 @@ class ENS extends React.Component {
     this.setState({ [stateName]: e.target.value });
   }
 
+  checkEnter(e, func) {
+    if (e.key !== 'Enter') {
+      return;
+    }
+    e.preventDefault();
+    func.apply(this, [e]);
+  }
+
   registerSubDomain(e) {
     e.preventDefault();
     const self = this;
@@ -109,7 +117,7 @@ class ENS extends React.Component {
     return (<React.Fragment>
         {this.state.globalError && <Alert bsStyle="danger">{this.state.globalError}</Alert>}
         <h3>Resolve a name</h3>
-        <Form inline>
+        <Form inline onKeyDown={(e) => this.checkEnter(e, this.resolveName)}>
           <FormGroup>
             {this.state.responseResolve &&
             <Alert className="alert-result" bsStyle={this.state.isResolveError ? 'danger' : 'success'}>
@@ -124,7 +132,7 @@ class ENS extends React.Component {
         </Form>
 
         <h3>Lookup an address</h3>
-        <Form inline>
+        <Form inline onKeyDown={(e) => this.checkEnter(e, this.lookupAddress)}>
           <FormGroup>
             {this.state.responseLookup &&
             <Alert className="alert-result" bsStyle={this.state.isLookupError ? 'danger' : 'success'}>
@@ -139,7 +147,7 @@ class ENS extends React.Component {
         </Form>
 
         <h3>Register subdomain for embark</h3>
-        <Form inline>
+        <Form inline onKeyDown={(e) => this.checkEnter(e, this.registerSubDomain)}>
           <FormGroup>
             {this.state.responseRegister &&
             <Alert className="alert-result" bsStyle={this.state.isRegisterError ? 'danger' : 'success'}>
