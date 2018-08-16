@@ -99,6 +99,7 @@ class Cmd {
       .option('-c, --client [client]', __('Use a specific ethereum client or simulator (supported: %s)', 'geth, testrpc'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'debug')
       .option('--locale [locale]', __('language to use (default: en)'))
+      .option('--pipeline [pipeline]', __('webpack config to use (default: production)'))
       .description(__('deploy and build dapp at ') + 'dist/ (default: development)')
       .action(function (env, _options) {
         i18n.setOrDetectLocale(_options.locale);
@@ -107,6 +108,7 @@ class Cmd {
         _options.logLevel = _options.loglevel; // fix casing
         _options.onlyCompile = _options.contracts;
         _options.client = _options.client || 'geth';
+        _options.webpackConfigName = _options.pipeline || 'production';
         embark.build(_options);
       });
   }
@@ -123,6 +125,7 @@ class Cmd {
       .option('--logfile [logfile]', __('filename to output logs (default: %s)', 'none'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'debug')
       .option('--locale [locale]', __('language to use (default: en)'))
+      .option('--pipeline [pipeline]', __('webpack config to use (default: development)'))
       .description(__('run dapp (default: %s)', 'development'))
       .action(function (env, options) {
         i18n.setOrDetectLocale(options.locale);
@@ -135,7 +138,8 @@ class Cmd {
           runWebserver: !options.noserver,
           useDashboard: !options.nodashboard,
           logFile: options.logfile,
-          logLevel: options.loglevel
+          logLevel: options.loglevel,
+          webpackConfigName: options.pipeline || 'development'
         });
       });
   }

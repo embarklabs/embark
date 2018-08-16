@@ -84,7 +84,8 @@ class EmbarkController {
       logLevel: options.logLevel,
       context: self.context,
       useDashboard: options.useDashboard,
-      webServerConfig: webServerConfig
+      webServerConfig: webServerConfig,
+      webpackConfigName: options.webpackConfigName
     });
     engine.init();
 
@@ -191,7 +192,8 @@ class EmbarkController {
       logger: options.logger,
       config: options.config,
       plugins: options.plugins,
-      context: this.context
+      context: this.context,
+      webpackConfigName: options.webpackConfigName
     });
     engine.init();
 
