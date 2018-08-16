@@ -5,7 +5,7 @@ import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
 
 const {account, accounts, block, blocks, transaction, transactions, processes, commands, processLogs,
        contracts, contract, contractProfile, messageSend, versions, plugins, messageListen, fiddle,
-       ensRecord, ensRecords, contractLogs, contractFile} = actions;
+       ensRecord, ensRecords, contractLogs, contractFile, contractFunction} = actions;
 
 function *doRequest(entity, apiFn, payload) {
   const {response, error} = yield call(apiFn, payload);
@@ -32,6 +32,7 @@ export const fetchContracts = doRequest.bind(null, contracts, api.fetchContracts
 export const fetchContract = doRequest.bind(null, contract, api.fetchContract);
 export const fetchContractProfile = doRequest.bind(null, contractProfile, api.fetchContractProfile);
 export const fetchContractFile = doRequest.bind(null, contractFile, api.fetchContractFile);
+export const postContractFunction = doRequest.bind(null, contractFunction, api.postContractFunction);
 export const fetchFiddle = doRequest.bind(null, fiddle, api.fetchFiddle);
 export const sendMessage = doRequest.bind(null, messageSend, api.sendMessage);
 export const fetchEnsRecord = doRequest.bind(null, ensRecord, api.fetchEnsRecord);
@@ -91,6 +92,10 @@ export function *watchFetchContractProfile() {
 
 export function *watchFetchContractFile() {
   yield takeEvery(actions.CONTRACT_FILE[actions.REQUEST], fetchContractFile);
+}
+
+export function *watchPostContractFunction() {
+  yield takeEvery(actions.CONTRACT_FUNCTION[actions.REQUEST], postContractFunction);
 }
 
 export function *watchFetchVersions() {
@@ -200,6 +205,7 @@ export default function *root() {
     fork(watchFetchContracts),
     fork(watchFetchContractProfile),
     fork(watchFetchContractFile),
+    fork(watchPostContractFunction),
     fork(watchListenToMessages),
     fork(watchSendMessage),
     fork(watchFetchContract),

@@ -13,6 +13,7 @@ const entitiesDefaultState = {
   contracts: [],
   contractProfiles: [],
   contractFiles: [],
+  contractFunctions: [],
   contractLogs: [],
   commands: [],
   messages: [],

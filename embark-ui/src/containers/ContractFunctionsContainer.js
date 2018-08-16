@@ -3,10 +3,10 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
 
-import {contractProfile as contractProfileAction} from '../actions';
+import {contractProfile as contractProfileAction, contractFunction as contractFunctionAction} from '../actions';
 import ContractFunctions from '../components/ContractFunctions';
 import DataWrapper from "../components/DataWrapper";
-import {getContractProfile} from "../reducers/selectors";
+import {getContractProfile, getContractFunctions} from "../reducers/selectors";
 
 class ContractFunctionsContainer extends Component {
   componentDidMount() {
@@ -15,8 +15,12 @@ class ContractFunctionsContainer extends Component {
 
   render() {
     return (
-      <DataWrapper shouldRender={this.props.contractProfile !== undefined } {...this.props} render={({contractProfile}) => (
-        <ContractFunctions contractProfile={contractProfile} />
+      <DataWrapper shouldRender={this.props.contractProfile !== undefined }
+                   {...this.props}
+                   render={({contractProfile, contractFunctions, postContractFunction}) => (
+        <ContractFunctions contractProfile={contractProfile}
+                           contractFunctions={contractFunctions}
+                           postContractFunction={postContractFunction} />
       )} />
     );
   }
@@ -25,6 +29,7 @@ class ContractFunctionsContainer extends Component {
 function mapStateToProps(state, props) {
   return {
     contractProfile: getContractProfile(state, props.match.params.contractName),
+    contractFunctions: getContractFunctions(state, props.match.params.contractName),
     error: state.errorMessage,
     loading: state.loading
   };
@@ -33,6 +38,8 @@ function mapStateToProps(state, props) {
 ContractFunctionsContainer.propTypes = {
   match: PropTypes.object,
   contractProfile: PropTypes.object,
+  contractFunctions: PropTypes.arrayOf(PropTypes.object),
+  postContractFunction: PropTypes.func,
   fetchContractProfile: PropTypes.func,
   error: PropTypes.string
 };
@@ -40,6 +47,7 @@ ContractFunctionsContainer.propTypes = {
 export default withRouter(connect(
   mapStateToProps,
   {
-    fetchContractProfile: contractProfileAction.request
+    fetchContractProfile: contractProfileAction.request,
+    postContractFunction: contractFunctionAction.post
   }
 )(ContractFunctionsContainer));
