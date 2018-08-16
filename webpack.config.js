@@ -34,7 +34,7 @@ try {
 
 const entry = Object.keys(embarkAssets).reduce((obj, key) => {
   embarkAssets[key]
-    .filter(file => file.filename.match(/\.js$/))
+    .filter(file => file.filename.match(/\.jsx?$/))
     .forEach(file => {
       let file_path = file.path;
       if (!file.path.match(/^\.\//)) {
@@ -66,7 +66,7 @@ const base = {
         loader: 'url-loader?limit=100000'
       },
       {
-        test: /\.js$/,
+        test: /\.jsx?$/,
         loader: 'babel-loader',
         exclude: /(node_modules|bower_components|\.embark[\\/]versions)/,
         options: {
