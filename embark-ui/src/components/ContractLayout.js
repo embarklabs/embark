@@ -9,6 +9,7 @@ import {
 
 import ContractContainer from '../containers/ContractContainer';
 import ContractLoggerContainer from '../containers/ContractLoggerContainer';
+import ContractFunctionsContainer from '../containers/ContractFunctionsContainer';
 import ContractProfileContainer from '../containers/ContractProfileContainer';
 import ContractSourceContainer from '../containers/ContractSourceContainer';
 
@@ -72,6 +73,7 @@ const ContractLayout = ({match}) => (
     <Grid.Col md={9}>
       <Switch>
         <Route exact path="/embark/contracts/:contractName/overview" component={ContractContainer} />
+        <Route exact path="/embark/contracts/:contractName/functions" component={ContractFunctionsContainer} />
         <Route exact path="/embark/contracts/:contractName/source" component={ContractSourceContainer} />
         <Route exact path="/embark/contracts/:contractName/profiler" component={ContractProfileContainer} />
         <Route exact path="/embark/contracts/:contractName/logger" component={ContractLoggerContainer} />

@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
 
-import {contract as contractAction} from '../actions';
 import Contract from '../components/Contract';
 import DataWrapper from "../components/DataWrapper";
 import {getContract} from "../reducers/selectors";
@@ -27,14 +26,10 @@ function mapStateToProps(state, props) {
 }
 
 ContractContainer.propTypes = {
-  match: PropTypes.object,
   contract: PropTypes.object,
   error: PropTypes.string
 };
 
 export default withRouter(connect(
-  mapStateToProps,
-  {
-    fetchContract: contractAction.request
-  }
+  mapStateToProps
 )(ContractContainer));
