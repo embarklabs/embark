@@ -118,6 +118,13 @@ export const contractFunction = {
   failure: (error) => action(CONTRACT_FUNCTION[FAILURE], {error})
 };
 
+export const CONTRACT_DEPLOY = createRequestTypes('CONTRACT_DEPLOY');
+export const contractDeploy = {
+  post: (contractName, method, inputs) => action(CONTRACT_DEPLOY[REQUEST], {contractName, method, inputs}),
+  success: (result, payload) => action(CONTRACT_DEPLOY[SUCCESS], {contractDeploys: [{...result, ...payload}]}),
+  failure: (error) => action(CONTRACT_DEPLOY[FAILURE], {error})
+};
+
 export const VERSIONS = createRequestTypes('VERSIONS');
 export const versions = {
   request: () => action(VERSIONS[REQUEST]),

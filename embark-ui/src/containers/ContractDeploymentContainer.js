@@ -3,12 +3,12 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
 
-import {contractProfile as contractProfileAction, contractFunction as contractFunctionAction} from '../actions';
+import {contractProfile as contractProfileAction, contractDeploy as contractDeployAction} from '../actions';
 import ContractFunctions from '../components/ContractFunctions';
 import DataWrapper from "../components/DataWrapper";
-import {getContractProfile, getContractFunctions} from "../reducers/selectors";
+import {getContractProfile, getContractDeploys} from "../reducers/selectors";
 
-class ContractFunctionsContainer extends Component {
+class ContractDeploymentContainer extends Component {
   componentDidMount() {
     this.props.fetchContractProfile(this.props.match.params.contractName);
   }
@@ -17,11 +17,12 @@ class ContractFunctionsContainer extends Component {
     return (
       <DataWrapper shouldRender={this.props.contractProfile !== undefined }
                    {...this.props}
-                   render={({contractProfile, contractFunctions, postContractFunction}) => (
+                   render={({contractProfile, contractDeploys, postContractDeploy}) => (
         <ContractFunctions contractProfile={contractProfile}
-                           contractFunctions={contractFunctions}
-                           postContractFunction={postContractFunction}/>
-      )} />
+                           contractFunctions={contractDeploys}
+                           onlyConstructor
+                           postContractFunction={postContractDeploy}/>
+     )} />
     );
   }
 }
@@ -29,17 +30,17 @@ class ContractFunctionsContainer extends Component {
 function mapStateToProps(state, props) {
   return {
     contractProfile: getContractProfile(state, props.match.params.contractName),
-    contractFunctions: getContractFunctions(state, props.match.params.contractName),
+    contractDeploys: getContractDeploys(state, props.match.params.contractName),
     error: state.errorMessage,
     loading: state.loading
   };
 }
 
-ContractFunctionsContainer.propTypes = {
+ContractDeploymentContainer.propTypes = {
   match: PropTypes.object,
   contractProfile: PropTypes.object,
   contractFunctions: PropTypes.arrayOf(PropTypes.object),
-  postContractFunction: PropTypes.func,
+  postContractDeploy: PropTypes.func,
   fetchContractProfile: PropTypes.func,
   error: PropTypes.string
 };
@@ -48,6 +49,6 @@ export default withRouter(connect(
   mapStateToProps,
   {
     fetchContractProfile: contractProfileAction.request,
-    postContractFunction: contractFunctionAction.post
+    postContractDeploy: contractDeployAction.post
   }
-)(ContractFunctionsContainer));
+)(ContractDeploymentContainer));
