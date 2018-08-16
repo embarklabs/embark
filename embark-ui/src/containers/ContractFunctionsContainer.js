@@ -20,7 +20,8 @@ class ContractFunctionsContainer extends Component {
                    render={({contractProfile, contractFunctions, postContractFunction}) => (
         <ContractFunctions contractProfile={contractProfile}
                            contractFunctions={contractFunctions}
-                           postContractFunction={postContractFunction} />
+                           constructor={true}
+                           postContractFunction={postContractFunction}/>
       )} />
     );
   }

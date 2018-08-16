@@ -5,13 +5,29 @@ import {
   Grid,
   Form,
   Button,
+  List,
   Card
 } from "tabler-react";
 
 class ContractFunction extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = { inputs: {} };
+  }
+
+  buttonTitle() {
+    const { method } =this.props;
+    if (method.name === 'constructor') {
+      return 'Deploy';
+    }
+
+    return (method.mutability === 'view' || method.mutability === 'pure') ? 'Call' : 'Send';
+  }
+
+  inputsAsArray(){
+    return this.props.method.inputs
+      .map(input => this.state.inputs[input.name])
+      .filter(value => value);
   }
 
   handleChange(e, name) {
@@ -22,8 +38,11 @@ class ContractFunction extends Component {
 
   handleCall(e) {
     e.preventDefault();
-    const inputs = this.props.method.inputs.map(input => this.state.inputs[input.name]);
-    this.props.postContractFunction(this.props.contractProfile.name, this.props.method.name, inputs);
+    this.props.postContractFunction(this.props.contractProfile.name, this.props.method.name, this.inputsAsArray());
+  }
+
+  callDisabled() {
+    return this.inputsAsArray().length !== this.props.method.inputs.length;
   }
 
   render() {
@@ -34,17 +53,25 @@ class ContractFunction extends Component {
             <Card.Header>
               <Card.Title>{this.props.method.name}</Card.Title>
             </Card.Header>
-            {this.props.method.inputs.length > 0 &&
             <Card.Body>
               {this.props.method.inputs.map(input => (
                 <Form.Group key={input.name} label={input.name}>
                   <Form.Input placeholder={input.type} onChange={(e) => this.handleChange(e, input.name)}/>
                 </Form.Group>
               ))}
+              <Button color="primary" disabled={this.callDisabled()} onClick={(e) => this.handleCall(e)}>
+                {this.buttonTitle()}
+              </Button>
             </Card.Body>
-            }
             <Card.Footer>
-              <Button color="primary" onClick={(e) => this.handleCall(e)}>Call</Button>
+              <List>
+                {this.props.contractFunctions.map(contractFunction => (
+                  <List.Item key={contractFunction.result}>
+                    {contractFunction.inputs.length > 0 && <p>Inputs: {contractFunction.inputs.join(', ')}</p>}
+                    <strong>Result: {contractFunction.result}</strong>
+                  </List.Item>
+                ))}
+              </List>
             </Card.Footer>
           </Card>
         </Grid.Col>
@@ -53,7 +80,6 @@ class ContractFunction extends Component {
   }
 }
 
-
 ContractFunction.propTypes = {
   contractProfile: PropTypes.object,
   method: PropTypes.object,
@@ -61,21 +87,39 @@ ContractFunction.propTypes = {
   postContractFunction: PropTypes.func
 };
 
+const filterContractFunctions = (contractFunctions, contractName, method) => {
+  return contractFunctions.filter((contractFunction) => (
+    contractFunction.contractName === contractName && contractFunction.method === method
+  ));
+};
+
 const ContractFunctions = (props) => {
   const {contractProfile} = props;
+
   return (
     <Page.Content title={contractProfile.name + ' Functions'}>
       {contractProfile.methods
-        .filter(method => method.name !== 'constructor')
-        .map(method => <ContractFunction key={method.name} method={method} {...props} />)}
+        .filter((method) => {
+          return props.onlyConstructor ? method.name === 'constructor' : method.name !== 'constructor';
+        })
+        .map(method => <ContractFunction key={method.name}
+                                         method={method}
+                                         contractFunctions={filterContractFunctions(props.contractFunctions, contractProfile.name, method.name)}
+                                         contractProfile={contractProfile}
+                                         postContractFunction={props.postContractFunction} />)}
     </Page.Content>
-  )
+  );
 };
 
 ContractFunctions.propTypes = {
+  onlyConstructor: PropTypes.bool,
   contractProfile: PropTypes.object,
   contractFunctions: PropTypes.arrayOf(PropTypes.object),
   postContractFunction: PropTypes.func
+};
+
+ContractFunctions.defaultProps = {
+  onlyConstructor: false
 };
 
 export default ContractFunctions;
