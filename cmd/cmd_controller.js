@@ -411,6 +411,22 @@ class EmbarkController {
     console.log(__("reset done!").green);
   }
 
+  ejectWebpack() {
+    var fs = require('../lib/core/fs.js');
+    var dappConfig = fs.dappPath('webpack.config.js');
+    var embarkConfig = fs.embarkPath('webpack.config.js');
+    if (fs.existsSync(dappConfig)) {
+      console.error(`${dappConfig} ${__('already exists')}`.bold.red);
+      console.error(__('not overwritten, rename or re/move the file and re-run this command').yellow);
+      process.exit(1);
+    } else {
+      fs.copySync(embarkConfig, dappConfig);
+      console.log(`${embarkConfig}`.green);
+      console.log(__('copied to').dim.green);
+      console.log(`${dappConfig}`.green);
+    }
+  }
+
   upload(options) {
     this.context = options.context || [constants.contexts.upload, constants.contexts.build];
 

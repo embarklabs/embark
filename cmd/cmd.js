@@ -18,6 +18,7 @@ class Cmd {
     this.simulator();
     this.test();
     this.reset();
+    this.ejectWebpack();
     this.graph();
     this.upload();
     this.versionCmd();
@@ -277,6 +278,15 @@ class Cmd {
           embarkConfig: 'embark.json', interceptLogs: false
         });
         embark.reset();
+      });
+  }
+
+  ejectWebpack() {
+    program
+      .command('eject-webpack')
+      .description(__('copy the default webpack config into your dapp for customization'))
+      .action(function () {
+        embark.ejectWebpack();
       });
   }
 
