@@ -27,7 +27,7 @@ function mapStateToProps(state) {
 
 ContractsContainer.propTypes = {
   contracts: PropTypes.array,
-  fetchContracts: PropTypes.func,
+  fetchContracts: PropTypes.func
 };
 
 export default connect(

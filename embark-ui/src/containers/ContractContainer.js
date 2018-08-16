@@ -26,6 +26,7 @@ function mapStateToProps(state, props) {
 }
 
 ContractContainer.propTypes = {
+  match: PropTypes.object,
   contract: PropTypes.object,
   error: PropTypes.string
 };

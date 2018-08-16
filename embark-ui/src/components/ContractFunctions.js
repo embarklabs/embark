@@ -18,7 +18,7 @@ const ContractFunction = ({method}) => (
         {method.inputs.length > 0 &&
           <Card.Body>
             {method.inputs.map(input => (
-              <Form.Group label={input.name}>
+              <Form.Group key={input.name} label={input.name}>
                 <Form.Input placeholder={input.type}/>
               </Form.Group>
             ))}
@@ -32,11 +32,15 @@ const ContractFunction = ({method}) => (
   </Grid.Row>
 );
 
+ContractFunction.propTypes = {
+  method: PropTypes.object
+};
+
 const ContractFunctions = ({contractProfile}) => (
   <Page.Content title={contractProfile.name + ' Functions'}>
     {contractProfile.methods
       .filter(method => method.name !== 'constructor')
-      .map(method => <ContractFunction method={method} />)}
+      .map(method => <ContractFunction key={method.name} method={method} />)}
   </Page.Content>
 );
 
