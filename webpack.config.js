@@ -1,9 +1,19 @@
 /* global module process require */
 
-// some packages, plugins, and presets referenced/required in this webpack
+// NOTE: some packages, plugins, and presets referenced/required in this webpack
 // config are deps of embark and will be transitive dapp deps unless specified
 // in the dapp's own package.json, perhaps with a different version/range or
 // other specifier
+
+// NOTE: embark modifies process.env.NODE_PATH so that embark's own
+// node_modules directory will be searched by node's require(). That allows an
+// ejected version of this config, inside a dapp, to function correctly without
+// embark being an explicit dependency of the dapp.  However, webpack and babel
+// do not directly support NODE_PATH, so in various parts of the config,
+// modules such as plugins and presets must be resolved with
+// require.resolve(). That is only necessary if a module is in embark's
+// node_modules; if it's in the dapp's node_modules then it can be specified
+// directly
 
 // there's a bug in pkg clone-deep re: regex; for now use lodash.clonedeep
 // see: https://github.com/jonschlinkert/clone-deep/pull/14
