@@ -18,6 +18,7 @@
 // there's a bug in pkg clone-deep re: regex; for now use lodash.clonedeep
 // see: https://github.com/jonschlinkert/clone-deep/pull/14
 const cloneDeep = require('lodash.clonedeep');
+const CompressionPlugin = require('compression-webpack-plugin');
 const fs = require('fs');
 const glob = require('glob');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
@@ -156,6 +157,7 @@ devBabelLoader.options.compact = false;
 const production = cloneDeep(base);
 production.mode = 'production';
 production.name = 'production';
+production.plugins.push(new CompressionPlugin());
 
 // export a list of named configs
 // -----------------------------------------------------------------------------
