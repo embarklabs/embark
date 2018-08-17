@@ -154,7 +154,8 @@ const development = cloneDeep(base);
 // full source maps increase build time but are useful during dapp development
 development.devtool = 'source-map';
 development.mode = 'development';
-// alternative: development.mode = 'none';
+// alternatively:
+// development.mode = 'none';
 development.name = 'development';
 const devBabelLoader = development.module.rules[3];
 devBabelLoader.options.compact = false;
