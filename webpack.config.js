@@ -152,10 +152,7 @@ const base = {
 
 const development = cloneDeep(base);
 // full source maps increase build time but are useful during dapp development
-// HOWEVER: source maps are broken (completely? not sure) until a webpack
-// chunk corresponds to a file being written to buildDir per embark.json;
-// currently embark is concatenating webpack chunks
-// dev.devtool = 'source-map';
+development.devtool = 'source-map';
 development.mode = 'development';
 // alternative: development.mode = 'none';
 development.name = 'development';
