@@ -5,11 +5,6 @@ require('colors');
 
 let version = require('../package.json').version;
 
-// Set PWD to CWD since Windows doesn't have a value for PWD
-if (!process.env.PWD) {
-  process.env.PWD = process.cwd();
-}
-
 class EmbarkController {
 
   constructor(options) {

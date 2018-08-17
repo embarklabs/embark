@@ -1,7 +1,29 @@
 const program = require('commander');
 const EmbarkController = require('./cmd_controller.js');
 const i18n = require('../lib/core/i18n/i18n.js');
+const utils = require('../lib/utils/utils.js');
+
 let embark = new EmbarkController;
+
+// set PWD to process.cwd() since Windows doesn't have a value for PWD
+if (!process.env.PWD) {
+  process.env.PWD = process.cwd();
+}
+
+// set the anchor for embark's fs.dappPath()
+if (!process.env.DAPP_PATH) {
+  process.env.DAPP_PATH = process.env.PWD;
+}
+
+// set the anchor for embark's fs.embarkPath()
+if (!process.env.EMBARK_PATH) {
+  process.env.EMBARK_PATH = utils.joinPath(__dirname, '..');
+}
+
+// enable lookup of embark's own node_modules from within dapp scripts
+process.env.NODE_PATH = utils.joinPath(process.env.EMBARK_PATH, 'node_modules')
+  + (process.platform === 'win32' ? ';' : ':')
+  + (process.env.NODE_PATH || '');
 
 class Cmd {
   constructor() {
