@@ -29,6 +29,7 @@ const embarkPath = process.env.EMBARK_PATH;
 
 const embarkAliases = require(path.join(dappPath, '.embark/embark-aliases.json'));
 const embarkAssets = require(path.join(dappPath, '.embark/embark-assets.json'));
+const embarkJson = require(path.join(dappPath, 'embark.json'));
 
 // it's important to `embark reset` if a pkg version is specified in
 // embark.json and changed/removed later, otherwise pkg resolution may behave
