@@ -2,8 +2,8 @@
 
 // some packages, plugins, and presets referenced/required in this webpack
 // config are deps of embark and will be transitive dapp deps unless specified
-// in the dapp's own package.json (perhaps with a different version/range or
-// other specifier)
+// in the dapp's own package.json, perhaps with a different version/range or
+// other specifier
 
 // there's a bug in pkg clone-deep re: regex; for now use lodash.clonedeep
 // see: https://github.com/jonschlinkert/clone-deep/pull/14
@@ -21,10 +21,11 @@ const embarkAssets = require(path.join(dappPath, '.embark/embark-assets.json'));
 // embark.json and changed/removed later, otherwise pkg resolution may behave
 // unexpectedly, e.g. a different version may get used owing to lexographical
 // order or because .embark/versions is still in place even though defaults are
-// desired; once embark is always a lib within a dapp's node_modules tree,
-// embark's pkg-version management functionality can probably be deprecated in
-// favor of a dapp simply specifying dependencies in its own package.json,
-// e.g. a different ipfs version than embark's default
+// desired; once embark and its dependencies are always resolvable (in the
+// usual node sense) relative to a dapp, embark's pkg version-management
+// functionality can probably be deprecated in favor of a dapp simply
+// specifying dependencies in its own package.json, e.g. a different ipfs
+// version than embark's default
 let versions;
 try {
   versions = glob.sync(path.join(dappPath, '.embark/versions/*/*'));
@@ -133,8 +134,8 @@ const development = cloneDeep(base);
 // chunk corresponds to a file being written to buildDir per embark.json;
 // currently embark is concatenating webpack chunks
 // dev.devtool = 'source-map';
-// alternative: development.mode = 'none'
 development.mode = 'development';
+// alternative: development.mode = 'none';
 development.name = 'development';
 const devBabelLoader = development.module.rules[3];
 devBabelLoader.options.compact = false;
