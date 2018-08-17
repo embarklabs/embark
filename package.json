@@ -35,6 +35,7 @@
     "clone-deep": "^4.0.0",
     "colors": "^1.1.2",
     "commander": "^2.15.1",
+    "compression-webpack-plugin": "^1.1.11",
     "css-loader": "^0.28.11",
     "decompress": "^4.2.0",
     "deep-equal": "^1.0.1",
