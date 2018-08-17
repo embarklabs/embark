@@ -47,18 +47,19 @@ try {
   versions = [];
 }
 
-const entry = Object.keys(embarkAssets).reduce((obj, key) => {
-  embarkAssets[key]
-    .filter(file => file.filename.match(/\.jsx?$/))
-    .forEach(file => {
-      let file_path = file.path;
-      if (!file.path.match(/^\.\//)) {
-        file_path = './' + file_path;
-      }
-      obj[file.path] = file_path;
-    });
-  return obj;
-}, {});
+const entry = Object.keys(embarkAssets)
+      .filter(key => key.match(/\.js?$/))
+      .reduce((obj, key) => {
+        obj[key] = embarkAssets[key]
+          .map(file => {
+            let file_path = file.path;
+            if (!file.path.match(/^\.\//)) {
+              file_path = './' + file_path;
+            }
+            return file_path;
+          });
+        return obj;
+      }, {});
 
 // base config
 // -----------------------------------------------------------------------------
