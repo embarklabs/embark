@@ -11,7 +11,7 @@
 // embark being an explicit dependency of the dapp.  However, webpack and babel
 // do not directly support NODE_PATH, so in various parts of the config,
 // modules such as plugins and presets must be resolved with
-// require.resolve(). That is only necessary if a module is in embark's
+// require.resolve(). That is only necessary if a plugin/preset is in embark's
 // node_modules; if it's in the dapp's node_modules then it can be specified
 // directly
 
