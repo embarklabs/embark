@@ -120,7 +120,7 @@ const base = {
     // see: https://github.com/webpack/webpack/issues/6522#issuecomment-371120689
     globalObject: 'typeof self !== \'undefined\' ? self : this',
     libraryTarget: 'umd',
-    path: path.join(dappPath, '.embark')
+    path: path.join(dappPath, embarkJson.buildDir)
   },
   plugins: [
     new HardSourceWebpackPlugin()
