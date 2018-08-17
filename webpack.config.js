@@ -25,6 +25,8 @@ const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const path = require('path');
 
 const dappPath = process.env.DAPP_PATH;
+const embarkPath = process.env.EMBARK_PATH;
+
 const embarkAliases = require(path.join(dappPath, '.embark/embark-aliases.json'));
 const embarkAssets = require(path.join(dappPath, '.embark/embark-assets.json'));
 
@@ -84,12 +86,12 @@ const base = {
         options: {
           plugins: [
             [
-              'module-resolver', {
+              require.resolve('babel-plugin-module-resolver'), {
                 'alias': embarkAliases
               }
             ],
             [
-              '@babel/plugin-transform-runtime', {
+              require.resolve('@babel/plugin-transform-runtime'), {
                 corejs: 2,
                 useESModules: true
               }
@@ -97,14 +99,14 @@ const base = {
           ],
           presets: [
             [
-              '@babel/preset-env', {
+              require.resolve('@babel/preset-env'), {
                 modules: false,
                 targets: {
                   browsers: ['last 1 version', 'not dead', '> 0.2%']
                 }
               }
             ],
-            '@babel/preset-react'
+            require.resolve('@babel/preset-react')
           ]
         }
       }
@@ -131,8 +133,15 @@ const base = {
     alias: embarkAliases,
     modules: [
       ...versions,
-      'node_modules'
+      'node_modules',
+      path.join(embarkPath, 'node_modules')
     ]
+  },
+  resolveLoader: {
+    modules: [
+      'node_modules',
+      path.join(embarkPath, 'node_modules')
+    ],
   }
 };
 
