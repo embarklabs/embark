@@ -175,6 +175,13 @@ export const fiddle = {
   failure: (error) => action(FIDDLE[FAILURE], {error})
 };
 
+export const FIDDLE_DEPLOY = createRequestTypes('FIDDLE_DEPLOY');
+export const fiddleDeploy = {
+  request: (compiledCode) => action(FIDDLE_DEPLOY[REQUEST], {compiledCode}),
+  success: () => action(FIDDLE_DEPLOY[SUCCESS]),
+  failure: (error) => action(FIDDLE_DEPLOY[FAILURE], {error})
+};
+
 // Web Socket
 export const WATCH_NEW_PROCESS_LOGS = 'WATCH_NEW_PROCESS_LOGS';
 export const WATCH_NEW_CONTRACT_LOGS = 'WATCH_NEW_CONTRACT_LOGS';

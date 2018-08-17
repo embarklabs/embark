@@ -124,6 +124,10 @@ export function webSocketBlockHeader() {
   return new WebSocket(`${constants.wsEndpoint}/blockchain/blockHeader`);
 }
 
-export function fetchFiddle(payload) {
+export function postFiddle(payload) {
   return post('/contract/compile', {code: payload.codeToCompile});
+}
+
+export function postFiddleDeploy(payload) {
+  return post('/contract/deploy', {compiledContract: payload.compiledCode.compilationResult});
 }

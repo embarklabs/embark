@@ -27,7 +27,7 @@ class FiddleContainer extends Component {
     this.setState({value: newValue});
     if (this.compileTimeout) clearTimeout(this.compileTimeout);
     this.compileTimeout = setTimeout(() => {
-      this.props.fetchFiddle(newValue);
+      this.props.postFiddle(newValue);
     }, 1000);
 
   }
@@ -136,14 +136,13 @@ function mapStateToProps(state) {
 FiddleContainer.propTypes = {
   fiddle: PropTypes.object,
   error: PropTypes.string,
-  fetchFiddle: PropTypes.func,
+  postFiddle: PropTypes.func,
   loading: PropTypes.bool
 };
 
 export default connect(
   mapStateToProps,
   {
-    fetchFiddle: fiddleAction.request
-    //fetchBlock: blockAction.request
+    postFiddle: fiddleAction.request
   },
 )(FiddleContainer);

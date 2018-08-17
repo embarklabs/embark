@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Badge, Icon} from 'tabler-react';
 import PropTypes from 'prop-types';
+import FiddleDeployButton from './FiddleDeployButton';
 
 class FiddleResultsSummary extends Component{
 
@@ -21,7 +22,12 @@ class FiddleResultsSummary extends Component{
     }
     else {
       if(hasResult && !errors.length){
-        renderings.push(<Badge key="success" className="badge-link" color="success">Compiled</Badge>);
+        renderings.push(
+          <React.Fragment key="success">
+            <Badge className="badge-link" color="success">Compiled</Badge>
+            <FiddleDeployButton />
+          </React.Fragment>
+        );
       }
       if(errors.length) renderings.push(
         <React.Fragment key="errors">
