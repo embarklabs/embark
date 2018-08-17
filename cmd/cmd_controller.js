@@ -409,7 +409,7 @@ class EmbarkController {
   ejectWebpack() {
     var fs = require('../lib/core/fs.js');
     var dappConfig = fs.dappPath('webpack.config.js');
-    var embarkConfig = fs.embarkPath('webpack.config.js');
+    var embarkConfig = fs.embarkPath('lib/pipeline', 'webpack.config.js');
     if (fs.existsSync(dappConfig)) {
       console.error(`${dappConfig} ${__('already exists')}`.bold.red);
       console.error(__('not overwritten, rename or re/move the file and re-run this command').yellow);
