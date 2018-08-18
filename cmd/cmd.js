@@ -24,7 +24,7 @@ if (!process.env.EMBARK_PATH) {
 // this makes embark's dependencies trasitive dependencies of a dapp without the
 // dapp explicitly specifying embark as a dependency in the dapp's package.json
 process.env.NODE_PATH = utils.joinPath(process.env.EMBARK_PATH, 'node_modules')
-  + (process.platform === 'win32' ? ';' : ':')
+  + (process.env.NODE_PATH ? (process.platform === 'win32' ? ';' : ':') : '')
   + (process.env.NODE_PATH || '');
 
 class Cmd {
