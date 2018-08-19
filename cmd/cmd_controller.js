@@ -256,7 +256,8 @@ class EmbarkController {
       logFile: options.logFile,
       logLevel: options.logLevel,
       context: this.context,
-      ipcRole: 'client'
+      ipcRole: 'client',
+      webpackConfigName: options.webpackConfigName
     });
     engine.init();
     async.waterfall([
