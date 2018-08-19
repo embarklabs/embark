@@ -20,9 +20,12 @@ if (!process.env.EMBARK_PATH) {
   process.env.EMBARK_PATH = utils.joinPath(__dirname, '..');
 }
 
-// enable lookup of *global* embark's own node_modules from within dapp scripts
-// this makes embark's dependencies trasitive dependencies of a dapp without the
-// dapp explicitly specifying embark as a dependency in the dapp's package.json
+// NOTE: setting NODE_PATH at runtime won't effect lookup behavior in the
+// current process, but will take effect in child processes; this enables
+// lookup of *global* embark's own node_modules from within dapp scripts (such
+// as an ejected webpack.config.js), making embark's dependencies trasitive
+// dependencies of a dapp without the dapp explicitly specifying embark as a
+// dependency in the dapp's package.json
 process.env.NODE_PATH = utils.joinPath(process.env.EMBARK_PATH, 'node_modules')
   + (process.env.NODE_PATH ? (process.platform === 'win32' ? ';' : ':') : '')
   + (process.env.NODE_PATH || '');
