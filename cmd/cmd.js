@@ -179,6 +179,7 @@ class Cmd {
       .option('--logfile [logfile]', __('filename to output logs (default: %s)', 'none'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'debug')
       .option('--locale [locale]', __('language to use (default: en)'))
+      .option('--pipeline [pipeline]', __('webpack config to use (default: development)'))
       .description(__('Start the Embark console'))
       .action(function (env, options) {
         i18n.setOrDetectLocale(options.locale);
@@ -187,7 +188,8 @@ class Cmd {
           client: options.client || 'geth',
           locale: options.locale,
           logFile: options.logfile,
-          logLevel: options.loglevel
+          logLevel: options.loglevel,
+          webpackConfigName: options.pipeline || 'development'
         });
       });
   }
