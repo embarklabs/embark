@@ -162,10 +162,10 @@ contract x {
 
       var bytecode = contractSource.contractBytecode['x'];
 
-      assert.deepEqual({instruction: 'PUSH1', sourceMap: '26:487:0:-', seen: false}, bytecode[0]);
-      assert.deepEqual({instruction: 'PUSH1', sourceMap: '', seen: false}, bytecode[2]);
-      assert.deepEqual({instruction: 'MSTORE', sourceMap: '', seen: false}, bytecode[4]);
-      assert.deepEqual({instruction: 'PUSH1', sourceMap: '', seen: false}, bytecode[5]);
+      assert.deepEqual({instruction: 'PUSH1', sourceMap: {offset: 26, length: 487, id: 0}, seen: false}, bytecode[0]);
+      assert.deepEqual({instruction: 'PUSH1', sourceMap: SourceMap.empty(), seen: false}, bytecode[2]);
+      assert.deepEqual({instruction: 'MSTORE', sourceMap: SourceMap.empty(), seen: false}, bytecode[4]);
+      assert.deepEqual({instruction: 'PUSH1', sourceMap: SourceMap.empty(), seen: false}, bytecode[5]);
 
       done();
     });
@@ -193,6 +193,7 @@ contract x {
 
       var trace = JSON.parse(loadFixture('geth-debugtrace-output-h-5.json'));
       var coverage = cs.generateCodeCoverage(trace);
+      assert.exists(coverage);
 
       done();
     });
@@ -213,7 +214,7 @@ contract x {
       // In the fixture, the branch has an ID of 61, and the function has the
       // ID of 63
       assert.deepEqual([1,1], coverage.b['61']);
-      assert.equal(2, coverage.f['63']);
+      assert.equal(4, coverage.f['63']);
 
       done();
     });
@@ -230,6 +231,28 @@ describe('SourceMap', () => {
 
       assert.equal(365, result.offset);
       assert.equal(63, result.length);
+
+      done();
+    });
+  });
+
+  describe('#createRelativeTo', () => {
+    it('should return an empty source map on an empty string', (done) => {
+      var sm1 = new SourceMap('192:10:0');
+      var sm2 = sm1.createRelativeTo('');
+
+      assert.equal('', sm2.toString());
+
+      done();
+    });
+
+    it('should return the correct source map on a relative string', (done) => {
+      var sm1 = new SourceMap('192:10:0');
+      var sm2 = sm1.createRelativeTo(':14');
+
+      assert.equal(192, sm2.offset);
+      assert.equal(14, sm2.length);
+      assert.equal(0, sm2.id);
 
       done();
     });
