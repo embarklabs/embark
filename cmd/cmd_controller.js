@@ -411,16 +411,22 @@ class EmbarkController {
     var fs = require('../lib/core/fs.js');
     var dappConfig = fs.dappPath('webpack.config.js');
     var embarkConfig = fs.embarkPath('lib/pipeline', 'webpack.config.js');
-    if (fs.existsSync(dappConfig)) {
-      console.error(`${dappConfig} ${__('already exists')}`.bold.red);
-      console.error(__('not overwritten, rename or re/move the file and re-run this command').yellow);
-      process.exit(1);
-    } else {
-      fs.copySync(embarkConfig, dappConfig);
-      console.log(`${embarkConfig}`.green);
-      console.log(__('copied to').dim.green);
-      console.log(`${dappConfig}`.green);
+    let ext = 1;
+    let dappConfigOld = dappConfig;
+    while (fs.existsSync(dappConfigOld)) {
+      dappConfigOld = dappConfig + `.${ext}`;
+      ext++;
     }
+    if (dappConfigOld !== dappConfig) {
+      fs.copySync(dappConfig, dappConfigOld);
+      console.warn(`${dappConfig}`.yellow);
+      console.warn(__('copied to').dim.yellow);
+      console.warn(`${dappConfigOld}\n`.yellow);
+    }
+    fs.copySync(embarkConfig, dappConfig);
+    console.log(`${embarkConfig}`.green);
+    console.log(__('copied to').dim.green);
+    console.log(`${dappConfig}`.green);
   }
 
   upload(options) {
