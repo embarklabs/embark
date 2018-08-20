@@ -119,11 +119,7 @@ function loadingEntities(state = {}, action) {
     return state;
   }
   let newState = {};
-  for (let name of Object.keys(entitiesDefaultState)) {
-    if (action[name] && action[name].length > 0) {
-      newState[name] = action[name][0].loading || "Loading...";
-    }
-  }
+  newState[action.type].loading = action.loading;
   return {...state, ...newState};
 }
 

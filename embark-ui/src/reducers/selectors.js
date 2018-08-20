@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {REQUEST, SUCCESS, FAILURE, FIDDLE, FIDDLE_DEPLOY} from '../actions';
 
 export function getAccounts(state) {
   return state.entities.accounts;
@@ -108,7 +109,7 @@ export function getFiddle(state) {
   return { 
     data: _.last(state.entities.fiddles), 
     error: _.last(state.errorEntities.fiddles), 
-    loading: _.last(state.loadingEntities)
+    loading: state.loadingEntities[FIDDLE[REQUEST]]
   };
 }
 
