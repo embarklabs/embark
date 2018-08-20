@@ -21,5 +21,11 @@
   },
   "plugins": {
     "embark-service": {}
+  },
+  "options": {
+    "solc": {
+      "optimize": true,
+      "optimize-runs": 200
+    }
   }
 }
