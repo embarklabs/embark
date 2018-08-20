@@ -27,7 +27,15 @@ var apiObject = {
   logger: new TestLogger({}),
   events: TestEvents,
   config: {
-    contractDirectories: ['app/contracts/']
+    contractDirectories: ['app/contracts/'],
+    embarkConfig: {
+      options: {
+        solc: {
+          "optimize": true,
+          "optimize-runs": 200
+        }
+      }
+    }
   }
 };
 
