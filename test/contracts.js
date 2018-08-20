@@ -30,7 +30,15 @@ describe('embark.Contracts', function() {
       logger: new TestLogger({}),
       events: TestEvents,
       config: {
-        contractDirectories: ['app/contracts/']
+        contractDirectories: ['app/contracts/'],
+        embarkConfig: {
+          options: {
+            solc: {
+              "optimize": true,
+              "optimize-runs": 200
+            }
+          }
+        }
       }
     });
     let ipcObject = new Ipc({
@@ -39,7 +47,20 @@ describe('embark.Contracts', function() {
     plugins.loadInternalPlugin('solidity', {ipc: ipcObject});
 
     let events = new Events();
-    let compiler = new Compiler({events: events, logger: plugins.logger}, {plugins: plugins});
+    let embarkObject = {
+      events: events,
+      logger: plugins.logger,
+      embarkConfig: {
+        options: {
+          solc: {
+            "optimize": true,
+            "optimize-runs": 200
+          }
+        }
+      }
+    }
+
+    let compiler = new Compiler(embarkObject, {plugins: plugins});
 
     events.setCommandHandler("config:contractsConfig", function(cb) {
       cb(contractsConfig);
@@ -136,7 +157,15 @@ describe('embark.Contracts', function() {
       logger: new TestLogger({}),
       events: TestEvents,
       config: {
-        contractDirectories: ['app/contracts/']
+        contractDirectories: ['app/contracts/'],
+        embarkConfig: {
+          options: {
+            solc: {
+              "optimize": true,
+              "optimize-runs": 200
+            }
+          }
+        }
       }
     });
     let ipcObject = new Ipc({
