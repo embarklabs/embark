@@ -12,5 +12,12 @@
   "versions": {
     "solc": "0.4.24"
   },
-  "plugins": {}
+  "plugins": {
+  },
+  "options": {
+    "solc": {
+      "optimize": true,
+      "optimize-runs": 200
+    }
+  }
 }
