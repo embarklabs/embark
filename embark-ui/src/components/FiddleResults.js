@@ -1,6 +1,6 @@
 /* eslint {jsx-a11y/anchor-has-content:"off"} */
 import React, {Component} from 'react';
-import {Card, List, Badge, Icon} from 'tabler-react';
+import {Card, List, Badge, Icon, Dimmer} from 'tabler-react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -24,7 +24,7 @@ class FiddleResults extends Component {
     this.setState(updatedState);
   }
 
-  _getFormatted(errors, errorType){
+  _getFormatted(errors, errorType, loading){
     const color = (errorType === "error" ? "danger" : errorType);
     const isFullscreen = Boolean(this.state[errorType + 'sFullscreen']);
     const classes = classNames({
@@ -46,15 +46,17 @@ class FiddleResults extends Component {
         </Card.Options>
       </Card.Header>
       <Card.Body>
-        <List.Group>
-          {errors.map(error => { return error.node; })}
-        </List.Group>
+        <Dimmer active={loading ? "active" : ""} loader>
+          <List.Group>
+            {errors.map(error => { return error.node; })}
+          </List.Group>
+        </Dimmer>
       </Card.Body>
     </Card>;
   }
   
   render() {
-    const {warnings, errors, fatal} = this.props;
+    const {warnings, errors, fatal, isLoading} = this.props;
 
     let renderings = [];
     if(fatal){
@@ -80,13 +82,13 @@ class FiddleResults extends Component {
       if (errors.length) renderings.push(
         <React.Fragment key="errors">
           <a id="errors" aria-hidden="true"/>
-          {this._getFormatted(errors, "error")}
+          {this._getFormatted(errors, "error", isLoading)}
         </React.Fragment>
       );
       if (warnings.length) renderings.push(
         <React.Fragment key="warnings">
           <a id="warnings" aria-hidden="true"/>
-          {this._getFormatted(warnings, "warning")}
+          {this._getFormatted(warnings, "warning", isLoading)}
         </React.Fragment>
       );
     }
@@ -102,7 +104,8 @@ class FiddleResults extends Component {
 FiddleResults.propTypes = {
   errors: PropTypes.array,
   warnings: PropTypes.array,
-  fatal: PropTypes.string
+  fatal: PropTypes.string,
+  isLoading: PropTypes.bool
 };
 
 export default FiddleResults;

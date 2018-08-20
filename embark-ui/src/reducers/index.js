@@ -114,6 +114,19 @@ function errorEntities(state = {}, action) {
   return {...state, ...newState};
 }
 
+function loadingEntities(state = {}, action) {
+  if (!action.type.endsWith(REQUEST)) {
+    return state;
+  }
+  let newState = {};
+  for (let name of Object.keys(entitiesDefaultState)) {
+    if (action[name] && action[name].length > 0) {
+      newState[name] = action[name][0].loading || "Loading...";
+    }
+  }
+  return {...state, ...newState};
+}
+
 function loading(_state = false, action) {
   return action.type.endsWith(REQUEST);
 }
@@ -122,7 +135,8 @@ const rootReducer = combineReducers({
   entities,
   loading,
   errorMessage,
-  errorEntities
+  errorEntities,
+  loadingEntities
 });
 
 export default rootReducer;

@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export function getAccounts(state) {
   return state.entities.accounts;
 }
@@ -103,7 +105,11 @@ export function getMessages(state) {
 }
 
 export function getFiddle(state) {
-  return state.entities.fiddles[state.entities.fiddles.length - 1];
+  return { 
+    data: _.last(state.entities.fiddles), 
+    error: _.last(state.errorEntities.fiddles), 
+    loading: _.last(state.loadingEntities)
+  };
 }
 
 export function getEnsRecords(state) {

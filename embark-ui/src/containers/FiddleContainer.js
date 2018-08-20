@@ -3,7 +3,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {fiddle as fiddleAction} from '../actions';
+import {fiddle as fiddleAction, fiddleDeploy as fiddleDeployAction} from '../actions';
 import Fiddle from '../components/Fiddle';
 import FiddleResults from '../components/FiddleResults';
 import FiddleResultsSummary from '../components/FiddleResultsSummary';
@@ -74,8 +74,12 @@ class FiddleContainer extends Component {
     scrollToComponent(this.ace);
   }
 
+  _onDeployClick(){
+    this.props.postFiddleDeploy(this.props.fiddle);
+  }
+
   render() {
-    const {fiddle, loading, error} = this.props;
+    const {fiddle, loading, loadingMessage, error} = this.props;
     let renderings = [];
     let warnings = [];
     let errors = [];
@@ -87,10 +91,12 @@ class FiddleContainer extends Component {
       <React.Fragment key="fiddle">
         <FiddleResultsSummary
           errors={errors} 
-          warnings={warnings} 
-          isFetching={loading}
+          warnings={warnings}
+          isLoading={loading}
+          loadingMessage={loadingMessage}
           hasResult={Boolean(fiddle)}
           fatal={error}
+          onDeployClick={this._onDeployClick}
         />
         <Fiddle
           value={this.state.value} 
@@ -113,6 +119,7 @@ class FiddleContainer extends Component {
           errors={errors} 
           warnings={warnings} 
           fatal={error}
+          isLoading={loading}
         />);
     }
 
@@ -126,9 +133,11 @@ class FiddleContainer extends Component {
   }
 }
 function mapStateToProps(state) {
+  const fiddle = getFiddle(state);
   return { 
-    fiddle: getFiddle(state), 
-    error: state.errorMessage, 
+    fiddle: fiddle.data, 
+    error: fiddle.error, 
+    loadingMessage: fiddle.loading,
     loading: state.loading
   };
 }
@@ -136,13 +145,16 @@ function mapStateToProps(state) {
 FiddleContainer.propTypes = {
   fiddle: PropTypes.object,
   error: PropTypes.string,
+  loading: PropTypes.bool,
+  loadingMessage: PropTypes.string,
   postFiddle: PropTypes.func,
-  loading: PropTypes.bool
+  postFiddleDeploy: PropTypes.func
 };
 
 export default connect(
   mapStateToProps,
   {
-    postFiddle: fiddleAction.request
+    postFiddle: fiddleAction.request,
+    postFiddleDeploy: fiddleDeployAction.request
   },
 )(FiddleContainer);

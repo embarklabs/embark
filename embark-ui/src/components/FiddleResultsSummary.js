@@ -6,7 +6,7 @@ import FiddleDeployButton from './FiddleDeployButton';
 class FiddleResultsSummary extends Component{
 
   render(){
-    const {warnings, errors, isFetching, hasResult, fatal} = this.props;
+    const {warnings, errors, isLoading, loadingMessage, hasResult, fatal} = this.props;
     let renderings = [];
     if(fatal) {
       renderings.push(
@@ -15,9 +15,9 @@ class FiddleResultsSummary extends Component{
         </React.Fragment>
       );
     }
-    else if(isFetching){
+    else if(isLoading){
       renderings.push(
-        <React.Fragment key="compiling"><div className="loader"></div><span className="loader-text">Compiling...</span></React.Fragment>
+        <React.Fragment key="loading"><div className="loader"></div><span className="loader-text">{loadingMessage}</span></React.Fragment>
       );
     }
     else {
@@ -25,7 +25,7 @@ class FiddleResultsSummary extends Component{
         renderings.push(
           <React.Fragment key="success">
             <Badge className="badge-link" color="success">Compiled</Badge>
-            <FiddleDeployButton />
+            <FiddleDeployButton onDeployClick={this.props.onDeployClick} />
           </React.Fragment>
         );
       }
@@ -41,9 +41,9 @@ class FiddleResultsSummary extends Component{
       );
     }
     return (
-      <div className={"compilation-summary " + ((hasResult || isFetching) ? "visible" : "")}>
+      <div className={"compilation-summary " + ((hasResult || isLoading) ? "visible" : "")}>
         {renderings}
-        {!(hasResult || isFetching) ? "&nbsp;" : ""}
+        {!(hasResult || isLoading) ? "&nbsp;" : ""}
       </div>
     );
   }
@@ -52,9 +52,11 @@ class FiddleResultsSummary extends Component{
 FiddleResultsSummary.propTypes = {
   errors: PropTypes.array,
   warnings: PropTypes.array,
-  isFetching: PropTypes.bool,
+  isLoading: PropTypes.bool,
+  loadingMessage: PropTypes.string,
   hasResult: PropTypes.bool,
-  fatal: PropTypes.string
+  fatal: PropTypes.string,
+  onDeployClick: PropTypes.func
 };
 
 export default FiddleResultsSummary;
