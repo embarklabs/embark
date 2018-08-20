@@ -1,0 +1,19 @@
+{
+  "name": "coverage_app",
+  "version": "0.0.1",
+  "description": "",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "../../bin/embark test",
+    "coverage": "istanbul report --root .embark --format html"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "",
+  "dependencies": {
+    "react": "^16.3.2",
+    "react-bootstrap": "^0.32.1",
+    "react-dom": "^16.3.2",
+    "istanbul": "^0.4.5"
+  }
+}
