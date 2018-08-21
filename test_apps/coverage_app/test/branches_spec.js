@@ -26,6 +26,6 @@ contract("Branches", function() {
   });
 
   it("should return the smaller number", function(done) {
-    Branches.methods.smaller(10).send().then(() => { done() });
+    Branches.methods.smaller(10).send().then(() => { done(); });
   });
 });
