@@ -117,7 +117,7 @@ contract x {
 }
   `.trim();
 
-  const cs = new ContractSource('contract.sol', contractSource);
+  const cs = new ContractSource('contract.sol', '/tmp/contract.sol', contractSource);
 
   describe('constructor', () => {
     it('should set line offsets and line lengths correctly', (done) => {
