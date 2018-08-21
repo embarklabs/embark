@@ -12,6 +12,9 @@ module.exports = {
     wsHost: "localhost", // WS-RPC server listening interface (default: "localhost")
     wsPort: 8546 // WS-RPC server listening port (default: 8546)
   },
+
+  // default environment, merges with the settings in default
+  // assumed to be the intended environment by `embark run` and `embark blockchain`
   development: {
     networkType: "custom", // Can be: testnet, rinkeby, livenet or custom, in which case, it will use the specified networkId
     networkId: "1337", // Network id used when networkType is custom
@@ -25,6 +28,9 @@ module.exports = {
     simulatorMnemonic: "example exile argue silk regular smile grass bomb merge arm assist farm", // Mnemonic  used by the simulator to generate a wallet
     simulatorBlocktime: 0 // Specify blockTime in seconds for automatic mining. Default is 0 and no auto-mining.
   },
+
+  // merges with the settings in default
+  // used with "embark run privatenet" and/or "embark blockchain privatenet"
   privatenet: {
     networkType: "custom",
     networkId: "1337",
@@ -45,6 +51,9 @@ module.exports = {
     simulatorMnemonic: "example exile argue silk regular smile grass bomb merge arm assist farm",
     simulatorBlocktime: 0
   },
+
+  // merges with the settings in default
+  // used with "embark run testnet" and/or "embark blockchain testnet"
   testnet: {
     networkType: "testnet",
     syncMode: "light",
@@ -52,6 +61,9 @@ module.exports = {
       password: "config/testnet/password"
     }
   },
+
+  // merges with the settings in default
+  // used with "embark run livenet" and/or "embark blockchain livenet"
   livenet: {
     networkType: "livenet",
     syncMode: "light",
@@ -60,5 +72,10 @@ module.exports = {
     account: {
       password: "config/livenet/password"
     }
-  }
+  },
+
+  // you can name an environment with specific settings and then specify with
+  // "embark run custom_name" or "embark blockchain custom_name"
+  //custom_name: {
+  //}
 };
