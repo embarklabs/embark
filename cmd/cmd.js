@@ -207,13 +207,14 @@ class Cmd {
   test() {
     program
       .command('test [file]')
+      .option('-n , --node [node]', __('Node to connect to (default: vm)'))
       .option('-d , --gasDetails', __('When set, will print the gas cost for each contract deploy'))
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'warn')
       .description(__('run tests'))
       .action(function (file, options) {
         i18n.setOrDetectLocale(options.locale);
-        embark.runTests({file, loglevel: options.loglevel, gasDetails: options.gasDetails});
+        embark.runTests({file, loglevel: options.loglevel, gasDetails: options.gasDetails, node: options.node});
       });
   }
 
