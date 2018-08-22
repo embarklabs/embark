@@ -1,4 +1,4 @@
-
+{
   "default": {
     "enabled": true,
     "rpcHost": "localhost",
@@ -13,7 +13,6 @@
     "networkType": "custom",
     "networkId": "1337",
     "isDev": true,
-    "genesisBlock": "config/development/genesis.json",
     "datadir": ".embark/development/datadir",
     "mineWhenNeeded": true,
     "nodiscover": true,
