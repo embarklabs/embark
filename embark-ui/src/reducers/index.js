@@ -119,7 +119,8 @@ function loadingEntities(state = {}, action) {
     return state;
   }
   let newState = {};
-  newState[action.type].loading = action.loading;
+  if(!newState[action.type]) newState[action.type] = {};
+  newState[action.type].loading = action.loading || 'Loading...';
   return {...state, ...newState};
 }
 
