@@ -44,10 +44,15 @@ class App extends React.Component {
           });
         }
       }
+
+      EmbarkJS.Storage.isAvailable().then((result) => {
+        this.setState({storageEnabled: result});
+      }).catch(() => {
+        this.setState({storageEnabled: false});
+      });
+
       this.setState({
-        storageEnabled: EmbarkJS.Storage.isAvailable(),
-        ensEnabled: EmbarkJS.Names.isAvailable(),
-        ensNameSystems: EmbarkJS.Names.currentNameSystems
+        ensEnabled: EmbarkJS.Names.isAvailable()
       });
     });
   }
@@ -61,11 +66,6 @@ class App extends React.Component {
   }
 
   handleSelect(key) {
-    if (key === 2) {
-      EmbarkJS.Names.setProvider('ipns', {server: 'localhost', port: '5001'});
-    } else if (key === 4) {
-      EmbarkJS.Names.currentNameSystems = this.state.ensNameSystems
-    }
     this.setState({ activeKey: key });
   }
 

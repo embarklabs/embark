@@ -110,8 +110,8 @@ class Storage extends React.Component {
   ipnsRegister(e) {
     e.preventDefault();
     this.setState({ registering: true, responseRegister: false });
-    this.addToLog("EmbarkJS.Names.register(this.state.ipfsHash).then(function(hash) { })");
-    EmbarkJS.Names.register(this.state.valueRegister, (err, name) => {
+    this.addToLog("EmbarkJS.Storage.register(this.state.ipfsHash).then(function(hash) { })");
+    EmbarkJS.Storage.register(this.state.valueRegister, (err, name) => {
       let responseRegister;
       let isRegisterError = false;
       if (err) {
@@ -132,8 +132,8 @@ class Storage extends React.Component {
   ipnsResolve(e) {
     e.preventDefault();
     this.setState({ resolving: true, responseResolver: false });
-    this.addToLog("EmbarkJS.Names.resolve(this.state.ipnsName, function(err, path) { })");
-    EmbarkJS.Names.resolve(this.state.valueResolver, (err, path) => {
+    this.addToLog("EmbarkJS.Storage.resolve(this.state.ipnsName, function(err, path) { })");
+    EmbarkJS.Storage.resolve(this.state.valueResolver, (err, path) => {
       let responseResolver;
       let isResolverError = false;
       if (err) {

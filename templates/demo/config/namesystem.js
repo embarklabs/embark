@@ -1,6 +1,6 @@
 module.exports = {
   default: {
-    available_providers: ["ens", "ipns"],
+    available_providers: ["ens"],
     provider: "ens"
   },
 
