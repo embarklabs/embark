@@ -81,7 +81,7 @@ class App extends React.Component {
         <div>Something went wrong connecting to ethereum. Please make sure you have a node running or are using metamask to connect to the ethereum network:</div>
         <div>{this.state.error}</div>
       </div>);
-    } else {
+    }
     return (<div>
       <h3>Embark - Usage Example</h3>
       <Tabs onSelect={this.handleSelect} activeKey={this.state.activeKey} id="uncontrolled-tab-example">
@@ -99,7 +99,6 @@ class App extends React.Component {
         </Tab>
       </Tabs>
     </div>);
-    }
   }
 }
 
