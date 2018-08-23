@@ -1,7 +1,7 @@
 module.exports = {
   // default applies to all environments
   default: {
-    available_providers: ["ens", "ipns"],
+    available_providers: ["ens"],
     provider: "ens"
   },
 
