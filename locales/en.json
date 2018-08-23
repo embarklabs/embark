@@ -176,5 +176,10 @@
 	"Building...": "Building...",
 	"gas at the price of": "gas at the price of",
 	"Wei, estimated cost:": "Wei, estimated cost:",
-	"using": "using"
+	"using": "using",
+	"Initializing Embark Template...": "Initializing Embark Template...",
+	"Unrecognized balance string \"%s\"": "Unrecognized balance string \"%s\"",
+	"{{className}} has a dependency on {{dependencyName}}": "{{className}} has a dependency on {{dependencyName}}",
+	", but it is not set to deploy. It could be an interface.": ", but it is not set to deploy. It could be an interface.",
+	"Done. %s generated": "Done. %s generated"
 }

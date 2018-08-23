@@ -205,5 +205,11 @@
 	"Wei, estimated cost:": "Wei, estimated cost:",
 	"using": "using",
 	"Embark is building, please wait...": "Embark is building, please wait...",
-	"instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)": "instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)"
+	"instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)": "instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)",
+	"Initializing Embark Template...": "Initializing Embark Template...",
+	"Name your app (default is %s):": "Name your app (default is %s):",
+	"Unrecognized balance string \"%s\"": "Unrecognized balance string \"%s\"",
+	"{{className}} has a dependency on {{dependencyName}}": "{{className}} has a dependency on {{dependencyName}}",
+	", but it is not set to deploy. It could be an interface.": ", but it is not set to deploy. It could be an interface.",
+	"Done. %s generated": "Done. %s generated"
 }
