@@ -36,7 +36,7 @@
     "initiated": "initiated",
     "servicePortOnProxy": 10,
     "networkIds": {
-      "mainnet": 1,
+      "livenet": 1,
       "testnet": 3,
       "ropsten": 3,
       "rinkeby": 4
