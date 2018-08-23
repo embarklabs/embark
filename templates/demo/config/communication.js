@@ -14,7 +14,7 @@ module.exports = {
       port: 8546, // Port of the blockchain node
       type: "ws" // Type of connection (ws or rpc)
     }
-  }
+  },
 
   // merges with the settings in default
   // used with "embark run privatenet"
