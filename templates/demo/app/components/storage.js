@@ -215,6 +215,8 @@ class Storage extends React.Component {
         </FormGroup>
       </Form>
 
+      <Alert bsStyle="warning">The 2 functions below are only available with IPFS</Alert>
+
       <h3>Register to IPNS</h3>
       <Form inline onKeyDown={(e) => this.checkEnter(e, this.ipnsRegister)}>
         <FormGroup>
