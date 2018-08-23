@@ -162,9 +162,19 @@
 	"Cannot start {{platform}} node on {{url}}.": "Cannot start {{platform}} node on {{url}}.",
 	"Storage process for swarm ended before the end of this process. Code: 0": "Storage process for swarm ended before the end of this process. Code: 0",
 	"error uploading to swarm": "error uploading to swarm",
-	"IPFS node detected": "IPFS node detected",
 	"Ethereum node detected": "Ethereum node detected",
-	"Starting swarm process": "Starting swarm process",
 	"Deployment Done": "Deployment Done",
-	"Name your app (default is %s):": "Name your app (default is %s):"
+	"Name your app (default is %s):": "Name your app (default is %s):",
+	"download template": "download template",
+	"Start the Embark console": "Start the Embark console",
+	"When set, will print the gas cost for each contract deploy": "When set, will print the gas cost for each contract deploy",
+	"ENS domain to associate to": "ENS domain to associate to",
+	"output usage information and help information": "output usage information and help information",
+	"Starting %s process": "Starting %s process",
+	"Storage process for {{storageName}} ended before the end of this process. Code: {{code}}": "Storage process for {{storageName}} ended before the end of this process. Code: {{code}}",
+	"Compiling...": "Compiling...",
+	"Building...": "Building...",
+	"gas at the price of": "gas at the price of",
+	"Wei, estimated cost:": "Wei, estimated cost:",
+	"using": "using"
 }
