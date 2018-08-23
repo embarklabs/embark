@@ -1,13 +1,12 @@
 export const REQUEST = 'REQUEST';
 export const SUCCESS = 'SUCCESS';
 export const FAILURE = 'FAILURE';
-export const ENTITY = 'ENTITY';
 
 function createRequestTypes(base) {
   return [REQUEST, SUCCESS, FAILURE].reduce((acc, type) => {
     acc[type] = `${base}_${type}`;
     return acc;
-  }, { id: 0 });
+  }, {});
 }
 
 function action(type, payload = {}) {
