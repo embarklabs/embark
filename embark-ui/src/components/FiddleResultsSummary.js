@@ -25,7 +25,7 @@ class FiddleResultsSummary extends Component{
         renderings.push(
           <React.Fragment key="success">
             <Badge className="badge-link" color="success">Compiled</Badge>
-            <FiddleDeployButton onDeployClick={this.props.onDeployClick} />
+            <FiddleDeployButton onDeployClick={(e) => this.props.onDeployClick(e)} />
           </React.Fragment>
         );
       }

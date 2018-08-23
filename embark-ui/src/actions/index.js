@@ -1,12 +1,13 @@
 export const REQUEST = 'REQUEST';
 export const SUCCESS = 'SUCCESS';
 export const FAILURE = 'FAILURE';
+export const ENTITY = 'ENTITY';
 
 function createRequestTypes(base) {
   return [REQUEST, SUCCESS, FAILURE].reduce((acc, type) => {
     acc[type] = `${base}_${type}`;
     return acc;
-  }, {});
+  }, { id: 0 });
 }
 
 function action(type, payload = {}) {
@@ -170,14 +171,14 @@ export const ensRecords = {
 
 export const FIDDLE = createRequestTypes('FIDDLE');
 export const fiddle = {
-  request: (codeToCompile) => action(FIDDLE[REQUEST], {codeToCompile, loading: 'Compiling...'}),
+  request: (codeToCompile) => action(FIDDLE[REQUEST], {codeToCompile}),
   success: (fiddle) => action(FIDDLE[SUCCESS], {fiddles: [fiddle]}),
   failure: (error) => action(FIDDLE[FAILURE], {error})
 };
 
 export const FIDDLE_DEPLOY = createRequestTypes('FIDDLE_DEPLOY');
 export const fiddleDeploy = {
-  request: (compiledCode) => action(FIDDLE_DEPLOY[REQUEST], {compiledCode, loading: 'Deploying...'}),
+  request: (compiledCode) => action(FIDDLE_DEPLOY[REQUEST], {compiledCode}),
   success: () => action(FIDDLE_DEPLOY[SUCCESS]),
   failure: (error) => action(FIDDLE_DEPLOY[FAILURE], {error})
 };

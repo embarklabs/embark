@@ -16,7 +16,8 @@ class FiddleContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: ''
+      value: '',
+      loadingMessage: ''
     };
     this.compileTimeout = null;
     this.ace = null;
@@ -27,6 +28,7 @@ class FiddleContainer extends Component {
     this.setState({value: newValue});
     if (this.compileTimeout) clearTimeout(this.compileTimeout);
     this.compileTimeout = setTimeout(() => {
+      this.setState({loadingMessage: 'Compiling...'});
       this.props.postFiddle(newValue);
     }, 1000);
 
@@ -74,12 +76,14 @@ class FiddleContainer extends Component {
     scrollToComponent(this.ace);
   }
 
-  _onDeployClick(){
-    this.props.postFiddleDeploy(this.props.fiddle);
+  _onDeployClick(_e){
+    this.setState({loadingMessage: 'Deploying...'});
+    this.props.postFiddleDeploy(this.props.fiddle.compilationResult);
   }
 
   render() {
-    const {fiddle, loading, loadingMessage, error} = this.props;
+    const {fiddle, loading, error} = this.props;
+    const {loadingMessage} = this.state;
     let renderings = [];
     let warnings = [];
     let errors = [];
@@ -96,7 +100,7 @@ class FiddleContainer extends Component {
           loadingMessage={loadingMessage}
           hasResult={Boolean(fiddle)}
           fatal={error}
-          onDeployClick={this._onDeployClick}
+          onDeployClick={(e) => this._onDeployClick(e)}
         />
         <Fiddle
           value={this.state.value} 
@@ -136,8 +140,7 @@ function mapStateToProps(state) {
   const fiddle = getFiddle(state);
   return { 
     fiddle: fiddle.data, 
-    error: fiddle.error, 
-    loadingMessage: fiddle.loading,
+    error: fiddle.error,
     loading: state.loading
   };
 }
@@ -146,7 +149,6 @@ FiddleContainer.propTypes = {
   fiddle: PropTypes.object,
   error: PropTypes.string,
   loading: PropTypes.bool,
-  loadingMessage: PropTypes.string,
   postFiddle: PropTypes.func,
   postFiddleDeploy: PropTypes.func
 };

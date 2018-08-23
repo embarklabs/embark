@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux';
 import {REQUEST, SUCCESS} from "../actions";
+//import entitiesDefaultState from "../api/entities";
 
 const BN_FACTOR = 10000;
 const voidAddress = '0x0000000000000000000000000000000000000000';
@@ -114,16 +115,6 @@ function errorEntities(state = {}, action) {
   return {...state, ...newState};
 }
 
-function loadingEntities(state = {}, action) {
-  if (!action.type.endsWith(REQUEST)) {
-    return state;
-  }
-  let newState = {};
-  if(!newState[action.type]) newState[action.type] = {};
-  newState[action.type].loading = action.loading || 'Loading...';
-  return {...state, ...newState};
-}
-
 function loading(_state = false, action) {
   return action.type.endsWith(REQUEST);
 }
@@ -132,8 +123,7 @@ const rootReducer = combineReducers({
   entities,
   loading,
   errorMessage,
-  errorEntities,
-  loadingEntities
+  errorEntities
 });
 
 export default rootReducer;

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {REQUEST, FIDDLE} from '../actions/index.js';
+import {REQUEST, FIDDLE, FIDDLE_DEPLOY} from '../actions/index.js';
 
 export function getAccounts(state) {
   return state.entities.accounts;
@@ -106,11 +106,9 @@ export function getMessages(state) {
 }
 
 export function getFiddle(state) {
-  const loadingEntity = state.loadingEntities[FIDDLE[REQUEST]];
-  return { 
+  return {
     data: _.last(state.entities.fiddles), 
-    error: _.last(state.errorEntities.fiddles), 
-    loading: loadingEntity ? loadingEntity.loading : undefined
+    error: _.last(state.errorEntities.fiddles)
   };
 }
 
