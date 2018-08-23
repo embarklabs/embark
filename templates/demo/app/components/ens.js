@@ -11,7 +11,7 @@ class ENS extends React.Component {
     super(props);
 
     this.state = {
-      valueResolve: 'embark.eth',
+      valueResolve: 'eth',
       responseResolve: null,
       isResolveError: false,
       valueLookup: '',
