@@ -18,6 +18,7 @@ class App extends React.Component {
     this.handleSelect = this.handleSelect.bind(this);
 
     this.state = {
+      error: false,
       activeKey: 1,
       whisperEnabled: false,
       storageEnabled: false,
@@ -26,7 +27,12 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    EmbarkJS.onReady(() => {
+    EmbarkJS.onReady((err) => {
+      if (err) {
+        // If err is not null then it means something went wrong connecting to ethereum
+        // you can use this to ask the user to enable metamask for e.g
+        return this.setState({error: err});
+      }
       if (EmbarkJS.isNewWeb3()) {
         EmbarkJS.Messages.Providers.whisper.getWhisperVersion((err, _version) => {
           if (err) {
@@ -70,7 +76,14 @@ class App extends React.Component {
   }
 
   render() {
-    return (<div><h3>Embark - Usage Example</h3>
+    if (this.state.error) {
+      return (<div>
+        <div>Something went wrong connecting to ethereum. Please make sure you have a node running or are using metamask to connect to the ethereum network:</div>
+        <div>{this.state.error}</div>
+      </div>);
+    } else {
+    return (<div>
+      <h3>Embark - Usage Example</h3>
       <Tabs onSelect={this.handleSelect} activeKey={this.state.activeKey} id="uncontrolled-tab-example">
         <Tab eventKey={1} title="Blockchain">
           <Blockchain/>
@@ -86,6 +99,7 @@ class App extends React.Component {
         </Tab>
       </Tabs>
     </div>);
+    }
   }
 }
 
