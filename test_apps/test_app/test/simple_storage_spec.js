@@ -1,6 +1,7 @@
 /*global contract, config, it, assert, web3*/
 const SimpleStorage = require('Embark/contracts/SimpleStorage');
 let accounts;
+const Utils = require('embarkjs').Utils;
 
 config({
   contracts: {
@@ -21,10 +22,16 @@ contract("SimpleStorage", function () {
     assert.strictEqual(parseInt(result, 10), 100);
   });
 
-  it("set storage value", async function () {
-    await SimpleStorage.methods.set(150).send();
-    let result = await SimpleStorage.methods.get().call();
-    assert.strictEqual(parseInt(result, 10), 150);
+  it("set storage value", function (done) {
+    // await SimpleStorage.methods.set(150).send();
+    Utils.secureSend(web3, SimpleStorage.methods.set(150), {}, false, async function(err) {
+      if (err) {
+        return done(err);
+      }
+      let result = await SimpleStorage.methods.get().call();
+      assert.strictEqual(parseInt(result, 10), 150);
+      done();
+    });
   });
 
   it("should set defaultAccount", async function () {
