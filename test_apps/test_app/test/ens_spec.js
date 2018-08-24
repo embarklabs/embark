@@ -18,9 +18,7 @@ config({
       "onDeploy": [
         `ENSRegistry.methods.setOwner('${rootNode}', web3.eth.defaultAccount).send().then(() => {
           ENSRegistry.methods.setResolver('${rootNode}', "$Resolver").send();
-          Resolver.methods.setAddr('${rootNode}', '${address}').send().then(() => {
-            global.ensTestReady = true;
-          });
+          Resolver.methods.setAddr('${rootNode}', '${address}').send();
         });`
       ]
     }
@@ -28,21 +26,18 @@ config({
 });
 
 contract("ENS", function () {
-  this.timeout(1000);
+  it("should have registered embark.eth", function () {
+    let maxRetry = 20;
+    let domainAddress;
 
-  before(function (done) {
-  //   Wait for onDeploy to finish
-    const wait = setInterval(() => {
-      if (!global.ensTestReady) {
+    const wait = setInterval(async () => {
+      domainAddress = await Resolver.methods.addr(rootNode).call();
+      if (domainAddress || maxRetry === 0) {
+        clearInterval(wait);
+        assert.strictEqual(domainAddress, address);
         return;
       }
-      clearInterval(wait);
-      done();
+      maxRetry--;
     }, 50);
-  });
-
-  it("should have registered embark.eth", async function () {
-    const domainAddress = await Resolver.methods.addr(rootNode).call();
-    assert.strictEqual(domainAddress, address);
   });
 });
