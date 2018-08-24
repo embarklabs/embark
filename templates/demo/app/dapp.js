@@ -18,7 +18,7 @@ class App extends React.Component {
     this.handleSelect = this.handleSelect.bind(this);
 
     this.state = {
-      error: false,
+      error: null,
       activeKey: 1,
       whisperEnabled: false,
       storageEnabled: false,
