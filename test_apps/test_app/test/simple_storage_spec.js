@@ -24,7 +24,7 @@ contract("SimpleStorage", function () {
   it("set storage value", async function () {
     await SimpleStorage.methods.set(150).send();
     let result = await SimpleStorage.methods.get().call();
-    assert.strictEqual(parseInt(result, 10), 499650);
+    assert.strictEqual(parseInt(result, 10), 150);
   });
 
   it("should set defaultAccount", async function () {

@@ -16,7 +16,7 @@ contract("SimpleStorage Deploy", function () {
   it("set storage value", async function () {
     await SimpleStorageInstance.methods.set(150).send();
     let result = await SimpleStorageInstance.methods.get().call();
-    assert.strictEqual(parseInt(result, 10), 499650);
+    assert.strictEqual(parseInt(result, 10), 150);
   });
 
 });
