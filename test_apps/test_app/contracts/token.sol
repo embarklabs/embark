@@ -64,6 +64,6 @@ contract Token {
     return (a + b >= a);
   }
   function isAvailable() public constant returns (bool) {
-    return true;
+    return false;
   }
 }
