@@ -1,5 +1,5 @@
 import React from 'react';
-import {NavLink, Route, Switch, withRouter} from 'react-router-dom';
+import {NavLink, Route, Switch} from 'react-router-dom';
 import {
   Page,
   Grid,
@@ -37,7 +37,7 @@ const ExplorerLayout = () => (
               className={className}
               to={groupItem.to}
               icon={groupItem.icon}
-              RootComponent={withRouter(NavLink)}
+              RootComponent={NavLink}
             >
               {groupItem.value}
             </List.GroupItem>

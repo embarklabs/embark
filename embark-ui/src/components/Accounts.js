@@ -16,23 +16,30 @@ const Accounts = ({accounts}) => (
           <Table
             responsive
             className="card-table table-vcenter text-nowrap"
-            headerItems={[
-              {content: "Address"},
-              {content: "Balance"},
-              {content: "TX count"},
-              {content: "Index"}
-            ]}
-            bodyItems={
-              accounts.map((account) => {
-                return ([
-                  {content: <Link to={`/embark/explorer/accounts/${account.address}`}>{account.address}</Link>},
-                  {content: account.balance},
-                  {content: account.transactionCount},
-                  {content: account.index}
-                ]);
-              })
-            }
-          />
+          >
+            <Table.Header>
+              <Table.Row>
+                <Table.ColHeader>Address</Table.ColHeader>
+                <Table.ColHeader>Balance</Table.ColHeader>
+                <Table.ColHeader>TX count</Table.ColHeader>
+                <Table.ColHeader>Index</Table.ColHeader>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {
+                accounts.map((account) => {
+                  return (
+                    <Table.Row key={account.address}>
+                      <Table.Col><Link to={`/embark/explorer/accounts/${account.address}`}>{account.address}</Link></Table.Col>
+                      <Table.Col>{account.balance}</Table.Col>
+                      <Table.Col>{account.transactionCount}</Table.Col>
+                      <Table.Col>{account.index}</Table.Col>
+                    </Table.Row>
+                  );
+                })
+              }
+            </Table.Body>
+          </Table>
         </Card>
       </Grid.Col>
     </Grid.Row>

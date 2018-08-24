@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import connect from "react-redux/es/connect/connect";
-import {NavLink, Route, Switch, withRouter, Redirect} from 'react-router-dom';
+import {NavLink, Route, Switch,  Redirect} from 'react-router-dom';
 import {
   Page,
   Grid,
@@ -30,7 +30,7 @@ class ProcessesLayout extends Component {
                 to={`${routePrefix}/${process.name}`}
                 key={'process-' + process.name}
                 active={index === 0 && this.props.match.isExact === true}
-                RootComponent={withRouter(NavLink)}
+                RootComponent={NavLink}
               >
                 {process.name}
               </List.GroupItem>);

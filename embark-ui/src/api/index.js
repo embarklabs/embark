@@ -129,5 +129,5 @@ export function postFiddle(payload) {
 }
 
 export function postFiddleDeploy(payload) {
-  return post('/contract/deploy', {compiledContract: payload.compiledCode.compilationResult});
+  return post('/contract/deploy', {compiledContract: payload.compiledCode});
 }

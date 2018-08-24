@@ -12,30 +12,38 @@ const ContractProfile = ({contractProfile}) => (
     <Grid.Row>
       <Grid.Col>
         <Card>
-          <Table
-            responsive
-            className="card-table table-vcenter text-nowrap"
-            headerItems={[
-              {content: "Function"},
-              {content: "Payable"},
-              {content: "Mutability"},
-              {content: "Inputs"},
-              {content: "Outputs"},
-              {content: "Gas Estimates"}
-            ]}
-            bodyItems={
-              contractProfile.methods.map((method) => {
-                return ([
-                  {content: method.name},
-                  {content: (method.payable === true).toString()},
-                  {content: method.mutability},
-                  {content: `(${method.inputs.map((x) => x.type).join(',')})`},
-                  {content: `(${method.outputs.map((x) => x.type).join(',')})`},
-                  {content: method.gasEstimates}
-                ]);
-              })
-            }
-          />
+          <Table 
+            responsive 
+            cards
+            verticalAlign="center"
+            className="text-nowrap">
+            <Table.Header>
+              <Table.Row>
+                <Table.ColHeader>Function</Table.ColHeader>
+                <Table.ColHeader>Payable</Table.ColHeader>
+                <Table.ColHeader>Mutability</Table.ColHeader>
+                <Table.ColHeader>Inputs</Table.ColHeader>
+                <Table.ColHeader>Outputs</Table.ColHeader>
+                <Table.ColHeader>Gas Estimates</Table.ColHeader>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {
+                contractProfile.methods.map((method) => {
+                  return (
+                    <Table.Row key={method.name}>
+                      <Table.Col>{method.name}</Table.Col>
+                      <Table.Col>{(method.payable === true).toString()}</Table.Col>
+                      <Table.Col>{method.mutability}</Table.Col>
+                      <Table.Col>{`(${method.inputs.map((x) => x.type).join(',')})`}</Table.Col>
+                      <Table.Col>{`(${method.outputs.map((x) => x.type).join(',')})`}</Table.Col>
+                      <Table.Col>{method.gasEstimates}</Table.Col>
+                    </Table.Row>
+                  );
+                })
+              }
+            </Table.Body>
+          </Table>
         </Card>
       </Grid.Col>
     </Grid.Row>

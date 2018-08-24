@@ -178,7 +178,9 @@ export const fiddle = {
 export const FIDDLE_DEPLOY = createRequestTypes('FIDDLE_DEPLOY');
 export const fiddleDeploy = {
   request: (compiledCode) => action(FIDDLE_DEPLOY[REQUEST], {compiledCode}),
-  success: () => action(FIDDLE_DEPLOY[SUCCESS]),
+  success: (response) => {
+    return action(FIDDLE_DEPLOY[SUCCESS], {fiddleDeploys: [response.contractNames]});
+  },
   failure: (error) => action(FIDDLE_DEPLOY[FAILURE], {error})
 };
 

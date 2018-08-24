@@ -15,22 +15,30 @@ const Contracts = ({contracts}) => (
         <Card>
           <Table
             responsive
-            className="card-table table-vcenter text-nowrap"
-            headerItems={[
-              {content: "Name"},
-              {content: "Address"},
-              {content: "State"}
-            ]}
-            bodyItems={
-              contracts.map((contract) => {
-                return ([
-                  {content: <Link to={`/embark/contracts/${contract.className}/overview`}>{contract.className}</Link>},
-                  {content: contract.address},
-                  {content: contract.deploy.toString()}
-                ]);
-              })
-            }
-          />
+            cards
+            verticalAlign="center"
+            className="text-nowrap">
+            <Table.Header>
+              <Table.Row>
+                <Table.ColHeader>Name</Table.ColHeader>
+                <Table.ColHeader>Address</Table.ColHeader>
+                <Table.ColHeader>State</Table.ColHeader>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {
+                contracts.map((contract) => {
+                  return (
+                    <Table.Row key={contract.className}>
+                      <Table.Col><Link to={`/embark/contracts/${contract.className}/overview`}>{contract.className}</Link></Table.Col>
+                      <Table.Col>{contract.address || 'Interface or not set to deploy'}</Table.Col>
+                      <Table.Col>{contract.deploy ? 'Deployed' : 'Not deployed'}</Table.Col>
+                    </Table.Row>
+                  );
+                })
+              }
+            </Table.Body>
+          </Table>
         </Card>
       </Grid.Col>
     </Grid.Row>

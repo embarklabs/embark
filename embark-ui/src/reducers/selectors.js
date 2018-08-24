@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import {REQUEST, FIDDLE, FIDDLE_DEPLOY} from '../actions/index.js';
 
 export function getAccounts(state) {
   return state.entities.accounts;
@@ -109,6 +108,13 @@ export function getFiddle(state) {
   return {
     data: _.last(state.entities.fiddles), 
     error: _.last(state.errorEntities.fiddles)
+  };
+}
+
+export function getFiddleDeploy(state) {
+  return {
+    data: _.last(state.entities.fiddleDeploys), 
+    error: _.last(state.errorEntities.fiddleDeploys)
   };
 }
 

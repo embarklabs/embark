@@ -15,19 +15,22 @@ const Contract = ({contract}) => (
           <Table
             responsive
             className="card-table table-vcenter text-nowrap"
-            headerItems={[
-              {content: "Name"},
-              {content: "Address"},
-              {content: "State"}
-            ]}
-            bodyItems={[
-              [
-                {content: (contract.name || contract.className)},
-                {content: (contract.address || contract.deployedAddress)},
-                {content: contract.deploy.toString()}
-              ]
-            ]}
-          />
+          >
+            <Table.Header>
+              <Table.Row>
+                <Table.ColHeader>Name</Table.ColHeader>
+                <Table.ColHeader>Address</Table.ColHeader>
+                <Table.ColHeader>State</Table.ColHeader>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              <Table.Row>
+                <Table.Col>{(contract.name || contract.className)}</Table.Col>
+                <Table.Col>{(contract.address || contract.deployedAddress)}</Table.Col>
+                <Table.Col>{contract.deploy}</Table.Col>
+              </Table.Row>
+            </Table.Body>
+          </Table>
         </Card>
       </Grid.Col>
     </Grid.Row>

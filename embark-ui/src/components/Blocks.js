@@ -15,19 +15,32 @@ const Blocks = ({blocks}) => (
         <Card>
           <Table
             responsive
-            className="card-table table-vcenter text-nowrap"
-            headerItems={[{content: "Number"}, {content: "Mined On"}, {content: "Gas Used"}, {content: "TX Count"}]}
-            bodyItems={
-              blocks.map((block) => {
-                return ([
-                  {content: <Link to={`/embark/explorer/blocks/${block.number}`}>{block.number}</Link>},
-                  {content: new Date(block.timestamp * 1000).toLocaleString()},
-                  {content: block.gasUsed},
-                  {content: block.transactions.length}
-                ]);
-              })
-            }
-          />
+            cards
+            verticalAlign="center"
+            className="text-nowrap">
+            <Table.Header>
+              <Table.Row>
+                <Table.ColHeader>Number</Table.ColHeader>
+                <Table.ColHeader>Mined On</Table.ColHeader>
+                <Table.ColHeader>Gas Used</Table.ColHeader>
+                <Table.ColHeader>TX Count</Table.ColHeader>
+              </Table.Row>
+            </Table.Header>  
+            <Table.Body>
+              {
+                blocks.map((block) => {
+                  return (
+                    <Table.Row key={block.number}>
+                      <Table.Col><Link to={`/embark/explorer/blocks/${block.number}`}>{block.number}</Link></Table.Col>
+                      <Table.Col>{new Date(block.timestamp * 1000).toLocaleString()}</Table.Col>
+                      <Table.Col>{block.gasUsed}</Table.Col>
+                      <Table.Col>{block.transactions.length}</Table.Col>
+                    </Table.Row>
+                  );
+                })
+              }
+            </Table.Body>
+          </Table>
         </Card>
       </Grid.Col>
     </Grid.Row>

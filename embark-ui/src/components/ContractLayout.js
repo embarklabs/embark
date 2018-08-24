@@ -24,7 +24,7 @@ const ContractLayout = ({match}) => (
             className="d-flex align-items-center"
             to={`/embark/contracts/${match.params.contractName}/overview`}
             icon="corner-left-up"
-            RootComponent={withRouter(NavLink)}
+            RootComponent={NavLink}
           >
             Back to {match.params.contractName}
           </List.GroupItem>
@@ -32,7 +32,7 @@ const ContractLayout = ({match}) => (
             className="d-flex align-items-center"
             to={`/embark/contracts/${match.params.contractName}/deployment`}
             icon="users"
-            RootComponent={withRouter(NavLink)}
+            RootComponent={NavLink}
           >
             Deployment / Utils
           </List.GroupItem>
@@ -40,7 +40,7 @@ const ContractLayout = ({match}) => (
             className="d-flex align-items-center"
             to={`/embark/contracts/${match.params.contractName}/functions`}
             icon="book-open"
-            RootComponent={withRouter(NavLink)}
+            RootComponent={NavLink}
           >
             Functions
           </List.GroupItem>
@@ -48,7 +48,7 @@ const ContractLayout = ({match}) => (
             className="d-flex align-items-center"
             to={`/embark/contracts/${match.params.contractName}/source`}
             icon="activity"
-            RootComponent={withRouter(NavLink)}
+            RootComponent={NavLink}
           >
             Source Code
           </List.GroupItem>
@@ -56,7 +56,7 @@ const ContractLayout = ({match}) => (
             className="d-flex align-items-center"
             to={`/embark/contracts/${match.params.contractName}/profiler`}
             icon="server"
-            RootComponent={withRouter(NavLink)}
+            RootComponent={NavLink}
           >
             Profile
           </List.GroupItem>
@@ -64,7 +64,7 @@ const ContractLayout = ({match}) => (
             className="d-flex align-items-center"
             to={`/embark/contracts/${match.params.contractName}/logger`}
             icon="chevrons-right"
-            RootComponent={withRouter(NavLink)}
+            RootComponent={NavLink}
           >
             Logger
           </List.GroupItem>

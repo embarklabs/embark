@@ -1,8 +1,9 @@
 /* eslint {jsx-a11y/anchor-has-content:"off"} */
 import React, {Component} from 'react';
-import {Card, List, Badge, Icon, Dimmer} from 'tabler-react';
+import {Card, List, Badge, Icon, Dimmer, Button} from 'tabler-react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import {NavLink} from 'react-router-dom';
 
 class FiddleResults extends Component {
 
@@ -56,7 +57,7 @@ class FiddleResults extends Component {
   }
   
   render() {
-    const {warnings, errors, fatal, isLoading} = this.props;
+    const {warnings, errors, fatal, isLoading, deployedContracts} = this.props;
 
     let renderings = [];
     if(fatal){
@@ -72,10 +73,33 @@ class FiddleResults extends Component {
               <Card.Title color="danger"><Icon name="slash"/> Failed to compile</Card.Title>
             </Card.Header>
             <Card.Body>
+              <Dimmer active={isLoading ? "active" : ""} loader>
                 {fatal}
+              </Dimmer>
             </Card.Body>
           </Card>
         </React.Fragment>
+      );
+    }
+    else if (deployedContracts){
+      renderings.push(
+        <Card
+          statusColor="success"
+          statusSide="true"
+          className="success-card"
+          key="success-card">
+          <Card.Header>
+            <Card.Title color="success"><Icon name="check"/> Contract(s) deployed!</Card.Title>
+          </Card.Header>
+          <Card.Body>
+            <Dimmer active={isLoading ? "active" : ""} loader>
+              <Button
+                to={`/embark/contracts/${deployedContracts[0]}/overview`}
+                RootComponent={NavLink}
+              >Play with my contract(s)</Button>
+            </Dimmer>
+          </Card.Body>
+        </Card>
       );
     }
     else{
@@ -105,7 +129,8 @@ FiddleResults.propTypes = {
   errors: PropTypes.array,
   warnings: PropTypes.array,
   fatal: PropTypes.string,
-  isLoading: PropTypes.bool
+  isLoading: PropTypes.bool,
+  deployedContracts: PropTypes.array
 };
 
 export default FiddleResults;

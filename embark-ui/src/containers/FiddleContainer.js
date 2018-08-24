@@ -8,7 +8,7 @@ import Fiddle from '../components/Fiddle';
 import FiddleResults from '../components/FiddleResults';
 import FiddleResultsSummary from '../components/FiddleResultsSummary';
 import scrollToComponent from 'react-scroll-to-component';
-import {getFiddle} from "../reducers/selectors";
+import {getFiddle, getFiddleDeploy} from "../reducers/selectors";
 import CompilerError from "../components/CompilerError";
 
 class FiddleContainer extends Component {
@@ -82,7 +82,7 @@ class FiddleContainer extends Component {
   }
 
   render() {
-    const {fiddle, loading, error} = this.props;
+    const {fiddle, loading, error, deployedContracts} = this.props;
     const {loadingMessage} = this.state;
     let renderings = [];
     let warnings = [];
@@ -124,6 +124,7 @@ class FiddleContainer extends Component {
           warnings={warnings} 
           fatal={error}
           isLoading={loading}
+          deployedContracts={deployedContracts}
         />);
     }
 
@@ -138,9 +139,11 @@ class FiddleContainer extends Component {
 }
 function mapStateToProps(state) {
   const fiddle = getFiddle(state);
+  const deployedFiddle = getFiddleDeploy(state);
   return { 
     fiddle: fiddle.data, 
-    error: fiddle.error,
+    deployedContracts: deployedFiddle.data,
+    error: fiddle.error || deployedFiddle.error,
     loading: state.loading
   };
 }

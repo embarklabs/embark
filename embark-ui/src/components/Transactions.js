@@ -15,26 +15,34 @@ const Transactions = ({transactions}) => (
         <Card>
           <Table
             responsive
-            className="card-table table-vcenter text-nowrap"
-            headerItems={[
-              {content: "Hash"},
-              {content: "Block Number"},
-              {content: "From"},
-              {content: "To"},
-              {content: "Type"}
-            ]}
-            bodyItems={
-              transactions.map((transaction) => {
-                return ([
-                  {content: <Link to={`/embark/explorer/transactions/${transaction.hash}`}>{transaction.hash}</Link>},
-                  {content: transaction.blockNumber},
-                  {content: transaction.from},
-                  {content: transaction.to},
-                  {content: transaction.to ? "Contract Call" : "Contract Creation"}
-                ]);
-              })
-            }
-          />
+            cards
+            verticalAlign="center"
+            className="text-nowrap">
+            <Table.Header>
+              <Table.Row>
+                <Table.ColHeader>Hash</Table.ColHeader>
+                <Table.ColHeader>Block Number</Table.ColHeader>
+                <Table.ColHeader>From</Table.ColHeader>
+                <Table.ColHeader>To</Table.ColHeader>
+                <Table.ColHeader>Type</Table.ColHeader>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {
+                transactions.reduce((transaction) => {
+                  return (
+                    <Table.Row key={transaction.hash}>
+                      <Table.Col><Link to={`/embark/explorer/transactions/${transaction.hash}`}>{transaction.hash}</Link></Table.Col>
+                      <Table.Col>{transaction.blockNumber}</Table.Col>
+                      <Table.Col>{transaction.from}</Table.Col>
+                      <Table.Col>{transaction.to}</Table.Col>
+                      <Table.Col>{transaction.to ? "Contract Call" : "Contract Creation"}</Table.Col>
+                    </Table.Row>
+                  );
+                })
+              }
+            </Table.Body>
+          </Table>
         </Card>
       </Grid.Col>
     </Grid.Row>
