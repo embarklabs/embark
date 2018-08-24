@@ -23,9 +23,6 @@ contract SimpleStorage is Ownable {
 
   function set(uint x) public {
     storedData = x;
-    for(uint i = 0; i < 1000; i++) {
-      storedData += i;
-    }
     Assert.triggerEvent(true, "hi");
   }
 
