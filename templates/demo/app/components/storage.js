@@ -152,7 +152,7 @@ class Storage extends React.Component {
   }
 
   isIpfs(){
-    return EmbarkJS.Storage.currentStorageName === 'ipfs';
+    return EmbarkJS.Storage.currentProviderName === 'ipfs';
   }
 
   render() {
