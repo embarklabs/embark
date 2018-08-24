@@ -17,7 +17,7 @@ import ContractSourceContainer from '../containers/ContractSourceContainer';
 const ContractLayout = ({match}) => (
   <Grid.Row>
     <Grid.Col md={3}>
-      <Page.Title className="my-5">Contract</Page.Title>
+      <Page.Title className="my-5">&nbsp;</Page.Title>
       <div>
         <List.Group transparent={true}>
           <List.GroupItem
@@ -26,7 +26,7 @@ const ContractLayout = ({match}) => (
             icon="corner-left-up"
             RootComponent={NavLink}
           >
-            Back to {match.params.contractName}
+            Overview
           </List.GroupItem>
           <List.GroupItem
             className="d-flex align-items-center"

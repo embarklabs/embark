@@ -82,7 +82,7 @@ class FiddleContainer extends Component {
   }
 
   render() {
-    const {fiddle, loading, error, deployedContracts} = this.props;
+    const {fiddle, loading, fiddleError, fiddleDeployError, deployedContracts} = this.props;
     const {loadingMessage} = this.state;
     let renderings = [];
     let warnings = [];
@@ -99,7 +99,8 @@ class FiddleContainer extends Component {
           isLoading={loading}
           loadingMessage={loadingMessage}
           hasResult={Boolean(fiddle)}
-          fatal={error}
+          fatalFiddle={fiddleError}
+          fatalFiddleDeploy={fiddleDeployError}
           onDeployClick={(e) => this._onDeployClick(e)}
         />
         <Fiddle
@@ -116,13 +117,14 @@ class FiddleContainer extends Component {
         />
       </React.Fragment>
     );
-    if (fiddle || (this.state.value && error)) {
+    if (fiddle || (this.state.value && (fiddleError || fiddleDeployError))) {
       renderings.push(
         <FiddleResults 
           key="results" 
           errors={errors} 
           warnings={warnings} 
-          fatal={error}
+          fatalFiddle={fiddleError}
+          fatalFiddleDeploy={fiddleDeployError}
           isLoading={loading}
           deployedContracts={deployedContracts}
         />);
@@ -143,23 +145,26 @@ function mapStateToProps(state) {
   return { 
     fiddle: fiddle.data, 
     deployedContracts: deployedFiddle.data,
-    error: fiddle.error || deployedFiddle.error,
+    fiddleError: fiddle.error,
+    fiddleDeployError: deployedFiddle.error,
     loading: state.loading
   };
 }
 
 FiddleContainer.propTypes = {
   fiddle: PropTypes.object,
-  error: PropTypes.string,
+  fiddleError: PropTypes.string,
+  fiddleDeployError: PropTypes.string,
   loading: PropTypes.bool,
   postFiddle: PropTypes.func,
-  postFiddleDeploy: PropTypes.func
+  postFiddleDeploy: PropTypes.func,
+  deployedContracts: PropTypes.object
 };
 
 export default connect(
   mapStateToProps,
   {
-    postFiddle: fiddleAction.request,
-    postFiddleDeploy: fiddleDeployAction.request
+    postFiddle: fiddleAction.post,
+    postFiddleDeploy: fiddleDeployAction.post
   },
 )(FiddleContainer);

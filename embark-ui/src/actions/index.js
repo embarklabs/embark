@@ -170,14 +170,14 @@ export const ensRecords = {
 
 export const FIDDLE = createRequestTypes('FIDDLE');
 export const fiddle = {
-  request: (codeToCompile) => action(FIDDLE[REQUEST], {codeToCompile}),
+  post: (codeToCompile) => action(FIDDLE[REQUEST], {codeToCompile}),
   success: (fiddle) => action(FIDDLE[SUCCESS], {fiddles: [fiddle]}),
   failure: (error) => action(FIDDLE[FAILURE], {error})
 };
 
 export const FIDDLE_DEPLOY = createRequestTypes('FIDDLE_DEPLOY');
 export const fiddleDeploy = {
-  request: (compiledCode) => action(FIDDLE_DEPLOY[REQUEST], {compiledCode}),
+  post: (compiledCode) => action(FIDDLE_DEPLOY[REQUEST], {compiledCode}),
   success: (response) => {
     return action(FIDDLE_DEPLOY[SUCCESS], {fiddleDeploys: [response.contractNames]});
   },

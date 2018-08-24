@@ -107,14 +107,14 @@ export function getMessages(state) {
 export function getFiddle(state) {
   return {
     data: _.last(state.entities.fiddles), 
-    error: _.last(state.errorEntities.fiddles)
+    error: state.errorEntities.fiddles
   };
 }
 
 export function getFiddleDeploy(state) {
   return {
     data: _.last(state.entities.fiddleDeploys), 
-    error: _.last(state.errorEntities.fiddleDeploys)
+    error: state.errorEntities.fiddleDeploys
   };
 }
 

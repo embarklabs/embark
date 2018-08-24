@@ -57,29 +57,51 @@ class FiddleResults extends Component {
   }
   
   render() {
-    const {warnings, errors, fatal, isLoading, deployedContracts} = this.props;
-
+    const {warnings, errors, fatalFiddle, fatalFiddleDeploy, isLoading, deployedContracts} = this.props;
+    const hasFatal = fatalFiddle || fatalFiddleDeploy;
     let renderings = [];
-    if(fatal){
-      renderings.push(
-        <React.Fragment key="fatal">
-          <a id="fatal" aria-hidden="true"/>
-          <Card
-            statusColor="danger"
-            statusSide="true"
-            className="fatal-card"
-            key="fatal-card">
-            <Card.Header>
-              <Card.Title color="danger"><Icon name="slash"/> Failed to compile</Card.Title>
-            </Card.Header>
-            <Card.Body>
-              <Dimmer active={isLoading ? "active" : ""} loader>
-                {fatal}
-              </Dimmer>
-            </Card.Body>
-          </Card>
-        </React.Fragment>
-      );
+    if(hasFatal){
+      if(fatalFiddle){
+        renderings.push(
+          <React.Fragment key="fatal-compile">
+            <a id="fatal-compile" aria-hidden="true"/>
+            <Card
+              statusColor="danger"
+              statusSide="true"
+              className="fatal-card">
+              <Card.Header>
+                <Card.Title color="danger"><Icon name="slash"/> Failed to compile</Card.Title>
+              </Card.Header>
+              <Card.Body>
+                <Dimmer active={isLoading ? "active" : ""} loader>
+                  {fatalFiddle}
+                </Dimmer>
+              </Card.Body>
+            </Card>
+          </React.Fragment>
+        );
+      }
+      if(fatalFiddleDeploy){
+        renderings.push(
+          <React.Fragment key="fatal-deploy">
+            <a id="fatal-deploy" aria-hidden="true"/>
+            <Card
+              statusColor="danger"
+              statusSide="true"
+              className="fatal-card">
+              <Card.Header>
+                <Card.Title color="danger"><Icon name="slash"/> Failed to deploy</Card.Title>
+              </Card.Header>
+              <Card.Body>
+                <Dimmer active={isLoading ? "active" : ""} loader>
+                  {fatalFiddleDeploy}
+                </Dimmer>
+              </Card.Body>
+            </Card>
+          </React.Fragment>
+        );
+      }
+      
     }
     else if (deployedContracts){
       renderings.push(
@@ -128,9 +150,10 @@ class FiddleResults extends Component {
 FiddleResults.propTypes = {
   errors: PropTypes.array,
   warnings: PropTypes.array,
-  fatal: PropTypes.string,
+  fatalFiddle: PropTypes.string,
+  fatalFiddleDeploy: PropTypes.string,
   isLoading: PropTypes.bool,
-  deployedContracts: PropTypes.array
+  deployedContracts: PropTypes.object
 };
 
 export default FiddleResults;

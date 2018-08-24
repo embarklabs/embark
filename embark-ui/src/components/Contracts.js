@@ -7,6 +7,7 @@ import {
   Table
 } from "tabler-react";
 import {Link} from 'react-router-dom';
+import {formatContractForDisplay} from '../utils/presentation';
 
 const Contracts = ({contracts}) => (
   <Page.Content title="Contracts">
@@ -28,11 +29,12 @@ const Contracts = ({contracts}) => (
             <Table.Body>
               {
                 contracts.map((contract) => {
+                  const contractDisplay = formatContractForDisplay(contract);
                   return (
-                    <Table.Row key={contract.className}>
+                    <Table.Row key={contract.className} className={contractDisplay.stateColor}>
                       <Table.Col><Link to={`/embark/contracts/${contract.className}/overview`}>{contract.className}</Link></Table.Col>
-                      <Table.Col>{contract.address || 'Interface or not set to deploy'}</Table.Col>
-                      <Table.Col>{contract.deploy ? 'Deployed' : 'Not deployed'}</Table.Col>
+                      <Table.Col>{contractDisplay.address}</Table.Col>
+                      <Table.Col>{contractDisplay.state}</Table.Col>
                     </Table.Row>
                   );
                 })

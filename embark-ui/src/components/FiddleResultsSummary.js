@@ -6,40 +6,48 @@ import FiddleDeployButton from './FiddleDeployButton';
 class FiddleResultsSummary extends Component{
 
   render(){
-    const {warnings, errors, isLoading, loadingMessage, hasResult, fatal} = this.props;
+    const {warnings, errors, isLoading, loadingMessage, hasResult, fatalFiddle, fatalFiddleDeploy} = this.props;
     let renderings = [];
-    if(fatal) {
-      renderings.push(
-        <React.Fragment key="errors">
-          <a className="badge-link" href="#fatal"><Badge color="danger"><Icon name="slash"/></Badge></a>
-        </React.Fragment>
-      );
-    }
-    else if(isLoading){
+    if(isLoading){
       renderings.push(
         <React.Fragment key="loading"><div className="loader"></div><span className="loader-text">{loadingMessage}</span></React.Fragment>
       );
     }
-    else {
-      if(hasResult && !errors.length){
-        renderings.push(
-          <React.Fragment key="success">
-            <Badge className="badge-link" color="success">Compiled</Badge>
-            <FiddleDeployButton onDeployClick={(e) => this.props.onDeployClick(e)} />
-          </React.Fragment>
-        );
-      }
-      if(errors.length) renderings.push(
+    if(fatalFiddle) {
+      renderings.push(
         <React.Fragment key="errors">
-          <a className="badge-link" href="#errors"><Badge color="danger">{errors.length} error{errors.length > 1 ? "s" : ""}</Badge></a>
-        </React.Fragment>
-      );
-      if(warnings.length) renderings.push(
-        <React.Fragment key="warnings">
-          <a className="badge-link" href="#warnings"><Badge color="warning">{warnings.length} warning{warnings.length > 1 ? "s" : ""}</Badge></a>
+          <a className="badge-link" href="#fatal-compile"><Badge color="danger"><Icon name="slash"/> Compilation</Badge></a>
         </React.Fragment>
       );
     }
+
+    if(fatalFiddleDeploy) {
+      renderings.push(
+        <React.Fragment key="errors">
+          <a className="badge-link" href="#fatal-deploy"><Badge color="danger"><Icon name="slash"/> Deployment</Badge></a>
+        </React.Fragment>
+      );
+    }
+    
+    if(errors.length) renderings.push(
+      <React.Fragment key="errors">
+        <a className="badge-link" href="#errors"><Badge color="danger">{errors.length} error{errors.length > 1 ? "s" : ""}</Badge></a>
+      </React.Fragment>
+    );
+    if(warnings.length) renderings.push(
+      <React.Fragment key="warnings">
+        <a className="badge-link" href="#warnings"><Badge color="warning">{warnings.length} warning{warnings.length > 1 ? "s" : ""}</Badge></a>
+      </React.Fragment>
+    );
+    if(hasResult && !errors.length){
+      renderings.push(
+        <React.Fragment key="success">
+          <Badge className="badge-link" color="success">Compiled</Badge>
+          <FiddleDeployButton onDeployClick={(e) => this.props.onDeployClick(e)} />
+        </React.Fragment>
+      );
+    }
+    
     return (
       <div className={"compilation-summary " + ((hasResult || isLoading) ? "visible" : "")}>
         {renderings}
@@ -55,7 +63,8 @@ FiddleResultsSummary.propTypes = {
   isLoading: PropTypes.bool,
   loadingMessage: PropTypes.string,
   hasResult: PropTypes.bool,
-  fatal: PropTypes.string,
+  fatalFiddle: PropTypes.string,
+  fatalFiddleDeploy: PropTypes.string,
   onDeployClick: PropTypes.func
 };
 
