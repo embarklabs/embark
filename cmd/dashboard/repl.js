@@ -44,6 +44,10 @@ class REPL {
       writer: this.enhancedWriter.bind(this)
     });
 
+    this.events.request("runcode:getContext", (context) => {
+      this.replServer.context = context;
+    });
+
     this.replServer.on("exit", () => {
       process.exit();
     });
