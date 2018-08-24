@@ -14,7 +14,8 @@ module.exports = {
                               // Balances are in Wei, but you can specify the unit with its name
         },
         {
-          privateKeyFile: "path/to/file" // You can put more than one key, separated by , or ;
+          privateKeyFile: "path/to/file", // Either a keystore or a list of keys, separated by , or ;
+          password: "passwordForTheKeystore" // Needed to decrypt the keystore file
         },
         {
           mnemonic: "12 word mnemonic",
