@@ -63,4 +63,7 @@ contract Token {
   function safeToAdd(uint a, uint b) internal pure returns (bool) {
     return (a + b >= a);
   }
+  function isAvailable() public constant returns (bool) {
+    return false;
+  }
 }
