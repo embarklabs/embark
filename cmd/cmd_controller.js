@@ -5,11 +5,6 @@ require('colors');
 
 let version = require('../package.json').version;
 
-// Set PWD to CWD since Windows doesn't have a value for PWD
-if (!process.env.PWD) {
-  process.env.PWD = process.cwd();
-}
-
 class EmbarkController {
 
   constructor(options) {
@@ -84,7 +79,8 @@ class EmbarkController {
       logLevel: options.logLevel,
       context: self.context,
       useDashboard: options.useDashboard,
-      webServerConfig: webServerConfig
+      webServerConfig: webServerConfig,
+      webpackConfigName: options.webpackConfigName
     });
     engine.init();
 
@@ -191,7 +187,8 @@ class EmbarkController {
       logger: options.logger,
       config: options.config,
       plugins: options.plugins,
-      context: this.context
+      context: this.context,
+      webpackConfigName: options.webpackConfigName
     });
     engine.init();
 
@@ -259,7 +256,8 @@ class EmbarkController {
       logFile: options.logFile,
       logLevel: options.logLevel,
       context: this.context,
-      ipcRole: 'client'
+      ipcRole: 'client',
+      webpackConfigName: options.webpackConfigName
     });
     engine.init();
     async.waterfall([
@@ -404,8 +402,31 @@ class EmbarkController {
     var fs = require('../lib/core/fs.js');
     fs.removeSync('./chains.json');
     fs.removeSync('.embark/');
+    fs.removeSync('node_modules/.cache');
     fs.removeSync('dist/');
     console.log(__("reset done!").green);
+  }
+
+  ejectWebpack() {
+    var fs = require('../lib/core/fs.js');
+    var dappConfig = fs.dappPath('webpack.config.js');
+    var embarkConfig = fs.embarkPath('lib/pipeline', 'webpack.config.js');
+    let ext = 1;
+    let dappConfigOld = dappConfig;
+    while (fs.existsSync(dappConfigOld)) {
+      dappConfigOld = dappConfig + `.${ext}`;
+      ext++;
+    }
+    if (dappConfigOld !== dappConfig) {
+      fs.copySync(dappConfig, dappConfigOld);
+      console.warn(`${dappConfig}`.yellow);
+      console.warn(__('copied to').dim.yellow);
+      console.warn(`${dappConfigOld}\n`.yellow);
+    }
+    fs.copySync(embarkConfig, dappConfig);
+    console.log(`${embarkConfig}`.green);
+    console.log(__('copied to').dim.green);
+    console.log(`${dappConfig}`.green);
   }
 
   upload(options) {

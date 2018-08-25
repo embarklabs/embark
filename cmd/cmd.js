@@ -1,7 +1,34 @@
 const program = require('commander');
 const EmbarkController = require('./cmd_controller.js');
 const i18n = require('../lib/core/i18n/i18n.js');
+const utils = require('../lib/utils/utils.js');
+
 let embark = new EmbarkController;
+
+// set PWD to process.cwd() since Windows doesn't have a value for PWD
+if (!process.env.PWD) {
+  process.env.PWD = process.cwd();
+}
+
+// set the anchor for embark's fs.dappPath()
+if (!process.env.DAPP_PATH) {
+  process.env.DAPP_PATH = process.env.PWD;
+}
+
+// set the anchor for embark's fs.embarkPath()
+if (!process.env.EMBARK_PATH) {
+  process.env.EMBARK_PATH = utils.joinPath(__dirname, '..');
+}
+
+// NOTE: setting NODE_PATH at runtime won't effect lookup behavior in the
+// current process, but will take effect in child processes; this enables
+// lookup of *global* embark's own node_modules from within dapp scripts (such
+// as an ejected webpack.config.js), making embark's dependencies trasitive
+// dependencies of a dapp without the dapp explicitly specifying embark as a
+// dependency in the dapp's package.json
+process.env.NODE_PATH = utils.joinPath(process.env.EMBARK_PATH, 'node_modules')
+  + (process.env.NODE_PATH ? require('path').delimiter : '')
+  + (process.env.NODE_PATH || '');
 
 class Cmd {
   constructor() {
@@ -18,6 +45,7 @@ class Cmd {
     this.simulator();
     this.test();
     this.reset();
+    this.ejectWebpack();
     this.graph();
     this.upload();
     this.versionCmd();
@@ -99,6 +127,7 @@ class Cmd {
       .option('-c, --client [client]', __('Use a specific ethereum client or simulator (supported: %s)', 'geth, testrpc'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'debug')
       .option('--locale [locale]', __('language to use (default: en)'))
+      .option('--pipeline [pipeline]', __('webpack config to use (default: production)'))
       .description(__('deploy and build dapp at ') + 'dist/ (default: development)')
       .action(function (env, _options) {
         i18n.setOrDetectLocale(_options.locale);
@@ -107,6 +136,7 @@ class Cmd {
         _options.logLevel = _options.loglevel; // fix casing
         _options.onlyCompile = _options.contracts;
         _options.client = _options.client || 'geth';
+        _options.webpackConfigName = _options.pipeline || 'production';
         embark.build(_options);
       });
   }
@@ -123,6 +153,7 @@ class Cmd {
       .option('--logfile [logfile]', __('filename to output logs (default: %s)', 'none'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'debug')
       .option('--locale [locale]', __('language to use (default: en)'))
+      .option('--pipeline [pipeline]', __('webpack config to use (default: development)'))
       .description(__('run dapp (default: %s)', 'development'))
       .action(function (env, options) {
         i18n.setOrDetectLocale(options.locale);
@@ -135,7 +166,8 @@ class Cmd {
           runWebserver: !options.noserver,
           useDashboard: !options.nodashboard,
           logFile: options.logfile,
-          logLevel: options.loglevel
+          logLevel: options.loglevel,
+          webpackConfigName: options.pipeline || 'development'
         });
       });
   }
@@ -147,6 +179,7 @@ class Cmd {
       .option('--logfile [logfile]', __('filename to output logs (default: %s)', 'none'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'debug')
       .option('--locale [locale]', __('language to use (default: en)'))
+      .option('--pipeline [pipeline]', __('webpack config to use (default: development)'))
       .description(__('Start the Embark console'))
       .action(function (env, options) {
         i18n.setOrDetectLocale(options.locale);
@@ -155,7 +188,8 @@ class Cmd {
           client: options.client || 'geth',
           locale: options.locale,
           logFile: options.logfile,
-          logLevel: options.loglevel
+          logLevel: options.loglevel,
+          webpackConfigName: options.pipeline || 'development'
         });
       });
   }
@@ -273,6 +307,15 @@ class Cmd {
           embarkConfig: 'embark.json', interceptLogs: false
         });
         embark.reset();
+      });
+  }
+
+  ejectWebpack() {
+    program
+      .command('eject-webpack')
+      .description(__('copy the default webpack config into your dapp for customization'))
+      .action(function () {
+        embark.ejectWebpack();
       });
   }
 
