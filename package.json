@@ -101,6 +101,7 @@
     "solc": "0.4.25",
     "string-replace-async": "1.2.1",
     "style-loader": "0.23.0",
+    "subdir": "0.0.3",
     "swarm-api": "0.1.2",
     "tar": "3.2.1",
     "toposort": "1.0.7",
