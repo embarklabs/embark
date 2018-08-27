@@ -11,7 +11,7 @@ import {getContract, getContractFile} from "../reducers/selectors";
 
 class ContractSourceContainer extends Component {
   componentDidMount() {
-    this.props.fetchContractFile(this.props.contract.originalFilename);
+    this.props.fetchContractFile(this.props.contract.filename);
   }
 
   render() {
@@ -27,7 +27,7 @@ class ContractSourceContainer extends Component {
 
 function mapStateToProps(state, props) {
   const contract = getContract(state, props.match.params.contractName);
-  const contractFile = getContractFile(state, contract.originalFilename);
+  const contractFile = getContractFile(state, contract.filename);
 
   return {
     contract,

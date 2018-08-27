@@ -179,9 +179,16 @@ export const FIDDLE_DEPLOY = createRequestTypes('FIDDLE_DEPLOY');
 export const fiddleDeploy = {
   post: (compiledCode) => action(FIDDLE_DEPLOY[REQUEST], {compiledCode}),
   success: (response) => {
-    return action(FIDDLE_DEPLOY[SUCCESS], {fiddleDeploys: [response.contractNames]});
+    return action(FIDDLE_DEPLOY[SUCCESS], {fiddleDeploys: response.result});
   },
   failure: (error) => action(FIDDLE_DEPLOY[FAILURE], {error})
+};
+
+export const FIDDLE_FILE = createRequestTypes('FIDDLE_FILE');
+export const fiddleFile = {
+  request: () => action(FIDDLE_FILE[REQUEST]),
+  success: (source) => action(FIDDLE_FILE[SUCCESS], {fiddleFiles: [{source, filename: 'temp'}]}),
+  failure: (error) => action(FIDDLE_FILE[FAILURE], {error})
 };
 
 // Web Socket

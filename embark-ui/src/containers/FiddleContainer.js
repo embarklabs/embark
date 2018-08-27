@@ -3,12 +3,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {fiddle as fiddleAction, fiddleDeploy as fiddleDeployAction} from '../actions';
+import {fiddle as fiddleAction, fiddleDeploy as fiddleDeployAction, fiddleFile as fiddleFileAction} from '../actions';
 import Fiddle from '../components/Fiddle';
 import FiddleResults from '../components/FiddleResults';
 import FiddleResultsSummary from '../components/FiddleResultsSummary';
 import scrollToComponent from 'react-scroll-to-component';
-import {getFiddle, getFiddleDeploy} from "../reducers/selectors";
+import {getFiddle, getFiddleDeploy, getLastFiddle} from "../reducers/selectors";
 import CompilerError from "../components/CompilerError";
 
 class FiddleContainer extends Component {
@@ -22,6 +22,16 @@ class FiddleContainer extends Component {
     this.compileTimeout = null;
     this.ace = null;
     this.editor = null;
+  }
+
+  componentDidMount() {
+    this.props.fetchLastFiddle();
+    
+  }
+  componentDidUpdate(prevProps){
+    if(prevProps.lastFiddle !== this.props.lastFiddle){
+      this._onCodeChange(this.props.lastFiddle);
+    }
   }
 
   _onCodeChange(newValue) {
@@ -82,7 +92,7 @@ class FiddleContainer extends Component {
   }
 
   render() {
-    const {fiddle, loading, fiddleError, fiddleDeployError, deployedContracts} = this.props;
+    const {fiddle, loading, fiddleError, fiddleDeployError, deployedContracts, lastFiddle} = this.props;
     const {loadingMessage} = this.state;
     let renderings = [];
     let warnings = [];
@@ -104,7 +114,7 @@ class FiddleContainer extends Component {
           onDeployClick={(e) => this._onDeployClick(e)}
         />
         <Fiddle
-          value={this.state.value} 
+          value={this.state.value || lastFiddle} 
           onCodeChange={(n) => this._onCodeChange(n)} 
           errors={errors} 
           warnings={warnings}
@@ -142,11 +152,13 @@ class FiddleContainer extends Component {
 function mapStateToProps(state) {
   const fiddle = getFiddle(state);
   const deployedFiddle = getFiddleDeploy(state);
+  const lastFiddle = getLastFiddle(state);
   return { 
     fiddle: fiddle.data, 
     deployedContracts: deployedFiddle.data,
     fiddleError: fiddle.error,
     fiddleDeployError: deployedFiddle.error,
+    lastFiddle: lastFiddle ? lastFiddle.source : '',
     loading: state.loading
   };
 }
@@ -158,13 +170,16 @@ FiddleContainer.propTypes = {
   loading: PropTypes.bool,
   postFiddle: PropTypes.func,
   postFiddleDeploy: PropTypes.func,
-  deployedContracts: PropTypes.object
+  deployedContracts: PropTypes.string,
+  fetchLastFiddle: PropTypes.func,
+  lastFiddle: PropTypes.string
 };
 
 export default connect(
   mapStateToProps,
   {
     postFiddle: fiddleAction.post,
-    postFiddleDeploy: fiddleDeployAction.post
+    postFiddleDeploy: fiddleDeployAction.post,
+    fetchLastFiddle: fiddleFileAction.request
   },
 )(FiddleContainer);

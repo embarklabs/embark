@@ -116,7 +116,7 @@ class FiddleResults extends Component {
           <Card.Body>
             <Dimmer active={isLoading ? "active" : ""} loader>
               <Button
-                to={`/embark/contracts/${deployedContracts[0]}/overview`}
+                to={`/embark/contracts/${deployedContracts}/overview`}
                 RootComponent={NavLink}
               >Play with my contract(s)</Button>
             </Dimmer>
@@ -153,7 +153,7 @@ FiddleResults.propTypes = {
   fatalFiddle: PropTypes.string,
   fatalFiddleDeploy: PropTypes.string,
   isLoading: PropTypes.bool,
-  deployedContracts: PropTypes.object
+  deployedContracts: PropTypes.string
 };
 
 export default FiddleResults;

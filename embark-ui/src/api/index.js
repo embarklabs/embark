@@ -108,6 +108,10 @@ export function fetchContractFile(payload) {
   return get('/files/contracts', {params: payload});
 }
 
+export function fetchLastFiddle() {
+  return get('/files/lastfiddle', {params: 'temp'});
+}
+
 export function listenToChannel(channel) {
   return new WebSocket(`${constants.wsEndpoint}/communication/listenTo/${channel}`);
 }

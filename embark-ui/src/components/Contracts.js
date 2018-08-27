@@ -9,8 +9,8 @@ import {
 import {Link} from 'react-router-dom';
 import {formatContractForDisplay} from '../utils/presentation';
 
-const Contracts = ({contracts}) => (
-  <Page.Content title="Contracts">
+const Contracts = ({contracts, title = "Contracts"}) => (
+  <Page.Content title={title}>
     <Grid.Row>
       <Grid.Col>
         <Card>
@@ -48,7 +48,8 @@ const Contracts = ({contracts}) => (
 );
 
 Contracts.propTypes = {
-  contracts: PropTypes.arrayOf(PropTypes.object)
+  contracts: PropTypes.array,
+  title: PropTypes.string
 };
 
 export default Contracts;

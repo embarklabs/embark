@@ -53,7 +53,11 @@ export function getContractLogsByContract(state, contractName) {
 }
 
 export function getContracts(state) {
-  return state.entities.contracts;
+  return state.entities.contracts.filter(contract => !contract.isFiddle);
+}
+
+export function getFiddleContracts(state) {
+  return state.entities.contracts.filter(contract => contract.isFiddle);
 }
 
 export function getContract(state, contractName) {
@@ -116,6 +120,10 @@ export function getFiddleDeploy(state) {
     data: _.last(state.entities.fiddleDeploys), 
     error: state.errorEntities.fiddleDeploys
   };
+}
+
+export function getLastFiddle(state) {
+  return state.entities.fiddleFiles.find((fiddleFile => fiddleFile.filename === 'temp'));
 }
 
 export function getEnsRecords(state) {
