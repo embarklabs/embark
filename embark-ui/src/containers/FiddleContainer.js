@@ -29,7 +29,7 @@ class FiddleContainer extends Component {
     
   }
   componentDidUpdate(prevProps){
-    if(prevProps.lastFiddle !== this.props.lastFiddle){
+    if(this.props.lastFiddle && (prevProps.lastFiddle !== this.props.lastFiddle)){
       this._onCodeChange(this.props.lastFiddle);
     }
   }
