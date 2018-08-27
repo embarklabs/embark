@@ -1,6 +1,5 @@
 import {combineReducers} from 'redux';
 import {REQUEST, SUCCESS} from "../actions";
-//import entitiesDefaultState from "../api/entities";
 
 const BN_FACTOR = 10000;
 const voidAddress = '0x0000000000000000000000000000000000000000';
