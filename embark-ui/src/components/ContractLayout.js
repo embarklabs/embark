@@ -14,7 +14,7 @@ import ContractDeploymentContainer from '../containers/ContractDeploymentContain
 import ContractProfileContainer from '../containers/ContractProfileContainer';
 import ContractSourceContainer from '../containers/ContractSourceContainer';
 
-const ContractLayout = ({match}) => (
+const ContractLayout = ({match, contract}) => (
   <Grid.Row>
     <Grid.Col md={3}>
       <Page.Title className="my-5">&nbsp;</Page.Title>
@@ -28,14 +28,18 @@ const ContractLayout = ({match}) => (
           >
             Overview
           </List.GroupItem>
-          <List.GroupItem
-            className="d-flex align-items-center"
-            to={`/embark/contracts/${match.params.contractName}/deployment`}
-            icon="users"
-            RootComponent={NavLink}
-          >
-            Deployment / Utils
-          </List.GroupItem>
+          {!contract.isFiddle ? 
+            <List.GroupItem
+              className="d-flex align-items-center"
+              to={`/embark/contracts/${match.params.contractName}/deployment`}
+              icon="users"
+              RootComponent={NavLink}
+            >
+              Deployment / Utils
+            </List.GroupItem>
+            :
+            ''
+          }
           <List.GroupItem
             className="d-flex align-items-center"
             to={`/embark/contracts/${match.params.contractName}/functions`}
