@@ -36,7 +36,6 @@ class ContractDeploymentContainer extends Component {
                      render={({gasStats}) => (
                        <GasStation gasStats={gasStats}/>
                      )}/>
-
       </React.Fragment>
     );
   }
@@ -58,6 +57,7 @@ ContractDeploymentContainer.propTypes = {
   contractFunctions: PropTypes.arrayOf(PropTypes.object),
   postContractDeploy: PropTypes.func,
   fetchContractProfile: PropTypes.func,
+  fetchEthGas: PropTypes.func,
   error: PropTypes.string
 };
 
