@@ -446,7 +446,8 @@ class EmbarkController {
       logger: options.logger,
       config: options.config,
       plugins: options.plugins,
-      context: this.context
+      context: this.context,
+      webpackConfigName: options.webpackConfigName
     });
     engine.init();
 

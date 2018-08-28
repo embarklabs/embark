@@ -260,6 +260,7 @@ class Cmd {
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'debug')
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('-c, --client [client]', __('Use a specific ethereum client or simulator (supported: %s)', 'geth, testrpc'))
+      .option('--pipeline [pipeline]', __('webpack config to use (default: production)'))
       .description(__('Upload your dapp to a decentralized storage') + '.')
       .action(function (env, _options) {
         i18n.setOrDetectLocale(_options.locale);
@@ -272,6 +273,7 @@ class Cmd {
         _options.logFile = _options.logfile; // fix casing
         _options.logLevel = _options.loglevel; // fix casing
         _options.client = _options.client || 'geth';
+        _options.webpackConfigName = _options.pipeline || 'production';
         embark.upload(_options);
       });
   }
