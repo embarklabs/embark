@@ -73,7 +73,7 @@ class GasStation extends Component {
       <Grid.Col>
         <Card>
           <Card.Header>
-            <Card.Title>Gas Price Estimator</Card.Title>
+            <Card.Title>Gas Price Estimator (for Mainnet)</Card.Title>
             <Card.Options>
               <CopyToClipboard text={currentGasStep.price}
                                onCopy={() => this.setState({copied: true})}

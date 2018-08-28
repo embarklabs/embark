@@ -113,14 +113,14 @@ export const contractFile = {
 
 export const CONTRACT_FUNCTION = createRequestTypes('CONTRACT_FUNCTION');
 export const contractFunction = {
-  post: (contractName, method, inputs) => action(CONTRACT_FUNCTION[REQUEST], {contractName, method, inputs}),
+  post: (contractName, method, inputs, gasPrice) => action(CONTRACT_FUNCTION[REQUEST], {contractName, method, inputs, gasPrice}),
   success: (result, payload) => action(CONTRACT_FUNCTION[SUCCESS], {contractFunctions: [{...result, ...payload}]}),
   failure: (error) => action(CONTRACT_FUNCTION[FAILURE], {error})
 };
 
 export const CONTRACT_DEPLOY = createRequestTypes('CONTRACT_DEPLOY');
 export const contractDeploy = {
-  post: (contractName, method, inputs) => action(CONTRACT_DEPLOY[REQUEST], {contractName, method, inputs}),
+  post: (contractName, method, inputs, gasPrice) => action(CONTRACT_DEPLOY[REQUEST], {contractName, method, inputs, gasPrice}),
   success: (result, payload) => action(CONTRACT_DEPLOY[SUCCESS], {contractDeploys: [{...result, ...payload}]}),
   failure: (error) => action(CONTRACT_DEPLOY[FAILURE], {error})
 };

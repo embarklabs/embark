@@ -15,13 +15,17 @@ class ContractFunction extends Component {
     this.state = {inputs: {}};
   }
 
+  static isPureCall(method) {
+    return (method.mutability === 'view' || method.mutability === 'pure');
+  }
+
   buttonTitle() {
     const {method} = this.props;
     if (method.name === 'constructor') {
       return 'Deploy';
     }
 
-    return (method.mutability === 'view' || method.mutability === 'pure') ? 'Call' : 'Send';
+    return ContractFunction.isPureCall(method) ? 'Call' : 'Send';
   }
 
   inputsAsArray() {
@@ -38,7 +42,7 @@ class ContractFunction extends Component {
 
   handleCall(e) {
     e.preventDefault();
-    this.props.postContractFunction(this.props.contractProfile.name, this.props.method.name, this.inputsAsArray());
+    this.props.postContractFunction(this.props.contractProfile.name, this.props.method.name, this.inputsAsArray(), this.state.inputs.gasPrice * 1000000000);
   }
 
   callDisabled() {
@@ -59,6 +63,11 @@ class ContractFunction extends Component {
                   <Form.Input placeholder={input.type} onChange={(e) => this.handleChange(e, input.name)}/>
                 </Form.Group>
               ))}
+              {!ContractFunction.isPureCall(this.props.method) &&
+                <Form.Group key="gasPrice" label="Gas Price (in GWei)(optional)">
+                  <Form.Input onChange={(e) => this.handleChange(e, 'gasPrice')}/>
+                </Form.Group>
+              }
               <Button color="primary" disabled={this.callDisabled()} onClick={(e) => this.handleCall(e)}>
                 {this.buttonTitle()}
               </Button>
