@@ -1,20 +1,8 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
-import {Card, Form, Grid, StampCard} from 'tabler-react';
+import {Card, Form, Grid, StampCard, Stamp} from 'tabler-react';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
-const test = {
-  "fast": 50.0,
-  "speed": 0.998437456605574,
-  "fastest": 400.0,
-  "avgWait": 1.9,
-  "fastWait": 0.7,
-  "blockNum": 6228803,
-  "safeLowWait": 1.9,
-  "block_time": 14.326530612244898,
-  "fastestWait": 0.5,
-  "safeLow": 24.0,
-  "average": 24.0
-};
 const COLORS = {
   good: 'green',
   medium: 'yellow',
@@ -28,7 +16,10 @@ class GasStation extends Component {
       return console.error('gasStats is a needed Prop for GasStation');
     }
 
-    this.state = {gasSliderIndex: 0};
+    this.state = {
+      gasSliderIndex: 0,
+      copied: false
+    };
     this.formattedGasStats = GasStation.formatGasStats(props.gasStats);
   }
 
@@ -83,9 +74,17 @@ class GasStation extends Component {
         <Card>
           <Card.Header>
             <Card.Title>Gas Price Estimator</Card.Title>
+            <Card.Options>
+              <CopyToClipboard text={currentGasStep.price}
+                               onCopy={() => this.setState({copied: true})}
+                               title="Copy gas price to clipboard">
+                <span><Stamp color="blue" icon="copy"/></span>
+              </CopyToClipboard>
+            </Card.Options>
           </Card.Header>
 
           <Card.Body>
+            {this.state.copied && <p>Copied Gas Price</p>}
             <Grid.Row cards={true}>
               <Grid.Col lg={6} md={6} sm={12}>
                 <StampCard icon="sliders" color={GasStation.getColorForPrice(currentGasStep.price)}>
@@ -101,11 +100,11 @@ class GasStation extends Component {
 
             <Form.Group>
               <input type="range" className="slider"
-                max={this.formattedGasStats.gasSteps.length - 1}
-                min={0}
-                step={1}
-                value={this.state.gasSliderIndex}
-                onChange={(e) => this.gasSliderChange(e)}
+                     max={this.formattedGasStats.gasSteps.length - 1}
+                     min={0}
+                     step={1}
+                     value={this.state.gasSliderIndex}
+                     onChange={(e) => this.gasSliderChange(e)}
               />
             </Form.Group>
 
@@ -113,7 +112,7 @@ class GasStation extends Component {
             <Grid.Row cards={true}>
               <Grid.Col lg={4} md={6} sm={12}>
                 <StampCard icon="sliders" color="grey">
-                 Average Price: {this.formattedGasStats.average.price / 10} Gwei
+                  Average Price: {this.formattedGasStats.average.price / 10} Gwei
                 </StampCard>
               </Grid.Col>
               <Grid.Col lg={4} md={6} sm={12}>
