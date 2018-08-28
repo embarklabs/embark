@@ -3,7 +3,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {fiddle as fiddleAction, fiddleDeploy as fiddleDeployAction, fiddleFile as fiddleFileAction} from '../actions';
+import {
+  fiddle as fiddleAction, 
+  fiddleDeploy as fiddleDeployAction, 
+  fiddleFile as fiddleFileAction,
+  putLastFiddle as putLastFiddleAction
+} from '../actions';
 import Fiddle from '../components/Fiddle';
 import FiddleResults from '../components/FiddleResults';
 import FiddleResultsSummary from '../components/FiddleResultsSummary';
@@ -16,8 +21,9 @@ class FiddleContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: '',
-      loadingMessage: ''
+      value: undefined,
+      loadingMessage: 'Loading...',
+      readOnly: true
     };
     this.compileTimeout = null;
     this.ace = null;
@@ -25,21 +31,32 @@ class FiddleContainer extends Component {
   }
 
   componentDidMount() {
+    this.setState({loadingMessage: 'Loading saved state...'});
     this.props.fetchLastFiddle();
-    
   }
   componentDidUpdate(prevProps){
-    if(this.props.lastFiddle && (prevProps.lastFiddle !== this.props.lastFiddle)){
+    if(this.props.lastFiddle && //!(this.props.fiddle && this.state.value === '') &&
+      (
+        (prevProps.lastFiddle !== this.props.lastFiddle)
+      )
+    )
+    {
       this._onCodeChange(this.props.lastFiddle);
     }
   }
 
+  componentWillUnmount(){
+    //this.props.fetchLastFiddle();
+    this.props.putLastFiddle(this.state.value); // force update on next load
+  }
+
   _onCodeChange(newValue) {
-    this.setState({value: newValue});
+    this.setState({readOnly: false, value: newValue});
     if (this.compileTimeout) clearTimeout(this.compileTimeout);
     this.compileTimeout = setTimeout(() => {
       this.setState({loadingMessage: 'Compiling...'});
       this.props.postFiddle(newValue);
+      //this.props.putLastFiddle(newValue);
     }, 1000);
 
   }
@@ -93,7 +110,7 @@ class FiddleContainer extends Component {
 
   render() {
     const {fiddle, loading, fiddleError, fiddleDeployError, deployedContracts, lastFiddle} = this.props;
-    const {loadingMessage} = this.state;
+    const {loadingMessage, value, readOnly} = this.state;
     let renderings = [];
     let warnings = [];
     let errors = [];
@@ -114,7 +131,9 @@ class FiddleContainer extends Component {
           onDeployClick={(e) => this._onDeployClick(e)}
         />
         <Fiddle
-          value={this.state.value || lastFiddle} 
+          // value={fiddle ? this.state.value : lastFiddle} 
+          value={value !== undefined ? value : lastFiddle} 
+          readOnly={readOnly}
           onCodeChange={(n) => this._onCodeChange(n)} 
           errors={errors} 
           warnings={warnings}
@@ -158,7 +177,7 @@ function mapStateToProps(state) {
     deployedContracts: deployedFiddle.data,
     fiddleError: fiddle.error,
     fiddleDeployError: deployedFiddle.error,
-    lastFiddle: lastFiddle ? lastFiddle.source : '',
+    lastFiddle: (lastFiddle && lastFiddle.source && !lastFiddle.source.error) ? lastFiddle.source : undefined,
     loading: state.loading
   };
 }
@@ -172,7 +191,8 @@ FiddleContainer.propTypes = {
   postFiddleDeploy: PropTypes.func,
   deployedContracts: PropTypes.string,
   fetchLastFiddle: PropTypes.func,
-  lastFiddle: PropTypes.string
+  lastFiddle: PropTypes.string,
+  putLastFiddle: PropTypes.func
 };
 
 export default connect(
@@ -180,6 +200,7 @@ export default connect(
   {
     postFiddle: fiddleAction.post,
     postFiddleDeploy: fiddleDeployAction.post,
-    fetchLastFiddle: fiddleFileAction.request
+    fetchLastFiddle: fiddleFileAction.request,
+    putLastFiddle: putLastFiddleAction
   },
 )(FiddleContainer);
