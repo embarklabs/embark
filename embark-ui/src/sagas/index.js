@@ -138,6 +138,10 @@ export function *watchPostFiddle() {
   yield takeEvery(actions.FIDDLE[actions.REQUEST], postFiddle);
 }
 
+export function *watchFetchLastFiddleSuccess() {
+  yield takeEvery(actions.FIDDLE_FILE[actions.SUCCESS], postFiddle);
+}
+
 export function *watchPostFiddleDeploy() {
   yield takeEvery(actions.FIDDLE_DEPLOY[actions.REQUEST], postFiddleDeploy);
 }
@@ -230,6 +234,7 @@ export default function *root() {
     fork(watchPostFiddle),
     fork(watchPostFiddleDeploy),
     fork(watchFetchLastFiddle),
+    fork(watchFetchLastFiddleSuccess),
     fork(watchFetchEnsRecord),
     fork(watchPostEnsRecords)
   ]);

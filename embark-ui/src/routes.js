@@ -17,7 +17,7 @@ const routes = (
       <Route path="/embark/processes/" component={ProcessesLayout} />
       <Route path="/embark/contracts/:contractName" component={ContractContainer} />
       <Route path="/embark/contracts" component={ContractsContainer} />
-      <Route path="/embark/fiddle" component={FiddleContainer} />
+      <Route path="/embark/fiddle" render={() => <FiddleContainer />} />
       <Route component={NoMatch} />
     </Switch>
   </React.Fragment>

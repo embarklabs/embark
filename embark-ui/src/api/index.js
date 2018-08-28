@@ -129,7 +129,7 @@ export function webSocketBlockHeader() {
 }
 
 export function postFiddle(payload) {
-  return post('/contract/compile', {code: payload.codeToCompile});
+  return post('/contract/compile', payload);
 }
 
 export function postFiddleDeploy(payload) {

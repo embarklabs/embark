@@ -171,8 +171,8 @@ export const ensRecords = {
 export const FIDDLE = createRequestTypes('FIDDLE');
 export const fiddle = {
   post: (codeToCompile) => action(FIDDLE[REQUEST], {codeToCompile}),
-  success: (fiddle) => {
-    return action(FIDDLE[SUCCESS], {fiddles: [fiddle]});
+  success: (fiddle, payload) => {
+    return action(FIDDLE[SUCCESS], {fiddles: [{...fiddle, ...payload}]});
   },
   failure: (error) => action(FIDDLE[FAILURE], {error})
 };
@@ -189,12 +189,8 @@ export const fiddleDeploy = {
 export const FIDDLE_FILE = createRequestTypes('FIDDLE_FILE');
 export const fiddleFile = {
   request: () => action(FIDDLE_FILE[REQUEST]),
-  success: (source) => action(FIDDLE_FILE[SUCCESS], {fiddleFiles: [{source, filename: 'temp'}]}),
+  success: (codeToCompile) => action(FIDDLE_FILE[SUCCESS], {codeToCompile}),
   failure: (error) => action(FIDDLE_FILE[FAILURE], {error})
-};
-
-export const putLastFiddle = (lastFiddleValue) => {
-  return ({ type: FIDDLE_FILE[SUCCESS], fiddleFiles: [{source: lastFiddleValue, filename: 'temp'}] });
 };
 
 // Web Socket

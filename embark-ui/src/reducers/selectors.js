@@ -110,20 +110,16 @@ export function getMessages(state) {
 
 export function getFiddle(state) {
   return {
-    data: _.last(state.entities.fiddles), 
+    data: _.last(state.entities.fiddles),
     error: state.errorEntities.fiddles
   };
 }
 
 export function getFiddleDeploy(state) {
   return {
-    data: _.last(state.entities.fiddleDeploys), 
+    data: _.last(state.entities.fiddleDeploys),
     error: state.errorEntities.fiddleDeploys
   };
-}
-
-export function getLastFiddle(state) {
-  return state.entities.fiddleFiles.find((fiddleFile => fiddleFile.filename === 'temp'));
 }
 
 export function getEnsRecords(state) {

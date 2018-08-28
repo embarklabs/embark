@@ -4,16 +4,15 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {
-  fiddle as fiddleAction, 
-  fiddleDeploy as fiddleDeployAction, 
-  fiddleFile as fiddleFileAction,
-  putLastFiddle as putLastFiddleAction
+  fiddle as fiddleAction,
+  fiddleDeploy as fiddleDeployAction,
+  fiddleFile as fiddleFileAction
 } from '../actions';
 import Fiddle from '../components/Fiddle';
 import FiddleResults from '../components/FiddleResults';
 import FiddleResultsSummary from '../components/FiddleResultsSummary';
 import scrollToComponent from 'react-scroll-to-component';
-import {getFiddle, getFiddleDeploy, getLastFiddle} from "../reducers/selectors";
+import {getFiddle, getFiddleDeploy} from "../reducers/selectors";
 import CompilerError from "../components/CompilerError";
 
 class FiddleContainer extends Component {
@@ -32,22 +31,15 @@ class FiddleContainer extends Component {
 
   componentDidMount() {
     this.setState({loadingMessage: 'Loading saved state...'});
-    this.props.fetchLastFiddle();
-  }
-  componentDidUpdate(prevProps){
-    if(this.props.lastFiddle && //!(this.props.fiddle && this.state.value === '') &&
-      (
-        (prevProps.lastFiddle !== this.props.lastFiddle)
-      )
-    )
-    {
-      this._onCodeChange(this.props.lastFiddle);
+    if (!this.props.fiddle) {
+      this.props.fetchLastFiddle();
     }
   }
 
-  componentWillUnmount(){
-    //this.props.fetchLastFiddle();
-    this.props.putLastFiddle(this.state.value); // force update on next load
+  componentDidUpdate() {
+    if(!this.state.value && this.props.fiddle) {
+      this.setState({value: this.props.fiddle.codeToCompile});
+    }
   }
 
   _onCodeChange(newValue) {
@@ -56,7 +48,6 @@ class FiddleContainer extends Component {
     this.compileTimeout = setTimeout(() => {
       this.setState({loadingMessage: 'Compiling...'});
       this.props.postFiddle(newValue);
-      //this.props.putLastFiddle(newValue);
     }, 1000);
 
   }
@@ -74,7 +65,7 @@ class FiddleContainer extends Component {
           });
           errors.push({
             solcError: error,
-            node: 
+            node:
             <CompilerError
               onClick={(e) => { this._onErrorClick(e, annotation); }}
               key={`${errorType}_${index}`}
@@ -109,7 +100,7 @@ class FiddleContainer extends Component {
   }
 
   render() {
-    const {fiddle, loading, fiddleError, fiddleDeployError, deployedContracts, lastFiddle} = this.props;
+    const {fiddle, loading, fiddleError, fiddleDeployError, deployedContracts} = this.props;
     const {loadingMessage, value, readOnly} = this.state;
     let renderings = [];
     let warnings = [];
@@ -121,7 +112,7 @@ class FiddleContainer extends Component {
     renderings.push(
       <React.Fragment key="fiddle">
         <FiddleResultsSummary
-          errors={errors} 
+          errors={errors}
           warnings={warnings}
           isLoading={loading}
           loadingMessage={loadingMessage}
@@ -131,27 +122,26 @@ class FiddleContainer extends Component {
           onDeployClick={(e) => this._onDeployClick(e)}
         />
         <Fiddle
-          // value={fiddle ? this.state.value : lastFiddle} 
-          value={value !== undefined ? value : lastFiddle} 
+          value={value}
           readOnly={readOnly}
-          onCodeChange={(n) => this._onCodeChange(n)} 
-          errors={errors} 
+          onCodeChange={(n) => this._onCodeChange(n)}
+          errors={errors}
           warnings={warnings}
-          ref={(fiddle) => { 
+          ref={(fiddle) => {
             if(fiddle) {
-              this.editor = fiddle.ace.editor; 
+              this.editor = fiddle.ace.editor;
               this.ace = fiddle.ace;
             }
-          }} 
+          }}
         />
       </React.Fragment>
     );
     if (fiddle || (this.state.value && (fiddleError || fiddleDeployError))) {
       renderings.push(
-        <FiddleResults 
-          key="results" 
-          errors={errors} 
-          warnings={warnings} 
+        <FiddleResults
+          key="results"
+          errors={errors}
+          warnings={warnings}
           fatalFiddle={fiddleError}
           fatalFiddleDeploy={fiddleDeployError}
           isLoading={loading}
@@ -171,13 +161,11 @@ class FiddleContainer extends Component {
 function mapStateToProps(state) {
   const fiddle = getFiddle(state);
   const deployedFiddle = getFiddleDeploy(state);
-  const lastFiddle = getLastFiddle(state);
-  return { 
-    fiddle: fiddle.data, 
+  return {
+    fiddle: fiddle.data,
     deployedContracts: deployedFiddle.data,
     fiddleError: fiddle.error,
     fiddleDeployError: deployedFiddle.error,
-    lastFiddle: (lastFiddle && lastFiddle.source && !lastFiddle.source.error) ? lastFiddle.source : undefined,
     loading: state.loading
   };
 }
@@ -190,9 +178,7 @@ FiddleContainer.propTypes = {
   postFiddle: PropTypes.func,
   postFiddleDeploy: PropTypes.func,
   deployedContracts: PropTypes.string,
-  fetchLastFiddle: PropTypes.func,
-  lastFiddle: PropTypes.string,
-  putLastFiddle: PropTypes.func
+  fetchLastFiddle: PropTypes.func
 };
 
 export default connect(
@@ -200,7 +186,6 @@ export default connect(
   {
     postFiddle: fiddleAction.post,
     postFiddleDeploy: fiddleDeployAction.post,
-    fetchLastFiddle: fiddleFileAction.request,
-    putLastFiddle: putLastFiddleAction
+    fetchLastFiddle: fiddleFileAction.request
   },
 )(FiddleContainer);
