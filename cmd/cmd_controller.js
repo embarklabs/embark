@@ -279,6 +279,7 @@ class EmbarkController {
             engine.startService("storage");
             engine.startService("codeGenerator");
             engine.startService("webServer");
+            engine.startService("namingSystem");
 
             return callback();
           }
@@ -315,6 +316,7 @@ class EmbarkController {
         if(engine.ipc.connected && engine.ipc.isClient()) {
           return callback();
         }
+        engine.config.reloadConfig();
         engine.events.request('deploy:contracts', function (err) {
           callback(err);
         });
