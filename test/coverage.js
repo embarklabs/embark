@@ -41,7 +41,7 @@ describe('ContractSources', () => {
     it('should throw an error when the file does not exist', (done) => {
       assert.throws(() => {
         new ContractSources(['fixtures/404.sol']);
-      }, 'Error loading fixtures/404.sol: ENOENT');
+      }, "ENOENT: no such file or directory, open 'fixtures/404.sol'");
 
       done();
     });
@@ -162,10 +162,10 @@ contract x {
 
       var bytecode = contractSource.contractBytecode['x'];
 
-      assert.deepEqual({instruction: 'PUSH1', sourceMap: {offset: 26, length: 487, id: 0}, seen: false}, bytecode[0]);
-      assert.deepEqual({instruction: 'PUSH1', sourceMap: SourceMap.empty(), seen: false}, bytecode[2]);
-      assert.deepEqual({instruction: 'MSTORE', sourceMap: SourceMap.empty(), seen: false}, bytecode[4]);
-      assert.deepEqual({instruction: 'PUSH1', sourceMap: SourceMap.empty(), seen: false}, bytecode[5]);
+      assert.deepEqual({instruction: 'PUSH1', sourceMap: {offset: 26, length: 487, id: 0, jump: '-'}, jump: '-', seen: false}, bytecode[0]);
+      assert.deepEqual({instruction: 'PUSH1', sourceMap: SourceMap.empty(), seen: false, jump: undefined}, bytecode[2]);
+      assert.deepEqual({instruction: 'MSTORE', sourceMap: SourceMap.empty(), seen: false, jump: undefined}, bytecode[4]);
+      assert.deepEqual({instruction: 'PUSH1', sourceMap: SourceMap.empty(), seen: false, jump: undefined}, bytecode[5]);
 
       done();
     });
@@ -213,8 +213,8 @@ contract x {
 
       // In the fixture, the branch has an ID of 61, and the function has the
       // ID of 63
-      assert.deepEqual([1,1], coverage.b['61']);
-      assert.equal(4, coverage.f['63']);
+      assert.deepEqual([1,0], coverage.b['61']);
+      assert.equal(6, coverage.f['63']);
 
       done();
     });
