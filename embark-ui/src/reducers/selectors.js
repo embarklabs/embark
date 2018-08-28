@@ -84,6 +84,10 @@ export function getVersions(state) {
   return state.entities.versions;
 }
 
+export function getGasStats(state) {
+  return state.entities.gasStats[state.entities.gasStats.length - 1];
+}
+
 export function isWeb3Enabled(state) {
   return Boolean(state.entities.versions.find((version) => version.name === 'web3'));
 }

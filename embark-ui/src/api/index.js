@@ -2,7 +2,6 @@ import axios from "axios";
 import constants from '../constants';
 
 function get(path, params, endpoint) {
-  console.log('GET ', (endpoint || constants.httpEndpoint) + path);
   return axios.get((endpoint || constants.httpEndpoint) + path, params)
     .then((response) => {
       return {response, error: null};
