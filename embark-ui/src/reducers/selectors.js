@@ -109,9 +109,11 @@ export function getMessages(state) {
 }
 
 export function getFiddle(state) {
+  const fiddleCompilation = _.last(state.entities.fiddles.sort((a, b) => { return (a.timestamp || 0) - (b.timestamp || 0); }));
+  const isNoTempFileError = Boolean(fiddleCompilation && fiddleCompilation.codeToCompile && fiddleCompilation.codeToCompile.error && fiddleCompilation.codeToCompile.error.indexOf('ENOENT') > -1);
   return {
-    data: _.last(state.entities.fiddles),
-    error: state.errorEntities.fiddles
+    data: fiddleCompilation,
+    error: isNoTempFileError ? undefined : state.errorEntities.fiddles
   };
 }
 

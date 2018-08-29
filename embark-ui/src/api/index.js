@@ -4,7 +4,7 @@ import constants from '../constants';
 function get(path, params) {
   return axios.get(constants.httpEndpoint + path, params)
     .then((response) => {
-      return {response};
+      return {response, error: null};
     }).catch((error) => {
       return {response: null, error: error.message || 'Something bad happened'};
     });
@@ -13,7 +13,7 @@ function get(path, params) {
 function post(path, params) {
   return axios.post(constants.httpEndpoint + path, params)
     .then((response) => {
-      return {response};
+      return {response, error: null};
     })
     .catch((error) => {
       return {response: null, error: error.message || 'Something bad happened'};

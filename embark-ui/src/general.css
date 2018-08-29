@@ -22,7 +22,8 @@
 }
 
 .text__new-line, .card.warnings-card .list-group-item, .card.errors-card .list-group-item {
-  white-space: pre-line;
+  white-space: pre-wrap;
+  font-family: monospace;
 }
 .card.card-fullscreen{
   z-index: 6;

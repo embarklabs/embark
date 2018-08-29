@@ -22,6 +22,7 @@ class FiddleContainer extends Component {
     this.state = {
       value: undefined,
       loadingMessage: 'Loading...',
+
       readOnly: true
     };
     this.compileTimeout = null;
@@ -31,24 +32,24 @@ class FiddleContainer extends Component {
 
   componentDidMount() {
     this.setState({loadingMessage: 'Loading saved state...'});
-    if (!this.props.fiddle) {
-      this.props.fetchLastFiddle();
+    this.props.fetchLastFiddle();
+  }
+
+  componentDidUpdate(prevProps) {
+    const {lastFiddle} = this.props;
+    if(this.state.value === '' && prevProps.lastFiddle === lastFiddle) return;
+    if((!this.state.value && lastFiddle && !lastFiddle.error) && this.state.value !== lastFiddle) {
+      this._onCodeChange(lastFiddle, true);
     }
   }
 
-  componentDidUpdate() {
-    if(!this.state.value && this.props.fiddle) {
-      this.setState({value: this.props.fiddle.codeToCompile});
-    }
-  }
-
-  _onCodeChange(newValue) {
+  _onCodeChange(newValue, immediate = false) {
     this.setState({readOnly: false, value: newValue});
     if (this.compileTimeout) clearTimeout(this.compileTimeout);
     this.compileTimeout = setTimeout(() => {
       this.setState({loadingMessage: 'Compiling...'});
-      this.props.postFiddle(newValue);
-    }, 1000);
+      this.props.postFiddle(newValue, Date.now());
+    }, immediate ? 0 : 1000);
 
   }
 
@@ -166,7 +167,8 @@ function mapStateToProps(state) {
     deployedContracts: deployedFiddle.data,
     fiddleError: fiddle.error,
     fiddleDeployError: deployedFiddle.error,
-    loading: state.loading
+    loading: state.loading,
+    lastFiddle: fiddle.data ? fiddle.data.codeToCompile : undefined
   };
 }
 
@@ -178,7 +180,8 @@ FiddleContainer.propTypes = {
   postFiddle: PropTypes.func,
   postFiddleDeploy: PropTypes.func,
   deployedContracts: PropTypes.string,
-  fetchLastFiddle: PropTypes.func
+  fetchLastFiddle: PropTypes.func,
+  lastFiddle: PropTypes.any
 };
 
 export default connect(

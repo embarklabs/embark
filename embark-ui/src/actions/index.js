@@ -170,7 +170,7 @@ export const ensRecords = {
 
 export const FIDDLE = createRequestTypes('FIDDLE');
 export const fiddle = {
-  post: (codeToCompile) => action(FIDDLE[REQUEST], {codeToCompile}),
+  post: (codeToCompile, timestamp) => action(FIDDLE[REQUEST], {codeToCompile, timestamp}),
   success: (fiddle, payload) => {
     return action(FIDDLE[SUCCESS], {fiddles: [{...fiddle, ...payload}]});
   },
