@@ -21,8 +21,7 @@ class App extends React.Component {
       error: null,
       activeKey: 1,
       whisperEnabled: false,
-      storageEnabled: false,
-      ensEnabled: false
+      storageEnabled: false
     };
   }
 
@@ -56,10 +55,6 @@ class App extends React.Component {
       }).catch(() => {
         this.setState({storageEnabled: false});
       });
-
-      this.setState({
-        ensEnabled: EmbarkJS.Names.isAvailable()
-      });
     });
   }
 
@@ -76,6 +71,7 @@ class App extends React.Component {
   }
 
   render() {
+    const ensEnabled = EmbarkJS.Names.currentNameSystems && EmbarkJS.Names.isAvailable();
     if (this.state.error) {
       return (<div>
         <div>Something went wrong connecting to ethereum. Please make sure you have a node running or are using metamask to connect to the ethereum network:</div>
@@ -94,8 +90,8 @@ class App extends React.Component {
         <Tab eventKey={3} title={this._renderStatus('P2P communication (Whisper)', this.state.whisperEnabled)}>
           <Whisper enabled={this.state.whisperEnabled}/>
         </Tab>
-        <Tab eventKey={4} title={this._renderStatus('Naming (ENS)', this.state.ensEnabled)}>
-          <ENS enabled={this.state.ensEnabled}/>
+        <Tab eventKey={4} title={this._renderStatus('Naming (ENS)', ensEnabled)}>
+          <ENS enabled={ensEnabled}/>
         </Tab>
       </Tabs>
     </div>);
