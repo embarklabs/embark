@@ -80,7 +80,8 @@ class EmbarkController {
       context: self.context,
       useDashboard: options.useDashboard,
       webServerConfig: webServerConfig,
-      webpackConfigName: options.webpackConfigName
+      webpackConfigName: options.webpackConfigName,
+      ipcRole: 'server'
     });
     engine.init();
 
@@ -258,7 +259,6 @@ class EmbarkController {
       logFile: options.logFile,
       logLevel: options.logLevel,
       context: this.context,
-      ipcRole: 'client',
       webpackConfigName: options.webpackConfigName
     });
     engine.init();
