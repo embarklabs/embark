@@ -187,7 +187,7 @@ class FiddleContainer extends Component {
           showFatalFiddleDeploy={Boolean(fiddleDeployError)}
           onDeployClick={(e) => this._onDeployClick(e)}
           isVisible={Boolean(fatalError || hasResult || loading)}
-          showDeploy={hasResult && !errors.length}
+          showDeploy={hasResult && Boolean(fiddle.compilationResult)}
           onWarningsClick={(e) => this._onErrorSummaryClick(e, "errorsCardRef")}
           onErrorsClick={(e) => this._onErrorSummaryClick(e, "warningsCardRef")}
           onFatalClick={(e) => this._onErrorSummaryClick(e, "fatalCardRef")}
