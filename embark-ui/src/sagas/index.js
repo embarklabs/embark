@@ -1,15 +1,11 @@
 import * as actions from '../actions';
-import * as api from '../api';
+import * as api from '../services/api';
+import * as storage from '../services/storage';
 import {eventChannel} from 'redux-saga';
 import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
 
-const {account, accounts, block, blocks, transaction, transactions, processes, commands, processLogs,
-       contracts, contract, contractProfile, messageSend, versions, plugins, messageListen, fiddle,
-       fiddleDeploy, ensRecord, ensRecords, contractLogs, contractFile, contractFunction, contractDeploy,
-       fiddleFile, files, gasOracle} = actions;
-
-function *doRequest(entity, apiFn, payload) {
-  const {response, error} = yield call(apiFn, payload);
+function *doRequest(entity, serviceFn, payload) {
+  const {response, error} = yield call(serviceFn, payload);
   if(response) {
     yield put(entity.success(response.data, payload));
   } else if (error) {
@@ -17,32 +13,37 @@ function *doRequest(entity, apiFn, payload) {
   }
 }
 
-export const fetchPlugins = doRequest.bind(null, plugins, api.fetchPlugins);
-export const fetchVersions = doRequest.bind(null, versions, api.fetchVersions);
-export const fetchAccount = doRequest.bind(null, account, api.fetchAccount);
-export const fetchBlock = doRequest.bind(null, block, api.fetchBlock);
-export const fetchTransaction = doRequest.bind(null, transaction, api.fetchTransaction);
-export const fetchAccounts = doRequest.bind(null, accounts, api.fetchAccounts);
-export const fetchBlocks = doRequest.bind(null, blocks, api.fetchBlocks);
-export const fetchTransactions = doRequest.bind(null, transactions, api.fetchTransactions);
-export const fetchProcesses = doRequest.bind(null, processes, api.fetchProcesses);
-export const postCommand = doRequest.bind(null, commands, api.postCommand);
-export const fetchProcessLogs = doRequest.bind(null, processLogs, api.fetchProcessLogs);
-export const fetchContractLogs = doRequest.bind(null, contractLogs, api.fetchContractLogs);
-export const fetchContracts = doRequest.bind(null, contracts, api.fetchContracts);
-export const fetchContract = doRequest.bind(null, contract, api.fetchContract);
-export const fetchContractProfile = doRequest.bind(null, contractProfile, api.fetchContractProfile);
-export const fetchContractFile = doRequest.bind(null, contractFile, api.fetchContractFile);
-export const fetchLastFiddle = doRequest.bind(null, fiddleFile, api.fetchLastFiddle);
-export const postContractFunction = doRequest.bind(null, contractFunction, api.postContractFunction);
-export const postContractDeploy = doRequest.bind(null, contractDeploy, api.postContractDeploy);
-export const postFiddle = doRequest.bind(null, fiddle, api.postFiddle);
-export const postFiddleDeploy = doRequest.bind(null, fiddleDeploy, api.postFiddleDeploy);
-export const sendMessage = doRequest.bind(null, messageSend, api.sendMessage);
-export const fetchEnsRecord = doRequest.bind(null, ensRecord, api.fetchEnsRecord);
-export const postEnsRecord = doRequest.bind(null, ensRecords, api.postEnsRecord);
-export const fetchFiles = doRequest.bind(null, files, api.fetchFiles);
-export const fetchEthGas = doRequest.bind(null, gasOracle, api.getEthGasAPI);
+export const fetchPlugins = doRequest.bind(null, actions.plugins, api.fetchPlugins);
+export const fetchVersions = doRequest.bind(null, actions.versions, api.fetchVersions);
+export const fetchAccount = doRequest.bind(null, actions.account, api.fetchAccount);
+export const fetchBlock = doRequest.bind(null, actions.block, api.fetchBlock);
+export const fetchTransaction = doRequest.bind(null, actions.transaction, api.fetchTransaction);
+export const fetchAccounts = doRequest.bind(null, actions.accounts, api.fetchAccounts);
+export const fetchBlocks = doRequest.bind(null, actions.blocks, api.fetchBlocks);
+export const fetchTransactions = doRequest.bind(null, actions.transactions, api.fetchTransactions);
+export const fetchProcesses = doRequest.bind(null, actions.processes, api.fetchProcesses);
+export const postCommand = doRequest.bind(null, actions.commands, api.postCommand);
+export const fetchProcessLogs = doRequest.bind(null, actions.processLogs, api.fetchProcessLogs);
+export const fetchContractLogs = doRequest.bind(null, actions.contractLogs, api.fetchContractLogs);
+export const fetchContracts = doRequest.bind(null, actions.contracts, api.fetchContracts);
+export const fetchContract = doRequest.bind(null, actions.contract, api.fetchContract);
+export const fetchContractProfile = doRequest.bind(null, actions.contractProfile, api.fetchContractProfile);
+export const postContractFunction = doRequest.bind(null, actions.contractFunction, api.postContractFunction);
+export const postContractDeploy = doRequest.bind(null, actions.contractDeploy, api.postContractDeploy);
+export const postContractCompile = doRequest.bind(null, actions.contractCompile, api.postContractCompile);
+export const sendMessage = doRequest.bind(null, actions.messageSend, api.sendMessage);
+export const fetchEnsRecord = doRequest.bind(null, actions.ensRecord, api.fetchEnsRecord);
+export const postEnsRecord = doRequest.bind(null, actions.ensRecords, api.postEnsRecord);
+export const fetchFiles = doRequest.bind(null, actions.files, api.fetchFiles);
+export const fetchFile = doRequest.bind(null, actions.file, api.fetchFile);
+export const postFile = doRequest.bind(null, actions.saveFile, api.postFile);
+export const deleteFile = doRequest.bind(null, actions.removeFile, api.deleteFile);
+export const fetchEthGas = doRequest.bind(null, actions.gasOracle, api.getEthGasAPI);
+
+export const fetchCurrentFile = doRequest.bind(null, actions.currentFile, storage.fetchCurrentFile);
+export const postCurrentFile = doRequest.bind(null, actions.saveCurrentFile, storage.postCurrentFile);
+export const deleteCurrentFile = doRequest.bind(null, null, storage.deleteCurrentFile);
+
 
 export function *watchFetchTransaction() {
   yield takeEvery(actions.TRANSACTION[actions.REQUEST], fetchTransaction);
@@ -96,20 +97,16 @@ export function *watchFetchContractProfile() {
   yield takeEvery(actions.CONTRACT_PROFILE[actions.REQUEST], fetchContractProfile);
 }
 
-export function *watchFetchContractFile() {
-  yield takeEvery(actions.CONTRACT_FILE[actions.REQUEST], fetchContractFile);
-}
-
-export function *watchFetchLastFiddle() {
-  yield takeEvery(actions.FIDDLE_FILE[actions.REQUEST], fetchLastFiddle);
-}
-
 export function *watchPostContractFunction() {
   yield takeEvery(actions.CONTRACT_FUNCTION[actions.REQUEST], postContractFunction);
 }
 
 export function *watchPostContractDeploy() {
   yield takeEvery(actions.CONTRACT_DEPLOY[actions.REQUEST], postContractDeploy);
+}
+
+export function *watchPostContractCompile() {
+  yield takeEvery(actions.CONTRACT_COMPILE[actions.REQUEST], postContractCompile);
 }
 
 export function *watchFetchVersions() {
@@ -136,20 +133,37 @@ export function *watchListenToMessages() {
   yield takeEvery(actions.MESSAGE_LISTEN[actions.REQUEST], listenToMessages);
 }
 
-export function *watchPostFiddle() {
-  yield takeEvery(actions.FIDDLE[actions.REQUEST], postFiddle);
-}
-
-export function *watchFetchLastFiddleSuccess() {
-  yield takeEvery(actions.FIDDLE_FILE[actions.SUCCESS], postFiddle);
-}
-
-export function *watchPostFiddleDeploy() {
-  yield takeEvery(actions.FIDDLE_DEPLOY[actions.REQUEST], postFiddleDeploy);
-}
-
 export function *watchFetchFiles() {
   yield takeEvery(actions.FILES[actions.REQUEST], fetchFiles);
+}
+
+export function *watchFetchFile() {
+  yield takeEvery(actions.FILE[actions.REQUEST], fetchFile);
+}
+
+export function *watchPostFile() {
+  yield takeEvery(actions.SAVE_FILE[actions.REQUEST], postFile);
+}
+
+export function *watchDeleteFile() {
+  yield takeEvery(actions.REMOVE_FILE[actions.REQUEST], deleteFile);
+}
+
+export function *watchDeleteFileSuccess() {
+  yield takeEvery(actions.REMOVE_FILE[actions.SUCCESS], fetchFiles);
+  yield takeEvery(actions.REMOVE_FILE[actions.SUCCESS], deleteCurrentFile);
+}
+
+export function *watchFetchFileSuccess() {
+  yield takeEvery(actions.FILE[actions.SUCCESS], postCurrentFile);
+}
+
+export function *watchFetchCurrentFile() {
+  yield takeEvery(actions.CURRENT_FILE[actions.REQUEST], fetchCurrentFile);
+}
+
+export function *watchPostCurrentFile() {
+  yield takeEvery(actions.SAVE_CURRENT_FILE[actions.REQUEST], postCurrentFile);
 }
 
 export function *watchFetchEthGas() {
@@ -186,7 +200,7 @@ export function *listenToProcessLogs(action) {
   const channel = yield call(createChannel, socket);
   while (true) {
     const processLog = yield take(channel);
-    yield put(processLogs.success([processLog]));
+    yield put(actions.processLogs.success([processLog]));
   }
 }
 
@@ -199,7 +213,7 @@ export function *listenToContractLogs() {
   const channel = yield call(createChannel, socket);
   while (true) {
     const contractLog = yield take(channel);
-    yield put(contractLogs.success([contractLog]));
+    yield put(actions.contractLogs.success([contractLog]));
   }
 }
 
@@ -212,7 +226,7 @@ export function *listenGasOracle() {
   const channel = yield call(createChannel, socket);
   while (true) {
     const gasOracleStats = yield take(channel);
-    yield put(gasOracle.success(gasOracleStats));
+    yield put(actions.gasOracle.success(gasOracleStats));
   }
 }
 
@@ -225,7 +239,7 @@ export function *listenToMessages(action) {
   const channel = yield call(createChannel, socket);
   while (true) {
     const message = yield take(channel);
-    yield put(messageListen.success([{channel: action.messageChannels[0], message: message.data, time: message.time}]));
+    yield put(actions.messageListen.success([{channel: action.messageChannels[0], message: message.data, time: message.time}]));
   }
 }
 
@@ -247,20 +261,23 @@ export default function *root() {
     fork(watchFetchBlocks),
     fork(watchFetchContracts),
     fork(watchFetchContractProfile),
-    fork(watchFetchContractFile),
     fork(watchPostContractFunction),
     fork(watchPostContractDeploy),
+    fork(watchPostContractCompile),
     fork(watchListenToMessages),
     fork(watchSendMessage),
     fork(watchFetchContract),
     fork(watchFetchTransaction),
-    fork(watchPostFiddle),
-    fork(watchPostFiddleDeploy),
-    fork(watchFetchLastFiddle),
-    fork(watchFetchLastFiddleSuccess),
     fork(watchFetchEnsRecord),
     fork(watchPostEnsRecords),
     fork(watchFetchFiles),
+    fork(watchFetchFile),
+    fork(watchPostFile),
+    fork(watchDeleteFile),
+    fork(watchDeleteFileSuccess),
+    fork(watchFetchFileSuccess),
+    fork(watchFetchCurrentFile),
+    fork(watchPostCurrentFile),
     fork(watchFetchEthGas),
     fork(watchListenGasOracle)
   ]);

@@ -20,6 +20,16 @@ function post(path, params) {
     });
 }
 
+function destroy(path, params) {
+  return axios.delete(constants.httpEndpoint + path, params)
+    .then((response) => {
+      return {response, error: null};
+    })
+    .catch((error) => {
+      return {response: null, error: error.message || 'Something bad happened'};
+    });
+}
+
 export function postCommand(payload) {
   return post('/command', payload);
 }
@@ -76,6 +86,10 @@ export function postContractDeploy(payload) {
   return post(`/contract/${payload.contractName}/deploy`, payload);
 }
 
+export function postContractCompile(payload) {
+  return post('/contract/compile', payload);
+}
+
 export function fetchVersions() {
   return get('/versions');
 }
@@ -104,16 +118,24 @@ export function postEnsRecord(payload) {
   return post('/ens/register', payload);
 }
 
-export function fetchContractFile(payload) {
-  return get('/files/contracts', {params: payload});
-}
-
 export function getEthGasAPI() {
   return get('/blockchain/gas/oracle', {});
 }
 
-export function fetchLastFiddle() {
-  return get('/files/lastfiddle', {params: 'temp'});
+export function fetchFiles() {
+  return get('/files');
+}
+
+export function fetchFile(payload) {
+  return get('/file', {params: payload});
+}
+
+export function postFile(payload) {
+  return post('/files', payload);
+}
+
+export function deleteFile(payload) {
+  return destroy('/file', {params: payload});
 }
 
 export function listenToChannel(channel) {
@@ -134,16 +156,4 @@ export function webSocketBlockHeader() {
 
 export function websocketGasOracle() {
   return new WebSocket(`${constants.wsEndpoint}/blockchain/gas/oracle`);
-}
-
-export function postFiddle(payload) {
-  return post('/contract/compile', payload);
-}
-
-export function postFiddleDeploy(payload) {
-  return post('/contract/deploy', {compiledContract: payload.compiledCode});
-}
-
-export function fetchFiles() {
-  return get('/files');
 }

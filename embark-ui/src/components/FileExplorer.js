@@ -29,26 +29,35 @@ class FileExplorer extends React.Component {
     super(props);
     this.state = {};
   }
+
   onToggle(node, toggled){
+    let oldNode = this.state.cursor;
+    if(oldNode) {
+      oldNode.active = false;
+    }
     node.active = true;
     if(node.children) {
       node.toggled = toggled;
+    } else {
+      this.props.fetchFile(node);
     }
     this.setState({ cursor: node });
   }
+
   render(){
     return (
       <Treebeard
         data={this.props.files}
         decorators={decorators}
-        onToggle={(node, toggled) => this.onToggle(node, toggled)}
+        onToggle={this.onToggle.bind(this)}
       />
     );
   }
 }
 
 FileExplorer.propTypes = {
-  files: PropTypes.array
+  files: PropTypes.array,
+  fetchFile: PropTypes.func
 };
 
 export default FileExplorer;

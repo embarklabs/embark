@@ -4,21 +4,21 @@ import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
 import {Page} from "tabler-react";
 
-import {contractFile as contractFileAction} from '../actions';
+import {file as FileAction} from '../actions';
 import DataWrapper from "../components/DataWrapper";
-import Fiddle from "../components/Fiddle";
-import {getContract, getContractFile} from "../reducers/selectors";
+import TextEditor from "../components/TextEditor";
+import {getContract, getCurrentFile} from "../reducers/selectors";
 
 class ContractSourceContainer extends Component {
   componentDidMount() {
-    this.props.fetchContractFile(this.props.contract.filename);
+    this.props.fetchFile({path: this.props.contract.path});
   }
 
   render() {
     return (
       <Page.Content title={`${this.props.contract.className} Source`}>
-        <DataWrapper shouldRender={this.props.contractFile !== undefined } {...this.props} render={({contractFile}) => (
-          <Fiddle value={contractFile.source} />
+        <DataWrapper shouldRender={this.props.file !== undefined } {...this.props} render={({file}) => (
+          <TextEditor value={file.content} contractCompile={{}} />
         )} />
       </Page.Content>
     );
@@ -27,11 +27,11 @@ class ContractSourceContainer extends Component {
 
 function mapStateToProps(state, props) {
   const contract = getContract(state, props.match.params.contractName);
-  const contractFile = getContractFile(state, contract.filename);
+  const file = getCurrentFile(state);
 
   return {
     contract,
-    contractFile,
+    file,
     error: state.errorMessage,
     loading: state.loading
   };
@@ -40,14 +40,14 @@ function mapStateToProps(state, props) {
 ContractSourceContainer.propTypes = {
   match: PropTypes.object,
   contract: PropTypes.object,
-  contractFile: PropTypes.object,
-  fetchContractFile: PropTypes.func,
+  file: PropTypes.object,
+  fetchFile: PropTypes.func,
   error: PropTypes.string
 };
 
 export default withRouter(connect(
   mapStateToProps,
   {
-    fetchContractFile: contractFileAction.request
+    fetchFile: FileAction.request
   }
 )(ContractSourceContainer));

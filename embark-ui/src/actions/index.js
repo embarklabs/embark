@@ -125,6 +125,13 @@ export const contractDeploy = {
   failure: (error) => action(CONTRACT_DEPLOY[FAILURE], {error})
 };
 
+export const CONTRACT_COMPILE = createRequestTypes('CONTRACT_COMPILE');
+export const contractCompile = {
+  post: (code, name) => action(CONTRACT_COMPILE[REQUEST], {code, name}),
+  success: (result, payload) => action(CONTRACT_COMPILE[SUCCESS], {contractCompiles: [{...result, ...payload}]}),
+  failure: (error) => action(CONTRACT_COMPILE[FAILURE], {error})
+};
+
 export const VERSIONS = createRequestTypes('VERSIONS');
 export const versions = {
   request: () => action(VERSIONS[REQUEST]),
@@ -168,36 +175,48 @@ export const ensRecords = {
   failure: (error) => action(ENS_RECORDS[FAILURE], {error})
 };
 
-export const FIDDLE = createRequestTypes('FIDDLE');
-export const fiddle = {
-  post: (codeToCompile, timestamp) => action(FIDDLE[REQUEST], {codeToCompile, timestamp}),
-  success: (fiddle, payload) => {
-    return action(FIDDLE[SUCCESS], {fiddles: [{...fiddle, ...payload}]});
-  },
-  failure: (error) => action(FIDDLE[FAILURE], {error})
-};
-
-export const FIDDLE_DEPLOY = createRequestTypes('FIDDLE_DEPLOY');
-export const fiddleDeploy = {
-  post: (compiledCode) => action(FIDDLE_DEPLOY[REQUEST], {compiledCode}),
-  success: (response) => {
-    return action(FIDDLE_DEPLOY[SUCCESS], {fiddleDeploys: response.result});
-  },
-  failure: (error) => action(FIDDLE_DEPLOY[FAILURE], {error})
-};
-
-export const FIDDLE_FILE = createRequestTypes('FIDDLE_FILE');
-export const fiddleFile = {
-  request: () => action(FIDDLE_FILE[REQUEST]),
-  success: (codeToCompile) => action(FIDDLE_FILE[SUCCESS], {codeToCompile}),
-  failure: (error) => action(FIDDLE_FILE[FAILURE], {error})
-};
-
 export const FILES = createRequestTypes('FILES');
 export const files = {
   request: () => action(FILES[REQUEST]),
   success: (files) => action(FILES[SUCCESS], {files: files}),
   failure: (error) => action(FILES[FAILURE], {error})
+};
+
+export const FILE = createRequestTypes('FILE');
+export const file = {
+  request: (file) => action(FILE[REQUEST], file),
+  success: (file) => action(FILE[SUCCESS], file),
+  failure: (error) => action(FILE[FAILURE], {error})
+};
+
+export const SAVE_FILE = createRequestTypes('SAVE_FILE');
+export const saveFile = {
+  request: ({name, path, content}) => {
+    return action(SAVE_FILE[REQUEST], {name, path, content});
+  },
+  success: () => action(SAVE_FILE[SUCCESS]),
+  failure: (error) => action(SAVE_FILE[FAILURE], {error})
+};
+
+export const REMOVE_FILE = createRequestTypes('REMOVE_FILE');
+export const removeFile = {
+  request: ({name, path, content}) => action(REMOVE_FILE[REQUEST], {name, path, content}),
+  success: () => action(REMOVE_FILE[SUCCESS]),
+  failure: (error) => action(REMOVE_FILE[FAILURE], {error})
+};
+
+export const CURRENT_FILE = createRequestTypes('CURRENT_FILE');
+export const currentFile = {
+  request: () => action(CURRENT_FILE[REQUEST]),
+  success: (file) => action(CURRENT_FILE[SUCCESS], {currentFiles: [file]}),
+  failure: () => action(CURRENT_FILE[FAILURE])
+};
+
+export const SAVE_CURRENT_FILE = createRequestTypes('SAVE_CURRENT_FILE');
+export const saveCurrentFile = {
+  request: (file) => action(SAVE_CURRENT_FILE[REQUEST], file),
+  success: (file) => action(SAVE_CURRENT_FILE[SUCCESS], {currentFiles: [file]}),
+  failure: () => action(SAVE_CURRENT_FILE[FAILURE])
 };
 
 export const GAS_ORACLE = createRequestTypes('GAS_ORACLE');

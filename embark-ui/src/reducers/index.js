@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux';
-import {REQUEST, SUCCESS} from "../actions";
+import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES} from "../actions";
 
 const BN_FACTOR = 10000;
 const voidAddress = '0x0000000000000000000000000000000000000000';
@@ -12,20 +12,19 @@ const entitiesDefaultState = {
   processLogs: [],
   contracts: [],
   contractProfiles: [],
-  contractFiles: [],
   contractFunctions: [],
   contractDeploys: [],
+  contractCompiles: [],
   contractLogs: [],
   commands: [],
   messages: [],
   messageChannels: [],
-  fiddles: [],
-  fiddleDeploys: [],
   versions: [],
   plugins: [],
   ensRecords: [],
   files: [],
-  gasOracleStats: []
+  gasOracleStats: [],
+  currentFiles: []
 };
 
 const sorter = {
@@ -61,9 +60,6 @@ const filtrer = {
   contracts: function(contract, index, self) {
     return index === self.findIndex((t) => t.className === contract.className);
   },
-  contractFiles: function(contractFile, index, self) {
-    return index === self.findIndex((c) => c.filename === contractFile.filename);
-  },
   accounts: function(account, index, self) {
     return index === self.findIndex((t) => t.address === account.address);
   },
@@ -91,6 +87,9 @@ const filtrer = {
 };
 
 function entities(state = entitiesDefaultState, action) {
+  if (action.type === FILES[SUCCESS]) {
+    return {...state, files: action.files};
+  }
   for (let name of Object.keys(state)) {
     let filter = filtrer[name] || (() => true);
     let sort = sorter[name] || (() => true);
@@ -137,9 +136,20 @@ function loading(_state = false, action) {
   return action.type.endsWith(REQUEST);
 }
 
+function compilingContract(state = false, action) {
+  if(action.type === CONTRACT_COMPILE[REQUEST]) {
+    return true;
+  } else if (action.type === CONTRACT_COMPILE[FAILURE] || action.type === CONTRACT_COMPILE[SUCCESS]) {
+    return false;
+  }
+
+  return state;
+}
+
 const rootReducer = combineReducers({
   entities,
   loading,
+  compilingContract,
   errorMessage,
   errorEntities
 });

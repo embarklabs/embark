@@ -72,16 +72,23 @@ export function getContractProfile(state, contractName) {
   return state.entities.contractProfiles.find((contractProfile => contractProfile.name === contractName));
 }
 
-export function getContractFile(state, filename) {
-  return state.entities.contractFiles.find((contractFile => contractFile.filename === filename));
-}
-
 export function getContractFunctions(state, contractName) {
   return state.entities.contractFunctions.filter((contractFunction => contractFunction.contractName === contractName));
 }
 
 export function getContractDeploys(state, contractName) {
   return state.entities.contractDeploys.filter((contractDeploy => contractDeploy.contractName === contractName));
+}
+
+export function getContractCompile(state, file) {
+  let contractCompile = state.entities.contractCompiles.reverse().find((contractCompile => contractCompile.name === file.name));
+  if (!contractCompile) return;
+  if (contractCompile.errors) {
+    contractCompile.warnings = contractCompile.errors.filter((error) => error.severity === 'warning');
+    contractCompile.errors = contractCompile.errors.filter((error) => error.severity === 'error');
+  }
+
+  return contractCompile;
 }
 
 export function getVersions(state) {
@@ -119,15 +126,6 @@ export function getMessages(state) {
   return messages;
 }
 
-export function getFiddle(state) {
-  const fiddleCompilation = last(state.entities.fiddles.sort((a, b) => { return (a.timestamp || 0) - (b.timestamp || 0); }));
-  const isNoTempFileError = Boolean(fiddleCompilation && fiddleCompilation.codeToCompile && fiddleCompilation.codeToCompile.error && fiddleCompilation.codeToCompile.error.indexOf('ENOENT') > -1);
-  return {
-    data: fiddleCompilation,
-    error: isNoTempFileError ? undefined : state.errorEntities.fiddles
-  };
-}
-
 export function getFiddleDeploy(state) {
   return {
     data: last(state.entities.fiddleDeploys),
@@ -149,4 +147,8 @@ export function isEnsEnabled(state) {
 
 export function getFiles(state) {
   return state.entities.files;
+}
+
+export function getCurrentFile(state) {
+  return last(state.entities.currentFiles);
 }

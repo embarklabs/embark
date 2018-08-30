@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {files as filesAction} from "../actions";
+import {files as filesAction, file as fileAction} from "../actions";
 
 import FileExplorer from '../components/FileExplorer';
 import DataWrapper from "../components/DataWrapper";
@@ -14,8 +14,8 @@ class FileExplorerContainer extends Component {
 
   render() {
     return (
-      <DataWrapper shouldRender={this.props.files.length > 0} {...this.props} render={({files}) => (
-        <FileExplorer files={files} />
+      <DataWrapper shouldRender={this.props.files.length > 0} {...this.props} render={({files, fetchFile}) => (
+        <FileExplorer files={files} fetchFile={fetchFile} />
       )} />
     );
   }
@@ -27,11 +27,13 @@ function mapStateToProps(state) {
 
 FileExplorerContainer.propTypes = {
   files: PropTypes.array,
-  fetchFiles: PropTypes.func
+  fetchFiles: PropTypes.func,
+  fetchFile: PropTypes.func
 };
 
 export default connect(
   mapStateToProps,{
-    fetchFiles: filesAction.request
+    fetchFiles: filesAction.request,
+    fetchFile: fileAction.request
   }
 )(FileExplorerContainer);
