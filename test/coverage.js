@@ -41,7 +41,7 @@ describe('ContractSources', () => {
     it('should throw an error when the file does not exist', (done) => {
       assert.throws(() => {
         new ContractSources(['fixtures/404.sol']);
-      }, 'Error loading fixtures/404.sol: ENOENT');
+      }, /ENOENT: no such file or directory, open/);
 
       done();
     });
@@ -117,7 +117,7 @@ contract x {
 }
   `.trim();
 
-  const cs = new ContractSource('contract.sol', contractSource);
+  const cs = new ContractSource('contract.sol', '/tmp/contract.sol', contractSource);
 
   describe('constructor', () => {
     it('should set line offsets and line lengths correctly', (done) => {
@@ -162,10 +162,10 @@ contract x {
 
       var bytecode = contractSource.contractBytecode['x'];
 
-      assert.deepEqual({instruction: 'PUSH1', sourceMap: '26:487:0:-', seen: false}, bytecode[0]);
-      assert.deepEqual({instruction: 'PUSH1', sourceMap: '', seen: false}, bytecode[2]);
-      assert.deepEqual({instruction: 'MSTORE', sourceMap: '', seen: false}, bytecode[4]);
-      assert.deepEqual({instruction: 'PUSH1', sourceMap: '', seen: false}, bytecode[5]);
+      assert.deepEqual({instruction: 'PUSH1', sourceMap: {offset: 26, length: 487, id: 0, jump: '-'}, jump: '-', seen: false}, bytecode[0]);
+      assert.deepEqual({instruction: 'PUSH1', sourceMap: SourceMap.empty(), seen: false, jump: undefined}, bytecode[2]);
+      assert.deepEqual({instruction: 'MSTORE', sourceMap: SourceMap.empty(), seen: false, jump: undefined}, bytecode[4]);
+      assert.deepEqual({instruction: 'PUSH1', sourceMap: SourceMap.empty(), seen: false, jump: undefined}, bytecode[5]);
 
       done();
     });
@@ -193,6 +193,7 @@ contract x {
 
       var trace = JSON.parse(loadFixture('geth-debugtrace-output-h-5.json'));
       var coverage = cs.generateCodeCoverage(trace);
+      assert.exists(coverage);
 
       done();
     });
@@ -212,8 +213,8 @@ contract x {
 
       // In the fixture, the branch has an ID of 61, and the function has the
       // ID of 63
-      assert.deepEqual([1,1], coverage.b['61']);
-      assert.equal(2, coverage.f['63']);
+      assert.deepEqual([1,0], coverage.b['61']);
+      assert.equal(6, coverage.f['63']);
 
       done();
     });
@@ -230,6 +231,28 @@ describe('SourceMap', () => {
 
       assert.equal(365, result.offset);
       assert.equal(63, result.length);
+
+      done();
+    });
+  });
+
+  describe('#createRelativeTo', () => {
+    it('should return an empty source map on an empty string', (done) => {
+      var sm1 = new SourceMap('192:10:0');
+      var sm2 = sm1.createRelativeTo('');
+
+      assert.equal('', sm2.toString());
+
+      done();
+    });
+
+    it('should return the correct source map on a relative string', (done) => {
+      var sm1 = new SourceMap('192:10:0');
+      var sm2 = sm1.createRelativeTo(':14');
+
+      assert.equal(192, sm2.offset);
+      assert.equal(14, sm2.length);
+      assert.equal(0, sm2.id);
 
       done();
     });
