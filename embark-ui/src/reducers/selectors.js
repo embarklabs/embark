@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import {last} from '../utils/utils';
 
 export function getAccounts(state) {
   return state.entities.accounts;
@@ -109,7 +109,7 @@ export function getMessages(state) {
 }
 
 export function getFiddle(state) {
-  const fiddleCompilation = _.last(state.entities.fiddles.sort((a, b) => { return (a.timestamp || 0) - (b.timestamp || 0); }));
+  const fiddleCompilation = last(state.entities.fiddles.sort((a, b) => { return (a.timestamp || 0) - (b.timestamp || 0); }));
   const isNoTempFileError = Boolean(fiddleCompilation && fiddleCompilation.codeToCompile && fiddleCompilation.codeToCompile.error && fiddleCompilation.codeToCompile.error.indexOf('ENOENT') > -1);
   return {
     data: fiddleCompilation,
@@ -119,7 +119,7 @@ export function getFiddle(state) {
 
 export function getFiddleDeploy(state) {
   return {
-    data: _.last(state.entities.fiddleDeploys),
+    data: last(state.entities.fiddleDeploys),
     error: state.errorEntities.fiddleDeploys
   };
 }

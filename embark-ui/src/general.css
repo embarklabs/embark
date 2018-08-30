@@ -37,7 +37,6 @@
 .compilation-summary {
   float: right;
   margin-bottom: 3px;
-  line-height: 30px;
   visibility: hidden;
 }
 .compilation-summary.visible{
@@ -55,11 +54,11 @@
 }
 .loader:before, .loader:after{
   margin: -0.6rem 0 0 -0.6rem;
+  left: 0;
 }
 .loader, .loader-text{
   display: inline-block;
-  vertical-align: middle;
-}
-.loader {
-  margin-right: 5px;
+  vertical-align: top;
+  padding-left: 0.6rem;
+  width: auto;
 }

@@ -14,7 +14,7 @@ class ContractLayoutContainer extends Component {
 
   render() {
     if (this.props.contract){
-      return <ContractLayout contract={this.props.contract} />;
+      return <ContractLayout contractIsFiddle={this.props.contract.isFiddle} />;
     } else {
       return <React.Fragment />;
     }

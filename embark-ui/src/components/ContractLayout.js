@@ -14,7 +14,7 @@ import ContractDeploymentContainer from '../containers/ContractDeploymentContain
 import ContractProfileContainer from '../containers/ContractProfileContainer';
 import ContractSourceContainer from '../containers/ContractSourceContainer';
 
-const ContractLayout = ({match, contract}) => (
+const ContractLayout = ({match, contractIsFiddle = false}) => (
   <Grid.Row>
     <Grid.Col md={3}>
       <Page.Title className="my-5">&nbsp;</Page.Title>
@@ -28,7 +28,7 @@ const ContractLayout = ({match, contract}) => (
           >
             Overview
           </List.GroupItem>
-          {!contract.isFiddle ? 
+          {!contractIsFiddle && 
             <List.GroupItem
               className="d-flex align-items-center"
               to={`/embark/contracts/${match.params.contractName}/deployment`}
@@ -37,8 +37,6 @@ const ContractLayout = ({match, contract}) => (
             >
               Deployment / Utils
             </List.GroupItem>
-            :
-            ''
           }
           <List.GroupItem
             className="d-flex align-items-center"
@@ -89,7 +87,8 @@ const ContractLayout = ({match, contract}) => (
 );
 
 ContractLayout.propTypes = {
-  match: PropTypes.object
+  match: PropTypes.object,
+  contractIsFiddle: PropTypes.bool
 };
 
 export default withRouter(ContractLayout);
