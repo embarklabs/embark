@@ -99,7 +99,8 @@ class EmbarkController {
             version: engine.version,
             events: engine.events,
             logger: engine.logger,
-            ipc: engine.ipc
+            ipc: engine.ipc,
+            config: engine.config
           }).startConsole();
           return callback();
         }
@@ -110,7 +111,8 @@ class EmbarkController {
           plugins: engine.plugins,
           version: self.version,
           env: engine.env,
-          ipc: engine.ipc
+          ipc: engine.ipc,
+          config: engine.config
         });
         dashboard.start(function () {
           engine.logger.info(__('dashboard start'));
@@ -260,6 +262,16 @@ class EmbarkController {
       webpackConfigName: options.webpackConfigName
     });
     engine.init();
+    const repl = new REPL({
+      env: engine.env,
+      plugins: engine.plugins,
+      version: engine.version,
+      events: engine.events,
+      logger: engine.logger,
+      ipc: engine.ipc,
+      config: engine.config
+    });
+    repl.startConsole();
     async.waterfall([
       function startServices(callback) {
         let pluginList = engine.plugins.listPlugins();
@@ -333,14 +345,6 @@ class EmbarkController {
         });
       },
       function startREPL(callback) {
-        let repl = new REPL({
-          env: engine.env,
-          plugins: engine.plugins,
-          version: engine.version,
-          events: engine.events,
-          logger: engine.logger,
-          ipc: engine.ipc
-        });
         repl.start(callback);
       }
     ], function (err, _result) {

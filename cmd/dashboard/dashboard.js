@@ -12,6 +12,7 @@ class Dashboard {
     this.version = options.version;
     this.env = options.env;
     this.ipc = options.ipc;
+    this.config = options.config;
 
     this.events.on('firstDeploymentDone', this.checkWindowSize.bind(this));
     this.events.on('outputDone', this.checkWindowSize.bind(this));
@@ -35,7 +36,8 @@ class Dashboard {
           plugins: self.plugins,
           version: self.version,
           ipc: self.ipc,
-          logger: self.logger
+          logger: self.logger,
+          config: self.config
         });
         callback();
       },

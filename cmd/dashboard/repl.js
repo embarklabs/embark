@@ -11,6 +11,7 @@ class REPL {
     this.events = options.events;
     this.version = options.version;
     this.ipc = options.ipc;
+    this.config = options.config;
   }
 
   startConsole(){
@@ -19,7 +20,8 @@ class REPL {
       plugins: this.plugins,
       version: this.version,
       ipc: this.ipc,
-      logger: this.logger
+      logger: this.logger,
+      config: this.config
     });
   }
 
