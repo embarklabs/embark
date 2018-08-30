@@ -41,7 +41,7 @@ describe('ContractSources', () => {
     it('should throw an error when the file does not exist', (done) => {
       assert.throws(() => {
         new ContractSources(['fixtures/404.sol']);
-      }, "ENOENT: no such file or directory, open 'fixtures/404.sol'");
+      }, /ENOENT: no such file or directory, open/);
 
       done();
     });
