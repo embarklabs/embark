@@ -23,7 +23,8 @@ const entitiesDefaultState = {
   fiddleDeploys: [],
   versions: [],
   plugins: [],
-  ensRecords: []
+  ensRecords: [],
+  files: []
 };
 
 const sorter = {
@@ -44,6 +45,11 @@ const sorter = {
   },
   commands: function(a, b) {
     return b.timestamp - a.timestamp;
+  },
+  files: function(a, b) {
+    if (a.name < b.name) return -1;
+    if (a.name > b.name) return 1;
+    return 0;
   }
 };
 
@@ -71,6 +77,11 @@ const filtrer = {
   ensRecords: function(record, index, self) {
     return record.name && record.address && record.address !== voidAddress && index === self.findIndex((r) => (
       r.address=== record.address && r.name === record.name
+    ));
+  },
+  files: function(file, index, self) {
+    return index === self.findIndex((f) => (
+      file.name === f.name
     ));
   }
 };

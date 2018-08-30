@@ -135,3 +135,7 @@ export function getEnsErrors(state) {
 export function isEnsEnabled(state) {
   return Boolean(state.entities.plugins.find((plugin) => plugin.name === 'ens'));
 }
+
+export function getFiles(state) {
+  return state.entities.files;
+}

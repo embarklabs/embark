@@ -135,3 +135,7 @@ export function postFiddle(payload) {
 export function postFiddleDeploy(payload) {
   return post('/contract/deploy', {compiledContract: payload.compiledCode});
 }
+
+export function fetchFiles() {
+  return get('/files');
+}

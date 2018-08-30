@@ -193,6 +193,13 @@ export const fiddleFile = {
   failure: (error) => action(FIDDLE_FILE[FAILURE], {error})
 };
 
+export const FILES = createRequestTypes('FILES');
+export const files = {
+  request: () => action(FILES[REQUEST]),
+  success: (files) => action(FILES[SUCCESS], {files: files}),
+  failure: (error) => action(FILES[FAILURE], {error})
+};
+
 // Web Socket
 export const WATCH_NEW_PROCESS_LOGS = 'WATCH_NEW_PROCESS_LOGS';
 export const WATCH_NEW_CONTRACT_LOGS = 'WATCH_NEW_CONTRACT_LOGS';
