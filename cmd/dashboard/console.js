@@ -1,5 +1,7 @@
 let utils = require('../../lib/utils/utils.js');
-
+const EmbarkJS = require('embarkjs');
+const IpfsApi = require('ipfs-api');
+const Web3 = require('web3');
 class Console {
   constructor(options) {
     this.events = options.events;
@@ -7,10 +9,13 @@ class Console {
     this.version = options.version;
     this.logger = options.logger;
     this.ipc = options.ipc;
+    this.config = options.config;
 
     if (this.ipc.isServer()) {
       this.ipc.on('console:executeCmd', this.executeCmd.bind(this));
     }
+
+    this.registerEmbarkJs();
   }
 
   processEmbarkCmd (cmd) {
@@ -64,6 +69,46 @@ class Console {
       }
       callback(e);
     }
+  }
+
+  registerEmbarkJs() {
+    this.events.on('runcode:ready', () => {
+      this.events.emit('runcode:register', 'IpfsApi', IpfsApi, false);
+      this.events.emit('runcode:register', 'Web3', Web3, false);
+      this.events.emit('runcode:register', 'EmbarkJS', EmbarkJS, false);
+    });
+
+    this.events.on('code-generator-ready', () => {
+      if (this.ipc.connected) {
+        return;
+      }
+
+      this.events.request('code-generator:embarkjs:provider-code', (code) => {
+        const func = () => {};
+        this.events.request('runcode:eval', code, func, true);
+        this.events.request('runcode:eval', this.getInitProviderCode(), func, true);
+      });
+    });
+  }
+
+  getInitProviderCode() {
+    const codeTypes = {
+      'communication': this.config.communicationConfig || {},
+      'names': this.config.namesystemConfig || {},
+      'storage': this.config.storageConfig || {}
+    };
+
+    return this.plugins.getPluginsFor('initConsoleCode').reduce((acc, plugin) => {
+      Object.keys(codeTypes).forEach(codeTypeName => {
+        (plugin.embarkjs_init_console_code[codeTypeName] || []).forEach(initCode => {
+          let [block, shouldInit] = initCode;
+          if (shouldInit.call(plugin, codeTypes[codeTypeName])) {
+            acc += block;
+          }
+        });
+      });
+      return acc;
+    }, '');
   }
 }
 
