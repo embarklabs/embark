@@ -35,10 +35,12 @@ class GasStation extends Component {
     if (!gasPrices.length) {
       return [];
     }
-    return gasPrices.map(gasPrice => {
+    return gasPrices.filter((gasPrice) => {
+      return this.props.gasOracleStats[gasPrice].nbTxs >= 10; // Only keep prices with enough transactions
+    }).map(gasPrice => {
       return {
         gasPrice,
-        wait: this.props.gasOracleStats[gasPrice].averageWait
+        wait: this.props.gasOracleStats[gasPrice].averageWait >= 0.1 ? this.props.gasOracleStats[gasPrice].averageWait : 0.1
       };
     }).sort((a, b) => {
       return a.gasPrice - b.gasPrice;
@@ -96,7 +98,7 @@ class GasStation extends Component {
             <Grid.Row cards={true}>
               <Grid.Col lg={6} md={6} sm={12}>
                 <StampCard icon="sliders" color={GasStation.getColorForPrice(currentGasStep.gasPrice)}>
-                  {currentGasStep.gasPrice / 1000000000} Wei
+                  {currentGasStep.gasPrice / 1000000000} GWei
                 </StampCard>
               </Grid.Col>
               <Grid.Col lg={6} md={6} sm={12}>
@@ -119,7 +121,7 @@ class GasStation extends Component {
             {/*<Grid.Row cards={true}>
               <Grid.Col lg={4} md={6} sm={12}>
                 <StampCard icon="sliders" color="grey">
-                  Average Price: {this.formattedGasStats.average.price} Wei
+                  Average Price: {this.formattedGasStats.average.price} GWei
                 </StampCard>
               </Grid.Col>
               <Grid.Col lg={4} md={6} sm={12}>
