@@ -6,7 +6,7 @@ import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
 const {account, accounts, block, blocks, transaction, transactions, processes, commands, processLogs,
        contracts, contract, contractProfile, messageSend, versions, plugins, messageListen, fiddle,
        fiddleDeploy, ensRecord, ensRecords, contractLogs, contractFile, contractFunction, contractDeploy,
-       fiddleFile, files, ethGas, gasOracle} = actions;
+       fiddleFile, files, gasOracle} = actions;
 
 function *doRequest(entity, apiFn, payload) {
   const {response, error} = yield call(apiFn, payload);
