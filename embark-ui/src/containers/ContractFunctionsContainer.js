@@ -6,7 +6,7 @@ import {withRouter} from 'react-router-dom';
 import {contractProfile as contractProfileAction, contractFunction as contractFunctionAction} from '../actions';
 import ContractFunctions from '../components/ContractFunctions';
 import DataWrapper from "../components/DataWrapper";
-import GasStation from "../components/GasStation";
+import GasStationContainer from "../containers/GasStationContainer";
 import {getContractProfile, getContractFunctions} from "../reducers/selectors";
 
 class ContractFunctionsContainer extends Component {
@@ -16,21 +16,17 @@ class ContractFunctionsContainer extends Component {
 
   render() {
     return (
-      <React.Fragment>
-        <DataWrapper shouldRender={this.props.contractProfile !== undefined}
-                     {...this.props}
-                     render={({contractProfile, contractFunctions, postContractFunction}) => (
+      <DataWrapper shouldRender={this.props.contractProfile !== undefined}
+                   {...this.props}
+                   render={({contractProfile, contractFunctions, postContractFunction}) => (
+                     <React.Fragment>
                        <ContractFunctions contractProfile={contractProfile}
                                           contractFunctions={contractFunctions}
                                           postContractFunction={postContractFunction}/>
-                     )}/>
 
-        <DataWrapper shouldRender={this.props.gasStats !== undefined}
-                     {...this.props}
-                     render={() => (
-                       <GasStation/>
-                     )}/>
-      </React.Fragment>
+                       <GasStationContainer/>
+                     </React.Fragment>
+                   )}/>
     );
   }
 }
@@ -50,7 +46,6 @@ ContractFunctionsContainer.propTypes = {
   contractFunctions: PropTypes.arrayOf(PropTypes.object),
   postContractFunction: PropTypes.func,
   fetchContractProfile: PropTypes.func,
-  fetchEthGas: PropTypes.func,
   error: PropTypes.string
 };
 

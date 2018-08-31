@@ -1,11 +1,7 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {withRouter} from "react-router-dom";
 import {Card, Form, Grid, StampCard, Stamp} from 'tabler-react';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
-import {listenToGasOracle, gasOracle as ethGasAction} from "../actions";
-import {getOracleGasStats, getLastBlock} from "../reducers/selectors";
 
 const COLORS = {
   good: 'green',
@@ -23,13 +19,6 @@ class GasStation extends Component {
       gasOracleSliderIndex: 0,
       copied: false
     };
-  }
-
-  componentDidMount() {
-    this.props.fetchEthGas();
-    if (!this.props.gasOracleStats.length) {
-      this.props.listenToGasOracle();
-    }
   }
 
   getGasOracleFormatted() {
@@ -164,23 +153,8 @@ class GasStation extends Component {
 }
 
 GasStation.propTypes = {
-  gasOracleStats: PropTypes.object,
-  lastBlock: PropTypes.object,
-  listenToGasOracle: PropTypes.func,
-  fetchEthGas: PropTypes.func
+  gasOracleStats: PropTypes.object.isRequired,
+  lastBlock: PropTypes.object.isRequired
 };
 
-function mapStateToProps(state, _props) {
-  return {
-    gasOracleStats: getOracleGasStats(state),
-    lastBlock: getLastBlock(state)
-  };
-}
-
-export default withRouter(connect(
-  mapStateToProps,
-  {
-    listenToGasOracle: listenToGasOracle,
-    fetchEthGas: ethGasAction.request
-  }
-)(GasStation));
+export default GasStation;
