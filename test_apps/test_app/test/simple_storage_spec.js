@@ -23,7 +23,6 @@ contract("SimpleStorage", function () {
   });
 
   it("set storage value", function (done) {
-    // await SimpleStorage.methods.set(150).send();
     Utils.secureSend(web3, SimpleStorage.methods.set(150), {}, false, async function(err) {
       if (err) {
         return done(err);
