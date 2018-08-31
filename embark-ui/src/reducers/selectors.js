@@ -89,7 +89,10 @@ export function getGasStats(state) {
 }
 
 export function getOracleGasStats(state) {
-  return state.entities.gasOracleStats;
+  if (!state.entities.gasOracleStats.length) {
+    return {};
+  }
+  return state.entities.gasOracleStats[0];
 }
 
 export function isWeb3Enabled(state) {

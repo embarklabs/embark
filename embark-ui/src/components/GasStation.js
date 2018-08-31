@@ -22,6 +22,7 @@ class GasStation extends Component {
 
     this.state = {
       gasSliderIndex: 0,
+      gasOracleSliderIndex: 0,
       copied: false
     };
     this.formattedGasStats = GasStation.formatGasStats(props.gasStats);
@@ -51,9 +52,22 @@ class GasStation extends Component {
     };
   }
 
-  gasSliderChange(e) {
+  getGasOracleFormatted() {
+    const gasPrices = Object.keys(this.props.gasOracleStats);
+    if (!gasPrices.length) {
+      return [];
+    }
+    return gasPrices.map(gasPrice => {
+      return {
+        gasPrice: gasPrice,
+        wait: this.props.gasOracleStats[gasPrice].averageWait
+      };
+    });
+  }
+
+  gasSliderChange(e, name) {
     this.setState({
-      gasSliderIndex: e.target.value
+      [name]: e.target.value
     });
   }
 
@@ -79,6 +93,7 @@ class GasStation extends Component {
 
   render() {
     const currentGasStep = this.formattedGasStats.gasSteps[this.state.gasSliderIndex];
+    const formattedGasOracleStats = this.getGasOracleFormatted();
     return <Grid.Row>
       <Grid.Col>
         <Card>
@@ -114,10 +129,18 @@ class GasStation extends Component {
                      min={0}
                      step={1}
                      value={this.state.gasSliderIndex}
-                     onChange={(e) => this.gasSliderChange(e)}
+                     onChange={(e) => this.gasSliderChange(e, 'gasSliderIndex')}
               />
-            </Form.Group>
 
+              {formattedGasOracleStats.length > 0 &&
+              <input type="range" className="slider"
+                     max={formattedGasOracleStats.length - 1}
+                     min={0}
+                     step={1}
+                     value={this.state.gasOracleSliderIndex}
+                     onChange={(e) => this.gasSliderChange(e, 'gasOracleSliderIndex')}
+              />}
+            </Form.Group>
 
             <Grid.Row cards={true}>
               <Grid.Col lg={4} md={6} sm={12}>
