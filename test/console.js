@@ -8,7 +8,7 @@ let version = require('../package.json').version;
 describe('embark.Console', function() {
   let ipc = new IPC({ipcRole: 'none'});
   let plugins = new Plugins({plugins: {}});
-  let events = {on: () => {}, setCommandHandler: () => {}, emit: () => {}};
+  let events = {once: () => {}, setCommandHandler: () => {}, emit: () => {}};
   let console = new Console({}, {plugins, version, ipc, events});
 
   describe('#executeCmd', function() {
