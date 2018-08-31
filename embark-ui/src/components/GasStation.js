@@ -1,7 +1,11 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {withRouter} from "react-router-dom";
 import {Card, Form, Grid, StampCard, Stamp} from 'tabler-react';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
+import {listenToGasOracle} from "../actions";
+import {getOracleGasStats} from "../reducers/selectors";
 
 const COLORS = {
   good: 'green',
@@ -21,6 +25,12 @@ class GasStation extends Component {
       copied: false
     };
     this.formattedGasStats = GasStation.formatGasStats(props.gasStats);
+  }
+
+  componentDidMount() {
+    if (!this.props.gasOracleStats.length) {
+      this.props.listenToGasOracle();
+    }
   }
 
   static formatGasStats(gasStats) {
@@ -134,7 +144,20 @@ class GasStation extends Component {
 }
 
 GasStation.propTypes = {
-  gasStats: PropTypes.object.isRequired
+  gasStats: PropTypes.object.isRequired,
+  gasOracleStats: PropTypes.array,
+  listenToGasOracle: PropTypes.func
 };
 
-export default GasStation;
+function mapStateToProps(state, _props) {
+  return {
+    gasOracleStats: getOracleGasStats(state)
+  };
+}
+
+export default withRouter(connect(
+  mapStateToProps,
+  {
+    listenToGasOracle: listenToGasOracle
+  }
+)(GasStation));

@@ -6,7 +6,7 @@ import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
 const {account, accounts, block, blocks, transaction, transactions, processes, commands, processLogs,
        contracts, contract, contractProfile, messageSend, versions, plugins, messageListen, fiddle,
        fiddleDeploy, ensRecord, ensRecords, contractLogs, contractFile, contractFunction, contractDeploy,
-       fiddleFile, files, ethGas} = actions;
+       fiddleFile, files, ethGas, gasOracle} = actions;
 
 function *doRequest(entity, apiFn, payload) {
   const {response, error} = yield call(apiFn, payload);
@@ -207,6 +207,19 @@ export function *watchListenToContractLogs() {
   yield takeEvery(actions.WATCH_NEW_CONTRACT_LOGS, listenToContractLogs);
 }
 
+export function *listenGasOracle() {
+  const socket = api.websocketGasOracle();
+  const channel = yield call(createChannel, socket);
+  while (true) {
+    const gasOracleStats = yield take(channel);
+    yield put(gasOracle.success([gasOracleStats]));
+  }
+}
+
+export function *watchListenGasOracle() {
+  yield takeEvery(actions.WATCH_GAS_ORACLE, listenGasOracle);
+}
+
 export function *listenToMessages(action) {
   const socket = api.listenToChannel(action.messageChannels[0]);
   const channel = yield call(createChannel, socket);
@@ -248,6 +261,7 @@ export default function *root() {
     fork(watchFetchEnsRecord),
     fork(watchPostEnsRecords),
     fork(watchFetchFiles),
-    fork(watchFetchEthGas)
+    fork(watchFetchEthGas),
+    fork(watchListenGasOracle)
   ]);
 }

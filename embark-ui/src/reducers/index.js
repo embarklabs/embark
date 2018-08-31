@@ -25,7 +25,8 @@ const entitiesDefaultState = {
   plugins: [],
   ensRecords: [],
   files: [],
-  gasStats: []
+  gasStats: [],
+  gasOracleStats: []
 };
 
 const sorter = {
@@ -84,6 +85,9 @@ const filtrer = {
     return index === self.findIndex((f) => (
       file.name === f.name
     ));
+  },
+  gasOracleStats: function(stat, index, _self) {
+    return index === 0; // Only keep last one
   }
 };
 

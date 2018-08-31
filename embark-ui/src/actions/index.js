@@ -207,10 +207,18 @@ export const ethGas = {
   failure: (error) => action(ETH_GAS[FAILURE], {error})
 };
 
+export const GAS_ORACLE = createRequestTypes('GAS_ORACLE');
+export const gasOracle = {
+  request: () => action(GAS_ORACLE[REQUEST]),
+  success: (gasOracleStats) => action(GAS_ORACLE[SUCCESS], {gasOracleStats}),
+  failure: (error) => action(GAS_ORACLE[FAILURE], {error})
+};
+
 // Web Socket
 export const WATCH_NEW_PROCESS_LOGS = 'WATCH_NEW_PROCESS_LOGS';
 export const WATCH_NEW_CONTRACT_LOGS = 'WATCH_NEW_CONTRACT_LOGS';
 export const INIT_BLOCK_HEADER = 'INIT_BLOCK_HEADER';
+export const WATCH_GAS_ORACLE = 'WATCH_GAS_ORACLE';
 
 export function listenToProcessLogs(processName) {
   return {
@@ -228,6 +236,12 @@ export function listenToContractLogs() {
 export function initBlockHeader(){
   return {
     type: INIT_BLOCK_HEADER
+  };
+}
+
+export function listenToGasOracle(){
+  return {
+    type: WATCH_GAS_ORACLE
   };
 }
 

@@ -88,6 +88,10 @@ export function getGasStats(state) {
   return state.entities.gasStats[state.entities.gasStats.length - 1];
 }
 
+export function getOracleGasStats(state) {
+  return state.entities.gasOracleStats;
+}
+
 export function isWeb3Enabled(state) {
   return Boolean(state.entities.versions.find((version) => version.name === 'web3'));
 }

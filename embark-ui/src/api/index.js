@@ -132,6 +132,10 @@ export function webSocketBlockHeader() {
   return new WebSocket(`${constants.wsEndpoint}/blockchain/blockHeader`);
 }
 
+export function websocketGasOracle() {
+  return new WebSocket(`${constants.wsEndpoint}/blockchain/gas/oracle`);
+}
+
 export function postFiddle(payload) {
   return post('/contract/compile', payload);
 }
