@@ -55,7 +55,6 @@ class EmbarkController {
     let self = this;
     self.context = options.context || [constants.contexts.run, constants.contexts.build];
     let Dashboard = require('./dashboard/dashboard.js');
-    let REPL = require('./dashboard/repl.js');
 
     let webServerConfig = {
       enabled: options.runWebserver
@@ -93,15 +92,6 @@ class EmbarkController {
     async.parallel([
       function startDashboard(callback) {
         if (!options.useDashboard) {
-          new REPL({
-            env: engine.env,
-            plugins: engine.plugins,
-            version: engine.version,
-            events: engine.events,
-            logger: engine.logger,
-            ipc: engine.ipc,
-            config: engine.config
-          }).startConsole();
           return callback();
         }
 
@@ -110,9 +100,7 @@ class EmbarkController {
           logger: engine.logger,
           plugins: engine.plugins,
           version: self.version,
-          env: engine.env,
-          ipc: engine.ipc,
-          config: engine.config
+          env: engine.env
         });
         dashboard.start(function () {
           engine.logger.info(__('dashboard start'));
@@ -135,6 +123,7 @@ class EmbarkController {
         engine.startService("storage");
         engine.startService("codeGenerator");
         engine.startService("namingSystem");
+        engine.startService("console");
 
         engine.events.on('check:backOnline:Ethereum', function () {
           engine.logger.info(__('Ethereum node detected') + '..');
@@ -262,16 +251,6 @@ class EmbarkController {
       webpackConfigName: options.webpackConfigName
     });
     engine.init();
-    const repl = new REPL({
-      env: engine.env,
-      plugins: engine.plugins,
-      version: engine.version,
-      events: engine.events,
-      logger: engine.logger,
-      ipc: engine.ipc,
-      config: engine.config
-    });
-    repl.startConsole();
     async.waterfall([
       function startServices(callback) {
         let pluginList = engine.plugins.listPlugins();
@@ -292,11 +271,13 @@ class EmbarkController {
             engine.startService("codeGenerator");
             engine.startService("webServer");
             engine.startService("namingSystem");
+            engine.startService("console");
 
             return callback();
           }
 
           engine.startService("codeRunner");
+          engine.startService("console");
           callback();
         });
       },
@@ -345,7 +326,7 @@ class EmbarkController {
         });
       },
       function startREPL(callback) {
-        repl.start(callback);
+        new REPL({events: engine.events, env: engine.env}).start(callback);
       }
     ], function (err, _result) {
       if (err) {
