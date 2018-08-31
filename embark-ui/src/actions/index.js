@@ -65,7 +65,7 @@ export const processes = {
 export const COMMANDS = createRequestTypes('COMMANDS');
 export const commands = {
   post: (command) => action(COMMANDS[REQUEST], {command}),
-  success: (command) => action(COMMANDS[SUCCESS], {commands: [command]}),
+  success: (command) => action(COMMANDS[SUCCESS], {commands: [{timestamp: new Date().getTime(), ...command}]}),
   failure: (error) => action(COMMANDS[FAILURE], {error})
 };
 

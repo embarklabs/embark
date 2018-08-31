@@ -41,6 +41,9 @@ const sorter = {
   },
   messages: function(a, b) {
     return a.time - b.time;
+  },
+  commands: function(a, b) {
+    return b.timestamp - a.timestamp;
   }
 };
 

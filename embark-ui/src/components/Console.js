@@ -25,6 +25,7 @@ class Console extends Component {
   }
 
   handleChange(event) {
+    event.preventDefault();
     this.setState({value: event.target.value});
   }
 
