@@ -2,6 +2,8 @@ import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import {Grid, Card, Form} from 'tabler-react';
 
+require('./Console.css');
+
 const CommandResult = ({result}) => (
   <p className="text__new-line">{result}</p>
 );
@@ -28,23 +30,25 @@ class Console extends Component {
 
   render() {
     return (
-      <Grid.Row cards>
+      <Grid.Row cards className="console">
         <Grid.Col>
           <Card>
             <Card.Header>
               <Card.Title>Embark console</Card.Title>
             </Card.Header>
-            <Card.Body>
+            <Card.Body className="console--results">
               <div>
                 {this.props.commands.map((command, index) => <CommandResult key={index} result={command.result} />)}
               </div>
+            </Card.Body>
+            <Card.Footer>
               <Form onSubmit={(event) => this.handleSubmit(event)}>
                 <Form.Input value={this.state.value}
                             onChange={(event) => this.handleChange(event)}
                             name="command"
                             placeholder="Type a command (e.g help)" />
               </Form>
-            </Card.Body>
+            </Card.Footer>
           </Card>
         </Grid.Col>
       </Grid.Row>

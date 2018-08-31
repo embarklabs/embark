@@ -1,0 +1,4 @@
+.console--results {
+  height: 200px;
+  overflow-y: scroll;
+}
