@@ -28,6 +28,10 @@ export function getBlocks(state) {
   return state.entities.blocks;
 }
 
+export function getLastBlock(state) {
+  return state.entities.blocks[0];
+}
+
 export function getBlock(state, number) {
   return state.entities.blocks.find((block) => block.number.toString() === number);
 }
@@ -82,10 +86,6 @@ export function getContractDeploys(state, contractName) {
 
 export function getVersions(state) {
   return state.entities.versions;
-}
-
-export function getGasStats(state) {
-  return state.entities.gasStats[state.entities.gasStats.length - 1];
 }
 
 export function getOracleGasStats(state) {

@@ -7,7 +7,7 @@ import {contractProfile as contractProfileAction, contractDeploy as contractDepl
 import ContractFunctions from '../components/ContractFunctions';
 import DataWrapper from "../components/DataWrapper";
 import GasStation from "../components/GasStation";
-import {getContractProfile, getContractDeploys, getGasStats} from "../reducers/selectors";
+import {getContractProfile, getContractDeploys} from "../reducers/selectors";
 
 class ContractDeploymentContainer extends Component {
   componentDidMount() {
@@ -35,7 +35,6 @@ function mapStateToProps(state, props) {
   return {
     contractProfile: getContractProfile(state, props.match.params.contractName),
     contractDeploys: getContractDeploys(state, props.match.params.contractName),
-    gasStats: getGasStats(state),
     error: state.errorMessage,
     loading: state.loading
   };

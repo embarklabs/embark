@@ -5,7 +5,7 @@ import {withRouter} from "react-router-dom";
 import {Card, Form, Grid, StampCard, Stamp} from 'tabler-react';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {listenToGasOracle, gasOracle as ethGasAction} from "../actions";
-import {getGasStats, getOracleGasStats} from "../reducers/selectors";
+import {getOracleGasStats, getLastBlock} from "../reducers/selectors";
 
 const COLORS = {
   good: 'green',
@@ -17,6 +17,8 @@ class GasStation extends Component {
   constructor(props) {
     super(props);
 
+    this.PRICE_UNIT_DIVIDER = 1000000000;
+    this.WAIT_UNIT = 'sec';
     this.state = {
       gasOracleSliderIndex: 0,
       copied: false
@@ -31,13 +33,19 @@ class GasStation extends Component {
   }
 
   getGasOracleFormatted() {
+    let totalWait = 0;
+    let totalTxs = 0;
+    let totalGasPrice = 0;
     const gasPrices = Object.keys(this.props.gasOracleStats);
     if (!gasPrices.length) {
       return [];
     }
-    return gasPrices.filter((gasPrice) => {
+    const formattedStats =  gasPrices.filter((gasPrice) => {
       return this.props.gasOracleStats[gasPrice].nbTxs >= 10; // Only keep prices with enough transactions
     }).map(gasPrice => {
+      totalWait += this.props.gasOracleStats[gasPrice].totalWait;
+      totalTxs += this.props.gasOracleStats[gasPrice].nbTxs;
+      totalGasPrice = gasPrice * this.props.gasOracleStats[gasPrice].nbTxs;
       return {
         gasPrice,
         wait: this.props.gasOracleStats[gasPrice].averageWait >= 0.1 ? this.props.gasOracleStats[gasPrice].averageWait : 0.1
@@ -45,12 +53,25 @@ class GasStation extends Component {
     }).sort((a, b) => {
       return a.gasPrice - b.gasPrice;
     });
+
+    this.averageWait = totalWait / totalTxs;
+    this.averagePrice = totalGasPrice / totalTxs;
+
+    return formattedStats;
   }
 
   gasSliderChange(e, name) {
     this.setState({
       [name]: e.target.value
     });
+  }
+
+  getFormattedPrice(price) {
+    return (price / this.PRICE_UNIT_DIVIDER).toFixed(3) + ' GWei';
+  }
+
+  getFormattedWait(wait) {
+    return `${wait.toFixed(3)} ${this.WAIT_UNIT}`;
   }
 
   static getColorForWait(wait) {
@@ -85,7 +106,7 @@ class GasStation extends Component {
           <Card.Header>
             <Card.Title>Gas Price Estimator</Card.Title>
             <Card.Options>
-              <CopyToClipboard text={currentGasStep.gasPrice / 1000000000}
+              <CopyToClipboard text={currentGasStep.gasPrice / this.PRICE_UNIT_DIVIDER}
                                onCopy={() => this.setState({copied: true})}
                                title="Copy gas price to clipboard">
                 <span><Stamp color="blue" icon="copy"/></span>
@@ -98,12 +119,12 @@ class GasStation extends Component {
             <Grid.Row cards={true}>
               <Grid.Col lg={6} md={6} sm={12}>
                 <StampCard icon="sliders" color={GasStation.getColorForPrice(currentGasStep.gasPrice)}>
-                  {currentGasStep.gasPrice / 1000000000} GWei
+                  {this.getFormattedPrice(currentGasStep.gasPrice)}
                 </StampCard>
               </Grid.Col>
               <Grid.Col lg={6} md={6} sm={12}>
                 <StampCard icon="clock" color={GasStation.getColorForWait(currentGasStep.wait)}>
-                  {currentGasStep.wait} seconds
+                  {this.getFormattedWait(currentGasStep.wait)}
                 </StampCard>
               </Grid.Col>
             </Grid.Row>
@@ -118,23 +139,23 @@ class GasStation extends Component {
               />
             </Form.Group>
 
-            {/*<Grid.Row cards={true}>
+            <Grid.Row cards={true}>
               <Grid.Col lg={4} md={6} sm={12}>
                 <StampCard icon="sliders" color="grey">
-                  Average Price: {this.formattedGasStats.average.price} GWei
+                  Average Price: {this.getFormattedPrice(this.averagePrice)}
                 </StampCard>
               </Grid.Col>
               <Grid.Col lg={4} md={6} sm={12}>
                 <StampCard icon="clock" color="grey">
-                  Average Wait: {this.formattedGasStats.average.wait} min
+                  Average Wait: {this.getFormattedWait(this.averageWait)}
                 </StampCard>
               </Grid.Col>
               <Grid.Col lg={4} md={6} sm={12}>
                 <StampCard icon="square" color="grey">
-                  Last Block: {this.formattedGasStats.blockNum}
+                  Last Block: {this.props.lastBlock.number}
                 </StampCard>
               </Grid.Col>
-            </Grid.Row>*/}
+            </Grid.Row>
           </Card.Body>
         </Card>
       </Grid.Col>
@@ -144,6 +165,7 @@ class GasStation extends Component {
 
 GasStation.propTypes = {
   gasOracleStats: PropTypes.object,
+  lastBlock: PropTypes.object,
   listenToGasOracle: PropTypes.func,
   fetchEthGas: PropTypes.func
 };
@@ -151,7 +173,7 @@ GasStation.propTypes = {
 function mapStateToProps(state, _props) {
   return {
     gasOracleStats: getOracleGasStats(state),
-    gasStats: getGasStats(state)
+    lastBlock: getLastBlock(state)
   };
 }
 
