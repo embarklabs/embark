@@ -6,7 +6,7 @@ import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
 const {account, accounts, block, blocks, transaction, transactions, processes, commands, processLogs,
        contracts, contract, contractProfile, messageSend, versions, plugins, messageListen, fiddle,
        fiddleDeploy, ensRecord, ensRecords, contractLogs, contractFile, contractFunction, contractDeploy,
-       fiddleFile, files} = actions;
+       fiddleFile, files, ethGas} = actions;
 
 function *doRequest(entity, apiFn, payload) {
   const {response, error} = yield call(apiFn, payload);
@@ -42,6 +42,7 @@ export const sendMessage = doRequest.bind(null, messageSend, api.sendMessage);
 export const fetchEnsRecord = doRequest.bind(null, ensRecord, api.fetchEnsRecord);
 export const postEnsRecord = doRequest.bind(null, ensRecords, api.postEnsRecord);
 export const fetchFiles = doRequest.bind(null, files, api.fetchFiles);
+export const fetchEthGas = doRequest.bind(null, ethGas, api.getEthGasAPI);
 
 export function *watchFetchTransaction() {
   yield takeEvery(actions.TRANSACTION[actions.REQUEST], fetchTransaction);
@@ -151,6 +152,10 @@ export function *watchFetchFiles() {
   yield takeEvery(actions.FILES[actions.REQUEST], fetchFiles);
 }
 
+export function *watchFetchEthGas() {
+  yield takeEvery(actions.ETH_GAS[actions.REQUEST], fetchEthGas);
+}
+
 function createChannel(socket) {
   return eventChannel(emit => {
     socket.onmessage = ((message) => {
@@ -242,6 +247,7 @@ export default function *root() {
     fork(watchFetchLastFiddleSuccess),
     fork(watchFetchEnsRecord),
     fork(watchPostEnsRecords),
-    fork(watchFetchFiles)
+    fork(watchFetchFiles),
+    fork(watchFetchEthGas)
   ]);
 }

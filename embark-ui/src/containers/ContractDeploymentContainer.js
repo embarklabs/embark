@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
 
-import {contractProfile as contractProfileAction, contractDeploy as contractDeployAction} from '../actions';
+import {contractProfile as contractProfileAction, contractDeploy as contractDeployAction, ethGas as ethGasAction} from '../actions';
 import ContractFunctions from '../components/ContractFunctions';
 import DataWrapper from "../components/DataWrapper";
 import {getContractProfile, getContractDeploys} from "../reducers/selectors";
@@ -11,6 +11,7 @@ import {getContractProfile, getContractDeploys} from "../reducers/selectors";
 class ContractDeploymentContainer extends Component {
   componentDidMount() {
     this.props.fetchContractProfile(this.props.match.params.contractName);
+    this.props.fetchEthGas();
   }
 
   render() {
@@ -49,6 +50,7 @@ export default withRouter(connect(
   mapStateToProps,
   {
     fetchContractProfile: contractProfileAction.request,
-    postContractDeploy: contractDeployAction.post
+    postContractDeploy: contractDeployAction.post,
+    fetchEthGas: ethGasAction.request
   }
 )(ContractDeploymentContainer));

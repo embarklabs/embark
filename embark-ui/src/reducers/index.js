@@ -24,7 +24,8 @@ const entitiesDefaultState = {
   versions: [],
   plugins: [],
   ensRecords: [],
-  files: []
+  files: [],
+  gasStats: []
 };
 
 const sorter = {

@@ -200,6 +200,13 @@ export const files = {
   failure: (error) => action(FILES[FAILURE], {error})
 };
 
+export const ETH_GAS = createRequestTypes('ETH_GAS');
+export const ethGas = {
+  request: () => action(ETH_GAS[REQUEST]),
+  success: (gasStats) => action(ETH_GAS[SUCCESS], {gasStats: [gasStats]}),
+  failure: (error) => action(ETH_GAS[FAILURE], {error})
+};
+
 // Web Socket
 export const WATCH_NEW_PROCESS_LOGS = 'WATCH_NEW_PROCESS_LOGS';
 export const WATCH_NEW_CONTRACT_LOGS = 'WATCH_NEW_CONTRACT_LOGS';
