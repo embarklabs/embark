@@ -146,7 +146,7 @@ class ENS extends React.Component {
           </FormGroup>
         </Form>
 
-        <h3>Register subdomain for embark</h3>
+        <h3>Register subdomain</h3>
         <Form inline onKeyDown={(e) => this.checkEnter(e, this.registerSubDomain)}>
           <FormGroup>
             {this.state.responseRegister &&

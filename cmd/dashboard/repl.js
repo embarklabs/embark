@@ -1,30 +1,13 @@
 const repl = require("repl");
 const util = require("util");
-
-const Console = require('./console.js');
-
 class REPL {
   constructor(options) {
-    this.logger = options.logger;
-    this.env = options.env;
-    this.plugins = options.plugins;
     this.events = options.events;
-    this.version = options.version;
-    this.ipc = options.ipc;
-  }
-
-  startConsole(){
-    this.console = new Console({
-      events: this.events,
-      plugins: this.plugins,
-      version: this.version,
-      ipc: this.ipc,
-      logger: this.logger
-    });
+    this.env = options.env
   }
 
   enhancedEval(cmd, context, filename, callback) {
-    this.console.executeCmd(cmd.trim(), callback);
+    this.events.request('console:executeCmd', cmd.trim(), callback);
   }
 
   enhancedWriter(output) {
@@ -36,7 +19,6 @@ class REPL {
   }
 
   start(done) {
-    this.startConsole();
     this.replServer = repl.start({
       prompt: "Embark (" + this.env + ") > ",
       useGlobal: true,
