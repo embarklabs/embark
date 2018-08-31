@@ -366,11 +366,10 @@ class Monitor {
   }
 
   executeCmd(cmd, cb) {
-    const self = this;
-    self.logText.log('console> '.bold.green + cmd);
-    self.console.executeCmd(cmd, function (err, result) {
+    this.logText.log('console> '.bold.green + cmd);
+    this.events.request('console:executeCmd', cmd, (err, result) => {
       let message = err || result;
-      self.logText.log(message);
+      this.logText.log(message);
       if (cb) {
         cb(message);
       }
