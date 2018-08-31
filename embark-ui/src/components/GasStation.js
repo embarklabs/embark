@@ -100,8 +100,7 @@ class GasStation extends Component {
             </Grid.Row>
 
             <Form.Group>
-              <Form.Ratio
-                defaultValue={0}
+              <input type="range" className="slider"
                 max={this.formattedGasStats.gasSteps.length - 1}
                 min={0}
                 step={1}

@@ -4,6 +4,7 @@ import {Provider} from 'react-redux';
 
 import "tabler-react/dist/Tabler.css";
 import "./general.css";
+import "./slider.css";
 
 import AppContainer from './containers/AppContainer';
 import registerServiceWorker from './registerServiceWorker';
