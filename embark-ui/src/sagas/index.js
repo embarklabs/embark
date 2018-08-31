@@ -42,7 +42,7 @@ export const sendMessage = doRequest.bind(null, messageSend, api.sendMessage);
 export const fetchEnsRecord = doRequest.bind(null, ensRecord, api.fetchEnsRecord);
 export const postEnsRecord = doRequest.bind(null, ensRecords, api.postEnsRecord);
 export const fetchFiles = doRequest.bind(null, files, api.fetchFiles);
-export const fetchEthGas = doRequest.bind(null, ethGas, api.getEthGasAPI);
+export const fetchEthGas = doRequest.bind(null, gasOracle, api.getEthGasAPI);
 
 export function *watchFetchTransaction() {
   yield takeEvery(actions.TRANSACTION[actions.REQUEST], fetchTransaction);
@@ -153,7 +153,7 @@ export function *watchFetchFiles() {
 }
 
 export function *watchFetchEthGas() {
-  yield takeEvery(actions.ETH_GAS[actions.REQUEST], fetchEthGas);
+  yield takeEvery(actions.GAS_ORACLE[actions.REQUEST], fetchEthGas);
 }
 
 function createChannel(socket) {
@@ -212,7 +212,7 @@ export function *listenGasOracle() {
   const channel = yield call(createChannel, socket);
   while (true) {
     const gasOracleStats = yield take(channel);
-    yield put(gasOracle.success([gasOracleStats]));
+    yield put(gasOracle.success(gasOracleStats));
   }
 }
 

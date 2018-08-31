@@ -109,7 +109,7 @@ export function fetchContractFile(payload) {
 }
 
 export function getEthGasAPI() {
-  return get('/json/ethgasAPI.json', {}, 'https://ethgasstation.info');
+  return get('/blockchain/gas/oracle', {});
 }
 
 export function fetchLastFiddle() {

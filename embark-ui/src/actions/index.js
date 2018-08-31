@@ -200,17 +200,10 @@ export const files = {
   failure: (error) => action(FILES[FAILURE], {error})
 };
 
-export const ETH_GAS = createRequestTypes('ETH_GAS');
-export const ethGas = {
-  request: () => action(ETH_GAS[REQUEST]),
-  success: (gasStats) => action(ETH_GAS[SUCCESS], {gasStats: [gasStats]}),
-  failure: (error) => action(ETH_GAS[FAILURE], {error})
-};
-
 export const GAS_ORACLE = createRequestTypes('GAS_ORACLE');
 export const gasOracle = {
   request: () => action(GAS_ORACLE[REQUEST]),
-  success: (gasOracleStats) => action(GAS_ORACLE[SUCCESS], {gasOracleStats}),
+  success: (gasOracleStats) => action(GAS_ORACLE[SUCCESS], {gasOracleStats: [gasOracleStats]}),
   failure: (error) => action(GAS_ORACLE[FAILURE], {error})
 };
 

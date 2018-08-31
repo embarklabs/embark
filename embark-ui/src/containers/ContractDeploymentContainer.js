@@ -3,11 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
 
-import {
-  contractProfile as contractProfileAction,
-  contractDeploy as contractDeployAction,
-  ethGas as ethGasAction
-} from '../actions';
+import {contractProfile as contractProfileAction, contractDeploy as contractDeployAction} from '../actions';
 import ContractFunctions from '../components/ContractFunctions';
 import DataWrapper from "../components/DataWrapper";
 import GasStation from "../components/GasStation";
@@ -16,7 +12,6 @@ import {getContractProfile, getContractDeploys, getGasStats} from "../reducers/s
 class ContractDeploymentContainer extends Component {
   componentDidMount() {
     this.props.fetchContractProfile(this.props.match.params.contractName);
-    this.props.fetchEthGas();
   }
 
   render() {
@@ -30,12 +25,7 @@ class ContractDeploymentContainer extends Component {
                                           onlyConstructor
                                           postContractFunction={postContractDeploy}/>
                      )}/>
-
-        <DataWrapper shouldRender={this.props.gasStats !== undefined}
-                     {...this.props}
-                     render={({gasStats}) => (
-                       <GasStation gasStats={gasStats}/>
-                     )}/>
+        <GasStation/>
       </React.Fragment>
     );
   }
@@ -57,7 +47,6 @@ ContractDeploymentContainer.propTypes = {
   contractFunctions: PropTypes.arrayOf(PropTypes.object),
   postContractDeploy: PropTypes.func,
   fetchContractProfile: PropTypes.func,
-  fetchEthGas: PropTypes.func,
   error: PropTypes.string
 };
 
@@ -65,7 +54,6 @@ export default withRouter(connect(
   mapStateToProps,
   {
     fetchContractProfile: contractProfileAction.request,
-    postContractDeploy: contractDeployAction.post,
-    fetchEthGas: ethGasAction.request
+    postContractDeploy: contractDeployAction.post
   }
 )(ContractDeploymentContainer));

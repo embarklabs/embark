@@ -4,8 +4,8 @@ import {connect} from 'react-redux';
 import {withRouter} from "react-router-dom";
 import {Card, Form, Grid, StampCard, Stamp} from 'tabler-react';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
-import {listenToGasOracle} from "../actions";
-import {getOracleGasStats} from "../reducers/selectors";
+import {listenToGasOracle, gasOracle as ethGasAction} from "../actions";
+import {getGasStats, getOracleGasStats} from "../reducers/selectors";
 
 const COLORS = {
   good: 'green',
@@ -16,40 +16,18 @@ const COLORS = {
 class GasStation extends Component {
   constructor(props) {
     super(props);
-    if (!props.gasStats) {
-      return console.error('gasStats is a needed Prop for GasStation');
-    }
 
     this.state = {
-      gasSliderIndex: 0,
       gasOracleSliderIndex: 0,
       copied: false
     };
-    this.formattedGasStats = GasStation.formatGasStats(props.gasStats);
   }
 
   componentDidMount() {
+    this.props.fetchEthGas();
     if (!this.props.gasOracleStats.length) {
       this.props.listenToGasOracle();
     }
-  }
-
-  static formatGasStats(gasStats) {
-    const {
-      fast, speed, fastest, avgWait, fastWait, blockNum, safeLowWait,
-      block_time, fastestWait, safeLow, average
-    } = gasStats;
-    return {
-      average: {price: average, wait: avgWait},
-      blockTime: block_time,
-      blockNum,
-      speed,
-      gasSteps: [
-        {price: safeLow, wait: safeLowWait},
-        {price: fast, wait: fastWait},
-        {price: fastest, wait: fastestWait}
-      ]
-    };
   }
 
   getGasOracleFormatted() {
@@ -59,9 +37,11 @@ class GasStation extends Component {
     }
     return gasPrices.map(gasPrice => {
       return {
-        gasPrice: gasPrice,
+        gasPrice,
         wait: this.props.gasOracleStats[gasPrice].averageWait
       };
+    }).sort((a, b) => {
+      return a.gasPrice - b.gasPrice;
     });
   }
 
@@ -72,35 +52,38 @@ class GasStation extends Component {
   }
 
   static getColorForWait(wait) {
-    if (wait <= 1) {
+    if (wait <= 60) {
       return COLORS.good;
     }
-    if (wait <= 3) {
+    if (wait <= 180) {
       return COLORS.medium;
     }
     return COLORS.bad;
   }
 
   static getColorForPrice(gasPrice) {
-    if (gasPrice <= 20) {
+    if (gasPrice <= 20000000000) {
       return COLORS.good;
     }
-    if (gasPrice <= 40) {
+    if (gasPrice <= 40000000000) {
       return COLORS.medium;
     }
     return COLORS.bad;
   }
 
   render() {
-    const currentGasStep = this.formattedGasStats.gasSteps[this.state.gasSliderIndex];
     const formattedGasOracleStats = this.getGasOracleFormatted();
+    const currentGasStep = formattedGasOracleStats[this.state.gasOracleSliderIndex];
+    if (!formattedGasOracleStats.length) {
+      return '';
+    }
     return <Grid.Row>
       <Grid.Col>
         <Card>
           <Card.Header>
-            <Card.Title>Gas Price Estimator (for Mainnet)</Card.Title>
+            <Card.Title>Gas Price Estimator</Card.Title>
             <Card.Options>
-              <CopyToClipboard text={currentGasStep.price / 10}
+              <CopyToClipboard text={currentGasStep.gasPrice / 1000000000}
                                onCopy={() => this.setState({copied: true})}
                                title="Copy gas price to clipboard">
                 <span><Stamp color="blue" icon="copy"/></span>
@@ -112,40 +95,31 @@ class GasStation extends Component {
             {this.state.copied && <p>Copied Gas Price</p>}
             <Grid.Row cards={true}>
               <Grid.Col lg={6} md={6} sm={12}>
-                <StampCard icon="sliders" color={GasStation.getColorForPrice(currentGasStep.price)}>
-                  {currentGasStep.price / 10} GWei
+                <StampCard icon="sliders" color={GasStation.getColorForPrice(currentGasStep.gasPrice)}>
+                  {currentGasStep.gasPrice / 1000000000} Wei
                 </StampCard>
               </Grid.Col>
               <Grid.Col lg={6} md={6} sm={12}>
                 <StampCard icon="clock" color={GasStation.getColorForWait(currentGasStep.wait)}>
-                  {currentGasStep.wait} minutes
+                  {currentGasStep.wait} seconds
                 </StampCard>
               </Grid.Col>
             </Grid.Row>
 
             <Form.Group>
               <input type="range" className="slider"
-                     max={this.formattedGasStats.gasSteps.length - 1}
-                     min={0}
-                     step={1}
-                     value={this.state.gasSliderIndex}
-                     onChange={(e) => this.gasSliderChange(e, 'gasSliderIndex')}
-              />
-
-              {formattedGasOracleStats.length > 0 &&
-              <input type="range" className="slider"
                      max={formattedGasOracleStats.length - 1}
                      min={0}
                      step={1}
                      value={this.state.gasOracleSliderIndex}
                      onChange={(e) => this.gasSliderChange(e, 'gasOracleSliderIndex')}
-              />}
+              />
             </Form.Group>
 
-            <Grid.Row cards={true}>
+            {/*<Grid.Row cards={true}>
               <Grid.Col lg={4} md={6} sm={12}>
                 <StampCard icon="sliders" color="grey">
-                  Average Price: {this.formattedGasStats.average.price / 10} Gwei
+                  Average Price: {this.formattedGasStats.average.price} Wei
                 </StampCard>
               </Grid.Col>
               <Grid.Col lg={4} md={6} sm={12}>
@@ -158,7 +132,7 @@ class GasStation extends Component {
                   Last Block: {this.formattedGasStats.blockNum}
                 </StampCard>
               </Grid.Col>
-            </Grid.Row>
+            </Grid.Row>*/}
           </Card.Body>
         </Card>
       </Grid.Col>
@@ -167,20 +141,22 @@ class GasStation extends Component {
 }
 
 GasStation.propTypes = {
-  gasStats: PropTypes.object.isRequired,
-  gasOracleStats: PropTypes.array,
-  listenToGasOracle: PropTypes.func
+  gasOracleStats: PropTypes.object,
+  listenToGasOracle: PropTypes.func,
+  fetchEthGas: PropTypes.func
 };
 
 function mapStateToProps(state, _props) {
   return {
-    gasOracleStats: getOracleGasStats(state)
+    gasOracleStats: getOracleGasStats(state),
+    gasStats: getGasStats(state)
   };
 }
 
 export default withRouter(connect(
   mapStateToProps,
   {
-    listenToGasOracle: listenToGasOracle
+    listenToGasOracle: listenToGasOracle,
+    fetchEthGas: ethGasAction.request
   }
 )(GasStation));
