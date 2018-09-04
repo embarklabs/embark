@@ -1,29 +1,38 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
-import {Card, Icon, Button} from 'tabler-react';
+import {Card, Icon} from 'tabler-react';
+import ContractFunctions from '../components/ContractFunctions';
 
-const TextEditorContractDeploy = (props) => (
-  <Card statusColor="success"
-        statusSide
-        className="success-card">
-    <Card.Header>
-      <Card.Title color="success">
-        <Icon name="check" className="mr-1" />
-        Deploy Contract
-      </Card.Title>
-    </Card.Header>
-    <Card.Body>
-      <Button to={`/embark/contracts/${Object.keys(props.result)[0]}/deployment`}
-              RootComponent={NavLink}>
-        Deploy my contract(s)
-      </Button>
-    </Card.Body>
-  </Card>
-);
+const TextEditorContractDeploy = (props) => {
+  const name = Object.keys(props.result)[0];
+  const profile = {
+    name,
+    methods: props.result[name].abiDefinition
+  };
+  return (
+    <Card statusColor="success"
+          statusSide
+          className="success-card">
+      <Card.Header>
+        <Card.Title color="success">
+          <Icon name="check" className="mr-1" />
+          Deploy Contract
+        </Card.Title>
+      </Card.Header>
+      <Card.Body>
+        <ContractFunctions contractProfile={profile}
+                           contractFunctions={props.contractDeploys}
+                           onlyConstructor
+                           postContractFunction={props.postContractDeploy}/>
+      </Card.Body>
+    </Card>
+  );
+};
 
 TextEditorContractDeploy.propTypes = {
-  result: PropTypes.object
+  result: PropTypes.object,
+  postContractDeploy: PropTypes.func,
+  contractDeploys: PropTypes.array
 };
 
 export default TextEditorContractDeploy;

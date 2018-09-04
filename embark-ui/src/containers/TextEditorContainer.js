@@ -16,9 +16,9 @@ import {
   saveFile as saveFileAction,
   removeFile as removeFileAction,
   contractCompile as contractCompileAction,
-  contractDeploy as contractDeployAction
+  contractDeploy as postContractDeploy
 } from '../actions';
-import {getCurrentFile, getContractCompile} from '../reducers/selectors';
+import {getCurrentFile, getContractCompile, getContractDeploys} from '../reducers/selectors';
 
 const DEFAULT_FILE = {name: 'newContract.sol', content: ''};
 
@@ -79,7 +79,10 @@ class TextEditorContainer extends Component {
     }
 
     if (result) {
-      components.push(<TextEditorContractDeploy key={3} result={result}/>);
+      components.push(<TextEditorContractDeploy key={3}
+                                                result={result}
+                                                postContractDeploy={this.props.postContractDeploy}
+                                                contractDeploys={this.props.contractDeploys}/>);
     }
     return <React.Fragment>{components}</React.Fragment>;
   }
@@ -116,10 +119,13 @@ class TextEditorContainer extends Component {
 function mapStateToProps(state) {
   const currentFile = getCurrentFile(state) || DEFAULT_FILE;
   const contractCompile = getContractCompile(state, currentFile) || {};
+  const contractName = contractCompile.result && Object.keys(contractCompile.result)[0];
+  const contractDeploys = getContractDeploys(state, contractName);
   return {
     currentFile,
     contractCompile,
     compilingContract: state.compilingContract,
+    contractDeploys,
     loading: state.loading,
     error: state.errorMessage
   };
@@ -132,9 +138,10 @@ TextEditorContainer.propTypes = {
   fetchCurrentFile: PropTypes.func,
   saveFile: PropTypes.func,
   removeFile: PropTypes.func,
-  deployContract: PropTypes.func,
+  postContractDeploy: PropTypes.func,
   compileContract: PropTypes.func,
   compilingContract: PropTypes.bool,
+  contractDeploys: PropTypes.array,
   loading: PropTypes.bool,
   error: PropTypes.string
 };
@@ -146,7 +153,7 @@ export default connect(
     saveCurrentFile: saveCurrentFileAction.request,
     saveFile: saveFileAction.request,
     removeFile: removeFileAction.request,
-    deployContract: contractDeployAction.post,
+    postContractDeploy: postContractDeploy.post,
     compileContract: contractCompileAction.post
   },
 )(TextEditorContainer);

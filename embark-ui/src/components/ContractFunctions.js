@@ -109,7 +109,7 @@ const ContractFunctions = (props) => {
     <Page.Content title={contractProfile.name + ' Functions'}>
       {contractProfile.methods
         .filter((method) => {
-          return props.onlyConstructor ? method.name === 'constructor' : method.name !== 'constructor';
+          return props.onlyConstructor ? method.type === 'constructor' : method.type !== 'constructor';
         })
         .map(method => <ContractFunction key={method.name}
                                          method={method}
