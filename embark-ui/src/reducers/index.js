@@ -133,7 +133,7 @@ function errorEntities(state = {}, action) {
 }
 
 function loading(_state = false, action) {
-  return action.type.endsWith(REQUEST);
+  return action.type.endsWith(REQUEST) && !action.noLoading;
 }
 
 function compilingContract(state = false, action) {

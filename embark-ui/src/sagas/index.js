@@ -186,8 +186,8 @@ export function *initBlockHeader() {
   const channel = yield call(createChannel, socket);
   while (true) {
     yield take(channel);
-    yield put({type: actions.BLOCKS[actions.REQUEST]});
-    yield put({type: actions.TRANSACTIONS[actions.REQUEST]});
+    yield put({type: actions.BLOCKS[actions.REQUEST], noLoading: true});
+    yield put({type: actions.TRANSACTIONS[actions.REQUEST], noLoading: true});
   }
 }
 
