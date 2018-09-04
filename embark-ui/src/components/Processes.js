@@ -11,12 +11,19 @@ function stampClasses(state){
   });
 }
 
+function iconClasses(state){
+  return classNames('fe', {
+    'fe-check-square': state === 'running',
+    'fe-x': state !== 'running'
+  });
+}
+
 const Process = ({process}) => (
   <Grid.Col sm={6} lg={3}>
     <Card className="p-3">
       <div className="d-flex align-items-center">
         <span className={stampClasses(process.state)}>
-          <i className="fe fa-cube"></i>
+          <i className={iconClasses(process.state)}></i>
         </span>
         <div>
           <h4 className="text-capitalize m-0"><Link to={`/embark/processes/${process.name}`}>{process.name}</Link></h4>
