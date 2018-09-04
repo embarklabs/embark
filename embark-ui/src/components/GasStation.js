@@ -34,7 +34,7 @@ class GasStation extends Component {
     }).map(gasPrice => {
       totalWait += this.props.gasOracleStats[gasPrice].totalWait;
       totalTxs += this.props.gasOracleStats[gasPrice].nbTxs;
-      totalGasPrice = gasPrice * this.props.gasOracleStats[gasPrice].nbTxs;
+      totalGasPrice += gasPrice * this.props.gasOracleStats[gasPrice].nbTxs;
       return {
         gasPrice,
         wait: this.props.gasOracleStats[gasPrice].averageWait >= 0.1 ? this.props.gasOracleStats[gasPrice].averageWait : 0.1
