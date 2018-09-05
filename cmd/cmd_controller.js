@@ -79,18 +79,20 @@ class EmbarkController {
       context: self.context,
       useDashboard: options.useDashboard,
       webServerConfig: webServerConfig,
-      webpackConfigName: options.webpackConfigName,
-      ipcRole: 'server'
+      webpackConfigName: options.webpackConfigName
     });
-    engine.init();
 
-    if (!options.useDashboard) {
-      engine.logger.info('========================'.bold.green);
-      engine.logger.info((__('Welcome to Embark') + ' ' + this.version).yellow.bold);
-      engine.logger.info('========================'.bold.green);
-    }
-
-    async.parallel([
+    async.waterfall([
+      function initEngine(callback) {
+        engine.init({}, () => {
+          if (!options.useDashboard) {
+            engine.logger.info('========================'.bold.green);
+            engine.logger.info((__('Welcome to Embark') + ' ' + engine.version).yellow.bold);
+            engine.logger.info('========================'.bold.green);
+          }
+          callback();
+        });
+      },
       function startDashboard(callback) {
         if (!options.useDashboard) {
           return callback();
@@ -182,9 +184,12 @@ class EmbarkController {
       context: this.context,
       webpackConfigName: options.webpackConfigName
     });
-    engine.init();
+
 
     async.waterfall([
+      function initEngine(callback) {
+        engine.init({}, callback);
+      },
       function startServices(callback) {
         let pluginList = engine.plugins.listPlugins();
         if (pluginList.length > 0) {
@@ -250,8 +255,11 @@ class EmbarkController {
       context: this.context,
       webpackConfigName: options.webpackConfigName
     });
-    engine.init();
+
     async.waterfall([
+      function initEngine(callback) {
+        engine.init({}, callback);
+      },
       function startServices(callback) {
         let pluginList = engine.plugins.listPlugins();
         if (pluginList.length > 0) {
@@ -350,9 +358,12 @@ class EmbarkController {
       logFile: options.logFile,
       context: this.context
     });
-    engine.init();
+
 
     async.waterfall([
+      function (callback) {
+        engine.init({}, callback);
+      },
       function (callback) {
         let pluginList = engine.plugins.listPlugins();
         if (pluginList.length > 0) {
@@ -436,12 +447,17 @@ class EmbarkController {
       context: this.context,
       webpackConfigName: options.webpackConfigName
     });
-    engine.init();
 
-    let platform = engine.config.storageConfig.upload.provider;
+
+    let platform;
 
     async.waterfall([
-
+      function initEngine(callback) {
+        engine.init({}, () => {
+          platform = engine.config.storageConfig.upload.provider;
+          callback();
+        });
+      },
       function startServices(callback) {
 
         engine.startService("processManager");
