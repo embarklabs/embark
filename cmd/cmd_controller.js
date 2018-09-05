@@ -454,6 +454,11 @@ class EmbarkController {
     async.waterfall([
       function initEngine(callback) {
         engine.init({}, () => {
+          if (engine.config.embarkConfig.config.storage === false || engine.config.storageConfig.enabled === false) {
+            engine.logger.error(__('Storage configuration is disabled in embark.json. Please provide a storage file before uploading'));
+            engine.logger.info(__('You can find an example here: %s', 'https://github.com/embark-framework/embark/blob/master/templates/demo/config/storage.js'.underline));
+            process.exit();
+          }
           platform = engine.config.storageConfig.upload.provider;
           callback();
         });
