@@ -11,12 +11,12 @@ import Console from '../components/Console';
 import {getProcesses, getCommands, getVersions, getProcessLogs} from "../reducers/selectors";
 
 class HomeContainer extends Component {
-  componentDidMount() {
-    if (this.props.processLogs.length === 0) {
-      // TODO get all
-      this.props.fetchProcessLogs('blockchain');
-      this.props.fetchProcessLogs('ipfs');
-      this.props.listenToProcessLogs('blockchain');
+  componentDidUpdate(prevProps) {
+    if (!prevProps.processes.length) {
+      this.props.processes.forEach(process => {
+        this.props.fetchProcessLogs(process.name);
+        this.props.listenToProcessLogs(process.name);
+      });
     }
   }
 

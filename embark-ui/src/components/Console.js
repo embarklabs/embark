@@ -5,7 +5,6 @@ import Logs from "./Logs";
 import Convert from 'ansi-to-html';
 
 const convert = new Convert();
-require('./Console.css');
 
 const CommandResult = ({result}) => (
   <p className="text__new-line">{result}</p>
