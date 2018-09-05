@@ -6,7 +6,7 @@
   color: white;
   padding: 10px;
   border-radius: 8px;
-  max-height: 400px;
+  max-height: 350px;
   overflow: auto;
 }
 
@@ -24,6 +24,15 @@
 
 .logs .trace {
   color: #8f98a2;
+}
+
+.console-container {
+  padding-top: 5px;
+  padding-bottom: 15px;
+}
+
+.console-container .nav-link {
+  text-transform: capitalize;
 }
 
 .text__new-line, .card.warnings-card .list-group-item, .card.errors-card .list-group-item {
