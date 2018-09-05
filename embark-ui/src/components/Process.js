@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Page} from "tabler-react";
 import Convert from 'ansi-to-html';
+import Logs from './Logs';
+
 const convert = new Convert();
 
 class Process extends Component {
@@ -11,11 +13,11 @@ class Process extends Component {
       <Page.Content>
         <Page.Header><Page.Title className="text-capitalize">{process.name}</Page.Title></Page.Header>
         <p className="text-capitalize">State: {process.state}</p>
-        <div className="logs">
+        <Logs>
           {
             processLogs.map((item, i) => <p key={i} className={item.logLevel} dangerouslySetInnerHTML={{__html: convert.toHtml(item.msg)}}></p>)
           }
-        </div>
+        </Logs>
       </Page.Content>
     );
   }

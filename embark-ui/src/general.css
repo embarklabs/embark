@@ -1,22 +1,27 @@
 .logs {
-  margin:  10px 0;
+  margin: 10px 0;
   background-color: #333333;
   font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
   font-size: 14px;
   color: white;
   padding: 10px;
   border-radius: 8px;
+  max-height: 400px;
+  overflow: auto;
 }
 
 .logs .error {
   color: #dc3546;
 }
+
 .logs .warn {
   color: #fec107;
 }
+
 .logs .debug {
   color: #b7c1cc;
 }
+
 .logs .trace {
   color: #8f98a2;
 }
@@ -25,38 +30,48 @@
   white-space: pre-wrap;
   font-family: monospace;
 }
-.card.card-fullscreen{
+
+.card.card-fullscreen {
   z-index: 6;
 }
-.card.warnings-card, .card.errors-card{
+
+.card.warnings-card, .card.errors-card {
   text-transform: capitalize;
 }
-.card.warnings-card .card-options a, .card.errors-card .card-options a{
-  cursor:pointer;
+
+.card.warnings-card .card-options a, .card.errors-card .card-options a {
+  cursor: pointer;
 }
+
 .compilation-summary {
   float: right;
   margin-bottom: 3px;
   visibility: hidden;
 }
-.compilation-summary.visible{
+
+.compilation-summary.visible {
   visibility: visible;
 }
-.compilation-summary .badge-link:not(:last-child){
+
+.compilation-summary .badge-link:not(:last-child) {
   margin-right: 5px;
 }
+
 .ace_editor {
   margin-bottom: 24px;
 }
-.loader, .loader:before, .loader:after{
+
+.loader, .loader:before, .loader:after {
   width: 1.2rem;
   height: 1.2rem;
 }
-.loader:before, .loader:after{
+
+.loader:before, .loader:after {
   margin: -0.6rem 0 0 -0.6rem;
   left: 0;
 }
-.loader, .loader-text{
+
+.loader, .loader-text {
   display: inline-block;
   vertical-align: top;
   padding-left: 0.6rem;
