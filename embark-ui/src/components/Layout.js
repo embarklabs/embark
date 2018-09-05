@@ -9,7 +9,6 @@ const navBarItems = [
   {value: "Home", to: "/embark", icon: "home", LinkComponent: NavLink},
   {value: "Contracts", to: "/embark/contracts", icon: "box", LinkComponent: NavLink},
   {value: "Explorer", to: "/embark/explorer/accounts", icon: "activity", LinkComponent: NavLink},
-  {value: "Processes", to: "/embark/processes", icon: "cpu", LinkComponent: NavLink},
   {value: "Fiddle", to: "/embark/fiddle", icon: "codepen", LinkComponent: NavLink},
   {value: "Documentation", to: "/embark/documentation", icon: "file-text", LinkComponent: NavLink}
 ];

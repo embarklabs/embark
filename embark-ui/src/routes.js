@@ -6,7 +6,6 @@ import ContractsContainer from './containers/ContractsContainer';
 import ContractContainer from './containers/ContractLayoutContainer';
 import NoMatch from './components/NoMatch';
 import ExplorerLayout from './components/ExplorerLayout';
-import ProcessesLayout from './components/ProcessesLayout';
 import FiddleLayout from './components/FiddleLayout';
 
 const routes = (
@@ -14,7 +13,6 @@ const routes = (
     <Switch>
       <Route exact path="/embark/" component={HomeContainer} />
       <Route path="/embark/explorer/" component={ExplorerLayout} />
-      <Route path="/embark/processes/" component={ProcessesLayout} />
       <Route path="/embark/contracts/:contractName" component={ContractContainer} />
       <Route path="/embark/contracts" component={ContractsContainer} />
       <Route path="/embark/fiddle" component={FiddleLayout} />
