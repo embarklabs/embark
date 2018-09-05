@@ -3,14 +3,23 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Page} from "tabler-react";
 
-import {commands as commandsAction} from "../actions";
+import {commands as commandsAction, listenToProcessLogs, processLogs as processLogsAction} from "../actions";
 import DataWrapper from "../components/DataWrapper";
 import Processes from '../components/Processes';
 import Versions from '../components/Versions';
 import Console from '../components/Console';
-import {getProcesses, getCommands, getVersions} from "../reducers/selectors";
+import {getProcesses, getCommands, getVersions, getProcessLogs} from "../reducers/selectors";
 
 class HomeContainer extends Component {
+  componentDidMount() {
+    if (this.props.processLogs.length === 0) {
+      // TODO get all
+      this.props.fetchProcessLogs('blockchain');
+      this.props.fetchProcessLogs('ipfs');
+      this.props.listenToProcessLogs('blockchain');
+    }
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -21,7 +30,10 @@ class HomeContainer extends Component {
         <DataWrapper shouldRender={this.props.versions.length > 0 } {...this.props} render={({versions}) => (
           <Versions versions={versions} />
         )} />
-        <Console postCommand={this.props.postCommand} commands={this.props.commands} />
+
+        <DataWrapper shouldRender={this.props.processes.length > 0 } {...this.props} render={({processes, postCommand, processLogs}) => (
+          <Console postCommand={postCommand} commands={this.props.commands} processes={processes} processLogs={processLogs} />
+        )} />
       </React.Fragment>
     );
   }
@@ -42,6 +54,7 @@ function mapStateToProps(state) {
     processes: getProcesses(state),
     commands: getCommands(state),
     error: state.errorMessage,
+    processLogs: getProcessLogs(state),
     loading: state.loading
   };
 }
@@ -49,6 +62,8 @@ function mapStateToProps(state) {
 export default connect(
   mapStateToProps,
   {
-    postCommand: commandsAction.post
+    postCommand: commandsAction.post,
+    fetchProcessLogs: processLogsAction.request,
+    listenToProcessLogs
   }
 )(HomeContainer);

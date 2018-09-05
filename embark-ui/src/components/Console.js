@@ -1,7 +1,10 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
-import {Grid, Card, Form} from 'tabler-react';
+import {Grid, Card, Form, Tabs, Tab} from 'tabler-react';
+import Logs from "./Logs";
+import Convert from 'ansi-to-html';
 
+const convert = new Convert();
 require('./Console.css');
 
 const CommandResult = ({result}) => (
@@ -30,6 +33,7 @@ class Console extends Component {
   }
 
   render() {
+    const {processLogs, processes, commands}= this.props;
     return (
       <Grid.Row cards className="console">
         <Grid.Col>
@@ -37,18 +41,36 @@ class Console extends Component {
             <Card.Header>
               <Card.Title>Embark console</Card.Title>
             </Card.Header>
-            <Card.Body className="console--results">
-              <div>
-                {this.props.commands.map((command, index) => <CommandResult key={index} result={command.result} />)}
-              </div>
+            <Card.Body >
+              <Tabs initialTab="Embark">
+                <Tab title="Embark">
+                  <Logs>
+                    {commands.map((command, index) => <CommandResult key={index} result={command.result}/>)}
+                  </Logs>
+                </Tab>
+                {processes.map(process => {
+                  return (
+                    <Tab title={process.name} key={process.name}>
+                      <Logs>
+                        {
+                          processLogs.filter((item) => item.name === process.name)
+                            .map((item, i) => <p key={i} className={item.logLevel}
+                                                          dangerouslySetInnerHTML={{__html: convert.toHtml(item.msg)}}></p>)
+                        }
+                      </Logs>
+                    </Tab>
+                  );
+                })}
+              </Tabs>
+
             </Card.Body>
             <Card.Footer>
-              <Form onSubmit={(event) => this.handleSubmit(event)}>
+              <form onSubmit={(event) => this.handleSubmit(event)} autoComplete="off">
                 <Form.Input value={this.state.value}
                             onChange={(event) => this.handleChange(event)}
                             name="command"
                             placeholder="Type a command (e.g help)" />
-              </Form>
+              </form>
             </Card.Footer>
           </Card>
         </Grid.Col>
@@ -59,7 +81,9 @@ class Console extends Component {
 
 Console.propTypes = {
   postCommand: PropTypes.func,
-  commands: PropTypes.arrayOf(PropTypes.object)
+  commands: PropTypes.arrayOf(PropTypes.object).isRequired,
+  processes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  processLogs: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
 export default Console;
