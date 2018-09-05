@@ -499,7 +499,7 @@ class EmbarkController {
           engine.logger.error(err.message);
           return engine.logger.debug(err.stack);
         }
-        engine.locale.error(err);
+        engine.logger.error(err);
       } else {
         engine.logger.info((__("finished building DApp and deploying to") + " " + platform).underline);
       }
