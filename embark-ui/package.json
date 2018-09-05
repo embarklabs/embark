@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "ace-mode-solidity": "^0.1.0",
+    "ansi-to-html": "^0.6.6",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
     "connected-react-router": "^4.3.0",
