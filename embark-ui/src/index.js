@@ -19,7 +19,7 @@ ReactDOM.render(
   <Provider store={store}>
     <ConnectedRouter history={history}>
       <Layout>
-      <AppContainer />
+        <AppContainer/>
       </Layout>
     </ConnectedRouter>
   </Provider>,

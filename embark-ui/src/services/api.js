@@ -11,12 +11,18 @@ function get(path, params, endpoint) {
 }
 
 function post(path, params) {
+  const callback = params.callback || function(){};
+  delete params.callback;
   return axios.post(constants.httpEndpoint + path, params)
     .then((response) => {
-      return {response, error: null};
+      const data = (response.data && response.data.error) ? {error: response.data.error} : {response, error: null};
+      callback(data.error, data.response);
+      return data;
     })
     .catch((error) => {
-      return {response: null, error: error.message || 'Something bad happened'};
+      const data = {response: null, error: error.message || 'Something bad happened'};
+      callback(data.error, data.response);
+      return data;
     });
 }
 
