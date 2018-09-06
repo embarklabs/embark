@@ -22,8 +22,7 @@ class AppContainer extends Component {
     this.state = {
       authenticateError: null
     };
-  }
-  componentDidMount() {
+
     let token;
     if (this.props.location.search) {
       token = queryString.parse(this.props.location.search).token;
@@ -37,6 +36,8 @@ class AppContainer extends Component {
       }
       this.setState({authenticateError: null});
     });
+  }
+  componentDidMount() {
     this.props.initBlockHeader();
     this.props.fetchProcesses();
     this.props.fetchVersions();

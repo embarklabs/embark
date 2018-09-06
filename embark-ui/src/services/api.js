@@ -1,7 +1,9 @@
 import axios from "axios";
 import constants from '../constants';
+import {get as cacheGet} from '../services/cache';
 
 function get(path, params = {}, endpoint) {
+  axios.defaults.headers.common['Authorization'] = cacheGet('token');
   const callback = params.callback || function(){};
   return axios.get((endpoint || constants.httpEndpoint) + path, params)
     .then((response) => {
@@ -16,6 +18,7 @@ function get(path, params = {}, endpoint) {
 }
 
 function post(path, params = {}) {
+  axios.defaults.headers.common['Authorization'] = cacheGet('token');
   const callback = params.callback || function(){};
   delete params.callback;
   return axios.post(constants.httpEndpoint + path, params)
@@ -32,6 +35,7 @@ function post(path, params = {}) {
 }
 
 function destroy(path, params = {}) {
+  axios.defaults.headers.common['Authorization'] = cacheGet('token');
   const callback = params.callback || function(){};
   return axios.delete(constants.httpEndpoint + path, params)
     .then((response) => {
@@ -154,8 +158,8 @@ export function deleteFile(payload) {
   return destroy('/file', {params: payload});
 }
 
-export function authenticate(payload) {
-  return post('/authenticate', payload);
+export function authorize(payload) {
+  return post('/authorize', payload);
 }
 
 export function listenToChannel(channel) {
