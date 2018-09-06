@@ -1,16 +1,21 @@
 import axios from "axios";
 import constants from '../constants';
 
-function get(path, params, endpoint) {
+function get(path, params = {}, endpoint) {
+  const callback = params.callback || function(){};
   return axios.get((endpoint || constants.httpEndpoint) + path, params)
     .then((response) => {
-      return {response, error: null};
+      const data = (response.data && response.data.error) ? {error: response.data.error} : {response, error: null};
+      callback(data.error, data.response);
+      return data;
     }).catch((error) => {
-      return {response: null, error: error.message || 'Something bad happened'};
+      const data = {response: null, error: error.message || 'Something bad happened'};
+      callback(data.error, data.response);
+      return data;
     });
 }
 
-function post(path, params) {
+function post(path, params = {}) {
   const callback = params.callback || function(){};
   delete params.callback;
   return axios.post(constants.httpEndpoint + path, params)
