@@ -2,10 +2,10 @@ import axios from "axios";
 import constants from '../constants';
 import {get as cacheGet} from '../services/cache';
 
-function get(path, params = {}, endpoint) {
+function request(type, path, params = {}, endpoint) {
   axios.defaults.headers.common['Authorization'] = cacheGet('token');
   const callback = params.callback || function(){};
-  return axios.get((endpoint || constants.httpEndpoint) + path, params)
+  return axios[type]((endpoint || constants.httpEndpoint) + path, params)
     .then((response) => {
       const data = (response.data && response.data.error) ? {error: response.data.error} : {response, error: null};
       callback(data.error, data.response);
@@ -17,37 +17,16 @@ function get(path, params = {}, endpoint) {
     });
 }
 
-function post(path, params = {}) {
-  axios.defaults.headers.common['Authorization'] = cacheGet('token');
-  const callback = params.callback || function(){};
-  delete params.callback;
-  return axios.post(constants.httpEndpoint + path, params)
-    .then((response) => {
-      const data = (response.data && response.data.error) ? {error: response.data.error} : {response, error: null};
-      callback(data.error, data.response);
-      return data;
-    })
-    .catch((error) => {
-      const data = {response: null, error: error.message || 'Something bad happened'};
-      callback(data.error, data.response);
-      return data;
-    });
+function get() {
+  return request('get', ...arguments);
 }
 
-function destroy(path, params = {}) {
-  axios.defaults.headers.common['Authorization'] = cacheGet('token');
-  const callback = params.callback || function(){};
-  return axios.delete(constants.httpEndpoint + path, params)
-    .then((response) => {
-      const data = (response.data && response.data.error) ? {error: response.data.error} : {response, error: null};
-      callback(data.error, data.response);
-      return data;
-    })
-    .catch((error) => {
-      const data = {response: null, error: error.message || 'Something bad happened'};
-      callback(data.error, data.response);
-      return data;
-    });
+function post() {
+  return request('post', ...arguments);
+}
+
+function destroy() {
+  return request('delete', ...arguments);
 }
 
 export function postCommand(payload) {
