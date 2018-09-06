@@ -10,7 +10,7 @@ import {put as cachePut, get as cacheGet} from '../services/cache';
 
 import {
   initBlockHeader,
-  authenticate,
+  authorize,
   processes as processesAction,
   versions as versionsAction,
   plugins as pluginsAction
@@ -30,7 +30,7 @@ class AppContainer extends Component {
     } else {
       token = cacheGet('token');
     }
-    this.props.authenticate(token, (err) => {
+    this.props.authorize(token, (err) => {
       if (err) {
         return this.setState({authenticateError: err});
       }
@@ -63,7 +63,7 @@ class AppContainer extends Component {
 }
 
 AppContainer.propTypes = {
-  authenticate: PropTypes.func,
+  authorize: PropTypes.func,
   initBlockHeader: PropTypes.func,
   fetchProcesses: PropTypes.func,
   fetchPlugins: PropTypes.func,
@@ -75,7 +75,7 @@ export default withRouter(connect(
   null,
   {
     initBlockHeader,
-    authenticate: authenticate.request,
+    authorize: authorize.request,
     fetchProcesses: processesAction.request,
     fetchVersions: versionsAction.request,
     fetchPlugins: pluginsAction.request

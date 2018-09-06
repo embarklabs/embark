@@ -13,11 +13,11 @@ function action(type, payload = {}) {
   return {type, ...payload};
 }
 
-export const AUTHENTICATE = createRequestTypes('AUTHENTICATE');
-export const authenticate = {
-  request: (token, callback) => action(AUTHENTICATE[REQUEST], {token, callback}),
-  success: () => action(AUTHENTICATE[SUCCESS]),
-  failure: (error) => action(AUTHENTICATE[FAILURE], {error})
+export const AUTHORIZE = createRequestTypes('AUTHORIZE');
+export const authorize = {
+  request: (token, callback) => action(AUTHORIZE[REQUEST], {token, callback}),
+  success: () => action(AUTHORIZE[SUCCESS]),
+  failure: (error) => action(AUTHORIZE[FAILURE], {error})
 };
 
 export const ACCOUNTS = createRequestTypes('ACCOUNTS');

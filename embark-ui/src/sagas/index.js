@@ -39,7 +39,7 @@ export const fetchFile = doRequest.bind(null, actions.file, api.fetchFile);
 export const postFile = doRequest.bind(null, actions.saveFile, api.postFile);
 export const deleteFile = doRequest.bind(null, actions.removeFile, api.deleteFile);
 export const fetchEthGas = doRequest.bind(null, actions.gasOracle, api.getEthGasAPI);
-export const authenticate = doRequest.bind(null, actions.authenticate, api.authorize);
+export const authorize = doRequest.bind(null, actions.authorize, api.authorize);
 
 export const fetchCurrentFile = doRequest.bind(null, actions.currentFile, storage.fetchCurrentFile);
 export const postCurrentFile = doRequest.bind(null, actions.saveCurrentFile, storage.postCurrentFile);
@@ -172,7 +172,7 @@ export function *watchFetchEthGas() {
 }
 
 export function *watchAuthenticate() {
-  yield takeEvery(actions.AUTHENTICATE[actions.REQUEST], authenticate);
+  yield takeEvery(actions.AUTHORIZE[actions.REQUEST], authorize);
 }
 
 function createChannel(socket) {
