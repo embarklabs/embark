@@ -9,13 +9,16 @@ import Processes from '../components/Processes';
 import Versions from '../components/Versions';
 import Console from '../components/Console';
 import {getProcesses, getCommands, getVersions, getProcessLogs} from "../reducers/selectors";
+import deepEqual from 'deep-equal';
 
 class HomeContainer extends Component {
   componentDidUpdate(prevProps) {
-    if (!prevProps.processes.length) {
+    if (!deepEqual(this.props.processes, prevProps.processes)) {
       this.props.processes.forEach(process => {
         this.props.fetchProcessLogs(process.name);
-        this.props.listenToProcessLogs(process.name);
+        if (!prevProps.processes.length) {
+          this.props.listenToProcessLogs(process.name);
+        }
       });
     }
   }
