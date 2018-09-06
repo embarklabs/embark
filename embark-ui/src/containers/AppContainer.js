@@ -9,6 +9,7 @@ import routes from '../routes';
 
 import {
   initBlockHeader,
+  authenticate,
   processes as processesAction,
   versions as versionsAction,
   plugins as pluginsAction
@@ -16,6 +17,7 @@ import {
 
 class AppContainer extends Component {
   componentDidMount() {
+    this.props.authenticate('Test');
     this.props.initBlockHeader();
     this.props.fetchProcesses();
     this.props.fetchVersions();
@@ -34,6 +36,7 @@ class AppContainer extends Component {
 }
 
 AppContainer.propTypes = {
+  authenticate: PropTypes.func,
   initBlockHeader: PropTypes.func,
   fetchProcesses: PropTypes.func,
   fetchPlugins: PropTypes.func,
@@ -44,8 +47,8 @@ export default connect(
   null,
   {
     initBlockHeader,
+    authenticate: authenticate.request,
     fetchProcesses: processesAction.request,
-
     fetchVersions: versionsAction.request,
     fetchPlugins: pluginsAction.request
   },

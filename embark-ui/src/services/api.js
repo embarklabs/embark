@@ -138,6 +138,10 @@ export function deleteFile(payload) {
   return destroy('/file', {params: payload});
 }
 
+export function authenticate(payload) {
+  return post('/authenticate', payload);
+}
+
 export function listenToChannel(channel) {
   return new WebSocket(`${constants.wsEndpoint}/communication/listenTo/${channel}`);
 }

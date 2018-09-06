@@ -39,6 +39,7 @@ export const fetchFile = doRequest.bind(null, actions.file, api.fetchFile);
 export const postFile = doRequest.bind(null, actions.saveFile, api.postFile);
 export const deleteFile = doRequest.bind(null, actions.removeFile, api.deleteFile);
 export const fetchEthGas = doRequest.bind(null, actions.gasOracle, api.getEthGasAPI);
+export const authenticate = doRequest.bind(null, actions.authenticate, api.authenticate);
 
 export const fetchCurrentFile = doRequest.bind(null, actions.currentFile, storage.fetchCurrentFile);
 export const postCurrentFile = doRequest.bind(null, actions.saveCurrentFile, storage.postCurrentFile);
@@ -170,6 +171,10 @@ export function *watchFetchEthGas() {
   yield takeEvery(actions.GAS_ORACLE[actions.REQUEST], fetchEthGas);
 }
 
+export function *watchAuthenticate() {
+  yield takeEvery(actions.AUTHENTICATE[actions.REQUEST], authenticate);
+}
+
 function createChannel(socket) {
   return eventChannel(emit => {
     socket.onmessage = ((message) => {
@@ -279,6 +284,7 @@ export default function *root() {
     fork(watchFetchCurrentFile),
     fork(watchPostCurrentFile),
     fork(watchFetchEthGas),
+    fork(watchAuthenticate),
     fork(watchListenGasOracle)
   ]);
 }
