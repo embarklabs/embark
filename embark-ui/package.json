@@ -11,6 +11,7 @@
     "connected-react-router": "^4.3.0",
     "history": "^4.7.2",
     "prop-types": "^15.6.2",
+    "query-string": "^6.1.0",
     "react": "^16.4.2",
     "react-ace": "^6.1.4",
     "react-copy-to-clipboard": "^5.0.1",

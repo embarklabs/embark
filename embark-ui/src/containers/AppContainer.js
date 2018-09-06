@@ -5,6 +5,7 @@ import {withRouter} from "react-router-dom";
 
 import routes from '../routes';
 import queryString from 'query-string';
+import {put as cachePut, get as cacheGet} from '../services/cache';
 
 import {
   initBlockHeader,
@@ -16,7 +17,14 @@ import {
 
 class AppContainer extends Component {
   componentDidMount() {
-    this.props.authenticate(queryString.parse(this.props.location.search).token);
+    let token;
+    if (this.props.location.search) {
+      token = queryString.parse(this.props.location.search).token;
+      cachePut('token', token);
+    } else {
+      token = cacheGet('token');
+    }
+    this.props.authenticate(token);
     this.props.initBlockHeader();
     this.props.fetchProcesses();
     this.props.fetchVersions();
