@@ -44,16 +44,8 @@ export function getProcesses(state) {
   return state.entities.processes;
 }
 
-export function getProcess(state, name) {
-  return state.entities.processes.find((process) => process.name === name);
-}
-
 export function getProcessLogs(state) {
   return state.entities.processLogs;
-}
-
-export function getProcessLogsByProcess(state, processName) {
-  return state.entities.processLogs.filter((processLog => processLog.name === processName));
 }
 
 export function getContractLogsByContract(state, contractName) {

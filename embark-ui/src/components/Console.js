@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
-import {Grid, Card, Form, Tabs, Tab, TabbedHeader, TabbedContainer} from 'tabler-react';
+import {Grid, Card, Form, Tab, TabbedHeader, TabbedContainer} from 'tabler-react';
 import Logs from "./Logs";
 import Convert from 'ansi-to-html';
 
