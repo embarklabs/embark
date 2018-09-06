@@ -1,11 +1,10 @@
-import {ConnectedRouter} from "connected-react-router";
 import PropTypes from "prop-types";
 import {connect} from 'react-redux';
 import React, {Component} from 'react';
+import {withRouter} from "react-router-dom";
 
-import history from '../history';
-import Layout from '../components/Layout';
 import routes from '../routes';
+import queryString from 'query-string';
 
 import {
   initBlockHeader,
@@ -17,7 +16,7 @@ import {
 
 class AppContainer extends Component {
   componentDidMount() {
-    this.props.authenticate('Test');
+    this.props.authenticate(queryString.parse(this.props.location.search).token);
     this.props.initBlockHeader();
     this.props.fetchProcesses();
     this.props.fetchVersions();
@@ -25,13 +24,7 @@ class AppContainer extends Component {
   }
 
   render() {
-    return (
-      <ConnectedRouter history={history}>
-        <Layout>
-          {routes}
-        </Layout>
-      </ConnectedRouter>
-    );
+    return (<React.Fragment>{routes}</React.Fragment>);
   }
 }
 
@@ -40,10 +33,11 @@ AppContainer.propTypes = {
   initBlockHeader: PropTypes.func,
   fetchProcesses: PropTypes.func,
   fetchPlugins: PropTypes.func,
-  fetchVersions: PropTypes.func
+  fetchVersions: PropTypes.func,
+  location: PropTypes.object
 };
 
-export default connect(
+export default withRouter(connect(
   null,
   {
     initBlockHeader,
@@ -52,4 +46,4 @@ export default connect(
     fetchVersions: versionsAction.request,
     fetchPlugins: pluginsAction.request
   },
-)(AppContainer);
+)(AppContainer));
