@@ -31,6 +31,7 @@
     "babel-loader": "8.0.0-beta.4",
     "babel-plugin-module-resolver": "^3.1.1",
     "bip39": "^2.5.0",
+    "check-dependencies": "^1.1.0",
     "chokidar": "^2.0.3",
     "clone-deep": "^4.0.0",
     "colors": "^1.1.2",
