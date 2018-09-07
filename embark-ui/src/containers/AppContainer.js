@@ -2,9 +2,9 @@ import PropTypes from "prop-types";
 import {connect} from 'react-redux';
 import React, {Component} from 'react';
 import {withRouter} from "react-router-dom";
-import {Alert, Page, Form, Button} from "tabler-react";
 
 import routes from '../routes';
+import AuthError from '../components/AuthError';
 import queryString from 'query-string';
 
 import {
@@ -52,17 +52,7 @@ class AppContainer extends Component {
 
   render() {
     if (this.state.authenticateError) {
-      return <Page.Content>
-        <Alert type="danger">
-          {this.state.authenticateError}
-        </Alert>
-        <Form>
-          <Form.Input name="token" label="Token" placeholder="Enter Token"/>
-          <Button type="submit" color="primary">
-            Authorize
-          </Button>
-        </Form>
-      </Page.Content>;
+      return <AuthError error={this.state.authenticateError}/>;
     }
     return (<React.Fragment>{routes}</React.Fragment>);
   }
