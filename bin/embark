@@ -4,11 +4,30 @@ try {
   eval('let __nodeTest = 123;');
 } catch(e) {
   if (e.name === 'SyntaxError') {
-    console.error("unsupported version of NodeJS. Make sure you are running nodejs 6.9.5 or above");
+    console.error("unsupported version of NodeJS. Make sure you are running nodejs 8.11.3 or above");
+
     process.exit();
   }
 }
 
-var Cmd = require('../cmd/cmd');
-var cli = new Cmd();
-cli.process(process.argv);
+function launchEmbark() {
+  var Cmd = require('../cmd/cmd');
+  var cli = new Cmd();
+  cli.process(process.argv);
+}
+
+const path = require('path');
+require('colors');
+try {
+  const dappPackage = require(path.join(process.cwd(), 'package.json'));
+  require('check-dependencies')(dappPackage, (state) => {
+    if (state.status) {
+      console.error('\nMissing dependencies. Please run npm install'.red);
+      process.exit();
+    }
+    launchEmbark();
+  });
+} catch (e) {
+  launchEmbark();
+}
+
