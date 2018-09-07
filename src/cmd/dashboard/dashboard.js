@@ -24,7 +24,7 @@ class Dashboard {
   start(done) {
     let monitor;
 
-    monitor = new Monitor({env: this.env, events: this.events});
+    monitor = new Monitor({env: this.env, events: this.events, version: this.version});
     this.logger.logFunction = monitor.logEntry;
     let plugin = this.plugins.createPlugin('dashboard', {});
     plugin.registerAPICall(
@@ -33,8 +33,6 @@ class Dashboard {
       (ws, _req) => {
         let dashboardState = {contractsState: [], environment: "", status: "", availableServices: []};
 
-        // TODO: doesn't feel quite right, should be refactored into a shared
-        // dashboard state
         self.events.request('setDashboardState');
 
         self.events.on('contractsState', (contracts) => {
@@ -59,8 +57,6 @@ class Dashboard {
     this.events.on('contractsState', monitor.setContracts);
     this.events.on('status', monitor.setStatus.bind(monitor));
     this.events.on('servicesState', monitor.availableServices.bind(monitor));
-
-    this.events.setCommandHandler("console:command", monitor.executeCmd.bind(monitor));
 
     this.logger.info('========================'.bold.green);
     this.logger.info((__('Welcome to Embark') + ' ' + this.version).yellow.bold);

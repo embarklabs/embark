@@ -1,14 +1,13 @@
 let blessed = require("neo-blessed");
-let CommandHistory = require('./command_history.js');
+const REPL = require('./repl.js');
+const stream = require('stream');
 
 class Monitor {
   constructor(_options) {
     let options = _options || {};
     this.env = options.env;
     this.console = options.console;
-    this.history = new CommandHistory();
     this.events = options.events;
-
     this.color = options.color || "green";
     this.minimal = options.minimal || false;
 
@@ -20,10 +19,10 @@ class Monitor {
       autoPadding: true
     });
 
-    this.layoutLog();
     this.layoutStatus();
     this.layoutModules();
-    this.layoutCmd();
+    this.layoutLog();
+    this.layoutTerminal();
 
     this.screen.key(["C-c"], function () {
       process.exit(0);
@@ -33,10 +32,31 @@ class Monitor {
     this.setContracts = this.setContracts.bind(this);
     this.availableServices = this.availableServices.bind(this);
 
-    this.status.setContent(this.env.green);
+    this.environmentBox.setContent(this.env.green);
 
     this.screen.render();
-    this.input.focus();
+
+    this.terminalReadableStream = new stream.Readable({
+      read() {}
+    });
+
+    const terminal = this.terminal;
+    const terminalWritableStream = new stream.Writable({
+      write(chunk, encoding, next) {
+        terminal.write(chunk.toString());
+        next();
+      }
+    });
+
+    this.repl = new REPL({
+      events: this.events,
+      env: this.env,
+      inputStream: this.terminalReadableStream,
+      outputStream: terminalWritableStream,
+      logText: this.logText
+    }).start(() => {
+      this.terminal.focus();
+    });
   }
 
   availableServices(_services) {
@@ -55,12 +75,12 @@ class Monitor {
       return checkObj.name;
     });
 
-    this.progress.setContent(services.join('\n'));
+    this.servicesBox.setContent(services.join('\n'));
     this.screen.render();
   }
 
   setStatus(status) {
-    this.operations.setContent(status);
+    this.statusBox.setContent(status);
     this.screen.render();
   }
 
@@ -89,7 +109,7 @@ class Monitor {
       width: "100%",
       height: "55%",
       left: "0%",
-      top: "42%",
+      top: "40%",
       border: {
         type: "line"
       },
@@ -127,7 +147,7 @@ class Monitor {
       tags: true,
       padding: 1,
       width: "75%",
-      height: "42%",
+      height: "40%",
       left: "0%",
       top: "0",
       border: {
@@ -164,108 +184,59 @@ class Monitor {
     this.screen.append(this.modules);
   }
 
-  layoutAssets() {
-    this.assets = blessed.box({
-      label: __("Asset Pipeline"),
-      tags: true,
-      padding: 1,
-      width: "50%",
-      height: "55%",
-      left: "50%",
-      top: "42%",
-      border: {
-        type: "line"
-      },
-      style: {
-        fg: -1,
-        border: {
-          fg: this.color
-        }
-      }
-    });
-
-    this.assetTable = blessed.table({
-      parent: this.assets,
-      height: "100%",
-      width: "100%-5",
-      align: "left",
-      pad: 1,
-      scrollable: true,
-      alwaysScroll: true,
-      scrollbar: {
-        ch: " ",
-        inverse: true
-      },
-      keys: false,
-      vi: false,
-      mouse: true,
-      data: [["Name", "Size"]]
-    });
-
-    this.screen.append(this.assets);
-  }
-
   layoutStatus() {
-
-    this.wrapper = blessed.layout({
-      width: "25%",
-      height: "42%",
-      top: "0%",
-      left: "75%",
-      layout: "grid"
-    });
-
-    this.status = blessed.box({
-      parent: this.wrapper,
+    this.environmentBox = blessed.box({
       label: __("Environment"),
       tags: true,
       padding: {
         left: 1
       },
-      width: "100%",
-      height: "20%",
+      width: "25%",
+      height: "8%",
+      left: "75%",
+      top: '0%',
       valign: "middle",
       border: {
         type: "line"
       },
       style: {
-        fg: -1,
         border: {
           fg: this.color
         }
       }
     });
 
-    this.operations = blessed.box({
-      parent: this.wrapper,
+    this.statusBox = blessed.box({
       label: __("Status"),
       tags: true,
       padding: {
         left: 1
       },
-      width: "100%",
-      height: "20%",
+      width: "25%",
+      height: "8%",
+      left: "75%",
+      top: '8%',
       valign: "middle",
       border: {
         type: "line"
       },
       style: {
-        fg: -1,
         border: {
           fg: this.color
         }
       }
     });
 
-    this.progress = blessed.box({
-      parent: this.wrapper,
+    this.servicesBox = blessed.box({
       label: __("Available Services"),
       tags: true,
-      padding: this.minimal ? {
+      padding: {
         left: 1
-      } : 1,
-      width: "100%",
-      height: "60%",
+      },
+      width: "25%",
+      height: "24%",
+      left: "75%",
+      top: '16%',
       valign: "top",
       border: {
         type: "line"
@@ -277,107 +248,52 @@ class Monitor {
         inverse: true
       },
       style: {
-        fg: -1,
         border: {
           fg: this.color
         }
       }
     });
 
-    this.screen.append(this.wrapper);
+    this.screen.append(this.environmentBox);
+    this.screen.append(this.statusBox);
+    this.screen.append(this.servicesBox);
   }
 
-  layoutCmd() {
-    this.consoleBox = blessed.box({
-      label: __('Console'),
-      tags: true,
-      padding: 0,
-      width: '100%',
-      height: '6%',
-      left: '0%',
-      top: '95%',
-      border: {
-        type: 'line'
-      },
-      style: {
-        fg: 'black',
-        border: {
-          fg: this.color
+  layoutTerminal() {
+      this.terminal = blessed.terminal({
+        parent: this.screen,
+        cursor: 'block',
+        cursorBlink: true,
+        padding: 0,
+        width: '100%',
+        height: 3,
+        left: 0,
+        top: '100%-3',
+        border: 'line',
+        style: {
+            fg: 'default',
+            bg: 'default',
+            focus: {
+                border: {
+                    fg: 'green'
+                }
+            }
+        },
+        scrollable: false,
+        handler: (data) => {
+          this.terminalReadableStream.push(data);
         }
-      }
-    });
+      });
 
-    this.input = blessed.textbox({
-      parent: this.consoleBox,
-      name: 'input',
-      input: true,
-      keys: false,
-      top: 0,
-      left: 1,
-      height: '50%',
-      width: '100%-2',
-      inputOnFocus: true,
-      style: {
-        fg: 'green',
-        bg: 'black',
-        focus: {
-          bg: 'black',
-          fg: 'green'
-        }
-      }
-    });
+      this.terminal.key('C-c', () => {
+        this.terminal.kill();
+        return screen.destroy();
+      });
 
-    let self = this;
-
-    this.input.key(["C-c"], function () {
-      self.events.emit('exit');
-      process.exit(0);
-    });
-
-    this.input.key(["C-w"], function () {
-      self.input.clearValue();
-      self.input.focus();
-    });
-
-    this.input.key(["up"], function () {
-      let cmd = self.history.getPreviousCommand();
-      self.input.setValue(cmd);
-      self.input.focus();
-    });
-
-    this.input.key(["down"], function () {
-      let cmd = self.history.getNextCommand();
-      self.input.setValue(cmd);
-      self.input.focus();
-    });
-
-    this.input.on('submit', this.submitCmd.bind(this));
-
-    this.screen.append(this.consoleBox);
+      this.terminal.on('click', () => {
+        this.terminal.focus();
+      });
   }
-
-  submitCmd(cmd) {
-    if (cmd !== '') {
-      this.history.addCommand(cmd);
-      this.executeCmd(cmd);
-    }
-    this.input.clearValue();
-    this.input.focus();
-  }
-
-  executeCmd(cmd, cb) {
-    this.logText.log('console> '.bold.green + cmd);
-    this.events.request('console:executeCmd', cmd, (err, result) => {
-      let message = err || result;
-      if (message) {
-        this.logText.log(message);
-      }
-      if (cb) {
-        cb(message);
-      }
-    });
-  }
-
 }
 
 module.exports = Monitor;
