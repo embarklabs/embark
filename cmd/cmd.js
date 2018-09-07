@@ -26,9 +26,9 @@ if (!process.env.EMBARK_PATH) {
 // as an ejected webpack.config.js), making embark's dependencies trasitive
 // dependencies of a dapp without the dapp explicitly specifying embark as a
 // dependency in the dapp's package.json
-process.env.NODE_PATH = utils.joinPath(process.env.EMBARK_PATH, 'node_modules')
-  + (process.env.NODE_PATH ? require('path').delimiter : '')
-  + (process.env.NODE_PATH || '');
+process.env.NODE_PATH = utils.joinPath(process.env.EMBARK_PATH, 'node_modules') +
+  (process.env.NODE_PATH ? require('path').delimiter : '') +
+  (process.env.NODE_PATH || '');
 
 class Cmd {
   constructor() {
@@ -62,7 +62,7 @@ class Cmd {
 
   newApp() {
 
-    let validateName = function (value) {
+    let validateName = function(value) {
       try {
         if (value.match(/^[a-zA-Z\s-]+$/)) return value;
       } catch (e) {
@@ -76,14 +76,14 @@ class Cmd {
       .option('--simple', __('create a barebones project meant only for contract development'))
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('--template [url]', __('download template'))
-      .action(function (name, options) {
+      .action(function(name, options) {
         i18n.setOrDetectLocale(options.locale);
         if (name === undefined) {
           const promptly = require('promptly');
           return promptly.prompt(__("Name your app (default is %s):", 'embarkDapp'), {
             default: "embarkDApp",
             validator: validateName
-          }, function (err, inputvalue) {
+          }, function(err, inputvalue) {
             if (err) {
               console.error(__('Invalid name') + ':', err.message);
               // Manually call retry
@@ -98,12 +98,11 @@ class Cmd {
               }
             }
           });
+        }
+        if (options.simple) {
+          embark.generateTemplate('simple', './', name);
         } else {
-          if (options.simple) {
-            embark.generateTemplate('simple', './', name);
-          } else {
-            embark.generateTemplate('boilerplate', './', name, options.template);
-          }
+          embark.generateTemplate('boilerplate', './', name, options.template);
         }
       });
   }
@@ -113,7 +112,7 @@ class Cmd {
       .command('demo')
       .option('--locale [locale]', __('language to use (default: en)'))
       .description(__('create a working dapp with a SimpleStorage contract'))
-      .action(function (options) {
+      .action(function(options) {
         i18n.setOrDetectLocale(options.locale);
         embark.generateTemplate('demo', './', 'embark_demo');
       });
@@ -129,7 +128,7 @@ class Cmd {
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('--pipeline [pipeline]', __('webpack config to use (default: production)'))
       .description(__('deploy and build dapp at ') + 'dist/ (default: development)')
-      .action(function (env, _options) {
+      .action(function(env, _options) {
         i18n.setOrDetectLocale(_options.locale);
         _options.env = env || 'development';
         _options.logFile = _options.logfile; // fix casing
@@ -155,7 +154,7 @@ class Cmd {
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('--pipeline [pipeline]', __('webpack config to use (default: development)'))
       .description(__('run dapp (default: %s)', 'development'))
-      .action(function (env, options) {
+      .action(function(env, options) {
         i18n.setOrDetectLocale(options.locale);
         embark.run({
           env: env || 'development',
@@ -181,7 +180,7 @@ class Cmd {
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('--pipeline [pipeline]', __('webpack config to use (default: development)'))
       .description(__('Start the Embark console'))
-      .action(function (env, options) {
+      .action(function(env, options) {
         i18n.setOrDetectLocale(options.locale);
         embark.console({
           env: env || 'development',
@@ -200,7 +199,7 @@ class Cmd {
       .option('-c, --client [client]', __('Use a specific ethereum client (supported: %s)', 'geth'))
       .option('--locale [locale]', __('language to use (default: en)'))
       .description(__('run blockchain server (default: %s)', 'development'))
-      .action(function (env, options) {
+      .action(function(env, options) {
         i18n.setOrDetectLocale(options.locale);
         embark.initConfig(env || 'development', {
           embarkConfig: 'embark.json',
@@ -222,7 +221,7 @@ class Cmd {
       .option('-l, --gasLimit [gasLimit]', __('custom gas limit (default: %s)', '8000000'))
       .option('--locale [locale]', __('language to use (default: en)'))
 
-      .action(function (env, options) {
+      .action(function(env, options) {
         i18n.setOrDetectLocale(options.locale);
         embark.initConfig(env || 'development', {
           embarkConfig: 'embark.json',
@@ -246,7 +245,7 @@ class Cmd {
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'warn')
       .description(__('run tests'))
-      .action(function (file, options) {
+      .action(function(file, options) {
         i18n.setOrDetectLocale(options.locale);
         embark.runTests({file, loglevel: options.loglevel, gasDetails: options.gasDetails, node: options.node});
       });
@@ -262,7 +261,7 @@ class Cmd {
       .option('-c, --client [client]', __('Use a specific ethereum client (supported: %s)', 'geth'))
       .option('--pipeline [pipeline]', __('webpack config to use (default: production)'))
       .description(__('Upload your dapp to a decentralized storage') + '.')
-      .action(function (env, _options) {
+      .action(function(env, _options) {
         i18n.setOrDetectLocale(_options.locale);
         if (env === "ipfs" || env === "swarm") {
           console.warn(("did you mean " + "embark upload".bold + " ?").underline);
@@ -286,7 +285,7 @@ class Cmd {
       .option('--skip-events', __('Graph will not include events'))
       .option('--locale [locale]', __('language to use (default: en)'))
       .description(__('generates documentation based on the smart contracts configured'))
-      .action(function (env, options) {
+      .action(function(env, options) {
         i18n.setOrDetectLocale(options.locale);
         embark.graph({
           env: env || 'development',
@@ -303,7 +302,7 @@ class Cmd {
       .command('reset')
       .option('--locale [locale]', __('language to use (default: en)'))
       .description(__('resets embarks state on this dapp including clearing cache'))
-      .action(function (options) {
+      .action(function(options) {
         i18n.setOrDetectLocale(options.locale);
         embark.initConfig('development', {
           embarkConfig: 'embark.json', interceptLogs: false
@@ -316,38 +315,38 @@ class Cmd {
     program
       .command('eject-webpack')
       .description(__('copy the default webpack config into your dapp for customization'))
-      .action(function () {
+      .action(function() {
         embark.ejectWebpack();
       });
   }
 
   versionCmd() {
     program
-    .command('version')
-    .description(__('output the version number'))
-    .action(function () {
-      console.log(embark.version);
-      process.exit(0);
-    });
+      .command('version')
+      .description(__('output the version number'))
+      .action(function() {
+        console.log(embark.version);
+        process.exit(0);
+      });
   }
 
   helpCmd() {
     program
-    .command('help')
-    .description(__('output usage information and help information'))
-    .action(function () {
-      console.log("Documentation can be found at: ".green + "https://embark.status.im/docs/".underline.green);
-      console.log("");
-      console.log("Have an issue? submit it here: ".green + "https://github.com/embark-framework/embark/issues/new".underline.green);
-      console.log("or chat with us directly at: ".green + "https://gitter.im/embark-framework/Lobby".underline.green);
-      program.help();
-      process.exit(0);
-    });
+      .command('help')
+      .description(__('output usage information and help information'))
+      .action(function() {
+        console.log("Documentation can be found at: ".green + "https://embark.status.im/docs/".underline.green);
+        console.log("");
+        console.log("Have an issue? submit it here: ".green + "https://github.com/embark-framework/embark/issues/new".underline.green);
+        console.log("or chat with us directly at: ".green + "https://gitter.im/embark-framework/Lobby".underline.green);
+        program.help();
+        process.exit(0);
+      });
   }
 
   otherCommands() {
     program
-      .action(function (cmd) {
+      .action(function(cmd) {
         console.log((__('unknown command') + ' "%s"').red, cmd);
         let utils = require('../lib/utils/utils.js');
         let dictionary = ['new', 'demo', 'build', 'run', 'blockchain', 'simulator', 'test', 'upload', 'version'];
