@@ -226,6 +226,20 @@ export const saveCurrentFile = {
   failure: () => action(SAVE_CURRENT_FILE[FAILURE])
 };
 
+export const GET_TOKEN = createRequestTypes('TOKEN');
+export const getToken = {
+  request: (callback) => action(GET_TOKEN[REQUEST], {callback}),
+  success: (token) => action(GET_TOKEN[SUCCESS], {token}),
+  failure: () => action(GET_TOKEN[FAILURE])
+};
+
+export const POST_TOKEN = createRequestTypes('POST_TOKEN');
+export const postToken = {
+  request: (token) => action(POST_TOKEN[REQUEST], {token}),
+  success: (token) => action(POST_TOKEN[SUCCESS], {token}),
+  failure: () => action(POST_TOKEN[FAILURE])
+};
+
 export const GAS_ORACLE = createRequestTypes('GAS_ORACLE');
 export const gasOracle = {
   request: () => action(GAS_ORACLE[REQUEST]),

@@ -6,11 +6,10 @@ import {Alert, Page, Form, Button} from "tabler-react";
 
 import routes from '../routes';
 import queryString from 'query-string';
-import {put as cachePut, get as cacheGet} from '../services/cache';
 
 import {
   initBlockHeader,
-  authorize,
+  authorize, getToken, postToken,
   processes as processesAction,
   versions as versionsAction,
   plugins as pluginsAction
@@ -23,20 +22,27 @@ class AppContainer extends Component {
       authenticateError: null
     };
 
-    let token;
+    this.checkToken();
+  }
+
+  checkToken() {
     if (this.props.location.search) {
-      token = queryString.parse(this.props.location.search).token;
-      cachePut('token', token);
-    } else {
-      token = cacheGet('token');
+      const token = queryString.parse(this.props.location.search).token;
+      this.props.postToken(token);
+      return this.props.authorize(token, this.authCallback.bind(this));
     }
-    this.props.authorize(token, (err) => {
-      if (err) {
-        return this.setState({authenticateError: err});
-      }
-      this.setState({authenticateError: null});
+    this.props.getToken((err, token) => {
+      this.props.authorize(token, this.authCallback.bind(this));
     });
   }
+
+  authCallback(err) {
+    if (err) {
+      return this.setState({authenticateError: err});
+    }
+    this.setState({authenticateError: null});
+  }
+
   componentDidMount() {
     this.props.initBlockHeader();
     this.props.fetchProcesses();
@@ -64,6 +70,8 @@ class AppContainer extends Component {
 
 AppContainer.propTypes = {
   authorize: PropTypes.func,
+  getToken: PropTypes.func,
+  postToken: PropTypes.func,
   initBlockHeader: PropTypes.func,
   fetchProcesses: PropTypes.func,
   fetchPlugins: PropTypes.func,
@@ -76,6 +84,8 @@ export default withRouter(connect(
   {
     initBlockHeader,
     authorize: authorize.request,
+    getToken: getToken.request,
+    postToken: postToken.request,
     fetchProcesses: processesAction.request,
     fetchVersions: versionsAction.request,
     fetchPlugins: pluginsAction.request

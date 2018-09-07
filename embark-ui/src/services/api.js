@@ -1,10 +1,9 @@
 import axios from "axios";
 import constants from '../constants';
-import {get as cacheGet} from '../services/cache';
 
 function request(type, path, params = {}, endpoint) {
-  axios.defaults.headers.common['Authorization'] = cacheGet('token');
-  const callback = params.callback || function(){};
+  axios.defaults.headers.common['Authorization'] = params.token;
+  const callback = params.callback || function() {};
   return axios[type]((endpoint || constants.httpEndpoint) + path, params)
     .then((response) => {
       const data = (response.data && response.data.error) ? {error: response.data.error} : {response, error: null};
@@ -29,118 +28,120 @@ function destroy() {
   return request('delete', ...arguments);
 }
 
-export function postCommand(payload) {
-  return post('/command', payload);
+export function postCommand() {
+  return post('/command', ...arguments);
 }
 
 export function fetchAccounts() {
-  return get('/blockchain/accounts');
+  return get('/blockchain/accounts', ...arguments);
 }
 
 export function fetchAccount(payload) {
-  return get(`/blockchain/accounts/${payload.address}`);
+  return get(`/blockchain/accounts/${payload.address}`, ...arguments);
 }
 
 export function fetchBlocks(payload) {
-  return get('/blockchain/blocks', {params: payload});
+  return get('/blockchain/blocks', {params: payload, token: payload.token});
 }
 
 export function fetchBlock(payload) {
-  return get(`/blockchain/blocks/${payload.blockNumber}`);
+  return get(`/blockchain/blocks/${payload.blockNumber}`, ...arguments);
 }
 
 export function fetchTransactions(payload) {
-  return get('/blockchain/transactions', {params: payload});
+  return get('/blockchain/transactions', {params: payload, token: payload.token});
 }
 
 export function fetchTransaction(payload) {
-  return get(`/blockchain/transactions/${payload.hash}`);
+  return get(`/blockchain/transactions/${payload.hash}`, ...arguments);
 }
 
 export function fetchProcesses() {
-  return get('/processes');
+  return get('/processes', ...arguments);
 }
 
 export function fetchProcessLogs(payload) {
-  return get(`/process-logs/${payload.processName}`);
+  return get(`/process-logs/${payload.processName}`, ...arguments);
 }
 
 export function fetchContractLogs() {
-  return get(`/contracts/logs`);
+  return get(`/contracts/logs`, ...arguments);
 }
 
 export function fetchContracts() {
-  return get('/contracts');
+  return get('/contracts', ...arguments);
 }
 
 export function fetchContract(payload) {
-  return get(`/contract/${payload.contractName}`);
+  return get(`/contract/${payload.contractName}`, ...arguments);
 }
 
 export function postContractFunction(payload) {
-  return post(`/contract/${payload.contractName}/function`, payload);
+  return post(`/contract/${payload.contractName}/function`, ...arguments);
 }
 
 export function postContractDeploy(payload) {
-  return post(`/contract/${payload.contractName}/deploy`, payload);
+  return post(`/contract/${payload.contractName}/deploy`, ...arguments);
 }
 
-export function postContractCompile(payload) {
-  return post('/contract/compile', payload);
+export function postContractCompile() {
+  return post('/contract/compile', ...arguments);
 }
 
 export function fetchVersions() {
-  return get('/versions');
+  return get('/versions', ...arguments);
 }
 
 export function fetchPlugins() {
-  return get('/plugins');
+  return get('/plugins', ...arguments);
 }
 
 export function sendMessage(payload) {
-  return post(`/communication/sendMessage`, payload.body);
+  return post(`/communication/sendMessage`, Object.assign({}, payload.body, {token: payload.token}));
 }
 
 export function fetchContractProfile(payload) {
-  return get(`/profiler/${payload.contractName}`);
+  return get(`/profiler/${payload.contractName}`, ...arguments);
 }
 
 export function fetchEnsRecord(payload) {
+  const _payload = {params: payload, token: payload.token};
   if (payload.name) {
-    return get('/ens/resolve', {params: payload});
+    return get('/ens/resolve', _payload);
   } else {
-    return get('/ens/lookup', {params: payload});
+    return get('/ens/lookup', _payload);
   }
 }
 
-export function postEnsRecord(payload) {
-  return post('/ens/register', payload);
+export function postEnsRecord() {
+  return post('/ens/register', ...arguments);
 }
 
 export function getEthGasAPI() {
-  return get('/blockchain/gas/oracle', {});
+  return get('/blockchain/gas/oracle', ...arguments);
 }
 
 export function fetchFiles() {
-  return get('/files');
+  return get('/files', ...arguments);
 }
 
 export function fetchFile(payload) {
-  return get('/file', {params: payload});
+  return get('/file', {params: payload, token: payload.token});
 }
 
-export function postFile(payload) {
-  return post('/files', payload);
+export function postFile() {
+  return post('/files', ...arguments);
 }
 
 export function deleteFile(payload) {
-  return destroy('/file', {params: payload});
+  return destroy('/file', {params: payload, token: payload.token});
 }
 
-export function authorize(payload) {
-  return post('/authorize', payload);
+export function authorize() {
+  return post('/authorize', ...arguments);
 }
 
+// TODO token for WS?
 export function listenToChannel(channel) {
   return new WebSocket(`${constants.wsEndpoint}/communication/listenTo/${channel}`);
 }

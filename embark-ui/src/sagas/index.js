@@ -2,9 +2,12 @@ import * as actions from '../actions';
 import * as api from '../services/api';
 import * as storage from '../services/storage';
 import {eventChannel} from 'redux-saga';
-import {all, call, fork, put, takeEvery, take} from 'redux-saga/effects';
+import {all, call, fork, put, takeEvery, take, select} from 'redux-saga/effects';
 
 function *doRequest(entity, serviceFn, payload) {
+  payload.token = yield select(function (state) {
+    return state.token;
+  });
   const {response, error} = yield call(serviceFn, payload);
   if(response) {
     yield put(entity.success(response.data, payload));
@@ -44,6 +47,8 @@ export const authorize = doRequest.bind(null, actions.authorize, api.authorize);
 export const fetchCurrentFile = doRequest.bind(null, actions.currentFile, storage.fetchCurrentFile);
 export const postCurrentFile = doRequest.bind(null, actions.saveCurrentFile, storage.postCurrentFile);
 export const deleteCurrentFile = doRequest.bind(null, null, storage.deleteCurrentFile);
+export const fetchToken = doRequest.bind(null, actions.getToken, storage.fetchToken);
+export const postToken = doRequest.bind(null, actions.postToken, storage.postToken);
 
 
 export function *watchFetchTransaction() {
@@ -167,6 +172,14 @@ export function *watchPostCurrentFile() {
   yield takeEvery(actions.SAVE_CURRENT_FILE[actions.REQUEST], postCurrentFile);
 }
 
+export function *watchFetchToken() {
+  yield takeEvery(actions.GET_TOKEN[actions.REQUEST], fetchToken);
+}
+
+export function *watchPostToken() {
+  yield takeEvery(actions.POST_TOKEN[actions.REQUEST], postToken);
+}
+
 export function *watchFetchEthGas() {
   yield takeEvery(actions.GAS_ORACLE[actions.REQUEST], fetchEthGas);
 }
@@ -283,6 +296,8 @@ export default function *root() {
     fork(watchFetchFileSuccess),
     fork(watchFetchCurrentFile),
     fork(watchPostCurrentFile),
+    fork(watchFetchToken),
+    fork(watchPostToken),
     fork(watchFetchEthGas),
     fork(watchAuthenticate),
     fork(watchListenGasOracle)

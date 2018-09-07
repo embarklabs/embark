@@ -73,7 +73,7 @@ const filtrer = {
   },
   ensRecords: function(record, index, self) {
     return record.name && record.address && record.address !== voidAddress && index === self.findIndex((r) => (
-      r.address=== record.address && r.name === record.name
+      r.address === record.address && r.name === record.name
     ));
   },
   files: function(file, index, self) {
@@ -137,7 +137,7 @@ function loading(_state = false, action) {
 }
 
 function compilingContract(state = false, action) {
-  if(action.type === CONTRACT_COMPILE[REQUEST]) {
+  if (action.type === CONTRACT_COMPILE[REQUEST]) {
     return true;
   } else if (action.type === CONTRACT_COMPILE[FAILURE] || action.type === CONTRACT_COMPILE[SUCCESS]) {
     return false;
@@ -146,12 +146,17 @@ function compilingContract(state = false, action) {
   return state;
 }
 
+function token(state = null, action) {
+  return (action.token) ? action.token : state;
+}
+
 const rootReducer = combineReducers({
   entities,
   loading,
   compilingContract,
   errorMessage,
-  errorEntities
+  errorEntities,
+  token
 });
 
 export default rootReducer;
