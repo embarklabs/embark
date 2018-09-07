@@ -4,8 +4,9 @@
   "description": "",
   "main": "Gruntfile.js",
   "scripts": {
-    "test": "../../bin/embark test",
-    "coverage": "istanbul report --root .embark --format html"
+    "coverage": "istanbul report --root .embark --format html",
+    "embark": "node ../../bin/embark",
+    "test": "npm run embark test"
   },
   "author": "",
   "license": "ISC",
