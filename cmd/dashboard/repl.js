@@ -5,6 +5,8 @@ class REPL {
   constructor(options) {
     this.events = options.events;
     this.env = options.env;
+    this.inputStream = options.inputStream || process.stdin;
+    this.outputStream = options.outputStream || process.stdout;
   }
 
   enhancedEval(cmd, context, filename, callback) {
@@ -25,7 +27,9 @@ class REPL {
       prompt: "Embark (" + this.env + ") > ",
       useGlobal: true,
       eval: this.enhancedEval.bind(this),
-      writer: this.enhancedWriter.bind(this)
+      writer: this.enhancedWriter.bind(this),
+      input: this.inputStream,
+      output: this.outputStream
     });
 
     this.events.request("runcode:getContext", (context) => {

@@ -1,5 +1,7 @@
 let blessed = require("neo-blessed");
 let CommandHistory = require('./command_history.js');
+const REPL = require('./repl.js');
+const stream = require('stream');
 
 class Monitor {
   constructor(_options) {
@@ -8,7 +10,6 @@ class Monitor {
     this.console = options.console;
     this.history = new CommandHistory();
     this.events = options.events;
-
     this.color = options.color || "green";
     this.minimal = options.minimal || false;
 
@@ -23,7 +24,7 @@ class Monitor {
     this.layoutLog();
     this.layoutStatus();
     this.layoutModules();
-    this.layoutCmd();
+    // this.layoutCmd();
 
     this.screen.key(["C-c"], function () {
       process.exit(0);
@@ -36,7 +37,44 @@ class Monitor {
     this.status.setContent(this.env.green);
 
     this.screen.render();
-    this.input.focus();
+    // this.input.focus();
+    // this.logText.focus();
+
+    // const LogWritableStream = class extends stream.Writable {
+    //     _write(chunk, enc, next) {
+    //         // setTimeout(() => {
+    //         // console.log(chunk.toString())
+    //         setTimeout(() => {
+    //             this.logText.log('hello');
+    //             // this.logText.log(chunk.toString());
+    //             // console.log(chunk.toString())
+    //         }, 1000);
+    //         // }, 1000);
+    //         // process.exit(0);
+    //         // console.log(chunk)
+    //         next();
+    //     }
+    // };
+
+    const logText = this.logText;
+    const logWritableStream = new stream.Writable({
+        write(chunk, encoding, next) {
+            // console.log(chunk.toString())
+            // this.logText.log('repl done loading');
+            // console.log(this);
+            logText.log(chunk.toString());
+
+            next();
+        }
+    });
+
+    this.repl = new REPL({
+        events: this.events,
+        env: this.env,
+        outputStream: logWritableStream
+    }).start(() => {
+        this.logText.log('repl done loading');
+    });
   }
 
   availableServices(_services) {
@@ -87,7 +125,7 @@ class Monitor {
       label: __("Logs"),
       padding: 1,
       width: "100%",
-      height: "55%",
+      height: "60%",
       left: "0%",
       top: "42%",
       border: {
@@ -117,6 +155,14 @@ class Monitor {
       vi: false,
       mouse: true
     });
+
+    // process.stdin.on('data', (data) => {
+    //     this.logText.log(data.toString());
+    // });
+
+    // process.stdout.on('data', (data) => {
+    //     this.logText.log(data);
+    // });
 
     this.screen.append(this.log);
   }
@@ -288,6 +334,8 @@ class Monitor {
   }
 
   layoutCmd() {
+
+
     this.consoleBox = blessed.box({
       label: __('Console'),
       tags: true,
