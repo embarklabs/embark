@@ -2,6 +2,7 @@ let blessed = require("neo-blessed");
 let CommandHistory = require('./command_history.js');
 const REPL = require('./repl.js');
 const stream = require('stream');
+const stripAnsi = require('strip-ansi');
 
 class Monitor {
   constructor(_options) {
@@ -13,12 +14,15 @@ class Monitor {
     this.color = options.color || "green";
     this.minimal = options.minimal || false;
 
+    const readableStream = new stream.Readable();
+
     this.screen = blessed.screen({
       smartCSR: true,
       title: options.title || ("Embark " + options.version),
       dockBorders: false,
       fullUnicode: true,
-      autoPadding: true
+      autoPadding: true,
+      input: readableStream
     });
 
     this.layoutLog();
@@ -56,13 +60,24 @@ class Monitor {
     //     }
     // };
 
+    //TODO figure out buffering of output from node repl
+    //TODO seee if you can get away with not repeating the console starting text (we might need to use something besides a log thing, because it seems to enforce a character return for every log)
+    //TODO mouse events are still showing up
+    //TODO stderr from the repl just prints across the top of the screen
+    //TODO this might be where we need to make actual changes to neo-blessed
+
     const logText = this.logText;
+    let buffer = '';
     const logWritableStream = new stream.Writable({
         write(chunk, encoding, next) {
             // console.log(chunk.toString())
             // this.logText.log('repl done loading');
             // console.log(this);
-            logText.log(chunk.toString());
+            // logText.log(encoding);
+            // buffer += stripAnsi(chunk.toString());
+
+            logText.log(stripAnsi(chunk.toString()));
+            // console.log(chunk.toString('ascii'))
 
             next();
         }
@@ -71,9 +86,13 @@ class Monitor {
     this.repl = new REPL({
         events: this.events,
         env: this.env,
+        // inputStream: this.logText.input,
         outputStream: logWritableStream
     }).start(() => {
-        this.logText.log('repl done loading');
+        // this.logText.log('repl done loading');
+        // process.stdout.on('data', () => {
+        //     // logText.log(data.toString());
+        // });
     });
   }
 
@@ -145,7 +164,7 @@ class Monitor {
       width: "100%-5",
       //height: '90%',
       scrollable: true,
-      input: false,
+      input: true,
       alwaysScroll: true,
       scrollbar: {
         ch: " ",
@@ -160,9 +179,12 @@ class Monitor {
     //     this.logText.log(data.toString());
     // });
 
-    // process.stdout.on('data', (data) => {
-    //     this.logText.log(data);
-    // });
+    // setTimeout(() => {
+    //     process.stdout.on('data', (data) => {
+    //         this.logText.log(data.toString());
+    //         // console.log(data);
+    //     });
+    // }, 5000);
 
     this.screen.append(this.log);
   }

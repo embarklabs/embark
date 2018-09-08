@@ -29,7 +29,8 @@ class REPL {
       eval: this.enhancedEval.bind(this),
       writer: this.enhancedWriter.bind(this),
       input: this.inputStream,
-      output: this.outputStream
+      output: this.outputStream,
+      terminal: true
     });
 
     this.events.request("runcode:getContext", (context) => {
