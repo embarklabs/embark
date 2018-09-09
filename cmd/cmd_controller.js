@@ -280,7 +280,7 @@ class EmbarkController {
             engine.startService("webServer");
             engine.startService("namingSystem");
             engine.startService("console");
-
+            engine.startService("pluginCommand");
             return callback();
           }
 
