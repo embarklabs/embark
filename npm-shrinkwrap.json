@@ -9533,11 +9533,6 @@
         "csextends": "^1.0.3"
       }
     },
-    "term.js": {
-      "version": "0.0.7",
-      "resolved": "https://registry.npmjs.org/term.js/-/term.js-0.0.7.tgz",
-      "integrity": "sha1-Um8kz8Dy72+A9RfJ4n2ulHvIcxU="
-    },
     "text-encoding": {
       "version": "0.6.4",
       "resolved": "https://registry.npmjs.org/text-encoding/-/text-encoding-0.6.4.tgz",
