@@ -1,7 +1,6 @@
 let blessed = require("neo-blessed");
 const REPL = require('./repl.js');
 const stream = require('stream');
-const stripAnsi = require('strip-ansi');
 
 class Monitor {
   constructor(_options) {
