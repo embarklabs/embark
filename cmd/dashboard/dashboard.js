@@ -32,8 +32,6 @@ class Dashboard {
     this.events.on('status', monitor.setStatus.bind(monitor));
     this.events.on('servicesState', monitor.availableServices.bind(monitor));
 
-    this.events.setCommandHandler("console:command", monitor.executeCmd.bind(monitor));
-
     this.logger.info('========================'.bold.green);
     this.logger.info((__('Welcome to Embark') + ' ' + this.version).yellow.bold);
     this.logger.info('========================'.bold.green);

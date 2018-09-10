@@ -1,5 +1,4 @@
 let blessed = require("neo-blessed");
-let CommandHistory = require('./command_history.js');
 const REPL = require('./repl.js');
 const stream = require('stream');
 const stripAnsi = require('strip-ansi');
@@ -9,26 +8,22 @@ class Monitor {
     let options = _options || {};
     this.env = options.env;
     this.console = options.console;
-    this.history = new CommandHistory();
     this.events = options.events;
     this.color = options.color || "green";
     this.minimal = options.minimal || false;
-
-    const readableStream = new stream.Readable();
 
     this.screen = blessed.screen({
       smartCSR: true,
       title: options.title || ("Embark " + options.version),
       dockBorders: false,
       fullUnicode: true,
-      autoPadding: true,
-      input: readableStream
+      autoPadding: true
     });
 
     this.layoutLog();
     this.layoutStatus();
     this.layoutModules();
-    // this.layoutCmd();
+    this.layoutTerminal();
 
     this.screen.key(["C-c"], function () {
       process.exit(0);
@@ -41,58 +36,29 @@ class Monitor {
     this.status.setContent(this.env.green);
 
     this.screen.render();
-    // this.input.focus();
-    // this.logText.focus();
 
-    // const LogWritableStream = class extends stream.Writable {
-    //     _write(chunk, enc, next) {
-    //         // setTimeout(() => {
-    //         // console.log(chunk.toString())
-    //         setTimeout(() => {
-    //             this.logText.log('hello');
-    //             // this.logText.log(chunk.toString());
-    //             // console.log(chunk.toString())
-    //         }, 1000);
-    //         // }, 1000);
-    //         // process.exit(0);
-    //         // console.log(chunk)
-    //         next();
-    //     }
-    // };
+    this.terminalReadableStream = new stream.Readable({
+        read() {
 
-    //TODO figure out buffering of output from node repl
-    //TODO seee if you can get away with not repeating the console starting text (we might need to use something besides a log thing, because it seems to enforce a character return for every log)
-    //TODO mouse events are still showing up
-    //TODO stderr from the repl just prints across the top of the screen
-    //TODO this might be where we need to make actual changes to neo-blessed
+        }
+    });
 
-    const logText = this.logText;
-    let buffer = '';
-    const logWritableStream = new stream.Writable({
+    const terminal = this.terminal;
+    const terminalWritableStream = new stream.Writable({
         write(chunk, encoding, next) {
-            // console.log(chunk.toString())
-            // this.logText.log('repl done loading');
-            // console.log(this);
-            // logText.log(encoding);
-            // buffer += stripAnsi(chunk.toString());
-
-            logText.log(stripAnsi(chunk.toString()));
-            // console.log(chunk.toString('ascii'))
-
+            terminal.write(chunk.toString());
             next();
         }
     });
 
-    this.repl = new REPL({
+    const repl = new REPL({
         events: this.events,
         env: this.env,
-        // inputStream: this.logText.input,
-        outputStream: logWritableStream
+        inputStream: this.terminalReadableStream,
+        outputStream: terminalWritableStream,
+        logText: this.logText
     }).start(() => {
-        // this.logText.log('repl done loading');
-        // process.stdout.on('data', () => {
-        //     // logText.log(data.toString());
-        // });
+        this.terminal.focus();
     });
   }
 
@@ -144,7 +110,7 @@ class Monitor {
       label: __("Logs"),
       padding: 1,
       width: "100%",
-      height: "60%",
+      height: "55%",
       left: "0%",
       top: "42%",
       border: {
@@ -174,17 +140,6 @@ class Monitor {
       vi: false,
       mouse: true
     });
-
-    // process.stdin.on('data', (data) => {
-    //     this.logText.log(data.toString());
-    // });
-
-    // setTimeout(() => {
-    //     process.stdout.on('data', (data) => {
-    //         this.logText.log(data.toString());
-    //         // console.log(data);
-    //     });
-    // }, 5000);
 
     this.screen.append(this.log);
   }
@@ -355,99 +310,28 @@ class Monitor {
     this.screen.append(this.wrapper);
   }
 
-  layoutCmd() {
-
-
-    this.consoleBox = blessed.box({
-      label: __('Console'),
-      tags: true,
-      padding: 0,
-      width: '100%',
-      height: '6%',
-      left: '0%',
-      top: '95%',
-      border: {
-        type: 'line'
-      },
-      style: {
-        fg: 'black',
-        border: {
-          fg: this.color
+  layoutTerminal() {
+      this.terminal = blessed.terminal({
+        parent: this.screen,
+        cursor: 'block',
+        cursorBlink: true,
+        padding: 0,
+        width: '100%',
+        height: '4%',
+        left: '0%',
+        top: '96%',
+        handler: (data) => {
+          this.terminalReadableStream.push(data);
         }
-      }
-    });
+      });
 
-    this.input = blessed.textbox({
-      parent: this.consoleBox,
-      name: 'input',
-      input: true,
-      keys: false,
-      top: 0,
-      left: 1,
-      height: '50%',
-      width: '100%-2',
-      inputOnFocus: true,
-      style: {
-        fg: 'green',
-        bg: 'black',
-        focus: {
-          bg: 'black',
-          fg: 'green'
-        }
-      }
-    });
+      this.terminal.key('C-c', () => {
+        this.terminal.kill();
+        return screen.destroy();
+      });
 
-    let self = this;
-
-    this.input.key(["C-c"], function () {
-      self.events.emit('exit');
-      process.exit(0);
-    });
-
-    this.input.key(["C-w"], function () {
-      self.input.clearValue();
-      self.input.focus();
-    });
-
-    this.input.key(["up"], function () {
-      let cmd = self.history.getPreviousCommand();
-      self.input.setValue(cmd);
-      self.input.focus();
-    });
-
-    this.input.key(["down"], function () {
-      let cmd = self.history.getNextCommand();
-      self.input.setValue(cmd);
-      self.input.focus();
-    });
-
-    this.input.on('submit', this.submitCmd.bind(this));
-
-    this.screen.append(this.consoleBox);
+      this.screen.append(this.terminal);
   }
-
-  submitCmd(cmd) {
-    if (cmd !== '') {
-      this.history.addCommand(cmd);
-      this.executeCmd(cmd);
-    }
-    this.input.clearValue();
-    this.input.focus();
-  }
-
-  executeCmd(cmd, cb) {
-    this.logText.log('console> '.bold.green + cmd);
-    this.events.request('console:executeCmd', cmd, (err, result) => {
-      let message = err || result;
-      if (message) {
-        this.logText.log(message);
-      }
-      if (cb) {
-        cb(message);
-      }
-    });
-  }
-
 }
 
 module.exports = Monitor;

@@ -7,6 +7,7 @@ class REPL {
     this.env = options.env;
     this.inputStream = options.inputStream || process.stdin;
     this.outputStream = options.outputStream || process.stdout;
+    this.logText = options.logText;
   }
 
   enhancedEval(cmd, context, filename, callback) {
@@ -17,7 +18,12 @@ class REPL {
 
   enhancedWriter(output) {
     if ((typeof output) === "string") {
+      this.logText.log(output);
       return output;
+    } else {
+      const inspectedOutput = util.inspect(output, {colors: true});
+      this.logText.log(inspectedOutput);
+      return inspectedOutput;
     }
     return util.inspect(output, {colors: true});
   }
