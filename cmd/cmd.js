@@ -20,6 +20,11 @@ if (!process.env.EMBARK_PATH) {
   process.env.EMBARK_PATH = utils.joinPath(__dirname, '..');
 }
 
+// set the anchor for embark's fs.pkgPath()
+if (!process.env.PKG_PATH) {
+  process.env.PKG_PATH = process.env.PWD;
+}
+
 // NOTE: setting NODE_PATH at runtime won't effect lookup behavior in the
 // current process, but will take effect in child processes; this enables
 // lookup of *global* embark's own node_modules from within dapp scripts (such
