@@ -127,7 +127,7 @@ class Monitor {
       width: "100%-5",
       //height: '90%',
       scrollable: true,
-      input: true,
+      input: false,
       alwaysScroll: true,
       scrollbar: {
         ch: " ",
