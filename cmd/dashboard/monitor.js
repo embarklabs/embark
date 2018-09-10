@@ -38,27 +38,25 @@ class Monitor {
     this.screen.render();
 
     this.terminalReadableStream = new stream.Readable({
-        read() {
-
-        }
+      read() {}
     });
 
     const terminal = this.terminal;
     const terminalWritableStream = new stream.Writable({
-        write(chunk, encoding, next) {
-            terminal.write(chunk.toString());
-            next();
-        }
+      write(chunk, encoding, next) {
+        terminal.write(chunk.toString());
+        next();
+      }
     });
 
     const repl = new REPL({
-        events: this.events,
-        env: this.env,
-        inputStream: this.terminalReadableStream,
-        outputStream: terminalWritableStream,
-        logText: this.logText
+      events: this.events,
+      env: this.env,
+      inputStream: this.terminalReadableStream,
+      outputStream: terminalWritableStream,
+      logText: this.logText
     }).start(() => {
-        this.terminal.focus();
+      this.terminal.focus();
     });
   }
 
