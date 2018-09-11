@@ -18,11 +18,11 @@ class REPL {
 
   enhancedWriter(output) {
     if ((typeof output) === "string") {
-      this.logText.log(output);
+      if (this.logText) this.logText.log(output);
       return output;
     } else {
       const inspectedOutput = util.inspect(output, {colors: true});
-      this.logText.log(inspectedOutput);
+      if (this.logText) this.logText.log(inspectedOutput);
       return inspectedOutput;
     }
     return util.inspect(output, {colors: true});
