@@ -327,7 +327,9 @@ class Monitor {
         return screen.destroy();
       });
 
-      this.screen.append(this.terminal);
+      this.terminal.on('click', () => {
+        this.terminal.focus();
+      });
   }
 }
 
