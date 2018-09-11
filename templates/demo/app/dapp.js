@@ -32,7 +32,7 @@ class App extends React.Component {
       if (err) {
         // If err is not null then it means something went wrong connecting to ethereum
         // you can use this to ask the user to enable metamask for e.g
-        return this.setState({error: err});
+        return this.setState({error: err.message || err});
       }
       if (EmbarkJS.isNewWeb3()) {
         EmbarkJS.Messages.Providers.whisper.getWhisperVersion((err, _version) => {
