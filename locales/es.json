@@ -185,7 +185,7 @@
    "versions": "versiones",
    "versions in use": "versiones en uso",
    "downloading {{packageName}} {{version}}....": "descargando {{packageName}} {{version}}....",
-   "language to use (default: en)": "languaje a utilizar (Por defecto: es)",
+   "language to use (default: en)": "lenguaje a utilizar (Por defecto: es)",
    "download template": "descargar plantilla",
    "Start the Embark console": "Iniciar la consola de Embark",
    "When set, will print the gas cost for each contract deploy": "Al ser establecido, imprimirá el costo en gas para cada contrato desplegado",
