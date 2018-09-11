@@ -200,7 +200,7 @@
   "Storage process for {{storageName}} ended before the end of this process. Code: {{code}}": "Le processus de stockage pour {{storageName}} a pris fin avant la fin de ce processus. Code: {{code}}",
   "ipfs process started": "processus ipfs commencé",
   "Compiling...": "Compiler...",
-  "Building...": "Bâtiment...",
+  "Building...": "Construire...",
   "gas at the price of": "gaz au prix de",
   "Wei, estimated cost:": "Coût estimé Wei:",
   "using": "en utilisant",
