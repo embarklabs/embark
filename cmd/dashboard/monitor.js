@@ -109,7 +109,7 @@ class Monitor {
       width: "100%",
       height: "55%",
       left: "0%",
-      top: "42%",
+      top: "40%",
       border: {
         type: "line"
       },
@@ -147,7 +147,7 @@ class Monitor {
       tags: true,
       padding: 1,
       width: "75%",
-      height: "42%",
+      height: "40%",
       left: "0%",
       top: "0",
       border: {
@@ -314,9 +314,20 @@ class Monitor {
         cursorBlink: true,
         padding: 0,
         width: '100%',
-        height: '4%',
+        height: '8%',
         left: '0%',
-        top: '96%',
+        top: '94%',
+        border: 'line',
+        style: {
+            fg: 'default',
+            bg: 'default',
+            focus: {
+                border: {
+                    fg: 'green'
+                }
+            }
+        },
+        scrollable: false,
         handler: (data) => {
           this.terminalReadableStream.push(data);
         }
