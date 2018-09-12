@@ -316,6 +316,10 @@ class Cmd {
       .command('eject-webpack')
       .description(__('copy the default webpack config into your dapp for customization'))
       .action(function() {
+        embark.initConfig('development', {
+          embarkConfig: 'embark.json',
+          interceptLogs: false
+        });
         embark.ejectWebpack();
       });
   }
