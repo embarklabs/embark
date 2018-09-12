@@ -72,15 +72,6 @@ module.exports = {
       SimpleStorageWithHttpImport: {
         fromIndex: 0,
         args: [100]
-      },
-      ENSRegistry: {
-        "deploy": false
-      },
-      Resolver: {
-        "deploy": false
-      },
-      FIFSRegistrar: {
-        "deploy": false
       }
     },
     afterDeploy: [
