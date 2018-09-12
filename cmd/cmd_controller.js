@@ -204,8 +204,10 @@ class EmbarkController {
           engine.startService("pipeline");
         }
         engine.startService("deployment", {onlyCompile: options.onlyCompile});
-        engine.startService("storage");
-        engine.startService("codeGenerator");
+        if (!options.onlyCompile) {
+          engine.startService("storage");
+          engine.startService("codeGenerator");
+        }
 
         callback();
       },
