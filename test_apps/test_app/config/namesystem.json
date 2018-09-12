@@ -1,6 +1,6 @@
 {
   "default": {
-    "enabled": false,
+    "enabled": true,
     "available_providers": [
       "ens"
     ],
