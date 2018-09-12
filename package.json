@@ -81,7 +81,7 @@
     "solc": "0.4.24",
     "string-replace-async": "^1.2.1",
     "style-loader": "^0.19.0",
-    "swarmjs": "https://github.com/embark-framework/swarmjs.git",
+    "swarm-api": "^0.1.2",
     "tar": "^3.1.5",
     "toposort": "^1.0.0",
     "underscore": "^1.9.0",
