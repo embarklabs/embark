@@ -127,6 +127,7 @@ class EmbarkController {
         engine.startService("codeGenerator");
         engine.startService("namingSystem");
         engine.startService("console");
+        engine.startService("pluginCommand");
 
         engine.events.on('check:backOnline:Ethereum', function () {
           engine.logger.info(__('Ethereum node detected') + '..');
@@ -280,7 +281,7 @@ class EmbarkController {
             engine.startService("webServer");
             engine.startService("namingSystem");
             engine.startService("console");
-
+            engine.startService("pluginCommand");
             return callback();
           }
 
