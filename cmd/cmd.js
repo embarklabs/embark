@@ -270,6 +270,7 @@ class Cmd {
               '                       ' + __('<custom node endpoint> - Connects to a running node available at the end point and uses it to run the tests'), 
               /^(vm|embark|((ws|https?):\/\/([a-zA-Z0-9_.-]*):?([0-9]*)?))$/i, null)
       .option('-d , --gasDetails', __('When set, will print the gas cost for each contract deploy'))
+      .option('-c , --coverage', __('When set, will generate the coverage after the tests'))
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'warn')
       .description(__('run tests'))
@@ -281,7 +282,8 @@ class Cmd {
         }
         checkDeps();
         i18n.setOrDetectLocale(options.locale);
-        embark.runTests({file, loglevel: options.loglevel, gasDetails: options.gasDetails, node: options.node});
+        embark.runTests({file, loglevel: options.loglevel, gasDetails: options.gasDetails,
+          node: options.node, coverage: options.coverage});
       });
   }
 
