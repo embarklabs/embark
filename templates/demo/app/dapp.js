@@ -21,16 +21,18 @@ class App extends React.Component {
       error: null,
       activeKey: 1,
       whisperEnabled: false,
-      storageEnabled: false
+      storageEnabled: false,
+      blockchainEnabled: false
     };
   }
 
   componentDidMount() {
     EmbarkJS.onReady((err) => {
+      this.setState({blockchainEnabled: true});
       if (err) {
         // If err is not null then it means something went wrong connecting to ethereum
         // you can use this to ask the user to enable metamask for e.g
-        return this.setState({error: err});
+        return this.setState({error: err.message || err});
       }
       if (EmbarkJS.isNewWeb3()) {
         EmbarkJS.Messages.Providers.whisper.getWhisperVersion((err, _version) => {
@@ -81,7 +83,7 @@ class App extends React.Component {
     return (<div>
       <h3>Embark - Usage Example</h3>
       <Tabs onSelect={this.handleSelect} activeKey={this.state.activeKey} id="uncontrolled-tab-example">
-        <Tab eventKey={1} title="Blockchain">
+        <Tab eventKey={1} title={this._renderStatus('Blockchain', this.state.blockchainEnabled)}>
           <Blockchain/>
         </Tab>
         <Tab eventKey={2} title={this._renderStatus('Decentralized Storage', this.state.storageEnabled)}>

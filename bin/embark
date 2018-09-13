@@ -10,26 +10,6 @@ try {
   }
 }
 
-function launchEmbark() {
-  var Cmd = require('../cmd/cmd');
-  var cli = new Cmd();
-  cli.process(process.argv);
-}
-
-const path = require('path');
-try {
-  const dappPackage = require(path.join(process.cwd(), 'package.json'));
-  require(path.join(process.cwd(), 'embark.json')); // Make sure we are in a Dapp
-  require('check-dependencies')(dappPackage, (state) => {
-    if (state.status) {
-      require('colors');
-      console.error('\nMissing dependencies. Please run npm install'.red);
-      process.exit();
-    }
-    launchEmbark();
-  });
-} catch (_e) {
-  // We are not in a Dapp
-  launchEmbark();
-}
-
+var Cmd = require('../cmd/cmd');
+var cli = new Cmd();
+cli.process(process.argv);
