@@ -369,7 +369,9 @@ class Monitor {
     this.logText.log('console> '.bold.green + cmd);
     this.events.request('console:executeCmd', cmd, (err, result) => {
       let message = err || result;
-      this.logText.log(message);
+      if (message) {
+        this.logText.log(message);
+      }
       if (cb) {
         cb(message);
       }

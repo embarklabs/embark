@@ -1,21 +1,23 @@
 const repl = require("repl");
 const util = require("util");
+
 class REPL {
   constructor(options) {
     this.events = options.events;
-    this.env = options.env
+    this.env = options.env;
   }
 
   enhancedEval(cmd, context, filename, callback) {
-    this.events.request('console:executeCmd', cmd.trim(), callback);
+    this.events.request('console:executeCmd', cmd.trim(), function (err, message) {
+      callback(err, message || ''); // This way, we don't print undefined
+    });
   }
 
   enhancedWriter(output) {
     if ((typeof output) === "string") {
       return output;
-    } else {
-      return util.inspect(output, {colors: true});
     }
+    return util.inspect(output, {colors: true});
   }
 
   start(done) {
@@ -36,7 +38,6 @@ class REPL {
 
     done();
   }
-
 }
 
 module.exports = REPL;
