@@ -79,7 +79,8 @@ class EmbarkController {
       context: self.context,
       useDashboard: options.useDashboard,
       webServerConfig: webServerConfig,
-      webpackConfigName: options.webpackConfigName
+      webpackConfigName: options.webpackConfigName,
+      ipcRole: 'server'
     });
 
     async.waterfall([
@@ -269,28 +270,24 @@ class EmbarkController {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
 
-        engine.ipc.connect((err) => {
-          if (err) {
-            engine.startService("processManager");
-            engine.startService("serviceMonitor");
-            engine.startService("libraryManager");
-            engine.startService("codeRunner");
-            engine.startService("web3");
-            engine.startService("pipeline");
-            engine.startService("deployment");
-            engine.startService("storage");
-            engine.startService("codeGenerator");
-            engine.startService("webServer");
-            engine.startService("namingSystem");
-            engine.startService("console");
-            engine.startService("pluginCommand");
-            return callback();
-          }
-
+        if (engine.ipc.connected) {
           engine.startService("codeRunner");
           engine.startService("console");
-          callback();
-        });
+          return callback();
+        }
+        engine.startService("processManager");
+        engine.startService("serviceMonitor");
+        engine.startService("libraryManager");
+        engine.startService("codeRunner");
+        engine.startService("web3");
+        engine.startService("pipeline");
+        engine.startService("deployment");
+        engine.startService("storage");
+        engine.startService("codeGenerator");
+        engine.startService("namingSystem");
+        engine.startService("console");
+        engine.startService("pluginCommand");
+        callback();
       },
       function web3IPC(callback) {
         // Do specific work in case we are connected to a socket:
