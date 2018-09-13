@@ -12,15 +12,23 @@ import {getProcesses, getCommands, getVersions, getProcessLogs} from "../reducer
 import deepEqual from 'deep-equal';
 
 class HomeContainer extends Component {
+  componentDidMount() {
+    this.getProcesses();
+  }
+
   componentDidUpdate(prevProps) {
     if (!deepEqual(this.props.processes, prevProps.processes)) {
-      this.props.processes.forEach(process => {
-        this.props.fetchProcessLogs(process.name);
-        if (!prevProps.processes.length) {
-          this.props.listenToProcessLogs(process.name);
-        }
-      });
+      this.getProcesses(prevProps);
     }
+  }
+
+  getProcesses(prevProps) {
+    this.props.processes.forEach(process => {
+      this.props.fetchProcessLogs(process.name);
+      if (!prevProps || !prevProps.processes.length) {
+        this.props.listenToProcessLogs(process.name);
+      }
+    });
   }
 
   render() {
