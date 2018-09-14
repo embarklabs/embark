@@ -34,23 +34,13 @@ class App extends React.Component {
         // you can use this to ask the user to enable metamask for e.g
         return this.setState({error: err.message || err});
       }
-      if (EmbarkJS.isNewWeb3()) {
-        EmbarkJS.Messages.Providers.whisper.getWhisperVersion((err, _version) => {
-          if (err) {
-            return console.log(err);
-          }
-          this.setState({whisperEnabled: true});
-        });
-      } else {
-        if (EmbarkJS.Messages.providerName === 'whisper') {
-          EmbarkJS.Messages.getWhisperVersion((err, _version) => {
-            if (err) {
-              return console.log(err);
-            }
-            this.setState({whisperEnabled: true});
-          });
+
+      EmbarkJS.Messages.Providers.whisper.getWhisperVersion((err, _version) => {
+        if (err) {
+          return console.log(err);
         }
-      }
+        this.setState({whisperEnabled: true});
+      });
 
       EmbarkJS.Storage.isAvailable().then((result) => {
         this.setState({storageEnabled: result});
