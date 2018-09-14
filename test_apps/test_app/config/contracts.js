@@ -66,8 +66,9 @@ module.exports = {
         file: "./some_folder/test_contract.sol",
         args: [1000]
       },
-      Identity: {
-        file: "https://github.com/status-im/contracts/blob/master/contracts/identity/Identity.sol"
+      StandardToken: {
+        file: "https://github.com/status-im/contracts/blob/151-embark31/contracts/token/StandardToken.sol",
+        deploy: false
       },
       SimpleStorageWithHttpImport: {
         fromIndex: 0,
