@@ -148,7 +148,9 @@ describe('embark.Config', function () {
           "importRemappings": [],
           "basedir": "",
           "resolver": undefined,
-          "downloadedImports": false
+          "downloadedImports": false,
+          "storageConfig": null,
+          "ipfsUrl": null
         },
         {
           "filename": ".embark/contracts/status-im/contracts/master/contracts/identity/ERC725.sol",
@@ -158,7 +160,9 @@ describe('embark.Config', function () {
           "importRemappings": [],
           "basedir": "",
           "resolver": undefined,
-          "downloadedImports": false
+          "downloadedImports": false,
+          "storageConfig": null,
+          "ipfsUrl": null
         }
       ];
       config.loadExternalContractsFiles();
