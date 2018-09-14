@@ -66,8 +66,9 @@ module.exports = {
         file: "./some_folder/test_contract.sol",
         args: [1000]
       },
-      Identity: {
-        file: "https://github.com/status-im/contracts/blob/master/contracts/identity/Identity.sol"
+      Owned: {
+        file: "https://github.com/status-im/contracts/blob/151-embark31/contracts/common/Owned.sol",
+        deploy: false
       },
       SimpleStorageWithHttpImport: {
         fromIndex: 0,

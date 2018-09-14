@@ -9,7 +9,7 @@ contract SimpleStorageWithHttpImport is Ownable {
 
   function() public payable { }
 
-  function SimpleStorageWithHttpImport(uint initialValue) public {
+  constructor(uint initialValue) public {
     storedData = initialValue;
   }
 
@@ -20,7 +20,7 @@ contract SimpleStorageWithHttpImport is Ownable {
     }
   }
 
-  function set2(uint x, uint unusedGiveWarning) public onlyOwner {
+  function set2(uint x) public onlyOwner {
     storedData = x;
   }
 

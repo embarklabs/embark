@@ -6,7 +6,7 @@ library Assert {
   event TestEvent(bool passed, string message);
 
   function triggerEvent(bool passed, string message) internal {
-    TestEvent(passed, message);
+    emit TestEvent(passed, message);
   }
 }
 
@@ -17,7 +17,7 @@ contract SimpleStorage is Ownable {
 
   function() public payable { }
 
-  function SimpleStorage(uint initialValue) public {
+  constructor(uint initialValue) public {
     storedData = initialValue;
   }
 
@@ -26,7 +26,7 @@ contract SimpleStorage is Ownable {
     Assert.triggerEvent(true, "hi");
   }
 
-  function set2(uint x, uint unusedGiveWarning) public onlyOwner {
+  function set2(uint x) public onlyOwner {
     storedData = x;
     emit EventOnSet2(true, "hi");
   }
