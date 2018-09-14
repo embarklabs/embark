@@ -51,7 +51,7 @@ contract("SimpleStorage", function () {
       done(error);
     });
 
-    SimpleStorage.methods.set2(150, 100).send();
+    SimpleStorage.methods.set2(150).send();
   });
 
 });

@@ -66,8 +66,8 @@ module.exports = {
         file: "./some_folder/test_contract.sol",
         args: [1000]
       },
-      Owned: {
-        file: "https://github.com/status-im/contracts/blob/151-embark31/contracts/common/Owned.sol",
+      StandardToken: {
+        file: "https://github.com/status-im/contracts/blob/151-embark31/contracts/token/StandardToken.sol",
         deploy: false
       },
       SimpleStorageWithHttpImport: {
