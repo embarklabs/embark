@@ -428,13 +428,9 @@ class EmbarkController {
     }
     if (dappConfigOld !== dappConfig) {
       fs.copySync(dappConfig, dappConfigOld);
-      console.warn(`${dappConfig}`.yellow);
-      console.warn(__('copied to').dim.yellow);
-      console.warn(`${dappConfigOld}\n`.yellow);
     }
     fs.copySync(embarkConfig, dappConfig);
-    console.log(`${embarkConfig}`.green);
-    console.log(__('copied to').dim.green);
+    console.log(__('webpack config ejected to: ').dim.yellow);
     console.log(`${dappConfig}`.green);
   }
 
