@@ -58,6 +58,7 @@
     "i18n": "^0.8.3",
     "ipfs-api": "17.2.4",
     "is-valid-domain": "0.0.5",
+    "istanbul": "^0.4.5",
     "live-plugin-manager-git-fix": "^0.12.1",
     "lodash.clonedeep": "^4.5.0",
     "merge": "^1.2.0",
