@@ -76,6 +76,7 @@
     "pkg-up": "^2.0.0",
     "promptly": "^2.1.0",
     "propose": "0.0.5",
+    "remix-tests": "0.0.12",
     "request": "^2.85.0",
     "serve-static": "^1.11.1",
     "shelljs": "^0.5.0",
