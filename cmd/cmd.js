@@ -262,20 +262,24 @@ class Cmd {
   }
 
   test() {
-    const urlRegexExp = /^(vm|embark|((ws|https?):\/\/([a-zA-Z0-9_.-]*):?([0-9]*)?))$/i;
     program
       .command('test [file]')
-      .option('-n , --node <node>', __('Node to connect to. Valid values are ["vm", "embark", "<custom node endpoint>"]: \n') + 
+      .option('-n , --node <node>', __('Node to connect to. Valid values are ["vm", "embark", "<custom node endpoint>"]: \n') +
               '                       vm - ' + __('Starts an Ethereum simulator (ganache) and runs the tests using the simulator') + '\n' +
-              '                       embark - ' + __('Uses the node associated with an already running embark process') + '\n' + 
-              '                       ' + __('<custom node endpoint> - Connects to a running node available at the end point and uses it to run the tests'), 
-              urlRegexExp, 'vm')
+              '                       embark - ' + __('Uses the node associated with an already running embark process') + '\n' +
+              '                       ' + __('<custom node endpoint> - Connects to a running node available at the end point and uses it to run the tests'))
       .option('-d , --gasDetails', __('When set, will print the gas cost for each contract deploy'))
       .option('-c , --coverage', __('When set, will generate the coverage after the tests'))
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'warn')
       .description(__('run tests'))
       .action(function(file, options) {
+        const node = options.node;
+        const urlRegexExp = /^(vm|embark|((ws|https?):\/\/([a-zA-Z0-9_.-]*):?([0-9]*)?))$/i;
+        if (node && !(node === 'embark' || node === 'vm' || node.match(urlRegexExp))) {
+          console.error(`invalid --node option: must be 'vm', 'embark' or a valid URL`.red);
+          process.exit(1);
+        }
         checkDeps();
         i18n.setOrDetectLocale(options.locale);
         embark.runTests({file, loglevel: options.loglevel, gasDetails: options.gasDetails,
