@@ -262,9 +262,14 @@ class Cmd {
   }
 
   test() {
+    const urlRegexExp = /^(vm|embark|((ws|https?):\/\/([a-zA-Z0-9_.-]*):?([0-9]*)?))$/i;
     program
       .command('test [file]')
-      .option('-n , --node [node]', __('Node to connect to (default: vm)'))
+      .option('-n , --node <node>', __('Node to connect to. Valid values are ["vm", "embark", "<custom node endpoint>"]: \n') + 
+              '                       vm - ' + __('Starts an Ethereum simulator (ganache) and runs the tests using the simulator') + '\n' +
+              '                       embark - ' + __('Uses the node associated with an already running embark process') + '\n' + 
+              '                       ' + __('<custom node endpoint> - Connects to a running node available at the end point and uses it to run the tests'), 
+              urlRegexExp, 'vm')
       .option('-d , --gasDetails', __('When set, will print the gas cost for each contract deploy'))
       .option('-c , --coverage', __('When set, will generate the coverage after the tests'))
       .option('--locale [locale]', __('language to use (default: en)'))

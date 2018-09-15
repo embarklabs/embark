@@ -10,7 +10,7 @@ contract Token {
   mapping( address => mapping( address => uint ) ) _approvals;
   uint public _supply;
   //uint public _supply2;
-  function Token( uint initial_balance ) public {
+  constructor( uint initial_balance ) public {
     _balances[msg.sender] = initial_balance;
     _supply = initial_balance;
   }
@@ -29,7 +29,7 @@ contract Token {
     }
     _balances[msg.sender] -= value;
     _balances[to] += value;
-    Transfer( msg.sender, to, value );
+    emit Transfer( msg.sender, to, value );
     return true;
   }
   function transferFrom( address from, address to, uint value) public returns (bool ok) {
@@ -48,13 +48,13 @@ contract Token {
     _approvals[from][msg.sender] -= value;
     _balances[from] -= value;
     _balances[to] += value;
-    Transfer( from, to, value );
+    emit Transfer( from, to, value );
     return true;
   }
   function approve(address spender, uint value) public returns (bool ok) {
     // TODO: should increase instead
     _approvals[msg.sender][spender] = value;
-    Approval( msg.sender, spender, value );
+    emit Approval( msg.sender, spender, value );
     return true;
   }
   function allowance(address owner, address spender) public constant returns (uint _allowance) {
@@ -63,7 +63,7 @@ contract Token {
   function safeToAdd(uint a, uint b) internal pure returns (bool) {
     return (a + b >= a);
   }
-  function isAvailable() public constant returns (bool) {
+  function isAvailable() public pure returns (bool) {
     return false;
   }
 }

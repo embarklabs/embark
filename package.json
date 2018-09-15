@@ -47,6 +47,7 @@
     "ethereumjs-wallet": "0.6.0",
     "file-loader": "^1.1.5",
     "finalhandler": "^1.1.1",
+    "flatted": "^0.2.3",
     "follow-redirects": "^1.2.4",
     "fs-extra": "^2.0.0",
     "ganache-cli": "^6.1.6",
