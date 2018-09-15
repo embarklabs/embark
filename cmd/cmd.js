@@ -274,12 +274,13 @@ class Cmd {
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'warn')
       .description(__('run tests'))
       .action(function(file, options) {
-        const node = options.node;
+        const node = options.node || 'vm';
         const urlRegexExp = /^(vm|embark|((ws|https?):\/\/([a-zA-Z0-9_.-]*):?([0-9]*)?))$/i;
         if (node && !(node === 'embark' || node === 'vm' || node.match(urlRegexExp))) {
           console.error(`invalid --node option: must be 'vm', 'embark' or a valid URL`.red);
           process.exit(1);
         }
+        options.node = node;
         checkDeps();
         i18n.setOrDetectLocale(options.locale);
         embark.runTests({file, loglevel: options.loglevel, gasDetails: options.gasDetails,
