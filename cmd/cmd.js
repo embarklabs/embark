@@ -276,7 +276,7 @@ class Cmd {
       .action(function(file, options) {
         const node = options.node || 'vm';
         const urlRegexExp = /^(vm|embark|((ws|https?):\/\/([a-zA-Z0-9_.-]*):?([0-9]*)?))$/i;
-        if (node && !(node === 'embark' || node === 'vm' || node.match(urlRegexExp))) {
+        if (!(node === 'embark' || node === 'vm' || node.match(urlRegexExp))) {
           console.error(`invalid --node option: must be 'vm', 'embark' or a valid URL`.red);
           process.exit(1);
         }
