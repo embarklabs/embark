@@ -32,8 +32,8 @@ class Blockchain extends React.Component {
 
     var value = parseInt(this.state.valueSet, 10);
 
-    SimpleStorage.methods.set(value).send({ from: web3.eth.defaultAccount });
-    this._addToLog("SimpleStorage.methods.set(value).send({from: web3.eth.defaultAccount})");
+    SimpleStorage.methods.set(value).send();
+    this._addToLog("SimpleStorage.methods.set(value).send()");
   }
 
   getValue(e) {
