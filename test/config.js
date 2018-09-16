@@ -70,6 +70,9 @@ describe('embark.Config', function () {
         },
         {
           file: 'github.com/status-im/contracts/contracts/identity/ERC725.sol'
+        },
+        {
+          file: 'bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63'
         }
       ];
       const expected = [
@@ -77,17 +80,38 @@ describe('embark.Config', function () {
           "filename": ".embark/contracts/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol",
           "type": "http",
           "path": "https://raw.githubusercontent.com/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol",
+          "pluginPath": '',
+          "importRemappings": [],
           "basedir": "",
           "resolver": undefined,
-          "downloadedImports": false
+          "pluginPath": "",
+          "downloadedImports": false,
+          "importRemappings": [],
+          "gateway": undefined
         },
         {
           "filename": ".embark/contracts/status-im/contracts/master/contracts/identity/ERC725.sol",
           "type": "http",
           "path": "https://raw.githubusercontent.com/status-im/contracts/master/contracts/identity/ERC725.sol",
+          "pluginPath": '',
+          "importRemappings": [],
           "basedir": "",
           "resolver": undefined,
-          "downloadedImports": false
+          "pluginPath": "",
+          "downloadedImports": false,
+          "importRemappings": [],
+          "gateway": undefined
+        },
+        {
+          "filename": ".embark/contracts/bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63",
+          "type": "http",
+          "path": "https://swarm-gateways.net/bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63",
+          "basedir": "",
+          "resolver": undefined,
+          "pluginPath": "",
+          "downloadedImports": false,
+          "importRemappings": [],
+          "gateway": undefined
         }
       ];
       config.loadExternalContractsFiles();

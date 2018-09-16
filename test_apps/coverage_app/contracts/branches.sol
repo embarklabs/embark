@@ -32,4 +32,9 @@ contract Branches {
   function get() public view returns (uint retVal) {
     return storedData;
   }
+
+  function smallFunctionWithoutStatements() public view returns (uint retVal) {
+    if(false) return storedData * 10;
+    if(true) return storedData * 20;
+  }
 }

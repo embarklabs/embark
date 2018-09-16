@@ -90,5 +90,16 @@ describe('embark.utils', function () {
         url: 'http://myurl.com/myFile.sol'
       });
     });
+
+    it('should get the correct url for a correct bzz:/ swarm file', function () {
+      const swarmFile = 'bzz:/someensdomain.eth/ERC725.sol'
+      const fileObj = Utils.getExternalContractUrl(
+        swarmFile
+      );
+      assert.deepEqual(fileObj, {
+        filePath: constants.httpContractsDirectory + swarmFile,
+        url: 'https://swarm-gateways.net/' + swarmFile
+      });
+    });
   });
 });

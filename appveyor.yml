@@ -1,6 +1,8 @@
 # Test against the latest version of this Node.js version
 environment:
-  nodejs_version: "8"
+  matrix:
+    - nodejs_version: "8"
+    - nodejs_version: "10"
 
 # Install scripts. (runs after repo cloning)
 install:
@@ -15,12 +17,8 @@ test_script:
   # Output useful info for debugging.
   - node --version
   - npm --version
-  - npm run lint
-  - npm run test
-  # tmp fix due to windows npm5 issue
-  - cd test_apps/test_app/extensions/embark-service && npm install
-  - npm run testdapp_1
-  - npm run testdapp_2
+  # run tests
+  - npm test
 
 # Don't actually build.
 build: off
