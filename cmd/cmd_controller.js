@@ -154,11 +154,8 @@ class EmbarkController {
           engine.events.emit("status", __("Ready").green);
         });
 
-        if (options.runWebserver) {
-          engine.startService("webServer", {
-            host: options.serverHost,
-            port: options.serverPort
-          });
+        if (webServerConfig.enabled !== false) {
+          engine.startService("webServer");
         }
         engine.startService("fileWatcher");
         callback();
