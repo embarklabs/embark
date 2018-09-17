@@ -168,6 +168,7 @@ class Cmd {
       .option('-b, --host [host]', __('host to run the dev webserver (default: %s)', 'localhost'))
       .option('--noserver', __('disable the development webserver'))
       .option('--nodashboard', __('simple mode, disables the dashboard'))
+      .option('--nobrowser', __('prevent the development webserver from opening your default web browser'))
       .option('--no-color', __('no colors in case it\'s needed for compatbility purposes'))
       .option('--logfile [logfile]', __('filename to output logs (default: %s)', 'none'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'debug')
@@ -187,7 +188,8 @@ class Cmd {
           useDashboard: !options.nodashboard,
           logFile: options.logfile,
           logLevel: options.loglevel,
-          webpackConfigName: options.pipeline || 'development'
+          webpackConfigName: options.pipeline || 'development',
+          openBrowser: options.nobrowser == null ? null : !options.nobrowser,
         });
       });
   }
