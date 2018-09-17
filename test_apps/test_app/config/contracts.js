@@ -53,7 +53,7 @@ module.exports = {
         }
       },
       SomeContract: {
-        deployIf: 'MyToken.methods.isAvailable().call()',
+        deployIf: 'await MyToken.methods.isAvailable().call()',
         args: [
           ["$MyToken2", "$SimpleStorage"],
           100
