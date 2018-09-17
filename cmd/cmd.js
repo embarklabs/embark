@@ -178,10 +178,11 @@ class Cmd {
       .action(function(env, options) {
         checkDeps();
         i18n.setOrDetectLocale(options.locale);
+        const nullify = (v) => (!v || typeof v !== 'string') ? null : v;
         embark.run({
           env: env || 'development',
-          serverPort: options.port,
-          serverHost: options.host,
+          serverPort: nullify(options.port),
+          serverHost: nullify(options.host),
           client: options.client || 'geth',
           locale: options.locale,
           runWebserver: !options.noserver,
