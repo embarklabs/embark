@@ -417,6 +417,7 @@ class EmbarkController {
     fs.removeSync('.embark/');
     fs.removeSync('node_modules/.cache');
     fs.removeSync('dist/');
+    fs.removeSync('coverage/');
     console.log(__("reset done!").green);
   }
 
