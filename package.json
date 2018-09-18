@@ -95,7 +95,8 @@
     "viz.js": "1.8.2",
     "web3": "1.0.0-beta.34",
     "webpack": "4.18.0",
-    "window-size": "1.1.1"
+    "window-size": "1.1.1",
+    "ws": "^6.0.0"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
