@@ -271,7 +271,7 @@ class Cmd {
               '                       vm - ' + __('Starts an Ethereum simulator (ganache) and runs the tests using the simulator') + '\n' +
               '                       embark - ' + __('Uses the node associated with an already running embark process') + '\n' +
               '                       ' + __('<custom node endpoint> - Connects to a running node available at the end point and uses it to run the tests'))
-      .option('-d , --gasDetails', __('When set, will print the gas cost for each contract deploy'))
+      .option('-d , --gasDetails', __('When set, will print the gas cost for each contract deployment'))
       .option('-c , --coverage', __('When set, will generate the coverage after the tests'))
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'warn')
