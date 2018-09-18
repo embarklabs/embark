@@ -267,11 +267,11 @@ class Cmd {
   test() {
     program
       .command('test [file]')
-      .option('-d , --gasDetails', __('When set, will print the gas cost for each contract deployment'))
       .option('-n , --node <node>', __('node for running the tests ["vm", "embark", <endpoint>] (default: vm)\n') +
               '                       vm - ' + __('start and use an Ethereum simulator (ganache)') + '\n' +
               '                       embark - ' + __('use the node of a running embark process') + '\n' +
               '                       <endpoint> - ' + __('connect to and use the specified node'))
+      .option('-d , --gasDetails', __('print the gas cost for each contract deployment when running the tests'))
       .option('-c , --coverage', __('generate a coverage report after running the tests (vm only)'))
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'warn')
