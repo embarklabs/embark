@@ -168,6 +168,7 @@ class Cmd {
       .option('-b, --host [host]', __('host to run the dev webserver (default: %s)', 'localhost'))
       .option('--noserver', __('disable the development webserver'))
       .option('--nodashboard', __('simple mode, disables the dashboard'))
+      .option('--nobrowser', __('prevent the development webserver from automatically opening a web browser'))
       .option('--no-color', __('no colors in case it\'s needed for compatbility purposes'))
       .option('--logfile [logfile]', __('filename to output logs (default: %s)', 'none'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'debug')
@@ -177,17 +178,19 @@ class Cmd {
       .action(function(env, options) {
         checkDeps();
         i18n.setOrDetectLocale(options.locale);
+        const nullify = (v) => (!v || typeof v !== 'string') ? null : v;
         embark.run({
           env: env || 'development',
-          serverPort: options.port,
-          serverHost: options.host,
+          serverPort: nullify(options.port),
+          serverHost: nullify(options.host),
           client: options.client || 'geth',
           locale: options.locale,
-          runWebserver: !options.noserver,
+          runWebserver: options.noserver == null ? null : !options.noserver,
           useDashboard: !options.nodashboard,
           logFile: options.logfile,
           logLevel: options.loglevel,
-          webpackConfigName: options.pipeline || 'development'
+          webpackConfigName: options.pipeline || 'development',
+          openBrowser: options.nobrowser == null ? null : !options.nobrowser,
         });
       });
   }

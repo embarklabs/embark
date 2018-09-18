@@ -56,15 +56,22 @@ class EmbarkController {
     self.context = options.context || [constants.contexts.run, constants.contexts.build];
     let Dashboard = require('./dashboard/dashboard.js');
 
-    let webServerConfig = {
-      enabled: options.runWebserver
-    };
+    const webServerConfig = {};
 
-    if (options.serverHost) {
+    if (options.runWebserver != null) {
+      webServerConfig.enabled = options.runWebserver;
+    }
+
+    if (options.serverHost != null) {
       webServerConfig.host = options.serverHost;
     }
-    if (options.serverPort) {
+
+    if (options.serverPort != null) {
       webServerConfig.port = options.serverPort;
+    }
+
+    if (options.openBrowser != null) {
+      webServerConfig.openBrowser = options.openBrowser;
     }
 
     const Engine = require('../lib/core/engine.js');
@@ -147,11 +154,8 @@ class EmbarkController {
           engine.events.emit("status", __("Ready").green);
         });
 
-        if (options.runWebserver) {
-          engine.startService("webServer", {
-            host: options.serverHost,
-            port: options.serverPort
-          });
+        if (webServerConfig.enabled !== false) {
+          engine.startService("webServer");
         }
         engine.startService("fileWatcher");
         callback();
