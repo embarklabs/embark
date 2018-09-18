@@ -94,7 +94,7 @@ class Cmd {
       .description(__('New Application'))
       .option('--simple', __('create a barebones project meant only for contract development'))
       .option('--locale [locale]', __('language to use (default: en)'))
-      .option('--template [url]', __('download template'))
+      .option('--template [url]', __('download template from a GitHub repository'))
       .action(function(name, options) {
         i18n.setOrDetectLocale(options.locale);
         if (name === undefined) {
