@@ -296,20 +296,31 @@ class EmbarkController {
         if(!engine.ipc.connected || engine.ipc.isServer()) {
           return callback();
         }
+        const Provider = require('../lib/modules/blockchain_connector/provider');
         const Web3 = require('web3');
         let web3 = new Web3();
         engine.ipc.request("runcode:getCommands", null, (_, {web3Config, commands}) => {
-          web3.setProvider(web3Config.provider.host);
-          web3.eth.defaultAccount = web3Config.defaultAccount;
-          engine.events.emit("runcode:register", "web3", web3);
-          async.each(commands, ({varName, code}, next) => {
-            if (varName) {
-              engine.events.emit("runcode:register", varName, code);
-            } else {
-              engine.events.request("runcode:eval", code);
-            }
-            next();
-          }, callback);
+          const providerOptions = {
+            web3: web3,
+            accountsConfig: engine.config.contractsConfig.deployment.accounts,
+            blockchainConfig: engine.config.blockchainConfig,
+            logger: engine.logger,
+            isDev: engine.isDev,
+            type: engine.config.contractsConfig.deployment.type,
+            web3Endpoint: web3Config.providerUrl
+          };
+          const provider = new Provider(providerOptions);
+          provider.startWeb3Provider(() => {
+            engine.events.emit("runcode:register", "web3", web3);
+            async.each(commands, ({varName, code}, next) => {
+              if (varName) {
+                engine.events.emit("runcode:register", varName, code);
+              } else {
+                engine.events.request("runcode:eval", code);
+              }
+              next();
+            }, callback);
+          });
         });
       },
       function deploy(callback) {
@@ -417,13 +428,9 @@ class EmbarkController {
     }
     if (dappConfigOld !== dappConfig) {
       fs.copySync(dappConfig, dappConfigOld);
-      console.warn(`${dappConfig}`.yellow);
-      console.warn(__('copied to').dim.yellow);
-      console.warn(`${dappConfigOld}\n`.yellow);
     }
     fs.copySync(embarkConfig, dappConfig);
-    console.log(`${embarkConfig}`.green);
-    console.log(__('copied to').dim.green);
+    console.log(__('webpack config ejected to: ').dim.yellow);
     console.log(`${dappConfig}`.green);
   }
 
