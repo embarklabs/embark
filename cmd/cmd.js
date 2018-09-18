@@ -280,7 +280,7 @@ class Cmd {
         const node = options.node || 'vm';
         const urlRegexExp = /^(vm|embark|((ws|https?):\/\/([a-zA-Z0-9_.-]*):?([0-9]*)?))$/i;
         if (!urlRegexExp.test(node)) {
-          console.error(`invalid --node option: must be 'vm', 'embark' or a valid URL\n`.red);
+          console.error(`invalid --node option: must be "vm", "embark" or a valid URL\n`.red);
           options.outputHelp();
           process.exit(1);
         }
