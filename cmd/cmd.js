@@ -272,7 +272,7 @@ class Cmd {
               '                       embark - ' + __('Uses the node associated with an already running embark process') + '\n' +
               '                       ' + __('<custom node endpoint> - Connects to a running node available at the end point and uses it to run the tests'))
       .option('-d , --gasDetails', __('When set, will print the gas cost for each contract deployment'))
-      .option('-c , --coverage', __('When set, will generate the coverage after the tests'))
+      .option('-c , --coverage', __('generate a coverage report after running the tests (vm only)'))
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'warn')
       .description(__('run tests'))
@@ -285,6 +285,11 @@ class Cmd {
           process.exit(1);
         }
         options.node = node;
+        if (options.coverage && options.node !== 'vm') {
+          console.error(`invalid --node option: coverage supports "vm" only\n`.red);
+          options.outputHelp();
+          process.exit(1);
+        }
         checkDeps();
         i18n.setOrDetectLocale(options.locale);
         embark.runTests({file, loglevel: options.loglevel, gasDetails: options.gasDetails,
