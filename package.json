@@ -45,6 +45,7 @@
     "eth-ens-namehash": "^2.0.8",
     "eth-lib": "^0.2.8",
     "ethereumjs-wallet": "0.6.0",
+    "express": "^4.16.3",
     "file-loader": "^1.1.5",
     "finalhandler": "^1.1.1",
     "flatted": "^0.2.3",
