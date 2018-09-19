@@ -267,12 +267,12 @@ class Cmd {
   test() {
     program
       .command('test [file]')
-      .option('-n , --node <node>', __('Node to connect to. Valid values are ["vm", "embark", "<custom node endpoint>"]: \n') +
-              '                       vm - ' + __('Starts an Ethereum simulator (ganache) and runs the tests using the simulator') + '\n' +
-              '                       embark - ' + __('Uses the node associated with an already running embark process') + '\n' +
-              '                       ' + __('<custom node endpoint> - Connects to a running node available at the end point and uses it to run the tests'))
-      .option('-d , --gasDetails', __('When set, will print the gas cost for each contract deployment'))
-      .option('-c , --coverage', __('When set, will generate the coverage after the tests'))
+      .option('-n , --node <node>', __('node for running the tests ["vm", "embark", <endpoint>] (default: vm)\n') +
+              '                       vm - ' + __('start and use an Ethereum simulator (ganache)') + '\n' +
+              '                       embark - ' + __('use the node of a running embark process') + '\n' +
+              '                       <endpoint> - ' + __('connect to and use the specified node'))
+      .option('-d , --gasDetails', __('print the gas cost for each contract deployment when running the tests'))
+      .option('-c , --coverage', __('generate a coverage report after running the tests (vm only)'))
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'warn')
       .description(__('run tests'))
@@ -280,11 +280,16 @@ class Cmd {
         const node = options.node || 'vm';
         const urlRegexExp = /^(vm|embark|((ws|https?):\/\/([a-zA-Z0-9_.-]*):?([0-9]*)?))$/i;
         if (!urlRegexExp.test(node)) {
-          console.error(`invalid --node option: must be 'vm', 'embark' or a valid URL\n`.red);
+          console.error(`invalid --node option: must be "vm", "embark" or a valid URL\n`.red);
           options.outputHelp();
           process.exit(1);
         }
         options.node = node;
+        if (options.coverage && options.node !== 'vm') {
+          console.error(`invalid --node option: coverage supports "vm" only\n`.red);
+          options.outputHelp();
+          process.exit(1);
+        }
         checkDeps();
         i18n.setOrDetectLocale(options.locale);
         embark.runTests({file, loglevel: options.loglevel, gasDetails: options.gasDetails,
