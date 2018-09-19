@@ -4,64 +4,72 @@ import React, {Component} from 'react';
 import {withRouter} from "react-router-dom";
 
 import routes from '../routes';
-import AuthError from '../components/AuthError';
+import Unauthenticated from '../components/Unauthenticated';
+import Layout from "../components/Layout";
 import queryString from 'query-string';
 
 import {
   initBlockHeader,
-  authorize, getToken, postToken,
+  authenticate, fetchToken, logout,
   processes as processesAction,
   versions as versionsAction,
   plugins as pluginsAction
 } from '../actions';
 
+import { getToken, getAuthenticationError } from '../reducers/selectors';
+
 class AppContainer extends Component {
   constructor (props) {
     super(props);
-    this.state = {
-      authenticateError: null
-    };
 
-    this.checkToken();
+    this.queryStringAuthenticate();
   }
 
-  checkToken() {
-    if (this.props.location.search) {
-      const token = queryString.parse(this.props.location.search).token;
-      this.props.postToken(token);
-      return this.props.authorize(token, this.authCallback.bind(this));
+  queryStringAuthenticate() {
+    if (!this.props.location.search) {
+      return;
     }
-    this.props.getToken((err, token) => {
-      this.props.authorize(token, this.authCallback.bind(this));
-    });
-  }
-
-  authCallback(err) {
-    if (err) {
-      return this.setState({authenticateError: err});
+    const token = queryString.parse(this.props.location.search).token;
+    if (token === this.props.token) {
+      return;
     }
-    this.setState({authenticateError: null});
+    this.props.authenticate(token);
   }
 
   componentDidMount() {
-    this.props.initBlockHeader();
-    this.props.fetchProcesses();
-    this.props.fetchVersions();
-    this.props.fetchPlugins();
+    this.props.fetchToken();
+  }
+
+  componentDidUpdate(){
+    if (this.props.token) {
+      this.props.authenticate(this.props.token);
+      this.props.initBlockHeader();
+      this.props.fetchProcesses();
+      this.props.fetchVersions();
+      this.props.fetchPlugins();
+    }
+  }
+
+  shouldRenderUnauthenticated() {
+    return this.props.authenticationError || !this.props.token;
   }
 
   render() {
-    if (this.state.authenticateError) {
-      return <AuthError error={this.state.authenticateError}/>;
-    }
-    return (<React.Fragment>{routes}</React.Fragment>);
+    return (
+      <Layout logout={this.props.logout}>
+        {this.shouldRenderUnauthenticated() ? <Unauthenticated authenticate={this.props.authenticate}
+                                                               error={this.props.authenticationError} /> : <React.Fragment>{routes}</React.Fragment>}
+      </Layout>
+    );
   }
 }
 
 AppContainer.propTypes = {
-  authorize: PropTypes.func,
-  getToken: PropTypes.func,
-  postToken: PropTypes.func,
+  token: PropTypes.string,
+  authenticationError: PropTypes.string,
+  authenticate: PropTypes.func,
+  logout: PropTypes.func,
+  fetchToken: PropTypes.func,
   initBlockHeader: PropTypes.func,
   fetchProcesses: PropTypes.func,
   fetchPlugins: PropTypes.func,
@@ -69,13 +77,20 @@ AppContainer.propTypes = {
   location: PropTypes.object
 };
 
+function mapStateToProps(state) {
+  return {
+    token: getToken(state),
+    authenticationError: getAuthenticationError(state)
+  };
+}
+
 export default withRouter(connect(
-  null,
+  mapStateToProps,
   {
     initBlockHeader,
-    authorize: authorize.request,
-    getToken: getToken.request,
-    postToken: postToken.request,
+    authenticate: authenticate.request,
+    logout: logout.request,
+    fetchToken: fetchToken.request,
     fetchProcesses: processesAction.request,
     fetchVersions: versionsAction.request,
     fetchPlugins: pluginsAction.request

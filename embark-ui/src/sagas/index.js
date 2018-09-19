@@ -3,11 +3,10 @@ import * as api from '../services/api';
 import * as storage from '../services/storage';
 import {eventChannel} from 'redux-saga';
 import {all, call, fork, put, takeEvery, take, select} from 'redux-saga/effects';
+import {getToken} from '../reducers/selectors';
 
 function *doRequest(entity, serviceFn, payload) {
-  payload.token = yield select(function (state) {
-    return state.token;
-  });
+  payload.token = yield select(getToken);
   const {response, error} = yield call(serviceFn, payload);
   if(response) {
     yield put(entity.success(response.data, payload));
@@ -42,13 +41,14 @@ export const fetchFile = doRequest.bind(null, actions.file, api.fetchFile);
 export const postFile = doRequest.bind(null, actions.saveFile, api.postFile);
 export const deleteFile = doRequest.bind(null, actions.removeFile, api.deleteFile);
 export const fetchEthGas = doRequest.bind(null, actions.gasOracle, api.getEthGasAPI);
-export const authorize = doRequest.bind(null, actions.authorize, api.authorize);
+export const authenticate = doRequest.bind(null, actions.authenticate, api.authenticate);
 
 export const fetchCurrentFile = doRequest.bind(null, actions.currentFile, storage.fetchCurrentFile);
 export const postCurrentFile = doRequest.bind(null, actions.saveCurrentFile, storage.postCurrentFile);
 export const deleteCurrentFile = doRequest.bind(null, null, storage.deleteCurrentFile);
-export const fetchToken = doRequest.bind(null, actions.getToken, storage.fetchToken);
+export const fetchToken = doRequest.bind(null, actions.fetchToken, storage.fetchToken);
 export const postToken = doRequest.bind(null, actions.postToken, storage.postToken);
+export const logout = doRequest.bind(null, actions.logout, storage.logout);
 
 
 export function *watchFetchTransaction() {
@@ -172,20 +172,24 @@ export function *watchPostCurrentFile() {
   yield takeEvery(actions.SAVE_CURRENT_FILE[actions.REQUEST], postCurrentFile);
 }
 
-export function *watchFetchToken() {
-  yield takeEvery(actions.GET_TOKEN[actions.REQUEST], fetchToken);
-}
-
-export function *watchPostToken() {
-  yield takeEvery(actions.POST_TOKEN[actions.REQUEST], postToken);
-}
-
 export function *watchFetchEthGas() {
   yield takeEvery(actions.GAS_ORACLE[actions.REQUEST], fetchEthGas);
 }
 
 export function *watchAuthenticate() {
-  yield takeEvery(actions.AUTHORIZE[actions.REQUEST], authorize);
+  yield takeEvery(actions.AUTHENTICATE[actions.REQUEST], authenticate);
+}
+
+export function *watchAuthenticateSuccess() {
+  yield takeEvery(actions.AUTHENTICATE[actions.SUCCESS], postToken);
+}
+
+export function *watchFetchToken() {
+  yield takeEvery(actions.FETCH_TOKEN[actions.REQUEST], fetchToken);
+}
+
+export function *watchLogout() {
+  yield takeEvery(actions.LOGOUT[actions.REQUEST], logout);
 }
 
 function createChannel(socket) {
@@ -297,9 +301,10 @@ export default function *root() {
     fork(watchFetchCurrentFile),
     fork(watchPostCurrentFile),
     fork(watchFetchToken),
-    fork(watchPostToken),
     fork(watchFetchEthGas),
     fork(watchAuthenticate),
+    fork(watchAuthenticateSuccess),
+    fork(watchLogout),
     fork(watchListenGasOracle)
   ]);
 }

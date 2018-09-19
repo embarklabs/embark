@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux';
-import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES} from "../actions";
+import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE} from "../actions";
 
 const BN_FACTOR = 10000;
 const voidAddress = '0x0000000000000000000000000000000000000000';
@@ -83,6 +83,9 @@ const filtrer = {
   },
   gasOracleStats: function(stat, index, _self) {
     return index === 0; // Only keep last one
+  },
+  versions: function(version, index, self) {
+    return index === self.findIndex((v) => v.value === version.value && v.name === version.name);
   }
 };
 
@@ -115,8 +118,8 @@ function entities(state = entitiesDefaultState, action) {
   return state;
 }
 
-function errorMessage(state = null, action) {
-  return action.error || state;
+function errorMessage(_state = null, action) {
+  return action.error || null;
 }
 
 function errorEntities(state = {}, action) {
@@ -146,8 +149,16 @@ function compilingContract(state = false, action) {
   return state;
 }
 
-function token(state = null, action) {
-  return (action.token) ? action.token : state;
+function authentication(state = {}, action) {
+  if (action.type === LOGOUT[SUCCESS]) {
+    return {};
+  }
+
+  if (action.type === AUTHENTICATE[FAILURE]) {
+    return {error: action.error};
+  }
+
+  return (action.token) ? {token: action.token} : state;
 }
 
 const rootReducer = combineReducers({
@@ -156,7 +167,7 @@ const rootReducer = combineReducers({
   compilingContract,
   errorMessage,
   errorEntities,
-  token
+  authentication
 });
 
 export default rootReducer;

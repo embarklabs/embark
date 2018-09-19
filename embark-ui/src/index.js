@@ -6,7 +6,6 @@ import {Provider} from 'react-redux';
 import "tabler-react/dist/Tabler.css";
 import "./general.css";
 import "./slider.css";
-import Layout from "./components/Layout";
 
 import AppContainer from './containers/AppContainer';
 import history from "./history";
@@ -18,9 +17,7 @@ const store = configureStore();
 ReactDOM.render(
   <Provider store={store}>
     <ConnectedRouter history={history}>
-      <Layout>
-        <AppContainer/>
-      </Layout>
+      <AppContainer/>
     </ConnectedRouter>
   </Provider>,
   document.getElementById('root')

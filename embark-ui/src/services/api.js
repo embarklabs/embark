@@ -137,8 +137,8 @@ export function deleteFile(payload) {
   return destroy('/file', {params: payload, token: payload.token});
 }
 
-export function authorize() {
-  return post('/authorize', ...arguments);
+export function authenticate() {
+  return post('/authenticate', ...arguments);
 }
 
 // TODO token for WS?

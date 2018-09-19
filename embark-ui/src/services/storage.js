@@ -18,18 +18,23 @@ export function deleteCurrentFile() {
   });
 }
 
-export function postToken(data) {
+export function postToken({token}) {
   return new Promise(function(resolve) {
-    localStorage.setItem('token', data.token);
-    resolve({response: {data: data.token}});
+    localStorage.setItem('token', token);
+    resolve({response: {data: token}});
   });
 }
 
-export function fetchToken({callback}) {
-  callback = callback || function(){};
+export function fetchToken() {
   return new Promise(function(resolve) {
     const token = localStorage.getItem('token');
-    callback(null, token);
     resolve({response: {data: token}});
+  });
+}
+
+export function logout() {
+  return new Promise(function(resolve) {
+    localStorage.clear();
+    resolve({response: true});
   });
 }

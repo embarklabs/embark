@@ -1,5 +1,13 @@
 import {last} from '../utils/utils';
 
+export function getToken(state) {
+  return state.authentication.token;
+}
+
+export function getAuthenticationError(state) {
+  return state.authentication.error;
+}
+
 export function getAccounts(state) {
   return state.entities.accounts;
 }

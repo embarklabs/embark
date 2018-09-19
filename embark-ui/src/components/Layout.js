@@ -13,37 +13,49 @@ const navBarItems = [
   {value: "Documentation", to: "/embark/documentation", icon: "file-text", LinkComponent: NavLink}
 ];
 
-const Layout = (props) => (
+const Layout = ({children, logout}) => (
   <Site.Wrapper
     headerProps={{
       href: "/embark",
       alt: "Embark",
       imageURL: logo,
       navItems: (
-        <Nav.Item type="div" className="d-none d-md-flex">
-          <Button
-            href="https://github.com/embark-framework/embark"
-            target="_blank"
-            outline
-            size="sm"
-            RootComponent="a"
-            color="primary"
-          >
-            Source code
-          </Button>
-        </Nav.Item>
+        <React.Fragment>
+          <Nav.Item type="div" className="d-none d-md-flex">
+            <Button
+              href="https://github.com/embark-framework/embark"
+              target="_blank"
+              outline
+              size="sm"
+              RootComponent="a"
+              color="primary"
+            >
+              Source code
+            </Button>
+          </Nav.Item>
+          <Nav.Item type="div" className="d-none d-md-flex">
+            <Button
+              outline
+              onClick={logout}
+              size="sm"
+              color="danger">
+              Logout
+            </Button> 
+          </Nav.Item>
+        </React.Fragment>
       )
     }}
     navProps={{itemsObjects: navBarItems}}
   >
     <Container>
-      {props.children}
+      {children}
     </Container>
   </Site.Wrapper>
 );
 
 Layout.propTypes = {
-  children: PropTypes.element
+  children: PropTypes.element,
+  logout: PropTypes.func
 };
 
 export default Layout;
