@@ -4,3 +4,4 @@ dist/
 config/production/password
 config/livenet/password
 coverage/
+chains.json
