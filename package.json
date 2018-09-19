@@ -46,6 +46,7 @@
     "eth-lib": "^0.2.8",
     "ethereumjs-wallet": "0.6.0",
     "express": "^4.16.3",
+    "express-ws": "^4.0.0",
     "file-loader": "^1.1.5",
     "finalhandler": "^1.1.1",
     "flatted": "^0.2.3",
@@ -93,8 +94,7 @@
     "viz.js": "^1.8.1",
     "web3": "1.0.0-beta.36",
     "webpack": "^4.16.1",
-    "window-size": "^1.1.0",
-    "ws": "^6.0.0"
+    "window-size": "^1.1.0"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
