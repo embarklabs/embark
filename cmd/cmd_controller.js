@@ -314,6 +314,7 @@ class EmbarkController {
             web3Endpoint: web3Config.providerUrl
           };
           const provider = new Provider(providerOptions);
+          web3.eth.defaultAccount = web3Config.defaultAccount;
           provider.startWeb3Provider(() => {
             engine.events.emit("runcode:register", "web3", web3);
             async.each(commands, ({varName, code}, next) => {
