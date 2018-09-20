@@ -52,7 +52,7 @@ module.exports = {
     mineWhenNeeded: true,
     // -- genesisBlock --
     // This option is only valid when mineWhenNeeded is true (which is only valid if isDev is false).
-    // When enabled, geth uses POW to mine transactions at it would normally, instead of using POA as it does in --dev mode.
+    // When enabled, geth uses POW to mine transactions as it would normally, instead of using POA as it does in --dev mode.
     // On the first `embark blockchain or embark run` after this option is enabled, geth will create a new chain with a 
     // genesis block, which can be configured using the `genesisBlock` configuration option below.
     genesisBlock: "config/privatenet/genesis.json", // Genesis block to initiate on first creation of a development node
