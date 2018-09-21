@@ -3,11 +3,12 @@
   "version": "3.2.0-develop",
   "description": "Embark is a framework that allows you to easily develop and deploy DApps",
   "scripts": {
-    "lint": "./node_modules/.bin/eslint lib/",
-    "test": "mocha test/ --no-timeouts --exit",
-    "testdapp_1": "cd test_apps/test_app/ && npm install && node ../../bin/embark test",
-    "testdapp_2": "cd test_apps/contracts_app/ && npm install && node ../../bin/embark test",
-    "fulltest": "npm run lint && npm run test && npm run testdapp_1 && npm run testdapp_2"
+    "lint": "eslint lib/",
+    "test": "npm-run-all lint test:*",
+    "test:embark": "mocha test/ --no-timeouts --exit",
+    "test:test_app": "cross-env DAPP=\"test_app\" npm run test_dapp",
+    "test:contracts_app": "cross-env DAPP=\"contracts_app\" npm run test_dapp",
+    "test_dapp": "cross-env-shell \"cd test_apps/$DAPP && npm install && npm test\""
   },
   "bin": {
     "embark": "./bin/embark"
@@ -109,10 +110,12 @@
   "homepage": "https://embark.status.im/",
   "license": "MIT",
   "devDependencies": {
+    "chai": "4.1.2",
+    "cross-env": "5.2.0",
     "eslint": "4.13.1",
     "mocha-sinon": "1.2.0",
-    "sinon": "4.5.0",
-    "chai": "4.1.2"
+    "npm-run-all": "4.1.3",
+    "sinon": "4.5.0"
   },
   "engines": {
     "node": ">=8.11.3",
