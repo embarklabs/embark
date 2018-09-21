@@ -2,11 +2,9 @@ import PropTypes from "prop-types";
 import {connect} from 'react-redux';
 import React, {Component} from 'react';
 import {withRouter} from "react-router-dom";
-
 import routes from '../routes';
 import Unauthenticated from '../components/Unauthenticated';
 import Layout from "../components/Layout";
-import queryString from 'query-string';
 
 import {
   initBlockHeader,
@@ -17,6 +15,8 @@ import {
 } from '../actions';
 
 import { getToken, getAuthenticationError } from '../reducers/selectors';
+
+const qs = require('qs');
 
 class AppContainer extends Component {
   constructor (props) {
@@ -29,7 +29,7 @@ class AppContainer extends Component {
     if (!this.props.location.search) {
       return;
     }
-    const token = queryString.parse(this.props.location.search).token;
+    const token = qs.parse(this.props.location.search, {ignoreQueryPrefix: true}).token;
     if (token === this.props.token) {
       return;
     }
