@@ -94,7 +94,7 @@ class Cmd {
       .description(__('New Application'))
       .option('--simple', __('create a barebones project meant only for contract development'))
       .option('--locale [locale]', __('language to use (default: en)'))
-      .option('--template [url]', __('download template from a GitHub repository'))
+      .option('--template [name/url]', __('download a known template given its name or from a GitHub repository'))
       .action(function(name, options) {
         i18n.setOrDetectLocale(options.locale);
         if (name === undefined) {
@@ -300,7 +300,7 @@ class Cmd {
   upload() {
     program
       .command('upload [environment]')
-      .option('--ens [ensDomain]', __('ENS domain to associate to'))
+      //.option('--ens [ensDomain]', __('ENS domain to associate to'))
       .option('--logfile [logfile]', __('filename to output logs (default: %s)', 'none'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'debug')
       .option('--locale [locale]', __('language to use (default: en)'))
@@ -401,7 +401,7 @@ class Cmd {
       .action(function(cmd) {
         console.log((__('unknown command') + ' "%s"').red, cmd);
         let utils = require('../lib/utils/utils.js');
-        let dictionary = ['new', 'demo', 'build', 'run', 'blockchain', 'simulator', 'test', 'upload', 'version'];
+        let dictionary = ['new', 'demo', 'build', 'run', 'blockchain', 'simulator', 'test', 'upload', 'version', 'console', 'eject-webpack', 'graph', 'help', 'reset'];
         let suggestion = utils.proposeAlternative(cmd, dictionary);
         if (suggestion) {
           console.log((__('did you mean') + ' "%s"?').green, suggestion);
