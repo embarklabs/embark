@@ -314,9 +314,9 @@ class Monitor {
         cursorBlink: true,
         padding: 0,
         width: '100%',
-        height: '8%',
-        left: '0%',
-        top: '94%',
+        height: 3,
+        left: 0,
+        top: '100%-3',
         border: 'line',
         style: {
             fg: 'default',
