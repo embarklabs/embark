@@ -26,6 +26,8 @@
     "@babel/preset-env": "7.0.0-rc.1",
     "@babel/preset-react": "7.0.0-rc.1",
     "@babel/runtime-corejs2": "7.0.0-rc.1",
+    "@ledgerhq/hw-transport-u2f": "^4.21.0",
+    "@ledgerhq/web3-subprovider": "^4.21.0",
     "ascii-table": "0.0.9",
     "async": "^2.0.1",
     "babel-loader": "8.0.0-beta.4",
