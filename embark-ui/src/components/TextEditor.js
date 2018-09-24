@@ -1,52 +1,61 @@
 import React from 'react';
-import AceEditor from 'react-ace';
-import 'brace/mode/javascript';
-import 'brace/theme/tomorrow_night_blue';
-import 'ace-mode-solidity/build/remix-ide/mode-solidity';
+import MonacoEditor from 'react-monaco-editor';
 import PropTypes from 'prop-types';
 
 class TextEditor extends React.Component {
+  language() {
+    switch(this.props.file.name.split('.').pop()) {
+      case 'css':
+        return 'css';
+      case 'sol':
+        return 'sol';
+      case 'html':
+        return 'html';
+      case 'json':
+        return 'json';
+      default:
+        return 'javascript';
+    }
+  }
+
   extractRowCol(errorMessage) {
     const errorSplit = errorMessage.split(':');
     if (errorSplit.length >= 3) {
-      return {row: errorSplit[1], col: errorSplit[2]};
+      return {row: parseInt(errorSplit[1], 10), col: parseInt(errorSplit[2], 10)};
     }
     return {row: 0, col: 0};
   }
 
-  annotations() {
+  componentDidUpdate() {
     const {errors, warnings} = this.props.contractCompile;
-    return [].concat(errors).concat(warnings).filter((e) => e).map((e) => {
-      const rowCol = this.extractRowCol(e.formattedMessage);
-      return Object.assign({}, {
-        row: rowCol.row - 1,
-        column: rowCol.col - 1,
-        text: e.formattedMessage,
-        type: e.severity
-      });
+    const markers = [].concat(errors).concat(warnings).filter((e) => e).map((e) => {
+      const {row, col} = this.extractRowCol(e.formattedMessage);
+      return {
+        startLineNumber: row,
+        startColumn: col,
+        endLineNumber: row,
+        endColumn: col + 1,
+        message: e.formattedMessage,
+        severity: e.severity
+      };
     });
+    this.state.monaco.editor.setModelMarkers(this.state.editor.getModel(), 'test', markers);
+  }
+
+  editorDidMount(editor, monaco) {
+    this.setState({editor, monaco});
   }
 
   render() {
     return (
-      <AceEditor
-        mode="solidity"
-        theme="tomorrow_night_blue"
-        name="fiddle"
-        height="60em"
-        width="100%"
+      <MonacoEditor
+        width="800"
+        height="600"
+        language={this.language()}
+        theme="vs-dark"
+        value={this.props.file.content}
         onChange={this.props.onFileContentChange}
-        value={this.props.value}
-        showGutter={true}
-        annotations={this.annotations()}
-        setOptions={{
-          useWorker: false
-        }}
-        editorProps={{
-          $blockScrolling: Infinity,
-          enableLiveAutocompletion:true,
-          highlightSelectedWord: true
-        }}
+        editorDidMount={(editor, monaco) => this.editorDidMount(editor, monaco)}
       />
     );
   }
@@ -54,7 +63,7 @@ class TextEditor extends React.Component {
 
 TextEditor.propTypes = {
   onFileContentChange: PropTypes.func,
-  value: PropTypes.string,
+  file: PropTypes.object,
   contractCompile: PropTypes.object
 };
 

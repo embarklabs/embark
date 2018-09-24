@@ -18,7 +18,7 @@ class ContractSourceContainer extends Component {
     return (
       <Page.Content title={`${this.props.contract.className} Source`}>
         <DataWrapper shouldRender={this.props.file !== undefined } {...this.props} render={({file}) => (
-          <TextEditor value={file.content} contractCompile={{}} />
+          <TextEditor file={file} contractCompile={{}} />
         )} />
       </Page.Content>
     );

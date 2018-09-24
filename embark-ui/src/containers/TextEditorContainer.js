@@ -107,7 +107,7 @@ class TextEditorContainer extends Component {
         <Grid.Row className="my-2">
           {this.renderToolbar()}
         </Grid.Row>
-        <TextEditor value={this.state.currentFile.content}
+        <TextEditor file={this.state.currentFile}
                     contractCompile={this.props.contractCompile}
                     onFileContentChange={(newContent) => this.onFileContentChange(newContent)} />
         {this.renderContractFooter()}
