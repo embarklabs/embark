@@ -40,13 +40,49 @@ class Monitor {
       read() {}
     });
 
+    const logText = this.logText;
     const terminal = this.terminal;
     const terminalWritableStream = new stream.Writable({
       write(chunk, encoding, next) {
+        // const terminalPrompt = "Embark (" + this.env + ") > ";
+        // const chunkString = chunk.toString();
+
+        // if (chunkString.contains(terminalPrompt)) {
+        //     // terminal.write()
+        // }
+        // else {
+
+        // }
+
+        // const regex = new RegExp(`(.*)(${terminalPrompt})`);
+        // const groups = regex.exec(chunkString);
+
+        // if (groups === null) {
+        //   terminal.write(chunk.toString());
+        // }
+        // else {
+        //   logText.log(groups[1]);
+        //   terminal.write(groups[2]);
+        // }
+
         terminal.write(chunk.toString());
+
         next();
       }
     });
+
+    // process.stderr.on('data', (data) => {
+    //   this.logText.log(data.toString());
+    //   // process.exit(0);
+    // });
+
+    // process.stderr.on('data', (data) => {
+    //   require('fs').writeFileSync('temp-repl-output', 'monkey-12345');
+    // });
+
+    // setTimeout(() => {
+    //   console.error('monkey')
+    // }, 5000);
 
     const repl = new REPL({
       events: this.events,

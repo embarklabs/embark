@@ -32,6 +32,9 @@ class Dashboard {
     this.events.on('status', monitor.setStatus.bind(monitor));
     this.events.on('servicesState', monitor.availableServices.bind(monitor));
 
+    //TODO Should we setup a handler for logger:log or something similar?
+    //TODO So everywhere that we call logText.this.logger, we can just raise an event?
+
     this.logger.info('========================'.bold.green);
     this.logger.info((__('Welcome to Embark') + ' ' + this.version).yellow.bold);
     this.logger.info('========================'.bold.green);
