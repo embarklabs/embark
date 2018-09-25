@@ -10,16 +10,25 @@
     }
   },
   "myenv": {
-    "gas": "auto",
+    "gas": "400 Kwei",
     "contracts": {
       "SimpleStorage": {
-        "gas": 123456
+        "gas": "123 Kwei",
+        "gasPrice": "1 Kwei"
       },
       "Token": {
         "args": [
           200
         ]
       }
+    },
+    "deployment": {
+      "accounts": [
+        {
+          "mnemonic": "12 word mnemonic",
+          "balance": "5000 Mwei"
+        }
+      ]
     }
   }
 }
