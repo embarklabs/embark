@@ -112,5 +112,15 @@ describe('TemplateGenerator', function () {
 
     });
 
+    describe('with unsupported template specifier', function () {
+
+      it('raises an exception', function () {
+        assert.throws(() => templateGenerator.getExternalProject("bad://format"), /Unsupported/);
+        assert.throws(() => templateGenerator.getExternalProject("bad://format#/also/bad"), /Unsupported/);
+        assert.throws(() => templateGenerator.getExternalProject(/force an error/), Error);
+      });
+
+    });
+
   });
 });
