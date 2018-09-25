@@ -10,7 +10,8 @@ const navBarItems = [
   {value: "Contracts", to: "/embark/contracts", icon: "box", LinkComponent: NavLink},
   {value: "Explorer", to: "/embark/explorer/accounts", icon: "activity", LinkComponent: NavLink},
   {value: "Fiddle", to: "/embark/fiddle", icon: "codepen", LinkComponent: NavLink},
-  {value: "Documentation", to: "/embark/documentation", icon: "file-text", LinkComponent: NavLink}
+  {value: "Documentation", to: "/embark/documentation", icon: "file-text", LinkComponent: NavLink},
+  {value: "Utils", to: "/embark/utilities/converter", icon: "settings", LinkComponent: NavLink}
 ];
 
 const Layout = ({children, logout}) => (

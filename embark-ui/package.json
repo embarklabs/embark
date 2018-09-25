@@ -9,6 +9,7 @@
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
     "connected-react-router": "^4.3.0",
+    "ethereumjs-units": "0.2.0",
     "history": "^4.7.2",
     "prop-types": "^15.6.2",
     "qs": "^6.5.2",
