@@ -31,7 +31,8 @@ describe('embark.DevFunds', function () {
     account: {
       password: './test/test1/password',
       numAccounts: 3,
-      balance: "5 ether"
+      // this conversion is normally done when constructing a Config object
+      balance: utils.getWeiBalanceFromString("5 ether", Web3)
     },
     bootnodes: "",
     wsApi: ["eth", "web3", "net", "shh", "debug"],
@@ -109,7 +110,6 @@ describe('embark.DevFunds', function () {
       });
 
       devFunds.fundAccounts(devFunds.balance, (errFundAccounts) => {
-
         assert.equal(errFundAccounts, null);
 
         // inject response for web3.eth.getAccounts
@@ -118,7 +118,7 @@ describe('embark.DevFunds', function () {
 
         web3.eth.getAccounts().then((accts) => {
 
-          const weiFromConfig = utils.getWeiBalanceFromString(config.account.balance, web3);
+          const weiFromConfig = config.account.balance;
 
           async.each(accts, (acct, cb) => {
 
