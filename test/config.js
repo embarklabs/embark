@@ -36,20 +36,87 @@ describe('embark.Config', function () {
 
       assert.deepEqual(config.blockchainConfig, expectedConfig);
     });
+
+    it('should convert Ether units', function () {
+      let expectedConfig = {
+        "enabled": true,
+        "networkType": "custom",
+        "genesisBlock": "config/development/genesis.json",
+        "datadir": ".embark/development/datadir",
+        "isDev": false,
+        "targetGasLimit": "300000",
+        "gasPrice": "8000000",
+        "mineWhenNeeded": true,
+        "nodiscover": true,
+        "rpcHost": "localhost",
+        "rpcPort": 8545,
+        "rpcCorsDomain": "http://localhost:8000",
+        "wsOrigins": "auto",
+        "account": {
+          "password": "config/development/password",
+          "balance": "3000000000000000000"
+        }
+      };
+
+      let config = new Config({
+        env: 'unitenv',
+        configDir: './test/test1/config/',
+        events: new Events()
+      });
+      config.plugins = new Plugins({plugins: {}});
+      config.logger = new TestLogger({});
+      config.loadBlockchainConfigFile();
+
+      assert.deepEqual(config.blockchainConfig, expectedConfig);
+    });
+
+    it('should accept unitless gas values', function () {
+      let expectedConfig = {
+        "enabled": true,
+        "networkType": "custom",
+        "genesisBlock": "config/development/genesis.json",
+        "datadir": ".embark/development/datadir",
+        "isDev": false,
+        "targetGasLimit": "20000000",
+        "gasPrice": "8000000",
+        "mineWhenNeeded": true,
+        "nodiscover": true,
+        "rpcHost": "localhost",
+        "rpcPort": 8545,
+        "rpcCorsDomain": "http://localhost:8000",
+        "wsOrigins": "auto",
+        "account": {
+          "password": "config/development/password",
+          "balance": "3000000000000000000"
+        }
+      };
+
+      let config = new Config({
+        env: 'unitlessenv',
+        configDir: './test/test1/config/',
+        events: new Events()
+      });
+      config.plugins = new Plugins({plugins: {}});
+      config.logger = new TestLogger({});
+      config.loadBlockchainConfigFile();
+
+      assert.deepEqual(config.blockchainConfig, expectedConfig);
+    });
   });
 
   describe('#loadContractsConfigFile', function () {
     it('should load contract config correctly', function () {
       config.loadContractsConfigFile();
       let expectedConfig = {
-        versions: {'web3': '1.0.0-beta', solc: '0.4.25'},
-        deployment: {host: 'localhost', port: 8545, type: 'rpc'},
+        versions: {'web3': '1.0.0-beta', solc: '0.4.17'},
+        deployment: {host: 'localhost', port: 8545, type: 'rpc', "accounts": [{"mnemonic": "12 word mnemonic", "balance": "5000000000"}]},
         dappConnection: ['$WEB3', 'localhost:8545'],
-        "gas": "auto",
+        "gas": "400000",
         "contracts": {
           "SimpleStorage": {
             "args": [100],
-            "gas": 123456
+            "gas": "123000",
+            "gasPrice": "1000"
           },
           "Token": {
             "args": [200]

@@ -13,6 +13,40 @@
       "password": "config/development/password"
     }
   },
+  "unitenv": {
+    "networkType": "custom",
+    "genesisBlock": "config/development/genesis.json",
+    "datadir": ".embark/development/datadir",
+    "isDev": false,
+    "gasPrice": "8 Mwei",
+    "mineWhenNeeded": true,
+    "nodiscover": true,
+    "rpcHost": "localhost",
+    "rpcPort": 8545,
+    "rpcCorsDomain": "http://localhost:8000",
+    "targetGasLimit": "300 Kwei",
+    "account": {
+      "password": "config/development/password",
+      "balance": "3 ether"
+    }
+  },
+  "unitlessenv": {
+      "networkType": "custom",
+      "genesisBlock": "config/development/genesis.json",
+      "datadir": ".embark/development/datadir",
+      "isDev": false,
+      "gasPrice": "8000000",
+      "mineWhenNeeded": true,
+      "nodiscover": true,
+      "rpcHost": "localhost",
+      "rpcPort": 8545,
+      "rpcCorsDomain": "http://localhost:8000",
+      "targetGasLimit": "20000000",
+      "account": {
+        "password": "config/development/password",
+        "balance": "3000000000000000000"
+    }
+  },
   "testnet": {
     "networkType": "testnet",
     "rpcHost": "localhost",
