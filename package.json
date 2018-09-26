@@ -1,6 +1,6 @@
 {
   "name": "embark",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "Embark is a framework that allows you to easily develop and deploy DApps",
   "scripts": {
     "lint": "eslint lib/",
