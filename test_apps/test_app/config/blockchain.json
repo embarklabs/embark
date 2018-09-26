@@ -44,6 +44,13 @@
       "password": "config/ropsten/password"
     }
   },
+  "infura": {
+    "networkType": "testnet",
+    "syncMode": "fast",
+    "account": {
+      "password": "config/ropsten/password"
+    }
+  },
   "rinkeby": {
     "networkType": "rinkeby",
     "syncMode": "fast",

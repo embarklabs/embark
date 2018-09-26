@@ -14,8 +14,7 @@ module.exports = {
                               // Balances are in Wei, but you can specify the unit with its name
         },
         {
-          privateKeyFile: "path/to/file", // Either a keystore or a list of keys, separated by , or ;
-          password: "passwordForTheKeystore" // Needed to decrypt the keystore file
+          privateKeyFile: "path/to/file" // You can put more than one key, separated by , or ;
         },
         {
           mnemonic: "12 word mnemonic",
@@ -35,38 +34,35 @@ module.exports = {
     contracts: {
       SimpleStorage: {
         fromIndex: 0,
-        args: [100]
+        args: [100],
+        onDeploy: ["console.log('===========> onDeploy executed for SimpleStorage')"]
+      },
+      SimpleStorage2: {
+        instanceOf: "SimpleStorage",
+        args: [200],
+        onDeploy: ["console.log('===========> onDeploy executed for SimpleStorage2')"]
+      },
+      SimpleStorage3: {
+        instanceOf: "SimpleStorage",
+        args: [300],
+        onDeploy: ["console.log('===========> onDeploy executed for SimpleStorage3')"]
       }
     }
   },
-
-  // default environment, merges with the settings in default
-  // assumed to be the intended environment by `embark run`
-  development: {
-    dappConnection: [
-      "ws://localhost:8546",
-      "http://localhost:8545",
-      "$WEB3"  // uses pre existing web3 object if available (e.g in Mist)
-    ]
-  },
-
-  // merges with the settings in default
-  // used with "embark run privatenet"
-  privatenet: {
-  },
-
-  // merges with the settings in default
-  // used with "embark run testnet"
-  testnet: {
-  },
-
-  // merges with the settings in default
-  // used with "embark run livenet"
-  livenet: {
-  },
-
-  // you can name an environment with specific settings and then specify with
-  // "embark run custom_name" or "embark blockchain custom_name"
-  //custom_name: {
-  //}
+  infura: {
+    deployment: {
+      accounts: [
+        {
+      
+          mnemonic: "See https://www.pivotaltracker.com/story/show/160712326 for mnemonic",
+          numAddresses: "2"
+        }
+      ],
+      
+      host: 'See https://www.pivotaltracker.com/story/show/160712326 for endpoint',
+      port: false,
+      protocol: 'https',
+      type: 'rpc'
+    }
+  }
 };

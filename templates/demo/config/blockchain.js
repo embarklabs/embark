@@ -91,6 +91,14 @@ module.exports = {
       password: "config/livenet/password"
     }
   },
+  infura:{
+    networkType: "testnet",
+    syncMode: "light",
+    account: {
+      password: "config/testnet/password"
+    }
+  },
+
 
   // you can name an environment with specific settings and then specify with
   // "embark run custom_name" or "embark blockchain custom_name"
