@@ -487,9 +487,7 @@ class EmbarkController {
         engine.startService("deployment");
         engine.startService("storage");
         engine.startService("codeGenerator");
-        if(options.ensDomain) {
-          engine.startService("namingSystem");
-        }
+        engine.startService("namingSystem");
         callback();
       },
       function listLoadedPlugin(callback) {
