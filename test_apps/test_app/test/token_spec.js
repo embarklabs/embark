@@ -5,6 +5,7 @@ const MyToken = require('Embark/contracts/MyToken');
 const MyToken2 = require('Embark/contracts/MyToken2');
 const AlreadyDeployedToken = require('Embark/contracts/AlreadyDeployedToken');
 const Test = require('Embark/contracts/Test');
+const SomeContract = require('Embark/contracts/SomeContract');
 
 config({
   contracts: {
@@ -40,6 +41,7 @@ config({
       }
     },
     SomeContract: {
+      deployIf: "await MyToken.methods.isAvailable().call()",
       args: [
         ["$MyToken2", "$SimpleStorage"],
         100
@@ -78,5 +80,9 @@ describe("Token", function () {
   it("should use onDeploy", async function () {
     let result = await Test.methods.addr().call();
     assert.strictEqual(result, MyToken.options.address);
+  });
+
+  it("should not deploy if deployIf returns false", async function() {
+    assert.ok(!SomeContract.options.address);
   });
 });

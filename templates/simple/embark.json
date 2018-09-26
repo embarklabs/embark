@@ -10,7 +10,14 @@
     "webserver": false
   },
   "versions": {
-    "solc": "0.4.24"
+    "solc": "0.4.25"
   },
-  "plugins": {}
+  "plugins": {
+  },
+  "options": {
+    "solc": {
+      "optimize": true,
+      "optimize-runs": 200
+    }
+  }
 }

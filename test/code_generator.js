@@ -1,5 +1,5 @@
 /*globals describe, it*/
-let CodeGenerator = require('../lib/contracts/code_generator.js');
+let CodeGenerator = require('../lib/modules/code_generator');
 let assert = require('assert');
 
 function replaceCRLF(string) {
@@ -29,13 +29,20 @@ describe('embark.CodeGenerator', function() {
       }
     ]
 
-    let generator = new CodeGenerator({blockchainConfig: {}});
+    const TestEvents = {
+      request: (cmd, cb) => {
+        cb(currentSolcVersion);
+      },
+      setCommandHandler: () => {
+      }
+    };
+    let generator = new CodeGenerator({config: {blockchainConfig: {}}, events: TestEvents}, {});
 
     describe('with EmbarkJS', function() {
       let withEmbarkJS = true;
 
       it('should generate contract code', function() {
-        var contractCode = "\n__mainContext.__loadManagerInstance.execWhenReady(function() {\n  __mainContext.SimpleStorage = new EmbarkJS.Contract({abi: [{\"constant\":true,\"inputs\":[],\"name\":\"storedData\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"x\",\"type\":\"uint256\"}],\"name\":\"set\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"get\",\"outputs\":[{\"name\":\"retVal\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"inputs\":[{\"name\":\"initialValue\",\"type\":\"uint256\"}],\"type\":\"constructor\"}], address: '0x123', code: '12345', gasEstimates: 12000});\n\n});\n__mainContext.__loadManagerInstance.execWhenReady(function() {\n  __mainContext.Foo = new EmbarkJS.Contract({abi: [{\"constant\":true,\"inputs\":[],\"name\":\"storedData\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"x\",\"type\":\"uint256\"}],\"name\":\"set\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"get\",\"outputs\":[{\"name\":\"retVal\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"inputs\":[{\"name\":\"initialValue\",\"type\":\"uint256\"}],\"type\":\"constructor\"}], address: '0x124', code: '123456', gasEstimates: 12000});\n\n});\n";
+        var contractCode = "\n__mainContext.__loadManagerInstance.execWhenReady(function() {\n  __mainContext.SimpleStorage = new EmbarkJS.Blockchain.Contract({abi: [{\"constant\":true,\"inputs\":[],\"name\":\"storedData\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"x\",\"type\":\"uint256\"}],\"name\":\"set\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"get\",\"outputs\":[{\"name\":\"retVal\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"inputs\":[{\"name\":\"initialValue\",\"type\":\"uint256\"}],\"type\":\"constructor\"}], address: '0x123', code: '12345', gasEstimates: 12000});\n\n});\n__mainContext.__loadManagerInstance.execWhenReady(function() {\n  __mainContext.Foo = new EmbarkJS.Blockchain.Contract({abi: [{\"constant\":true,\"inputs\":[],\"name\":\"storedData\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"x\",\"type\":\"uint256\"}],\"name\":\"set\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"get\",\"outputs\":[{\"name\":\"retVal\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"inputs\":[{\"name\":\"initialValue\",\"type\":\"uint256\"}],\"type\":\"constructor\"}], address: '0x124', code: '123456', gasEstimates: 12000});\n\n});\n";
         assert.strictEqual(replaceCRLF(generator.generateContracts(contracts, withEmbarkJS)), contractCode);
       });
     });

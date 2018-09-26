@@ -1,6 +1,7 @@
 /*global contract, config, it, assert, web3*/
 const SimpleStorage = require('Embark/contracts/SimpleStorage');
 let accounts;
+const Utils = require('embarkjs').Utils;
 
 config({
   contracts: {
@@ -21,10 +22,15 @@ contract("SimpleStorage", function () {
     assert.strictEqual(parseInt(result, 10), 100);
   });
 
-  it("set storage value", async function () {
-    await SimpleStorage.methods.set(150).send();
-    let result = await SimpleStorage.methods.get().call();
-    assert.strictEqual(parseInt(result, 10), 499650);
+  it("set storage value", function (done) {
+    Utils.secureSend(web3, SimpleStorage.methods.set(150), {}, false, async function(err) {
+      if (err) {
+        return done(err);
+      }
+      let result = await SimpleStorage.methods.get().call();
+      assert.strictEqual(parseInt(result, 10), 150);
+      done();
+    });
   });
 
   it("should set defaultAccount", async function () {
@@ -38,14 +44,14 @@ contract("SimpleStorage", function () {
   });
 
   it('listens to events', function (done) {
-    SimpleStorage.once('EventOnSet2', async function(error, _result){
+    SimpleStorage.once('EventOnSet2', async function (error, _result) {
       assert.strictEqual(error, null);
       let result = await SimpleStorage.methods.get().call();
       assert.strictEqual(parseInt(result, 10), 150);
-      done();
+      done(error);
     });
 
-    SimpleStorage.methods.set2(150, 100).send();
+    SimpleStorage.methods.set2(150).send();
   });
 
 });

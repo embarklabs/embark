@@ -22,6 +22,14 @@ class Whisper extends React.Component {
     this.setState(this.state);
   }
 
+  checkEnter(e, func) {
+    if (e.key !== 'Enter') {
+      return;
+    }
+    e.preventDefault();
+    func.apply(this, [e]);
+  }
+
   sendMessage (e) {
     e.preventDefault();
     EmbarkJS.Messages.sendMessage({topic: this.state.channel, data: this.state.message});
@@ -68,7 +76,7 @@ class Whisper extends React.Component {
             </React.Fragment> : ''
         }
         <h3>Listen To channel</h3>
-        <Form inline>
+        <Form inline onKeyDown={(e) => this.checkEnter(e, this.listenToChannel)}>
           <FormGroup>
             <FormControl
               type="text"
@@ -87,7 +95,7 @@ class Whisper extends React.Component {
         </Form>
 
         <h3>Send Message</h3>
-        <Form inline>
+        <Form inline onKeyDown={(e) => this.checkEnter(e, this.sendMessage)}>
           <FormGroup>
             <FormControl
               type="text"

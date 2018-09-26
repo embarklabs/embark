@@ -20,6 +20,7 @@ test_apps/contracts_app/config/production/password
 test_apps/contracts_app/node_modules/
 test_apps/contracts_app/chains.json
 .idea
+.vscode
 .eslintrc.json
 .embark/
 NOTES

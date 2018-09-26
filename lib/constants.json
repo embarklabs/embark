@@ -7,14 +7,11 @@
     "run": "run",
     "upload": "upload",
     "build": "build",
+    "console": "console",
     "graph": "graph",
     "test": "test",
     "reset": "reset",
     "any": "any"
-  },
-  "events": {
-    "contractFilesChanged": "contractFilesChanged",
-    "contractConfigChanged": "contractConfigChanged"
   },
   "process": {
     "processLaunchRequest": "process:launch-request",
@@ -34,9 +31,16 @@
   },
   "blockchain": {
     "blockchainReady": "blockchainReady",
+    "blockchainExit": "blockchainExit",
     "init": "init",
     "initiated": "initiated",
-    "servicePortOnProxy": 10
+    "servicePortOnProxy": 10,
+    "networkIds": {
+      "livenet": 1,
+      "testnet": 3,
+      "ropsten": 3,
+      "rinkeby": 4
+    }
   },
   "storage": {
     "init": "init",

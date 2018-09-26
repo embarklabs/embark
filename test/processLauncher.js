@@ -1,8 +1,9 @@
 /*global describe, it, before, beforeEach*/
 const assert = require('assert');
 const sinon = require('sinon');
-const TestLogger = require('../lib/tests/test_logger.js');
-const ProcessLauncher = require('../lib/process/processLauncher');
+const TestLogger = require('../lib/tests/test_logger');
+const path = require('path');
+const ProcessLauncher = require('../lib/core/processes/processLauncher');
 
 describe('ProcessWrapper', () => {
   let processLauncher;
@@ -11,7 +12,7 @@ describe('ProcessWrapper', () => {
     sinon.stub(ProcessLauncher.prototype, '_subscribeToMessages');
     processLauncher = new ProcessLauncher({
       logger: new TestLogger({}),
-      modulePath: 'test.js'
+      modulePath: path.join(__dirname, 'test.js')
     });
   });
 

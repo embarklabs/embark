@@ -3,7 +3,7 @@ contract AnotherStorage {
   address public simpleStorageAddress;
   address simpleStorageAddress2;
 
-  function AnotherStorage(address addr) public {
+  constructor(address addr) public {
     simpleStorageAddress = addr;
   }
 

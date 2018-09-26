@@ -1,6 +1,6 @@
 /*globals describe, it*/
-let ContractsManager = require('../lib/contracts/contracts.js');
-let Compiler = require('../lib/contracts/compiler.js');
+let ContractsManager = require('../lib/modules/contracts_manager/index.js');
+let Compiler = require('../lib/modules/compiler/');
 let Logger = require('../lib/core/logger.js');
 let File = require('../lib/core/file.js');
 let TestLogger = require('../lib/tests/test_logger.js');
@@ -19,7 +19,8 @@ const currentSolcVersion = require('../package.json').dependencies.solc;
 const TestEvents = {
   request: (cmd, cb) => {
     cb(currentSolcVersion);
-  }
+  },
+  emit: (_ev, _data) => {}
 };
 
 describe('embark.Contracts', function() {
@@ -29,7 +30,15 @@ describe('embark.Contracts', function() {
       logger: new TestLogger({}),
       events: TestEvents,
       config: {
-        contractDirectories: ['app/contracts/']
+        contractDirectories: ['app/contracts/'],
+        embarkConfig: {
+          options: {
+            solc: {
+              "optimize": true,
+              "optimize-runs": 200
+            }
+          }
+        }
       }
     });
     let ipcObject = new Ipc({
@@ -37,18 +46,31 @@ describe('embark.Contracts', function() {
     });
     plugins.loadInternalPlugin('solidity', {ipc: ipcObject});
 
-    let compiler = new Compiler({plugins: plugins, logger: plugins.logger});
     let events = new Events();
-    events.setCommandHandler("compiler:contracts", function(contractFiles, cb) {
-      compiler.compile_contracts(contractFiles, cb);
-    });
+    let embarkObject = {
+      events: events,
+      logger: plugins.logger,
+      embarkConfig: {
+        options: {
+          solc: {
+            "optimize": true,
+            "optimize-runs": 200
+          }
+        }
+      }
+    }
+
+    let compiler = new Compiler(embarkObject, {plugins: plugins});
 
     events.setCommandHandler("config:contractsConfig", function(cb) {
       cb(contractsConfig);
     });
 
     events.setCommandHandler("config:contractsFiles", (cb) => {
-      cb([]);
+      cb([
+        readFile('test/contracts/simple_storage.sol'),
+        readFile('test/contracts/token.sol')
+      ]);
     });
 
     events.setCommandHandler("blockchain:gasPrice", (cb) => {
@@ -84,16 +106,13 @@ describe('embark.Contracts', function() {
       }
     };
 
-    let contractsManager = new ContractsManager({
-      plugins: plugins,
-      contractFiles:  [
-        readFile('test/contracts/simple_storage.sol'),
-        readFile('test/contracts/token.sol')
-      ],
-      contractDirectories: ['app/contracts'],
-      contractsConfig: contractsConfig,
+    let embarkObj = {
       logger: new Logger({}),
       events: events
+    };
+
+    let contractsManager = new ContractsManager(embarkObj, {
+      contractDirectories: ['app/contracts']
     });
 
     describe('#build', function() {
@@ -138,7 +157,15 @@ describe('embark.Contracts', function() {
       logger: new TestLogger({}),
       events: TestEvents,
       config: {
-        contractDirectories: ['app/contracts/']
+        contractDirectories: ['app/contracts/'],
+        embarkConfig: {
+          options: {
+            solc: {
+              "optimize": true,
+              "optimize-runs": 200
+            }
+          }
+        }
       }
     });
     let ipcObject = new Ipc({
@@ -146,18 +173,18 @@ describe('embark.Contracts', function() {
     });
     plugins.loadInternalPlugin('solidity', {ipc: ipcObject});
 
-    let compiler = new Compiler({plugins: plugins, logger: plugins.logger});
     let events = new Events();
-    events.setCommandHandler("compiler:contracts", function(contractFiles, cb) {
-      compiler.compile_contracts(contractFiles, cb);
-    });
+    let compiler = new Compiler({events: events, logger: plugins.logger}, {plugins: plugins});
 
     events.setCommandHandler("config:contractsConfig", function(cb) {
       cb(contractsConfig);
     });
 
     events.setCommandHandler("config:contractsFiles", (cb) => {
-      cb([]);
+      cb([
+        readFile('test/contracts/simple_storage.sol'),
+        readFile('test/contracts/token_storage.sol')
+      ]);
     });
 
     events.setCommandHandler("blockchain:gasPrice", (cb) => {
@@ -203,16 +230,13 @@ describe('embark.Contracts', function() {
       }
     }
 
-    let contractsManager = new ContractsManager({
-      plugins: plugins,
-      contractFiles:  [
-        readFile('test/contracts/simple_storage.sol'),
-        readFile('test/contracts/token_storage.sol')
-      ],
-      contractDirectories: ['app/contracts'],
-      contractsConfig: contractsConfig,
+    let embarkObj = {
       logger: new Logger({}),
       events: events
+    }
+
+    let contractsManager = new ContractsManager(embarkObj, {
+      contractDirectories: ['app/contracts']
     });
 
     describe('#build', function() {

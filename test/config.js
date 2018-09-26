@@ -22,7 +22,7 @@ describe('embark.Config', function () {
         "networkType": "custom",
         "genesisBlock": "config/development/genesis.json",
         "datadir": ".embark/development/datadir",
-        "isDev": true,
+        "isDev": false,
         "mineWhenNeeded": true,
         "nodiscover": true,
         "rpcHost": "localhost",
@@ -78,14 +78,16 @@ describe('embark.Config', function () {
           "type": "http",
           "path": "https://raw.githubusercontent.com/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol",
           "basedir": "",
-          "resolver": undefined
+          "resolver": undefined,
+          "downloadedImports": false
         },
         {
           "filename": ".embark/contracts/status-im/contracts/master/contracts/identity/ERC725.sol",
           "type": "http",
           "path": "https://raw.githubusercontent.com/status-im/contracts/master/contracts/identity/ERC725.sol",
           "basedir": "",
-          "resolver": undefined
+          "resolver": undefined,
+          "downloadedImports": false
         }
       ];
       config.loadExternalContractsFiles();

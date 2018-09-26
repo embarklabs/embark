@@ -1,5 +1,5 @@
 /*globals describe, it*/
-const Blockchain = require('../lib/cmds/blockchain/blockchain');
+const Blockchain =  require('../lib/modules/blockchain_process/blockchain.js');
 const constants = require('../lib/constants.json');
 const {defaultHost} = require('../lib/utils/host');
 
@@ -39,6 +39,7 @@ describe('embark.Blockchain', function () {
           wsPort: 8546,
           wsRPC: true,
           targetGasLimit: false,
+          syncmode: undefined,
           syncMode: undefined,
           syncmode: undefined,
           verbosity: undefined,

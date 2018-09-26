@@ -6,7 +6,7 @@
     "css/app.css": ["app/css/**"],
     "images/": ["app/images/**"],
     "js/app.js": ["app/js/index.js"],
-    "js/test.js": ["app/js/_vendor/jquery.min.js", "app/js/_vendor/async.min.js", "app/js/test.js", "app/js/non_existant_file.js"],
+    "js/test.js": ["app/js/_vendor/jquery.min.js", "app/js/_vendor/async.min.js", "app/js/test.js"],
     "index.html": "app/index.html",
     "test.html": "app/test.html",
     "test2.html": "app/test2.html",
@@ -16,11 +16,16 @@
   "config": "config/",
   "versions": {
     "solc": "0.4.24",
-    "web3": "1.0.0-beta.34",
-    "ipfs-api": "17.2.7",
-    "p-iteration": "1.1.7"
+    "web3": "1.0.0-beta",
+    "ipfs-api": "17.2.7"
   },
   "plugins": {
     "embark-service": {}
+  },
+  "options": {
+    "solc": {
+      "optimize": true,
+      "optimize-runs": 200
+    }
   }
 }

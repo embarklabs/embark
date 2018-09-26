@@ -4,22 +4,23 @@
   "description": "",
   "main": "Gruntfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "embark": "node ../../bin/embark",
+    "test": "npm run embark test"
   },
   "author": "",
   "license": "ISC",
   "homepage": "",
   "devDependencies": {
-    "babel-code-frame": "^6.26.0"
+    "@babel/code-frame": "7.0.0-rc.1"
   },
   "dependencies": {
     "bootstrap": "^3.3.6",
     "embark-service": "file:extensions/embark-service",
     "haml": "^0.4.3",
-    "jquery": "^1.11.3",
+    "jquery": "^3.3.1",
     "react": "^16.0.0",
     "react-bootstrap": "^0.32.0",
     "react-dom": "^16.2.0",
-    "zeppelin-solidity": "1.8.0"
+    "zeppelin-solidity": "1.12.0"
   }
 }

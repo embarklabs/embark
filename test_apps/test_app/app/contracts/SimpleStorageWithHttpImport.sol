@@ -1,6 +1,7 @@
 pragma solidity ^0.4.17;
 
 import "https://github.com/embark-framework/embark/blob/develop/test_apps/contracts_app/contracts/ownable.sol";
+import "https://github.com/embark-framework/embark/blob/develop/test_apps/contracts_app/contracts/contract_args.sol";
 
 
 contract SimpleStorageWithHttpImport is Ownable {
@@ -8,7 +9,7 @@ contract SimpleStorageWithHttpImport is Ownable {
 
   function() public payable { }
 
-  function SimpleStorageWithHttpImport(uint initialValue) public {
+  constructor(uint initialValue) public {
     storedData = initialValue;
   }
 
@@ -19,7 +20,7 @@ contract SimpleStorageWithHttpImport is Ownable {
     }
   }
 
-  function set2(uint x, uint unusedGiveWarning) public onlyOwner {
+  function set2(uint x) public onlyOwner {
     storedData = x;
   }
 

@@ -113,7 +113,7 @@
         "no-continue": "off",
         "no-div-regex": "error",
         "no-duplicate-imports": "error",
-        "no-else-return": "off",
+        "no-else-return": 2,
         "no-empty-function": "off",
         "no-eq-null": "error",
         "no-eval": "off",
@@ -122,7 +122,12 @@
         "no-extra-label": "error",
         "no-extra-parens": "off",
         "no-floating-decimal": "error",
-        "no-implicit-coercion": "error",
+        "no-implicit-coercion": [
+            "error",
+            {
+              "allow": ["!!"]
+            }
+        ],
         "no-implicit-globals": "error",
         "no-implied-eval": "error",
         "no-inline-comments": "off",
@@ -186,7 +191,7 @@
         "no-unmodified-loop-condition": "error",
         "no-unneeded-ternary": "error",
         "no-unused-expressions": "error",
-        "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+        "no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_"}],
         "no-use-before-define": "off",
         "no-useless-call": "off",
         "no-useless-computed-key": "error",
