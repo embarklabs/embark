@@ -2,20 +2,12 @@ import React from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import PropTypes from 'prop-types';
 
+const supportedLanguages = ['css', 'sol', 'html', 'json'];
+
 class TextEditor extends React.Component {
   language() {
-    switch(this.props.file.name.split('.').pop()) {
-      case 'css':
-        return 'css';
-      case 'sol':
-        return 'sol';
-      case 'html':
-        return 'html';
-      case 'json':
-        return 'json';
-      default:
-        return 'javascript';
-    }
+    const extension = this.props.file.name.split('.').pop();
+    return supportedLanguages[supportedLanguages.indexOf(extension)] || 'javascript';
   }
 
   extractRowCol(errorMessage) {
