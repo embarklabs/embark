@@ -2915,9 +2915,9 @@
       }
     },
     "embarkjs": {
-      "version": "0.4.2",
-      "resolved": "https://registry.npmjs.org/embarkjs/-/embarkjs-0.4.2.tgz",
-      "integrity": "sha512-PSSs2WHxq8SkeHku56GZwRYsJDRjKYjRCQj7XItD/11lzlqSxOoymrnmZBkCGORBOil93n9MFhMMjsiAepEyVg==",
+      "version": "0.4.3",
+      "resolved": "https://registry.npmjs.org/embarkjs/-/embarkjs-0.4.3.tgz",
+      "integrity": "sha512-0y50RSywW3ehPR5lOd0t+p+Xq8ycjHVbHFLU+9PwaS2nBDi4JU/BF0JYly3hUZp0cQmkmfTJDsnub/Ys/95Mcg==",
       "requires": {
         "@babel/runtime-corejs2": "7.0.0-rc.1",
         "async": "2.6.1",
