@@ -233,12 +233,7 @@ class EmbarkController {
           callback(err, true);
         });
       }
-    ], function (err, canExit) {
-      if (err) {
-        engine.logger.error(err.message);
-        engine.logger.debug(err.stack);
-      }
-
+    ], function (_err, canExit) {
       // TODO: this should be moved out and determined somewhere else
       if (canExit || !engine.config.contractsConfig.afterDeploy || !engine.config.contractsConfig.afterDeploy.length) {
         process.exit();
