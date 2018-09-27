@@ -1,4 +1,4 @@
-![Embark](https://github.com/embark-framework/embark/raw/master/header.png)
+![Embark](https://github.com/embark-framework/embark/raw/develop/header.png)
 
 [![npm](https://img.shields.io/npm/dm/embark.svg)](https://npmjs.com/package/embark)
 [![Gitter](https://img.shields.io/gitter/room/embark-framework/Lobby.svg)](https://gitter.im/embark-framework/Lobby)
