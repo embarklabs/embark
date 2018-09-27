@@ -6,7 +6,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/nnq38x2hi3q11o44/branch/develop?svg=true)](https://ci.appveyor.com/project/iurimatias/embark/branch/develop)
 ![Open PRs](https://img.shields.io/github/issues-pr-raw/embark-framework/framework.svg)
 ![Closed PRs](https://img.shields.io/github/issues-pr-closed-raw/embark-framework/framework.svg)
-![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/m/embark-framework/embark.svg)
+![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/y/embark-framework/embark.svg)
 
 What is Embark
 ======
