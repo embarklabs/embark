@@ -286,9 +286,11 @@ class EmbarkController {
         engine.startService("namingSystem");
         engine.startService("console");
         engine.startService("pluginCommand");
-        callback();
+        engine.events.on('check:backOnline:Ethereum', function () {
+          callback();
+        });
       },
-      function web3IPC(callback) {
+      function ipcConnect(callback) {
         // Do specific work in case we are connected to a socket:
         //  - Setup Web3
         //  - Apply history
