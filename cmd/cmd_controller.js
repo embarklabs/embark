@@ -286,9 +286,7 @@ class EmbarkController {
         engine.startService("namingSystem");
         engine.startService("console");
         engine.startService("pluginCommand");
-        engine.events.on('check:backOnline:Ethereum', function () {
-          callback();
-        });
+        engine.events.on('check:backOnline:Ethereum', () => callback());
       },
       function ipcConnect(callback) {
         // Do specific work in case we are connected to a socket:
