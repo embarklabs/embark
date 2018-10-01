@@ -399,7 +399,7 @@ class EmbarkController {
       } else {
 
         engine.events.request("graph:create", options, () => {
-          engine.logger.info(__("Done. %s generated", "./diagram.svg").underline);
+          engine.logger.info(__("Done. %s generated", options.output).underline);
         });
       }
       process.exit();
