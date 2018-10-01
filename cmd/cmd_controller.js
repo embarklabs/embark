@@ -433,6 +433,20 @@ class EmbarkController {
     fs.copySync(embarkConfig, dappConfig);
     console.log(__('webpack config ejected to: ').dim.yellow);
     console.log(`${dappConfig}`.green);
+    var dappOverrides = fs.dappPath('webpack-overrides.js');
+    var embarkOverrides = fs.embarkPath('lib/pipeline', 'webpack-overrides.js');
+    ext = 1;
+    let dappOverridesOld = dappOverrides;
+    while (fs.existsSync(dappOverridesOld)) {
+      dappOverridesOld = dappOverrides + `.${ext}`;
+      ext++;
+    }
+    if (dappOverridesOld !== dappOverrides) {
+      fs.copySync(dappOverrides, dappOverridesOld);
+    }
+    fs.copySync(embarkOverrides, dappOverrides);
+    console.log(__('webpack overrides ejected to: ').dim.yellow);
+    console.log(`${dappOverrides}`.green);
   }
 
   upload(options) {
