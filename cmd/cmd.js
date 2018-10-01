@@ -30,6 +30,8 @@ process.env.NODE_PATH = utils.joinPath(process.env.EMBARK_PATH, 'node_modules') 
   (process.env.NODE_PATH ? require('path').delimiter : '') +
   (process.env.NODE_PATH || '');
 
+process.env.DEFAULT_DIAGRAM_PATH = utils.joinPath(process.env.DAPP_PATH, 'diagram.svg');
+
 function checkDeps() {
   const path = require('path');
   try {
@@ -332,6 +334,7 @@ class Cmd {
       .option('--skip-functions', __('Graph will not include functions'))
       .option('--skip-events', __('Graph will not include events'))
       .option('--locale [locale]', __('language to use (default: en)'))
+      .option('--output [svgfile]', __('filepath to output SVG graph to (default: %s)', process.env['DEFAULT_DIAGRAM_PATH']))
       .description(__('generates documentation based on the smart contracts configured'))
       .action(function(env, options) {
         checkDeps();
@@ -341,7 +344,8 @@ class Cmd {
           logFile: options.logfile,
           skipUndeployed: options.skipUndeployed,
           skipFunctions: options.skipFunctions,
-          skipEvents: options.skipEvents
+          skipEvents: options.skipEvents,
+          output: options.output || process.env['DEFAULT_DIAGRAM_PATH']
         });
       });
   }
