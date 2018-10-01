@@ -22,8 +22,8 @@ class App extends React.Component {
       activeKey: 1,
       whisperEnabled: false,
       storageEnabled: false,
-      blockchainEnabled: false
-      ensEnabled: false,
+      blockchainEnabled: false,
+      ensEnabled: false
     };
   }
 
