@@ -6,6 +6,7 @@ import {
   Card,
   Table
 } from "tabler-react";
+import JSONTree from 'react-json-tree';
 import {formatContractForDisplay} from '../utils/presentation';
 import {withRouter} from 'react-router-dom';
 
@@ -41,7 +42,7 @@ const Contract = ({contract, match}) => {
               <Card.Title>ABI</Card.Title>
             </Card.Header>
             <Card.Body>
-              <pre>{JSON.stringify(contract.abiDefinition)}</pre>
+              <JSONTree data={contract.abiDefinition} />
             </Card.Body>
           </Card>
           <Card>
