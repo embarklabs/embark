@@ -36,6 +36,22 @@ const Contract = ({contract, match}) => {
               </Table.Body>
             </Table>
           </Card>
+          <Card>
+            <Card.Header>
+              <Card.Title>ABI</Card.Title>
+            </Card.Header>
+            <Card.Body>
+              <pre>{JSON.stringify(contract.abiDefinition)}</pre>
+            </Card.Body>
+          </Card>
+          <Card>
+            <Card.Header>
+              <Card.Title>Bytecode</Card.Title>
+            </Card.Header>
+            <Card.Body>
+              {contract.runtimeBytecode}
+            </Card.Body>
+          </Card>
         </Grid.Col>
       </Grid.Row>
     </Page.Content>
