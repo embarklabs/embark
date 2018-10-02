@@ -108,9 +108,9 @@ export function fetchEnsRecord(payload) {
   const _payload = {params: payload, token: payload.token};
   if (payload.name) {
     return get('/ens/resolve', _payload);
-  } else {
-    return get('/ens/lookup', _payload);
   }
+
+  return get('/ens/lookup', _payload);
 }
 
 export function postEnsRecord() {
