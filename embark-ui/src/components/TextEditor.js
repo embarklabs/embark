@@ -2,11 +2,11 @@ import React from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import PropTypes from 'prop-types';
 
-const SUPPORTED_LANGUAGES = ['css', 'sol', 'html', 'json'];
+const SUPPORTED_LANGUAGES = ['css', 'sol', 'html'];
 const DEFAULT_LANGUAGE = 'javascript';
 
 class TextEditor extends React.Component {
-  language() {
+  getLanguage() {
     const extension = this.props.file.name.split('.').pop();
     return SUPPORTED_LANGUAGES[SUPPORTED_LANGUAGES.indexOf(extension)] || DEFAULT_LANGUAGE;
   }
@@ -33,6 +33,13 @@ class TextEditor extends React.Component {
       };
     });
     this.state.monaco.editor.setModelMarkers(this.state.editor.getModel(), 'test', markers);
+
+    const newLanguage = this.getLanguage();
+    const currentLanguage = this.state.editor.getModel().getModeId();
+
+    if (newLanguage !== currentLanguage) {
+      this.state.monaco.editor.setModelLanguage(this.state.editor.getModel(), newLanguage);
+    }
   }
 
   editorDidMount(editor, monaco) {
@@ -44,7 +51,6 @@ class TextEditor extends React.Component {
       <MonacoEditor
         width="800"
         height="600"
-        language={this.language()}
         theme="vs-dark"
         value={this.props.file.content}
         onChange={this.props.onFileContentChange}
