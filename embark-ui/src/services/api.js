@@ -136,23 +136,22 @@ export function authenticate(payload) {
   return post('/authenticate', {...payload, credentials: payload});
 }
 
-// TODO token for WS?
 export function listenToChannel(credentials, channel) {
-  return new WebSocket(`ws://${credentials.host}/communication/listenTo/${channel}`);
+  return new WebSocket(`ws://${credentials.host}/embark-api/communication/listenTo/${channel}`, [credentials.token]);
 }
 
 export function webSocketProcess(credentials, processName) {
-  return new WebSocket(`ws://${credentials.host}/process-logs/${processName}`);
+  return new WebSocket(`ws://${credentials.host}/embark-api/process-logs/${processName}`, [credentials.token]);
 }
 
 export function webSocketContractLogs(credentials) {
-  return new WebSocket(`ws://${credentials.host}/contracts/logs`);
+  return new WebSocket(`ws://${credentials.host}/embark-api/contracts/logs`, [credentials.token]);
 }
 
 export function webSocketBlockHeader(credentials) {
-  return new WebSocket(`ws://${credentials.host}/blockchain/blockHeader`);
+  return new WebSocket(`ws://${credentials.host}/embark-api/blockchain/blockHeader`, [credentials.token]);
 }
 
 export function websocketGasOracle(credentials) {
-  return new WebSocket(`ws://${credentials.host}/blockchain/gas/oracle`);
+  return new WebSocket(`ws://${credentials.host}/embark-api/blockchain/gas/oracle`, [credentials.token]);
 }
