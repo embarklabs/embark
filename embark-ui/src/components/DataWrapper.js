@@ -9,12 +9,12 @@ const DataWrapper = ({error, loading, shouldRender, render, ...rest}) => {
     return <Error error={error} />;
   }
 
-  if (loading) {
-    return <Loading />;
-  }
-
   if (shouldRender) {
     return render(rest);
+  }
+
+  if (loading) {
+    return <Loading />;
   }
 
   return <React.Fragment />;
