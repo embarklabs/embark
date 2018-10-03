@@ -42,7 +42,7 @@ const Contract = ({contract, match}) => {
               <Card.Title>ABI</Card.Title>
             </Card.Header>
             <Card.Body>
-              <JSONTree data={contract.abiDefinition} />
+              {contract.abiDefinition && <JSONTree data={contract.abiDefinition} />}
             </Card.Body>
           </Card>
           <Card>
