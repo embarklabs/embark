@@ -1,27 +1,35 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import {Form, Button} from 'tabler-react';
 
 class ApplicationPreviewContainer extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      // TODO(andremedeiros): Figure out how to pull this from the actual host.
       previewUrl: this.props.previewHomepage
     };
   }
 
   render() {
     return (
-      <div>
-        <div className="input-group mb-3">
-          <input type="text" className="form-control" placeholder="URL" value={this.state.previewUrl} onChange={(e) => this.handlePreviewUrlChange(e)} />
-          <div className="input-group-append">
-            <button className="btn btn-outline-secondary" type="button" onClick={(e) => this.handlePreviewGo(e)}>Go</button>
-          </div>
-        </div>
-        <iframe width="100%" height="500" title="Preview" ref={(iframe) => this.previewIframe = iframe} onLoad={(e) => this.handlePreviewChange(e)} src={this.props.previewHomepage}></iframe>
-      </div>
+      <Form.Group>
+        <Form.InputGroup>
+          <Form.Input placeholder="URL"
+                      value={this.state.previewUrl}
+                      className="form-control"
+                      onChange={(e) => this.handlePreviewUrlChange(e)} />
+          <Form.InputGroupAppend>
+            <Button color="primary" onClick={(e) => this.handlePreviewGo(e)}>Go</Button>
+          </Form.InputGroupAppend>
+        </Form.InputGroup>
+        <iframe width="100%"
+                height="500"
+                title="Preview"
+                ref={(iframe) => this.previewIframe = iframe}
+                onLoad={(e) => this.handlePreviewChange(e)} src={this.props.previewHomepage}>
+        </iframe>
+      </Form.Group>
     );
   }
 
@@ -48,7 +56,7 @@ ApplicationPreviewContainer.propTypes = {
 };
 
 ApplicationPreviewContainer.defaultProps = {
-  previewHomepage: 'http://localhost:8000'
+  previewHomepage: window.location.protocol + '//' + window.location.host
 };
 
 export default ApplicationPreviewContainer;
