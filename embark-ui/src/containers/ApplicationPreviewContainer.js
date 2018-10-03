@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 class ApplicationPreviewContainer extends React.Component {
@@ -5,7 +6,8 @@ class ApplicationPreviewContainer extends React.Component {
     super(props);
 
     this.state = {
-      previewUrl: 'http://localhost:8000'
+      // TODO(andremedeiros): Figure out how to pull this from the actual host.
+      previewUrl: this.props.previewHomepage
     };
   }
 
@@ -18,7 +20,7 @@ class ApplicationPreviewContainer extends React.Component {
             <button className="btn btn-outline-secondary" type="button" onClick={(e) => this.handlePreviewGo(e)}>Go</button>
           </div>
         </div>
-        <iframe width="100%" height="500" title="Preview" ref={(iframe) => this.previewIframe = iframe} onLoad={(e) => this.handlePreviewChange(e)} src="http://localhost:8000"></iframe>
+        <iframe width="100%" height="500" title="Preview" ref={(iframe) => this.previewIframe = iframe} onLoad={(e) => this.handlePreviewChange(e)} src={this.props.previewHomepage}></iframe>
       </div>
     );
   }
@@ -37,9 +39,17 @@ class ApplicationPreviewContainer extends React.Component {
   }
 
   handlePreviewGo() {
-    this.previewIframe.src = this.previewUrl;
+    this.previewIframe.src = this.state.previewUrl;
   }
 }
+
+ApplicationPreviewContainer.propTypes = {
+  previewHomepage: PropTypes.string
+};
+
+ApplicationPreviewContainer.defaultProps = {
+  previewHomepage: 'http://localhost:8000'
+};
 
 export default ApplicationPreviewContainer;
 
