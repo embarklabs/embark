@@ -25,9 +25,9 @@ const ContractLogger = ({contractName, contractLogs}) => (
           </Table.Header>
           <Table.Body>
             {
-              contractLogs.map((log) => {
+              contractLogs.map((log, index) => {
                 return (
-                  <Table.Row key={log.name}>
+                  <Table.Row key={'log-' + index}>
                     <Table.Col>{`${log.name}.${log.functionName}(${log.paramString})`}</Table.Col>
                     <Table.Col>{log.transactionHash}</Table.Col>
                     <Table.Col>{log.gasUsed}</Table.Col>
