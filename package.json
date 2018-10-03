@@ -50,6 +50,7 @@
     "commander": "2.18.0",
     "compression-webpack-plugin": "2.0.0",
     "css-loader": "1.0.0",
+    "date-and-time": "0.6.2",
     "decompress": "4.2.0",
     "deep-equal": "1.0.1",
     "ejs": "2.6.1",
