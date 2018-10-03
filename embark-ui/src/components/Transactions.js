@@ -29,7 +29,7 @@ const Transactions = ({transactions}) => (
             </Table.Header>
             <Table.Body>
               {
-                transactions.reduce((transaction) => {
+                transactions.map((transaction) => {
                   return (
                     <Table.Row key={transaction.hash}>
                       <Table.Col><Link to={`/embark/explorer/transactions/${transaction.hash}`}>{transaction.hash}</Link></Table.Col>
