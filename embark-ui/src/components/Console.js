@@ -33,23 +33,18 @@ class Console extends Component {
 
   renderTabs() {
     const {processLogs, processes, commands} = this.props;
-    return [
-      (<Tab title="Embark" key="Embark">
-        <Logs>
-          {commands.map((command, index) => <CommandResult key={index} result={command.result}/>)}
-        </Logs>
-      </Tab>)
-    ].concat(processes.map(process => (
-      <Tab title={process.name} key={process.name}>
+    return processes.map(process => (
+      <Tab title={process.name} key={process.name} onClick={(e, x) => this.clickTab(e, x)}>
         <Logs>
           {
             processLogs.reverse().filter((item) => item.name === process.name)
               .map((item, i) => <p key={i} className={item.logLevel}
                                    dangerouslySetInnerHTML={{__html: convert.toHtml(item.msg)}}></p>)
           }
+          {process.name === "embark" && commands.map((command, index) => <CommandResult key={index} result={command.result}/>)}
         </Logs>
       </Tab>
-    )));
+    ));
   }
 
   render() {
