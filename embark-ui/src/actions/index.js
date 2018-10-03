@@ -15,23 +15,23 @@ function action(type, payload = {}) {
 
 export const AUTHENTICATE = createRequestTypes('AUTHENTICATE');
 export const authenticate = {
-  request: (token) => action(AUTHENTICATE[REQUEST], {token}),
-  success: (_result, payload) => action(AUTHENTICATE[SUCCESS], {token: payload.token}),
+  request: (host, token) => action(AUTHENTICATE[REQUEST], {host, token}),
+  success: (_result, payload) => action(AUTHENTICATE[SUCCESS], {host: payload.host, token: payload.token}),
   failure: (error) => action(AUTHENTICATE[FAILURE], {error})
 };
 
-export const FETCH_TOKEN = createRequestTypes('FETCH_TOKEN');
-export const fetchToken = {
-  request: () => action(FETCH_TOKEN[REQUEST]),
-  success: (token) => action(FETCH_TOKEN[SUCCESS], {token}),
-  failure: () => action(FETCH_TOKEN[FAILURE])
+export const FETCH_CREDENTIALS = createRequestTypes('FETCH_CREDENTIALS');
+export const fetchCredentials = {
+  request: () => action(FETCH_CREDENTIALS[REQUEST]),
+  success: (credentials) => action(FETCH_CREDENTIALS[SUCCESS], credentials),
+  failure: () => action(FETCH_CREDENTIALS[FAILURE])
 };
 
-export const POST_TOKEN = createRequestTypes('POST_TOKEN');
-export const postToken = {
-  request: (token) => action(POST_TOKEN[REQUEST], {token}),
-  success: (token) => action(POST_TOKEN[SUCCESS], {token}),
-  failure: () => action(POST_TOKEN[FAILURE])
+export const SAVE_CREDENTIALS = createRequestTypes('SAVE_CREDENTIALS');
+export const saveCredentials = {
+  request: (credentials) => action(SAVE_CREDENTIALS[REQUEST], credentials),
+  success: (credentials) => action(SAVE_CREDENTIALS[SUCCESS], credentials),
+  failure: () => action(SAVE_CREDENTIALS[FAILURE])
 };
 
 export const LOGOUT = createRequestTypes('LOGOUT');

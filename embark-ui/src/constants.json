@@ -1,4 +1,0 @@
-{
-  "httpEndpoint": "http://localhost:8000/embark-api",
-  "wsEndpoint": "ws://localhost:8000/embark-api"
-}

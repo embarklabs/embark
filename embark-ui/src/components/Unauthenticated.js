@@ -5,16 +5,16 @@ import {Page, Alert, Form, Button} from "tabler-react";
 class Unauthenticated extends React.Component {
   constructor(props){
     super(props);
-    this.state = { token: '' };
+    this.state = props.credentials;
   }
 
-  handleTokenChange(event){
-    this.setState({token: event.target.value});
+  handleChange(event){
+    this.setState({[event.target.name]: event.target.value});
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    this.props.authenticate(this.state.token);
+    this.props.authenticate(this.state.host, this.state.token);
   }
 
   render() {
@@ -24,10 +24,15 @@ class Unauthenticated extends React.Component {
           {this.props.error}
         </Alert>}
         <Form  onSubmit={(e) => this.handleSubmit(e)}>
+          <Form.Input name="host"
+                      label="Embark Host"
+                      value={this.state.host}
+                      onChange={(e) => this.handleChange(e)}
+                      placeholder="Enter Embark Host"/>
           <Form.Input name="token"
                       label="Token"
                       value={this.state.token}
-                      onChange={(e) => this.handleTokenChange(e)}
+                      onChange={(e) => this.handleChange(e)}
                       placeholder="Enter Token"/>
           <Button type="submit" color="primary">
             Authenticate
@@ -40,6 +45,7 @@ class Unauthenticated extends React.Component {
 
 Unauthenticated.propTypes = {
   authenticate: PropTypes.func,
+  credentials: PropTypes.object,
   error: PropTypes.string
 };
 

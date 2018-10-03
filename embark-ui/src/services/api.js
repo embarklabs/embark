@@ -1,18 +1,13 @@
 import axios from "axios";
-import constants from '../constants';
 
-function request(type, path, params = {}, endpoint) {
-  axios.defaults.headers.common['Authorization'] = params.token;
-  const callback = params.callback || function() {};
-  return axios[type]((endpoint || constants.httpEndpoint) + path, params)
+function request(type, path, params = {}) {
+  axios.defaults.headers.common['Authorization'] = params.credentials.token;
+  const endpoint = `http://${params.credentials.host}/embark-api${path}`;
+  return axios[type](endpoint, params)
     .then((response) => {
-      const data = (response.data && response.data.error) ? {error: response.data.error} : {response, error: null};
-      callback(data.error, data.response);
-      return data;
+      return (response.data && response.data.error) ? {error: response.data.error} : {response, error: null};
     }).catch((error) => {
-      const data = {response: null, error: error.message || 'Something bad happened'};
-      callback(data.error, data.response);
-      return data;
+      return {response: null, error: error.message || 'Something bad happened'};
     });
 }
 
@@ -41,7 +36,7 @@ export function fetchAccount(payload) {
 }
 
 export function fetchBlocks(payload) {
-  return get('/blockchain/blocks', {params: payload, token: payload.token});
+  return get('/blockchain/blocks', {params: payload, credentials: payload.credentials});
 }
 
 export function fetchBlock(payload) {
@@ -49,7 +44,7 @@ export function fetchBlock(payload) {
 }
 
 export function fetchTransactions(payload) {
-  return get('/blockchain/transactions', {params: payload, token: payload.token});
+  return get('/blockchain/transactions', {params: payload, credentials: payload.credentials});
 }
 
 export function fetchTransaction(payload) {
@@ -97,7 +92,7 @@ export function fetchPlugins() {
 }
 
 export function sendMessage(payload) {
-  return post(`/communication/sendMessage`, Object.assign({}, payload.body, {token: payload.token}));
+  return post(`/communication/sendMessage`, Object.assign({}, payload.body, {credentials: payload.credentials}));
 }
 
 export function fetchContractProfile(payload) {
@@ -105,7 +100,7 @@ export function fetchContractProfile(payload) {
 }
 
 export function fetchEnsRecord(payload) {
-  const _payload = {params: payload, token: payload.token};
+  const _payload = {params: payload, credentials: payload.credentials};
   if (payload.name) {
     return get('/ens/resolve', _payload);
   }
@@ -126,7 +121,7 @@ export function fetchFiles() {
 }
 
 export function fetchFile(payload) {
-  return get('/file', {params: payload, token: payload.token});
+  return get('/file', {params: payload, credentials: payload.credentials});
 }
 
 export function postFile() {
@@ -134,30 +129,30 @@ export function postFile() {
 }
 
 export function deleteFile(payload) {
-  return destroy('/file', {params: payload, token: payload.token});
+  return destroy('/file', {params: payload, credentials: payload.credentials});
 }
 
-export function authenticate() {
-  return post('/authenticate', ...arguments);
+export function authenticate(payload) {
+  return post('/authenticate', {...payload, credentials: payload});
 }
 
 // TODO token for WS?
-export function listenToChannel(channel) {
-  return new WebSocket(`${constants.wsEndpoint}/communication/listenTo/${channel}`);
+export function listenToChannel(credentials, channel) {
+  return new WebSocket(`ws://${credentials.host}/communication/listenTo/${channel}`);
 }
 
-export function webSocketProcess(processName) {
-  return new WebSocket(constants.wsEndpoint + '/process-logs/' + processName);
+export function webSocketProcess(credentials, processName) {
+  return new WebSocket(`ws://${credentials.host}/process-logs/${processName}`);
 }
 
-export function webSocketContractLogs() {
-  return new WebSocket(constants.wsEndpoint + '/contracts/logs');
+export function webSocketContractLogs(credentials) {
+  return new WebSocket(`ws://${credentials.host}/contracts/logs`);
 }
 
-export function webSocketBlockHeader() {
-  return new WebSocket(`${constants.wsEndpoint}/blockchain/blockHeader`);
+export function webSocketBlockHeader(credentials) {
+  return new WebSocket(`ws://${credentials.host}/blockchain/blockHeader`);
 }
 
-export function websocketGasOracle() {
-  return new WebSocket(`${constants.wsEndpoint}/blockchain/gas/oracle`);
+export function websocketGasOracle(credentials) {
+  return new WebSocket(`ws://${credentials.host}/blockchain/gas/oracle`);
 }

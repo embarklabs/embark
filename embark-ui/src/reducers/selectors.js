@@ -1,11 +1,11 @@
 import {last} from '../utils/utils';
 
-export function getToken(state) {
-  return state.authentication.token;
+export function getCredentials(state) {
+  return state.credentials;
 }
 
 export function getAuthenticationError(state) {
-  return state.authentication.error;
+  return state.credentials.error;
 }
 
 export function getAccounts(state) {

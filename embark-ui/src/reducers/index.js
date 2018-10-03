@@ -1,8 +1,9 @@
 import {combineReducers} from 'redux';
-import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE} from "../actions";
+import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE, FETCH_CREDENTIALS} from "../actions";
 
 const BN_FACTOR = 10000;
-const voidAddress = '0x0000000000000000000000000000000000000000';
+const VOID_ADDRESS = '0x0000000000000000000000000000000000000000';
+const DEFAULT_HOST = 'localhost:8000';
 
 const entitiesDefaultState = {
   accounts: [],
@@ -72,7 +73,7 @@ const filtrer = {
     ));
   },
   ensRecords: function(record, index, self) {
-    return record.name && record.address && record.address !== voidAddress && index === self.findIndex((r) => (
+    return record.name && record.address && record.address !== VOID_ADDRESS && index === self.findIndex((r) => (
       r.address === record.address && r.name === record.name
     ));
   },
@@ -149,16 +150,26 @@ function compilingContract(state = false, action) {
   return state;
 }
 
-function authentication(state = {}, action) {
+const DEFAULT_CREDENTIALS_STATE = {host: DEFAULT_HOST, token: '', authenticated: false};
+
+function credentials(state = DEFAULT_CREDENTIALS_STATE, action) {
   if (action.type === LOGOUT[SUCCESS]) {
-    return {};
+    return DEFAULT_CREDENTIALS_STATE;
   }
 
   if (action.type === AUTHENTICATE[FAILURE]) {
-    return {error: action.error};
+    return {error: action.error, authenticated: false};
   }
 
-  return (action.token) ? {token: action.token} : state;
+  if (action.type === AUTHENTICATE[SUCCESS]) {
+    return {...state, ...{authenticated: true, token: action.token, host: action.host, error: null}};
+  }
+
+  if (action.type === FETCH_CREDENTIALS[SUCCESS]) {
+    return {...state, ...{token: action.token, host: action.host}};
+  }
+
+  return state;
 }
 
 const rootReducer = combineReducers({
@@ -167,7 +178,7 @@ const rootReducer = combineReducers({
   compilingContract,
   errorMessage,
   errorEntities,
-  authentication
+  credentials
 });
 
 export default rootReducer;

@@ -3,10 +3,10 @@ import * as api from '../services/api';
 import * as storage from '../services/storage';
 import {eventChannel} from 'redux-saga';
 import {all, call, fork, put, takeEvery, take, select} from 'redux-saga/effects';
-import {getToken} from '../reducers/selectors';
+import {getCredentials} from '../reducers/selectors';
 
 function *doRequest(entity, serviceFn, payload) {
-  payload.token = yield select(getToken);
+  payload.credentials = yield select(getCredentials);
   const {response, error} = yield call(serviceFn, payload);
   if(response) {
     yield put(entity.success(response.data, payload));
@@ -46,8 +46,8 @@ export const authenticate = doRequest.bind(null, actions.authenticate, api.authe
 export const fetchCurrentFile = doRequest.bind(null, actions.currentFile, storage.fetchCurrentFile);
 export const postCurrentFile = doRequest.bind(null, actions.saveCurrentFile, storage.postCurrentFile);
 export const deleteCurrentFile = doRequest.bind(null, null, storage.deleteCurrentFile);
-export const fetchToken = doRequest.bind(null, actions.fetchToken, storage.fetchToken);
-export const postToken = doRequest.bind(null, actions.postToken, storage.postToken);
+export const fetchCredentials = doRequest.bind(null, actions.fetchCredentials, storage.fetchCredentials);
+export const saveCredentials = doRequest.bind(null, actions.saveCredentials, storage.saveCredentials);
 export const logout = doRequest.bind(null, actions.logout, storage.logout);
 
 
@@ -181,11 +181,11 @@ export function *watchAuthenticate() {
 }
 
 export function *watchAuthenticateSuccess() {
-  yield takeEvery(actions.AUTHENTICATE[actions.SUCCESS], postToken);
+  yield takeEvery(actions.AUTHENTICATE[actions.SUCCESS], saveCredentials);
 }
 
-export function *watchFetchToken() {
-  yield takeEvery(actions.FETCH_TOKEN[actions.REQUEST], fetchToken);
+export function *watchFetchCredentials() {
+  yield takeEvery(actions.FETCH_CREDENTIALS[actions.REQUEST], fetchCredentials);
 }
 
 export function *watchLogout() {
@@ -204,7 +204,8 @@ function createChannel(socket) {
 }
 
 export function *initBlockHeader() {
-  const socket = api.webSocketBlockHeader();
+  const credentials = yield select(getCredentials);
+  const socket = api.webSocketBlockHeader(credentials);
   const channel = yield call(createChannel, socket);
   while (true) {
     yield take(channel);
@@ -218,7 +219,8 @@ export function *watchInitBlockHeader() {
 }
 
 export function *listenToProcessLogs(action) {
-  const socket = api.webSocketProcess(action.processName);
+  const credentials = yield select(getCredentials);
+  const socket = api.webSocketProcess(credentials, action.processName);
   const channel = yield call(createChannel, socket);
   while (true) {
     const processLog = yield take(channel);
@@ -231,7 +233,8 @@ export function *watchListenToProcessLogs() {
 }
 
 export function *listenToContractLogs() {
-  const socket = api.webSocketContractLogs();
+  const credentials = yield select(getCredentials);
+  const socket = api.webSocketContractLogs(credentials);
   const channel = yield call(createChannel, socket);
   while (true) {
     const contractLog = yield take(channel);
@@ -244,7 +247,8 @@ export function *watchListenToContractLogs() {
 }
 
 export function *listenGasOracle() {
-  const socket = api.websocketGasOracle();
+  const credentials = yield select(getCredentials);
+  const socket = api.websocketGasOracle(credentials);
   const channel = yield call(createChannel, socket);
   while (true) {
     const gasOracleStats = yield take(channel);
@@ -257,7 +261,8 @@ export function *watchListenGasOracle() {
 }
 
 export function *listenToMessages(action) {
-  const socket = api.listenToChannel(action.messageChannels[0]);
+  const credentials = yield select(getCredentials);
+  const socket = api.listenToChannel(credentials, action.messageChannels[0]);
   const channel = yield call(createChannel, socket);
   while (true) {
     const message = yield take(channel);
@@ -300,7 +305,7 @@ export default function *root() {
     fork(watchFetchFileSuccess),
     fork(watchFetchCurrentFile),
     fork(watchPostCurrentFile),
-    fork(watchFetchToken),
+    fork(watchFetchCredentials),
     fork(watchFetchEthGas),
     fork(watchAuthenticate),
     fork(watchAuthenticateSuccess),

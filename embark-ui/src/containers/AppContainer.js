@@ -8,13 +8,13 @@ import Layout from "../components/Layout";
 
 import {
   initBlockHeader,
-  authenticate, fetchToken, logout,
+  authenticate, fetchCredentials, logout,
   processes as processesAction,
   versions as versionsAction,
   plugins as pluginsAction
 } from '../actions';
 
-import { getToken, getAuthenticationError } from '../reducers/selectors';
+import { getCredentials, getAuthenticationError, getVersions } from '../reducers/selectors';
 
 const qs = require('qs');
 
@@ -30,19 +30,27 @@ class AppContainer extends Component {
       return;
     }
     const token = qs.parse(this.props.location.search, {ignoreQueryPrefix: true}).token;
-    if (token === this.props.token) {
+    const host = window.location.host;
+    if (token === this.props.credentials.token && this.props.credentials.host === host) {
       return;
     }
-    this.props.authenticate(token);
+    this.props.authenticate(host, token);
   }
 
   componentDidMount() {
-    this.props.fetchToken();
+    this.props.fetchCredentials();
+  }
+
+  requireAuthentication() {
+    return this.props.credentials.token && this.props.credentials.host && !this.props.credentials.authenticated;
   }
 
   componentDidUpdate(){
-    if (this.props.token) {
-      this.props.authenticate(this.props.token);
+    if (this.requireAuthentication()) {
+      this.props.authenticate(this.props.credentials.host, this.props.credentials.token);
+    }
+
+    if (this.props.credentials.authenticated && !this.props.initialized) {
       this.props.initBlockHeader();
       this.props.fetchProcesses();
       this.props.fetchVersions();
@@ -51,13 +59,14 @@ class AppContainer extends Component {
   }
 
   shouldRenderUnauthenticated() {
-    return this.props.authenticationError || !this.props.token;
+    return this.props.authenticationError || !this.props.credentials.authenticated;
   }
 
   render() {
     return (
-      <Layout logout={this.props.logout}>
-        {this.shouldRenderUnauthenticated() ? <Unauthenticated authenticate={this.props.authenticate}
+      <Layout logout={this.props.logout} credentials={this.props.credentials}>
+        {this.shouldRenderUnauthenticated() ? <Unauthenticated credentials={this.props.credentials}
+                                                               authenticate={this.props.authenticate}
                                                                error={this.props.authenticationError} /> : <React.Fragment>{routes}</React.Fragment>}
       </Layout>
     );
@@ -65,11 +74,12 @@ class AppContainer extends Component {
 }
 
 AppContainer.propTypes = {
-  token: PropTypes.string,
+  credentials: PropTypes.object,
+  initialized: PropTypes.bool,
   authenticationError: PropTypes.string,
   authenticate: PropTypes.func,
   logout: PropTypes.func,
-  fetchToken: PropTypes.func,
+  fetchCredentials: PropTypes.func,
   initBlockHeader: PropTypes.func,
   fetchProcesses: PropTypes.func,
   fetchPlugins: PropTypes.func,
@@ -79,7 +89,8 @@ AppContainer.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    token: getToken(state),
+    initialized: getVersions(state).length > 0,
+    credentials: getCredentials(state),
     authenticationError: getAuthenticationError(state)
   };
 }
@@ -90,7 +101,7 @@ export default withRouter(connect(
     initBlockHeader,
     authenticate: authenticate.request,
     logout: logout.request,
-    fetchToken: fetchToken.request,
+    fetchCredentials: fetchCredentials.request,
     fetchProcesses: processesAction.request,
     fetchVersions: versionsAction.request,
     fetchPlugins: pluginsAction.request

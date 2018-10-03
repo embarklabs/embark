@@ -14,7 +14,7 @@ const navBarItems = [
   {value: "Utils", to: "/embark/utilities/converter", icon: "settings", LinkComponent: NavLink}
 ];
 
-const Layout = ({children, logout}) => (
+const Layout = ({children, logout, credentials}) => (
   <Site.Wrapper
     headerProps={{
       href: "/embark",
@@ -34,6 +34,11 @@ const Layout = ({children, logout}) => (
               Source code
             </Button>
           </Nav.Item>
+          {credentials.authenticated &&
+            <Nav.Item type="div" className="d-none d-md-flex">
+              Connected on {credentials.host}
+            </Nav.Item>  
+          }
           <Nav.Item type="div" className="d-none d-md-flex">
             <Button
               outline
@@ -56,6 +61,7 @@ const Layout = ({children, logout}) => (
 
 Layout.propTypes = {
   children: PropTypes.element,
+  credentials: PropTypes.object,
   logout: PropTypes.func
 };
 
