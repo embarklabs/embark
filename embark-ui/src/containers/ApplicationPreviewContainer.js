@@ -1,11 +1,11 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 
 class ApplicationPreviewContainer extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      previewUrl: props.previewUrl || 'http://localhost:8000'
+      previewUrl: 'http://localhost:8000'
     };
   }
 
@@ -13,7 +13,7 @@ class ApplicationPreviewContainer extends React.Component {
     return (
       <div>
         <div className="input-group mb-3">
-          <input type="text" className="form-control" placeholder="URL" ref={(input) => this.locationInput = input} value={this.props.previewUrl} />
+          <input type="text" className="form-control" placeholder="URL" value={this.state.previewUrl} onChange={(e) => this.handlePreviewUrlChange(e)} />
           <div className="input-group-append">
             <button className="btn btn-outline-secondary" type="button" onClick={(e) => this.handlePreviewGo(e)}>Go</button>
           </div>
@@ -21,6 +21,10 @@ class ApplicationPreviewContainer extends React.Component {
         <iframe width="100%" height="500" title="Preview" ref={(iframe) => this.previewIframe = iframe} onLoad={(e) => this.handlePreviewChange(e)} src="http://localhost:8000"></iframe>
       </div>
     );
+  }
+
+  handlePreviewUrlChange(ev) {
+    this.setState({previewUrl: ev.target.value});
   }
 
   handlePreviewChange(ev) {
@@ -33,13 +37,9 @@ class ApplicationPreviewContainer extends React.Component {
   }
 
   handlePreviewGo() {
-    this.previewIframe.src = this.locationInput.value;
+    this.previewIframe.src = this.previewUrl;
   }
 }
-
-ApplicationPreviewContainer.propTypes = {
-  previewUrl: PropTypes.string
-};
 
 export default ApplicationPreviewContainer;
 
