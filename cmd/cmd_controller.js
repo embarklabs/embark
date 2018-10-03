@@ -419,33 +419,15 @@ class EmbarkController {
 
   ejectWebpack() {
     var fs = require('../lib/core/fs.js');
+    var embarkConfig = fs.embarkPath('lib/pipeline/webpack.config.js');
     var dappConfig = fs.dappPath('webpack.config.js');
-    var embarkConfig = fs.embarkPath('lib/pipeline', 'webpack.config.js');
-    let ext = 1;
-    let dappConfigOld = dappConfig;
-    while (fs.existsSync(dappConfigOld)) {
-      dappConfigOld = dappConfig + `.${ext}`;
-      ext++;
-    }
-    if (dappConfigOld !== dappConfig) {
-      fs.copySync(dappConfig, dappConfigOld);
-    }
-    fs.copySync(embarkConfig, dappConfig);
-    console.log(__('webpack config ejected to: ').dim.yellow);
+    fs.copyPreserve(embarkConfig, dappConfig);
+    console.log(__('webpack config ejected to:').dim.yellow);
     console.log(`${dappConfig}`.green);
+    var embarkOverrides = fs.embarkPath('lib/pipeline/webpack-overrides.js');
     var dappOverrides = fs.dappPath('webpack-overrides.js');
-    var embarkOverrides = fs.embarkPath('lib/pipeline', 'webpack-overrides.js');
-    ext = 1;
-    let dappOverridesOld = dappOverrides;
-    while (fs.existsSync(dappOverridesOld)) {
-      dappOverridesOld = dappOverrides + `.${ext}`;
-      ext++;
-    }
-    if (dappOverridesOld !== dappOverrides) {
-      fs.copySync(dappOverrides, dappOverridesOld);
-    }
-    fs.copySync(embarkOverrides, dappOverrides);
-    console.log(__('webpack overrides ejected to: ').dim.yellow);
+    fs.copyPreserve(embarkOverrides, dappOverrides);
+    console.log(__('webpack overrides ejected to:').dim.yellow);
     console.log(`${dappOverrides}`.green);
   }
 
