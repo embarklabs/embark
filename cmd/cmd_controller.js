@@ -430,6 +430,86 @@ class EmbarkController {
     console.log(`${dappOverrides}`.green);
   }
 
+  scaffold(options) {
+    this.context = options.context || [constants.contexts.build];
+
+    const Scaffolding = require('../lib/cmds/scaffolding.js');
+
+    const Engine = require('../lib/core/engine.js');
+    const engine = new Engine({
+      env: options.env,
+      client: options.client,
+      locale: options.locale,
+      version: this.version,
+      embarkConfig: 'embark.json',
+      interceptLogs: false,
+      logFile: options.logFile,
+      logLevel: options.logLevel,
+      events: options.events,
+      logger: options.logger,
+      config: options.config,
+      plugins: options.plugins,
+      context: this.context,
+      webpackConfigName: options.webpackConfigName
+    });
+
+
+    async.waterfall([
+      function initEngine(callback) {
+        engine.init({}, callback);
+      },
+      function startServices(callback) {
+        let pluginList = engine.plugins.listPlugins();
+        if (pluginList.length > 0) {
+          engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
+        }
+
+        engine.startService("processManager");
+        engine.startService("libraryManager");
+        engine.startService("codeRunner");
+        engine.startService("web3");
+        if (!options.onlyCompile) {
+          engine.startService("pipeline");
+        }
+        engine.startService("deployment", {onlyCompile: options.onlyCompile});
+        if (!options.onlyCompile) {
+          engine.startService("storage");
+          engine.startService("codeGenerator");
+        }
+
+        callback();
+      },
+      function deploy(callback) {
+        engine.events.request('deploy:contracts', function (err) {
+          callback(err);
+        });
+      },
+      function waitForWriteFinish(callback) {
+        if (options.onlyCompile) {
+          engine.logger.info("Finished compiling".underline);
+          return callback(null, true);
+        }
+
+        engine.events.on('outputDone', (err) => {
+
+
+          let scaffold = new Scaffolding(engine, options);
+          scaffold.generate(options.contract);
+
+          engine.logger.info(__("finished generating the UI").underline);
+          callback(err, true);
+        });
+      }
+    ], function (_err, canExit) {
+      // TODO: this should be moved out and determined somewhere else
+      if (canExit || !engine.config.contractsConfig.afterDeploy || !engine.config.contractsConfig.afterDeploy.length) {
+        process.exit();
+      }
+      engine.logger.info(__('Waiting for after deploy to finish...'));
+      engine.logger.info(__('You can exit with CTRL+C when after deploy completes'));
+    });
+  }
+
   upload(options) {
     this.context = options.context || [constants.contexts.upload, constants.contexts.build];
 
@@ -452,7 +532,7 @@ class EmbarkController {
     });
 
     let platform;
-
+    
     async.waterfall([
       function initEngine(callback) {
         engine.init({}, () => {
