@@ -31,6 +31,16 @@ class Console extends Component {
     this.setState({value: event.target.value});
   }
 
+  getProcessLogs(processName){
+    const log = this.props.processLogs
+      .reverse()
+      .filter((item) => item.process === processName);
+
+    if(!log.length) return [];
+    //should be only one item in the array
+    return log[0].logs;
+  }
+
   renderCommandsResult(){
     const {commands} = this.props;
     return (
@@ -42,7 +52,7 @@ class Console extends Component {
   }
 
   renderTabs() {
-    const {processLogs, processes} = this.props;
+    const {processes} = this.props;
     return processes
       .sort((a, b) => { // ensure the "Embark" tab is displayed first
         if (a.name === this.DEFAULT_PROCESS) return -1;
@@ -53,10 +63,7 @@ class Console extends Component {
         <Tab title={process.name} key={process.name} onClick={(e, x) => this.clickTab(e, x)}>
           <Logs>
             {
-              processLogs
-                .reverse()
-                .filter((item) => item.name === process.name)
-                .sort((a, b) => a.timestamp - b.timestamp)
+              this.getProcessLogs(process.name)
                 .map((item, i) => <p key={i} className={item.logLevel}
                                     dangerouslySetInnerHTML={{__html: convert.toHtml(item.msg)}}></p>)
             }

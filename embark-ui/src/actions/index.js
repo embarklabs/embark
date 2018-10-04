@@ -100,7 +100,19 @@ export const commands = {
 export const PROCESS_LOGS = createRequestTypes('PROCESS_LOGS');
 export const processLogs = {
   request: (processName) => action(PROCESS_LOGS[REQUEST], {processName}),
-  success: (processLogs) => action(PROCESS_LOGS[SUCCESS], {processLogs}),
+  success: (processLogs, payload) => {
+    return action(PROCESS_LOGS[SUCCESS],
+      { 
+        processLogs:  [
+          {
+            process: payload.processName,
+            timestamp: new Date().getTime(),
+            logs: processLogs
+          }
+        ]
+      }
+    );
+  },
   failure: (error) => action(PROCESS_LOGS[FAILURE], {error})
 };
 

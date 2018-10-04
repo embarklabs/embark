@@ -53,7 +53,15 @@ export function getProcesses(state) {
 }
 
 export function getProcessLogs(state) {
-  return state.entities.processLogs;
+  if(!state.entities.processLogs.length) return [];
+  const processLogsObj = state.entities.processLogs.reduce((processLogs, processLog) => {
+    const existingProcessLog = processLogs[processLog.process];
+    if(!existingProcessLog || processLog.timestamp > existingProcessLog.timestamp){
+      processLogs[processLog.process] = processLog;
+    }
+    return processLogs;
+  }, {});
+  return Object.values(processLogsObj);
 }
 
 export function getContractLogsByContract(state, contractName) {
