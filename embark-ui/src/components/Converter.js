@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {Page, Form} from "tabler-react";
+import {Page, Form, Icon, Button} from "tabler-react";
 import Units from 'ethereumjs-units';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 const UNITS = [
   { key: 'wei', name: 'Wei' },
@@ -55,7 +56,13 @@ class Converter extends Component {
             UNITS.map(unit => {
               return (
                 <Form.Group label={unit.name} key={unit.key}>
-                  <Form.Input placeholder={unit.name} value={this.state.units[unit.key]} onChange={e => this.calculate(e.target.value, unit.key)} />
+                  <Form.InputGroup>
+                    <Form.Input placeholder={unit.name} value={this.state.units[unit.key]} onChange={e => this.calculate(e.target.value, unit.key)} />
+
+                    <CopyToClipboard text={this.state.units[unit.key]} title="Copy value to clipboard">
+                      <Button color="primary"><Icon name="copy"/></Button>
+                    </CopyToClipboard>
+                  </Form.InputGroup>
                 </Form.Group>
               )
             })
