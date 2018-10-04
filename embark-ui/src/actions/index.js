@@ -1,3 +1,5 @@
+import Units from 'ethereumjs-units';
+
 export const REQUEST = 'REQUEST';
 export const SUCCESS = 'SUCCESS';
 export const FAILURE = 'FAILURE';
@@ -296,6 +298,52 @@ export function listenToGasOracle(){
 export function stopGasOracle(){
   return {
     type: STOP_GAS_ORACLE
+  }
+}
+
+// Actions without Side Effect
+const UNITS = [
+  { key: 'wei', name: 'Wei' },
+  { key: 'kwei', name: 'KWei' },
+  { key: 'mwei', name: 'MWei' },
+  { key: 'gwei', name: 'Szabo' },
+  { key: 'finney', name: 'Finney' },
+  { key: 'ether', name: 'Ether' },
+  { key: 'kether', name: 'KEther' },
+  { key: 'mether', name: 'MEther' },
+  { key: 'gether', name: 'GEther' },
+  { key: 'tether', namw: 'TEther' }
+];
+
+const safeConvert = (value, from, to) => {
+  try {
+    value = Units.convert(value, from, to);
+  } catch (e) {
+    value = '';
+  }
+  return value;
+};
+
+const calculateUnits = (value, from) => {
+  return UNITS.map((unit) => {
+    unit.value = safeConvert(value, from, unit.key);
+    return unit;
+  });
+};
+
+export const INIT_ETHER_CONVERSIONS = 'INIT_ETHER_CONVERSIONS';
+export function initEtherConversions() {
+  return {
+    type: INIT_ETHER_CONVERSIONS,
+    payload: calculateUnits('1', 'ether')
+  };
+}
+
+export const UPDATE_ETHER_CONVERSIONS = 'UPDATED_ETHER_CONVERSIONS';
+export function updateEtherConversions(value, key) {
+  return {
+    type: UPDATE_ETHER_CONVERSIONS,
+    payload: calculateUnits(value, key)
   };
 }
 

@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux';
-import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE, FETCH_CREDENTIALS} from "../actions";
+import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE, 
+        FETCH_CREDENTIALS, INIT_ETHER_CONVERSIONS, UPDATE_ETHER_CONVERSIONS} from "../actions";
 
 const BN_FACTOR = 10000;
 const VOID_ADDRESS = '0x0000000000000000000000000000000000000000';
@@ -180,13 +181,21 @@ function credentials(state = DEFAULT_CREDENTIALS_STATE, action) {
   return state;
 }
 
+function etherConversions(state = [], action) {
+  if ([INIT_ETHER_CONVERSIONS, UPDATE_ETHER_CONVERSIONS].includes(action.type)) {
+    return action.payload;
+  }
+  return state;
+}
+
 const rootReducer = combineReducers({
   entities,
   loading,
   compilingContract,
   errorMessage,
   errorEntities,
-  credentials
+  credentials,
+  etherConversions
 });
 
 export default rootReducer;

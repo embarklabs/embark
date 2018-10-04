@@ -2,10 +2,10 @@ import React from 'react';
 import {Page, Grid, List} from 'tabler-react'
 import {NavLink, Route, Switch} from 'react-router-dom';
 
-import Converter from '../components/Converter';
+import ConverterContainer from '../containers/ConverterContainer';
 
 const groupItems = [
-  {to: "/embark/utilities/converter", icon: "dollar-sign", value: "Ether Converter"},
+  {to: "/embark/utilities/converter", icon: "dollar-sign", value: "Ether Converter"}
 ];
 
 const className = "d-flex align-items-center";
@@ -34,11 +34,11 @@ class UtilsLayout extends React.Component {
         </Grid.Col>
         <Grid.Col md={9}>
           <Switch>
-            <Route exact path="/embark/utilities/converter" component={Converter} />
+            <Route exact path="/embark/utilities/converter" component={ConverterContainer} />
           </Switch>
         </Grid.Col>
       </Grid.Row>
-    )
+    );
   }
 }
 

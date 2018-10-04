@@ -156,3 +156,7 @@ export function getFiles(state) {
 export function getCurrentFile(state) {
   return last(state.entities.currentFiles);
 }
+
+export function getEtherConversions(state) {
+  return state.etherConversions;
+}
