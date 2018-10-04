@@ -259,7 +259,15 @@ export function *listenGasOracle() {
   const socket = api.websocketGasOracle(credentials);
   const channel = yield call(createChannel, socket);
   while (true) {
-    const gasOracleStats = yield take(channel);
+    const { cancel, gasOracleStats } = yield race({
+      gasOracleStats: take(channel),
+      cancel: take(actions.STOP_GAS_ORACLE)
+    });
+
+    if (cancel) {
+      channel.close();
+      return;
+    }
     yield put(actions.gasOracle.success(gasOracleStats));
   }
 }

@@ -3,19 +3,19 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from "react-router-dom";
 import GasStation from '../components/GasStation';
-import {listenToGasOracle, gasOracle as ethGasAction, blocks as blocksAction} from "../actions";
+import {stopGasOracle, listenToGasOracle, gasOracle as ethGasAction, blocks as blocksAction} from "../actions";
 import DataWrapper from "../components/DataWrapper";
 import {getOracleGasStats, getLastBlock} from "../reducers/selectors";
 
 class GasStationContainer extends Component {
   componentDidMount() {
     this.props.fetchEthGas();
-    if (!this.props.gasOracleStats.length) {
-      this.props.listenToGasOracle();
-    }
-    if (!this.props.lastBlock) {
-      this.props.fetchBlocks();
-    }
+    this.props.listenToGasOracle();
+    this.props.fetchBlocks();
+  }
+
+  componentWillUnmount() {
+    this.props.stopGasOracle();
   }
 
   render() {
@@ -31,6 +31,8 @@ GasStationContainer.propTypes = {
   gasOracleStats: PropTypes.object,
   lastBlock: PropTypes.object,
   listenToGasOracle: PropTypes.func,
+  stopGasOracle: PropTypes.func,
+  fetchBlocks: PropTypes.func,
   fetchEthGas: PropTypes.func
 };
 
@@ -44,8 +46,9 @@ function mapStateToProps(state, _props) {
 export default withRouter(connect(
   mapStateToProps,
   {
-    listenToGasOracle: listenToGasOracle,
     fetchEthGas: ethGasAction.request,
-    fetchBlocks: blocksAction.request
+    fetchBlocks: blocksAction.request,
+    listenToGasOracle,
+    stopGasOracle
   }
 )(GasStationContainer));
