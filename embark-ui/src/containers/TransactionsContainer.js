@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {transactions as transactionsAction} from '../actions';
+import {transactions as transactionsAction, initBlockHeader, stopBlockHeader} from '../actions';
 import LoadMore from "../components/LoadMore";
 import Transactions from '../components/Transactions';
 import DataWrapper from "../components/DataWrapper";
@@ -11,6 +11,11 @@ import {getTransactions} from "../reducers/selectors";
 class TransactionsContainer extends Component {
   componentDidMount() {
     this.props.fetchTransactions();
+    this.props.initBlockHeader();
+  }
+
+  componentWillUnmount() {
+    this.props.stopBlockHeader();
   }
 
   loadMore() {
@@ -44,6 +49,8 @@ function mapStateToProps(state) {
 TransactionsContainer.propTypes = {
   transactions: PropTypes.arrayOf(PropTypes.object),
   fetchTransactions: PropTypes.func,
+  initBlockHeader: PropTypes.func,
+  stopBlockHeader: PropTypes.func,
   error: PropTypes.string,
   loading: PropTypes.bool
 };
@@ -51,6 +58,8 @@ TransactionsContainer.propTypes = {
 export default connect(
   mapStateToProps,
   {
-    fetchTransactions: transactionsAction.request
+    fetchTransactions: transactionsAction.request,
+    initBlockHeader,
+    stopBlockHeader
   },
 )(TransactionsContainer);

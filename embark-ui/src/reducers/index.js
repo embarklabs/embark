@@ -4,6 +4,7 @@ import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE
 const BN_FACTOR = 10000;
 const VOID_ADDRESS = '0x0000000000000000000000000000000000000000';
 const DEFAULT_HOST = 'localhost:8000';
+const MAX_ELEMENTS = 200;
 
 const entitiesDefaultState = {
   accounts: [],
@@ -65,9 +66,16 @@ const filtrer = {
     return index === self.findIndex((t) => t.address === account.address);
   },
   blocks: function(block, index, self) {
+    if (index > MAX_ELEMENTS) {
+      return false;
+    }
+
     return index === self.findIndex((t) => t.number === block.number);
   },
   transactions: function(tx, index, self) {
+    if (index > MAX_ELEMENTS) {
+      return false;
+    }
     return index === self.findIndex((t) => (
       t.blockNumber === tx.blockNumber && t.transactionIndex === tx.transactionIndex
     ));

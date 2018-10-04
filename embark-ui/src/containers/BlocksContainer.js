@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {blocks as blocksAction} from '../actions';
+import {blocks as blocksAction, initBlockHeader, stopBlockHeader} from '../actions';
 import Blocks from '../components/Blocks';
 import DataWrapper from "../components/DataWrapper";
 import LoadMore from "../components/LoadMore";
@@ -11,6 +11,11 @@ import {getBlocks} from "../reducers/selectors";
 class BlocksContainer extends Component {
   componentDidMount() {
     this.props.fetchBlocks();
+    this.props.initBlockHeader();
+  }
+
+  componentWillUnmount() {
+    this.props.stopBlockHeader();
   }
 
   loadMore() {
@@ -44,6 +49,8 @@ function mapStateToProps(state) {
 BlocksContainer.propTypes = {
   blocks: PropTypes.arrayOf(PropTypes.object),
   fetchBlocks: PropTypes.func,
+  initBlockHeader: PropTypes.func,
+  stopBlockHeader: PropTypes.func,
   error: PropTypes.string,
   loading: PropTypes.bool
 };
@@ -51,6 +58,8 @@ BlocksContainer.propTypes = {
 export default connect(
   mapStateToProps,
   {
-    fetchBlocks: blocksAction.request
+    fetchBlocks: blocksAction.request,
+    initBlockHeader,
+    stopBlockHeader
   },
 )(BlocksContainer);

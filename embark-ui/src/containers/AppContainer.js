@@ -7,7 +7,6 @@ import Unauthenticated from '../components/Unauthenticated';
 import Layout from "../components/Layout";
 
 import {
-  initBlockHeader,
   authenticate, fetchCredentials, logout,
   processes as processesAction,
   versions as versionsAction,
@@ -51,7 +50,6 @@ class AppContainer extends Component {
     }
 
     if (this.props.credentials.authenticated && !this.props.initialized) {
-      this.props.initBlockHeader();
       this.props.fetchProcesses();
       this.props.fetchVersions();
       this.props.fetchPlugins();
@@ -98,7 +96,6 @@ function mapStateToProps(state) {
 export default withRouter(connect(
   mapStateToProps,
   {
-    initBlockHeader,
     authenticate: authenticate.request,
     logout: logout.request,
     fetchCredentials: fetchCredentials.request,

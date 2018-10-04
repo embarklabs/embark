@@ -2,7 +2,7 @@ import * as actions from '../actions';
 import * as api from '../services/api';
 import * as storage from '../services/storage';
 import {eventChannel} from 'redux-saga';
-import {all, call, fork, put, takeEvery, take, select} from 'redux-saga/effects';
+import {all, call, fork, put, takeEvery, take, select, race} from 'redux-saga/effects';
 import {getCredentials} from '../reducers/selectors';
 
 function *doRequest(entity, serviceFn, payload) {
@@ -208,9 +208,17 @@ export function *initBlockHeader() {
   const socket = api.webSocketBlockHeader(credentials);
   const channel = yield call(createChannel, socket);
   while (true) {
-    yield take(channel);
-    yield put({type: actions.BLOCKS[actions.REQUEST], noLoading: true});
-    yield put({type: actions.TRANSACTIONS[actions.REQUEST], noLoading: true});
+    const { cancel } = yield race({
+      task: take(channel),
+      cancel: take(actions.STOP_BLOCK_HEADER)
+    });
+
+    if (cancel) {
+      channel.close();
+      return;
+    }
+    yield put({type: actions.BLOCKS[actions.REQUEST]});
+    yield put({type: actions.TRANSACTIONS[actions.REQUEST]});
   }
 }
 
