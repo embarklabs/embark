@@ -31,24 +31,43 @@ class Console extends Component {
     this.setState({value: event.target.value});
   }
 
+  renderCommandsResult(){
+    const {commands} = this.props;
+    return (
+      this.state.selectedProcess === this.DEFAULT_PROCESS && 
+      commands.map((command, index) => {
+        return <CommandResult key={index} result={command.result}/>;
+      })
+    );
+  }
+
   renderTabs() {
-    const {processLogs, processes, commands} = this.props;
-    return processes.map(process => (
-      <Tab title={process.name} key={process.name} onClick={(e, x) => this.clickTab(e, x)}>
-        <Logs>
-          {
-            processLogs.reverse().filter((item) => item.name === process.name)
-              .map((item, i) => <p key={i} className={item.logLevel}
-                                   dangerouslySetInnerHTML={{__html: convert.toHtml(item.msg)}}></p>)
-          }
-          {process.name === "embark" && commands.map((command, index) => <CommandResult key={index} result={command.result}/>)}
-        </Logs>
-      </Tab>
+    const {processLogs, processes} = this.props;
+    return processes
+      .sort((a, b) => { // ensure the "Embark" tab is displayed first
+        if (a.name === this.DEFAULT_PROCESS) return -1;
+        if (b.name === this.DEFAULT_PROCESS) return 1;
+        return 0;
+      })
+      .map(process => (
+        <Tab title={process.name} key={process.name} onClick={(e, x) => this.clickTab(e, x)}>
+          <Logs>
+            {
+              processLogs
+                .reverse()
+                .filter((item) => item.name === process.name)
+                .sort((a, b) => a.timestamp - b.timestamp)
+                .map((item, i) => <p key={i} className={item.logLevel}
+                                    dangerouslySetInnerHTML={{__html: convert.toHtml(item.msg)}}></p>)
+            }
+          </Logs>
+        </Tab>
     ));
   }
 
   render() {
     const tabs = this.renderTabs();
+    const commandsResult = this.renderCommandsResult();
     const {value} = this.state;
 
     return (
@@ -65,6 +84,7 @@ class Console extends Component {
                 </TabbedHeader>
                 <TabbedContainer selectedTitle={this.props.activeProcess}>
                   {tabs}
+                  {commandsResult}
                 </TabbedContainer>
               </React.Fragment>
             </Card.Body>

@@ -126,6 +126,7 @@ class EmbarkController {
         }
 
         engine.startService("processManager");
+        engine.startService("embark");
         engine.startService("serviceMonitor");
         engine.startService("libraryManager");
         engine.startService("codeRunner");
