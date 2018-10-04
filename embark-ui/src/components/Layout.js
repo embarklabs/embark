@@ -5,16 +5,17 @@ import PropTypes from 'prop-types';
 
 import logo from '../images/logo.png';
 
-const navBarItems = [
-  {value: "Home", to: "/embark", icon: "home", LinkComponent: NavLink},
-  {value: "Contracts", to: "/embark/contracts", icon: "box", LinkComponent: NavLink},
-  {value: "Explorer", to: "/embark/explorer/accounts", icon: "activity", LinkComponent: NavLink},
-  {value: "Fiddle", to: "/embark/fiddle", icon: "codepen", LinkComponent: NavLink},
-  {value: "Documentation", to: "/embark/documentation", icon: "file-text", LinkComponent: NavLink},
-  {value: "Utils", to: "/embark/utilities/converter", icon: "settings", LinkComponent: NavLink}
-];
+const navBarItems = (tabs) => {
+  const homeTab = {value: "Home", to: "/embark", icon: "home", LinkComponent: NavLink};
 
-const Layout = ({children, logout, credentials}) => (
+  const generatedTabs = tabs.map(tab => (
+    {LinkComponent: NavLink, ...tab}
+  ));
+
+  return [homeTab, ...generatedTabs];
+}
+
+const Layout = ({children, logout, credentials, tabs}) => (
   <Site.Wrapper
     headerProps={{
       href: "/embark",
@@ -37,7 +38,7 @@ const Layout = ({children, logout, credentials}) => (
           {credentials.authenticated &&
             <Nav.Item type="div" className="d-none d-md-flex">
               Connected on {credentials.host}
-            </Nav.Item>  
+            </Nav.Item>
           }
           <Nav.Item type="div" className="d-none d-md-flex">
             <Button
@@ -46,12 +47,12 @@ const Layout = ({children, logout, credentials}) => (
               size="sm"
               color="danger">
               Logout
-            </Button> 
+            </Button>
           </Nav.Item>
         </React.Fragment>
       )
     }}
-    navProps={{itemsObjects: navBarItems}}
+    navProps={{itemsObjects: navBarItems(tabs)}}
   >
     <Container>
       {children}
@@ -61,6 +62,7 @@ const Layout = ({children, logout, credentials}) => (
 
 Layout.propTypes = {
   children: PropTypes.element,
+  tabs: PropTypes.arrayOf(PropTypes.object),
   credentials: PropTypes.object,
   logout: PropTypes.func
 };

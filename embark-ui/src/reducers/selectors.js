@@ -160,3 +160,7 @@ export function getCurrentFile(state) {
 export function getEtherConversions(state) {
   return state.etherConversions;
 }
+
+export function getTabs(state) {
+  return state.tabs;
+}

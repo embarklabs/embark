@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux';
-import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE, 
+import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE,
         FETCH_CREDENTIALS, INIT_ETHER_CONVERSIONS, UPDATE_ETHER_CONVERSIONS} from "../actions";
 
 const BN_FACTOR = 10000;
@@ -188,6 +188,28 @@ function etherConversions(state = [], action) {
   return state;
 }
 
+const DEFAULT_TABS = [
+  {value: "Contracts", to: "/embark/contracts", icon: "box", base: '/embark/contracts'},
+  {value: "Explorer", to: "/embark/explorer/accounts", icon: "activity", base: '/embark/explorer'},
+  {value: "Fiddle", to: "/embark/fiddle", icon: "codepen", base: '/embark/fiddle'},
+  {value: "Documentation", to: "/embark/documentation", icon: "file-text", base: '/embark/documentation'},
+  {value: "Utils", to: "/embark/utilities/converter", icon: "settings", base: '/embark/utilities'}
+];
+
+function tabs(state = DEFAULT_TABS, action) {
+  if (action.type === '@@router/LOCATION_CHANGE'){
+    const newState = [...state];
+    const activeTab = newState.find(tab => action.payload.location.pathname.startsWith(tab.base));
+    if (activeTab) {
+      activeTab.to = action.payload.location.pathname;
+      return newState;
+    }
+
+    return state;
+  }
+  return state;
+}
+
 const rootReducer = combineReducers({
   entities,
   loading,
@@ -195,7 +217,8 @@ const rootReducer = combineReducers({
   errorMessage,
   errorEntities,
   credentials,
-  etherConversions
+  etherConversions,
+  tabs
 });
 
 export default rootReducer;

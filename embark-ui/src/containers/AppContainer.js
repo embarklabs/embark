@@ -13,7 +13,7 @@ import {
   plugins as pluginsAction
 } from '../actions';
 
-import { getCredentials, getAuthenticationError, getVersions } from '../reducers/selectors';
+import { getTabs, getCredentials, getAuthenticationError, getVersions } from '../reducers/selectors';
 
 const qs = require('qs');
 
@@ -62,7 +62,7 @@ class AppContainer extends Component {
 
   render() {
     return (
-      <Layout logout={this.props.logout} credentials={this.props.credentials}>
+      <Layout logout={this.props.logout} credentials={this.props.credentials} tabs={this.props.tabs}>
         {this.shouldRenderUnauthenticated() ? <Unauthenticated credentials={this.props.credentials}
                                                                authenticate={this.props.authenticate}
                                                                error={this.props.authenticationError} /> : <React.Fragment>{routes}</React.Fragment>}
@@ -73,6 +73,7 @@ class AppContainer extends Component {
 
 AppContainer.propTypes = {
   credentials: PropTypes.object,
+  tabs: PropTypes.arrayOf(PropTypes.object),
   initialized: PropTypes.bool,
   authenticationError: PropTypes.string,
   authenticate: PropTypes.func,
@@ -89,6 +90,7 @@ function mapStateToProps(state) {
   return {
     initialized: getVersions(state).length > 0,
     credentials: getCredentials(state),
+    tabs: getTabs(state),
     authenticationError: getAuthenticationError(state)
   };
 }
