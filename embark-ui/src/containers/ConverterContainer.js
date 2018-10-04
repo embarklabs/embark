@@ -2,39 +2,31 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {updateEtherConversions, initEtherConversions} from '../actions';
-import {getEtherConversions} from "../reducers/selectors";
+import {updateBaseEther} from '../actions';
+import {getBaseEther} from "../reducers/selectors";
 import Converter from '../components/Converter';
 
 class ConverterContainer extends React.Component {
-  componentDidMount() {
-    if(this.props.etherConversions.length === 0) {
-      this.props.initEtherConversions();
-    }
-  }
-
   render() {
-    return <Converter etherConversions={this.props.etherConversions}
-                      updateEtherConversions={this.props.updateEtherConversions} />;
+    return <Converter baseEther={this.props.baseEther}
+    updateBaseEther={this.props.updateBaseEther} />;
   }
 }
 
 function mapStateToProps(state) {
   return {
-    etherConversions: getEtherConversions(state)
+    baseEther: getBaseEther(state)
   };
 }
 
 ConverterContainer.propTypes = {
-  etherConversions: PropTypes.arrayOf(PropTypes.object),
-  updateEtherConversions: PropTypes.func,
-  initEtherConversions: PropTypes.func
+  baseEther: PropTypes.string,
+  updateBaseEther: PropTypes.func
 };
 
 export default connect(
   mapStateToProps,
   {
-    updateEtherConversions,
-    initEtherConversions
+    updateBaseEther
   }
 )(ConverterContainer);

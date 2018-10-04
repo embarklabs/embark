@@ -157,8 +157,8 @@ export function getCurrentFile(state) {
   return last(state.entities.currentFiles);
 }
 
-export function getEtherConversions(state) {
-  return state.etherConversions;
+export function getBaseEther(state) {
+  return state.baseEther;
 }
 
 export function getTabs(state) {
