@@ -32,7 +32,7 @@ config({
       instanceOf: "Token"
     },
     Test: {
-      onDeploy: ["Test.methods.changeAddress('$MyToken').send()"]
+      onDeploy: ["Test.methods.changeAddress('$MyToken').send()", "Test.methods.changeENS('embark.eth').send()"]
     },
     ContractArgs: {
       args: {

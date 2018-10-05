@@ -10,6 +10,7 @@ library ZAMyLib {
 
 contract Test {
   address public addr;
+  address public ens;
 
   function testAdd() public pure returns (uint _result) {
     return ZAMyLib.add(1, 2);
@@ -17,6 +18,10 @@ contract Test {
 
   function changeAddress(address _addr) public {
     addr = _addr;
+  }
+
+  function changeENS(address _ens) public {
+    ens = _ens;
   }
 
 }

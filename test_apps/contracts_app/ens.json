@@ -1,0 +1,9 @@
+{
+  "default" : {
+    "enabled": true,
+    "available_providers": "ens",
+    "register": {
+      "rootDomain": "embark.eth"
+    }
+  }
+}

@@ -30,7 +30,7 @@ module.exports = {
         args: [1000]
       },
       Test: {
-        onDeploy: ["Test.methods.changeAddress('$MyToken')"]
+        onDeploy: ["Test.methods.changeAddress('$MyToken')", "Test.methods.changeENS('embark.eth')"]
       },
       MyToken: {
         instanceOf: "Token"

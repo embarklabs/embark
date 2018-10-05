@@ -13,7 +13,7 @@ config({
       args: [100]
     },
     AnotherStorage: {
-      args: ["$SimpleStorage"]
+      args: ["$SimpleStorage", "0xCAFECAFECAFECAFECAFECAFECAFECAFECAFECAFE"]
     },
     Token: {
       deploy: false,
