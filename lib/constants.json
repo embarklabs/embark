@@ -9,6 +9,7 @@
     "build": "build",
     "console": "console",
     "graph": "graph",
+    "scaffold": "scaffold",
     "test": "test",
     "reset": "reset",
     "any": "any"

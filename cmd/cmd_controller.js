@@ -435,9 +435,7 @@ class EmbarkController {
     this.context = options.context || [constants.contexts.scaffold];
     options.onlyCompile = true;
 
-    const Scaffolding = require('../lib/cmds/scaffolding.js');
     const Engine = require('../lib/core/engine.js');
-
     const engine = new Engine({
       env: options.env,
       version: this.version,
@@ -463,6 +461,7 @@ class EmbarkController {
         engine.startService("pipeline");
         engine.startService("deployment", {onlyCompile: true});
         engine.startService("web3");
+        engine.startService("scaffolding");
 
         engine.events.request('deploy:contracts', callback);
       }
@@ -471,8 +470,10 @@ class EmbarkController {
         engine.logger.error(err.message);
         engine.logger.info(err.stack);
       } else {
-        let scaffold = new Scaffolding(engine, options);
-        scaffold.generate(options.contract, options.overwrite);
+        engine.events.request("scaffolding:generate", options, () => {
+          engine.logger.info(__("finished generating the UI").underline);
+          process.exit();
+        });
       }
     });
   }
