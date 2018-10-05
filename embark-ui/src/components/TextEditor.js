@@ -1,11 +1,34 @@
 import React from 'react';
-import MonacoEditor from 'react-monaco-editor';
+import * as monaco from 'monaco-editor';
 import PropTypes from 'prop-types';
 
-const SUPPORTED_LANGUAGES = ['css', 'sol', 'html'];
+const SUPPORTED_LANGUAGES = ['css', 'sol', 'html', 'json'];
 const DEFAULT_LANGUAGE = 'javascript';
+const EDITOR_ID = 'react-monaco-editor-container';
+
+let editor;
+
+const initMonaco = (value) => {
+  let model;
+  if (editor) {
+    model = editor.getModel()
+  }
+  editor = monaco.editor.create(document.getElementById(EDITOR_ID), {
+    value,
+    model
+  });
+  monaco.editor.setTheme("vs-dark");
+};
 
 class TextEditor extends React.Component {
+  componentDidMount() {
+    initMonaco();
+    editor.onDidChangeModelContent((event) => {
+      const value = editor.getValue();
+      this.props.onFileContentChange(value);
+    });
+  }
+
   getLanguage() {
     const extension = this.props.file.name.split('.').pop();
     return SUPPORTED_LANGUAGES[SUPPORTED_LANGUAGES.indexOf(extension)] || DEFAULT_LANGUAGE;
@@ -19,7 +42,7 @@ class TextEditor extends React.Component {
     return {row: 0, col: 0};
   }
 
-  componentDidUpdate() {
+  updateMarkers() {
     const {errors, warnings} = this.props.contractCompile;
     const markers = [].concat(errors).concat(warnings).filter((e) => e).map((e) => {
       const {row, col} = this.extractRowCol(e.formattedMessage);
@@ -32,31 +55,33 @@ class TextEditor extends React.Component {
         severity: e.severity
       };
     });
-    this.state.monaco.editor.setModelMarkers(this.state.editor.getModel(), 'test', markers);
+    monaco.editor.setModelMarkers(editor.getModel(), 'test', markers);
+  }
 
+  updateLanguage() {
     const newLanguage = this.getLanguage();
-    const currentLanguage = this.state.editor.getModel().getModeId();
-
+    const currentLanguage = editor.getModel().getModeId();
     if (newLanguage !== currentLanguage) {
-      this.state.monaco.editor.setModelLanguage(this.state.editor.getModel(), newLanguage);
+      monaco.editor.setModelLanguage(editor.getModel(), newLanguage);
     }
   }
 
-  editorDidMount(editor, monaco) {
-    this.setState({editor, monaco});
+  componentDidUpdate(prevProps) {
+    if (this.props.file.content !== prevProps.file.content) {
+      editor.setValue(this.props.file.content);
+    }
+
+    this.updateMarkers();
+    this.updateLanguage();
   }
 
   render() {
-    return (
-      <MonacoEditor
-        width="800"
-        height="600"
-        theme="vs-dark"
-        value={this.props.file.content}
-        onChange={this.props.onFileContentChange}
-        editorDidMount={(editor, monaco) => this.editorDidMount(editor, monaco)}
-      />
-    );
+    const style = {
+      width: "800px",
+      height: "600px"
+    };
+
+    return <div ref={this.assignRef} style={style} id={EDITOR_ID} />;
   }
 }
 
