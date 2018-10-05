@@ -6,7 +6,8 @@
     "contracts": "contracts.json",
     "storage": false,
     "communication": false,
-    "webserver": false
+    "webserver": false,
+    "namesystem": "ens.json"
   },
   "versions": {
     "web3": "1.0.0-beta",

@@ -133,7 +133,6 @@ class EmbarkController {
         engine.startService("deployment");
         engine.startService("storage");
         engine.startService("codeGenerator");
-        engine.startService("namingSystem");
         engine.startService("console");
         engine.startService("pluginCommand");
 
@@ -286,7 +285,6 @@ class EmbarkController {
         engine.startService("deployment");
         engine.startService("storage");
         engine.startService("codeGenerator");
-        engine.startService("namingSystem");
         engine.startService("console");
         engine.startService("pluginCommand");
         engine.events.once('check:backOnline:Ethereum', () => callback());
@@ -478,7 +476,6 @@ class EmbarkController {
         engine.startService("deployment");
         engine.startService("storage");
         engine.startService("codeGenerator");
-        engine.startService("namingSystem");
         callback();
       },
       function listLoadedPlugin(callback) {
