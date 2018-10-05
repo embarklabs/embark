@@ -494,9 +494,7 @@ class EmbarkController {
 
 
           let scaffold = new Scaffolding(engine, options);
-          scaffold.generate(options.contract);
-
-          engine.logger.info(__("finished generating the UI").underline);
+          scaffold.generate(options.contract, options.overwrite);
           callback(err, true);
         });
       }
