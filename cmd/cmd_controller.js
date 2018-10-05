@@ -463,7 +463,6 @@ class EmbarkController {
         engine.startService("pipeline");
         engine.startService("deployment", {onlyCompile: true});
         engine.startService("web3");
-        engine.startService("codeGenerator");
 
         engine.events.request('deploy:contracts', callback);
       }
@@ -474,7 +473,6 @@ class EmbarkController {
       } else {
         let scaffold = new Scaffolding(engine, options);
         scaffold.generate(options.contract, options.overwrite);
-        process.exit();
       }
     });
   }

@@ -160,21 +160,13 @@ class {{capitalize name}}Form{{@index}} extends Component {
 
 {{/each}}
 
-class {{contractName}}UI extends Component {
-    constructor (props) {
-        super(props);
-            this.state = {
-        };
-    }
-
-    render(){
-        return (<div>
+function {{contractName}}UI(props) {
+    return (<div>
             <h1>{{title}}</h1>
             {{#each functions}}
             <{{capitalize name}}Form{{@index}} />
             {{/each}}
         </div>);
-    }
 }
 
 
