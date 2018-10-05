@@ -419,12 +419,12 @@ class EmbarkController {
 
   ejectWebpack() {
     var fs = require('../lib/core/fs.js');
-    var embarkConfig = fs.embarkPath('lib/pipeline/webpack.config.js');
+    var embarkConfig = fs.embarkPath('lib/modules/pipeline/webpack.config.js');
     var dappConfig = fs.dappPath('webpack.config.js');
     fs.copyPreserve(embarkConfig, dappConfig);
     console.log(__('webpack config ejected to:').dim.yellow);
     console.log(`${dappConfig}`.green);
-    var embarkOverrides = fs.embarkPath('lib/pipeline/babel-loader-overrides.js');
+    var embarkOverrides = fs.embarkPath('lib/modules/pipeline/babel-loader-overrides.js');
     var dappOverrides = fs.dappPath('babel-loader-overrides.js');
     fs.copyPreserve(embarkOverrides, dappOverrides);
     console.log(__('webpack overrides ejected to:').dim.yellow);
