@@ -30,22 +30,27 @@ class {{capitalize name}}Form{{@index}} extends Component {
     }
 
     handleChange(e, name){
-        this.state.input[name] = e.target.value;
-        this.setState(this.state);
+        const {input} = this.state;
+        input[name] = e.target.value;
+        this.setState({input});
     }
 
     handleCheckbox(e, name){
-        this.state.input[name] = e.target.checked;
-        this.setState(this.state);
+        const {input} = this.state;
+        input[name] = e.target.checked;
+        this.setState({input});
     }
 
     async handleClick(e){
         e.preventDefault();
+
+        const {input, value} = this.state;
+
         this.setState({output: null, error: null, receipt: null});
-        
+
         try {
         {{#ifview stateMutability}}
-            const result = await {{../contractName}}.methods{{methodname ../functions name inputs}}({{#each inputs}}this.state.input.{{name}}{{#unless @last}}, {{/unless}}{{/each}}).call()
+            const result = await {{../contractName}}.methods{{methodname ../functions name inputs}}({{#each inputs}}input.{{name}}{{#unless @last}}, {{/unless}}{{/each}}).call()
             {{#iflengthgt outputs 1}}
             this.setState({output: {
             {{#each outputs}}
@@ -56,13 +61,13 @@ class {{capitalize name}}Form{{@index}} extends Component {
             this.setState({output: result});  
             {{/iflengthgt}}           
         {{else}}
-            const toSend = {{../contractName}}.methods{{methodname ../functions name inputs}}({{#each inputs}}this.state.input.{{name}}{{#unless @last}}, {{/unless}}{{/each}});
+            const toSend = {{../contractName}}.methods{{methodname ../functions name inputs}}({{#each inputs}}input.{{name}}{{#unless @last}}, {{/unless}}{{/each}});
 
             const estimatedGas = await toSend.estimateGas({from: web3.eth.defaultAccount});
             
             const receipt = await toSend.send({
                 {{#if payable}}
-                value: this.state.value,
+                value: value,
                 {{/if}}
                 from: web3.eth.defaultAccount,
                 gasLimit: estimatedGas
@@ -158,7 +163,7 @@ class {{capitalize name}}Form{{@index}} extends Component {
 class {{contractName}}UI extends Component {
     constructor (props) {
         super(props);
-        this.state = {
+            this.state = {
         };
     }
 

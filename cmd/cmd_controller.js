@@ -431,80 +431,51 @@ class EmbarkController {
   }
 
   scaffold(options) {
-    this.context = options.context || [constants.contexts.build];
+
+    this.context = options.context || [constants.contexts.scaffold];
+    options.onlyCompile = true;
 
     const Scaffolding = require('../lib/cmds/scaffolding.js');
-
     const Engine = require('../lib/core/engine.js');
+
     const engine = new Engine({
       env: options.env,
-      client: options.client,
-      locale: options.locale,
       version: this.version,
-      embarkConfig: 'embark.json',
-      interceptLogs: false,
+      embarkConfig: options.embarkConfig || 'embark.json',
       logFile: options.logFile,
-      logLevel: options.logLevel,
-      events: options.events,
-      logger: options.logger,
-      config: options.config,
-      plugins: options.plugins,
-      context: this.context,
-      webpackConfigName: options.webpackConfigName
+      context: this.context
     });
 
 
     async.waterfall([
-      function initEngine(callback) {
+      function (callback) {
         engine.init({}, callback);
       },
-      function startServices(callback) {
+      function (callback) {
         let pluginList = engine.plugins.listPlugins();
         if (pluginList.length > 0) {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
 
         engine.startService("processManager");
+        engine.startService("serviceMonitor");
         engine.startService("libraryManager");
-        engine.startService("codeRunner");
+        engine.startService("pipeline");
+        engine.startService("deployment", {onlyCompile: true});
         engine.startService("web3");
-        if (!options.onlyCompile) {
-          engine.startService("pipeline");
-        }
-        engine.startService("deployment", {onlyCompile: options.onlyCompile});
-        if (!options.onlyCompile) {
-          engine.startService("storage");
-          engine.startService("codeGenerator");
-        }
+        engine.startService("codeGenerator");
 
-        callback();
-      },
-      function deploy(callback) {
-        engine.events.request('deploy:contracts', function (err) {
-          callback(err);
-        });
-      },
-      function waitForWriteFinish(callback) {
-        if (options.onlyCompile) {
-          engine.logger.info("Finished compiling".underline);
-          return callback(null, true);
-        }
-
-        engine.events.on('outputDone', (err) => {
-
-
-          let scaffold = new Scaffolding(engine, options);
-          scaffold.generate(options.contract, options.overwrite);
-          callback(err, true);
-        });
+        engine.events.request('deploy:contracts', callback);
       }
-    ], function (_err, canExit) {
-      // TODO: this should be moved out and determined somewhere else
-      if (canExit || !engine.config.contractsConfig.afterDeploy || !engine.config.contractsConfig.afterDeploy.length) {
+    ], (err) => {
+      if (err) {
+        engine.logger.error(err.message);
+        engine.logger.info(err.stack);
+      } else {
+        let scaffold = new Scaffolding(engine, options);
+        scaffold.generate(options.contract, options.overwrite);
         process.exit();
       }
-      engine.logger.info(__('Waiting for after deploy to finish...'));
-      engine.logger.info(__('You can exit with CTRL+C when after deploy completes'));
     });
   }
 
