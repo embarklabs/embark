@@ -12,7 +12,7 @@ class REPL {
 
   enhancedEval(cmd, context, filename, callback) {
     this.events.request('console:executeCmd', cmd.trim(), function (err, message) {
-      callback(err, message || ''); // This way, we don't print undefined
+      callback(err, message === undefined ? '' : message); // This way, we don't print undefined
     });
   }
 
