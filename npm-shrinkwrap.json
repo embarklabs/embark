@@ -15328,6 +15328,22 @@
       }
     },
     "ws": {
+      "version": "3.0.0",
+      "resolved": "https://registry.npmjs.org/ws/-/ws-3.0.0.tgz",
+      "integrity": "sha1-mN2wAFbIOQy3Ued4h4hJf5kQO2w=",
+      "requires": {
+        "safe-buffer": "~5.0.1",
+        "ultron": "~1.1.0"
+      },
+      "dependencies": {
+        "safe-buffer": {
+          "version": "5.0.1",
+          "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.0.1.tgz",
+          "integrity": "sha1-0mPKVGls2KMGtcplUekt5XkY++c="
+        }
+      }
+    },
+    "ws": {
       "version": "3.3.3",
       "resolved": "https://registry.npmjs.org/ws/-/ws-3.3.3.tgz",
       "integrity": "sha512-nnWLa/NwZSt4KQJu51MYlCcSQ5g7INpOrOMt4XV8j4dqTXdmlUmSHQ8/oLC069ckre0fRsgfvsKwbTdtKLCDkA==",
