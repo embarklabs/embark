@@ -278,6 +278,7 @@ class Cmd {
       .option('--nobrowser', __('do not start browser after coverage report is generated'))
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'warn')
+      .option('--solc', __('run only solidity tests'))
       .description(__('run tests'))
       .action(function(file, options) {
         const node = options.node || 'vm';
@@ -295,7 +296,7 @@ class Cmd {
         }
         checkDeps();
         i18n.setOrDetectLocale(options.locale);
-        embark.runTests({file, loglevel: options.loglevel, gasDetails: options.gasDetails,
+        embark.runTests({file, solc:options.solc, loglevel: options.loglevel, gasDetails: options.gasDetails,
           node: options.node, coverage: options.coverage, noBrowser: options.nobrowser});
       });
   }
