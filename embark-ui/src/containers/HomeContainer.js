@@ -6,9 +6,8 @@ import {Page} from "tabler-react";
 import {commands as commandsAction, listenToProcessLogs, processLogs as processLogsAction} from "../actions";
 import DataWrapper from "../components/DataWrapper";
 import Processes from '../components/Processes';
-import Versions from '../components/Versions';
 import Console from '../components/Console';
-import {getProcesses, getCommands, getVersions, getProcessLogs} from "../reducers/selectors";
+import {getProcesses, getCommands, getProcessLogs} from "../reducers/selectors";
 import deepEqual from 'deep-equal';
 
 class HomeContainer extends Component {
@@ -38,9 +37,6 @@ class HomeContainer extends Component {
         <DataWrapper shouldRender={this.props.processes.length > 0 } {...this.props} render={({processes}) => (
           <Processes processes={processes} />
         )} />
-        <DataWrapper shouldRender={this.props.versions.length > 0 } {...this.props} render={({versions}) => (
-          <Versions versions={versions} />
-        )} />
 
         <DataWrapper shouldRender={this.props.processes.length > 0 } {...this.props} render={({processes, postCommand, processLogs}) => (
           <Console postCommand={postCommand} commands={this.props.commands} processes={processes} processLogs={processLogs} />
@@ -52,7 +48,6 @@ class HomeContainer extends Component {
 
 HomeContainer.propTypes = {
   processes: PropTypes.arrayOf(PropTypes.object),
-  versions: PropTypes.arrayOf(PropTypes.object),
   postCommand: PropTypes.func,
   commands: PropTypes.arrayOf(PropTypes.object),
   error: PropTypes.string,
@@ -61,7 +56,6 @@ HomeContainer.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    versions: getVersions(state),
     processes: getProcesses(state),
     commands: getCommands(state),
     error: state.errorMessage,
