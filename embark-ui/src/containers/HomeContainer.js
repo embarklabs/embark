@@ -3,12 +3,23 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Page} from "tabler-react";
 
-import {commands as commandsAction, listenToProcessLogs, processLogs as processLogsAction, stopProcessLogs} from "../actions";
+import {
+  contracts as contractsAction,
+  commands as commandsAction,
+  listenToProcessLogs,
+  processLogs as processLogsAction,
+  stopProcessLogs
+} from "../actions";
+
 import DataWrapper from "../components/DataWrapper";
 import Processes from '../components/Processes';
 import Console from '../components/Console';
 import {getProcesses, getProcessLogs} from "../reducers/selectors";
 import {EMBARK_PROCESS_NAME} from '../constants';
+import ContractsList from '../components/ContractsList';
+import {getContracts, getProcesses, getCommands, getProcessLogs} from "../reducers/selectors";
+
+const EMBARK_PROCESS_NAME = 'Embark';
 
 class HomeContainer extends Component {
   constructor(props) {
@@ -38,6 +49,7 @@ class HomeContainer extends Component {
       this.props.listenToProcessLogs(processName);
     }
 
+    this.props.fetchContracts();
     this.setState({activeProcess: processName});
   }
 
@@ -47,6 +59,11 @@ class HomeContainer extends Component {
         <Page.Title className="my-5">Dashboard</Page.Title>
         <DataWrapper shouldRender={this.props.processes.length > 0 } {...this.props} render={({processes}) => (
           <Processes processes={processes} />
+        )} />
+        <DataWrapper shouldRender={this.props.contracts.length > 0} {...this.props} render={({contracts}) => (
+            <div style={{maxHeight: '227px', marginBottom: '1.5rem', overflow: 'auto'}}>
+                <ContractsList contracts={contracts} />
+            </div>
         )} />
 
         <DataWrapper shouldRender={this.props.processes.length > 0 } {...this.props} render={({processes, postCommand, processLogs}) => (
@@ -72,6 +89,8 @@ HomeContainer.propTypes = {
 function mapStateToProps(state) {
   return {
     processes: getProcesses(state),
+    contracts: getContracts(state),
+    commands: getCommands(state),
     error: state.errorMessage,
     processLogs: getProcessLogs(state),
     loading: state.loading
@@ -83,6 +102,7 @@ export default connect(
   {
     postCommand: commandsAction.post,
     fetchProcessLogs: processLogsAction.request,
+    fetchContracts: contractsAction.request,
     listenToProcessLogs,
     stopProcessLogs
   }
