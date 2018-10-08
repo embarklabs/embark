@@ -1,5 +1,6 @@
 const repl = require("repl");
 const util = require("util");
+let fs = require('../../lib/core/fs');
 
 class REPL {
   constructor(options) {
@@ -26,6 +27,12 @@ class REPL {
       useGlobal: true,
       eval: this.enhancedEval.bind(this),
       writer: this.enhancedWriter.bind(this)
+    });
+
+    this.events.request('console:history', (err, history) => {
+      history
+        .split('\n')
+        .forEach((cmd) => { this.replServer.history.push(cmd); });
     });
 
     this.events.request("runcode:getContext", (context) => {
