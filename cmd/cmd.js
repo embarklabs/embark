@@ -36,6 +36,8 @@ process.env.NODE_PATH = utils.joinPath(process.env.EMBARK_PATH, 'node_modules') 
   (process.env.NODE_PATH || '');
 
 process.env.DEFAULT_DIAGRAM_PATH = utils.joinPath(process.env.DAPP_PATH, 'diagram.svg');
+process.env.DEFAULT_CMD_HISTORY_PATH = utils.joinPath(process.env.DAPP_PATH, '.embark', 'cmd_history');
+process.env.DEFAULT_CMD_HISTORY_SIZE = 20;
 
 class Cmd {
   constructor() {

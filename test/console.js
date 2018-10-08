@@ -9,7 +9,20 @@ describe('embark.Console', function() {
   let ipc = new IPC({ipcRole: 'none'});
   let plugins = new Plugins({plugins: {}});
   let events = {once: () => {}, setCommandHandler: () => {}, emit: () => {}};
-  let console = new Console({}, {plugins, version, ipc, events});
+  let embarkObject = {
+    events: events,
+    logger: plugins.logger,
+    registerConsoleCommand: (cmd, opt) => {},
+    embarkConfig: {
+      options: {
+        solc: {
+          "optimize": true,
+          "optimize-runs": 200
+        }
+      }
+    }
+  }
+  let console = new Console(embarkObject, {plugins, version, ipc, events});
 
   describe('#executeCmd', function() {
 
