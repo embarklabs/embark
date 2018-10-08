@@ -38,7 +38,7 @@ const sorter = {
     return ((BN_FACTOR * b.blockNumber) + b.transactionIndex) - ((BN_FACTOR * a.blockNumber) + a.transactionIndex);
   },
   processLogs: function(a, b) {
-    return a.timestamp - b.timestamp;
+    return b.timestamp - a.timestamp;
   },
   contractLogs: function(a, b) {
     return a.timestamp - b.timestamp;
@@ -47,7 +47,7 @@ const sorter = {
     return a.time - b.time;
   },
   commands: function(a, b) {
-    return b.timestamp - a.timestamp;
+    return a.timestamp - b.timestamp;
   },
   files: function(a, b) {
     if (a.name < b.name) return -1;
@@ -59,6 +59,9 @@ const sorter = {
 const filtrer = {
   processes: function(process, index, self) {
     return index === self.findIndex((t) => t.name === process.name);
+  },
+  processLogs: function(_processLog, index) {
+    return index <= MAX_ELEMENTS
   },
   contracts: function(contract, index, self) {
     return index === self.findIndex((t) => t.className === contract.className);
@@ -107,7 +110,7 @@ function entities(state = entitiesDefaultState, action) {
     let filter = filtrer[name] || (() => true);
     let sort = sorter[name] || (() => true);
     if (action[name] && action[name].length > 1) {
-      return {...state, [name]: [...action[name], ...state[name]].filter(filter).sort(sort)};
+      return {...state, [name]: [...action[name], ...state[name]].sort(sort).filter(filter)};
     }
     if (action[name] && action[name].length === 1) {
       let entity = action[name][0];
@@ -115,12 +118,12 @@ function entities(state = entitiesDefaultState, action) {
         if (entity[entityName] && entity[entityName].length > 0) {
           let entityFilter = filtrer[entityName] || (() => true);
           let entitySort = sorter[entityName] || (() => true);
-          acc[entityName] = [...entity[entityName], ...state[entityName]].filter(entityFilter).sort(entitySort);
+          acc[entityName] = [...entity[entityName], ...state[entityName]].sort(entitySort).filter(entityFilter);
         }
         return acc;
       }, {});
       return {
-        ...state, ...nested, [name]: [...action[name], ...state[name]].filter(filter).sort(sort)
+        ...state, ...nested, [name]: [...action[name], ...state[name]].sort(sort).filter(filter)
       };
     }
   }

@@ -43,7 +43,7 @@ class Console extends Component {
       <Tab title={process.name} key={process.name}>
         <Logs>
           {
-            processLogs.filter((item) => item.name === process.name)
+            processLogs.reverse().filter((item) => item.name === process.name)
               .map((item, i) => <p key={i} className={item.logLevel}
                                    dangerouslySetInnerHTML={{__html: convert.toHtml(item.msg)}}></p>)
           }
