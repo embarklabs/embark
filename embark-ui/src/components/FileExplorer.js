@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Treebeard, decorators} from 'react-treebeard';
+import {Form} from 'tabler-react';
 
 const Header = ({style, node}) => {
   const iconType = node.children ? 'folder' : 'file';
@@ -27,7 +28,9 @@ decorators.Header = Header;
 class FileExplorer extends React.Component {
   constructor(props){
     super(props);
-    this.state = {};
+    this.state = {
+      files: this.props.files
+    };
   }
 
   onToggle(node, toggled){
@@ -44,13 +47,23 @@ class FileExplorer extends React.Component {
     this.setState({ cursor: node });
   }
 
+  onHiddenToggle(value){
+    this.setState({files: this.props.files.filter((file) => {
+        return;
+      })
+    });
+  }
+
   render(){
     return (
-      <Treebeard
-        data={this.props.files}
-        decorators={decorators}
-        onToggle={this.onToggle.bind(this)}
-      />
+      <React.Fragment>
+        <Form.Switch type="checkbox" name="toggle" value={true} label="Show hidden files" ref={(input) => { this.showHidden = input; }} onToggle={this.onHiddenToggle.bind(this)} />
+        <Treebeard
+          data={this.props.files}
+          decorators={decorators}
+          onToggle={this.onToggle.bind(this)}
+        />
+      </React.Fragment>
     );
   }
 }
