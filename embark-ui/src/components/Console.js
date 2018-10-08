@@ -17,10 +17,7 @@ CommandResult.propTypes = {
 class Console extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      value: '',
-      selectedProcess: 'Embark'
-    };
+    this.state = {value: ''};
   }
 
   handleSubmit(event) {
@@ -43,7 +40,7 @@ class Console extends Component {
         </Logs>
       </Tab>)
     ].concat(processes.map(process => (
-      <Tab title={process.name} key={process.name} onClick={(e, x) => this.clickTab(e, x)}>
+      <Tab title={process.name} key={process.name}>
         <Logs>
           {
             processLogs.filter((item) => item.name === process.name)
@@ -57,7 +54,7 @@ class Console extends Component {
 
   render() {
     const tabs = this.renderTabs();
-    const {selectedProcess, value} = this.state;
+    const {value} = this.state;
 
     return (
       <Grid.Row cards className="console">
@@ -66,17 +63,17 @@ class Console extends Component {
             <Card.Body className="console-container">
               <React.Fragment>
                 <TabbedHeader
-                  selectedTitle={selectedProcess}
-                  stateCallback={newProcess => this.setState({selectedProcess: newProcess})}
+                  selectedTitle={this.props.activeProcess}
+                  stateCallback={this.props.updateTab}
                 >
                   {tabs}
                 </TabbedHeader>
-                <TabbedContainer selectedTitle={selectedProcess}>
+                <TabbedContainer selectedTitle={this.props.activeProcess}>
                   {tabs}
                 </TabbedContainer>
               </React.Fragment>
             </Card.Body>
-            {selectedProcess === 'Embark' && <Card.Footer>
+            {this.props.isEmbark() && <Card.Footer>
               <form onSubmit={(event) => this.handleSubmit(event)} autoComplete="off">
                 <Form.Input value={value}
                             onChange={(event) => this.handleChange(event)}
@@ -93,9 +90,11 @@ class Console extends Component {
 
 Console.propTypes = {
   postCommand: PropTypes.func,
+  isEmbark: PropTypes.func,
   commands: PropTypes.arrayOf(PropTypes.object).isRequired,
   processes: PropTypes.arrayOf(PropTypes.object).isRequired,
-  processLogs: PropTypes.arrayOf(PropTypes.object).isRequired
+  processLogs: PropTypes.arrayOf(PropTypes.object).isRequired,
+  updateTab: PropTypes.func
 };
 
 export default Console;

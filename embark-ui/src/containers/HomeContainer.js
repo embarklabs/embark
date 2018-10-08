@@ -3,31 +3,39 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Page} from "tabler-react";
 
-import {commands as commandsAction, listenToProcessLogs, processLogs as processLogsAction} from "../actions";
+import {commands as commandsAction, listenToProcessLogs, processLogs as processLogsAction, stopProcessLogs} from "../actions";
 import DataWrapper from "../components/DataWrapper";
 import Processes from '../components/Processes';
 import Console from '../components/Console';
 import {getProcesses, getCommands, getProcessLogs} from "../reducers/selectors";
-import deepEqual from 'deep-equal';
+
+const EMBARK_PROCESS_NAME = 'Embark';
 
 class HomeContainer extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { activeProcess: EMBARK_PROCESS_NAME };
+  }
+
   componentDidMount() {
-    this.getProcesses();
+    this.updateTab();
   }
 
-  componentDidUpdate(prevProps) {
-    if (!deepEqual(this.props.processes, prevProps.processes)) {
-      this.getProcesses(prevProps);
+  isEmbark() {
+    return this.state.activeProcess === EMBARK_PROCESS_NAME
+  }
+
+  updateTab(processName = EMBARK_PROCESS_NAME) {
+    if (!this.isEmbark()){
+      this.props.stopProcessLogs(this.state.activeProcess)
     }
-  }
 
-  getProcesses(prevProps) {
-    this.props.processes.forEach(process => {
-      this.props.fetchProcessLogs(process.name);
-      if (!prevProps || !prevProps.processes.length) {
-        this.props.listenToProcessLogs(process.name);
-      }
-    });
+    if (processName !== EMBARK_PROCESS_NAME) {
+      this.props.fetchProcessLogs(processName);
+      this.props.listenToProcessLogs(processName);
+    }
+
+    this.setState({activeProcess: processName});
   }
 
   render() {
@@ -39,7 +47,13 @@ class HomeContainer extends Component {
         )} />
 
         <DataWrapper shouldRender={this.props.processes.length > 0 } {...this.props} render={({processes, postCommand, processLogs}) => (
-          <Console postCommand={postCommand} commands={this.props.commands} processes={processes} processLogs={processLogs} />
+          <Console activeProcess={this.state.activeProcess}
+                   postCommand={postCommand}
+                   commands={this.props.commands}
+                   processes={processes}
+                   processLogs={processLogs}
+                   isEmbark={() => this.isEmbark}
+                   updateTab={processName => this.updateTab(processName)} />
         )} />
       </React.Fragment>
     );
@@ -69,6 +83,7 @@ export default connect(
   {
     postCommand: commandsAction.post,
     fetchProcessLogs: processLogsAction.request,
-    listenToProcessLogs
+    listenToProcessLogs,
+    stopProcessLogs
   }
 )(HomeContainer);

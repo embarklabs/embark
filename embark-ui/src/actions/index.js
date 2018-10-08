@@ -256,6 +256,7 @@ export const gasOracle = {
 
 // Web Socket
 export const WATCH_NEW_PROCESS_LOGS = 'WATCH_NEW_PROCESS_LOGS';
+export const STOP_NEW_PROCESS_LOGS = 'STOP_NEW_PROCESS_LOGS';
 export const WATCH_NEW_CONTRACT_LOGS = 'WATCH_NEW_CONTRACT_LOGS';
 export const INIT_BLOCK_HEADER = 'INIT_BLOCK_HEADER';
 export const STOP_BLOCK_HEADER = 'STOP_BLOCK_HEADER';
@@ -265,6 +266,13 @@ export const STOP_GAS_ORACLE = 'STOP_GAS_ORACLE';
 export function listenToProcessLogs(processName) {
   return {
     type: WATCH_NEW_PROCESS_LOGS,
+    processName
+  };
+}
+
+export function stopProcessLogs(processName) {
+  return {
+    type: STOP_NEW_PROCESS_LOGS,
     processName
   };
 }

@@ -231,7 +231,16 @@ export function *listenToProcessLogs(action) {
   const socket = api.webSocketProcess(credentials, action.processName);
   const channel = yield call(createChannel, socket);
   while (true) {
-    const processLog = yield take(channel);
+    const { cancel, processLog } = yield race({
+      processLog: take(channel),
+      cancel: take(actions.STOP_NEW_PROCESS_LOGS)
+    });
+    
+    if (cancel && action.processName === cancel.processName) {
+      channel.close();
+      return;
+    }
+
     yield put(actions.processLogs.success([processLog]));
   }
 }
