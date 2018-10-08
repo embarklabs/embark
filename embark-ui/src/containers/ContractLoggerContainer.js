@@ -31,6 +31,7 @@ function mapStateToProps(state, props) {
 }
 
 ContractLoggerContainer.propTypes = {
+  contract: PropTypes.object,
   contractLogs: PropTypes.array,
   fetchContractLogs: PropTypes.func,
   listenToContractLogs: PropTypes.func,
