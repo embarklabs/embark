@@ -10,6 +10,6 @@ try {
   }
 }
 
-var Cmd = require('../cmd/cmd');
+var Cmd = require('../src/cmd/cmd');
 var cli = new Cmd();
 cli.process(process.argv);

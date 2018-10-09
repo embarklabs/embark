@@ -1,16 +1,15 @@
 let http = require('follow-redirects').http;
 let https = require('follow-redirects').https;
+const path = require('path');
 const {canonicalHost} = require('./host');
 
 const balanceRegex = /([0-9]+) ?([a-zA-Z]*)/;
 
 function joinPath() {
-  const path = require('path');
   return path.join.apply(path.join, arguments);
 }
 
 function dirname() {
-  const path = require('path');
   return path.dirname.apply(path.dirname, arguments);
 }
 

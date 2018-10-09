@@ -26,3 +26,4 @@ test_apps/contracts_app/chains.json
 NOTES
 npm-debug.log
 .tern-port
+dist/

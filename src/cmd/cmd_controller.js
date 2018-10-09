@@ -3,7 +3,7 @@ const constants = require('../lib/constants');
 
 require('colors');
 
-let version = require('../package.json').version;
+let version = require('../../package.json').version;
 
 class EmbarkController {
 

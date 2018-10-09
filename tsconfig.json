@@ -1,0 +1,23 @@
+{
+"compilerOptions": {
+ "target": "es5",
+ "lib": [
+   "es2017","es2015","dom","es6"
+  ],
+ "module": "commonjs",
+ "outDir": "./dist",
+ "sourceMap": false,
+ "strict": true,
+ "allowJs": true,
+ "resolveJsonModule": true
+},
+"include": [
+  "src/**/*.js",
+  "src/**/*.json",
+  "bin/embark.ts"
+ ],
+"exclude": [
+  "node_modules"
+ ]
+}
+
