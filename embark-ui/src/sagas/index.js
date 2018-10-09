@@ -27,6 +27,7 @@ export const fetchProcesses = doRequest.bind(null, actions.processes, api.fetchP
 export const postCommand = doRequest.bind(null, actions.commands, api.postCommand);
 export const postCommandSuggestions = doRequest.bind(null, actions.commandSuggestions, api.postCommandSuggestions);
 export const fetchProcessLogs = doRequest.bind(null, actions.processLogs, api.fetchProcessLogs);
+export const fetchContractEvents = doRequest.bind(null, actions.contractEvents, api.fetchContractEvents);
 export const fetchContractLogs = doRequest.bind(null, actions.contractLogs, api.fetchContractLogs);
 export const fetchContracts = doRequest.bind(null, actions.contracts, api.fetchContracts);
 export const fetchContract = doRequest.bind(null, actions.contract, api.fetchContract);
@@ -96,6 +97,10 @@ export function *watchFetchProcessLogs() {
 
 export function *watchFetchContractLogs() {
   yield takeEvery(actions.CONTRACT_LOGS[actions.REQUEST], fetchContractLogs);
+}
+
+export function *watchFetchContractEvents() {
+  yield takeEvery(actions.CONTRACT_EVENTS[actions.REQUEST], fetchContractEvents);
 }
 
 export function *watchFetchContract() {
@@ -278,6 +283,20 @@ export function *watchListenToContractLogs() {
   yield takeEvery(actions.WATCH_NEW_CONTRACT_LOGS, listenToContractLogs);
 }
 
+export function *listenToContractEvents() {
+  const credentials = yield select(getCredentials);
+  const socket = api.webSocketContractEvents(credentials);
+  const channel = yield call(createChannel, socket);
+  while (true) {
+    const contractEvent = yield take(channel);
+    yield put(actions.contractEvents.success([contractEvent]));
+  }
+}
+
+export function *watchListenToContractEvents() {
+  yield takeEvery(actions.WATCH_NEW_CONTRACT_EVENTS, listenToContractEvents);
+}
+
 export function *listenGasOracle() {
   const credentials = yield select(getCredentials);
   const socket = api.websocketGasOracle(credentials);
@@ -318,8 +337,10 @@ export default function *root() {
     fork(watchFetchProcesses),
     fork(watchFetchProcessLogs),
     fork(watchFetchContractLogs),
+    fork(watchFetchContractEvents),
     fork(watchListenToProcessLogs),
     fork(watchListenToContractLogs),
+    fork(watchListenToContractEvents),
     fork(watchFetchBlock),
     fork(watchFetchTransactions),
     fork(watchPostCommand),

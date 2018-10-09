@@ -64,6 +64,10 @@ export function getContractLogsByContract(state, contractName) {
   return state.entities.contractLogs.filter((contractLog => contractLog.name === contractName));
 }
 
+export function getContractEventsByContract(state, contractName) {
+  return state.entities.contractEvents.filter((contractEvent => contractEvent.name === contractName));
+}
+
 export function getContracts(state) {
   return state.entities.contracts.filter(contract => !contract.isFiddle);
 }

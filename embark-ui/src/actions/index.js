@@ -152,6 +152,13 @@ export const contractLogs = {
   failure: (error) => action(CONTRACT_LOGS[FAILURE], {error})
 };
 
+export const CONTRACT_EVENTS = createRequestTypes('CONTRACT_EVENTS');
+export const contractEvents = {
+  request: () => action(CONTRACT_EVENTS[REQUEST]),
+  success: (contractEvents) => action(CONTRACT_EVENTS[SUCCESS], {contractEvents}),
+  failure: (error) => action(CONTRACT_EVENTS[FAILURE], {error})
+};
+
 export const CONTRACTS = createRequestTypes('CONTRACTS');
 export const contracts = {
   request: () => action(CONTRACTS[REQUEST]),
@@ -299,6 +306,7 @@ export const gasOracle = {
 export const WATCH_NEW_PROCESS_LOGS = 'WATCH_NEW_PROCESS_LOGS';
 export const STOP_NEW_PROCESS_LOGS = 'STOP_NEW_PROCESS_LOGS';
 export const WATCH_NEW_CONTRACT_LOGS = 'WATCH_NEW_CONTRACT_LOGS';
+export const WATCH_NEW_CONTRACT_EVENTS = 'WATCH_NEW_CONTRACT_EVENTS';
 export const INIT_BLOCK_HEADER = 'INIT_BLOCK_HEADER';
 export const STOP_BLOCK_HEADER = 'STOP_BLOCK_HEADER';
 export const WATCH_GAS_ORACLE = 'WATCH_GAS_ORACLE';
@@ -321,6 +329,12 @@ export function stopProcessLogs(processName) {
 export function listenToContractLogs() {
   return {
     type: WATCH_NEW_CONTRACT_LOGS
+  };
+}
+
+export function listenToContractEvents() {
+  return {
+    type: WATCH_NEW_CONTRACT_EVENTS
   };
 }
 

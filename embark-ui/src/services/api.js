@@ -94,6 +94,10 @@ export function fetchContractLogs() {
   return get(`/contracts/logs`, ...arguments);
 }
 
+export function fetchContractEvents() {
+  return get(`/blockchain/contracts/events`, ...arguments);
+}
+
 export function fetchContracts() {
   return get('/contracts', ...arguments);
 }
@@ -177,6 +181,10 @@ export function webSocketProcess(credentials, processName) {
 
 export function webSocketContractLogs(credentials) {
   return new WebSocket(`ws://${credentials.host}/embark-api/contracts/logs`, [credentials.token]);
+}
+
+export function webSocketContractEvents(credentials) {
+  return new WebSocket(`ws://${credentials.host}/embark-api/blockchain/contracts/event`, [credentials.token]);
 }
 
 export function webSocketBlockHeader(credentials) {

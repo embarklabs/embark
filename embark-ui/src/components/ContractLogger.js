@@ -7,7 +7,14 @@ import {
   Form
 } from "tabler-react";
 
+const ANY_STATE = 'Any';
+const TX_STATES = ['Success', 'Fail', ANY_STATE];
+
 class ContractLogger extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {method: '', event: '', status: ANY_STATE};
+  }
 
   getMethods() {
     if (!this.props.contract.abiDefinition) {
@@ -26,45 +33,60 @@ class ContractLogger extends React.Component {
     return this.props.contract.abiDefinition.filter(method => method.type === 'event');
   }
 
+  updateState(key, value) {
+    this.setState({[key]: value});
+  }
+
+  dataToDisplay() {
+    return this.props.contractLogs.map(contractLog => {
+      const events = this.props.contractEvents
+        .filter(contractEvent => contractEvent.transactionHash === contractLog.transactionHash)
+        .map(contractEvent => contractEvent.event);
+      contractLog.events = events;
+      return contractLog;
+    }).filter(contractLog => {
+      if (this.state.method || this.state.event || this.state.status !== ANY_STATE) {
+        return contractLog.status === '0x1' && this.state.status === 'Success' &&
+          (this.state.method === contractLog.functionName || contractLog.events.includes(this.state.event));
+      }
+
+      return true;
+    });
+  }
+
   render() {
     return (
-      <Page.Content title={this.props.contractName + ' Logger'}>
+      <Page.Content title={this.props.contract.className + ' Logger'}>
         <Form>
           <Grid.Row>
             <Grid.Col md={6}>
               <Form.Group label="Functions">
-                <Form.Select>
-                  {this.getMethods().map((method, index) => <option key={index}>{method.name}</option>)}
+                <Form.Select onChange={(event) => this.updateState('method', event.target.value)} value={this.state.method}>
+                  <option value=""></option>
+                  {this.getMethods().map((method, index) => <option value={method.name} key={index}>{method.name}</option>)}
                 </Form.Select>
               </Form.Group>
             </Grid.Col>
             <Grid.Col md={6}>
               <Form.Group label="Events">
-                <Form.Select>
-                  {this.getEvents().map((event, index) => <option key={index}>{event.name}</option>)}
+                <Form.Select onChange={(event) => this.updateState('event', event.target.value)} value={this.state.event}>
+                  <option value=""></option>
+                  {this.getEvents().map((event, index) => <option value={event.name} key={index}>{event.name}</option>)}
                 </Form.Select>
               </Form.Group>
             </Grid.Col>
             <Grid.Col>
               <Form.Group label="Tx Status">
-                <Form.Radio
-                  isInline
-                  label="Failed"
-                  name="example-inline-radios"
-                  value="option1"
-                />
-                <Form.Radio
-                  isInline
-                  label="Success"
-                  name="example-inline-radios"
-                  value="option2"
-                />
-                <Form.Radio
-                  isInline
-                  label="Any"
-                  name="example-inline-radios"
-                  value="option3"
-                />
+                {TX_STATES.map(state => (
+                  <Form.Radio
+                    key={state}
+                    isInline
+                    label={state}
+                    value={state}
+                    onChange={(event) => this.updateState('status', event.target.value)}
+                    checked={state === this.state.status}
+                  />
+                ))}
               </Form.Group>
             </Grid.Col>
           </Grid.Row>
@@ -78,23 +100,25 @@ class ContractLogger extends React.Component {
               className="text-nowrap">
               <Table.Header>
                 <Table.Row>
-                  <Table.ColHeader>call</Table.ColHeader>
-                  <Table.ColHeader>Transaction hash</Table.ColHeader>
+                  <Table.ColHeader>Call</Table.ColHeader>
+                  <Table.ColHeader>Events</Table.ColHeader>
                   <Table.ColHeader>Gas Used</Table.ColHeader>
                   <Table.ColHeader>Block number</Table.ColHeader>
                   <Table.ColHeader>Status</Table.ColHeader>
+                  <Table.ColHeader>Transaction hash</Table.ColHeader>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
                 {
-                  this.props.contractLogs.map((log, index) => {
+                  this.dataToDisplay().map((log, index) => {
                     return (
                       <Table.Row key={'log-' + index}>
                         <Table.Col>{`${log.name}.${log.functionName}(${log.paramString})`}</Table.Col>
-                        <Table.Col>{log.transactionHash}</Table.Col>
+                        <Table.Col>{log.events.join(' ')}</Table.Col>
                         <Table.Col>{log.gasUsed}</Table.Col>
                         <Table.Col>{log.blockNumber}</Table.Col>
                         <Table.Col>{log.status}</Table.Col>
+                        <Table.Col>{log.transactionHash}</Table.Col>
                       </Table.Row>
                     );
                   })
@@ -109,8 +133,8 @@ class ContractLogger extends React.Component {
 }
 
 ContractLogger.propTypes = {
-  contractName: PropTypes.string.isRequired,
-  contractLogs: PropTypes.array.isRequired.Header,
+  contractLogs: PropTypes.array,
+  contractEvents: PropTypes.array,
   contract: PropTypes.object.isRequired
 };
 
