@@ -7,13 +7,12 @@ import {
   Form
 } from "tabler-react";
 
-const ANY_STATE = 'Any';
-const TX_STATES = ['Success', 'Fail', ANY_STATE];
+const TX_STATES = {Success: '0x1', Fail: '0x0', Any: ''};
 
 class ContractLogger extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {method: '', event: '', status: ANY_STATE};
+    this.state = {method: '', event: '', status: TX_STATES['Any']};
   }
 
   getMethods() {
@@ -45,9 +44,12 @@ class ContractLogger extends React.Component {
       contractLog.events = events;
       return contractLog;
     }).filter(contractLog => {
-      if (this.state.method || this.state.event || this.state.status !== ANY_STATE) {
-        return contractLog.status === '0x1' && this.state.status === 'Success' &&
-          (this.state.method === contractLog.functionName || contractLog.events.includes(this.state.event));
+      if (this.state.status && contractLog.status !== this.state.status) {
+        return false;
+      }
+
+      if (this.state.method || this.state.event) {
+        return this.state.method === contractLog.functionName || contractLog.events.includes(this.state.event);
       }
 
       return true;
@@ -77,14 +79,14 @@ class ContractLogger extends React.Component {
             </Grid.Col>
             <Grid.Col>
               <Form.Group label="Tx Status">
-                {TX_STATES.map(state => (
+                {Object.keys(TX_STATES).map(key => (
                   <Form.Radio
-                    key={state}
+                    key={key}
                     isInline
-                    label={state}
-                    value={state}
+                    label={key}
+                    value={TX_STATES[key]}
                     onChange={(event) => this.updateState('status', event.target.value)}
-                    checked={state === this.state.status}
+                    checked={TX_STATES[key] === this.state.status}
                   />
                 ))}
               </Form.Group>
@@ -114,7 +116,7 @@ class ContractLogger extends React.Component {
                     return (
                       <Table.Row key={'log-' + index}>
                         <Table.Col>{`${log.name}.${log.functionName}(${log.paramString})`}</Table.Col>
-                        <Table.Col>{log.events.join(' ')}</Table.Col>
+                        <Table.Col>{log.events.join(', ')}</Table.Col>
                         <Table.Col>{log.gasUsed}</Table.Col>
                         <Table.Col>{log.blockNumber}</Table.Col>
                         <Table.Col>{log.status}</Table.Col>
