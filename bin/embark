@@ -729,11 +729,6 @@ function whenNoShim() {
   if (process.env.EMBARK_NO_SHIM) {
     noShim = true;
   }
-  var idx = process.argv.indexOf('--no-shim');
-  if (idx > -1) {
-    process.argv.splice(idx, 1);
-    noShim = true;
-  }
   if (noShim) {
     EmbarkBin.prototype.exec();
   }
