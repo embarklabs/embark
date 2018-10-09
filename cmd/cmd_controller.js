@@ -531,7 +531,8 @@ class EmbarkController {
 
   runTests(options) {
     this.context = [constants.contexts.test];
-    let RunTests = require('../lib/tests/run_tests.js');
+    // TODO Refactor to use an event
+    let RunTests = require('../lib/modules/tests/run_tests.js');
     RunTests.run(options);
   }
 }
