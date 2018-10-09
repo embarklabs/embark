@@ -72,7 +72,7 @@ class FileExplorer extends React.Component {
 
       // if it's a folder, filter the children
       if (node.children) {
-        let children = this.filterHidden(node.children);
+        const children = this.filterHidden(node.children);
         if (children.length) {
           updatedNode.children = children;
         }
@@ -81,11 +81,12 @@ class FileExplorer extends React.Component {
       // if this is the selected node, set it as active
       if (this.nodeEquals(node, cursor)) {
         updatedNode.active = cursor.active;
-        // if this node has children, set it as toggled
+        // if this node is the selected node and is a folder, set 
+        // it as toggled (expanded) according to the selected node
         if (node.children) updatedNode.toggled = cursor.toggled;
       }
-      // if this is a directory, and it lies in the path
-      // of the selected node, ensure it's toggled
+      // if this node is a folder, and it's a parent of the selected
+      // folder, force toggle it
       if (node.children && this.isNodeInPath(node, cursor)) {
         updatedNode.toggled = true;
       }
