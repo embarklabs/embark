@@ -387,13 +387,10 @@ class EmbarkController {
         engine.startService("processManager");
         engine.startService("serviceMonitor");
         engine.startService("libraryManager");
-        engine.startService("pipeline");
-        engine.startService("deployment", {onlyCompile: true});
-        engine.startService("web3");
+        engine.startService("compiler");
         engine.startService("codeGenerator");
         engine.startService("graph");
-
-        engine.events.request('deploy:contracts', callback);
+        engine.events.request('contracts:build', {}, callback);
       }
     ], (err) => {
       if (err) {
