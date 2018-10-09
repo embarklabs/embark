@@ -52,5 +52,8 @@
   },
   "codeGenerator": {
     "gasLimit": 6000000
+  },
+  "logs": {
+    "logPath": ".embark/logs/"
   }
 }

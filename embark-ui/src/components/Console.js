@@ -34,17 +34,19 @@ class Console extends Component {
   getProcessLogs(processName){
     const log = this.props.processLogs
       .reverse()
-      .filter((item) => item.process === processName);
+      .filter(item => item.process === processName);
 
     if(!log.length) return [];
-    //should be only one item in the array
+    // the selector should have reduced `processLogs` down to one
+    // record per process, and therefore after filtering, the array
+    // should have only one item
     return log[0].logs;
   }
 
   renderCommandsResult(){
     const {commands} = this.props;
     return (
-      this.state.selectedProcess === this.DEFAULT_PROCESS && 
+      this.state.selectedProcess === DEFAULT_PROCESS && 
       commands.map((command, index) => {
         return <CommandResult key={index} result={command.result}/>;
       })
@@ -55,8 +57,8 @@ class Console extends Component {
     const {processes} = this.props;
     return processes
       .sort((a, b) => { // ensure the "Embark" tab is displayed first
-        if (a.name === this.DEFAULT_PROCESS) return -1;
-        if (b.name === this.DEFAULT_PROCESS) return 1;
+        if (a.name === DEFAULT_PROCESS) return -1;
+        if (b.name === DEFAULT_PROCESS) return 1;
         return 0;
       })
       .map(process => (

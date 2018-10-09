@@ -11,6 +11,10 @@ class EmbarkController {
   constructor(options) {
     this.version = version;
     this.options = options || {};
+
+    // set a default context. should be overwritten by an action
+    // method before being used
+    this.context = [constants.contexts.any];
   }
 
   initConfig(env, options) {
@@ -126,7 +130,8 @@ class EmbarkController {
         }
 
         engine.startService("processManager");
-        engine.startService("embark");
+        engine.startService("coreProcess");
+        engine.startService("loggerApi");
         engine.startService("serviceMonitor");
         engine.startService("libraryManager");
         engine.startService("codeRunner");
