@@ -3,9 +3,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 
-import "tabler-react/dist/Tabler.css";
-import "./general.css";
-import "./slider.css";
+import 'font-awesome/css/font-awesome.min.css';
+import '@coreui/coreui/dist/css/coreui.min.css';
 
 import AppContainer from './containers/AppContainer';
 import history from "./history";
