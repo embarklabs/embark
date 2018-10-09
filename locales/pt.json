@@ -66,7 +66,7 @@
   "error running afterDeploy: ": "erro ao executar afterDeploy: ",
   "ready to watch file changes": "pronto para monitorar alterações em ficheiros/arquivos",
   "Starting Server": "iniciando o servidor",
-  "webserver available at": "servidor web disponivel em",
+  "webserver available at": "Servidor web disponivel em",
   "Webserver": "servidor web",
   " already deployed at ": " já publicado em ",
   "Deployed": "Publicado",
