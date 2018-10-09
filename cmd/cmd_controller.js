@@ -205,22 +205,25 @@ class EmbarkController {
         engine.startService("processManager");
         engine.startService("libraryManager");
         engine.startService("codeRunner");
-        engine.startService("web3");
         if (!options.onlyCompile) {
+          engine.startService("web3");
+          engine.startService("deployment", {onlyCompile: options.onlyCompile});
           engine.startService("pipeline");
-        }
-        engine.startService("deployment", {onlyCompile: options.onlyCompile});
-        if (!options.onlyCompile) {
           engine.startService("storage");
           engine.startService("codeGenerator");
+        } else {
+          engine.startService('compiler');
         }
 
         callback();
       },
-      function deploy(callback) {
-        engine.events.request('deploy:contracts', function (err) {
-          callback(err);
-        });
+      function buildOrBuildAndDeploy(callback) {
+        if (options.onlyCompile) {
+          engine.events.request('contracts:build', {}, err => callback(err));
+        } else {
+          // deploy:contracts will trigger a build as well
+          engine.events.request('deploy:contracts', err => callback(err));
+        }
       },
       function waitForWriteFinish(callback) {
         if (options.onlyCompile) {
@@ -229,7 +232,7 @@ class EmbarkController {
         }
         engine.logger.info("Finished deploying".underline);
         engine.events.on('outputDone', (err) => {
-          engine.logger.info(__("finished building").underline);
+          engine.logger.info(__("Finished building").underline);
           callback(err, true);
         });
       }
