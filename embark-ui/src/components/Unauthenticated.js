@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React from 'react';
-import {Page, Alert, Form, Button} from "tabler-react";
+import './Unauthenticated.css';
 
 class Unauthenticated extends React.Component {
   constructor(props){
@@ -19,28 +19,37 @@ class Unauthenticated extends React.Component {
 
   render() {
     return (
-      <Page.Content>
-        {this.props.error && <Alert type="danger">
-          {this.props.error}
-        </Alert>}
-        <Form  onSubmit={(e) => this.handleSubmit(e)}>
-          <Form.Input name="host"
-                      label="Embark Host"
-                      value={this.state.host}
-                      onChange={(e) => this.handleChange(e)}
-                      placeholder="Enter Embark Host"/>
-          <Form.Input name="token"
-                      label="Token"
-                      value={this.state.token}
-                      onChange={(e) => this.handleChange(e)}
-                      placeholder="Enter Token"/>
-          <Button type="submit" color="primary">
-            Authenticate
-          </Button>
-        </Form>
-      </Page.Content>
+      <React.Fragment>
+        <h2>Login</h2>
+        <div className="login-form">
+          <form  onSubmit={(e) => this.handleSubmit(e)}>
+            <div className="form-group">
+              <label htmlFor="host">Host</label>
+              <input type="text"
+                    className="form-control form-control-lg"
+                    id="host"
+                    name="host"
+                    placeholder="Enter Embark host"
+                    onChange={(e) => this.handleChange(e)}
+                    value={this.state.host}/>
+            </div>
+            <div className="form-group">
+              <label htmlFor="token">Token</label>
+              <input type="text"
+                    className="form-control form-control-lg"
+                    id="token"
+                    name="token"
+                    placeholder="Enter token"
+                    onChange={(e) => this.handleChange(e)}
+                    value={this.state.token}/>
+              <small className="form-text text-muted">Execute <code>embark run</code> in the command line to get your token.</small>
+            </div>
+            <button type="submit" className="btn btn-pill btn-dark">Enter Cockpit</button>
+          </form>
+        </div>
+      </React.Fragment>
     );
-  } 
+  }
 }
 
 Unauthenticated.propTypes = {
