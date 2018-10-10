@@ -127,6 +127,7 @@
   "homepage": "https://embark.status.im/",
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "10.11.6",
     "chai": "4.1.2",
     "cross-env": "5.2.0",
     "eslint": "4.13.1",
