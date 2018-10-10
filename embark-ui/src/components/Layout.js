@@ -52,7 +52,7 @@ const Layout = ({children, logout, credentials, location}) => (
             <i className="fa fa-user fa-3x" />
           </DropdownToggle>
           <DropdownMenu right style={{ right: 'auto' }}>
-            <DropdownItem><button className="btn btn-link" onClick={logout}><i className="fa fa-lock"></i> Logout</button></DropdownItem>
+            <DropdownItem onClick={logout}><i className="fa fa-lock"></i> Logout</DropdownItem>
           </DropdownMenu>
         </AppHeaderDropdown>
       </Nav>
