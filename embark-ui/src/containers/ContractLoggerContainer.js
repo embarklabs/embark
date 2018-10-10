@@ -34,7 +34,7 @@ class ContractLoggerContainer extends Component {
 function mapStateToProps(state, props) {
   return {
     contractLogs: getContractLogsByContract(state, props.contract.className),
-    contractEvents: getContractEventsByContract(state, props.match.params.contractName)
+    contractEvents: getContractEventsByContract(state, props.contract.className)
   };
 }
 
