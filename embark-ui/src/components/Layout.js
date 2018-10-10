@@ -21,6 +21,7 @@ import logo from '../images/logo.png';
 
 const sidebarNavItems = {items: [
   {name: "Dashboard", url: "/embark", icon: 'fa fa-tachometer'},
+  {name: "Deployment", url: "/embark/deployment", icon: "fa fa-arrow-up"},
   {name: "Contracts", url: "/embark/contracts", icon: "fa fa-file-text"},
   {name: "Explorer", url: "/embark/explorer/accounts", icon: "fa fa-signal", children: [
     {url: "/embark/explorer/accounts", icon: "fa fa-users", name: "Accounts"},
