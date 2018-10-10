@@ -9,7 +9,8 @@ import Processes from '../components/Processes';
 import Console from '../components/Console';
 import {getProcesses, getCommands, getProcessLogs} from "../reducers/selectors";
 
-const EMBARK_PROCESS_NAME = 'Embark';
+const EMBARK_PROCESS_NAME = 'embark';
+const LOG_LIMIT = 50;
 
 class HomeContainer extends Component {
   constructor(props) {
@@ -30,8 +31,8 @@ class HomeContainer extends Component {
       this.props.stopProcessLogs(this.state.activeProcess)
     }
 
+    this.props.fetchProcessLogs(processName, LOG_LIMIT);
     if (processName !== EMBARK_PROCESS_NAME) {
-      this.props.fetchProcessLogs(processName);
       this.props.listenToProcessLogs(processName);
     }
 

@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux';
 import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE,
-        FETCH_CREDENTIALS, UPDATE_BASE_ETHER} from "../actions";
+        FETCH_CREDENTIALS, UPDATE_BASE_ETHER, PROCESS_LOGS} from "../actions";
 
 const BN_FACTOR = 10000;
 const VOID_ADDRESS = '0x0000000000000000000000000000000000000000';
@@ -103,6 +103,12 @@ const filtrer = {
 };
 
 function entities(state = entitiesDefaultState, action) {
+  if (action.type === PROCESS_LOGS[SUCCESS] && action.ws === true){
+    const process = action.processLogs[0].process;
+    let processLogs = state.processLogs.filter(logs => logs.process === process).sort((a, b) => b.timestamp - a.timestamp)[0];
+    processLogs.logs.push(action.processLogs[0].logs[0]);
+    return {...state};
+  }
   if (action.type === FILES[SUCCESS]) {
     return {...state, files: action.files};
   }

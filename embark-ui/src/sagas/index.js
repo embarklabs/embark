@@ -241,7 +241,7 @@ export function *listenToProcessLogs(action) {
       return;
     }
 
-    yield put(actions.processLogs.success([processLog]));
+    yield put(actions.processLogs.success([processLog], {processName: action.processName, ws: true}));
   }
 }
 

@@ -46,7 +46,7 @@ class Console extends Component {
   renderCommandsResult(){
     const {commands} = this.props;
     return (
-      this.state.selectedProcess === DEFAULT_PROCESS && 
+      this.props.isEmbark() && 
       commands.map((command, index) => {
         return <CommandResult key={index} result={command.result}/>;
       })
@@ -57,8 +57,8 @@ class Console extends Component {
     const {processes} = this.props;
     return processes
       .sort((a, b) => { // ensure the "Embark" tab is displayed first
-        if (a.name === DEFAULT_PROCESS) return -1;
-        if (b.name === DEFAULT_PROCESS) return 1;
+        if (a.name === 'embark') return -1;
+        if (b.name === 'embark') return 1;
         return 0;
       })
       .map(process => (
