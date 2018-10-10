@@ -1,6 +1,7 @@
 /*globals describe, it*/
 const assert = require('assert');
 const TemplateGenerator = require('../lib/utils/template_generator');
+const semver = require('semver');
 
 describe('TemplateGenerator', function () {
   describe('getExternalProject', function () {
@@ -14,9 +15,11 @@ describe('TemplateGenerator', function () {
 
       it('returns correct info for named template', function () {
         let result = templateGenerator.getExternalProject("typescript");
-        assert.strictEqual(result.url, "https://codeload.github.com/embark-framework/embark-typescript-template/tar.gz/master");
-        assert.strictEqual(result.filePath.replace(/\\/g,'/'), ".embark/templates/embark-framework/embark-typescript-template/master/archive.zip");
-        assert.strictEqual(result.browse, "https://github.com/embark-framework/embark-typescript-template");
+        let embarkVersion = semver(require('../package.json').version);
+        let branch = `${embarkVersion.major}.${embarkVersion.minor}`;
+        assert.strictEqual(result.url, `https://codeload.github.com/embark-framework/embark-typescript-template/tar.gz/${branch}`);
+        assert.strictEqual(result.filePath.replace(/\\/g,'/'), `.embark/templates/embark-framework/embark-typescript-template/${branch}/archive.zip`);
+        assert.strictEqual(result.browse, `https://github.com/embark-framework/embark-typescript-template/tree/${branch}`);
 
         result = templateGenerator.getExternalProject("typescript#features/branch");
         assert.strictEqual(result.url, "https://codeload.github.com/embark-framework/embark-typescript-template/tar.gz/features%2Fbranch");
