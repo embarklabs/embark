@@ -8,6 +8,11 @@ import {
 } from "tabler-react";
 
 const TX_STATES = {Success: '0x1', Fail: '0x0', Any: ''};
+const EVENT = 'event';
+const FUNCTION = 'function';
+const CONSTRUCTOR = 'constructor';
+const PURE = 'pure';
+const VIEW = 'view';
 
 class ContractLogger extends React.Component {
   constructor(props) {
@@ -21,7 +26,7 @@ class ContractLogger extends React.Component {
     }
 
     return this.props.contract.abiDefinition.filter(method => (
-      method.name !== 'constructor' && method.mutability !== 'view' && method.mutability !== 'pure' && method.constant !== true && method.type === 'function'
+      method.name !== CONSTRUCTOR && method.mutability !== VIEW && method.mutability !== PURE && method.constant !== true && method.type === FUNCTION
     ));
   }
 
@@ -29,7 +34,7 @@ class ContractLogger extends React.Component {
     if (!this.props.contract.abiDefinition) {
       return [];
     }
-    return this.props.contract.abiDefinition.filter(method => method.type === 'event');
+    return this.props.contract.abiDefinition.filter(method => method.type === EVENT);
   }
 
   updateState(key, value) {

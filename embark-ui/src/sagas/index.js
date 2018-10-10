@@ -215,7 +215,12 @@ export function *watchLogout() {
 function createChannel(socket) {
   return eventChannel(emit => {
     socket.onmessage = ((message) => {
-      emit(JSON.parse(message.data));
+      try {
+        emit(JSON.parse(message.data));
+      } catch(_error) {
+        // Ignore the message if not formatted correctly
+        // For example message like outputDone (for live reload)
+      }
     });
     return () => {
       socket.close();
