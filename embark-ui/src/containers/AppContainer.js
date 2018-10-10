@@ -5,6 +5,7 @@ import {withRouter} from "react-router-dom";
 import routes from '../routes';
 import Unauthenticated from '../components/Unauthenticated';
 import Layout from "../components/Layout";
+import LoginLayout from '../components/LoginLayout';
 
 import {
   authenticate, fetchCredentials, logout,
@@ -62,12 +63,18 @@ class AppContainer extends Component {
 
   render() {
     return (
-      <Layout location ={this.props.location} logout={this.props.logout} credentials={this.props.credentials}>
-        {this.shouldRenderUnauthenticated() ? <Unauthenticated credentials={this.props.credentials}
-                                                               authenticate={this.props.authenticate}
-                                                               error={this.props.authenticationError} /> : <React.Fragment>{routes}</React.Fragment>}
-      </Layout>
-    );
+      <React.Fragment>
+        {this.shouldRenderUnauthenticated() ?
+          <LoginLayout>
+            <Unauthenticated credentials={this.props.credentials} authenticate={this.props.authenticate} error={this.props.authenticationError} />
+          </LoginLayout>
+          :
+          <Layout location={this.props.location} logout={this.props.logout} credentials={this.props.credentials}>
+            <React.Fragment>{routes}</React.Fragment>
+          </Layout>
+        }
+      </React.Fragment>
+    )
   }
 }
 
