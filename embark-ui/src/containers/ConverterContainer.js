@@ -9,7 +9,7 @@ import Converter from '../components/Converter';
 class ConverterContainer extends React.Component {
   render() {
     return <Converter baseEther={this.props.baseEther}
-    updateBaseEther={this.props.updateBaseEther} />;
+                      updateBaseEther={this.props.updateBaseEther} />;
   }
 }
 

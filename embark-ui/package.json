@@ -55,6 +55,7 @@
     "react-router-dom": "^4.3.1",
     "react-scroll-to-component": "^1.0.2",
     "react-treebeard": "^2.1.0",
+    "reactstrap": "^6.5.0",
     "redux": "^4.0.0",
     "redux-saga": "^0.16.0",
     "resolve": "1.6.0",
