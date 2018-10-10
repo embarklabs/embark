@@ -537,16 +537,14 @@ class EmbarkController {
       client: options.client,
       locale: options.locale,
       version: this.version,
-      embarkConfig: 'embark.json',
-      interceptLogs: false,
+      embarkConfig: options.embarkConfig || 'embark.json',
       logFile: options.logFile,
       logLevel: options.logLevel,
-      events: options.events,
-      logger: options.logger,
-      config: options.config,
-      plugins: options.plugins,
       context: this.context,
-      webpackConfigName: options.webpackConfigName
+      useDashboard: options.useDashboard,
+      webpackConfigName: options.webpackConfigName,
+      ipcRole: 'client',
+      interceptLogs: false
     });
 
     async.waterfall([
@@ -555,8 +553,10 @@ class EmbarkController {
       },
       function startServices(callback) {
         engine.startService("processManager");
+        engine.startService("libraryManager");
         engine.startService("web3", {wait: true}); // Empty web3 as Test changes it
         engine.startService("deployment");
+        engine.startService("codeGenerator");
         engine.startService("testRunner");
         callback();
       },
