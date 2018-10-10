@@ -53,7 +53,6 @@ export function getProcesses(state) {
 }
 
 export function getProcessLogs(state) {
-  if(!state.entities.processLogs.length) return [];
   const processLogsObj = state.entities.processLogs.reduce((processLogs, processLog) => {
     const existingProcessLog = processLogs[processLog.process];
     if(!existingProcessLog || processLog.timestamp > existingProcessLog.timestamp){

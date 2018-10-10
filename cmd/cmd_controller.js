@@ -14,7 +14,7 @@ class EmbarkController {
 
     // set a default context. should be overwritten by an action
     // method before being used
-    this.context = [constants.contexts.any];
+    this.context = {};
   }
 
   initConfig(env, options) {
