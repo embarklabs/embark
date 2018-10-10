@@ -3,6 +3,8 @@
   "version": "3.2.1",
   "description": "Embark is a framework that allows you to easily develop and deploy DApps",
   "scripts": {
+    "build": "babel src --out-dir dist --copy-files && npm run copy:package",
+    "copy:package": "cp package.json dist",
     "lint": "eslint lib/",
     "test": "npm-run-all lint test:*",
     "test:embark": "mocha test/ --no-timeouts --exit",
@@ -22,14 +24,13 @@
     "url": "https://github.com/embark-framework/embark.git"
   },
   "dependencies": {
-    "@babel/core": "7.1.2",
     "@babel/plugin-proposal-class-properties": "7.1.0",
     "@babel/plugin-proposal-object-rest-spread": "7.0.0",
     "@babel/plugin-syntax-dynamic-import": "7.0.0",
     "@babel/plugin-transform-destructuring": "7.1.2",
     "@babel/plugin-transform-flow-strip-types": "7.0.0",
     "@babel/plugin-transform-runtime": "7.1.0",
-    "@babel/preset-env": "7.1.0",
+    "@babel/polyfill": "7.0.0",
     "@babel/preset-react": "7.0.0",
     "@babel/preset-typescript": "7.1.0",
     "@babel/runtime-corejs2": "7.1.2",
@@ -124,6 +125,9 @@
   "homepage": "https://embark.status.im/",
   "license": "MIT",
   "devDependencies": {
+    "@babel/cli": "7.1.2",
+    "@babel/core": "7.1.2",
+    "@babel/preset-env": "7.1.0",
     "chai": "4.1.2",
     "cross-env": "5.2.0",
     "eslint": "4.13.1",

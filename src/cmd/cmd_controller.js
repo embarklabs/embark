@@ -1,5 +1,5 @@
 let async = require('async');
-const constants = require('../lib/constants');
+const constants = require('../lib/constants.json');
 
 require('colors');
 
