@@ -557,6 +557,8 @@ class EmbarkController {
         engine.startService("web3", {wait: true}); // Empty web3 as Test changes it
         engine.startService("deployment");
         engine.startService("codeGenerator");
+        engine.startService("codeRunner");
+        engine.startService("codeCoverage");
         engine.startService("testRunner");
         callback();
       },
