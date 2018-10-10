@@ -40,7 +40,7 @@ class IPFS {
     const self = this;
 
     self.events.request("version:get:ipfs-api", function(ipfsApiVersion) {
-      let currentIpfsApiVersion = require('../../../package.json').dependencies["ipfs-api"];
+      let currentIpfsApiVersion = require('../../../../package.json').dependencies["ipfs-api"];
       if (ipfsApiVersion !== currentIpfsApiVersion) {
         self.events.request("version:getPackageLocation", "ipfs-api", ipfsApiVersion, function(err, location) {
           self.embark.registerImportFile("ipfs-api", fs.dappPath(location));

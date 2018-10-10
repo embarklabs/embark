@@ -1,6 +1,6 @@
 let utils = require('../../utils/utils.js');
 let fs = require('../../core/fs.js');
-let currentSolcVersion = require('../../../package.json').dependencies.solc;
+let currentSolcVersion = require('../../../../package.json').dependencies.solc;
 const ProcessLauncher = require('../../core/processes/processLauncher.js');
 const uuid = require('uuid/v1');
 
@@ -50,7 +50,7 @@ class SolcW {
       this.events.request("version:get:solc", function(solcVersion) {
         if (solcVersion === currentSolcVersion) {
           return self.solcProcess.send({action: 'loadCompiler', requirePath: 'solc'});
-        } 
+        }
         self.events.request("version:getPackagePath", "solc", solcVersion, function(err, path) {
           if (err) {
             return done(err);

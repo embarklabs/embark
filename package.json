@@ -3,7 +3,9 @@
   "version": "3.2.1",
   "description": "Embark is a framework that allows you to easily develop and deploy DApps",
   "scripts": {
-    "build": "tsc && cp -rf src/locales dist/src",
+    "build": "tsc && npm run copy:locales && npm run copy:ejs-templates",
+    "copy:locales": "cp -rf src/locales dist/src",
+    "copy:ejs-templates": "cp -rf src/lib/modules/code_generator/code_templates dist/src/lib/modules/code_generator && cp -rf src/lib/modules/webserver/templates dist/src/lib/modules/webserver",
     "lint": "eslint lib/",
     "test": "npm-run-all lint test:*",
     "test:embark": "mocha test/ --no-timeouts --exit",
