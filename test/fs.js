@@ -2,20 +2,17 @@
 const {assert} = require('chai');
 const os = require('os');
 
+process.env.DAPP_PATH = '/home/testuser/src/dapp_path/';
 const fs = require('../lib/core/fs');
 
 describe('fs', () => {
   before(() => {
-    this.oldDappPath = process.env.DAPP_PATH;
-    process.env.DAPP_PATH = '/home/testuser/src/dapp_path/';
-
     this.oldProcessExit = process.exit;
     process.exit = function() {};
   });
 
 
   after(() => {
-    process.env.DAPP_PATH = this.oldDappPath;
     process.exit = this.oldProcessExit;
   });
 
