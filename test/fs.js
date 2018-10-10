@@ -46,8 +46,6 @@ describe('fs', () => {
         done();
       });
 
-      if(func === 'stat') return;
-
       it('should not throw exceptions on paths inside the temporary dir root', (done) => {
         assert.doesNotThrow(async () => {
           try {
