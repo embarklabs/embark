@@ -38,7 +38,7 @@ const sorter = {
     return ((BN_FACTOR * b.blockNumber) + b.transactionIndex) - ((BN_FACTOR * a.blockNumber) + a.transactionIndex);
   },
   processLogs: function(a, b) {
-    return b.timestamp - a.timestamp;
+    return b.id - a.id;
   },
   contractLogs: function(a, b) {
     return a.timestamp - b.timestamp;
@@ -60,8 +60,8 @@ const filtrer = {
   processes: function(process, index, self) {
     return index === self.findIndex((t) => t.name === process.name);
   },
-  processLogs: function(_processLog, index) {
-    return index <= MAX_ELEMENTS
+  processLogs: function(processLog, index, self) {
+    return index === self.findIndex((p) => p.id === processLog.id) && index <= MAX_ELEMENTS
   },
   contracts: function(contract, index, self) {
     return index === self.findIndex((t) => t.className === contract.className);
