@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux';
 import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE,
-        FETCH_CREDENTIALS, UPDATE_BASE_ETHER, PROCESS_LOGS} from "../actions";
+        FETCH_CREDENTIALS, UPDATE_BASE_ETHER} from "../actions";
+import {EMBARK_PROCESS_NAME} from '../constants';
 
 const BN_FACTOR = 10000;
 const VOID_ADDRESS = '0x0000000000000000000000000000000000000000';
@@ -19,7 +20,6 @@ const entitiesDefaultState = {
   contractDeploys: [],
   contractCompiles: [],
   contractLogs: [],
-  commands: [],
   messages: [],
   messageChannels: [],
   versions: [],
@@ -37,7 +37,22 @@ const sorter = {
   transactions: function(a, b) {
     return ((BN_FACTOR * b.blockNumber) + b.transactionIndex) - ((BN_FACTOR * a.blockNumber) + a.transactionIndex);
   },
+  processes: function(a, b) {
+    if (a.name === EMBARK_PROCESS_NAME) return -1;
+    if (b.name === EMBARK_PROCESS_NAME) return 1;
+    return 0;
+  },
   processLogs: function(a, b) {
+    if (a.name !== b.name) {
+      if(a.name < b.name) return -1;
+      if(a.name > b.name) return 1;
+      return 0;
+    }
+
+    if (a.id === undefined && b.id === undefined) {
+      return b.timestamp - a.timestamp;
+    }
+
     return b.id - a.id;
   },
   contractLogs: function(a, b) {
@@ -45,9 +60,6 @@ const sorter = {
   },
   messages: function(a, b) {
     return a.time - b.time;
-  },
-  commands: function(a, b) {
-    return a.timestamp - b.timestamp;
   },
   files: function(a, b) {
     if (a.name < b.name) return -1;
@@ -61,7 +73,10 @@ const filtrer = {
     return index === self.findIndex((t) => t.name === process.name);
   },
   processLogs: function(processLog, index, self) {
-    return index === self.findIndex((p) => p.id === processLog.id) && index <= MAX_ELEMENTS
+    if (processLog.id !== undefined) {
+      return index === self.findIndex((p) => p.id === processLog.id) && index <= MAX_ELEMENTS
+    }
+    return true;
   },
   contracts: function(contract, index, self) {
     return index === self.findIndex((t) => t.className === contract.className);
@@ -103,12 +118,6 @@ const filtrer = {
 };
 
 function entities(state = entitiesDefaultState, action) {
-  if (action.type === PROCESS_LOGS[SUCCESS] && action.ws === true){
-    const process = action.processLogs[0].process;
-    let processLogs = state.processLogs.filter(logs => logs.process === process).sort((a, b) => b.timestamp - a.timestamp)[0];
-    processLogs.logs.push(action.processLogs[0].logs[0]);
-    return {...state};
-  }
   if (action.type === FILES[SUCCESS]) {
     return {...state, files: action.files};
   }
@@ -155,7 +164,7 @@ function errorEntities(state = {}, action) {
 }
 
 function loading(_state = false, action) {
-  return action.type.endsWith(REQUEST) && !action.noLoading;
+  return action.type.endsWith(REQUEST);
 }
 
 function compilingContract(state = false, action) {

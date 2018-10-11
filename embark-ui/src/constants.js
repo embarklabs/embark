@@ -1,0 +1,1 @@
+export const EMBARK_PROCESS_NAME = 'embark';

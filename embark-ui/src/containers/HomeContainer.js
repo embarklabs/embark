@@ -7,10 +7,8 @@ import {commands as commandsAction, listenToProcessLogs, processLogs as processL
 import DataWrapper from "../components/DataWrapper";
 import Processes from '../components/Processes';
 import Console from '../components/Console';
-import {getProcesses, getCommands, getProcessLogs} from "../reducers/selectors";
-
-const EMBARK_PROCESS_NAME = 'embark';
-const LOG_LIMIT = 50;
+import {getProcesses, getProcessLogs} from "../reducers/selectors";
+import {EMBARK_PROCESS_NAME} from '../constants';
 
 class HomeContainer extends Component {
   constructor(props) {
@@ -31,8 +29,12 @@ class HomeContainer extends Component {
       this.props.stopProcessLogs(this.state.activeProcess)
     }
 
-    this.props.fetchProcessLogs(processName, LOG_LIMIT);
-    if (processName !== EMBARK_PROCESS_NAME) {
+    if (processName === EMBARK_PROCESS_NAME) {
+      if (this.props.processes.length === 0) {
+        this.props.fetchProcessLogs(processName);
+      }
+    } else {
+      this.props.fetchProcessLogs(processName);
       this.props.listenToProcessLogs(processName);
     }
 
@@ -50,7 +52,6 @@ class HomeContainer extends Component {
         <DataWrapper shouldRender={this.props.processes.length > 0 } {...this.props} render={({processes, postCommand, processLogs}) => (
           <Console activeProcess={this.state.activeProcess}
                    postCommand={postCommand}
-                   commands={this.props.commands}
                    processes={processes}
                    processLogs={processLogs}
                    isEmbark={() => this.isEmbark}
@@ -64,7 +65,6 @@ class HomeContainer extends Component {
 HomeContainer.propTypes = {
   processes: PropTypes.arrayOf(PropTypes.object),
   postCommand: PropTypes.func,
-  commands: PropTypes.arrayOf(PropTypes.object),
   error: PropTypes.string,
   loading: PropTypes.bool
 };
@@ -72,7 +72,6 @@ HomeContainer.propTypes = {
 function mapStateToProps(state) {
   return {
     processes: getProcesses(state),
-    commands: getCommands(state),
     error: state.errorMessage,
     processLogs: getProcessLogs(state),
     loading: state.loading

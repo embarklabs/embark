@@ -56,7 +56,7 @@ export function fetchProcesses() {
 }
 
 export function fetchProcessLogs(payload) {
-  return get(`/process-logs/${payload.processName}`, {params: payload, processName: payload.processName, credentials: payload.credentials});
+  return get(`/process-logs/${payload.processName}`, ...arguments);
 }
 
 export function fetchContractLogs() {

@@ -44,23 +44,12 @@ export function getBlock(state, number) {
   return state.entities.blocks.find((block) => block.number.toString() === number);
 }
 
-export function getCommands(state) {
-  return state.entities.commands;
-}
-
 export function getProcesses(state) {
   return state.entities.processes;
 }
 
 export function getProcessLogs(state) {
-  const processLogsObj = state.entities.processLogs.reduce((processLogs, processLog) => {
-    const existingProcessLog = processLogs[processLog.process];
-    if(!existingProcessLog || processLog.timestamp > existingProcessLog.timestamp){
-      processLogs[processLog.process] = processLog;
-    }
-    return processLogs;
-  }, {});
-  return Object.values(processLogsObj);
+  return state.entities.processLogs;
 }
 
 export function getContractLogsByContract(state, contractName) {
