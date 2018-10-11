@@ -1,28 +1,27 @@
 import React from 'react';
-import {
-  Page,
-  Grid
-} from "tabler-react";
-
-import ApplicationPreviewContainer from '../containers/ApplicationPreviewContainer';
+import {Row, Col} from 'reactstrap';
+import TextEditorAsideContainer from '../containers/TextEditorAsideContainer';
 import TextEditorContainer from '../containers/TextEditorContainer';
 import FileExplorerContainer from '../containers/FileExplorerContainer';
+
+import './FiddleLayout.css';
+
+const DEFAULT_FILE = {name: 'newContract.sol', content: ''};
 
 class FiddleLayout extends React.Component {
   render() {
     return (
-      <Page.Content title="Fiddle">
-        <Grid.Row className="my-5">
-          <Grid.Col md={3}>
-            <Page.Title>Fiddle</Page.Title>
-            <FileExplorerContainer />
-          </Grid.Col>
-          <Grid.Col md={9}>
-            <TextEditorContainer />
-          </Grid.Col>
-        </Grid.Row>
-        <ApplicationPreviewContainer />
-      </Page.Content>
+      <Row noGutters className="h-100 fiddle--grid">
+        <Col sm={4} md={2}>
+          <FileExplorerContainer />
+        </Col>
+        <Col sm={8} md={6}>
+          <TextEditorContainer defaultFile={DEFAULT_FILE} />
+        </Col>
+        <Col sm={12} md={4}>
+          <TextEditorAsideContainer defaultFile={DEFAULT_FILE} />
+        </Col>
+      </Row>
     );
   }
 }

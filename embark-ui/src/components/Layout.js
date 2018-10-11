@@ -66,7 +66,7 @@ const Layout = ({children, logout, credentials, location}) => (
         <AppSidebarMinimizer />
       </AppSidebar>
       <main className="main">
-        <Container fluid>
+        <Container fluid className="h-100">
           {children}
         </Container>
       </main>

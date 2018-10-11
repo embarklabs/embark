@@ -3,7 +3,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {Grid} from 'tabler-react';
 import TextEditor from '../components/TextEditor';
 import TextEditorContractErrors from '../components/TextEditorContractErrors';
 import TextEditorContractWarnings from '../components/TextEditorContractWarnings';
@@ -19,8 +18,6 @@ import {
   contractDeploy as postContractDeploy
 } from '../actions';
 import {getCurrentFile, getContractCompile, getContractDeploys} from '../reducers/selectors';
-
-const DEFAULT_FILE = {name: 'newContract.sol', content: ''};
 
 class TextEditorContainer extends Component {
   constructor(props) {
@@ -62,7 +59,7 @@ class TextEditorContainer extends Component {
 
   remove() {
     this.props.removeFile(this.state.currentFile);
-    this.setState({currentFile: DEFAULT_FILE});
+    this.setState({currentFile: this.props.defaultFile});
   }
 
   renderContractFooter() {
@@ -103,21 +100,15 @@ class TextEditorContainer extends Component {
 
   render() {
     return (
-      <React.Fragment>
-        <Grid.Row className="my-2">
-          {this.renderToolbar()}
-        </Grid.Row>
-        <TextEditor file={this.state.currentFile}
-                    contractCompile={this.props.contractCompile}
-                    onFileContentChange={(newContent) => this.onFileContentChange(newContent)} />
-        {this.renderContractFooter()}
-      </React.Fragment>
+      <TextEditor file={this.state.currentFile}
+                  contractCompile={this.props.contractCompile}
+                  onFileContentChange={(newContent) => this.onFileContentChange(newContent)} />
     );
   }
 }
 
-function mapStateToProps(state) {
-  const currentFile = getCurrentFile(state) || DEFAULT_FILE;
+function mapStateToProps(state, props) {
+  const currentFile = getCurrentFile(state) || props.defaultFile;
   const contractCompile = getContractCompile(state, currentFile) || {};
   const contractName = contractCompile.result && Object.keys(contractCompile.result)[0];
   const contractDeploys = getContractDeploys(state, contractName);

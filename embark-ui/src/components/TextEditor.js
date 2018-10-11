@@ -27,7 +27,12 @@ class TextEditor extends React.Component {
       const value = editor.getValue();
       this.props.onFileContentChange(value);
     });
+    editor.layout();
+    window.addEventListener('resize', this.handleResize);
   }
+
+  handleResize = () => editor.layout();
+
 
   getLanguage() {
     const extension = this.props.file.name.split('.').pop();
@@ -77,11 +82,10 @@ class TextEditor extends React.Component {
 
   render() {
     const style = {
-      width: "800px",
-      height: "600px"
+      height: "100%"
     };
 
-    return <div ref={this.assignRef} style={style} id={EDITOR_ID} />;
+    return <div style={style} id={EDITOR_ID} />;
   }
 }
 
