@@ -3,9 +3,8 @@ import {connect} from 'react-redux';
 import React, {Component} from 'react';
 import {withRouter} from "react-router-dom";
 import routes from '../routes';
-import Unauthenticated from '../components/Unauthenticated';
+import Login from '../components/Login';
 import Layout from "../components/Layout";
-import LoginLayout from '../components/LoginLayout';
 
 import {
   authenticate, fetchCredentials, logout,
@@ -57,17 +56,15 @@ class AppContainer extends Component {
     }
   }
 
-  shouldRenderUnauthenticated() {
+  shouldRenderLogin() {
     return this.props.authenticationError || !this.props.credentials.authenticated;
   }
 
   render() {
     return (
       <React.Fragment>
-        {this.shouldRenderUnauthenticated() ?
-          <LoginLayout>
-            <Unauthenticated credentials={this.props.credentials} authenticate={this.props.authenticate} error={this.props.authenticationError} />
-          </LoginLayout>
+        {this.shouldRenderLogin() ?
+          <Login credentials={this.props.credentials} authenticate={this.props.authenticate} error={this.props.authenticationError} />
           :
           <Layout location={this.props.location} logout={this.props.logout} credentials={this.props.credentials}>
             <React.Fragment>{routes}</React.Fragment>

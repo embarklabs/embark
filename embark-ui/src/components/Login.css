@@ -1,0 +1,33 @@
+.login-container {
+  width: 80%;
+  max-width: 900px;
+}
+
+.login-layout-container-section {
+  padding: 0.8em;
+  background: #20a8d8;
+}
+
+.login-layout-container-section:first-child {
+  background: white;
+  padding: 3em;
+}
+
+.logo {
+  display: block;
+  margin: 0 auto;
+  max-height: 40px;
+}
+
+@media only screen and (min-width: 768px) {
+
+  .login-layout-container-section {
+    padding: 3em;
+  }
+
+  .logo {
+    max-height: 180px;
+    margin-top: 3em;
+  }
+}
+
