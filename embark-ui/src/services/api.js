@@ -68,7 +68,7 @@ export function fetchContracts() {
 }
 
 export function fetchContract(payload) {
-  return get(`/contract/${payload.contractName}`, ...arguments);
+  return get('/contract', ...arguments);
 }
 
 export function postContractFunction(payload) {

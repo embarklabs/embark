@@ -8,6 +8,7 @@ import {
 } from '../actions';
 import {getCurrentFile} from '../reducers/selectors';
 import Preview from '../components/Preview';
+import FileContractsContainer from './FileContractsContainer';
 
 class TextEditorAsideContainer extends Component {
   constructor(props) {
@@ -30,7 +31,7 @@ class TextEditorAsideContainer extends Component {
   }
 
   render() {
-    return this.isContract() ? <React.Fragment>hello</React.Fragment> : <Preview />
+    return this.isContract() ? <FileContractsContainer currentFile={this.state.currentFile} /> : <Preview />
   }
 }
 
@@ -48,7 +49,8 @@ TextEditorAsideContainer.propTypes = {
   currentFile: PropTypes.object,
   fetchCurrentFile: PropTypes.func,
   loading: PropTypes.bool,
-  error: PropTypes.string
+  error: PropTypes.string,
+  defaultFile: PropTypes.object
 };
 
 export default connect(

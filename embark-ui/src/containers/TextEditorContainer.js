@@ -123,6 +123,7 @@ function mapStateToProps(state, props) {
 }
 
 TextEditorContainer.propTypes = {
+  defaultFile: PropTypes.object,
   currentFile: PropTypes.object,
   contractCompile: PropTypes.object,
   saveCurrentFile: PropTypes.func,
