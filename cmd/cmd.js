@@ -25,16 +25,6 @@ if (!process.env.PKG_PATH) {
   process.env.PKG_PATH = process.env.PWD;
 }
 
-// NOTE: setting NODE_PATH at runtime won't effect lookup behavior in the
-// current process, but will take effect in child processes; this enables
-// lookup of *global* embark's own node_modules from within dapp scripts (such
-// as an ejected webpack.config.js), making embark's dependencies trasitive
-// dependencies of a dapp without the dapp explicitly specifying embark as a
-// dependency in the dapp's package.json
-process.env.NODE_PATH = utils.joinPath(process.env.EMBARK_PATH, 'node_modules') +
-  (process.env.NODE_PATH ? require('path').delimiter : '') +
-  (process.env.NODE_PATH || '');
-
 process.env.DEFAULT_DIAGRAM_PATH = utils.joinPath(process.env.DAPP_PATH, 'diagram.svg');
 process.env.DEFAULT_CMD_HISTORY_PATH = utils.joinPath(process.env.DAPP_PATH, '.embark', 'cmd_history');
 process.env.DEFAULT_CMD_HISTORY_SIZE = 20;
