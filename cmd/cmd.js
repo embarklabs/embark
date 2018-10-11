@@ -166,19 +166,21 @@ class Cmd {
       .description(__('run dapp (default: %s)', 'development'))
       .action(function(env, options) {
         i18n.setOrDetectLocale(options.locale);
-        const nullify = (v) => (!v || typeof v !== 'string') ? null : v;
+        const nullify = (v) => {
+          return (!v || typeof v !== 'string') ? null : v;
+        };
         embark.run({
           env: env || 'development',
           serverPort: options.port,
           serverHost: options.host,
           client: options.client,
           locale: options.locale,
-          runWebserver: options.noserver == null ? null : !options.noserver,
+          runWebserver: options.noserver === null ? null : !options.noserver,
           useDashboard: !options.nodashboard,
           logFile: options.logfile,
           logLevel: options.loglevel,
           webpackConfigName: options.pipeline || 'development',
-          openBrowser: options.nobrowser == null ? null : !options.nobrowser,
+          openBrowser: options.nobrowser === null ? null : !options.nobrowser
         });
       });
   }
@@ -260,7 +262,7 @@ class Cmd {
       .option('-c , --coverage', __('generate a coverage report after running the tests (vm only)'))
       .option('--nobrowser', __('do not start browser after coverage report is generated'))
       .option('--locale [locale]', __('language to use (default: en)'))
-      .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'warn')
+      .option('--logLevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'warn')
       .option('--solc', __('run only solidity tests'))
       .description(__('run tests'))
       .action(function(file, options) {
@@ -278,7 +280,7 @@ class Cmd {
           process.exit(1);
         }
         i18n.setOrDetectLocale(options.locale);
-        embark.runTests({file, solc:options.solc, loglevel: options.loglevel, gasDetails: options.gasDetails,
+        embark.runTests({file, solc:options.solc, logLevel: options.logLevel, gasDetails: options.gasDetails,
           node: options.node, coverage: options.coverage, noBrowser: options.nobrowser});
       });
   }
