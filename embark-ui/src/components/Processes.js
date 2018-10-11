@@ -26,7 +26,7 @@ const Process = ({process}) => (
           <i className={iconClasses(process.state)}></i>
         </span>
         <div>
-          <h4 className="text-capitalize m-0"><Link to={`/embark/processes/${process.name}`}>{process.name}</Link></h4>
+          <h4 className="text-capitalize m-0"><Link to={`/embark/processes/${process.name}`}>{process.name} ({process.state})</Link></h4>
         </div>
       </div>
     </Card>
