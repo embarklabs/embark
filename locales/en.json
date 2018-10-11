@@ -61,7 +61,7 @@
   "error running afterDeploy: ": "error running afterDeploy: ",
   "ready to watch file changes": "ready to watch file changes",
   "Starting Server": "Starting Server",
-  "webserver available at": "webserver available at",
+  "webserver available at": "Webserver available at",
   "Webserver": "Webserver",
   "versions": "versions",
   "possible commands are:": "possible commands are:",
