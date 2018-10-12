@@ -108,7 +108,7 @@ export const commands = {
 
 export const PROCESS_LOGS = createRequestTypes('PROCESS_LOGS');
 export const processLogs = {
-  request: (processName) => action(PROCESS_LOGS[REQUEST], {processName}),
+  request: (processName, limit) => action(PROCESS_LOGS[REQUEST], {processName, limit}),
   success: (processLogs) => action(PROCESS_LOGS[SUCCESS], {processLogs}),
   failure: (error) => action(PROCESS_LOGS[FAILURE], {error})
 };

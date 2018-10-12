@@ -14,7 +14,7 @@ import {
 import DataWrapper from "../components/DataWrapper";
 import Processes from '../components/Processes';
 import Console from '../components/Console';
-import {EMBARK_PROCESS_NAME} from '../constants';
+import {EMBARK_PROCESS_NAME, LOG_LIMIT} from '../constants';
 import ContractsList from '../components/ContractsList';
 import {getContracts, getProcesses, getProcessLogs} from "../reducers/selectors";
 
@@ -39,10 +39,10 @@ class HomeContainer extends Component {
 
     if (processName === EMBARK_PROCESS_NAME) {
       if (this.props.processLogs.length === 0) {
-        this.props.fetchProcessLogs(processName);
+        this.props.fetchProcessLogs(processName, LOG_LIMIT);
       }
     } else {
-      this.props.fetchProcessLogs(processName);
+      this.props.fetchProcessLogs(processName, LOG_LIMIT);
       this.props.listenToProcessLogs(processName);
     }
 
