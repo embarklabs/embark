@@ -10,7 +10,7 @@ const FakeIpcProvider = require('./helpers/fakeIpcProvider');
 const utils = require('../lib/utils/utils');
 i18n.setOrDetectLocale('en');
 
-describe('embark.DevFunds', function () {
+describe('embark.DevFunds', function() {
   let config = {
     networkType: 'livenet',
     genesisBlock: 'foo/bar/genesis.json',
@@ -41,7 +41,6 @@ describe('embark.DevFunds', function () {
     wsRPC: true,
     targetGasLimit: false,
     syncMode: undefined,
-    syncmode: undefined,
     verbosity: undefined,
     proxy: true
   };
@@ -51,7 +50,7 @@ describe('embark.DevFunds', function () {
     config.rpcPort += constants.blockchain.servicePortOnProxy;
   }
 
-  describe('#create, fund, and unlock accounts', function () {
+  describe('#create, fund, and unlock accounts', function() {
     let provider = new FakeIpcProvider();
     const web3 = new Web3(provider);
     let devFunds;
@@ -61,7 +60,8 @@ describe('embark.DevFunds', function () {
       devFunds = await DevFunds.new({blockchainConfig: config, provider: provider, logger: new TestLogger({})});
     });
 
-    it('should create correct number of accounts', function (done) {
+    // TOCHECK: DevFunds does not provide this function anymore, please consider to remove this test
+    it('should create correct number of accounts', function(done) {
       provider.injectResult('0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae'); // createAccount #1
       provider.injectResult('0x22f4d0a3c12e86b4b5f39b213f7e19d048276dab'); // createAccount #2
 
@@ -81,7 +81,8 @@ describe('embark.DevFunds', function () {
       });
     });
 
-    it('should unlock accounts', function (done) {
+    // TOCHECK: DevFunds does not provide this function anymore, please consider to remove this test
+    it('should unlock accounts', function(done) {
       if (devFunds.accounts.length === 0) {
         assert.equal(true, true, "no accounts to unlock");
         return done();
@@ -97,7 +98,7 @@ describe('embark.DevFunds', function () {
       });
     });
 
-    it('should fund accounts', function (done) {
+    it('should fund accounts', function(done) {
 
       if (devFunds.accounts.length === 0) {
         assert.equal(true, true, "no accounts to fund");
@@ -108,7 +109,7 @@ describe('embark.DevFunds', function () {
         // provider.injectResult('0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe'); // send tx response
       });
 
-      devFunds.fundAccounts(devFunds.balance, (errFundAccounts) => {
+      devFunds.fundAccounts(false, (errFundAccounts) => {
 
         assert.equal(errFundAccounts, null);
 
@@ -136,7 +137,7 @@ describe('embark.DevFunds', function () {
               cb();
             }).catch(cb);
 
-          }, function (errAcctsBalance) {
+          }, function(errAcctsBalance) {
             if (errAcctsBalance) throw errAcctsBalance;
             done();
           });
