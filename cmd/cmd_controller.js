@@ -554,7 +554,7 @@ class EmbarkController {
       function startServices(callback) {
         engine.startService("processManager");
         engine.startService("libraryManager");
-        engine.startService("web3", {wait: true}); // Empty web3 as Test changes it
+        engine.startService("web3", {wait: true});
         engine.startService("deployment");
         engine.startService("codeGenerator");
         engine.startService("codeRunner");
