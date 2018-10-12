@@ -1,6 +1,8 @@
 import React from 'react';
 import autoscroll from 'autoscroll-react';
 
+import "./Logs.css";
+
 class Logs extends React.Component {
   render() {
     return (

@@ -1,0 +1,27 @@
+.logs {
+  margin: 10px 0;
+  background-color: #333333;
+  font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  font-size: 14px;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  max-height: 350px;
+  overflow: auto;
+}
+
+.logs .error {
+  color: #dc3546;
+}
+
+.logs .warn {
+  color: #fec107;
+}
+
+.logs .debug {
+  color: #b7c1cc;
+}
+
+.logs .trace {
+  color: #8f98a2;
+}

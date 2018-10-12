@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
+import Convert from 'ansi-to-html';
 import {Grid, Card, Form, Tab, TabbedHeader, TabbedContainer} from 'tabler-react';
 import Logs from "./Logs";
-import Convert from 'ansi-to-html';
+
+import "./Console.css";
 
 const convert = new Convert();
 

@@ -1,0 +1,16 @@
+.loader, .loader:before, .loader:after {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.loader:before, .loader:after {
+  margin: -0.6rem 0 0 -0.6rem;
+  left: 0;
+}
+
+.loader, .loader-text {
+  display: inline-block;
+  vertical-align: top;
+  padding-left: 0.6rem;
+  width: auto;
+}

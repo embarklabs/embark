@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import {Form, Button} from 'tabler-react';
 
@@ -7,7 +6,7 @@ class Preview extends React.Component {
     super(props);
 
     this.state = {
-      previewUrl: this.props.previewUrl
+      previewUrl: `${window.location.protocol}//${window.location.host}/`
     };
   }
 
@@ -48,14 +47,6 @@ class Preview extends React.Component {
     );
   }
 }
-
-Preview.propTypes = {
-  previewUrl: PropTypes.string
-};
-
-Preview.defaultProps = {
-  previewUrl: window.location.protocol + '//' + window.location.host
-};
 
 export default Preview;
 

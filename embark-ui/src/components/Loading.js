@@ -1,6 +1,8 @@
 import React from 'react';
 import {Grid, Loader} from 'tabler-react';
 
+import "./Loading.css";
+
 const Loading = () => (
   <Grid.Row className="align-items-center h-100 mt-5">
     <Grid.Col>
