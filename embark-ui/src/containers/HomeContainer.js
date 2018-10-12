@@ -30,7 +30,7 @@ class HomeContainer extends Component {
     }
 
     if (processName === EMBARK_PROCESS_NAME) {
-      if (this.props.processes.length === 0) {
+      if (this.props.processLogs.length === 0) {
         this.props.fetchProcessLogs(processName);
       }
     } else {
