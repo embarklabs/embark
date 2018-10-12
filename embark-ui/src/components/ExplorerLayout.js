@@ -12,15 +12,11 @@ import BlocksContainer from '../containers/BlocksContainer';
 import BlockContainer from '../containers/BlockContainer';
 import TransactionsContainer from '../containers/TransactionsContainer';
 import TransactionContainer from '../containers/TransactionContainer';
-import CommunicationContainer from '../containers/CommunicationContainer';
-import EnsContainer from '../containers/EnsContainer';
 
 const groupItems = [
   {to: "/embark/explorer/accounts", icon: "users", value: "Accounts"},
   {to: "/embark/explorer/blocks", icon: "book-open", value: "Blocks"},
-  {to: "/embark/explorer/transactions", icon: "activity", value: "Transactions"},
-  {to: "/embark/explorer/communication", icon: "phone-call", value: "Communication"},
-  {to: "/embark/explorer/ens", icon: "disc", value: "ENS"}
+  {to: "/embark/explorer/transactions", icon: "activity", value: "Transactions"}
 ];
 
 const className = "d-flex align-items-center";
@@ -53,8 +49,6 @@ const ExplorerLayout = () => (
         <Route exact path="/embark/explorer/blocks/:blockNumber" component={BlockContainer} />
         <Route exact path="/embark/explorer/transactions" component={TransactionsContainer} />
         <Route exact path="/embark/explorer/transactions/:hash" component={TransactionContainer} />
-        <Route exact path="/embark/explorer/communication" component={CommunicationContainer} />
-        <Route exact path="/embark/explorer/ens" component={EnsContainer} />
       </Switch>
     </Grid.Col>
   </Grid.Row>

@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import connect from "react-redux/es/connect/connect";
-import {Alert, Page} from 'tabler-react';
+import { Alert } from 'reactstrap';
 import {messageSend, messageListen} from "../actions";
 import Communication from "../components/Communication";
 import {getMessages, getMessageChannels, isOldWeb3, isWeb3Enabled} from "../reducers/selectors";
@@ -16,7 +16,7 @@ class CommunicationContainer extends Component {
   }
 
   web3DisabledWarning() {
-    return <Alert type="warning">The node you are using does not support Whisper</Alert>;
+    return <Alert color="danger">The node you are using does not support Whisper</Alert>;
   }
 
   web3Enabled() {
@@ -24,7 +24,7 @@ class CommunicationContainer extends Component {
   }
 
   web3OldWarning() {
-    return <Alert type="warning">The node uses an unsupported version of Whisper</Alert>;
+    return <Alert color="danger">The node uses an unsupported version of Whisper</Alert>;
   }
 
   showCommunication() {
@@ -36,9 +36,9 @@ class CommunicationContainer extends Component {
 
   render() {
     return (
-      <Page.Content title="Communication explorer">
+      <React.Fragment>
         {this.props.isWeb3Enabled ? this.web3Enabled() : this.web3DisabledWarning()}
-      </Page.Content>
+      </React.Fragment>
     );
   }
 }

@@ -27,13 +27,13 @@ const sidebarNavItems = {items: [
     {url: "/embark/explorer/accounts", icon: "fa fa-users", name: "Accounts"},
     {url: "/embark/explorer/blocks", icon: "fa fa-stop", name: "Blocks"},
     {url: "/embark/explorer/transactions", icon: "fa fa-tree", name: "Transactions"},
-    {url: "/embark/explorer/communication", icon: "fa fa-phone", name: "Communication"},
-    {url: "/embark/explorer/ens", icon: "fa fa-circle", name: "ENS"}
   ]},
   {name: "Fiddle", url: "/embark/fiddle", icon: "fa fa-codepen"},
   {name: "Documentation", url: "/embark/documentation", icon: "fa fa-book"},
   {name: "Utils", url: "/embark/utilities/converter", icon: "fa fa-cog", children: [
-    {url: "/embark/utilities/converter", icon: "fa fa-plug", name: "Converter"}
+    {url: "/embark/utilities/converter", icon: "fa fa-plug", name: "Converter"},
+    {url: "/embark/utilities/communication", icon: "fa fa-phone", name: "Communication"},
+    {url: "/embark/utilities/ens", icon: "fa fa-circle", name: "ENS"}
   ]},
 ]};
 

@@ -37,7 +37,7 @@ class Converter extends React.Component {
   render() {
     return(
       <Row className="mt-3 justify-content-md-center">
-        <Col xs="12" sm="9" lg="6">
+        <Col xs="12" sm="9" lg="9">
           <Card>
             <CardHeader>
               <strong>Ether Converter</strong>

@@ -1,6 +1,18 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
-import {Button, Form, Card, Grid, List} from 'tabler-react';
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  FormGroup,
+  Input,
+  Row,
+  Label,
+  ListGroup,
+  ListGroupItem
+} from 'reactstrap';
 
 class Communication extends Component {
   constructor(props) {
@@ -32,66 +44,77 @@ class Communication extends Component {
 
   render() {
     return (
-      <React.Fragment>
-        <h3>Listen To channel</h3>
-        <Form.FieldSet>
-          <Form.Group label="Whisper channel" isRequired>
-            <Form.Input name="text-input"
-                        defaultValue={this.state.listenTo}
-                        placeholder="channel"
-                        onChange={e => this.handleChange(e, 'listenTo')}/>
-          </Form.Group>
-          <Button color="primary" onClick={(e) => this.listenToChannel(e)}>Start Listening</Button>
-        </Form.FieldSet>
+      <Row className="mt-3 justify-content-md-center">
+        <Col xs="12" sm="9" lg="9">
+          <Card>
+            <CardHeader>
+              <strong>Listen to channel</strong>
+            </CardHeader>
+            <CardBody>
+              <FormGroup>
+                <Label htmlFor="listenTo">Whisper channel</Label>
+                <Input id="listenTo" placeholder="Channel" value={this.state.listenTo} onChange={e => this.handleChange(e, 'listenTo')} />
+              </FormGroup>
+              <Button color="primary" onClick={(e) => this.listenToChannel(e)}>Start Listening</Button>
 
-        {this.props.subscriptions && this.props.subscriptions.length > 0 &&
-        <div id="subscribeList">
-          <h4>Subscribed channels:</h4>
-          <List>
-            {this.props.subscriptions.map((item, i) => <List.Item key={i}>{item}</List.Item>)}
-          </List>
-        </div>
-        }
+              {this.props.subscriptions && this.props.subscriptions.length > 0 &&
+              <React.Fragment>
+                <h4>Subscribed channels:</h4>
+                <ListGroup>
+                  {this.props.subscriptions.map((item, i) => <ListGroupItem key={i}>{item}</ListGroupItem>)}
+                </ListGroup>
+              </React.Fragment>
+              }
 
-        {this.props.channels && Boolean(Object.keys(this.props.channels).length) &&
-        <React.Fragment>
-          <h4>Messages received:</h4>
+              {this.props.channels && Boolean(Object.keys(this.props.channels).length) &&
+              <React.Fragment>
+                <h4>Messages received:</h4>
 
-          <Grid.Row messagesList>
-            {Object.keys(this.props.channels).map((channelName, i) => {
-              return (<Grid.Col md={4} key={`message-${i}`}>
-                <Card title={channelName}>
-                  <Card.Body>
-                    {this.props.channels[channelName].map((data, f) => {
-                      return <p key={`message-${i}-${f}`}>{data.message}</p>;
-                    })}
-                  </Card.Body>
-                </Card>
-              </Grid.Col>);
-            })}
-          </Grid.Row>
-        </React.Fragment>
-        }
+                <Row>
+                  {Object.keys(this.props.channels).map((channelName, i) => {
+                    return (<Col md={4} key={`message-${i}`}>
+                      <Card>
+                        <CardHeader>
+                          <strong>{channelName}</strong>
+                        </CardHeader>
+                        <CardBody>
+                          {this.props.channels[channelName].map((data, f) => {
+                            return <p key={`message-${i}-${f}`}>{data.message}</p>;
+                          })}
+                        </CardBody>
+                      </Card>
+                    </Col>);
+                  })}
+                </Row>
+              </React.Fragment>
+              }
+            </CardBody>
+          </Card>
+          <Card>
+            <CardHeader>
+              <strong>Send message</strong>
+            </CardHeader>
+            <CardBody>
+              <FormGroup label="Whisper channel">
+                <Label htmlFor="sendChannel">Whisper channel</Label>
+                <Input value={this.state.channel}
+                      id="sendChannel"
+                      placeholder="Channel"
+                      onChange={e => this.handleChange(e, 'channel')}/>
+              </FormGroup>
+              <FormGroup label="Message">
+                <Label htmlFor="message">Message</Label>
+                <Input value={this.state.message}
+                      placeholder="Message"
+                      id="message"
+                      onChange={e => this.handleChange(e, 'message')}/>
+              </FormGroup>
+              <Button color="primary" onClick={(e) => this.sendMessage(e)}>Send Message</Button>
 
-        <h3>Send Message</h3>
-
-        <Form.FieldSet>
-          <Form.Group label="Whisper channel" isRequired>
-            <Form.Input name="text-input"
-                        defaultValue={this.state.channel}
-                        placeholder="channel"
-                        onChange={e => this.handleChange(e, 'channel')}/>
-          </Form.Group>
-          <Form.Group label="Message" isRequired>
-            <Form.Input name="text-input"
-                        defaultValue={this.state.message}
-                        placeholder="message"
-                        onChange={e => this.handleChange(e, 'message')}/>
-          </Form.Group>
-          <Button color="primary" onClick={(e) => this.sendMessage(e)}>Send Message</Button>
-
-        </Form.FieldSet>
-      </React.Fragment>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
     );
   }
 }
