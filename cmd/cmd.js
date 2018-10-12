@@ -20,6 +20,11 @@ if (!process.env.EMBARK_PATH) {
   process.env.EMBARK_PATH = utils.joinPath(__dirname, '..');
 }
 
+// set the anchor for embark's fs.pkgPath()
+if (!process.env.PKG_PATH) {
+  process.env.PKG_PATH = process.env.PWD;
+}
+
 // NOTE: setting NODE_PATH at runtime won't effect lookup behavior in the
 // current process, but will take effect in child processes; this enables
 // lookup of *global* embark's own node_modules from within dapp scripts (such
@@ -31,25 +36,6 @@ process.env.NODE_PATH = utils.joinPath(process.env.EMBARK_PATH, 'node_modules') 
   (process.env.NODE_PATH || '');
 
 process.env.DEFAULT_DIAGRAM_PATH = utils.joinPath(process.env.DAPP_PATH, 'diagram.svg');
-
-function checkDeps() {
-  const path = require('path');
-  try {
-    const dappPackage = require(path.join(process.cwd(), 'package.json'));
-    require(path.join(process.cwd(), 'embark.json')); // Make sure we are in a Dapp
-    require('check-dependencies')(dappPackage, (state) => {
-      if (state.status) {
-        require('colors');
-        console.error('\nMissing dependencies. Please run npm install'.red);
-        process.exit();
-      }
-      return true;
-    });
-  } catch (_e) {
-    // We are not in a Dapp
-    return true;
-  }
-}
 
 class Cmd {
   constructor() {
@@ -150,7 +136,6 @@ class Cmd {
       .option('--pipeline [pipeline]', __('webpack config to use (default: production)'))
       .description(__('deploy and build dapp at ') + 'dist/ (default: development)')
       .action(function(env, _options) {
-        checkDeps();
         i18n.setOrDetectLocale(_options.locale);
         _options.env = env || 'development';
         _options.logFile = _options.logfile; // fix casing
@@ -178,7 +163,6 @@ class Cmd {
       .option('--pipeline [pipeline]', __('webpack config to use (default: development)'))
       .description(__('run dapp (default: %s)', 'development'))
       .action(function(env, options) {
-        checkDeps();
         i18n.setOrDetectLocale(options.locale);
         const nullify = (v) => (!v || typeof v !== 'string') ? null : v;
         embark.run({
@@ -207,7 +191,6 @@ class Cmd {
       .option('--pipeline [pipeline]', __('webpack config to use (default: development)'))
       .description(__('Start the Embark console'))
       .action(function(env, options) {
-        checkDeps();
         i18n.setOrDetectLocale(options.locale);
         embark.console({
           env: env || 'development',
@@ -227,7 +210,6 @@ class Cmd {
       .option('--locale [locale]', __('language to use (default: en)'))
       .description(__('run blockchain server (default: %s)', 'development'))
       .action(function(env, options) {
-        checkDeps();
         i18n.setOrDetectLocale(options.locale);
         embark.initConfig(env || 'development', {
           embarkConfig: 'embark.json',
@@ -250,7 +232,6 @@ class Cmd {
       .option('--locale [locale]', __('language to use (default: en)'))
 
       .action(function(env, options) {
-        checkDeps();
         i18n.setOrDetectLocale(options.locale);
         embark.initConfig(env || 'development', {
           embarkConfig: 'embark.json',
@@ -294,7 +275,6 @@ class Cmd {
           options.outputHelp();
           process.exit(1);
         }
-        checkDeps();
         i18n.setOrDetectLocale(options.locale);
         embark.runTests({file, solc:options.solc, loglevel: options.loglevel, gasDetails: options.gasDetails,
           node: options.node, coverage: options.coverage, noBrowser: options.nobrowser});
@@ -312,7 +292,6 @@ class Cmd {
       .option('--pipeline [pipeline]', __('webpack config to use (default: production)'))
       .description(__('Upload your dapp to a decentralized storage') + '.')
       .action(function(env, _options) {
-        checkDeps();
         i18n.setOrDetectLocale(_options.locale);
         if (env === "ipfs" || env === "swarm") {
           console.warn(("did you mean " + "embark upload".bold + " ?").underline);
@@ -338,7 +317,6 @@ class Cmd {
       .option('--output [svgfile]', __('filepath to output SVG graph to (default: %s)', process.env['DEFAULT_DIAGRAM_PATH']))
       .description(__('generates documentation based on the smart contracts configured'))
       .action(function(env, options) {
-        checkDeps();
         i18n.setOrDetectLocale(options.locale);
         embark.graph({
           env: env || 'development',
