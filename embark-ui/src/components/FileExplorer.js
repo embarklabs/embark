@@ -177,7 +177,7 @@ class FileExplorer extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
+      <div className="h-100 d-flex flex-column">
         <Form.Switch type="checkbox" name="toggle" value={true} label="Show hidden files" onChange={this.onHiddenToggle.bind(this)} />
         <Treebeard
           data={this.filterHidden(this.props.files)}
@@ -185,7 +185,7 @@ class FileExplorer extends React.Component {
           onToggle={this.onToggle.bind(this)}
           style={style}
         />
-      </React.Fragment>
+      </div>
     );
   }
 }

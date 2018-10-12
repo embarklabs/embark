@@ -81,11 +81,11 @@ class TextEditor extends React.Component {
   }
 
   render() {
-    const style = {
-      height: "100%"
-    };
-
-    return <div style={style} id={EDITOR_ID} />;
+    return (
+      <div className="h-100 d-flex flex-column">
+        <div style={{height: '100%'}} id={EDITOR_ID} />
+      </div>
+    )
   }
 }
 

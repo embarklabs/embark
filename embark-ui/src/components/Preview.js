@@ -28,7 +28,7 @@ class Preview extends React.Component {
 
   render() {
     return (
-      <Form.Group className='h-100'>
+      <div className='h-100 d-flex flex-column'>
         <Form.InputGroup>
           <Form.Input placeholder="URL"
                       value={this.state.previewUrl}
@@ -44,7 +44,7 @@ class Preview extends React.Component {
                 ref={(iframe) => this.previewIframe = iframe}
                 onLoad={(e) => this.handlePreviewChange(e)} src={this.state.previewUrl}>
         </iframe>
-      </Form.Group>
+      </div>
     );
   }
 }

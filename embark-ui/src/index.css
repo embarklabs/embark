@@ -1,3 +1,7 @@
+.app-body {
+  overflow-x: unset;
+}
+
 .logs {
   margin: 10px 0;
   background-color: #333333;
