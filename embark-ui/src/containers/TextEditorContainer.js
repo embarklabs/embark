@@ -1,5 +1,3 @@
-/* eslint multiline-ternary: "off" */
-/* eslint operator-linebreak: "off" */
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';

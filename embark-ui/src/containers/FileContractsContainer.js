@@ -2,13 +2,13 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {contract as contractAction} from '../actions';
+import {contracts as contractsAction} from '../actions';
 import ContractLayout from '../components/ContractLayout';
 import {getContractsByPath} from "../reducers/selectors";
 
 class FileContractsContainer extends Component {
   componentDidMount() {
-    this.props.fetchContract(this.props.currentFile);
+    this.props.fetchContracts();
   }
 
   render() {
@@ -28,7 +28,7 @@ function mapStateToProps(state, props) {
 
 FileContractsContainer.propTypes = {
   contracts: PropTypes.arrayOf(PropTypes.object),
-  fetchFileContracts: PropTypes.func,
+  fetchContractsByPath: PropTypes.func,
   error: PropTypes.string,
   loading: PropTypes.bool
 };
@@ -36,6 +36,6 @@ FileContractsContainer.propTypes = {
 export default connect(
   mapStateToProps,
   {
-    fetchContract: contractAction.request
+    fetchContracts: contractsAction.request
   }
 )(FileContractsContainer);

@@ -1,94 +1,75 @@
 import PropTypes from "prop-types";
 import React from 'react';
-import {NavLink, Route, Switch, withRouter} from 'react-router-dom';
-import {
-  Page,
-  Grid,
-  List
-} from "tabler-react";
+import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
+import classnames from 'classnames';
 
-import ContractContainer from '../containers/ContractContainer';
+import ContractOverview from '../components/ContractOverview';
 import ContractLoggerContainer from '../containers/ContractLoggerContainer';
 import ContractFunctionsContainer from '../containers/ContractFunctionsContainer';
-import ContractDeploymentContainer from '../containers/ContractDeploymentContainer';
-import ContractProfileContainer from '../containers/ContractProfileContainer';
-import ContractSourceContainer from '../containers/ContractSourceContainer';
 
-const ContractLayout = ({match, contractIsFiddle = false}) => (
-  <Grid.Row>
-    <Grid.Col md={3}>
-      <Page.Title className="my-5">&nbsp;</Page.Title>
-      <div>
-        <List.Group transparent={true}>
-          <List.GroupItem
-            className="d-flex align-items-center"
-            to={`/embark/contracts/${match.params.contractName}/overview`}
-            icon="corner-left-up"
-            RootComponent={NavLink}
-          >
-            Overview
-          </List.GroupItem>
-          {!contractIsFiddle && 
-            <List.GroupItem
-              className="d-flex align-items-center"
-              to={`/embark/contracts/${match.params.contractName}/deployment`}
-              icon="users"
-              RootComponent={NavLink}
+class ContractLayout extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      activeTab: '1'
+    };
+  }
+
+  toggle(tab) {
+    if (this.state.activeTab !== tab) {
+      this.setState({
+        activeTab: tab
+      });
+    }
+  }
+  render() {
+    return (
+      <React.Fragment>
+        <Nav tabs>
+          <NavItem>
+            <NavLink
+              className={classnames({ active: this.state.activeTab === '1' })}
+              onClick={() => { this.toggle('1'); }}
             >
-              Deployment / Utils
-            </List.GroupItem>
-          }
-          <List.GroupItem
-            className="d-flex align-items-center"
-            to={`/embark/contracts/${match.params.contractName}/functions`}
-            icon="book-open"
-            RootComponent={NavLink}
-          >
-            Functions
-          </List.GroupItem>
-          <List.GroupItem
-            className="d-flex align-items-center"
-            to={`/embark/contracts/${match.params.contractName}/source`}
-            icon="activity"
-            RootComponent={NavLink}
-          >
-            Source Code
-          </List.GroupItem>
-          <List.GroupItem
-            className="d-flex align-items-center"
-            to={`/embark/contracts/${match.params.contractName}/profiler`}
-            icon="server"
-            RootComponent={NavLink}
-          >
-            Profile
-          </List.GroupItem>
-          <List.GroupItem
-            className="d-flex align-items-center"
-            to={`/embark/contracts/${match.params.contractName}/logger`}
-            icon="chevrons-right"
-            RootComponent={NavLink}
-          >
-            Logger
-          </List.GroupItem>
-        </List.Group>
-      </div>
-    </Grid.Col>
-    <Grid.Col md={9}>
-      <Switch>
-        <Route exact path="/embark/contracts/:contractName/overview" component={ContractContainer} />
-        <Route exact path="/embark/contracts/:contractName/deployment" component={ContractDeploymentContainer} />
-        <Route exact path="/embark/contracts/:contractName/functions" component={ContractFunctionsContainer} />
-        <Route exact path="/embark/contracts/:contractName/source" component={ContractSourceContainer} />
-        <Route exact path="/embark/contracts/:contractName/profiler" component={ContractProfileContainer} />
-        <Route exact path="/embark/contracts/:contractName/logger" component={ContractLoggerContainer} />
-      </Switch>
-    </Grid.Col>
-  </Grid.Row>
-);
+              Overview
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink
+              className={classnames({ active: this.state.activeTab === '2' })}
+              onClick={() => { this.toggle('2'); }}
+            >
+              Functions
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink
+              className={classnames({ active: this.state.activeTab === '3' })}
+              onClick={() => { this.toggle('3'); }}
+            >
+              Logger
+            </NavLink>
+          </NavItem>
+        </Nav>
+        <TabContent activeTab={this.state.activeTab}>
+          <TabPane tabId="1">
+            <ContractOverview contract={this.props.contract} />
+          </TabPane>
+          <TabPane tabId="2">
+            <ContractFunctionsContainer contract={this.props.contract} />
+          </TabPane>
+          <TabPane tabId="3">
+            <ContractLoggerContainer contract={this.props.contract} />
+          </TabPane>
+        </TabContent>
+      </React.Fragment>
+    )
+  }
+}
 
 ContractLayout.propTypes = {
-  match: PropTypes.object,
-  contractIsFiddle: PropTypes.bool
+  contract: PropTypes.object
 };
 
-export default withRouter(ContractLayout);
+export default ContractLayout;

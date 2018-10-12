@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {withRouter} from 'react-router-dom';
 import {contractLogs as contractLogsAction, listenToContractLogs} from '../actions';
 
 import ContractLogger from '../components/ContractLogger';
@@ -12,14 +11,14 @@ class ContractLoggerContainer extends Component {
   componentDidMount() {
     if (this.props.contractLogs.length === 0) {
       this.props.listenToContractLogs();
-      this.props.fetchContractLogs(this.props.match.params.contractName);
+      this.props.fetchContractLogs(this.props.contract.className);
     }
   }
 
   render() {
     return (
       <DataWrapper shouldRender={this.props.contractLogs !== undefined } {...this.props} render={() => (
-        <ContractLogger contractLogs={this.props.contractLogs} contractName={this.props.match.params.contractName}/>
+        <ContractLogger contractLogs={this.props.contractLogs} contractName={this.props.contract.className}/>
       )} />
     );
   }
@@ -27,7 +26,7 @@ class ContractLoggerContainer extends Component {
 
 function mapStateToProps(state, props) {
   return {
-    contractLogs: getContractLogsByContract(state, props.match.params.contractName)
+    contractLogs: getContractLogsByContract(state, props.contract.className)
   };
 }
 
@@ -38,10 +37,10 @@ ContractLoggerContainer.propTypes = {
   match: PropTypes.object
 };
 
-export default withRouter(connect(
+export default connect(
   mapStateToProps,
   {
     fetchContractLogs: contractLogsAction.request,
     listenToContractLogs: listenToContractLogs
   }
-)(ContractLoggerContainer));
+)(ContractLoggerContainer);

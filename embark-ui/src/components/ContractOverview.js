@@ -8,12 +8,11 @@ import {
 } from "tabler-react";
 import JSONTree from 'react-json-tree';
 import {formatContractForDisplay} from '../utils/presentation';
-import {withRouter} from 'react-router-dom';
 
 const Contract = ({contract, match}) => {
   const contractDisplay = formatContractForDisplay(contract);
   return (
-    <Page.Content title={match.params.contractName + " Overview"}>
+    <Page.Content title={contract.className + " Overview"}>
       <Grid.Row>
         <Grid.Col>
           <Card>
@@ -30,7 +29,7 @@ const Contract = ({contract, match}) => {
               </Table.Header>
               <Table.Body>
                 <Table.Row className={contractDisplay.stateColor}>
-                  <Table.Col>{(contract.name || contract.className)}</Table.Col>
+                  <Table.Col>{contract.className}</Table.Col>
                   <Table.Col>{contractDisplay.address}</Table.Col>
                   <Table.Col>{contractDisplay.state}</Table.Col>
                 </Table.Row>
@@ -61,8 +60,7 @@ const Contract = ({contract, match}) => {
 
 Contract.propTypes = {
   contract: PropTypes.object,
-  match: PropTypes.object
 };
 
-export default withRouter(Contract);
+export default Contract;
 
