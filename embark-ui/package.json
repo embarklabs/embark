@@ -40,6 +40,7 @@
     "keccakjs": "0.2.1",
     "monaco-editor": "^0.14.3",
     "monaco-editor-webpack-plugin": "^1.5.4",
+    "node-sass": "^4.9.3",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",
@@ -73,7 +74,8 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom"
+    "test": "node scripts/test.js --env=jsdom",
+    "css-compile": "node-sass --output-style expanded --source-map true --source-map-contents true --precision 6 src/dark-theme/coreui.scss src/coreui.css"
   },
   "homepage": "http://localhost:8000/embark",
   "jest": {

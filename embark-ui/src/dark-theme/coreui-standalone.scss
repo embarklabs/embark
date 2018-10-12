@@ -10,9 +10,9 @@
 @import "variables";
 
 // Import Bootstrap source files
-@import "node_modules/bootstrap/scss/functions";
-@import "node_modules/bootstrap/scss/variables";
-@import "node_modules/bootstrap/scss/mixins";
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
+@import "../../node_modules/bootstrap/scss/mixins";
 
 // Import core styles
 @import "mixins";
@@ -62,4 +62,4 @@
 @import "rtl";
 
 // Custom Properties support for Internet Explorer
-@import "ie-custom-properties"
+@import "ie-custom-properties";

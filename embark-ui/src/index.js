@@ -4,7 +4,9 @@ import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 
 import 'font-awesome/css/font-awesome.min.css';
-import '@coreui/coreui/dist/css/coreui.min.css';
+import './coreui.css';
+// import './dark-theme/coreui-standalone.scss';
+// import '@coreui/coreui/dist/css/coreui.min.css';
 import './index.css';
 
 import AppContainer from './containers/AppContainer';

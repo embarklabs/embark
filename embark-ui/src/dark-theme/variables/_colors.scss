@@ -14,6 +14,11 @@ $gray-800:  #2f353a !default; // lighten($gray-base, 10%);
 $gray-900:  #23282c !default; // lighten($gray-base, 5%);
 $black:     #000 !default;
 
+$dark-border-color: #3a4149;
+$dark-bg-color: #30353b;
+$dark-progress-bg: #515b65;
+$dark-accent: #343b41;
+
 $grays: () !default;
 $grays: map-merge(
   (

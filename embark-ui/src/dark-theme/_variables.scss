@@ -5,8 +5,8 @@
 @import "variables/bootstrap/variables";
 
 // Import Bootstrap variables after customization for use below
-@import "node_modules/bootstrap/scss/functions"; // from bootstrap node_modules
-@import "node_modules/bootstrap/scss/variables"; // from bootstrap node_modules
+@import "../../node_modules/bootstrap/scss/functions"; // from bootstrap node_modules
+@import "../../node_modules/bootstrap/scss/variables"; // from bootstrap node_modules
 
 // CoreUI Variables
 
@@ -17,7 +17,7 @@ $layout-transition-speed:             .25s !default;
 // Navbar
 
 $navbar-height:                       55px !default;
-$navbar-bg:                           #fff !default;
+$navbar-bg:                           $dark-border-color !default;
 $navbar-border: (
   bottom: (
     size:                             1px,
@@ -33,9 +33,9 @@ $navbar-brand-minimized-width:        50px !default;
 $navbar-brand-minimized-bg:           $navbar-brand-bg !default;
 $navbar-brand-minimized-border:       $navbar-brand-border !default;
 
-$navbar-color:                        $gray-600 !default;
-$navbar-hover-color:                  $gray-800 !default;
-$navbar-active-color:                 $gray-800 !default;
+$navbar-color:                        $gray-300 !default;
+$navbar-hover-color:                  $gray-200 !default;
+$navbar-active-color:                 $gray-200 !default;
 $navbar-disabled-color:               $gray-300 !default;
 
 $navbar-toggler-icon:                 str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$navbar-color}' stroke-width='2.25' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"), "#", "%23") !default;
@@ -49,8 +49,8 @@ $sidebar-minimized-width:             50px !default;
 $sidebar-minimized-height:            $sidebar-minimized-width !default;
 $sidebar-compact-width:               150px !default;
 $sidebar-compact-height:              $sidebar-compact-width !default;
-$sidebar-color:                       #fff !default;
-$sidebar-bg:                          $gray-800 !default;
+$sidebar-color:                       #f3f4f5 !default;
+$sidebar-bg:                          $dark-border-color !default;
 $sidebar-borders:                     none !default;
 $mobile-sidebar-width:                220px !default;
 
@@ -70,6 +70,7 @@ $sidebar-form-placeholder-color:      rgba(255,255,255,.7) !default;
 
 // Sidebar Navigation
 
+// Not used
 $sidebar-nav-color:                   #fff !default;
 $sidebar-nav-title-padding-y:         .75rem !default;
 $sidebar-nav-title-padding-x:         1rem !default;
@@ -130,8 +131,8 @@ $breadcrumb-borders: (
 // Aside
 
 $aside-menu-width:                    250px !default;
-$aside-menu-color:                    $gray-800 !default;
-$aside-menu-bg:                       #fff !default;
+$aside-menu-color:                    #f3f4f5 !default;
+$aside-menu-bg:                       $dark-border-color !default;
 $aside-menu-borders: (
   left: (
     size:                             1px,
@@ -146,7 +147,7 @@ $aside-menu-nav-padding-x:            1rem !default;
 // Footer
 
 $footer-height:                       50px !default;
-$footer-bg:                           $gray-100 !default;
+$footer-bg:                           $dark-border-color !default;
 $footer-color:                        $body-color !default;
 $footer-borders: (
   top: (
