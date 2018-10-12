@@ -130,7 +130,7 @@ function entities(state = entitiesDefaultState, action) {
     if (action[name] && action[name].length === 1) {
       let entity = action[name][0];
       let nested = Object.keys(state).reduce((acc, entityName) => {
-        if (entity[entityName] && entity[entityName].length > 0) {
+        if (entity && entity[entityName] && entity[entityName].length > 0) {
           let entityFilter = filtrer[entityName] || (() => true);
           let entitySort = sorter[entityName] || (() => true);
           acc[entityName] = [...entity[entityName], ...state[entityName]].sort(entitySort).filter(entityFilter);
@@ -156,7 +156,7 @@ function errorEntities(state = {}, action) {
   }
   let newState = {};
   for (let name of Object.keys(entitiesDefaultState)) {
-    if (action[name] && action[name].length > 0) {
+    if (action[name] && action[name].length > 0 && action[name][0]) {
       newState[name] = action[name][0].error;
     }
   }
