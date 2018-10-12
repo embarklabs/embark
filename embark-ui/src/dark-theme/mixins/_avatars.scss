@@ -1,0 +1,17 @@
+@mixin avatar($width, $status-width) {
+  position: relative;
+  display: inline-block;
+  width: $width;
+  height: $width;
+
+  .avatar-status {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    display: block;
+    width: $status-width;
+    height: $status-width;
+    border: 1px solid #fff;
+    border-radius: 50em;
+  }
+}

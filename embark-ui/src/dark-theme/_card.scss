@@ -1,0 +1,117 @@
+.card {
+  margin-bottom: ($spacer * 1.5);
+
+  // Cards with color accent
+  @each $color, $value in $theme-colors {
+    &.bg-#{$color} {
+      border-color: darken($value, 12.5%);
+      .card-header {
+        background-color: darken($value, 3%);
+        border-color: darken($value, 12.5%);
+      }
+    }
+  }
+
+  &.drag,
+  .drag {
+    cursor: move;
+  }
+}
+
+.card-placeholder {
+  background: rgba(0, 0, 0, .025);
+  border: 1px dashed $gray-300;
+}
+
+.card-header {
+  > i {
+    margin-right: $spacer / 2;
+  }
+
+  .nav-tabs {
+    margin-top: -$card-spacer-y;
+    margin-bottom: -$card-spacer-y;
+    border-bottom: 0;
+
+    .nav-item {
+      border-top: 0;
+    }
+
+    .nav-link {
+      padding: $card-spacer-y ($card-spacer-x / 2);
+      color: $text-muted;
+      border-top: 0;
+
+      &.active {
+        color: $body-color;
+        background: #fff;
+      }
+    }
+  }
+}
+
+*[dir="rtl"] .card-header > i {
+  margin-right: 0;
+  margin-left: $spacer / 2;
+}
+
+.card-header-icon-bg {
+  display: inline-block;
+  width: ($card-spacer-y * 2) + ($font-size-base * $line-height-base);
+  padding: $card-spacer-y 0;
+  margin: (- $card-spacer-y) $card-spacer-x (- $card-spacer-y) (- $card-spacer-x);
+  line-height: inherit;
+  color: $card-icon-color;
+  text-align: center;
+  background: $card-icon-bg;
+  border-right: $card-border-width solid $card-border-color;
+}
+
+.card-header-actions {
+  display: inline-block;
+  float: right;
+  margin-right: - ($spacer / 4);
+}
+
+*[dir="rtl"] {
+  .card-header-actions {
+    float: left;
+    margin-right: auto;
+    margin-left: - ($spacer / 4);
+  }
+}
+
+.card-header-action {
+  padding: 0 ($spacer / 4);
+  color: $gray-600;
+
+  &:hover {
+    color: $body-color;
+    text-decoration: none;
+  }
+}
+
+
+// Cards with color accent
+@each $color, $value in $theme-colors {
+  .card-accent-#{$color} {
+    @include card-accent-variant($value);
+  }
+}
+
+.card-full {
+  margin-top: - $spacer;
+  margin-right: - $grid-gutter-width / 2;
+  margin-left: - $grid-gutter-width / 2;
+  border: 0;
+  border-bottom: $card-border-width solid $border-color;
+}
+
+@include media-breakpoint-up(sm) {
+  .card-columns {
+
+    &.cols-2 {
+      column-count: 2;
+    }
+  }
+}

@@ -1,0 +1,4 @@
+@mixin card-accent-variant($color) {
+  border-top-color: $color;
+  border-top-width: 2px;
+}

@@ -1,0 +1,478 @@
+// IE10&11 Flexbox fix
+@media all and (-ms-high-contrast: none) {
+  html {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+// stylelint-disable selector-type-no-unknown, no-duplicate-selectors, selector-no-qualifying-type
+// app-dashboard and app-root are Angular2+ selectors. You can add here your own selectors if you need.
+.app,
+app-dashboard,
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-header {
+  flex: 0 0 $navbar-height;
+}
+
+.app-footer {
+  flex: 0 0 $footer-height;
+}
+
+.app-body {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  overflow-x: hidden;
+
+  .main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sidebar {
+    // $sidebar-width is the width of the columns
+    flex: 0 0 $sidebar-width;
+    // put the nav on the left
+    order: -1;
+  }
+
+  .aside-menu {
+    // $aside-menu-width is the width of the columns
+    flex: 0 0 $aside-menu-width;
+  }
+}
+
+html:not([dir="rtl"]) {
+  .sidebar {
+    margin-left: - $sidebar-width;
+  }
+  .aside-menu {
+    right: 0;
+    margin-right: - $aside-menu-width;
+  }
+}
+html[dir="rtl"] {
+  .sidebar {
+    margin-right: - $sidebar-width;
+  }
+  .aside-menu {
+    left: 0;
+    margin-left: - $aside-menu-width;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  //
+  // Header
+  //
+  .header-fixed {
+    .app-header {
+      position: fixed;
+      z-index: $zindex-sticky;
+      width: 100%;
+    }
+    .app-body {
+      margin-top: $navbar-height;
+    }
+  }
+  //
+  // Sidebar
+  //
+  .sidebar-fixed {
+    .sidebar {
+      position: fixed;
+      z-index: $zindex-sticky - 1;
+      width: $sidebar-width;
+      height: 100vh;
+    }
+  }
+  .sidebar-fixed {
+    .app-header + .app-body .sidebar {
+      height: calc(100vh - #{$navbar-height});
+    }
+  }
+
+  .sidebar-compact {
+    .sidebar {
+      flex: 0 0 $sidebar-compact-width;
+    }
+
+    &.sidebar-fixed {
+      .sidebar {
+        width: $sidebar-compact-width;
+      }
+    }
+    .sidebar-minimizer {
+      display: none;
+    }
+  }
+
+  .sidebar-minimized {
+    .sidebar {
+      flex: 0 0 $sidebar-minimized-width;
+    }
+
+    &.sidebar-fixed {
+      .sidebar {
+        width: $sidebar-minimized-width;
+      }
+    }
+  }
+
+  .sidebar-off-canvas {
+    .sidebar {
+      position: fixed;
+      z-index: $zindex-sticky - 1;
+      height: 100%;
+    }
+  }
+
+  .sidebar-off-canvas {
+    .app-header + .app-body .sidebar {
+      height: calc(100vh - #{$navbar-height});
+    }
+  }
+
+  html:not([dir="rtl"]) {
+    .sidebar-compact {
+      .sidebar {
+        margin-left: - $sidebar-compact-width;
+      }
+    }
+    .sidebar-minimized {
+      .sidebar {
+        margin-left: - $sidebar-minimized-width;
+      }
+    }
+  }
+  html[dir="rtl"] {
+    .sidebar-compact {
+      .sidebar {
+        margin-right: - $sidebar-compact-width;
+      }
+    }
+    .sidebar-minimized {
+      .sidebar {
+        margin-right: - $sidebar-minimized-width;
+      }
+    }
+  }
+
+  //
+  // Aside Menu
+  //
+
+  .aside-menu-fixed {
+    .aside-menu {
+      position: fixed;
+      height: 100%;
+
+      .tab-content {
+        height: calc(100vh - #{$aside-menu-nav-padding-y * 2 + $font-size-base} - #{$navbar-height});
+      }
+    }
+  }
+
+  .aside-menu-fixed {
+    .app-header + .app-body .aside-menu {
+      height: calc(100vh - #{$navbar-height});
+    }
+  }
+
+  .aside-menu-off-canvas {
+    .aside-menu {
+      position: fixed;
+      z-index: $zindex-sticky - 1;
+      height: 100%;
+    }
+  }
+
+  .aside-menu-off-canvas {
+    .app-header + .app-body .aside-menu {
+      height: calc(100vh - #{$navbar-height});
+    }
+  }
+
+  html:not([dir="rtl"]) {
+    .aside-menu-fixed,
+    .aside-menu-off-canvas {
+      .aside-menu {
+        right: 0;
+      }
+    }
+  }
+  html[dir="rtl"] {
+    .aside-menu-fixed,
+    .aside-menu-off-canvas {
+      .aside-menu {
+        left: 0;
+      }
+    }
+  }
+}
+
+//
+// Breadcrumb
+//
+.breadcrumb-fixed {
+  .main {
+    $breadcrumb-height: 2 * $breadcrumb-padding-y + $font-size-base + 1.5 * $spacer;
+    padding-top: $breadcrumb-height;
+  }
+
+  .breadcrumb {
+    position: fixed;
+    top: $navbar-height;
+    right: 0;
+    left: 0;
+    z-index: $zindex-sticky - 3;
+  }
+}
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+    html:not([dir="rtl"]) {
+      .sidebar#{$infix}-show {
+        .sidebar {
+          margin-left: 0;
+        }
+        @if media-breakpoint-up(sm) {
+          &.sidebar-fixed {
+            .main,
+            .app-footer {
+              margin-left: $sidebar-width;
+            }
+            &.sidebar-compact {
+              .main,
+              .app-footer {
+                margin-left: $sidebar-compact-width;
+              }
+            }
+            &.sidebar-minimized {
+              .main,
+              .app-footer {
+                margin-left: $sidebar-minimized-width;
+              }
+            }
+          }
+          &.breadcrumb-fixed {
+            .breadcrumb {
+              left: $sidebar-width;
+            }
+            &.sidebar-compact {
+              .breadcrumb {
+                left: $sidebar-compact-width;
+              }
+            }
+            &.sidebar-minimized {
+              .breadcrumb {
+                left: $sidebar-minimized-width;
+              }
+            }
+          }
+        }
+      }
+
+      .aside-menu#{$infix}-show {
+        .aside-menu {
+          margin-right: 0;
+        }
+        @if media-breakpoint-up(sm) {
+          &.aside-menu-fixed {
+            .main,
+            .app-footer {
+              margin-right: $aside-menu-width;
+            }
+          }
+          &.breadcrumb-fixed {
+            .breadcrumb {
+              right: $aside-menu-width;
+            }
+          }
+        }
+      }
+    }
+
+    html[dir="rtl"] {
+      .sidebar#{$infix}-show {
+        .sidebar {
+          margin-right: 0;
+        }
+        @if media-breakpoint-up(sm) {
+          &.sidebar-fixed {
+            .main,
+            .app-footer {
+              margin-right: $sidebar-width;
+            }
+            &.sidebar-compact {
+              .main,
+              .app-footer {
+                margin-right: $sidebar-compact-width;
+              }
+            }
+            &.sidebar-minimized {
+              .main,
+              .app-footer {
+                margin-right: $sidebar-minimized-width;
+              }
+            }
+          }
+          &.breadcrumb-fixed {
+            .breadcrumb {
+              right: $sidebar-width;
+            }
+            &.sidebar-compact {
+              .breadcrumb {
+                right: $sidebar-compact-width;
+              }
+            }
+            &.sidebar-minimized {
+              .breadcrumb {
+                right: $sidebar-minimized-width;
+              }
+            }
+          }
+        }
+      }
+
+      .aside-menu#{$infix}-show {
+        .aside-menu {
+          margin-left: 0;
+        }
+        @if media-breakpoint-up(sm) {
+          &.aside-menu-fixed {
+            .main,
+            .app-footer {
+              margin-left: $aside-menu-width;
+            }
+          }
+          &.breadcrumb-fixed {
+            .breadcrumb {
+              left: $aside-menu-width;
+            }
+          }
+        }
+      }
+    }
+    .sidebar#{$infix}-show,
+    .aside-menu#{$infix}-show {
+      @keyframes opacity {
+        0%   { opacity: 0; }
+        100% { opacity: 1; }
+      }
+
+      @include media-breakpoint-down(xs) {
+        .main {
+          position: relative;
+          &::before {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: $zindex-sticky - 2;
+            width: 100%;
+            height: 100%;
+            content: "";
+            background: rgba(0, 0, 0, .7);
+            animation: opacity $layout-transition-speed;
+          }
+        }
+      }
+    }
+  }
+}
+
+//
+// Footer
+//
+.footer-fixed {
+  .app-footer {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: $zindex-sticky;
+    height: $footer-height;
+  }
+
+  .app-body {
+    margin-bottom: $footer-height;
+  }
+}
+
+//
+// Animations
+//
+.app-header,
+.app-footer,
+.sidebar,
+.main,
+.aside-menu {
+  transition: margin-left $layout-transition-speed, margin-right $layout-transition-speed, width $layout-transition-speed, flex $layout-transition-speed;
+}
+.sidebar-nav {
+  transition: width $layout-transition-speed;
+}
+.breadcrumb {
+  transition: left $layout-transition-speed, right $layout-transition-speed, width $layout-transition-speed;
+}
+
+//
+// Mobile layout
+//
+
+@include media-breakpoint-down(md) {
+  .app-header {
+    position: fixed;
+    z-index: $zindex-sticky;
+    width: 100%;
+    text-align: center;
+    @if $navbar-brand-bg == transparent {
+      background-color: $navbar-bg;
+    } @else {
+      background-color: $navbar-brand-bg;
+    }
+    @include borders($navbar-brand-border);
+
+    .navbar-toggler {
+      @if (lightness( $navbar-brand-bg ) > 40) {
+        color: $navbar-color;
+      } @else {
+        color: #fff;
+      }
+    }
+
+    .navbar-brand {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      margin-left: - ($navbar-brand-width / 2);
+    }
+  }
+
+  .app-body {
+    margin-top: $navbar-height;
+  }
+
+  .sidebar {
+    position: fixed;
+    z-index: $zindex-sticky - 1;
+    width: $sidebar-width;
+    height: calc(100vh - #{$navbar-height});
+  }
+
+  .sidebar-minimizer {
+    display: none;
+  }
+
+  .aside-menu {
+    position: fixed;
+    height: 100%;
+  }
+}

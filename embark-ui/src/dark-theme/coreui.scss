@@ -1,0 +1,64 @@
+/*!
+ * CoreUI - Open Source Dashboard UI Kit
+ * @version v2.0.18
+ * @link https://coreui.io
+ * Copyright (c) 2018 creativeLabs Łukasz Holeczek
+ * Licensed under MIT (https://coreui.io/license)
+ */
+
+// Override Boostrap variables
+@import "variables";
+
+// Import Bootstrap source files
+@import "node_modules/bootstrap/scss/bootstrap"; // from bootstrap node_modules
+
+// Mixins
+@import "mixins";
+
+// Animations
+@import "animate";
+
+// Vendors
+@import "vendors";
+
+// Components
+@import "aside";
+@import "avatars";
+@import "badge";
+@import "breadcrumb-menu";
+@import "breadcrumb";
+@import "brand-card";
+@import "brand-buttons";
+@import "buttons";
+@import "callout";
+@import "card";
+@import "charts";
+@import "dropdown";
+@import "footer";
+@import "grid";
+@import "header";
+@import "input-group";
+@import "images";
+@import "list-group";
+@import "modal";
+@import "nav";
+@import "progress";
+@import "progress-group";
+@import "sidebar";
+@import "switches";
+@import "tables";
+@import "widgets";
+
+// Layout Options
+@import "layout";
+
+@import "others";
+
+// Utility classes
+@import "utilities";
+
+// Right-to-left
+@import "rtl";
+
+// Custom Properties support for Internet Explorer
+@import "ie-custom-properties";

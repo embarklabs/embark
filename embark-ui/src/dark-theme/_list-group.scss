@@ -1,0 +1,35 @@
+// List items with accent
+//
+// Remove top, bottome and right borders and border-radius.
+
+.list-group-accent {
+  .list-group-item {
+    margin-bottom: 1px;
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 0;
+    @include border-radius(0);
+
+    &.list-group-item-divider {
+      position: relative;
+
+      &::before {
+        position: absolute;
+        bottom: -1px;
+        left: 5%;
+        width: 90%;
+        height: 1px;
+        content: "";
+        background-color: $gray-200;
+      }
+    }
+  }
+}
+
+// Contextual variants
+//
+// Add modifier classes to change border color on individual items.
+
+@each $color, $value in $theme-colors {
+  @include list-group-item-accent-variant($color, $value);
+}

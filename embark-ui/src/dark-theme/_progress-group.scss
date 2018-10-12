@@ -1,0 +1,40 @@
+.progress-group {
+  display: flex;
+  flex-flow: row wrap;
+  margin-bottom: $spacer;
+}
+
+.progress-group-prepend {
+  flex: 0 0 100px;
+  align-self: center;
+}
+
+.progress-group-icon {
+  margin: 0 $spacer 0 ($spacer * .25);
+  font-size: $font-size-lg;
+}
+
+.progress-group-text {
+  font-size: $font-size-sm;
+  color: $gray-600;
+}
+
+.progress-group-header {
+  display: flex;
+  flex-basis: 100%;
+  align-items: flex-end;
+  margin-bottom: ($spacer * .25);
+}
+
+.progress-group-bars {
+  flex-grow: 1;
+  align-self: center;
+
+  .progress:not(:last-child) {
+    margin-bottom: 2px;
+  }
+}
+
+.progress-group-header + .progress-group-bars {
+  flex-basis: 100%;
+}

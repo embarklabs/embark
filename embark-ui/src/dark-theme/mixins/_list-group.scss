@@ -1,0 +1,7 @@
+// List Groups
+
+@mixin list-group-item-accent-variant($state, $color) {
+  .list-group-item-accent-#{$state} {
+    border-left: 4px solid $color;
+  }
+}

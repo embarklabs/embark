@@ -1,0 +1,27 @@
+//
+// RTL Support
+//
+*[dir="rtl"] {
+  direction: rtl;
+  unicode-bidi: embed;
+
+  body {
+    text-align: right;
+  }
+
+
+  // Dropdown
+  .dropdown-item {
+    text-align: right;
+
+    i {
+      margin-right: -10px;
+      margin-left: 10px;
+    }
+
+    .badge {
+      right: auto;
+      left: 10px;
+    }
+  }
+}

@@ -1,0 +1,18 @@
+@mixin sidebar-width($borders, $width) {
+  $sidebar-width: $width;
+
+  @each $border in $borders {
+    $direction: nth($border, 1);
+    @if $direction == "all" {
+      $size: map-get(map-get($borders, $direction), size);
+      $sidebar-width: ($sidebar-width - (2 * $size));
+    } @else if $direction == "right" {
+      $size: map-get(map-get($borders, $direction), size);
+      $sidebar-width: $sidebar-width - $size;
+    } @else if $direction == "left" {
+      $size: map-get(map-get($borders, $direction), size);
+      $sidebar-width: $sidebar-width - $size;
+    }
+    width: $sidebar-width;
+  }
+}

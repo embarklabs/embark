@@ -1,0 +1,65 @@
+//
+// Base styles
+//
+
+.brand-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin-bottom: ($spacer * 1.5);
+  word-wrap: break-word;
+  background-color: $card-bg;
+  background-clip: border-box;
+  border: $card-border-width solid $card-border-color;
+  @include border-radius($card-border-radius);
+}
+
+.brand-card-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 6rem;
+  @include border-radius($card-border-radius $card-border-radius 0 0);
+
+  i {
+    font-size: 2rem;
+    color: #fff;
+  }
+
+  .chart-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.brand-card-body {
+  display: flex;
+  flex-direction: row;
+  padding: $card-spacer-y 0;
+  text-align: center;
+
+  > * {
+    flex: 1;
+    padding: ($card-spacer-y * .25) 0;
+  }
+
+  > *:not(:last-child) {
+    border-right: 1px solid $border-color;
+  }
+}
+
+// stylelint-disable selector-max-universal
+// Right-to-Left Support
+*[dir="rtl"] {
+  .brand-card-body {
+    > *:not(:last-child) {
+      border-right: 0;
+      border-left: 1px solid $border-color;
+    }
+  }
+}

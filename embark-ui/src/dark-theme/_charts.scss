@@ -1,0 +1,55 @@
+.chart-wrapper canvas {
+  width: 100%;
+}
+// stylelint-disable selector-no-qualifying-type, selector-type-no-unknown
+base-chart.chart {
+  display: block;
+}
+
+canvas {
+  user-select: none;
+}
+
+.chartjs-tooltip {
+  position: absolute;
+  z-index: $zindex-sticky + 1;
+  display: flex;
+  flex-direction: column;
+  padding: ($spacer * .25) ($spacer * .5);
+  color: #fff;
+  pointer-events: none;
+  background: rgba(0, 0, 0, .7);
+  opacity: 0;
+  transition: all $layout-transition-speed ease;
+  transform: translate(-50%, 0);
+  @include border-radius($border-radius);
+
+  .tooltip-header {
+    margin-bottom: ($spacer * .5);
+  }
+
+  .tooltip-header-item {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-bold;
+  }
+
+  .tooltip-body-item {
+    display: flex;
+    align-items: center;
+    font-size: $font-size-sm;
+    white-space: nowrap;
+  }
+
+  .tooltip-body-item-color {
+    display: inline-block;
+    width: $font-size-base;
+    height: $font-size-base;
+    margin-right: $font-size-base;
+  }
+
+  .tooltip-body-item-value {
+    padding-left: $spacer;
+    margin-left: auto;
+    font-weight: $font-weight-bold;
+  }
+}

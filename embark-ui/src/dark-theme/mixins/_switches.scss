@@ -1,0 +1,78 @@
+@mixin switch-size($width, $height, $font-size, $handle-margin) {
+  width: $width;
+  height: $height;
+
+  .switch-slider {
+    font-size: $font-size;
+
+    &::before {
+      width: $height - ($handle-margin * 2) - ($border-width * 2);
+      height: $height - ($handle-margin * 2) - ($border-width * 2);
+    }
+    &::after {
+      font-size: $font-size;
+    }
+  }
+
+  .switch-input:checked ~ .switch-slider {
+    &::before {
+      transform: translateX($width - $height);
+    }
+  }
+}
+
+@mixin switch-3d-size($width, $height) {
+  width: $width;
+  height: $height;
+
+  .switch-slider::before {
+    width: $height;
+    height: $height;
+  }
+
+  .switch-input:checked ~ .switch-slider {
+    &::before {
+      transform: translateX($width - $height);
+    }
+  }
+}
+
+@mixin switch-variant($color) {
+  .switch-input:checked + .switch-slider {
+    background-color: $color;
+    border-color: darken($color, 10%);
+
+    &::before {
+      border-color: darken($color, 10%);
+    }
+  }
+}
+
+@mixin switch-outline-variant($color) {
+  .switch-input:checked + .switch-slider {
+    background-color: #fff;
+    border-color: $color;
+
+    &::before {
+      border-color: $color;
+    }
+    &::after {
+      color: $color;
+    }
+  }
+}
+
+@mixin switch-outline-variant-alt($color) {
+  .switch-input:checked + .switch-slider {
+    background-color: #fff;
+    border-color: $color;
+
+    &::before {
+      background-color: $color;
+      border-color: $color;
+    }
+    &::after {
+      color: $color;
+    }
+  }
+}

@@ -1,0 +1,44 @@
+.avatar {
+  @include avatar($avatar-width,$avatar-status-width);
+
+  > img {
+    @extend .img-avatar;
+    vertical-align: initial;
+  }
+}
+
+.avatar-lg {
+  @include avatar($avatar-lg-width,$avatar-lg-status-width);
+}
+
+.avatar-sm {
+  @include avatar($avatar-sm-width,$avatar-sm-status-width);
+}
+
+.avatar-xs {
+  @include avatar($avatar-xs-width,$avatar-xs-status-width);
+}
+
+.avatars-stack {
+
+  .avatar {
+    margin-right: - ($avatar-width / 2);
+    transition: margin-right $layout-transition-speed;
+
+    &:hover {
+      margin-right: 0;
+    }
+  }
+
+  .avatar-lg {
+    margin-right: - ($avatar-lg-width / 2);
+  }
+
+  .avatar-sm {
+    margin-right: - ($avatar-sm-width / 2);
+  }
+
+  .avatar-xs {
+    margin-right: - ($avatar-xs-width / 2);
+  }
+}

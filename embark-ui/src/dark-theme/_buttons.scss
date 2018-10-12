@@ -1,0 +1,32 @@
+button {
+  cursor: pointer;
+}
+
+.btn-transparent {
+  color: #fff;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.btn {
+  [class^="icon-"],
+  [class*=" icon-"] {
+    display: inline-block;
+    margin-top: -2px;
+    vertical-align: middle;
+  }
+}
+
+.btn-pill {
+  border-radius: 50em;
+}
+
+.btn-square {
+  border-radius: 0;
+}
+
+@each $color, $value in $theme-colors {
+  .btn-ghost-#{$color} {
+    @include button-ghost-variant($value);
+  }
+}
