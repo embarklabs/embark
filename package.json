@@ -9,7 +9,7 @@
     "test:test_app": "cross-env DAPP=\"test_app\" npm run test_dapp",
     "test:contracts_app": "cross-env DAPP=\"contracts_app\" npm run test_dapp",
     "test_dapp": "cross-env-shell \"cd test_apps/$DAPP && npm install && npm test\"",
-    "prepublish": "cross-env cd embark-ui && npm install && cd -"
+    "prepack": "cd embark-ui && npm install && npm run build"
   },
   "bin": {
     "embark": "./bin/embark"
