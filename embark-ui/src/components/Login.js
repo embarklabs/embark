@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React from 'react';
-import logo from '../images/logo.png';
+import logo from '../images/logo-new.svg';
 import './Login.css';
 
 class Login extends React.Component {

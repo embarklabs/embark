@@ -1,11 +1,12 @@
 .login-container {
   width: 80%;
   max-width: 900px;
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
 }
 
 .login-layout-container-section {
   padding: 0.8em;
-  background: #20a8d8;
+  background: #2f353a;
 }
 
 .login-layout-container-section:first-child {
