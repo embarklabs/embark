@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {
   Alert,
+  FormGroup,
+  Input,
   Button,
-  Form
-} from "tabler-react";
-import PropTypes from 'prop-types';
+  Card,
+  CardHeader,
+  CardBody
+} from 'reactstrap';
 
 class EnsLookup extends Component {
   constructor(props) {
@@ -28,24 +32,26 @@ class EnsLookup extends Component {
   showResult() {
     let ensRecord = this.props.ensRecords.find((record) => record.address === this.state.address);
     if (ensRecord) {
-      return <Alert type="success">The name is: {ensRecord.name}</Alert>;
+      return <Alert className="mt-3" color="success">The name is: {ensRecord.name}</Alert>;
     } else {
-      return <Alert type="danger">We could not find a name for this address</Alert>;
+      return <Alert className="mt-3" color="danger">We could not find a name for this address</Alert>;
     }
   }
 
   render(){
     return (
-      <React.Fragment>
-        <h3>Lookup</h3>
-        <Form.FieldSet>
-          <Form.Group>
-            <Form.Input placeholder="Enter an address" onChange={e => this.handleChange(e)}/>
-          </Form.Group>
+      <Card>
+        <CardHeader>
+          <strong>ENS Lookup</strong>
+        </CardHeader>
+        <CardBody>
+          <FormGroup>
+            <Input placeholder="Enter an address" onChange={e => this.handleChange(e)}/>
+          </FormGroup>
           <Button color="primary" onClick={() => this.handleLookup()}>Lookup</Button>
           {this.state.showResult && this.showResult()}
-        </Form.FieldSet>
-      </React.Fragment>
+        </CardBody>
+      </Card>
     );
   }
 }
