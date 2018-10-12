@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {withRouter} from 'react-router-dom';
 
 import {contract as contractAction} from '../actions';
 import ContractLayout from '../components/ContractLayout';
-import {getContractsByFilename} from "../reducers/selectors";
+import {getContractsByPath} from "../reducers/selectors";
 
 class FileContractsContainer extends Component {
   componentDidMount() {
@@ -13,17 +12,15 @@ class FileContractsContainer extends Component {
   }
 
   render() {
-    if (this.props.contract){
-      return <ContractLayout contractIsFiddle={this.props.contract.isFiddle} />;
-    } else {
-      return <React.Fragment />;
-    }
+    return (
+      this.props.contracts.map(contract => <ContractLayout contract={contract} />)
+    )
   }
 }
 
 function mapStateToProps(state, props) {
   return {
-    contracts: getContractsByFilename(state, props.currentFile.name),
+    contracts: getContractsByPath(state, props.currentFile.path),
     error: state.errorMessage,
     loading: state.loading
   };
