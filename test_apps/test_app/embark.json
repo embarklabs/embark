@@ -15,7 +15,7 @@
   "buildDir": "dist/",
   "config": "config/",
   "versions": {
-    "solc": "0.4.24",
+    "solc": "0.4.25",
     "web3": "1.0.0-beta",
     "ipfs-api": "17.2.7"
   },

@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux';
 import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE,
-        FETCH_CREDENTIALS, UPDATE_BASE_ETHER, CHANGE_THEME, FETCH_THEME, EXPLORER_SEARCH,
+        FETCH_CREDENTIALS, UPDATE_BASE_ETHER, CHANGE_THEME, FETCH_THEME, EXPLORER_SEARCH, DEBUGGER_INFO,
         SIGN_MESSAGE, VERIFY_MESSAGE, TOGGLE_BREAKPOINT,
         UPDATE_DEPLOYMENT_PIPELINE, WEB3_CONNECT, WEB3_DEPLOY, WEB3_ESTIMAGE_GAS} from "../actions";
 import {EMBARK_PROCESS_NAME, DARK_THEME, DEPLOYMENT_PIPELINES, DEFAULT_HOST} from '../constants';
@@ -313,7 +313,7 @@ function messageVerification(state = DEFAULT_MESSAGE_VERIFICATION_STATE, action)
 }
 
 function breakpoints(state = {}, action) {
-  if (action.type === TOGGLE_BREAKPOINT) {
+  if (action.type === TOGGLE_BREAKPOINT[SUCCESS]) {
     const {filename, lineNumber} = action.payload;
     let lineNumbers = state[filename] || [];
     if (lineNumbers.includes(lineNumber)){
@@ -347,6 +347,13 @@ function web3(state = {deployments: {}, gasEstimates: {}}, action) {
   return state
 }
 
+function debuggerInfo(state={}, action) {
+  if (action.type === DEBUGGER_INFO[SUCCESS]) {
+    return action.data;
+  }
+  return state;
+}
+
 const rootReducer = combineReducers({
   entities,
   loading,
@@ -355,13 +362,15 @@ const rootReducer = combineReducers({
   errorEntities,
   credentials,
   baseEther,
-  theme,
   searchResult,
   messageSignature,
   messageVerification,
   breakpoints,
   deploymentPipeline,
-  web3
+  web3,
+  searchResult,
+  debuggerInfo,
+  theme
 });
 
 export default rootReducer;

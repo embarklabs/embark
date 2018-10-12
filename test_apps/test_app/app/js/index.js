@@ -6,6 +6,9 @@ import SimpleStorage from 'Embark/contracts/SimpleStorage';
 import Test from 'Embark/contracts/Test';
 import Assert from 'Embark/contracts/Assert';
 
+import SimpleStorageTest from 'Embark/contracts/SimpleStorageTest';
+window.SimpleStorageTest = SimpleStorageTest
+
 import ReactDOM from 'react-dom';
 
 //import $ from './_vendor/jquery.min';

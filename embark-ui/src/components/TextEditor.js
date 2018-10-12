@@ -97,8 +97,9 @@ class TextEditor extends React.Component {
       }
     ));
 
-    //TODO remove me when debuggerLine comes from the debugger API
-    let debuggerLine = this.props.debuggerLine || 11;
+    let debuggerLine = this.props.debuggerLine;
+    console.dir("debuggerLine")
+    console.dir(debuggerLine)
     newDecorations.push({
       range: new monaco.Range(debuggerLine,1,debuggerLine,1),
         options: {
@@ -116,9 +117,8 @@ class TextEditor extends React.Component {
     }
 
     this.updateMarkers();
-    // TODO replace with const expectedDecorationsLength = this.props.debuggerLine ? this.props.breakpoints.length + 1 : this.props.breakpoints.length
-    const expectedDecorationsLength = this.props.breakpoints.length + 1;
-    if (expectedDecorationsLength !== this.state.decorations.length) {
+    const expectedDecorationsLength = this.props.debuggerLine ? this.props.breakpoints.length + 1 : this.props.breakpoints.length
+    if (expectedDecorationsLength !== this.state.decorations.length || this.props.debuggerLine !== prevProps.debuggerLine) {
       this.updateDecorations();
     }
     this.updateLanguage();

@@ -69,6 +69,14 @@ export const fetchFile = doRequest.bind(null, actions.file, api.fetchFile);
 export const postFile = doRequest.bind(null, actions.saveFile, api.postFile);
 export const deleteFile = doRequest.bind(null, actions.removeFile, api.deleteFile);
 export const fetchEthGas = doRequest.bind(null, actions.gasOracle, api.getEthGasAPI);
+export const startDebug = doRequest.bind(null, actions.startDebug, api.startDebug);
+export const debugJumpBack = doRequest.bind(null, actions.debugJumpBack, api.debugJumpBack);
+export const debugJumpForward = doRequest.bind(null, actions.debugJumpForward, api.debugJumpForward);
+export const debugStepOverForward = doRequest.bind(null, actions.debugStepOverForward, api.debugStepOverForward);
+export const debugStepOverBackward = doRequest.bind(null, actions.debugStepOverBackward, api.debugStepOverBackward);
+export const debugStepIntoForward = doRequest.bind(null, actions.debugStepIntoForward, api.debugStepIntoForward);
+export const debugStepIntoBackward = doRequest.bind(null, actions.debugStepIntoBackward, api.debugStepIntoBackward);
+export const toggleBreakpoint = doRequest.bind(null, actions.toggleBreakpoint, api.toggleBreakpoint);
 export const authenticate = doRequest.bind(null, actions.authenticate, api.authenticate);
 
 export const fetchCurrentFile = doRequest.bind(null, actions.currentFile, storage.fetchCurrentFile);
@@ -223,6 +231,38 @@ export function *watchFetchCurrentFile() {
 
 export function *watchFetchEthGas() {
   yield takeEvery(actions.GAS_ORACLE[actions.REQUEST], fetchEthGas);
+}
+
+export function *watchStartDebug() {
+  yield takeEvery(actions.START_DEBUG[actions.REQUEST], startDebug);
+}
+
+export function *watchDebugJumpBack() {
+  yield takeEvery(actions.DEBUG_JUMP_BACK[actions.REQUEST], debugJumpBack);
+}
+
+export function *watchDebugJumpForward() {
+  yield takeEvery(actions.DEBUG_JUMP_FORWARD[actions.REQUEST], debugJumpForward);
+}
+
+export function *watchDebugStepOverForward() {
+  yield takeEvery(actions.DEBUG_STEP_OVER_FORWARD[actions.REQUEST], debugStepOverForward);
+}
+
+export function *watchDebugStepOverBackward() {
+  yield takeEvery(actions.DEBUG_STEP_OVER_BACKWARD[actions.REQUEST], debugStepOverBackward);
+}
+
+export function *watchDebugStepIntoForward() {
+  yield takeEvery(actions.DEBUG_STEP_INTO_FORWARD[actions.REQUEST], debugStepIntoForward);
+}
+
+export function *watchDebugStepIntoBackward() {
+  yield takeEvery(actions.DEBUG_STEP_INTO_BACKWARD[actions.REQUEST], debugStepIntoBackward);
+}
+
+export function *watchToggleBreakpoint() {
+  yield takeEvery(actions.TOGGLE_BREAKPOINT[actions.REQUEST], toggleBreakpoint);
 }
 
 export function *watchAuthenticate() {
@@ -385,6 +425,28 @@ export function *watchListenGasOracle() {
   yield takeEvery(actions.WATCH_GAS_ORACLE, listenGasOracle);
 }
 
+export function *listenDebugger() {
+  const credentials = yield select(getCredentials);
+  const socket = api.listenToDebugger(credentials);
+  const channel = yield call(createChannel, socket);
+  while (true) {
+    const { cancel, debuggerInfo } = yield race({
+      debuggerInfo: take(channel),
+      cancel: take(actions.STOP_DEBUGGER)
+    });
+
+    if (cancel) {
+      channel.close();
+      return;
+    }
+    yield put(actions.debuggerInfo.success(debuggerInfo));
+  }
+}
+
+export function *watchListenDebugger() {
+  yield takeEvery(actions.START_DEBUG[actions.SUCCESS], listenDebugger);
+}
+
 export function *listenToMessages(action) {
   const credentials = yield select(getCredentials);
   const socket = api.listenToChannel(credentials, action.messageChannels[0]);
@@ -436,6 +498,14 @@ export default function *root() {
     fork(watchPostFileSuccess),
     fork(watchFetchCredentials),
     fork(watchFetchEthGas),
+    fork(watchStartDebug),
+    fork(watchDebugJumpBack),
+    fork(watchDebugJumpForward),
+    fork(watchDebugStepOverForward),
+    fork(watchDebugStepOverBackward),
+    fork(watchDebugStepIntoForward),
+    fork(watchDebugStepIntoBackward),
+    fork(watchToggleBreakpoint),
     fork(watchAuthenticate),
     fork(watchAuthenticateSuccess),
     fork(watchLogout),
@@ -447,6 +517,7 @@ export default function *root() {
     fork(watchVerifyMessage),
     fork(watchWeb3EstimateGas),
     fork(watchWeb3Deploy),
-    fork(watchUpdateDeploymentPipeline)
+    fork(watchUpdateDeploymentPipeline),
+    fork(watchListenDebugger)
   ]);
 }

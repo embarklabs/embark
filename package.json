@@ -115,6 +115,7 @@
     "swarm-api": "0.1.2",
     "tar": "3.2.1",
     "toposort": "1.0.7",
+    "remix-debug-debugtest": "latest",
     "underscore": "1.9.1",
     "url-loader": "1.1.1",
     "uuid": "3.3.2",
