@@ -77,6 +77,8 @@ describe('embark.Config', function () {
           "filename": ".embark/contracts/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol",
           "type": "http",
           "path": "https://raw.githubusercontent.com/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol",
+          "pluginPath": '',
+          "importRemappings": [],
           "basedir": "",
           "resolver": undefined,
           "downloadedImports": false
@@ -85,6 +87,8 @@ describe('embark.Config', function () {
           "filename": ".embark/contracts/status-im/contracts/master/contracts/identity/ERC725.sol",
           "type": "http",
           "path": "https://raw.githubusercontent.com/status-im/contracts/master/contracts/identity/ERC725.sol",
+          "pluginPath": '',
+          "importRemappings": [],
           "basedir": "",
           "resolver": undefined,
           "downloadedImports": false
