@@ -339,9 +339,22 @@ class Cmd {
         
         const fieldMapping = {};
         if(fields.length > 0){
-          // TODO: validate fields
+          const typeRegex = /^(u?int[0-9]{0,3}(\[\])?|string|bool|address|bytes[0-9]{0,3})(\[\])?$/;
+          const varRegex = /^[a-zA-Z][a-zA-Z0-9_]*$/;
+
           fields.forEach(curr => {
             const c = curr.split(':');
+
+            if(!varRegex.test(c[0])){
+              console.log("Invalid variable name: " + c[0]);
+              process.exit(0);
+            }
+
+            if(!typeRegex.test(c[1])){
+              console.log("Invalid datatype: " + c[1] + " - The dApp generator might not support this type at the moment");
+              process.exit(0);
+            }
+
             fieldMapping[c[0]] = c[1];
           });
         }

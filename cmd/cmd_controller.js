@@ -490,8 +490,7 @@ class EmbarkController {
         });
       },
       function generateUI(callback){
-        engine.events.request("scaffolding:generate", options, () => {
-          
+        engine.events.request("scaffolding:generate:ui", options, () => {
           callback();
         });
       }
