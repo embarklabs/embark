@@ -326,19 +326,29 @@ class Cmd {
 
   scaffold() {
     program
-      .command('scaffold [contract] [environment]')
+      .command('scaffold [contract] [fields...]')
       .option('--framework <framework>', 'UI framework to use. (default: react)')
+      .option('--contract-language <language>', 'Language used for the smart contract generation (default: solidity)')
       .option('--overwrite', 'Overwrite existing files. (default: false)')
 
-      .action(function(contract, env, options){
+      .action(function(contract, fields, options){
         if(contract === undefined){
           console.log("contract name is required");
           process.exit(0);
         }
         
+        const fieldMapping = {};
+        if(fields.length > 0){
+          // TODO: validate fields
+          fields.forEach(curr => {
+            const c = curr.split(':');
+            fieldMapping[c[0]] = c[1];
+          });
+        }
+
         checkDeps();
         i18n.setOrDetectLocale(options.locale);
-        options.env = env || 'development';
+        options.env = 'development';
         options.logFile = options.logfile; // fix casing
         options.logLevel = options.loglevel; // fix casing
         options.onlyCompile = options.contracts;
@@ -346,7 +356,9 @@ class Cmd {
         options.webpackConfigName = options.pipeline || 'development';
         options.contract = contract;
         options.framework = options.framework || 'react';
+        options.contractLanguage = options.contractLanguage || 'solidity';
         options.overwrite = options.overwrite || false;
+        options.fields = fieldMapping;
 
         embark.scaffold(options);
       });
