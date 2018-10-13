@@ -92,7 +92,7 @@ class Console extends Component {
                 search={value}
 								autoFocus={true}
                 emptyLabel={false}
-                labelKey="name"
+                labelKey="value"
                 multiple={false}
                 emptyLabel={false}
                 maxResults={10}
@@ -108,12 +108,22 @@ class Console extends Component {
                 }}
                 onSearch={(value) => {
                   console.dir(value);
-									this.setState({ isLoading: false, options: ['hello', 'dude', 'dude1'] })
+									this.setState({ isLoading: false, options: [{value: 'hello', command_type: "embark", description: "says hello back!"}, {value: 'SimpleStorage', command_type: "web3 object", description: ""}, {value: 'web3.eth.getAccounts', command_type: "web3", description: "get list of accounts"}] })
                 }}
+                filterBy={['value']}
                 maxHeight="200px"
                 placeholder="Type a command (e.g help)"
                 options={this.state.options}
                 placeholder="Choose a state..."
+                renderMenuItemChildren={(option) => (
+                  <div>
+                    {option.value}
+                    <div>
+                      <small>{option.command_type} - {option.description}</small>
+                    </div>
+                  </div>
+                )}
+
               />
             </Card.Footer>}
           </Card>
