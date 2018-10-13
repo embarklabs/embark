@@ -25,8 +25,8 @@ class Console extends Component {
     this.typeahead.getInstance().clear()
   }
 
-  handleChange(value) {
-    this.setState({value: value});
+  handleChange(value, cb) {
+    this.setState({value: value}, cb);
   }
 
   toggle(tab) {
@@ -89,7 +89,6 @@ class Console extends Component {
             </Card.Body>
             {this.props.isEmbark() && <Card.Footer>
               <AsyncTypeahead
-                search={value}
 								autoFocus={true}
                 emptyLabel={false}
                 labelKey="value"
@@ -97,20 +96,25 @@ class Console extends Component {
                 emptyLabel={false}
                 maxResults={10}
                 isLoading={this.state.isLoading}
-                defaultInputValue={value}
                 onInputChange={(text) => this.handleChange(text)}
+                onChange={(text) => {
+                  if (text && text[0]) {
+                    this.handleChange(text[0].value)
+                  }
+                }}
                 ref={(typeahead) => this.typeahead = typeahead}
                 searchText={false}
                 onKeyDown={(e) => {
                   if (e.keyCode === 13) {
-                    this.handleSubmit(e)
+                    this.handleChange(e.target.value, () => {
+                      this.handleSubmit(e)
+                    })
                   }
                 }}
                 onSearch={(value) => {
-                  console.dir(value);
-									this.setState({ isLoading: false, options: [{value: 'hello', command_type: "embark", description: "says hello back!"}, {value: 'SimpleStorage', command_type: "web3 object", description: ""}, {value: 'web3.eth.getAccounts', command_type: "web3", description: "get list of accounts"}] })
+                  this.setState({ isLoading: false, options: [{value: 'hello', command_type: "embark", description: "says hello back!"}, {value: 'SimpleStorage', command_type: "web3 object", description: ""}, {value: 'web3.eth.getAccounts', command_type: "web3", description: "get list of accounts"}] })
                 }}
-                filterBy={['value']}
+                filterBy={['value', 'description']}
                 maxHeight="200px"
                 placeholder="Type a command (e.g help)"
                 options={this.state.options}
@@ -123,7 +127,6 @@ class Console extends Component {
                     </div>
                   </div>
                 )}
-
               />
             </Card.Footer>}
           </Card>
