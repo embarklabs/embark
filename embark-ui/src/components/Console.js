@@ -112,7 +112,11 @@ class Console extends Component {
                   }
                 }}
                 onSearch={(value) => {
-                  this.setState({ isLoading: false, options: [{value: 'hello', command_type: "embark", description: "says hello back!"}, {value: 'SimpleStorage', command_type: "web3 object", description: ""}, {value: 'web3.eth.getAccounts', command_type: "web3", description: "get list of accounts"}] })
+									console.dir("searching for " + value);
+									this.props.postCommandSuggestions(value)
+                  // this.setState({ isLoading: false, options: [{value: 'hello', command_type: "embark", description: "says hello back!"}, {value: 'SimpleStorage', command_type: "web3 object", description: ""}, {value: 'web3.eth.getAccounts', command_type: "web3", description: "get list of accounts"}] })
+									console.dir(this.props.command_suggestions)
+                  this.setState({ isLoading: false, options: this.props.command_suggestions })
                 }}
                 filterBy={['value', 'description']}
                 maxHeight="200px"
@@ -138,8 +142,10 @@ class Console extends Component {
 
 Console.propTypes = {
   postCommand: PropTypes.func,
+  postCommandSuggestions: PropTypes.func,
   isEmbark: PropTypes.func,
   processes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  command_suggestions: PropTypes.arrayOf(PropTypes.object),
   processLogs: PropTypes.arrayOf(PropTypes.object).isRequired,
   updateTab: PropTypes.func
 };

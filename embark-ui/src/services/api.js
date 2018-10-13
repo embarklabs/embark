@@ -27,6 +27,10 @@ export function postCommand() {
   return post('/command', ...arguments);
 }
 
+export function postCommandSuggestions() {
+  return post('/suggestions', ...arguments);
+}
+
 export function fetchAccounts() {
   return get('/blockchain/accounts', ...arguments);
 }

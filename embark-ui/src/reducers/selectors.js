@@ -52,6 +52,10 @@ export function getProcessLogs(state) {
   return state.entities.processLogs;
 }
 
+export function getCommandSuggestions(state) {
+  return state.entities.command_suggestions;
+}
+
 export function getContractLogsByContract(state, contractName) {
   return state.entities.contractLogs.filter((contractLog => contractLog.name === contractName));
 }

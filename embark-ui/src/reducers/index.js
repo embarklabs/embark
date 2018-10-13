@@ -14,6 +14,7 @@ const entitiesDefaultState = {
   transactions: [],
   processes: [],
   processLogs: [],
+  command_suggestions: [],
   contracts: [],
   contractProfiles: [],
   contractFunctions: [],
@@ -81,6 +82,11 @@ const filtrer = {
   contracts: function(contract, index, self) {
     return index === self.findIndex((t) => t.className === contract.className);
   },
+	command_suggestions: function(command, index, self) {
+    return index === self.findIndex((f) => (
+      command.value === f.value
+    ));
+	},
   accounts: function(account, index, self) {
     return index === self.findIndex((t) => t.address === account.address);
   },

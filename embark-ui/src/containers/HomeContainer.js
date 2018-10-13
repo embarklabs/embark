@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {
   contracts as contractsAction,
   commands as commandsAction,
+  command_suggestions as commandSuggestionsAction,
   listenToProcessLogs,
   processLogs as processLogsAction,
   stopProcessLogs
@@ -15,7 +16,7 @@ import Processes from '../components/Processes';
 import Console from '../components/Console';
 import {EMBARK_PROCESS_NAME, LOG_LIMIT} from '../constants';
 import ContractsList from '../components/ContractsList';
-import {getContracts, getProcesses, getProcessLogs} from "../reducers/selectors";
+import {getContracts, getProcesses, getProcessLogs, getCommandSuggestions} from "../reducers/selectors";
 
 class HomeContainer extends Component {
   constructor(props) {
@@ -62,11 +63,13 @@ class HomeContainer extends Component {
           </div>
         )} />
 
-        <DataWrapper shouldRender={this.props.processes.length > 0 } {...this.props} render={({processes, postCommand, processLogs}) => (
+        <DataWrapper shouldRender={this.props.processes.length > 0 } {...this.props} render={({processes, postCommand, postCommandSuggestions, processLogs, command_suggestions}) => (
           <Console activeProcess={this.state.activeProcess}
                    postCommand={postCommand}
+                   postCommandSuggestions={postCommandSuggestions}
                    processes={processes}
                    processLogs={processLogs}
+                   command_suggestions={command_suggestions}
                    isEmbark={() => this.isEmbark}
                    updateTab={processName => this.updateTab(processName)} />
         )} />
@@ -78,6 +81,7 @@ class HomeContainer extends Component {
 HomeContainer.propTypes = {
   processes: PropTypes.arrayOf(PropTypes.object),
   postCommand: PropTypes.func,
+  postCommandSuggestions: PropTypes.func,
   error: PropTypes.string,
   loading: PropTypes.bool
 };
@@ -88,6 +92,7 @@ function mapStateToProps(state) {
     contracts: getContracts(state),
     error: state.errorMessage,
     processLogs: getProcessLogs(state),
+    command_suggestions: getCommandSuggestions(state),
     loading: state.loading
   };
 }
@@ -96,6 +101,7 @@ export default connect(
   mapStateToProps,
   {
     postCommand: commandsAction.post,
+    postCommandSuggestions: commandSuggestionsAction.post,
     fetchProcessLogs: processLogsAction.request,
     fetchContracts: contractsAction.request,
     listenToProcessLogs,

@@ -106,6 +106,15 @@ export const commands = {
   failure: (error) => action(COMMANDS[FAILURE], {error})
 };
 
+export const COMMAND_SUGGESTIONS = createRequestTypes('COMMAND_SUGGESTIONS');
+export const command_suggestions = {
+  post: (command) => action(COMMAND_SUGGESTIONS[REQUEST], {command}),
+  success: (command, payload) => {
+    return action(COMMAND_SUGGESTIONS[SUCCESS], {command_suggestions: command.result })
+  },
+  failure: (error) => action(COMMAND_SUGGESTIONS[FAILURE], {error})
+};
+
 export const PROCESS_LOGS = createRequestTypes('PROCESS_LOGS');
 export const processLogs = {
   request: (processName, limit) => {
