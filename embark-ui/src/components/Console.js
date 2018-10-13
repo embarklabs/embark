@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import Convert from 'ansi-to-html';
+
 import { Form, Col, Row, Card, CardBody, Input, CardFooter, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import classnames from 'classnames';
+import {AsyncTypeahead} from 'react-bootstrap-typeahead'
 
 import Logs from "./Logs";
 import "./Console.css";
@@ -13,18 +15,18 @@ const convert = new Convert();
 class Console extends Component {
   constructor(props) {
     super(props);
-    this.state = {value: '', activeTab: EMBARK_PROCESS_NAME};
+    this.state = {value: '', isLoading: true, options: [], activeTab: EMBARK_PROCESS_NAME};
   }
 
   handleSubmit(event) {
     event.preventDefault();
     this.props.postCommand(this.state.value);
     this.setState({value: ''});
+    this.typeahead.getInstance().clear()
   }
 
-  handleChange(event) {
-    event.preventDefault();
-    this.setState({value: event.target.value});
+  handleChange(value) {
+    this.setState({value: value});
   }
 
   toggle(tab) {
@@ -49,14 +51,14 @@ class Console extends Component {
           </NavLink>
         </NavItem>
         ))}
-        
+
       </Nav>
     )
   }
 
   renderTabs() {
     const {processLogs, processes} = this.props;
-    
+
     return (
       <TabContent activeTab={this.state.activeTab}>
         {processes.map(process => (
@@ -81,18 +83,39 @@ class Console extends Component {
       <Row>
         <Col>
           <Card>
-            <CardBody className="console-container">
+            <Card.Body className="console-container">
               {this.renderNav()}
               {this.renderTabs()}
-            </CardBody>
-            {this.props.isEmbark() && <CardFooter>
-              <Form onSubmit={(event) => this.handleSubmit(event)} autoComplete="off">
-                <Input value={value}
-                            onChange={(event) => this.handleChange(event)}
-                            name="command"
-                            placeholder="Type a command (e.g help)"/>
-              </Form>
-            </CardFooter>}
+            </Card.Body>
+            {this.props.isEmbark() && <Card.Footer>
+              <AsyncTypeahead
+                search={value}
+								autoFocus={true}
+                emptyLabel={false}
+                labelKey="name"
+                multiple={false}
+                emptyLabel={false}
+                maxResults={10}
+                isLoading={this.state.isLoading}
+                defaultInputValue={value}
+                onInputChange={(text) => this.handleChange(text)}
+                ref={(typeahead) => this.typeahead = typeahead}
+                searchText={false}
+                onKeyDown={(e) => {
+                  if (e.keyCode === 13) {
+                    this.handleSubmit(e)
+                  }
+                }}
+                onSearch={(value) => {
+                  console.dir(value);
+									this.setState({ isLoading: false, options: ['hello', 'dude', 'dude1'] })
+                }}
+                maxHeight="200px"
+                placeholder="Type a command (e.g help)"
+                options={this.state.options}
+                placeholder="Choose a state..."
+              />
+            </Card.Footer>}
           </Card>
         </Col>
       </Row>

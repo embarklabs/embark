@@ -47,6 +47,7 @@
     "qs": "^6.5.2",
     "raf": "3.4.0",
     "react": "^16.4.2",
+    "react-bootstrap-typeahead": "^3.2.4",
     "react-copy-to-clipboard": "^5.0.1",
     "react-dev-utils": "^5.0.1",
     "react-dom": "^16.4.1",
