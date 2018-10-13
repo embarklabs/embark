@@ -1,4 +1,5 @@
 import {EMBARK_PROCESS_NAME} from '../constants';
+import {ansiToHtml} from '../utils/utils';
 
 export const REQUEST = 'REQUEST';
 export const SUCCESS = 'SUCCESS';
@@ -99,7 +100,7 @@ export const commands = {
     return action(COMMANDS[SUCCESS], {processLogs: [{
       timestamp: new Date().getTime(),
       name: EMBARK_PROCESS_NAME,
-      msg: `${payload.command} > ${command.result}`
+      msg: `console> ${payload.command}<br>${ansiToHtml(command.result)}`
     }]})
   },
   failure: (error) => action(COMMANDS[FAILURE], {error})

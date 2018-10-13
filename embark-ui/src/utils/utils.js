@@ -12,3 +12,9 @@ export function hashCode(str) {
   }
   return hash;
 }
+
+export function ansiToHtml(text) {
+  const Convert = require('ansi-to-html');
+  const convert = new Convert();
+  return convert.toHtml(text.replace(/\n/g,'<br>'))
+}
