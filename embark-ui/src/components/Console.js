@@ -77,8 +77,6 @@ class Console extends Component {
   }
 
   render() {
-    const {value} = this.state;
-
     return (
       <Row>
         <Col>
@@ -93,7 +91,6 @@ class Console extends Component {
                 emptyLabel={false}
                 labelKey="value"
                 multiple={false}
-                emptyLabel={false}
                 maxResults={10}
                 isLoading={this.state.isLoading}
                 onInputChange={(text) => this.handleChange(text)}
@@ -118,7 +115,6 @@ class Console extends Component {
                 maxHeight="200px"
                 placeholder="Type a command (e.g help)"
                 options={this.props.command_suggestions}
-                placeholder="Choose a state..."
                 renderMenuItemChildren={(option) => (
                   <div>
                     {option.value}

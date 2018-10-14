@@ -48,7 +48,7 @@ const sorter = {
 		  let a_levels = a.value.split('.').length
 		  let b_levels = b.value.split('.').length
 			let diff = b_levels - a_levels
-			if (diff !== 0) return lengthDiff * -1
+			if (diff !== 0) return diff * -1
 		}
 		let lengthDiff = b.value.length - a.value.length;
 		if (lengthDiff !== 0) return lengthDiff * -1
