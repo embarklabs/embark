@@ -43,6 +43,17 @@ const sorter = {
     if (b.name === EMBARK_PROCESS_NAME) return 1;
     return 0;
   },
+	command_suggestions: function(a, b) {
+		if (a.value.indexOf('.').length > 0) {
+		  let a_levels = a.value.split('.').length
+		  let b_levels = b.value.split('.').length
+			let diff = b_levels - a_levels
+			if (diff !== 0) return lengthDiff * -1
+		}
+		let lengthDiff = b.value.length - a.value.length;
+		if (lengthDiff !== 0) return lengthDiff * -1
+		return 0;
+	},
   processLogs: function(a, b) {
     if (a.name !== b.name) {
       if(a.name < b.name) return -1;
@@ -83,8 +94,8 @@ const filtrer = {
     return index === self.findIndex((t) => t.className === contract.className);
   },
 	command_suggestions: function(command, index, self) {
-    return index === self.findIndex((f) => (
-      command.value === f.value
+    return index === self.findIndex((c) => (
+      command.value === c.value
     ));
 	},
   accounts: function(account, index, self) {
