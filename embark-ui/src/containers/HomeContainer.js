@@ -14,12 +14,9 @@ import {
 import DataWrapper from "../components/DataWrapper";
 import Processes from '../components/Processes';
 import Console from '../components/Console';
-import {getProcesses, getProcessLogs} from "../reducers/selectors";
 import {EMBARK_PROCESS_NAME} from '../constants';
 import ContractsList from '../components/ContractsList';
-import {getContracts, getProcesses, getCommands, getProcessLogs} from "../reducers/selectors";
-
-const EMBARK_PROCESS_NAME = 'Embark';
+import {getContracts, getProcesses, getProcessLogs} from "../reducers/selectors";
 
 class HomeContainer extends Component {
   constructor(props) {
@@ -90,7 +87,6 @@ function mapStateToProps(state) {
   return {
     processes: getProcesses(state),
     contracts: getContracts(state),
-    commands: getCommands(state),
     error: state.errorMessage,
     processLogs: getProcessLogs(state),
     loading: state.loading
