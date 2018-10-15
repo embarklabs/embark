@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux';
 import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE,
-        FETCH_CREDENTIALS, UPDATE_BASE_ETHER, CHANGE_THEME} from "../actions";
+        FETCH_CREDENTIALS, UPDATE_BASE_ETHER, CHANGE_THEME, FETCH_THEME} from "../actions";
 import {EMBARK_PROCESS_NAME} from '../constants';
 
 const BN_FACTOR = 10000;
@@ -86,7 +86,7 @@ const filtrer = {
   },
   processLogs: function(processLog, index, self) {
     if (processLog.id !== undefined) {
-      return index === self.findIndex((p) => p.id === processLog.id) && index <= MAX_ELEMENTS
+      return index === self.findIndex((p) => p.id === processLog.id) && index <= MAX_ELEMENTS;
     }
     return true;
   },
@@ -224,7 +224,7 @@ function baseEther(state = '1', action) {
 }
 
 function theme(state='dark', action) {
-  if (action.type === CHANGE_THEME[REQUEST]) {
+  if (action.type === CHANGE_THEME[REQUEST] || action.type === FETCH_THEME[SUCCESS]) {
     return action.theme;
   }
   return state;

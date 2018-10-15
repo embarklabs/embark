@@ -50,6 +50,8 @@ export const deleteCurrentFile = doRequest.bind(null, null, storage.deleteCurren
 export const fetchCredentials = doRequest.bind(null, actions.fetchCredentials, storage.fetchCredentials);
 export const saveCredentials = doRequest.bind(null, actions.saveCredentials, storage.saveCredentials);
 export const logout = doRequest.bind(null, actions.logout, storage.logout);
+export const changeTheme = doRequest.bind(null, actions.changeTheme, storage.changeTheme);
+export const fetchTheme = doRequest.bind(null, actions.fetchTheme, storage.fetchTheme);
 
 
 export function *watchFetchTransaction() {
@@ -183,6 +185,14 @@ export function *watchFetchEthGas() {
 
 export function *watchAuthenticate() {
   yield takeEvery(actions.AUTHENTICATE[actions.REQUEST], authenticate);
+}
+
+export function *watchChangeTheme() {
+  yield takeEvery(actions.CHANGE_THEME[actions.REQUEST], changeTheme);
+}
+
+export function *watchFetchTheme() {
+  yield takeEvery(actions.FETCH_THEME[actions.REQUEST], fetchTheme);
 }
 
 export function *watchAuthenticateSuccess() {
@@ -341,6 +351,8 @@ export default function *root() {
     fork(watchAuthenticate),
     fork(watchAuthenticateSuccess),
     fork(watchLogout),
+    fork(watchFetchTheme),
+    fork(watchChangeTheme),
     fork(watchListenGasOracle)
   ]);
 }

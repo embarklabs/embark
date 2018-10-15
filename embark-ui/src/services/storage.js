@@ -19,7 +19,7 @@ export function deleteCurrentFile() {
 }
 
 export function saveCredentials({token, host}) {
-  const credentials = {token, host}
+  const credentials = {token, host};
   return new Promise(function(resolve) {
     localStorage.setItem('credentials', JSON.stringify(credentials));
     resolve({response: {data: credentials}});
@@ -37,5 +37,18 @@ export function logout() {
   return new Promise(function(resolve) {
     localStorage.clear();
     resolve({response: true});
+  });
+}
+
+export function changeTheme({theme}) {
+  return new Promise(function(resolve) {
+    localStorage.setItem('theme', theme);
+    resolve({response: {data: theme}});
+  });
+}
+
+export function fetchTheme() {
+  return new Promise(function(resolve) {
+    resolve({response: {data: localStorage.getItem('theme')}});
   });
 }

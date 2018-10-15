@@ -30,6 +30,14 @@ export const changeTheme = {
   failure: (error) => action(CHANGE_THEME[FAILURE], {error})
 };
 
+export const FETCH_THEME = createRequestTypes('FETCH_THEME');
+export const fetchTheme = {
+  request: () => action(FETCH_THEME[REQUEST]),
+  success: (theme) => action(FETCH_THEME[SUCCESS], {theme}),
+  failure: () => action(FETCH_THEME[FAILURE])
+};
+
+
 export const FETCH_CREDENTIALS = createRequestTypes('FETCH_CREDENTIALS');
 export const fetchCredentials = {
   request: () => action(FETCH_CREDENTIALS[REQUEST]),
@@ -104,11 +112,15 @@ export const COMMANDS = createRequestTypes('COMMANDS');
 export const commands = {
   post: (command) => action(COMMANDS[REQUEST], {command}),
   success: (command, payload) => {
-    return action(COMMANDS[SUCCESS], {processLogs: [{
-      timestamp: new Date().getTime(),
-      name: EMBARK_PROCESS_NAME,
-      msg: `console> ${payload.command}<br>${ansiToHtml(command.result)}`
-    }]})
+    return action(COMMANDS[SUCCESS], {
+      processLogs: [
+        {
+          timestamp: new Date().getTime(),
+          name: EMBARK_PROCESS_NAME,
+          msg: `console> ${payload.command}<br>${ansiToHtml(command.result)}`
+        }
+      ]
+    });
   },
   failure: (error) => action(COMMANDS[FAILURE], {error})
 };

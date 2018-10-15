@@ -11,7 +11,7 @@ import {
   processes as processesAction,
   versions as versionsAction,
   plugins as pluginsAction,
-  changeTheme
+  changeTheme, fetchTheme
 } from '../actions';
 
 import { getCredentials, getAuthenticationError, getVersions, getTheme } from '../reducers/selectors';
@@ -39,6 +39,7 @@ class AppContainer extends Component {
 
   componentDidMount() {
     this.props.fetchCredentials();
+    this.props.fetchTheme();
   }
 
   requireAuthentication() {
@@ -113,6 +114,7 @@ export default withRouter(connect(
     fetchProcesses: processesAction.request,
     fetchVersions: versionsAction.request,
     fetchPlugins: pluginsAction.request,
-    changeTheme: changeTheme.request
+    changeTheme: changeTheme.request,
+    fetchTheme: fetchTheme.request
   },
 )(AppContainer));
