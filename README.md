@@ -1,12 +1,9 @@
-![Embark](https://github.com/embark-framework/embark/raw/develop/header.png)
+![Embark](https://github.com/iurimatias/embark-framework/raw/develop/logo.png)
 
 [![npm](https://img.shields.io/npm/dm/embark.svg)](https://npmjs.com/package/embark)
 [![Gitter](https://img.shields.io/gitter/room/embark-framework/Lobby.svg)](https://gitter.im/embark-framework/Lobby)
 [![Build Status](https://travis-ci.org/embark-framework/embark.svg?branch=develop)](https://travis-ci.org/embark-framework/embark)
 [![Build status](https://ci.appveyor.com/api/projects/status/nnq38x2hi3q11o44/branch/develop?svg=true)](https://ci.appveyor.com/project/iurimatias/embark/branch/develop)
-![Open PRs](https://img.shields.io/github/issues-pr-raw/embark-framework/embark.svg)
-![Closed PRs](https://img.shields.io/github/issues-pr-closed-raw/embark-framework/embark.svg)
-![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/y/embark-framework/embark.svg)
 
 What is Embark
 ======
@@ -27,10 +24,10 @@ With Embark you can:
 * Manage different chains (e.g testnet, private net, livenet)
 * Easily manage complex systems of interdependent contracts.
 
-**Decentralized Storage (IPFS, Swarm)**
+**Decentralized Storage (IPFS)**
 * Easily Store & Retrieve Data on the DApp through EmbarkJS. Including uploading and retrieving files.
 * Deploy the full application to IPFS or Swarm.
-* Import and deploy contracts hosted on Swarm.
+
 
 **Decentralized Communication (Whisper, Orbit)**
 * Easily send/receive messages through channels in P2P through Whisper or Orbit.
@@ -41,6 +38,9 @@ With Embark you can:
 
 ```Bash
 $ npm -g install embark
+
+# If you plan to use the simulator instead of a real ethereum node.
+$ npm -g install ganache-cli
 ```
 
 See [Complete Documentation](https://embark.status.im/docs/).

@@ -28,8 +28,4 @@ contract("Branches", function() {
   it("should return the smaller number", function(done) {
     Branches.methods.smaller(10).send().then(() => { done(); });
   });
-
-  it("should not crash code coverage on `if` without statements", function(done) {
-    Branches.methods.smallFunctionWithoutStatements().call().then(() => { done(); });
-  });
 });

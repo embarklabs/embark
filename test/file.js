@@ -41,7 +41,7 @@ describe('embark.File', function () {
       });
     });
 
-    it('should find all the imports and call download because it is an http import', function (done) {
+    it('should find all the imports and call downlaod because it is an http import', function (done) {
       const contract = fs.readFileSync('./test/contracts/contract_with_http_import.sol').toString();
       const file = new File({filename: '.embark/contracts/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol',
         path: 'https://raw.githubusercontent.com/embark-framework/embark/develop/test_apps/test_app/app/contracts/simple_storage.sol'});

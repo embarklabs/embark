@@ -56,22 +56,15 @@ class EmbarkController {
     self.context = options.context || [constants.contexts.run, constants.contexts.build];
     let Dashboard = require('./dashboard/dashboard.js');
 
-    const webServerConfig = {};
+    let webServerConfig = {
+      enabled: options.runWebserver
+    };
 
-    if (options.runWebserver != null) {
-      webServerConfig.enabled = options.runWebserver;
-    }
-
-    if (options.serverHost != null) {
+    if (options.serverHost) {
       webServerConfig.host = options.serverHost;
     }
-
-    if (options.serverPort != null) {
+    if (options.serverPort) {
       webServerConfig.port = options.serverPort;
-    }
-
-    if (options.openBrowser != null) {
-      webServerConfig.openBrowser = options.openBrowser;
     }
 
     const Engine = require('../lib/core/engine.js');
@@ -154,8 +147,11 @@ class EmbarkController {
           engine.events.emit("status", __("Ready").green);
         });
 
-        if (webServerConfig.enabled !== false) {
-          engine.startService("webServer");
+        if (options.runWebserver) {
+          engine.startService("webServer", {
+            host: options.serverHost,
+            port: options.serverPort
+          });
         }
         engine.startService("fileWatcher");
         callback();
@@ -205,25 +201,22 @@ class EmbarkController {
         engine.startService("processManager");
         engine.startService("libraryManager");
         engine.startService("codeRunner");
+        engine.startService("web3");
         if (!options.onlyCompile) {
-          engine.startService("web3");
-          engine.startService("deployment", {onlyCompile: options.onlyCompile});
           engine.startService("pipeline");
+        }
+        engine.startService("deployment", {onlyCompile: options.onlyCompile});
+        if (!options.onlyCompile) {
           engine.startService("storage");
           engine.startService("codeGenerator");
-        } else {
-          engine.startService('compiler');
         }
 
         callback();
       },
-      function buildOrBuildAndDeploy(callback) {
-        if (options.onlyCompile) {
-          engine.events.request('contracts:build', {}, err => callback(err));
-        } else {
-          // deploy:contracts will trigger a build as well
-          engine.events.request('deploy:contracts', err => callback(err));
-        }
+      function deploy(callback) {
+        engine.events.request('deploy:contracts', function (err) {
+          callback(err);
+        });
       },
       function waitForWriteFinish(callback) {
         if (options.onlyCompile) {
@@ -232,11 +225,16 @@ class EmbarkController {
         }
         engine.logger.info("Finished deploying".underline);
         engine.events.on('outputDone', (err) => {
-          engine.logger.info(__("Finished building").underline);
+          engine.logger.info(__("finished building").underline);
           callback(err, true);
         });
       }
-    ], function (_err, canExit) {
+    ], function (err, canExit) {
+      if (err) {
+        engine.logger.error(err.message);
+        engine.logger.debug(err.stack);
+      }
+
       // TODO: this should be moved out and determined somewhere else
       if (canExit || !engine.config.contractsConfig.afterDeploy || !engine.config.contractsConfig.afterDeploy.length) {
         process.exit();
@@ -289,9 +287,9 @@ class EmbarkController {
         engine.startService("namingSystem");
         engine.startService("console");
         engine.startService("pluginCommand");
-        engine.events.on('check:backOnline:Ethereum', () => callback());
+        callback();
       },
-      function ipcConnect(callback) {
+      function web3IPC(callback) {
         // Do specific work in case we are connected to a socket:
         //  - Setup Web3
         //  - Apply history
@@ -312,7 +310,6 @@ class EmbarkController {
             web3Endpoint: web3Config.providerUrl
           };
           const provider = new Provider(providerOptions);
-          web3.eth.defaultAccount = web3Config.defaultAccount;
           provider.startWeb3Provider(() => {
             engine.events.emit("runcode:register", "web3", web3);
             async.each(commands, ({varName, code}, next) => {
@@ -387,10 +384,13 @@ class EmbarkController {
         engine.startService("processManager");
         engine.startService("serviceMonitor");
         engine.startService("libraryManager");
-        engine.startService("compiler");
+        engine.startService("pipeline");
+        engine.startService("deployment", {onlyCompile: true});
+        engine.startService("web3");
         engine.startService("codeGenerator");
         engine.startService("graph");
-        engine.events.request('contracts:build', {}, callback);
+
+        engine.events.request('deploy:contracts', callback);
       }
     ], (err) => {
       if (err) {
@@ -399,7 +399,7 @@ class EmbarkController {
       } else {
 
         engine.events.request("graph:create", options, () => {
-          engine.logger.info(__("Done. %s generated", options.output).underline);
+          engine.logger.info(__("Done. %s generated", "./diagram.svg").underline);
         });
       }
       process.exit();
@@ -413,22 +413,25 @@ class EmbarkController {
     fs.removeSync('.embark/');
     fs.removeSync('node_modules/.cache');
     fs.removeSync('dist/');
-    fs.removeSync('coverage/');
     console.log(__("reset done!").green);
   }
 
   ejectWebpack() {
     var fs = require('../lib/core/fs.js');
-    var embarkConfig = fs.embarkPath('lib/modules/pipeline/webpack.config.js');
     var dappConfig = fs.dappPath('webpack.config.js');
-    fs.copyPreserve(embarkConfig, dappConfig);
-    console.log(__('webpack config ejected to:').dim.yellow);
+    var embarkConfig = fs.embarkPath('lib/pipeline', 'webpack.config.js');
+    let ext = 1;
+    let dappConfigOld = dappConfig;
+    while (fs.existsSync(dappConfigOld)) {
+      dappConfigOld = dappConfig + `.${ext}`;
+      ext++;
+    }
+    if (dappConfigOld !== dappConfig) {
+      fs.copySync(dappConfig, dappConfigOld);
+    }
+    fs.copySync(embarkConfig, dappConfig);
+    console.log(__('webpack config ejected to: ').dim.yellow);
     console.log(`${dappConfig}`.green);
-    var embarkOverrides = fs.embarkPath('lib/modules/pipeline/babel-loader-overrides.js');
-    var dappOverrides = fs.dappPath('babel-loader-overrides.js');
-    fs.copyPreserve(embarkOverrides, dappOverrides);
-    console.log(__('webpack overrides ejected to:').dim.yellow);
-    console.log(`${dappOverrides}`.green);
   }
 
   upload(options) {
@@ -478,7 +481,9 @@ class EmbarkController {
         engine.startService("deployment");
         engine.startService("storage");
         engine.startService("codeGenerator");
-        engine.startService("namingSystem");
+        if(options.ensDomain) {
+          engine.startService("namingSystem");
+        }
         callback();
       },
       function listLoadedPlugin(callback) {
