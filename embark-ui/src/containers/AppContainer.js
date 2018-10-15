@@ -22,6 +22,10 @@ class AppContainer extends Component {
     super(props);
 
     this.queryStringAuthenticate();
+
+    this.state = {
+      theme: 'dark'
+    };
   }
 
   queryStringAuthenticate() {
@@ -59,18 +63,22 @@ class AppContainer extends Component {
     return this.props.authenticationError || !this.props.credentials.authenticated;
   }
 
+  changeTheme(theme) {
+    this.setState({theme});
+  }
+
   render() {
     return (
-      <React.Fragment>
+      <div className={this.state.theme + "-theme"}>
         {this.shouldRenderLogin() ?
           <Login credentials={this.props.credentials} authenticate={this.props.authenticate} error={this.props.authenticationError} />
           :
-          <Layout location={this.props.location} logout={this.props.logout} credentials={this.props.credentials}>
+          <Layout location={this.props.location} logout={this.props.logout} credentials={this.props.credentials} changeTheme={(v) => this.changeTheme(v)}>
             <React.Fragment>{routes}</React.Fragment>
           </Layout>
         }
-      </React.Fragment>
-    )
+      </div>
+    );
   }
 }
 

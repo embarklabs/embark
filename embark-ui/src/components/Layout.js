@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { DropdownItem, DropdownMenu, DropdownToggle, Nav, Container } from 'reactstrap';
+import { UncontrolledDropdown, DropdownItem, DropdownMenu, DropdownToggle, Nav, Container } from 'reactstrap';
 
 import {
   AppAside,
@@ -38,7 +38,7 @@ const sidebarNavItems = {items: [
   ]},
 ]};
 
-const Layout = ({children, logout, credentials, location}) => (
+const Layout = ({children, logout, credentials, location, changeTheme}) => (
   <div className="app">
     <AppHeader fixed>
       <AppSidebarToggler className="d-lg-none" display="md" mobile />
@@ -75,6 +75,16 @@ const Layout = ({children, logout, credentials, location}) => (
       </AppAside>
     </div>
     <AppFooter>
+      <UncontrolledDropdown direction="up">
+        <DropdownToggle caret>
+          Theme
+        </DropdownToggle>
+        <DropdownMenu>
+          <DropdownItem onClick={() => changeTheme('dark')}>Dark</DropdownItem>
+          <DropdownItem onClick={() => changeTheme('light')}>Light</DropdownItem>
+        </DropdownMenu>
+      </UncontrolledDropdown>
+
       <span className="ml-auto">
         Embark&nbsp;
         <a href="https://embark.status.im" title="Documentation" rel="noopener noreferrer" target="_blank">Documentation</a>
@@ -89,7 +99,9 @@ Layout.propTypes = {
   children: PropTypes.element,
   tabs: PropTypes.arrayOf(PropTypes.object),
   credentials: PropTypes.object,
-  logout: PropTypes.func
+  location: PropTypes.object,
+  logout: PropTypes.func,
+  changeTheme: PropTypes.func
 };
 
 export default Layout;
