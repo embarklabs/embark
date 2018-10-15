@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Page} from "tabler-react";
 
 import {
   contracts as contractsAction,
@@ -53,14 +52,14 @@ class HomeContainer extends Component {
   render() {
     return (
       <React.Fragment>
-        <Page.Title className="my-5">Dashboard</Page.Title>
+        <h1 className="my-5">Dashboard</h1>
         <DataWrapper shouldRender={this.props.processes.length > 0 } {...this.props} render={({processes}) => (
           <Processes processes={processes} />
         )} />
         <DataWrapper shouldRender={this.props.contracts.length > 0} {...this.props} render={({contracts}) => (
-            <div style={{maxHeight: '227px', marginBottom: '1.5rem', overflow: 'auto'}}>
-                <ContractsList contracts={contracts} />
-            </div>
+          <div style={{maxHeight: '227px', marginBottom: '1.5rem', overflow: 'auto'}}>
+            <ContractsList contracts={contracts} />
+          </div>
         )} />
 
         <DataWrapper shouldRender={this.props.processes.length > 0 } {...this.props} render={({processes, postCommand, processLogs}) => (

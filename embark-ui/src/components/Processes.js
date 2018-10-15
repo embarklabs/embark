@@ -1,36 +1,35 @@
 import PropTypes from "prop-types";
 import React from 'react';
-import {Link} from "react-router-dom";
-import {Grid, Card} from 'tabler-react';
+import {Row, Col, Card} from 'reactstrap';
 import classNames from 'classnames';
 
-function stampClasses(state){
-  return classNames('stamp stamp-md mr-3', {
-    'bg-green': state === 'running',
+function badgeClasses(state){
+  return classNames('badge p-1 mr-3', {
+    'bg-success': state === 'running',
     'bg-danger': state !== 'running'
   });
 }
 
 function iconClasses(state){
-  return classNames('fe', {
-    'fe-check-square': state === 'running',
-    'fe-x': state !== 'running'
+  return classNames('fa', {
+    'fa-check': state === 'running',
+    'fa-x': state !== 'running'
   });
 }
 
 const Process = ({process}) => (
-  <Grid.Col sm={6} lg={3}>
+  <Col sm={6} lg={3}>
     <Card className="p-3">
       <div className="d-flex align-items-center">
-        <span className={stampClasses(process.state)}>
+        <span className={badgeClasses(process.state)}>
           <i className={iconClasses(process.state)}></i>
         </span>
         <div>
-          <h4 className="text-capitalize m-0"><Link to={`/embark/processes/${process.name}`}>{process.name} ({process.state})</Link></h4>
+          <h4 className="text-capitalize m-0">{process.name} ({process.state})</h4>
         </div>
       </div>
     </Card>
-  </Grid.Col>
+  </Col>
 );
 
 Process.propTypes = {
@@ -38,9 +37,9 @@ Process.propTypes = {
 };
 
 const Processes = ({processes}) => (
-  <Grid.Row cards>
+  <Row>
     {processes.map((process) => <Process key={process.name} process={process} />)}
-  </Grid.Row>
+  </Row>
 );
 
 Processes.propTypes = {

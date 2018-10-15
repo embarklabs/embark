@@ -14,30 +14,30 @@ const ContractLogger = ({contractName, contractLogs}) => (
           cards
           verticalAlign="center"
           className="text-nowrap">
-          <Table.Header>
-            <Table.Row>
-              <Table.ColHeader>call</Table.ColHeader>
-              <Table.ColHeader>Transaction hash</Table.ColHeader>
-              <Table.ColHeader>Gas Used</Table.ColHeader>
-              <Table.ColHeader>Block number</Table.ColHeader>
-              <Table.ColHeader>Status</Table.ColHeader>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
+          <thead>
+            <tr>
+              <th>call</th>
+              <th>Transaction hash</th>
+              <th>Gas Used</th>
+              <th>Block number</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
             {
               contractLogs.map((log, index) => {
                 return (
-                  <Table.Row key={'log-' + index}>
-                    <Table.Col>{`${log.name}.${log.functionName}(${log.paramString})`}</Table.Col>
-                    <Table.Col>{log.transactionHash}</Table.Col>
-                    <Table.Col>{log.gasUsed}</Table.Col>
-                    <Table.Col>{log.blockNumber}</Table.Col>
-                    <Table.Col>{log.status}</Table.Col>
-                  </Table.Row>
+                  <tr key={'log-' + index}>
+                    <td>{`${log.name}.${log.functionName}(${log.paramString})`}</td>
+                    <td>{log.transactionHash}</td>
+                    <td>{log.gasUsed}</td>
+                    <td>{log.blockNumber}</td>
+                    <td>{log.status}</td>
+                  </tr>
                 );
               })
             }
-          </Table.Body>
+          </tbody>
         </Table>
       </Grid.Col>
     </Grid.Row>

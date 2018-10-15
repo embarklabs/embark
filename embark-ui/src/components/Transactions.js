@@ -1,52 +1,40 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-import {
-  Page,
-  Grid,
-  Card,
-  Table
-} from "tabler-react";
+import {Row, Col, Table} from 'reactstrap';
 import PropTypes from 'prop-types';
 
 const Transactions = ({transactions}) => (
-  <Page.Content title="Transactions">
-    <Grid.Row>
-      <Grid.Col>
-        <Card>
-          <Table
-            responsive
-            cards
-            verticalAlign="center"
-            className="text-nowrap">
-            <Table.Header>
-              <Table.Row>
-                <Table.ColHeader>Hash</Table.ColHeader>
-                <Table.ColHeader>Block Number</Table.ColHeader>
-                <Table.ColHeader>From</Table.ColHeader>
-                <Table.ColHeader>To</Table.ColHeader>
-                <Table.ColHeader>Type</Table.ColHeader>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {
-                transactions.map((transaction) => {
-                  return (
-                    <Table.Row key={transaction.hash}>
-                      <Table.Col><Link to={`/embark/explorer/transactions/${transaction.hash}`}>{transaction.hash}</Link></Table.Col>
-                      <Table.Col>{transaction.blockNumber}</Table.Col>
-                      <Table.Col>{transaction.from}</Table.Col>
-                      <Table.Col>{transaction.to}</Table.Col>
-                      <Table.Col>{transaction.to ? "Contract Call" : "Contract Creation"}</Table.Col>
-                    </Table.Row>
-                  );
-                })
-              }
-            </Table.Body>
-          </Table>
-        </Card>
-      </Grid.Col>
-    </Grid.Row>
-  </Page.Content>
+  <Row>
+    <Col>
+      <h1>Transactions</h1>
+      <Table responsive className="text-nowrap">
+        <thead>
+          <tr>
+            <th>Hash</th>
+            <th>Block Number</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+      <tbody>
+        {
+          transactions.map((transaction) => {
+            return (
+              <tr key={transaction.hash}>
+                <td><Link to={`/embark/explorer/transactions/${transaction.hash}`}>{transaction.hash}</Link></td>
+                <td>{transaction.blockNumber}</td>
+                <td>{transaction.from}</td>
+                <td>{transaction.to}</td>
+                <td>{transaction.to ? "Contract Call" : "Contract Creation"}</td>
+              </tr>
+            );
+          })
+        }
+      </tbody>
+    </Table>
+    </Col>
+  </Row>
 );
 
 Transactions.propTypes = {

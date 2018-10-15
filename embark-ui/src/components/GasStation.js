@@ -1,12 +1,12 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
-import {Card, Form, Grid, StampCard, Stamp} from 'tabler-react';
+import {Card, CardBody, CardHeader, CardTitle, Row, Col, Input, Badge} from 'reactstrap';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 const COLORS = {
-  good: 'green',
-  medium: 'yellow',
-  bad: 'red'
+  good: 'success',
+  medium: 'warning',
+  bad: 'danger'
 };
 
 class GasStation extends Component {
@@ -89,66 +89,69 @@ class GasStation extends Component {
     if (!formattedGasOracleStats.length) {
       return '';
     }
-    return <Grid.Row>
-      <Grid.Col>
+    return <Row>
+      <Col>
         <Card>
-          <Card.Header>
-            <Card.Title>Gas Price Estimator</Card.Title>
-            <Card.Options>
+          <CardHeader>
+            <CardTitle>
+              Gas Price Estimator
               <CopyToClipboard text={currentGasStep.gasPrice / this.PRICE_UNIT_DIVIDER}
                                onCopy={() => this.setState({copied: true})}
                                title="Copy gas price to clipboard">
-                <span><Stamp color="blue" icon="copy"/></span>
+                <Badge className="p-3" color="primary"><i className="fa fa-copy"/></Badge>
               </CopyToClipboard>
-            </Card.Options>
-          </Card.Header>
+            </CardTitle>
+          </CardHeader>
 
-          <Card.Body>
+          <CardBody>
             {this.state.copied && <p>Copied Gas Price</p>}
-            <Grid.Row cards={true}>
-              <Grid.Col lg={6} md={6} sm={12}>
-                <StampCard icon="sliders" color={GasStation.getColorForPrice(currentGasStep.gasPrice)}>
+            <Row>
+              <Col lg={6} md={6} sm={12}>
+                <Badge className="p-2" color={GasStation.getColorForPrice(currentGasStep.gasPrice)}>
+                  <i className="mr-2 fa fa-adjust"/>
                   {this.getFormattedPrice(currentGasStep.gasPrice)}
-                </StampCard>
-              </Grid.Col>
-              <Grid.Col lg={6} md={6} sm={12}>
-                <StampCard icon="clock" color={GasStation.getColorForWait(currentGasStep.wait)}>
+                </Badge>
+              </Col>
+              <Col lg={6} md={6} sm={12}>
+                <Badge className="p-2" color={GasStation.getColorForWait(currentGasStep.wait)}>
+                  <i className="mr-2 fa fa-clock-o"/>
                   {this.getFormattedWait(currentGasStep.wait)}
-                </StampCard>
-              </Grid.Col>
-            </Grid.Row>
+                </Badge>
+              </Col>
+            </Row>
 
-            <Form.Group>
-              <input type="range" className="slider"
+            <Input type="range" className="slider"
                      max={formattedGasOracleStats.length - 1}
                      min={0}
                      step={1}
                      value={this.state.gasOracleSliderIndex}
                      onChange={(e) => this.gasSliderChange(e, 'gasOracleSliderIndex')}
-              />
-            </Form.Group>
+            />
 
-            <Grid.Row cards={true}>
-              <Grid.Col lg={4} md={6} sm={12}>
-                <StampCard icon="sliders" color="grey">
+            <Row>
+              <Col lg={4} md={6} sm={12}>
+                <Badge className="p-2" color="secondary">
+                  <i className="mr-2 fa fa-adjust"/>
                   Average Price: {this.getFormattedPrice(this.averagePrice)}
-                </StampCard>
-              </Grid.Col>
-              <Grid.Col lg={4} md={6} sm={12}>
-                <StampCard icon="clock" color="grey">
+                </Badge>
+              </Col>
+              <Col lg={4} md={6} sm={12}>
+                <Badge className="p-2" color="secondary">
+                  <i className="mr-2 fa fa-clock-o"/>
                   Average Wait: {this.getFormattedWait(this.averageWait)}
-                </StampCard>
-              </Grid.Col>
-              <Grid.Col lg={4} md={6} sm={12}>
-                <StampCard icon="square" color="grey">
+                </Badge>
+              </Col>
+              <Col lg={4} md={6} sm={12}>
+                <Badge className="p-2" color="secondary">
+                  <i className="mr-2 fa fa-square"/>
                   Last Block: {this.props.lastBlock.number}
-                </StampCard>
-              </Grid.Col>
-            </Grid.Row>
-          </Card.Body>
+                </Badge>
+              </Col>
+            </Row>
+          </CardBody>
         </Card>
-      </Grid.Col>
-    </Grid.Row>;
+      </Col>
+    </Row>;
   }
 }
 

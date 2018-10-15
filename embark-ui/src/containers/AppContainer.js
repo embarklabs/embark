@@ -51,7 +51,6 @@ class AppContainer extends Component {
 
     if (this.props.credentials.authenticated && !this.props.initialized) {
       this.props.fetchProcesses();
-      this.props.fetchVersions();
       this.props.fetchPlugins();
     }
   }

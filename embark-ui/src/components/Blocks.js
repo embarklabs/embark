@@ -1,50 +1,39 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-import {
-  Page,
-  Grid,
-  Card,
-  Table
-} from "tabler-react";
+import {Row, Col, Table} from 'reactstrap';
+
 import PropTypes from 'prop-types';
 
 const Blocks = ({blocks}) => (
-  <Page.Content title="Blocks">
-    <Grid.Row>
-      <Grid.Col>
-        <Card>
-          <Table
-            responsive
-            cards
-            verticalAlign="center"
-            className="text-nowrap">
-            <Table.Header>
-              <Table.Row>
-                <Table.ColHeader>Number</Table.ColHeader>
-                <Table.ColHeader>Mined On</Table.ColHeader>
-                <Table.ColHeader>Gas Used</Table.ColHeader>
-                <Table.ColHeader>TX Count</Table.ColHeader>
-              </Table.Row>
-            </Table.Header>  
-            <Table.Body>
-              {
-                blocks.map((block) => {
-                  return (
-                    <Table.Row key={block.number}>
-                      <Table.Col><Link to={`/embark/explorer/blocks/${block.number}`}>{block.number}</Link></Table.Col>
-                      <Table.Col>{new Date(block.timestamp * 1000).toLocaleString()}</Table.Col>
-                      <Table.Col>{block.gasUsed}</Table.Col>
-                      <Table.Col>{block.transactions.length}</Table.Col>
-                    </Table.Row>
-                  );
-                })
-              }
-            </Table.Body>
-          </Table>
-        </Card>
-      </Grid.Col>
-    </Grid.Row>
-  </Page.Content>
+  <Row>
+    <Col>
+      <h1>Blocks</h1>
+      <Table responsive className="text-nowrap">
+        <thead>
+          <tr>
+            <th>Number</th>
+            <th>Mined On</th>
+            <th>Gas Used</th>
+            <th>TX Count</th>
+          </tr>
+        </thead>  
+        <tbody>
+          {
+            blocks.map((block) => {
+              return (
+                <tr key={block.number}>
+                  <td><Link to={`/embark/explorer/blocks/${block.number}`}>{block.number}</Link></td>
+                  <td>{new Date(block.timestamp * 1000).toLocaleString()}</td>
+                  <td>{block.gasUsed}</td>
+                  <td>{block.transactions.length}</td>
+                </tr>
+              );
+            })
+          }
+        </tbody>
+      </Table>
+    </Col>
+  </Row>
 );
 
 Blocks.propTypes = {

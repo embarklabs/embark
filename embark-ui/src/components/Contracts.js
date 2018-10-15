@@ -1,16 +1,15 @@
 import PropTypes from "prop-types";
 import React from 'react';
-import {Page, Grid} from "tabler-react";
+import {Row, Col} from "reactstrap";
 import ContractsList from './ContractsList';
 
 const Contracts = ({contracts, title = "Contracts"}) => (
-  <Page.Content title={title}>
-    <Grid.Row>
-      <Grid.Col>
+  <Row>
+    <Col>
+      <h1>{title}</h1>
         <ContractsList contracts={contracts}></ContractsList>
-      </Grid.Col>
-    </Grid.Row>
-  </Page.Content>
+    </Col>
+  </Row>
 );
 
 Contracts.propTypes = {

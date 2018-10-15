@@ -23,6 +23,7 @@ class ContractLayout extends React.Component {
       });
     }
   }
+
   render() {
     return (
       <React.Fragment>

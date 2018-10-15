@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Treebeard, decorators} from 'react-treebeard';
-import {Form} from 'tabler-react';
+import {Input, Label, FormGroup} from 'reactstrap';
 
 const style = {
   tree: {
@@ -178,7 +178,12 @@ class FileExplorer extends React.Component {
   render() {
     return (
       <div className="h-100 d-flex flex-column">
-        <Form.Switch type="checkbox" name="toggle" value={true} label="Show hidden files" onChange={this.onHiddenToggle.bind(this)} />
+        <FormGroup check>
+          <Label check>
+            <Input type="checkbox" onChange={this.onHiddenToggle.bind(this)} />
+            Show hidden files
+          </Label>
+        </FormGroup>
         <Treebeard
           data={this.filterHidden(this.props.files)}
           decorators={decorators}

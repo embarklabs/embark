@@ -1,60 +1,44 @@
 import PropTypes from "prop-types";
 import React from 'react';
-import {
-  Page,
-  Grid,
-  Card,
-  Table
-} from "tabler-react";
+import {Row, Col, Table} from "reactstrap";
 import JSONTree from 'react-json-tree';
 import {formatContractForDisplay} from '../utils/presentation';
 
 const Contract = ({contract, match}) => {
   const contractDisplay = formatContractForDisplay(contract);
   return (
-    <Page.Content title={contract.className + " Overview"}>
-      <Grid.Row>
-        <Grid.Col>
-          <Card>
-            <Table
-              responsive
-              className="card-table table-vcenter text-nowrap"
-            >
-              <Table.Header>
-                <Table.Row>
-                  <Table.ColHeader>Name</Table.ColHeader>
-                  <Table.ColHeader>Address</Table.ColHeader>
-                  <Table.ColHeader>State</Table.ColHeader>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                <Table.Row className={contractDisplay.stateColor}>
-                  <Table.Col>{contract.className}</Table.Col>
-                  <Table.Col>{contractDisplay.address}</Table.Col>
-                  <Table.Col>{contractDisplay.state}</Table.Col>
-                </Table.Row>
-              </Table.Body>
-            </Table>
-          </Card>
-          <Card>
-            <Card.Header>
-              <Card.Title>ABI</Card.Title>
-            </Card.Header>
-            <Card.Body>
-              {contract.abiDefinition && <JSONTree data={contract.abiDefinition} />}
-            </Card.Body>
-          </Card>
-          <Card>
-            <Card.Header>
-              <Card.Title>Bytecode</Card.Title>
-            </Card.Header>
-            <Card.Body>
-              {contract.runtimeBytecode}
-            </Card.Body>
-          </Card>
-        </Grid.Col>
-      </Grid.Row>
-    </Page.Content>
+    <Row>
+      <Col>
+        <h1>{contract.className} Overview</h1>
+        <Table
+          responsive
+          className="text-nowrap"
+        >
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Address</th>
+              <th>State</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className={contractDisplay.stateColor}>
+              <td>{contract.className}</td>
+              <td>{contractDisplay.address}</td>
+              <td>{contractDisplay.state}</td>
+            </tr>
+          </tbody>
+        </Table>
+        <h2>ABI</h2>
+        <div>
+          {contract.abiDefinition && <JSONTree data={contract.abiDefinition} />}
+        </div>
+        <h2>Bytecode</h2>
+        <div className="text-wrap">
+          {contract.runtimeBytecode}
+        </div>
+      </Col>
+    </Row>
   );
 };
 

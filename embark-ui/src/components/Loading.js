@@ -1,14 +1,14 @@
 import React from 'react';
-import {Grid, Loader} from 'tabler-react';
+import {Row, Col} from 'reactstrap';
 
 import "./Loading.css";
 
 const Loading = () => (
-  <Grid.Row className="align-items-center h-100 mt-5">
-    <Grid.Col>
-      <Loader className="mx-auto" />
-    </Grid.Col>
-  </Grid.Row>
+  <Row className="align-items-center mt-5">
+    <Col className="text-center">
+      <i className="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+    </Col>
+  </Row>
 );
 
 export default Loading;

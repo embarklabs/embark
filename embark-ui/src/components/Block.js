@@ -1,14 +1,15 @@
 import React from 'react';
-import {
-  Page
-} from "tabler-react";
+import {Row, Col} from 'reactstrap';
 import PropTypes from 'prop-types';
 
 const Block = ({block}) => (
-  <Page.Content title={`Block ${block.number}`}>
-    <p>Timestamp: {block.timestamp}</p>
-    <p>Gas used: {block.gasUsed}</p>
-  </Page.Content>
+  <Row>
+    <Col>
+      <h1>Block {block.number}</h1>
+      <p>Timestamp: {block.timestamp}</p>
+      <p>Gas used: {block.gasUsed}</p>
+    </Col>
+  </Row>
 );
 
 Block.propTypes = {

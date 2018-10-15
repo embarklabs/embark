@@ -13,3 +13,11 @@
 .card.warnings-card .card-options a, .card.errors-card .card-options a {
   cursor: pointer;
 }
+
+.text-wrap {
+  word-wrap: break-word; 
+}
+
+.table {
+  background: #ffffff;
+}

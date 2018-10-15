@@ -1,13 +1,13 @@
 import React from 'react';
-import {Grid, Button} from 'tabler-react';
+import {Row, Col, Button} from 'reactstrap';
 import PropTypes from 'prop-types';
 
 const LoadMore = ({loadMore}) => (
-  <Grid.Row className="my-3">
-    <Grid.Col className="text-center">
+  <Row className="my-3">
+    <Col className="text-center">
       <Button onClick={loadMore} icon="plus" outline color="primary">Load More</Button>
-    </Grid.Col>
-  </Grid.Row>
+    </Col>
+  </Row>
 );
 
 LoadMore.propTypes = {

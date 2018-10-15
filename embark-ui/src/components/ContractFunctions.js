@@ -1,13 +1,20 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import {
-  Page,
-  Grid,
-  Form,
+  Row,
+  Col,
+  FormGroup,
+  Label,
+  Input,
   Button,
-  List,
-  Card
-} from "tabler-react";
+  Card,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+  ListGroup,
+  ListGroupItem
+} from "reactstrap";
 
 class ContractFunction extends Component {
   constructor(props) {
@@ -51,40 +58,40 @@ class ContractFunction extends Component {
 
   render() {
     return (
-      <Grid.Row>
-        <Grid.Col>
-          <Card>
-            <Card.Header>
-              <Card.Title>{this.props.method.name}</Card.Title>
-            </Card.Header>
-            <Card.Body>
-              {this.props.method.inputs.map(input => (
-                <Form.Group key={input.name} label={input.name}>
-                  <Form.Input placeholder={input.type} onChange={(e) => this.handleChange(e, input.name)}/>
-                </Form.Group>
+      <Col xs={12}>
+        <Card>
+          <CardHeader>
+            <CardTitle>{this.props.method.name}</CardTitle>
+          </CardHeader>
+          <CardBody>
+            {this.props.method.inputs.map(input => (
+              <FormGroup key={input.name}>
+                <Label for={input.name}>{input.name}</Label>
+                <Input name={input.name} id={input.name} placeholder={input.type} onChange={(e) => this.handleChange(e, input.name)}/>
+              </FormGroup>
+            ))}
+            {!ContractFunction.isPureCall(this.props.method) &&
+              <FormGroup key="gasPrice">
+                <Label for="gasPrice">Gas Price (in GWei)(optional)</Label>
+                <Input name="gasPrice" id="gasPrice" onChange={(e) => this.handleChange(e, 'gasPrice')}/>
+              </FormGroup>
+            }
+            <Button color="primary" disabled={this.callDisabled()} onClick={(e) => this.handleCall(e)}>
+              {this.buttonTitle()}
+            </Button>
+          </CardBody>
+          {this.props.contractFunctions && this.props.contractFunctions.length > 0 && <CardFooter>
+            <ListGroup>
+              {this.props.contractFunctions.map(contractFunction => (
+                <ListGroupItem key={contractFunction.result}>
+                  {contractFunction.inputs.length > 0 && <p>Inputs: {contractFunction.inputs.join(', ')}</p>}
+                  <strong>Result: {contractFunction.result}</strong>
+                </ListGroupItem>
               ))}
-              {!ContractFunction.isPureCall(this.props.method) &&
-                <Form.Group key="gasPrice" label="Gas Price (in GWei)(optional)">
-                  <Form.Input onChange={(e) => this.handleChange(e, 'gasPrice')}/>
-                </Form.Group>
-              }
-              <Button color="primary" disabled={this.callDisabled()} onClick={(e) => this.handleCall(e)}>
-                {this.buttonTitle()}
-              </Button>
-            </Card.Body>
-            {this.props.contractFunctions && this.props.contractFunctions.length > 0 && <Card.Footer>
-              <List>
-                {this.props.contractFunctions.map(contractFunction => (
-                  <List.Item key={contractFunction.result}>
-                    {contractFunction.inputs.length > 0 && <p>Inputs: {contractFunction.inputs.join(', ')}</p>}
-                    <strong>Result: {contractFunction.result}</strong>
-                  </List.Item>
-                ))}
-              </List>
-            </Card.Footer>}
-          </Card>
-        </Grid.Col>
-      </Grid.Row>
+            </ListGroup>
+          </CardFooter>}
+        </Card>
+      </Col>
     );
   }
 }
@@ -106,7 +113,8 @@ const ContractFunctions = (props) => {
   const {contractProfile} = props;
 
   return (
-    <Page.Content title={contractProfile.name + ' Functions'}>
+    <Row>
+      <Col xs={12}><h1>{contractProfile.name} Functions</h1></Col>
       {contractProfile.methods
         .filter((method) => {
           return props.onlyConstructor ? method.type === 'constructor' : method.type !== 'constructor';
@@ -116,7 +124,7 @@ const ContractFunctions = (props) => {
                                          contractFunctions={filterContractFunctions(props.contractFunctions, contractProfile.name, method.name)}
                                          contractProfile={contractProfile}
                                          postContractFunction={props.postContractFunction}/>)}
-    </Page.Content>
+    </Row>
   );
 };
 

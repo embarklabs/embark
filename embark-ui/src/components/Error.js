@@ -1,15 +1,15 @@
 import PropTypes from "prop-types";
 import React from 'react';
-import {Grid} from 'tabler-react';
+import {Row, Col} from 'reactstrap';
 
 const Error = ({error}) => (
-  <Grid.Row className="align-items-center h-100 mt-5">
-    <Grid.Col>
+  <Row className="align-items-center mt-5">
+    <Col>
       <p className="text-center alert-danger">
         {error}
       </p>
-    </Grid.Col>
-  </Grid.Row>
+    </Col>
+  </Row>
 );
 
 Error.propTypes = {

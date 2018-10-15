@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form, Button} from 'tabler-react';
+import {Button, InputGroup, Input, InputGroupAddon} from 'reactstrap';
 
 class Preview extends React.Component {
   constructor(props) {
@@ -28,15 +28,14 @@ class Preview extends React.Component {
   render() {
     return (
       <div className='h-100 d-flex flex-column'>
-        <Form.InputGroup>
-          <Form.Input placeholder="URL"
-                      value={this.state.previewUrl}
-                      className="form-control"
-                      onChange={(e) => this.handlePreviewUrlChange(e)} />
-          <Form.InputGroupAppend>
-            <Button color="primary" onClick={(e) => this.handlePreviewGo(e)}>Go</Button>
-          </Form.InputGroupAppend>
-        </Form.InputGroup>
+        <InputGroup>
+          <Input placeholder="URL"
+                 value={this.state.previewUrl}
+                 onChange={(e) => this.handlePreviewUrlChange(e)} />
+          <InputGroupAddon addonType="append">
+            <Button className="ml-auto" color="primary" onClick={(e) => this.handlePreviewGo(e)}>Go</Button>
+          </InputGroupAddon>
+        </InputGroup>
         <iframe width="100%"
                 height="100%"
                 title="Preview"
