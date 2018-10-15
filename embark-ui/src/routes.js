@@ -6,6 +6,7 @@ import ContractsContainer from './containers/ContractsContainer';
 import ContractLayoutContainer from './containers/ContractLayoutContainer';
 import DeploymentContainer from './containers/DeploymentContainer';
 import NoMatch from './components/NoMatch';
+import ExplorerDashboardLayout from './components/ExplorerDashboardLayout';
 import ExplorerLayout from './components/ExplorerLayout';
 import FiddleLayout from './components/FiddleLayout';
 import UtilsLayout from './components/UtilsLayout';
@@ -14,7 +15,8 @@ const routes = (
   <React.Fragment>
     <Switch>
       <Route exact path="/embark/" component={HomeContainer} />
-      <Route path="/embark/explorer/" component={ExplorerLayout} />
+      <Route exact path="/embark/explorer" component={ExplorerDashboardLayout} />
+      <Route path="/embark/explorer" component={ExplorerLayout} />
       <Route path="/embark/deployment/" component={DeploymentContainer} />
       <Route path="/embark/contracts/:contractName" component={ContractLayoutContainer} />
       <Route path="/embark/contracts" component={ContractsContainer} />
