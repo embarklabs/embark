@@ -5,6 +5,7 @@ import Convert from 'ansi-to-html';
 import { Col, Row, Card, CardBody, CardFooter, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import classnames from 'classnames';
 import {AsyncTypeahead} from 'react-bootstrap-typeahead'
+import ReactJson from 'react-json-view';
 
 import Logs from "./Logs";
 import "./Console.css";
@@ -67,8 +68,17 @@ class Console extends Component {
               {processLogs
                 .filter((item) => item.name === process.name)
                 .reverse()
-                .map((item, i) => <p key={i} className={item.logLevel}
-                                    dangerouslySetInnerHTML={{__html: convert.toHtml(item.msg)}}></p>)}
+                .map((item, i) => {
+
+                  if (item.result && item.result[0] === "{") {
+                    return(
+                    	<ReactJson src={JSON.parse(item.result)} theme="monokai" sortKeys={true} collapsed={1} />
+                    )
+                  }
+                  <p key={i} className={item.logLevel} dangerouslySetInnerHTML={{__html: convert.toHtml(item.msg)}}></p>
+
+                })
+              }
             </Logs>
           </TabPane>
         ))}

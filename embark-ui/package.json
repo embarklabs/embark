@@ -57,6 +57,7 @@
     "react-dom": "^16.4.1",
     "react-fontawesome": "^1.6.1",
     "react-json-tree": "^0.11.0",
+    "react-json-view": "^1.19.1",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
     "react-scroll-to-component": "^1.0.2",
