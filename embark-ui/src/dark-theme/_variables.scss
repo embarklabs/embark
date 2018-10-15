@@ -5,8 +5,8 @@
 @import "variables/bootstrap/variables";
 
 // Import Bootstrap variables after customization for use below
-@import "../../node_modules/bootstrap/scss/functions"; // from bootstrap node_modules
-@import "../../node_modules/bootstrap/scss/variables"; // from bootstrap node_modules
+@import "./bootstrap/functions"; // from bootstrap node_modules
+@import "./bootstrap/variables"; // from bootstrap node_modules
 
 // CoreUI Variables
 

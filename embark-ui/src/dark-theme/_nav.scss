@@ -5,14 +5,12 @@
       cursor: pointer;
     }
     &.active {
-      color: $gray-800;
-      background: #fff;
+      color: $nav-tabs-link-active-color;
+      background: $nav-tabs-link-active-bg;
       border-color: $border-color;
-      border-bottom-color: #fff;
       &:focus {
-        background: #fff;
+        background: $nav-tabs-link-active-bg;
         border-color: $border-color;
-        border-bottom-color: #fff;
       }
     }
   }
@@ -20,7 +18,7 @@
 
 .tab-content {
   margin-top: -1px;
-  background: #fff;
+  background: $card-bg;
   border: 1px solid $border-color;
   .tab-pane {
     padding: $spacer;
