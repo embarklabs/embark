@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux';
 import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE,
-        FETCH_CREDENTIALS, UPDATE_BASE_ETHER} from "../actions";
+        FETCH_CREDENTIALS, UPDATE_BASE_ETHER, CHANGE_THEME} from "../actions";
 import {EMBARK_PROCESS_NAME} from '../constants';
 
 const BN_FACTOR = 10000;
@@ -223,6 +223,13 @@ function baseEther(state = '1', action) {
   return state;
 }
 
+function theme(state='dark', action) {
+  if (action.type === CHANGE_THEME[REQUEST]) {
+    return action.theme;
+  }
+  return state;
+}
+
 const rootReducer = combineReducers({
   entities,
   loading,
@@ -230,7 +237,8 @@ const rootReducer = combineReducers({
   errorMessage,
   errorEntities,
   credentials,
-  baseEther
+  baseEther,
+  theme
 });
 
 export default rootReducer;

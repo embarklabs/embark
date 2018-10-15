@@ -23,6 +23,13 @@ export const authenticate = {
   failure: (error) => action(AUTHENTICATE[FAILURE], {error})
 };
 
+export const CHANGE_THEME = createRequestTypes('CHANGE_THEME');
+export const changeTheme = {
+  request: (theme) => action(CHANGE_THEME[REQUEST], {theme}),
+  success: () => action(CHANGE_THEME[SUCCESS]),
+  failure: (error) => action(CHANGE_THEME[FAILURE], {error})
+};
+
 export const FETCH_CREDENTIALS = createRequestTypes('FETCH_CREDENTIALS');
 export const fetchCredentials = {
   request: () => action(FETCH_CREDENTIALS[REQUEST]),

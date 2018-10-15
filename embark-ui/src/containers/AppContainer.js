@@ -10,10 +10,11 @@ import {
   authenticate, fetchCredentials, logout,
   processes as processesAction,
   versions as versionsAction,
-  plugins as pluginsAction
+  plugins as pluginsAction,
+  changeTheme
 } from '../actions';
 
-import { getCredentials, getAuthenticationError, getVersions } from '../reducers/selectors';
+import { getCredentials, getAuthenticationError, getVersions, getTheme } from '../reducers/selectors';
 
 const qs = require('qs');
 
@@ -22,10 +23,6 @@ class AppContainer extends Component {
     super(props);
 
     this.queryStringAuthenticate();
-
-    this.state = {
-      theme: 'dark'
-    };
   }
 
   queryStringAuthenticate() {
@@ -64,12 +61,12 @@ class AppContainer extends Component {
   }
 
   changeTheme(theme) {
-    this.setState({theme});
+    this.props.changeTheme(theme);
   }
 
   render() {
     return (
-      <div className={this.state.theme + "-theme"}>
+      <div className={(this.props.theme || 'dark') + "-theme"}>
         {this.shouldRenderLogin() ?
           <Login credentials={this.props.credentials} authenticate={this.props.authenticate} error={this.props.authenticationError} />
           :
@@ -93,14 +90,17 @@ AppContainer.propTypes = {
   fetchProcesses: PropTypes.func,
   fetchPlugins: PropTypes.func,
   fetchVersions: PropTypes.func,
-  location: PropTypes.object
+  location: PropTypes.object,
+  theme: PropTypes.string,
+  changeTheme: PropTypes.func
 };
 
 function mapStateToProps(state) {
   return {
     initialized: getVersions(state).length > 0,
     credentials: getCredentials(state),
-    authenticationError: getAuthenticationError(state)
+    authenticationError: getAuthenticationError(state),
+    theme: getTheme(state)
   };
 }
 
@@ -112,6 +112,7 @@ export default withRouter(connect(
     fetchCredentials: fetchCredentials.request,
     fetchProcesses: processesAction.request,
     fetchVersions: versionsAction.request,
-    fetchPlugins: pluginsAction.request
+    fetchPlugins: pluginsAction.request,
+    changeTheme: changeTheme.request
   },
 )(AppContainer));

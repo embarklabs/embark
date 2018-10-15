@@ -8,6 +8,10 @@ export function getAuthenticationError(state) {
   return state.credentials.error;
 }
 
+export function getTheme(state) {
+  return state.theme;
+}
+
 export function getAccounts(state) {
   return state.entities.accounts;
 }
