@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import Convert from 'ansi-to-html';
 
-import { Form, Col, Row, Card, CardBody, Input, CardFooter, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import { Col, Row, Card, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import classnames from 'classnames';
 import {AsyncTypeahead} from 'react-bootstrap-typeahead'
 
