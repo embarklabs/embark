@@ -23,7 +23,7 @@ const Contract = ({contract}) => (
       {contract.address &&
         <React.Fragment>
           <h5>{contract.className} deployed at {contract.address}</h5>
-          <p><strong>Arguments:</strong> {contract.args}</p>
+          <p><strong>Arguments:</strong> {JSON.stringify(contract.args)}</p>
         </React.Fragment>
       }
       {!contract.address &&
