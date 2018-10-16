@@ -14,6 +14,9 @@ import {
   changeTheme, fetchTheme
 } from '../actions';
 
+
+import {LIGHT_THEME, DARK_THEME} from '../constants';
+
 import { getCredentials, getAuthenticationError, getVersions, getTheme } from '../reducers/selectors';
 
 const qs = require('qs');
@@ -61,8 +64,12 @@ class AppContainer extends Component {
     return this.props.authenticationError || !this.props.credentials.authenticated;
   }
 
-  changeTheme(theme) {
-    this.props.changeTheme(theme);
+  toggleTheme() {
+    if (this.props.theme === LIGHT_THEME) {
+      this.props.changeTheme(DARK_THEME);
+    } else {
+      this.props.changeTheme(LIGHT_THEME);
+    }
   }
 
   render() {
@@ -70,7 +77,8 @@ class AppContainer extends Component {
     if (this.shouldRenderLogin()) {
       content = <Login credentials={this.props.credentials} authenticate={this.props.authenticate} error={this.props.authenticationError} />;
     } else {
-      content = <Layout location={this.props.location} logout={this.props.logout} credentials={this.props.credentials} changeTheme={(v) => this.changeTheme(v)}>
+      content = <Layout location={this.props.location} logout={this.props.logout} credentials={this.props.credentials}
+                        toggleTheme={() => this.toggleTheme()} currentTheme={this.props.theme}>
         <React.Fragment>{routes}</React.Fragment>
       </Layout>;
     }

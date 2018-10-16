@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { UncontrolledDropdown, DropdownItem, DropdownMenu, DropdownToggle, Nav, Container } from 'reactstrap';
+import { DropdownItem, DropdownMenu, DropdownToggle, Nav, Container } from 'reactstrap';
 import {LIGHT_THEME, DARK_THEME} from '../constants';
+import FontAwesome from 'react-fontawesome';
 
 import {
   AppAside,
@@ -39,7 +40,7 @@ const sidebarNavItems = {items: [
   ]}
 ]};
 
-const Layout = ({children, logout, credentials, location, changeTheme}) => (
+const Layout = ({children, logout, credentials, location, toggleTheme, currentTheme}) => (
   <div className="app">
     <AppHeader fixed>
       <AppSidebarToggler className="d-lg-none" display="md" mobile />
@@ -54,7 +55,11 @@ const Layout = ({children, logout, credentials, location, changeTheme}) => (
             <i className="fa fa-user fa-3x" />
           </DropdownToggle>
           <DropdownMenu right style={{ right: 'auto' }}>
-            <DropdownItem onClick={logout}><i className="fa fa-lock"></i> Logout</DropdownItem>
+            <DropdownItem className="text-capitalize" onClick={() => toggleTheme()}>
+              <FontAwesome name={currentTheme === DARK_THEME ? 'sun-o' : 'moon-o'} />
+              {currentTheme === DARK_THEME ? LIGHT_THEME : DARK_THEME} Mode
+            </DropdownItem>
+            <DropdownItem onClick={logout}><FontAwesome name="lock" /> Logout</DropdownItem>
           </DropdownMenu>
         </AppHeaderDropdown>
       </Nav>
@@ -76,15 +81,6 @@ const Layout = ({children, logout, credentials, location, changeTheme}) => (
       </AppAside>
     </div>
     <AppFooter>
-      <UncontrolledDropdown direction="up">
-        <DropdownToggle caret>
-          Theme
-        </DropdownToggle>
-        <DropdownMenu>
-          <DropdownItem onClick={() => changeTheme(DARK_THEME)}>Dark</DropdownItem>
-          <DropdownItem onClick={() => changeTheme(LIGHT_THEME)}>Light</DropdownItem>
-        </DropdownMenu>
-      </UncontrolledDropdown>
 
       <span className="ml-auto">
         Embark&nbsp;
@@ -102,7 +98,8 @@ Layout.propTypes = {
   credentials: PropTypes.object,
   location: PropTypes.object,
   logout: PropTypes.func,
-  changeTheme: PropTypes.func
+  toggleTheme: PropTypes.func,
+  currentTheme: PropTypes.string
 };
 
 export default Layout;

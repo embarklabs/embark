@@ -65,6 +65,15 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
   background-color: $body-bg; // 2
 }
 
+span.fa {
+  display: inline-block;
+  width: 20px;
+  margin-right: 10px;
+  margin-left: -10px;
+  color: $gray-300;
+  text-align: center;
+}
+
 // Suppress the focus outline on elements that cannot be accessed via keyboard.
 // This prevents an unwanted focus outline from appearing around elements that
 // might still respond to pointer events.
