@@ -57,6 +57,15 @@ class Console extends Component {
     )
   }
 
+  isJsonObject(item) {
+    if (!item.result) return false;
+    try {
+      return typeof(JSON.parse(item.result)) === 'object'
+    } catch(_err) {
+      return false;
+    }
+  }
+
   renderTabs() {
     const {processLogs, processes} = this.props;
 
@@ -70,7 +79,7 @@ class Console extends Component {
                 .reverse()
                 .map((item, i) => {
 
-                  if (item.result && (item.result[0] === "{" || item.result[0] === "[")) {
+                  if (this.isJsonObject(item)) {
                     return(
                       <div>
                         <p key={i} className={item.logLevel} dangerouslySetInnerHTML={{__html: (convert.toHtml(item.command || ""))}}></p>
