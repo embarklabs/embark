@@ -118,10 +118,14 @@ class Cmd {
     program
       .command('demo')
       .option('--locale [locale]', __('language to use (default: en)'))
+      .option('--angular', __('use angular.js'))
       .description(__('create a working dapp with a SimpleStorage contract'))
       .action(function(options) {
         i18n.setOrDetectLocale(options.locale);
-        embark.generateTemplate('demo', './', 'embark_demo');
+        if (options.angular){
+          embark.generateTemplate('demo-angular', './', 'embark_demo');
+        } else {
+          embark.generateTemplate('demo', './', 'embark_demo');}
       });
   }
 

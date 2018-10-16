@@ -1,0 +1,24 @@
+{
+  "contracts": ["contracts/**"],
+  "app": {
+    "css/app.css": ["app/css/**"],
+    "js/app.js": ["app/js/index.ts"],
+    "images/": ["app/images/**"],
+    "index.html": "app/index.html"
+  },
+  "buildDir": "dist/",
+  "config": "config/",
+  "versions": {
+    "web3": "1.0.0-beta",
+    "solc": "0.4.24",
+    "ipfs-api": "17.2.4"
+  },
+  "plugins": {
+  },
+  "options": {
+    "solc": {
+      "optimize": true,
+      "optimize-runs": 200
+    }
+  }
+}

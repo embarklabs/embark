@@ -1,0 +1,16 @@
+{
+  "name": "embark-angular-template",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "test": "embark test"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "",
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.0.0",
+    "typescript": "^3.0.3"
+  },
+  "dependencies": {}
+}
