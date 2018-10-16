@@ -117,7 +117,7 @@ export const commands = {
         {
           timestamp: new Date().getTime(),
           name: EMBARK_PROCESS_NAME,
-          msg: `console> ${payload.command}<br>${ansiToHtml(command.result)}`,
+          msg: `${ansiToHtml(command.result)}`,
           command: `console> ${payload.command}<br>`,
 			    result: command.result
         }

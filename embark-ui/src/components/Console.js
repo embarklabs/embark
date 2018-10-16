@@ -70,13 +70,18 @@ class Console extends Component {
                 .reverse()
                 .map((item, i) => {
 
-                  if (item.result && item.result[0] === "{") {
+                  if (item.result && (item.result[0] === "{" || item.result[0] === "[")) {
                     return(
-                    	<ReactJson src={JSON.parse(item.result)} theme="monokai" sortKeys={true} collapsed={1} />
+                      <div>
+                        <p key={i} className={item.logLevel} dangerouslySetInnerHTML={{__html: (convert.toHtml(item.command || ""))}}></p>
+                        <ReactJson src={JSON.parse(item.result)} theme="monokai" sortKeys={true} collapsed={1} />
+                      </div>
                     )
                   }
-                  <p key={i} className={item.logLevel} dangerouslySetInnerHTML={{__html: convert.toHtml(item.msg)}}></p>
 
+                  return (
+                    <p key={i} className={item.logLevel} dangerouslySetInnerHTML={{__html: (convert.toHtml(item.command || "") + convert.toHtml(item.msg))}}></p>
+                  )
                 })
               }
             </Logs>
