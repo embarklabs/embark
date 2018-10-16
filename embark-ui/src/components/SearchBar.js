@@ -20,6 +20,17 @@ class SearchBar extends React.Component {
     });
   }
 
+  onSubmit(e) {
+    e.preventDefault();
+    this.props.searchSubmit(this.state.searchValue);
+  }
+
+  onKeyPress(e) {
+    if (e.key === 'Enter') {
+      this.onSubmit(e);
+    }
+  }
+
   render() {
     return (
       <Row>
@@ -27,8 +38,8 @@ class SearchBar extends React.Component {
           <Form inline className="search-bar float-right">
             <FormGroup>
               <Input type="text" name="search-bar" placeholder="Search" onChange={(e) => this.onChange(e)}
-                     value={this.state.searchValue}/>
-              <Button color="secondary" onClick={() => this.props.searchSubmit(this.state.searchValue)}>
+                     value={this.state.searchValue} onKeyPress={e => this.onKeyPress(e)}/>
+              <Button color="secondary" onClick={(e) => this.onSubmit(e)}>
                 <FontAwesome name="search"/>
               </Button>
             </FormGroup>

@@ -1,11 +1,12 @@
 .search-bar {
-  margin-top: 10px;
+  margin: 10px 0;
 }
 
 .search-bar input {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   border: 0;
+  outline: none;
 }
 
 .search-bar button {
