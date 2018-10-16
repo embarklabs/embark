@@ -52,7 +52,7 @@ function *searchExplorer(entity, payload) {
     return yield put(entity.success(result));
   }
 
-  return yield put(entity.failure('No results'));
+  return yield put(entity.success({error: 'No result found in transactions, accounts or blocks'}));
 }
 
 export const fetchPlugins = doRequest.bind(null, actions.plugins, api.fetchPlugins);

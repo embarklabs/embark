@@ -4,6 +4,7 @@ import connect from "react-redux/es/connect/connect";
 import {Route, Switch, withRouter} from 'react-router-dom';
 import {explorerSearch} from "../actions";
 import {searchResult} from "../reducers/selectors";
+import {Alert} from 'reactstrap';
 
 import AccountsContainer from '../containers/AccountsContainer';
 import AccountContainer from '../containers/AccountContainer';
@@ -16,7 +17,10 @@ import SearchBar from '../components/SearchBar';
 class ExplorerLayout extends React.Component {
   shouldComponentUpdate(nextProps) {
     if (nextProps.searchResult && nextProps.searchResult !== this.props.searchResult) {
-      console.log('New result', nextProps.searchResult);
+      if (nextProps.searchResult.error) {
+        return true;
+      }
+
       if (nextProps.searchResult.address) {
         this.props.history.push(`/embark/explorer/accounts/${nextProps.searchResult.address}`);
         return false;
@@ -35,11 +39,11 @@ class ExplorerLayout extends React.Component {
   }
 
   render() {
-    const {explorerSearch} = this.props;
+    const {explorerSearch, searchResult} = this.props;
     return (
       <React.Fragment>
         <SearchBar searchSubmit={searchValue => explorerSearch(searchValue)}/>
-        {searchResult && <span>{JSON.stringify(searchResult)}</span>}
+        {searchResult.error && <Alert color="danger">{searchResult.error}</Alert>}
         <Switch>
           <Route exact path="/embark/explorer/accounts" component={AccountsContainer}/>
           <Route exact path="/embark/explorer/accounts/:address" component={AccountContainer}/>
