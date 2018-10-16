@@ -1,5 +1,6 @@
 let async = require('async');
 const constants = require('../lib/constants');
+const Logger = require('../lib/core/logger');
 
 require('colors');
 
@@ -18,7 +19,7 @@ class EmbarkController {
     let Config = require('../lib/core/config.js');
 
     this.events = new Events();
-    this.logger = new Logger({logLevel: 'debug', events: this.events});
+    this.logger = new Logger({logLevel: Logger.logLevels.debug, events: this.events});
 
     this.config = new Config({env: env, logger: this.logger, events: this.events, context: this.context});
     this.config.loadConfigFiles(options);
@@ -539,7 +540,7 @@ class EmbarkController {
       version: this.version,
       embarkConfig: options.embarkConfig || 'embark.json',
       logFile: options.logFile,
-      logLevel: options.logLevel,
+      logLevel: options.logLevel || Logger.logLevels.warn,
       context: this.context,
       useDashboard: options.useDashboard,
       webpackConfigName: options.webpackConfigName,
