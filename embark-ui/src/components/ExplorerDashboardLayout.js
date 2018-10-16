@@ -1,8 +1,8 @@
 import React from 'react';
 import {
-  Page,
-  Grid
-} from "tabler-react";
+  Col,
+  Row
+} from "reactstrap";
 
 import AccountsContainer from '../containers/AccountsContainer';
 import BlocksContainer from '../containers/BlocksContainer';
@@ -10,24 +10,24 @@ import TransactionsContainer from '../containers/TransactionsContainer';
 
 const ExplorerDashboardLayout = () => (
   <React.Fragment>
-    <Grid.Row md={12}>
-      <Grid.Col>
-        <Page.Title className="my-5">Explorer</Page.Title>
-      </Grid.Col>
-    </Grid.Row>
-    <Grid.Row>
-      <Grid.Col className="pl-md-0 pr-md-0 ml-md-0 mr-md-0 pr-lg-3 mr-lg-3 pl-lg-2 ml-lg-2">
+    <Row>
+      <Col>
+        <h1 className="my-5">Explorer</h1>
+      </Col>
+    </Row>
+    <Row>
+      <Col>
         <AccountsContainer />
-      </Grid.Col>
-    </Grid.Row>
-    <Grid.Row>
-      <Grid.Col md={6}>
+      </Col>
+    </Row>
+    <Row>
+      <Col md={6}>
         <BlocksContainer />
-      </Grid.Col>
-      <Grid.Col md={6}>
+      </Col>
+      <Col md={6}>
         <TransactionsContainer />
-      </Grid.Col>
-    </Grid.Row>
+      </Col>
+    </Row>
   </React.Fragment>
 );
 

@@ -1,10 +1,12 @@
 import React from 'react';
-import {NavLink, Route, Switch} from 'react-router-dom';
+import {NavLink as RouterNavLink, Route, Switch} from 'react-router-dom';
 import {
-  Page,
-  Grid,
-  List
-} from "tabler-react";
+  Row,
+  Col,
+  Nav,
+  NavItem,
+  NavLink
+} from "reactstrap";
 
 import AccountsContainer from '../containers/AccountsContainer';
 import AccountContainer from '../containers/AccountContainer';
@@ -14,36 +16,36 @@ import TransactionsContainer from '../containers/TransactionsContainer';
 import TransactionContainer from '../containers/TransactionContainer';
 
 const groupItems = [
-  {to: "/embark/explorer", icon: "compass", value: "Overview", exact: true},
+  {to: "/embark/explorer/overview", icon: "signal", value: "Overview"},
   {to: "/embark/explorer/accounts", icon: "users", value: "Accounts"},
-  {to: "/embark/explorer/blocks", icon: "book-open", value: "Blocks"},
-  {to: "/embark/explorer/transactions", icon: "activity", value: "Transactions"}
+  {to: "/embark/explorer/blocks", icon: "stop", value: "Blocks"},
+  {to: "/embark/explorer/transactions", icon: "tree", value: "Transactions"}
 ];
 
 const className = "d-flex align-items-center";
 
-const ExplorerLayout = () => (
-  <Grid.Row>
-    <Grid.Col md={3}>
-      <Page.Title className="my-5">Explorer</Page.Title>
+const ExplorerLayout = (props) => (
+  <Row>
+    <Col md={2}>
+      <h1 className="my-5">Explorer</h1>
       <div>
-        <List.Group transparent={true}>
+        <Nav vertical pills>
           {groupItems.map((groupItem) => (
-            <List.GroupItem
-              key={groupItem.value}
-              className={className}
-              to={groupItem.to}
-              icon={groupItem.icon}
-              RootComponent={NavLink}
-              exact={groupItem.exact || false}
-            >
-              {groupItem.value}
-            </List.GroupItem>
+            <NavItem 
+              key={groupItem.value}>
+              <NavLink
+                className={className}
+                to={groupItem.to}
+                tag={RouterNavLink}
+              >
+                <i className={`fa fa-${groupItem.icon} mr-3`} />{groupItem.value}
+              </NavLink>
+            </NavItem>
           ))}
-        </List.Group>
+        </Nav>
       </div>
-    </Grid.Col>
-    <Grid.Col md={9}>
+    </Col>
+    <Col md={10}>
       <Switch>
         <Route exact path="/embark/explorer/accounts" component={AccountsContainer} />
         <Route exact path="/embark/explorer/accounts/:address" component={AccountContainer} />
@@ -52,8 +54,8 @@ const ExplorerLayout = () => (
         <Route exact path="/embark/explorer/transactions" component={TransactionsContainer} />
         <Route exact path="/embark/explorer/transactions/:hash" component={TransactionContainer} />
       </Switch>
-    </Grid.Col>
-  </Grid.Row>
+    </Col>
+  </Row>
 );
 
 export default ExplorerLayout;

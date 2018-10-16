@@ -15,7 +15,7 @@ const routes = (
   <React.Fragment>
     <Switch>
       <Route exact path="/embark/" component={HomeContainer} />
-      <Route exact path="/embark/explorer" component={ExplorerDashboardLayout} />
+      <Route exact path="/embark/explorer/overview" component={ExplorerDashboardLayout} />
       <Route path="/embark/explorer" component={ExplorerLayout} />
       <Route path="/embark/deployment/" component={DeploymentContainer} />
       <Route path="/embark/contracts/:contractName" component={ContractLayoutContainer} />
