@@ -1,9 +1,36 @@
 import axios from "axios";
+import keccak from "keccakjs";
+
+function hash(cnonce, token, type, path, params = {}) {
+  let hash = new keccak();
+  hash.update(JSON.stringify(cnonce));
+  hash.update(token);
+  hash.update(type.toUpperCase());
+  hash.update(`/embark-api${path}`);
+  return hash.digest('hex');
+}
 
 function request(type, path, params = {}) {
-  axios.defaults.headers.common['Authorization'] = params.credentials.token;
-  const endpoint = `http://${params.credentials.host}/embark-api${path}`;
-  return axios[type](endpoint, params)
+  const cnonce = Date.now() + Math.random();
+
+  // Extract credentials out of the params and delete so the token doesn't get sent
+  // as cleartext.
+  let credentials = params.credentials;
+  delete params.credentials;
+
+  let requestHash = hash(cnonce, credentials.token, type, path, params);
+
+  const endpoint = `http://${credentials.host}/embark-api${path}`;
+  const req = {
+    method: type,
+    url: endpoint,
+    headers: {
+      'X-Embark-Request-Hash': requestHash,
+      'X-Embark-Cnonce': cnonce
+    }
+  }
+
+  return axios(req, params)
     .then((response) => {
       return (response.data && response.data.error) ? {error: response.data.error} : {response, error: null};
     }).catch((error) => {

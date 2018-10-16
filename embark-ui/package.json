@@ -37,6 +37,7 @@
     "history": "^4.7.2",
     "html-webpack-plugin": "2.29.0",
     "jest": "20.0.4",
+    "keccakjs": "0.2.1",
     "monaco-editor": "^0.14.3",
     "monaco-editor-webpack-plugin": "^1.5.4",
     "object-assign": "4.1.1",
