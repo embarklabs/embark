@@ -53,7 +53,7 @@ export function getProcessLogs(state) {
 }
 
 export function getCommandSuggestions(state) {
-  return state.entities.command_suggestions;
+  return state.entities.commandSuggestions;
 }
 
 export function getContractLogsByContract(state, contractName) {

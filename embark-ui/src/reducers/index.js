@@ -14,7 +14,7 @@ const entitiesDefaultState = {
   transactions: [],
   processes: [],
   processLogs: [],
-  command_suggestions: [],
+  commandSuggestions: [],
   contracts: [],
   contractProfiles: [],
   contractFunctions: [],
@@ -43,7 +43,7 @@ const sorter = {
     if (b.name === EMBARK_PROCESS_NAME) return 1;
     return 0;
   },
-	command_suggestions: function(a, b) {
+	commandSuggestions: function(a, b) {
 		if (a.value.indexOf('.').length > 0) {
 		  let a_levels = a.value.split('.').length
 		  let b_levels = b.value.split('.').length
@@ -93,11 +93,11 @@ const filtrer = {
   contracts: function(contract, index, self) {
     return index === self.findIndex((t) => t.className === contract.className);
   },
-	command_suggestions: function(command, index, self) {
+  commandSuggestions: function(command, index, self) {
     return index === self.findIndex((c) => (
       command.value === c.value
     ));
-	},
+  },
   accounts: function(account, index, self) {
     return index === self.findIndex((t) => t.address === account.address);
   },

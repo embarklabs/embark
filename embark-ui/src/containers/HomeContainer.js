@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {
   contracts as contractsAction,
   commands as commandsAction,
-  command_suggestions as commandSuggestionsAction,
+  commandSuggestions as commandSuggestionsAction,
   listenToProcessLogs,
   processLogs as processLogsAction,
   stopProcessLogs
@@ -63,13 +63,13 @@ class HomeContainer extends Component {
           </div>
         )} />
 
-        <DataWrapper shouldRender={this.props.processes.length > 0 } {...this.props} render={({processes, postCommand, postCommandSuggestions, processLogs, command_suggestions}) => (
+        <DataWrapper shouldRender={this.props.processes.length > 0 } {...this.props} render={({processes, postCommand, postCommandSuggestions, processLogs, commandSuggestions}) => (
           <Console activeProcess={this.state.activeProcess}
                    postCommand={postCommand}
                    postCommandSuggestions={postCommandSuggestions}
                    processes={processes}
                    processLogs={processLogs}
-                   command_suggestions={command_suggestions}
+                   commandSuggestions={commandSuggestions}
                    isEmbark={() => this.isEmbark}
                    updateTab={processName => this.updateTab(processName)} />
         )} />
@@ -92,7 +92,7 @@ function mapStateToProps(state) {
     contracts: getContracts(state),
     error: state.errorMessage,
     processLogs: getProcessLogs(state),
-    command_suggestions: getCommandSuggestions(state),
+    commandSuggestions: getCommandSuggestions(state),
     loading: state.loading
   };
 }

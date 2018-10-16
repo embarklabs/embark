@@ -107,10 +107,10 @@ export const commands = {
 };
 
 export const COMMAND_SUGGESTIONS = createRequestTypes('COMMAND_SUGGESTIONS');
-export const command_suggestions = {
+export const commandSuggestions = {
   post: (command) => action(COMMAND_SUGGESTIONS[REQUEST], {command}),
   success: (command, payload) => {
-    return action(COMMAND_SUGGESTIONS[SUCCESS], {command_suggestions: command.result })
+    return action(COMMAND_SUGGESTIONS[SUCCESS], {commandSuggestions: command.result })
   },
   failure: (error) => action(COMMAND_SUGGESTIONS[FAILURE], {error})
 };

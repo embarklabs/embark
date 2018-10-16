@@ -114,7 +114,7 @@ class Console extends Component {
                 filterBy={['value', 'description']}
                 maxHeight="200px"
                 placeholder="Type a command (e.g help)"
-                options={this.props.command_suggestions}
+                options={this.props.commandSuggestions}
                 renderMenuItemChildren={(option) => (
                   <div>
                     {option.value}
@@ -137,7 +137,7 @@ Console.propTypes = {
   postCommandSuggestions: PropTypes.func,
   isEmbark: PropTypes.func,
   processes: PropTypes.arrayOf(PropTypes.object).isRequired,
-  command_suggestions: PropTypes.arrayOf(PropTypes.object),
+  commandSuggestions: PropTypes.arrayOf(PropTypes.object),
   processLogs: PropTypes.arrayOf(PropTypes.object).isRequired,
   updateTab: PropTypes.func
 };

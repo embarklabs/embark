@@ -25,7 +25,7 @@ export const fetchBlocks = doRequest.bind(null, actions.blocks, api.fetchBlocks)
 export const fetchTransactions = doRequest.bind(null, actions.transactions, api.fetchTransactions);
 export const fetchProcesses = doRequest.bind(null, actions.processes, api.fetchProcesses);
 export const postCommand = doRequest.bind(null, actions.commands, api.postCommand);
-export const postCommandSuggestions = doRequest.bind(null, actions.command_suggestions, api.postCommandSuggestions);
+export const postCommandSuggestions = doRequest.bind(null, actions.commandSuggestions, api.postCommandSuggestions);
 export const fetchProcessLogs = doRequest.bind(null, actions.processLogs, api.fetchProcessLogs);
 export const fetchContractLogs = doRequest.bind(null, actions.contractLogs, api.fetchContractLogs);
 export const fetchContracts = doRequest.bind(null, actions.contracts, api.fetchContracts);
@@ -240,7 +240,7 @@ export function *listenToProcessLogs(action) {
       processLog: take(channel),
       cancel: take(actions.STOP_NEW_PROCESS_LOGS)
     });
-    
+
     if (cancel && action.processName === cancel.processName) {
       channel.close();
       return;
