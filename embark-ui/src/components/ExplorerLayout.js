@@ -15,8 +15,17 @@ import TransactionContainer from '../containers/TransactionContainer';
 import SearchBar from '../components/SearchBar';
 
 class ExplorerLayout extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {loading: false};
+  }
+
   shouldComponentUpdate(nextProps) {
-    if (nextProps.searchResult && nextProps.searchResult !== this.props.searchResult) {
+    if (nextProps.searchResult && Object.keys(nextProps.searchResult).length &&
+      nextProps.searchResult !== this.props.searchResult) {
+      this.setState({loading: false});
+
       if (nextProps.searchResult.error) {
         return true;
       }
@@ -38,11 +47,17 @@ class ExplorerLayout extends React.Component {
     return true;
   }
 
+  searchTheExplorer(value) {
+    this.props.explorerSearch(value);
+    this.setState({loading: true});
+  }
+
   render() {
-    const {explorerSearch, searchResult} = this.props;
+    const {searchResult} = this.props;
     return (
       <React.Fragment>
-        <SearchBar searchSubmit={searchValue => explorerSearch(searchValue)}/>
+        <SearchBar searchSubmit={searchValue => this.searchTheExplorer(searchValue)}/>
+        {this.state.loading && <p>Searching...</p>}
         {searchResult.error && <Alert color="danger">{searchResult.error}</Alert>}
         <Switch>
           <Route exact path="/embark/explorer/accounts" component={AccountsContainer}/>
