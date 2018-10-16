@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import Convert from 'ansi-to-html';
 
-import { Col, Row, Card, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import { Col, Row, Card, CardBody, CardFooter, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import classnames from 'classnames';
 import {AsyncTypeahead} from 'react-bootstrap-typeahead'
 
@@ -81,11 +81,11 @@ class Console extends Component {
       <Row>
         <Col>
           <Card>
-            <Card.Body className="console-container">
+            <CardBody className="console-container">
               {this.renderNav()}
               {this.renderTabs()}
-            </Card.Body>
-            {this.props.isEmbark() && <Card.Footer>
+            </CardBody>
+            {this.props.isEmbark() && <CardFooter>
               <AsyncTypeahead
 								autoFocus={true}
                 emptyLabel={false}
@@ -124,7 +124,7 @@ class Console extends Component {
                   </div>
                 )}
               />
-            </Card.Footer>}
+            </CardFooter>}
           </Card>
         </Col>
       </Row>
