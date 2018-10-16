@@ -17,6 +17,7 @@ function *doRequest(entity, serviceFn, payload) {
 
 function *searchExplorer(entity, payload) {
   let result;
+  const SEARCH_LIMIT = 100;
 
   // Accounts
   yield fetchAccounts({});
@@ -30,7 +31,7 @@ function *searchExplorer(entity, payload) {
   }
 
   // Blocks
-  yield fetchBlocks({limit: 100});
+  yield fetchBlocks({limit: SEARCH_LIMIT});
   const blocks = yield select(getBlocks);
   const intSearchValue = parseInt(payload.searchValue, 10);
   result = blocks.find(block => {
@@ -42,7 +43,7 @@ function *searchExplorer(entity, payload) {
   }
 
   // Transactions
-  yield fetchTransactions({blockLimit: 100});
+  yield fetchTransactions({blockLimit: SEARCH_LIMIT});
   const transactions = yield select(getTransactions);
   result = transactions.find(transaction => {
     return transaction.hash === payload.searchValue;

@@ -235,6 +235,9 @@ function searchResult(state = {}, action) {
   if (action.type === EXPLORER_SEARCH[SUCCESS]) {
     return action.searchResult;
   }
+  if (action.type === EXPLORER_SEARCH[REQUEST]) {
+    return {};
+  }
   return state;
 }
 
