@@ -4,7 +4,7 @@ import {Row, Col, Table} from "reactstrap";
 import JSONTree from 'react-json-tree';
 import {formatContractForDisplay} from '../utils/presentation';
 
-const Contract = ({contract, match}) => {
+const Contract = ({contract}) => {
   const contractDisplay = formatContractForDisplay(contract);
   return (
     <Row>
@@ -43,7 +43,7 @@ const Contract = ({contract, match}) => {
 };
 
 Contract.propTypes = {
-  contract: PropTypes.object,
+  contract: PropTypes.object
 };
 
 export default Contract;

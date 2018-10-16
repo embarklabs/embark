@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { UncontrolledDropdown, DropdownItem, DropdownMenu, DropdownToggle, Nav, Container } from 'reactstrap';
+import {LIGHT_THEME, DARK_THEME} from '../constants';
 
 import {
   AppAside,
@@ -27,7 +28,7 @@ const sidebarNavItems = {items: [
     {url: "/embark/explorer/overview", icon: "fa fa-signal", name: "Overview"},
     {url: "/embark/explorer/accounts", icon: "fa fa-users", name: "Accounts"},
     {url: "/embark/explorer/blocks", icon: "fa fa-stop", name: "Blocks"},
-    {url: "/embark/explorer/transactions", icon: "fa fa-tree", name: "Transactions"},
+    {url: "/embark/explorer/transactions", icon: "fa fa-tree", name: "Transactions"}
   ]},
   {name: "Fiddle", url: "/embark/fiddle", icon: "fa fa-codepen"},
   {name: "Documentation", url: "/embark/documentation", icon: "fa fa-book"},
@@ -35,7 +36,7 @@ const sidebarNavItems = {items: [
     {url: "/embark/utilities/converter", icon: "fa fa-plug", name: "Converter"},
     {url: "/embark/utilities/communication", icon: "fa fa-phone", name: "Communication"},
     {url: "/embark/utilities/ens", icon: "fa fa-circle", name: "ENS"}
-  ]},
+  ]}
 ]};
 
 const Layout = ({children, logout, credentials, location, changeTheme}) => (
@@ -80,8 +81,8 @@ const Layout = ({children, logout, credentials, location, changeTheme}) => (
           Theme
         </DropdownToggle>
         <DropdownMenu>
-          <DropdownItem onClick={() => changeTheme('dark')}>Dark</DropdownItem>
-          <DropdownItem onClick={() => changeTheme('light')}>Light</DropdownItem>
+          <DropdownItem onClick={() => changeTheme(DARK_THEME)}>Dark</DropdownItem>
+          <DropdownItem onClick={() => changeTheme(LIGHT_THEME)}>Light</DropdownItem>
         </DropdownMenu>
       </UncontrolledDropdown>
 

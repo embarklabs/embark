@@ -3,9 +3,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 
+// Icons
 import 'font-awesome/css/font-awesome.min.css';
+// Light theme
 import '@coreui/coreui/dist/css/coreui.min.css';
-import './css/coreui.css';
+// Dark theme
+import './css/coreui-dark.css';
+// Custom style
 import './index.css';
 
 import AppContainer from './containers/AppContainer';

@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux';
 import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE,
         FETCH_CREDENTIALS, UPDATE_BASE_ETHER, CHANGE_THEME, FETCH_THEME} from "../actions";
-import {EMBARK_PROCESS_NAME} from '../constants';
+import {EMBARK_PROCESS_NAME, DARK_THEME} from '../constants';
 
 const BN_FACTOR = 10000;
 const VOID_ADDRESS = '0x0000000000000000000000000000000000000000';
@@ -223,8 +223,8 @@ function baseEther(state = '1', action) {
   return state;
 }
 
-function theme(state='dark', action) {
-  if (action.type === CHANGE_THEME[REQUEST] || action.type === FETCH_THEME[SUCCESS]) {
+function theme(state=DARK_THEME, action) {
+  if (action.type === CHANGE_THEME[REQUEST] || (action.type === FETCH_THEME[SUCCESS] && action.theme)) {
     return action.theme;
   }
   return state;

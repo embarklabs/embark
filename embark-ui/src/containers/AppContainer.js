@@ -66,15 +66,18 @@ class AppContainer extends Component {
   }
 
   render() {
+    let content;
+    if (this.shouldRenderLogin()) {
+      content = <Login credentials={this.props.credentials} authenticate={this.props.authenticate} error={this.props.authenticationError} />;
+    } else {
+      content = <Layout location={this.props.location} logout={this.props.logout} credentials={this.props.credentials} changeTheme={(v) => this.changeTheme(v)}>
+        <React.Fragment>{routes}</React.Fragment>
+      </Layout>;
+    }
+
     return (
-      <div className={(this.props.theme || 'dark') + "-theme"}>
-        {this.shouldRenderLogin() ?
-          <Login credentials={this.props.credentials} authenticate={this.props.authenticate} error={this.props.authenticationError} />
-          :
-          <Layout location={this.props.location} logout={this.props.logout} credentials={this.props.credentials} changeTheme={(v) => this.changeTheme(v)}>
-            <React.Fragment>{routes}</React.Fragment>
-          </Layout>
-        }
+      <div className={(this.props.theme) + "-theme"}>
+        {content}
       </div>
     );
   }
@@ -93,7 +96,8 @@ AppContainer.propTypes = {
   fetchVersions: PropTypes.func,
   location: PropTypes.object,
   theme: PropTypes.string,
-  changeTheme: PropTypes.func
+  changeTheme: PropTypes.func,
+  fetchTheme: PropTypes.func
 };
 
 function mapStateToProps(state) {
