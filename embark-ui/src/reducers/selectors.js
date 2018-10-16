@@ -208,3 +208,19 @@ export function getVerificationError(state) {
 export function getBreakpointsByFilename(state, filename) {
   return state.breakpoints[filename] || [];
 }
+
+export function getDeploymentPipeline(state) {
+  return state.deploymentPipeline;
+}
+
+export function getWeb3(state) {
+  return state.web3.instance;
+}
+
+export function getWeb3GasEstimates(state) {
+  return state.web3.gasEstimates;
+}
+
+export function getWeb3Deployments(state) {
+  return state.web3.deployments;
+}

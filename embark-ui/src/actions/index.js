@@ -323,11 +323,33 @@ export const gasOracle = {
   failure: (error) => action(GAS_ORACLE[FAILURE], {error})
 };
 
+<<<<<<< HEAD
 export const EXPLORER_SEARCH = createRequestTypes('EXPLORER_SEARCH');
 export const explorerSearch = {
   request: (searchValue) => action(EXPLORER_SEARCH[REQUEST], {searchValue}),
   success: (searchResult) => action(EXPLORER_SEARCH[SUCCESS], {searchResult}),
   failure: (error) => action(EXPLORER_SEARCH[FAILURE], {error})
+=======
+export const WEB3_CONNECT = createRequestTypes('WEB3_CONNECT');
+export const web3Connect = {
+  request: () => action(WEB3_CONNECT[REQUEST]),
+  success: (web3) => action(WEB3_CONNECT[SUCCESS], {web3}),
+  failure: (error) => action(WEB3_CONNECT[FAILURE], {web3Error: error})
+};
+
+export const WEB3_DEPLOY = createRequestTypes('WEB3_DEPLOY');
+export const web3Deploy = {
+  request: (contract, args) => action(WEB3_DEPLOY[REQUEST], {contract, args}),
+  success: (receipt, payload) => action(WEB3_DEPLOY[SUCCESS], {contract: payload.contract, receipt}),
+  failure: (error, payload) => action(WEB3_DEPLOY[FAILURE], {web3Error: error, contract: payload.contract})
+};
+
+export const WEB3_ESTIMAGE_GAS = createRequestTypes('WEB3_ESTIMAGE_GAS');
+export const web3EstimateGas = {
+  request: (contract, args) => action(WEB3_ESTIMAGE_GAS[REQUEST], {contract, args}),
+  success: (gas, payload) => action(WEB3_ESTIMAGE_GAS[SUCCESS], {contract: payload.contract, gas}),
+  failure: (error, payload) => action(WEB3_ESTIMAGE_GAS[FAILURE], {web3Error: error, contract: payload.contract})
+>>>>>>> Adding option to switch deployment pipeline
 };
 
 // Web Socket
@@ -407,4 +429,10 @@ export function toggleBreakpoint(filename, lineNumber) {
   };
 }
 
-
+export const UPDATE_DEPLOYMENT_PIPELINE = 'UPDATE_DEPLOYMENT_PIPELINE';
+export function updateDeploymentPipeline(value) {
+  return {
+    type: UPDATE_DEPLOYMENT_PIPELINE,
+    payload: value
+  };
+}

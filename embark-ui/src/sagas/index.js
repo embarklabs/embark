@@ -1,9 +1,11 @@
 import * as actions from '../actions';
 import * as api from '../services/api';
 import * as storage from '../services/storage';
+import * as web3Service from '../services/web3';
 import {eventChannel} from 'redux-saga';
 import {all, call, fork, put, takeLatest, takeEvery, take, select, race} from 'redux-saga/effects';
-import {getCredentials} from '../reducers/selectors';
+import {getCredentials, getWeb3} from '../reducers/selectors';
+import { DEPLOYMENT_PIPELINES } from '../constants';
 import {searchExplorer} from './searchSaga';
 
 function *doRequest(entity, serviceFn, payload) {
@@ -12,7 +14,29 @@ function *doRequest(entity, serviceFn, payload) {
   if(response) {
     yield put(entity.success(response.data, payload));
   } else if (error) {
-    yield put(entity.failure(error));
+    yield put(entity.failure(error.message));
+  }
+}
+
+function *doWeb3Request(entity, serviceFn, payload) {
+  payload.web3 = yield select(getWeb3);
+  try {
+    const result = yield call(serviceFn, payload);
+    yield put(entity.success(result, payload));
+  } catch (error) {
+    yield put(entity.failure(error.message, payload));
+  }
+}
+
+function *web3Connect(action) {
+  if (action.payload !== DEPLOYMENT_PIPELINES.injectedWeb3) return;
+  if (yield select(getWeb3)) return;
+
+  try {
+    const web3 = yield call(web3Service.connect);
+    yield put(actions.web3Connect.success(web3));
+  } catch(error) {
+    yield put(actions.web3Connect.failure(error));
   }
 }
 
@@ -59,6 +83,9 @@ export const signMessage = doRequest.bind(null, actions.signMessage, api.signMes
 export const verifyMessage = doRequest.bind(null, actions.verifyMessage, api.verifyMessage);
 
 export const explorerSearch = searchExplorer.bind(null, actions.explorerSearch);
+
+export const web3Deploy = doWeb3Request.bind(null, actions.web3Deploy, web3Service.deploy);
+export const web3EstimateGas = doWeb3Request.bind(null, actions.web3EstimateGas, web3Service.estimateGas);
 
 
 export function *watchFetchTransaction() {
@@ -234,6 +261,18 @@ export function *watchVerifyMessage() {
   yield takeEvery(actions.VERIFY_MESSAGE[actions.REQUEST], verifyMessage);
 }
 
+export function *watchWeb3Deploy() {
+  yield takeEvery(actions.WEB3_DEPLOY[actions.REQUEST], web3Deploy);
+}
+
+export function *watchWeb3EstimateGas() {
+  yield takeEvery(actions.WEB3_ESTIMAGE_GAS[actions.REQUEST], web3EstimateGas);
+}
+
+export function *watchUpdateDeploymentPipeline() {
+  yield takeEvery(actions.UPDATE_DEPLOYMENT_PIPELINE, web3Connect);
+}
+
 function createChannel(socket) {
   return eventChannel(emit => {
     socket.onmessage = ((message) => {
@@ -405,6 +444,9 @@ export default function *root() {
     fork(watchChangeTheme),
     fork(watchListenGasOracle),
     fork(watchSignMessage),
-    fork(watchVerifyMessage)
+    fork(watchVerifyMessage),
+    fork(watchWeb3EstimateGas),
+    fork(watchWeb3Deploy),
+    fork(watchUpdateDeploymentPipeline)
   ]);
 }

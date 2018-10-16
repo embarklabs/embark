@@ -71,6 +71,7 @@
     "sw-precache-webpack-plugin": "0.11.4",
     "tabler-react": "^1.18.0",
     "url-loader": "0.6.2",
+    "web3": "^1.0.0-beta.36",
     "webpack": "3.8.1",
     "webpack-dev-server": "2.9.4",
     "webpack-manifest-plugin": "1.3.2",

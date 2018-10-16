@@ -1,8 +1,14 @@
 import {combineReducers} from 'redux';
+<<<<<<< HEAD
 import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE,
         FETCH_CREDENTIALS, UPDATE_BASE_ETHER, CHANGE_THEME, FETCH_THEME, EXPLORER_SEARCH,
         SIGN_MESSAGE, VERIFY_MESSAGE, TOGGLE_BREAKPOINT} from "../actions";
 import {EMBARK_PROCESS_NAME, DARK_THEME} from '../constants';
+=======
+import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE, CHANGE_THEME, FETCH_THEME,
+        FETCH_CREDENTIALS, UPDATE_BASE_ETHER, UPDATE_DEPLOYMENT_PIPELINE, WEB3_CONNECT, WEB3_DEPLOY, WEB3_ESTIMAGE_GAS} from "../actions";
+import {EMBARK_PROCESS_NAME, DARK_THEME, DEPLOYMENT_PIPELINES} from '../constants';
+>>>>>>> Adding option to switch deployment pipeline
 
 const BN_FACTOR = 10000;
 const VOID_ADDRESS = '0x0000000000000000000000000000000000000000';
@@ -234,6 +240,13 @@ function theme(state=DARK_THEME, action) {
   if (action.type === CHANGE_THEME[REQUEST] || (action.type === FETCH_THEME[SUCCESS] && action.theme)) {
     return action.theme;
   }
+  return state
+}
+
+function deploymentPipeline(state = DEPLOYMENT_PIPELINES.embark, action) {
+  if (action.type === UPDATE_DEPLOYMENT_PIPELINE) {
+    return action.payload;
+  }
   return state;
 }
 
@@ -320,6 +333,26 @@ function breakpoints(state = {}, action) {
   return state;
 }
 
+function web3(state = {deployments: {}, gasEstimates: {}}, action) {
+  if (action.type === WEB3_CONNECT[SUCCESS]) {
+    return {...state, instance: action.web3};
+  } else if (action.type === WEB3_DEPLOY[REQUEST]) {
+    return {...state, deployments: {...state['deployments'], [action.contract.className]: {running: true, error: null}}};
+  } else if (action.type === WEB3_DEPLOY[SUCCESS]){
+    return {...state, deployments: {...state['deployments'], [action.contract.className]: {...action.receipt, running: false, error: null}}};
+  } else if (action.type === WEB3_DEPLOY[FAILURE]){
+    return {...state, deployments: {...state['deployments'], [action.contract.className]: {error: action.web3Error, running: false}}};
+  } else if (action.type === WEB3_ESTIMAGE_GAS[REQUEST]){
+    return {...state, gasEstimates: {...state['gasEstimates'], [action.contract.className]: {running: true, error: null}}};
+  } else if (action.type === WEB3_ESTIMAGE_GAS[SUCCESS]){
+    return {...state, gasEstimates: {...state['gasEstimates'], [action.contract.className]: {gas: action.gas, running: false, error: null}}};
+  } else if (action.type === WEB3_ESTIMAGE_GAS[FAILURE]){
+    return {...state, gasEstimates: {...state['gasEstimates'], [action.contract.className]: {error: action.web3Error, running: false}}};
+  }
+
+  return state
+}
+
 const rootReducer = combineReducers({
   entities,
   loading,
@@ -332,7 +365,9 @@ const rootReducer = combineReducers({
   searchResult,
   messageSignature,
   messageVerification,
-  breakpoints
+  breakpoints,
+  deploymentPipeline,
+  web3
 });
 
 export default rootReducer;
