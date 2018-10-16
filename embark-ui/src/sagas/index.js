@@ -32,8 +32,9 @@ function *searchExplorer(entity, payload) {
   // Blocks
   yield fetchBlocks({limit: 100});
   const blocks = yield select(getBlocks);
+  const intSearchValue = parseInt(payload.searchValue, 10);
   result = blocks.find(block => {
-    return block.hash === payload.searchValue;
+    return block.hash === payload.searchValue || block.number === intSearchValue;
   });
 
   if (result) {

@@ -231,7 +231,7 @@ function theme(state=DARK_THEME, action) {
   return state;
 }
 
-function searchResult(state = '', action) {
+function searchResult(state = {}, action) {
   if (action.type === EXPLORER_SEARCH[SUCCESS]) {
     return action.searchResult;
   }

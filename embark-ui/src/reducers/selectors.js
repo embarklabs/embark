@@ -172,3 +172,7 @@ export function getCurrentFile(state) {
 export function getBaseEther(state) {
   return state.baseEther;
 }
+
+export function searchResult(state) {
+  return state.searchResult;
+}
