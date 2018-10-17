@@ -5,8 +5,8 @@ import {Link} from 'react-router-dom';
 import {formatContractForDisplay} from '../utils/presentation';
 
 const ContractsList = ({contracts}) => (
-  <Table responsive className="text-nowrap">
-    <thead>
+  <Table hover responsive className="table-outline mb-0 d-none d-sm-table text-nowrap">
+    <thead className="thead-light">
       <tr>
         <th>Name</th>
         <th>Address</th>

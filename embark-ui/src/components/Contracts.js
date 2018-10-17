@@ -1,13 +1,23 @@
 import PropTypes from "prop-types";
 import React from 'react';
-import {Row, Col} from "reactstrap";
+import {Row, Col, Card, CardBody, CardTitle} from "reactstrap";
 import ContractsList from './ContractsList';
 
 const Contracts = ({contracts, title = "Contracts"}) => (
   <Row>
     <Col>
-      <h1>{title}</h1>
-        <ContractsList contracts={contracts}></ContractsList>
+      <Card>
+        <CardBody>
+          <Row>
+            <Col sm="5">
+              <CardTitle className="mb-0">Contracts</CardTitle>
+            </Col>
+          </Row>
+          <div style={{ marginTop: 40 + 'px' }}>
+           <ContractsList contracts={contracts}></ContractsList>
+          </div>
+        </CardBody>
+      </Card>
     </Col>
   </Row>
 );

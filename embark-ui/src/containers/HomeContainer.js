@@ -3,6 +3,12 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
 import {
+  Card,
+  CardHeader,
+  CardBody
+} from 'reactstrap';
+
+import {
   contracts as contractsAction,
   commands as commandsAction,
   commandSuggestions as commandSuggestionsAction,
@@ -53,25 +59,38 @@ class HomeContainer extends Component {
   render() {
     return (
       <React.Fragment>
-        <h1 className="my-5">Dashboard</h1>
         <DataWrapper shouldRender={this.props.processes.length > 0 } {...this.props} render={({processes}) => (
           <Processes processes={processes} />
         )} />
         <DataWrapper shouldRender={this.props.contracts.length > 0} {...this.props} render={({contracts}) => (
-          <div style={{maxHeight: '227px', marginBottom: '1.5rem', overflow: 'auto'}}>
-            <ContractsList contracts={contracts} />
-          </div>
+          <Card>
+            <CardHeader>
+              Deployed Contracts
+            </CardHeader>
+            <CardBody>
+              <div style={{maxHeight: '227px', marginBottom: '1.5rem', overflow: 'auto'}}>
+                <ContractsList contracts={contracts} />
+              </div>
+            </CardBody>
+          </Card>
         )} />
 
         <DataWrapper shouldRender={this.props.processes.length > 0 } {...this.props} render={({processes, postCommand, postCommandSuggestions, processLogs, commandSuggestions}) => (
-          <Console activeProcess={this.state.activeProcess}
-                   postCommand={postCommand}
-                   postCommandSuggestions={postCommandSuggestions}
-                   processes={processes}
-                   processLogs={processLogs}
-                   commandSuggestions={commandSuggestions}
-                   isEmbark={() => this.isEmbark}
-                   updateTab={processName => this.updateTab(processName)} />
+          <Card>
+            <CardHeader>
+              Logs & Console
+            </CardHeader>
+            <CardBody>
+              <Console activeProcess={this.state.activeProcess}
+                       postCommand={postCommand}
+                       postCommandSuggestions={postCommandSuggestions}
+                       processes={processes}
+                       processLogs={processLogs}
+                       commandSuggestions={commandSuggestions}
+                       isEmbark={() => this.isEmbark}
+                       updateTab={processName => this.updateTab(processName)} />
+            </CardBody>
+          </Card>
         )} />
       </React.Fragment>
     );
