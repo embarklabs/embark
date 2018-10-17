@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, NavLink, Container } from 'reactstrap';
 import {LIGHT_THEME, DARK_THEME} from '../constants';
 import FontAwesome from 'react-fontawesome';
+import {explorerSearch} from "../actions";
 
 import {
   AppAside,
@@ -18,6 +19,8 @@ import {
   AppNavbarBrand,
   AppHeaderDropdown
 } from '@coreui/react';
+
+import SearchBar from './SearchBar';
 
 import logo from '../images/logo-new.svg';
 
@@ -41,6 +44,10 @@ const sidebarNavItems = {items: [
   ]}
 ]};
 
+function searchTheExplorer(value) {
+  // TODO: search
+}
+
 const Layout = ({children, logout, credentials, location, toggleTheme, currentTheme}) => (
   <div className="app animated fadeIn">
     <AppHeader fixed>
@@ -63,6 +70,7 @@ const Layout = ({children, logout, credentials, location, toggleTheme, currentTh
         })}
       </Nav>
       <Nav className="ml-auto" navbar>
+        <SearchBar searchSubmit={searchValue => searchTheExplorer(searchValue)}/>
         <AppHeaderDropdown direction="down">
           <DropdownToggle nav>
             <i className="fa fa-user fa-3x" />

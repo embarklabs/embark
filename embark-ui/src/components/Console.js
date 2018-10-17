@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import Convert from 'ansi-to-html';
 
-import { Col, Row, Card, CardBody, CardFooter, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import { Col, Row,  TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import classnames from 'classnames';
 import {AsyncTypeahead} from 'react-bootstrap-typeahead';
 import ReactJson from 'react-json-view';
@@ -102,22 +102,7 @@ class Console extends Component {
                 })
               }
             </Logs>
-          </TabPane>
-        ))}
-      </TabContent>
-    );
-  }
-
-  render() {
-    return (
-      <Row>
-        <Col>
-          <Card>
-            <CardBody className="console-container">
-              {this.renderNav()}
-              {this.renderTabs()}
-            </CardBody>
-            {this.props.isEmbark() && <CardFooter>
+            {process.name === "embark" &&
               <AsyncTypeahead
                 autoFocus={true}
                 emptyLabel={false}
@@ -156,8 +141,20 @@ class Console extends Component {
                   </div>
                 )}
               />
-            </CardFooter>}
-          </Card>
+            }
+
+          </TabPane>
+        ))}
+      </TabContent>
+    );
+  }
+
+  render() {
+    return (
+      <Row>
+        <Col>
+          {this.renderNav()}
+          {this.renderTabs()}
         </Col>
       </Row>
     );

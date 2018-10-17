@@ -34,11 +34,11 @@ class SearchBar extends React.Component {
   render() {
     return (
       <Row>
-        <Col>
+        <Col className="col-sm-12">
           <Form inline className="search-bar float-right my-2">
             <FormGroup>
-              <Input type="text" name="search-bar" placeholder="Search" onChange={(e) => this.onChange(e)}
-                     value={this.state.searchValue} onKeyPress={e => this.onKeyPress(e)}/>
+              <Input type="text" name="search-bar" placeholder="Search by Address / Txhash / Block" onChange={(e) => this.onChange(e)}
+                     value={this.state.searchValue} onKeyPress={e => this.onKeyPress(e)} style={{"border": "1px solid #e4e7ea", "width": "330px"}} />
               <Button color="secondary" onClick={(e) => this.onSubmit(e)}>
                 <FontAwesome name="search"/>
               </Button>

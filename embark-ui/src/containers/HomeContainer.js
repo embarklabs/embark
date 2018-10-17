@@ -78,7 +78,7 @@ class HomeContainer extends Component {
         <DataWrapper shouldRender={this.props.processes.length > 0 } {...this.props} render={({processes, postCommand, postCommandSuggestions, processLogs, commandSuggestions}) => (
           <Card>
             <CardHeader>
-              Logs & Console
+              Console
             </CardHeader>
             <CardBody>
               <Console activeProcess={this.state.activeProcess}
