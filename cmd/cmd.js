@@ -330,33 +330,33 @@ class Cmd {
       .option('--framework <framework>', 'UI framework to use. (default: react)')
       .option('--contract-language <language>', 'Language used for the smart contract generation (default: solidity)')
       .option('--overwrite', 'Overwrite existing files. (default: false)')
-
-      .action(function(contract, fields, options){
-        if(contract === undefined){
+      .description(__('Generates a contract and a function tester for you\nExample: ContractName field1:uint field2:address --contract-language solidity --framework react'))
+      .action(function(contract, fields, options) {
+        if (contract === undefined) {
           console.log("contract name is required");
           process.exit(0);
         }
-        
-        const fieldMapping = {};
-        if(fields.length > 0){
+
+        let fieldMapping = {};
+        if (fields.length > 0) {
           const typeRegex = /^(u?int[0-9]{0,3}(\[\])?|string|bool|address|bytes[0-9]{0,3})(\[\])?$/;
           const varRegex = /^[a-zA-Z][a-zA-Z0-9_]*$/;
-
-          fields.forEach(curr => {
+          fieldMapping = fields.reduce((acc, curr) => {
             const c = curr.split(':');
 
-            if(!varRegex.test(c[0])){
+            if (!varRegex.test(c[0])) {
               console.log("Invalid variable name: " + c[0]);
-              process.exit(0);
+              process.exit(1);
             }
 
-            if(!typeRegex.test(c[1])){
+            if (!typeRegex.test(c[1])) {
               console.log("Invalid datatype: " + c[1] + " - The dApp generator might not support this type at the moment");
-              process.exit(0);
+              process.exit(1);
             }
 
-            fieldMapping[c[0]] = c[1];
-          });
+            acc[c[0]] = c[1];
+            return acc;
+          }, {});
         }
 
         checkDeps();
