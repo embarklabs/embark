@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, NavLink, Container } from 'reactstrap';
 import {LIGHT_THEME, DARK_THEME} from '../constants';
 import FontAwesome from 'react-fontawesome';
-import {explorerSearch} from "../actions";
 
 import {
   AppAside,

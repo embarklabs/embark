@@ -4,7 +4,6 @@ import {connect} from 'react-redux';
 
 import {
   Card,
-  CardHeader,
   CardTitle,
   CardBody
 } from 'reactstrap';

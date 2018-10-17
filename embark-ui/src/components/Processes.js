@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React from 'react';
-import {Row, Col, Card} from 'reactstrap';
+import {Row, Col} from 'reactstrap';
 import classNames from 'classnames';
 import Widget02 from './Widget02';
 
