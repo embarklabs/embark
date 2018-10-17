@@ -106,9 +106,9 @@ class Web3Contract extends React.Component {
   }
 
   render() {
-    const constructor = findConstructor(this.props.contract.abiDefinition);
-    const isInterface = !constructor;
-    const argumentsRequired = constructor && constructor.inputs.length > 0;
+    const abiConstructor = findConstructor(this.props.contract.abiDefinition);
+    const isInterface = !abiConstructor;
+    const argumentsRequired = abiConstructor && abiConstructor.inputs.length > 0;
     return (
       <LayoutContract contract={this.props.contract}>
         <Row>
@@ -121,7 +121,7 @@ class Web3Contract extends React.Component {
                   <strong>Arguments:</strong>
                 </CardHeader>
                 <CardBody>
-                  {constructor.inputs.map(input => (
+                  {abiConstructor.inputs.map(input => (
                     <FormGroup key={input.name}>
                       <Label htmlFor={input.name}>{input.name}</Label>
                       <Input id={input.name} placeholder={input.name} onChange={e => this.handleOnChange(e, input.name)} />
@@ -227,9 +227,9 @@ const Contract = ({web3, contract, deploymentPipeline, web3Deploy, web3EstimateG
   const deployment = web3Deployments[contract.className];
   const gasEstimate = web3GasEstimates[contract.className];
   switch(deploymentPipeline) {
-    case 'embark':
+    case DEPLOYMENT_PIPELINES.embark:
       return <EmbarkContract contract={contract} />;
-    case 'injectedWeb3':
+    case DEPLOYMENT_PIPELINES.injectedWeb3:
       return <Web3Contract web3={web3} 
                            deployment={deployment}
                            gasEstimate={gasEstimate}
