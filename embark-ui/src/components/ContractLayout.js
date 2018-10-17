@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React from 'react';
-import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import { TabContent, TabPane, Nav, NavItem, NavLink, Card, CardBody, CardTitle } from 'reactstrap';
 import classnames from 'classnames';
 
 import ContractOverview from '../components/ContractOverview';
@@ -27,43 +27,48 @@ class ContractLayout extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Nav tabs>
-          <NavItem>
-            <NavLink
-              className={classnames({ active: this.state.activeTab === '1' })}
-              onClick={() => { this.toggle('1'); }}
-            >
-              Overview
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink
-              className={classnames({ active: this.state.activeTab === '2' })}
-              onClick={() => { this.toggle('2'); }}
-            >
-              Functions
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink
-              className={classnames({ active: this.state.activeTab === '3' })}
-              onClick={() => { this.toggle('3'); }}
-            >
-              Logger
-            </NavLink>
-          </NavItem>
-        </Nav>
-        <TabContent activeTab={this.state.activeTab}>
-          <TabPane tabId="1">
-            <ContractOverview contract={this.props.contract} />
-          </TabPane>
-          <TabPane tabId="2">
-            <ContractFunctionsContainer contract={this.props.contract} />
-          </TabPane>
-          <TabPane tabId="3">
-            <ContractLoggerContainer contract={this.props.contract} />
-          </TabPane>
-        </TabContent>
+        <Card>
+          <CardBody>
+            <CardTitle>{this.props.contract.className}</CardTitle>
+            <Nav tabs>
+              <NavItem>
+                <NavLink
+                  className={classnames({ active: this.state.activeTab === '1' })}
+                  onClick={() => { this.toggle('1'); }}
+                >
+                  Overview
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  className={classnames({ active: this.state.activeTab === '2' })}
+                  onClick={() => { this.toggle('2'); }}
+                >
+                  Functions
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  className={classnames({ active: this.state.activeTab === '3' })}
+                  onClick={() => { this.toggle('3'); }}
+                >
+                  Logger
+                </NavLink>
+              </NavItem>
+            </Nav>
+            <TabContent activeTab={this.state.activeTab}>
+              <TabPane tabId="1">
+                <ContractOverview contract={this.props.contract} />
+              </TabPane>
+              <TabPane tabId="2">
+                <ContractFunctionsContainer contract={this.props.contract} />
+              </TabPane>
+              <TabPane tabId="3">
+                <ContractLoggerContainer contract={this.props.contract} />
+              </TabPane>
+            </TabContent>
+          </CardBody>
+        </Card>
       </React.Fragment>
     )
   }

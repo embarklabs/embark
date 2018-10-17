@@ -114,7 +114,6 @@ const ContractFunctions = (props) => {
 
   return (
     <Row>
-      <Col xs={12}><h1>{contractProfile.name} Functions</h1></Col>
       {contractProfile.methods
         .filter((method) => {
           return props.onlyConstructor ? method.type === 'constructor' : method.type !== 'constructor';

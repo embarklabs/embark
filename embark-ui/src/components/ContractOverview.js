@@ -9,7 +9,6 @@ const Contract = ({contract}) => {
   return (
     <Row>
       <Col>
-        <h1>{contract.className} Overview</h1>
         <Table
           responsive
           className="text-nowrap"
