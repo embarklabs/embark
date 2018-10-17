@@ -1,0 +1,14 @@
+.search-bar {
+  margin-top: 10px;
+}
+
+.search-bar input {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border: 0;
+}
+
+.search-bar button {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}

@@ -4,7 +4,7 @@ import Convert from 'ansi-to-html';
 
 import { Col, Row, Card, CardBody, CardFooter, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import classnames from 'classnames';
-import {AsyncTypeahead} from 'react-bootstrap-typeahead'
+import {AsyncTypeahead} from 'react-bootstrap-typeahead';
 import ReactJson from 'react-json-view';
 
 import Logs from "./Logs";
@@ -23,7 +23,7 @@ class Console extends Component {
     event.preventDefault();
     this.props.postCommand(this.state.value);
     this.setState({value: ''});
-    this.typeahead.getInstance().clear()
+    this.typeahead.getInstance().clear();
   }
 
   handleChange(value, cb) {
@@ -54,7 +54,7 @@ class Console extends Component {
         ))}
 
       </Nav>
-    )
+    );
   }
 
   isJsonObject(item) {
@@ -119,7 +119,7 @@ class Console extends Component {
             </CardBody>
             {this.props.isEmbark() && <CardFooter>
               <AsyncTypeahead
-								autoFocus={true}
+                autoFocus={true}
                 emptyLabel={false}
                 labelKey="value"
                 multiple={false}
@@ -128,7 +128,7 @@ class Console extends Component {
                 onInputChange={(text) => this.handleChange(text)}
                 onChange={(text) => {
                   if (text && text[0]) {
-                    this.handleChange(text[0].value)
+                    this.handleChange(text[0].value);
                   }
                 }}
                 ref={(typeahead) => this.typeahead = typeahead}
@@ -136,12 +136,12 @@ class Console extends Component {
                 onKeyDown={(e) => {
                   if (e.keyCode === 13) {
                     this.handleChange(e.target.value, () => {
-                      this.handleSubmit(e)
-                    })
+                      this.handleSubmit(e);
+                    });
                   }
                 }}
                 onSearch={(value) => {
-									this.props.postCommandSuggestions(value)
+                  this.props.postCommandSuggestions(value);
                 }}
                 filterBy={['value', 'description']}
                 maxHeight="200px"

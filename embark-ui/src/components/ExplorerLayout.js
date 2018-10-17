@@ -14,6 +14,7 @@ import BlocksContainer from '../containers/BlocksContainer';
 import BlockContainer from '../containers/BlockContainer';
 import TransactionsContainer from '../containers/TransactionsContainer';
 import TransactionContainer from '../containers/TransactionContainer';
+import SearchBar from '../components/SearchBar';
 
 const groupItems = [
   {to: "/embark/explorer/overview", icon: "signal", value: "Overview"},
