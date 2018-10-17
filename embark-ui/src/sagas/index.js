@@ -3,7 +3,8 @@ import * as api from '../services/api';
 import * as storage from '../services/storage';
 import {eventChannel} from 'redux-saga';
 import {all, call, fork, put, takeLatest, takeEvery, take, select, race} from 'redux-saga/effects';
-import {getCredentials, getBlocks, getTransactions, getAccounts} from '../reducers/selectors';
+import {getCredentials} from '../reducers/selectors';
+import {searchExplorer} from './searchSaga';
 
 function *doRequest(entity, serviceFn, payload) {
   payload.credentials = yield select(getCredentials);
@@ -13,47 +14,6 @@ function *doRequest(entity, serviceFn, payload) {
   } else if (error) {
     yield put(entity.failure(error));
   }
-}
-
-function *searchExplorer(entity, payload) {
-  let result;
-  const SEARCH_LIMIT = 100;
-
-  // Accounts
-  yield fetchAccounts({});
-  const accounts = yield select(getAccounts);
-  result = accounts.find(account => {
-    return account.address === payload.searchValue;
-  });
-
-  if (result) {
-    return yield put(entity.success(result));
-  }
-
-  // Blocks
-  yield fetchBlocks({limit: SEARCH_LIMIT});
-  const blocks = yield select(getBlocks);
-  const intSearchValue = parseInt(payload.searchValue, 10);
-  result = blocks.find(block => {
-    return block.hash === payload.searchValue || block.number === intSearchValue;
-  });
-
-  if (result) {
-    return yield put(entity.success(result));
-  }
-
-  // Transactions
-  yield fetchTransactions({blockLimit: SEARCH_LIMIT});
-  const transactions = yield select(getTransactions);
-  result = transactions.find(transaction => {
-    return transaction.hash === payload.searchValue;
-  });
-
-  if (result) {
-    return yield put(entity.success(result));
-  }
-
-  return yield put(entity.success({error: 'No result found in transactions, accounts or blocks'}));
 }
 
 export const fetchPlugins = doRequest.bind(null, actions.plugins, api.fetchPlugins);
@@ -85,7 +45,6 @@ export const postFile = doRequest.bind(null, actions.saveFile, api.postFile);
 export const deleteFile = doRequest.bind(null, actions.removeFile, api.deleteFile);
 export const fetchEthGas = doRequest.bind(null, actions.gasOracle, api.getEthGasAPI);
 export const authenticate = doRequest.bind(null, actions.authenticate, api.authenticate);
-export const explorerSearch = searchExplorer.bind(null, actions.explorerSearch);
 
 export const fetchCurrentFile = doRequest.bind(null, actions.currentFile, storage.fetchCurrentFile);
 export const postCurrentFile = doRequest.bind(null, actions.saveCurrentFile, storage.postCurrentFile);
@@ -95,6 +54,8 @@ export const saveCredentials = doRequest.bind(null, actions.saveCredentials, sto
 export const logout = doRequest.bind(null, actions.logout, storage.logout);
 export const changeTheme = doRequest.bind(null, actions.changeTheme, storage.changeTheme);
 export const fetchTheme = doRequest.bind(null, actions.fetchTheme, storage.fetchTheme);
+
+export const explorerSearch = searchExplorer.bind(null, actions.explorerSearch);
 
 
 export function *watchFetchTransaction() {
