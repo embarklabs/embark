@@ -1,11 +1,13 @@
-.search-bar input {
+#root .search-bar input {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   border: 0;
   outline: none;
+  box-shadow: none;
 }
 
-.search-bar button {
+#root .search-bar button {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+  box-shadow: none;
 }

@@ -141,3 +141,8 @@ input[type="button"] {
     width: 100%;
   }
 }
+
+.search-bar button {
+  background-color: $gray-500;
+  border-color: $gray-500;
+}
