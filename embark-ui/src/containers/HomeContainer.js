@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {
   Card,
   CardHeader,
+  CardTitle,
   CardBody
 } from 'reactstrap';
 
@@ -62,25 +63,11 @@ class HomeContainer extends Component {
         <DataWrapper shouldRender={this.props.services.length > 0 } {...this.props} render={({services}) => (
           <Processes processes={services} />
         )} />
-        <DataWrapper shouldRender={this.props.contracts.length > 0} {...this.props} render={({contracts}) => (
-          <Card>
-            <CardHeader>
-              Deployed Contracts
-            </CardHeader>
-            <CardBody>
-              <div style={{maxHeight: '227px', marginBottom: '1.5rem', overflow: 'auto'}}>
-                <ContractsList contracts={contracts} />
-              </div>
-            </CardBody>
-          </Card>
-        )} />
 
         <DataWrapper shouldRender={this.props.processes.length > 0 } {...this.props} render={({processes, postCommand, postCommandSuggestions, processLogs, commandSuggestions}) => (
           <Card>
-            <CardHeader>
-              Console
-            </CardHeader>
             <CardBody>
+              <CardTitle>Console</CardTitle>
               <Console activeProcess={this.state.activeProcess}
                        postCommand={postCommand}
                        postCommandSuggestions={postCommandSuggestions}
@@ -92,6 +79,19 @@ class HomeContainer extends Component {
             </CardBody>
           </Card>
         )} />
+
+        <DataWrapper shouldRender={this.props.contracts.length > 0} {...this.props} render={({contracts}) => (
+          <Card>
+            <CardBody>
+              <CardTitle>Deployed Contracts</CardTitle>
+              <div style={{marginBottom: '1.5rem', overflow: 'auto'}}>
+                <ContractsList contracts={contracts} />
+              </div>
+            </CardBody>
+          </Card>
+        )} />
+
+
       </React.Fragment>
     );
   }

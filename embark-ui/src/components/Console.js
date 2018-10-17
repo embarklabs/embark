@@ -42,7 +42,7 @@ class Console extends Component {
   renderNav() {
     return (
       <Nav tabs>
-        {this.props.processes.map((process) => (
+        {this.props.processes.filter((p) => ["embark", "blockchain"].indexOf(p.name) >= 0).map((process) => (
           <NavItem key={process.name}>
             <NavLink
               className={classnames({ active: this.state.activeTab === process.name })}
@@ -79,7 +79,7 @@ class Console extends Component {
 
     return (
       <TabContent activeTab={this.state.activeTab}>
-        {processes.map(process => (
+        {processes.filter((p) => ["embark", "blockchain"].indexOf(p.name) >= 0).map(process => (
           <TabPane key={process.name} tabId={process.name}>
             <Logs>
               {processLogs

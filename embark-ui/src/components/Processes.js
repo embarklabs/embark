@@ -18,8 +18,6 @@ function iconClasses(state){
   });
 }
 
-// processList.push({state: service.status, name: serviceName, description: service.name})
-
 const Process = ({process}) => (
   <Col sm={6} lg={2}>
     <Widget02 header={process.name} mainText={process.description} icon={iconClasses(process.state)} color={colorClasses(process.state)} variant="1" />
