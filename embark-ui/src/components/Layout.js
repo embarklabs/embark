@@ -39,7 +39,8 @@ const sidebarNavItems = {items: [
     {url: "/embark/utilities/converter", icon: "fa fa-plug", name: "Converter"},
     {url: "/embark/utilities/communication", icon: "fa fa-phone", name: "Communication"},
     {url: "/embark/utilities/ens", icon: "fa fa-circle", name: "ENS"},
-    {url: "/embark/utilities/sign-and-verify", icon: "fa fa-edit", name: "Sign & Verify"}
+    {url: "/embark/utilities/sign-and-verify", icon: "fa fa-edit", name: "Sign & Verify"},
+    {url: "/embark/utilities/transaction-decoder", icon: "fa fa-edit", name: "Transaction Decoder"}
   ]}
 ]};
 
