@@ -56,6 +56,7 @@ class AppContainer extends Component {
 
     if (this.props.credentials.authenticated && !this.props.initialized) {
       this.props.fetchProcesses();
+      this.props.fetchServices();
       this.props.fetchPlugins();
     }
   }
@@ -100,6 +101,7 @@ AppContainer.propTypes = {
   fetchCredentials: PropTypes.func,
   initBlockHeader: PropTypes.func,
   fetchProcesses: PropTypes.func,
+  fetchServices: PropTypes.func,
   fetchPlugins: PropTypes.func,
   fetchVersions: PropTypes.func,
   location: PropTypes.object,
@@ -124,6 +126,7 @@ export default withRouter(connect(
     logout: logout.request,
     fetchCredentials: fetchCredentials.request,
     fetchProcesses: processesAction.request,
+    fetchServices: processesAction.request,
     fetchVersions: versionsAction.request,
     fetchPlugins: pluginsAction.request,
     changeTheme: changeTheme.request,

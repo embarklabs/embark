@@ -108,6 +108,13 @@ export const processes = {
   failure: (error) => action(PROCESSES[FAILURE], {error})
 };
 
+export const SERVICES = createRequestTypes('SERVICES');
+export const services = {
+  request: () => action(SERVICES[REQUEST]),
+  success: (services) => action(SERVICES[SUCCESS], {services}),
+  failure: (error) => action(SERVICES[FAILURE], {error})
+};
+
 export const COMMANDS = createRequestTypes('COMMANDS');
 export const commands = {
   post: (command) => action(COMMANDS[REQUEST], {command}),

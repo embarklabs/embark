@@ -87,6 +87,10 @@ export function fetchProcesses() {
   return get('/processes', ...arguments);
 }
 
+export function fetchServices() {
+  return get('/services', ...arguments);
+}
+
 export function fetchProcessLogs(payload) {
   return get(`/process-logs/${payload.processName}`, {params: payload, credentials: payload.credentials});
 }

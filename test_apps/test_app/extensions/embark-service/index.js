@@ -1,9 +1,9 @@
 const Haml = require('haml');
 
 module.exports = function (embark) {
-  embark.registerServiceCheck('PluginService', function (cb) {
-    cb({name: "ServiceName", status: "on"});
-  });
+  // embark.registerServiceCheck('PluginService', function (cb) {
+  //   cb({name: "ServiceName", status: "on"});
+  // });
 
   embark.registerPipeline((embark.pluginConfig.files || ['**/*.haml']), function (opts) {
     return Haml.render(opts.source);

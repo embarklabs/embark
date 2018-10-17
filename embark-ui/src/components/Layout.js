@@ -73,7 +73,7 @@ const Layout = ({children, logout, credentials, location, toggleTheme, currentTh
         <SearchBar searchSubmit={searchValue => searchTheExplorer(searchValue)}/>
         <AppHeaderDropdown direction="down">
           <DropdownToggle nav>
-            <i className="fa fa-user fa-3x" />
+            <i className="icon-settings" />
           </DropdownToggle>
           <DropdownMenu right style={{ right: 'auto' }}>
             <DropdownItem className="text-capitalize" onClick={() => toggleTheme()}>

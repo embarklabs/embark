@@ -22,7 +22,7 @@ import Processes from '../components/Processes';
 import Console from '../components/Console';
 import {EMBARK_PROCESS_NAME, LOG_LIMIT} from '../constants';
 import ContractsList from '../components/ContractsList';
-import {getContracts, getProcesses, getProcessLogs, getCommandSuggestions} from "../reducers/selectors";
+import {getContracts, getProcesses, getProcessLogs, getServices, getCommandSuggestions} from "../reducers/selectors";
 
 class HomeContainer extends Component {
   constructor(props) {
@@ -59,8 +59,8 @@ class HomeContainer extends Component {
   render() {
     return (
       <React.Fragment>
-        <DataWrapper shouldRender={this.props.processes.length > 0 } {...this.props} render={({processes}) => (
-          <Processes processes={processes} />
+        <DataWrapper shouldRender={this.props.services.length > 0 } {...this.props} render={({services}) => (
+          <Processes processes={services} />
         )} />
         <DataWrapper shouldRender={this.props.contracts.length > 0} {...this.props} render={({contracts}) => (
           <Card>
@@ -108,6 +108,7 @@ HomeContainer.propTypes = {
 function mapStateToProps(state) {
   return {
     processes: getProcesses(state),
+    services: getServices(state),
     contracts: getContracts(state),
     error: state.errorMessage,
     processLogs: getProcessLogs(state),

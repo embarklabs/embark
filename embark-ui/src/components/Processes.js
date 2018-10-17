@@ -2,33 +2,27 @@ import PropTypes from "prop-types";
 import React from 'react';
 import {Row, Col, Card} from 'reactstrap';
 import classNames from 'classnames';
+import Widget02 from './Widget02';
 
-function badgeClasses(state){
-  return classNames('badge p-1 mr-3', {
-    'bg-success': state === 'running',
-    'bg-danger': state !== 'running'
+function colorClasses(state){
+  return classNames('', {
+    'success': state === 'on',
+    'danger': state !== 'on'
   });
 }
 
 function iconClasses(state){
   return classNames('fa', {
-    'fa-check': state === 'running',
-    'fa-x': state !== 'running'
+    'fa-check': state === 'on',
+    'fa-times': state !== 'on'
   });
 }
 
+// processList.push({state: service.status, name: serviceName, description: service.name})
+
 const Process = ({process}) => (
-  <Col sm={6} lg={3}>
-    <Card className="p-3">
-      <div className="d-flex align-items-center">
-        <span className={badgeClasses(process.state)}>
-          <i className={iconClasses(process.state)}></i>
-        </span>
-        <div>
-          <h4 className="text-capitalize m-0">{process.name} ({process.state})</h4>
-        </div>
-      </div>
-    </Card>
+  <Col sm={6} lg={2}>
+    <Widget02 header={process.name} mainText={process.description} icon={iconClasses(process.state)} color={colorClasses(process.state)} variant="1" />
   </Col>
 );
 

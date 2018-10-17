@@ -25,6 +25,7 @@ export const fetchAccounts = doRequest.bind(null, actions.accounts, api.fetchAcc
 export const fetchBlocks = doRequest.bind(null, actions.blocks, api.fetchBlocks);
 export const fetchTransactions = doRequest.bind(null, actions.transactions, api.fetchTransactions);
 export const fetchProcesses = doRequest.bind(null, actions.processes, api.fetchProcesses);
+export const fetchServices = doRequest.bind(null, actions.services, api.fetchServices);
 export const postCommand = doRequest.bind(null, actions.commands, api.postCommand);
 export const postCommandSuggestions = doRequest.bind(null, actions.commandSuggestions, api.postCommandSuggestions);
 export const fetchProcessLogs = doRequest.bind(null, actions.processLogs, api.fetchProcessLogs);
@@ -86,6 +87,10 @@ export function *watchFetchAccounts() {
 
 export function *watchFetchProcesses() {
   yield takeEvery(actions.PROCESSES[actions.REQUEST], fetchProcesses);
+}
+
+export function *watchFetchServices() {
+  yield takeLatest(actions.PROCESSES[actions.REQUEST], fetchServices);
 }
 
 export function *watchPostCommand() {
@@ -357,6 +362,7 @@ export default function *root() {
     fork(watchFetchAccounts),
     fork(watchFetchAccount),
     fork(watchFetchProcesses),
+    fork(watchFetchServices),
     fork(watchFetchProcessLogs),
     fork(watchFetchContractLogs),
     fork(watchFetchContractEvents),

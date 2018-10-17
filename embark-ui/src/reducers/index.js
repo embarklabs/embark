@@ -14,6 +14,7 @@ const entitiesDefaultState = {
   blocks: [],
   transactions: [],
   processes: [],
+  services: [],
   processLogs: [],
   commandSuggestions: [],
   contracts: [],

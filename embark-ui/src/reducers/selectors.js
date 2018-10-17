@@ -52,6 +52,10 @@ export function getProcesses(state) {
   return state.entities.processes;
 }
 
+export function getServices(state) {
+  return state.entities.services;
+}
+
 export function getProcessLogs(state) {
   return state.entities.processLogs;
 }
