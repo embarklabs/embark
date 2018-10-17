@@ -66,6 +66,14 @@ class Console extends Component {
     }
   }
 
+  logClassName(item) {
+    return classnames('m-0', {
+      'text-info': item.logLevel === 'debug',
+      'text-danger': item.logLevel === 'error',
+      'text-warning': item.logLevel === 'warning'
+    });
+  }
+
   renderTabs() {
     const {processLogs, processes} = this.props;
 
@@ -82,14 +90,14 @@ class Console extends Component {
                   if (this.isJsonObject(item)) {
                     return(
                       <div>
-                        <p key={i} className={item.logLevel} dangerouslySetInnerHTML={{__html: (convert.toHtml(item.command || ""))}}></p>
+                        <p key={i} className={this.logClassName(item)} dangerouslySetInnerHTML={{__html: (convert.toHtml(item.command || ""))}}></p>
                         <ReactJson src={JSON.parse(item.result)} theme="monokai" sortKeys={true} collapsed={1} />
                       </div>
                     )
                   }
 
                   return (
-                    <p key={i} className={item.logLevel} dangerouslySetInnerHTML={{__html: (convert.toHtml(item.command || "") + convert.toHtml(item.msg))}}></p>
+                    <p key={i} className={this.logClassName(item)} dangerouslySetInnerHTML={{__html: (convert.toHtml(item.command || "") + convert.toHtml(item.msg))}}></p>
                   )
                 })
               }
