@@ -465,13 +465,14 @@ class EmbarkController {
         engine.startService("scaffolding");
         callback();
       },
-      function generateContract(callback){
-        engine.events.request('scaffolding:generate:contract', options, function(){
-          // Engine is re-initiated to be able to see the new contract file
-          engine.init({}, callback);
+      function generateContract(callback) {
+        engine.events.request('scaffolding:generate:contract', options, function(err, file) {
+          // Add contract file to the manager
+          engine.events.request('config:contractsFiles:add', file);
+          callback();
         });
       },
-      function initEngineServices(callback){
+      function initEngineServices(callback) {
         let pluginList = engine.plugins.listPlugins();
         if (pluginList.length > 0) {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
@@ -481,15 +482,15 @@ class EmbarkController {
         engine.startService("codeRunner");
         engine.startService("web3");
         engine.startService("deployment", {onlyCompile: true});
-        
+
         callback();
       },
       function deploy(callback) {
-        engine.events.request('deploy:contracts', function (err) {
+        engine.events.request('deploy:contracts', function(err) {
           callback(err);
         });
       },
-      function generateUI(callback){
+      function generateUI(callback) {
         engine.events.request("scaffolding:generate:ui", options, () => {
           callback();
         });
@@ -502,7 +503,7 @@ class EmbarkController {
         `  ],\n` +
         `  "index.html": "app/${options.contract}.html"`).cyan);
       process.exit();
-    });  
+    });
   }
 
   upload(options) {
