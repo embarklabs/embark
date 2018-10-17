@@ -35,7 +35,7 @@ class SearchBar extends React.Component {
     return (
       <Row>
         <Col>
-          <Form inline className="search-bar float-right">
+          <Form inline className="search-bar float-right my-2">
             <FormGroup>
               <Input type="text" name="search-bar" placeholder="Search" onChange={(e) => this.onChange(e)}
                      value={this.state.searchValue} onKeyPress={e => this.onKeyPress(e)}/>

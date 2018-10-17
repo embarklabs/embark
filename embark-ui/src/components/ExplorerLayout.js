@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React from 'react';
-import connect from "react-redux/es/connect/connect";
+import {connect} from 'react-redux';
 import {Route, Switch, withRouter} from 'react-router-dom';
 import {explorerSearch} from "../actions";
 import {searchResult} from "../reducers/selectors";
