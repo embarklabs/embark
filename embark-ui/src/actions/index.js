@@ -323,13 +323,13 @@ export const gasOracle = {
   failure: (error) => action(GAS_ORACLE[FAILURE], {error})
 };
 
-<<<<<<< HEAD
 export const EXPLORER_SEARCH = createRequestTypes('EXPLORER_SEARCH');
 export const explorerSearch = {
   request: (searchValue) => action(EXPLORER_SEARCH[REQUEST], {searchValue}),
   success: (searchResult) => action(EXPLORER_SEARCH[SUCCESS], {searchResult}),
   failure: (error) => action(EXPLORER_SEARCH[FAILURE], {error})
-=======
+};
+
 export const WEB3_CONNECT = createRequestTypes('WEB3_CONNECT');
 export const web3Connect = {
   request: () => action(WEB3_CONNECT[REQUEST]),
@@ -349,7 +349,6 @@ export const web3EstimateGas = {
   request: (contract, args) => action(WEB3_ESTIMAGE_GAS[REQUEST], {contract, args}),
   success: (gas, payload) => action(WEB3_ESTIMAGE_GAS[SUCCESS], {contract: payload.contract, gas}),
   failure: (error, payload) => action(WEB3_ESTIMAGE_GAS[FAILURE], {web3Error: error, contract: payload.contract})
->>>>>>> Adding option to switch deployment pipeline
 };
 
 // Web Socket

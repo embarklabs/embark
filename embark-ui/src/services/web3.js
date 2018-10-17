@@ -12,8 +12,7 @@ export const connect = () => {
         reject(error);
       }
     } else if (window.web3) {
-      const web3 = new Web3(window.web3.currentProvider);
-      resolve(web3);
+      resolve(new Web3(window.web3.currentProvider));
     } else {
       reject(Error('Non-Ethereum browser detected. You should use MetaMask!'));
     }

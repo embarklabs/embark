@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React from 'react';
+import FontAwesomeIcon from 'react-fontawesome';
 import {
   Row,
   Col,
@@ -47,7 +48,7 @@ const LayoutContract = ({contract, children}) => (
 
 const DeploymentResult = ({deployment}) => {
   if (deployment.running) {
-    return <p>Deployment is in progress <i className="fa fa-spinner fa-spin fa-fw"/></p>
+    return <p>Deployment is in progress <FontAwesomeIcon className="ml-1" name="spinner" spin/></p>
   }
 
   if (deployment.error) {
@@ -73,7 +74,7 @@ const DeploymentResult = ({deployment}) => {
 
 const GasEstimateResult = ({gasEstimate}) => {
   if (gasEstimate.running) {
-    return <p>Gas Estimation is in progresss <i className="fa fa-spinner fa-spin fa-fw"/></p>
+    return <p>Gas Estimation is in progresss <FontAwesomeIcon className="ml-1" name="spinner" spin/></p>
   }
 
   if (gasEstimate.error) {
@@ -197,7 +198,7 @@ const ContractsHeader = ({deploymentPipeline, updateDeploymentPipeline}) => (
                        onChange={() => updateDeploymentPipeline(DEPLOYMENT_PIPELINES.embark)} 
                        checked={deploymentPipeline === DEPLOYMENT_PIPELINES.embark} />
                 Embark
-                <i className="ml-1 fa fa-question" id="embark-tooltip" />
+                <FontAwesomeIcon className="ml-1" name="question" id="embark-tooltip" />
                 <UncontrolledTooltip placement="bottom" target="embark-tooltip">
                   Embark will deploy the contracts automatically for you each time there is a change in one of them.
                 </UncontrolledTooltip>
@@ -210,7 +211,7 @@ const ContractsHeader = ({deploymentPipeline, updateDeploymentPipeline}) => (
                        onChange={() => updateDeploymentPipeline(DEPLOYMENT_PIPELINES.injectedWeb3)} 
                        checked={deploymentPipeline === DEPLOYMENT_PIPELINES.injectedWeb3} />
                 Injected Web3
-                <i className="ml-1 fa fa-question" id="web3-tooltip" />
+                <FontAwesomeIcon className="ml-1" name="question" id="web3-tooltip" />
                 <UncontrolledTooltip placement="bottom" target="web3-tooltip">
                   You will have full control on your deployment
                 </UncontrolledTooltip>
