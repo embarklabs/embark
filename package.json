@@ -40,9 +40,9 @@
     "babel-plugin-macros": "2.4.2",
     "babel-plugin-module-resolver": "3.1.1",
     "babel-plugin-transform-react-remove-prop-types": "0.4.18",
-    "babel-plugin-webpack-aliases": "^1.1.3",
+    "babel-plugin-webpack-aliases": "1.1.3",
     "bip39": "2.5.0",
-    "body-parser": "^1.18.2",
+    "body-parser": "1.18.3",
     "check-dependencies": "1.1.0",
     "chokidar": "2.0.4",
     "clipboardy": "1.2.3",
@@ -72,8 +72,7 @@
     "glob": "7.1.3",
     "globule": "1.2.1",
     "hard-source-webpack-plugin": "0.12.0",
-    "handlebars": "^4.0.11",
-    "hard-source-webpack-plugin": "0.11.2",
+    "handlebars": "4.0.12",
     "helmet": "3.13.0",
     "hosted-git-info": "2.7.1",
     "http-proxy": "1.17.0",
@@ -90,7 +89,7 @@
     "multihashes": "0.4.14",
     "neo-blessed": "0.2.0",
     "netcat": "1.3.5",
-    "node-http-proxy": "^0.2.3",
+    "node-http-proxy": "0.2.3",
     "node-ipc": "9.1.1",
     "node-netcat": "1.4.8",
     "node-sass": "4.9.3",
@@ -102,8 +101,14 @@
     "pkg-up": "2.0.0",
     "promptly": "2.2.0",
     "propose": "0.0.5",
+<<<<<<< HEAD
     "remix-tests": "0.0.13",
     "react-scripts": "^1.1.4",
+||||||| merged common ancestors
+    "react-scripts": "^1.1.4",
+=======
+    "react-scripts": "1.1.5",
+>>>>>>> exact versions per `npm ls --depth=0`
     "request": "2.88.0",
     "sass-loader": "7.1.0",
     "semver": "5.5.1",
@@ -121,11 +126,21 @@
     "url-loader": "1.1.1",
     "uuid": "3.3.2",
     "viz.js": "1.8.2",
+<<<<<<< HEAD
     "web3": "1.0.0-beta.34",
     "webpack": "4.19.0",
     "websocket": "1.0.28",
     "window-size": "1.1.1",
     "webpack-bundle-analyzer": "^2.13.1",
+||||||| merged common ancestors
+    "web3": "1.0.0-beta.36",
+    "webpack": "4.18.0",
+    "webpack-bundle-analyzer": "^2.13.1",
+=======
+    "web3": "1.0.0-beta.36",
+    "webpack": "4.18.0",
+    "webpack-bundle-analyzer": "2.13.1",
+>>>>>>> exact versions per `npm ls --depth=0`
     "window-size": "1.1.1"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
