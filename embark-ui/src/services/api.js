@@ -171,6 +171,14 @@ export function authenticate(payload) {
   return post('/authenticate', {...payload, credentials: payload});
 }
 
+export function signMessage(payload) {
+  return post('/messages/sign', ...arguments);
+}
+
+export function verifyMessage(payload) {
+  return post('/messages/verify', ...arguments);
+}
+
 export function listenToChannel(credentials, channel) {
   return new WebSocket(`ws://${credentials.host}/embark-api/communication/listenTo/${channel}`, [credentials.token]);
 }

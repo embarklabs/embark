@@ -236,6 +236,20 @@ export const messageListen = {
   failure: (error) => action(MESSAGE_LISTEN[FAILURE], {error})
 };
 
+export const SIGN_MESSAGE = createRequestTypes('SIGN_MESSAGE');
+export const signMessage = {
+  request: (message, address) => action(SIGN_MESSAGE[REQUEST], {message, address}),
+  success: ({ message, signature, signer}) => action(SIGN_MESSAGE[SUCCESS], {message, signature, signer}),
+  failure: (error) => action(SIGN_MESSAGE[FAILURE], { signMessageError: error})
+};
+
+export const VERIFY_MESSAGE = createRequestTypes('VERIFY_MESSAGE');
+export const verifyMessage = {
+  request: (message) => action(VERIFY_MESSAGE[REQUEST], {message}),
+  success: ({ error, address }) => action(VERIFY_MESSAGE[SUCCESS], {address, verifyMessageError: error}),
+  failure: (error) => action(VERIFY_MESSAGE[FAILURE], {verifyMessageError: error})
+};
+
 export const ENS_RECORD = createRequestTypes('ENS_RECORD');
 export const ensRecord = {
   resolve: (name) => action(ENS_RECORD[REQUEST], {name}),

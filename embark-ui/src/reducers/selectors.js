@@ -176,3 +176,27 @@ export function getBaseEther(state) {
 export function searchResult(state) {
   return state.searchResult;
 }
+
+export function getMessageSignaturePendingState(state) {
+  return state.messageSignature.pending;
+}
+
+export function getMessageSignaturePayload(state) {
+  return state.messageSignature.payload ? JSON.stringify(state.messageSignature.payload, null, 2): null;
+}
+
+export function getMessageSignatureError(state) {
+  return state.messageSignature.error;
+}
+
+export function getVerificationPendingState(state) {
+  return state.messageVerification.pending;
+}
+
+export function getVerifiedAddressPayload(state) {
+  return state.messageVerification.payload ? state.messageVerification.payload.verifiedAddress : null;
+}
+
+export function getVerificationError(state) {
+  return state.messageVerification.error;
+}

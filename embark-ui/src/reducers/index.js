@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux';
 import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE,
-        FETCH_CREDENTIALS, UPDATE_BASE_ETHER, CHANGE_THEME, FETCH_THEME, EXPLORER_SEARCH} from "../actions";
+        FETCH_CREDENTIALS, UPDATE_BASE_ETHER, CHANGE_THEME, FETCH_THEME, EXPLORER_SEARCH,
+        SIGN_MESSAGE, VERIFY_MESSAGE} from "../actions";
 import {EMBARK_PROCESS_NAME, DARK_THEME} from '../constants';
 
 const BN_FACTOR = 10000;
@@ -241,6 +242,65 @@ function searchResult(state = {}, action) {
   return state;
 }
 
+const DEFAULT_MESSAGE_SIGNATURE_STATE = {
+  pending: false,
+  error: null,
+  payload: null
+};
+
+function messageSignature(state = DEFAULT_MESSAGE_SIGNATURE_STATE, action) {
+
+  if (action.type === SIGN_MESSAGE[REQUEST]) {
+    return {...state, pending: true, error: null, payload: null };
+  }
+
+  if (action.type === SIGN_MESSAGE[FAILURE]) {
+    return {...state, pending: false, error: action.signMessageError };
+  }
+
+  if (action.type === SIGN_MESSAGE[SUCCESS]) {
+    return {...state, ...{
+      pending: false,
+      error: null,
+      payload: {
+        signature: action.signature,
+        message: action.message,
+        signer: action.signer
+      }
+    }};
+  }
+
+  return state;
+}
+
+const DEFAULT_MESSAGE_VERIFICATION_STATE = {
+  pending: false,
+  error: null,
+  payload: null
+};
+
+function messageVerification(state = DEFAULT_MESSAGE_VERIFICATION_STATE, action) {
+
+  if (action.type === VERIFY_MESSAGE[REQUEST]) {
+    return {...state, pending: true, error: null, payload: null };
+  }
+
+  if (action.type === VERIFY_MESSAGE[FAILURE]) {
+    return {...state, pending: false, error: action.verifyMessageError };
+  }
+
+  if (action.type === VERIFY_MESSAGE[SUCCESS]) {
+    return {...state, ...{
+      pending: false,
+      error: null,
+      payload: {
+        verifiedAddress: action.address
+      }
+    }};
+  }
+  return state;
+}
+
 const rootReducer = combineReducers({
   entities,
   loading,
@@ -250,7 +310,9 @@ const rootReducer = combineReducers({
   credentials,
   baseEther,
   theme,
-  searchResult
+  searchResult,
+  messageSignature,
+  messageVerification
 });
 
 export default rootReducer;

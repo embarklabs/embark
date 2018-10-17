@@ -54,6 +54,8 @@ export const saveCredentials = doRequest.bind(null, actions.saveCredentials, sto
 export const logout = doRequest.bind(null, actions.logout, storage.logout);
 export const changeTheme = doRequest.bind(null, actions.changeTheme, storage.changeTheme);
 export const fetchTheme = doRequest.bind(null, actions.fetchTheme, storage.fetchTheme);
+export const signMessage = doRequest.bind(null, actions.signMessage, api.signMessage);
+export const verifyMessage = doRequest.bind(null, actions.verifyMessage, api.verifyMessage);
 
 export const explorerSearch = searchExplorer.bind(null, actions.explorerSearch);
 
@@ -217,6 +219,14 @@ export function *watchLogout() {
 
 export function *watchExplorerSearch() {
   yield takeEvery(actions.EXPLORER_SEARCH[actions.REQUEST], explorerSearch);
+}
+
+export function *watchSignMessage() {
+  yield takeEvery(actions.SIGN_MESSAGE[actions.REQUEST], signMessage);
+}
+
+export function *watchVerifyMessage() {
+  yield takeEvery(actions.VERIFY_MESSAGE[actions.REQUEST], verifyMessage);
 }
 
 function createChannel(socket) {
@@ -387,6 +397,8 @@ export default function *root() {
     fork(watchExplorerSearch),
     fork(watchFetchTheme),
     fork(watchChangeTheme),
-    fork(watchListenGasOracle)
+    fork(watchListenGasOracle),
+    fork(watchSignMessage),
+    fork(watchVerifyMessage)
   ]);
 }
