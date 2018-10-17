@@ -54,7 +54,10 @@ const Layout = ({children, logout, credentials, location, toggleTheme, currentTh
         {sidebarNavItems.items.map((item) => {
           return (
             <NavItem className="px-3">
-              <NavLink href={item.url}>{item.name}</NavLink>
+              <NavLink href={item.url}>
+                <i className={item.icon}>&nbsp;</i>
+                {item.name}
+              </NavLink>
             </NavItem>
           )
         })}
@@ -91,7 +94,6 @@ const Layout = ({children, logout, credentials, location, toggleTheme, currentTh
       </AppAside>
     </div>
     <AppFooter>
-
       <span className="ml-auto">
         Embark&nbsp;
         <a href="https://embark.status.im" title="Documentation" rel="noopener noreferrer" target="_blank">Documentation</a>
