@@ -8,7 +8,7 @@ contract {{contractName}} {
 {{/each}}
     }
 
-    {{structName}}[] public items;
+    {{structName}}[] items;
 
     event ItemCreated(uint id, address createdBy);
     event ItemDeleted(uint id, address deletedBy);
@@ -40,6 +40,11 @@ contract {{contractName}} {
 
         delete items[_id];
         emit ItemDeleted(_id, msg.sender);
+    }
+
+    function get(uint _id) public view returns ({{#each fields}}{{type}}{{#unless @last}},{{/unless}}{{/each}}) {
+        require(_id < items.length, "Invalid ArrayContractStruct id");
+        return ({{#each fields}}items[_id].{{name}}{{#unless @last}},{{/unless}}{{/each}});
     }
 
 }

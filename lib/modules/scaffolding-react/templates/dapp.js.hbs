@@ -63,7 +63,7 @@ class {{capitalize name}}Form{{@index}} extends Component {
         {{else}}
             {{#each inputs}}
             {{#ifarr type}}
-            input.{{trim name}} = input.{{trim name}}.split(',').map(x => trim(x.toString()));
+            input.{{trim name}} = input.{{trim name}}.split(',').map(x => x.toString().trim());
             {{/ifarr}}
             {{/each}}
 
@@ -154,7 +154,7 @@ class {{capitalize name}}Form{{@index}} extends Component {
                 {
                 receipt &&
                 <Fragment>
-                    <Alert bsStyle={receipt.status == "0x1" ? 'success' : 'danger'}>{receipt.status == "0x1" ? 'Success' : 'Failure / Revert'} - Transaction Hash: {receipt.transactionHash}</Alert>
+                    <Alert bsStyle={receipt.status === "0x1" ? 'success' : 'danger'}>{receipt.status === "0x1" ? 'Success' : 'Failure / Revert'} - Transaction Hash: {receipt.transactionHash}</Alert>
                 </Fragment>
                 
                 }
