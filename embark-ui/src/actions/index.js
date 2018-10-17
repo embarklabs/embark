@@ -302,6 +302,13 @@ export const gasOracle = {
   failure: (error) => action(GAS_ORACLE[FAILURE], {error})
 };
 
+export const EXPLORER_SEARCH = createRequestTypes('EXPLORER_SEARCH');
+export const explorerSearch = {
+  request: (searchValue) => action(EXPLORER_SEARCH[REQUEST], {searchValue}),
+  success: (searchResult) => action(EXPLORER_SEARCH[SUCCESS], {searchResult}),
+  failure: (error) => action(EXPLORER_SEARCH[FAILURE], {error})
+};
+
 // Web Socket
 export const WATCH_NEW_PROCESS_LOGS = 'WATCH_NEW_PROCESS_LOGS';
 export const STOP_NEW_PROCESS_LOGS = 'STOP_NEW_PROCESS_LOGS';

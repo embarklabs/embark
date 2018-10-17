@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux';
 import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE,
-        FETCH_CREDENTIALS, UPDATE_BASE_ETHER, CHANGE_THEME, FETCH_THEME} from "../actions";
+        FETCH_CREDENTIALS, UPDATE_BASE_ETHER, CHANGE_THEME, FETCH_THEME, EXPLORER_SEARCH} from "../actions";
 import {EMBARK_PROCESS_NAME, DARK_THEME} from '../constants';
 
 const BN_FACTOR = 10000;
@@ -44,17 +44,17 @@ const sorter = {
     if (b.name === EMBARK_PROCESS_NAME) return 1;
     return 0;
   },
-	commandSuggestions: function(a, b) {
-		if (a.value.indexOf('.').length > 0) {
-		  let a_levels = a.value.split('.').length
-		  let b_levels = b.value.split('.').length
-			let diff = b_levels - a_levels
-			if (diff !== 0) return diff * -1
-		}
-		let lengthDiff = b.value.length - a.value.length;
-		if (lengthDiff !== 0) return lengthDiff * -1
-		return 0;
-	},
+  commandSuggestions: function(a, b) {
+    if (a.value.indexOf('.').length > 0) {
+      let a_levels = a.value.split('.').length;
+      let b_levels = b.value.split('.').length;
+      let diff = b_levels - a_levels;
+      if (diff !== 0) return diff * -1;
+    }
+    let lengthDiff = b.value.length - a.value.length;
+    if (lengthDiff !== 0) return lengthDiff * -1;
+    return 0;
+  },
   processLogs: function(a, b) {
     if (a.name !== b.name) {
       if(a.name < b.name) return -1;
@@ -231,6 +231,13 @@ function theme(state=DARK_THEME, action) {
   return state;
 }
 
+function searchResult(state = '', action) {
+  if (action.type === EXPLORER_SEARCH[SUCCESS]) {
+    return action.searchResult;
+  }
+  return state;
+}
+
 const rootReducer = combineReducers({
   entities,
   loading,
@@ -239,7 +246,8 @@ const rootReducer = combineReducers({
   errorEntities,
   credentials,
   baseEther,
-  theme
+  theme,
+  searchResult
 });
 
 export default rootReducer;

@@ -3,7 +3,7 @@ import * as api from '../services/api';
 import * as storage from '../services/storage';
 import {eventChannel} from 'redux-saga';
 import {all, call, fork, put, takeLatest, takeEvery, take, select, race} from 'redux-saga/effects';
-import {getCredentials} from '../reducers/selectors';
+import {getCredentials, getBlocks, getTransactions, getAccounts} from '../reducers/selectors';
 
 function *doRequest(entity, serviceFn, payload) {
   payload.credentials = yield select(getCredentials);
@@ -13,6 +13,45 @@ function *doRequest(entity, serviceFn, payload) {
   } else if (error) {
     yield put(entity.failure(error));
   }
+}
+
+function *searchExplorer(entity, payload) {
+  let result;
+
+  // Accounts
+  yield fetchAccounts({});
+  const accounts = yield select(getAccounts);
+  result = accounts.find(account => {
+    return account.address === payload.searchValue;
+  });
+
+  if (result) {
+    return yield put(entity.success(result));
+  }
+
+  // Blocks
+  yield fetchBlocks({limit: 100});
+  const blocks = yield select(getBlocks);
+  result = blocks.find(block => {
+    return block.hash === payload.searchValue;
+  });
+
+  if (result) {
+    return yield put(entity.success(result));
+  }
+
+  // Transactions
+  yield fetchTransactions({blockLimit: 100});
+  const transactions = yield select(getTransactions);
+  result = transactions.find(transaction => {
+    return transaction.hash === payload.searchValue;
+  });
+
+  if (result) {
+    return yield put(entity.success(result));
+  }
+
+  return yield put(entity.failure('No results'));
 }
 
 export const fetchPlugins = doRequest.bind(null, actions.plugins, api.fetchPlugins);
@@ -44,6 +83,7 @@ export const postFile = doRequest.bind(null, actions.saveFile, api.postFile);
 export const deleteFile = doRequest.bind(null, actions.removeFile, api.deleteFile);
 export const fetchEthGas = doRequest.bind(null, actions.gasOracle, api.getEthGasAPI);
 export const authenticate = doRequest.bind(null, actions.authenticate, api.authenticate);
+export const explorerSearch = searchExplorer.bind(null, actions.explorerSearch);
 
 export const fetchCurrentFile = doRequest.bind(null, actions.currentFile, storage.fetchCurrentFile);
 export const postCurrentFile = doRequest.bind(null, actions.saveCurrentFile, storage.postCurrentFile);
@@ -212,6 +252,10 @@ export function *watchLogout() {
   yield takeEvery(actions.LOGOUT[actions.REQUEST], logout);
 }
 
+export function *watchExplorerSearch() {
+  yield takeEvery(actions.EXPLORER_SEARCH[actions.REQUEST], explorerSearch);
+}
+
 function createChannel(socket) {
   return eventChannel(emit => {
     socket.onmessage = ((message) => {
@@ -377,6 +421,7 @@ export default function *root() {
     fork(watchAuthenticate),
     fork(watchAuthenticateSuccess),
     fork(watchLogout),
+    fork(watchExplorerSearch),
     fork(watchFetchTheme),
     fork(watchChangeTheme),
     fork(watchListenGasOracle)
