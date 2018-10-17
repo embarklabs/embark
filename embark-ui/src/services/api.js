@@ -27,10 +27,11 @@ function request(type, path, params = {}) {
     headers: {
       'X-Embark-Request-Hash': requestHash,
       'X-Embark-Cnonce': cnonce
-    }
+    },
+    data: params
   }
 
-  return axios(req, params)
+  return axios(req)
     .then((response) => {
       return (response.data && response.data.error) ? {error: response.data.error} : {response, error: null};
     }).catch((error) => {
