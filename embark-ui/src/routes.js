@@ -20,7 +20,7 @@ const routes = (
       <Route path="/embark/deployment/" component={DeploymentContainer} />
       <Route path="/embark/contracts/:contractName" component={ContractLayoutContainer} />
       <Route path="/embark/contracts" component={ContractsContainer} />
-      <Route path="/embark/fiddle" component={FiddleLayout} />
+      <Route path="/embark/editor" component={FiddleLayout} />
       <Route path="/embark/utilities" component={UtilsLayout} />
       <Route component={NoMatch} />
     </Switch>

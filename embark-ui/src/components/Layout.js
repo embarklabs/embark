@@ -33,7 +33,7 @@ const sidebarNavItems = {items: [
     {url: "/embark/explorer/blocks", icon: "fa fa-stop", name: "Blocks"},
     {url: "/embark/explorer/transactions", icon: "fa fa-tree", name: "Transactions"}
   ]},
-  {name: "Editor", url: "/embark/fiddle", icon: "fa fa-codepen"},
+  {name: "Editor", url: "/embark/editor", icon: "fa fa-codepen"},
   {name: "Documentation", url: "/embark/documentation", icon: "fa fa-book"},
   {name: "Utils", url: "/embark/utilities/converter", icon: "fa fa-cog", children: [
     {url: "/embark/utilities/converter", icon: "fa fa-plug", name: "Converter"},
