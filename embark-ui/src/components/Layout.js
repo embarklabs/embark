@@ -128,7 +128,6 @@ class Layout extends React.Component {
   }
 
   renderRightNav() {
-    // {searchResult.error && <Alert color="danger">{searchResult.error}</Alert>}
     return (<Nav className="ml-auto" navbar>
       {<SearchBar hidden={this.state.searchLoading} searchSubmit={searchValue => this.searchTheExplorer(searchValue)}/>}
       {this.state.searchLoading && <p className="search-loading">Searching... <FontAwesome name="spinner" spin /></p>}
