@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Grid, Badge, Icon} from 'tabler-react';
+import {Col, Badge, Icon} from 'reactstrap';
+import FontAwesomeIcon from 'react-fontawesome';
 import TextEditorToolbar from './TextEditorToolbar';
 
 class TextEditorContractToolbar extends Component {
@@ -8,12 +9,12 @@ class TextEditorContractToolbar extends Component {
     return (
       <React.Fragment>
         <TextEditorToolbar {...this.props} />
-        <Grid.Col md={6} className="text-right">
+        <Col md={6} className="text-right">
           {this.props.compilingContract &&
-            <Badge color="warning"><Icon name="slash" className="mr-1" />compiling</Badge>}
+            <Badge color="warning"><FontAwesomeIcon name="exclamation-triangle " className="mr-1" />compiling</Badge>}
           {!this.props.compilingContract && this.props.contractCompile.result &&
-            <Badge color="success"><Icon name="check" className="mr-1" />compiled</Badge>}
-        </Grid.Col>
+            <Badge color="success"><FontAwesomeIcon name="check" className="mr-1" />compiled</Badge>}
+        </Col>
       </React.Fragment>
     );
   }

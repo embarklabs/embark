@@ -1,11 +1,6 @@
 import PropTypes from "prop-types";
 import React from 'react';
-import {
-  Page,
-  Grid,
-  Table,
-  Form
-} from "tabler-react";
+import {Row, Col, Table, FormGroup, Label, Input, Form} from 'reactstrap';
 
 const TX_STATES = {Success: '0x1', Fail: '0x0', Any: ''};
 const EVENT = 'event';
@@ -63,78 +58,83 @@ class ContractLogger extends React.Component {
 
   render() {
     return (
-      <Page.Content title={this.props.contract.className + ' Logger'}>
+      <React.Fragment>
         <Form>
-          <Grid.Row>
-            <Grid.Col md={6}>
-              <Form.Group label="Functions">
-                <Form.Select onChange={(event) => this.updateState('method', event.target.value)} value={this.state.method}>
+          <Row>
+            <Col md={6}>
+              <FormGroup>
+                <Label htmlFor="functions">Functions</Label>
+                <Input type="select" name="functions" id="functions" onChange={(event) => this.updateState('method', event.target.value)} value={this.state.method}>
                   <option value=""></option>
                   {this.getMethods().map((method, index) => <option value={method.name} key={index}>{method.name}</option>)}
-                </Form.Select>
-              </Form.Group>
-            </Grid.Col>
-            <Grid.Col md={6}>
-              <Form.Group label="Events">
-                <Form.Select onChange={(event) => this.updateState('event', event.target.value)} value={this.state.event}>
+                </Input>
+              </FormGroup>
+            </Col>
+            <Col md={6}>
+              <FormGroup>
+                <Label htmlFor="events">Events</Label>
+                <Input type="select" name="events" id="events" onChange={(event) => this.updateState('eveny', event.target.value)} value={this.state.event}>
                   <option value=""></option>
                   {this.getEvents().map((event, index) => <option value={event.name} key={index}>{event.name}</option>)}
-                </Form.Select>
-              </Form.Group>
-            </Grid.Col>
-            <Grid.Col>
-              <Form.Group label="Tx Status">
-                {Object.keys(TX_STATES).map(key => (
-                  <Form.Radio
-                    key={key}
-                    isInline
-                    label={key}
-                    value={TX_STATES[key]}
-                    onChange={(event) => this.updateState('status', event.target.value)}
-                    checked={TX_STATES[key] === this.state.status}
-                  />
-                ))}
-              </Form.Group>
-            </Grid.Col>
-          </Grid.Row>
+                </Input>
+              </FormGroup>
+            </Col>
+            <Col>
+              <FormGroup row>
+                <Col md="3">
+                  <Label>Tx Status</Label>
+                </Col>
+                <Col md="9">
+                  {Object.keys(TX_STATES).map(key => (
+                    <FormGroup key={key} check inline>
+                      <Input className="form-check-input"
+                            type="radio"
+                            id={key}
+                            name={key}
+                            value={TX_STATES[key]}
+                            onChange={(event) => this.updateState('status', event.target.value)}
+                            checked={TX_STATES[key] === this.state.status} />
+                      <Label check className="form-check-label" htmlFor={key}>{key}</Label>
+                    </FormGroup>
+                  ))}
+                </Col>
+              </FormGroup>
+            </Col>
+          </Row>
         </Form>
-        <Grid.Row>
-          <Grid.Col>
-            <Table
-              responsive
-              cards
-              verticalAlign="center"
-              className="text-nowrap">
-              <Table.Header>
-                <Table.Row>
-                  <Table.ColHeader>Call</Table.ColHeader>
-                  <Table.ColHeader>Events</Table.ColHeader>
-                  <Table.ColHeader>Gas Used</Table.ColHeader>
-                  <Table.ColHeader>Block number</Table.ColHeader>
-                  <Table.ColHeader>Status</Table.ColHeader>
-                  <Table.ColHeader>Transaction hash</Table.ColHeader>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
+        <Row>
+          <Col>
+            <Table>
+              <thead>
+                <tr>
+                  <th>Call</th>
+                  <th>Events</th>
+                  <th>Gas Used</th>
+                  <th>Block number</th>
+                  <th>Status</th>
+                  <th>Transaction hash</th>
+                </tr>
+              </thead>
+              <tbody>
                 {
                   this.dataToDisplay().map((log, index) => {
                     return (
-                      <Table.Row key={'log-' + index}>
-                        <Table.Col>{`${log.name}.${log.functionName}(${log.paramString})`}</Table.Col>
-                        <Table.Col>{log.events.join(', ')}</Table.Col>
-                        <Table.Col>{log.gasUsed}</Table.Col>
-                        <Table.Col>{log.blockNumber}</Table.Col>
-                        <Table.Col>{log.status}</Table.Col>
-                        <Table.Col>{log.transactionHash}</Table.Col>
-                      </Table.Row>
+                      <tr key={'log-' + index}>
+                        <td>{`${log.name}.${log.functionName}(${log.paramString})`}</td>
+                        <td>{log.events.join(', ')}</td>
+                        <td>{log.gasUsed}</td>
+                        <td>{log.blockNumber}</td>
+                        <td>{log.status}</td>
+                        <td>{log.transactionHash}</td>
+                      </tr>
                     );
                   })
                 }
-              </Table.Body>
+              </tbody>
             </Table>
-          </Grid.Col>
-        </Grid.Row>
-      </Page.Content>
+          </Col>
+        </Row>
+      </React.Fragment>
     );
   }
 }

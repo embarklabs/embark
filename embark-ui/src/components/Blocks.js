@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-import {Row, Col, Card, CardHeader, CardTitle, CardBody} from 'reactstrap';
+import {Row, Col, Card, CardHeader, CardBody} from 'reactstrap';
 import PropTypes from 'prop-types';
 
 import CardTitleIdenticon from './CardTitleIdenticon';

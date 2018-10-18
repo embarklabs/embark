@@ -1,22 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Card, Icon, List} from 'tabler-react';
+import {Card, CardBody, CardHeader, CardTitle, ListGroup, ListGroupItem} from 'reactstrap';
+import FontAwesomeIcon from 'react-fontawesome';
 
 const TextEditorContractErrors = (props) => (
-  <Card statusColor="danger"
-        statusSide
-        className="errors-card">
-    <Card.Header>
-      <Card.Title color="danger">
-        <Icon name="alert-circle" className="mr-1" />
+  <Card className="bg-danger">
+    <CardHeader>
+      <CardTitle>
+        <FontAwesomeIcon className="mr-1" name="minus-circle"/>
         Failed to compile
-      </Card.Title>
-    </Card.Header>
-    <Card.Body>
-      <List.Group>
-        {props.errors.map((error, index) => <List.GroupItem key={index}>{error.formattedMessage}</List.GroupItem>)}
-      </List.Group>
-    </Card.Body>
+      </CardTitle>
+    </CardHeader>
+    <CardBody>
+      <ListGroup>
+        {props.errors.map((error, index) => <ListGroupItem key={index}>{error.formattedMessage}</ListGroupItem>)}
+      </ListGroup>
+    </CardBody>
   </Card>
 );
 

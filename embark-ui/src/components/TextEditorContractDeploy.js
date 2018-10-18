@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Card, Icon} from 'tabler-react';
+import {Card, CardHeader, CardTitle, CardBody} from 'reactstrap';
+import FontAwesomeIcon from 'react-fontawesome';
+
 import ContractFunctions from '../components/ContractFunctions';
 
 const TextEditorContractDeploy = (props) => {
@@ -10,21 +12,19 @@ const TextEditorContractDeploy = (props) => {
     methods: props.result[name].abiDefinition
   };
   return (
-    <Card statusColor="success"
-          statusSide
-          className="success-card">
-      <Card.Header>
-        <Card.Title color="success">
-          <Icon name="check" className="mr-1" />
+    <Card className="bg-success">
+      <CardHeader>
+        <CardTitle>
+          <FontAwesomeIcon className="mr-1" name="check"/>
           Deploy Contract
-        </Card.Title>
-      </Card.Header>
-      <Card.Body>
+        </CardTitle>
+      </CardHeader>
+      <CardBody>
         <ContractFunctions contractProfile={profile}
                            contractFunctions={props.contractDeploys}
                            onlyConstructor
                            postContractFunction={props.postContractDeploy}/>
-      </Card.Body>
+      </CardBody>
     </Card>
   );
 };

@@ -1,22 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Card, Icon, List} from 'tabler-react';
+import {Card, CardHeader, CardBody, CardTitle, ListGroup, ListGroupItem} from 'reactstrap';
+import FontAwesomeIcon from 'react-fontawesome';
 
 const TextEditorContractWarnings = (props) => (
-  <Card statusColor="warning"
-        statusSide
-        className="warnings-card">
-    <Card.Header>
-      <Card.Title color="warning">
-        <Icon name="alert-triangle" className="mr-1" />
+  <Card className="bg-warning">
+    <CardHeader>
+      <CardTitle color="warning">
+        <FontAwesomeIcon className="mr-1" name="exclamation-triangle"/>
         Warning during compilation
-      </Card.Title>
-    </Card.Header>
-    <Card.Body>
-      <List.Group>
-        {props.warnings.map((warning, index) => <List.GroupItem key={index}>{warning.formattedMessage}</List.GroupItem>)}
-      </List.Group>
-    </Card.Body>
+      </CardTitle>
+    </CardHeader>
+    <CardBody>
+      <ListGroup>
+        {props.warnings.map((warning, index) => <ListGroupItem key={index}>{warning.formattedMessage}</ListGroupItem>)}
+      </ListGroup>
+    </CardBody>
   </Card>
 );
 
