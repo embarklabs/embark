@@ -9,7 +9,7 @@ config({
       args: [100]
     },
     "AnotherStorage": {
-      args: ["$SimpleStorage"]
+      args: ["$SimpleStorage", "embark.eth"]
     }
   }
 });

@@ -19,4 +19,8 @@ contract Test {
     addr = _addr;
   }
 
+  function changeAddress2(address _addr) public {
+    
+  }
+
 }
