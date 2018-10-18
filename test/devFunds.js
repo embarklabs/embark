@@ -1,6 +1,6 @@
 /*global describe, it, before*/
 const assert = require('assert');
-let TestLogger = require('../lib/tests/test_logger.js');
+let TestLogger = require('../lib/utils/test_logger');
 const Web3 = require('web3');
 const i18n = require('../lib/core/i18n/i18n.js');
 const constants = require('../lib/constants.json');

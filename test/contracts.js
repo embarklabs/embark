@@ -3,7 +3,7 @@ let ContractsManager = require('../lib/modules/contracts_manager/index.js');
 let Compiler = require('../lib/modules/compiler/');
 let Logger = require('../lib/core/logger.js');
 let File = require('../lib/core/file.js');
-let TestLogger = require('../lib/tests/test_logger.js');
+let TestLogger = require('../lib/utils/test_logger');
 let Events = require('../lib/core/events');
 let Ipc = require('../lib/core/ipc.js');
 let assert = require('assert');
@@ -58,7 +58,7 @@ describe('embark.Contracts', function() {
           }
         }
       }
-    }
+    };
 
     let compiler = new Compiler(embarkObject, {plugins: plugins});
 

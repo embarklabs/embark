@@ -1,7 +1,7 @@
 /*global describe, it, before, beforeEach*/
 const assert = require('assert');
 const sinon = require('sinon');
-const TestLogger = require('../lib/tests/test_logger');
+const TestLogger = require('../lib/utils/test_logger');
 const path = require('path');
 const ProcessLauncher = require('../lib/core/processes/processLauncher');
 

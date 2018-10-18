@@ -1,5 +1,6 @@
 let async = require('async');
 const constants = require('../lib/constants');
+const Logger = require('../lib/core/logger');
 
 require('colors');
 
@@ -18,7 +19,7 @@ class EmbarkController {
     let Config = require('../lib/core/config.js');
 
     this.events = new Events();
-    this.logger = new Logger({logLevel: 'debug', events: this.events});
+    this.logger = new Logger({logLevel: Logger.logLevels.debug, events: this.events});
 
     this.config = new Config({env: env, logger: this.logger, events: this.events, context: this.context});
     this.config.loadConfigFiles(options);
@@ -58,19 +59,19 @@ class EmbarkController {
 
     const webServerConfig = {};
 
-    if (options.runWebserver != null) {
+    if (options.runWebserver !== null) {
       webServerConfig.enabled = options.runWebserver;
     }
 
-    if (options.serverHost != null) {
+    if (options.serverHost !== null) {
       webServerConfig.host = options.serverHost;
     }
 
-    if (options.serverPort != null) {
+    if (options.serverPort !== null) {
       webServerConfig.port = options.serverPort;
     }
 
-    if (options.openBrowser != null) {
+    if (options.openBrowser !== null) {
       webServerConfig.openBrowser = options.openBrowser;
     }
 
@@ -450,7 +451,6 @@ class EmbarkController {
       webpackConfigName: options.webpackConfigName
     });
 
-
     let platform;
 
     async.waterfall([
@@ -531,8 +531,52 @@ class EmbarkController {
 
   runTests(options) {
     this.context = [constants.contexts.test];
-    let RunTests = require('../lib/tests/run_tests.js');
-    RunTests.run(options);
+
+    const Engine = require('../lib/core/engine.js');
+    const engine = new Engine({
+      env: options.env,
+      client: options.client,
+      locale: options.locale,
+      version: this.version,
+      embarkConfig: options.embarkConfig || 'embark.json',
+      logFile: options.logFile,
+      logLevel: options.logLevel || Logger.logLevels.warn,
+      context: this.context,
+      useDashboard: options.useDashboard,
+      webpackConfigName: options.webpackConfigName,
+      ipcRole: 'client',
+      interceptLogs: false
+    });
+
+    async.waterfall([
+      function initEngine(callback) {
+        engine.init({}, callback);
+      },
+      function startServices(callback) {
+        engine.startService("processManager");
+        engine.startService("libraryManager");
+        engine.startService("web3", {wait: true});
+        engine.startService("deployment", {
+          trackContracts: false,
+          compileOnceOnly: true,
+          disableOptimizations: options.coverage
+        });
+        engine.startService("codeGenerator");
+        engine.startService("codeRunner");
+        engine.startService("codeCoverage");
+        engine.startService("testRunner");
+        callback();
+      },
+      function runTests(callback) {
+        engine.events.request('tests:run', options, callback);
+      }
+    ], function (err) {
+      if (err) {
+        engine.logger.error(err.message || err);
+      }
+
+      process.exit(err ? 1 : 0);
+    });
   }
 }
 

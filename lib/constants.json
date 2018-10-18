@@ -45,5 +45,11 @@
   "storage": {
     "init": "init",
     "initiated": "initiated"
+  },
+  "tests": {
+    "gasLimit": 6000000
+  },
+  "codeGenerator": {
+    "gasLimit": 6000000
   }
 }
