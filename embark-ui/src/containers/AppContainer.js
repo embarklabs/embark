@@ -30,10 +30,11 @@ class AppContainer extends Component {
   }
 
   queryStringAuthenticate() {
-    if (!this.props.location.search) {
+    const token = qs.parse(this.props.location.search, {ignoreQueryPrefix: true}).token;
+
+    if (!token) {
       return;
     }
-    const token = qs.parse(this.props.location.search, {ignoreQueryPrefix: true}).token;
     const host = process.env.NODE_ENV === 'development' ? DEFAULT_HOST : window.location.host;
     if (token === this.props.credentials.token && this.props.credentials.host === host) {
       return;
