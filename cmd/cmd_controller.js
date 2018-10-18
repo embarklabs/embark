@@ -556,7 +556,11 @@ class EmbarkController {
         engine.startService("processManager");
         engine.startService("libraryManager");
         engine.startService("web3", {wait: true});
-        engine.startService("deployment");
+        engine.startService("deployment", {
+          trackContracts: false,
+          compileOnceOnly: true,
+          disableOptimizations: options.coverage
+        });
         engine.startService("codeGenerator");
         engine.startService("codeRunner");
         engine.startService("codeCoverage");
