@@ -28,7 +28,8 @@ function request(type, path, params = {}) {
       'X-Embark-Request-Hash': requestHash,
       'X-Embark-Cnonce': cnonce
     },
-    data: params
+    ...(type === 'post' ? { data: params } : {}),
+    ...(type === 'get' ? { params } : {})
   }
 
   return axios(req)
