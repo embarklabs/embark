@@ -1,6 +1,6 @@
 import {put, select} from "redux-saga/effects";
-import {getAccounts, getBlocks, getTransactions} from "../reducers/selectors";
-import {fetchAccounts, fetchBlocks, fetchTransactions} from "./index";
+import {getAccounts, getBlocks, getTransactions, getContracts} from "../reducers/selectors";
+import {fetchAccounts, fetchBlocks, fetchTransactions, fetchContracts} from "./index";
 
 export function *searchExplorer(entity, payload) {
   let result;
@@ -11,6 +11,17 @@ export function *searchExplorer(entity, payload) {
   const accounts = yield select(getAccounts);
   result = accounts.find(account => {
     return account.address === payload.searchValue;
+  });
+
+  if (result) {
+    return yield put(entity.success(result));
+  }
+
+  // Contracts
+  yield fetchContracts({});
+  const contracts = yield select(getContracts);
+  result = contracts.find(contract => {
+    return contract.address === payload.searchValue;
   });
 
   if (result) {

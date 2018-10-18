@@ -10,7 +10,7 @@ const Transactions = ({transactions}) => (
     <Col>
       <h1>Transactions</h1>
       {transactions.map(transaction => (
-        <Card>
+        <Card key={transaction.hash}>
           <CardHeader>
             <Link to={`/embark/explorer/transactions/${transaction.hash}`}>
               <CardTitleIdenticon id={transaction.hash}>Transaction {transaction.hash}</CardTitleIdenticon>

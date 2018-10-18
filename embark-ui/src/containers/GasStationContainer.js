@@ -19,7 +19,7 @@ class GasStationContainer extends Component {
   }
 
   render() {
-    return <DataWrapper shouldRender={this.props.gasOracleStats && Object.keys(this.props.gasOracleStats).length && this.props.lastBlock}
+    return <DataWrapper shouldRender={Boolean(this.props.gasOracleStats && Object.keys(this.props.gasOracleStats).length && this.props.lastBlock)}
                         {...this.props} render={({lastBlock, gasOracleStats}) => (
       <GasStation gasOracleStats={gasOracleStats} lastBlock={lastBlock}/>
     )}/>;

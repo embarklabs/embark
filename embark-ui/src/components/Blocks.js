@@ -10,7 +10,7 @@ const Blocks = ({blocks}) => (
     <Col>
       <h1>Blocks</h1>
       {blocks.map(block => (
-        <Card>
+        <Card key={block.number}>
           <CardHeader>
             <Link to={`/embark/explorer/blocks/${block.number}`}> <CardTitleIdenticon id={block.hash}>Block {block.number}</CardTitleIdenticon></Link>
           </CardHeader>

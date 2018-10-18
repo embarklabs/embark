@@ -10,7 +10,6 @@ import {LIGHT_THEME, DARK_THEME} from '../constants';
 import FontAwesome from 'react-fontawesome';
 
 import {
-  AppAside,
   AppFooter,
   AppHeader,
   AppSidebar,
@@ -79,6 +78,10 @@ class Layout extends React.Component {
         return true;
       }
 
+      if (nextProps.searchResult.className) {
+        this.props.history.push(`/embark/contracts/${nextProps.searchResult.className}/overview`);
+        return false;
+      }
       if (nextProps.searchResult.address) {
         this.props.history.push(`/embark/explorer/accounts/${nextProps.searchResult.address}`);
         return false;

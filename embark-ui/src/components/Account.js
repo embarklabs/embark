@@ -13,7 +13,7 @@ const Account = ({account}) => (
           <CardTitleIdenticon id={account.address}>Account {account.address}</CardTitleIdenticon>
         </CardHeader>
         <CardBody>
-          <dl class="row">
+          <dl className="row">
             <Description label="Balance" value={account.balance} />
             <Description label="Transaction count" value={account.transactionCount} />
           </dl>
