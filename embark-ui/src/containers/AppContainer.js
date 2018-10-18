@@ -25,8 +25,6 @@ const qs = require('qs');
 class AppContainer extends Component {
   constructor (props) {
     super(props);
-
-    this.queryStringAuthenticate();
   }
 
   queryStringAuthenticate() {
@@ -39,7 +37,7 @@ class AppContainer extends Component {
     if (token === this.props.credentials.token && this.props.credentials.host === host) {
       return;
     }
-    this.props.authenticate(host, token);
+    return this.props.authenticate(host, token);
   }
 
   componentDidMount() {
@@ -53,7 +51,9 @@ class AppContainer extends Component {
 
   componentDidUpdate(){
     if (this.requireAuthentication()) {
-      this.props.authenticate(this.props.credentials.host, this.props.credentials.token);
+      if (!this.queryStringAuthenticate()) {
+        this.props.authenticate(this.props.credentials.host, this.props.credentials.token);
+      }
     }
 
     if (this.props.credentials.authenticated && !this.props.initialized) {
