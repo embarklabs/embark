@@ -495,13 +495,14 @@ class EmbarkController {
           callback();
         });
       }
-    ], function(_err) {
+    ], function(err) {
+      if (err) {
+        engine.logger.error(__("Error generating the UI: "));
+        engine.logger.error(err.message || err);
+        process.exit(1);
+      }
       engine.logger.info(__("finished generating the UI").underline);
-      engine.logger.info(__("You can add the UI to your Dapp easily by adding the following in embark.json:"));
-      engine.logger.info((`  "js/${options.contract}.js": [\n` +
-        `    "${options.contract}.js"\n` +
-        `  ],\n` +
-        `  "index.html": "app/${options.contract}.html"`).cyan);
+      engine.logger.info(__("To see the result, execute {{cmd}} and go to /{{contract}}.html", {cmd: 'embark run'.underline, contract: options.contract}));
       process.exit();
     });
   }
