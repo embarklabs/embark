@@ -11,13 +11,15 @@ import {
   Button,
   Card,
   CardHeader,
+  CardTitle,
   CardBody
 } from 'reactstrap';
 import classNames from 'classnames';
 import {DEPLOYMENT_PIPELINES} from '../constants';
+import Description from './Description';
 
 const orderClassName = (address) => {
-  return classNames({
+  return classNames('mr-4', {
     badge: true,
     'badge-success': address,
     'badge-secondary': !address
@@ -35,15 +37,20 @@ const NoWeb3 = () => (
   </Row>
 )
 
-const LayoutContract = ({contract, children}) => (
-  <Row className="border-bottom border-primary pb-3 mt-4">
-    <Col xs={1} className="text-center">
-      <h4><span className={orderClassName(contract.address)}>{contract.index + 1}</span></h4>
-    </Col>
-    <Col xs={11}>
+const LayoutContract = ({contract, children, cardTitle}) => (
+  <Card>
+    <CardHeader>
+      <CardTitle>
+        <h4>
+          <span className={orderClassName(contract.address)}>{contract.index + 1}</span>
+          {cardTitle}
+        </h4>
+      </CardTitle>
+    </CardHeader>
+    <CardBody>
       {children}
-    </Col>
-  </Row>
+    </CardBody>
+  </Card>
 )
 
 const DeploymentResult = ({deployment}) => {
@@ -59,14 +66,9 @@ const DeploymentResult = ({deployment}) => {
     <React.Fragment>
       <p className="text-success">Deployment succeed:</p>
       <dl class="row">
-        <dt class="col-sm-3">Transaction</dt>
-        <dd class="col-sm-9">{deployment.transactionHash}</dd>
-
-        <dt class="col-sm-3">Gas used</dt>
-        <dd class="col-sm-9">{deployment.gasUsed}</dd>
-
-        <dt class="col-sm-3">Address</dt>
-        <dd class="col-sm-9">{deployment.contractAddress}</dd>
+        <Description label="Transaction" value={deployment.transactionHash} />
+        <Description label="Gas used" value={deployment.gasUsed} />
+        <Description label="Address" value={deployment.contractAddress} />
       </dl>
     </React.Fragment>
   )
@@ -111,25 +113,24 @@ class Web3Contract extends React.Component {
     const isInterface = !abiConstructor;
     const argumentsRequired = abiConstructor && abiConstructor.inputs.length > 0;
     return (
-      <LayoutContract contract={this.props.contract}>
+      <LayoutContract contract={this.props.contract} cardTitle={
+        <React.Fragment>
+          {isInterface && `${this.props.contract.className} is an interface`}
+          {!isInterface && this.props.contract.className}
+        </React.Fragment>
+      }>
         <Row>
           <Col md={6}>
-            {isInterface && <h5>{this.props.contract.className} is an interface</h5>}
-            {!isInterface && <h5>{this.props.contract.className}</h5>}
             {argumentsRequired &&
-              <Card>
-                <CardHeader>
-                  <strong>Arguments:</strong>
-                </CardHeader>
-                <CardBody>
-                  {abiConstructor.inputs.map(input => (
+              <React.Fragment>
+                <h5>Arguments:</h5>
+                {abiConstructor.inputs.map(input => (
                     <FormGroup key={input.name}>
                       <Label htmlFor={input.name}>{input.name}</Label>
                       <Input id={input.name} placeholder={input.name} onChange={e => this.handleOnChange(e, input.name)} />
                     </FormGroup>
                   ))}
-                </CardBody>
-              </Card>
+              </React.Fragment>
             }
 
             {!this.props.web3 && <NoWeb3 />}
@@ -158,16 +159,13 @@ class Web3Contract extends React.Component {
 }
 
 const EmbarkContract = ({contract}) => (
-  <LayoutContract contract={contract}>
-    {contract.address &&
-      <React.Fragment>
-        <h5>{contract.className} deployed at {contract.address}</h5>
-        <p><strong>Arguments:</strong> {JSON.stringify(contract.args)}</p>
-      </React.Fragment>
-    }
-    {!contract.address &&
-      <h5>{contract.className} not deployed</h5>
-    }
+  <LayoutContract contract={contract} cardTitle={
+    <React.Fragment>
+      {contract.address && `${contract.className} deployed at ${contract.address}`}
+      {!contract.address && `${contract.className} not deployed`}
+    </React.Fragment>
+  }>
+    {contract.address && <p><strong>Arguments:</strong> {JSON.stringify(contract.args)}</p>}
     {contract.transactionHash &&
       <React.Fragment>
         <p><strong>Transaction Hash:</strong> {contract.transactionHash}</p>
@@ -182,45 +180,37 @@ const EmbarkContract = ({contract}) => (
 
 const ContractsHeader = ({deploymentPipeline, updateDeploymentPipeline}) => (
   <Row className="mt-3">
-    <Col xs={1} className="text-center">
-      <strong>Order</strong>
-    </Col>
-    <Col xs={11}>
-      <Row>
-        <strong>Contract</strong>
-        <div className="ml-auto mr-5">
-          <FormGroup row>
-            <span className="mr-2">Deploy using</span>
-            <FormGroup check inline>
-              <Label className="form-check-label" check>
-                <Input className="form-check-input" 
-                       type="radio" 
-                       onChange={() => updateDeploymentPipeline(DEPLOYMENT_PIPELINES.embark)} 
-                       checked={deploymentPipeline === DEPLOYMENT_PIPELINES.embark} />
-                Embark
-                <FontAwesomeIcon className="ml-1" name="question" id="embark-tooltip" />
-                <UncontrolledTooltip placement="bottom" target="embark-tooltip">
-                  Embark will deploy the contracts automatically for you each time there is a change in one of them.
-                </UncontrolledTooltip>
-              </Label>
-            </FormGroup>
-            <FormGroup check inline>
-              <Label className="form-check-label" check>
-                <Input className="form-check-input" 
-                       type="radio" 
-                       onChange={() => updateDeploymentPipeline(DEPLOYMENT_PIPELINES.injectedWeb3)} 
-                       checked={deploymentPipeline === DEPLOYMENT_PIPELINES.injectedWeb3} />
-                Injected Web3
-                <FontAwesomeIcon className="ml-1" name="question" id="web3-tooltip" />
-                <UncontrolledTooltip placement="bottom" target="web3-tooltip">
-                  You will have full control on your deployment
-                </UncontrolledTooltip>
-              </Label>
-            </FormGroup>
-          </FormGroup>
-        </div>
-      </Row>
-    </Col>
+    <div className="ml-auto mr-5">
+      <FormGroup row>
+        <span className="mr-2">Deploy using</span>
+        <FormGroup check inline>
+          <Label className="form-check-label" check>
+            <Input className="form-check-input" 
+                    type="radio" 
+                    onChange={() => updateDeploymentPipeline(DEPLOYMENT_PIPELINES.embark)} 
+                    checked={deploymentPipeline === DEPLOYMENT_PIPELINES.embark} />
+            Embark
+            <FontAwesomeIcon className="ml-1" name="question" id="embark-tooltip" />
+            <UncontrolledTooltip placement="bottom" target="embark-tooltip">
+              Embark will deploy the contracts automatically for you each time there is a change in one of them.
+            </UncontrolledTooltip>
+          </Label>
+        </FormGroup>
+        <FormGroup check inline>
+          <Label className="form-check-label" check>
+            <Input className="form-check-input" 
+                    type="radio" 
+                    onChange={() => updateDeploymentPipeline(DEPLOYMENT_PIPELINES.injectedWeb3)} 
+                    checked={deploymentPipeline === DEPLOYMENT_PIPELINES.injectedWeb3} />
+            Injected Web3
+            <FontAwesomeIcon className="ml-1" name="question" id="web3-tooltip" />
+            <UncontrolledTooltip placement="bottom" target="web3-tooltip">
+              You will have full control on your deployment
+            </UncontrolledTooltip>
+          </Label>
+        </FormGroup>
+      </FormGroup>
+    </div>
   </Row>
 )
 
