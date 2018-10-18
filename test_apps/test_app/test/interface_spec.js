@@ -16,7 +16,7 @@ contract("AnotherStorageWithInterface", function() {
 
   it("sets an empty address because ERC20 is an interface", async function() {
     let result = await AnotherStorage.methods.simpleStorageAddress().call();
-    assert.equal(result.toString(), '0x0000000000000000000000000000000000000000');
+    assert.strictEqual(result.toString(), '0x0000000000000000000000000000000000000000');
   });
 });
 

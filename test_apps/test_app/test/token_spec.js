@@ -1,4 +1,4 @@
-/*global describe, config, it*/
+/*global describe, config, it, web3*/
 const assert = require('assert');
 const Token = require('Embark/contracts/Token');
 const MyToken = require('Embark/contracts/MyToken');
@@ -84,5 +84,12 @@ describe("Token", function () {
 
   it("should not deploy if deployIf returns false", function() {
     assert.ok(!SomeContract.options.address);
+  });
+
+  it("should set the ens attr to the address of embark.eth", async function() {
+    let result = await Test.methods.ens().call();
+    // Testing that it is an address as we don't really know the address
+    assert.strictEqual(web3.utils.isAddress(result), true);
+    assert.notStrictEqual(result, '0x0000000000000000000000000000000000000000');
   });
 });
