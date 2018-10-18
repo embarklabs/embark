@@ -22,12 +22,6 @@
   margin-top: 16px;
 }
 
-.search-loading .fa-spinner {
-  font-size: 2em;
-  vertical-align: middle;
-  margin-left: 10px;
-}
-
 .search-error-close {
   position: absolute;
   cursor: pointer;

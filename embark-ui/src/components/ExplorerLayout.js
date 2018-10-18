@@ -8,21 +8,17 @@ import BlockContainer from '../containers/BlockContainer';
 import TransactionsContainer from '../containers/TransactionsContainer';
 import TransactionContainer from '../containers/TransactionContainer';
 
-class ExplorerLayout extends React.Component {
-  render() {
-    return (
-      <React.Fragment>
-        <Switch>
-          <Route exact path="/embark/explorer/accounts" component={AccountsContainer}/>
-          <Route exact path="/embark/explorer/accounts/:address" component={AccountContainer}/>
-          <Route exact path="/embark/explorer/blocks" component={BlocksContainer}/>
-          <Route exact path="/embark/explorer/blocks/:blockNumber" component={BlockContainer}/>
-          <Route exact path="/embark/explorer/transactions" component={TransactionsContainer}/>
-          <Route exact path="/embark/explorer/transactions/:hash" component={TransactionContainer}/>
-        </Switch>
-      </React.Fragment>
-    );
-  }
-}
+const ExplorerLayout = () => (
+  <React.Fragment>
+    <Switch>
+      <Route exact path="/embark/explorer/accounts" component={AccountsContainer}/>
+      <Route exact path="/embark/explorer/accounts/:address" component={AccountContainer}/>
+      <Route exact path="/embark/explorer/blocks" component={BlocksContainer}/>
+      <Route exact path="/embark/explorer/blocks/:blockNumber" component={BlockContainer}/>
+      <Route exact path="/embark/explorer/transactions" component={TransactionsContainer}/>
+      <Route exact path="/embark/explorer/transactions/:hash" component={TransactionContainer}/>
+    </Switch>
+  </React.Fragment>
+);
 
 export default ExplorerLayout;

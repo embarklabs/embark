@@ -130,7 +130,9 @@ class Layout extends React.Component {
   renderRightNav() {
     return (<Nav className="ml-auto" navbar>
       {<SearchBar hidden={this.state.searchLoading} searchSubmit={searchValue => this.searchTheExplorer(searchValue)}/>}
-      {this.state.searchLoading && <p className="search-loading">Searching... <FontAwesome name="spinner" spin /></p>}
+      {this.state.searchLoading && <p className="search-loading">
+        Searching... <FontAwesome name="spinner" size="2x" spin className="align-middle ml-2"/>
+      </p>}
 
       {this.renderSettings()}
     </Nav>);
