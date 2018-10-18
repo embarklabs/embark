@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import React from 'react';
 import {
-  Button,
   InputGroup,
   Card,
   CardBody,
@@ -13,7 +12,7 @@ import {
   InputGroupAddon,
   Label
 } from 'reactstrap';
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+import CopyButton from './CopyButton';
 
 import { calculateUnits } from '../services/unitConverter';
 
@@ -50,9 +49,7 @@ class Converter extends React.Component {
                     <InputGroup>
                       <Input id={unit.name} placeholder={unit.name} value={unit.value} onChange={e => this.handleOnChange(e, unit.key)} />
                       <InputGroupAddon addonType="append">
-                        <CopyToClipboard text={unit.value} title="Copy value to clipboard">
-                          <Button color="primary"><i className="fa fa-copy"></i></Button>
-                        </CopyToClipboard>
+                        <CopyButton text={unit.value} title="Copy value to clipboard" size={2}/>
                       </InputGroupAddon>
                     </InputGroup>
                   </FormGroup>

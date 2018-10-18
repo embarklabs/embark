@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import {Card, CardBody, CardHeader, CardTitle, Row, Col, Input, Badge} from 'reactstrap';
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+import CopyButton from './CopyButton';
 
 const COLORS = {
   good: 'success',
@@ -95,11 +95,9 @@ class GasStation extends Component {
           <CardHeader>
             <CardTitle>
               Gas Price Estimator
-              <CopyToClipboard text={currentGasStep.gasPrice / this.PRICE_UNIT_DIVIDER}
-                               onCopy={() => this.setState({copied: true})}
-                               title="Copy gas price to clipboard">
-                <Badge className="p-3" color="primary"><i className="fa fa-copy"/></Badge>
-              </CopyToClipboard>
+              <CopyButton text={currentGasStep.gasPrice / this.PRICE_UNIT_DIVIDER}
+                          onCopy={() => this.setState({copied: true})}
+                          title="Copy gas price to clipboard"/>
             </CardTitle>
           </CardHeader>
 

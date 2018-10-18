@@ -18,6 +18,9 @@
   word-wrap: break-word; 
 }
 
+.relative {
+  position: relative;
+}
 .hidden {
   display: none;
 }
