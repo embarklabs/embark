@@ -18,23 +18,19 @@ const Blocks = ({blocks}) => (
             <Row>
               <Col>
                 <strong>Number</strong>
-                <br/>
-                {block.number}
+                <div>{block.number}</div>
               </Col>
               <Col>
                 <strong>Mined On</strong>
-                <br/>
-                {new Date(block.timestamp * 1000).toLocaleString()}
+                <div>{new Date(block.timestamp * 1000).toLocaleString()}</div>
               </Col>
               <Col>
                 <strong>Gas Used</strong>
-                <br/>
-                {block.gasUsed}
+                <div>{block.gasUsed}</div>
               </Col>
               <Col>
                 <strong>TX Count</strong>
-                <br/>
-                {block.transactions.length}
+                <div>{block.transactions.length}</div>
               </Col>
             </Row>
           </CardBody>

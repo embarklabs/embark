@@ -20,23 +20,19 @@ const Transactions = ({transactions}) => (
             <Row>
               <Col>
                 <strong>Block number</strong>
-                <br/>
-                {transaction.blockNumber}
+                <div>{transaction.blockNumber}</div>
               </Col>
               <Col>
                 <strong>From</strong>
-                <br/>
-                {transaction.from}
+                <div>{transaction.from}</div>
               </Col>
               <Col>
                 <strong>To</strong>
-                <br/>
-                {transaction.to}
+                <div>{transaction.to}</div>
               </Col>
               <Col>
                 <strong>Type</strong>
-                <br/>
-                {transaction.to ? "Contract Call" : "Contract Creation"}
+                <div>{transaction.to ? "Contract Call" : "Contract Creation"}</div>
               </Col>
             </Row>
           </CardBody>

@@ -20,18 +20,15 @@ const Accounts = ({accounts}) => (
             <Row>
               <Col>
                 <strong>Balance</strong>
-                <br/>
-                {account.balance} Wei
+                <div>{account.balance} Wei</div>
               </Col>
               <Col>
                 <strong>Tx Count</strong>
-                <br/>
-                {account.transactionCount}
+                <div>{account.transactionCount}</div>
               </Col>
               <Col>
                 <strong>Index</strong>
-                <br/>
-                {account.index}
+                <div>{account.index}</div>
               </Col>
             </Row>
           </CardBody>
