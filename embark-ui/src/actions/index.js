@@ -399,4 +399,12 @@ export function updateBaseEther(value) {
   };
 }
 
+export const TOGGLE_BREAKPOINT = 'TOGGLE_BREAKPOINT';
+export function toggleBreakpoint(filename, lineNumber) {
+  return {
+    type: TOGGLE_BREAKPOINT,
+    payload: {filename, lineNumber}
+  };
+}
+
 

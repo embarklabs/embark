@@ -13,9 +13,10 @@ import {
   saveFile as saveFileAction,
   removeFile as removeFileAction,
   contractCompile as contractCompileAction,
-  contractDeploy as postContractDeploy
+  contractDeploy as postContractDeploy,
+  toggleBreakpoint,
 } from '../actions';
-import {getCurrentFile, getContractCompile, getContractDeploys} from '../reducers/selectors';
+import {getCurrentFile, getContractCompile, getContractDeploys, getBreakpointsByFilename} from '../reducers/selectors';
 
 class TextEditorContainer extends Component {
   constructor(props) {
@@ -100,6 +101,8 @@ class TextEditorContainer extends Component {
     return (
       <TextEditor file={this.state.currentFile}
                   contractCompile={this.props.contractCompile}
+                  breakpoints={this.props.breakpoints}
+                  toggleBreakpoint={this.props.toggleBreakpoint}
                   onFileContentChange={(newContent) => this.onFileContentChange(newContent)} />
     );
   }
@@ -110,13 +113,15 @@ function mapStateToProps(state, props) {
   const contractCompile = getContractCompile(state, currentFile) || {};
   const contractName = contractCompile.result && Object.keys(contractCompile.result)[0];
   const contractDeploys = getContractDeploys(state, contractName);
+  const breakpoints = getBreakpointsByFilename(state, currentFile.name);
   return {
+    compilingContract: state.compilingContract,
+    loading: state.loading,
+    error: state.errorMessage,
     currentFile,
     contractCompile,
-    compilingContract: state.compilingContract,
     contractDeploys,
-    loading: state.loading,
-    error: state.errorMessage
+    breakpoints,
   };
 }
 
@@ -133,7 +138,9 @@ TextEditorContainer.propTypes = {
   compilingContract: PropTypes.bool,
   contractDeploys: PropTypes.array,
   loading: PropTypes.bool,
-  error: PropTypes.string
+  error: PropTypes.string,
+  toggleBreakpoints: PropTypes.func,
+  breakpoints: PropTypes.array,
 };
 
 export default connect(
@@ -144,6 +151,7 @@ export default connect(
     saveFile: saveFileAction.request,
     removeFile: removeFileAction.request,
     postContractDeploy: postContractDeploy.post,
-    compileContract: contractCompileAction.post
+    compileContract: contractCompileAction.post,
+    toggleBreakpoint,
   },
 )(TextEditorContainer);

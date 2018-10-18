@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux';
 import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE,
         FETCH_CREDENTIALS, UPDATE_BASE_ETHER, CHANGE_THEME, FETCH_THEME, EXPLORER_SEARCH,
-        SIGN_MESSAGE, VERIFY_MESSAGE} from "../actions";
+        SIGN_MESSAGE, VERIFY_MESSAGE, TOGGLE_BREAKPOINT} from "../actions";
 import {EMBARK_PROCESS_NAME, DARK_THEME} from '../constants';
 
 const BN_FACTOR = 10000;
@@ -281,7 +281,6 @@ const DEFAULT_MESSAGE_VERIFICATION_STATE = {
 };
 
 function messageVerification(state = DEFAULT_MESSAGE_VERIFICATION_STATE, action) {
-
   if (action.type === VERIFY_MESSAGE[REQUEST]) {
     return {...state, pending: true, error: null, payload: null };
   }
@@ -302,6 +301,21 @@ function messageVerification(state = DEFAULT_MESSAGE_VERIFICATION_STATE, action)
   return state;
 }
 
+function breakpoints(state = {}, action) {
+  if (action.type === TOGGLE_BREAKPOINT) {
+    const {filename, lineNumber} = action.payload;
+    let lineNumbers = state[filename] || [];
+    if (lineNumbers.includes(lineNumber)){
+      lineNumbers = lineNumbers.filter(ln => ln !== lineNumber);
+    } else {
+      lineNumbers.push(lineNumber);
+    }
+    return {...state, [filename]: lineNumbers};
+  }
+
+  return state;
+}
+
 const rootReducer = combineReducers({
   entities,
   loading,
@@ -313,7 +327,8 @@ const rootReducer = combineReducers({
   theme,
   searchResult,
   messageSignature,
-  messageVerification
+  messageVerification,
+  breakpoints
 });
 
 export default rootReducer;

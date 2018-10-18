@@ -204,3 +204,7 @@ export function getVerifiedAddressPayload(state) {
 export function getVerificationError(state) {
   return state.messageVerification.error;
 }
+
+export function getBreakpointsByFilename(state, filename) {
+  return state.breakpoints[filename] || [];
+}
