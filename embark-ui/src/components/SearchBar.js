@@ -33,7 +33,7 @@ class SearchBar extends React.Component {
 
   render() {
     return (
-      <Row>
+      <Row className={this.props.hidden ? 'hidden' : ''}>
         <Col className="col-sm-12">
           <Form inline className="search-bar float-right my-2">
             <FormGroup>
@@ -51,7 +51,8 @@ class SearchBar extends React.Component {
 }
 
 SearchBar.propTypes = {
-  searchSubmit: PropTypes.func.isRequired
+  searchSubmit: PropTypes.func.isRequired,
+  hidden: PropTypes.bool
 };
 
 export default SearchBar;

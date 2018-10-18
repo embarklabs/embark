@@ -17,3 +17,19 @@
   border-bottom-left-radius: 0;
   box-shadow: none;
 }
+
+.search-loading {
+  margin-top: 16px;
+}
+
+.search-loading .fa-spinner {
+  font-size: 2em;
+  vertical-align: middle;
+  margin-left: 10px;
+}
+
+.search-error-close {
+  position: absolute;
+  cursor: pointer;
+  right: 20px;
+}

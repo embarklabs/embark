@@ -51,5 +51,5 @@ export function *searchExplorer(entity, payload) {
     return yield put(entity.success(result));
   }
 
-  return yield put(entity.success({error: 'No result found in transactions, accounts or blocks'}));
+  return yield put(entity.success({error: 'No result found in transactions, accounts, contracts, or blocks'}));
 }

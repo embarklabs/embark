@@ -17,3 +17,7 @@
 .text-wrap {
   word-wrap: break-word; 
 }
+
+.hidden {
+  display: none;
+}

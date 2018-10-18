@@ -66,15 +66,19 @@ class Layout extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {loading: false};
+    this.state = {
+      searchLoading: false,
+      searchError: false
+    };
   }
 
   shouldComponentUpdate(nextProps) {
     if (nextProps.searchResult && Object.keys(nextProps.searchResult).length &&
       nextProps.searchResult !== this.props.searchResult) {
-      this.setState({loading: false});
+      this.setState({searchLoading: false});
 
       if (nextProps.searchResult.error) {
+        this.setState({searchError: true});
         return true;
       }
 
@@ -101,7 +105,11 @@ class Layout extends React.Component {
 
   searchTheExplorer(value) {
     this.props.explorerSearch(value);
-    this.setState({loading: true});
+    this.setState({searchLoading: true});
+  }
+
+  closeSearchError() {
+    this.setState({searchError: false});
   }
 
   renderNav() {
@@ -120,11 +128,10 @@ class Layout extends React.Component {
   }
 
   renderRightNav() {
-    const searchResult = this.props.searchResult;
+    // {searchResult.error && <Alert color="danger">{searchResult.error}</Alert>}
     return (<Nav className="ml-auto" navbar>
-      <SearchBar searchSubmit={searchValue => this.searchTheExplorer(searchValue)}/>
-      {this.state.loading && <p>Searching...</p>}
-      {searchResult.error && <Alert color="danger">{searchResult.error}</Alert>}
+      {<SearchBar hidden={this.state.searchLoading} searchSubmit={searchValue => this.searchTheExplorer(searchValue)}/>}
+      {this.state.searchLoading && <p className="search-loading">Searching... <FontAwesome name="spinner" spin /></p>}
 
       {this.renderSettings()}
     </Nav>);
@@ -169,7 +176,7 @@ class Layout extends React.Component {
   }
 
   render() {
-    const {children} = this.props;
+    const {children, searchResult} = this.props;
 
     return (<div className="app animated fadeIn">
       <AppHeader fixed>
@@ -189,6 +196,12 @@ class Layout extends React.Component {
         {this.renderSideBar()}
 
         <main className="main">
+          {searchResult.error && this.state.searchError && <Alert color="danger">{searchResult.error}
+            <span className="search-error-close" onClick={(e) => this.closeSearchError(e)}>
+              <FontAwesome name="times-circle"/>
+            </span>
+          </Alert>}
+
           <Container fluid className="h-100" style={{marginTop: '24px'}}>
             {children}
           </Container>
