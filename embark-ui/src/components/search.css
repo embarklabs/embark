@@ -1,9 +1,15 @@
 #root .search-bar input {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
-  border: 0;
   outline: none;
   box-shadow: none;
+  width: 330px;
+  border: 1px solid #c8ced3;
+  border-right: 0;
+}
+
+#root .dark-theme .search-bar input {
+  border: 0;
 }
 
 #root .search-bar button {
