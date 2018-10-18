@@ -60,7 +60,7 @@ const Layout = ({children, logout, credentials, location, toggleTheme, currentTh
       <Nav className="d-md-down-none" navbar>
         {sidebarNavItems.items.map((item) => {
           return (
-            <NavItem className="px-3">
+            <NavItem className="px-3" key={item.url}>
               <NavLink href={item.url}>
                 <i className={item.icon}>&nbsp;</i>
                 {item.name}
@@ -94,7 +94,7 @@ const Layout = ({children, logout, credentials, location, toggleTheme, currentTh
         <AppSidebarMinimizer />
       </AppSidebar>
       <main className="main">
-        <Container fluid className="h-100" style={{"margin-top": '24px'}}>
+        <Container fluid className="h-100" style={{marginTop: '24px'}}>
           {children}
         </Container>
       </main>
