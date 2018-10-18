@@ -2,7 +2,7 @@
 const Config = require('../lib/core/config.js');
 const Plugins = require('../lib/core/plugins.js');
 const assert = require('assert');
-const TestLogger = require('../lib/tests/test_logger.js');
+const TestLogger = require('../lib/utils/test_logger');
 const Events = require('../lib/core/events');
 
 describe('embark.Config', function () {
