@@ -2,6 +2,8 @@ import React from 'react';
 import * as monaco from 'monaco-editor';
 import PropTypes from 'prop-types';
 
+import './TextEditor.css';
+
 const SUPPORTED_LANGUAGES = ['css', 'sol', 'html', 'json'];
 const DEFAULT_LANGUAGE = 'javascript';
 const EDITOR_ID = 'react-monaco-editor-container';
@@ -83,8 +85,8 @@ class TextEditor extends React.Component {
     }
   }
 
-  updateBreakpoints() {
-    const decorations = editor.deltaDecorations(this.state.decorations, this.props.breakpoints.map(breakpoint => (
+  updateDecorations() {
+    const newDecorations = this.props.breakpoints.map(breakpoint => (
       {
         range: new monaco.Range(breakpoint,1,breakpoint,1),
         options: {
@@ -92,7 +94,18 @@ class TextEditor extends React.Component {
           glyphMarginClassName: 'bg-primary rounded-circle'
         }
       }
-    )));
+    ));
+
+    //TODO remove me when debuggerLine comes from the debugger API
+    let debuggerLine = this.props.debuggerLine || 11;
+    newDecorations.push({
+      range: new monaco.Range(debuggerLine,1,debuggerLine,1),
+        options: {
+          isWholeLine: true,
+          className: 'text-editor__debuggerLine'
+        }
+    })
+    const decorations = editor.deltaDecorations(this.state.decorations, newDecorations);
     this.setState({decorations: decorations});
   }
 
@@ -102,8 +115,10 @@ class TextEditor extends React.Component {
     }
 
     this.updateMarkers();
-    if (this.props.breakpoints.length !== this.state.decorations.length) {
-      this.updateBreakpoints();
+    // TODO replace with const expectedDecorationsLength = this.props.debuggerLine ? this.props.breakpoints.length + 1 : this.props.breakpoints.length
+    const expectedDecorationsLength = this.props.breakpoints.length + 1;
+    if (expectedDecorationsLength !== this.state.decorations.length) {
+      this.updateDecorations();
     }
     this.updateLanguage();
   }
@@ -122,7 +137,8 @@ TextEditor.propTypes = {
   file: PropTypes.object,
   contractCompile: PropTypes.object,
   toggleBreakpoint: PropTypes.func,
-  breakpoints: PropTypes.array
+  breakpoints: PropTypes.array,
+  debuggerLine: PropTypes.number
 };
 
 export default TextEditor;
