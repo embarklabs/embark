@@ -5,6 +5,7 @@ import {withRouter} from "react-router-dom";
 import routes from '../routes';
 import Login from '../components/Login';
 import Layout from "../components/Layout";
+import { DEFAULT_HOST } from '../constants';
 
 import {
   authenticate, fetchCredentials, logout,
@@ -33,7 +34,7 @@ class AppContainer extends Component {
       return;
     }
     const token = qs.parse(this.props.location.search, {ignoreQueryPrefix: true}).token;
-    const host = window.location.host;
+    const host = process.env.NODE_ENV === 'development' ? DEFAULT_HOST : window.location.host;
     if (token === this.props.credentials.token && this.props.credentials.host === host) {
       return;
     }

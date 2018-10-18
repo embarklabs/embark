@@ -6,3 +6,4 @@ export const DEPLOYMENT_PIPELINES = {
   injectedWeb3: 'injectedWeb3',
   embark: 'embark'
 }
+export const DEFAULT_HOST = 'localhost:8000';
