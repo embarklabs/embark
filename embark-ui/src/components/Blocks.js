@@ -1,37 +1,45 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-import {Row, Col, Table} from 'reactstrap';
-
+import {Row, Col, Card, CardHeader, CardTitle, CardBody} from 'reactstrap';
 import PropTypes from 'prop-types';
+
+import CardTitleIdenticon from './CardTitleIdenticon';
 
 const Blocks = ({blocks}) => (
   <Row>
     <Col>
       <h1>Blocks</h1>
-      <Table responsive className="text-nowrap">
-        <thead>
-          <tr>
-            <th>Number</th>
-            <th>Mined On</th>
-            <th>Gas Used</th>
-            <th>TX Count</th>
-          </tr>
-        </thead>  
-        <tbody>
-          {
-            blocks.map((block) => {
-              return (
-                <tr key={block.number}>
-                  <td><Link to={`/embark/explorer/blocks/${block.number}`}>{block.number}</Link></td>
-                  <td>{new Date(block.timestamp * 1000).toLocaleString()}</td>
-                  <td>{block.gasUsed}</td>
-                  <td>{block.transactions.length}</td>
-                </tr>
-              );
-            })
-          }
-        </tbody>
-      </Table>
+      {blocks.map(block => (
+        <Card>
+          <CardHeader>
+            <Link to={`/embark/explorer/blocks/${block.number}`}> <CardTitleIdenticon id={block.hash}>Block {block.number}</CardTitleIdenticon></Link>
+          </CardHeader>
+          <CardBody>
+            <Row>
+              <Col>
+                <strong>Number</strong>
+                <br/>
+                {block.number}
+              </Col>
+              <Col>
+                <strong>Mined On</strong>
+                <br/>
+                {new Date(block.timestamp * 1000).toLocaleString()}
+              </Col>
+              <Col>
+                <strong>Gas Used</strong>
+                <br/>
+                {block.gasUsed}
+              </Col>
+              <Col>
+                <strong>TX Count</strong>
+                <br/>
+                {block.transactions.length}
+              </Col>
+            </Row>
+          </CardBody>
+        </Card>
+      ))}
     </Col>
   </Row>
 );

@@ -1,17 +1,24 @@
 import React from 'react';
-import {Row, Col} from 'reactstrap';
+import {Row, Col, Card, CardHeader, CardBody, CardTitle} from 'reactstrap';
 import PropTypes from 'prop-types';
 
 import Description from './Description';
+import CardTitleIdenticon from './CardTitleIdenticon';
 
 const Account = ({account}) => (
   <Row>
     <Col>
-      <h1>Account {account.address}</h1>
-      <dl class="row">
-        <Description label="Balance" value={account.balance} />
-        <Description label="Transaction count" value={account.transactionCount} />
-      </dl>
+      <Card>
+        <CardHeader>
+          <CardTitleIdenticon id={account.address}>Account {account.address}</CardTitleIdenticon>
+        </CardHeader>
+        <CardBody>
+          <dl class="row">
+            <Description label="Balance" value={account.balance} />
+            <Description label="Transaction count" value={account.transactionCount} />
+          </dl>
+        </CardBody>
+      </Card>
     </Col>
   </Row>
 );
