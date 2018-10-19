@@ -1,9 +1,7 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, NavLink, Container} from 'reactstrap';
 import {connect} from 'react-redux';
-import {withRouter} from "react-router-dom";
 import {DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, NavLink, Container, Alert} from 'reactstrap';
 import {explorerSearch} from "../actions";
 import {LIGHT_THEME, DARK_THEME} from '../constants';
@@ -55,12 +53,12 @@ const SIDEBAR_NAV_ITEMS = {
 const removeCssClasses = () => {
   document.body.classList.remove('sidebar-fixed');
   document.body.classList.remove('sidebar-lg-show');
-}
+};
 
 const getSidebar = (location) => {
   const currentItem = Object.keys(SIDEBAR_NAV_ITEMS).find(path => location.pathname.startsWith(path));
   return currentItem && SIDEBAR_NAV_ITEMS[currentItem];
-}
+};
 
 class Layout extends React.Component {
   constructor(props) {
@@ -114,11 +112,11 @@ class Layout extends React.Component {
 
   renderNav() {
     return (<Nav className="d-md-down-none" navbar>
-      {sidebarNavItems.items.map((item) => {
+      {HEADER_NAV_ITEMS.map((item) => {
         return (
-          <NavItem className="px-3" key={item.url}>
-            <NavLink href={item.url}>
-              <i className={item.icon}>&nbsp;</i>
+          <NavItem className="px-3" key={item.to}>
+            <NavLink exact tag={Link} to={item.to}>
+              <FontAwesome className="mr-2" name={item.icon} />
               {item.name}
             </NavLink>
           </NavItem>
@@ -155,16 +153,6 @@ class Layout extends React.Component {
     </AppHeaderDropdown>);
   }
 
-  renderSideBar() {
-    return (<AppSidebar fixed display="lg">
-      <AppSidebarHeader />
-      <AppSidebarForm />
-      <AppSidebarNav navConfig={sidebarNavItems} location={this.props.location} />
-      <AppSidebarFooter />
-      <AppSidebarMinimizer />
-    </AppSidebar>);
-  }
-
   renderFooter() {
     return (<AppFooter>
         <span className="ml-auto">
@@ -177,16 +165,18 @@ class Layout extends React.Component {
   }
 
   render() {
-    const {children, searchResult} = this.props;
+    const {children, searchResult, location} = this.props;
+    const sidebar = getSidebar(location);
+    if (!sidebar) {
+      removeCssClasses();
+    }
 
     return (<div className="app animated fadeIn">
       <AppHeader fixed>
-        <AppSidebarToggler className="d-lg-none" display="md" mobile />
-        <AppNavbarBrand
-          full={{ src: logo, width: 50, height: 50, alt: 'Embark Logo' }}
-          minimized={{ src: logo, width: 30, height: 30, alt: 'Embark Logo' }}
+        <AppNavbarBrand className="mx-3"
+                        full={{src: logo, width: 50, height: 50, alt: 'Embark Logo'}}
+                        minimized={{src: logo, width: 30, height: 30, alt: 'Embark Logo'}}
         />
-        <AppSidebarToggler className="d-md-down-none" display="lg" />
 
         {this.renderNav()}
 
@@ -194,7 +184,15 @@ class Layout extends React.Component {
       </AppHeader>
 
       <div className="app-body">
-        {this.renderSideBar()}
+        {sidebar &&
+        <AppSidebar fixed display="lg">
+          <AppSidebarHeader />
+          <AppSidebarForm />
+          <AppSidebarNav navConfig={sidebar} location={location} />
+          <AppSidebarFooter />
+          <AppSidebarMinimizer />
+        </AppSidebar>
+        }
 
         <main className="main">
           {searchResult.error && this.state.searchError && <Alert color="danger">{searchResult.error}

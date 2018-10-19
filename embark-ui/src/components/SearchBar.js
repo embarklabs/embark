@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Form, FormGroup, Input, Button, Row, Col} from 'reactstrap';
+import {Form, FormGroup, Input, Button} from 'reactstrap';
 import FontAwesome from 'react-fontawesome';
 import classNames from 'classnames';
 
