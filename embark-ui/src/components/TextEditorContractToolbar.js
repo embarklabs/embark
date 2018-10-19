@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Col, Badge, Icon} from 'reactstrap';
+import {Col, Badge} from 'reactstrap';
 import FontAwesomeIcon from 'react-fontawesome';
 import TextEditorToolbar from './TextEditorToolbar';
 
