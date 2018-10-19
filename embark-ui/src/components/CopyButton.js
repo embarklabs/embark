@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {Badge, Tooltip} from "reactstrap";
 import classNames from 'classnames';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
+import FontAwesome from 'react-fontawesome';
 import uuid from 'uuid/v1';
 
 import './CopyButton.css';
@@ -23,7 +24,7 @@ class CopyButton extends React.Component {
     this.setState({
       showCopied: true
     });
-    // Hide the tooltip after a few seconds
+    // Hide the tooltip after 1.5s
     clearTimeout(this.showTimeout);
     this.showTimeout = setTimeout(() => {
       this.setState({showCopied: false});
@@ -35,9 +36,9 @@ class CopyButton extends React.Component {
     return (<CopyToClipboard text={text}
                              onCopy={() => this.onCopy()}
                              title={title}>
-      <Badge className={classNames('copy-to-clipboard', 'p-' + (size ? size : 3))}
+      <Badge className={classNames('copy-to-clipboard', 'p-' + (size || 3))}
              color="primary" id={'copy-button-' + this.id}>
-        <i className="fa fa-copy"/>
+        <FontAwesome name="copy"/>
         {this.state.showCopied &&
         <Tooltip isOpen={true} target={'copy-button-' + this.id}>
           Copied to clipboard
