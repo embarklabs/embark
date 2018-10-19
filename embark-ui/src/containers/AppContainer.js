@@ -46,10 +46,8 @@ class AppContainer extends Component {
   }
 
   componentDidUpdate(){
-    if (this.requireAuthentication()) {
-      if (!this.queryStringAuthenticate()) {
-        this.props.authenticate(this.props.credentials.host, this.props.credentials.token);
-      }
+    if (!this.queryStringAuthenticate() && this.requireAuthentication()) {
+      this.props.authenticate(this.props.credentials.host, this.props.credentials.token);
     }
 
     if (this.props.credentials.authenticated && !this.props.initialized) {
