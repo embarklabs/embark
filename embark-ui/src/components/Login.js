@@ -24,6 +24,9 @@ class Login extends React.Component {
         <div className="login-container d-flex flex-column-reverse flex-md-row">
           <div className="login-layout-container-section flex-fill">
             <h2>Login</h2>
+            {this.props.error &&
+              <p className="text-danger">{this.props.error}</p>
+            }
             <div className="mt-4">
               <form  onSubmit={(e) => this.handleSubmit(e)}>
                 <div className="form-group">

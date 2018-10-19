@@ -14,7 +14,7 @@ function *doRequest(entity, serviceFn, payload) {
   if(response) {
     yield put(entity.success(response.data, payload));
   } else if (error) {
-    yield put(entity.failure(error.message));
+    yield put(entity.failure(error.message || error));
   }
 }
 

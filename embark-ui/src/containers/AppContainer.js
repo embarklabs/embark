@@ -75,24 +75,22 @@ class AppContainer extends Component {
     }
   }
 
-  render() {
-    let content;
+  renderBody() {
     if (this.shouldRenderLogin()) {
-      content = <Login credentials={this.props.credentials} authenticate={this.props.authenticate} error={this.props.authenticationError} />;
-    } else {
-      content = <Layout location={this.props.location} 
-                        logout={this.props.logout}
-                        toggleTheme={() => this.toggleTheme()} 
-                        currentTheme={this.props.theme}>
-        <React.Fragment>{routes}</React.Fragment>
-      </Layout>;
+      return <Login credentials={this.props.credentials} authenticate={this.props.authenticate} error={this.props.authenticationError} />;
     }
-
     return (
-      <div className={(this.props.theme) + "-theme"}>
-        {content}
-      </div>
+      <Layout location={this.props.location} 
+              logout={this.props.logout}
+              toggleTheme={() => this.toggleTheme()} 
+              currentTheme={this.props.theme}>
+        <React.Fragment>{routes}</React.Fragment>
+      </Layout>
     );
+  }
+
+  render() {
+    return <div className={(this.props.theme) + "-theme"}>{this.renderBody()}</div>;
   }
 }
 
@@ -111,7 +109,7 @@ AppContainer.propTypes = {
   location: PropTypes.object,
   theme: PropTypes.string,
   changeTheme: PropTypes.func,
-  fetchTheme: PropTypes.func
+  fetchTheme: PropTypes.func,
 };
 
 function mapStateToProps(state) {
@@ -119,7 +117,7 @@ function mapStateToProps(state) {
     initialized: getVersions(state).length > 0,
     credentials: getCredentials(state),
     authenticationError: getAuthenticationError(state),
-    theme: getTheme(state)
+    theme: getTheme(state),
   };
 }
 
