@@ -5,7 +5,7 @@
   font-size: 14px;
   color: white;
   padding: 10px;
-  border-radius: 8px;
+  border-radius: .25rem;
   max-height: 350px;
   overflow: auto;
 }

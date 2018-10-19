@@ -16,7 +16,10 @@ const CopyButton = ({text, onCopy, title, size}) => (
 );
 
 CopyButton.propTypes = {
-  text: PropTypes.string.isRequired,
+  text: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]).isRequired,
   onCopy: PropTypes.func,
   title: PropTypes.string,
   size: PropTypes.number

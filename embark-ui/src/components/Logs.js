@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import React from 'react';
 import autoscroll from 'autoscroll-react';
 
@@ -12,5 +13,9 @@ class Logs extends React.Component {
     );
   }
 }
+
+Logs.propTypes = {
+  children: PropTypes.object
+};
 
 export default autoscroll(Logs);

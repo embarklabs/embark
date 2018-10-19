@@ -60,7 +60,7 @@ class Console extends Component {
   isJsonObject(item) {
     if (!item.result) return false;
     try {
-      return typeof(JSON.parse(item.result)) === 'object'
+      return typeof (JSON.parse(item.result)) === 'object';
     } catch(_err) {
       return false;
     }
@@ -93,12 +93,12 @@ class Console extends Component {
                         <p key={i} className={this.logClassName(item)} dangerouslySetInnerHTML={{__html: (convert.toHtml(item.command || ""))}}></p>
                         <ReactJson src={JSON.parse(item.result)} theme="monokai" sortKeys={true} collapsed={1} />
                       </div>
-                    )
+                    );
                   }
 
                   return (
                     <p key={i} className={this.logClassName(item)} dangerouslySetInnerHTML={{__html: (convert.toHtml(item.command || "") + convert.toHtml(item.msg))}}></p>
-                  )
+                  );
                 })
               }
             </Logs>

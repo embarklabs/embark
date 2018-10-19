@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React from 'react';
+import ReactJson from "react-json-view";
 import {Row, Col, Table} from "reactstrap";
-import JSONTree from 'react-json-tree';
 import GasStationContainer from "../containers/GasStationContainer";
 import {formatContractForDisplay} from '../utils/presentation';
 import CopyButton from './CopyButton';
@@ -32,9 +32,9 @@ const Contract = ({contract}) => {
         </Table>
         <h2>ABI</h2>
         <div className="relative">
-          <CopyButton text={contract.runtimeBytecode}
+          <CopyButton text={JSON.stringify(contract.abiDefinition)}
                       title="Copy bytecode to clipboard"/>
-          {contract.abiDefinition && <JSONTree data={contract.abiDefinition}/>}
+          {contract.abiDefinition && <ReactJson src={contract.abiDefinition} theme="monokai" sortKeys={true} collapsed={1} />}
         </div>
         <h2>Bytecode</h2>
         <div className="text-wrap logs relative">
@@ -42,7 +42,6 @@ const Contract = ({contract}) => {
                       title="Copy bytecode to clipboard"/>
           {contract.runtimeBytecode}
         </div>
-        <GasStationContainer/>
       </Col>
     </Row>
   );
