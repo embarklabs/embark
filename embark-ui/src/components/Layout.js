@@ -15,7 +15,6 @@ import {
   AppSidebarHeader,
   AppSidebarMinimizer,
   AppSidebarNav,
-  AppSidebarToggler,
   AppNavbarBrand,
   AppHeaderDropdown
 } from '@coreui/react';
@@ -71,12 +70,10 @@ const Layout = ({children, logout, location, toggleTheme, currentTheme}) => {
   return (
     <div className="app animated fadeIn">
       <AppHeader fixed>
-        <AppSidebarToggler className="d-lg-none" display="md" mobile />
-        <AppNavbarBrand
+        <AppNavbarBrand className="mx-3"
           full={{ src: logo, width: 50, height: 50, alt: 'Embark Logo' }}
           minimized={{ src: logo, width: 30, height: 30, alt: 'Embark Logo' }}
         />
-        {sidebar && <AppSidebarToggler className="d-md-down-none" display="lg" />}
         <Nav className="d-md-down-none" navbar>
           {HEADER_NAV_ITEMS.map((item) => {
             return (
