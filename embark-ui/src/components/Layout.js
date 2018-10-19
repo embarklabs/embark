@@ -2,6 +2,10 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, NavLink, Container} from 'reactstrap';
+import {connect} from 'react-redux';
+import {withRouter} from "react-router-dom";
+import {DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, NavLink, Container, Alert} from 'reactstrap';
+import {explorerSearch} from "../actions";
 import {LIGHT_THEME, DARK_THEME} from '../constants';
 import FontAwesome from 'react-fontawesome';
 
@@ -18,6 +22,7 @@ import {
   AppNavbarBrand,
   AppHeaderDropdown
 } from '@coreui/react';
+import {searchResult} from "../reducers/selectors";
 
 import SearchBar from './SearchBar';
 
@@ -58,36 +63,76 @@ const getSidebar = (location) => {
   return currentItem && SIDEBAR_NAV_ITEMS[currentItem];
 }
 
-function searchTheExplorer(value) {
+function searchTheExplorer(_value) {
   // TODO: search
 }
 
-const Layout = ({children, logout, location, toggleTheme, currentTheme}) => {
-  const sidebar = getSidebar(location);
-  if (!sidebar) {
-    removeCssClasses();
+class Layout extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {loading: false};
   }
-  return (
-    <div className="app animated fadeIn">
+
+  shouldComponentUpdate(nextProps) {
+    if (nextProps.searchResult && Object.keys(nextProps.searchResult).length &&
+      nextProps.searchResult !== this.props.searchResult) {
+      this.setState({loading: false});
+
+      if (nextProps.searchResult.error) {
+        return true;
+      }
+
+      if (nextProps.searchResult.address) {
+        this.props.history.push(`/embark/explorer/accounts/${nextProps.searchResult.address}`);
+        return false;
+      }
+      if (nextProps.searchResult.hasOwnProperty('transactionIndex')) {
+        this.props.history.push(`/embark/explorer/transactions/${nextProps.searchResult.hash}`);
+        return false;
+      }
+      if (nextProps.searchResult.hasOwnProperty('number')) {
+        this.props.history.push(`/embark/explorer/blocks/${nextProps.searchResult.number}`);
+        return false;
+      }
+      // Returned something we didn't know existed
+    }
+    return true;
+  }
+
+  searchTheExplorer(value) {
+    this.props.explorerSearch(value);
+    this.setState({loading: true});
+  }
+
+  render() {
+    const {children, logout, location, toggleTheme, currentTheme, searchResult} = this.props;
+
+    return (<div className="app animated fadeIn">
       <AppHeader fixed>
-        <AppNavbarBrand className="mx-3"
+        <AppSidebarToggler className="d-lg-none" display="md" mobile />
+        <AppNavbarBrand
           full={{ src: logo, width: 50, height: 50, alt: 'Embark Logo' }}
           minimized={{ src: logo, width: 30, height: 30, alt: 'Embark Logo' }}
         />
+        <AppSidebarToggler className="d-md-down-none" display="lg" />
         <Nav className="d-md-down-none" navbar>
-          {HEADER_NAV_ITEMS.map((item) => {
+          {sidebarNavItems.items.map((item) => {
             return (
-              <NavItem className="px-3" key={item.to}>
-                <NavLink exact tag={Link} to={item.to}>
-                  <FontAwesome className="mr-2" name={item.icon} />
+              <NavItem className="px-3" key={item.url}>
+                <NavLink href={item.url}>
+                  <i className={item.icon}>&nbsp;</i>
                   {item.name}
                 </NavLink>
               </NavItem>
-            )
+            );
           })}
         </Nav>
         <Nav className="ml-auto" navbar>
-          <SearchBar searchSubmit={searchValue => searchTheExplorer(searchValue)}/>
+          <SearchBar searchSubmit={searchValue => this.searchTheExplorer(searchValue)}/>
+          {this.state.loading && <p>Searching...</p>}
+          {searchResult.error && <Alert color="danger">{searchResult.error}</Alert>}
+
           <AppHeaderDropdown direction="down">
             <DropdownToggle nav>
               <i className="icon-settings" />
@@ -104,13 +149,13 @@ const Layout = ({children, logout, location, toggleTheme, currentTheme}) => {
       </AppHeader>
       <div className="app-body">
         {sidebar &&
-          <AppSidebar fixed display="lg">
-            <AppSidebarHeader />
-            <AppSidebarForm />
-            <AppSidebarNav navConfig={sidebar} location={location} />
-            <AppSidebarFooter />
-            <AppSidebarMinimizer />
-          </AppSidebar>
+        <AppSidebar fixed display="lg">
+          <AppSidebarHeader />
+          <AppSidebarForm />
+          <AppSidebarNav navConfig={sidebarNavItems} location={location} />
+          <AppSidebarFooter />
+          <AppSidebarMinimizer />
+        </AppSidebar>
         }
         <main className="main">
           <Container fluid className="h-100" style={{marginTop: '24px'}}>
@@ -128,8 +173,8 @@ const Layout = ({children, logout, location, toggleTheme, currentTheme}) => {
           <a href="https://github.com/embark-framework" title="Github" rel="noopener noreferrer" target="_blank">Github</a>
         </span>
       </AppFooter>
-    </div>
-  );
+    </div>);
+  }
 }
 
 Layout.propTypes = {
@@ -138,7 +183,20 @@ Layout.propTypes = {
   location: PropTypes.object,
   logout: PropTypes.func,
   toggleTheme: PropTypes.func,
-  currentTheme: PropTypes.string
+  currentTheme: PropTypes.string,
+  explorerSearch: PropTypes.func,
+  searchResult: PropTypes.object,
+  history: PropTypes.object
 };
 
-export default Layout;
+
+function mapStateToProps(state) {
+  return {searchResult: searchResult(state)};
+}
+
+export default withRouter(connect(
+  mapStateToProps,
+  {
+    explorerSearch: explorerSearch.request
+  },
+)(Layout));

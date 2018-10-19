@@ -10,7 +10,7 @@ const Accounts = ({accounts}) => (
     <Col>
       <h1>Accounts</h1>
       {accounts.map(account => (
-        <Card>
+        <Card key={account.address}>
           <CardHeader>
             <Link to={`/embark/explorer/accounts/${account.address}`}>
               <CardTitleIdenticon id={account.address}>Account {account.address}</CardTitleIdenticon>
