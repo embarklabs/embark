@@ -1,4 +1,3 @@
-let async = require('async');
 let windowSize = require('window-size');
 
 let Monitor = require('./monitor.js');

@@ -4,14 +4,22 @@ import autoscroll from 'autoscroll-react';
 
 import "./Logs.css";
 
-const Logs = (props) =>  (
-  <div className="logs" {...props}>
-    {props.children}
-  </div>
-);
+// This NEEDS to be a component because of autoscroll
+class Logs extends React.Component {
+  render() {
+    return (
+      <div className="logs" {...this.props}>
+        {this.props.children}
+      </div>
+    );
+  }
+}
 
 Logs.propTypes = {
-  children: PropTypes.object
+  children: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array
+  ])
 };
 
 export default autoscroll(Logs);

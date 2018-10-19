@@ -115,7 +115,7 @@ class Layout extends React.Component {
       {HEADER_NAV_ITEMS.map((item) => {
         return (
           <NavItem className="px-3" key={item.to}>
-            <NavLink exact tag={Link} to={item.to}>
+            <NavLink tag={Link} to={item.to}>
               <FontAwesome className="mr-2" name={item.icon} />
               {item.name}
             </NavLink>

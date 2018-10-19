@@ -24,7 +24,7 @@ const orderClassName = (address) => {
     'badge-success': address,
     'badge-secondary': !address
   });
-}
+};
 
 // TODO add an ABI parser
 const findConstructor = (abiDefinition) => abiDefinition.find(method => method.type === 'constructor');
@@ -35,56 +35,54 @@ const NoWeb3 = () => (
       <h3>You are not connected to web3 yet</h3>
     </Col>
   </Row>
-)
+);
 
 const LayoutContract = ({contract, children, cardTitle}) => (
   <Card>
     <CardHeader>
       <CardTitle>
-        <h4>
-          <span className={orderClassName(contract.address)}>{contract.index + 1}</span>
-          {cardTitle}
-        </h4>
+        <span className={orderClassName(contract.address)}>{contract.index + 1}</span>
+        {cardTitle}
       </CardTitle>
     </CardHeader>
     <CardBody>
       {children}
     </CardBody>
   </Card>
-)
+);
 
 const DeploymentResult = ({deployment}) => {
   if (deployment.running) {
-    return <p>Deployment is in progress <FontAwesomeIcon className="ml-1" name="spinner" spin/></p>
+    return <p>Deployment is in progress <FontAwesomeIcon className="ml-1" name="spinner" spin/></p>;
   }
 
   if (deployment.error) {
-    return <p className="text-danger">Deployment failed: {deployment.error}</p>
+    return <p className="text-danger">Deployment failed: {deployment.error}</p>;
   }
 
   return (
     <React.Fragment>
       <p className="text-success">Deployment succeed:</p>
-      <dl class="row">
-        <Description label="Transaction" value={deployment.transactionHash} />
-        <Description label="Gas used" value={deployment.gasUsed} />
-        <Description label="Address" value={deployment.contractAddress} />
+      <dl className="row">
+        <Description label="Transaction" value={deployment.transactionHash}/>
+        <Description label="Gas used" value={deployment.gasUsed}/>
+        <Description label="Address" value={deployment.contractAddress}/>
       </dl>
     </React.Fragment>
-  )
-}
+  );
+};
 
 const GasEstimateResult = ({gasEstimate}) => {
   if (gasEstimate.running) {
-    return <p>Gas Estimation is in progresss <FontAwesomeIcon className="ml-1" name="spinner" spin/></p>
+    return <p>Gas Estimation is in progresss <FontAwesomeIcon className="ml-1" name="spinner" spin/></p>;
   }
 
   if (gasEstimate.error) {
-    return <p className="text-danger">Gas Estimation failed: {gasEstimate.error}</p>
+    return <p className="text-danger">Gas Estimation failed: {gasEstimate.error}</p>;
   }
 
-  return <p className="text-success">Gas Estimation succeed: {gasEstimate.gas}</p>
-}
+  return <p className="text-success">Gas Estimation succeed: {gasEstimate.gas}</p>;
+};
 
 class Web3Contract extends React.Component {
   constructor(props) {
@@ -122,39 +120,40 @@ class Web3Contract extends React.Component {
         <Row>
           <Col md={6}>
             {argumentsRequired &&
-              <React.Fragment>
-                <h5>Arguments:</h5>
-                {abiConstructor.inputs.map(input => (
-                    <FormGroup key={input.name}>
-                      <Label htmlFor={input.name}>{input.name}</Label>
-                      <Input id={input.name} placeholder={input.name} onChange={e => this.handleOnChange(e, input.name)} />
-                    </FormGroup>
-                  ))}
-              </React.Fragment>
+            <React.Fragment>
+              <h5>Arguments:</h5>
+              {abiConstructor.inputs.map(input => (
+                <FormGroup key={input.name}>
+                  <Label htmlFor={input.name}>{input.name}</Label>
+                  <Input id={input.name} placeholder={input.name} onChange={e => this.handleOnChange(e, input.name)}/>
+                </FormGroup>
+              ))}
+            </React.Fragment>
             }
 
-            {!this.props.web3 && <NoWeb3 />}
+            {!this.props.web3 && <NoWeb3/>}
 
             {this.props.web3 && !isInterface &&
-              <React.Fragment>
-                <Button className="mr-2" 
-                        color="primary" 
-                        disabled={this.actionDisabled()} 
-                        onClick={() => this.props.web3EstimateGas(this.props.contract, this.inputsAsArray())}>
-                  Estimate
-                </Button>
-                <Button color="primary" disabled={this.actionDisabled()} onClick={() => this.props.web3Deploy(this.props.contract, this.inputsAsArray())}>Deploy</Button>
-              </React.Fragment>
+            <React.Fragment>
+              <Button className="mr-2"
+                      color="primary"
+                      disabled={this.actionDisabled()}
+                      onClick={() => this.props.web3EstimateGas(this.props.contract, this.inputsAsArray())}>
+                Estimate
+              </Button>
+              <Button color="primary" disabled={this.actionDisabled()}
+                      onClick={() => this.props.web3Deploy(this.props.contract, this.inputsAsArray())}>Deploy</Button>
+            </React.Fragment>
             }
           </Col>
           <Col md={5}>
             {this.props.gasEstimate && <GasEstimateResult gasEstimate={this.props.gasEstimate}/>}
-            <hr />
+            <hr/>
             {this.props.deployment && <DeploymentResult deployment={this.props.deployment}/>}
           </Col>
         </Row>
       </LayoutContract>
-    )
+    );
   }
 }
 
@@ -167,13 +166,14 @@ const EmbarkContract = ({contract}) => (
   }>
     {contract.address && <p><strong>Arguments:</strong> {JSON.stringify(contract.args)}</p>}
     {contract.transactionHash &&
-      <React.Fragment>
-        <p><strong>Transaction Hash:</strong> {contract.transactionHash}</p>
-        <p><strong>{contract.gas}</strong> gas at <strong>{contract.gasPrice}</strong> Wei, estimated cost: <strong>{contract.gas * contract.gasPrice}</strong> Wei</p>
-      </React.Fragment>
+    <React.Fragment>
+      <p><strong>Transaction Hash:</strong> {contract.transactionHash}</p>
+      <p><strong>{contract.gas}</strong> gas at <strong>{contract.gasPrice}</strong> Wei, estimated
+        cost: <strong>{contract.gas * contract.gasPrice}</strong> Wei</p>
+    </React.Fragment>
     }
     {contract.address && !contract.transactionHash &&
-      <p><strong>Contract already deployed</strong></p>
+    <p><strong>Contract already deployed</strong></p>
     }
   </LayoutContract>
 );
@@ -185,12 +185,12 @@ const ContractsHeader = ({deploymentPipeline, updateDeploymentPipeline}) => (
         <span className="mr-2">Deploy using</span>
         <FormGroup check inline>
           <Label className="form-check-label" check>
-            <Input className="form-check-input" 
-                    type="radio" 
-                    onChange={() => updateDeploymentPipeline(DEPLOYMENT_PIPELINES.embark)} 
-                    checked={deploymentPipeline === DEPLOYMENT_PIPELINES.embark} />
+            <Input className="form-check-input"
+                   type="radio"
+                   onChange={() => updateDeploymentPipeline(DEPLOYMENT_PIPELINES.embark)}
+                   checked={deploymentPipeline === DEPLOYMENT_PIPELINES.embark}/>
             Embark
-            <FontAwesomeIcon className="ml-1" name="question" id="embark-tooltip" />
+            <FontAwesomeIcon className="ml-1" name="question" id="embark-tooltip"/>
             <UncontrolledTooltip placement="bottom" target="embark-tooltip">
               Embark will deploy the contracts automatically for you each time there is a change in one of them.
             </UncontrolledTooltip>
@@ -198,12 +198,12 @@ const ContractsHeader = ({deploymentPipeline, updateDeploymentPipeline}) => (
         </FormGroup>
         <FormGroup check inline>
           <Label className="form-check-label" check>
-            <Input className="form-check-input" 
-                    type="radio" 
-                    onChange={() => updateDeploymentPipeline(DEPLOYMENT_PIPELINES.injectedWeb3)} 
-                    checked={deploymentPipeline === DEPLOYMENT_PIPELINES.injectedWeb3} />
+            <Input className="form-check-input"
+                   type="radio"
+                   onChange={() => updateDeploymentPipeline(DEPLOYMENT_PIPELINES.injectedWeb3)}
+                   checked={deploymentPipeline === DEPLOYMENT_PIPELINES.injectedWeb3}/>
             Injected Web3
-            <FontAwesomeIcon className="ml-1" name="question" id="web3-tooltip" />
+            <FontAwesomeIcon className="ml-1" name="question" id="web3-tooltip"/>
             <UncontrolledTooltip placement="bottom" target="web3-tooltip">
               You will have full control on your deployment
             </UncontrolledTooltip>
@@ -212,30 +212,32 @@ const ContractsHeader = ({deploymentPipeline, updateDeploymentPipeline}) => (
       </FormGroup>
     </div>
   </Row>
-)
+);
 
 const Contract = ({web3, contract, deploymentPipeline, web3Deploy, web3EstimateGas, web3Deployments, web3GasEstimates}) => {
   const deployment = web3Deployments[contract.className];
   const gasEstimate = web3GasEstimates[contract.className];
-  switch(deploymentPipeline) {
+  switch (deploymentPipeline) {
     case DEPLOYMENT_PIPELINES.embark:
-      return <EmbarkContract contract={contract} />;
+      return <EmbarkContract contract={contract}/>;
     case DEPLOYMENT_PIPELINES.injectedWeb3:
-      return <Web3Contract web3={web3} 
+      return <Web3Contract web3={web3}
                            deployment={deployment}
                            gasEstimate={gasEstimate}
                            contract={contract}
                            web3Deploy={web3Deploy}
-                           web3EstimateGas={web3EstimateGas} />;
+                           web3EstimateGas={web3EstimateGas}/>;
     default:
       return <React.Fragment></React.Fragment>;
   }
-}
+};
 
 const Contracts = (props) => (
   <React.Fragment>
-    <ContractsHeader deploymentPipeline={props.deploymentPipeline} updateDeploymentPipeline={props.updateDeploymentPipeline} />
-    {props.contracts.sort((a, b) => a.index - b.index).map(contract => <Contract key={contract.index} contract={contract} {...props} />)}
+    <ContractsHeader deploymentPipeline={props.deploymentPipeline}
+                     updateDeploymentPipeline={props.updateDeploymentPipeline}/>
+    {props.contracts.sort((a, b) => a.index - b.index).map(contract => <Contract key={contract.index}
+                                                                                 contract={contract} {...props} />)}
   </React.Fragment>
 );
 
