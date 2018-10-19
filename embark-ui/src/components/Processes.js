@@ -19,7 +19,7 @@ function iconClasses(state){
 }
 
 const Process = ({process}) => (
-  <Col sm={6} lg={2}>
+  <Col xs={12} sm={6} md={4} xl={3}>
     <Widget02 header={process.name} mainText={process.description} icon={iconClasses(process.state)} color={colorClasses(process.state)} variant="1" />
   </Col>
 );

@@ -10,8 +10,6 @@ const propTypes = {
   icon: PropTypes.string,
   color: PropTypes.string,
   variant: PropTypes.string,
-  footer: PropTypes.bool,
-  link: PropTypes.string,
   children: PropTypes.node,
   className: PropTypes.string,
   cssModule: PropTypes.object,
@@ -46,25 +44,13 @@ class Widget02 extends Component {
       return (<i className={classes}></i>);
     };
 
-    const cardFooter = function () {
-      if (footer) {
-        return (
-          <CardFooter className="px-3 py-2">
-            <a className="font-weight-bold font-xs btn-block text-muted" href={link}>View More
-              <i className="fa fa-angle-right float-right font-lg"></i></a>
-          </CardFooter>
-        );
-      }
-    };
-
     return (
       <Card>
         <CardBody className={card.classes} {...attributes}>
           {blockIcon(card.icon)}
-          <div className={lead.classes}>{header}</div>
-          <div className="text-muted text-uppercase font-weight-bold font-xs">{mainText}</div>
+          <p className={lead.classes}>{header}</p>
+          <p className="mb-0 text-truncate text-muted text-uppercase font-weight-bold font-xs">{mainText}</p>
         </CardBody>
-        {cardFooter()}
       </Card>
     );
   }
