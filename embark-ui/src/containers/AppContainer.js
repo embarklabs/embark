@@ -23,10 +23,6 @@ import { getCredentials, getAuthenticationError, getProcesses, getTheme } from '
 const qs = require('qs');
 
 class AppContainer extends Component {
-  constructor (props) {
-    super(props);
-  }
-
   queryStringAuthenticate() {
     const token = qs.parse(this.props.location.search, {ignoreQueryPrefix: true}).token;
 
