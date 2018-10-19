@@ -59,19 +59,19 @@ class EmbarkController {
 
     const webServerConfig = {};
 
-    if (options.runWebserver !== null) {
+    if (options.runWebserver !== null && options.runWebserver !== undefined) {
       webServerConfig.enabled = options.runWebserver;
     }
 
-    if (options.serverHost !== null) {
+    if (options.serverHost !== null && options.serverHost !== undefined) {
       webServerConfig.host = options.serverHost;
     }
 
-    if (options.serverPort !== null) {
+    if (options.serverPort !== null && options.serverPort !== undefined) {
       webServerConfig.port = options.serverPort;
     }
 
-    if (options.openBrowser !== null) {
+    if (options.openBrowser !== null && options.openBrowser !== undefined) {
       webServerConfig.openBrowser = options.openBrowser;
     }
 
