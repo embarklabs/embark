@@ -80,8 +80,10 @@ class AppContainer extends Component {
     if (this.shouldRenderLogin()) {
       content = <Login credentials={this.props.credentials} authenticate={this.props.authenticate} error={this.props.authenticationError} />;
     } else {
-      content = <Layout location={this.props.location} logout={this.props.logout} credentials={this.props.credentials}
-                        toggleTheme={() => this.toggleTheme()} currentTheme={this.props.theme}>
+      content = <Layout location={this.props.location} 
+                        logout={this.props.logout}
+                        toggleTheme={() => this.toggleTheme()} 
+                        currentTheme={this.props.theme}>
         <React.Fragment>{routes}</React.Fragment>
       </Layout>;
     }
