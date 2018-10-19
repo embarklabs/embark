@@ -63,10 +63,6 @@ const getSidebar = (location) => {
   return currentItem && SIDEBAR_NAV_ITEMS[currentItem];
 }
 
-function searchTheExplorer(_value) {
-  // TODO: search
-}
-
 class Layout extends React.Component {
   constructor(props) {
     super(props);
@@ -105,8 +101,72 @@ class Layout extends React.Component {
     this.setState({loading: true});
   }
 
+  renderNav() {
+    return (<Nav className="d-md-down-none" navbar>
+      {sidebarNavItems.items.map((item) => {
+        return (
+          <NavItem className="px-3" key={item.url}>
+            <NavLink href={item.url}>
+              <i className={item.icon}>&nbsp;</i>
+              {item.name}
+            </NavLink>
+          </NavItem>
+        );
+      })}
+    </Nav>);
+  }
+
+  renderRightNav() {
+    const searchResult = this.props.searchResult;
+    return (<Nav className="ml-auto" navbar>
+      <SearchBar searchSubmit={searchValue => this.searchTheExplorer(searchValue)}/>
+      {this.state.loading && <p>Searching...</p>}
+      {searchResult.error && <Alert color="danger">{searchResult.error}</Alert>}
+
+      {this.renderSettings()}
+    </Nav>);
+  }
+
+  renderSettings() {
+    const {logout, toggleTheme, currentTheme} = this.props;
+
+    return (<AppHeaderDropdown direction="down">
+      <DropdownToggle nav>
+        <i className="icon-settings" />
+      </DropdownToggle>
+      <DropdownMenu right style={{ right: 'auto' }}>
+        <DropdownItem className="text-capitalize" onClick={() => toggleTheme()}>
+          <FontAwesome name={currentTheme === DARK_THEME ? 'sun-o' : 'moon-o'} />
+          {currentTheme === DARK_THEME ? LIGHT_THEME : DARK_THEME} Mode
+        </DropdownItem>
+        <DropdownItem onClick={logout}><FontAwesome name="lock" /> Logout</DropdownItem>
+      </DropdownMenu>
+    </AppHeaderDropdown>);
+  }
+
+  renderSideBar() {
+    return (<AppSidebar fixed display="lg">
+      <AppSidebarHeader />
+      <AppSidebarForm />
+      <AppSidebarNav navConfig={sidebarNavItems} location={this.props.location} />
+      <AppSidebarFooter />
+      <AppSidebarMinimizer />
+    </AppSidebar>);
+  }
+
+  renderFooter() {
+    return (<AppFooter>
+        <span className="ml-auto">
+          Embark&nbsp;
+          <a href="https://embark.status.im" title="Documentation" rel="noopener noreferrer" target="_blank">Documentation</a>
+          &nbsp;|&nbsp;
+          <a href="https://github.com/embark-framework" title="Github" rel="noopener noreferrer" target="_blank">Github</a>
+        </span>
+    </AppFooter>);
+  }
+
   render() {
-    const {children, logout, location, toggleTheme, currentTheme, searchResult} = this.props;
+    const {children} = this.props;
 
     return (<div className="app animated fadeIn">
       <AppHeader fixed>
@@ -116,63 +176,23 @@ class Layout extends React.Component {
           minimized={{ src: logo, width: 30, height: 30, alt: 'Embark Logo' }}
         />
         <AppSidebarToggler className="d-md-down-none" display="lg" />
-        <Nav className="d-md-down-none" navbar>
-          {sidebarNavItems.items.map((item) => {
-            return (
-              <NavItem className="px-3" key={item.url}>
-                <NavLink href={item.url}>
-                  <i className={item.icon}>&nbsp;</i>
-                  {item.name}
-                </NavLink>
-              </NavItem>
-            );
-          })}
-        </Nav>
-        <Nav className="ml-auto" navbar>
-          <SearchBar searchSubmit={searchValue => this.searchTheExplorer(searchValue)}/>
-          {this.state.loading && <p>Searching...</p>}
-          {searchResult.error && <Alert color="danger">{searchResult.error}</Alert>}
 
-          <AppHeaderDropdown direction="down">
-            <DropdownToggle nav>
-              <i className="icon-settings" />
-            </DropdownToggle>
-            <DropdownMenu right style={{ right: 'auto' }}>
-              <DropdownItem className="text-capitalize" onClick={() => toggleTheme()}>
-                <FontAwesome name={currentTheme === DARK_THEME ? 'sun-o' : 'moon-o'} />
-                {currentTheme === DARK_THEME ? LIGHT_THEME : DARK_THEME} Mode
-              </DropdownItem>
-              <DropdownItem onClick={logout}><FontAwesome name="lock" /> Logout</DropdownItem>
-            </DropdownMenu>
-          </AppHeaderDropdown>
-        </Nav>
+        {this.renderNav()}
+
+        {this.renderRightNav()}
       </AppHeader>
+
       <div className="app-body">
-        {sidebar &&
-        <AppSidebar fixed display="lg">
-          <AppSidebarHeader />
-          <AppSidebarForm />
-          <AppSidebarNav navConfig={sidebarNavItems} location={location} />
-          <AppSidebarFooter />
-          <AppSidebarMinimizer />
-        </AppSidebar>
-        }
+        {this.renderSideBar()}
+
         <main className="main">
           <Container fluid className="h-100" style={{marginTop: '24px'}}>
             {children}
           </Container>
         </main>
-        <AppAside fixed>
-        </AppAside>
       </div>
-      <AppFooter>
-        <span className="ml-auto">
-          Embark&nbsp;
-          <a href="https://embark.status.im" title="Documentation" rel="noopener noreferrer" target="_blank">Documentation</a>
-          &nbsp;|&nbsp;
-          <a href="https://github.com/embark-framework" title="Github" rel="noopener noreferrer" target="_blank">Github</a>
-        </span>
-      </AppFooter>
+
+      {this.renderFooter()}
     </div>);
   }
 }
