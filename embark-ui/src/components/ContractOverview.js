@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import React from 'react';
 import ReactJson from "react-json-view";
 import {Row, Col, Table} from "reactstrap";
-import GasStationContainer from "../containers/GasStationContainer";
 import {formatContractForDisplay} from '../utils/presentation';
 import CopyButton from './CopyButton';
 

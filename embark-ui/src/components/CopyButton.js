@@ -1,19 +1,51 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Badge} from "reactstrap";
+import {Badge, Tooltip} from "reactstrap";
 import classNames from 'classnames';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
+import uuid from 'uuid/v1';
 
 import './CopyButton.css';
 
-const CopyButton = ({text, onCopy, title, size}) => (
-  <CopyToClipboard text={text}
-                   onCopy={onCopy}
-                   title={title}>
-    <Badge className={classNames('copy-to-clipboard', 'p-' + (size ? size : 3))}
-           color="primary"><i className="fa fa-copy"/></Badge>
-  </CopyToClipboard>
-);
+class CopyButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.id = uuid();
+    this.state = {
+      showCopied: false
+    };
+  }
+
+  onCopy() {
+    if (this.props.onCopy) {
+      return this.props.onCopy();
+    }
+    this.setState({
+      showCopied: true
+    });
+    // Hide the tooltip after a few seconds
+    clearTimeout(this.showTimeout);
+    this.showTimeout = setTimeout(() => {
+      this.setState({showCopied: false});
+    }, 1500);
+  }
+
+  render() {
+    const {text, title, size} = this.props;
+    return (<CopyToClipboard text={text}
+                             onCopy={() => this.onCopy()}
+                             title={title}>
+      <Badge className={classNames('copy-to-clipboard', 'p-' + (size ? size : 3))}
+             color="primary" id={'copy-button-' + this.id}>
+        <i className="fa fa-copy"/>
+        {this.state.showCopied &&
+        <Tooltip isOpen={true} target={'copy-button-' + this.id}>
+          Copied to clipboard
+        </Tooltip>}
+      </Badge>
+    </CopyToClipboard>);
+  }
+}
 
 CopyButton.propTypes = {
   text: PropTypes.oneOfType([
