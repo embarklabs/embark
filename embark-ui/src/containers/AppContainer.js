@@ -23,12 +23,12 @@ import { getCredentials, getAuthenticationError, getProcesses, getTheme } from '
 const qs = require('qs');
 
 class AppContainer extends Component {
-  getToken() {
+  getQueryToken() {
     return qs.parse(this.props.location.search, {ignoreQueryPrefix: true}).token;
   }
 
   queryStringAuthenticate() {
-    const token = this.getToken();
+    const token = this.getQueryToken();
 
     if (!token) {
       return;
@@ -54,7 +54,7 @@ class AppContainer extends Component {
       this.props.authenticate(this.props.credentials.host, this.props.credentials.token);
     }
 
-    if (this.getToken() && this.props.credentials.authenticated) {
+    if (this.getQueryToken() && this.props.credentials.authenticated) {
       const loc = Object.assign({}, this.props.location);
       loc.search = loc.search.replace(
         /(\?|&?)(token=[\w-]*)(&?)/,
