@@ -27,6 +27,15 @@ class AppContainer extends Component {
     return qs.parse(this.props.location.search, {ignoreQueryPrefix: true}).token;
   }
 
+  stripQueryToken(location) {
+    const _location = Object.assign({}, location);
+    _location.search = _location.search.replace(
+      /(\?|&?)(token=[\w-]*)(&?)/,
+      (_, p1, p2, p3) => (p2 ? (p3 === '&' ? p1 : '') : '')
+    );
+    return _location;
+  }
+
   queryStringAuthenticate() {
     if (this.props.credentials.authenticating) {
       return;
@@ -62,12 +71,7 @@ class AppContainer extends Component {
     }
 
     if (this.getQueryToken() && this.props.credentials.authenticated) {
-      const loc = Object.assign({}, this.props.location);
-      loc.search = loc.search.replace(
-        /(\?|&?)(token=[\w-]*)(&?)/,
-        (_, p1, p2, p3) => (p2 ? (p3 === '&' ? p1 : '') : '')
-      );
-      this.props.history.replace(loc);
+      this.props.history.replace(this.stripQueryToken(this.props.location));
     }
 
     if (this.props.credentials.authenticated && !this.props.initialized) {
