@@ -107,9 +107,9 @@ class AppContainer extends Component {
       return <div></div>;
     }
     return (
-      <Layout location={this.props.location} 
+      <Layout location={this.props.location}
               logout={this.props.logout}
-              toggleTheme={() => this.toggleTheme()} 
+              toggleTheme={() => this.toggleTheme()}
               currentTheme={this.props.theme}>
         <React.Fragment>{routes}</React.Fragment>
       </Layout>
