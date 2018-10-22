@@ -7,6 +7,8 @@ import {explorerSearch} from "../actions";
 import {LIGHT_THEME, DARK_THEME} from '../constants';
 import FontAwesome from 'react-fontawesome';
 
+import "./Layout.css";
+
 import {
   AppFooter,
   AppHeader,
@@ -106,62 +108,83 @@ class Layout extends React.Component {
     this.setState({searchLoading: true});
   }
 
-  closeSearchError() {
+  dismissSearchError() {
     this.setState({searchError: false});
   }
 
   renderNav() {
-    return (<Nav className="d-md-down-none" navbar>
-      {HEADER_NAV_ITEMS.map((item) => {
-        return (
-          <NavItem className="px-3" key={item.to}>
-            <NavLink tag={Link} to={item.to}>
-              <FontAwesome className="mr-2" name={item.icon} />
-              {item.name}
-            </NavLink>
-          </NavItem>
-        );
-      })}
-    </Nav>);
+    return (
+      <React.Fragment>
+        <Nav className="d-lg-down-none" navbar>
+          {HEADER_NAV_ITEMS.map((item) => {
+            return (
+              <NavItem className="px-3" key={item.to}>
+                <NavLink tag={Link} to={item.to}>
+                  <FontAwesome className="mr-2" name={item.icon} />
+                  {item.name}
+                </NavLink>
+              </NavItem>
+            );
+          })}
+        </Nav>
+        <AppHeaderDropdown className="list-unstyled d-xl-none" direction="down">
+          <DropdownToggle nav>
+            <FontAwesome name='bars'/>
+          </DropdownToggle>
+          <DropdownMenu left style={{ left: 'auto' }}>
+            {HEADER_NAV_ITEMS.map((item) => (
+              <DropdownItem key={item.to} to={item.to} tag={Link}>
+                <FontAwesome className="mr-2" name={item.icon} />
+                {item.name}
+              </DropdownItem>
+            ))}
+          </DropdownMenu>
+        </AppHeaderDropdown>
+      </React.Fragment>
+    );
   }
 
   renderRightNav() {
-    return (<Nav className="ml-auto" navbar>
-      {<SearchBar hidden={this.state.searchLoading} searchSubmit={searchValue => this.searchTheExplorer(searchValue)}/>}
-      {this.state.searchLoading && <p className="search-loading">
-        Searching... <FontAwesome name="spinner" size="2x" spin className="align-middle ml-2"/>
-      </p>}
-
-      {this.renderSettings()}
-    </Nav>);
+    return (
+      <Nav className="ml-auto" navbar>
+        <NavItem className="d-sm-down-none">
+          <SearchBar loading={this.state.searchLoading} searchSubmit={searchValue => this.searchTheExplorer(searchValue)}/>
+        </NavItem>
+        {this.renderSettings()}
+      </Nav>
+    );
   }
 
   renderSettings() {
     const {logout, toggleTheme, currentTheme} = this.props;
 
-    return (<AppHeaderDropdown direction="down">
-      <DropdownToggle nav>
-        <i className="icon-settings" />
-      </DropdownToggle>
-      <DropdownMenu right style={{ right: 'auto' }}>
-        <DropdownItem className="text-capitalize" onClick={() => toggleTheme()}>
-          <FontAwesome name={currentTheme === DARK_THEME ? 'sun-o' : 'moon-o'} />
-          {currentTheme === DARK_THEME ? LIGHT_THEME : DARK_THEME} Mode
-        </DropdownItem>
-        <DropdownItem onClick={logout}><FontAwesome name="lock" /> Logout</DropdownItem>
-      </DropdownMenu>
-    </AppHeaderDropdown>);
+    return (
+      <AppHeaderDropdown direction="down">
+        <DropdownToggle nav>
+          <i className="icon-settings" />
+        </DropdownToggle>
+        <DropdownMenu right style={{ right: 'auto' }}>
+          <DropdownItem className="text-capitalize" onClick={() => toggleTheme()}>
+            <FontAwesome name={currentTheme === DARK_THEME ? 'sun-o' : 'moon-o'} />
+            {currentTheme === DARK_THEME ? LIGHT_THEME : DARK_THEME} Mode
+          </DropdownItem>
+          <DropdownItem onClick={logout}><FontAwesome name="lock" /> Logout</DropdownItem>
+        </DropdownMenu>
+      </AppHeaderDropdown>
+    );
   }
 
   renderFooter() {
-    return (<AppFooter>
+    return (
+      <AppFooter>
         <span className="ml-auto">
           Embark&nbsp;
           <a href="https://embark.status.im" title="Documentation" rel="noopener noreferrer" target="_blank">Documentation</a>
           &nbsp;|&nbsp;
           <a href="https://github.com/embark-framework" title="Github" rel="noopener noreferrer" target="_blank">Github</a>
         </span>
-    </AppFooter>);
+      </AppFooter>
+    );
   }
 
   render() {
@@ -173,11 +196,9 @@ class Layout extends React.Component {
 
     return (<div className="app animated fadeIn">
       <AppHeader fixed>
-        <AppNavbarBrand className="mx-3"
-                        full={{src: logo, width: 50, height: 50, alt: 'Embark Logo'}}
-                        minimized={{src: logo, width: 30, height: 30, alt: 'Embark Logo'}}
+        <AppNavbarBrand full={{src: logo, width: 50, height: 50, alt: 'Embark Logo'}}
+                        minimized={{src: logo, width: 50, height: 50, alt: 'Embark Logo'}}
         />
-
         {this.renderNav()}
 
         {this.renderRightNav()}
@@ -185,7 +206,7 @@ class Layout extends React.Component {
 
       <div className="app-body">
         {sidebar &&
-        <AppSidebar fixed display="lg">
+        <AppSidebar fixed display="sm">
           <AppSidebarHeader />
           <AppSidebarForm />
           <AppSidebarNav navConfig={sidebar} location={location} />
@@ -195,11 +216,9 @@ class Layout extends React.Component {
         }
 
         <main className="main">
-          {searchResult.error && this.state.searchError && <Alert color="danger">{searchResult.error}
-            <span className="search-error-close" onClick={(e) => this.closeSearchError(e)}>
-              <FontAwesome name="times-circle"/>
-            </span>
-          </Alert>}
+          <Alert color="danger" isOpen={this.state.searchError} toggle={() => this.dismissSearchError()}>
+            {searchResult.error}
+          </Alert>
 
           <Container fluid className="h-100" style={{marginTop: '24px'}}>
             {children}

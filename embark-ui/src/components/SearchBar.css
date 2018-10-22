@@ -18,12 +18,6 @@
   box-shadow: none;
 }
 
-.search-loading {
+.search-bar .search-loading {
   margin-top: 16px;
-}
-
-.search-error-close {
-  position: absolute;
-  cursor: pointer;
-  right: 20px;
 }
