@@ -29,7 +29,7 @@ function request(type, path, params = {}) {
       'X-Embark-Cnonce': cnonce
     },
     ...(type === 'post' ? { data: params } : {}),
-    ...(type === 'get' ? { params } : {})
+    ...(type === 'get' ? { params: params.params } : {})
   }
 
   return axios(req)
