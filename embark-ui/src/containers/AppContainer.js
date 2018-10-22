@@ -18,7 +18,7 @@ import {
 
 import {LIGHT_THEME, DARK_THEME} from '../constants';
 
-import { getCredentials, getAuthenticationError, getVersions, getTheme } from '../reducers/selectors';
+import { getCredentials, getAuthenticationError, getProcesses, getTheme } from '../reducers/selectors';
 
 const qs = require('qs');
 
@@ -114,7 +114,7 @@ AppContainer.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    initialized: getVersions(state).length > 0,
+    initialized: getProcesses(state).length > 0,
     credentials: getCredentials(state),
     authenticationError: getAuthenticationError(state),
     theme: getTheme(state),
