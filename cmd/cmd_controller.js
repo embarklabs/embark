@@ -31,8 +31,8 @@ class EmbarkController {
   }
 
   blockchain(env, client) {
-    this.context = [constants.contexts.blockchain];
-    return require('../lib/modules/blockchain_process/blockchain.js')(this.config.blockchainConfig, client, env).run();
+    this.context = [constants.contexts.blockchain];    
+    return require('../lib/modules/blockchain_process/blockchain.js')(this.config.blockchainConfig, client, env, null, null, this.logger, this.events, true).run();
   }
 
   simulator(options) {
@@ -132,6 +132,7 @@ class EmbarkController {
         engine.startService("processManager");
         engine.startService("coreProcess");
         engine.startService("loggerApi");
+        engine.startService("blockchainListener");
         engine.startService("serviceMonitor");
         engine.startService("libraryManager");
         engine.startService("codeRunner");
@@ -437,73 +438,50 @@ class EmbarkController {
   }
 
   scaffold(options) {
+
     this.context = options.context || [constants.contexts.scaffold];
+    options.onlyCompile = true;
 
     const Engine = require('../lib/core/engine.js');
     const engine = new Engine({
       env: options.env,
-      client: options.client,
-      locale: options.locale,
       version: this.version,
-      embarkConfig: 'embark.json',
-      interceptLogs: false,
+      embarkConfig: options.embarkConfig || 'embark.json',
       logFile: options.logFile,
-      logLevel: options.logLevel,
-      events: options.events,
-      logger: options.logger,
-      config: options.config,
-      plugins: options.plugins,
-      context: this.context,
-      webpackConfigName: options.webpackConfigName
+      context: this.context
     });
 
+
     async.waterfall([
-      function initEngine(callback) {
+      function (callback) {
         engine.init({}, callback);
       },
-      function startServices(callback) {
-        engine.startService("scaffolding");
-        callback();
-      },
-      function generateContract(callback) {
-        engine.events.request('scaffolding:generate:contract', options, function(err, file) {
-          // Add contract file to the manager
-          engine.events.request('config:contractsFiles:add', file);
-          callback();
-        });
-      },
-      function initEngineServices(callback) {
+      function (callback) {
         let pluginList = engine.plugins.listPlugins();
         if (pluginList.length > 0) {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
-        engine.startService("processManager");
-        engine.startService("libraryManager");
-        engine.startService("codeRunner");
-        engine.startService("web3");
-        engine.startService("deployment", {onlyCompile: true});
 
-        callback();
-      },
-      function deploy(callback) {
-        engine.events.request('deploy:contracts', function(err) {
-          callback(err);
-        });
-      },
-      function generateUI(callback) {
-        engine.events.request("scaffolding:generate:ui", options, () => {
-          callback();
-        });
+        engine.startService("processManager");
+        engine.startService("serviceMonitor");
+        engine.startService("libraryManager");
+        engine.startService("pipeline");
+        engine.startService("deployment", {onlyCompile: true});
+        engine.startService("web3");
+        engine.startService("scaffolding");
+
+        engine.events.request('deploy:contracts', callback);
       }
-    ], function(err) {
+    ], (err) => {
       if (err) {
-        engine.logger.error(__("Error generating the UI: "));
-        engine.logger.error(err.message || err);
-        process.exit(1);
+        engine.logger.error(err.message);
+        engine.logger.info(err.stack);
+      } else {
+        engine.events.request("scaffolding:generate", options, () => {
+          engine.logger.info(__("finished generating the UI").underline);
+          process.exit();
+        });
       }
-      engine.logger.info(__("finished generating the UI").underline);
-      engine.logger.info(__("To see the result, execute {{cmd}} and go to /{{contract}}.html", {cmd: 'embark run'.underline, contract: options.contract}));
-      process.exit();
     });
   }
 

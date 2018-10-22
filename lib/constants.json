@@ -54,6 +54,7 @@
     "gasLimit": 6000000
   },
   "logs": {
-    "logPath": ".embark/logs/"
+    "logPath": ".embark/logs/",
+    "maxLogLength": 1500
   }
 }
