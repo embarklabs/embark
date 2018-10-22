@@ -4,6 +4,7 @@
   outline: none;
   box-shadow: none;
   width: 245px;
+  display: inline-block;
   border: 1px solid #c8ced3;
   border-right: 0;
 }
@@ -12,10 +13,16 @@
   border: 0;
 }
 
-#root .search-bar button {
+#root .search-bar .search-bar__button {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   box-shadow: none;
+}
+
+@media(max-width:575px){
+  #root .search-bar .search-bar__button {
+    margin-bottom: 4px;
+  }
 }
 
 .search-bar .search-loading {

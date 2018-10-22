@@ -147,7 +147,7 @@ class Layout extends React.Component {
   renderRightNav() {
     return (
       <Nav className="ml-auto" navbar>
-        <NavItem className="d-sm-down-none">
+        <NavItem>
           <SearchBar loading={this.state.searchLoading} searchSubmit={searchValue => this.searchTheExplorer(searchValue)}/>
         </NavItem>
         {this.renderSettings()}

@@ -11,7 +11,8 @@ class SearchBar extends React.Component {
     super(props);
 
     this.state = {
-      searchValue: ''
+      searchValue: '',
+      showForm: false
     };
   }
 
@@ -23,7 +24,12 @@ class SearchBar extends React.Component {
 
   onSubmit(e) {
     e.preventDefault();
+    this.hideForm();
     this.props.searchSubmit(this.state.searchValue);
+  }
+
+  hideForm() {
+    this.setState({showForm: false});
   }
 
   onKeyPress(e) {
@@ -32,17 +38,31 @@ class SearchBar extends React.Component {
     }
   }
 
+  revealForm() {
+    this.setState({showForm: true});
+  }
+
   render() {
     return (
       <Form inline className={classNames('search-bar', 'mr-2', {hidden: this.props.hidden})}>
         {!this.props.loading &&
           <React.Fragment>
-            <Input type="text" name="search-bar" placeholder="Search by Address / Txhash / Block"
-                  onChange={(e) => this.onChange(e)}
-                  value={this.state.searchValue} onKeyPress={e => this.onKeyPress(e)}/>
-            <Button color="secondary" onClick={(e) => this.onSubmit(e)}>
-              <FontAwesome name="search"/>
-            </Button>
+            <div className={classNames({'d-sm-down-none': !this.state.showForm})}>
+              <Input type="text" name="search-bar"
+                    placeholder="Search by Address / Txhash / Block"
+                    onChange={(e) => this.onChange(e)}
+                    value={this.state.searchValue}
+                    onBlur={() => this.hideForm()}
+                    onKeyPress={e => this.onKeyPress(e)}/>
+              <Button className='search-bar__button' color="secondary" onClick={(e) => this.onSubmit(e)}>
+                <FontAwesome name="search"/>
+              </Button>
+            </div>
+            {!this.state.showForm && <div className="d-block d-md-none">
+              <Button color="secondary" onClick={() => this.revealForm()}>
+                <FontAwesome name="search"/>
+              </Button>
+            </div>}
           </React.Fragment>
         }
         {this.props.loading &&
