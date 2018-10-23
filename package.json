@@ -100,14 +100,8 @@
     "pkg-up": "2.0.0",
     "promptly": "2.2.0",
     "propose": "0.0.5",
-<<<<<<< HEAD
     "remix-tests": "0.0.13",
-    "react-scripts": "^1.1.4",
-||||||| merged common ancestors
-    "react-scripts": "^1.1.4",
-=======
     "react-scripts": "1.1.5",
->>>>>>> exact versions per `npm ls --depth=0`
     "request": "2.88.0",
     "sass-loader": "7.1.0",
     "semver": "5.5.1",
@@ -125,22 +119,11 @@
     "url-loader": "1.1.1",
     "uuid": "3.3.2",
     "viz.js": "1.8.2",
-<<<<<<< HEAD
     "web3": "1.0.0-beta.34",
     "webpack": "4.19.0",
     "websocket": "1.0.28",
     "window-size": "1.1.1",
-    "webpack-bundle-analyzer": "^2.13.1",
-||||||| merged common ancestors
-    "web3": "1.0.0-beta.36",
-    "webpack": "4.18.0",
-    "webpack-bundle-analyzer": "^2.13.1",
-=======
-    "web3": "1.0.0-beta.36",
-    "webpack": "4.18.0",
-    "webpack-bundle-analyzer": "2.13.1",
->>>>>>> exact versions per `npm ls --depth=0`
-    "window-size": "1.1.1"
+    "webpack-bundle-analyzer": "^2.13.1"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
