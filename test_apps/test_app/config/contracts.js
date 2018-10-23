@@ -6,11 +6,11 @@ module.exports = {
       type: "ws"
     },
     dappConnection: [
-      "$WEB3",
       "ws://localhost:8546",
       "http://localhost:8550",
       "http://localhost:8545",
-      "http://localhost:8550"
+      "http://localhost:8550",
+      "$WEB3"
     ],
     gas: "auto",
     contracts: {
