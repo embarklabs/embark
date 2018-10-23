@@ -131,7 +131,7 @@ class Layout extends React.Component {
           <DropdownToggle nav>
             <FontAwesome name='bars'/>
           </DropdownToggle>
-          <DropdownMenu left style={{ left: 'auto' }}>
+          <DropdownMenu>
             {HEADER_NAV_ITEMS.map((item) => (
               <DropdownItem key={item.to} to={item.to} tag={Link}>
                 <FontAwesome className="mr-2" name={item.icon} />
@@ -220,7 +220,7 @@ class Layout extends React.Component {
             {searchResult.error}
           </Alert>
 
-          <Container fluid className="h-100" style={{marginTop: '24px'}}>
+          <Container fluid className="h-100">
             {children}
           </Container>
         </main>

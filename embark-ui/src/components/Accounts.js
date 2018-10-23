@@ -12,15 +12,15 @@ const Accounts = ({accounts}) => (
       {accounts.map(account => (
         <Card key={account.address}>
           <CardHeader>
-            <Link to={`/embark/explorer/accounts/${account.address}`}>
-              <CardTitleIdenticon id={account.address}>Account {account.address}</CardTitleIdenticon>
-            </Link>
+              <CardTitleIdenticon id={account.address}>Account&nbsp;
+                <Link to={`/embark/explorer/accounts/${account.address}`}>{account.address}</Link>
+              </CardTitleIdenticon>
           </CardHeader>
           <CardBody>
             <Row>
               <Col>
                 <strong>Balance</strong>
-                <div>{account.balance} Wei</div>
+                <div>{account.balance} Ether</div>
               </Col>
               <Col>
                 <strong>Tx Count</strong>

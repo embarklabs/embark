@@ -1,59 +1,79 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {
-  currentFile as currentFileAction,
-} from '../actions';
-import {getCurrentFile} from '../reducers/selectors';
+import {  Card, CardBody, CardTitle } from 'reactstrap';
+
 import Preview from '../components/Preview';
-import FileContractsContainer from './FileContractsContainer';
+import {contracts as contractsAction} from '../actions';
+import {getContractsByPath} from "../reducers/selectors";
+import ContractDetail from '../components/ContractDetail';
+import ContractLoggerContainer from '../containers/ContractLoggerContainer';
+import ContractOverviewContainer from '../containers/ContractOverviewContainer';
 
 class TextEditorAsideContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {currentFile: this.props.currentFile};
-  }
-
   componentDidMount() {
-    this.props.fetchCurrentFile();
-  }
-
-  componentDidUpdate(prevProps) {
-    if(this.props.currentFile.path !== prevProps.currentFile.path) {
-      this.setState({currentFile: this.props.currentFile});
-    }
-  }
-
-  isContract() {
-    return this.state.currentFile.name.endsWith('.sol');
+    this.props.fetchContracts();
   }
 
   render() {
-    return this.isContract() ? <FileContractsContainer currentFile={this.state.currentFile} /> : <Preview />
+    switch(this.props.currentAsideTab) {
+      case 'browser':
+        return <Preview />
+      case 'detail':
+        return this.props.contracts.map((contract, index) => {
+          return (
+            <Card>
+              <CardBody>
+                <CardTitle style={{"font-size": "2em"}}>{contract.className} - Details</CardTitle>
+                <ContractDetail key={index} contract={contract} />
+              </CardBody>
+            </Card>
+          )
+        })
+      case 'logger':
+        return this.props.contracts.map((contract, index) => {
+          return (
+            <Card>
+              <CardBody>
+                <CardTitle style={{"font-size": "2em"}}>{contract.className} - Transactions</CardTitle>
+                <ContractLoggerContainer key={index} contract={contract} />)
+              </CardBody>
+            </Card>
+          )
+        })
+      case 'overview':
+        return this.props.contracts.map((contract, index) => {
+          return (
+            <Card>
+              <CardBody>
+                <CardTitle style={{"font-size": "2em"}}>{contract.className} - Overview</CardTitle>
+                <ContractOverviewContainer key={index} contract={contract} />
+              </CardBody>
+            </Card>
+          )
+        })
+      default:
+        return <React.Fragment></React.Fragment>;
+    }
   }
 }
 
 function mapStateToProps(state, props) {
-  const currentFile = getCurrentFile(state) || props.defaultFile
-
   return {
-    currentFile,
-    loading: state.loading,
-    error: state.errorMessage
+    contracts: getContractsByPath(state, props.currentFile.path)
   };
 }
 
 TextEditorAsideContainer.propTypes = {
   currentFile: PropTypes.object,
-  fetchCurrentFile: PropTypes.func,
-  loading: PropTypes.bool,
-  error: PropTypes.string,
-  defaultFile: PropTypes.object
+  currentAsideTab: PropTypes.string,
+  contract: PropTypes.array,
+  fetchContracts: PropTypes.func
 };
 
 export default connect(
   mapStateToProps,
   {
-    fetchCurrentFile: currentFileAction.request,
+    fetchContracts: contractsAction.request,
   },
 )(TextEditorAsideContainer);

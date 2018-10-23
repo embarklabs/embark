@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Treebeard, decorators} from 'react-treebeard';
-import {Input, Label, FormGroup} from 'reactstrap';
 
 const style = {
   tree: {
@@ -107,9 +106,7 @@ decorators.Header = Header;
 class FileExplorer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      showHidden: false
-    };
+    this.state = {cursor: null};
   }
 
   onToggle(node, toggled) {
@@ -120,10 +117,6 @@ class FileExplorer extends React.Component {
       this.props.fetchFile(node);
     }
     this.setState({cursor: node});
-  }
-
-  onHiddenToggle(e) {
-    this.setState({showHidden: e.target.checked});
   }
 
   nodeEquals(a, b) {
@@ -138,20 +131,21 @@ class FileExplorer extends React.Component {
       b.path.indexOf(a.path) > -1;
   }
 
-  filterHidden(nodes) {
+  data(nodes) {
     let filtered = [];
     if (!Array.isArray(nodes)) return filtered;
 
+    const cursor = this.state.cursor;
+    const showHidden = this.props.showHiddenFiles;
     // we need a foreach to build an array instead of a
     // filter to prevent mutating the original object (in props) 
     nodes.forEach(node => {
-      const {showHidden, cursor} = this.state;
       if (!showHidden && node.isHidden) return;
       let updatedNode = {...node};
 
       // if it's a folder, filter the children
       if (node.children) {
-        const children = this.filterHidden(node.children);
+        const children = this.data(node.children);
         if (children.length) {
           updatedNode.children = children;
         }
@@ -178,14 +172,8 @@ class FileExplorer extends React.Component {
   render() {
     return (
       <div className="h-100 d-flex flex-column">
-        <FormGroup check>
-          <Label check>
-            <Input type="checkbox" onChange={this.onHiddenToggle.bind(this)} />
-            Show hidden files
-          </Label>
-        </FormGroup>
         <Treebeard
-          data={this.filterHidden(this.props.files)}
+          data={this.data(this.props.files)}
           decorators={decorators}
           onToggle={this.onToggle.bind(this)}
           style={style}
@@ -197,7 +185,8 @@ class FileExplorer extends React.Component {
 
 FileExplorer.propTypes = {
   files: PropTypes.array,
-  fetchFile: PropTypes.func
+  fetchFile: PropTypes.func,
+  showHiddenFiles: PropTypes.bool,
 };
 
 export default FileExplorer;

@@ -200,6 +200,10 @@ export function *watchPostFile() {
   yield takeEvery(actions.SAVE_FILE[actions.REQUEST], postFile);
 }
 
+export function *watchPostFileSuccess() {
+  yield takeEvery(actions.SAVE_FILE[actions.SUCCESS], postCurrentFile);
+}
+
 export function *watchDeleteFile() {
   yield takeEvery(actions.REMOVE_FILE[actions.REQUEST], deleteFile);
 }
@@ -215,10 +219,6 @@ export function *watchFetchFileSuccess() {
 
 export function *watchFetchCurrentFile() {
   yield takeEvery(actions.CURRENT_FILE[actions.REQUEST], fetchCurrentFile);
-}
-
-export function *watchPostCurrentFile() {
-  yield takeEvery(actions.SAVE_CURRENT_FILE[actions.REQUEST], postCurrentFile);
 }
 
 export function *watchFetchEthGas() {
@@ -433,7 +433,7 @@ export default function *root() {
     fork(watchDeleteFileSuccess),
     fork(watchFetchFileSuccess),
     fork(watchFetchCurrentFile),
-    fork(watchPostCurrentFile),
+    fork(watchPostFileSuccess),
     fork(watchFetchCredentials),
     fork(watchFetchEthGas),
     fork(watchAuthenticate),

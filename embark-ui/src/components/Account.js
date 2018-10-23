@@ -10,7 +10,7 @@ const Account = ({account}) => (
     <Col>
       <Card>
         <CardHeader>
-          <CardTitleIdenticon id={account.address}>Account {account.address}</CardTitleIdenticon>
+          <CardTitleIdenticon id={account.address}>{account.address}</CardTitleIdenticon>
         </CardHeader>
         <CardBody>
           <dl className="row">

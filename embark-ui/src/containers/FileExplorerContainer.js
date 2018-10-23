@@ -14,21 +14,22 @@ class FileExplorerContainer extends Component {
 
   render() {
     return (
-      <DataWrapper shouldRender={this.props.files.length > 0} {...this.props} render={({files, fetchFile}) => (
-        <FileExplorer files={files} fetchFile={fetchFile} />
+      <DataWrapper shouldRender={this.props.files.length > 0} {...this.props} render={({files, fetchFile, showHiddenFiles}) => (
+        <FileExplorer files={files} fetchFile={fetchFile} showHiddenFiles={showHiddenFiles} />
       )} />
     );
   }
 }
 
 function mapStateToProps(state) {
-  return {files: getFiles(state), error: state.errorMessage, loading: state.loading};
+  return {files: getFiles(state)};
 }
 
 FileExplorerContainer.propTypes = {
   files: PropTypes.array,
   fetchFiles: PropTypes.func,
-  fetchFile: PropTypes.func
+  fetchFile: PropTypes.func,
+  showHiddenFiles: PropTypes.bool,
 };
 
 export default connect(

@@ -12,11 +12,6 @@ const ExplorerDashboardLayout = () => (
   <React.Fragment>
     <Row>
       <Col>
-        <h1 className="my-5">Explorer</h1>
-      </Col>
-    </Row>
-    <Row>
-      <Col>
         <AccountsContainer />
       </Col>
     </Row>

@@ -12,7 +12,11 @@ const Blocks = ({blocks}) => (
       {blocks.map(block => (
         <Card key={block.number}>
           <CardHeader>
-            <Link to={`/embark/explorer/blocks/${block.number}`}> <CardTitleIdenticon id={block.hash}>Block {block.number}</CardTitleIdenticon></Link>
+            <CardTitleIdenticon id={block.hash}>Block&nbsp;
+              <Link to={`/embark/explorer/blocks/${block.number}`}>
+                {block.number}
+              </Link>
+            </CardTitleIdenticon>
           </CardHeader>
           <CardBody>
             <Row>
