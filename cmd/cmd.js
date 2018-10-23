@@ -359,7 +359,6 @@ class Cmd {
           }, {});
         }
 
-        checkDeps();
         i18n.setOrDetectLocale(options.locale);
         options.env = 'development';
         options.logFile = options.logfile; // fix casing
