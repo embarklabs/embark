@@ -5,7 +5,7 @@ import ContractsList from './ContractsList';
 
 const Contracts = ({contracts, title = "Contracts"}) => (
   <Row>
-    <Col>
+    <Col className="mt-3">
       <Card>
         <CardBody>
           <Row>
@@ -13,7 +13,7 @@ const Contracts = ({contracts, title = "Contracts"}) => (
               <CardTitle className="mb-0">Contracts</CardTitle>
             </Col>
           </Row>
-          <div style={{ marginTop: 40 + 'px' }}>
+          <div className="mt-5">
            <ContractsList contracts={contracts}></ContractsList>
           </div>
         </CardBody>

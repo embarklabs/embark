@@ -15,7 +15,7 @@
 }
 
 .text-wrap {
-  word-wrap: break-word; 
+  word-wrap: break-word;
 }
 
 .relative {
@@ -27,4 +27,12 @@
 
 .react-json-view {
   border-radius: .25rem;
+}
+
+.collapsable:hover {
+  cursor: pointer;
+}
+
+.contractFunction {
+  margin-bottom: 0px;
 }

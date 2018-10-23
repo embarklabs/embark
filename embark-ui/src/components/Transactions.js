@@ -12,9 +12,11 @@ const Transactions = ({transactions}) => (
       {transactions.map(transaction => (
         <Card key={transaction.hash}>
           <CardHeader>
-            <Link to={`/embark/explorer/transactions/${transaction.hash}`}>
-              <CardTitleIdenticon id={transaction.hash}>Transaction {transaction.hash}</CardTitleIdenticon>
-            </Link>
+            <CardTitleIdenticon id={transaction.hash}>Transaction&nbsp;
+              <Link to={`/embark/explorer/transactions/${transaction.hash}`}>
+                {transaction.hash}
+              </Link>
+            </CardTitleIdenticon>
           </CardHeader>
           <CardBody>
             <Row>

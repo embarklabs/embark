@@ -7,7 +7,7 @@ import './TextEditor.css';
 const SUPPORTED_LANGUAGES = ['css', 'sol', 'html', 'json'];
 const DEFAULT_LANGUAGE = 'javascript';
 const EDITOR_ID = 'react-monaco-editor-container';
-const GUTTER_GLYPH_MARGIN = 3;
+const GUTTER_GLYPH_MARGIN = 2;
 
 let editor;
 
@@ -62,19 +62,20 @@ class TextEditor extends React.Component {
   }
 
   updateMarkers() {
-    const {errors, warnings} = this.props.contractCompile;
-    const markers = [].concat(errors).concat(warnings).filter((e) => e).map((e) => {
-      const {row, col} = this.extractRowCol(e.formattedMessage);
-      return {
-        startLineNumber: row,
-        startColumn: col,
-        endLineNumber: row,
-        endColumn: col + 1,
-        message: e.formattedMessage,
-        severity: e.severity
-      };
-    });
-    monaco.editor.setModelMarkers(editor.getModel(), 'test', markers);
+    // TODO: Fetch Result of compilation in embark, via ws
+    // const {errors, warnings} = this.props.contractCompile;
+    // const markers = [].concat(errors).concat(warnings).filter((e) => e).map((e) => {
+    //   const {row, col} = this.extractRowCol(e.formattedMessage);
+    //   return {
+    //     startLineNumber: row,
+    //     startColumn: col,
+    //     endLineNumber: row,
+    //     endColumn: col + 1,
+    //     message: e.formattedMessage,
+    //     severity: e.severity
+    //   };
+    // });
+    // monaco.editor.setModelMarkers(editor.getModel(), 'test', markers);
   }
 
   updateLanguage() {
@@ -121,6 +122,7 @@ class TextEditor extends React.Component {
       this.updateDecorations();
     }
     this.updateLanguage();
+    this.handleResize();
   }
 
   render() {
@@ -135,7 +137,6 @@ class TextEditor extends React.Component {
 TextEditor.propTypes = {
   onFileContentChange: PropTypes.func,
   file: PropTypes.object,
-  contractCompile: PropTypes.object,
   toggleBreakpoint: PropTypes.func,
   breakpoints: PropTypes.array,
   debuggerLine: PropTypes.number

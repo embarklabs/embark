@@ -4,11 +4,11 @@ import {Route, Switch} from 'react-router-dom';
 import HomeContainer from './containers/HomeContainer';
 import ContractsContainer from './containers/ContractsContainer';
 import ContractLayoutContainer from './containers/ContractLayoutContainer';
+import EditorContainer from './containers/EditorContainer';
 import DeploymentContainer from './containers/DeploymentContainer';
 import NoMatch from './components/NoMatch';
 import ExplorerDashboardLayout from './components/ExplorerDashboardLayout';
 import ExplorerLayout from './components/ExplorerLayout';
-import FiddleLayout from './components/FiddleLayout';
 import UtilsLayout from './components/UtilsLayout';
 
 const routes = (
@@ -20,7 +20,7 @@ const routes = (
       <Route path="/embark/deployment/" component={DeploymentContainer} />
       <Route path="/embark/contracts/:contractName" component={ContractLayoutContainer} />
       <Route path="/embark/contracts" component={ContractsContainer} />
-      <Route path="/embark/editor" component={FiddleLayout} />
+      <Route path="/embark/editor" component={EditorContainer} />
       <Route path="/embark/utilities" component={UtilsLayout} />
       <Route component={NoMatch} />
     </Switch>

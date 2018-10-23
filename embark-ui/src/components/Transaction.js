@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 
 import Description from './Description';
 import CardTitleIdenticon from './CardTitleIdenticon';
+import {utils} from 'web3';
+
 
 const Transaction = ({transaction}) => (
   <Row>
@@ -18,7 +20,7 @@ const Transaction = ({transaction}) => (
             <Description label="Block" value={<Link to={`/embark/explorer/blocks/${transaction.blockNumber}`}>{transaction.blockNumber}</Link>} />
             <Description label="From" value={transaction.from} />
             <Description label="To" value={transaction.to} />
-            <Description label="Value" value={`${transaction.value} Wei`}/>
+            <Description label="Value" value={`${utils.fromWei(transaction.value)} Ether`}/>
             <Description label="Input" value={transaction.input} />
             <Description label="Gas" value={transaction.gas} />
             <Description label="Gas price" value={`${transaction.gasPrice} Wei`} />
