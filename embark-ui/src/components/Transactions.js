@@ -15,7 +15,7 @@ const Transactions = ({transactions, showLoadMore, loadMore}) => (
         </CardHeader>
         <CardBody>
           {transactions.map(transaction => (
-            <div className="explorer-row" key={transaction.hash}>
+            <div className="explorer-row border-top" key={transaction.hash}>
               <CardTitleIdenticon id={transaction.hash}>Transaction&nbsp;
                 <Link to={`/embark/explorer/transactions/${transaction.hash}`}>
                   {transaction.hash}

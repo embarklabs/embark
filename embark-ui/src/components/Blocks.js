@@ -15,7 +15,7 @@ const Blocks = ({blocks, showLoadMore, loadMore}) => (
         </CardHeader>
         <CardBody>
           {blocks.map(block => (
-            <div className="explorer-row" key={block.number}>
+            <div className="explorer-row border-top" key={block.number}>
               <CardTitleIdenticon id={block.hash}>Block&nbsp;
                 <Link to={`/embark/explorer/blocks/${block.number}`}>
                   {block.number}

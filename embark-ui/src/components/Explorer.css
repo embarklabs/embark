@@ -1,11 +1,11 @@
+.explorer-row {
+  border-top-width: 0 !important; /*Bootstrap uses important, so we need to override it*/
+}
+
 .explorer-row + .explorer-row {
   margin-top: 5px;
   padding-top: 20px;
-  border-top: 1px solid #c8ced3;
-}
-
-.dark-theme .explorer-row {
-  border-top-color: #23282c;
+  border-top-width: 1px !important;
 }
 
 .explorer-row .text-truncate {
