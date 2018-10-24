@@ -131,7 +131,7 @@ class EmbarkController {
 
         engine.startService("processManager");
         engine.startService("coreProcess");
-        engine.startService("loggerApi");
+        engine.startService("embarkListener");
         engine.startService("blockchainListener");
         engine.startService("serviceMonitor");
         engine.startService("libraryManager");
