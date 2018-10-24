@@ -132,10 +132,15 @@ class TextEditor extends React.Component {
     return (
       <ul className="list-inline m-0 p-2">
         {this.props.editorTabs.map(file => (
-          <li key={file.name} className={classNames("list-inline-item", "border-right", "p-2", { 'bg-dark': file.name === this.props.currentFile.name })}>
-            <a className="text-white no-underline" href="#switch-tab" onClick={() => this.props.addEditorTabs(file)}>{file.name}</a>
-            <FontAwesomeIcon onClick={() => this.props.removeEditorTabs(file)} className="mx-1" name="close" />
-        </li>
+          <li key={file.name} className={classNames("list-inline-item")}>
+            <a className={classNames({'text-body': file.name !== this.props.currentFile.name},
+              {'text-primary': file.name === this.props.currentFile.name}, "border-right", "p-2", "d-inline-block")}
+               href="#switch-tab" onClick={() => this.props.addEditorTabs(file)}>
+              {file.name}
+               <FontAwesomeIcon onClick={() => this.props.removeEditorTabs(file)} className="mx-1" name="close"/>
+            </a>
+
+          </li>
         ))}
       </ul>
     );
@@ -145,7 +150,7 @@ class TextEditor extends React.Component {
     return (
       <div className="h-100 d-flex flex-column">
         {this.renderTabs()}
-        <div style={{height: '100%'}} id={EDITOR_ID} />
+        <div style={{height: '100%'}} id={EDITOR_ID}/>
       </div>
     );
   }
