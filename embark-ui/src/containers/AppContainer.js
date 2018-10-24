@@ -34,7 +34,7 @@ class AppContainer extends Component {
     if (!token) {
       return;
     }
-    const host = process.env.NODE_ENV === 'development' ? DEFAULT_HOST : window.location.host;
+    const host = DEFAULT_HOST;
     if (token === this.props.credentials.token && this.props.credentials.host === host) {
       return;
     }

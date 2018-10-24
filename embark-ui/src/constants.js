@@ -5,5 +5,5 @@ export const LIGHT_THEME = 'light';
 export const DEPLOYMENT_PIPELINES = {
   injectedWeb3: 'injectedWeb3',
   embark: 'embark'
-}
-export const DEFAULT_HOST = 'localhost:8000';
+};
+export const DEFAULT_HOST = process.env.NODE_ENV === 'development' ? 'localhost:8000' : window.location.host;

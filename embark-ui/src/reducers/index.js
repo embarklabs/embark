@@ -201,7 +201,7 @@ function compilingContract(state = false, action) {
 }
 
 const DEFAULT_CREDENTIALS_STATE = {
-  host: process.env.NODE_ENV === 'development' ? DEFAULT_HOST : window.location.host,
+  host: DEFAULT_HOST,
   token: '',
   authenticated: false,
   authenticating: false,
