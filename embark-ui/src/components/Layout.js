@@ -129,7 +129,7 @@ class Layout extends React.Component {
         </Nav>
         <AppHeaderDropdown className="list-unstyled d-xl-none" direction="down">
           <DropdownToggle nav>
-            <FontAwesome name='bars'/>
+            <FontAwesome name="bars"/>
           </DropdownToggle>
           <DropdownMenu>
             {HEADER_NAV_ITEMS.map((item) => (

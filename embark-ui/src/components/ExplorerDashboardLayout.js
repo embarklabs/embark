@@ -11,21 +11,21 @@ import TransactionsContainer from '../containers/TransactionsContainer';
 import './Explorer.css';
 
 const ExplorerDashboardLayout = () => (
-  <React.Fragment>
+  <div className="explorer-overview">
     <Row className="mt-4">
       <Col>
         <AccountsContainer />
       </Col>
     </Row>
     <Row>
-      <Col md={6}>
+      <Col xl={6}>
         <BlocksContainer />
       </Col>
-      <Col md={6}>
+      <Col xl={6}>
         <TransactionsContainer />
       </Col>
     </Row>
-  </React.Fragment>
+  </div>
 );
 
 export default ExplorerDashboardLayout;

@@ -4,9 +4,9 @@ import {Row, Col, Card, CardHeader, CardBody} from 'reactstrap';
 import PropTypes from 'prop-types';
 
 import CardTitleIdenticon from './CardTitleIdenticon';
-import LoadMore from "./LoadMore";
+import Pagination from "./Pagination";
 
-const Transactions = ({transactions, showLoadMore, loadMore}) => (
+const Transactions = ({transactions, changePage, currentPage, numberOfPages}) => (
   <Row>
     <Col>
       <Card>
@@ -41,7 +41,7 @@ const Transactions = ({transactions, showLoadMore, loadMore}) => (
               </Row>
             </div>
           ))}
-          {showLoadMore && <LoadMore loadMore={() => loadMore()}/>}
+          <Pagination changePage={changePage} currentPage={currentPage} numberOfPages={numberOfPages}/>
         </CardBody>
       </Card>
     </Col>
@@ -50,8 +50,9 @@ const Transactions = ({transactions, showLoadMore, loadMore}) => (
 
 Transactions.propTypes = {
   transactions: PropTypes.arrayOf(PropTypes.object),
-  showLoadMore: PropTypes.bool,
-  loadMore: PropTypes.func
+  changePage: PropTypes.func,
+  currentPage: PropTypes.number,
+  numberOfPages: PropTypes.number
 };
 
 export default Transactions;
