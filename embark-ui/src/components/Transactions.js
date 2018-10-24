@@ -22,19 +22,19 @@ const Transactions = ({transactions, showLoadMore, loadMore}) => (
                 </Link>
               </CardTitleIdenticon>
               <Row>
-                <Col>
+                <Col md={6}>
                   <strong>Block number</strong>
                   <div>{transaction.blockNumber}</div>
                 </Col>
-                <Col>
+                <Col md={6}>
                   <strong>From</strong>
                   <div>{transaction.from}</div>
                 </Col>
-                <Col>
+                <Col md={6}>
                   <strong>To</strong>
                   <div>{transaction.to}</div>
                 </Col>
-                <Col>
+                <Col md={6}>
                   <strong>Type</strong>
                   <div>{transaction.to ? "Contract Call" : "Contract Creation"}</div>
                 </Col>
