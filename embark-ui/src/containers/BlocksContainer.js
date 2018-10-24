@@ -7,6 +7,8 @@ import Blocks from '../components/Blocks';
 import DataWrapper from "../components/DataWrapper";
 import {getBlocks} from "../reducers/selectors";
 
+const MAX_BLOCKS = 10; // TODO use same constant as API
+
 class BlocksContainer extends Component {
   constructor(props) {
     super(props);
@@ -27,6 +29,10 @@ class BlocksContainer extends Component {
     this.props.fetchBlocks(this.loadMoreFrom());
   }
 
+  getNumberOfPages() {
+    return Math.ceil(this.loadMoreFrom() / MAX_BLOCKS);
+  }
+
   loadMoreFrom() {
     let blocks = this.props.blocks;
     if (blocks.length === 0) {
@@ -43,7 +49,7 @@ class BlocksContainer extends Component {
     return (
       <React.Fragment>
         <DataWrapper shouldRender={this.props.blocks.length > 0} {...this.props} render={({blocks}) => (
-          <Blocks blocks={blocks} showLoadMore={(this.loadMoreFrom() >= 0)}
+          <Blocks blocks={blocks} numberOfPages={this.getNumberOfPages()}
                   changePage={(newPage) => this.changePage(newPage)} currentPage={this.state.currentPage} />
         )} />
       </React.Fragment>

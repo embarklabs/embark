@@ -2,27 +2,43 @@ import React from 'react';
 import {Pagination, PaginationItem, PaginationLink} from 'reactstrap';
 import PropTypes from 'prop-types';
 
+const NB_PAGES_MAX = 14;
+
 const Pages = ({currentPage, numberOfPages, changePage}) => {
-  const paginationItems = [];
-  for (let i = 1; i <= numberOfPages; i++) {
-    paginationItems.push(<PaginationItem active={currentPage === i} key={'page-' + i}>
-      <PaginationLink href="#" onClick={(e) => {
-        e.preventDefault();
-        changePage(i);
-      }}>
-        {i}
-      </PaginationLink>
-    </PaginationItem>);
+  let i = currentPage - NB_PAGES_MAX / 2;
+  if (i < 1) {
+    i = 1;
+  }
+  let max = i + NB_PAGES_MAX;
+  if (max > numberOfPages) {
+    max = numberOfPages;
+  }
+  const pageNumbers = [];
+  for (i; i <= max; i++) {
+    pageNumbers.push(i);
   }
 
   return (
     <Pagination aria-label="Page navigation example">
-      <PaginationItem>
-        <PaginationLink previous href="#"/>
+      <PaginationItem disabled={currentPage <= 1}>
+        <PaginationLink previous href="#" onClick={(e) => {
+          e.preventDefault();
+          changePage(currentPage - 1);
+        }}/>
       </PaginationItem>
-      {paginationItems}
-      <PaginationItem>
-        <PaginationLink next href="#"/>
+      {pageNumbers.map(number => (<PaginationItem active={currentPage === number} key={'page-' + number}>
+        <PaginationLink href="#" onClick={(e) => {
+          e.preventDefault();
+          changePage(number);
+        }}>
+          {number}
+        </PaginationLink>
+      </PaginationItem>))}
+      <PaginationItem disabled={currentPage >= numberOfPages}>
+        <PaginationLink next href="#" onClick={(e) => {
+          e.preventDefault();
+          changePage(currentPage + 1);
+        }}/>
       </PaginationItem>
     </Pagination>
   );

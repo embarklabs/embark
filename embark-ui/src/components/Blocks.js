@@ -6,7 +6,7 @@ import Pages from './Pagination';
 
 import CardTitleIdenticon from './CardTitleIdenticon';
 
-const Blocks = ({blocks, changePage, currentPage}) => (
+const Blocks = ({blocks, changePage, currentPage, numberOfPages}) => (
   <Row>
     <Col>
       <Card>
@@ -37,7 +37,7 @@ const Blocks = ({blocks, changePage, currentPage}) => (
               </Row>
             </div>
           ))}
-          <Pages changePage={changePage} currentPage={currentPage} numberOfPages={5}/>
+          <Pages changePage={changePage} currentPage={currentPage} numberOfPages={numberOfPages}/>
         </CardBody>
       </Card>
     </Col>
@@ -47,7 +47,8 @@ const Blocks = ({blocks, changePage, currentPage}) => (
 Blocks.propTypes = {
   blocks: PropTypes.arrayOf(PropTypes.object),
   changePage: PropTypes.func,
-  currentPage: PropTypes.number
+  currentPage: PropTypes.number,
+  numberOfPages: PropTypes.number
 };
 
 export default Blocks;
