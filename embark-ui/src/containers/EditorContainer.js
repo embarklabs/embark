@@ -6,12 +6,10 @@ import TextEditorAsideContainer from './TextEditorAsideContainer';
 import TextEditorContainer from './TextEditorContainer';
 import FileExplorerContainer from './FileExplorerContainer';
 import TextEditorToolbarContainer from './TextEditorToolbarContainer';
-import {currentFile as currentFileAction} from '../actions';
+import {fetchEditorTabs as fetchEditorTabsAction} from '../actions';
 import {getCurrentFile} from '../reducers/selectors';
 
 import './EditorContainer.css';
-
-const DEFAULT_FILE = {name: 'newContract.sol', content: ''};
 
 class EditorContainer extends React.Component {
   constructor(props) {
@@ -20,9 +18,7 @@ class EditorContainer extends React.Component {
   }
 
   componentDidMount() {
-    if(this.props.currentFile.content === '') {
-      this.props.fetchCurrentFile();
-    }
+    this.props.fetchEditorTabs();
   }
 
   componentDidUpdate(prevProps) {
@@ -32,7 +28,7 @@ class EditorContainer extends React.Component {
   }
 
   isContract() {
-    return this.state.currentFile.name.endsWith('.sol');
+    return this.state.currentFile.name && this.state.currentFile.name.endsWith('.sol');
   }
 
   onFileContentChange(newContent) {
@@ -84,7 +80,7 @@ class EditorContainer extends React.Component {
 }
 
 function mapStateToProps(state, props) {
-  const currentFile = getCurrentFile(state) || DEFAULT_FILE;
+  const currentFile = getCurrentFile(state);
 
   return {
     currentFile
@@ -93,11 +89,11 @@ function mapStateToProps(state, props) {
 
 EditorContainer.propTypes = {
   currentFile: PropTypes.object,
-  fetchCurrentFile: PropTypes.func
+  fetchEditorTabs: PropTypes.func
 };
 
 export default connect(
   mapStateToProps,
-  {fetchCurrentFile: currentFileAction.request},
+  {fetchEditorTabs: fetchEditorTabsAction.request},
 )(EditorContainer);
 

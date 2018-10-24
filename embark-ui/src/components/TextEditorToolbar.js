@@ -13,8 +13,6 @@ const TextEditorToolbar = (props) => (
       </Label>
     </Col>
     <Col sm={4} md={6}>
-      <strong>{props.currentFile.name}</strong>
-      <span className="mx-2">|</span>
       <Button color="success" size="sm" onClick={props.save}>
         <FontAwesomeIcon className="mr-2" name="save"/>
         Save
@@ -55,7 +53,6 @@ const TextEditorToolbar = (props) => (
 );
 
 TextEditorToolbar.propTypes = {
-  currentFile: PropTypes.object,
   isContract: PropTypes.bool,
   save: PropTypes.func,
   remove: PropTypes.func,

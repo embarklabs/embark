@@ -73,3 +73,7 @@
   background-image: url(images/icons.png);
 }
 
+.no-underline {
+  text-decoration: none;
+}
+
