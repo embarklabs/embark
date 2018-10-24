@@ -349,6 +349,67 @@ export const web3EstimateGas = {
   failure: (error, payload) => action(WEB3_ESTIMAGE_GAS[FAILURE], {web3Error: error, contract: payload.contract})
 };
 
+export const START_DEBUG = createRequestTypes('START_DEBUG');
+export const startDebug = {
+  request: (txHash) => action(START_DEBUG[REQUEST], {txHash}),
+  success: () => action(START_DEBUG[SUCCESS]),
+  failure: (error) => action(START_DEBUG[FAILURE], {error})
+};
+
+export const DEBUG_JUMP_BACK = createRequestTypes('DEBUG_JUMP_BACK');
+export const debugJumpBack = {
+  request: () => action(DEBUG_JUMP_BACK[REQUEST], {}),
+  success: () => action(DEBUG_JUMP_BACK[SUCCESS]),
+  failure: (error) => action(DEBUG_JUMP_BACK[FAILURE], {error})
+};
+
+export const DEBUG_JUMP_FORWARD = createRequestTypes('DEBUG_JUMP_FORWARD');
+export const debugJumpForward = {
+  request: () => action(DEBUG_JUMP_FORWARD[REQUEST], {}),
+  success: () => action(DEBUG_JUMP_FORWARD[SUCCESS]),
+  failure: (error) => action(DEBUG_JUMP_FORWARD[FAILURE], {error})
+};
+
+export const DEBUG_STEP_OVER_BACKWARD = createRequestTypes('DEBUG_STEP_OVER_BACKWARD');
+export const debugStepOverBackward = {
+  request: () => action(DEBUG_STEP_OVER_BACKWARD[REQUEST], {}),
+  success: () => action(DEBUG_STEP_OVER_BACKWARD[SUCCESS]),
+  failure: (error) => action(DEBUG_STEP_OVER_BACKWARD[FAILURE], {error})
+};
+
+export const DEBUG_STEP_OVER_FORWARD = createRequestTypes('DEBUG_STEP_OVER_FORWARD');
+export const debugStepOverForward = {
+  request: () => action(DEBUG_STEP_OVER_FORWARD[REQUEST], {}),
+  success: () => action(DEBUG_STEP_OVER_FORWARD[SUCCESS]),
+  failure: (error) => action(DEBUG_STEP_OVER_FORWARD[FAILURE], {error})
+};
+
+export const DEBUG_STEP_INTO_BACKWARD = createRequestTypes('DEBUG_STEP_INTO_BACKWARD');
+export const debugStepIntoBackward = {
+  request: () => action(DEBUG_STEP_INTO_BACKWARD[REQUEST], {}),
+  success: () => action(DEBUG_STEP_INTO_BACKWARD[SUCCESS]),
+  failure: (error) => action(DEBUG_STEP_INTO_BACKWARD[FAILURE], {error})
+};
+
+export const DEBUG_STEP_INTO_FORWARD = createRequestTypes('DEBUG_STEP_INTO_FORWARD');
+export const debugStepIntoForward = {
+  request: () => action(DEBUG_STEP_INTO_FORWARD[REQUEST], {}),
+  success: () => action(DEBUG_STEP_INTO_FORWARD[SUCCESS]),
+  failure: (error) => action(DEBUG_STEP_INTO_FORWARD[FAILURE], {error})
+};
+
+export const TOGGLE_BREAKPOINT = createRequestTypes('TOGGLE_BREAKPOINT');
+export const toggleBreakpoint = {
+  request: (filename, lineNumber) => action(TOGGLE_BREAKPOINT[REQUEST], {filename, lineNumber}),
+  success: (data, payload) => action(TOGGLE_BREAKPOINT[SUCCESS], {payload}),
+  failure: (error) => action(TOGGLE_BREAKPOINT[FAILURE], {error})
+};
+
+export const DEBUGGER_INFO = createRequestTypes('DEBUGGER_INFO');
+export const debuggerInfo = {
+  success: (data) => action(DEBUGGER_INFO[SUCCESS], {data})
+};
+
 // Web Socket
 export const WATCH_NEW_PROCESS_LOGS = 'WATCH_NEW_PROCESS_LOGS';
 export const STOP_NEW_PROCESS_LOGS = 'STOP_NEW_PROCESS_LOGS';
@@ -358,6 +419,7 @@ export const INIT_BLOCK_HEADER = 'INIT_BLOCK_HEADER';
 export const STOP_BLOCK_HEADER = 'STOP_BLOCK_HEADER';
 export const WATCH_GAS_ORACLE = 'WATCH_GAS_ORACLE';
 export const STOP_GAS_ORACLE = 'STOP_GAS_ORACLE';
+export const STOP_DEBUGGER = 'STOP_DEBUGGER';
 
 export function listenToProcessLogs(processName) {
   return {
@@ -409,20 +471,18 @@ export function stopGasOracle(){
   };
 }
 
+export function stopDebugger(){
+  return {
+    type: STOP_DEBUGGER
+  }
+}
+
 // Actions without Side Effect
 export const UPDATE_BASE_ETHER = 'UPDATE_BASE_ETHER';
 export function updateBaseEther(value) {
   return {
     type: UPDATE_BASE_ETHER,
     payload: value
-  };
-}
-
-export const TOGGLE_BREAKPOINT = 'TOGGLE_BREAKPOINT';
-export function toggleBreakpoint(filename, lineNumber) {
-  return {
-    type: TOGGLE_BREAKPOINT,
-    payload: {filename, lineNumber}
   };
 }
 

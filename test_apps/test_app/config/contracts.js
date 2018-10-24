@@ -3,7 +3,13 @@ module.exports = {
     deployment: {
       host: "localhost",
       port: 8546,
-      type: "ws"
+      type: "ws",
+      accounts: [
+        {
+          mnemonic: "example exile argue silk regular smile grass bomb merge arm assist farm",
+          balance: "5 ether"
+        }
+      ]
     },
     dappConnection: [
       "ws://localhost:8546",
@@ -16,6 +22,9 @@ module.exports = {
     contracts: {
       Ownable: {
         deploy: false
+      },
+      SimpleStorageTest: {
+        args: [100]
       },
       SimpleStorage: {
         fromIndex: 0,

@@ -5,18 +5,21 @@ import TextEditor from '../components/TextEditor';
 import {
   toggleBreakpoint,
 } from '../actions';
-import {getBreakpointsByFilename} from '../reducers/selectors';
+
+import {getCurrentFile, getContractCompile, getContractDeploys, getBreakpointsByFilename, getDebuggerLine} from '../reducers/selectors';
 
 const TextEditorContainer = (props) => (
   <TextEditor file={props.currentFile}
               breakpoints={props.breakpoints}
               toggleBreakpoint={props.toggleBreakpoint}
+              debuggerLine={props.debuggerLine}
               onFileContentChange={props.onFileContentChange} />
 )
 
 function mapStateToProps(state, props) {
   const breakpoints = getBreakpointsByFilename(state, props.currentFile.name);
-  return {breakpoints};
+  const debuggerLine = getDebuggerLine(state);
+  return {breakpoints, debuggerLine};
 }
 
 TextEditorContainer.propTypes = {
@@ -24,6 +27,7 @@ TextEditorContainer.propTypes = {
   onFileContentChange: PropTypes.func,
   toggleBreakpoints: PropTypes.func,
   breakpoints: PropTypes.array,
+  toggleBreakpoint: PropTypes.object
 };
 
 export default connect(

@@ -41,6 +41,9 @@ const TextEditorToolbar = (props) => (
               Logger
             </Button>
             <span className="mx-2">|</span>
+            <Button size="sm" color="primary" onClick={() => props.openAsideTab('debugger')}>
+              Debugger
+            </Button>
           </React.Fragment>
         }
         <Button size="sm" color="primary" onClick={() => props.openAsideTab('browser')}>
