@@ -1,7 +1,24 @@
 {
   "name": "embark",
   "version": "3.2.3",
+  "author": "Iuri Matias <iuri.matias@gmail.com>",
+  "contributors": [],
   "description": "Embark is a framework that allows you to easily develop and deploy DApps",
+  "homepage": "https://embark.status.im/",
+  "keywords": [
+    "ethereum",
+    "dapps",
+    "ipfs",
+    "solidity",
+    "solc",
+    "blockchain",
+    "serverless"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/embark-framework/embark.git"
+  },
   "scripts": {
     "lint": "eslint bin/embark lib/",
     "test": "npm-run-all lint test:*",
@@ -17,10 +34,6 @@
   "main": "./lib/index.js",
   "directories": {
     "lib": "./lib"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/embark-framework/embark.git"
   },
   "dependencies": {
     "@babel/core": "7.1.2",
@@ -126,19 +139,6 @@
     "websocket": "1.0.28",
     "window-size": "1.1.1"
   },
-  "author": "Iuri Matias <iuri.matias@gmail.com>",
-  "contributors": [],
-  "keywords": [
-    "ethereum",
-    "dapps",
-    "ipfs",
-    "solidity",
-    "solc",
-    "blockchain",
-    "serverless"
-  ],
-  "homepage": "https://embark.status.im/",
-  "license": "MIT",
   "devDependencies": {
     "chai": "4.1.2",
     "cross-env": "5.2.0",
