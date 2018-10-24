@@ -9,6 +9,7 @@ import {getContractsByPath} from "../reducers/selectors";
 import ContractDetail from '../components/ContractDetail';
 import ContractLoggerContainer from '../containers/ContractLoggerContainer';
 import ContractOverviewContainer from '../containers/ContractOverviewContainer';
+import ContractDebuggerContainer from '../containers/ContractDebuggerContainer';
 
 class TextEditorAsideContainer extends Component {
   componentDidMount() {
@@ -19,6 +20,17 @@ class TextEditorAsideContainer extends Component {
     switch(this.props.currentAsideTab) {
       case 'browser':
         return <Preview />
+      case 'debugger':
+        return this.props.contracts.map((contract, index) => {
+          return (
+            <Card>
+              <CardBody>
+                <CardTitle style={{"font-size": "2em"}}>{contract.className} - Details</CardTitle>
+                <ContractDebuggerContainer key={index} contract={contract} />
+              </CardBody>
+            </Card>
+          )
+        })
       case 'detail':
         return this.props.contracts.map((contract, index) => {
           return (

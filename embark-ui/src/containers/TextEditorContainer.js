@@ -12,12 +12,14 @@ const TextEditorContainer = (props) => (
   <TextEditor file={props.currentFile}
               breakpoints={props.breakpoints}
               toggleBreakpoint={props.toggleBreakpoint}
+              debuggerLine={props.debuggerLine}
               onFileContentChange={props.onFileContentChange} />
 )
 
 function mapStateToProps(state, props) {
   const breakpoints = getBreakpointsByFilename(state, props.currentFile.name);
-  return {breakpoints};
+  const debuggerLine = getDebuggerLine(state);
+  return {breakpoints, debuggerLine};
 }
 
 TextEditorContainer.propTypes = {

@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import EmbarkJS from 'Embark/EmbarkJS';
 import SimpleStorage from 'Embark/contracts/SimpleStorage';
 import Test from 'Embark/contracts/Test';
-import Assert from 'Embark/contracts/Assert';
+//import Assert from 'Embark/contracts/Assert';
 
 import SimpleStorageTest from 'Embark/contracts/SimpleStorageTest';
 window.SimpleStorageTest = SimpleStorageTest
@@ -26,7 +26,7 @@ import { Navbar, Jumbotron, Button } from 'react-bootstrap';
 window.EmbarkJS = EmbarkJS;
 window.SimpleStorage = SimpleStorage;
 window.Test = Test;
-window.Assert = Assert;
+//window.Assert = Assert;
 
 window.React = React;
 

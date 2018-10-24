@@ -11,7 +11,7 @@ contract SimpleStorage {
 
   function set(uint x) public {
     storedData = x;
-    require(msg.sender != owner);
+    require(msg.sender == 0x0);
     storedData = x + 2;
   }
 

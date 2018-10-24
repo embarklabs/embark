@@ -57,28 +57,32 @@ class ContractDebugger extends Component {
 
   render() {
     return (
-      <Row>
-        <Col>
-          <Input name="txHash" id="txHash" onChange={(e) => this.handleChange(e)}/>
-          <Button color="primary" onClick={(e) => this.debug(e)}>Debug Tx</Button>
-        </Col>
-
-        <Col>
-          <Button color="light" className="btn-square debugButton jumpBack" alt="jump to previous breakpoint" onClick={(e) => this.debugJumpBack(e)}></Button>
-          <Button color="light" className="btn-square debugButton jumpForward" alt="jump to revious breakpoint" onClick={(e) => this.debugJumpForward(e)}></Button>
-          <Button color="light" className="btn-square debugButton stepOverBack" alt="step back" onClick={(e) => this.debugStepOverBackward(e)}></Button>
-          <Button color="light" className="btn-square debugButton stepOverForward" alt="step over" onClick={(e) => this.debugStepOverForward(e)}></Button>
-          <Button color="light" className="btn-square debugButton stepIntoForward" alt="step into" onClick={(e) => this.debugStepIntoForward(e)}></Button>
-          <Button color="light" className="btn-square debugButton stepIntoBack" alt="step out" onClick={(e) => this.debugStepIntoBackward(e)}></Button>
-        </Col>
-
-        <Col>
-          <br /><strong>Scopes</strong>
-          <div>
-            <ReactJson src={{locals: this.props.debuggerInfo.locals, contract: this.props.debuggerInfo.globals}} theme="monokai" sortKeys={true} name={false} collapse={1} />
-          </div>
-        </Col>
-      </Row>
+      <div>
+        <Row>
+          <Col>
+            <Input name="txHash" id="txHash" onChange={(e) => this.handleChange(e)}/>
+            <Button color="primary" onClick={(e) => this.debug(e)}>Debug Tx</Button>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Button color="light" className="btn-square debugButton jumpBack" alt="jump to previous breakpoint" onClick={(e) => this.debugJumpBack(e)}></Button>
+            <Button color="light" className="btn-square debugButton jumpForward" alt="jump to revious breakpoint" onClick={(e) => this.debugJumpForward(e)}></Button>
+            <Button color="light" className="btn-square debugButton stepOverBack" alt="step back" onClick={(e) => this.debugStepOverBackward(e)}></Button>
+            <Button color="light" className="btn-square debugButton stepOverForward" alt="step over" onClick={(e) => this.debugStepOverForward(e)}></Button>
+            <Button color="light" className="btn-square debugButton stepIntoForward" alt="step into" onClick={(e) => this.debugStepIntoForward(e)}></Button>
+            <Button color="light" className="btn-square debugButton stepIntoBack" alt="step out" onClick={(e) => this.debugStepIntoBackward(e)}></Button>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <br /><strong>Scopes</strong>
+            <div>
+              <ReactJson src={{locals: this.props.debuggerInfo.locals, contract: this.props.debuggerInfo.globals}} theme="monokai" sortKeys={true} name={false} collapse={1} />
+            </div>
+          </Col>
+        </Row>
+      </div>
     );
   }
 }

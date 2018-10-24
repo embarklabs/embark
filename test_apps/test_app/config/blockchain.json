@@ -18,11 +18,6 @@
     "nodiscover": true,
     "maxpeers": 0,
     "targetGasLimit": 8000000,
-    "account": {
-      "numAccounts": 3,
-      "balance": "5 ether",
-      "password": "config/privatenet/password"
-    },
     "proxy": true
   },
   "privatenet": {
