@@ -18,14 +18,14 @@ class TextEditorContainer extends React.Component {
 
   render() {
     return (
-      <TextEditor file={props.currentFile}
+      <TextEditor file={this.props.currentFile}
                   currentFile={this.props.currentFile}
                   breakpoints={this.props.breakpoints}
                   toggleBreakpoint={this.props.toggleBreakpoint}
                   editorTabs={this.props.editorTabs}
                   removeEditorTabs={this.props.removeEditorTabs}
                   addEditorTabs={this.props.addEditorTabs}
-                  debuggerLine={props.debuggerLine}
+                  debuggerLine={this.props.debuggerLine}
                   onFileContentChange={this.props.onFileContentChange} />
     )
   }

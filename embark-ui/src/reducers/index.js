@@ -350,6 +350,7 @@ function debuggerInfo(state={}, action) {
   if (action.type === DEBUGGER_INFO[SUCCESS]) {
     return action.data;
   }
+  return state;
 }
 
 function editorTabs(state = [], action) {
