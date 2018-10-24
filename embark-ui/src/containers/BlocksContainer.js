@@ -15,6 +15,7 @@ class BlocksContainer extends Component {
 
     this.state = {currentPage: 0};
     this.numberOfBlocks = 0;
+    this.currentBlocks = [];
   }
 
   componentDidMount() {
@@ -51,11 +52,14 @@ class BlocksContainer extends Component {
   }
 
   render() {
-    const currentBlocks = this.getCurrentBlocks();
+    const newBlocks = this.getCurrentBlocks();
+    if (newBlocks.length) {
+      this.currentBlocks = newBlocks;
+    }
     return (
       <React.Fragment>
-        <DataWrapper shouldRender={currentBlocks.length > 0} {...this.props} render={() => (
-          <Blocks blocks={currentBlocks} numberOfPages={this.getNumberOfPages()}
+        <DataWrapper shouldRender={this.currentBlocks.length > 0} {...this.props} render={() => (
+          <Blocks blocks={this.currentBlocks} numberOfPages={this.getNumberOfPages()}
                   changePage={(newPage) => this.changePage(newPage)}
                   currentPage={this.state.currentPage || this.getNumberOfPages()} />
         )} />
