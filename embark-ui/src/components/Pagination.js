@@ -6,7 +6,7 @@ const NB_PAGES_MAX = 8;
 
 const Pages = ({currentPage, numberOfPages, changePage}) => {
   let max = currentPage + NB_PAGES_MAX / 2;
-  if (max >= numberOfPages) {
+  if (max > numberOfPages) {
     max = numberOfPages;
   }
   let i = max - NB_PAGES_MAX;

@@ -14,6 +14,7 @@ class BlocksContainer extends Component {
     super(props);
 
     this.state = {currentPage: 0};
+    this.numberOfBlocks = 0;
   }
 
   componentDidMount() {
@@ -25,31 +26,36 @@ class BlocksContainer extends Component {
     this.props.stopBlockHeader();
   }
 
-  loadMore() {
-    this.props.fetchBlocks(this.loadMoreFrom());
-  }
-
   getNumberOfPages() {
-    return Math.ceil(this.loadMoreFrom() / MAX_BLOCKS);
-  }
-
-  loadMoreFrom() {
-    let blocks = this.props.blocks;
-    if (blocks.length === 0) {
-      return 0;
+    if (!this.numberOfBlocks) {
+      let blocks = this.props.blocks;
+      if (blocks.length === 0) {
+        this.numberOfBlocks = 0;
+      } else {
+        this.numberOfBlocks = blocks[blocks.length - 1].number - 1;
+      }
     }
-    return blocks[blocks.length - 1].number - 1;
+    return Math.ceil(this.numberOfBlocks / MAX_BLOCKS);
   }
 
   changePage(newPage) {
     this.setState({currentPage: newPage});
+
+    this.props.fetchBlocks((newPage * MAX_BLOCKS) + MAX_BLOCKS);
+  }
+
+  getCurrentBlocks() {
+    const currentPage = this.state.currentPage || this.getNumberOfPages();
+    return this.props.blocks.filter(block => block.number <= (currentPage * MAX_BLOCKS) + MAX_BLOCKS &&
+      block.number > currentPage * MAX_BLOCKS);
   }
 
   render() {
+    const currentBlocks = this.getCurrentBlocks();
     return (
       <React.Fragment>
-        <DataWrapper shouldRender={this.props.blocks.length > 0} {...this.props} render={({blocks}) => (
-          <Blocks blocks={blocks} numberOfPages={this.getNumberOfPages()}
+        <DataWrapper shouldRender={currentBlocks.length > 0} {...this.props} render={() => (
+          <Blocks blocks={currentBlocks} numberOfPages={this.getNumberOfPages()}
                   changePage={(newPage) => this.changePage(newPage)}
                   currentPage={this.state.currentPage || this.getNumberOfPages()} />
         )} />
