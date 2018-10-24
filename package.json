@@ -1,26 +1,39 @@
 {
   "name": "embark",
   "version": "3.2.3",
+  "author": "Iuri Matias <iuri.matias@gmail.com>",
+  "contributors": [],
   "description": "Embark is a framework that allows you to easily develop and deploy DApps",
-  "scripts": {
-    "lint": "eslint bin/embark lib/",
-    "test": "npm-run-all lint test:*",
-    "test:embark": "mocha test/ --no-timeouts --exit",
-    "test:test_app": "cross-env DAPP=\"test_app\" npm run test_dapp",
-    "test:contracts_app": "cross-env DAPP=\"contracts_app\" npm run test_dapp",
-    "test_dapp": "cross-env-shell \"cd test_apps/$DAPP && npm install && npm test\"",
-    "prepack": "cd embark-ui && npm install && npm run build"
+  "homepage": "https://embark.status.im/",
+  "keywords": [
+    "blockchain",
+    "dapps",
+    "ethereum",
+    "ipfs",
+    "serverless",
+    "solc",
+    "solidity"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/embark-framework/embark.git"
   },
   "bin": {
     "embark": "./bin/embark"
   },
-  "main": "./lib/index.js",
   "directories": {
     "lib": "./lib"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/embark-framework/embark.git"
+  "main": "./lib/index.js",
+  "scripts": {
+    "lint": "eslint bin/embark lib/",
+    "prepack": "cd embark-ui && npm install && npm run build",
+    "test": "npm-run-all lint test:*",
+    "test:embark": "mocha test/ --no-timeouts --exit",
+    "test:test_app": "cross-env DAPP=\"test_app\" npm run test_dapp",
+    "test:contracts_app": "cross-env DAPP=\"contracts_app\" npm run test_dapp",
+    "test_dapp": "cross-env-shell \"cd test_apps/$DAPP && npm install && npm test\""
   },
   "dependencies": {
     "@babel/core": "7.1.2",
@@ -71,8 +84,8 @@
     "ganache-cli": "6.1.8",
     "glob": "7.1.3",
     "globule": "1.2.1",
-    "hard-source-webpack-plugin": "0.12.0",
     "handlebars": "4.0.12",
+    "hard-source-webpack-plugin": "0.12.0",
     "helmet": "3.13.0",
     "hosted-git-info": "2.7.1",
     "http-proxy": "1.17.0",
@@ -100,8 +113,9 @@
     "pkg-up": "2.0.0",
     "promptly": "2.2.0",
     "propose": "0.0.5",
-    "remix-tests": "0.0.13",
     "react-scripts": "1.1.5",
+    "remix-debug-debugtest": "latest",
+    "remix-tests": "0.0.13",
     "request": "2.88.0",
     "sass-loader": "7.1.0",
     "semver": "5.5.1",
@@ -115,30 +129,16 @@
     "swarm-api": "0.1.2",
     "tar": "3.2.1",
     "toposort": "1.0.7",
-    "remix-debug-debugtest": "latest",
     "underscore": "1.9.1",
     "url-loader": "1.1.1",
     "uuid": "3.3.2",
     "viz.js": "1.8.2",
     "web3": "1.0.0-beta.34",
     "webpack": "4.19.0",
+    "webpack-bundle-analyzer": "2.13.1",
     "websocket": "1.0.28",
-    "window-size": "1.1.1",
-    "webpack-bundle-analyzer": "^2.13.1"
+    "window-size": "1.1.1"
   },
-  "author": "Iuri Matias <iuri.matias@gmail.com>",
-  "contributors": [],
-  "keywords": [
-    "ethereum",
-    "dapps",
-    "ipfs",
-    "solidity",
-    "solc",
-    "blockchain",
-    "serverless"
-  ],
-  "homepage": "https://embark.status.im/",
-  "license": "MIT",
   "devDependencies": {
     "chai": "4.1.2",
     "cross-env": "5.2.0",
