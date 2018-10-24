@@ -13,7 +13,7 @@ class BlocksContainer extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {currentPage: 1};
+    this.state = {currentPage: 0};
   }
 
   componentDidMount() {
@@ -50,7 +50,8 @@ class BlocksContainer extends Component {
       <React.Fragment>
         <DataWrapper shouldRender={this.props.blocks.length > 0} {...this.props} render={({blocks}) => (
           <Blocks blocks={blocks} numberOfPages={this.getNumberOfPages()}
-                  changePage={(newPage) => this.changePage(newPage)} currentPage={this.state.currentPage} />
+                  changePage={(newPage) => this.changePage(newPage)}
+                  currentPage={this.state.currentPage || this.getNumberOfPages()} />
         )} />
       </React.Fragment>
     );

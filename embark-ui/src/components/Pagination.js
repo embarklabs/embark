@@ -5,13 +5,16 @@ import PropTypes from 'prop-types';
 const NB_PAGES_MAX = 8;
 
 const Pages = ({currentPage, numberOfPages, changePage}) => {
-  let i = currentPage - NB_PAGES_MAX / 2;
+  let max = currentPage + NB_PAGES_MAX / 2;
+  if (max >= numberOfPages) {
+    max = numberOfPages;
+  }
+  let i = max - NB_PAGES_MAX;
   if (i < 1) {
     i = 1;
   }
-  let max = i + NB_PAGES_MAX - 1;
-  if (max > numberOfPages) {
-    max = numberOfPages;
+  if (max - i < NB_PAGES_MAX) {
+    max += NB_PAGES_MAX - max + 1;
   }
   const pageNumbers = [];
   for (i; i <= max; i++) {
