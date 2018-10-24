@@ -49,7 +49,7 @@ class EditorContainer extends React.Component {
   }
 
   textEditorMdSize() {
-    return this.state.currentAsideTab.length ? 5 : 10;
+    return this.state.currentAsideTab.length ? 7 : 10
   }
 
   textEditorXsSize() {
@@ -64,13 +64,13 @@ class EditorContainer extends React.Component {
                                       isContract={this.isContract()}
                                       currentFile={this.props.currentFile} />
         </Col>
-        <Col xs={4} md={2} className="border-right">
+        <Col xs={4} md={2} xl={2} lg={2} className="border-right">
           <FileExplorerContainer showHiddenFiles={this.state.showHiddenFiles} toggleShowHiddenFiles={() => this.toggleShowHiddenFiles()} />
         </Col>
         <Col xs={this.textEditorXsSize()} md={this.textEditorMdSize()}>
           <TextEditorContainer currentFile={this.props.currentFile} onFileContentChange={(newContent) => this.onFileContentChange(newContent)} />
         </Col>
-        {this.state.currentAsideTab && <Col xs={6} md={5}>
+        {this.state.currentAsideTab && <Col xs={6} md={3}>
           <TextEditorAsideContainer currentAsideTab={this.state.currentAsideTab} currentFile={this.props.currentFile} />
         </Col>}
       </Row>
