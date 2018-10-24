@@ -7,3 +7,8 @@
 .dark-theme .explorer-row {
   border-bottom-color: #23282c;
 }
+
+.explorer-row .text-truncate {
+  width: 90%;
+  display: inline-block;
+}

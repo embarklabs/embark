@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {transactions as transactionsAction, initBlockHeader, stopBlockHeader} from '../actions';
+import Blocks from "../components/Blocks";
 import LoadMore from "../components/LoadMore";
 import Transactions from '../components/Transactions';
 import DataWrapper from "../components/DataWrapper";
@@ -34,9 +35,9 @@ class TransactionsContainer extends Component {
     return (
       <React.Fragment>
         <DataWrapper shouldRender={this.props.transactions.length > 0} {...this.props} render={({transactions}) => (
-          <Transactions transactions={transactions} />
+          <Transactions transactions={transactions}
+                        showLoadMore={(this.loadMoreFrom() >= 0)} loadMore={() => this.loadMore()} />
         )} />
-        {(this.loadMoreFrom() > 0) ? <LoadMore loadMore={() => this.loadMore()} /> : <React.Fragment />}
       </React.Fragment>
     );
   }
