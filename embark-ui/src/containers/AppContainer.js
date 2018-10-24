@@ -6,6 +6,7 @@ import routes from '../routes';
 import Login from '../components/Login';
 import Layout from "../components/Layout";
 import { DEFAULT_HOST } from '../constants';
+import {getQueryToken, stripQueryToken} from '../utils/utils';
 
 import {
   authenticate, fetchCredentials, logout,
@@ -20,22 +21,7 @@ import {LIGHT_THEME, DARK_THEME} from '../constants';
 
 import { getCredentials, getAuthenticationError, getProcesses, getTheme } from '../reducers/selectors';
 
-const qs = require('qs');
-
 class AppContainer extends Component {
-  getQueryToken() {
-    return qs.parse(this.props.location.search, {ignoreQueryPrefix: true}).token;
-  }
-
-  stripQueryToken(location) {
-    const _location = Object.assign({}, location);
-    _location.search = _location.search.replace(
-      /(\?|&?)(token=[\w-]*)(&?)/,
-      (_, p1, p2, p3) => (p2 ? (p3 === '&' ? p1 : '') : '')
-    );
-    return _location;
-  }
-
   queryStringAuthenticate() {
     if (this.props.credentials.authenticating) {
       return;
