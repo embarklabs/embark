@@ -4,7 +4,7 @@ import {Row, Col, Card, CardHeader, CardBody} from 'reactstrap';
 import PropTypes from 'prop-types';
 
 import CardTitleIdenticon from './CardTitleIdenticon';
-import Pages from "./Pagination";
+import Pagination from "./Pagination";
 
 const Transactions = ({transactions, changePage, currentPage, numberOfPages}) => (
   <Row>
@@ -41,7 +41,7 @@ const Transactions = ({transactions, changePage, currentPage, numberOfPages}) =>
               </Row>
             </div>
           ))}
-          <Pages changePage={changePage} currentPage={currentPage} numberOfPages={numberOfPages}/>
+          <Pagination changePage={changePage} currentPage={currentPage} numberOfPages={numberOfPages}/>
         </CardBody>
       </Card>
     </Col>

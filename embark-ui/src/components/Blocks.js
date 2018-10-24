@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from "react-router-dom";
 import {Row, Col, Card, CardHeader, CardBody} from 'reactstrap';
 import PropTypes from 'prop-types';
-import Pages from './Pagination';
+import Pagination from './Pagination';
 
 import CardTitleIdenticon from './CardTitleIdenticon';
 
@@ -37,7 +37,7 @@ const Blocks = ({blocks, changePage, currentPage, numberOfPages}) => (
               </Row>
             </div>
           ))}
-          <Pages changePage={changePage} currentPage={currentPage} numberOfPages={numberOfPages}/>
+          <Pagination changePage={changePage} currentPage={currentPage} numberOfPages={numberOfPages}/>
         </CardBody>
       </Card>
     </Col>

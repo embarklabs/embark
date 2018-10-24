@@ -1,10 +1,10 @@
 import React from 'react';
-import {Pagination, PaginationItem, PaginationLink} from 'reactstrap';
+import {Pagination as RPagination, PaginationItem, PaginationLink} from 'reactstrap';
 import PropTypes from 'prop-types';
 
 const NB_PAGES_MAX = 8;
 
-const Pages = ({currentPage, numberOfPages, changePage}) => {
+const Pagination = ({currentPage, numberOfPages, changePage}) => {
   let max = currentPage + NB_PAGES_MAX / 2;
   if (max > numberOfPages) {
     max = numberOfPages;
@@ -22,7 +22,7 @@ const Pages = ({currentPage, numberOfPages, changePage}) => {
   }
 
   return (
-    <Pagination aria-label="Page navigation example" className="mt-4 mb-0 float-right">
+    <RPagination aria-label="Explorer navigation" className="mt-4 mb-0 float-right">
       <PaginationItem disabled={currentPage <= 1}>
         <PaginationLink previous href="#" onClick={(e) => {
           e.preventDefault();
@@ -43,14 +43,14 @@ const Pages = ({currentPage, numberOfPages, changePage}) => {
           changePage(currentPage + 1);
         }}/>
       </PaginationItem>
-    </Pagination>
+    </RPagination>
   );
 };
 
-Pages.propTypes = {
+Pagination.propTypes = {
   numberOfPages: PropTypes.number,
   currentPage: PropTypes.number,
   changePage: PropTypes.func
 };
 
-export default Pages;
+export default Pagination;
