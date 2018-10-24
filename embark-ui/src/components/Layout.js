@@ -30,7 +30,6 @@ import logo from '../images/logo-new.svg';
 const HEADER_NAV_ITEMS = [
   {name: "Dashboard", to: "/embark", icon: 'tachometer'},
   {name: "Deployment", to: "/embark/deployment", icon: "arrow-up"},
-  {name: "Contracts", to: "/embark/contracts", icon: "file-text"},
   {name: "Explorer", to: "/embark/explorer/overview", icon: "compass"},
   {name: "Editor", to: "/embark/editor", icon: "codepen"},
   {name: "Utils", to: "/embark/utilities/converter", icon: "cog"}
@@ -41,6 +40,7 @@ const SIDEBAR_NAV_ITEMS = {
     {url: "/embark/explorer/overview", icon: "fa fa-signal", name: "Overview"},
     {url: "/embark/explorer/accounts", icon: "fa fa-users", name: "Accounts"},
     {url: "/embark/explorer/blocks", icon: "fa fa-stop", name: "Blocks"},
+    {url: "/embark/explorer/contracts", icon: "fa fa-file-code-o", name: "Contracts"},
     {url: "/embark/explorer/transactions", icon: "fa fa-tree", name: "Transactions"}
   ]},
   "/embark/utilities/": {items: [
