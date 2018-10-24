@@ -19,7 +19,7 @@ const ContractsList = ({contracts}) => (
           const contractDisplay = formatContractForDisplay(contract);
           return (
             <tr key={contract.className} className={contractDisplay.stateColor}>
-              <td><Link to={`/embark/contracts/${contract.className}/overview`}>{contract.className}</Link></td>
+              <td><Link to={`/embark/explorer/contracts/${contract.className}`}>{contract.className}</Link></td>
               <td>{contractDisplay.address}</td>
               <td>{contractDisplay.state}</td>
             </tr>

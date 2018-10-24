@@ -1,21 +1,44 @@
 import PropTypes from "prop-types";
 import React from 'react';
-import {Row, Col, Card, CardBody, CardTitle} from "reactstrap";
-import ContractsList from './ContractsList';
+import {Row, Col, Card, CardHeader, CardBody, CardTitle} from "reactstrap";
+import {Link} from 'react-router-dom';
+import {formatContractForDisplay} from '../utils/presentation';
+
+import CardTitleIdenticon from './CardTitleIdenticon';
 
 const Contracts = ({contracts, title = "Contracts"}) => (
   <Row>
-    <Col className="mt-3">
+    <Col>
       <Card>
+        <CardHeader>
+          <h2>{title}</h2>
+        </CardHeader>
         <CardBody>
-          <Row>
-            <Col sm="5">
-              <CardTitle className="mb-0">Contracts</CardTitle>
-            </Col>
-          </Row>
-          <div className="mt-5">
-           <ContractsList contracts={contracts}></ContractsList>
-          </div>
+          {
+            contracts.map(contract => {
+              const contractDisplay = formatContractForDisplay(contract);
+
+              return (
+                <div className="explorer-row border-top" key={contract.address}>
+                  <CardTitleIdenticon id={contract.className}>
+                    <Link to={`/embark/explorer/contracts/${contract.className}`}>{contract.className}</Link>
+                  </CardTitleIdenticon>
+                  <Row>
+                    <Col>
+                      <strong>Address</strong>
+                      <div>{contract.address}</div>
+                    </Col>
+                    <Col>
+                      <strong>State</strong>
+                      <div className={contractDisplay.stateColor}>
+                        {formatContractForDisplay(contract).state}
+                      </div>
+                    </Col>
+                  </Row>
+                </div>
+              )
+            })
+          }
         </CardBody>
       </Card>
     </Col>
@@ -28,4 +51,3 @@ Contracts.propTypes = {
 };
 
 export default Contracts;
-
