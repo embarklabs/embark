@@ -28,12 +28,12 @@
   "main": "./lib/index.js",
   "scripts": {
     "lint": "eslint bin/embark lib/",
+    "prepack": "cd embark-ui && npm install && npm run build",
     "test": "npm-run-all lint test:*",
     "test:embark": "mocha test/ --no-timeouts --exit",
     "test:test_app": "cross-env DAPP=\"test_app\" npm run test_dapp",
     "test:contracts_app": "cross-env DAPP=\"contracts_app\" npm run test_dapp",
-    "test_dapp": "cross-env-shell \"cd test_apps/$DAPP && npm install && npm test\"",
-    "prepack": "cd embark-ui && npm install && npm run build"
+    "test_dapp": "cross-env-shell \"cd test_apps/$DAPP && npm install && npm test\""
   },
   "dependencies": {
     "@babel/core": "7.1.2",
