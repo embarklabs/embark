@@ -226,7 +226,7 @@ function credentials(state = DEFAULT_CREDENTIALS_STATE, action) {
   }
 
   if (action.type === AUTHENTICATE[REQUEST]) {
-    return {...state, ...{authenticating: true}};
+    return {...state, ...{authenticating: true, error: null}};
   }
 
   return state;
