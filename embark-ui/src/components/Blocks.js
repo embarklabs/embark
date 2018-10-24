@@ -17,7 +17,7 @@ const Blocks = ({blocks, showLoadMore, loadMore}) => (
           {blocks.map(block => (
             <div className="explorer-row" key={block.number}>
               <CardTitleIdenticon id={block.hash}>Block&nbsp;
-                <Link className="align-top" to={`/embark/explorer/blocks/${block.number}`}>
+                <Link to={`/embark/explorer/blocks/${block.number}`}>
                   {block.number}
                 </Link>
               </CardTitleIdenticon>
