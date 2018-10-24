@@ -3,56 +3,42 @@ import React, {Component} from 'react';
 import {
   Row,
   Col,
-  FormGroup,
-  Label,
   Input,
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-  ListGroup,
-  ListGroupItem
+  Button
 } from "reactstrap";
 import ReactJson from 'react-json-view';
 
 class ContractDebugger extends Component {
-
-  constructor(props) {
-    super(props);
-  }
-
   handleChange(e) {
     this.setState({txHash: e.target.value});
   }
 
-  debug(e) {
+  debug(_e) {
     this.props.startDebug(this.state.txHash);
   }
 
-  debugJumpBack(e) {
-    this.props.debugJumpBack()
+  debugJumpBack(_e) {
+    this.props.debugJumpBack();
   }
 
-  debugJumpForward(e) {
-    this.props.debugJumpForward()
+  debugJumpForward(_e) {
+    this.props.debugJumpForward();
   }
 
-  debugStepOverForward(e) {
-    this.props.debugStepOverForward()
+  debugStepOverForward(_e) {
+    this.props.debugStepOverForward();
   }
 
-  debugStepOverBackward(e) {
-    this.props.debugStepOverBackward()
+  debugStepOverBackward(_e) {
+    this.props.debugStepOverBackward();
   }
 
-  debugStepIntoForward(e) {
-    this.props.debugStepIntoForward()
+  debugStepIntoForward(_e) {
+    this.props.debugStepIntoForward();
   }
 
-  debugStepIntoBackward(e) {
-    this.props.debugStepIntoBackward()
+  debugStepIntoBackward(_e) {
+    this.props.debugStepIntoBackward();
   }
 
   render() {
@@ -89,6 +75,14 @@ class ContractDebugger extends Component {
 
 ContractDebugger.propTypes = {
   contract: PropTypes.object.isRequired,
+  startDebug: PropTypes.func,
+  debugJumpBack: PropTypes.func,
+  debugJumpForward: PropTypes.func,
+  debugStepOverForward: PropTypes.func,
+  debugStepOverBackward: PropTypes.func,
+  debugStepIntoForward: PropTypes.func,
+  debugStepIntoBackward: PropTypes.func,
+  debuggerInfo: PropTypes.object
 };
 
 export default ContractDebugger;

@@ -16,7 +16,7 @@ let editor;
 const initMonaco = (value) => {
   let model;
   if (editor) {
-    model = editor.getModel()
+    model = editor.getModel();
   }
   editor = monaco.editor.create(document.getElementById(EDITOR_ID), {
     glyphMargin: true,
@@ -33,7 +33,7 @@ class TextEditor extends React.Component {
   }
   componentDidMount() {
     initMonaco();
-    editor.onDidChangeModelContent((event) => {
+    editor.onDidChangeModelContent((_event) => {
       const value = editor.getValue();
       this.props.onFileContentChange(value);
     });
@@ -103,15 +103,13 @@ class TextEditor extends React.Component {
     ));
 
     let debuggerLine = this.props.debuggerLine;
-    console.dir("debuggerLine")
-    console.dir(debuggerLine)
     newDecorations.push({
       range: new monaco.Range(debuggerLine,1,debuggerLine,1),
         options: {
           isWholeLine: true,
           className: 'text-editor__debuggerLine'
         }
-    })
+    });
     const decorations = editor.deltaDecorations(this.state.decorations, newDecorations);
     this.setState({decorations: decorations});
   }
@@ -122,7 +120,7 @@ class TextEditor extends React.Component {
     }
 
     this.updateMarkers();
-    const expectedDecorationsLength = this.props.debuggerLine ? this.props.breakpoints.length + 1 : this.props.breakpoints.length
+    const expectedDecorationsLength = this.props.debuggerLine ? this.props.breakpoints.length + 1 : this.props.breakpoints.length;
     if (expectedDecorationsLength !== this.state.decorations.length || this.props.debuggerLine !== prevProps.debuggerLine) {
       this.updateDecorations();
     }
@@ -135,12 +133,12 @@ class TextEditor extends React.Component {
       <ul className="list-inline m-0 p-2">
         {this.props.editorTabs.map(file => (
           <li key={file.name} className={classNames("list-inline-item", "border-right", "p-2", { 'bg-dark': file.name === this.props.currentFile.name })}>
-            <a className="text-white no-underline" href='#switch-tab' onClick={() => this.props.addEditorTabs(file)}>{file.name}</a>
+            <a className="text-white no-underline" href="#switch-tab" onClick={() => this.props.addEditorTabs(file)}>{file.name}</a>
             <FontAwesomeIcon onClick={() => this.props.removeEditorTabs(file)} className="mx-1" name="close" />
         </li>
         ))}
       </ul>
-    )
+    );
   }
 
   render() {
@@ -149,7 +147,7 @@ class TextEditor extends React.Component {
         {this.renderTabs()}
         <div style={{height: '100%'}} id={EDITOR_ID} />
       </div>
-    )
+    );
   }
 }
 

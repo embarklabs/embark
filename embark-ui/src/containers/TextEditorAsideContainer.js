@@ -19,51 +19,51 @@ class TextEditorAsideContainer extends Component {
   render() {
     switch(this.props.currentAsideTab) {
       case 'browser':
-        return <Preview />
+        return <Preview />;
       case 'debugger':
         return this.props.contracts.map((contract, index) => {
           return (
-            <Card>
+            <Card key={'contract-' + index}>
               <CardBody>
-                <CardTitle style={{"font-size": "2em"}}>{contract.className} - Details</CardTitle>
+                <CardTitle style={{"fontSize": "2em"}}>{contract.className} - Details</CardTitle>
                 <ContractDebuggerContainer key={index} contract={contract} />
               </CardBody>
             </Card>
-          )
-        })
+          );
+        });
       case 'detail':
         return this.props.contracts.map((contract, index) => {
           return (
-            <Card>
+            <Card key={'contract-' + index}>
               <CardBody>
-                <CardTitle style={{"font-size": "2em"}}>{contract.className} - Details</CardTitle>
+                <CardTitle style={{"fontSize": "2em"}}>{contract.className} - Details</CardTitle>
                 <ContractDetail key={index} contract={contract} />
               </CardBody>
             </Card>
-          )
-        })
+          );
+        });
       case 'logger':
         return this.props.contracts.map((contract, index) => {
           return (
-            <Card>
+            <Card key={'contract-' + index}>
               <CardBody>
-                <CardTitle style={{"font-size": "2em"}}>{contract.className} - Transactions</CardTitle>
+                <CardTitle style={{"fontSize": "2em"}}>{contract.className} - Transactions</CardTitle>
                 <ContractLoggerContainer key={index} contract={contract} />)
               </CardBody>
             </Card>
-          )
-        })
+          );
+        });
       case 'overview':
         return this.props.contracts.map((contract, index) => {
           return (
-            <Card>
+            <Card key={'contract-' + index}>
               <CardBody>
-                <CardTitle style={{"font-size": "2em"}}>{contract.className} - Overview</CardTitle>
+                <CardTitle style={{"fontSize": "2em"}}>{contract.className} - Overview</CardTitle>
                 <ContractOverviewContainer key={index} contract={contract} />
               </CardBody>
             </Card>
-          )
-        })
+          );
+        });
       default:
         return <React.Fragment></React.Fragment>;
     }
@@ -80,12 +80,13 @@ TextEditorAsideContainer.propTypes = {
   currentFile: PropTypes.object,
   currentAsideTab: PropTypes.string,
   contract: PropTypes.array,
-  fetchContracts: PropTypes.func
+  fetchContracts: PropTypes.func,
+  contracts: PropTypes.array
 };
 
 export default connect(
   mapStateToProps,
   {
-    fetchContracts: contractsAction.request,
+    fetchContracts: contractsAction.request
   },
 )(TextEditorAsideContainer);

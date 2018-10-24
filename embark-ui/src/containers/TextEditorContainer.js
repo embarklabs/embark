@@ -6,10 +6,10 @@ import {
   addEditorTabs as addEditorTabsAction,
   fetchEditorTabs as fetchEditorTabsAction,
   removeEditorTabs as removeEditorTabsAction,
-  toggleBreakpoint,
+  toggleBreakpoint
 } from '../actions';
 
-import {getCurrentFile, getContractCompile, getContractDeploys, getBreakpointsByFilename, getDebuggerLine, getEditorTabs} from '../reducers/selectors';
+import {getBreakpointsByFilename, getDebuggerLine, getEditorTabs} from '../reducers/selectors';
 
 class TextEditorContainer extends React.Component {
   componentDidMount() {
@@ -27,7 +27,7 @@ class TextEditorContainer extends React.Component {
                   addEditorTabs={this.props.addEditorTabs}
                   debuggerLine={this.props.debuggerLine}
                   onFileContentChange={this.props.onFileContentChange} />
-    )
+    );
   }
 }
 
@@ -46,7 +46,9 @@ TextEditorContainer.propTypes = {
   toggleBreakpoint: PropTypes.object,
   fetchEditorTabs: PropTypes.func,
   removeEditorTabs: PropTypes.func,
-  addEditorTabs: PropTypes.func
+  addEditorTabs: PropTypes.func,
+  debuggerLine: PropTypes.number,
+  editorTabs: PropTypes.array
 };
 
 export default connect(

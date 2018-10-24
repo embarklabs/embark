@@ -1,15 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Row, Label, Col, Button, Nav, NavLink} from 'reactstrap';
+import {Button, Nav, NavLink} from 'reactstrap';
 import FontAwesomeIcon from 'react-fontawesome';
-import { AppSwitch } from '@coreui/react'
 
 const TextEditorToolbar = (props) => (
   <ol className="breadcrumb">
-    <li class="breadcrumb-item">
+    <li className="breadcrumb-item">
       {props.currentFile.name}
     </li>
-    <li class="breadcrumb-item">
+    <li className="breadcrumb-item">
       <Button color="success" size="sm" onClick={props.save}>
         <FontAwesomeIcon className="mr-2" name="save"/>
         Save
@@ -49,7 +48,8 @@ TextEditorToolbar.propTypes = {
   save: PropTypes.func,
   remove: PropTypes.func,
   toggleShowHiddenFiles: PropTypes.func,
-  openAsideTab: PropTypes.func
+  openAsideTab: PropTypes.func,
+  currentFile: PropTypes.object
 };
 
 export default TextEditorToolbar;

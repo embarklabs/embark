@@ -5,7 +5,7 @@ import TextEditorToolbar from '../components/TextEditorToolbar';
 
 import {
   saveFile as saveFileAction,
-  removeFile as removeFileAction,
+  removeFile as removeFileAction
 } from '../actions';
 
 class TextEditorToolbarContainer extends Component {
