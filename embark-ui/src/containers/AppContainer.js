@@ -19,7 +19,9 @@ import {
 
 import {LIGHT_THEME, DARK_THEME} from '../constants';
 
-import { getCredentials, getAuthenticationError, getProcesses, getTheme } from '../reducers/selectors';
+import {
+  getCredentials, getAuthenticationError, getProcesses, getTheme
+} from '../reducers/selectors';
 
 class AppContainer extends Component {
   queryStringAuthenticate() {
@@ -84,7 +86,11 @@ class AppContainer extends Component {
 
   renderBody() {
     if (this.shouldRenderLogin()) {
-      return <Login credentials={this.props.credentials} authenticate={this.props.authenticate} error={this.props.authenticationError} />;
+      return (
+          <Login credentials={this.props.credentials}
+                 authenticate={this.props.authenticate}
+                 error={this.props.authenticationError} />
+      );
     } else if (this.props.credentials.authenticating) {
       return <React.Fragment/>;
     }
