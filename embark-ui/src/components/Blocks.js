@@ -2,11 +2,11 @@ import React from 'react';
 import {Link} from "react-router-dom";
 import {Row, Col, Card, CardHeader, CardBody} from 'reactstrap';
 import PropTypes from 'prop-types';
+import Pages from './Pagination';
 
 import CardTitleIdenticon from './CardTitleIdenticon';
-import LoadMore from "./LoadMore";
 
-const Blocks = ({blocks, showLoadMore, loadMore}) => (
+const Blocks = ({blocks, changePage, currentPage}) => (
   <Row>
     <Col>
       <Card>
@@ -37,7 +37,7 @@ const Blocks = ({blocks, showLoadMore, loadMore}) => (
               </Row>
             </div>
           ))}
-          {showLoadMore && <LoadMore loadMore={() => loadMore()}/>}
+          <Pages changePage={changePage} currentPage={currentPage} numberOfPages={5}/>
         </CardBody>
       </Card>
     </Col>
@@ -46,8 +46,8 @@ const Blocks = ({blocks, showLoadMore, loadMore}) => (
 
 Blocks.propTypes = {
   blocks: PropTypes.arrayOf(PropTypes.object),
-  showLoadMore: PropTypes.bool,
-  loadMore: PropTypes.func
+  changePage: PropTypes.func,
+  currentPage: PropTypes.number
 };
 
 export default Blocks;
