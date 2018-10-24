@@ -86,7 +86,7 @@ class AppContainer extends Component {
     if (this.shouldRenderLogin()) {
       return <Login credentials={this.props.credentials} authenticate={this.props.authenticate} error={this.props.authenticationError} />;
     } else if (this.props.credentials.authenticating) {
-      return <div></div>;
+      return <React.Fragment/>;
     }
     return (
       <Layout location={this.props.location}
