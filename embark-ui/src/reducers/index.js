@@ -204,7 +204,8 @@ const DEFAULT_CREDENTIALS_STATE = {
   host: process.env.NODE_ENV === 'development' ? DEFAULT_HOST : window.location.host,
   token: '',
   authenticated: false,
-  authenticating: false
+  authenticating: false,
+  error: null
 };
 
 function credentials(state = DEFAULT_CREDENTIALS_STATE, action) {
