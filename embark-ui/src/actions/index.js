@@ -282,7 +282,7 @@ export const files = {
 export const FILE = createRequestTypes('FILE');
 export const file = {
   request: (file) => action(FILE[REQUEST], file),
-  success: (file) => action(FILE[SUCCESS], file),
+  success: (file) => action(FILE[SUCCESS], {file}),
   failure: (error) => action(FILE[FAILURE], {error})
 };
 
@@ -298,20 +298,6 @@ export const removeFile = {
   request: ({name, path, content}) => action(REMOVE_FILE[REQUEST], {name, path, content}),
   success: () => action(REMOVE_FILE[SUCCESS]),
   failure: (error) => action(REMOVE_FILE[FAILURE], {error})
-};
-
-export const CURRENT_FILE = createRequestTypes('CURRENT_FILE');
-export const currentFile = {
-  request: () => action(CURRENT_FILE[REQUEST]),
-  success: (file) => action(CURRENT_FILE[SUCCESS], {currentFiles: [file]}),
-  failure: () => action(CURRENT_FILE[FAILURE])
-};
-
-export const SAVE_CURRENT_FILE = createRequestTypes('SAVE_CURRENT_FILE');
-export const saveCurrentFile = {
-  request: (file) => action(SAVE_CURRENT_FILE[REQUEST], file),
-  success: (file) => action(SAVE_CURRENT_FILE[SUCCESS], {currentFiles: [file]}),
-  failure: () => action(SAVE_CURRENT_FILE[FAILURE])
 };
 
 export const GAS_ORACLE = createRequestTypes('GAS_ORACLE');
@@ -408,6 +394,27 @@ export const toggleBreakpoint = {
 export const DEBUGGER_INFO = createRequestTypes('DEBUGGER_INFO');
 export const debuggerInfo = {
   success: (data) => action(DEBUGGER_INFO[SUCCESS], {data})
+};
+
+export const FETCH_EDITOR_TABS = createRequestTypes('FETCH_EDITOR_TABS');
+export const fetchEditorTabs = {
+  request: () => action(FETCH_EDITOR_TABS[REQUEST]),
+  success: (editorTabs) => action(FETCH_EDITOR_TABS[SUCCESS], {editorTabs}),
+  failure: () => action(FETCH_EDITOR_TABS[FAILURE])
+};
+
+export const ADD_EDITOR_TABS = createRequestTypes('ADD_EDITOR_TABS');
+export const addEditorTabs = {
+  request: (file) => action(ADD_EDITOR_TABS[REQUEST], {file}),
+  success: () => action(ADD_EDITOR_TABS[SUCCESS]),
+  failure: () => action(ADD_EDITOR_TABS[FAILURE])
+};
+
+export const REMOVE_EDITOR_TABS = createRequestTypes('REMOVE_EDITOR_TABS');
+export const removeEditorTabs = {
+  request: (file) => action(REMOVE_EDITOR_TABS[REQUEST], {file}),
+  success: () => action(REMOVE_EDITOR_TABS[SUCCESS]),
+  failure: () => action(REMOVE_EDITOR_TABS[FAILURE])
 };
 
 // Web Socket

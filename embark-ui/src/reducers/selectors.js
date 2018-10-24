@@ -170,7 +170,7 @@ export function getFiles(state) {
 }
 
 export function getCurrentFile(state) {
-  return last(state.entities.currentFiles);
+  return state.editorTabs.find(file => file.active) || {};
 }
 
 export function getBaseEther(state) {
@@ -234,3 +234,6 @@ export function getDebuggerLine(state) {
   return state.debuggerInfo.sources.lineColumnPos[0].start.line + 1;
 }
 
+export function getEditorTabs(state) {
+  return state.editorTabs
+}

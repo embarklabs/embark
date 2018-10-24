@@ -79,9 +79,6 @@ export const debugStepIntoBackward = doRequest.bind(null, actions.debugStepIntoB
 export const toggleBreakpoint = doRequest.bind(null, actions.toggleBreakpoint, api.toggleBreakpoint);
 export const authenticate = doRequest.bind(null, actions.authenticate, api.authenticate);
 
-export const fetchCurrentFile = doRequest.bind(null, actions.currentFile, storage.fetchCurrentFile);
-export const postCurrentFile = doRequest.bind(null, actions.saveCurrentFile, storage.postCurrentFile);
-export const deleteCurrentFile = doRequest.bind(null, null, storage.deleteCurrentFile);
 export const fetchCredentials = doRequest.bind(null, actions.fetchCredentials, storage.fetchCredentials);
 export const saveCredentials = doRequest.bind(null, actions.saveCredentials, storage.saveCredentials);
 export const logout = doRequest.bind(null, actions.logout, storage.logout);
@@ -89,6 +86,9 @@ export const changeTheme = doRequest.bind(null, actions.changeTheme, storage.cha
 export const fetchTheme = doRequest.bind(null, actions.fetchTheme, storage.fetchTheme);
 export const signMessage = doRequest.bind(null, actions.signMessage, api.signMessage);
 export const verifyMessage = doRequest.bind(null, actions.verifyMessage, api.verifyMessage);
+export const fetchEditorTabs = doRequest.bind(null, actions.fetchEditorTabs, storage.fetchEditorTabs);
+export const addEditorTabs = doRequest.bind(null, actions.addEditorTabs, storage.addEditorTabs);
+export const removeEditorTabs = doRequest.bind(null, actions.removeEditorTabs, storage.removeEditorTabs);
 
 export const explorerSearch = searchExplorer.bind(null, actions.explorerSearch);
 
@@ -208,25 +208,17 @@ export function *watchPostFile() {
   yield takeEvery(actions.SAVE_FILE[actions.REQUEST], postFile);
 }
 
-export function *watchPostFileSuccess() {
-  yield takeEvery(actions.SAVE_FILE[actions.SUCCESS], postCurrentFile);
-}
-
 export function *watchDeleteFile() {
   yield takeEvery(actions.REMOVE_FILE[actions.REQUEST], deleteFile);
 }
 
 export function *watchDeleteFileSuccess() {
   yield takeEvery(actions.REMOVE_FILE[actions.SUCCESS], fetchFiles);
-  yield takeEvery(actions.REMOVE_FILE[actions.SUCCESS], deleteCurrentFile);
+  yield takeEvery(actions.REMOVE_FILE[actions.SUCCESS], removeEditorTabs);
 }
 
 export function *watchFetchFileSuccess() {
-  yield takeEvery(actions.FILE[actions.SUCCESS], postCurrentFile);
-}
-
-export function *watchFetchCurrentFile() {
-  yield takeEvery(actions.CURRENT_FILE[actions.REQUEST], fetchCurrentFile);
+  yield takeEvery(actions.FILE[actions.SUCCESS], addEditorTabs);
 }
 
 export function *watchFetchEthGas() {
@@ -311,6 +303,26 @@ export function *watchWeb3EstimateGas() {
 
 export function *watchUpdateDeploymentPipeline() {
   yield takeEvery(actions.UPDATE_DEPLOYMENT_PIPELINE, web3Connect);
+}
+
+export function *watchFetchEditorTabs() {
+  yield takeEvery(actions.FETCH_EDITOR_TABS[actions.REQUEST], fetchEditorTabs);
+}
+
+export function *watchAddEditorTabs() {
+  yield takeEvery(actions.ADD_EDITOR_TABS[actions.REQUEST], addEditorTabs);
+}
+
+export function *watchRemoveEditorTabs() {
+  yield takeEvery(actions.REMOVE_EDITOR_TABS[actions.REQUEST], removeEditorTabs);
+}
+
+export function *watchAddEditorTabsSuccess() {
+  yield takeEvery(actions.ADD_EDITOR_TABS[actions.SUCCESS], fetchEditorTabs);
+}
+
+export function *watchRemoveEditorTabsSuccess() {
+  yield takeEvery(actions.REMOVE_EDITOR_TABS[actions.SUCCESS], fetchEditorTabs);
 }
 
 function createChannel(socket) {
@@ -494,8 +506,6 @@ export default function *root() {
     fork(watchDeleteFile),
     fork(watchDeleteFileSuccess),
     fork(watchFetchFileSuccess),
-    fork(watchFetchCurrentFile),
-    fork(watchPostFileSuccess),
     fork(watchFetchCredentials),
     fork(watchFetchEthGas),
     fork(watchStartDebug),
@@ -518,6 +528,11 @@ export default function *root() {
     fork(watchWeb3EstimateGas),
     fork(watchWeb3Deploy),
     fork(watchUpdateDeploymentPipeline),
-    fork(watchListenDebugger)
+    fork(watchListenDebugger),
+    fork(watchFetchEditorTabs),
+    fork(watchAddEditorTabs),
+    fork(watchRemoveEditorTabs),
+    fork(watchAddEditorTabsSuccess),
+    fork(watchRemoveEditorTabsSuccess),
   ]);
 }

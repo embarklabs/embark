@@ -1,6 +1,8 @@
 import React from 'react';
 import * as monaco from 'monaco-editor';
 import PropTypes from 'prop-types';
+import FontAwesomeIcon from 'react-fontawesome';
+import classNames from 'classnames';
 
 import './TextEditor.css';
 
@@ -40,7 +42,7 @@ class TextEditor extends React.Component {
 
     editor.onMouseDown((e) => {
       if (e.target.type === GUTTER_GLYPH_MARGIN){
-        this.props.toggleBreakpoint(this.props.file.name, e.target.position.lineNumber);
+        this.props.toggleBreakpoint(this.props.currentFile.name, e.target.position.lineNumber);
       }
     });
   }
@@ -49,7 +51,10 @@ class TextEditor extends React.Component {
 
 
   getLanguage() {
-    const extension = this.props.file.name.split('.').pop();
+    if (!this.props.currentFile.name) {
+      return DEFAULT_LANGUAGE;
+    }
+    const extension = this.props.currentFile.name.split('.').pop();
     return SUPPORTED_LANGUAGES[SUPPORTED_LANGUAGES.indexOf(extension)] || DEFAULT_LANGUAGE;
   }
 
@@ -112,8 +117,8 @@ class TextEditor extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.file.content !== prevProps.file.content) {
-      editor.setValue(this.props.file.content);
+    if (this.props.currentFile.content && this.props.currentFile.content !== prevProps.currentFile.content) {
+      editor.setValue(this.props.currentFile.content);
     }
 
     this.updateMarkers();
@@ -125,9 +130,23 @@ class TextEditor extends React.Component {
     this.handleResize();
   }
 
+  renderTabs() {
+    return (
+      <ul className="list-inline m-0 p-2">
+        {this.props.editorTabs.map(file => (
+          <li key={file.name} className={classNames("list-inline-item", "border-right", "p-2", { 'bg-dark': file.name === this.props.currentFile.name })}>
+            <a className="text-white no-underline" href='#switch-tab' onClick={() => this.props.addEditorTabs(file)}>{file.name}</a>
+            <FontAwesomeIcon onClick={() => this.props.removeEditorTabs(file)} className="mx-1" name="close" />
+        </li>
+        ))}
+      </ul>
+    )
+  }
+
   render() {
     return (
       <div className="h-100 d-flex flex-column">
+        {this.renderTabs()}
         <div style={{height: '100%'}} id={EDITOR_ID} />
       </div>
     )
@@ -136,10 +155,13 @@ class TextEditor extends React.Component {
 
 TextEditor.propTypes = {
   onFileContentChange: PropTypes.func,
-  file: PropTypes.object,
+  currentFile: PropTypes.object,
   toggleBreakpoint: PropTypes.func,
   breakpoints: PropTypes.array,
-  debuggerLine: PropTypes.number
+  debuggerLine: PropTypes.number,
+  editorTabs: PropTypes.array,
+  removeEditorTabs: PropTypes.func,
+  addEditorTabs: PropTypes.func
 };
 
 export default TextEditor;

@@ -1,12 +1,10 @@
 import PropTypes from "prop-types";
 import React from 'react';
 import ReactJson from "react-json-view";
-import {Row, Col, Table} from "reactstrap";
-import {formatContractForDisplay} from '../utils/presentation';
+import {Row, Col} from "reactstrap";
 import CopyButton from './CopyButton';
 
 const ContractDetail = ({contract}) => {
-  const contractDisplay = formatContractForDisplay(contract);
   return (
     <Row>
       <Col>
