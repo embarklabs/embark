@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Row, Label, Col, Button} from 'reactstrap';
+import {Row, Label, Col, Button, Nav, NavLink} from 'reactstrap';
 import FontAwesomeIcon from 'react-fontawesome';
 import { AppSwitch } from '@coreui/react'
 
@@ -26,26 +26,23 @@ const TextEditorToolbar = (props) => (
       </Button>
     </Col>
     <Col sm={4} md={4}>
-      <div className="float-right mr-2">
-        {props.isContract &&
-          <React.Fragment>
-            <Button size="sm" color="primary" onClick={() => props.openAsideTab('overview')}>
-              Overview
-            </Button>
-            <span className="mx-2">|</span>
-            <Button size="sm" color="primary" onClick={() => props.openAsideTab('detail')}>
-              Detail
-            </Button>
-            <span className="mx-2">|</span>
-            <Button size="sm" color="primary" onClick={() => props.openAsideTab('logger')}>
-              Logger
-            </Button>
-            <span className="mx-2">|</span>
-          </React.Fragment>
-        }
-        <Button size="sm" color="primary" onClick={() => props.openAsideTab('browser')}>
-          Browser
-        </Button>
+      <div className="float-right mr-2 btn-group">
+        <Nav>
+          {props.isContract &&
+            <React.Fragment>
+              <NavLink href="#" onClick={() => props.openAsideTab('overview')}>
+                <FontAwesomeIcon className="mr-2" name="info-circle" /> Overview
+              </NavLink>
+              <NavLink href="#" onClick={() => props.openAsideTab('detail')}>
+                <FontAwesomeIcon className="mr-2" name="file-text-o" /> Details
+              </NavLink>
+              <NavLink href="#" onClick={() => props.openAsideTab('logger')}>Logger</NavLink>
+            </React.Fragment>
+          }
+          <NavLink href="#" onClick={() => props.openAsideTab('browser')}>
+            <FontAwesomeIcon className="mr-2" name="compass" /> Browser
+          </NavLink>
+        </Nav>
       </div>
     </Col>
   </Row>
