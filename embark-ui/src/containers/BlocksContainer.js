@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import {blocks as blocksAction, initBlockHeader, stopBlockHeader} from '../actions';
 import Blocks from '../components/Blocks';
 import DataWrapper from "../components/DataWrapper";
-import LoadMore from "../components/LoadMore";
 import {getBlocks} from "../reducers/selectors";
 
 class BlocksContainer extends Component {
@@ -34,9 +33,8 @@ class BlocksContainer extends Component {
     return (
       <React.Fragment>
         <DataWrapper shouldRender={this.props.blocks.length > 0} {...this.props} render={({blocks}) => (
-          <Blocks blocks={blocks} />
+          <Blocks blocks={blocks} showLoadMore={(this.loadMoreFrom() >= 0)} loadMore={() => this.loadMore()} />
         )} />
-        {(this.loadMoreFrom() >= 0) ? <LoadMore loadMore={() => this.loadMore()} /> : <React.Fragment />}
       </React.Fragment>
     );
   }

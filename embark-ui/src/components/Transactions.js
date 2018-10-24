@@ -4,48 +4,54 @@ import {Row, Col, Card, CardHeader, CardBody} from 'reactstrap';
 import PropTypes from 'prop-types';
 
 import CardTitleIdenticon from './CardTitleIdenticon';
+import LoadMore from "./LoadMore";
 
-const Transactions = ({transactions}) => (
+const Transactions = ({transactions, showLoadMore, loadMore}) => (
   <Row>
     <Col>
-      <h1>Transactions</h1>
-      {transactions.map(transaction => (
-        <Card key={transaction.hash}>
-          <CardHeader>
-            <CardTitleIdenticon id={transaction.hash}>Transaction&nbsp;
-              <Link to={`/embark/explorer/transactions/${transaction.hash}`}>
-                {transaction.hash}
-              </Link>
-            </CardTitleIdenticon>
-          </CardHeader>
-          <CardBody>
-            <Row>
-              <Col>
-                <strong>Block number</strong>
-                <div>{transaction.blockNumber}</div>
-              </Col>
-              <Col>
-                <strong>From</strong>
-                <div>{transaction.from}</div>
-              </Col>
-              <Col>
-                <strong>To</strong>
-                <div>{transaction.to}</div>
-              </Col>
-              <Col>
-                <strong>Type</strong>
-                <div>{transaction.to ? "Contract Call" : "Contract Creation"}</div>
-              </Col>
-            </Row>
-          </CardBody>
-        </Card>
-      ))}
+      <Card>
+        <CardHeader>
+          <h2>Transactions</h2>
+        </CardHeader>
+        <CardBody>
+          {transactions.map(transaction => (
+            <div className="explorer-row border-top" key={transaction.hash}>
+              <CardTitleIdenticon id={transaction.hash}>Transaction&nbsp;
+                <Link to={`/embark/explorer/transactions/${transaction.hash}`}>
+                  {transaction.hash}
+                </Link>
+              </CardTitleIdenticon>
+              <Row>
+                <Col md={6}>
+                  <strong>Block number</strong>
+                  <div>{transaction.blockNumber}</div>
+                </Col>
+                <Col md={6}>
+                  <strong>From</strong>
+                  <div>{transaction.from}</div>
+                </Col>
+                <Col md={6}>
+                  <strong>To</strong>
+                  <div>{transaction.to}</div>
+                </Col>
+                <Col md={6}>
+                  <strong>Type</strong>
+                  <div>{transaction.to ? "Contract Call" : "Contract Creation"}</div>
+                </Col>
+              </Row>
+            </div>
+          ))}
+          {showLoadMore && <LoadMore loadMore={() => loadMore()}/>}
+        </CardBody>
+      </Card>
     </Col>
   </Row>
 );
 
 Transactions.propTypes = {
-  transactions: PropTypes.arrayOf(PropTypes.object)
+  transactions: PropTypes.arrayOf(PropTypes.object),
+  showLoadMore: PropTypes.bool,
+  loadMore: PropTypes.func
 };
 
 export default Transactions;

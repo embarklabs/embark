@@ -1,0 +1,14 @@
+.explorer-row {
+  border-top-width: 0 !important; /*Bootstrap uses important, so we need to override it*/
+}
+
+.explorer-row + .explorer-row {
+  margin-top: 5px;
+  padding-top: 20px;
+  border-top-width: 1px !important;
+}
+
+.explorer-row .text-truncate {
+  width: 90%;
+  display: inline-block;
+}
