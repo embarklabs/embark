@@ -19,6 +19,13 @@
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },
+  "bin": {
+    "embark": "./bin/embark"
+  },
+  "directories": {
+    "lib": "./lib"
+  },
+  "main": "./lib/index.js",
   "scripts": {
     "lint": "eslint bin/embark lib/",
     "test": "npm-run-all lint test:*",
@@ -27,13 +34,6 @@
     "test:contracts_app": "cross-env DAPP=\"contracts_app\" npm run test_dapp",
     "test_dapp": "cross-env-shell \"cd test_apps/$DAPP && npm install && npm test\"",
     "prepack": "cd embark-ui && npm install && npm run build"
-  },
-  "bin": {
-    "embark": "./bin/embark"
-  },
-  "main": "./lib/index.js",
-  "directories": {
-    "lib": "./lib"
   },
   "dependencies": {
     "@babel/core": "7.1.2",
