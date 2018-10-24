@@ -73,6 +73,7 @@
   "The web3 object and the interfaces for the deployed contracts and their methods are also available": "The web3 object and the interfaces for the deployed contracts and their methods are also available",
   "versions in use": "versions in use",
   "language to use (default: en)": "language to use (default: en)",
+  "use Vue.js framework": "use Vue.js framework",
   "executing": "executing",
   "writing file": "writing file",
   "errors found while generating": "errors found while generating",

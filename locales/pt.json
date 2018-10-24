@@ -186,6 +186,7 @@
   "versions in use": "versões em uso",
   "downloading {{packageName}} {{version}}....": "baixando {{packageName}} {{version}}....",
   "language to use (default: en)": "linguagem a ser utilizada (padrão: en)",
+  "use Vue.js framework": "usar o framework Vue.js",
   "download template": "download concluído",
   "Start the Embark console": "Iniciar o console Embark",
   "When set, will print the gas cost for each contract deploy": "Quando configurado, irá mostrar o custo do gás para cada contrato publicado",

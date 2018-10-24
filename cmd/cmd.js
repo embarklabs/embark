@@ -110,10 +110,13 @@ class Cmd {
     program
       .command('demo')
       .option('--locale [locale]', __('language to use (default: en)'))
+      .option('--vuejs', __('use Vue.js framework'))
       .description(__('create a working dapp with a SimpleStorage contract'))
       .action(function(options) {
         i18n.setOrDetectLocale(options.locale);
-        embark.generateTemplate('demo', './', 'embark_demo');
+        const url = options.vuejs ? 'https://github.com/embark-framework/embark-vue-template.git':null;
+        const framework = options.vuejs ? '_vuejs':'';
+        embark.generateTemplate('demo', './', `embark${framework}_demo`, url);
       });
   }
 
