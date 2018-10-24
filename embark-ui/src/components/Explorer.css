@@ -1,0 +1,9 @@
+.explorer-row {
+  margin-bottom: 20px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #c8ced3;
+}
+
+.dark-theme .explorer-row {
+  border-bottom-color: #23282c;
+}

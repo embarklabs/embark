@@ -8,6 +8,8 @@ import AccountsContainer from '../containers/AccountsContainer';
 import BlocksContainer from '../containers/BlocksContainer';
 import TransactionsContainer from '../containers/TransactionsContainer';
 
+import './Explorer.css';
+
 const ExplorerDashboardLayout = () => (
   <React.Fragment>
     <Row>
