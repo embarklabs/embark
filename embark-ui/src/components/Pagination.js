@@ -2,14 +2,14 @@ import React from 'react';
 import {Pagination, PaginationItem, PaginationLink} from 'reactstrap';
 import PropTypes from 'prop-types';
 
-const NB_PAGES_MAX = 14;
+const NB_PAGES_MAX = 8;
 
 const Pages = ({currentPage, numberOfPages, changePage}) => {
   let i = currentPage - NB_PAGES_MAX / 2;
   if (i < 1) {
     i = 1;
   }
-  let max = i + NB_PAGES_MAX;
+  let max = i + NB_PAGES_MAX - 1;
   if (max > numberOfPages) {
     max = numberOfPages;
   }
@@ -19,7 +19,7 @@ const Pages = ({currentPage, numberOfPages, changePage}) => {
   }
 
   return (
-    <Pagination aria-label="Page navigation example">
+    <Pagination aria-label="Page navigation example" className="mt-4 mb-0 float-right">
       <PaginationItem disabled={currentPage <= 1}>
         <PaginationLink previous href="#" onClick={(e) => {
           e.preventDefault();

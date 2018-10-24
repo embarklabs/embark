@@ -1,5 +1,9 @@
 .explorer-row {
-  border-top-width: 0 !important; /*Bootstrap uses important, so we need to override it*/
+  border-top-width: 0 !important; /*Bootstrap uses important, so we need to override it*/ 
+}
+
+.explorer-overview .card-body {
+  overflow: hidden;
 }
 
 .explorer-row + .explorer-row {
