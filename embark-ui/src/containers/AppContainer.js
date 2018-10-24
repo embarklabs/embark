@@ -105,7 +105,11 @@ class AppContainer extends Component {
   }
 
   render() {
-    return <div className={(this.props.theme) + "-theme"}>{this.renderBody()}</div>;
+    return (
+      <div className={(this.props.theme) + "-theme"}>
+        {this.renderBody()}
+      </div>
+    );
   }
 }
 
