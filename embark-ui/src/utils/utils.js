@@ -18,7 +18,8 @@ export function hashCode(str) {
 
 export function ansiToHtml(text) {
   const convert = new Convert();
-  return convert.toHtml(text.replace(/\n/g,'<br>'))
+  return convert.toHtml(text.replace(/\n/g,'<br>'));
+}
 
 export function getQueryToken(location) {
   return qs.parse(location.search, {ignoreQueryPrefix: true}).token;

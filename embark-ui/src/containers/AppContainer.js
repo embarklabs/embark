@@ -5,7 +5,7 @@ import {withRouter} from "react-router-dom";
 import routes from '../routes';
 import Login from '../components/Login';
 import Layout from "../components/Layout";
-import { DEFAULT_HOST } from '../constants';
+import {DEFAULT_HOST} from '../constants';
 import {getQueryToken, stripQueryToken} from '../utils/utils';
 
 import {
