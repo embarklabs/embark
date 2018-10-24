@@ -69,11 +69,16 @@ export const fetchFile = doRequest.bind(null, actions.file, api.fetchFile);
 export const postFile = doRequest.bind(null, actions.saveFile, api.postFile);
 export const deleteFile = doRequest.bind(null, actions.removeFile, api.deleteFile);
 export const fetchEthGas = doRequest.bind(null, actions.gasOracle, api.getEthGasAPI);
+export const startDebug = doRequest.bind(null, actions.startDebug, api.startDebug);
+export const debugJumpBack = doRequest.bind(null, actions.debugJumpBack, api.debugJumpBack);
+export const debugJumpForward = doRequest.bind(null, actions.debugJumpForward, api.debugJumpForward);
+export const debugStepOverForward = doRequest.bind(null, actions.debugStepOverForward, api.debugStepOverForward);
+export const debugStepOverBackward = doRequest.bind(null, actions.debugStepOverBackward, api.debugStepOverBackward);
+export const debugStepIntoForward = doRequest.bind(null, actions.debugStepIntoForward, api.debugStepIntoForward);
+export const debugStepIntoBackward = doRequest.bind(null, actions.debugStepIntoBackward, api.debugStepIntoBackward);
+export const toggleBreakpoint = doRequest.bind(null, actions.toggleBreakpoint, api.toggleBreakpoint);
 export const authenticate = doRequest.bind(null, actions.authenticate, api.authenticate);
 
-export const fetchCurrentFile = doRequest.bind(null, actions.currentFile, storage.fetchCurrentFile);
-export const postCurrentFile = doRequest.bind(null, actions.saveCurrentFile, storage.postCurrentFile);
-export const deleteCurrentFile = doRequest.bind(null, null, storage.deleteCurrentFile);
 export const fetchCredentials = doRequest.bind(null, actions.fetchCredentials, storage.fetchCredentials);
 export const saveCredentials = doRequest.bind(null, actions.saveCredentials, storage.saveCredentials);
 export const logout = doRequest.bind(null, actions.logout, storage.logout);
@@ -81,6 +86,9 @@ export const changeTheme = doRequest.bind(null, actions.changeTheme, storage.cha
 export const fetchTheme = doRequest.bind(null, actions.fetchTheme, storage.fetchTheme);
 export const signMessage = doRequest.bind(null, actions.signMessage, api.signMessage);
 export const verifyMessage = doRequest.bind(null, actions.verifyMessage, api.verifyMessage);
+export const fetchEditorTabs = doRequest.bind(null, actions.fetchEditorTabs, storage.fetchEditorTabs);
+export const addEditorTabs = doRequest.bind(null, actions.addEditorTabs, storage.addEditorTabs);
+export const removeEditorTabs = doRequest.bind(null, actions.removeEditorTabs, storage.removeEditorTabs);
 
 export const explorerSearch = searchExplorer.bind(null, actions.explorerSearch);
 
@@ -200,29 +208,53 @@ export function *watchPostFile() {
   yield takeEvery(actions.SAVE_FILE[actions.REQUEST], postFile);
 }
 
-export function *watchPostFileSuccess() {
-  yield takeEvery(actions.SAVE_FILE[actions.SUCCESS], postCurrentFile);
-}
-
 export function *watchDeleteFile() {
   yield takeEvery(actions.REMOVE_FILE[actions.REQUEST], deleteFile);
 }
 
 export function *watchDeleteFileSuccess() {
   yield takeEvery(actions.REMOVE_FILE[actions.SUCCESS], fetchFiles);
-  yield takeEvery(actions.REMOVE_FILE[actions.SUCCESS], deleteCurrentFile);
+  yield takeEvery(actions.REMOVE_FILE[actions.SUCCESS], removeEditorTabs);
 }
 
 export function *watchFetchFileSuccess() {
-  yield takeEvery(actions.FILE[actions.SUCCESS], postCurrentFile);
-}
-
-export function *watchFetchCurrentFile() {
-  yield takeEvery(actions.CURRENT_FILE[actions.REQUEST], fetchCurrentFile);
+  yield takeEvery(actions.FILE[actions.SUCCESS], addEditorTabs);
 }
 
 export function *watchFetchEthGas() {
   yield takeEvery(actions.GAS_ORACLE[actions.REQUEST], fetchEthGas);
+}
+
+export function *watchStartDebug() {
+  yield takeEvery(actions.START_DEBUG[actions.REQUEST], startDebug);
+}
+
+export function *watchDebugJumpBack() {
+  yield takeEvery(actions.DEBUG_JUMP_BACK[actions.REQUEST], debugJumpBack);
+}
+
+export function *watchDebugJumpForward() {
+  yield takeEvery(actions.DEBUG_JUMP_FORWARD[actions.REQUEST], debugJumpForward);
+}
+
+export function *watchDebugStepOverForward() {
+  yield takeEvery(actions.DEBUG_STEP_OVER_FORWARD[actions.REQUEST], debugStepOverForward);
+}
+
+export function *watchDebugStepOverBackward() {
+  yield takeEvery(actions.DEBUG_STEP_OVER_BACKWARD[actions.REQUEST], debugStepOverBackward);
+}
+
+export function *watchDebugStepIntoForward() {
+  yield takeEvery(actions.DEBUG_STEP_INTO_FORWARD[actions.REQUEST], debugStepIntoForward);
+}
+
+export function *watchDebugStepIntoBackward() {
+  yield takeEvery(actions.DEBUG_STEP_INTO_BACKWARD[actions.REQUEST], debugStepIntoBackward);
+}
+
+export function *watchToggleBreakpoint() {
+  yield takeEvery(actions.TOGGLE_BREAKPOINT[actions.REQUEST], toggleBreakpoint);
 }
 
 export function *watchAuthenticate() {
@@ -271,6 +303,26 @@ export function *watchWeb3EstimateGas() {
 
 export function *watchUpdateDeploymentPipeline() {
   yield takeEvery(actions.UPDATE_DEPLOYMENT_PIPELINE, web3Connect);
+}
+
+export function *watchFetchEditorTabs() {
+  yield takeEvery(actions.FETCH_EDITOR_TABS[actions.REQUEST], fetchEditorTabs);
+}
+
+export function *watchAddEditorTabs() {
+  yield takeEvery(actions.ADD_EDITOR_TABS[actions.REQUEST], addEditorTabs);
+}
+
+export function *watchRemoveEditorTabs() {
+  yield takeEvery(actions.REMOVE_EDITOR_TABS[actions.REQUEST], removeEditorTabs);
+}
+
+export function *watchAddEditorTabsSuccess() {
+  yield takeEvery(actions.ADD_EDITOR_TABS[actions.SUCCESS], fetchEditorTabs);
+}
+
+export function *watchRemoveEditorTabsSuccess() {
+  yield takeEvery(actions.REMOVE_EDITOR_TABS[actions.SUCCESS], fetchEditorTabs);
 }
 
 function createChannel(socket) {
@@ -385,6 +437,28 @@ export function *watchListenGasOracle() {
   yield takeEvery(actions.WATCH_GAS_ORACLE, listenGasOracle);
 }
 
+export function *listenDebugger() {
+  const credentials = yield select(getCredentials);
+  const socket = api.listenToDebugger(credentials);
+  const channel = yield call(createChannel, socket);
+  while (true) {
+    const { cancel, debuggerInfo } = yield race({
+      debuggerInfo: take(channel),
+      cancel: take(actions.STOP_DEBUGGER)
+    });
+
+    if (cancel) {
+      channel.close();
+      return;
+    }
+    yield put(actions.debuggerInfo.success(debuggerInfo));
+  }
+}
+
+export function *watchListenDebugger() {
+  yield takeEvery(actions.START_DEBUG[actions.SUCCESS], listenDebugger);
+}
+
 export function *listenToMessages(action) {
   const credentials = yield select(getCredentials);
   const socket = api.listenToChannel(credentials, action.messageChannels[0]);
@@ -432,10 +506,16 @@ export default function *root() {
     fork(watchDeleteFile),
     fork(watchDeleteFileSuccess),
     fork(watchFetchFileSuccess),
-    fork(watchFetchCurrentFile),
-    fork(watchPostFileSuccess),
     fork(watchFetchCredentials),
     fork(watchFetchEthGas),
+    fork(watchStartDebug),
+    fork(watchDebugJumpBack),
+    fork(watchDebugJumpForward),
+    fork(watchDebugStepOverForward),
+    fork(watchDebugStepOverBackward),
+    fork(watchDebugStepIntoForward),
+    fork(watchDebugStepIntoBackward),
+    fork(watchToggleBreakpoint),
     fork(watchAuthenticate),
     fork(watchAuthenticateSuccess),
     fork(watchLogout),
@@ -447,6 +527,12 @@ export default function *root() {
     fork(watchVerifyMessage),
     fork(watchWeb3EstimateGas),
     fork(watchWeb3Deploy),
-    fork(watchUpdateDeploymentPipeline)
+    fork(watchUpdateDeploymentPipeline),
+    fork(watchListenDebugger),
+    fork(watchFetchEditorTabs),
+    fork(watchAddEditorTabs),
+    fork(watchRemoveEditorTabs),
+    fork(watchAddEditorTabsSuccess),
+    fork(watchRemoveEditorTabsSuccess),
   ]);
 }

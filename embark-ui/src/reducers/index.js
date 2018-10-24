@@ -1,8 +1,8 @@
 import {combineReducers} from 'redux';
 import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE,
-        FETCH_CREDENTIALS, UPDATE_BASE_ETHER, CHANGE_THEME, FETCH_THEME, EXPLORER_SEARCH,
+        FETCH_CREDENTIALS, UPDATE_BASE_ETHER, CHANGE_THEME, FETCH_THEME, EXPLORER_SEARCH, DEBUGGER_INFO,
         SIGN_MESSAGE, VERIFY_MESSAGE, TOGGLE_BREAKPOINT,
-        UPDATE_DEPLOYMENT_PIPELINE, WEB3_CONNECT, WEB3_DEPLOY, WEB3_ESTIMAGE_GAS} from "../actions";
+        UPDATE_DEPLOYMENT_PIPELINE, WEB3_CONNECT, WEB3_DEPLOY, WEB3_ESTIMAGE_GAS, FETCH_EDITOR_TABS} from "../actions";
 import {EMBARK_PROCESS_NAME, DARK_THEME, DEPLOYMENT_PIPELINES, DEFAULT_HOST} from '../constants';
 
 const BN_FACTOR = 10000;
@@ -31,7 +31,6 @@ const entitiesDefaultState = {
   ensRecords: [],
   files: [],
   gasOracleStats: [],
-  currentFiles: []
 };
 
 const sorter = {
@@ -80,7 +79,7 @@ const sorter = {
     if (a.name < b.name) return -1;
     if (a.name > b.name) return 1;
     return 0;
-  }
+  },
 };
 
 const filtrer = {
@@ -313,7 +312,7 @@ function messageVerification(state = DEFAULT_MESSAGE_VERIFICATION_STATE, action)
 }
 
 function breakpoints(state = {}, action) {
-  if (action.type === TOGGLE_BREAKPOINT) {
+  if (action.type === TOGGLE_BREAKPOINT[SUCCESS]) {
     const {filename, lineNumber} = action.payload;
     let lineNumbers = state[filename] || [];
     if (lineNumbers.includes(lineNumber)){
@@ -347,6 +346,20 @@ function web3(state = {deployments: {}, gasEstimates: {}}, action) {
   return state
 }
 
+function debuggerInfo(state={}, action) {
+  if (action.type === DEBUGGER_INFO[SUCCESS]) {
+    return action.data;
+  }
+  return state;
+}
+
+function editorTabs(state = [], action) {
+  if (action.type === FETCH_EDITOR_TABS[SUCCESS] && action.editorTabs) {
+    return action.editorTabs;
+  }
+  return state;
+}
+
 const rootReducer = combineReducers({
   entities,
   loading,
@@ -355,13 +368,15 @@ const rootReducer = combineReducers({
   errorEntities,
   credentials,
   baseEther,
-  theme,
   searchResult,
   messageSignature,
   messageVerification,
   breakpoints,
   deploymentPipeline,
-  web3
+  web3,
+  debuggerInfo,
+  theme,
+  editorTabs
 });
 
 export default rootReducer;

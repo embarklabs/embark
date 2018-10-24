@@ -79,12 +79,12 @@ class ContractFunction extends Component {
     return (
         <Card>
           <CardHeader>
-            <CardTitle className="collapsable contractFunction" onClick={() => this.toggleFunction()}>
+            <CardTitle className="collapsable" onClick={() => this.toggleFunction()}>
               {ContractFunction.isPureCall(this.props.method) &&
-                <button class="btn btn-brand btn-sm" style={{ "color": "#fff", "background-color": "#ff4500", "border-color": "#ff4500", "float": "right" }}>call</button>
+                <button className="btn btn-warning btn-sm float-right">call</button>
               }
               {ContractFunction.isEvent(this.props.method) &&
-                <button class="btn btn-brand btn-sm" style={{ "color": "#fff", "background-color": "#aad450", "border-color": "#aad450", "float": "right" }}>event</button>
+                <button className="btn btn-info btn-sm float-right">event</button>
               }
               {this.props.method.name}({this.props.method.inputs.map(input => input.name).join(', ')})
             </CardTitle>

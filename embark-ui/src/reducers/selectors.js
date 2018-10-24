@@ -170,7 +170,7 @@ export function getFiles(state) {
 }
 
 export function getCurrentFile(state) {
-  return last(state.entities.currentFiles);
+  return state.editorTabs.find(file => file.active) || {};
 }
 
 export function getBaseEther(state) {
@@ -223,4 +223,17 @@ export function getWeb3GasEstimates(state) {
 
 export function getWeb3Deployments(state) {
   return state.web3.deployments;
+}
+
+export function debuggerInfo(state) {
+  return state.debuggerInfo;
+}
+
+export function getDebuggerLine(state) {
+  if (!state.debuggerInfo.sources) return 10;
+  return state.debuggerInfo.sources.lineColumnPos[0].start.line + 1;
+}
+
+export function getEditorTabs(state) {
+  return state.editorTabs
 }

@@ -1,20 +1,34 @@
-export function postCurrentFile(file) {
+export function addEditorTabs({file}) {
   return new Promise(resolve => {
-    localStorage.setItem('currentFile', JSON.stringify(file));
-    resolve({response: {data: file}});
+    const editorTabs = findOrCreateEditorTabs();
+    editorTabs.forEach(f => f.active = false);
+    const alreadyAddedFile = editorTabs.find(f => f.name === file.name)
+    if (alreadyAddedFile) {
+      alreadyAddedFile.active = true
+    } else {
+      file.active = true
+      editorTabs.push(file);
+    }
+    localStorage.setItem('editorTabs', JSON.stringify(editorTabs));
+    resolve({response: {data: editorTabs}});
   });
 }
 
-export function fetchCurrentFile() {
+export function fetchEditorTabs() {
   return new Promise(resolve => {
-    resolve({response: {data: JSON.parse(localStorage.getItem('currentFile'))}});
+    resolve({response: {data: JSON.parse(localStorage.getItem('editorTabs'))}});
   });
 }
 
-export function deleteCurrentFile() {
+export function removeEditorTabs({file}) {
   return new Promise(resolve => {
-    localStorage.removeItem('currentFile');
-    resolve({});
+    const editorTabs = findOrCreateEditorTabs();
+    const filtered = editorTabs.filter(value => value.name !== file.name);
+    if (file.active && filtered.length) {
+      filtered[0].active = true;
+    }
+    localStorage.setItem('editorTabs', JSON.stringify(filtered));
+    resolve({response: {data: filtered}});
   });
 }
 
@@ -49,4 +63,9 @@ export function changeTheme({theme}) {
 
 export function fetchTheme() {
   return new Promise(resolve => resolve({response: {data: localStorage.getItem('theme')}}));
+}
+
+
+function findOrCreateEditorTabs() {
+  return JSON.parse(localStorage.getItem('editorTabs')) || [];
 }

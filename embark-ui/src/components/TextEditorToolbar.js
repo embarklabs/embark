@@ -30,6 +30,9 @@ const TextEditorToolbar = (props) => (
               <FontAwesomeIcon className="mr-2" name="file-text-o" /> Details
             </NavLink>
             <NavLink className="btn" href="#" onClick={() => props.openAsideTab('logger')}>Logger</NavLink>
+            <NavLink className="btn" href="#" onClick={() => props.openAsideTab('debugger')}>
+              <FontAwesomeIcon className="mr-2" name="bug" /> Debugger
+            </NavLink>
           </React.Fragment>
         }
         <NavLink className="btn" href="#" onClick={() => props.openAsideTab('browser')}>
@@ -42,7 +45,6 @@ const TextEditorToolbar = (props) => (
 );
 
 TextEditorToolbar.propTypes = {
-  currentFile: PropTypes.object,
   isContract: PropTypes.bool,
   save: PropTypes.func,
   remove: PropTypes.func,

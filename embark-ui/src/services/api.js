@@ -185,6 +185,42 @@ export function verifyMessage(payload) {
   return post('/messages/verify', ...arguments);
 }
 
+export function startDebug(payload) {
+  return post('/debugger/start', {params: payload, credentials: payload.credentials});
+}
+
+export function debugJumpBack(payload) {
+  return post('/debugger/jumpBack', {params: payload, credentials: payload.credentials});
+}
+
+export function debugJumpForward(payload) {
+  return post('/debugger/jumpForward', {params: payload, credentials: payload.credentials});
+}
+
+export function debugStepOverForward(payload) {
+  return post('/debugger/stepOverForward', {params: payload, credentials: payload.credentials});
+}
+
+export function debugStepOverBackward(payload) {
+  return post('/debugger/stepOverBackward', {params: payload, credentials: payload.credentials});
+}
+
+export function debugStepIntoForward(payload) {
+  return post('/debugger/stepIntoForward', {params: payload, credentials: payload.credentials});
+}
+
+export function debugStepIntoBackward(payload) {
+  return post('/debugger/stepIntoBackward', {params: payload, credentials: payload.credentials});
+}
+
+export function toggleBreakpoint(payload) {
+  return post('/debugger/breakpoint', {params: payload, credentials: payload.credentials});
+}
+
+export function listenToDebugger(credentials) {
+  return new WebSocket(`ws://${credentials.host}/embark-api/debugger`, [credentials.token]);
+}
+
 export function listenToChannel(credentials, channel) {
   return new WebSocket(`ws://${credentials.host}/embark-api/communication/listenTo/${channel}`, [credentials.token]);
 }

@@ -36,3 +36,44 @@
 .contractFunction {
   margin-bottom: 0px;
 }
+
+.debugButton {
+  width: 28px;
+  height: 24px;
+}
+
+.jumpBack {
+  background-position: 0px 48px;
+  background-image: url(images/icons.png);
+}
+
+.jumpForward {
+  background-position: -28px 48px;
+  background-image: url(images/icons.png);
+}
+
+.stepOverBack {
+  transform: scaleX(-1);
+  background-position: -56px 24px;
+  background-image: url(images/icons.png);
+}
+
+.stepOverForward {
+  background-position: -56px 24px;
+  background-image: url(images/icons.png);
+}
+
+.stepIntoForward {
+  background-position: 0px 24px;
+  background-image: url(images/icons.png);
+}
+
+.stepIntoBack {
+  background-position: -28px 24px;
+  background-image: url(images/icons.png);
+}
+
+.no-underline {
+  text-decoration: none;
+}
+
