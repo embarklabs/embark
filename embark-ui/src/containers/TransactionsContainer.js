@@ -3,8 +3,6 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {transactions as transactionsAction, initBlockHeader, stopBlockHeader} from '../actions';
-import Blocks from "../components/Blocks";
-import LoadMore from "../components/LoadMore";
 import Transactions from '../components/Transactions';
 import DataWrapper from "../components/DataWrapper";
 import {getTransactions} from "../reducers/selectors";

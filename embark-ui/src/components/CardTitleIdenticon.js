@@ -11,7 +11,10 @@ const CardTitleIdenticon = ({id, children}) => (
 
 CardTitleIdenticon.propTypes = {
   id: PropTypes.string,
-  children: PropTypes.object
+  children: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array
+  ])
 };
 
 export default CardTitleIdenticon;
