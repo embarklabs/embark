@@ -59,8 +59,8 @@ class AppContainer extends Component {
   }
 
   requireAuthentication() {
-    return !this.props.credentials.authenticating &&
-      !this.props.credentials.authenticated &&
+    return !(this.props.credentials.authenticating ||
+             this.props.credentials.authenticated) &&
       this.props.credentials.token &&
       this.props.credentials.host;
   }
