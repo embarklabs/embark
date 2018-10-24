@@ -6,13 +6,13 @@
   "description": "Embark is a framework that allows you to easily develop and deploy DApps",
   "homepage": "https://embark.status.im/",
   "keywords": [
-    "ethereum",
-    "dapps",
-    "ipfs",
-    "solidity",
-    "solc",
     "blockchain",
-    "serverless"
+    "dapps",
+    "ethereum",
+    "ipfs",
+    "serverless",
+    "solc",
+    "solidity"
   ],
   "license": "MIT",
   "repository": {
