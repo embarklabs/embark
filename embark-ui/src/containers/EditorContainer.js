@@ -60,13 +60,12 @@ class EditorContainer extends React.Component {
     return (
       <Row noGutters className="h-100 editor--grid">
         <Col xs={12}>
-          <TextEditorToolbarContainer toggleShowHiddenFiles={() => this.toggleShowHiddenFiles()} 
-                                      openAsideTab={(newTab) => this.openAsideTab(newTab)}
+          <TextEditorToolbarContainer openAsideTab={(newTab) => this.openAsideTab(newTab)}
                                       isContract={this.isContract()}
                                       currentFile={this.props.currentFile} />
         </Col>
         <Col xs={4} md={2}>
-          <FileExplorerContainer showHiddenFiles={this.state.showHiddenFiles} />
+          <FileExplorerContainer showHiddenFiles={this.state.showHiddenFiles} toggleShowHiddenFiles={() => this.toggleShowHiddenFiles()} />
         </Col>
         <Col xs={this.textEditorXsSize()} md={this.textEditorMdSize()}>
           <TextEditorContainer currentFile={this.props.currentFile} onFileContentChange={(newContent)=> this.onFileContentChange(newContent)} />

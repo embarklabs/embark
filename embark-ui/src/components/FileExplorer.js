@@ -1,3 +1,5 @@
+import {AppSwitch} from '@coreui/react';
+import {Label} from 'reactstrap';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Treebeard, decorators} from 'react-treebeard';
@@ -138,7 +140,7 @@ class FileExplorer extends React.Component {
     const cursor = this.state.cursor;
     const showHidden = this.props.showHiddenFiles;
     // we need a foreach to build an array instead of a
-    // filter to prevent mutating the original object (in props) 
+    // filter to prevent mutating the original object (in props)
     nodes.forEach(node => {
       if (!showHidden && node.isHidden) return;
       let updatedNode = {...node};
@@ -150,11 +152,11 @@ class FileExplorer extends React.Component {
           updatedNode.children = children;
         }
       }
-      
+
       // if this is the selected node, set it as active
       if (this.nodeEquals(node, cursor)) {
         updatedNode.active = cursor.active;
-        // if this node is the selected node and is a folder, set 
+        // if this node is the selected node and is a folder, set
         // it as toggled (expanded) according to the selected node
         if (node.children) updatedNode.toggled = cursor.toggled;
       }
@@ -178,7 +180,12 @@ class FileExplorer extends React.Component {
           onToggle={this.onToggle.bind(this)}
           style={style}
         />
-      </div>
+
+        <Label className="mb-0 pt-1">
+          <AppSwitch color='success' variant='pill' size='sm' onChange={this.props.toggleShowHiddenFiles}/>
+          <span className="ml-1 align-top">Show hidden files</span>
+        </Label>
+       </div>
     );
   }
 }

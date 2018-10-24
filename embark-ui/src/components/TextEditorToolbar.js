@@ -1,55 +1,47 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Row, Label, Col, Button} from 'reactstrap';
+import {Row, Label, Col, Button, Nav, NavLink} from 'reactstrap';
 import FontAwesomeIcon from 'react-fontawesome';
 import { AppSwitch } from '@coreui/react'
 
 const TextEditorToolbar = (props) => (
-  <Row>
-    <Col sm={4} md={2}>
-      <Label className="mb-0 pt-1">
-        <AppSwitch color='success' variant='pill' size='sm' onChange={props.toggleShowHiddenFiles}/>
-        <span className="ml-1 align-top">Show hidden files</span>
-      </Label>
-    </Col>
-    <Col sm={4} md={6}>
+  <ol className="breadcrumb">
+    <li class="breadcrumb-item">
+      {props.currentFile.name}
+    </li>
+    <li class="breadcrumb-item">
       <Button color="success" size="sm" onClick={props.save}>
         <FontAwesomeIcon className="mr-2" name="save"/>
         Save
       </Button>
-      <span className="mx-2">|</span>
       <Button color="danger" size="sm" onClick={props.remove}>
         <FontAwesomeIcon className="mr-2" name="trash"/>
         Delete
       </Button>
-    </Col>
-    <Col sm={4} md={4}>
-      <div className="float-right mr-2">
+    </li>
+    <li className="breadcrumb-menu">
+      <Nav className="btn-group">
         {props.isContract &&
           <React.Fragment>
-            <Button size="sm" color="primary" onClick={() => props.openAsideTab('overview')}>
-              Overview
-            </Button>
-            <span className="mx-2">|</span>
-            <Button size="sm" color="primary" onClick={() => props.openAsideTab('detail')}>
-              Detail
-            </Button>
-            <span className="mx-2">|</span>
-            <Button size="sm" color="primary" onClick={() => props.openAsideTab('logger')}>
-              Logger
-            </Button>
-            <span className="mx-2">|</span>
-            <Button size="sm" color="primary" onClick={() => props.openAsideTab('debugger')}>
-              Debugger
-            </Button>
+            <NavLink className="btn" href="#" onClick={() => props.openAsideTab('overview')}>
+              <FontAwesomeIcon className="mr-2" name="info-circle" /> Overview
+            </NavLink>
+            <NavLink className="btn" href="#" onClick={() => props.openAsideTab('detail')}>
+              <FontAwesomeIcon className="mr-2" name="file-text-o" /> Details
+            </NavLink>
+            <NavLink className="btn" href="#" onClick={() => props.openAsideTab('logger')}>Logger</NavLink>
+            <NavLink className="btn" href="#" onClick={() => props.openAsideTab('debugger')}>
+              <FontAwesomeIcon className="mr-2" name="bug" /> Debugger
+            </NavLink>
           </React.Fragment>
         }
-        <Button size="sm" color="primary" onClick={() => props.openAsideTab('browser')}>
-          Browser
-        </Button>
-      </div>
-    </Col>
-  </Row>
+        <NavLink className="btn" href="#" onClick={() => props.openAsideTab('browser')}>
+          <FontAwesomeIcon className="mr-2" name="compass" /> Browser
+        </NavLink>
+      </Nav>
+
+    </li>
+  </ol>
 );
 
 TextEditorToolbar.propTypes = {

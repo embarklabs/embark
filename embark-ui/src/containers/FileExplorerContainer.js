@@ -14,9 +14,9 @@ class FileExplorerContainer extends Component {
 
   render() {
     return (
-      <DataWrapper shouldRender={this.props.files.length > 0} {...this.props} render={({files, fetchFile, showHiddenFiles}) => (
-        <FileExplorer files={files} fetchFile={fetchFile} showHiddenFiles={showHiddenFiles} />
-      )} />
+        <DataWrapper shouldRender={this.props.files.length > 0} {...this.props} render={({files, fetchFile, showHiddenFiles, toggleShowHiddenFiles}) => (
+          <FileExplorer files={files} fetchFile={fetchFile} showHiddenFiles={showHiddenFiles} toggleShowHiddenFiles={toggleShowHiddenFiles} />
+        )} />
     );
   }
 }
@@ -30,6 +30,7 @@ FileExplorerContainer.propTypes = {
   fetchFiles: PropTypes.func,
   fetchFile: PropTypes.func,
   showHiddenFiles: PropTypes.bool,
+  toggleShowHiddenFiles: PropTypes.func,
 };
 
 export default connect(
