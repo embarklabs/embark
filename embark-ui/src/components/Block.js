@@ -13,7 +13,7 @@ const Block = ({block}) => (
           <CardTitleIdenticon id={block.hash}>Block {block.number}</CardTitleIdenticon>
         </CardHeader>
         <CardBody>
-          <dl class="row">
+          <dl className="row">
             <Description label="Hash" value={block.hash} />
             <Description label="Timestamp" value={block.timestamp} />
             <Description label="Difficulty" value={block.difficulty} />
