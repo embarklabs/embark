@@ -1,4 +1,4 @@
-const Convert = require('ansi-to-html');
+import Convert from 'ansi-to-html';
 import qs from 'qs';
 
 export function last(array) {
