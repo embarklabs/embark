@@ -27,7 +27,7 @@ class AppContainer extends Component {
       return;
     }
 
-    const token = this.getQueryToken();
+    const token = getQueryToken(this.props.lcation);
 
     if (!token) {
       return;
@@ -56,14 +56,10 @@ class AppContainer extends Component {
       this.props.authenticate(this.props.credentials.host, this.props.credentials.token);
     }
 
-    if (this.getQueryToken() &&
-        !this.props.credentials.authenticated &&
-        !this.props.credentials.authenticating) {
-      this.props.history.replace(this.stripQueryToken(this.props.location));
-    }
-
-    if (this.getQueryToken() && this.props.credentials.authenticated) {
-      this.props.history.replace(this.stripQueryToken(this.props.location));
+    if (getQueryToken(this.props.location) &&
+        (!this.props.credentials.authenticating ||
+         this.props.credentials.authenticated)) {
+      this.props.history.replace(stripQueryToken(this.props.location));
     }
 
     if (this.props.credentials.authenticated && !this.props.initialized) {
