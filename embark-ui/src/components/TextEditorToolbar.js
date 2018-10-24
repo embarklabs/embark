@@ -4,7 +4,7 @@ import {Button, Nav, NavLink} from 'reactstrap';
 import FontAwesomeIcon from 'react-fontawesome';
 
 const TextEditorToolbar = (props) => (
-  <ol className="breadcrumb">
+  <ol className="breadcrumb mb-0">
     <li className="breadcrumb-item">
       {props.currentFile.name}
     </li>

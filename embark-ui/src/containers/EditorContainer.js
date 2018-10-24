@@ -13,8 +13,8 @@ import './EditorContainer.css';
 
 class EditorContainer extends React.Component {
   constructor(props) {
-    super(props)
-    this.state = {currentAsideTab: '', showHiddenFiles: false, currentFile: this.props.currentFile}
+    super(props);
+    this.state = {currentAsideTab: '', showHiddenFiles: false, currentFile: this.props.currentFile};
   }
 
   componentDidMount() {
@@ -43,17 +43,17 @@ class EditorContainer extends React.Component {
 
   openAsideTab(newTab) {
     if (newTab === this.state.currentAsideTab) {
-      return this.setState({currentAsideTab: ''})
+      return this.setState({currentAsideTab: ''});
     }
-    this.setState({currentAsideTab: newTab})
+    this.setState({currentAsideTab: newTab});
   }
 
   textEditorMdSize() {
-    return this.state.currentAsideTab.length ? 5 : 10
+    return this.state.currentAsideTab.length ? 5 : 10;
   }
 
   textEditorXsSize() {
-    return this.state.currentAsideTab.length ? 2 : 8
+    return this.state.currentAsideTab.length ? 2 : 8;
   }
 
   render() {
@@ -64,11 +64,11 @@ class EditorContainer extends React.Component {
                                       isContract={this.isContract()}
                                       currentFile={this.props.currentFile} />
         </Col>
-        <Col xs={4} md={2}>
+        <Col xs={4} md={2} className="border-right">
           <FileExplorerContainer showHiddenFiles={this.state.showHiddenFiles} toggleShowHiddenFiles={() => this.toggleShowHiddenFiles()} />
         </Col>
         <Col xs={this.textEditorXsSize()} md={this.textEditorMdSize()}>
-          <TextEditorContainer currentFile={this.props.currentFile} onFileContentChange={(newContent)=> this.onFileContentChange(newContent)} />
+          <TextEditorContainer currentFile={this.props.currentFile} onFileContentChange={(newContent) => this.onFileContentChange(newContent)} />
         </Col>
         {this.state.currentAsideTab && <Col xs={6} md={5}>
           <TextEditorAsideContainer currentAsideTab={this.state.currentAsideTab} currentFile={this.props.currentFile} />

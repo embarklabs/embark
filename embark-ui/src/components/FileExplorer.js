@@ -181,9 +181,9 @@ class FileExplorer extends React.Component {
           style={style}
         />
 
-        <Label className="mb-0 pt-1">
-          <AppSwitch color='success' variant='pill' size='sm' onChange={this.props.toggleShowHiddenFiles}/>
-          <span className="ml-1 align-top">Show hidden files</span>
+        <Label className="mb-0 pt-2 pr-2 pb-1 border-top text-right">
+          <span className="mr-2 align-top">Show hidden files</span>
+          <AppSwitch color="success" variant="pill" size="sm" onChange={this.props.toggleShowHiddenFiles}/>
         </Label>
        </div>
     );
@@ -194,6 +194,7 @@ FileExplorer.propTypes = {
   files: PropTypes.array,
   fetchFile: PropTypes.func,
   showHiddenFiles: PropTypes.bool,
+  toggleShowHiddenFiles: PropTypes.func
 };
 
 export default FileExplorer;
