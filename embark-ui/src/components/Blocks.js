@@ -37,7 +37,7 @@ const Blocks = ({blocks, showLoadMore, loadMore}) => (
               </Row>
             </div>
           ))}
-          {showLoadMore && <LoadMore loadMore={() => loadMore()} />}
+          {showLoadMore && <LoadMore loadMore={() => loadMore()}/>}
         </CardBody>
       </Card>
     </Col>
