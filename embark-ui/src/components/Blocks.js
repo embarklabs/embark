@@ -11,7 +11,7 @@ const Blocks = ({blocks, showLoadMore, loadMore}) => (
     <Col>
       <Card>
         <CardHeader>
-          <h1>Blocks</h1>
+          <h2>Blocks</h2>
         </CardHeader>
         <CardBody>
           {blocks.map(block => (

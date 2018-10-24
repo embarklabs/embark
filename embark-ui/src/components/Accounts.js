@@ -10,7 +10,7 @@ const Accounts = ({accounts}) => (
     <Col>
       <Card>
         <CardHeader>
-          <h1>Accounts</h1>
+          <h2>Accounts</h2>
         </CardHeader>
         <CardBody>
           {accounts.map(account => (

@@ -11,7 +11,7 @@ const Transactions = ({transactions, showLoadMore, loadMore}) => (
     <Col>
       <Card>
         <CardHeader>
-          <h1>Transactions</h1>
+          <h2>Transactions</h2>
         </CardHeader>
         <CardBody>
           {transactions.map(transaction => (
@@ -41,7 +41,7 @@ const Transactions = ({transactions, showLoadMore, loadMore}) => (
               </Row>
             </div>
           ))}
-          {showLoadMore && <LoadMore loadMore={() => loadMore()} />}
+          {showLoadMore && <LoadMore loadMore={() => loadMore()}/>}
         </CardBody>
       </Card>
     </Col>

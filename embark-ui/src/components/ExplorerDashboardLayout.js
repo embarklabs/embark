@@ -12,7 +12,7 @@ import './Explorer.css';
 
 const ExplorerDashboardLayout = () => (
   <React.Fragment>
-    <Row>
+    <Row className="mt-4">
       <Col>
         <AccountsContainer />
       </Col>
