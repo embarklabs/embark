@@ -3,22 +3,23 @@ import {Label} from 'reactstrap';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Treebeard, decorators} from 'react-treebeard';
+import classNames from 'classnames';
 
 const style = {
   tree: {
     base: {
-      height: '100%',
+      height: '450px',
+      overflowX: 'auto',
       listStyle: 'none',
       backgroundColor: '#1C1C1C',
+      color: '#ffffff',
+      padding: '10px 0 0 10px',
       margin: 0,
-      padding: 0,
-      color: '#9DA5AB',
-      fontFamily: 'lucida grande ,tahoma,verdana,arial,sans-serif',
-      fontSize: '14px'
     },
     node: {
       base: {
-        position: 'relative'
+        position: 'relative',
+        verticalAlign: 'middle',
       },
       link: {
         cursor: 'pointer',
@@ -26,37 +27,24 @@ const style = {
         padding: '0px 5px',
         display: 'block'
       },
-      activeLink: {
-        background: '#31363F'
-      },
       toggle: {
         base: {
-          position: 'relative',
           display: 'inline-block',
-          verticalAlign: 'top',
-          marginLeft: '-5px',
-          height: '24px',
-          width: '24px'
+          marginRight: '10px'
         },
         wrapper: {
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          margin: '-7px 0 0 -7px',
-          height: '14px'
+          margin: '-7px 0 0 0',
         },
-        height: 14,
-        width: 14,
+        height: 7,
+        width: 7,
         arrow: {
-          fill: '#9DA5AB',
+          fill: '#FFFFFF',
           strokeWidth: 0
         }
       },
       header: {
         base: {
           display: 'inline-block',
-          verticalAlign: 'top',
-          color: '#9DA5AB'
         },
         connector: {
           width: '2px',
@@ -69,12 +57,11 @@ const style = {
         },
         title: {
           lineHeight: '24px',
-          verticalAlign: 'middle'
         }
       },
       subtree: {
         listStyle: 'none',
-        paddingLeft: '19px'
+        paddingLeft: '22px'
       },
       loading: {
         color: '#E2C089'
@@ -83,15 +70,62 @@ const style = {
   }
 };
 
+
 const Header = ({style, node}) => {
-  const iconType = node.children ? 'folder' : 'file';
-  const iconClass = `fe fe-${iconType}`;
-  const iconStyle = {marginRight: '5px'};
+  let icon;
+
+  if (!node.children) {
+    const extension = node.path.split('.').pop();
+    switch(extension) {
+      case 'html':
+        icon = 'text-danger fa fa-html5';
+        break;
+      case 'css':
+        icon = 'text-warning fa fa-css3';
+        break;
+      case 'js':
+      case 'jsx':
+        icon = 'text-primary icon js-icon';
+        break;
+      case 'json':
+        icon = 'text-success icon hjson-icon';
+        break;
+      case 'sol':
+        icon = 'text-warning icon solidity-icon';
+        break;
+      default:
+        icon = 'fa fa-file-o';
+    }
+  } else {
+    switch(node.name) {
+      case 'dist':
+        icon = 'text-danger icon easybuild-icon';
+        break;
+      case 'config':
+        icon = 'text-warning fa fa-cogs';
+        break;
+      case 'contracts':
+        icon = 'text-success icon appstore-icon';
+        break;
+      case 'app':
+        icon = 'text-primary fa fa-code';
+        break;
+      case 'test':
+        icon = 'icon test-dir-icon';
+        break;
+      case 'node_modules':
+        icon = 'fa fa-folder-o';
+        break;
+      default:
+        icon = 'fa fa-folder'
+    }
+
+  }
 
   return (
-    <div style={style.base}>
+    <div className="mb-1" style={style.base}>
       <div style={style.title}>
-        <i className={iconClass} style={iconStyle} />
+        <i className={classNames('mr-1', icon)} />
         {node.name}
       </div>
     </div>

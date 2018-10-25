@@ -81,7 +81,7 @@
     "start": "npm-run-all --parallel css-compile react-start watch-css",
     "build": "npm run css-compile && node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "css-compile": "node-sass --output-style expanded --source-map true --source-map-contents true --precision 6 src/dark-theme/coreui.scss src/css/coreui-dark.css",
+    "css-compile": "node-sass --output-style expanded --source-map true --source-map-contents true --precision 6 src/scss/coreui.scss src/css/coreui-dark.css && node-sass --output-style expanded --source-map true --source-map-contents true --precision 6 src/scss/icons.scss src/css/icons.css",
     "watch-css": "nodemon --ignore dist/ -e scss -x \"npm run css-compile\""
   },
   "homepage": "http://localhost:8000/embark",

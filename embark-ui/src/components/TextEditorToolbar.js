@@ -6,10 +6,7 @@ import FontAwesomeIcon from 'react-fontawesome';
 const TextEditorToolbar = (props) => (
   <ol className="breadcrumb mb-0">
     <li className="breadcrumb-item">
-      {props.currentFile.name}
-    </li>
-    <li className="breadcrumb-item">
-      <Button color="success" size="sm" onClick={props.save}>
+      <Button color="success" size="sm" className="mr-1" onClick={props.save}>
         <FontAwesomeIcon className="mr-2" name="save"/>
         Save
       </Button>
@@ -48,8 +45,7 @@ TextEditorToolbar.propTypes = {
   save: PropTypes.func,
   remove: PropTypes.func,
   toggleShowHiddenFiles: PropTypes.func,
-  openAsideTab: PropTypes.func,
-  currentFile: PropTypes.object
+  openAsideTab: PropTypes.func
 };
 
 export default TextEditorToolbar;

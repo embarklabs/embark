@@ -18,8 +18,7 @@ class TextEditorToolbarContainer extends Component {
   }
 
   render() {
-    return <TextEditorToolbar currentFile={this.props.currentFile}
-                              isContract={this.props.isContract}
+    return <TextEditorToolbar isContract={this.props.isContract}
                               toggleShowHiddenFiles={this.props.toggleShowHiddenFiles}
                               openAsideTab={this.props.openAsideTab}
                               save={() => this.save()}
