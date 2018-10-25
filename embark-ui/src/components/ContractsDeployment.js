@@ -180,7 +180,7 @@ const EmbarkContract = ({contract, toggleContractOverview}) => (
 );
 
 const ContractsHeader = ({deploymentPipeline, updateDeploymentPipeline}) => (
-  <Row className="mt-3">
+  <Row>
     <div className="ml-auto mr-5">
       <FormGroup row>
         <span className="mr-2">Deploy using</span>

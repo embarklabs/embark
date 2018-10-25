@@ -11,7 +11,7 @@ const getQueryParams = (props) => {
   return qs.parse(props.location.search, {
     ignoreQueryPrefix: true
   });
-}
+};
 
 class TransactionDecoderContainer extends Component {
 
@@ -33,7 +33,7 @@ class TransactionDecoderContainer extends Component {
 
   render() {
     return (
-      <Row className="mt-3">
+      <Row>
         <Col>
           <TransactionDecoder transaction={this.props.transaction}
                               transactionHash={getQueryParams(this.props).hash}/>

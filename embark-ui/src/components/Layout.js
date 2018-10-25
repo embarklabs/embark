@@ -225,7 +225,7 @@ class Layout extends React.Component {
               {searchResult.error}
             </Alert>
 
-            <Container fluid className="h-100">
+            <Container fluid className="h-100 pt-4">
               {children}
             </Container>
           </main>

@@ -12,7 +12,7 @@ import './Explorer.css';
 
 const ExplorerDashboardLayout = () => (
   <div className="explorer-overview">
-    <Row className="mt-4">
+    <Row>
       <Col>
         <AccountsContainer />
       </Col>

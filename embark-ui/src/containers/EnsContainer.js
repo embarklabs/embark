@@ -12,7 +12,7 @@ class EnsContainer extends Component {
 
   showEns() {
     return (
-      <Row className="mt-3 justify-content-md-center">
+      <Row className="justify-content-md-center">
         <Col xs="12" sm="9" lg="6">
           <EnsLookup lookup={this.props.lookup} ensRecords={this.props.ensRecords}/>
           <EnsResolve resolve={this.props.resolve} ensRecords={this.props.ensRecords}/>
