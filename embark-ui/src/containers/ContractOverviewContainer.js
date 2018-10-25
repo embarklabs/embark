@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import {contractProfile as contractProfileAction, contractFunction as contractFunctionAction} from '../actions';
 import ContractOverview from '../components/ContractOverview';
 import DataWrapper from "../components/DataWrapper";
-import GasStationContainer from "../containers/GasStationContainer";
 import {getContractProfile, getContractFunctions} from "../reducers/selectors";
 
 class ContractOverviewContainer extends Component {
@@ -18,14 +17,10 @@ class ContractOverviewContainer extends Component {
       <DataWrapper shouldRender={this.props.contractProfile !== undefined}
                    {...this.props}
                    render={({contractProfile, contractFunctions, postContractFunction}) => (
-                     <React.Fragment>
-                       <ContractOverview contractProfile={contractProfile}
-                                          contractFunctions={contractFunctions}
-                                          contract={this.props.contract}
-                                          postContractFunction={postContractFunction}/>
-
-                       <GasStationContainer/>
-                     </React.Fragment>
+                     <ContractOverview contractProfile={contractProfile}
+                                       contractFunctions={contractFunctions}
+                                       contract={this.props.contract}
+                                       postContractFunction={postContractFunction}/>
                    )}/>
     );
   }

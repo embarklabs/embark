@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {withRouter} from "react-router-dom";
 import GasStation from '../components/GasStation';
 import {stopGasOracle, listenToGasOracle, gasOracle as ethGasAction, blocks as blocksAction} from "../actions";
 import DataWrapper from "../components/DataWrapper";
@@ -18,10 +17,14 @@ class GasStationContainer extends Component {
     this.props.stopGasOracle();
   }
 
+  getCurrentGas() {
+    return this.gasStation.getCurrentGas();
+  }
+
   render() {
     return <DataWrapper shouldRender={Boolean(this.props.gasOracleStats && Object.keys(this.props.gasOracleStats).length && this.props.lastBlock)}
                         {...this.props} render={({lastBlock, gasOracleStats}) => (
-      <GasStation gasOracleStats={gasOracleStats} lastBlock={lastBlock}/>
+      <GasStation gasOracleStats={gasOracleStats} lastBlock={lastBlock} ref={instance => { this.gasStation = instance; }}/>
     )}/>;
 
   }
@@ -43,12 +46,14 @@ function mapStateToProps(state, _props) {
   };
 }
 
-export default withRouter(connect(
+export default connect(
   mapStateToProps,
   {
     fetchEthGas: ethGasAction.request,
     fetchBlocks: blocksAction.request,
     listenToGasOracle,
     stopGasOracle
-  }
-)(GasStationContainer));
+  },
+  null,
+  { withRef: true }
+)(GasStationContainer);
