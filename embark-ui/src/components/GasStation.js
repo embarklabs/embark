@@ -49,6 +49,10 @@ class GasStation extends Component {
     return formattedStats;
   }
 
+  getCurrentGas() {
+    return this.getGasOracleFormatted()[this.state.gasOracleSliderIndex].gasPrice / this.PRICE_UNIT_DIVIDER;
+  }
+
   gasSliderChange(e, name) {
     this.setState({
       [name]: e.target.value
@@ -91,7 +95,7 @@ class GasStation extends Component {
     }
     return <Row>
       <Col>
-        <Card>
+        <Card className="mb-0">
           <CardHeader>
             <CardTitle>
               Gas Price Estimator

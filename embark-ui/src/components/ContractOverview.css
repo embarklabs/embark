@@ -1,0 +1,21 @@
+.contract-function-container .collapse.show .card-body {
+  min-height: 65px;
+}
+
+.contract-function-container .contract-function-button {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+}
+
+.contract-function-container .gas-price-form #gasPrice {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.contract-function-container .gas-price-form button {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border: 0;
+  box-shadow: none !important;
+}
