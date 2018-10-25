@@ -24,38 +24,46 @@ import {
 } from '../reducers/selectors';
 
 class AppContainer extends Component {
-  queryStringAuthenticate() {
-    if (this.props.credentials.authenticating) {
-      return;
-    }
-
-    const token = getQueryToken(this.props.lcation);
-
-    if (!token) {
-      return;
-    }
-    const host = DEFAULT_HOST;
-    if (token === this.props.credentials.token && this.props.credentials.host === host) {
-      return;
-    }
-    return this.props.authenticate(host, token);
-  }
-
   componentDidMount() {
     this.props.fetchCredentials();
     this.props.fetchTheme();
   }
 
+  doAuthenticate() {
+    let {host, token} = this.props.credentials;
+    const queryToken = getQueryToken(this.props.location);
+
+    if (queryToken) {
+      host = DEFAULT_HOST;
+      token = queryToken;
+    }
+
+    this.props.authenticate(host, token);
+  }
+
   requireAuthentication() {
-    return !(this.props.credentials.authenticating ||
-             this.props.credentials.authenticated) &&
-      this.props.credentials.token &&
-      this.props.credentials.host;
+    if (this.props.credentials.authenticating) {
+      return false;
+    }
+
+    const queryToken = getQueryToken(this.props.location);
+    if (queryToken && !(queryToken === this.props.credentials.token &&
+                        this.props.credentials.host === DEFAULT_HOST)) {
+      return true;
+    }
+
+    if (!this.props.credentials.authenticated &&
+        this.props.credentials.host &&
+        this.props.credentials.token) {
+      return true;
+    }
+
+    return false;
   }
 
   componentDidUpdate(){
-    if (!this.queryStringAuthenticate() && this.requireAuthentication()) {
-      this.props.authenticate(this.props.credentials.host, this.props.credentials.token);
+    if (this.requireAuthentication()) {
+      this.doAuthenticate();
     }
 
     if (getQueryToken(this.props.location) &&
