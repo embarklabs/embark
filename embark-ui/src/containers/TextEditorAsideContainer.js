@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {  Card, CardBody, CardTitle } from 'reactstrap';
+import {Card, CardBody} from 'reactstrap';
 
 import Preview from '../components/Preview';
 import {contracts as contractsAction} from '../actions';
@@ -25,7 +25,7 @@ class TextEditorAsideContainer extends Component {
           return (
             <Card key={'contract-' + index}>
               <CardBody>
-                <CardTitle style={{"fontSize": "2em"}}>{contract.className} - Details</CardTitle>
+                <h2>{contract.className} - Details</h2>
                 <ContractDebuggerContainer key={index} contract={contract} />
               </CardBody>
             </Card>
@@ -36,7 +36,7 @@ class TextEditorAsideContainer extends Component {
           return (
             <Card key={'contract-' + index}>
               <CardBody>
-                <CardTitle style={{"fontSize": "2em"}}>{contract.className} - Details</CardTitle>
+                <h2>{contract.className} - Details</h2>
                 <ContractDetail key={index} contract={contract} />
               </CardBody>
             </Card>
@@ -47,7 +47,7 @@ class TextEditorAsideContainer extends Component {
           return (
             <Card key={'contract-' + index}>
               <CardBody>
-                <CardTitle style={{"fontSize": "2em"}}>{contract.className} - Transactions</CardTitle>
+                <h2>{contract.className} - Transactions</h2>
                 <ContractLoggerContainer key={index} contract={contract} />)
               </CardBody>
             </Card>
@@ -58,7 +58,7 @@ class TextEditorAsideContainer extends Component {
           return (
             <Card key={'contract-' + index}>
               <CardBody>
-                <CardTitle style={{"fontSize": "2em"}}>{contract.className} - Overview</CardTitle>
+                <h2>{contract.className} - Overview</h2>
                 <ContractOverviewContainer key={index} contract={contract} />
               </CardBody>
             </Card>

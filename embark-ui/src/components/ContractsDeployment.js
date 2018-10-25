@@ -17,6 +17,7 @@ import {
 import classNames from 'classnames';
 import {DEPLOYMENT_PIPELINES} from '../constants';
 import Description from './Description';
+import ContractOverviewContainer from '../containers/ContractOverviewContainer';
 
 const orderClassName = (address) => {
   return classNames('mr-4', {
@@ -157,12 +158,12 @@ class Web3Contract extends React.Component {
   }
 }
 
-const EmbarkContract = ({contract}) => (
+const EmbarkContract = ({contract, toggleContractOverview}) => (
   <LayoutContract contract={contract} cardTitle={
-    <React.Fragment>
+    <a href='#toggleContract' onClick={() => toggleContractOverview(contract)}>
       {contract.address && `${contract.className} deployed at ${contract.address}`}
       {!contract.address && `${contract.className} not deployed`}
-    </React.Fragment>
+    </a>
   }>
     {contract.address && <p><strong>Arguments:</strong> {JSON.stringify(contract.args)}</p>}
     {contract.transactionHash &&
@@ -214,12 +215,12 @@ const ContractsHeader = ({deploymentPipeline, updateDeploymentPipeline}) => (
   </Row>
 );
 
-const Contract = ({web3, contract, deploymentPipeline, web3Deploy, web3EstimateGas, web3Deployments, web3GasEstimates}) => {
+const Contract = ({web3, contract, deploymentPipeline, web3Deploy, web3EstimateGas, web3Deployments, web3GasEstimates, toggleContractOverview}) => {
   const deployment = web3Deployments[contract.className];
   const gasEstimate = web3GasEstimates[contract.className];
   switch (deploymentPipeline) {
     case DEPLOYMENT_PIPELINES.embark:
-      return <EmbarkContract contract={contract}/>;
+      return <EmbarkContract contract={contract} toggleContractOverview={toggleContractOverview}/>;
     case DEPLOYMENT_PIPELINES.injectedWeb3:
       return <Web3Contract web3={web3}
                            deployment={deployment}
@@ -232,16 +233,52 @@ const Contract = ({web3, contract, deploymentPipeline, web3Deploy, web3EstimateG
   }
 };
 
-const Contracts = (props) => (
-  <React.Fragment>
-    <ContractsHeader deploymentPipeline={props.deploymentPipeline}
-                     updateDeploymentPipeline={props.updateDeploymentPipeline}/>
-    {props.contracts.sort((a, b) => a.index - b.index).map(contract => <Contract key={contract.index}
-                                                                                 contract={contract} {...props} />)}
-  </React.Fragment>
-);
+class ContractsDeployment extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { currentContractOverview: null }
+  }
 
-Contracts.propTypes = {
+  toggleContractOverview(contract) {
+    if (this.state.currentContractOverview && this.state.currentContractOverview.className === contract.className) {
+      return this.setState({currentContractOverview: null});
+    }
+    this.setState({currentContractOverview: contract});
+  }
+
+  isContractOverviewOpen() {
+    return this.state.currentContractOverview && this.props.deploymentPipeline === DEPLOYMENT_PIPELINES.embark;
+  }
+
+  render() {
+    return (
+      <Row>
+        <Col>
+          <ContractsHeader deploymentPipeline={this.props.deploymentPipeline}
+                          updateDeploymentPipeline={this.props.updateDeploymentPipeline}/>
+          {this.props.contracts.sort((a, b) => a.index - b.index).map(contract => (
+            <Contract key={contract.index}
+                      contract={contract}
+                      toggleContractOverview={(contract) => this.toggleContractOverview(contract)}
+                      {...this.props} />
+          ))}
+        </Col>
+        {this.isContractOverviewOpen() &&
+          <Col xs={6} md={3}>
+            <Card>
+              <CardBody>
+                <h2>{this.state.currentContractOverview.className} - Overview</h2>
+                <ContractOverviewContainer contract={this.state.currentContractOverview} />
+              </CardBody>
+            </Card>
+          </Col>
+        }
+    </Row>
+    )
+  }
+}
+
+ContractsDeployment.propTypes = {
   contracts: PropTypes.array,
   deploymentPipeline: PropTypes.string,
   updateDeploymentPipeline: PropTypes.func,
@@ -252,5 +289,5 @@ Contracts.propTypes = {
   web3EstimateGas: PropTypes.func
 };
 
-export default Contracts;
+export default ContractsDeployment;
 
