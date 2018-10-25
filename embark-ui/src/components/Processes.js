@@ -29,7 +29,7 @@ Process.propTypes = {
 };
 
 const Processes = ({processes}) => (
-  <Row className="mt-3">
+  <Row>
     {processes.map((process) => <Process key={process.name} process={process} />)}
   </Row>
 );

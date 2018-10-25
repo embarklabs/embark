@@ -19,7 +19,7 @@ class SignAndVerify extends React.Component {
     this.state = {
       selectedAccount: this.props.accounts[0].address,
       messageToSign: '',
-      messageToVerify: '',
+      messageToVerify: ''
     };
   }
 
@@ -40,7 +40,7 @@ class SignAndVerify extends React.Component {
 
   render() {
     return (
-      <Row className="mt-3 justify-content-md-center">
+      <Row className="justify-content-md-center">
         <Col xs="12" sm="9" lg="6">
           <Card>
             <CardHeader>

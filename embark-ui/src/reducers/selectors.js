@@ -33,7 +33,7 @@ export function getTransactionsByAccount(state, address) {
 }
 
 export function getTransactionsByBlock(state, blockNumber) {
-  return state.entities.transactions.filter((transaction) => transaction.blockNumber.toString() === blockNumber);
+  return state.entities.transactions.filter((transaction) => transaction.hasOwnProperty('blockNumber') && transaction.blockNumber.toString() === blockNumber);
 }
 
 export function getBlocks(state) {
