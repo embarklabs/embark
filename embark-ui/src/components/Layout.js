@@ -40,7 +40,7 @@ const SIDEBAR_NAV_ITEMS = {
     {url: "/embark/explorer/accounts", icon: "fa fa-users", name: "Accounts"},
     {url: "/embark/explorer/blocks", icon: "fa fa-stop", name: "Blocks"},
     {url: "/embark/explorer/contracts", icon: "fa fa-file-code-o", name: "Contracts"},
-    {url: "/embark/explorer/transactions", icon: "fa fa-tree", name: "Transactions"}
+    {url: "/embark/explorer/transactions", icon: "fa fa-exchange", name: "Transactions"}
   ]},
   "/embark/utilities/": {items: [
     {url: "/embark/utilities/converter", icon: "fa fa-plug", name: "Converter"},
