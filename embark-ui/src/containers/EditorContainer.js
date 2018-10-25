@@ -67,7 +67,7 @@ class EditorContainer extends React.Component {
         <Col xs={4} md={2} xl={2} lg={2} className="border-right">
           <FileExplorerContainer showHiddenFiles={this.state.showHiddenFiles} toggleShowHiddenFiles={() => this.toggleShowHiddenFiles()} />
         </Col>
-        <Col xs={this.textEditorXsSize()} md={this.textEditorMdSize()}>
+        <Col xs={this.textEditorXsSize()} md={this.textEditorMdSize()} style={{overflow: 'hidden'}}>
           <TextEditorContainer currentFile={this.props.currentFile} onFileContentChange={(newContent) => this.onFileContentChange(newContent)} />
         </Col>
         {this.state.currentAsideTab && <Col xs={6} md={3}>
@@ -78,7 +78,7 @@ class EditorContainer extends React.Component {
   }
 }
 
-function mapStateToProps(state, props) {
+function mapStateToProps(state, _props) {
   const currentFile = getCurrentFile(state);
 
   return {
