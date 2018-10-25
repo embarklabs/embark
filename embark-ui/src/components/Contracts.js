@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React from 'react';
-import {Row, Col, Card, CardHeader, CardBody, CardTitle} from "reactstrap";
+import {Row, Col, Card, CardHeader, CardBody} from "reactstrap";
 import {Link} from 'react-router-dom';
 import {formatContractForDisplay} from '../utils/presentation';
 

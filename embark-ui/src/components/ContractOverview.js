@@ -100,10 +100,12 @@ class ContractFunction extends Component {
               ))}
               </Form>
               {!ContractFunction.isPureCall(this.props.method) &&
-                <Col xs={12} style={{"margin-bottom": "5px", "margin-top": "5px"}}>
+                <Col xs={12} className="my-2">
                   <Row>
-                  <strong className="collapsable" onClick={() => this.toggleOptions()}><i className={this.state.optionsCollapse ? 'fa fa-caret-down' : 'fa fa-caret-right'}/>Advanced Options</strong>
-                    <Col xs={12} style={{"margin-bottom": "5px", "margin-top": "5px"}}>
+                    <strong className="collapsable" onClick={() => this.toggleOptions()}>
+                      <i className={this.state.optionsCollapse ? 'fa fa-caret-down' : 'fa fa-caret-right'}/>Advanced Options
+                    </strong>
+                    <Col xs={12} className="my-2">
                       <Row>
                         <Collapse isOpen={this.state.optionsCollapse}>
                           <Form action="" method="post" inline>
