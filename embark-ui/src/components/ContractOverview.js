@@ -133,7 +133,7 @@ class ContractFunction extends Component {
                         <Input name="gasPrice" id="gasPrice" placeholder="uint256"
                                value={this.state.inputs.gasPrice || ''}
                                onChange={(e) => this.handleChange(e, 'gasPrice')}/>
-                        <Button onClick={(e) => this.autoSetGasPrice(e)}>
+                        <Button onClick={(e) => this.autoSetGasPrice(e)} title="Automatically set the gas price to what is currently in the estimator (default: safe low)">
                           Auto-set
                         </Button>
                       </FormGroup>
