@@ -10,7 +10,6 @@ import FontAwesome from 'react-fontawesome';
 import "./Layout.css";
 
 import {
-  AppFooter,
   AppHeader,
   AppSidebar,
   AppSidebarFooter,
@@ -150,6 +149,7 @@ class Layout extends React.Component {
         <NavItem>
           <SearchBar loading={this.state.searchLoading} searchSubmit={searchValue => this.searchTheExplorer(searchValue)}/>
         </NavItem>
+        {this.renderTool()}
         {this.renderSettings()}
       </Nav>
     );
@@ -174,16 +174,21 @@ class Layout extends React.Component {
     );
   }
 
-  renderFooter() {
+  renderTool() {
     return (
-      <AppFooter>
-        <span className="ml-auto">
-          Embark&nbsp;
-          <a href="https://embark.status.im" title="Documentation" rel="noopener noreferrer" target="_blank">Documentation</a>
-          &nbsp;|&nbsp;
-          <a href="https://github.com/embark-framework" title="Github" rel="noopener noreferrer" target="_blank">Github</a>
-        </span>
-      </AppFooter>
+      <React.Fragment>
+        <NavItem>
+          <NavLink href="https://embark.status.im" title="Documentation" rel="noopener noreferrer" target="_blank">
+            <FontAwesome name="book" />
+          </NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink href="https://github.com/embark-framework" title="Github" rel="noopener noreferrer" target="_blank">
+            <FontAwesome name="github" />
+          </NavLink>
+        </NavItem>
+      </React.Fragment>
+      
     );
   }
 
@@ -194,40 +199,39 @@ class Layout extends React.Component {
       removeCssClasses();
     }
 
-    return (<div className="app animated fadeIn">
-      <AppHeader fixed>
-        <AppNavbarBrand full={{src: logo, width: 50, height: 50, alt: 'Embark Logo'}}
-                        minimized={{src: logo, width: 50, height: 50, alt: 'Embark Logo'}}
-        />
-        {this.renderNav()}
+    return (
+      <div className="app animated fadeIn">
+        <AppHeader fixed>
+          <AppNavbarBrand full={{src: logo, width: 50, height: 50, alt: 'Embark Logo'}}
+                          minimized={{src: logo, width: 50, height: 50, alt: 'Embark Logo'}}
+          />
+          {this.renderNav()}
+          {this.renderRightNav()}
+        </AppHeader>
 
-        {this.renderRightNav()}
-      </AppHeader>
+        <div className="app-body">
+          {sidebar &&
+          <AppSidebar fixed display="sm">
+            <AppSidebarHeader />
+            <AppSidebarForm />
+            <AppSidebarNav navConfig={sidebar} location={location} />
+            <AppSidebarFooter />
+            <AppSidebarMinimizer />
+          </AppSidebar>
+          }
 
-      <div className="app-body">
-        {sidebar &&
-        <AppSidebar fixed display="sm">
-          <AppSidebarHeader />
-          <AppSidebarForm />
-          <AppSidebarNav navConfig={sidebar} location={location} />
-          <AppSidebarFooter />
-          <AppSidebarMinimizer />
-        </AppSidebar>
-        }
+          <main className="main">
+            <Alert color="danger" isOpen={this.state.searchError} toggle={() => this.dismissSearchError()}>
+              {searchResult.error}
+            </Alert>
 
-        <main className="main">
-          <Alert color="danger" isOpen={this.state.searchError} toggle={() => this.dismissSearchError()}>
-            {searchResult.error}
-          </Alert>
-
-          <Container fluid className="h-100">
-            {children}
-          </Container>
-        </main>
+            <Container fluid className="h-100">
+              {children}
+            </Container>
+          </main>
+        </div>
       </div>
-
-      {this.renderFooter()}
-    </div>);
+    );
   }
 }
 
