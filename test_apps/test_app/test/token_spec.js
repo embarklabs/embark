@@ -82,7 +82,7 @@ describe("Token", function () {
     assert.strictEqual(result, MyToken.options.address);
   });
 
-  it("should not deploy if deployIf returns false", async function() {
+  it("should not deploy if deployIf returns false", function() {
     assert.ok(!SomeContract.options.address);
   });
 });
