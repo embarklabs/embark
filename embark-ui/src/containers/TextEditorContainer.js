@@ -9,7 +9,7 @@ import {
   toggleBreakpoint
 } from '../actions';
 
-import {getBreakpointsByFilename, getDebuggerLine, getEditorTabs} from '../reducers/selectors';
+import {getBreakpointsByFilename, getDebuggerLine, getEditorTabs, getTheme} from '../reducers/selectors';
 
 class TextEditorContainer extends React.Component {
   componentDidMount() {
@@ -26,7 +26,8 @@ class TextEditorContainer extends React.Component {
                   removeEditorTabs={this.props.removeEditorTabs}
                   addEditorTabs={this.props.addEditorTabs}
                   debuggerLine={this.props.debuggerLine}
-                  onFileContentChange={this.props.onFileContentChange} />
+                  onFileContentChange={this.props.onFileContentChange}
+                  theme={this.props.theme} />
     );
   }
 }
@@ -35,7 +36,8 @@ function mapStateToProps(state, props) {
   const breakpoints = getBreakpointsByFilename(state, props.currentFile.name);
   const editorTabs = getEditorTabs(state);
   const debuggerLine = getDebuggerLine(state);
-  return {breakpoints, editorTabs, debuggerLine};
+  const theme = getTheme(state);
+  return {breakpoints, editorTabs, debuggerLine, theme};
 }
 
 TextEditorContainer.propTypes = {
@@ -48,7 +50,8 @@ TextEditorContainer.propTypes = {
   removeEditorTabs: PropTypes.func,
   addEditorTabs: PropTypes.func,
   debuggerLine: PropTypes.number,
-  editorTabs: PropTypes.array
+  editorTabs: PropTypes.array,
+  theme: PropTypes.string
 };
 
 export default connect(

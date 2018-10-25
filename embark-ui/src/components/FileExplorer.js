@@ -4,15 +4,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Treebeard, decorators} from 'react-treebeard';
 import classNames from 'classnames';
+import {DARK_THEME} from '../constants'
 
-const style = {
+const isDarkTheme= (theme) => theme === DARK_THEME;
+
+const style = (theme) => ({
   tree: {
     base: {
       height: '450px',
       overflowX: 'auto',
       listStyle: 'none',
-      backgroundColor: '#1C1C1C',
-      color: '#ffffff',
+      backgroundColor: isDarkTheme(theme) ? '#1C1C1C' : '#FFFFFF',
+      color: isDarkTheme(theme) ? '#FFFFFF' : '#000000',
       padding: '10px 0 0 10px',
       margin: 0,
     },
@@ -38,7 +41,7 @@ const style = {
         height: 7,
         width: 7,
         arrow: {
-          fill: '#FFFFFF',
+          fill: isDarkTheme(theme) ? '#FFFFFF' : '#000000',
           strokeWidth: 0
         }
       },
@@ -68,7 +71,7 @@ const style = {
       }
     }
   }
-};
+});
 
 
 const Header = ({style, node}) => {
@@ -212,7 +215,7 @@ class FileExplorer extends React.Component {
           data={this.data(this.props.files)}
           decorators={decorators}
           onToggle={this.onToggle.bind(this)}
-          style={style}
+          style={style(this.props.theme)}
         />
 
         <Label className="mb-0 pt-2 pr-2 pb-1 border-top text-right">
@@ -228,7 +231,8 @@ FileExplorer.propTypes = {
   files: PropTypes.array,
   fetchFile: PropTypes.func,
   showHiddenFiles: PropTypes.bool,
-  toggleShowHiddenFiles: PropTypes.func
+  toggleShowHiddenFiles: PropTypes.func,
+  theme: PropTypes.string
 };
 
 export default FileExplorer;

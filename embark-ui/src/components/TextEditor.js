@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import FontAwesomeIcon from 'react-fontawesome';
 import classNames from 'classnames';
 
+import {DARK_THEME} from '../constants';
 import './TextEditor.css';
 
 const SUPPORTED_LANGUAGES = ['css', 'sol', 'html', 'json'];
@@ -13,7 +14,7 @@ const GUTTER_GLYPH_MARGIN = 2;
 
 let editor;
 
-const initMonaco = (value) => {
+const initMonaco = (value, theme) => {
   let model;
   if (editor) {
     model = editor.getModel();
@@ -23,7 +24,6 @@ const initMonaco = (value) => {
     value,
     model
   });
-  monaco.editor.setTheme("vs-dark");
 };
 
 class TextEditor extends React.Component {
@@ -114,6 +114,11 @@ class TextEditor extends React.Component {
     this.setState({decorations: decorations});
   }
 
+  setTheme() {
+    const vsTheme = this.props.theme === DARK_THEME ? 'vs-dark' : 'vs';
+    monaco.editor.setTheme(vsTheme);
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.currentFile.content && this.props.currentFile.content !== prevProps.currentFile.content) {
       editor.setValue(this.props.currentFile.content);
@@ -124,6 +129,8 @@ class TextEditor extends React.Component {
     if (expectedDecorationsLength !== this.state.decorations.length || this.props.debuggerLine !== prevProps.debuggerLine) {
       this.updateDecorations();
     }
+
+    this.setTheme();
     this.updateLanguage();
     this.handleResize();
   }
@@ -132,14 +139,16 @@ class TextEditor extends React.Component {
     return (
       <ul className="list-inline m-0 p-2">
         {this.props.editorTabs.map(file => (
-          <li key={file.name} className={classNames("list-inline-item")}>
-            <a className={classNames({'text-body': file.name !== this.props.currentFile.name},
-              {'text-primary': file.name === this.props.currentFile.name}, "border-right", "p-2", "d-inline-block")}
-               href="#switch-tab" onClick={() => this.props.addEditorTabs(file)}>
+          <li key={file.name} className={classNames("m-1", "list-inline-item", "border-right")}>
+            <a
+              href="#switch-tab"
+              onClick={() => this.props.addEditorTabs(file)}
+              className={classNames('p-2', {'text-muted': !file.active},
+                                           {'text-primary': file.active})
+            }>
               {file.name}
-               <FontAwesomeIcon onClick={() => this.props.removeEditorTabs(file)} className="mx-1" name="close"/>
             </a>
-
+            <FontAwesomeIcon style={{cursor: 'pointer'}} onClick={() => this.props.removeEditorTabs(file)} className="mx-1" name="close"/>
           </li>
         ))}
       </ul>
@@ -164,7 +173,8 @@ TextEditor.propTypes = {
   debuggerLine: PropTypes.number,
   editorTabs: PropTypes.array,
   removeEditorTabs: PropTypes.func,
-  addEditorTabs: PropTypes.func
+  addEditorTabs: PropTypes.func,
+  theme: PropTypes.string
 };
 
 export default TextEditor;
