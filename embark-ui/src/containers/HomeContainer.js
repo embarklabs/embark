@@ -39,18 +39,10 @@ class HomeContainer extends Component {
   }
 
   updateTab(processName = EMBARK_PROCESS_NAME) {
-    if (!this.isEmbark()){
-      this.props.stopProcessLogs(this.state.activeProcess)
-    }
+    this.props.stopProcessLogs(this.state.activeProcess)
 
-    if (processName === EMBARK_PROCESS_NAME) {
-      if (this.props.processLogs.length === 0) {
-        this.props.fetchProcessLogs(processName, LOG_LIMIT);
-      }
-    } else {
-      this.props.fetchProcessLogs(processName, LOG_LIMIT);
-      this.props.listenToProcessLogs(processName);
-    }
+    this.props.fetchProcessLogs(processName, LOG_LIMIT);
+    this.props.listenToProcessLogs(processName);
 
     this.props.fetchContracts();
     this.setState({activeProcess: processName});

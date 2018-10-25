@@ -32,7 +32,7 @@ class EmbarkController {
 
   blockchain(env, client) {
     this.context = [constants.contexts.blockchain];
-    return require('../lib/modules/blockchain_process/blockchain.js')(this.config.blockchainConfig, client, env).run();
+    return require('../lib/modules/blockchain_process/blockchain.js')(this.config.blockchainConfig, client, env, null, null, this.logger, this.events, true).run();
   }
 
   simulator(options) {
@@ -131,7 +131,8 @@ class EmbarkController {
 
         engine.startService("processManager");
         engine.startService("coreProcess");
-        engine.startService("loggerApi");
+        engine.startService("embarkListener");
+        engine.startService("blockchainListener");
         engine.startService("serviceMonitor");
         engine.startService("libraryManager");
         engine.startService("codeRunner");
