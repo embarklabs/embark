@@ -2,3 +2,10 @@
   margin-left: -30px !important;
   margin-right: -30px !important;
 }
+
+.hidden-toogle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}

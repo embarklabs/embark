@@ -4,25 +4,29 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Treebeard, decorators} from 'react-treebeard';
 import classNames from 'classnames';
-import {DARK_THEME} from '../constants'
+import {DARK_THEME} from '../constants';
 
 const isDarkTheme= (theme) => theme === DARK_THEME;
 
 const style = (theme) => ({
   tree: {
     base: {
-      height: '450px',
-      overflowX: 'auto',
       listStyle: 'none',
       backgroundColor: isDarkTheme(theme) ? '#1C1C1C' : '#FFFFFF',
       color: isDarkTheme(theme) ? '#FFFFFF' : '#000000',
       padding: '10px 0 0 10px',
       margin: 0,
+      overflow: 'auto',
+      position: 'absolute',
+      top: 0,
+      bottom: '40px',
+      left: 0,
+      right: 0
     },
     node: {
       base: {
         position: 'relative',
-        verticalAlign: 'middle',
+        verticalAlign: 'middle'
       },
       link: {
         cursor: 'pointer',
@@ -36,7 +40,7 @@ const style = (theme) => ({
           marginRight: '10px'
         },
         wrapper: {
-          margin: '-7px 0 0 0',
+          margin: '-7px 0 0 0'
         },
         height: 7,
         width: 7,
@@ -47,7 +51,7 @@ const style = (theme) => ({
       },
       header: {
         base: {
-          display: 'inline-block',
+          display: 'inline-block'
         },
         connector: {
           width: '2px',
@@ -59,7 +63,7 @@ const style = (theme) => ({
           left: '-21px'
         },
         title: {
-          lineHeight: '24px',
+          lineHeight: '24px'
         }
       },
       subtree: {
@@ -120,7 +124,7 @@ const Header = ({style, node}) => {
         icon = 'fa fa-folder-o';
         break;
       default:
-        icon = 'fa fa-folder'
+        icon = 'fa fa-folder';
     }
 
   }
@@ -210,7 +214,7 @@ class FileExplorer extends React.Component {
 
   render() {
     return (
-      <div className="h-100 d-flex flex-column">
+      <div className="d-flex flex-column">
         <Treebeard
           data={this.data(this.props.files)}
           decorators={decorators}
@@ -218,7 +222,7 @@ class FileExplorer extends React.Component {
           style={style(this.props.theme)}
         />
 
-        <Label className="mb-0 pt-2 pr-2 pb-1 border-top text-right">
+        <Label className="hidden-toogle mb-0 pt-2 pr-2 pb-1 border-top text-right">
           <span className="mr-2 align-top">Show hidden files</span>
           <AppSwitch color="success" variant="pill" size="sm" onChange={this.props.toggleShowHiddenFiles}/>
         </Label>
