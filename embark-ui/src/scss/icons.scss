@@ -1,0 +1,750 @@
+@font-face {
+	font-family: 'Mfizz';
+	src: url("../fonts/mfixx.woff2");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Devicons';
+	src: url("../fonts/devopicons.woff2");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'file-icons';
+	src: url("../fonts/file-icons.woff2");
+	font-weight: normal;
+	font-style: normal;
+}
+
+.icon:before{
+	font-weight: normal;
+	font-style: normal;
+	text-align: center;
+	width: 16px;
+	line-height: 1;
+	position: relative;
+	display: inline-block;
+	-webkit-font-smoothing: antialiased;
+}
+
+// Tweak Atom's default icon classes
+.header > .icon-repo:before            { top: 1px; text-align: left; }
+.header > .icon-file-directory:before  { top: 1px }
+
+// Avoid enforcing fixed-width icons in tabs
+.tab > .icon:before { width: auto; }
+
+// ... unless the theme uses proportional units
+.theme-one-dark-ui,
+.theme-one-light-ui{
+	.tab-bar .tab > .title.icon:before{
+		font-size: 1.1em;
+		margin-right: .3em;
+		width: 1em;
+		top: auto;
+	}
+}
+
+// Turn off antialiasing for macOS
+@mixin thicken{
+	-webkit-font-smoothing: subpixel-antialiased;
+}
+
+// Accentuate an icon's edges
+@mixin sharpen{
+	text-shadow: 0 0 0;
+}
+
+
+
+/*============================================================================*
+  Octicons
+  https://github.com/github/octicons
+/*============================================================================*/
+@mixin octicons { font-family: "Octicons Regular"; font-size: 16px; top: 1px; }
+
+.binary-icon:before       { @include octicons; content: "\f094"; }
+.book-icon:before         { @include octicons; content: "\f007"; }
+.brew-icon:before         { @include octicons; content: "\f069"; font-size: 15px; left: 1px; }
+.checklist-icon:before    { @include octicons; content: "\f076"; font-size: 17px; left: 1px; }
+.code-icon:before         { @include octicons; content: "\f05f"; }
+.database-icon:before     { @include octicons; content: "\f096"; }
+.gear-icon:before         { @include octicons; content: "\f02f"; }
+.git-commit-icon:before   { @include octicons; content: "\f01f"; }
+.git-merge-icon:before    { @include octicons; content: "\f023"; }
+.github-icon:before       { @include octicons; content: "\f00a"; }
+.graph-icon:before        { @include octicons; content: "\f043"; }
+.image-icon:before        { @include octicons; content: "\f012"; }
+.key-icon:before          { @include octicons; content: "\f049"; }
+.link-icon:before         { @include octicons; content: "\f0b0"; }
+.markdown-icon:before     { @include octicons; content: "\f0c9"; }
+.package-icon:before      { @include octicons; content: "\f0c4"; }
+.ruby-icon:before         { @include octicons; content: "\f047"; }
+.secret-icon:before       { @include octicons; content: "\f08c"; }
+.squirrel-icon:before     { @include octicons; content: "\f0b2"; font-size: 15px; }
+.text-icon:before         { @include octicons; content: "\f011"; }
+.zip-icon:before          { @include octicons; content: "\f013"; }
+
+
+/*============================================================================*
+  Mfizz
+  http://mfizz.com/oss/font-mfizz
+/*============================================================================*/
+@mixin mf { font-family: 'Mfizz'; font-size: 14px; }
+
+.apache-icon:before       { @include mf; content: "\f102"; top: 3px; font-size: 15px; }
+.archlinux-icon:before    { @include mf; content: "A";     top: 1px; font-size: 15px; }
+.c-icon:before            { @include mf; content: "\f106"; top: 1px; font-size: 13px; }
+.cpp-icon:before          { @include mf; content: "\f10b"; top: 1px; }
+.csharp-icon:before       { @include mf; content: "\f10c"; top: 1px; }
+.debian-icon:before       { @include mf; content: "\f111"; top: 1px; }
+.elixir-icon:before       { @include mf; content: "\f113"; top: 1px; }
+.gnome-icon:before        { @include mf; content: "\f119"; top: 1px; }
+.haskell-icon:before      { @include mf; content: "\f121"; top: 2px; font-size: 16px; }
+.java-icon:before         { @include mf; content: "\f126"; top: 2px; font-size: 16px; }
+.js-icon:before           { @include mf; content: "\f129"; top: 1px; font-size: 14px; }
+.msql-icon:before         { @include mf; content: "\f136"; top: 2px; font-size: 15px; @include sharpen; }
+.objc-icon:before         { @include mf; content: "\f13e"; top: 2px; font-size: 16px; }
+.osx-icon:before          { @include mf; content: "\f141"; top: 1px; }
+.pgsql-icon:before        { @include mf; content: "\f14a"; top: 2px; font-size: 16px; }
+.python-icon:before       { @include mf; content: "\f14c"; top: 1px; }
+.red-hat-icon:before      { @include mf; content: "\f14e"; top: 2px; }
+.scala-icon:before        { @include mf; content: "\f154"; top: 1px; }
+.sql-icon:before          { @include mf; content: "\f10e"; top: 1px; }
+.svg-icon:before          { @include mf; content: "\f15c"; top: 1px; }
+.x11-icon:before          { @include mf; content: "\f16e"; top: 1px; font-size: 13px; }
+
+
+
+/*============================================================================*
+  Devicons
+  http://vorillaz.github.io/devicons
+/*============================================================================*/
+@mixin devicons { font-family: 'Devicons'; font-size: 16px; top: 3px; }
+
+.angular-icon:before      { @include devicons; content: "\e653"; }
+.appcelerator-icon:before { @include devicons; content: "\e6ab"; }
+.appstore-icon:before     { @include devicons; content: "\e613"; }
+.asp-icon:before          { @include devicons; content: "\e67f"; }
+.atom-icon:before         { @include devicons; content: "\e664"; @include thicken; }
+.backbone-icon:before     { @include devicons; content: "\e652"; }
+.bootstrap-icon:before    { @include devicons; content: "\e647"; font-size: 15px; top: 2px; }
+.bower-icon:before        { @include devicons; content: "\e64d"; @include sharpen; }
+.chrome-icon:before       { @include devicons; content: "\e643"; }
+.clojure-icon:before      { @include devicons; content: "\e668"; @include thicken; }
+.compass-icon:before      { @include devicons; content: "\e661"; font-size: 14px; top: 2px; }
+.dart-icon:before         { @include devicons; content: "\e698"; font-size: 15px; top: 2px; }
+.dlang-icon:before        { @include devicons; content: "\e6af"; }
+.dojo-icon:before         { @include devicons; content: "\e61c"; font-size: 16px; top: 4px; transform: scale(1.2); @include thicken; }
+.dropbox-icon:before      { @include devicons; content: "\e607"; }
+.eclipse-icon:before      { @include devicons; content: "\e69e"; }
+.erlang-icon:before       { @include devicons; content: "\e6b1"; }
+.extjs-icon:before        { @include devicons; content: "\e68e"; }
+.firefox-icon:before      { @include devicons; content: "\e645"; }
+.fsharp-icon:before       { @include devicons; content: "\e6a7"; left: 1px; top: 2px; }
+.git-icon:before          { @include devicons; content: "\e602"; font-size: 15px; top: 2px; }
+.heroku-icon:before       { @include devicons; content: "\e67b"; }
+.jekyll-icon:before       { @include devicons; content: "\e60d"; font-size: 16px; @include sharpen; }
+.jquery-icon:before       { @include devicons; content: "\e650"; font-size: 15px; top: 2px; }
+.jqueryui-icon:before     { @include devicons; content: "\e654"; font-size: 15px; top: 2px; }
+.laravel-icon:before      { @include devicons; content: "\e63f"; @include thicken; }
+.materialize-icon:before  { @include devicons; content: "\e6b6"; transform: scale(1.2); @include thicken; }
+.modernizr-icon:before    { @include devicons; content: "\e620"; }
+.mootools-icon:before     { @include devicons; content: "\e68f"; @include sharpen; }
+.node-icon:before         { @include devicons; content: "\e618"; }
+.perl-icon:before         { @include devicons; content: "\e669"; font-size: 15px; top: 2px; }
+.prolog-icon:before       { @include devicons; content: "\e6a1"; }
+.rails-icon:before        { @include devicons; content: "\e63b"; }
+.raphael-icon:before      { @include devicons; content: "\e65f"; font-size: 15px; }
+.requirejs-icon:before    { @include devicons; content: "\e670"; }
+.rust-icon:before         { @include devicons; content: "\e6a8"; }
+.safari-icon:before       { @include devicons; content: "\e648"; }
+.sass-icon:before         { @include devicons; content: "\e64b"; }
+.sencha-icon:before       { @include devicons; content: "\e68c"; }
+.snapsvg-icon:before      { @include devicons; content: "\e65e"; }
+.swift-icon:before        { @include devicons; content: "\e655"; left: -1px; }
+.travis-icon:before       { @include devicons; content: "\e67e"; font-size: 15px; top: 2px; }
+.typo3-icon:before        { @include devicons; content: "\e672"; }
+.uikit-icon:before        { @include devicons; content: "\e673"; font-size: 15px; top: 2px; }
+.unity3d-icon:before      { @include devicons; content: "\e621"; }
+.vim-icon:before          { @include devicons; content: "\e6c5"; }
+.vs-icon:before           { @include devicons; content: "\e60c"; font-size: 14px; top: 2px; }
+.windows-icon:before      { @include devicons; content: "\e60f"; font-size: 14px; top: 2px; }
+.yeoman-icon:before       { @include devicons; content: "\e67a"; }
+
+
+
+
+/*============================================================================*
+  Custom file icons
+  See https://github.com/file-icons/source/charmap.md
+/*============================================================================*/
+@mixin fi { font-family: 'file-icons'; font-size: 15px; }
+@mixin test-file { top: 3px; font-size: 17px; }
+
+._1c-icon:before           { @include fi; content: "\a5ea"; top: 3px; font-size: 16px; }
+._1c-alt-icon:before       { @include fi; content: "\ea28"; top: 3px; font-size: 16px; }
+.abap-icon:before          { @include fi; content: "\e92b"; top: 2px; }
+.abif-icon:before          { @include fi; content: "\ea4e"; top: 3px; font-size: 16px; }
+.access-icon:before        { @include fi; content: "\e9ea"; top: 2px; }
+.ada-icon:before           { @include fi; content: "\e90b"; top: 3px; font-size: 17px; }
+.ae-icon:before            { @include fi; content: "\e9f3"; top: 2px; }
+.affinity-icon:before      { @include fi; content: "\eabb"; top: 2px; }
+.ahk-icon:before           { @include fi; content: "\e932"; top: 2px; }
+.ai-icon:before            { @include fi; content: "\e6b4"; top: 2px; }
+.alex-icon:before          { @include fi; content: "\29cb"; top: 4px; font-size: 16px; @include thicken; }
+.alloy-icon:before         { @include fi; content: "\e935"; top: 2px; }
+.alpine-icon:before        { @include fi; content: "\e9ff"; top: 2px; font-size: 16px; }
+.ampl-icon:before          { @include fi; content: "\e94e"; top: 3px; font-size: 16px; left: 1px; }
+.amx-icon:before           { @include fi; content: "\e99b"; top: 3px; font-size: 16px; }
+.angelscript-icon:before   { @include fi; content: "\ea5b"; top: 4px; font-size: 18px; left: -2px; transform: scale(1.3); @include sharpen; }
+.ansible-icon:before       { @include fi; content: "\24b6"; top: 2px; }
+.ant-icon:before           { @include fi; content: "\e93e"; top: 4px; font-size: 18px; transform: scale(1.1); }
+.antlr-icon:before         { @include fi; content: "\e92c"; top: 3px; }
+.antwar-icon:before        { @include fi; content: "\2591"; top: 3px; font-size: 16px; }
+.anyscript-icon:before     { @include fi; content: "\eacf"; top: 4px; font-size: 17px; }
+.api-icon:before           { @include fi; content: "\e92d"; top: 2px; }
+.apl-icon:before           { @include fi; content: "\234b"; top: 2px; }
+.apple-icon:before         { @include fi; content: "\e925"; top: 1px; }
+.appveyor-icon:before      { @include fi; content: "\e923"; top: 2px; }
+.arc-icon:before           { @include fi; content: "\e92f"; top: 2px; }
+.arduino-icon:before       { @include fi; content: "\e930"; top: 3px; font-size: 16px; }
+.arttext-icon:before       { @include fi; content: "\24d0"; top: 2px; }
+.as-icon:before            { @include fi; content: "\e92e"; top: 1px; font-size: 14px; }
+.asciidoc-icon:before      { @include fi; content: "\e918"; top: 1px; font-size: 14px; }
+.asciidoctor-icon:before   { @include fi; content: "\eac7"; top: 2px; font-size: 16px; @include sharpen; }
+.atoum-icon:before         { @include fi; content: "\2649"; top: 2px; font-size: 16px; }
+.ats-icon:before           { @include fi; content: "\e934"; top: 2px; }
+.audacity-icon:before      { @include fi; content: "\e9f9"; top: 2px; }
+.augeas-icon:before        { @include fi; content: "\e931"; top: 2px; }
+.aurelia-icon:before       { @include fi; content: "\ea48"; top: 2px; }
+.autoit-icon:before        { @include fi; content: "\e933"; top: 2px; font-size: 16px; }
+.avro-icon:before          { @include fi; content: "\eaa3"; top: 4px; font-size: 16px; left: 1px; transform: scale(1.2); }
+.babel-icon:before         { @include fi; content: "\e91f"; top: 2px; left: 1px; }
+.bazaar-icon:before        { @include fi; content: "\eacd"; top: 2px; font-size: 16px; @include sharpen; }
+.bazel-icon:before         { @include fi; content: "\ead2"; top: 2px; font-size: 16px; @include sharpen; }
+.behat-icon:before         { @include fi; content: "\ea89"; top: 2px; }
+.bem-icon:before           { @include fi; content: "\ea59"; top: 2px; }
+.bibtex-icon:before        { @include fi; content: "\e601"; top: 2px; font-size: 16px; @include thicken; }
+.bintray-icon:before       { @include fi; content: "\ea6e"; top: 2px; }
+.bithound-icon:before      { @include fi; content: "\ea2a"; top: 2px; }
+.blender-icon:before       { @include fi; content: "\e9fa"; top: 2px; }
+.bluespec-icon:before      { @include fi; content: "\e93c"; top: 1px; font-size: 13px; left: 1px; }
+.boo-icon:before           { @include fi; content: "\e939"; top: 2px; }
+.boot-icon:before          { @include fi; content: "\f103"; top: 2px; font-size: 16px; }
+.brain-icon:before         { @include fi; content: "\e93a"; top: 2px; }
+.brakeman-icon:before      { @include fi; content: "\e9d6"; top: 2px; }
+.bro-icon:before           { @include fi; content: "\e93b"; top: 3px; font-size: 16px; }
+.broccoli-icon:before      { @include fi; content: "\e922"; top: 1px; font-size: 14px; }
+.brotli-icon:before        { @include fi; content: "\eaa2"; top: 2px; }
+.browserslist-icon:before  { @include fi; content: "\ea80"; top: 2px; }
+.browsersync-icon:before   { @include fi; content: "b";     top: 2px; }
+.brunch-icon:before        { @include fi; content: "\ea47"; top: 3px; font-size: 17px; left: -1px; }
+.buck-icon:before          { @include fi; content: "\ea46"; top: 2px; }
+.bundler-icon:before       { @include fi; content: "\ea45"; top: 2px; font-size: 16px; }
+.byond-icon:before         { @include fi; content: "\e962"; top: 2px; }
+.cabal-icon:before         { @include fi; content: "\e9c2"; top: 2px; }
+.caddy-icon:before         { @include fi; content: "\ea58"; top: 2px; }
+.caffe-icon:before         { @include fi; content: "\ea9a"; top: 3px; font-size: 17px; }
+.caffe2-icon:before        { @include fi; content: "\eab6"; top: 2px; }
+.cake-icon:before          { @include fi; content: "\e9e3"; top: 2px; }
+.cakefile-icon:before      { @include fi; content: "\e924"; top: 2px; }
+.cakephp-icon:before       { @include fi; content: "\ea43"; top: 2px; }
+.carthage-icon:before      { @include fi; content: "\ea98"; top: 2px; }
+.cc-icon:before            { @include fi; content: "\e9d5"; top: 2px; font-size: 16px; }
+.ceylon-icon:before        { @include fi; content: "\e94f"; top: 2px; }
+.cf-icon:before            { @include fi; content: "\e929"; top: 2px; }
+.chai-icon:before          { @include fi; content: "c";     top: 3px; font-size: 16px; }
+.chapel-icon:before        { @include fi; content: "\e950"; top: 2px; }
+.chartjs-icon:before       { @include fi; content: "\ea0b"; top: 2px; }
+.chef-icon:before          { @include fi; content: "\ea42"; top: 2px; }
+.chuck-icon:before         { @include fi; content: "\e943"; top: 2px; }
+.circleci-icon:before      { @include fi; content: "\ea12"; top: 2px; font-size: 14px; }
+.cirru-icon:before         { @include fi; content: "\e951"; top: 2px; @include sharpen; }
+.cl-icon:before            { @include fi; content: "\e972"; top: 2px; @include sharpen; }
+.clarion-icon:before       { @include fi; content: "\e952"; top: 1px; font-size: 14px; left: 1px; }
+.clean-icon:before         { @include fi; content: "\e95b"; top: 2px; font-size: 16px; }
+.click-icon:before         { @include fi; content: "\e95c"; top: 2px; }
+.clips-icon:before         { @include fi; content: "\e940"; top: 3px; font-size: 18px; }
+.cljs-icon:before          { @include fi; content: "\f104"; top: 2px; }
+.closure-tpl-icon:before   { @include fi; content: "\ea82"; top: 2px; }
+.cloudfoundry-icon:before  { @include fi; content: "\ead0"; top: 2px; }
+.cmake-icon:before         { @include fi; content: "\e93f"; top: 1px; font-size: 14px; }
+.cobol-icon:before         { @include fi; content: "\ea44"; top: 2px; font-size: 16px; }
+.cocoapods-icon:before     { @include fi; content: "\ea97"; top: 2px; }
+.codacy-icon:before        { @include fi; content: "\ea8b"; top: 2px; }
+.codecov-icon:before       { @include fi; content: "\2602"; top: 2px; }
+.codekit-icon:before       { @include fi; content: "\ea41"; top: 2px; }
+.codeship-icon:before      { @include fi; content: "\ea6a"; top: 2px; }
+.composer-icon:before      { @include fi; content: "\e683"; top: 3px; font-size: 17px; }
+.conan-icon:before         { @include fi; content: "\ead1"; top: 2px; }
+.config-icon:before        { @include fi; content: "\f07c"; top: 2px; font-size: 14px; }
+.conll-icon:before         { @include fi; content: "\eaa6"; top: 2px; }
+.coq-icon:before           { @include fi; content: "\e95f"; top: 2px; font-size: 16px; left: 1px; }
+.cordova-icon:before       { @include fi; content: "\ea11"; top: 2px; }
+.corel-icon:before         { @include fi; content: "\ea91"; top: 3px; font-size: 16px; }
+.coreldraw-icon:before     { @include fi; content: "\ea90"; top: 2px; }
+.coveralls-icon:before     { @include fi; content: "\272a"; top: 2px; }
+.cp-icon:before            { @include fi; content: "\e942"; top: 3px; font-size: 17px; }
+.cpan-icon:before          { @include fi; content: "\ea87"; top: 2px; }
+.creole-icon:before        { @include fi; content: "\e95e"; top: 2px; }
+.crowdin-icon:before       { @include fi; content: "\ead3"; top: 2px; font-size: 16px; @include sharpen; }
+.crystal-icon:before       { @include fi; content: "\e902"; top: 2px; left: 1px; }
+.csound-icon:before        { @include fi; content: "\e9f0"; top: 2px; }
+.csscript-icon:before      { @include fi; content: "\e9e2"; top: 2px; }
+.cucumber-icon:before      { @include fi; content: "\f02b"; top: 3px; }
+.curl-icon:before          { @include fi; content: "/";     top: 3px; font-size: 16px; }
+.cvs-icon:before           { @include fi; content: "\1f41f";top: 1px; font-size: 16px; }
+.cwl-icon:before           { @include fi; content: "\29d9"; top: 2px; font-size: 16px; }
+.cython-icon:before        { @include fi; content: "\e963"; top: 2px; }
+.d3-icon:before            { @include fi; content: "\ea10"; top: 2px; }
+.darcs-icon:before         { @include fi; content: "\e964"; top: 2px; }
+.dashboard-icon:before     { @include fi; content: "\f07d"; top: 2px; font-size: 13px; }
+.dataweave-icon:before     { @include fi; content: "\ea99"; top: 2px; }
+.dbase-icon:before         { @include fi; content: "\e9f1"; top: 2px; }
+.dna-icon:before           { @include fi; content: "\2624"; top: 2px; font-size: 16px; }
+.default-icon:before       { @include fi; content: "\1f5cc";top: 2px; font-size: 14px; }
+.delphi-icon:before        { @include fi; content: "\ea40"; top: 2px; font-size: 16px; }
+.devicetree-icon:before    { @include fi; content: "\ea57"; top: 2px; font-size: 17px; @include sharpen; }
+.dia-icon:before           { @include fi; content: "\eab5"; top: 2px; }
+.diff-icon:before          { @include fi; content: "\e960"; top: 2px; }
+.docker-icon:before        { @include fi; content: "\f106"; top: 3px; font-size: 18px; }
+.doclets-icon:before       { @include fi; content: "\ea3f"; top: 2px; }
+.docpad-icon:before        { @include fi; content: "\21b9"; top: 4px; font-size: 17px; }
+.doge-icon:before          { @include fi; content: "\e946"; top: 2px; }
+.doxygen-icon:before       { @include fi; content: "\e928"; top: 1px; font-size: 13px; }
+.dragula-icon:before       { @include fi; content: "\1f44c";top: 3px; font-size: 17px; }
+.drone-icon:before         { @include fi; content: "\ea3d"; top: 2px; }
+.dyalog-icon:before        { @include fi; content: "\e90c"; top: 1px; font-size: 14px; left: 1px; }
+.dylib-icon:before         { @include fi; content: "\ea15"; top: 2px; }
+.e-icon:before             { @include fi; content: "E";     top: 1px; font-size: 14px; }
+.eagle-icon:before         { @include fi; content: "\e965"; top: 2px; }
+.easybuild-icon:before     { @include fi; content: "\ea85"; top: 2px; }
+.ec-icon:before            { @include fi; content: "\e9c9"; top: 2px; }
+.ecere-icon:before         { @include fi; content: "\e966"; top: 3px; font-size: 16px; }
+.editorconfig-icon:before  { @include fi; content: "\ea1b"; top: 3px; }
+.edge-icon:before          { @include fi; content: "\ea78"; top: 2px; }
+.eiffel-icon:before        { @include fi; content: "\e967"; top: 2px; font-size: 16px; }
+.ejs-icon:before           { @include fi; content: "\ea4b"; top: 3px; font-size: 16px; }
+.electron-icon:before      { @include fi; content: "\ea27"; top: 3px; font-size: 16px; @include sharpen; }
+.elm-icon:before           { @include fi; content: "\f102"; top: 2px; }
+.em-icon:before            { @include fi; content: "\e968"; top: 3px; font-size: 16px; }
+.emacs-icon:before         { @include fi; content: "\e926"; top: 2px; }
+.ember-icon:before         { @include fi; content: "\e61b"; top: 2px; font-size: 14px; }
+.ensime-icon:before        { @include fi; content: "\ead4"; top: 2px; }
+.eq-icon:before            { @include fi; content: "\ea0a"; top: 5px; }
+.esdoc-icon:before         { @include fi; content: "\ea5c"; top: 2px; }
+.eslint-icon:before        { @include fi; content: "\ea0f"; top: 3px; font-size: 16px; }
+.excel-icon:before         { @include fi; content: "\e9ee"; top: 2px; }
+.fabfile-icon:before       { @include fi; content: "\e94b"; top: 2px; font-size: 16px; }
+.factor-icon:before        { @include fi; content: "\e96a"; top: 3px; font-size: 18px; left: -2px; transform: scale(1.2); }
+.fancy-icon:before         { @include fi; content: "\e96b"; top: 2px; font-size: 16px; }
+.fantom-icon:before        { @include fi; content: "\e96f"; top: 2px; left: 1px; }
+.fbx-icon:before           { @include fi; content: "\e9fc"; top: 2px; }
+.ff-icon:before            { @include fi; content: "\fb00"; top: 3px; }
+.finder-icon:before        { @include fi; content: "\e9e9"; top: 3px; font-size: 16px; }
+.firebase-icon:before      { @include fi; content: "\ea7f"; top: 2px; }
+.firebase-bolt-icon:before { @include fi; content: "\26A1"; top: 3px; }
+.flask-icon:before         { @include fi; content: "\1f704";top: 2px; }
+.floobits-icon:before      { @include fi; content: "\ead5"; top: 3px; font-size: 16px; }
+.flow-icon:before          { @include fi; content: "\e921"; top: 1px; }
+.flux-icon:before          { @include fi; content: "\e969"; top: 2px; }
+.font-icon:before          { @include fi; content: "\eaaa"; top: 2px; font-size: 16px; @include sharpen; }
+.font-bitmap-icon:before   { @include fi; content: "\eaab"; top: 2px; }
+.fortran-icon:before       { @include fi; content: "\e90a"; top: 1px; font-size: 14px; left: 1px; }
+.fossa-icon:before         { @include fi; content: "\eac3"; top: 3px; font-size: 17px; }
+.fossil-icon:before        { @include fi; content: "\ead6"; top: 2px; font-size: 17px; @include sharpen; }
+.franca-icon:before        { @include fi; content: "\ea56"; top: 2px; }
+.freemarker-icon:before    { @include fi; content: "\e970"; top: 2px; font-size: 16px; left: 1px; }
+.frege-icon:before         { @include fi; content: "\e96e"; top: 2px; font-size: 16px; left: 1px; }
+.fuelux-icon:before        { @include fi; content: "\ea09"; top: 3px; font-size: 16px; left: 2px; transform: scale(1.15); @include sharpen; }
+.fusebox-icon:before       { @include fi; content: "\ead7"; top: 2px; }
+.gams-icon:before          { @include fi; content: "\e973"; top: 2px; left: 1px; }
+.galen-icon:before         { @include fi; content: "\ead8"; top: 2px; }
+.gap-icon:before           { @include fi; content: "\e971"; top: 3px; font-size: 16px; left: 1px; }
+.gdb-icon:before           { @include fi; content: "\ea08"; top: 3px; font-size: 16px; transform: scale(1.15); @include sharpen; }
+.genshi-icon:before        { @include fi; content: "\e976"; top: 3px; }
+.gentoo-icon:before        { @include fi; content: "\e96d"; top: 1px; font-size: 14px; left: 1px; }
+.gf-icon:before            { @include fi; content: "\e978"; top: 2px; }
+.gimp-icon:before          { @include fi; content: "\ea88"; top: 2px; font-size: 17px; transform: scale(1.15); }
+.gitlab-icon:before        { @include fi; content: "\ea3c"; top: 3px; font-size: 16px; }
+.glade-icon:before         { @include fi; content: "\e938"; top: 2px; }
+.glide-icon:before         { @include fi; content: "\eacb"; top: 3px; font-size: 17px; transform: scale(1.15); }
+.gltf-icon:before          { @include fi; content: "\eaa7"; top: 3px; font-size: 17px; }
+.glyphs-icon:before        { @include fi; content: "G";     top: 3px; }
+.gml-icon:before           { @include fi; content: "\e975"; top: 3px; font-size: 16px; }
+.gn-icon:before            { @include fi; content: "\ea25"; top: 2px; }
+.gnu-icon:before           { @include fi; content: "\e679"; top: 2px; font-size: 16px; @include sharpen; }
+.go-icon:before            { @include fi; content: "\eaae"; top: 4px; font-size: 18px; left: -1px; }
+.godot-icon:before         { @include fi; content: "\e974"; top: 2px; }
+.golo-icon:before          { @include fi; content: "\e979"; top: 2px; }
+.gosu-icon:before          { @include fi; content: "\e97a"; top: 2px; }
+.gradle-icon:before        { @include fi; content: "\e903"; top: 3px; font-size: 16px; left: 1px; }
+.graphite-icon:before      { @include fi; content: "\ea8a"; top: 2px; font-size: 17px; }
+.graphql-icon:before       { @include fi; content: "\e97c"; top: 2px; }
+.graphviz-icon:before      { @include fi; content: "\e97d"; top: 4px; font-size: 17px; left:  1px; }
+.groovy-icon:before        { @include fi; content: "\e904"; top: 4px; font-size: 17px; left: -1px; }
+.grunt-icon:before         { @include fi; content: "\e611"; top: 1px; font-size: 14px; }
+.gulp-icon:before          { @include fi; content: "\e610"; top: 2px; font-size: 16px; }
+.hack-icon:before          { @include fi; content: "\e9ce"; top: 2px; }
+.haml-icon:before          { @include fi; content: "\f15b"; top: 2px; }
+.hoplon-icon:before        { @include fi; content: "\ea4d"; top: 2px; }
+.harbour-icon:before       { @include fi; content: "\e97b"; top: 2px; font-size: 16px; @include sharpen; }
+.hashicorp-icon:before     { @include fi; content: "\e97e"; top: 2px; }
+.haxe-icon:before          { @include fi; content: "\e907"; top: 2px; }
+.haxedevelop-icon:before   { @include fi; content: "\ea3b"; top: 2px; font-size: 16px; @include thicken; }
+.helix-icon:before         { @include fi; content: "\2695"; top: 2px; font-size: 16px; }
+.hg-icon:before            { @include fi; content: "\263f"; top: 2px; }
+.hjson-icon:before         { @include fi; content: "\eac2"; top: 2px; font-size: 16px; @include thicken; }
+.houndci-icon:before       { @include fi; content: "\eaaf"; top: 2px; }
+.hp-icon:before            { @include fi; content: "\33cb"; top: 2px; }
+.hy-icon:before            { @include fi; content: "\e97f"; top: 2px; }
+.kx-icon:before            { @include fi; content: "\ea9b"; top: 2px; }
+.husky-icon:before         { @include fi; content: "\1f436";top: 2px; font-size: 17px; @include sharpen; }
+.icomoon-icon:before       { @include fi; content: "\eaea"; top: 2px; }
+.idl-icon:before           { @include fi; content: "\e947"; top: 3px; font-size: 18px; }
+.idris-icon:before         { @include fi; content: "\e983"; top: 2px; font-size: 16px; @include thicken; }
+.igorpro-icon:before       { @include fi; content: "\e980"; top: 2px; font-size: 16px; @include thicken; }
+.indesign-icon:before      { @include fi; content: "\e9f4"; top: 2px; }
+.infopath-icon:before      { @include fi; content: "\ea35"; top: 2px; font-size: 16px; }
+.inform7-icon:before       { @include fi; content: "\e984"; top: 2px; font-size: 16px; @include sharpen; }
+.inno-icon:before          { @include fi; content: "\e985"; top: 2px; }
+.imba-icon:before          { @include fi; content: "\1f4a0";top: 2px; font-size: 16px; }
+.ink-icon:before           { @include fi; content: "\eace"; top: 2px; font-size: 16px; }
+.io-icon:before            { @include fi; content: "\e981"; top: 1px; font-size: 13px; @include thicken; }
+.ioke-icon:before          { @include fi; content: "\e982"; top: 2px; }
+.ionic-icon:before         { @include fi; content: "\f14b"; top: 2px; }
+.isabelle-icon:before      { @include fi; content: "\e945"; top: 2px; font-size: 16px; }
+.istanbul-icon:before      { @include fi; content: "\1f54c";top: 2px; font-size: 17px; }
+.j-icon:before             { @include fi; content: "\e937"; top: 1px; font-size: 13px; }
+.jade-icon:before          { @include fi; content: "\e90d"; top: 1px; font-size: 14px; }
+.jake-icon:before          { @include fi; content: "\e948"; top: 3px; font-size: 16px; }
+.jasmine-icon:before       { @include fi; content: "\ea3a"; top: 3px; font-size: 16px; }
+.jenkins-icon:before       { @include fi; content: "\e667"; top: 3px; font-size: 18px; @include sharpen; }
+.jest-icon:before          { @include fi; content: "\ea39"; top: 2px; }
+.jolie-icon:before         { @include fi; content: "\ea75"; top: 2px; }
+.jinja-icon:before         { @include fi; content: "\e944"; top: 2px; }
+.jison-icon:before         { @include fi; content: "\ea55"; top: 2px; }
+.json-icon:before          { @include fi; content: "\eabe"; top: 2px; }
+.json5-icon:before         { @include fi; content: "\2478"; top: 2px; }
+.jsonld-icon:before        { @include fi; content: "\e958"; top: 3px; font-size: 17px; }
+.jsx-icon:before           { @include fi; content: "\e9e6"; top: 1px; font-size: 14px; }
+.julia-icon:before         { @include fi; content: "\26ec"; top: 1px; font-size: 14px; }
+.junos-icon:before         { @include fi; content: "\ea81"; top: 2px; }
+.jupyter-icon:before       { @include fi; content: "\e987"; top: 3px; font-size: 16px; }
+.karma-icon:before         { @include fi; content: "\e9cd"; top: 2px; }
+.keynote-icon:before       { @include fi; content: "\e9e5"; top: 2px; }
+.khronos-icon:before       { @include fi; content: "\e9f8"; top: 2px; }
+.kicad-icon:before         { @include fi; content: "\ea4c"; top: 2px; }
+.kitchenci-icon:before     { @include fi; content: "\ea38"; top: 2px; }
+.kivy-icon:before          { @include fi; content: "\e901"; top: 2px; }
+.knockout-icon:before      { @include fi; content: "\4B";   top: 2px; }
+.kos-icon:before           { @include fi; content: "k";     top: 4px; font-size: 17px; }
+.kotlin-icon:before        { @include fi; content: "\e989"; top: 1px; font-size: 14px; }
+.krl-icon:before           { @include fi; content: "\e988"; top: 1px; font-size: 14px; }
+.labview-icon:before       { @include fi; content: "\e98a"; top: 2px; font-size: 16px; }
+.lasso-icon:before         { @include fi; content: "\e98c"; top: 2px; left: 1px; }
+.leaflet-icon:before       { @include fi; content: "\ea07"; top: 2px; }
+.lean-icon:before          { @include fi; content: "L";     top: 1px; font-size: 13px; }
+.lein-icon:before          { @include fi; content: "\f105"; top: 3px; font-size: 16px; @include sharpen; transform: scale(1.15); }
+.lektor-icon:before        { @include fi; content: "\eab9"; top: 2px; font-size: 16px; }
+.lerna-icon:before         { @include fi; content: "\ea37"; top: 2px; font-size: 16px; transform: scale(1.15); }
+.lfe-icon:before           { @include fi; content: "\e94c"; top: 2px; font-size: 16px; }
+.lightwave-icon:before     { @include fi; content: "\e9fb"; top: 2px; }
+.lime-icon:before          { @include fi; content: "\ea36"; top: 2px; font-size: 16px; }
+.lisp-icon:before          { @include fi; content: "\e908"; top: 3px; font-size: 17px; }
+.llvm-icon:before          { @include fi; content: "\e91d"; top: 3px; font-size: 17px; }
+.logtalk-icon:before       { @include fi; content: "\e98d"; top: 2px; @include sharpen; }
+.lolcode-icon:before       { @include fi; content: "\1f63a";top: 2px; font-size: 16px; @include sharpen; }
+.lookml-icon:before        { @include fi; content: "\e98e"; top: 2px; font-size: 16px; @include sharpen; }
+.ls-icon:before            { @include fi; content: "\e914"; top: 2px; font-size: 14px; }
+.lsl-icon:before           { @include fi; content: "\e98b"; top: 1px; }
+.lua-icon:before           { @include fi; content: "\e91b"; top: 2px; font-size: 14px; }
+.lync-icon:before          { @include fi; content: "\ead9"; top: 2px; font-size: 16px; }
+.mako-icon:before          { @include fi; content: "\e98f"; top: 4px; font-size: 16px; }
+.manpage-icon:before       { @include fi; content: "\e936"; top: 3px; }
+.mapbox-icon:before        { @include fi; content: "\e941"; top: 1px; font-size: 13px; }
+.marko-icon:before         { @include fi; content: "\e920"; top: 4px; font-size: 18px; left: -1px; transform: scale(1.05); }
+.markdownlint-icon:before  { @include fi; content: "\f0c9"; top: 3px; font-size: 17px; transform: scale(1.25); transform-origin: 0 60%; }
+.mathematica-icon:before   { @include fi; content: "\e990"; top: 2px; font-size: 16px; }
+.mathjax-icon:before       { @include fi; content: "\ea06"; top: 2px; }
+.matlab-icon:before        { @include fi; content: "\e991"; top: 2px; }
+.max-icon:before           { @include fi; content: "\e993"; top: 2px; }
+.maxscript-icon:before     { @include fi; content: "\e900"; top: 2px; }
+.maya-icon:before          { @include fi; content: "\e9f6"; top: 2px; font-size: 16px; }
+.mdx-icon:before           { @include fi; content: "\eab7"; top: 3px; font-size: 16px; }
+.mediawiki-icon:before     { @include fi; content: "\e954"; top: 2px; font-size: 16px; }
+.mercury-icon:before       { @include fi; content: "\e994"; top: 3px; font-size: 16px; transform: scale(1.2); }
+.meson-icon:before         { @include fi; content: "\ea54"; top: 2px; }
+.metal-icon:before         { @include fi; content: "M";     top: 1px; left: 1px; }
+.meteor-icon:before        { @include fi; content: "\e6a5"; top: 1px; }
+.minecraft-icon:before     { @include fi; content: "\e9dc"; top: 2px; }
+.minizinc-icon:before      { @include fi; content: "\ea53"; top: 2px; }
+.mirah-icon:before         { @include fi; content: "\e995"; top: 2px; }
+.miranda-icon:before       { @include fi; content: "\ea52"; top: 3px; font-size: 16px; }
+.mjml-icon:before          { @include fi; content: "\ea6f"; top: 2px; }
+.mocha-icon:before         { @include fi; content: "\26fe"; top: 2px; font-size: 17px; }
+.model-icon:before         { @include fi; content: "\e9e8"; top: 2px; font-size: 16px; }
+.modula2-icon:before       { @include fi; content: "\e996"; top: 2px; }
+.modula3-icon:before       { @include fi; content: "\2778"; top: 3px; font-size: 17px; }
+.moment-icon:before        { @include fi; content: "\1f558";top: 2px; }
+.moment-tz-icon:before     { @include fi; content: "\1f30d";top: 2px; }
+.monotone-icon:before      { @include fi; content: "\1f400";top: 2px; font-size: 18px; }
+.monkey-icon:before        { @include fi; content: "\e997"; top: 3px; font-size: 18px; left: -1px; }
+.mruby-icon:before         { @include fi; content: "\ea18"; top: 2px; }
+.mupad-icon:before         { @include fi; content: "\e9ca"; top: 3px; font-size: 16px; }
+.mustache-icon:before      { @include fi; content: "\e60f"; top: 2px; font-size: 16px; }
+.nailpolish-icon:before    { @include fi; content: "\1f485";top: 3px; font-size: 16px; left: 1px; }
+.nano-icon:before          { @include fi; content: "\ea76"; top: 2px; }
+.nanoc-icon:before         { @include fi; content: "\ea51"; top: 2px; }
+.nant-icon:before          { @include fi; content: "\e9e1"; top: 3px; transform: scale(1.2); }
+.nasm-icon:before          { @include fi; content: "\ea72"; top: 2px; }
+.ndepend-icon:before       { @include fi; content: "\eab4"; top: 2px; }
+.neko-icon:before          { @include fi; content: "\ea05"; top: 2px; }
+.neo4j-icon:before         { @include fi; content: "\eab3"; top: 2px; }
+.netlify-icon:before       { @include fi; content: "\eabf"; top: 3px; font-size: 16px; }
+.netlogo-icon:before       { @include fi; content: "\e99c"; top: 2px; left: 1px; }
+.newrelic-icon:before      { @include fi; content: "\e9d7"; top: 2px; }
+.nextflow-icon:before      { @include fi; content: "\eaa5"; top: 2px; font-size: 16px; }
+.nestjs-icon:before        { @include fi; content: "\eac9"; top: 2px; }
+.nginx-icon:before         { @include fi; content:"\f146b"; top: 2px; }
+.nib-icon:before           { @include fi; content: "\2712"; top: 2px; }
+.nimrod-icon:before        { @include fi; content: "\e998"; top: 2px; }
+.nit-icon:before           { @include fi; content: "\e999"; top: 2px; }
+.nix-icon:before           { @include fi; content: "\e99a"; top: 3px; font-size: 16px; }
+.nmap-icon:before          { @include fi; content: "\e94d"; top: 3px; font-size: 16px; transform: scale(1.1); }
+.nodemon-icon:before       { @include fi; content: "\ea26"; top: 2px; }
+.nomad-icon:before         { @include fi; content: "\ea96"; top: 2px; }
+.normalize-icon:before     { @include fi; content: "\ea04"; top: 3px; font-size: 16px; }
+.npm-icon:before           { @include fi; content: "\e91c"; top: 3px; font-size: 17px; }
+.nsis-icon:before          { @include fi; content: "\ea1e"; top: 3px; font-size: 16px; }
+.nuclide-icon:before       { @include fi; content: "\ea34"; top: 2px; }
+.nuget-icon:before         { @include fi; content: "\e9d9"; top: 2px; }
+.numpy-icon:before         { @include fi; content: "\e99d"; top: 2px; font-size: 14px; }
+.nunjucks-icon:before      { @include fi; content: "\e953"; top: 2px; font-size: 16px; }
+.nuxt-icon:before          { @include fi; content: "\eaca"; top: 2px; font-size: 16px; }
+.nxc-icon:before           { @include fi; content: "\ea6b"; top: 2px; font-size: 16px; }
+.nvidia-icon:before        { @include fi; content: "\e95d"; top: 2px; }
+.objj-icon:before          { @include fi; content: "\e99e"; top: 2px; }
+.ocaml-icon:before         { @include fi; content: "\e91a"; top: 1px; font-size: 14px; }
+.octave-icon:before        { @include fi; content: "\ea33"; top: 2px; }
+.onenote-icon:before       { @include fi; content: "\e9eb"; top: 2px; }
+.ooc-icon:before           { @include fi; content: "\e9cb"; top: 2px; }
+.opa-icon:before           { @include fi; content: "\2601"; top: 2px; }
+.opencl-icon:before        { @include fi; content: "\e99f"; top: 2px; font-size: 16px; }
+.opengl-icon:before        { @include fi; content: "\ea7a"; top: 3px; font-size: 18px; transform: scale(1.1); }
+.openoffice-icon:before    { @include fi; content: "\e9e4"; top: 2px; }
+.openvms-icon:before       { @include fi; content: "\eac6"; top: 1px; font-size: 16px; transform: scale(1.1); }
+.org-icon:before           { @include fi; content: "\e917"; top: 1px; font-size: 14px; left: 1px; }
+.outlook-icon:before       { @include fi; content: "\eada"; top: 2px; font-size: 16px; }
+.owl-icon:before           { @include fi; content: "\e957"; top: 2px; }
+.ox-icon:before            { @include fi; content: "\e9a1"; top: 3px; font-size: 16px; @include sharpen; }
+.oxygene-icon:before       { @include fi; content: "\e9bf"; top: 2px; }
+.oz-icon:before            { @include fi; content: "\e9be"; top: 2px; }
+.p4-icon:before            { @include fi; content: "\ea50"; top: 2px; }
+.pan-icon:before           { @include fi; content: "\e9bd"; top: 2px; }
+.papyrus-icon:before       { @include fi; content: "\e9bc"; top: 2px; }
+.parrot-icon:before        { @include fi; content: "\e9bb"; top: 3px; font-size: 16px; }
+.pascal-icon:before        { @include fi; content: "\e92a"; top: 2px; }
+.patch-icon:before         { @include fi; content: "\e961"; top: 2px; }
+.pawn-icon:before          { @include fi; content: "\265f"; top: 1px; font-size: 14px; }
+.pcd-icon:before           { @include fi; content: "\26c5"; top: 2px; font-size: 16px; }
+.peg-icon:before           { @include fi; content: "\ea74"; top: 3px; font-size: 16px; }
+.perl6-icon:before         { @include fi; content: "\e96c"; top: 2px; }
+.phalcon-icon:before       { @include fi; content: "\e94a"; top: 2px; }
+.phoenix-icon:before       { @include fi; content: "\ea5f"; top: 3px; font-size: 17px; transform: scale(1.1); }
+.php-icon:before           { @include fi; content: "\f147"; top: 1px; font-size: 14px; left: 1px; }
+.phpunit-icon:before       { @include fi; content: "\ea32"; top: 2px; }
+.phraseapp-icon:before     { @include fi; content: "\eadb"; top: 2px; }
+.pickle-icon:before        { @include fi; content: "\e9c4"; top: 2px; }
+.pico8-icon:before         { @include fi; content: "\eabc"; top: 2px; }
+.pike-icon:before          { @include fi; content: "\e9b9"; top: 4px; font-size: 16px; @include thicken; transform: scale(1.15); }
+.pipenv-icon:before        { @include fi; content: "\1f381";top: 2px; }
+.platformio-icon:before    { @include fi; content: "\ea2c"; top: 2px; font-size: 16px; }
+.pm2-icon:before           { @include fi; content: "\2630"; top: 3px; }
+.pod-icon:before           { @include fi; content: "\ea84"; top: 2px; left: 1px; }
+.pogo-icon:before          { @include fi; content: "\e9b8"; top: 3px; font-size: 14px; @include thicken; }
+.pointwise-icon:before     { @include fi; content: "\e977"; top: 2px; }
+.polymer-icon:before       { @include fi; content: "\ea2b"; top: 3px; }
+.pony-icon:before          { @include fi; content: "\e9b7"; top: 3px; font-size: 16px; }
+.postcss-icon:before       { @include fi; content: "\e910"; top: 2px; font-size: 14px; }
+.postscript-icon:before    { @include fi; content: "\e955"; top: 2px; left: 1px; }
+.povray-icon:before        { @include fi; content: "P";     top: 2px; left: 1px; }
+.powerbuilder-icon:before  { @include fi; content: "\ea14"; }
+.powerpoint-icon:before    { @include fi; content: "\e9ec"; top: 2px; }
+.powershell-icon:before    { @include fi; content: "\e9da"; top: 2px; font-size: 16px; }
+.precommit-icon:before     { @include fi; content: "\eac1"; top: 2px; }
+.premiere-icon:before      { @include fi; content: "\e9f5"; top: 2px; }
+.prettier-icon:before      { @include fi; content: "\eaa1"; top: 2px; }
+.prisma-icon:before        { @include fi; content: "\eac5"; top: 2px; }
+.processing-icon:before    { @include fi; content: "\e9a0"; top: 2px; }
+.progress-icon:before      { @include fi; content: "\eadc"; top: 2px; }
+.proselint-icon:before     { @include fi; content: "\ea6d"; top: 2px; font-size: 16px; }
+.pros-icon:before          { @include fi; content: "\eaad"; top: 3px; font-size: 16px; }
+.propeller-icon:before     { @include fi; content: "\e9b5"; top: 3px; font-size: 16px; }
+.protractor-icon:before    { @include fi; content: "\e9de"; top: 3px; }
+.psd-icon:before           { @include fi; content: "\e6b8"; top: 2px; }
+.publisher-icon:before     { @include fi; content: "\eadd"; top: 2px; font-size: 16px; }
+.pug-alt-icon:before       { @include fi; content: "\e9d0"; top: 3px; font-size: 16px; }
+.pug-icon:before           { @include fi; content: "\ea13"; top: 3px; font-size: 16px; }
+.puppet-icon:before        { @include fi; content: "\f0c3"; top: 2px; left: 1px; }
+.purebasic-icon:before     { @include fi; content: "\01b5"; top: 2px; }
+.purescript-icon:before    { @include fi; content: "\e9b2"; top: 3px; }
+.pullapprove-icon:before   { @include fi; content: "\293e"; top: 2px; }
+.pypi-icon:before          { @include fi; content: "\ea94"; top: 2px; }
+.pyret-icon:before         { @include fi; content: "\2620"; top: 2px; font-size: 16px; }
+.qlik-icon:before          { @include fi; content: "\1f50d";top: 2px; }
+.quasar-icon:before        { @include fi; content: "\eacc"; top: 2px; }
+.r-icon:before             { @include fi; content: "\e905"; top: 3px; font-size: 17px; }
+.racket-icon:before        { @include fi; content: "\e9b1"; top: 2px; left: 1px; }
+.raml-icon:before          { @include fi; content: "\e913"; top: 1px; font-size: 14px; }
+.rascal-icon:before        { @include fi; content: "\ea24"; top: 2px; }
+.rdoc-icon:before          { @include fi; content: "\e9b0"; top: 2px; left: 1px; }
+.react-icon:before         { @include fi; content: "\f100"; top: 2px; }
+.reason-icon:before        { @include fi; content: "\ea1d"; top: 3px; }
+.rebol-icon:before         { @include fi; content: "\e9ae"; top: 1px; font-size: 13px; }
+.red-icon:before           { @include fi; content: "\e9ad"; top: 3px; font-size: 16px; }
+.redux-icon:before         { @include fi; content: "\ea30"; top: 2px; }
+.reek-icon:before          { @include fi; content: "\eaa0"; top: 3px; font-size: 17px; @include sharpen; }
+.regex-icon:before         { @include fi; content: "*";     top: 1px; font-size: 12px; left: 1px; }
+.rexx-icon:before          { @include fi; content: "\ea16"; top: 2px; font-size: 14px; left: 1px; }
+.rhino-icon:before         { @include fi; content: "\ea4a"; top: 4px; font-size: 16px; left: 1px; transform: scale(1.1); }
+.ring-icon:before          { @include fi; content: "\1f48d";top: 2px; }
+.riot-icon:before          { @include fi; content: "\e919"; top: 4px; font-size: 18px; }
+.robot-icon:before         { @include fi; content: "\e9ac"; top: 2px; font-size: 14px; }
+.robots-icon:before        { @include fi; content: "\1f916";top: 2px; }
+.rollup-icon:before        { @include fi; content: "\ea20"; top: 2px; }
+.rspec-icon:before         { @include fi; content: "\ea31"; top: 3px; font-size: 16px; }
+.rst-icon:before           { @include fi; content: "\e9cc"; top: 3px; font-size: 16px; }
+.rstudio-icon:before       { @include fi; content: "\24c7"; top: 2px; }
+.rubocop-icon:before       { @include fi; content: "\eade"; top: 2px; }
+.sage-icon:before          { @include fi; content: "\e9ab"; top: 3px; font-size: 16px; @include thicken; }
+.saltstack-icon:before     { @include fi; content: "\e915"; top: 2px; font-size: 14px; }
+.sas-icon:before           { @include fi; content: "\e95a"; top: 2px; }
+.sbt-icon:before           { @include fi; content: "\e9d2"; top: 2px; font-size: 14px; }
+.scad-icon:before          { @include fi; content: "\e911"; top: 2px; font-size: 14px; }
+.scd-icon:before           { @include fi; content: "\e9a2"; top: 2px; }
+.scheme-icon:before        { @include fi; content: "\03bb"; top: 2px; }
+.scilab-icon:before        { @include fi; content: "\e9a9"; top: 3px; font-size: 18px; left: -1px; @include thicken; }
+.scrutinizer-icon:before   { @include fi; content: "\e9d4"; top: 2px; font-size: 14px; }
+.self-icon:before          { @include fi; content: "\e9a8"; top: 3px; font-size: 16px; @include sharpen; transform: scale(1.2); }
+.serverless-icon:before    { @include fi; content: "\eab8"; top: 2px; }
+.sequelize-icon:before     { @include fi; content: "\ea2f"; top: 3px; font-size: 16px; }
+.sf-icon:before            { @include fi; content: "\e9db"; top: 2px; }
+.sgi-icon:before           { @include fi; content: "\2318"; top: 2px; }
+.shen-icon:before          { @include fi; content: "\e9a7"; top: 2px; font-size: 16px; }
+.shipit-icon:before        { @include fi; content: "\26f5"; top: 2px; font-size: 16px; transform: scale(1.1); }
+.shippable-icon:before     { @include fi; content: "\ea2d"; top: 2px; }
+.shopify-icon:before       { @include fi; content: "\e9cf"; top: 2px; }
+.shuriken-icon:before      { @include fi; content: "\272b"; top: 2px; font-size: 14px; }
+.sigils-icon:before        { @include fi; content: "\1f764";top: 3px; font-size: 16px; @include sharpen; }
+.silverstripe-icon:before  { @include fi; content: "\e800"; top: 2px; }
+.sketch-icon:before        { @include fi; content: "\e927"; top: 2px; }
+.sketchup-lo-icon:before   { @include fi; content: "\ea7c"; top: 2px; }
+.sketchup-mk-icon:before   { @include fi; content: "\ea7e"; top: 2px; }
+.sketchup-sb-icon:before   { @include fi; content: "\ea7d"; top: 2px; }
+.slash-icon:before         { @include fi; content: "\e9a6"; top: 2px; }
+.snort-icon:before         { @include fi; content: "\1f43d";top: 3px; font-size: 17px; }
+.snyk-icon:before          { @include fi; content: "\ea1c"; top: 2px; font-size: 16px; }
+.solidarity-icon:before    { @include fi; content: "\1d5e6";top: 2px; }
+.solidity-icon:before      { @include fi; content: "\ea86"; top: 2px; }
+.spacemacs-icon:before     { @include fi; content: "\eaa4"; top: 2px; }
+.sparql-icon:before        { @include fi; content: "\e959"; top: 2px; }
+.sqf-icon:before           { @include fi; content: "\e9a5"; top: 1px; @include sharpen; }
+.sqlite-icon:before        { @include fi; content: "\e9dd"; top: 3px; }
+.squarespace-icon:before   { @include fi; content: "\ea5e"; top: 2px; }
+.stan-icon:before          { @include fi; content: "\e9a4"; top: 2px; }
+.stata-icon:before         { @include fi; content: "\e9a3"; top: 2px; }
+.stencil-icon:before       { @include fi; content: "\ea95"; top: 2px; }
+.storyist-icon:before      { @include fi; content: "\e9ef"; top: 2px; font-size: 16px; }
+.strings-icon:before       { @include fi; content: "\e9e0"; top: 2px; }
+.stylable-icon:before      { @include fi; content: "\eae0"; top: 2px; }
+.storybook-icon:before     { @include fi; content: "\eadf"; top: 2px; font-size: 16px; }
+.stylelint-icon:before     { @include fi; content: "\e93d"; top: 2px; }
+.stylus-icon:before        { @include fi; content: "s";     top: 2px; left: 1px; }
+.sublime-icon:before       { @include fi; content: "\e986"; top: 2px; }
+.svn-icon:before           { @include fi; content: "\ea17"; top: 2px; }
+.swagger-icon:before       { @include fi; content: "\ea29"; top: 2px; }
+.sysverilog-icon:before    { @include fi; content: "\e9c3"; top: 2px; }
+.tag-icon:before           { @include fi; content: "\f015"; top: 2px; font-size: 14px; }
+.tcl-icon:before           { @include fi; content: "\e956"; top: 2px; font-size: 16px; }
+.telegram-icon:before      { @include fi; content: "\2708"; top: 2px; }
+.terminal-icon:before      { @include fi; content: "\f0c8"; top: 2px; font-size: 14px; }
+.tern-icon:before          { @include fi; content: "\1f54a";top: 4px; font-size: 16px; }
+.terraform-icon:before     { @include fi; content: "\e916"; top: 1px; font-size: 14px; }
+.test-coffee-icon:before   { @include fi; content: "\ea62"; @include test-file; }
+.test-dir-icon:before      { @include fi; content: "\ea60"; top: 2px; }
+.test-generic-icon:before  { @include fi; content: "\ea63"; @include test-file; }
+.test-js-icon:before       { @include fi; content: "\ea64"; @include test-file; }
+.test-perl-icon:before     { @include fi; content: "\ea65"; @include test-file; }
+.test-python-icon:before   { @include fi; content: "\ea66"; @include test-file; }
+.test-react-icon:before    { @include fi; content: "\ea67"; @include test-file; }
+.test-ruby-icon:before     { @include fi; content: "\ea68"; @include test-file; }
+.test-ts-icon:before       { @include fi; content: "\ea69"; @include test-file; }
+.tex-icon:before           { @include fi; content: "\e600"; top: 4px; font-size: 16px; @include thicken; }
+.textile-icon:before       { @include fi; content: "t";     top: 2px; }
+.textmate-icon:before      { @include fi; content: "\2122"; top: 2px; font-size: 16px; }
+.tfs-icon:before           { @include fi; content: "\eae1"; top: 3px; }
+.thor-icon:before          { @include fi; content: "\e9d8"; top: 2px; }
+.tipe-icon:before          { @include fi; content: "\eaa9"; top: 3px; font-size: 16px; }
+.tla-icon:before           { @include fi; content: "\eab2"; top: 2px; }
+.tmux-icon:before          { @include fi; content: "\ea8c"; top: 2px; }
+.toml-icon:before          { @include fi; content: "\1f143";top: 2px; }
+.tortoise-icon:before      { @include fi; content: "\ea93"; top: 3px; font-size: 17px; transform: scale(1.15); }
+.ts-icon:before            { @include fi; content: "\2a6";  top: 1px; font-size: 14px; }
+.tsx-icon:before           { @include fi; content: "\e9e7"; top: 1px; font-size: 14px; }
+.tt-icon:before            { @include fi; content: "T";     top: 2px; }
+.ttcn3-icon:before         { @include fi; content: "\2476"; top: 2px; }
+.turing-icon:before        { @include fi; content: "\e9b6"; top: 2px; }
+.twine-icon:before         { @include fi; content: "\ea5d"; top: 2px; }
+.twig-icon:before          { @include fi; content: "\2e19"; top: 2px; font-size: 16px; @include sharpen; }
+.txl-icon:before           { @include fi; content: "\e9c1"; top: 2px; }
+.typedoc-icon:before       { @include fi; content: "\e9fe"; top: 2px; }
+.typings-icon:before       { @include fi; content: "\e9df"; top: 2px; }
+.unbeautify-icon:before    { @include fi; content: "\eac4"; top: 2px; font-size: 16px; @include sharpen; }
+.uno-icon:before           { @include fi; content: "\e9b3"; top: 2px; }
+.unreal-icon:before        { @include fi; content: "u";     top: 2px; }
+.urweb-icon:before         { @include fi; content: "\e9ba"; top: 4px; font-size: 18px; left: -1px; @include sharpen; }
+.v8-icon:before            { @include fi; content: "\ea1f"; top: 3px; font-size: 16px; }
+.v8-turbofan-icon:before   { @include fi; content: "\eaac"; top: 3px; font-size: 17px; }
+.vagrant-icon:before       { @include fi; content: "V";     top: 2px; font-size: 14px; }
+.varnish-icon:before       { @include fi; content: "\e9b4"; top: 1px; font-size: 14px; }
+.velocity-icon:before      { @include fi; content: "\2b94"; top: 3px; font-size: 17px; transform: scale(1.1); }
+.verilog-icon:before       { @include fi; content: "\e949"; top: 2px; }
+.vertex-icon:before        { @include fi; content: "\ea79"; top: 2px; font-size: 16px; }
+.vhdl-icon:before          { @include fi; content: "\e9aa"; top: 2px; }
+.video-icon:before         { @include fi; content: "\f057"; top: 1px; font-size: 14px; }
+.virtualbox-icon:before    { @include fi; content: "\ea3e"; top: 2px; font-size: 16px; }
+.visio-icon:before         { @include fi; content: "\ea83"; top: 2px; }
+.vmware-icon:before        { @include fi; content: "\ea49"; top: 3px; font-size: 16px; @include sharpen; }
+.vue-icon:before           { @include fi; content: "\e906"; top: 3px; }
+.vsts-icon:before          { @include fi; content: "\eac0"; top: 3px; font-size: 16px; left: -1px; }
+.wallaby-icon:before       { @include fi; content: "\231f"; top: 2px; }
+.walt-icon:before          { @include fi; content: "\eaba"; top: 3px; font-size: 16px; }
+.wasm-icon:before          { @include fi; content: "\ea70"; top: 2px; }
+.watchman-icon:before      { @include fi; content: "\ea4f"; top: 2px; }
+.wdl-icon:before           { @include fi; content: "\eab1"; top: 2px; }
+.webgl-icon:before         { @include fi; content: "\ea7b"; top: 3px; font-size: 18px; transform: scale(1.1); }
+.webpack-icon:before       { @include fi; content: "\ea61"; top: 3px; font-size: 16px; }
+.wercker-icon:before       { @include fi; content: "\ea19"; top: 2px; }
+.wix-icon:before           { @include fi; content: "\eab0"; top: 3px; font-size: 16px; }
+.word-icon:before          { @include fi; content: "\e9ed"; top: 2px; }
+.workbox-icon:before       { @include fi; content: "\eaa8"; top: 2px; }
+.wurst-icon:before         { @include fi; content: "\1f32d";top: 2px; font-size: 16px; }
+.xamarin-icon:before       { @include fi; content: "\ea77"; top: 2px; }
+.x10-icon:before           { @include fi; content: "\2169"; top: 2px; }
+.xmos-icon:before          { @include fi; content: "X";     top: 1px; font-size: 14px; }
+.xojo-icon:before          { @include fi; content: "\e9af"; top: 2px; }
+.xpages-icon:before        { @include fi; content: "\e9c5"; top: 2px; }
+.xtend-icon:before         { @include fi; content: "\e9c6"; top: 2px; }
+.yaml-icon:before          { @include fi; content: "y";     top: 2px; }
+.yang-icon:before          { @include fi; content: "\262f"; top: 2px; }
+.yara-icon:before          { @include fi; content: "\ea9f"; top: 2px; }
+.yarn-icon:before          { @include fi; content: "\ea1a"; top: 2px; font-size: 16px; }
+.yui-icon:before           { @include fi; content: "\ea00"; top: 2px; }
+.zbrush-icon:before        { @include fi; content: "\e9f2"; top: 2px; font-size: 16px; }
+.zephir-icon:before        { @include fi; content: "\e9c7"; top: 2px; @include thicken; }
+.zimpl-icon:before         { @include fi; content: "\e9c8"; top: 2px; font-size: 16px; left: 1px; }

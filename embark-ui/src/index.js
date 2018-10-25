@@ -15,6 +15,9 @@ import 'simple-line-icons/css/simple-line-icons.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
 // Dark theme
 import './css/coreui-dark.css';
+// Custom icons set from https://github.com/file-icons/atom
+import './css/icons.css';
+
 // Custom style
 import './index.css';
 
