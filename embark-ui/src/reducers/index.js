@@ -200,7 +200,13 @@ function compilingContract(state = false, action) {
   return state;
 }
 
-const DEFAULT_CREDENTIALS_STATE = {host: DEFAULT_HOST, token: '', authenticated: false};
+const DEFAULT_CREDENTIALS_STATE = {
+  host: DEFAULT_HOST,
+  token: '',
+  authenticated: false,
+  authenticating: false,
+  error: null
+};
 
 function credentials(state = DEFAULT_CREDENTIALS_STATE, action) {
   if (action.type === LOGOUT[SUCCESS]) {
@@ -208,15 +214,19 @@ function credentials(state = DEFAULT_CREDENTIALS_STATE, action) {
   }
 
   if (action.type === AUTHENTICATE[FAILURE]) {
-    return {error: action.error, authenticated: false};
+    return {error: action.error, ...DEFAULT_CREDENTIALS_STATE};
   }
 
   if (action.type === AUTHENTICATE[SUCCESS]) {
-    return {...state, ...{authenticated: true, token: action.token, host: action.host, error: null}};
+    return {...state, ...{authenticated: true, authenticating: false, token: action.token, host: action.host, error: null}};
   }
 
   if (action.type === FETCH_CREDENTIALS[SUCCESS]) {
     return {...state, ...{token: action.token, host: action.host}};
+  }
+
+  if (action.type === AUTHENTICATE[REQUEST]) {
+    return {...state, ...{authenticating: true, error: null}};
   }
 
   return state;

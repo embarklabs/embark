@@ -5,7 +5,8 @@ import {withRouter} from "react-router-dom";
 import routes from '../routes';
 import Login from '../components/Login';
 import Layout from "../components/Layout";
-import { DEFAULT_HOST } from '../constants';
+import {DEFAULT_HOST} from '../constants';
+import {getQueryToken, stripQueryToken} from '../utils/utils';
 
 import {
   authenticate, fetchCredentials, logout,
@@ -18,42 +19,57 @@ import {
 
 import {LIGHT_THEME, DARK_THEME} from '../constants';
 
-import { getCredentials, getAuthenticationError, getProcesses, getTheme } from '../reducers/selectors';
-
-const qs = require('qs');
+import {
+  getCredentials, getAuthenticationError, getProcesses, getTheme
+} from '../reducers/selectors';
 
 class AppContainer extends Component {
-  constructor (props) {
-    super(props);
-
-    this.queryStringAuthenticate();
-  }
-
-  queryStringAuthenticate() {
-    const token = qs.parse(this.props.location.search, {ignoreQueryPrefix: true}).token;
-
-    if (!token) {
-      return;
-    }
-    const host = process.env.NODE_ENV === 'development' ? DEFAULT_HOST : window.location.host;
-    if (token === this.props.credentials.token && this.props.credentials.host === host) {
-      return;
-    }
-    this.props.authenticate(host, token);
-  }
-
   componentDidMount() {
     this.props.fetchCredentials();
     this.props.fetchTheme();
   }
 
+  doAuthenticate() {
+    let {host, token} = this.props.credentials;
+    const queryToken = getQueryToken(this.props.location);
+
+    if (queryToken) {
+      host = DEFAULT_HOST;
+      token = queryToken;
+    }
+
+    this.props.authenticate(host, token);
+  }
+
   requireAuthentication() {
-    return this.props.credentials.token && this.props.credentials.host && !this.props.credentials.authenticated;
+    if (this.props.credentials.authenticating) {
+      return false;
+    }
+
+    const queryToken = getQueryToken(this.props.location);
+    if (queryToken && !(queryToken === this.props.credentials.token &&
+                        this.props.credentials.host === DEFAULT_HOST)) {
+      return true;
+    }
+
+    if (!this.props.credentials.authenticated &&
+        this.props.credentials.host &&
+        this.props.credentials.token) {
+      return true;
+    }
+
+    return false;
   }
 
   componentDidUpdate(){
     if (this.requireAuthentication()) {
-      this.props.authenticate(this.props.credentials.host, this.props.credentials.token);
+      this.doAuthenticate();
+    }
+
+    if (getQueryToken(this.props.location) &&
+        (!this.props.credentials.authenticating ||
+         this.props.credentials.authenticated)) {
+      this.props.history.replace(stripQueryToken(this.props.location));
     }
 
     if (this.props.credentials.authenticated && !this.props.initialized) {
@@ -64,7 +80,8 @@ class AppContainer extends Component {
   }
 
   shouldRenderLogin() {
-    return this.props.authenticationError || !this.props.credentials.authenticated;
+    return this.props.authenticationError ||
+      !(this.props.credentials.authenticated || this.props.credentials.authenticating);
   }
 
   toggleTheme() {
@@ -77,12 +94,18 @@ class AppContainer extends Component {
 
   renderBody() {
     if (this.shouldRenderLogin()) {
-      return <Login credentials={this.props.credentials} authenticate={this.props.authenticate} error={this.props.authenticationError} />;
+      return (
+          <Login credentials={this.props.credentials}
+                 authenticate={this.props.authenticate}
+                 error={this.props.authenticationError} />
+      );
+    } else if (this.props.credentials.authenticating) {
+      return <React.Fragment/>;
     }
     return (
-      <Layout location={this.props.location} 
+      <Layout location={this.props.location}
               logout={this.props.logout}
-              toggleTheme={() => this.toggleTheme()} 
+              toggleTheme={() => this.toggleTheme()}
               currentTheme={this.props.theme}>
         <React.Fragment>{routes}</React.Fragment>
       </Layout>
@@ -90,7 +113,11 @@ class AppContainer extends Component {
   }
 
   render() {
-    return <div className={(this.props.theme) + "-theme"}>{this.renderBody()}</div>;
+    return (
+      <div className={(this.props.theme) + "-theme"}>
+        {this.renderBody()}
+      </div>
+    );
   }
 }
 

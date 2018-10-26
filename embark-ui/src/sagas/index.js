@@ -273,6 +273,10 @@ export function *watchAuthenticateSuccess() {
   yield takeEvery(actions.AUTHENTICATE[actions.SUCCESS], saveCredentials);
 }
 
+export function *watchAuthenticateFailure() {
+  yield takeEvery(actions.AUTHENTICATE[actions.FAILURE], logout);
+}
+
 export function *watchFetchCredentials() {
   yield takeEvery(actions.FETCH_CREDENTIALS[actions.REQUEST], fetchCredentials);
 }
@@ -518,6 +522,7 @@ export default function *root() {
     fork(watchToggleBreakpoint),
     fork(watchAuthenticate),
     fork(watchAuthenticateSuccess),
+    fork(watchAuthenticateFailure),
     fork(watchLogout),
     fork(watchExplorerSearch),
     fork(watchFetchTheme),
