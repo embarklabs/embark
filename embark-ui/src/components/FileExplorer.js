@@ -149,17 +149,25 @@ decorators.Header = Header;
 class FileExplorer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {cursor: null};
+    this.state = {activeNodes: []};
   }
 
   onToggle(node, toggled) {
-    node.active = true;
+    node.active = toggled;
     if (node.children) {
       node.toggled = toggled;
     } else {
       this.props.fetchFile(node);
     }
-    this.setState({cursor: node});
+
+    let newNodes;
+    if (toggled) {
+      newNodes = this.state.activeNodes;
+      newNodes.push(node)
+    } else {
+      newNodes = this.state.activeNodes.filter(n => !this.nodeEquals(node, n))
+    }
+    this.setState({activeNodes: newNodes});
   }
 
   nodeEquals(a, b) {
@@ -168,25 +176,17 @@ class FileExplorer extends React.Component {
       a.name === b.name;
   }
 
-  isNodeInPath(a, b) {
-    return a && b && a.path && b.path &&
-      a.path !== b.path &&
-      b.path.indexOf(a.path) > -1;
-  }
-
   data(nodes) {
     let filtered = [];
     if (!Array.isArray(nodes)) return filtered;
 
-    const cursor = this.state.cursor;
+    const activeNodes = this.state.activeNodes;
     const showHidden = this.props.showHiddenFiles;
-    // we need a foreach to build an array instead of a
-    // filter to prevent mutating the original object (in props)
-    nodes.forEach(node => {
-      if (!showHidden && node.isHidden) return;
+
+    return nodes.reduce((filtered, node) => {
+      if (!showHidden && node.isHidden) return filtered;
       let updatedNode = {...node};
 
-      // if it's a folder, filter the children
       if (node.children) {
         const children = this.data(node.children);
         if (children.length) {
@@ -194,22 +194,14 @@ class FileExplorer extends React.Component {
         }
       }
 
-      // if this is the selected node, set it as active
-      if (this.nodeEquals(node, cursor)) {
-        updatedNode.active = cursor.active;
-        // if this node is the selected node and is a folder, set
-        // it as toggled (expanded) according to the selected node
-        if (node.children) updatedNode.toggled = cursor.toggled;
+      if (activeNodes.find(n => this.nodeEquals(node, n))) {
+        updatedNode.active = true;
+        if (node.children) updatedNode.toggled = true;
       }
-      // if this node is a folder, and it's a parent of the selected
-      // folder, force toggle it
-      if (node.children && this.isNodeInPath(node, cursor)) {
-        updatedNode.toggled = true;
-      }
-      filtered.push(updatedNode);
-    });
 
-    return filtered;
+      filtered.push(updatedNode);
+      return filtered;
+    }, []);
   }
 
   render() {
