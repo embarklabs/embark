@@ -2,10 +2,21 @@ import React from 'react';
 import {Link, withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, NavLink, Container, Alert} from 'reactstrap';
+import {
+  UncontrolledTooltip,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Nav,
+  NavItem,
+  NavLink,
+  Container,
+  Alert
+} from 'reactstrap';
 import {explorerSearch} from "../actions";
 import {LIGHT_THEME, DARK_THEME} from '../constants';
 import FontAwesome from 'react-fontawesome';
+import {  } from 'reactstrap';
 
 import "./Layout.css";
 
@@ -178,17 +189,30 @@ class Layout extends React.Component {
     return (
       <React.Fragment>
         <NavItem>
-          <NavLink href="https://embark.status.im" title="Documentation" rel="noopener noreferrer" target="_blank">
+          <NavLink id="open-documentation"
+                   href="https://embark.status.im"
+                   title="Documentation"
+                   rel="noopener noreferrer"
+                   target="_blank">
             <FontAwesome name="book" />
           </NavLink>
         </NavItem>
         <NavItem>
-          <NavLink href="https://github.com/embark-framework" title="Github" rel="noopener noreferrer" target="_blank">
+          <NavLink id="open-github"
+                   href="https://github.com/embark-framework"
+                   title="Github"
+                   rel="noopener noreferrer"
+                   target="_blank">
             <FontAwesome name="github" />
           </NavLink>
         </NavItem>
+        <UncontrolledTooltip target="open-documentation">
+          Open Embark documentation
+        </UncontrolledTooltip>
+        <UncontrolledTooltip target="open-github">
+          Open Github of Embark
+        </UncontrolledTooltip>
       </React.Fragment>
-      
     );
   }
 
