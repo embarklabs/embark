@@ -16,57 +16,53 @@ class TextEditorAsideContainer extends Component {
     this.props.fetchContracts();
   }
 
-  render() {
-    switch(this.props.currentAsideTab) {
+  renderContent(contract, index) {
+    switch (this.props.currentAsideTab) {
       case 'browser':
-        return <Preview />;
+        return <Preview/>;
       case 'debugger':
-        return this.props.contracts.map((contract, index) => {
-          return (
-            <Card key={'contract-' + index}>
-              <CardBody>
-                <h2>{contract.className} - Details</h2>
-                <ContractDebuggerContainer key={index} contract={contract} />
-              </CardBody>
-            </Card>
-          );
-        });
+        return (
+          <React.Fragment>
+            <h2>{contract.className} - Details</h2>
+            <ContractDebuggerContainer key={index} contract={contract}/>
+          </React.Fragment>
+        );
       case 'detail':
-        return this.props.contracts.map((contract, index) => {
-          return (
-            <Card key={'contract-' + index}>
-              <CardBody>
-                <h2>{contract.className} - Details</h2>
-                <ContractDetail key={index} contract={contract} />
-              </CardBody>
-            </Card>
-          );
-        });
+        return (
+          <React.Fragment>
+            <h2>{contract.className} - Details</h2>
+            <ContractDetail key={index} contract={contract}/>
+          </React.Fragment>
+        );
       case 'logger':
-        return this.props.contracts.map((contract, index) => {
-          return (
-            <Card key={'contract-' + index}>
-              <CardBody>
-                <h2>{contract.className} - Transactions</h2>
-                <ContractLoggerContainer key={index} contract={contract} />)
-              </CardBody>
-            </Card>
-          );
-        });
+        return (
+          <React.Fragment>
+            <h2>{contract.className} - Transactions</h2>
+            <ContractLoggerContainer key={index} contract={contract}/>)
+          </React.Fragment>
+        );
       case 'overview':
-        return this.props.contracts.map((contract, index) => {
-          return (
-            <Card key={'contract-' + index}>
-              <CardBody>
-                <h2>{contract.className} - Overview</h2>
-                <ContractOverviewContainer key={index} contract={contract} />
-              </CardBody>
-            </Card>
-          );
-        });
+        return (
+          <React.Fragment>
+            <h2>{contract.className} - Overview</h2>
+            <ContractOverviewContainer key={index} contract={contract}/>
+          </React.Fragment>
+        );
       default:
-        return <React.Fragment></React.Fragment>;
+        return '';
     }
+  }
+
+  render() {
+    return this.props.contracts.map((contract, index) => {
+      return (
+        <Card key={'contract-' + index}>
+          <CardBody>
+            {this.renderContent(contract, index)}
+          </CardBody>
+        </Card>
+      );
+    });
   }
 }
 
@@ -88,5 +84,5 @@ export default connect(
   mapStateToProps,
   {
     fetchContracts: contractsAction.request
-  },
+  }
 )(TextEditorAsideContainer);
