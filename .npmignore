@@ -1,2 +1,11 @@
-test_apps/
-test/
+.editorconfig
+.eslintrc.json
+.github
+.travis.yml
+.vscode
+CONTRIBUTING.md
+appveyor.yml
+header.png
+logo.png
+test
+test_apps
