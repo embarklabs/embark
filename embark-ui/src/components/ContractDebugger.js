@@ -64,7 +64,7 @@ class ContractDebugger extends Component {
           <Col>
             <br /><strong>Scopes</strong>
             <div>
-              <ReactJson src={{locals: this.props.debuggerInfo.locals, contract: this.props.debuggerInfo.globals}} theme="monokai" sortKeys={true} name={false} collapse={1} />
+              <ReactJson src={{locals: this.props.debuggerInfo.locals, contract: this.props.debuggerInfo.contract, globals: this.props.debuggerInfo.globals}} theme="monokai" sortKeys={true} name={false} collapse={1} style={{"overflow-x": "auto"}} shouldCollapse={(field) => { return (field.name === 'globals') }} />
             </div>
           </Col>
         </Row>

@@ -17,6 +17,11 @@ contract SimpleStorageTest is Ownable {
     storedData = x + 2;
   }
 
+  function set2(uint x) public onlyOwner {
+    storedData = x;
+    storedData = x + 2;
+  }
+
   function test(uint x) public {
     uint value = 1;
     assembly {
