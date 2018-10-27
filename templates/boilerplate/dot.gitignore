@@ -1,5 +1,6 @@
-.embark/
-node_modules/
-dist/
+.embark
 config/production/password
 config/livenet/password
+coverage
+dist
+node_modules
