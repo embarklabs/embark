@@ -56,7 +56,7 @@ class TextEditorAsideContainer extends Component {
   render() {
     return this.props.contracts.map((contract, index) => {
       return (
-        <Card key={'contract-' + index} className="explorer-aside-card">
+        <Card key={'contract-' + index} className="editor-aside-card rounded-0 border-top-0">
           <CardBody>
             {this.renderContent(contract, index)}
           </CardBody>

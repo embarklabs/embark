@@ -97,7 +97,11 @@ class ContractFunction extends Component {
   render() {
     return (
       <Card className="contract-function-container">
-        <CardHeader className={classnames({collapsable: !ContractFunction.isEvent(this.props.method), closed: !this.state.functionCollapse})}
+        <CardHeader className={classnames({
+          collapsable: !ContractFunction.isEvent(this.props.method),
+          'border-bottom-0': !this.state.functionCollapse,
+          'rounded': !this.state.functionCollapse
+        })}
                     onClick={() => this.toggleFunction()}>
           <CardTitle>
             {ContractFunction.isPureCall(this.props.method) && Boolean(this.props.method.inputs.length) &&
