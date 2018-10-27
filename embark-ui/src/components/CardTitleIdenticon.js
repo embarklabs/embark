@@ -13,7 +13,8 @@ CardTitleIdenticon.propTypes = {
   id: PropTypes.string,
   children: PropTypes.oneOfType([
     PropTypes.object,
-    PropTypes.array
+    PropTypes.array,
+    PropTypes.string
   ])
 };
 

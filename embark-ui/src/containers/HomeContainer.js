@@ -35,11 +35,11 @@ class HomeContainer extends Component {
   }
 
   isEmbark() {
-    return this.state.activeProcess === EMBARK_PROCESS_NAME
+    return this.state.activeProcess === EMBARK_PROCESS_NAME;
   }
 
   updateTab(processName = EMBARK_PROCESS_NAME) {
-    this.props.stopProcessLogs(this.state.activeProcess)
+    this.props.stopProcessLogs(this.state.activeProcess);
 
     this.props.fetchProcessLogs(processName, LOG_LIMIT);
     this.props.listenToProcessLogs(processName);
@@ -93,7 +93,13 @@ HomeContainer.propTypes = {
   postCommand: PropTypes.func,
   postCommandSuggestions: PropTypes.func,
   error: PropTypes.string,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  stopProcessLogs: PropTypes.func,
+  fetchProcessLogs: PropTypes.func,
+  listenToProcessLogs: PropTypes.func,
+  fetchContracts: PropTypes.func,
+  services: PropTypes.array,
+  contracts: PropTypes.array
 };
 
 function mapStateToProps(state) {
