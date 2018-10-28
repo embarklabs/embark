@@ -1,0 +1,6 @@
+{
+  "extends": "react-app",
+  "rules": {
+    "react/prop-types": "warn"
+  }
+}
