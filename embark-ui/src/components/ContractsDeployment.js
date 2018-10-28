@@ -160,10 +160,10 @@ class Web3Contract extends React.Component {
 
 const EmbarkContract = ({contract, toggleContractOverview}) => (
   <LayoutContract contract={contract} cardTitle={
-    <a href='#toggleContract' onClick={() => toggleContractOverview(contract)}>
-      {contract.address && `${contract.className} deployed at ${contract.address}`}
-      {!contract.address && `${contract.className} not deployed`}
-    </a>
+    <React.Fragment>
+      <a href='#toggleContract' onClick={() => toggleContractOverview(contract)}>{contract.className}</a>&nbsp;
+      <span>{contract.address && `deployed at ${contract.address}` || "not deployed"}</span>
+    </React.Fragment>
   }>
     {contract.address && <p><strong>Arguments:</strong> {JSON.stringify(contract.args)}</p>}
     {contract.transactionHash &&
