@@ -44,7 +44,7 @@ class SearchBar extends React.Component {
 
   render() {
     return (
-      <Form inline className={classNames('search-bar', 'mr-2', {hidden: this.props.hidden})}>
+      <Form inline className={classNames('search-bar', 'mr-2')}>
         {!this.props.loading &&
           <React.Fragment>
             <div className={classNames({'d-sm-down-none': !this.state.showForm})}>
