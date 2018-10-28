@@ -1,4 +1,5 @@
 .embark
+chains.json
 config/production/password
 config/livenet/password
 coverage
