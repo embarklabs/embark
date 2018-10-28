@@ -16,6 +16,10 @@
   background-color: #20a8d8;
 }
 
+.text-editor-container {
+  overflow: hidden;
+}
+
 .editor-aside {
   position: absolute;
   top: 0;
@@ -24,4 +28,14 @@
   bottom: 0;
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .editor-aside {
+    position: relative;
+  }
+
+  .aside-opened .text-editor-container {
+    max-height: 500px;
+  }
 }

@@ -8,6 +8,7 @@ import FileExplorerContainer from './FileExplorerContainer';
 import TextEditorToolbarContainer from './TextEditorToolbarContainer';
 import {fetchEditorTabs as fetchEditorTabsAction} from '../actions';
 import {getCurrentFile} from '../reducers/selectors';
+import classnames from 'classnames';
 
 import './EditorContainer.css';
 
@@ -52,27 +53,23 @@ class EditorContainer extends React.Component {
     return this.state.currentAsideTab.length ? 7 : 10;
   }
 
-  textEditorXsSize() {
-    return this.state.currentAsideTab.length ? 2 : 8;
-  }
-
   render() {
     return (
-      <Row noGutters className="h-100 editor--grid">
+      <Row noGutters className={classnames('h-100', 'editor--grid', {'aside-opened': this.state.currentAsideTab.length})}>
         <Col xs={12}>
           <TextEditorToolbarContainer openAsideTab={(newTab) => this.openAsideTab(newTab)}
                                       isContract={this.isContract()}
                                       currentFile={this.props.currentFile}
                                       activeTab={this.state.currentAsideTab}/>
         </Col>
-        <Col xs={4} md={2} xl={2} lg={2} className="border-right">
+        <Col sm={4} md={2} xl={2} lg={2} className="border-right">
           <FileExplorerContainer showHiddenFiles={this.state.showHiddenFiles} toggleShowHiddenFiles={() => this.toggleShowHiddenFiles()} />
         </Col>
-        <Col xs={this.textEditorXsSize()} md={this.textEditorMdSize()} style={{overflow: 'hidden'}}>
+        <Col sm={8} md={this.textEditorMdSize()} className="text-editor-container">
           <TextEditorContainer currentFile={this.props.currentFile} onFileContentChange={(newContent) => this.onFileContentChange(newContent)} />
         </Col>
         {this.state.currentAsideTab &&
-        <Col xs={6} md={3} className="border-left-0 relative">
+        <Col sm={12} md={3} className="border-left-0 relative">
           <div className="editor-aside">
             <TextEditorAsideContainer currentAsideTab={this.state.currentAsideTab}
                                       currentFile={this.props.currentFile}/>
