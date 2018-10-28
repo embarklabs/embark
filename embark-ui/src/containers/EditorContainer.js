@@ -62,7 +62,8 @@ class EditorContainer extends React.Component {
         <Col xs={12}>
           <TextEditorToolbarContainer openAsideTab={(newTab) => this.openAsideTab(newTab)}
                                       isContract={this.isContract()}
-                                      currentFile={this.props.currentFile} />
+                                      currentFile={this.props.currentFile}
+                                      activeTab={this.state.currentAsideTab}/>
         </Col>
         <Col xs={4} md={2} xl={2} lg={2} className="border-right">
           <FileExplorerContainer showHiddenFiles={this.state.showHiddenFiles} toggleShowHiddenFiles={() => this.toggleShowHiddenFiles()} />

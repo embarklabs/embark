@@ -1,51 +1,72 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {Button, Nav, NavLink} from 'reactstrap';
+import classnames from 'classnames';
 import FontAwesomeIcon from 'react-fontawesome';
 
-const TextEditorToolbar = (props) => (
-  <ol className="breadcrumb mb-0">
-    <li className="breadcrumb-item">
-      <Button color="success" size="sm" className="mr-1" onClick={props.save}>
-        <FontAwesomeIcon className="mr-2" name="save"/>
-        Save
-      </Button>
-      <Button color="danger" size="sm" onClick={props.remove}>
-        <FontAwesomeIcon className="mr-2" name="trash"/>
-        Delete
-      </Button>
-    </li>
-    <li className="breadcrumb-menu">
-      <Nav className="btn-group">
-        {props.isContract &&
-          <React.Fragment>
-            <NavLink className="btn" href="#" onClick={() => props.openAsideTab('overview')}>
-              <FontAwesomeIcon className="mr-2" name="info-circle" /> Overview
-            </NavLink>
-            <NavLink className="btn" href="#" onClick={() => props.openAsideTab('detail')}>
-              <FontAwesomeIcon className="mr-2" name="file-text-o" /> Details
-            </NavLink>
-            <NavLink className="btn" href="#" onClick={() => props.openAsideTab('logger')}>Logger</NavLink>
-            <NavLink className="btn" href="#" onClick={() => props.openAsideTab('debugger')}>
-              <FontAwesomeIcon className="mr-2" name="bug" /> Debugger
-            </NavLink>
-          </React.Fragment>
-        }
-        <NavLink className="btn" href="#" onClick={() => props.openAsideTab('browser')}>
-          <FontAwesomeIcon className="mr-2" name="compass" /> Browser
-        </NavLink>
-      </Nav>
+const TextEditorToolbarTabs = {
+  Overview: 'overview',
+  Detail: 'detail',
+  Logger: 'logger',
+  Debugger: 'debugger',
+  Browser: 'browser'
+};
 
-    </li>
-  </ol>
-);
+class TextEditorToolbar extends Component {
+
+  isActiveTab(tab) {
+    return this.props.activeTab === tab;
+  }
+
+  render() {
+    return (
+      <ol className="breadcrumb mb-0">
+        <li className="breadcrumb-item">
+          <Button color="success" size="sm" className="mr-1" onClick={this.props.save}>
+            <FontAwesomeIcon className="mr-2" name="save"/>
+            Save
+          </Button>
+          <Button color="danger" size="sm" onClick={this.props.remove}>
+            <FontAwesomeIcon className="mr-2" name="trash"/>
+            Delete
+          </Button>
+        </li>
+        <li className="breadcrumb-menu">
+          <Nav className="btn-group">
+            {this.props.isContract &&
+              <React.Fragment>
+                <NavLink className={classnames('btn', { active: this.isActiveTab(TextEditorToolbarTabs.Overview)})} onClick={() => this.props.openAsideTab(TextEditorToolbarTabs.Overview)}>
+                  <FontAwesomeIcon className="mr-2" name="info-circle" /> Overview
+                </NavLink>
+                <NavLink className={classnames('btn', { active: this.isActiveTab(TextEditorToolbarTabs.Detail)})} href="#" onClick={() => this.props.openAsideTab(TextEditorToolbarTabs.Detail)}>
+                  <FontAwesomeIcon className="mr-2" name="file-text-o" /> Details
+                </NavLink>
+                <NavLink className={classnames('btn', { active: this.isActiveTab(TextEditorToolbarTabs.Logger)})} href="#" onClick={() => this.props.openAsideTab(TextEditorToolbarTabs.Logger)}>
+                  <FontAwesomeIcon className="mr-2" name="file-text-o" /> Logger
+                </NavLink>
+                <NavLink className={classnames('btn', { active: this.isActiveTab(TextEditorToolbarTabs.Debugger)})} href="#" onClick={() => this.props.openAsideTab(TextEditorToolbarTabs.Debugger)}>
+                  <FontAwesomeIcon className="mr-2" name="bug" /> Debugger
+                </NavLink>
+              </React.Fragment>
+            }
+            <NavLink className={classnames('btn', { active: this.isActiveTab(TextEditorToolbarTabs.Browser)})} href="#" onClick={() => this.props.openAsideTab(TextEditorToolbarTabs.Browser)}>
+              <FontAwesomeIcon className="mr-2" name="compass" /> Browser
+            </NavLink>
+          </Nav>
+
+        </li>
+      </ol>
+    );
+  }
+}
 
 TextEditorToolbar.propTypes = {
   isContract: PropTypes.bool,
   save: PropTypes.func,
   remove: PropTypes.func,
   toggleShowHiddenFiles: PropTypes.func,
-  openAsideTab: PropTypes.func
+  openAsideTab: PropTypes.func,
+  activeTab: PropTypes.string
 };
 
 export default TextEditorToolbar;
