@@ -10,3 +10,22 @@
   right: 0;
   left: 0;
 }
+
+.text-editor__debuggerLine {
+  opacity: 0.4;
+  background-color: #20a8d8;
+}
+
+.explorer-aside-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+}
+
+.contract-function-container .card-header.closed {
+  border-bottom: none;
+  border-radius: 0.25rem;
+}

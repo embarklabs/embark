@@ -54,7 +54,7 @@ class SearchBar extends React.Component {
                     value={this.state.searchValue}
                     onBlur={() => this.hideForm()}
                     onKeyPress={e => this.onKeyPress(e)}/>
-              <Button className='search-bar__button' color="secondary" onClick={(e) => this.onSubmit(e)}>
+              <Button className="search-bar__button" color="secondary" onClick={(e) => this.onSubmit(e)}>
                 <FontAwesome name="search"/>
               </Button>
             </div>

@@ -5,7 +5,6 @@ import FontAwesomeIcon from 'react-fontawesome';
 import classNames from 'classnames';
 
 import {DARK_THEME, LIGHT_THEME} from '../constants';
-import './TextEditor.css';
 
 const SUPPORTED_LANGUAGES = ['css', 'sol', 'html', 'json'];
 const DEFAULT_LANGUAGE = 'javascript';

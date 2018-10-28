@@ -8,6 +8,7 @@ import {
   Label,
   Input,
   Button,
+  Badge,
   Card,
   CardBody,
   CardHeader,
@@ -20,6 +21,7 @@ import {
 import GasStationContainer from "../containers/GasStationContainer";
 import {formatContractForDisplay} from '../utils/presentation';
 import FontAwesome from 'react-fontawesome';
+import classnames from 'classnames';
 
 import "./ContractOverview.css";
 
@@ -94,69 +96,75 @@ class ContractFunction extends Component {
 
   render() {
     return (
-        <Card className="contract-function-container">
-          <CardHeader className="collapsable" onClick={() => this.toggleFunction()}>
-            <CardTitle>
-              {ContractFunction.isPureCall(this.props.method) &&
-                <button className="btn btn-warning btn-sm float-right" onClick={(e) => this.handleCall(e)}>call</button>
-              }
-              {ContractFunction.isEvent(this.props.method) &&
-              <button className="btn btn-info btn-sm float-right">event</button>
-              }
-              {this.props.method.name}({this.props.method.inputs.map(input => input.name).join(', ')})
-            </CardTitle>
-          </CardHeader>
-          <Collapse isOpen={this.state.functionCollapse} className="relative">
-            <CardBody>
-              <Form method="post" inline>
-                {this.props.method.inputs.map(input => (
-                  <FormGroup key={input.name}>
-                    <Label for={input.name} className="mr-2 font-weight-bold">{input.name}</Label>
-                    <Input name={input.name} id={input.name} placeholder={input.type}
-                           onChange={(e) => this.handleChange(e, input.name)}/>
-                  </FormGroup>
-                ))}
-              </Form>
-              {!ContractFunction.isPureCall(this.props.method) &&
-              <Col xs={12} className="mt-3">
-                <Row>
-                  <strong className="collapsable" onClick={() => this.toggleOptions()}>
-                    <FontAwesome name={this.state.optionsCollapse ? 'caret-down' : 'caret-right'} className="mr-2"/>
-                    Advanced Options
-                  </strong>
-                </Row>
-                <Row>
-                  <Collapse isOpen={this.state.optionsCollapse} className="pl-3">
-                    <Form method="post" inline className="gas-price-form ">
-                      <FormGroup key="gasPrice">
-                        <Label for="gasPrice" className="mr-2">Gas Price (in GWei)(optional)</Label>
-                        <Input name="gasPrice" id="gasPrice" placeholder="uint256"
-                               value={this.state.inputs.gasPrice || ''}
-                               onChange={(e) => this.handleChange(e, 'gasPrice')}/>
-                        <Button onClick={(e) => this.autoSetGasPrice(e)} title="Automatically set the gas price to what is currently in the estimator (default: safe low)">
-                          Auto-set
-                        </Button>
-                      </FormGroup>
-                    </Form>
-                    <p className="collapsable mb-2" onClick={() => this.toggleGasPrice()}>
-                      <FontAwesome name={this.state.gasPriceCollapse ? 'caret-down' : 'caret-right'} className="mr-2"/>
-                      Gas price estimator
-                    </p>
-                    <Collapse isOpen={this.state.gasPriceCollapse}>
-                      <GasStationContainer ref={instance => {
-                        if (instance) this.gasStation = instance.getWrappedInstance();
-                      }}/>
-                    </Collapse>
+      <Card className="contract-function-container">
+        <CardHeader className={classnames({collapsable: !ContractFunction.isEvent(this.props.method), closed: !this.state.functionCollapse})}
+                    onClick={() => this.toggleFunction()}>
+          <CardTitle>
+            {ContractFunction.isPureCall(this.props.method) && Boolean(this.props.method.inputs.length) &&
+            <Badge color="warning" className="float-right p-2">call</Badge>
+            }
+            {ContractFunction.isPureCall(this.props.method) && !this.props.method.inputs.length &&
+            <Button color="warning" size="sm" className="float-right" onClick={(e) => this.handleCall(e)}>call</Button>
+            }
+            {ContractFunction.isEvent(this.props.method) &&
+            <Badge color="info" className="float-right p-2">event</Badge>
+            }
+            {this.props.method.name}({this.props.method.inputs.map(input => input.name).join(', ')})
+          </CardTitle>
+        </CardHeader>
+        {!ContractFunction.isEvent(this.props.method) &&
+        <Collapse isOpen={this.state.functionCollapse} className="relative">
+          <CardBody>
+            <Form method="post" inline>
+              {this.props.method.inputs.map(input => (
+                <FormGroup key={input.name}>
+                  <Label for={input.name} className="mr-2 font-weight-bold">{input.name}</Label>
+                  <Input name={input.name} id={input.name} placeholder={input.type}
+                         onChange={(e) => this.handleChange(e, input.name)}/>
+                </FormGroup>
+              ))}
+            </Form>
+            {!ContractFunction.isPureCall(this.props.method) &&
+            <Col xs={12} className="mt-3">
+              <Row>
+                <strong className="collapsable" onClick={() => this.toggleOptions()}>
+                  <FontAwesome name={this.state.optionsCollapse ? 'caret-down' : 'caret-right'} className="mr-2"/>
+                  Advanced Options
+                </strong>
+              </Row>
+              <Row>
+                <Collapse isOpen={this.state.optionsCollapse} className="pl-3">
+                  <Form method="post" inline className="gas-price-form ">
+                    <FormGroup key="gasPrice">
+                      <Label for="gasPrice" className="mr-2">Gas Price (in GWei)(optional)</Label>
+                      <Input name="gasPrice" id="gasPrice" placeholder="uint256"
+                             value={this.state.inputs.gasPrice || ''}
+                             onChange={(e) => this.handleChange(e, 'gasPrice')}/>
+                      <Button onClick={(e) => this.autoSetGasPrice(e)}
+                              title="Automatically set the gas price to what is currently in the estimator (default: safe low)">
+                        Auto-set
+                      </Button>
+                    </FormGroup>
+                  </Form>
+                  <p className="collapsable mb-2" onClick={() => this.toggleGasPrice()}>
+                    <FontAwesome name={this.state.gasPriceCollapse ? 'caret-down' : 'caret-right'} className="mr-2"/>
+                    Gas price estimator
+                  </p>
+                  <Collapse isOpen={this.state.gasPriceCollapse}>
+                    <GasStationContainer ref={instance => {
+                      if (instance) this.gasStation = instance.getWrappedInstance();
+                    }}/>
                   </Collapse>
-                </Row>
-              </Col>
-              }
-              <Button className="contract-function-button" color="primary" disabled={this.callDisabled()}
-                      onClick={(e) => this.handleCall(e)}>
-                {this.buttonTitle()}
-              </Button>
-            </CardBody>
-          </Collapse>
+                </Collapse>
+              </Row>
+            </Col>
+            }
+            <Button className="contract-function-button float-right" color="primary" disabled={this.callDisabled()}
+                    onClick={(e) => this.handleCall(e)}>
+              {this.buttonTitle()}
+            </Button>
+            <div className="clearfix"/>
+          </CardBody>
           {this.props.contractFunctions && this.props.contractFunctions.length > 0 && <CardFooter>
             <ListGroup>
               {this.props.contractFunctions.map(contractFunction => (
@@ -167,7 +175,9 @@ class ContractFunction extends Component {
               ))}
             </ListGroup>
           </CardFooter>}
-        </Card>
+        </Collapse>}
+
+      </Card>
     );
   }
 }
@@ -193,7 +203,7 @@ const ContractOverview = (props) => {
     <div>
       {(contractDisplay.state === 'Deployed') && <div>Deployed at {contractDisplay.address}</div>}
       {(contractDisplay.state !== 'Deployed') && <div>{contractDisplay.address}</div>}
-      <br />
+      <br/>
       {contractProfile.methods
         .filter((method) => {
           return props.onlyConstructor ? method.type === 'constructor' : method.type !== 'constructor';
@@ -202,7 +212,7 @@ const ContractOverview = (props) => {
                                          method={method}
                                          contractFunctions={filterContractFunctions(props.contractFunctions, contractProfile.name, method.name)}
                                          contractProfile={contractProfile}
-                                         postContractFunction={props.postContractFunction} />)}
+                                         postContractFunction={props.postContractFunction}/>)}
     </div>
   );
 };
