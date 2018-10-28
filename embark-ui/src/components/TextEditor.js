@@ -120,8 +120,8 @@ class TextEditor extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.currentFile.content && this.props.currentFile.content !== prevProps.currentFile.content) {
-      editor.setValue(this.props.currentFile.content);
+    if (this.props.currentFile.content !== prevProps.currentFile.content) {
+      editor.setValue(this.props.currentFile.content || '');
     }
 
     this.updateMarkers();
