@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import FontAwesomeIcon from 'react-fontawesome';
 import classNames from 'classnames';
 
-import {DARK_THEME} from '../constants';
+import {DARK_THEME, LIGHT_THEME} from '../constants';
 import './TextEditor.css';
 
 const SUPPORTED_LANGUAGES = ['css', 'sol', 'html', 'json'];
@@ -137,18 +137,20 @@ class TextEditor extends React.Component {
 
   renderTabs() {
     return (
-      <ul className="list-inline m-0 p-2">
+      <ul className="list-inline m-0 p-0">
         {this.props.editorTabs.map(file => (
-          <li key={file.name} className={classNames("m-1", "list-inline-item", "border-right")}>
+          <li key={file.name} className={classNames("p-2", "list-inline-item", "mr-0", "border-right", {
+            'bg-white': file.active && LIGHT_THEME === this.props.theme,
+            'bg-black': file.active && DARK_THEME === this.props.theme
+          })}>
             <a
               href="#switch-tab"
               onClick={() => this.props.addEditorTabs(file)}
-              className={classNames('p-2', {'text-muted': !file.active},
-                                           {'text-primary': file.active})
-            }>
+              className="p-2 text-muted"
+            >
               {file.name}
             </a>
-            <FontAwesomeIcon style={{cursor: 'pointer'}} onClick={() => this.props.removeEditorTabs(file)} className="mx-1" name="close"/>
+            <FontAwesomeIcon style={{cursor: 'pointer'}} onClick={() => this.props.removeEditorTabs(file)} className="px-1" name="close"/>
           </li>
         ))}
       </ul>
