@@ -71,8 +71,12 @@ class EditorContainer extends React.Component {
         <Col xs={this.textEditorXsSize()} md={this.textEditorMdSize()} style={{overflow: 'hidden'}}>
           <TextEditorContainer currentFile={this.props.currentFile} onFileContentChange={(newContent) => this.onFileContentChange(newContent)} />
         </Col>
-        {this.state.currentAsideTab && <Col xs={6} md={3} className="editor-aside border-left-0">
-          <TextEditorAsideContainer currentAsideTab={this.state.currentAsideTab} currentFile={this.props.currentFile} />
+        {this.state.currentAsideTab &&
+        <Col xs={6} md={3} className="border-left-0 relative">
+          <div className="editor-aside">
+            <TextEditorAsideContainer currentAsideTab={this.state.currentAsideTab}
+                                      currentFile={this.props.currentFile}/>
+          </div>
         </Col>}
       </Row>
     );
