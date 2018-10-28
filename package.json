@@ -27,7 +27,7 @@
   },
   "main": "./lib/index.js",
   "scripts": {
-    "lint": "eslint bin/embark lib/",
+    "lint": "eslint bin/embark lib/ embark-ui/src",
     "prepack": "cd embark-ui && npm install && npm run build",
     "test": "npm-run-all lint test:*",
     "test:embark": "mocha test/ --no-timeouts --exit",
