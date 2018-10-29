@@ -2,7 +2,6 @@
 const {assert} = require('chai');
 const os = require('os');
 
-process.env.DAPP_PATH = '/home/testuser/src/dapp_path/';
 const fs = require('../lib/core/fs');
 
 describe('fs', () => {
@@ -19,6 +18,7 @@ describe('fs', () => {
   const helperFunctions = [
     'dappPath',
     'embarkPath',
+    'pkgPath',
     'tmpDir'
   ];
 
