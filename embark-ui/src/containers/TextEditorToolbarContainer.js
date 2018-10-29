@@ -34,7 +34,7 @@ TextEditorToolbarContainer.propTypes = {
   removeFile: PropTypes.func,
   toggleShowHiddenFiles: PropTypes.func,
   openAsideTab: PropTypes.func,
-  activeTab: PropTypes.string
+  activeTab: PropTypes.object
 };
 
 export default connect(

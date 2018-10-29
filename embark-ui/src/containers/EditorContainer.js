@@ -15,7 +15,7 @@ import './EditorContainer.css';
 class EditorContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {currentAsideTab: '', showHiddenFiles: false, currentFile: this.props.currentFile};
+    this.state = {currentAsideTab: {}, showHiddenFiles: false, currentFile: this.props.currentFile};
   }
 
   componentDidMount() {
@@ -43,19 +43,19 @@ class EditorContainer extends React.Component {
   }
 
   openAsideTab(newTab) {
-    if (newTab === this.state.currentAsideTab) {
-      return this.setState({currentAsideTab: ''});
+    if (newTab.label === this.state.currentAsideTab.label) {
+      return this.setState({currentAsideTab: {}});
     }
     this.setState({currentAsideTab: newTab});
   }
 
   textEditorMdSize() {
-    return this.state.currentAsideTab.length ? 7 : 10;
+    return this.state.currentAsideTab.label ? 7 : 10;
   }
 
   render() {
     return (
-      <Row noGutters className={classnames('h-100', 'editor--grid', {'aside-opened': this.state.currentAsideTab.length})}>
+      <Row noGutters className={classnames('h-100', 'editor--grid', {'aside-opened': this.state.currentAsideTab.label})}>
         <Col xs={12}>
           <TextEditorToolbarContainer openAsideTab={(newTab) => this.openAsideTab(newTab)}
                                       isContract={this.isContract()}

@@ -10,6 +10,7 @@ import ContractDetail from '../components/ContractDetail';
 import ContractTransactionsContainer from './ContractTransactionsContainer';
 import ContractOverviewContainer from '../containers/ContractOverviewContainer';
 import ContractDebuggerContainer from '../containers/ContractDebuggerContainer';
+import { TextEditorToolbarTabs } from '../components/TextEditorToolbar';
 
 class TextEditorAsideContainer extends Component {
   componentDidMount() {
@@ -18,28 +19,28 @@ class TextEditorAsideContainer extends Component {
 
   renderContent(contract, index) {
     switch (this.props.currentAsideTab) {
-      case 'debugger':
+      case TextEditorToolbarTabs.Debugger:
         return (
           <React.Fragment>
             <h2>{contract.className} - Debugger</h2>
             <ContractDebuggerContainer key={index} contract={contract}/>
           </React.Fragment>
         );
-      case 'detail':
+      case TextEditorToolbarTabs.Details:
         return (
           <React.Fragment>
             <h2>{contract.className} - Details</h2>
             <ContractDetail key={index} contract={contract}/>
           </React.Fragment>
         );
-      case 'transactions':
+      case TextEditorToolbarTabs.Transactions:
         return (
           <React.Fragment>
             <h2>{contract.className} - Transactions</h2>
             <ContractTransactionsContainer key={index} contract={contract}/>
           </React.Fragment>
         );
-      case 'overview':
+      case TextEditorToolbarTabs.Interact:
         return (
           <React.Fragment>
             <h2>{contract.className} - Interact</h2>
@@ -52,7 +53,7 @@ class TextEditorAsideContainer extends Component {
   }
 
   render() {
-    if (this.props.currentAsideTab === 'browser') {
+    if (this.props.currentAsideTab === TextEditorToolbarTabs.Browser) {
       return <Preview/>;
     }
     return this.props.contracts.map((contract, index) => {
@@ -75,7 +76,7 @@ function mapStateToProps(state, props) {
 
 TextEditorAsideContainer.propTypes = {
   currentFile: PropTypes.object,
-  currentAsideTab: PropTypes.string,
+  currentAsideTab: PropTypes.object,
   contract: PropTypes.array,
   fetchContracts: PropTypes.func,
   contracts: PropTypes.array
