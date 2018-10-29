@@ -112,7 +112,7 @@ const Header = ({style, node}) => {
         icon = 'text-warning fa fa-cogs';
         break;
       case 'contracts':
-        icon = 'text-success icon appstore-icon';
+        icon = 'text-success fa fa-file-text';
         break;
       case 'app':
         icon = 'text-primary fa fa-code';
