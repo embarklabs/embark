@@ -22,7 +22,8 @@ class TextEditorToolbarContainer extends Component {
                               toggleShowHiddenFiles={this.props.toggleShowHiddenFiles}
                               openAsideTab={this.props.openAsideTab}
                               save={() => this.save()}
-                              remove={() => this.remove()} />;
+                              remove={() => this.remove()}
+                              activeTab={this.props.activeTab} />;
   }
 }
 
@@ -32,7 +33,8 @@ TextEditorToolbarContainer.propTypes = {
   saveFile: PropTypes.func,
   removeFile: PropTypes.func,
   toggleShowHiddenFiles: PropTypes.func,
-  openAsideTab: PropTypes.func
+  openAsideTab: PropTypes.func,
+  activeTab: PropTypes.string
 };
 
 export default connect(
