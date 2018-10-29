@@ -49,7 +49,7 @@ class EditorContainer extends React.Component {
   }
 
   textEditorMdSize() {
-    return this.state.currentAsideTab.length ? 7 : 10
+    return this.state.currentAsideTab.length ? 7 : 10;
   }
 
   textEditorXsSize() {

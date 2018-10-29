@@ -163,9 +163,9 @@ class FileExplorer extends React.Component {
     let newNodes;
     if (toggled) {
       newNodes = this.state.activeNodes;
-      newNodes.push(node)
+      newNodes.push(node);
     } else {
-      newNodes = this.state.activeNodes.filter(n => !this.nodeEquals(node, n))
+      newNodes = this.state.activeNodes.filter(n => !this.nodeEquals(node, n));
     }
     this.setState({activeNodes: newNodes});
   }
@@ -215,7 +215,7 @@ class FileExplorer extends React.Component {
         />
 
         <Label className="hidden-toogle mb-0 pt-2 pr-2 pb-1 border-top text-right">
-          <span className="mr-2 align-top" style={{"font-size": "12px"}}>Show hidden files</span>
+          <span className="mr-2 align-top" style={{"fontSize": "12px"}}>Show hidden files</span>
           <AppSwitch color="success" variant="pill" size="sm" onChange={this.props.toggleShowHiddenFiles}/>
         </Label>
        </div>

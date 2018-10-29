@@ -9,7 +9,7 @@ const CONSTRUCTOR = 'constructor';
 const PURE = 'pure';
 const VIEW = 'view';
 
-class ContractLogger extends React.Component {
+class ContractTransactions extends React.Component {
   constructor(props) {
     super(props);
     this.state = {method: '', event: '', status: TX_STATES['Any']};
@@ -139,11 +139,11 @@ class ContractLogger extends React.Component {
   }
 }
 
-ContractLogger.propTypes = {
+ContractTransactions.propTypes = {
   contractLogs: PropTypes.array,
   contractEvents: PropTypes.array,
   contract: PropTypes.object.isRequired
 };
 
-export default ContractLogger;
+export default ContractTransactions;
 

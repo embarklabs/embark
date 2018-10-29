@@ -25,8 +25,3 @@
   overflow-x: hidden;
   overflow-y: auto;
 }
-
-.contract-function-container .card-header.closed {
-  border-bottom: none;
-  border-radius: 0.25rem;
-}

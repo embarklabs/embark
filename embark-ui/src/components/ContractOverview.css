@@ -9,3 +9,8 @@
   border: 0;
   box-shadow: none !important;
 }
+
+.contract-function-container .card-header.closed {
+  border-bottom: none;
+  border-radius: 0.25rem;
+}

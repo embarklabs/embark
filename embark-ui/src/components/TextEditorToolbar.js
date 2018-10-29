@@ -7,7 +7,7 @@ import FontAwesomeIcon from 'react-fontawesome';
 const TextEditorToolbarTabs = {
   Overview: 'overview',
   Detail: 'detail',
-  Logger: 'logger',
+  Transactions: 'transactions',
   Debugger: 'debugger',
   Browser: 'browser'
 };
@@ -41,8 +41,8 @@ class TextEditorToolbar extends Component {
                 <NavLink className={classnames('btn', { active: this.isActiveTab(TextEditorToolbarTabs.Detail)})} href="#" onClick={() => this.props.openAsideTab(TextEditorToolbarTabs.Detail)}>
                   <FontAwesomeIcon className="mr-2" name="info-circle" /> Details
                 </NavLink>
-                <NavLink className={classnames('btn', { active: this.isActiveTab(TextEditorToolbarTabs.Logger)})} href="#" onClick={() => this.props.openAsideTab(TextEditorToolbarTabs.Logger)}>
-                  <FontAwesomeIcon className="mr-2" name="list-alt" /> Logger</NavLink>
+                <NavLink className={classnames('btn', { active: this.isActiveTab(TextEditorToolbarTabs.Logger)})} href="#" onClick={() => this.props.openAsideTab(TextEditorToolbarTabs.Transactions)}>
+                  <FontAwesomeIcon className="mr-2" name="list-alt" /> Transactions</NavLink>
                 </NavLink>
                 <NavLink className={classnames('btn', { active: this.isActiveTab(TextEditorToolbarTabs.Debugger)})} href="#" onClick={() => this.props.openAsideTab(TextEditorToolbarTabs.Debugger)}>
                   <FontAwesomeIcon className="mr-2" name="bug" /> Debugger

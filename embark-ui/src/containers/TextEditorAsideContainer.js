@@ -7,7 +7,7 @@ import Preview from '../components/Preview';
 import {contracts as contractsAction} from '../actions';
 import {getContractsByPath} from "../reducers/selectors";
 import ContractDetail from '../components/ContractDetail';
-import ContractLoggerContainer from '../containers/ContractLoggerContainer';
+import ContractTransactionsContainer from './ContractTransactionsContainer';
 import ContractOverviewContainer from '../containers/ContractOverviewContainer';
 import ContractDebuggerContainer from '../containers/ContractDebuggerContainer';
 
@@ -18,8 +18,6 @@ class TextEditorAsideContainer extends Component {
 
   renderContent(contract, index) {
     switch (this.props.currentAsideTab) {
-      case 'browser':
-        return <Preview/>;
       case 'debugger':
         return (
           <React.Fragment>
@@ -34,11 +32,11 @@ class TextEditorAsideContainer extends Component {
             <ContractDetail key={index} contract={contract}/>
           </React.Fragment>
         );
-      case 'logger':
+      case 'transactions':
         return (
           <React.Fragment>
             <h2>{contract.className} - Transactions</h2>
-            <ContractLoggerContainer key={index} contract={contract}/>
+            <ContractTransactionsContainer key={index} contract={contract}/>
           </React.Fragment>
         );
       case 'overview':
@@ -54,6 +52,9 @@ class TextEditorAsideContainer extends Component {
   }
 
   render() {
+    if (this.props.currentAsideTab === 'browser') {
+      return <Preview/>;
+    }
     return this.props.contracts.map((contract, index) => {
       return (
         <Card key={'contract-' + index} className="editor-aside-card rounded-0 border-top-0">

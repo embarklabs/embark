@@ -3,11 +3,11 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {contractEvents as contractEventsAction, contractLogs as contractLogsAction, listenToContractLogs, listenToContractEvents} from '../actions';
 
-import ContractLogger from '../components/ContractLogger';
+import ContractTransactions from '../components/ContractTransactions';
 import DataWrapper from "../components/DataWrapper";
 import {getContractLogsByContract, getContractEventsByContract} from "../reducers/selectors";
 
-class ContractLoggerContainer extends Component {
+class ContractTransactionsContainer extends Component {
   componentDidMount() {
     if (this.props.contractLogs.length === 0) {
       this.props.listenToContractLogs();
@@ -23,9 +23,9 @@ class ContractLoggerContainer extends Component {
   render() {
     return (
       <DataWrapper shouldRender={this.props.contractLogs !== undefined } {...this.props} render={() => (
-        <ContractLogger contractLogs={this.props.contractLogs} 
-                        contractEvents={this.props.contractEvents}
-                        contract={this.props.contract}/>
+        <ContractTransactions contractLogs={this.props.contractLogs}
+                              contractEvents={this.props.contractEvents}
+                              contract={this.props.contract}/>
       )} />
     );
   }
@@ -38,7 +38,7 @@ function mapStateToProps(state, props) {
   };
 }
 
-ContractLoggerContainer.propTypes = {
+ContractTransactionsContainer.propTypes = {
   contract: PropTypes.object,
   contractLogs: PropTypes.array,
   contractEvents: PropTypes.array,
@@ -57,4 +57,4 @@ export default connect(
     fetchContractEvents: contractEventsAction.request,
     listenToContractEvents: listenToContractEvents
   }
-)(ContractLoggerContainer);
+)(ContractTransactionsContainer);
