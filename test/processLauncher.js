@@ -5,13 +5,21 @@ const TestLogger = require('../lib/utils/test_logger');
 const path = require('path');
 const ProcessLauncher = require('../lib/core/processes/processLauncher');
 
+let logger = new TestLogger({});
+
+let embarkObj = {
+  logger: logger,
+  registerAPICall: () => {}
+}
+
 describe('ProcessWrapper', () => {
   let processLauncher;
 
   before(() => {
     sinon.stub(ProcessLauncher.prototype, '_subscribeToMessages');
     processLauncher = new ProcessLauncher({
-      logger: new TestLogger({}),
+      embark: embarkObj,
+      logger: logger,
       modulePath: path.join(__dirname, 'test.js')
     });
   });

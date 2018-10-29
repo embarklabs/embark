@@ -108,7 +108,7 @@ describe('embark.Config', function () {
     it('should load contract config correctly', function () {
       config.loadContractsConfigFile();
       let expectedConfig = {
-        versions: {'web3': '1.0.0-beta', solc: '0.4.17'},
+        versions: {'web3': '1.0.0-beta', solc: '0.4.25'},
         deployment: {host: 'localhost', port: 8545, type: 'rpc', "accounts": [{"mnemonic": "12 word mnemonic", "balance": "5000000000"}]},
         dappConnection: ['$WEB3', 'localhost:8545'],
         "gas": "400000",
