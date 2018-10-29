@@ -1,9 +1,0 @@
-{
-  "reporter": [
-    "lcov",
-    "text-summary"
-  ],
-  "include": [
-    "lib/**/*.js"
-  ]
-}

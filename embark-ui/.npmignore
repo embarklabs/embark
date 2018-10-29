@@ -1,0 +1,7 @@
+.env
+.env.*
+config
+node_modules
+public
+scripts
+src
