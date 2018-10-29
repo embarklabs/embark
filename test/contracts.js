@@ -48,6 +48,7 @@ describe('embark.Contracts', function() {
 
     let events = new Events();
     let embarkObject = {
+      registerAPICall: () => {},
       events: events,
       logger: plugins.logger,
       embarkConfig: {

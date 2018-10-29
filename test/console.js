@@ -7,9 +7,10 @@ let version = require('../package.json').version;
 
 describe('embark.Console', function() {
   let ipc = new IPC({ipcRole: 'none'});
-  let plugins = new Plugins({plugins: {}});
-  let events = {once: () => {}, setCommandHandler: () => {}, emit: () => {}};
+  let events = {once: () => {}, setCommandHandler: () => {}, emit: () => {}, on: () => {}};
+  let plugins = new Plugins({plugins: {}, events: events});
   let embarkObject = {
+    registerAPICall: () => {},
     events: events,
     logger: plugins.logger,
     registerConsoleCommand: (cmd, opt) => {},

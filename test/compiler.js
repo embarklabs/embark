@@ -24,6 +24,7 @@ let generateApiObject = function() {
   };
 
   var apiObject = {
+    registerAPICall: () => {},
     registerCompiler: function() {},
     logger: new TestLogger({}),
     events: TestEvents,
