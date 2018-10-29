@@ -161,8 +161,8 @@ class ContractFunction extends Component {
             <ListGroup>
               {this.props.contractFunctions.map(contractFunction => (
                 <ListGroupItem key={contractFunction.result}>
-                  {contractFunction.inputs.length > 0 && <p>Inputs: {contractFunction.inputs.join(', ')}</p>}
-                  <strong>Result: {contractFunction.result}</strong>
+                  {contractFunction.inputs.length > 0 && <p>Input(s): {contractFunction.inputs.join(', ')}</p>}
+                  <strong>Result: {JSON.stringify(contractFunction.result)}</strong>
                 </ListGroupItem>
               ))}
             </ListGroup>
