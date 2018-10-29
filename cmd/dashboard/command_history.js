@@ -2,8 +2,7 @@ let fs = require('../../lib/core/fs');
 
 class CommandHistory {
   constructor(options = {}) {
-    this.cmdHistoryFile = options.cmdHistoryFile
-      || process.env.DEFAULT_CMD_HISTORY_PATH;
+    this.cmdHistoryFile = options.cmdHistoryFile || fs.dappPath('.embark', 'cmd_history');
     this.history = [];
     this.pointer = -1;
     this.loadHistory();

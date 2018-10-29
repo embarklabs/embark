@@ -995,7 +995,7 @@ function isDappCmd(cmd) {
 }
 
 function isObject(val) {
-  // eslint-disable-next-line no-eq-null
+  // eslint-disable-next-line
   return val != null && typeof val === 'object' && Array.isArray(val) === false;
 }
 
