@@ -108,6 +108,7 @@ describe('embark.Contracts', function() {
     };
 
     let embarkObj = {
+      registerAPICall: () => {},
       logger: new Logger({}),
       events: events
     };
@@ -232,6 +233,7 @@ describe('embark.Contracts', function() {
     }
 
     let embarkObj = {
+      registerAPICall: () => {},
       logger: new Logger({}),
       events: events
     }
