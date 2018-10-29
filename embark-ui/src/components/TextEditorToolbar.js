@@ -36,13 +36,13 @@ class TextEditorToolbar extends Component {
             {this.props.isContract &&
               <React.Fragment>
                 <NavLink className={classnames('btn', { active: this.isActiveTab(TextEditorToolbarTabs.Overview)})} onClick={() => this.props.openAsideTab(TextEditorToolbarTabs.Overview)}>
-                  <FontAwesomeIcon className="mr-2" name="info-circle" /> Overview
+                  <FontAwesomeIcon className="mr-2" name="bolt" /> Interact
                 </NavLink>
                 <NavLink className={classnames('btn', { active: this.isActiveTab(TextEditorToolbarTabs.Detail)})} href="#" onClick={() => this.props.openAsideTab(TextEditorToolbarTabs.Detail)}>
-                  <FontAwesomeIcon className="mr-2" name="file-text-o" /> Details
+                  <FontAwesomeIcon className="mr-2" name="info-circle" /> Details
                 </NavLink>
                 <NavLink className={classnames('btn', { active: this.isActiveTab(TextEditorToolbarTabs.Logger)})} href="#" onClick={() => this.props.openAsideTab(TextEditorToolbarTabs.Logger)}>
-                  <FontAwesomeIcon className="mr-2" name="file-text-o" /> Logger
+                  <FontAwesomeIcon className="mr-2" name="list-alt" /> Logger</NavLink>
                 </NavLink>
                 <NavLink className={classnames('btn', { active: this.isActiveTab(TextEditorToolbarTabs.Debugger)})} href="#" onClick={() => this.props.openAsideTab(TextEditorToolbarTabs.Debugger)}>
                   <FontAwesomeIcon className="mr-2" name="bug" /> Debugger
@@ -50,7 +50,7 @@ class TextEditorToolbar extends Component {
               </React.Fragment>
             }
             <NavLink className={classnames('btn', { active: this.isActiveTab(TextEditorToolbarTabs.Browser)})} href="#" onClick={() => this.props.openAsideTab(TextEditorToolbarTabs.Browser)}>
-              <FontAwesomeIcon className="mr-2" name="compass" /> Browser
+              <FontAwesomeIcon className="mr-2" name="internet-explorer" /> Preview
             </NavLink>
           </Nav>
 

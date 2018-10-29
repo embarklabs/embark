@@ -38,7 +38,7 @@ class TextEditorAsideContainer extends Component {
         return (
           <React.Fragment>
             <h2>{contract.className} - Transactions</h2>
-            <ContractLoggerContainer key={index} contract={contract}/>)
+            <ContractLoggerContainer key={index} contract={contract}/>
           </React.Fragment>
         );
       case 'overview':

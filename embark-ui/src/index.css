@@ -22,6 +22,10 @@
   position: relative;
 }
 
+.overflow-auto {
+  overflow: auto;
+}
+
 .react-json-view {
   border-radius: .25rem;
 }

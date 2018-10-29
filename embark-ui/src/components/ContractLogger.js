@@ -74,7 +74,7 @@ class ContractLogger extends React.Component {
               <FormGroup>
                 <Label htmlFor="events">Events</Label>
                 <Input type="select" name="events" id="events" onChange={(event) => this.updateState('eveny', event.target.value)} value={this.state.event}>
-                  <option value=""></option>
+                  <option value=""/>
                   {this.getEvents().map((event, index) => <option value={event.name} key={index}>{event.name}</option>)}
                 </Input>
               </FormGroup>
@@ -103,7 +103,7 @@ class ContractLogger extends React.Component {
           </Row>
         </Form>
         <Row>
-          <Col>
+          <Col className="overflow-auto">
             <Table>
               <thead>
                 <tr>
