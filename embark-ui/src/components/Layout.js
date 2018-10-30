@@ -1,4 +1,5 @@
 import React from 'react';
+import {NavLink as RNavLink} from 'react-router-dom';
 import {Link, withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
@@ -36,6 +37,7 @@ import {searchResult} from "../reducers/selectors";
 import SearchBar from './SearchBar';
 
 import logo from '../images/logo-new.svg';
+import './Layout.css';
 
 const HEADER_NAV_ITEMS = [
   {name: "Dashboard", to: "/embark", icon: 'tachometer'},
@@ -125,11 +127,11 @@ class Layout extends React.Component {
   renderNav() {
     return (
       <React.Fragment>
-        <Nav className="d-lg-down-none" navbar>
+        <Nav className="header-nav d-lg-down-none" navbar>
           {HEADER_NAV_ITEMS.map((item) => {
             return (
               <NavItem className="px-3" key={item.to}>
-                <NavLink tag={Link} to={item.to}>
+                <NavLink exact activeClassName="active" tag={RNavLink} to={item.to}>
                   <FontAwesome className="mr-2" name={item.icon} />
                   {item.name}
                 </NavLink>
