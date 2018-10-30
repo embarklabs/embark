@@ -50,7 +50,7 @@ class TextEditorToolbar extends Component {
               </React.Fragment>
             }
             <NavLink className={classnames('btn', { active: this.isActiveTab(TextEditorToolbarTabs.Browser)})} href="#" onClick={() => this.props.openAsideTab(TextEditorToolbarTabs.Browser)}>
-              <FontAwesomeIcon className="mr-2" name="internet-explorer" /> Preview
+              <FontAwesomeIcon className="mr-2" name="eye" /> Preview
             </NavLink>
           </Nav>
 
