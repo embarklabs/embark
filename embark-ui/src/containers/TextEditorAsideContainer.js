@@ -42,7 +42,7 @@ class TextEditorAsideContainer extends Component {
       case 'overview':
         return (
           <React.Fragment>
-            <h2>{contract.className} - Overview</h2>
+            <h2>{contract.className} - Interact</h2>
             <ContractOverviewContainer key={index} contract={contract}/>
           </React.Fragment>
         );

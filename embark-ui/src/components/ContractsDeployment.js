@@ -112,26 +112,26 @@ class Web3Contract extends React.Component {
   }
 
   inputsAsArray() {
-    return findConstructor(this.props.contract.abiDefinition).inputs
+    const constructor = findConstructor(this.props.contract.abiDefinition);
+    if (!constructor) return [];
+
+    return constructor.inputs
       .map(input => this.state.inputs[input.name])
       .filter(value => value);
   }
 
   actionDisabled() {
-    return this.inputsAsArray().length !== findConstructor(this.props.contract.abiDefinition).inputs.length;
+    const constructor = findConstructor(this.props.contract.abiDefinition);
+    if (!constructor) return false;
+
+    return this.inputsAsArray().length !== constructor.inputs.length;
   }
 
   render() {
     const abiConstructor = findConstructor(this.props.contract.abiDefinition);
-    const isInterface = !abiConstructor;
     const argumentsRequired = abiConstructor && abiConstructor.inputs.length > 0;
     return (
-      <LayoutContract contract={this.props.contract} cardTitle={
-        <React.Fragment>
-          {isInterface && `${this.props.contract.className} is an interface`}
-          {!isInterface && this.props.contract.className}
-        </React.Fragment>
-      }>
+      <LayoutContract contract={this.props.contract} cardTitle={this.props.contract.className}>
         <Row>
           <Col md={6}>
             {argumentsRequired &&
@@ -148,7 +148,7 @@ class Web3Contract extends React.Component {
 
             {!this.props.web3 && <NoWeb3/>}
 
-            {this.props.web3 && !isInterface &&
+            {this.props.web3 &&
             <React.Fragment>
               <Button className="mr-2"
                       color="primary"
