@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import {withRouter} from 'react-router-dom';
 import {
@@ -64,5 +65,11 @@ class TransactionDecoder extends React.Component {
     );
   }
 }
+
+TransactionDecoder.propTypes = {
+  history: PropTypes.array,
+  transaction: PropTypes.object,
+  transactionHash: PropTypes.string
+};
 
 export default withRouter(TransactionDecoder);

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import {
   Card,
@@ -13,7 +14,6 @@ import {
 } from 'reactstrap';
 
 class SignAndVerify extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -96,5 +96,17 @@ class SignAndVerify extends React.Component {
     )
   }
 }
+
+SignAndVerify.propTypes = {
+  accounts: PropTypes.array,
+  signMessage: PropTypes.function,
+  signatureError: PropTypes.string,
+  signaturePending: PropTypes.function,
+  signedMessage: PropTypes.string,
+  verificationError: PropTypes.string,
+  verificationPending: PropTypes.boolean,
+  verifiedAddress: PropTypes.string,
+  verifyMessage: PropTypes.function
+};
 
 export default SignAndVerify;

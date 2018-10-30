@@ -137,6 +137,7 @@ AppContainer.propTypes = {
   theme: PropTypes.string,
   changeTheme: PropTypes.func,
   fetchTheme: PropTypes.func,
+  history: PropTypes.instanceOf(History)
 };
 
 function mapStateToProps(state) {

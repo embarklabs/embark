@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import qs from 'qs';
@@ -14,7 +15,6 @@ const getQueryParams = (props) => {
 };
 
 class TransactionDecoderContainer extends Component {
-
   componentDidMount() {
     const { hash } = getQueryParams(this.props);
     if (hash) {
@@ -42,6 +42,11 @@ class TransactionDecoderContainer extends Component {
     );
   }
 }
+
+TransactionDecoderContainer.propTypes = {
+  fetchTransaction: PropTypes.func,
+  transaction: PropTypes.object
+};
 
 function mapStateToProps(state, props) {
   return {

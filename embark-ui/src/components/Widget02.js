@@ -12,7 +12,7 @@ const propTypes = {
   variant: PropTypes.string,
   children: PropTypes.node,
   className: PropTypes.string,
-  cssModule: PropTypes.object,
+  cssModule: PropTypes.object
 };
 
 const defaultProps = {
@@ -21,12 +21,11 @@ const defaultProps = {
   icon: 'fa fa-cogs',
   color: 'primary',
   variant: '0',
-  link: '#',
 };
 
 class Widget02 extends Component {
   render() {
-    const { className, cssModule, header, mainText, icon, color, footer, link, children, variant, ...attributes } = this.props;
+    const { className, cssModule, header, mainText, icon, color, children, variant, ...attributes } = this.props;
 
     // demo purposes only
     const padding = (variant === '0' ? { card: 'p-3', icon: 'p-3', lead: 'mt-2' } : (variant === '1' ? {
