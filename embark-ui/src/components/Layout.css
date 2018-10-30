@@ -1,3 +1,11 @@
-.sidebar-minimizer {
-  display: block !important; 
+.header-nav .active {
+  color: black !important;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.dark-theme .header-nav .active {
+  color: white !important;
+  font-weight: bold;
+  text-decoration: underline;
 }
