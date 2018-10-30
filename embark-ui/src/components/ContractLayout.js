@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React from 'react';
+import FontAwesomeIcon from "react-fontawesome";
 import { TabContent, TabPane, Nav, NavItem, NavLink, Card, CardBody, CardTitle } from 'reactstrap';
 import classnames from 'classnames';
 
@@ -37,7 +38,7 @@ class ContractLayout extends React.Component {
                   className={classnames({ active: this.state.activeTab === '1' })}
                   onClick={() => { this.toggle('1'); }}
                 >
-                  Overview
+                  <FontAwesomeIcon className="mr-2" name="bolt" />Interact
                 </NavLink>
               </NavItem>
               <NavItem>
@@ -45,7 +46,7 @@ class ContractLayout extends React.Component {
                   className={classnames({ active: this.state.activeTab === '2' })}
                   onClick={() => { this.toggle('2'); }}
                 >
-                  Detail
+                  <FontAwesomeIcon className="mr-2" name="info-circle" />Details
                 </NavLink>
               </NavItem>
               <NavItem>
@@ -53,7 +54,7 @@ class ContractLayout extends React.Component {
                   className={classnames({ active: this.state.activeTab === '3' })}
                   onClick={() => { this.toggle('3'); }}
                 >
-                  Transactions
+                  <FontAwesomeIcon className="mr-2" name="list-alt" />Transactions
                 </NavLink>
               </NavItem>
               <NavItem>
@@ -61,7 +62,7 @@ class ContractLayout extends React.Component {
                   className={classnames({ active: this.state.activeTab === '4' })}
                   onClick={() => { this.toggle('4'); }}
                 >
-                  Debugger
+                  <FontAwesomeIcon className="mr-2" name="bug" />Debugger
                 </NavLink>
               </NavItem>
             </Nav>

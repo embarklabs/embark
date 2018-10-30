@@ -36,16 +36,16 @@ class TextEditorToolbar extends Component {
             {this.props.isContract &&
               <React.Fragment>
                 <NavLink className={classnames('btn', { active: this.isActiveTab(TextEditorToolbarTabs.Overview)})} onClick={() => this.props.openAsideTab(TextEditorToolbarTabs.Overview)}>
-                  <FontAwesomeIcon className="mr-2" name="bolt" /> Interact
+                  <FontAwesomeIcon className="mr-2" name="bolt" />Interact
                 </NavLink>
                 <NavLink className={classnames('btn', { active: this.isActiveTab(TextEditorToolbarTabs.Detail)})} href="#" onClick={() => this.props.openAsideTab(TextEditorToolbarTabs.Detail)}>
-                  <FontAwesomeIcon className="mr-2" name="info-circle" /> Details
+                  <FontAwesomeIcon className="mr-2" name="info-circle" />Details
                 </NavLink>
                 <NavLink className={classnames('btn', { active: this.isActiveTab(TextEditorToolbarTabs.Transactions)})} href="#" onClick={() => this.props.openAsideTab(TextEditorToolbarTabs.Transactions)}>
-                  <FontAwesomeIcon className="mr-2" name="list-alt" /> Transactions
+                  <FontAwesomeIcon className="mr-2" name="list-alt" />Transactions
                 </NavLink>
                 <NavLink className={classnames('btn', { active: this.isActiveTab(TextEditorToolbarTabs.Debugger)})} href="#" onClick={() => this.props.openAsideTab(TextEditorToolbarTabs.Debugger)}>
-                  <FontAwesomeIcon className="mr-2" name="bug" /> Debugger
+                  <FontAwesomeIcon className="mr-2" name="bug" />Debugger
                 </NavLink>
               </React.Fragment>
             }
