@@ -2,11 +2,15 @@ import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import connect from "react-redux/es/connect/connect";
 import { Alert } from 'reactstrap';
-import {messageSend, messageListen} from "../actions";
+import {messageSend, messageListen, versions} from "../actions";
 import Communication from "../components/Communication";
 import {getMessages, getMessageChannels, isOldWeb3, isWeb3Enabled} from "../reducers/selectors";
 
 class CommunicationContainer extends Component {
+  componentDidMount() {
+    this.props.fetchVersions();
+  }
+
   sendMessage(topic, message) {
     this.props.messageSend({topic, message});
   }
@@ -65,7 +69,7 @@ export default connect(
   mapStateToProps,
   {
     messageSend: messageSend.request,
-    messageListen: messageListen.request
+    messageListen: messageListen.request,
+    fetchVersions: versions.request
   }
 )(CommunicationContainer);
-
