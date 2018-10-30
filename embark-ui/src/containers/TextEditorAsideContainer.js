@@ -21,7 +21,7 @@ class TextEditorAsideContainer extends Component {
       case 'debugger':
         return (
           <React.Fragment>
-            <h2>{contract.className} - Details</h2>
+            <h2>{contract.className} - Debugger</h2>
             <ContractDebuggerContainer key={index} contract={contract}/>
           </React.Fragment>
         );
