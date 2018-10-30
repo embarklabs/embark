@@ -52,6 +52,12 @@ const LayoutContract = ({contract, children, cardTitle}) => (
   </Card>
 );
 
+LayoutContract.propTypes = {
+  contract: PropTypes.object,
+  children: PropTypes.array,
+  cardTitle: PropTypes.string
+};
+
 const DeploymentResult = ({deployment}) => {
   if (deployment.running) {
     return <p>Deployment is in progress <FontAwesomeIcon className="ml-1" name="spinner" spin/></p>;
@@ -73,6 +79,10 @@ const DeploymentResult = ({deployment}) => {
   );
 };
 
+DeploymentResult.propTypes = {
+  deployment: PropTypes.object
+}
+
 const GasEstimateResult = ({gasEstimate}) => {
   if (gasEstimate.running) {
     return <p>Gas Estimation is in progresss <FontAwesomeIcon className="ml-1" name="spinner" spin/></p>;
@@ -83,6 +93,10 @@ const GasEstimateResult = ({gasEstimate}) => {
   }
 
   return <p className="text-success">Gas Estimation succeed: {gasEstimate.gas}</p>;
+};
+
+GasEstimateResult.propTypes = {
+  gasEstimate: PropTypes.object
 };
 
 class Web3Contract extends React.Component {
@@ -158,11 +172,20 @@ class Web3Contract extends React.Component {
   }
 }
 
+Web3Contract.propTypes = {
+  contract: PropTypes.object,
+  web3: PropTypes.object,
+  web3EstimateGas: PropTypes.func,
+  web3Deploy: PropTypes.func,
+  gasEstimate: PropTypes.object,
+  deployment: PropTypes.object
+};
+
 const EmbarkContract = ({contract, toggleContractOverview}) => (
   <LayoutContract contract={contract} cardTitle={
     <React.Fragment>
       <a href='#toggleContract' onClick={() => toggleContractOverview(contract)}>{contract.className}</a>&nbsp;
-      <span>{contract.address && `deployed at ${contract.address}` || "not deployed"}</span>
+      <span>{(contract.address && `deployed at ${contract.address}`) || 'not deployed'}</span>
     </React.Fragment>
   }>
     {contract.address && <p><strong>Arguments:</strong> {JSON.stringify(contract.args)}</p>}
@@ -178,6 +201,11 @@ const EmbarkContract = ({contract, toggleContractOverview}) => (
     }
   </LayoutContract>
 );
+
+EmbarkContract.propTypes = {
+  contract: PropTypes.object,
+  toggleContractOverview: PropTypes.func
+};
 
 const ContractsHeader = ({deploymentPipeline, updateDeploymentPipeline}) => (
   <Row>
@@ -215,6 +243,11 @@ const ContractsHeader = ({deploymentPipeline, updateDeploymentPipeline}) => (
   </Row>
 );
 
+ContractsHeader.propTypes = {
+  deploymentPipeline: PropTypes.object,
+  updateDeploymentPipeline: PropTypes.func
+};
+
 const Contract = ({web3, contract, deploymentPipeline, web3Deploy, web3EstimateGas, web3Deployments, web3GasEstimates, toggleContractOverview}) => {
   const deployment = web3Deployments[contract.className];
   const gasEstimate = web3GasEstimates[contract.className];
@@ -231,6 +264,17 @@ const Contract = ({web3, contract, deploymentPipeline, web3Deploy, web3EstimateG
     default:
       return <React.Fragment></React.Fragment>;
   }
+};
+
+Contract.propTypes = {
+  contract: PropTypes.object,
+  deploymentPipeline: PropTypes.object,
+  toggleContractOverview: PropTypes.func,
+  web3: PropTypes.object,
+  web3Deploy: PropTypes.func,
+  web3Deployments: PropTypes.object,
+  web3EstimateGas: PropTypes.func,
+  web3GasEstimates: PropTypes.object
 };
 
 class ContractsDeployment extends React.Component {

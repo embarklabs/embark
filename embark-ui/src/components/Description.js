@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 const Description = ({label, value}) => (
@@ -6,5 +7,10 @@ const Description = ({label, value}) => (
     <dd className="col-sm-9 text-wrap">{value}</dd>
   </React.Fragment>
 );
+
+Description.propTypes = {
+  label: PropTypes.string,
+  value: PropTypes.string
+};
 
 export default Description

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { Component }  from 'react';
 import {connect} from 'react-redux';
 import SignAndVerify from '../components/SignAndVerify';
@@ -39,6 +40,19 @@ class SignAndVerifyContainer extends Component {
     )
   }
 }
+
+SignAndVerifyContainer.propTypes = {
+  accounts: PropTypes.array,
+  fetchAccounts: PropTypes.func,
+  signMessage: PropTypes.func,
+  signatureError: PropTypes.string,
+  signaturePending: PropTypes.boolean,
+  signedMessage: PropTypes.string,
+  verificationError: PropTypes.string,
+  verificationPending: PropTypes.boolean,
+  verifiedAddress: PropTypes.string,
+  verifyMessage: PropTypes.func
+};
 
 function mapStateToProps(state) {
   return {
