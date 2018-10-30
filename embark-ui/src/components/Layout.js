@@ -246,13 +246,12 @@ class Layout extends React.Component {
             <AppSidebarMinimizer />
           </AppSidebar>
           }
-
           <main className="main">
-            <Alert color="danger" isOpen={(this.state.searchError && Boolean(searchResult.error))} toggle={() => this.dismissSearchError()}>
-              {searchResult.error}
-            </Alert>
-
             <Container fluid className="h-100 pt-4">
+              <Alert color="danger" isOpen={(this.state.searchError && Boolean(searchResult.error))}
+                     className="search-error no-gutters" toggle={() => this.dismissSearchError()}>
+                {searchResult.error}
+              </Alert>
               {children}
             </Container>
           </main>

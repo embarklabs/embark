@@ -4,7 +4,6 @@ import {Form, Input, Button} from 'reactstrap';
 import FontAwesome from 'react-fontawesome';
 import classNames from 'classnames';
 
-import './SearchBar.css';
 
 class SearchBar extends React.Component {
   constructor(props) {

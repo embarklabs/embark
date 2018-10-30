@@ -1,10 +1,10 @@
 import {put, select} from "redux-saga/effects";
 import {getAccounts, getBlocks, getTransactions, getContracts} from "../reducers/selectors";
 import {fetchAccounts, fetchBlocks, fetchTransactions, fetchContracts} from "./index";
+import {ELEMENTS_LIMIT} from '../constants';
 
 export function *searchExplorer(entity, payload) {
   let result;
-  const SEARCH_LIMIT = 100;
 
   // Accounts
   yield fetchAccounts({});
@@ -29,7 +29,7 @@ export function *searchExplorer(entity, payload) {
   }
 
   // Blocks
-  yield fetchBlocks({limit: SEARCH_LIMIT});
+  yield fetchBlocks({limit: ELEMENTS_LIMIT});
   const blocks = yield select(getBlocks);
   const intSearchValue = parseInt(payload.searchValue, 10);
   result = blocks.find(block => {
@@ -41,7 +41,7 @@ export function *searchExplorer(entity, payload) {
   }
 
   // Transactions
-  yield fetchTransactions({blockLimit: SEARCH_LIMIT});
+  yield fetchTransactions({blockLimit: ELEMENTS_LIMIT});
   const transactions = yield select(getTransactions);
   result = transactions.find(transaction => {
     return transaction.hash === payload.searchValue;
@@ -51,5 +51,5 @@ export function *searchExplorer(entity, payload) {
     return yield put(entity.success(result));
   }
 
-  return yield put(entity.success({error: 'No result found in transactions, accounts, contracts, or blocks'}));
+  return yield put(entity.success({error: `No result found in transactions, accounts, contracts, or blocks. Please note: We limit the search to the last ${ELEMENTS_LIMIT} elements for performance`}));
 }
