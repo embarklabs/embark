@@ -9,8 +9,8 @@ const Description = ({label, value}) => (
 );
 
 Description.propTypes = {
-  label: PropTypes.string,
-  value: PropTypes.string
+  label: PropTypes.any,
+  value: PropTypes.any
 };
 
 export default Description
