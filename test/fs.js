@@ -2,17 +2,29 @@
 const {assert} = require('chai');
 const os = require('os');
 
+const underlyingFs = require('fs-extra');
 const fs = require('../lib/core/fs');
 
 describe('fs', () => {
+  let fsMethods = {};
+
   before(() => {
     this.oldProcessExit = process.exit;
     process.exit = function() {};
+
+    for(const method in underlyingFs) {
+      fsMethods[method] = underlyingFs[method];
+      underlyingFs[method] = function() {};
+    }
   });
 
 
   after(() => {
     process.exit = this.oldProcessExit;
+
+    for(const method in underlyingFs) {
+      underlyingFs[method] = fsMethods[method];
+    }
   });
 
   const helperFunctions = [
