@@ -53,7 +53,8 @@ CommunicationContainer.propTypes = {
   isOldWeb3: PropTypes.bool,
   isWeb3Enabled: PropTypes.bool,
   messages: PropTypes.object,
-  messageChannels: PropTypes.array
+  messageChannels: PropTypes.array,
+  fetchVersions: PropTypes.func
 };
 
 function mapStateToProps(state) {
