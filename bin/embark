@@ -15,7 +15,7 @@
 // package.json under `{"embark": {...}}` -or- stored in an embark.json file.
 
 function main() {
-  whenNoShim();
+  if (whenNoShim()) return;
   var invoked = thisEmbark();
   var embarkJson = findEmbarkJson();
   var dappPath = embarkJson.dirname;
@@ -725,13 +725,9 @@ function thisEmbark() {
 }
 
 function whenNoShim() {
-  var noShim = false;
-  if (process.env.EMBARK_NO_SHIM) {
-    noShim = true;
-  }
-  if (noShim) {
-    EmbarkBin.prototype.exec();
-  }
+  var noShim = !!process.env.EMBARK_NO_SHIM;
+  if (noShim) EmbarkBin.prototype.exec();
+  return noShim;
 }
 
 // -- reporters ----------------------------------------------------------------
