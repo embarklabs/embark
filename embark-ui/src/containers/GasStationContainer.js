@@ -5,6 +5,7 @@ import GasStation from '../components/GasStation';
 import {stopGasOracle, listenToGasOracle, gasOracle as ethGasAction, blocks as blocksAction} from "../actions";
 import DataWrapper from "../components/DataWrapper";
 import {getOracleGasStats, getLastBlock} from "../reducers/selectors";
+import {Alert} from 'reactstrap';
 
 class GasStationContainer extends Component {
   componentDidMount() {
@@ -18,6 +19,9 @@ class GasStationContainer extends Component {
   }
 
   getCurrentGas() {
+    if (!this.gasStation) {
+      return 'Unavailable';
+    }
     return this.gasStation.getCurrentGas();
   }
 
@@ -25,7 +29,13 @@ class GasStationContainer extends Component {
     return <DataWrapper shouldRender={Boolean(this.props.gasOracleStats && Object.keys(this.props.gasOracleStats).length && this.props.lastBlock)}
                         {...this.props} render={({lastBlock, gasOracleStats}) => (
       <GasStation gasOracleStats={gasOracleStats} lastBlock={lastBlock} ref={instance => { this.gasStation = instance; }}/>
-    )}/>;
+    )} elseRender={() => {
+      let message = 'Currently not enough blocks mined to estimated';
+      if (Object.keys(this.props.gasOracleStats).length === 0) {
+        message = 'No blocks detected. If you are connected using an RPC connection, switch to WS to have access to new block events.'
+      }
+      return (<Alert color="danger">{message}</Alert>)
+    }}/>;
 
   }
 }
