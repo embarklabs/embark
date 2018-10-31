@@ -4,9 +4,10 @@ export function addEditorTabs({file}) {
     editorTabs.forEach(f => f.active = false);
     const alreadyAddedFile = editorTabs.find(f => f.name === file.name)
     if (alreadyAddedFile) {
-      alreadyAddedFile.active = true
+      alreadyAddedFile.active = true;
+      alreadyAddedFile.content = file.content;
     } else {
-      file.active = true
+      file.active = true;
       editorTabs.push(file);
     }
     localStorage.setItem('editorTabs', JSON.stringify(editorTabs));
