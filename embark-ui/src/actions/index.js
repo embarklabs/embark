@@ -289,7 +289,7 @@ export const file = {
 export const SAVE_FILE = createRequestTypes('SAVE_FILE');
 export const saveFile = {
   request: ({name, path, content}) => action(SAVE_FILE[REQUEST], {name, path, content}),
-  success: (_, {name, path, content}) => action(SAVE_FILE[SUCCESS], {name, path, content}),
+  success: (file) => action(SAVE_FILE[SUCCESS], {file}),
   failure: (error) => action(SAVE_FILE[FAILURE], {error})
 };
 

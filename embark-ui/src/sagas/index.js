@@ -208,6 +208,10 @@ export function *watchPostFile() {
   yield takeEvery(actions.SAVE_FILE[actions.REQUEST], postFile);
 }
 
+export function *watchPostFileSuccess() {
+  yield takeEvery(actions.SAVE_FILE[actions.SUCCESS], addEditorTabs);
+}
+
 export function *watchDeleteFile() {
   yield takeEvery(actions.REMOVE_FILE[actions.REQUEST], deleteFile);
 }
@@ -539,5 +543,6 @@ export default function *root() {
     fork(watchRemoveEditorTabs),
     fork(watchAddEditorTabsSuccess),
     fork(watchRemoveEditorTabsSuccess),
+    fork(watchPostFileSuccess)
   ]);
 }
