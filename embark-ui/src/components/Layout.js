@@ -17,7 +17,6 @@ import {
 import {explorerSearch} from "../actions";
 import {LIGHT_THEME, DARK_THEME} from '../constants';
 import FontAwesome from 'react-fontawesome';
-import {  } from 'reactstrap';
 
 import "./Layout.css";
 
@@ -92,6 +91,8 @@ class Layout extends React.Component {
       if (nextProps.searchResult.error) {
         this.setState({searchError: true});
         return true;
+      } else {
+        this.setState({searchError: false});
       }
 
       if (nextProps.searchResult.className) {
@@ -245,13 +246,12 @@ class Layout extends React.Component {
             <AppSidebarMinimizer />
           </AppSidebar>
           }
-
           <main className="main">
-            <Alert color="danger" isOpen={this.state.searchError} toggle={() => this.dismissSearchError()}>
-              {searchResult.error}
-            </Alert>
-
             <Container fluid className="h-100 pt-4">
+              <Alert color="danger" isOpen={(this.state.searchError && Boolean(searchResult.error))}
+                     className="search-error no-gutters" toggle={() => this.dismissSearchError()}>
+                {searchResult.error}
+              </Alert>
               {children}
             </Container>
           </main>

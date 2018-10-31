@@ -1,3 +1,6 @@
+@import "bootstrap/variables";
+@import "variables";
+
 #root .search-bar input {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
@@ -27,4 +30,13 @@
 
 .search-bar .search-loading {
   margin-top: 16px;
+}
+
+#root .search-error {
+  position: sticky;
+  margin: -#{$grid-gutter-width} -#{$grid-gutter-width} #{$grid-gutter-width} -#{$grid-gutter-width};
+  top: $navbar-height;
+  z-index: 3242;
+  border-radius: 0;
+  border: 0;
 }

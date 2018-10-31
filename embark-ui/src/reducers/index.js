@@ -3,11 +3,10 @@ import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE
         FETCH_CREDENTIALS, UPDATE_BASE_ETHER, CHANGE_THEME, FETCH_THEME, EXPLORER_SEARCH, DEBUGGER_INFO,
         SIGN_MESSAGE, VERIFY_MESSAGE, TOGGLE_BREAKPOINT,
         UPDATE_DEPLOYMENT_PIPELINE, WEB3_CONNECT, WEB3_DEPLOY, WEB3_ESTIMAGE_GAS, FETCH_EDITOR_TABS} from "../actions";
-import {EMBARK_PROCESS_NAME, DARK_THEME, DEPLOYMENT_PIPELINES, DEFAULT_HOST} from '../constants';
+import {EMBARK_PROCESS_NAME, DARK_THEME, DEPLOYMENT_PIPELINES, DEFAULT_HOST, ELEMENTS_LIMIT} from '../constants';
 
 const BN_FACTOR = 10000;
 const VOID_ADDRESS = '0x0000000000000000000000000000000000000000';
-const MAX_ELEMENTS = 200;
 
 const entitiesDefaultState = {
   accounts: [],
@@ -92,7 +91,7 @@ const filtrer = {
   },
   processLogs: function(processLog, index, self) {
     if (processLog.id !== undefined) {
-      return index === self.findIndex((p) => p.id === processLog.id) && index <= MAX_ELEMENTS;
+      return index === self.findIndex((p) => p.id === processLog.id) && index <= ELEMENTS_LIMIT;
     }
     return true;
   },
@@ -108,14 +107,14 @@ const filtrer = {
     return index === self.findIndex((t) => t.address === account.address);
   },
   blocks: function(block, index, self) {
-    if (index > MAX_ELEMENTS) {
+    if (index > ELEMENTS_LIMIT) {
       return false;
     }
 
     return index === self.findIndex((t) => t.number === block.number);
   },
   transactions: function(tx, index, self) {
-    if (index > MAX_ELEMENTS) {
+    if (index > ELEMENTS_LIMIT) {
       return false;
     }
     return index === self.findIndex((t) => (
