@@ -73,7 +73,7 @@ class ContractTransactions extends React.Component {
             <Col md={6}>
               <FormGroup>
                 <Label htmlFor="events">Events</Label>
-                <Input type="select" name="events" id="events" onChange={(event) => this.updateState('eveny', event.target.value)} value={this.state.event}>
+                <Input type="select" name="events" id="events" onChange={(event) => this.updateState('event', event.target.value)} value={this.state.event}>
                   <option value=""/>
                   {this.getEvents().map((event, index) => <option value={event.name} key={index}>{event.name}</option>)}
                 </Input>
