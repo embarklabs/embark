@@ -56,5 +56,6 @@
   "logs": {
     "logPath": ".embark/logs/",
     "maxLogLength": 1500
-  }
+  },
+  "embarkResourceOrigin": "http://embark"
 }
