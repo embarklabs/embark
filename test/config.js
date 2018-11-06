@@ -141,6 +141,9 @@ describe('embark.Config', function () {
         },
         {
           file: 'github.com/status-im/contracts/contracts/identity/ERC725.sol'
+        },
+        {
+          file: 'bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63'
         }
       ];
       const expected = [
@@ -152,9 +155,9 @@ describe('embark.Config', function () {
           "importRemappings": [],
           "basedir": "",
           "resolver": undefined,
-          "downloadedImports": false,
-          "storageConfig": null,
-          "ipfsUrl": null
+          "storageConfig": undefined,
+          "providerUrl": undefined,
+          "downloadedImports": false
         },
         {
           "filename": ".embark/contracts/status-im/contracts/master/contracts/identity/ERC725.sol",
@@ -164,9 +167,21 @@ describe('embark.Config', function () {
           "importRemappings": [],
           "basedir": "",
           "resolver": undefined,
-          "downloadedImports": false,
-          "storageConfig": null,
-          "ipfsUrl": null
+          "storageConfig": undefined,
+          "providerUrl": undefined,
+          "downloadedImports": false
+        },
+        {
+          "filename": ".embark/contracts/bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63",
+          "type": "http",
+          "path": "https://swarm-gateways.net/bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63",
+          "pluginPath": '',
+          "importRemappings": [],
+          "basedir": "",
+          "resolver": undefined,
+          "storageConfig": undefined,
+          "providerUrl": undefined,
+          "downloadedImports": false
         }
       ];
       config.loadExternalContractsFiles();

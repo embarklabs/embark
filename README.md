@@ -27,9 +27,10 @@ With Embark you can:
 * Manage different chains (e.g testnet, private net, livenet)
 * Easily manage complex systems of interdependent contracts.
 
-**Decentralized Storage (IPFS)**
+**Decentralized Storage (IPFS, Swarm)**
 * Easily Store & Retrieve Data on the DApp through EmbarkJS. Including uploading and retrieving files.
 * Deploy the full application to IPFS or Swarm.
+* Import and deploy contracts hosted on Swarm.
 
 
 **Decentralized Communication (Whisper, Orbit)**
@@ -44,4 +45,3 @@ $ npm -g install embark
 ```
 
 See [Complete Documentation](https://embark.status.im/docs/).
-
