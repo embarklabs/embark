@@ -81,7 +81,7 @@ const DeploymentResult = ({deployment}) => {
 
 DeploymentResult.propTypes = {
   deployment: PropTypes.object
-}
+};
 
 const GasEstimateResult = ({gasEstimate}) => {
   if (gasEstimate.running) {
@@ -249,6 +249,9 @@ ContractsHeader.propTypes = {
 };
 
 const Contract = ({web3, contract, deploymentPipeline, web3Deploy, web3EstimateGas, web3Deployments, web3GasEstimates, toggleContractOverview}) => {
+  if (!contract.code && !contract.deploy) {
+    return <React.Fragment/>;
+  }
   const deployment = web3Deployments[contract.className];
   const gasEstimate = web3GasEstimates[contract.className];
   switch (deploymentPipeline) {
@@ -262,7 +265,7 @@ const Contract = ({web3, contract, deploymentPipeline, web3Deploy, web3EstimateG
                            web3Deploy={web3Deploy}
                            web3EstimateGas={web3EstimateGas}/>;
     default:
-      return <React.Fragment></React.Fragment>;
+      return <React.Fragment/>;
   }
 };
 
