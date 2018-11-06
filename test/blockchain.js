@@ -41,12 +41,9 @@ describe('embark.Blockchain', function() {
           targetGasLimit: false,
           syncMode: undefined,
           verbosity: undefined,
-          proxy: true,
+          proxy: undefined,
           silent: undefined          
         };
-        // We check also proxy's ports because proxy is set to true
-        expectedConfig.wsPort += constants.blockchain.servicePortOnProxy;
-        expectedConfig.rpcPort += constants.blockchain.servicePortOnProxy;
 
         assert.deepEqual(blockchain.config, expectedConfig);
         done();
