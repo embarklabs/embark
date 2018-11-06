@@ -42,7 +42,7 @@ const LayoutContract = ({contract, children, cardTitle}) => (
   <Card>
     <CardHeader>
       <CardTitle>
-        <span className={orderClassName(contract.address)}>{contract.index + 1}</span>
+        <span className={orderClassName(contract.address)}>{contract.deployIndex + 1}</span>
         {cardTitle}
       </CardTitle>
     </CardHeader>
@@ -55,7 +55,7 @@ const LayoutContract = ({contract, children, cardTitle}) => (
 LayoutContract.propTypes = {
   contract: PropTypes.object,
   children: PropTypes.array,
-  cardTitle: PropTypes.string
+  cardTitle: PropTypes.object
 };
 
 const DeploymentResult = ({deployment}) => {
@@ -244,14 +244,14 @@ const ContractsHeader = ({deploymentPipeline, updateDeploymentPipeline}) => (
 );
 
 ContractsHeader.propTypes = {
-  deploymentPipeline: PropTypes.object,
+  deploymentPipeline:  PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.string
+  ]),
   updateDeploymentPipeline: PropTypes.func
 };
 
 const Contract = ({web3, contract, deploymentPipeline, web3Deploy, web3EstimateGas, web3Deployments, web3GasEstimates, toggleContractOverview}) => {
-  if (!contract.code && !contract.deploy) {
-    return <React.Fragment/>;
-  }
   const deployment = web3Deployments[contract.className];
   const gasEstimate = web3GasEstimates[contract.className];
   switch (deploymentPipeline) {
@@ -271,7 +271,10 @@ const Contract = ({web3, contract, deploymentPipeline, web3Deploy, web3EstimateG
 
 Contract.propTypes = {
   contract: PropTypes.object,
-  deploymentPipeline: PropTypes.object,
+  deploymentPipeline:  PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.string
+  ]),
   toggleContractOverview: PropTypes.func,
   web3: PropTypes.object,
   web3Deploy: PropTypes.func,
@@ -302,13 +305,16 @@ class ContractsDeployment extends React.Component {
       <Row>
         <Col>
           <ContractsHeader deploymentPipeline={this.props.deploymentPipeline}
-                          updateDeploymentPipeline={this.props.updateDeploymentPipeline}/>
-          {this.props.contracts.sort((a, b) => a.index - b.index).map(contract => (
-            <Contract key={contract.index}
-                      contract={contract}
-                      toggleContractOverview={(contract) => this.toggleContractOverview(contract)}
-                      {...this.props} />
-          ))}
+                           updateDeploymentPipeline={this.props.updateDeploymentPipeline}/>
+          {this.props.contracts.filter(contract => contract.code || contract.deploy)
+            .sort((a, b) => a.index - b.index).map((contract, index) => {
+                contract.deployIndex = index;
+                return (<Contract key={contract.deployIndex}
+                                  contract={contract}
+                                  toggleContractOverview={(contract) => this.toggleContractOverview(contract)}
+                                  {...this.props} />);
+              }
+            )}
         </Col>
         {this.isContractOverviewOpen() &&
           <Col xs={6} md={3}>
@@ -325,9 +331,13 @@ class ContractsDeployment extends React.Component {
   }
 }
 
+
 ContractsDeployment.propTypes = {
   contracts: PropTypes.array,
-  deploymentPipeline: PropTypes.string,
+  deploymentPipeline: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.string
+  ]),
   updateDeploymentPipeline: PropTypes.func,
   web3Deployments: PropTypes.object,
   web3GasEstimates: PropTypes.object,

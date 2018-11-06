@@ -46,7 +46,10 @@ function mapStateToProps(state) {
 
 DeploymentContainer.propTypes = {
   contracts: PropTypes.array,
-  deploymentPipeline: PropTypes.object,
+  deploymentPipeline:  PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.string
+  ]),
   fetchContracts: PropTypes.func,
   updateDeploymentPipeline: PropTypes.func,
   web3: PropTypes.object,
