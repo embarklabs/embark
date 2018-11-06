@@ -90,5 +90,40 @@ describe('embark.utils', function () {
         url: 'http://myurl.com/myFile.sol'
       });
     });
+
+    it('should get the correct default url for a correct bzz:/ swarm file', function () {
+      const swarmFile = 'bzz:/someensdomain.eth/ERC725.sol'
+      const fileObj = Utils.getExternalContractUrl(
+        swarmFile
+      );
+      assert.deepEqual(fileObj, {
+        filePath: constants.httpContractsDirectory + swarmFile,
+        url: 'https://swarm-gateways.net/' + swarmFile
+      });
+    });
+
+    it('should get the correct url for a correct bzz:/ swarm file when a http swarm gateway is explicitly provided', function () {
+      const swarmFile = 'bzz:/someensdomain.eth/ERC725.sol'
+      const fileObj = Utils.getExternalContractUrl(
+        swarmFile,
+        'http://localhost:8500'
+      );
+      assert.deepEqual(fileObj, {
+        filePath: constants.httpContractsDirectory + 'ERC725.sol',
+        url: 'http://localhost:8500/' + swarmFile
+      });
+    });
+
+    it('should get the correct url for a correct bzz:/ swarm file when a https swarm gateway is provided', function () {
+      const swarmFile = 'bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63'
+      const fileObj = Utils.getExternalContractUrl(
+        swarmFile,
+        'https://swarm-gateways.net'
+      );
+      assert.deepEqual(fileObj, {
+        filePath: constants.httpContractsDirectory + swarmFile,
+        url: 'https://swarm-gateways.net/' + swarmFile
+      });
+    });
   });
 });
