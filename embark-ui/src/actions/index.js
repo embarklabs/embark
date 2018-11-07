@@ -293,10 +293,17 @@ export const saveFile = {
   failure: (error) => action(SAVE_FILE[FAILURE], {error})
 };
 
+export const SAVE_FOLDER = createRequestTypes('SAVE_FOLDER');
+export const saveFolder = {
+  request: ({path}) => action(SAVE_FOLDER[REQUEST], {path}),
+  success: () => action(SAVE_FOLDER[SUCCESS]),
+  failure: (error) => action(SAVE_FOLDER[FAILURE], {error})
+};
+
 export const REMOVE_FILE = createRequestTypes('REMOVE_FILE');
 export const removeFile = {
   request: ({name, path, content}) => action(REMOVE_FILE[REQUEST], {name, path, content}),
-  success: () => action(REMOVE_FILE[SUCCESS]),
+  success: (_, file) => action(REMOVE_FILE[SUCCESS], {file}),
   failure: (error) => action(REMOVE_FILE[FAILURE], {error})
 };
 

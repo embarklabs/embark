@@ -5,8 +5,10 @@ import TextEditorToolbar from '../components/TextEditorToolbar';
 
 import {
   saveFile as saveFileAction,
-  removeFile as removeFileAction
+  removeFile as removeFileAction,
+  saveFolder as saveFolderAction
 } from '../actions';
+import { getRootDirname, getTheme } from '../reducers/selectors';
 
 class TextEditorToolbarContainer extends Component {
   save() {
@@ -22,6 +24,10 @@ class TextEditorToolbarContainer extends Component {
                               toggleShowHiddenFiles={this.props.toggleShowHiddenFiles}
                               openAsideTab={this.props.openAsideTab}
                               save={() => this.save()}
+                              saveFile={this.props.saveFile}
+                              theme={this.props.theme}
+                              saveFolder={this.props.saveFolder}
+                              rootDirname={this.props.rootDirname}
                               remove={() => this.remove()}
                               activeTab={this.props.activeTab} />;
   }
@@ -29,18 +35,29 @@ class TextEditorToolbarContainer extends Component {
 
 TextEditorToolbarContainer.propTypes = {
   currentFile: PropTypes.object,
+  theme: PropTypes.string,
   isContract: PropTypes.bool,
   saveFile: PropTypes.func,
+  saveFolder: PropTypes.func,
   removeFile: PropTypes.func,
+  rootDirname: PropTypes.string,
   toggleShowHiddenFiles: PropTypes.func,
   openAsideTab: PropTypes.func,
   activeTab: PropTypes.object
 };
 
+const mapStateToProps = (state) => {
+  return {
+    rootDirname: getRootDirname(state),
+    theme: getTheme(state)
+  }
+}
+
 export default connect(
-  null,
+  mapStateToProps,
   {
     saveFile: saveFileAction.request,
+    saveFolder: saveFolderAction.request,
     removeFile: removeFileAction.request
   },
 )(TextEditorToolbarContainer);

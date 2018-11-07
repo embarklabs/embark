@@ -1,6 +1,8 @@
 import Convert from 'ansi-to-html';
 import qs from 'qs';
 
+import {DARK_THEME} from '../constants';
+
 export function last(array) {
   return array && array.length ? array[array.length - 1] : undefined;
 }
@@ -37,3 +39,5 @@ export function stripQueryToken(location) {
   );
   return _location;
 }
+
+export const isDarkTheme = (theme) => theme === DARK_THEME;

@@ -4,6 +4,9 @@ import {Button, Nav, NavLink} from 'reactstrap';
 import classnames from 'classnames';
 import FontAwesomeIcon from 'react-fontawesome';
 
+import AddFileModal from '../components/AddFileModal';
+import AddFolderModal from '../components/AddFolderModal';
+
 export const TextEditorToolbarTabs = {
   Interact: { label: 'Interact', icon: 'bolt' },
   Details: { label: 'Details', icon: 'info-circle' },
@@ -13,6 +16,11 @@ export const TextEditorToolbarTabs = {
 };
 
 class TextEditorToolbar extends Component {
+  constructor(props) {
+    super(props);
+    this.addFileModal = React.createRef();
+    this.addFolderModal = React.createRef();
+  }
 
   isActiveTab(tab) {
     return this.props.activeTab === tab;
@@ -38,6 +46,16 @@ class TextEditorToolbar extends Component {
     return (
       <ol className="breadcrumb mb-0">
         <li className="breadcrumb-item">
+          <Button color="success" size="sm" className="mr-1" onClick={() => this.addFileModal.current.toggle()}>
+            <FontAwesomeIcon className="mr-2" name="plus"/>
+            Add File
+          </Button>
+          <AddFileModal theme={this.props.theme} node={{path: this.props.rootDirname}} saveFile={this.props.saveFile} ref={this.addFileModal} />
+          <Button color="success" size="sm" className="mr-1" onClick={() => this.addFolderModal.current.toggle()}>
+            <FontAwesomeIcon className="mr-2" name="folder-open"/>
+            Add Folder
+          </Button>
+          <AddFolderModal theme={this.props.theme} node={{path: this.props.rootDirname}} saveFolder={this.props.saveFolder} ref={this.addFolderModal} />
           <Button color="success" size="sm" className="mr-1" onClick={this.props.save}>
             <FontAwesomeIcon className="mr-2" name="save"/>
             Save
@@ -61,7 +79,11 @@ class TextEditorToolbar extends Component {
 
 TextEditorToolbar.propTypes = {
   isContract: PropTypes.bool,
+  theme: PropTypes.string,
   save: PropTypes.func,
+  saveFile: PropTypes.func,
+  rootDirname: PropTypes.string,
+  saveFolder: PropTypes.func,
   remove: PropTypes.func,
   toggleShowHiddenFiles: PropTypes.func,
   openAsideTab: PropTypes.func,

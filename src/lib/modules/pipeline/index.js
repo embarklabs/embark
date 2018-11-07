@@ -29,13 +29,32 @@ class Pipeline {
       'get',
       '/embark-api/file',
       (req, res) => {
-        if (!fs.existsSync(req.query.path) || !req.query.path.startsWith(fs.dappPath())) {
-          return res.send({error: 'Path is invalid'});
+        try {
+          this.apiGuardBadFile(req.query.path);
+        } catch (error) {
+          return res.send({error: error.message});
         }
+        
         const name = path.basename(req.query.path);
         const content = fs.readFileSync(req.query.path, 'utf8');
         res.send({name, content, path: req.query.path});
 
+      }
+    );
+
+    plugin.registerAPICall(
+      'post',
+      '/embark-api/folders',
+      (req, res) => {
+        try {
+          this.apiGuardBadFile(req.body.path);
+        } catch (error) {
+          return res.send({error: error.message});
+        }
+        
+        fs.mkdirpSync(req.body.path);
+        const name = path.basename(req.body.path);
+        res.send({name, path: req.body.path});
       }
     );
 
@@ -60,7 +79,7 @@ class Pipeline {
       '/embark-api/file',
       (req, res) => {
         try {
-          this.apiGuardBadFile(req.query.path);
+          this.apiGuardBadFile(req.query.path, {ensureExists: true});
         } catch (error) {
           return res.send({error: error.message});
         }
@@ -100,10 +119,14 @@ class Pipeline {
     );
   }
 
-  apiGuardBadFile(pathToCheck) {
+  apiGuardBadFile(pathToCheck, options = {ensureExists: false}) {
     const dir = path.dirname(pathToCheck);
-    if (!fs.existsSync(pathToCheck) || !dir.startsWith(fs.dappPath())) {
-      throw new Error('Path is invalid');
+    const error = new Error('Path is invalid');
+    if (options.ensureExists && !fs.existsSync(pathToCheck)) {
+      throw error;
+    }
+    if (!dir.startsWith(fs.dappPath())) {
+      throw error;
     }
   }
 

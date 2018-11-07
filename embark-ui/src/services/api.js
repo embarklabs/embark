@@ -29,7 +29,7 @@ function request(type, path, params = {}) {
       'X-Embark-Cnonce': cnonce
     },
     ...(type === 'post' ? { data: params } : {}),
-    ...(type === 'get' ? { params: params.params } : {})
+    ...(['get', 'delete'].includes(type) ? { params: params.params } : {})
   }
 
   return axios(req)
@@ -167,6 +167,10 @@ export function fetchFile(payload) {
 
 export function postFile() {
   return post('/files', ...arguments);
+}
+
+export function postFolder() {
+  return post('/folders', ...arguments);
 }
 
 export function deleteFile(payload) {
