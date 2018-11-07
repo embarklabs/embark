@@ -1,92 +1,216 @@
-# Contributing
+# Contributing to Embark
 
-When contributing to this repository, please first discuss the change you wish to make via issue,
-email, or any other method with the owners of this repository before making a change.
+We would love for you to contribute to Embark  and help make it even better than it is
+today! As a contributor, here are the guidelines we would like you to follow:
 
-Please note we have a code of conduct, please follow it in all your interactions with the project.
+ - [Code of Conduct](#coc)
+ - [Question or Problem?](#question)
+ - [Issues and Bugs](#issue)
+ - [Feature Requests](#feature)
+ - [Submission Guidelines](#submit)
+ - [Coding Rules](#rules)
+ - [Commit Message Guidelines](#commit)
 
-## Pull Request Process
+## <a name="coc"></a> Code of Conduct
+Help us keep Embark open and inclusive. Please read and follow our [Code of Conduct](./CODE_OF_CONDUCT.md).
 
-1. Ensure any install or build dependencies are removed before the end of the layer when doing a
-   build.
-2. Update the README.md with details of changes to the interface, this includes new environment
-   variables, exposed ports, useful file locations and container parameters.
-3. Increase the version numbers in any examples files and the README.md to the new version that this
-   Pull Request would represent. The versioning scheme we use is [SemVer](http://semver.org/).
-4. You may merge the Pull Request in once you have the sign-off of two other developers, or if you
-   do not have permission to do that, you may request the second reviewer to merge it for you.
+## <a name="question"></a> Got a Question or Problem?
 
-## Code of Conduct
+Do not open issues for general support questions as we want to keep GitHub issues for bug reports and feature requests. You've got much better chances of getting your question answered on [Stack Exchange](https://ethereum.stackexchange.com/search?tab=newest&q=embark) where the questions should be tagged with tag `embark`.
 
-### Our Pledge
+Stack Exchange is a much better place to ask questions since:
 
-In the interest of fostering an open and welcoming environment, we as
-contributors and maintainers pledge to making participation in our project and
-our community a harassment-free experience for everyone, regardless of age, body
-size, disability, ethnicity, gender identity and expression, level of experience,
-nationality, personal appearance, race, religion, or sexual identity and
-orientation.
+- there are thousands of people willing to help
+- questions and answers stay available for public viewing so your question / answer might help someone else
+- Stack Exchange's voting system assures that the best answers are prominently visible.
 
-### Our Standards
+To save your and our time, we will systematically close all issues that are requests for general support and redirect people to Stack Exchange.
 
-Examples of behavior that contributes to creating a positive environment
-include:
+If you would like to chat about the question in real-time, you can reach out via [our gitter channel](https://gitter.im/embark-framework/Lobby).
 
-* Using welcoming and inclusive language
-* Being respectful of differing viewpoints and experiences
-* Gracefully accepting constructive criticism
-* Focusing on what is best for the community
-* Showing empathy towards other community members
+## <a name="issue"></a> Found a Bug?
+If you find a bug in the source code, you can help us by
+[submitting an issue](#submit-issue) to our [GitHub Repository](https://github.com/embark-framework/embark/). Even better, you can
+[submit a Pull Request](#submit-pr) with a fix.
 
-Examples of unacceptable behavior by participants include:
+## <a name="feature"></a> Missing a Feature?
+You can *request* a new feature by [submitting an issue](#submit-issue) to our GitHub
+Repository. If you would like to *implement* a new feature, please submit an issue with
+a proposal for your work first, to be sure that we can use it.
+Please consider what kind of change it is:
 
-* The use of sexualized language or imagery and unwelcome sexual attention or
-advances
-* Trolling, insulting/derogatory comments, and personal or political attacks
-* Public or private harassment
-* Publishing others' private information, such as a physical or electronic
-  address, without explicit permission
-* Other conduct which could reasonably be considered inappropriate in a
-  professional setting
+* For a **Major Feature**, first open an issue and outline your proposal so that it can be
+discussed. This will also allow us to better coordinate our efforts, prevent duplication of work,
+and help you to craft the change so that it is successfully accepted into the project.
+* **Small Features** can be crafted and directly [submitted as a Pull Request](#submit-pr).
 
-### Our Responsibilities
+## <a name="submit"></a> Submission Guidelines
 
-Project maintainers are responsible for clarifying the standards of acceptable
-behavior and are expected to take appropriate and fair corrective action in
-response to any instances of unacceptable behavior.
+### <a name="submit-issue"></a> Submitting an Issue
 
-Project maintainers have the right and responsibility to remove, edit, or
-reject comments, commits, code, wiki edits, issues, and other contributions
-that are not aligned to this Code of Conduct, or to ban temporarily or
-permanently any contributor for other behaviors that they deem inappropriate,
-threatening, offensive, or harmful.
+Before you submit an issue, please search the issue tracker, maybe an issue for your problem already exists and the discussion might inform you of workarounds readily available.
+
+We want to fix all the issues as soon as possible, but before fixing a bug we need to reproduce and confirm it. In order to reproduce bugs, we will systematically ask you to provide steps to reproduce your issue.
+
+You can file new issues by filling out our [new issue form](https://github.com/embark-framework/embark/issues/new/choose).
+
+### <a name="submit-pr"></a> Submitting a Pull Request (PR)
+Before you submit your Pull Request (PR) consider the following guidelines:
+
+1. Search [GitHub](https://github.com/embark-framework/embark/pulls) for an open or closed PR
+  that relates to your submission. You don't want to duplicate effort.
+1. Fork the embark-framework/embark repo.
+1. Make your changes in a new git branch:
+
+     ```shell
+     git checkout -b my-fix-branch develop
+     ```
+
+1. Create your patch, **including appropriate test cases**.
+1. Run the test suite, by running `$ npm run fulltest` and ensure that all tests pass.
+1. Commit your changes using a descriptive commit message that follows our
+  [commit message conventions](#commit). Adherence to these conventions
+  is necessary because release notes are automatically generated from these messages.
+
+     ```shell
+     git commit -a
+     ```
+    Note: the optional commit `-a` command line option will automatically "add" and "rm" edited files.
+
+1. Push your branch to GitHub:
+
+    ```shell
+    git push origin my-fix-branch
+    ```
+
+1. In GitHub, send a pull request to `embark:develop`.
+* If we suggest changes then:
+  * Make the required updates.
+  * Re-run the test suites to ensure tests are still passing.
+  * Rebase your branch and force push to your GitHub repository (this will update your Pull Request):
+
+    ```shell
+    git rebase develop -i
+    git push -f
+    ```
+
+That's it! Thank you for your contribution!
+
+#### After your pull request is merged
+
+After your pull request is merged, you can safely delete your branch and pull the changes
+from the main (upstream) repository:
+
+* Delete the remote branch on GitHub either through the GitHub web UI or your local shell as follows:
+
+    ```shell
+    git push origin --delete my-fix-branch
+    ```
+
+* Check out the develop branch:
+
+    ```shell
+    git checkout develop -f
+    ```
+
+* Delete the local branch:
+
+    ```shell
+    git branch -D my-fix-branch
+    ```
+
+* Update your develop with the latest upstream version:
+
+    ```shell
+    git pull --ff upstream develop
+    ```
+
+## <a name="rules"></a> Coding Rules
+To ensure consistency throughout the source code, keep these rules in mind as you are working:
+
+* All public API methods **must be documented**.
+
+## <a name="commit"></a> Commit Message Guidelines
+
+We have very precise rules over how our git commit messages can be formatted.  This leads to **more
+readable messages** that are easy to follow when looking through the **project history**.  But also,
+we use the git commit messages to **generate the Embark change log**.
+
+### Commit Message Format
+Each commit message consists of a **header**, a **body** and a **footer**.  The header has a special
+format that includes a **type**, a **scope** and a **subject**:
+
+```
+<type>(<scope>): <subject>
+<BLANK LINE>
+<body>
+<BLANK LINE>
+<footer>
+```
+
+The **header** is mandatory and the **scope** of the header is optional.
+
+Any line of the commit message cannot be longer 100 characters! This allows the message to be easier
+to read on GitHub as well as in various git tools.
+
+The footer should contain a [closing reference to an issue](https://help.github.com/articles/closing-issues-via-commit-messages/) if any.
+
+Samples:
+
+```
+docs(changelog): update changelog to beta.5
+```
+```
+fix(release): need to depend on latest rxjs and zone.js
+
+The version in our package.json gets copied to the one we publish, and users need the latest of these.
+```
+
+### Revert
+If the commit reverts a previous commit, it should begin with `revert: `, followed by the header of the reverted commit. In the body it should say: `This reverts commit <hash>.`, where the hash is the SHA of the commit being reverted.
+
+### Type
+Must be one of the following:
+
+* **build**: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
+* **ci**: Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
+* **docs**: Documentation only changes
+* **feat**: A new feature
+* **fix**: A bug fix
+* **perf**: A code change that improves performance
+* **refactor**: A code change that neither fixes a bug nor adds a feature
+* **style**: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+* **test**: Adding missing tests or correcting existing tests
+* **uiux**: UI and UX related changes like CSS
 
 ### Scope
+The scope should be the name of the npm package affected (as perceived by the person reading the changelog generated from commit messages.
 
-This Code of Conduct applies both within project spaces and in public spaces
-when an individual is representing the project or its community. Examples of
-representing a project or community include using an official project e-mail
-address, posting via an official social media account, or acting as an appointed
-representative at an online or offline event. Representation of a project may be
-further defined and clarified by project maintainers.
+The following is the list of supported scopes:
 
-### Enforcement
+* **@embark/cli** - Embark command line interface
+* **@embark/core** - Embark core
+* **@embark/<module>** - Embark core module
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported by contacting the project team at [INSERT EMAIL ADDRESS]. All
-complaints will be reviewed and investigated and will result in a response that
-is deemed necessary and appropriate to the circumstances. The project team is
-obligated to maintain confidentiality with regard to the reporter of an incident.
-Further details of specific enforcement policies may be posted separately.
+There are currently a few exceptions to the "use package name" rule:
 
-Project maintainers who do not follow or enforce the Code of Conduct in good
-faith may face temporary or permanent repercussions as determined by other
-members of the project's leadership.
+* **packaging**: used for changes that change the npm package layout in all of our packages, e.g. public path changes, package.json changes done to all packages, d.ts file/format changes, changes to bundles, etc.
+* **changelog**: used for updating the release notes in CHANGELOG.md
+* none/empty string: useful for `style`, `test` and `refactor` changes that are done across all packages (e.g. `style: add missing semicolons`)
 
-### Attribution
+### Subject
+The subject contains a succinct description of the change:
 
-This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4,
-available at [http://contributor-covenant.org/version/1/4][version]
+* use the imperative, present tense: "change" not "changed" nor "changes"
+* don't capitalize the first letter
+* no dot (.) at the end
 
-[homepage]: http://contributor-covenant.org
-[version]: http://contributor-covenant.org/version/1/4/
+### Body
+Just as in the **subject**, use the imperative, present tense: "change" not "changed" nor "changes".
+The body should include the motivation for the change and contrast this with previous behavior.
+
+### Footer
+The footer should contain any information about **Breaking Changes** and is also the place to
+reference GitHub issues that this commit **Closes**.
+
+**Breaking Changes** should start with the word `BREAKING CHANGE:` with a space or two newlines. The rest of the commit message is then used for this.
