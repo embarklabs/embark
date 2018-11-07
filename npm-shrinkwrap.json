@@ -2910,9 +2910,9 @@
       }
     },
     "embarkjs": {
-      "version": "0.4.3",
-      "resolved": "https://registry.npmjs.org/embarkjs/-/embarkjs-0.4.3.tgz",
-      "integrity": "sha512-0y50RSywW3ehPR5lOd0t+p+Xq8ycjHVbHFLU+9PwaS2nBDi4JU/BF0JYly3hUZp0cQmkmfTJDsnub/Ys/95Mcg==",
+      "version": "0.4.5",
+      "resolved": "https://registry.npmjs.org/embarkjs/-/embarkjs-0.4.5.tgz",
+      "integrity": "sha512-WAW9tlvCiSa6DEC6M+ZfFS9WemE91DunOUP4rn7urtFgOpT0m08dFKB0F+Qfcmonb7cozEPfNv5C78xSt1JUsA==",
       "requires": {
         "@babel/runtime-corejs2": "7.0.0-rc.1",
         "async": "2.6.1",
@@ -3974,8 +3974,7 @@
         },
         "code-point-at": {
           "version": "1.1.0",
-          "bundled": true,
-          "optional": true
+          "bundled": true
         },
         "concat-map": {
           "version": "0.0.1",
@@ -4086,8 +4085,7 @@
         },
         "inherits": {
           "version": "2.0.3",
-          "bundled": true,
-          "optional": true
+          "bundled": true
         },
         "ini": {
           "version": "1.3.5",
@@ -4097,7 +4095,6 @@
         "is-fullwidth-code-point": {
           "version": "1.0.0",
           "bundled": true,
-          "optional": true,
           "requires": {
             "number-is-nan": "^1.0.0"
           }
@@ -4209,8 +4206,7 @@
         },
         "number-is-nan": {
           "version": "1.0.1",
-          "bundled": true,
-          "optional": true
+          "bundled": true
         },
         "object-assign": {
           "version": "4.1.1",
@@ -4325,7 +4321,6 @@
         "string-width": {
           "version": "1.0.2",
           "bundled": true,
-          "optional": true,
           "requires": {
             "code-point-at": "^1.0.0",
             "is-fullwidth-code-point": "^1.0.0",
