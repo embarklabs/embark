@@ -56,5 +56,9 @@
   "logs": {
     "logPath": ".embark/logs/",
     "maxLogLength": 1500
+  },
+  "deploymentStrategy": {
+    "implicit": "implicit",
+    "explicit": "explicit"
   }
 }
