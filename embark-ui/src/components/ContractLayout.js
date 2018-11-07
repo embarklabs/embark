@@ -7,7 +7,6 @@ import classnames from 'classnames';
 import ContractDetail from '../components/ContractDetail';
 import ContractTransactionsContainer from '../containers/ContractTransactionsContainer';
 import ContractOverviewContainer from '../containers/ContractOverviewContainer';
-import ContractDebuggerContainer from '../containers/ContractDebuggerContainer';
 
 class ContractLayout extends React.Component {
   constructor(props) {
@@ -57,14 +56,6 @@ class ContractLayout extends React.Component {
                   <FontAwesomeIcon className="mr-2" name="list-alt" />Transactions
                 </NavLink>
               </NavItem>
-              <NavItem>
-                <NavLink
-                  className={classnames({ active: this.state.activeTab === '4' })}
-                  onClick={() => { this.toggle('4'); }}
-                >
-                  <FontAwesomeIcon className="mr-2" name="bug" />Debugger
-                </NavLink>
-              </NavItem>
             </Nav>
             <TabContent activeTab={this.state.activeTab}>
               <TabPane tabId="1">
@@ -75,9 +66,6 @@ class ContractLayout extends React.Component {
               </TabPane>
               <TabPane tabId="3">
                 <ContractTransactionsContainer contract={this.props.contract} />
-              </TabPane>
-              <TabPane tabId="4">
-                <ContractDebuggerContainer contract={this.props.contract} />
               </TabPane>
             </TabContent>
           </CardBody>

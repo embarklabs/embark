@@ -7,14 +7,23 @@ import {
   Button
 } from "reactstrap";
 import ReactJson from 'react-json-view';
+import DebugButton from './DebugButton';
 
 class ContractDebugger extends Component {
-  handleChange(e) {
-    this.setState({txHash: e.target.value});
+  constructor(props) {
+    super(props);
+    this.state = {txHash: ''};
   }
 
-  debug(_e) {
-    this.props.startDebug(this.state.txHash);
+  componentDidMount() {
+    if (this.props.debuggerTransactionHash) {
+      this.setState({txHash: this.props.debuggerTransactionHash});
+      this.props.startDebug(this.props.debuggerTransactionHash);
+    }
+  }
+
+  handleChange(e) {
+    this.setState({txHash: e.target.value});
   }
 
   debugJumpBack(_e) {
@@ -46,8 +55,8 @@ class ContractDebugger extends Component {
       <div>
         <Row>
           <Col>
-            <Input name="txHash" id="txHash" onChange={(e) => this.handleChange(e)}/>
-            <Button color="primary" onClick={(e) => this.debug(e)}>Debug Tx</Button>
+            <Input name="txHash" id="txHash" value={this.state.txHash} onChange={(e) => this.handleChange(e)}/>
+            <DebugButton forceDebuggable transaction={{hash: this.state.txHash}} />
           </Col>
         </Row>
         <Row>
@@ -74,7 +83,7 @@ class ContractDebugger extends Component {
 }
 
 ContractDebugger.propTypes = {
-  contract: PropTypes.object.isRequired,
+  debuggerTransactionHash: PropTypes.string,
   startDebug: PropTypes.func,
   debugJumpBack: PropTypes.func,
   debugJumpForward: PropTypes.func,

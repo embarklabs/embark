@@ -22,6 +22,10 @@ class TextEditorToolbar extends Component {
     return tab === TextEditorToolbarTabs.Browser;
   }
 
+  isDebuggerTab(tab) {
+    return tab === TextEditorToolbarTabs.Debugger;
+  }
+
   renderTab(tab) {
     return (
       <NavLink key={tab.label} className={classnames('btn', { active: this.isActiveTab(tab)})} onClick={() => this.props.openAsideTab(tab)}>
@@ -45,7 +49,8 @@ class TextEditorToolbar extends Component {
         </li>
         <li className="breadcrumb-menu">
           <Nav className="btn-group">
-            {this.props.isContract && Object.values(TextEditorToolbarTabs).map(tab => !this.isBrowserTab(tab) && this.renderTab(tab))}
+            {this.props.isContract && Object.values(TextEditorToolbarTabs).map(tab => !this.isBrowserTab(tab) && !this.isDebuggerTab(tab) && this.renderTab(tab))}
+            {this.renderTab(TextEditorToolbarTabs.Debugger)}
             {this.renderTab(TextEditorToolbarTabs.Browser)}
           </Nav>
         </li>
