@@ -67,6 +67,7 @@ export const postEnsRecord = doRequest.bind(null, actions.ensRecords, api.postEn
 export const fetchFiles = doRequest.bind(null, actions.files, api.fetchFiles);
 export const fetchFile = doRequest.bind(null, actions.file, api.fetchFile);
 export const postFile = doRequest.bind(null, actions.saveFile, api.postFile);
+export const postFolder = doRequest.bind(null, actions.saveFolder, api.postFolder);
 export const deleteFile = doRequest.bind(null, actions.removeFile, api.deleteFile);
 export const fetchEthGas = doRequest.bind(null, actions.gasOracle, api.getEthGasAPI);
 export const startDebug = doRequest.bind(null, actions.startDebug, api.startDebug);
@@ -209,7 +210,16 @@ export function *watchPostFile() {
 }
 
 export function *watchPostFileSuccess() {
+  yield takeEvery(actions.SAVE_FILE[actions.SUCCESS], fetchFiles);
   yield takeEvery(actions.SAVE_FILE[actions.SUCCESS], addEditorTabs);
+}
+
+export function *watchPostFolder() {
+  yield takeEvery(actions.SAVE_FOLDER[actions.REQUEST], postFolder);
+}
+
+export function *watchPostFolderSuccess() {
+  yield takeEvery(actions.SAVE_FOLDER[actions.SUCCESS], fetchFiles);
 }
 
 export function *watchDeleteFile() {
@@ -511,6 +521,7 @@ export default function *root() {
     fork(watchFetchFiles),
     fork(watchFetchFile),
     fork(watchPostFile),
+    fork(watchPostFolder),
     fork(watchDeleteFile),
     fork(watchDeleteFileSuccess),
     fork(watchFetchFileSuccess),
@@ -543,6 +554,7 @@ export default function *root() {
     fork(watchRemoveEditorTabs),
     fork(watchAddEditorTabsSuccess),
     fork(watchRemoveEditorTabsSuccess),
-    fork(watchPostFileSuccess)
+    fork(watchPostFileSuccess),
+    fork(watchPostFolderSuccess)
   ]);
 }
