@@ -73,11 +73,7 @@ export function getContractEventsByContract(state, contractName) {
 }
 
 export function getContracts(state) {
-  return state.entities.contracts.filter(contract => !contract.isFiddle);
-}
-
-export function getFiddleContracts(state) {
-  return state.entities.contracts.filter(contract => contract.isFiddle);
+  return state.entities.contracts
 }
 
 export function getContract(state, contractName) {
