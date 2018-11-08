@@ -40,6 +40,7 @@ class EmbarkController {
     let Simulator = require('../lib/modules/blockchain_process/simulator.js');
     let simulator = new Simulator({
       blockchainConfig: this.config.blockchainConfig,
+      contractsConfig: this.config.contractsConfig,
       logger: this.logger
     });
     simulator.run(options);
