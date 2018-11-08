@@ -10,3 +10,4 @@ node_modules
 npm-debug.log
 package
 src/test/cli_shim/.cid
+dist
