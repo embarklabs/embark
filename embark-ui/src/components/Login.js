@@ -4,12 +4,12 @@ import logo from '../images/logo-new.svg';
 import './Login.css';
 
 class Login extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = props.credentials;
   }
 
-  handleChange(event){
+  handleChange(event) {
     this.setState({[event.target.name]: event.target.value});
   }
 
@@ -28,27 +28,30 @@ class Login extends React.Component {
               <p className="text-danger">{this.props.error}</p>
             }
             <div className="mt-4">
-              <form  onSubmit={(e) => this.handleSubmit(e)}>
+              <form onSubmit={(e) => this.handleSubmit(e)}>
                 <div className="form-group">
                   <label htmlFor="host">Host</label>
                   <input type="text"
-                        className="form-control form-control-lg"
-                        id="host"
-                        name="host"
-                        placeholder="Enter Embark host"
-                        onChange={(e) => this.handleChange(e)}
-                        value={this.state.host}/>
+                         className="form-control form-control-lg"
+                         id="host"
+                         name="host"
+                         placeholder="Enter Embark host"
+                         onChange={(e) => this.handleChange(e)}
+                         value={this.state.host}/>
                 </div>
                 <div className="form-group">
                   <label htmlFor="token">Token</label>
                   <input type="text"
-                        className="form-control form-control-lg"
-                        id="token"
-                        name="token"
-                        placeholder="Enter token"
-                        onChange={(e) => this.handleChange(e)}
-                        value={this.state.token}/>
-                  <small className="form-text text-muted">Execute <code>embark run</code> in the command line to get your token.</small>
+                         className="form-control form-control-lg"
+                         id="token"
+                         name="token"
+                         placeholder="Enter token"
+                         onChange={(e) => this.handleChange(e)}
+                         autoComplete="off"
+                         value={this.state.token}/>
+                  <small className="form-text text-muted">Execute <code>embark run</code> in the command line to get
+                    your token.
+                  </small>
                 </div>
                 <button type="submit" className="btn btn-pill btn-dark">Enter Cockpit</button>
               </form>
