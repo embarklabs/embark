@@ -157,6 +157,10 @@ export function getEnsRecords(state) {
   return state.entities.ensRecords;
 }
 
+export function getEnsRecordForName(state, name) {
+  return state.entities.ensRecords.find((record) => record.name === name);
+}
+
 export function getEnsErrors(state) {
   return state.errorEntities.ensRecords;
 }
