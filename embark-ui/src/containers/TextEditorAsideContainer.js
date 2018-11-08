@@ -18,29 +18,29 @@ class TextEditorAsideContainer extends Component {
   }
 
   renderContent(contract, index) {
-    switch (this.props.currentAsideTab) {
-      case TextEditorToolbarTabs.Debugger:
+    switch (this.props.currentAsideTab.label) {
+      case TextEditorToolbarTabs.Debugger.label:
         return (
           <React.Fragment>
             <h2>{contract.className} - Debugger</h2>
             <ContractDebuggerContainer key={index} contract={contract}/>
           </React.Fragment>
         );
-      case TextEditorToolbarTabs.Details:
+      case TextEditorToolbarTabs.Details.label:
         return (
           <React.Fragment>
             <h2>{contract.className} - Details</h2>
             <ContractDetail key={index} contract={contract}/>
           </React.Fragment>
         );
-      case TextEditorToolbarTabs.Transactions:
+      case TextEditorToolbarTabs.Transactions.label:
         return (
           <React.Fragment>
             <h2>{contract.className} - Transactions</h2>
             <ContractTransactionsContainer key={index} contract={contract}/>
           </React.Fragment>
         );
-      case TextEditorToolbarTabs.Interact:
+      case TextEditorToolbarTabs.Interact.label:
         return (
           <React.Fragment>
             <h2>{contract.className} - Interact</h2>
@@ -53,7 +53,7 @@ class TextEditorAsideContainer extends Component {
   }
 
   render() {
-    if (this.props.currentAsideTab === TextEditorToolbarTabs.Browser) {
+    if (this.props.currentAsideTab.label === TextEditorToolbarTabs.Browser.label) {
       return <Preview/>;
     }
     return this.props.contracts.map((contract, index) => {
