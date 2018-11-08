@@ -5163,9 +5163,9 @@
       }
     },
     "embarkjs": {
-      "version": "0.4.4",
-      "resolved": "https://registry.npmjs.org/embarkjs/-/embarkjs-0.4.4.tgz",
-      "integrity": "sha512-HIetHNqngbhUgdESZ8V1gQiRzoti7LMu/P5xcfemn+8b4KwasUyrybaBdvqmo+ock9rExXZFHIgaYA+85s9DkA==",
+      "version": "0.4.5",
+      "resolved": "https://registry.npmjs.org/embarkjs/-/embarkjs-0.4.5.tgz",
+      "integrity": "sha512-WAW9tlvCiSa6DEC6M+ZfFS9WemE91DunOUP4rn7urtFgOpT0m08dFKB0F+Qfcmonb7cozEPfNv5C78xSt1JUsA==",
       "requires": {
         "@babel/runtime-corejs2": "7.0.0-rc.1",
         "async": "2.6.1",

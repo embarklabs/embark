@@ -4,11 +4,12 @@
   margin-top: -1.5rem !important;
 }
 
-.hidden-toogle {
+.hidden-toggle {
   position: absolute;
   bottom: 0;
   right: 0;
   left: 0;
+  height: 40px;
 }
 
 .text-editor__debuggerLine {
@@ -34,8 +35,12 @@
   .editor-aside {
     position: relative;
   }
+}
 
-  .aside-opened .text-editor-container {
-    max-height: 500px;
-  }
+.resizer-handle {
+  width: 15px !important;
+}
+
+.resize-handle-horizontal {
+  height: 15px !important;
 }

@@ -60,5 +60,6 @@
   "deploymentStrategy": {
     "implicit": "implicit",
     "explicit": "explicit"
-  }
+  },
+  "embarkResourceOrigin": "http://embark"
 }

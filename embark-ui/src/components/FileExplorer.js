@@ -21,7 +21,8 @@ const style = (theme) => ({
       top: 0,
       bottom: '40px',
       left: 0,
-      right: 0
+      right: 0,
+      minWidth: '175px'
     },
     node: {
       base: {
@@ -214,7 +215,7 @@ class FileExplorer extends React.Component {
           style={style(this.props.theme)}
         />
 
-        <Label className="hidden-toogle mb-0 pt-2 pr-2 pb-1 border-top text-right">
+        <Label className="hidden-toggle mb-0 pt-2 pr-2 pb-1 border-top text-right">
           <span className="mr-2 align-top" style={{"fontSize": "12px"}}>Show hidden files</span>
           <AppSwitch color="success" variant="pill" size="sm" onChange={this.props.toggleShowHiddenFiles}/>
         </Label>
