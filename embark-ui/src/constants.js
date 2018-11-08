@@ -8,3 +8,7 @@ export const DEPLOYMENT_PIPELINES = {
   embark: 'embark'
 };
 export const DEFAULT_HOST = process.env.NODE_ENV === 'development' ? 'localhost:8000' : window.location.host;
+export const OPERATIONS = {
+  MORE: 1,
+  LESS: -1
+};

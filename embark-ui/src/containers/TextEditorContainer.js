@@ -27,7 +27,10 @@ class TextEditorContainer extends React.Component {
                   addEditorTabs={this.props.addEditorTabs}
                   debuggerLine={this.props.debuggerLine}
                   onFileContentChange={this.props.onFileContentChange}
-                  theme={this.props.theme} />
+                  theme={this.props.theme}
+                  ref={instance => {
+                    if (instance) this.editor = instance;
+                  }}/>
     );
   }
 }
@@ -45,7 +48,7 @@ TextEditorContainer.propTypes = {
   onFileContentChange: PropTypes.func,
   toggleBreakpoints: PropTypes.func,
   breakpoints: PropTypes.array,
-  toggleBreakpoint: PropTypes.object,
+  toggleBreakpoint: PropTypes.func,
   fetchEditorTabs: PropTypes.func,
   removeEditorTabs: PropTypes.func,
   addEditorTabs: PropTypes.func,
@@ -57,9 +60,11 @@ TextEditorContainer.propTypes = {
 export default connect(
   mapStateToProps,
   {
-    toggleBreakpoint,
+    toggleBreakpoint: toggleBreakpoint.request,
     fetchEditorTabs: fetchEditorTabsAction.request,
     removeEditorTabs: removeEditorTabsAction.request,
     addEditorTabs: addEditorTabsAction.request
   },
+  null,
+  { withRef: true }
 )(TextEditorContainer);
