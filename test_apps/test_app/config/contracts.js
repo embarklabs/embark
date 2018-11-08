@@ -23,9 +23,6 @@ module.exports = {
       Ownable: {
         deploy: false
       },
-      SimpleStorageTest: {
-        args: [100]
-      },
       SimpleStorage: {
         fromIndex: 0,
         args: [100],
