@@ -46,6 +46,10 @@ class TextEditor extends React.Component {
     });
   }
 
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.handleResize);
+  }
+
   handleResize = () => editor.layout();
 
 
@@ -134,6 +138,10 @@ class TextEditor extends React.Component {
     this.handleResize();
   }
 
+  addEditorTabs(e, file) {
+    e.preventDefault(); this.props.addEditorTabs(file);
+  }
+
   renderTabs() {
     return (
       <ul className="list-inline m-0 p-0">
@@ -144,7 +152,7 @@ class TextEditor extends React.Component {
           })}>
             <a
               href="#switch-tab"
-              onClick={() => this.props.addEditorTabs(file)}
+              onClick={(e) => this.addEditorTabs(e, file)}
               className="p-2 text-muted"
             >
               {file.name}
