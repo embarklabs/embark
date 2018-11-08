@@ -115,6 +115,7 @@ describe('embark.Config', function () {
         deployment: {host: 'localhost', port: 8545, type: 'rpc', "accounts": [{"mnemonic": "12 word mnemonic", "balance": "5000000000"}]},
         dappConnection: ['$WEB3', 'localhost:8545'],
         "gas": "400000",
+        "strategy": "implicit",
         "contracts": {
           "SimpleStorage": {
             "args": [100],
