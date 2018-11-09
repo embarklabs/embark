@@ -201,7 +201,7 @@ class Cmd {
       .description(__('run a fast ethereum rpc simulator'))
       .option('--testrpc', __('use ganache-cli (former "testrpc") as the rpc simulator [%s]', 'default'))
       .option('-p, --port [port]', __('port to run the rpc simulator (default: %s)', '8545'))
-      .option('-h, --host [host]', __('host to run the rpc simulator (default: %s)', 'localhost'))
+      .option('--host [host]', __('host to run the rpc simulator (default: %s)', 'localhost'))
       .option('-a, --accounts [numAccounts]', __('number of accounts (default: %s)', '10'))
       .option('-e, --defaultBalanceEther [balance]', __('Amount of ether to assign each test account (default: %s)', '100'))
       .option('-l, --gasLimit [gasLimit]', __('custom gas limit (default: %s)', '8000000'))
