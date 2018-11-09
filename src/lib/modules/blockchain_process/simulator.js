@@ -14,7 +14,7 @@ class Simulator {
     this.logger = options.logger;
   }
 
-  /*eslint complexity: ["error", 22]*/
+  /*eslint complexity: ["error", 23]*/
   run(options) {
     let cmds = [];
 
@@ -39,7 +39,7 @@ class Simulator {
     cmds.push("-h " + host);
     cmds.push("-a " + (options.numAccounts || 10));
     cmds.push("-e " + (options.defaultBalance || 100));
-    cmds.push("-l " + (options.gasLimit || 8000000));
+    cmds.push("-l " + (options.gasLimit || this.blockchainConfig.targetGasLimit || 8000000));
 
     // adding mnemonic only if it is defined in the blockchainConfig or options
     let simulatorMnemonic = this.blockchainConfig.simulatorMnemonic || options.simulatorMnemonic;
