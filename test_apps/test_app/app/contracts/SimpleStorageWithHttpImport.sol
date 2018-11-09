@@ -1,7 +1,7 @@
 pragma solidity ^0.4.17;
 
-import "https://github.com/embark-framework/embark/blob/develop/test_apps/contracts_app/contracts/ownable.sol";
-import "https://github.com/embark-framework/embark/blob/develop/test_apps/contracts_app/contracts/contract_args.sol";
+import "https://github.com/embark-framework/embark/blob/master/test_apps/contracts_app/contracts/ownable.sol";
+import "https://github.com/embark-framework/embark/blob/master/test_apps/contracts_app/contracts/contract_args.sol";
 
 
 contract SimpleStorageWithHttpImport is Ownable {
