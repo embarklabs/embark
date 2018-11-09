@@ -75,7 +75,8 @@ class Simulator {
     const programName = 'ganache-cli';
     const program = ganache;
     console.log(`running: ${programName} ${cmds.join(' ')}`);
-    shelljs.exec(`${program} ${cmds.join(' ')}`, {async : true});
+
+    shelljs.exec(`node ${program} ${cmds.join(' ')}`, {async : true});
 
     if(useProxy){
       let ipcObject = new Ipc({ipcRole: 'client'});
