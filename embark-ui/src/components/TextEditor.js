@@ -123,13 +123,14 @@ class TextEditor extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.currentFile.content !== prevProps.currentFile.content) {
+    const isNewContent = this.props.currentFile.content !== prevProps.currentFile.content;
+    if (isNewContent) {
       editor.setValue(this.props.currentFile.content || '');
     }
 
     this.updateMarkers();
     const expectedDecorationsLength = this.props.debuggerLine ? this.props.breakpoints.length + 1 : this.props.breakpoints.length;
-    if (expectedDecorationsLength !== this.state.decorations.length || this.props.debuggerLine !== prevProps.debuggerLine) {
+    if (expectedDecorationsLength !== this.state.decorations.length || this.props.debuggerLine !== prevProps.debuggerLine || isNewContent) {
       this.updateDecorations();
     }
 

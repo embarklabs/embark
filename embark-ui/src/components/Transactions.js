@@ -3,10 +3,11 @@ import {Link} from "react-router-dom";
 import {Row, Col, Card, CardHeader, CardBody} from 'reactstrap';
 import PropTypes from 'prop-types';
 
+import DebugButton from './DebugButton';
 import CardTitleIdenticon from './CardTitleIdenticon';
 import Pagination from "./Pagination";
 
-const Transactions = ({transactions, changePage, currentPage, numberOfPages}) => (
+const Transactions = ({transactions, contracts, changePage, currentPage, numberOfPages}) => (
   <Row>
     <Col>
       <Card>
@@ -21,6 +22,11 @@ const Transactions = ({transactions, changePage, currentPage, numberOfPages}) =>
                   {transaction.hash}
                 </Link>
               </CardTitleIdenticon>
+              <Row>
+                <Col>
+                  <DebugButton transaction={transaction} contracts={contracts} />
+                </Col>
+              </Row>
               <Row>
                 <Col md={6}>
                   <strong>Block number</strong>
@@ -50,6 +56,7 @@ const Transactions = ({transactions, changePage, currentPage, numberOfPages}) =>
 
 Transactions.propTypes = {
   transactions: PropTypes.arrayOf(PropTypes.object),
+  contracts: PropTypes.arrayOf(PropTypes.object),
   changePage: PropTypes.func,
   currentPage: PropTypes.number,
   numberOfPages: PropTypes.number

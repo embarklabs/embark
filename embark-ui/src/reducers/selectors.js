@@ -225,7 +225,7 @@ export function getWeb3Deployments(state) {
   return state.web3.deployments;
 }
 
-export function debuggerInfo(state) {
+export function getDebuggerInfo(state) {
   return state.debuggerInfo;
 }
 

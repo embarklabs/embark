@@ -2,6 +2,8 @@ import PropTypes from "prop-types";
 import React from 'react';
 import {Row, Col, Table, FormGroup, Label, Input, Form} from 'reactstrap';
 
+import DebugButton from './DebugButton'
+
 const TX_STATES = {Success: '0x1', Fail: '0x0', Any: ''};
 const EVENT = 'event';
 const FUNCTION = 'function';
@@ -107,6 +109,7 @@ class ContractTransactions extends React.Component {
             <Table>
               <thead>
                 <tr>
+                  <th></th>
                   <th>Call</th>
                   <th>Events</th>
                   <th>Gas Used</th>
@@ -120,6 +123,7 @@ class ContractTransactions extends React.Component {
                   this.dataToDisplay().map((log, index) => {
                     return (
                       <tr key={'log-' + index}>
+                        <td><DebugButton forceDebuggable transaction={{hash: log.transactionHash}}/></td>
                         <td>{`${log.name}.${log.functionName}(${log.paramString})`}</td>
                         <td>{log.events.join(', ')}</td>
                         <td>{log.gasUsed}</td>

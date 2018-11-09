@@ -2,10 +2,10 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {transactions as transactionsAction, initBlockHeader, stopBlockHeader} from '../actions';
+import {transactions as transactionsAction, initBlockHeader, stopBlockHeader, contracts as contractsAction} from '../actions';
 import Transactions from '../components/Transactions';
 import DataWrapper from "../components/DataWrapper";
-import {getTransactions} from "../reducers/selectors";
+import {getTransactions, getContracts} from "../reducers/selectors";
 
 const MAX_TXS = 10; // TODO use same constant as API
 
@@ -20,6 +20,7 @@ class TransactionsContainer extends Component {
 
   componentDidMount() {
     this.props.fetchTransactions();
+    this.props.fetchContracts();
     this.props.initBlockHeader();
   }
 
@@ -59,7 +60,9 @@ class TransactionsContainer extends Component {
     return (
       <React.Fragment>
         <DataWrapper shouldRender={this.currentTxs.length > 0} {...this.props} render={() => (
-          <Transactions transactions={this.currentTxs} numberOfPages={this.getNumberOfPages()}
+          <Transactions transactions={this.currentTxs} 
+                        contracts={this.props.contracts}
+                        numberOfPages={this.getNumberOfPages()}
                         changePage={(newPage) => this.changePage(newPage)}
                         currentPage={this.state.currentPage || this.getNumberOfPages()} />
         )} />
@@ -69,12 +72,19 @@ class TransactionsContainer extends Component {
 }
 
 function mapStateToProps(state) {
-  return {transactions: getTransactions(state), error: state.errorMessage, loading: state.loading};
+  return {
+    transactions: getTransactions(state),
+    contracts: getContracts(state),
+    error: state.errorMessage,
+    loading: state.loading
+  };
 }
 
 TransactionsContainer.propTypes = {
   transactions: PropTypes.arrayOf(PropTypes.object),
+  contracts: PropTypes.arrayOf(PropTypes.object),
   fetchTransactions: PropTypes.func,
+  fetchContracts: PropTypes.func,
   initBlockHeader: PropTypes.func,
   stopBlockHeader: PropTypes.func,
   error: PropTypes.string,
@@ -85,6 +95,7 @@ export default connect(
   mapStateToProps,
   {
     fetchTransactions: transactionsAction.request,
+    fetchContracts: contractsAction.request,
     initBlockHeader,
     stopBlockHeader
   },

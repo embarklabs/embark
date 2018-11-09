@@ -1,13 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import {withRouter} from "react-router-dom";
 import {Row, Col} from 'reactstrap';
 import TextEditorAsideContainer from './TextEditorAsideContainer';
 import TextEditorContainer from './TextEditorContainer';
 import FileExplorerContainer from './FileExplorerContainer';
 import TextEditorToolbarContainer from './TextEditorToolbarContainer';
-import {fetchEditorTabs as fetchEditorTabsAction} from '../actions';
-import {getCurrentFile} from '../reducers/selectors';
+import {
+  fetchEditorTabs as fetchEditorTabsAction,
+  contracts as contractsAction,
+  file as fileAction,
+  transaction as transactionAction
+} from '../actions';
+import {getCurrentFile, getContracts, getTransaction} from '../reducers/selectors';
+import {getDebuggerTransactionHash} from '../utils/utils';
 import classnames from 'classnames';
 import Resizable from 're-resizable';
 import {OPERATIONS} from '../constants';
@@ -24,16 +31,21 @@ class EditorContainer extends React.Component {
     this.windowWidth = window.innerWidth;
 
     this.state = {
-      currentAsideTab: {}, showHiddenFiles: false, currentFile: this.props.currentFile,
+      currentAsideTab: {},
+      showHiddenFiles: false,
+      currentFile: this.props.currentFile,
       editorHeight: this.DEFAULT_HEIGHT,
       editorWidth: ((this.windowWidth < this.SMALL_SIZE) ? this.DEFAULT_EDITOR_WIDTH_SMALL : this.DEFAULT_EDITOR_WIDTH) + '%',
-      asideHeight: '100%', asideWidth: '25%',
+      asideHeight: '100%',
+      asideWidth: '25%',
       isSmallSize: (this.windowWidth < this.SMALL_SIZE)
     };
   }
 
   componentDidMount() {
     this.props.fetchEditorTabs();
+    this.props.fetchContracts();
+    this.props.fetchTransaction(this.props.debuggerTransactionHash);
     window.addEventListener("resize", this.updateDimensions.bind(this));
   }
 
@@ -55,6 +67,14 @@ class EditorContainer extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.currentFile.path !== prevProps.currentFile.path) {
       this.setState({currentFile: this.props.currentFile});
+    }
+
+    if(this.props.contracts && this.props.transaction !== prevProps.transaction) {
+      const debuggingContract = this.props.contracts.find(contract => contract.address === this.props.transaction.to)
+      if (debuggingContract) {
+        this.setState({currentAsideTab: 'debugger'})
+        this.props.fetchFile({path: debuggingContract.path});
+      }
     }
   }
 
@@ -129,6 +149,7 @@ class EditorContainer extends React.Component {
     const aside = (
       <div className="editor-aside">
         <TextEditorAsideContainer currentAsideTab={this.state.currentAsideTab}
+                                  debuggerTransactionHash={this.props.debuggerTransactionHash}
                                   currentFile={this.props.currentFile}/>
       </div>
     );
@@ -188,21 +209,36 @@ class EditorContainer extends React.Component {
   }
 }
 
-function mapStateToProps(state, _props) {
+function mapStateToProps(state, props) {
   const currentFile = getCurrentFile(state);
+  const debuggerTransactionHash = getDebuggerTransactionHash(props.location);
 
   return {
-    currentFile
+    currentFile,
+    debuggerTransactionHash,
+    transaction: getTransaction(state, debuggerTransactionHash),
+    contracts: getContracts(state)
   };
 }
 
 EditorContainer.propTypes = {
+  debuggerTransactionHash: PropTypes.string,
+  contracts: PropTypes.array,
+  transaction: PropTypes.object,
+  fetchContracts: PropTypes.func,
+  fetchFile: PropTypes.func,
+  fetchTransaction: PropTypes.func,
   currentFile: PropTypes.object,
   fetchEditorTabs: PropTypes.func
 };
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
-  {fetchEditorTabs: fetchEditorTabsAction.request}
-)(EditorContainer);
+  {
+    fetchEditorTabs: fetchEditorTabsAction.request,
+    fetchTransaction: transactionAction.request,
+    fetchFile: fileAction.request,
+    fetchContracts: contractsAction.request
+  },
+)(EditorContainer));
 

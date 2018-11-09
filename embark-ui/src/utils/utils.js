@@ -25,6 +25,10 @@ export function getQueryToken(location) {
   return qs.parse(location.search, {ignoreQueryPrefix: true}).token;
 }
 
+export function getDebuggerTransactionHash(location) {
+  return qs.parse(location.search, {ignoreQueryPrefix: true}).debuggerTransactionHash;
+}
+
 export function stripQueryToken(location) {
   const _location = Object.assign({}, location);
   _location.search = _location.search.replace(
