@@ -1,3 +1,4 @@
+let env = require('../../core/env');
 let fs = require('../../core/fs');
 let utils = require('../../utils/utils');
 const EmbarkJS = require('embarkjs');
@@ -23,12 +24,16 @@ class Console {
       this.ipc.on('console:executeCmd', this.executeCmd.bind(this));
     }
     this.events.setCommandHandler("console:executeCmd", this.executeCmd.bind(this));
-    this.events.setCommandHandler("console:history", (cb) => this.getHistory(process.env.DEFAULT_CMD_HISTORY_SIZE, cb));
+    this.events.setCommandHandler("console:history", (cb) => this.getHistory(this.cmdHistorySize(), cb));
     this.registerEmbarkJs();
     this.registerConsoleCommands();
     this.registerApi();
 
     this.suggestions = new Suggestions(embark, options);
+  }
+
+  cmdHistorySize() {
+    return env.anchoredValue(env.CMD_HISTORY_SIZE);
   }
 
   registerApi() {
@@ -170,7 +175,7 @@ class Console {
         _length = parseInt(_length, 10);
         if (isNaN(_length)) return callback("Invalid argument. Please provide an integer.");
       }
-      let length = _length || process.env.DEFAULT_CMD_HISTORY_SIZE;
+      let length = _length || this.cmdHistorySize();
       return callback(null, this.history
                               .slice(Math.max(0, this.history.length - length))
                               .filter(line => line.trim())
@@ -182,7 +187,7 @@ class Console {
     if (fs.existsSync(utils.dirname(this.cmdHistoryFile))) {
       fs.writeFileSync(this.cmdHistoryFile,
                        this.history
-                        .slice(Math.max(0, this.history.length - process.env.DEFAULT_CMD_HISTORY_SIZE))
+                        .slice(Math.max(0, this.history.length - this.cmdHistorySize()))
                         .reverse()
                         .filter(line => line.trim())
                         .join('\n'));

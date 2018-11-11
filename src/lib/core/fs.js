@@ -3,33 +3,8 @@ const os = require('os');
 let path = require('path');
 let fs = require('fs-extra');
 let utils = require('../utils/utils.js');
+let env = require('./env.js');
 require('colors');
-
-// set PWD to process.cwd() since Windows doesn't have a value for PWD
-if (!process.env.PWD) {
-  process.env.PWD = process.cwd();
-}
-
-// set the anchor for embark's fs.dappPath()
-if (!process.env.DAPP_PATH) {
-  process.env.DAPP_PATH = process.env.PWD;
-}
-
-// set the anchor for embark's fs.embarkPath()
-if (!process.env.EMBARK_PATH) {
-  process.env.EMBARK_PATH = utils.joinPath(__dirname, '../../..');
-}
-
-// set the anchor for embark's fs.pkgPath()
-if (!process.env.PKG_PATH) {
-  process.env.PKG_PATH = process.env.PWD;
-}
-
-const pathConfigs = {
-  DAPP_PATH: process.env.DAPP_PATH,
-  EMBARK_PATH: process.env.EMBARK_PATH,
-  PKG_PATH: process.env.PKG_PATH
-};
 
 function restrictPath(receiver, binding, count, args) {
   const dapp = dappPath();
@@ -149,25 +124,24 @@ function removeSync() {
   return restrictPath(fs.removeSync, fs.removeSync, 1, arguments);
 }
 
-function anchoredPath(envAnchor, ...args) {
-  let anchor = pathConfigs[envAnchor];
-  if (!pathConfigs[envAnchor]) {
-    console.error(`process.env.${envAnchor} was not set`.bold.red);
-    process.exit(1);
-  }
-  return utils.joinPath(anchor, ...args);
+function anchoredPath(anchor, ...args) {
+  return utils.joinPath(env.anchoredValue(anchor), ...args);
 }
 
 function embarkPath() {
-  return anchoredPath('EMBARK_PATH', ...arguments);
+  return anchoredPath(env.EMBARK_PATH, ...arguments);
 }
 
 function dappPath() {
-  return anchoredPath('DAPP_PATH', ...arguments);
+  return anchoredPath(env.DAPP_PATH, ...arguments);
+}
+
+function diagramPath() {
+  return anchoredPath(env.DIAGRAM_PATH, ...arguments);
 }
 
 function pkgPath() {
-  return anchoredPath('PKG_PATH', ...arguments);
+  return anchoredPath(env.PKG_PATH, ...arguments);
 }
 
 function createWriteStream() {
@@ -209,8 +183,11 @@ module.exports = {
   access,
   appendFileSync,
   copy,
+  copyPreserve,
   copySync,
   createWriteStream,
+  dappPath,
+  diagramPath,
   embarkPath,
   existsSync,
   mkdirp,
@@ -218,6 +195,7 @@ module.exports = {
   move,
   moveSync,
   outputFileSync,
+  pkgPath,
   readFile,
   readFileSync,
   readJSONSync,
@@ -231,8 +209,5 @@ module.exports = {
   writeFile,
   writeFileSync,
   writeJSONSync,
-  copyPreserve,
-  dappPath,
-  pkgPath,
   writeJson
 };

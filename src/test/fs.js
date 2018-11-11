@@ -29,6 +29,7 @@ describe('fs', () => {
 
   const helperFunctions = [
     'dappPath',
+    'diagramPath',
     'embarkPath',
     'pkgPath',
     'tmpDir'

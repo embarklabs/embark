@@ -1,32 +1,10 @@
 const program = require('commander');
 const EmbarkController = require('./cmd_controller.js');
 const i18n = require('../lib/core/i18n/i18n.js');
+const fs = require('../lib/core/fs.js');
 const utils = require('../lib/utils/utils.js');
 
 let embark = new EmbarkController();
-
-// set PWD to process.cwd() since Windows doesn't have a value for PWD
-if (!process.env.PWD) {
-  process.env.PWD = process.cwd();
-}
-
-// set the anchor for embark's fs.dappPath()
-if (!process.env.DAPP_PATH) {
-  process.env.DAPP_PATH = process.env.PWD;
-}
-
-// set the anchor for embark's fs.embarkPath()
-if (!process.env.EMBARK_PATH) {
-  process.env.EMBARK_PATH = utils.joinPath(__dirname, '../..');
-}
-
-// set the anchor for embark's fs.pkgPath()
-if (!process.env.PKG_PATH) {
-  process.env.PKG_PATH = process.env.PWD;
-}
-
-process.env.DEFAULT_DIAGRAM_PATH = utils.joinPath(process.env.DAPP_PATH, 'diagram.svg');
-process.env.DEFAULT_CMD_HISTORY_SIZE = 20;
 
 class Cmd {
   constructor() {
@@ -308,7 +286,7 @@ class Cmd {
       .option('--skip-functions', __('Graph will not include functions'))
       .option('--skip-events', __('Graph will not include events'))
       .option('--locale [locale]', __('language to use (default: en)'))
-      .option('--output [svgfile]', __('filepath to output SVG graph to (default: %s)', process.env['DEFAULT_DIAGRAM_PATH']))
+      .option('--output [svgfile]', __('filepath to output SVG graph to (default: %s)', fs.diagramPath()))
       .description(__('generates documentation based on the smart contracts configured'))
       .action(function(env, options) {
         i18n.setOrDetectLocale(options.locale);
@@ -318,7 +296,7 @@ class Cmd {
           skipUndeployed: options.skipUndeployed,
           skipFunctions: options.skipFunctions,
           skipEvents: options.skipEvents,
-          output: options.output || process.env['DEFAULT_DIAGRAM_PATH']
+          output: options.output || fs.diagramPath()
         });
       });
   }
