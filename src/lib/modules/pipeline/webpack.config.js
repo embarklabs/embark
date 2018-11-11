@@ -8,25 +8,20 @@ const embarkPath = process.env.EMBARK_PATH;
 const dappNodeModules = path.join(dappPath, 'node_modules');
 const embarkNodeModules = path.join(embarkPath, 'node_modules');
 
-function customRequire(mod) {
-  return require(customRequire.resolve(mod));
+function requireFromEmbark(mod) {
+  return require(requireFromEmbark.resolve(mod));
 }
 
-customRequire.resolve = function (mod) {
+requireFromEmbark.resolve = function (mod) {
   return require.resolve(
     mod,
-    {paths: [dappNodeModules, embarkNodeModules]}
+    {paths: [embarkNodeModules]}
   );
 };
 
-// some packages, plugins, and presets referenced/required in this webpack
-// config are deps of embark and will effectively be transitive dapp deps
-// unless specified in the dapp's own package.json
-
-const cloneDeep = customRequire('lodash.clonedeep');
-// const CompressionPlugin = customRequire('compression-webpack-plugin');
-const glob = customRequire('glob');
-const HardSourceWebpackPlugin = customRequire('hard-source-webpack-plugin');
+const cloneDeep = requireFromEmbark('lodash.clonedeep');
+const glob = requireFromEmbark('glob');
+const HardSourceWebpackPlugin = requireFromEmbark('hard-source-webpack-plugin');
 
 const embarkAliases = require(path.join(dappPath, '.embark/embark-aliases.json'));
 const embarkAssets = require(path.join(dappPath, '.embark/embark-assets.json'));
@@ -66,10 +61,10 @@ const entry = Object.keys(embarkAssets)
 function resolve(pkgName) {
   if (Array.isArray(pkgName)) {
     const _pkgName = pkgName[0];
-    pkgName[0] = customRequire.resolve(_pkgName);
+    pkgName[0] = requireFromEmbark.resolve(_pkgName);
     return pkgName;
   }
-  return customRequire.resolve(pkgName);
+  return requireFromEmbark.resolve(pkgName);
 }
 
 // base config
@@ -122,6 +117,11 @@ const base = {
             ],
             'babel-plugin-macros',
             '@babel/plugin-transform-destructuring',
+            [
+              '@babel/plugin-proposal-decorators', {
+                legacy: true
+              }
+            ],
             [
               '@babel/plugin-proposal-class-properties', {
                 loose: true
@@ -187,13 +187,13 @@ const base = {
     ],
     modules: [
       ...versions,
-      'node_modules',
+      dappNodeModules,
       embarkNodeModules
     ]
   },
   resolveLoader: {
     modules: [
-      'node_modules',
+      dappNodeModules,
       embarkNodeModules
     ]
   }
@@ -209,7 +209,7 @@ const isFlowEnabled = !embarkPipeline.typescript;
 if (isFlowEnabled) {
   // position @babel/plugin-transform-flow-strip-types per babel-preset-react-app
   baseBabelLoader.options.plugins.unshift(
-    customRequire.resolve('@babel/plugin-transform-flow-strip-types')
+    requireFromEmbark.resolve('@babel/plugin-transform-flow-strip-types')
   );
 }
 
@@ -222,7 +222,7 @@ if (isTypeScriptEnabled) {
   // position @babel/preset-typescript as the last preset (runs first)
   // see: https://blogs.msdn.microsoft.com/typescript/2018/08/27/typescript-and-babel-7/
   baseBabelLoader.options.presets.push(
-    customRequire.resolve('@babel/preset-typescript')
+    requireFromEmbark.resolve('@babel/preset-typescript')
   );
   // additional extensions
   baseBabelLoader.test = /\.(js|ts)x?$/;
@@ -259,13 +259,11 @@ production.name = 'production';
 const prodBabelLoader = production.module.rules[3];
 // position babel-plugin-transform-react-remove-prop-types per babel-preset-react-app
 prodBabelLoader.options.plugins.splice(prodBabelLoader.length - 1, 0, [
-  customRequire.resolve('babel-plugin-transform-react-remove-prop-types'),
+  requireFromEmbark.resolve('babel-plugin-transform-react-remove-prop-types'),
   {
     removeImport: true
   }
 ]);
-// compression of webpack's JS output not enabled by default
-// production.plugins.push(new CompressionPlugin());
 
 // export a list of named configs
 // -----------------------------------------------------------------------------
