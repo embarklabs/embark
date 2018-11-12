@@ -12,8 +12,9 @@ class Suggestions {
 
   registerApi() {
     this.embark.registerAPICall('post', '/embark-api/suggestions', (req, res) => {
-      let suggestions = this.getSuggestions(req.body.command);
-      res.send({result: suggestions});
+      this.getSuggestions(req.body.command, (suggestions) => {
+        res.send({result: this.sortSuggestions(suggestions)});
+      });
     });
   }
 
@@ -23,8 +24,17 @@ class Suggestions {
     });
   }
 
-  getSuggestions(cmd) {
-    if (!cmd) return [];
+  sortSuggestions(suggestions) {
+    // sort first the ones that match the command at the beginning of the string, then prefer smaller commands first
+    return utils.fuzzySearch(cmd, suggestions, (result) => { return result.value + " " + result.description; }).map((x) => x.original).sort((x,y) => {
+      let diff = x.value.indexOf(cmd) - y.value.indexOf(cmd);
+      if (diff !== 0) return diff;
+      return x.value.length - y.value.length;
+    });
+  }
+
+  getSuggestions(cmd, cb) {
+    if (!cmd) return cb([]);
     cmd = cmd.toLowerCase();
     let suggestions = [];
 
@@ -50,12 +60,7 @@ class Suggestions {
     suggestions.push({value: 'web3', command_type: "javascript object", description: "instantiated web3.js object configured to the current environment"});
     suggestions.push({value: 'EmbarkJS', command_type: "javascript object", description: "EmbarkJS static functions for Storage, Messages, Names, etc."});
 
-    // sort first the ones that match the command at the beginning of the string, then prefer smaller commands first
-    return utils.fuzzySearch(cmd, suggestions, (result) => { return result.value + " " + result.description; }).map((x) => x.original).sort((x,y) => {
-      let diff = x.value.indexOf(cmd) - y.value.indexOf(cmd);
-      if (diff !== 0) return diff;
-      return x.value.length - y.value.length;
-    });
+    return cb(results);
   }
 }
 
