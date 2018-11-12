@@ -294,7 +294,7 @@ Config.prototype.loadContractsConfigFile = function() {
   }
   if (newContractsConfig.deployment && 'accounts' in newContractsConfig.deployment) {
     newContractsConfig.deployment.accounts.forEach((account) => {
-      if (account.balance.match(unitRegex)) {
+      if (account.balance && account.balance.match(unitRegex)) {
         account.balance = utils.getWeiBalanceFromString(account.balance, web3);
       }
     });
