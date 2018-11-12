@@ -141,6 +141,10 @@ function existsSync() {
   return restrictPath(fs.existsSync, fs.existsSync, 1, arguments);
 }
 
+function ensureFileSync() {
+  return restrictPath(fs.ensureFileSync, fs.ensureFileSync, 1, arguments);
+}
+
 function access() {
   return restrictPath(fs.access, fs.access, 1, arguments);
 }
@@ -213,6 +217,7 @@ module.exports = {
   createWriteStream,
   embarkPath,
   existsSync,
+  ensureFileSync,
   mkdirp,
   mkdirpSync,
   move,
