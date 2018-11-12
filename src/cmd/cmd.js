@@ -50,11 +50,15 @@ class Cmd {
     program
       .command('new [name]')
       .description(__('New Application'))
-      .option('--simple', __('create a barebones project meant only for contract development'))
+      .option('--simple', __('an alias for --contracts-only'))
+      .option('--contracts-only', __('create a barebones project meant only for contract development'))
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('--template <name/url>', __('download a template using a known name or a git host URL'))
       .action(function(name, options) {
         i18n.setOrDetectLocale(options.locale);
+
+        const contractsOnly = options.simple || options.contractsOnly;
+
         if (name === undefined) {
           const promptly = require('promptly');
           return promptly.prompt(__("Name your app (default is %s):", 'embarkDapp'), {
@@ -68,7 +72,7 @@ class Cmd {
               err.retry();
             } else {
               //slightly different assignment of name since it comes from child prompt
-              if (options.simple) {
+              if (contractsOnly) {
                 embark.generateTemplate('simple', './', inputvalue);
               } else {
                 embark.generateTemplate('boilerplate', './', inputvalue, options.template);
@@ -76,7 +80,7 @@ class Cmd {
             }
           });
         }
-        if (options.simple) {
+        if (contractsOnly) {
           embark.generateTemplate('simple', './', name);
         } else {
           embark.generateTemplate('boilerplate', './', name, options.template);
