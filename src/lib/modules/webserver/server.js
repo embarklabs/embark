@@ -73,7 +73,7 @@ class Server {
     this.app.use(coverageStyle);
 
     this.app.use(express.static(path.join(fs.dappPath(this.dist)), {'index': ['index.html', 'index.htm']}));
-    this.app.use('/embark', express.static(path.join(__dirname, '../../../embark-ui/build')));
+    this.app.use('/embark', express.static(path.join(__dirname, '../../../../embark-ui/build')));
 
     this.app.use(bodyParser.json()); // support json encoded bodies
     this.app.use(bodyParser.urlencoded({extended: true})); // support encoded bodies
@@ -118,7 +118,7 @@ class Server {
 
     this.app.get('/embark/*', function(req, res) {
       self.logger.trace('webserver> GET ' + req.path);
-      res.sendFile(path.join(__dirname, '../../../embark-ui/build', 'index.html'));
+      res.sendFile(path.join(__dirname, '../../../../embark-ui/build', 'index.html'));
     });
 
     if (this.enableCatchAll === true) {
