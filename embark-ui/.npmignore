@@ -1,5 +1,6 @@
 .env
 .env.*
+.eslintrc
 config
 node_modules
 public
