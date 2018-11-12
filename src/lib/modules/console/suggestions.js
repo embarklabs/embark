@@ -12,8 +12,9 @@ class Suggestions {
 
   registerApi() {
     this.embark.registerAPICall('post', '/embark-api/suggestions', (req, res) => {
-      this.getSuggestions(req.body.command, (suggestions) => {
-        res.send({result: this.sortSuggestions(suggestions)});
+      let cmd = req.body.command;
+      this.getSuggestions(cmd, (suggestions) => {
+        res.send({result: this.sortSuggestions(cmd, suggestions)});
       });
     });
   }
@@ -24,9 +25,9 @@ class Suggestions {
     });
   }
 
-  sortSuggestions(suggestions) {
+  sortSuggestions(cmd, suggestions) {
     // sort first the ones that match the command at the beginning of the string, then prefer smaller commands first
-    return utils.fuzzySearch(cmd, suggestions, (result) => { return result.value + " " + result.description; }).map((x) => x.original).sort((x,y) => {
+    return suggestions.map((x) => x.original).sort((x,y) => {
       let diff = x.value.indexOf(cmd) - y.value.indexOf(cmd);
       if (diff !== 0) return diff;
       return x.value.length - y.value.length;
@@ -60,7 +61,19 @@ class Suggestions {
     suggestions.push({value: 'web3', command_type: "javascript object", description: "instantiated web3.js object configured to the current environment"});
     suggestions.push({value: 'EmbarkJS', command_type: "javascript object", description: "EmbarkJS static functions for Storage, Messages, Names, etc."});
 
-    return cb(results);
+    if (cmd[cmd.length - 1] === '.') {
+      return this.events.request("runcode:eval", "Object.keys(" + cmd.slice(0, cmd.length - 1) + ")", (err, result) => {
+        if (Array.isArray(result)) {
+          for (let match of result) {
+            suggestions.push({value: cmd + match, command_type: "javascript object", description: ""});
+          }
+        }
+
+        return cb(utils.fuzzySearch(cmd, suggestions, (result) => { return result.value + " " + result.description; }));
+      });
+    }
+
+    return cb(utils.fuzzySearch(cmd, suggestions, (result) => { return result.value + " " + result.description; }));
   }
 }
 
