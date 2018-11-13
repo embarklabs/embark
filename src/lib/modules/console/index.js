@@ -5,7 +5,7 @@ const EmbarkJS = require('embarkjs');
 const IpfsApi = require('ipfs-api');
 const Web3 = require('web3');
 const stringify = require('json-stringify-safe');
-const Suggestions = require('./suggestions');
+import Suggestions from './suggestions';
 
 class Console {
   constructor(embark, options) {
