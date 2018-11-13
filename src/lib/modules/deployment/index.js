@@ -13,7 +13,7 @@ class DeployManager {
     this.events = embark.events;
     this.plugins = options.plugins;
     this.blockchain = options.blockchain;
-    this.gasLimit = false;
+    this.gasLimit = 6000000;
     this.fatalErrors = false;
     this.deployOnlyOnConfig = false;
     this.onlyCompile = options.onlyCompile !== undefined ? options.onlyCompile : false;
@@ -81,7 +81,7 @@ class DeployManager {
               contractDeploys[className].push(deploy);
             });
 
-            async.auto(contractDeploys, 1, function(_err, _results) {
+            async.auto(contractDeploys, function(_err, _results) {
               if (errors.length) {
                 _err = __("Error deploying contracts. Please fix errors to continue.");
                 self.logger.error(_err);

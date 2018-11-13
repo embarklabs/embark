@@ -60,6 +60,7 @@ module.exports = {
       },
       SomeContract: {
         deployIf: 'await MyToken.methods.isAvailable().call()',
+        onDeploy: ['$MyToken'], // Needed because otherwise Embark doesn't know that we depend on MyToken. Would be cleaner with `dependsOn`
         args: [
           ["$MyToken2", "$SimpleStorage"],
           100
