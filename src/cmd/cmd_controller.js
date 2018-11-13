@@ -380,7 +380,6 @@ class EmbarkController {
       context: this.context
     });
 
-
     async.waterfall([
       function (callback) {
         engine.init({}, callback);
