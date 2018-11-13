@@ -92,10 +92,19 @@ class Cmd {
     program
       .command('demo')
       .option('--locale [locale]', __('language to use (default: en)'))
+      .option('--template <name/url>', __('download a demo template using a known name or a git host URL'))
       .description(__('create a working dapp with a SimpleStorage contract'))
       .action(function(options) {
         i18n.setOrDetectLocale(options.locale);
-        embark.generateTemplate('demo', './', 'embark_demo');
+        if(options.template) {
+          const hostedGitInfo = require('hosted-git-info');
+          const hgi = hostedGitInfo.fromUrl(options.template);
+          const url = !hgi ? `embark-framework/embark-${options.template}-template#demo`:options.template;
+          const folderName = !hgi ? `embark_${options.template}_demo`:'template_demo';
+          embark.generateTemplate('demo', './', folderName, url);
+        } else {
+          embark.generateTemplate('demo', './', 'embark_demo');
+        }
       });
   }
 
