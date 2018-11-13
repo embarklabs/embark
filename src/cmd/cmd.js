@@ -412,9 +412,18 @@ class Cmd {
     program
       .action(function(cmd) {
         console.log((__('unknown command') + ' "%s"').red, cmd);
-        let utils = require('../lib/utils/utils.js');
-        let dictionary = ['new', 'demo', 'build', 'run', 'blockchain', 'simulator', 'test', 'upload', 'version', 'console', 'eject-webpack', 'graph', 'help', 'reset'];
-        let suggestion = utils.proposeAlternative(cmd, dictionary);
+
+        let suggestion;
+
+        if (cmd == 'compile') {
+          // we bypass `utils.proposeAlternative()` here as `build` isn't
+          // similar enough
+          suggestion = 'build --contracts';
+        } else {
+          let utils = require('../lib/utils/utils.js');
+          let dictionary = ['new', 'demo', 'build', 'run', 'blockchain', 'simulator', 'test', 'upload', 'version', 'console', 'eject-webpack', 'graph', 'help', 'reset'];
+          suggestion = utils.proposeAlternative(cmd, dictionary);
+        }
         if (suggestion) {
           console.log((__('did you mean') + ' "%s"?').green, suggestion);
         }
