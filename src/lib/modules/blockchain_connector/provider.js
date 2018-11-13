@@ -2,6 +2,8 @@ const async = require('async');
 const AccountParser = require('../../utils/accountParser');
 const fundAccount = require('./fundAccount');
 const constants = require('../../constants');
+const Transaction = require('ethereumjs-tx');
+const ethUtil = require('ethereumjs-util');
 
 class Provider {
   constructor(options) {
@@ -12,6 +14,23 @@ class Provider {
     this.web3Endpoint = options.web3Endpoint;
     this.logger = options.logger;
     this.isDev = options.isDev;
+    this.nonceCache = {};
+  }
+
+  getNonce(address, callback) {
+    this.web3.eth.getTransactionCount(address, (_error, transactionCount) => {
+      if(!this.nonceCache[address]) {
+        this.nonceCache[address] = -1;
+      }
+
+      if (transactionCount > this.nonceCache[address]) {
+        this.nonceCache[address] = transactionCount;
+        return callback(this.nonceCache[address]);
+      }
+
+      this.nonceCache[address]++;
+      callback(this.nonceCache[address]);
+    });
   }
 
   startWeb3Provider(callback) {
@@ -32,7 +51,6 @@ class Provider {
     } else {
       return callback(__("contracts config error: unknown deployment type %s", this.type));
     }
-
     self.web3.setProvider(self.provider);
 
     self.web3.eth.getAccounts((err, accounts) => {
@@ -43,32 +61,63 @@ class Provider {
       self.accounts = AccountParser.parseAccountsConfig(self.accountsConfig, self.web3, self.logger, accounts);
       self.addresses = [];
 
-      if (!self.accounts.length) {
-        return callback();
-      }
-
       self.accounts.forEach(account => {
         self.addresses.push(account.address);
         if (account.privateKey) {
           self.web3.eth.accounts.wallet.add(account);
         }
       });
-      self.web3.eth.defaultAccount = self.addresses[0];
+
+      if (self.accounts.length) {
+        self.web3.eth.defaultAccount = self.addresses[0];
+      }
 
       const realSend = self.provider.send.bind(self.provider);
-      self.provider.send = function (payload, cb) {
+
+      // Allow to run transaction in parallel by resolving
+      // the nonce manually.
+      // For each transaction, resolve the nonce by taking the
+      // max of current transaction count and the cache we keep
+      // locally.
+      // Deconstruct the transaction and update the nonce.
+      // Before updating the transaction, it must be signed.
+      self.runTransaction = async.queue(({payload}, callback) => {
+        const rawTx = payload.params[0];
+        const rawData = Buffer.from(ethUtil.stripHexPrefix(rawTx), 'hex');
+        const tx = new Transaction(rawData, 'hex');
+        const address = '0x' + tx.getSenderAddress().toString('hex').toLowerCase();
+
+        self.getNonce(address, (newNonce) => {
+          tx.nonce = newNonce;
+          const key = ethUtil.stripHexPrefix(self.web3.eth.accounts.wallet[address].privateKey);
+          const privKey = Buffer.from(key, 'hex');
+          tx.sign(privKey);
+          payload.params[0] = '0x' + tx.serialize().toString('hex');
+          return realSend(payload, (error, result) => {
+            self.web3.eth.getTransaction(result.result, () => {
+              callback(error, result);
+            });
+          });
+        });
+      }, 1);
+
+      self.provider.send = function(payload, cb) {
         if (payload.method === 'eth_accounts') {
-          return realSend(payload, function (err, result) {
+          return realSend(payload, function(err, result) {
             if (err) {
               return cb(err);
             }
-            result.result = self.addresses; // Send our addresses
+            if (self.accounts.length) {
+              result.result = self.addresses; // Send our addresses
+            }
             cb(null, result);
           });
+        } else if (payload.method === 'eth_sendRawTransaction') {
+          return self.runTransaction.push({payload}, cb);
         }
+
         realSend(payload, cb);
       };
-
       callback();
     });
   }

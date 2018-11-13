@@ -169,7 +169,7 @@ class SpecialConfigs {
       self.events.request('runcode:eval', cmd, (err, result) => {
         if (err) {
           self.logger.error(params.contract.className + ' deployIf directive has an error; contract will not deploy');
-          self.logger.error(err);
+          self.logger.error(err.message || err);
           params.shouldDeploy = false;
         } else if (!result) {
           self.logger.info(params.contract.className + ' deployIf directive returned false; contract will not deploy');

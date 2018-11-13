@@ -420,7 +420,7 @@ Blockchain.prototype.initChainAndGetAddress = function (callback) {
       if (!self.config.genesisBlock || self.client.name === 'parity') {
         return next();
       }
-      this.logger.info(__("initializing genesis block").green);
+      self.logger.info(__("initializing genesis block").green);
       self.runCommand(self.client.initGenesisCommmand(), {}, (err, _stdout, _stderr) => {
         next(err);
       });
