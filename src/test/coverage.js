@@ -16,10 +16,6 @@ function loadFixture(fixture) {
   return fs.readFileSync(fixturePath(fixture)).toString();
 }
 
-function dumpToFile(obj, path) {
-  return fs.writeFileSync(path, JSON.stringify(obj));
-}
-
 describe('ContractSources', () => {
   describe('constructor', () => {
     it('should read files and create instances of ContractSource', (done) => {
@@ -149,6 +145,29 @@ contract x {
   });
 
   describe('#parseSolcOutput', () => {
+    it('should parse the deployed bytecode output correctly', (done) => {
+      var solcOutput = JSON.parse(loadFixture('solc-output.json'));
+      const contractPath = fixturePath('cont.sol');
+      var cs = new ContractSources(contractPath);
+      cs.parseSolcOutput(solcOutput);
+
+      var contractSource = cs.files['cont.sol'];
+
+      assert.isNotEmpty(contractSource.contractDeployedBytecode);
+      assert.isNotEmpty(contractSource.contractDeployedBytecode['x']);
+
+      var bytecode = contractSource.contractDeployedBytecode['x'];
+
+      assert.deepEqual({instruction: 'PUSH1', sourceMap: {offset: 26, length: 487, id: 0, jump: '-'}, jump: '-', seen: false}, bytecode[0]);
+      assert.deepEqual({instruction: 'PUSH1', sourceMap: SourceMap.empty(), seen: false, jump: undefined}, bytecode[2]);
+      assert.deepEqual({instruction: 'MSTORE', sourceMap: SourceMap.empty(), seen: false, jump: undefined}, bytecode[4]);
+      assert.deepEqual({instruction: 'PUSH1', sourceMap: SourceMap.empty(), seen: false, jump: undefined}, bytecode[5]);
+
+      done();
+    });
+  });
+
+  describe('#parseSolcOutput', () => {
     it('should parse the bytecode output correctly', (done) => {
       var solcOutput = JSON.parse(loadFixture('solc-output.json'));
       const contractPath = fixturePath('cont.sol');
@@ -165,7 +184,7 @@ contract x {
       assert.deepEqual({instruction: 'PUSH1', sourceMap: {offset: 26, length: 487, id: 0, jump: '-'}, jump: '-', seen: false}, bytecode[0]);
       assert.deepEqual({instruction: 'PUSH1', sourceMap: SourceMap.empty(), seen: false, jump: undefined}, bytecode[2]);
       assert.deepEqual({instruction: 'MSTORE', sourceMap: SourceMap.empty(), seen: false, jump: undefined}, bytecode[4]);
-      assert.deepEqual({instruction: 'PUSH1', sourceMap: SourceMap.empty(), seen: false, jump: undefined}, bytecode[5]);
+      assert.deepEqual({instruction: 'CALLVALUE', sourceMap: {offset: 71, length: 60, jump: undefined}, seen: false, jump: undefined}, bytecode[5]);
 
       done();
     });
