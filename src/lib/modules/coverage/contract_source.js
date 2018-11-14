@@ -2,17 +2,15 @@ const SourceMap = require('./source_map');
 
 class ContractSource {
   constructor(file, path, body) {
-    let self = this;
-
     this.file = file;
     this.path = path;
     this.body = body;
 
-    this.lineLengths = body.split("\n").map((line) => { return line.length; });
+    this.lineLengths = body.split("\n").map(line => line.length);
     this.lineCount = this.lineLengths.length;
 
     this.lineOffsets = this.lineLengths.reduce((sum, _elt, i) => {
-      sum[i] = (i === 0) ? 0 : self.lineLengths[i-1] + sum[i-1] + 1;
+      sum[i] = (i === 0) ? 0 : this.lineLengths[i-1] + sum[i-1] + 1;
       return sum;
     }, []);
 
@@ -57,43 +55,20 @@ class ContractSource {
     this.id = source.id;
     this.ast = source.ast;
     this.contractBytecode = {};
+    this.contractDeployedBytecode = {};
 
     for(var contractName in contracts) {
       this.contractBytecode[contractName] = {};
+      this.contractDeployedBytecode[contractName] = {};
 
       var contract = contracts[contractName];
-      var bytecodeMapping = this.contractBytecode[contractName];
-      var opcodes = contract.evm.deployedBytecode.opcodes.trim().split(' ');
-      var sourceMaps = contract.evm.deployedBytecode.sourceMap.split(';');
+      var opcodes = contract.evm.bytecode.opcodes.trim().split(' ');
+      var deployedOpcodes = contract.evm.deployedBytecode.opcodes.trim().split(' ');
+      var sourceMaps = contract.evm.bytecode.sourceMap.split(';');
+      var deployedSourceMaps = contract.evm.deployedBytecode.sourceMap.split(';');
 
-      var bytecodeIdx = 0;
-      var pc = 0;
-      var instructions = 0;
-      var previousSourceMap = null;
-
-      do {
-        let sourceMap;
-
-        if(previousSourceMap === null) {
-          sourceMap = new SourceMap(sourceMaps[instructions]);
-        } else {
-          sourceMap = previousSourceMap.createRelativeTo(sourceMaps[instructions]);
-        }
-
-        var instruction = opcodes[bytecodeIdx];
-        var length = this._instructionLength(instruction);
-        bytecodeMapping[pc] = {
-          instruction: instruction,
-          sourceMap: sourceMap,
-          jump: sourceMap.jump,
-          seen: false
-        };
-
-        pc += length;
-        instructions++;
-        bytecodeIdx += (length > 1) ? 2 : 1;
-        previousSourceMap = sourceMap;
-      } while(bytecodeIdx < opcodes.length);
+      this._buildContractBytecode(contractName, this.contractBytecode, opcodes, sourceMaps);
+      this._buildContractBytecode(contractName, this.contractDeployedBytecode, deployedOpcodes, deployedSourceMaps);
     }
   }
 
@@ -102,7 +77,7 @@ class ContractSource {
       Object.values(this.contractBytecode).every((contractBytecode) => { return (Object.values(contractBytecode).length <= 1); });
   }
 
-  /*eslint complexity: ["error", 44]*/
+  /*eslint complexity: ["error", 42]*/
   generateCodeCoverage(trace) {
     if(!this.ast || !this.contractBytecode) throw new Error('Error generating coverage: solc output was not assigned');
 
@@ -128,7 +103,6 @@ class ContractSource {
       let children = [];
       let markLocations = [];
       let location;
-
       switch(node.nodeType) {
         case 'Assignment':
         case 'EventDefinition':
@@ -280,7 +254,6 @@ class ContractSource {
         }
 
         default:
-          //console.log(`Don't know how to handle node type ${node.nodeType}`);
           break;
       }
 
@@ -294,13 +267,21 @@ class ContractSource {
 
     } while(nodesRequiringVisiting.length > 0);
 
+    this._generateCodeCoverageForBytecode(trace, coverage, sourceMapToNodeType, this.contractBytecode);
+    this._generateCodeCoverageForBytecode(trace, coverage, sourceMapToNodeType, this.contractDeployedBytecode);
+
+    return coverage;
+  }
+
+  _generateCodeCoverageForBytecode(trace, coverage, sourceMapToNodeType, contractBytecode) {
     var contractMatches = true;
-    for(var contractName in this.contractBytecode) {
-      var bytecode = this.contractBytecode[contractName];
+    for(var contractName in contractBytecode) {
+      var bytecode = contractBytecode[contractName];
 
       // Try to match the contract to the bytecode. If it doesn't,
       // then we bail.
-      contractMatches = trace.structLogs.every((step) => { return bytecode[step.pc]; });
+
+      contractMatches = trace.structLogs.every((step) => bytecode[step.pc]);
       if(!contractMatches) continue;
 
       trace.structLogs.forEach((step) => {
@@ -336,8 +317,38 @@ class ContractSource {
         });
       });
     }
+  }
 
-    return coverage;
+  _buildContractBytecode(contractName, contractBytecode, opcodes, sourceMaps) {
+    var bytecodeMapping = contractBytecode[contractName];
+    var bytecodeIdx = 0;
+    var pc = 0;
+    var instructions = 0;
+    var previousSourceMap = null;
+
+    do {
+      let sourceMap;
+      const sourceMapArgs = sourceMaps[instructions];
+      if(previousSourceMap === null) {
+        sourceMap = new SourceMap(sourceMapArgs);
+      } else {
+        sourceMap = previousSourceMap.createRelativeTo(sourceMapArgs);
+      }
+
+      var instruction = opcodes[bytecodeIdx];
+      var length = this._instructionLength(instruction);
+      bytecodeMapping[pc] = {
+        instruction: instruction,
+        sourceMap: sourceMap,
+        jump: sourceMap.jump,
+        seen: false
+      };
+
+      pc += length;
+      instructions++;
+      bytecodeIdx += (length > 1) ? 2 : 1;
+      previousSourceMap = sourceMap;
+    } while(bytecodeIdx < opcodes.length);
   }
 
   _instructionLength(instruction) {
