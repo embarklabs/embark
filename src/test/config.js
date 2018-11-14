@@ -130,6 +130,38 @@ describe('embark.Config', function () {
 
       assert.deepEqual(config.contractsConfig, expectedConfig);
     });
+
+    it('should replace occourences of `0x0` with full zero addresses', () => {
+      let expectedConfig = {
+        versions: {'web3': '1.0.0-beta', solc: '0.4.25'},
+        deployment: {host: 'localhost', port: 8545, type: 'rpc'},
+        dappConnection: ['$WEB3', 'localhost:8545'],
+        "gas": "auto",
+        "strategy": "implicit",
+        "contracts": {
+          "SimpleStorage": {
+            "args": [100, '0x0000000000000000000000000000000000000000'],
+            "address": '0x0000000000000000000000000000000000000000',
+            "onDeploy": [
+              "SimpleStorage.methods.changeAddress('0x0000000000000000000000000000000000000000')"
+            ]
+          },
+          "afterDeploy": [
+            "SimpleStorage.methods.changeAddress('0x0000000000000000000000000000000000000000')",
+            "SimpleStorage.methods.changeAddress('$SomeToken')"
+          ]
+        }
+      };
+      let zeroAddressconfig = new Config({
+        env: 'zeroaddress',
+        configDir: './dist/test/test1/config/',
+        events: new Events()
+      });
+      zeroAddressconfig.plugins = new Plugins({plugins: {}});
+      zeroAddressconfig.logger = new TestLogger({});
+      zeroAddressconfig.loadContractsConfigFile();
+      assert.deepEqual(zeroAddressconfig.contractsConfig, expectedConfig);
+    });
   });
 
   describe('#loadExternalContractsFiles', function () {

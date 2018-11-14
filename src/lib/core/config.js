@@ -8,6 +8,7 @@ const web3 = require('web3');
 const constants = require('../constants');
 const {canonicalHost, defaultHost} = require('../utils/host');
 const cloneDeep = require('lodash.clonedeep');
+import { extendZeroAddressShorthand, replaceZeroAddressShorthand } from '../utils/addressUtils';
 
 const DEFAULT_CONFIG_PATH = 'config/';
 const unitRegex = /([0-9]+) ([a-zA-Z]+)/;
@@ -299,16 +300,47 @@ Config.prototype.loadContractsConfigFile = function() {
       }
     });
   }
+
   Object.keys(newContractsConfig.contracts).forEach(contractName => {
-      let gas = newContractsConfig.contracts[contractName].gas;
-      let gasPrice = newContractsConfig.contracts[contractName].gasPrice;
-      if (gas && gas.match(unitRegex)) {
-        newContractsConfig.contracts[contractName].gas = utils.getWeiBalanceFromString(gas, web3);
-      }
-      if (gasPrice && gasPrice.match(unitRegex)) {
-        newContractsConfig.contracts[contractName].gasPrice = utils.getWeiBalanceFromString(gasPrice, web3);
-      }
+
+    const gas = newContractsConfig.contracts[contractName].gas;
+    const gasPrice = newContractsConfig.contracts[contractName].gasPrice;
+    const address = newContractsConfig.contracts[contractName].address;
+    const args = newContractsConfig.contracts[contractName].args;
+    const onDeploy = newContractsConfig.contracts[contractName].onDeploy;
+
+    if (gas && gas.match(unitRegex)) {
+      newContractsConfig.contracts[contractName].gas = utils.getWeiBalanceFromString(gas, web3);
+    }
+
+    if (gasPrice && gasPrice.match(unitRegex)) {
+      newContractsConfig.contracts[contractName].gasPrice = utils.getWeiBalanceFromString(gasPrice, web3);
+    }
+
+    if (address) {
+      newContractsConfig.contracts[contractName].address = extendZeroAddressShorthand(address);
+    }
+
+    if (args && args.length) {
+      newContractsConfig.contracts[contractName].args = args.map(val => {
+        if (typeof val === 'string') {
+          return extendZeroAddressShorthand(val);
+        }
+        return val;
+      });
+    }
+
+    if (onDeploy && onDeploy.length) {
+      newContractsConfig.contracts[contractName].onDeploy = onDeploy.map(replaceZeroAddressShorthand);
+    }
   });
+
+  const afterDeploy = newContractsConfig.contracts.afterDeploy;
+
+  if (afterDeploy && afterDeploy.length) {
+    newContractsConfig.contracts.afterDeploy = afterDeploy.map(replaceZeroAddressShorthand);
+  }
+
   if (!deepEqual(newContractsConfig, this.contractsConfig)) {
     this.contractsConfig = newContractsConfig;
   }

@@ -9,6 +9,25 @@
       }
     }
   },
+  "zeroaddress": {
+    "gas": "auto",
+    "contracts": {
+      "SimpleStorage": {
+        "address": "0x0",
+        "args": [
+          100,
+          "0x0"
+        ],
+        "onDeploy": [
+          "SimpleStorage.methods.changeAddress('0x0')"
+        ]
+      },
+      "afterDeploy": [
+        "SimpleStorage.methods.changeAddress('0x0')",
+        "SimpleStorage.methods.changeAddress('$SomeToken')"
+      ]
+    }
+  },
   "myenv": {
     "gas": "400 Kwei",
     "contracts": {
