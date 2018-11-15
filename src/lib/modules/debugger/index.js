@@ -1,4 +1,4 @@
-var DebuggerManager = require('./debugger_manager.js');
+var DebuggerManager = require('./debugger_manager.js').default;
 
 class TransactionDebugger {
   constructor(embark, _options) {
@@ -179,6 +179,7 @@ class TransactionDebugger {
               }
               let filename = contract.filename;
               self.currentCmdTxHash = txHash;
+              self.embark.logger.info("debugging tx " + txHash);
               self.cmdDebugger = self.debugger_manager.createDebuggerSession(txHash, filename, () => {
                 self.cmdDebugger.getSource().forEach((line) => {
                   console.dir(line);
@@ -189,6 +190,7 @@ class TransactionDebugger {
           }
           self.currentCmdTxHash = self.last_tx;
           let filename = self.tx_tracker[self.last_tx].contract.filename;
+          self.embark.logger.info("debugging tx " + self.last_tx);
           self.cmdDebugger = self.debugger_manager.createDebuggerSession(self.last_tx, filename, () => {
             self.cmdDebugger.getSource().forEach((line) => {
               console.dir(line);
