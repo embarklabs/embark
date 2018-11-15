@@ -421,8 +421,7 @@ class ContractsManager {
           if (Array.isArray(contract.args)) {
             ref = contract.args;
           } else {
-            let keys = Object.keys(contract.args);
-            ref = keys.map((k) => contract.args[k]).filter((x) => !x);
+            ref = Object.values(contract.args);
           }
 
           for (let j = 0; j < ref.length; j++) {
