@@ -1,15 +1,20 @@
 environment:
   matrix:
+    - nodejs_version: "8.11.3"
     - nodejs_version: "8"
     - nodejs_version: "10"
+cache:
+ - "%LOCALAPPDATA%\\Yarn"
 install:
-  # get the latest version of Node.js in a release series
   - ps: Install-Product node $env:nodejs_version
-  # output useful info for debugging
+  - ps: Start-FileDownload 'https://github.com/yarnpkg/yarn/releases/download/v1.12.3/yarn-1.12.3.msi'
+  - cmd /c start /wait msiexec.exe /i yarn-1.12.3.msi /quiet /qn /norestart
+  - rm yarn-1.12.3.msi
   - node --version
-  - npm --version
-  # install modules
-  - npm install
+  - yarn --version
+  - yarn install
+  - cd embark-ui && yarn install && cd ..
+  - git status && node -e "process.exit(require('child_process').execSync('git status --porcelain').toString().trim()===''?0:1)"
 test_script:
   - npm run build:node
   - npm test
