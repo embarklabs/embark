@@ -10,6 +10,8 @@ babel.config.js
 dist/test
 header.png
 logo.png
+npm-shrinkwrap.json
+package-lock.json
 src
 test_apps
 tsconfig.json

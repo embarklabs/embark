@@ -19,3 +19,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# lock files
+npm-shrinkwrap.json
+package-lock.json
