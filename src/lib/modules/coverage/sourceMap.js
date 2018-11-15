@@ -12,7 +12,7 @@ const EmptySourceMap = {
 class SourceMap {
   constructor(sourceMapStringOrOffset, length, id, jump) {
     if(typeof sourceMapStringOrOffset === 'string') {
-      let [offset, length, id, jump] = sourceMapStringOrOffset.split(":");
+      const [offset, length, id, jump] = sourceMapStringOrOffset.split(":");
 
       this.offset = parseInt(offset, 10);
       this.length = parseInt(length, 10);
@@ -44,7 +44,7 @@ class SourceMap {
   }
 
   toString(defaultId) {
-    let parts = [this.offset, this.length];
+    const parts = [this.offset, this.length];
 
     if(this.id !== undefined && this.id !== '') {
       parts.push(this.id);

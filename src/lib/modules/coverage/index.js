@@ -1,7 +1,6 @@
 /*global web3*/
 const fs = require('../../core/fs');
-const ContractSources = require('./contract_sources');
-
+const ContractSources = require('./contractSources');
 
 class CodeCoverage {
   constructor(embark, _options) {
@@ -54,21 +53,19 @@ class CodeCoverage {
     let block = await web3.eth.getBlock(receipt.number);
     if(block.transactions.length === 0) return;
 
-    let requests = [];
-    for(let i in block.transactions) {
-      var txHash = block.transactions[i];
-
+    let requests = block.transactions.reduce((acc, txHash) => {
       if(this.seenTransactions[txHash]) return;
 
       this.seenTransactions[txHash] = true;
-      requests.push(web3.debug.traceTransaction(txHash, {}));
-    }
+      acc.push(web3.debug.traceTransaction(txHash, {}));
+      return acc;
+    }, []);
 
     let traces = await Promise.all(requests);
 
-    for(let i in traces) {
-      this.coverageReport = this.contractSources.generateCodeCoverage(traces[i]);
-    }
+    traces.forEach(trace => {
+      this.coverageReport = this.contractSources.generateCodeCoverage(trace);
+    });
   }
 }
 

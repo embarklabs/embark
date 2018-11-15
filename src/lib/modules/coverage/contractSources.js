@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const ContractSource = require('./contract_source');
+const ContractSource = require('./contractSource');
 
 class ContractSources {
   constructor(files) {
@@ -20,7 +20,7 @@ class ContractSources {
 
       case '[object Array]':
         files.forEach((file) => {
-          var content = fs.readFileSync(file).toString();
+          const content = fs.readFileSync(file).toString();
           this.addFile(file, content);
         });
         break;
@@ -31,37 +31,37 @@ class ContractSources {
   }
 
   addFile(fullPath, contents) {
-    let basename = path.basename(fullPath);
+    const basename = path.basename(fullPath);
     if(this.files[basename]) return;
 
     this.files[basename] = new ContractSource(basename, fullPath, contents);
   }
 
   toSolcInputs() {
-    var inputs = {};
+    const inputs = {};
 
-    for(var file in this.files) {
-      inputs[file] = {content: this.files[file].body};
+    for(const filename in this.files) {
+      inputs[filename] = {content: this.files[filename].body};
     }
 
     return inputs;
   }
 
   parseSolcOutput(output) {
-    for(var file in output.contracts) {
-      var contractSource = this.files[path.basename(file)];
+    for(const filename in output.contracts) {
+      const contractSource = this.files[path.basename(filename)];
       if(!contractSource) continue;
 
-      contractSource.parseSolcOutput(output.sources[file], output.contracts[file]);
+      contractSource.parseSolcOutput(output.sources[filename], output.contracts[filename]);
     }
   }
 
   generateCodeCoverage(trace) {
-    var coverageReport = {};
+    const coverageReport = {};
 
-    for(var file in this.files) {
-      if(this.files[file].isInterface()) continue;
-      coverageReport[file] = this.files[file].generateCodeCoverage(trace);
+    for(const filename in this.files) {
+      if(this.files[filename].isInterface()) continue;
+      coverageReport[filename] = this.files[filename].generateCodeCoverage(trace);
     }
 
     if(!this.coverageReport) {
