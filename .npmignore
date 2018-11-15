@@ -3,6 +3,7 @@
 .github
 .travis.yml
 .vscode
+.yarnrc
 CODE_OF_CONDUCT.md
 CONTRIBUTING.md
 appveyor.yml
@@ -10,9 +11,13 @@ babel.config.js
 dist/test
 header.png
 logo.png
+npm-debug.log*
 npm-shrinkwrap.json
 package-lock.json
 src
 test_apps
 tsconfig.json
 tslint.json
+yarn-debug.log*
+yarn-error.log*
+yarn.lock

@@ -34,11 +34,13 @@
     "build:ui": "cd embark-ui && npm run build",
     "clean": "rimraf dist embark-*.tgz package embark-ui/build",
     "eslint": "eslint",
-    "install:core": "npm install",
-    "install:ui": "cd embark-ui && npm install",
+    "install:core": "yarn install",
+    "install:ui": "cd embark-ui && yarn install",
     "install_all": "npm-run-all install:*",
     "lint": "npm-run-all lint:*",
-    "lint:js": "eslint babel.config.js bin/embark embark-ui/src/ src/bin/ src/lib/",
+    "lint:js": "npm-run-all lint:js:*",
+    "lint:js:core": "eslint babel.config.js bin/embark src/bin/ src/lib/",
+    "lint:js:ui": "cd embark-ui && npm run lint",
     "lint:ts": "tslint -c tslint.json 'src/**/*.ts'",
     "prepublishOnly": "npm-run-all clean build test",
     "test": "npm-run-all lint test:*",
@@ -182,6 +184,7 @@
   },
   "engines": {
     "node": ">=8.11.3",
-    "npm": ">=6.4.1"
+    "npm": ">666",
+    "yarn": ">=1.12.3"
   }
 }
