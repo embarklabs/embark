@@ -172,6 +172,7 @@
     "@types/i18n": "0.8.3",
     "@types/node": "10.11.7",
     "@types/os-locale": "2.1.0",
+    "@types/web3": "1.0.12",
     "babel-plugin-dynamic-import-node": "2.2.0",
     "chai": "4.1.2",
     "chalk": "2.4.1",
