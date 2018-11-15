@@ -4,9 +4,9 @@ const fs = require('fs');
 const path = require('path');
 const sinon = require('sinon');
 
-const ContractSources = require('../lib/modules/coverage/contract_sources');
-const ContractSource = require('../lib/modules/coverage/contract_source');
-const SourceMap = require('../lib/modules/coverage/source_map');
+const ContractSources = require('../lib/modules/coverage/contractSources');
+const ContractSource = require('../lib/modules/coverage/contractSource');
+const SourceMap = require('../lib/modules/coverage/sourceMap');
 
 function fixturePath(fixture) {
   return path.join(__dirname, 'fixtures', fixture);

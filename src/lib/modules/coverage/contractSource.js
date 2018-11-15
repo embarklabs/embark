@@ -1,4 +1,4 @@
-const SourceMap = require('./source_map');
+const SourceMap = require('./sourceMap');
 
 class ContractSource {
   constructor(file, path, body) {
@@ -18,11 +18,11 @@ class ContractSource {
   }
 
   sourceMapToLocations(sourceMap) {
-    var [offset, length, ..._] = sourceMap.split(":").map((val) => {
+    const [offset, length, ..._] = sourceMap.split(":").map((val) => {
       return parseInt(val, 10);
     });
 
-    var locations = {};
+    const locations = {};
 
     for(let i = 0; i < this.lineCount; i++) {
       if(this.lineOffsets[i+1] <= offset) continue;
@@ -31,7 +31,7 @@ class ContractSource {
       break;
     }
 
-    for(var i = locations.start.line; i < this.lineCount; i++) {
+    for(let i = locations.start.line; i < this.lineCount; i++) {
       if(this.lineOffsets[i+1] <= offset + length) continue;
 
       locations.end = {line: i, column: ((offset + length) - this.lineOffsets[i])};
@@ -41,7 +41,7 @@ class ContractSource {
     // Ensure we return an "end" as a safeguard if the marker ends up to be
     // or surpass the offset for last character.
     if(!locations.end) {
-      var lastLine = this.lineCount - 1;
+      const lastLine = this.lineCount - 1;
       locations.end = {line: lastLine, column: this.lineLengths[lastLine]};
     }
 
@@ -57,7 +57,7 @@ class ContractSource {
     this.contractBytecode = {};
     this.contractDeployedBytecode = {};
 
-    for(var contractName in contracts) {
+    for(const contractName in contracts) {
       this.contractBytecode[contractName] = {};
       this.contractDeployedBytecode[contractName] = {};
 
@@ -81,7 +81,7 @@ class ContractSource {
   generateCodeCoverage(trace) {
     if(!this.ast || !this.contractBytecode) throw new Error('Error generating coverage: solc output was not assigned');
 
-    let coverage = {
+    const coverage = {
       code: this.body.trim().split("\n"),
       l: {},
       path: this.path,
@@ -93,11 +93,11 @@ class ContractSource {
       branchMap: {}
     };
 
-    var nodesRequiringVisiting = [this.ast];
-    var sourceMapToNodeType = {};
+    let nodesRequiringVisiting = [this.ast];
+    const sourceMapToNodeType = {};
 
     do {
-      let node = nodesRequiringVisiting.pop();
+      const node = nodesRequiringVisiting.pop();
       if(!node) continue;
 
       let children = [];
@@ -117,12 +117,12 @@ class ContractSource {
 
         case 'IfStatement': {
           location = this.sourceMapToLocations(node.src);
-          let trueBranchLocation = this.sourceMapToLocations(node.trueBody.src);
+          const trueBranchLocation = this.sourceMapToLocations(node.trueBody.src);
 
-          let declarationSourceMap = new SourceMap(node.src).subtract(new SourceMap(node.trueBody.src));
-          let declarationLocation = this.sourceMapToLocations(declarationSourceMap.toString());
+          const declarationSourceMap = new SourceMap(node.src).subtract(new SourceMap(node.trueBody.src));
+          const declarationLocation = this.sourceMapToLocations(declarationSourceMap.toString());
 
-          var falseBranchLocation;
+          let falseBranchLocation;
           if(node.falseBody) {
             falseBranchLocation = this.sourceMapToLocations(node.falseBody.src);
           } else {
@@ -139,13 +139,13 @@ class ContractSource {
           markLocations = [declarationLocation];
           children = [node.condition];
 
-          let trueExpression = (node.trueBody && node.trueBody.statements && node.trueBody.statements[0]) || node.trueBody;
+          const trueExpression = (node.trueBody && node.trueBody.statements && node.trueBody.statements[0]) || node.trueBody;
           if(trueExpression) {
             children = children.concat(trueExpression);
             trueExpression._parent = {type: 'b', id: node.id, idx: 0};
           }
 
-          let falseExpression = (node.falseBody && node.falseBody.statements && node.falseBody.statements[0]) || node.falseBody;
+          const falseExpression = (node.falseBody && node.falseBody.statements && node.falseBody.statements[0]) || node.falseBody;
           if(falseExpression) {
             children = children.concat(falseExpression);
             falseExpression._parent = {type: 'b', id: node.id, idx: 1};
@@ -188,18 +188,18 @@ class ContractSource {
           break;
 
         case 'ModifierDefinition':
-        case 'FunctionDefinition':
+        case 'FunctionDefinition': {
           // Istanbul only wants the function definition, not the body, so we're
           // going to do some fun math here.
-          var functionSourceMap = new SourceMap(node.src);
-          var functionParametersSourceMap = new SourceMap(node.parameters.src);
+          const functionSourceMap = new SourceMap(node.src);
+          const functionParametersSourceMap = new SourceMap(node.parameters.src);
 
-          var functionDefinitionSourceMap = new SourceMap(
+          const functionDefinitionSourceMap = new SourceMap(
             functionSourceMap.offset,
             (functionParametersSourceMap.offset + functionParametersSourceMap.length) - functionSourceMap.offset
           ).toString();
 
-          var fnName = node.isConstructor ? "(constructor)" : node.name;
+          const fnName = node.isConstructor ? "(constructor)" : node.name;
           location = this.sourceMapToLocations(functionDefinitionSourceMap);
 
           coverage.f[node.id] = 0;
@@ -215,19 +215,19 @@ class ContractSource {
           if(node.body) children = node.body.statements;
           markLocations = [location];
           break;
-
+        }
         case 'ForStatement': {
           // For statements will be a bit of a special case. We want to count the body
           // iterations but we only want to count the for loop being hit once. Because
           // of this, we cover the initialization on the node.
-          let sourceMap = new SourceMap(node.src);
-          let bodySourceMap = new SourceMap(node.body.src);
-          let forLoopDeclaration = sourceMap.subtract(bodySourceMap).toString();
+          const sourceMap = new SourceMap(node.src);
+          const bodySourceMap = new SourceMap(node.body.src);
+          const forLoopDeclaration = sourceMap.subtract(bodySourceMap).toString();
 
           location = this.sourceMapToLocations(forLoopDeclaration);
 
-          let markExpression = node.initializationExpression || node.loopExpression;
-          let expressionLocation = this.sourceMapToLocations(markExpression.src);
+          const markExpression = node.initializationExpression || node.loopExpression;
+          const expressionLocation = this.sourceMapToLocations(markExpression.src);
 
           if(!sourceMapToNodeType[markExpression.src]) sourceMapToNodeType[markExpression.src] = [];
           sourceMapToNodeType[markExpression.src].push({type: 's', id: node.id, body: {loc: location}});
@@ -274,9 +274,9 @@ class ContractSource {
   }
 
   _generateCodeCoverageForBytecode(trace, coverage, sourceMapToNodeType, contractBytecode) {
-    var contractMatches = true;
-    for(var contractName in contractBytecode) {
-      var bytecode = contractBytecode[contractName];
+    let contractMatches = true;
+    for(const contractName in contractBytecode) {
+      const bytecode = contractBytecode[contractName];
 
       // Try to match the contract to the bytecode. If it doesn't,
       // then we bail.
@@ -287,8 +287,8 @@ class ContractSource {
       trace.structLogs.forEach((step) => {
         step = bytecode[step.pc];
         if(!step.sourceMap || step.sourceMap === '' || step.sourceMap === SourceMap.empty()) return;
-        let sourceMapString = step.sourceMap.toString(this.id);
-        var nodes = sourceMapToNodeType[sourceMapString];
+        const sourceMapString = step.sourceMap.toString(this.id);
+        const nodes = sourceMapToNodeType[sourceMapString];
 
         if(!nodes) return;
 
@@ -297,7 +297,7 @@ class ContractSource {
           if(node.type === 'f' && step.jump) return;
 
           if(node.type !== 'b' && node.body && node.body.loc) {
-            for(var line = node.body.loc.start.line; line <= node.body.loc.end.line; line++) {
+            for(let line = node.body.loc.start.line; line <= node.body.loc.end.line; line++) {
               coverage.l[line]++;
             }
           }
@@ -320,11 +320,11 @@ class ContractSource {
   }
 
   _buildContractBytecode(contractName, contractBytecode, opcodes, sourceMaps) {
-    var bytecodeMapping = contractBytecode[contractName];
-    var bytecodeIdx = 0;
-    var pc = 0;
-    var instructions = 0;
-    var previousSourceMap = null;
+    const bytecodeMapping = contractBytecode[contractName];
+    let bytecodeIdx = 0;
+    let pc = 0;
+    let instructions = 0;
+    let previousSourceMap = null;
 
     do {
       let sourceMap;
@@ -335,8 +335,8 @@ class ContractSource {
         sourceMap = previousSourceMap.createRelativeTo(sourceMapArgs);
       }
 
-      var instruction = opcodes[bytecodeIdx];
-      var length = this._instructionLength(instruction);
+      const instruction = opcodes[bytecodeIdx];
+      const length = this._instructionLength(instruction);
       bytecodeMapping[pc] = {
         instruction: instruction,
         sourceMap: sourceMap,
