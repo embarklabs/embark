@@ -8,5 +8,7 @@ dist
 embark-*.tgz
 node_modules
 npm-debug.log
+npm-shrinkwrap.json
 package
+package-lock.json
 src/test/cli_shim/.cid

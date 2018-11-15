@@ -3,6 +3,8 @@
 .eslintrc
 config
 node_modules
+npm-shrinkwrap.json
+package-lock.json
 public
 scripts
 src
