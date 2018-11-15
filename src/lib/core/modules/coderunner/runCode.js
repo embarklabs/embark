@@ -9,11 +9,13 @@ class RunCode {
     });
   }
 
-  doEval(code) {
+  doEval(code, tolerateError = false) {
     try {
       return vm.runInNewContext(code, this.context);
     } catch(e) {
-      this.logger.error(e.message);
+      if (!tolerateError) {
+        this.logger.error(e.message);
+      }
       return e.message;
     }
   }

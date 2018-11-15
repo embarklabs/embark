@@ -62,7 +62,7 @@ class CodeRunner {
     this.runCode.registerVar(varName, code);
   }
 
-  async evalCode(code, cb, forConsoleOnly = false) {
+  async evalCode(code, cb, forConsoleOnly = false, tolerateError = false) {
     cb = cb || function() {};
     const awaitIdx = code.indexOf('await');
     let awaiting = false;
@@ -73,14 +73,14 @@ class CodeRunner {
       const last = instructions.pop();
 
       if (!last.trim().startsWith('return')) {
-        instructions.push(`return ${last}`); 
+        instructions.push(`return ${last}`);
       } else {
-        instructions.push(last); 
+        instructions.push(last);
       }
-      
+
       code = `(async function() {${instructions.join(';')}})();`;
     }
-    let result = this.runCode.doEval(code);
+    let result = this.runCode.doEval(code, tolerateError);
 
     if (forConsoleOnly && this.ipc.isServer()) {
       this.commands.push({code});
@@ -100,7 +100,7 @@ class CodeRunner {
         error.message += '. Are you connected to an Ethereum node?';
       }
 
-      cb(error);  
+      cb(error);
     }
   }
 
