@@ -114,6 +114,7 @@ describe('embark.Config', function () {
         versions: {'web3': '1.0.0-beta', solc: '0.5.0'},
         deployment: {host: 'localhost', port: 8545, type: 'rpc', "accounts": [{"mnemonic": "12 word mnemonic", "balance": "5000000000"}]},
         dappConnection: ['$WEB3', 'localhost:8545'],
+        dappAutoEnable: true,
         "gas": "400000",
         "strategy": "implicit",
         "contracts": {
@@ -136,6 +137,7 @@ describe('embark.Config', function () {
         versions: {'web3': '1.0.0-beta', solc: '0.5.0'},
         deployment: {host: 'localhost', port: 8545, type: 'rpc'},
         dappConnection: ['$WEB3', 'localhost:8545'],
+        dappAutoEnable: true,
         "gas": "auto",
         "strategy": "implicit",
         "contracts": {

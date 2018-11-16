@@ -284,6 +284,7 @@ Config.prototype.loadContractsConfigFile = function() {
         "$WEB3",
         "localhost:8545"
       ],
+      "dappAutoEnable": true,
       "strategy": constants.deploymentStrategy.implicit,
       "gas": "auto",
       "contracts": {

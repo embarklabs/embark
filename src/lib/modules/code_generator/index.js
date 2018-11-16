@@ -120,7 +120,12 @@ class CodeGenerator {
       } else {
         let connectionList = "[" + this.contractsConfig.dappConnection.map((x) => '"' + x + '"').join(',') + "]";
         let isDev = (self.env === 'development');
-        web3Load = Templates.web3_connector({connectionList: connectionList, done: 'done(err);', warnAboutMetamask: isDev});
+        web3Load = Templates.web3_connector({
+          autoEnable: this.contractsConfig.dappAutoEnable,
+          connectionList: connectionList,
+          done: 'done(err);',
+          warnAboutMetamask: isDev
+        });
       }
 
       result += Templates.do_when_loaded({block: web3Load, environment: this.env});

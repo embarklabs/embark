@@ -12,7 +12,7 @@ class Blockchain extends React.Component {
       valueSet: 10,
       valueGet: "",
       logs: []
-    }
+    };
   }
 
   handleChange(e) {
@@ -27,9 +27,9 @@ class Blockchain extends React.Component {
     func.apply(this, [e]);
   }
 
-  setValue(e) {
+  async setValue(e) {
     e.preventDefault();
-
+    await EmbarkJS.enableEthereum();
     var value = parseInt(this.state.valueSet, 10);
 
     SimpleStorage.methods.set(value).send();
