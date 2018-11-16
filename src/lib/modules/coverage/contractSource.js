@@ -281,10 +281,10 @@ class ContractSource {
       // Try to match the contract to the bytecode. If it doesn't,
       // then we bail.
 
-      contractMatches = trace.structLogs.every((step) => bytecode[step.pc]);
+      contractMatches = trace.structLogs.filter((step) => bytecode[step.pc]);
       if(!contractMatches) continue;
 
-      trace.structLogs.forEach((step) => {
+      contractMatches.forEach((step) => {
         step = bytecode[step.pc];
         if(!step.sourceMap || step.sourceMap === '' || step.sourceMap === SourceMap.empty()) return;
         const sourceMapString = step.sourceMap.toString(this.id);
