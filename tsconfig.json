@@ -15,5 +15,5 @@
       "*": ["./typings/*"]
     }
   },
-  "include": ["./src/**/*", "./test/**/*"]
+  "include": ["./src/**/*"]
 }

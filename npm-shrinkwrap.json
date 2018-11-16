@@ -898,6 +898,12 @@
         "@types/node": "*"
       }
     },
+    "@types/i18n": {
+      "version": "0.8.3",
+      "resolved": "https://registry.npmjs.org/@types/i18n/-/i18n-0.8.3.tgz",
+      "integrity": "sha512-JyNZyqamS3jfJ/qTXkAIAtBKlapN5OrEVosdde6LT41Gf209NzXppDVoNkn1pABGZbSnT8dgEgiuTFBIgxweIQ==",
+      "dev": true
+    },
     "@types/lockfile": {
       "version": "1.0.0",
       "resolved": "https://registry.npmjs.org/@types/lockfile/-/lockfile-1.0.0.tgz",
@@ -915,6 +921,12 @@
       "requires": {
         "@types/node": "*"
       }
+    },
+    "@types/os-locale": {
+      "version": "2.1.0",
+      "resolved": "https://registry.npmjs.org/@types/os-locale/-/os-locale-2.1.0.tgz",
+      "integrity": "sha512-1FI8uCzD//cYu6eDMrik91BevmE8xQLeV5Br2+dDjiluhTM5vtxTDXSaVY20rRV8V/XT6l+A1H12g5+hBtSQZg==",
+      "dev": true
     },
     "@types/semver": {
       "version": "5.5.0",
@@ -3819,7 +3831,7 @@
       "dependencies": {
         "colors": {
           "version": "1.0.3",
-          "resolved": "http://registry.npmjs.org/colors/-/colors-1.0.3.tgz",
+          "resolved": "https://registry.npmjs.org/colors/-/colors-1.0.3.tgz",
           "integrity": "sha1-BDP0TYCWgP3rYO0mDxsMJi6CpAs="
         }
       }
@@ -10906,7 +10918,8 @@
         "pem-jwk": "^1.5.1",
         "protons": "^1.0.1",
         "rsa-pem-to-jwk": "^1.1.3",
-        "tweetnacl": "^1.0.0"
+        "tweetnacl": "^1.0.0",
+        "webcrypto-shim": "github:dignifiedquire/webcrypto-shim#190bc9ec341375df6025b17ae12ddb2428ea49c8"
       },
       "dependencies": {
         "base-x": {
@@ -10924,10 +10937,6 @@
           "requires": {
             "base-x": "^3.0.2"
           }
-        },
-        "webcrypto-shim": {
-          "version": "github:dignifiedquire/webcrypto-shim#190bc9ec341375df6025b17ae12ddb2428ea49c8",
-          "from": "github:dignifiedquire/webcrypto-shim#190bc9ec341375df6025b17ae12ddb2428ea49c8"
         }
       }
     },
@@ -12642,12 +12651,12 @@
         },
         "minimist": {
           "version": "1.2.0",
-          "resolved": "http://registry.npmjs.org/minimist/-/minimist-1.2.0.tgz",
+          "resolved": "https://registry.npmjs.org/minimist/-/minimist-1.2.0.tgz",
           "integrity": "sha1-o1AIsg9BOD7sH7kU9M1d95omQoQ="
         },
         "node-notifier": {
           "version": "4.6.1",
-          "resolved": "http://registry.npmjs.org/node-notifier/-/node-notifier-4.6.1.tgz",
+          "resolved": "https://registry.npmjs.org/node-notifier/-/node-notifier-4.6.1.tgz",
           "integrity": "sha1-BW0UJE89zBzq3+aK+c/wxUc6M/M=",
           "requires": {
             "cli-usage": "^0.1.1",
@@ -15791,6 +15800,7 @@
           "resolved": "https://registry.npmjs.org/web3/-/web3-0.20.6.tgz",
           "integrity": "sha1-PpcwauAk+yThCj11yIQwJWIhUSA=",
           "requires": {
+            "bignumber.js": "git+https://github.com/frozeman/bignumber.js-nolookahead.git#57692b3ecfc98bbdd6b3a516cb2353652ea49934",
             "crypto-js": "^3.1.4",
             "utf8": "^2.1.1",
             "xhr2": "*",
@@ -15799,7 +15809,7 @@
           "dependencies": {
             "bignumber.js": {
               "version": "git+https://github.com/frozeman/bignumber.js-nolookahead.git#57692b3ecfc98bbdd6b3a516cb2353652ea49934",
-              "from": "git+https://github.com/frozeman/bignumber.js-nolookahead.git#57692b3ecfc98bbdd6b3a516cb2353652ea49934"
+              "from": "git+https://github.com/frozeman/bignumber.js-nolookahead.git"
             }
           }
         }
@@ -15831,7 +15841,7 @@
       "dependencies": {
         "acorn": {
           "version": "3.3.0",
-          "resolved": "http://registry.npmjs.org/acorn/-/acorn-3.3.0.tgz",
+          "resolved": "https://registry.npmjs.org/acorn/-/acorn-3.3.0.tgz",
           "integrity": "sha1-ReN/s56No/JbruP/U2niu18iAXo="
         },
         "ajv": {
@@ -15850,7 +15860,7 @@
         },
         "ansi-escapes": {
           "version": "1.4.0",
-          "resolved": "http://registry.npmjs.org/ansi-escapes/-/ansi-escapes-1.4.0.tgz",
+          "resolved": "https://registry.npmjs.org/ansi-escapes/-/ansi-escapes-1.4.0.tgz",
           "integrity": "sha1-06ioOzGapneTZisT52HHkRQiMG4="
         },
         "ansi-styles": {
@@ -15860,7 +15870,7 @@
         },
         "chalk": {
           "version": "1.1.3",
-          "resolved": "http://registry.npmjs.org/chalk/-/chalk-1.1.3.tgz",
+          "resolved": "https://registry.npmjs.org/chalk/-/chalk-1.1.3.tgz",
           "integrity": "sha1-qBFcVeSnAv5NFQq9OHKCKn4J/Jg=",
           "requires": {
             "ansi-styles": "^2.2.1",
@@ -15888,7 +15898,7 @@
         },
         "doctrine": {
           "version": "1.5.0",
-          "resolved": "http://registry.npmjs.org/doctrine/-/doctrine-1.5.0.tgz",
+          "resolved": "https://registry.npmjs.org/doctrine/-/doctrine-1.5.0.tgz",
           "integrity": "sha1-N53Ocw9hZvds76TmcHoVmwLFpvo=",
           "requires": {
             "esutils": "^2.0.2",
@@ -15897,7 +15907,7 @@
         },
         "eslint": {
           "version": "2.10.2",
-          "resolved": "http://registry.npmjs.org/eslint/-/eslint-2.10.2.tgz",
+          "resolved": "https://registry.npmjs.org/eslint/-/eslint-2.10.2.tgz",
           "integrity": "sha1-sjCUgv7wQ9MgM2WjIShebM4Bw9c=",
           "requires": {
             "chalk": "^1.1.3",
@@ -15936,7 +15946,7 @@
         },
         "eslint-plugin-react": {
           "version": "5.2.2",
-          "resolved": "http://registry.npmjs.org/eslint-plugin-react/-/eslint-plugin-react-5.2.2.tgz",
+          "resolved": "https://registry.npmjs.org/eslint-plugin-react/-/eslint-plugin-react-5.2.2.tgz",
           "integrity": "sha1-fbBo4fVIf2hx5N7vNqOBwwPqwWE=",
           "requires": {
             "doctrine": "^1.2.2",
@@ -15945,7 +15955,7 @@
         },
         "espree": {
           "version": "3.1.4",
-          "resolved": "http://registry.npmjs.org/espree/-/espree-3.1.4.tgz",
+          "resolved": "https://registry.npmjs.org/espree/-/espree-3.1.4.tgz",
           "integrity": "sha1-BybXrIOvl6fISY2ps2OjYJ0qaKE=",
           "requires": {
             "acorn": "^3.1.0",
@@ -15991,7 +16001,7 @@
         },
         "inquirer": {
           "version": "0.12.0",
-          "resolved": "http://registry.npmjs.org/inquirer/-/inquirer-0.12.0.tgz",
+          "resolved": "https://registry.npmjs.org/inquirer/-/inquirer-0.12.0.tgz",
           "integrity": "sha1-HvK/1jUE3wvHV4X/+MLEHfEvB34=",
           "requires": {
             "ansi-escapes": "^1.1.0",
@@ -16016,7 +16026,7 @@
         },
         "onetime": {
           "version": "1.1.0",
-          "resolved": "http://registry.npmjs.org/onetime/-/onetime-1.1.0.tgz",
+          "resolved": "https://registry.npmjs.org/onetime/-/onetime-1.1.0.tgz",
           "integrity": "sha1-ofeDj4MUxRbwXs78vEzP4EtO14k="
         },
         "pluralize": {
@@ -16026,7 +16036,7 @@
         },
         "progress": {
           "version": "1.1.8",
-          "resolved": "http://registry.npmjs.org/progress/-/progress-1.1.8.tgz",
+          "resolved": "https://registry.npmjs.org/progress/-/progress-1.1.8.tgz",
           "integrity": "sha1-4mDHj2Fhzdmw5WzD4Khd4Xx6V74="
         },
         "restore-cursor": {
@@ -16053,17 +16063,17 @@
         },
         "shelljs": {
           "version": "0.6.1",
-          "resolved": "http://registry.npmjs.org/shelljs/-/shelljs-0.6.1.tgz",
+          "resolved": "https://registry.npmjs.org/shelljs/-/shelljs-0.6.1.tgz",
           "integrity": "sha1-7GIRvtGSBEIIj+D3Cyg3Iy7SyKg="
         },
         "slice-ansi": {
           "version": "0.0.4",
-          "resolved": "http://registry.npmjs.org/slice-ansi/-/slice-ansi-0.0.4.tgz",
+          "resolved": "https://registry.npmjs.org/slice-ansi/-/slice-ansi-0.0.4.tgz",
           "integrity": "sha1-7b+JA/ZvfOL46v1s7tZeJkyDGzU="
         },
         "standard": {
           "version": "7.1.2",
-          "resolved": "http://registry.npmjs.org/standard/-/standard-7.1.2.tgz",
+          "resolved": "https://registry.npmjs.org/standard/-/standard-7.1.2.tgz",
           "integrity": "sha1-QBZu7sJAUGXRpPDj8VurxuJ0YH4=",
           "requires": {
             "eslint": "~2.10.2",
@@ -16087,7 +16097,7 @@
         },
         "table": {
           "version": "3.8.3",
-          "resolved": "http://registry.npmjs.org/table/-/table-3.8.3.tgz",
+          "resolved": "https://registry.npmjs.org/table/-/table-3.8.3.tgz",
           "integrity": "sha1-K7xULw/amGGnVdOUf+/Ys/UThV8=",
           "requires": {
             "ajv": "^4.7.0",
@@ -16124,7 +16134,7 @@
         },
         "web3": {
           "version": "0.20.6",
-          "resolved": "http://registry.npmjs.org/web3/-/web3-0.20.6.tgz",
+          "resolved": "https://registry.npmjs.org/web3/-/web3-0.20.6.tgz",
           "integrity": "sha1-PpcwauAk+yThCj11yIQwJWIhUSA=",
           "requires": {
             "bignumber.js": "git+https://github.com/frozeman/bignumber.js-nolookahead.git#57692b3ecfc98bbdd6b3a516cb2353652ea49934",
@@ -16845,14 +16855,6 @@
           "resolved": "https://registry.npmjs.org/bn.js/-/bn.js-4.11.6.tgz",
           "integrity": "sha1-UzRK2xRhehP26N0s4okF0cC6MhU="
         },
-        "debug": {
-          "version": "2.6.9",
-          "resolved": "https://registry.npmjs.org/debug/-/debug-2.6.9.tgz",
-          "integrity": "sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==",
-          "requires": {
-            "ms": "2.0.0"
-          }
-        },
         "eth-lib": {
           "version": "0.1.27",
           "resolved": "https://registry.npmjs.org/eth-lib/-/eth-lib-0.1.27.tgz",
@@ -17105,17 +17107,28 @@
           "integrity": "sha1-fecPG4Py3jZHZ3IVa+z+9uNRbrM=",
           "requires": {
             "underscore": "1.8.3",
-            "web3-core-helpers": "1.0.0-beta.34"
+            "web3-core-helpers": "1.0.0-beta.34",
+            "websocket": "git://github.com/frozeman/WebSocket-Node.git#6c72925e3f8aaaea8dc8450f97627e85263999f2"
           },
           "dependencies": {
             "websocket": {
               "version": "git://github.com/frozeman/WebSocket-Node.git#6c72925e3f8aaaea8dc8450f97627e85263999f2",
-              "from": "git://github.com/frozeman/WebSocket-Node.git#6c72925e3f8aaaea8dc8450f97627e85263999f2",
+              "from": "git://github.com/frozeman/WebSocket-Node.git#browserifyCompatible",
               "requires": {
                 "debug": "^2.2.0",
                 "nan": "^2.3.3",
                 "typedarray-to-buffer": "^3.1.2",
                 "yaeti": "^0.0.6"
+              },
+              "dependencies": {
+                "debug": {
+                  "version": "2.6.9",
+                  "resolved": "https://registry.npmjs.org/debug/-/debug-2.6.9.tgz",
+                  "integrity": "sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==",
+                  "requires": {
+                    "ms": "2.0.0"
+                  }
+                }
               }
             }
           }
@@ -17149,7 +17162,6 @@
           "version": "git://github.com/frozeman/WebSocket-Node.git#6c72925e3f8aaaea8dc8450f97627e85263999f2",
           "from": "git://github.com/frozeman/WebSocket-Node.git#browserifyCompatible",
           "requires": {
-            "debug": "^2.2.0",
             "nan": "^2.3.3",
             "typedarray-to-buffer": "^3.1.2",
             "yaeti": "^0.0.6"
@@ -20713,14 +20725,6 @@
           "resolved": "https://registry.npmjs.org/bn.js/-/bn.js-4.11.6.tgz",
           "integrity": "sha1-UzRK2xRhehP26N0s4okF0cC6MhU="
         },
-        "debug": {
-          "version": "2.6.9",
-          "resolved": "https://registry.npmjs.org/debug/-/debug-2.6.9.tgz",
-          "integrity": "sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==",
-          "requires": {
-            "ms": "2.0.0"
-          }
-        },
         "eth-lib": {
           "version": "0.1.27",
           "resolved": "https://registry.npmjs.org/eth-lib/-/eth-lib-0.1.27.tgz",
@@ -20959,17 +20963,28 @@
           "integrity": "sha1-fecPG4Py3jZHZ3IVa+z+9uNRbrM=",
           "requires": {
             "underscore": "1.8.3",
-            "web3-core-helpers": "1.0.0-beta.34"
+            "web3-core-helpers": "1.0.0-beta.34",
+            "websocket": "git://github.com/frozeman/WebSocket-Node.git#6c72925e3f8aaaea8dc8450f97627e85263999f2"
           },
           "dependencies": {
             "websocket": {
               "version": "git://github.com/frozeman/WebSocket-Node.git#6c72925e3f8aaaea8dc8450f97627e85263999f2",
-              "from": "git://github.com/frozeman/WebSocket-Node.git#6c72925e3f8aaaea8dc8450f97627e85263999f2",
+              "from": "git://github.com/frozeman/WebSocket-Node.git#browserifyCompatible",
               "requires": {
                 "debug": "^2.2.0",
                 "nan": "^2.3.3",
                 "typedarray-to-buffer": "^3.1.2",
                 "yaeti": "^0.0.6"
+              },
+              "dependencies": {
+                "debug": {
+                  "version": "2.6.9",
+                  "resolved": "https://registry.npmjs.org/debug/-/debug-2.6.9.tgz",
+                  "integrity": "sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==",
+                  "requires": {
+                    "ms": "2.0.0"
+                  }
+                }
               }
             }
           }
@@ -21003,7 +21018,6 @@
           "version": "git://github.com/frozeman/WebSocket-Node.git#6c72925e3f8aaaea8dc8450f97627e85263999f2",
           "from": "git://github.com/frozeman/WebSocket-Node.git#browserifyCompatible",
           "requires": {
-            "debug": "^2.2.0",
             "nan": "^2.3.3",
             "typedarray-to-buffer": "^3.1.2",
             "yaeti": "^0.0.6"
@@ -21315,7 +21329,8 @@
       "integrity": "sha1-bUZ4Geoi3foba6FJjTHZVU4rBt0=",
       "requires": {
         "underscore": "1.8.3",
-        "web3-core-helpers": "1.0.0-beta.27"
+        "web3-core-helpers": "1.0.0-beta.27",
+        "websocket": "git://github.com/frozeman/WebSocket-Node.git#6c72925e3f8aaaea8dc8450f97627e85263999f2"
       },
       "dependencies": {
         "debug": {
@@ -21333,7 +21348,7 @@
         },
         "websocket": {
           "version": "git://github.com/frozeman/WebSocket-Node.git#6c72925e3f8aaaea8dc8450f97627e85263999f2",
-          "from": "git://github.com/frozeman/WebSocket-Node.git#6c72925e3f8aaaea8dc8450f97627e85263999f2",
+          "from": "git://github.com/frozeman/WebSocket-Node.git#browserifyCompatible",
           "requires": {
             "debug": "^2.2.0",
             "nan": "^2.3.3",
@@ -21398,6 +21413,10 @@
           "integrity": "sha1-LgHbAvfY0JRPdxBPFgnrDDBM92g="
         }
       }
+    },
+    "webcrypto-shim": {
+      "version": "github:dignifiedquire/webcrypto-shim#190bc9ec341375df6025b17ae12ddb2428ea49c8",
+      "from": "github:dignifiedquire/webcrypto-shim#master"
     },
     "webidl-conversions": {
       "version": "4.0.2",
