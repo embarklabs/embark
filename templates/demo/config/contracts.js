@@ -32,6 +32,11 @@ module.exports = {
       "http://localhost:8545"
     ],
 
+    // Automatically call `ethereum.enable` if true.
+    // If false, the following code must run before sending any transaction: `await EmbarkJS.enableEthereum();`
+    // Default value is true.
+    // dappAutoEnable: true,
+
     gas: "auto",
 
     // Strategy for the deployment of the contracts:
