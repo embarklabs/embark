@@ -65,7 +65,10 @@ class IPC {
     ipc.server.emit(client, 'message', message);
   }
 
-  listenTo(action, callback) {
+  listenTo(action, callback = () => {}) {
+    if (!this.connected) {
+      return callback();
+    }
     ipc.of['embark'].on(action, (messageString) => {
       callback(parse(messageString));
     });
@@ -75,7 +78,10 @@ class IPC {
     ipc.server.broadcast(action, stringify(data));
   }
 
-  once(action, cb) {
+  once(action, cb = () => {}) {
+    if (!this.connected) {
+      return cb();
+    }
     ipc.of['embark'].once('message', function(messageString) {
       const message = parse(messageString);
       if (message.action !== action) {
@@ -86,6 +92,10 @@ class IPC {
   }
 
   request(action, data, cb) {
+    if (!this.connected) {
+      cb = cb || (() => {});
+      return cb();
+    }
     if (cb) {
       this.once(action, cb);
     }
