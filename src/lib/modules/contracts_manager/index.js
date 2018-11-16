@@ -124,8 +124,8 @@ class ContractsManager {
                 res.send({result});
               });
             } catch (e) {
-              if (funcCall === 'call' && e.message === 'Returned error: gas required exceeds allowance or always failing transaction') {
-                return res.send({result: 'Failing call, this could be because of invalid inputs or function guards that may have been triggered, or an unknown error.'});
+              if (funcCall === 'call' && e.message === constants.blockchain.gasAllowanceError) {
+                return res.send({result: constants.blockchain.gasAllowanceErrorMessage});
               }
               res.send({result: e.message});
             }
@@ -421,8 +421,7 @@ class ContractsManager {
           if (Array.isArray(contract.args)) {
             ref = contract.args;
           } else {
-            let keys = Object.keys(contract.args);
-            ref = keys.map((k) => contract.args[k]).filter((x) => !x);
+            ref = Object.values(contract.args);
           }
 
           for (let j = 0; j < ref.length; j++) {

@@ -41,7 +41,9 @@
       "testnet": 3,
       "ropsten": 3,
       "rinkeby": 4
-    }
+    },
+    "gasAllowanceError": "Returned error: gas required exceeds allowance or always failing transaction",
+    "gasAllowanceErrorMessage": "Failing call, this could be because of invalid inputs or function guards that may have been triggered, or an unknown error."
   },
   "storage": {
     "init": "init",

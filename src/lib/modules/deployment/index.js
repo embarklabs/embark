@@ -2,6 +2,7 @@ let async = require('async');
 
 const ContractDeployer = require('./contract_deployer.js');
 const cloneDeep = require('clone-deep');
+const constants = require('../../constants');
 
 class DeployManager {
   constructor(embark, options) {
@@ -66,6 +67,9 @@ class DeployManager {
                   if (err) {
                     contract.error = err.message || err;
                     self.logger.error(`[${contract.className}]: ${err.message || err}`);
+                    if (contract.error === constants.blockchain.gasAllowanceError) {
+                      self.logger.error(constants.blockchain.gasAllowanceErrorMessage);
+                    }
                     errors.push(err);
                   }
                   callback();
