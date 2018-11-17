@@ -3,9 +3,14 @@
 .github
 .travis.yml
 .vscode
+CODE_OF_CONDUCT.md
 CONTRIBUTING.md
 appveyor.yml
+babel.config.js
+dist/test
 header.png
 logo.png
-test
+src
 test_apps
+tsconfig.json
+tslint.json

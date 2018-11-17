@@ -1,0 +1,53 @@
+{
+  "default": {
+    "gas": "auto",
+    "contracts": {
+      "SimpleStorage": {
+        "args": [
+          100
+        ]
+      }
+    }
+  },
+  "zeroaddress": {
+    "gas": "auto",
+    "contracts": {
+      "SimpleStorage": {
+        "address": "0x0",
+        "args": [
+          100,
+          "0x0"
+        ],
+        "onDeploy": [
+          "SimpleStorage.methods.changeAddress('0x0')"
+        ]
+      },
+      "afterDeploy": [
+        "SimpleStorage.methods.changeAddress('0x0')",
+        "SimpleStorage.methods.changeAddress('$SomeToken')"
+      ]
+    }
+  },
+  "myenv": {
+    "gas": "400 Kwei",
+    "contracts": {
+      "SimpleStorage": {
+        "gas": "123 Kwei",
+        "gasPrice": "1 Kwei"
+      },
+      "Token": {
+        "args": [
+          200
+        ]
+      }
+    },
+    "deployment": {
+      "accounts": [
+        {
+          "mnemonic": "12 word mnemonic",
+          "balance": "5000 Mwei"
+        }
+      ]
+    }
+  }
+}

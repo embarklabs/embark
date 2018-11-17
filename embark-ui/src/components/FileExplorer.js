@@ -1,12 +1,12 @@
+import React from 'react';
 import {AppSwitch} from '@coreui/react';
 import {Label} from 'reactstrap';
-import React from 'react';
 import PropTypes from 'prop-types';
 import {Treebeard, decorators} from 'react-treebeard';
 import classNames from 'classnames';
-import {DARK_THEME} from '../constants';
 
-const isDarkTheme= (theme) => theme === DARK_THEME;
+import FileExplorerRowContainer from '../containers/FileExplorerRowContainer';
+import {isDarkTheme} from '../utils/utils';
 
 const style = (theme) => ({
   tree: {
@@ -77,67 +77,73 @@ const style = (theme) => ({
     }
   }
 });
+class Header extends React.Component {
+  resolveIcon() {
+    let icon;
+    let {node} = this.props;
 
-
-const Header = ({style, node}) => {
-  let icon;
-
-  if (!node.children) {
-    const extension = node.path.split('.').pop();
-    switch(extension) {
-      case 'html':
-        icon = 'text-danger fa fa-html5';
-        break;
-      case 'css':
-        icon = 'text-warning fa fa-css3';
-        break;
-      case 'js':
-      case 'jsx':
-        icon = 'text-primary icon js-icon';
-        break;
-      case 'json':
-        icon = 'text-success icon hjson-icon';
-        break;
-      case 'sol':
-        icon = 'text-warning icon solidity-icon';
-        break;
-      default:
-        icon = 'fa fa-file-o';
+    if (!node.children) {
+      const extension = node.path.split('.').pop();
+      switch(extension) {
+        case 'html':
+          icon = 'text-danger fa fa-html5';
+          break;
+        case 'css':
+          icon = 'text-warning fa fa-css3';
+          break;
+        case 'js':
+        case 'jsx':
+          icon = 'text-primary icon js-icon';
+          break;
+        case 'json':
+          icon = 'text-success icon hjson-icon';
+          break;
+        case 'sol':
+          icon = 'text-warning icon solidity-icon';
+          break;
+        default:
+          icon = 'fa fa-file-o';
+      }
+    } else {
+      switch(node.name) {
+        case 'dist':
+          icon = 'text-danger icon easybuild-icon';
+          break;
+        case 'config':
+          icon = 'text-warning fa fa-cogs';
+          break;
+        case 'contracts':
+          icon = 'text-success fa fa-file-text';
+          break;
+        case 'app':
+          icon = 'text-primary fa fa-code';
+          break;
+        case 'test':
+          icon = 'icon test-dir-icon';
+          break;
+        case 'node_modules':
+          icon = 'fa fa-folder-o';
+          break;
+        default:
+          icon = 'fa fa-folder';
+      }
     }
-  } else {
-    switch(node.name) {
-      case 'dist':
-        icon = 'text-danger icon easybuild-icon';
-        break;
-      case 'config':
-        icon = 'text-warning fa fa-cogs';
-        break;
-      case 'contracts':
-        icon = 'text-success fa fa-file-text';
-        break;
-      case 'app':
-        icon = 'text-primary fa fa-code';
-        break;
-      case 'test':
-        icon = 'icon test-dir-icon';
-        break;
-      case 'node_modules':
-        icon = 'fa fa-folder-o';
-        break;
-      default:
-        icon = 'fa fa-folder';
-    }
 
+    return icon;
   }
 
-  return (
-    <div className="mb-1" style={style.base}>
-      <div style={style.title}>
-        <i className={classNames('mr-1', icon)} />
-        {node.name}
+  render() {
+    let {node, style} = this.props;
+    return (
+      <div className="mb-1 d-inline-block"
+           style={style.base}>
+        <div style={style.title}>
+          <i className={classNames('mr-1', this.resolveIcon())} />
+          {node.name}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
 Header.propTypes = {
@@ -146,6 +152,7 @@ Header.propTypes = {
 };
 
 decorators.Header = Header;
+decorators.Container = FileExplorerRowContainer;
 
 class FileExplorer extends React.Component {
   constructor(props) {

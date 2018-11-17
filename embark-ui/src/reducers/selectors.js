@@ -169,6 +169,10 @@ export function getFiles(state) {
   return state.entities.files;
 }
 
+export function getRootDirname(state) {
+  return state.entities.files[0] && state.entities.files[0].dirname;
+}
+
 export function getCurrentFile(state) {
   return state.editorTabs.find(file => file.active) || {};
 }

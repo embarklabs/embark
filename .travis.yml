@@ -3,12 +3,8 @@ os:
   - linux
   - osx
 node_js:
-    - "8"
-    - "10"
-addons:
-    code_climate:
-        repo_token: 7454b1a666015e244c384d19f48c34e35d1ae58c3aa428ec542f10bbcb848358
-before_install:
-    - npm i -g npm@latest
+  - "8"
+  - "10"
 script:
-    - npm test
+  - npm run build:node
+  - npm test

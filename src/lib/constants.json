@@ -1,0 +1,67 @@
+{
+  "httpContractsDirectory": ".embark/contracts/",
+  "contexts": {
+    "simulator": "simulator",
+    "blockchain": "blockchain",
+    "templateGeneration": "templateGeneration",
+    "run": "run",
+    "upload": "upload",
+    "build": "build",
+    "console": "console",
+    "graph": "graph",
+    "scaffold": "scaffold",
+    "test": "test",
+    "reset": "reset",
+    "any": "any"
+  },
+  "process": {
+    "processLaunchRequest": "process:launch-request",
+    "processLaunchComplete": "process:launch-complete",
+    "log": "log",
+    "events": {
+      "on": "on",
+      "request": "request",
+      "response": "response"
+    }
+  },
+  "pipeline": {
+    "init": "init",
+    "build": "build",
+    "initiated": "initiated",
+    "built": "built"
+  },
+  "blockchain": {
+    "blockchainReady": "blockchainReady",
+    "blockchainExit": "blockchainExit",
+    "init": "init",
+    "initiated": "initiated",
+    "servicePortOnProxy": 10,
+    "networkIds": {
+      "livenet": 1,
+      "testnet": 3,
+      "ropsten": 3,
+      "rinkeby": 4
+    },
+    "gasAllowanceError": "Returned error: gas required exceeds allowance or always failing transaction",
+    "gasAllowanceErrorMessage": "Failing call, this could be because of invalid inputs or function guards that may have been triggered, or an unknown error."
+  },
+  "storage": {
+    "init": "init",
+    "initiated": "initiated"
+  },
+  "tests": {
+    "gasLimit": 6000000
+  },
+  "codeGenerator": {
+    "gasLimit": 6000000
+  },
+  "logs": {
+    "logPath": ".embark/logs/",
+    "maxLogLength": 1500
+  },
+  "deploymentStrategy": {
+    "implicit": "implicit",
+    "explicit": "explicit"
+  },
+  "embarkResourceOrigin": "http://embark"
+}
