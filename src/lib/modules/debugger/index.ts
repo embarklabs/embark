@@ -53,13 +53,13 @@ class TransactionDebugger {
           lines.forEach((errorLine: string) => {
             this.embark.logger.error(errorLine);
           });
-
           this.find_vars_in_line(tx.transactionHash, line, knownVars, (foundVars: any) => {
             if (!foundVars) { return; }
             this.embark.logger.info("vars:");
             foundVars.forEach((variable: any) => {
               this.embark.logger.info(`${variable.name}: ${variable.value}`);
             });
+            this.embark.logger.info(`type "debug" to start debugging the last failing tx`);
           });
         });
       });
@@ -70,14 +70,14 @@ class TransactionDebugger {
     const foundVars: any = [];
     this.getGlobals(txHash, (err: any, globals: any) => {
       if (err) { return cb([]); }
-      for (const variable of Object.keys(globals)) {
+      for (const variable of Object.keys(globals || {})) {
         const value: any = globals[variable];
         if (line.indexOf(variable) >= 0) {
           foundVars.push({name: variable, value});
         }
       }
 
-      for (const variable of Object.keys(knownVars.locals)) {
+      for (const variable of Object.keys(knownVars.locals || {})) {
         const value: any = knownVars.locals[variable];
         const variableName: string = variable.split(" ")[0];
         if (line.indexOf(variableName) >= 0) {
@@ -85,7 +85,7 @@ class TransactionDebugger {
         }
       }
 
-      for (const variable of Object.keys(knownVars.contract)) {
+      for (const variable of Object.keys(knownVars.contract || {})) {
         const value: any = knownVars.contract[variable];
         const variableName: string = variable.split(" ")[0];
         if (line.indexOf(variableName) >= 0) {
@@ -131,19 +131,27 @@ class TransactionDebugger {
       res.send({ok: true});
     });
     this.embark.registerAPICall("post", "/embark-api/debugger/StepOverForward", (req: any, res: any) => {
-      this.apiDebugger.stepOverForward(true);
+      if (this.apiDebugger.canGoNext()) {
+        this.apiDebugger.stepOverForward(true);
+      }
       res.send({ok: true});
     });
     this.embark.registerAPICall("post", "/embark-api/debugger/StepOverBackward", (req: any, res: any) => {
-      this.apiDebugger.stepOverBack(true);
+      if (this.apiDebugger.canGotPrevious()) {
+        this.apiDebugger.stepOverBack(true);
+      }
       res.send({ok: true});
     });
     this.embark.registerAPICall("post", "/embark-api/debugger/StepIntoForward", (req: any, res: any) => {
-      this.apiDebugger.stepIntoForward(true);
+      if (this.apiDebugger.canGoNext()) {
+        this.apiDebugger.stepIntoForward(true);
+      }
       res.send({ok: true});
     });
     this.embark.registerAPICall("post", "/embark-api/debugger/StepIntoBackward", (req: any, res: any) => {
-      this.apiDebugger.stepIntoBack(true);
+      if (this.apiDebugger.canGotPrevious()) {
+        this.apiDebugger.stepIntoBack(true);
+      }
       res.send({ok: true});
     });
     this.embark.registerAPICall("post", "/embark-api/debugger/breakpoint", (req: any, res: any) => {
@@ -200,9 +208,7 @@ class TransactionDebugger {
               this.currentCmdTxHash = txHash;
               this.embark.logger.info("debugging tx " + txHash);
               this.cmdDebugger = this.debuggerManager.createDebuggerSession(txHash, contract.filename, () => {
-                this.cmdDebugger.getSource().forEach((line: string) => {
-                  this.embark.logger.info(line);
-                });
+                this.displayStepInfo();
               });
             });
             return;
@@ -211,9 +217,7 @@ class TransactionDebugger {
           const filename: string = this.txTracker[this.lastTx].contract.filename;
           this.embark.logger.info("debugging tx " + this.lastTx);
           this.cmdDebugger = this.debuggerManager.createDebuggerSession(this.lastTx, filename, () => {
-            this.cmdDebugger.getSource().forEach((line: string) => {
-              this.embark.logger.info(line);
-            });
+            this.displayStepInfo();
           });
         },
       };
@@ -223,14 +227,15 @@ class TransactionDebugger {
       return {
         match: () => (cmd === "next" || cmd === "n"),
         process: (cb: any) => {
+          if (!this.cmdDebugger.canGoNext()) {
+            return;
+          }
           if (!this.cmdDebugger.currentStep()) {
             this.embark.logger.info("end of execution reached");
             return this.cmdDebugger.unload();
           }
           this.cmdDebugger.stepOverForward(true);
-          this.cmdDebugger.getSource().forEach((line: string) => {
-            this.embark.logger.info(line);
-          });
+          this.displayStepInfo();
         },
       };
     });
@@ -239,14 +244,15 @@ class TransactionDebugger {
       return {
         match: () => (cmd === "previous" || cmd === "p"),
         process: (cb: any) => {
+          if (!this.cmdDebugger.canGoPrevious()) {
+            return;
+          }
           if (!this.cmdDebugger.currentStep()) {
             this.embark.logger.info("end of execution reached");
             return this.cmdDebugger.unload();
           }
           this.cmdDebugger.stepOverBack(true);
-          this.cmdDebugger.getSource().forEach((line: string) => {
-            this.embark.logger.info(line);
-          });
+          this.displayStepInfo();
         },
       };
     });
@@ -306,6 +312,58 @@ class TransactionDebugger {
 
         cb(null, globals);
       });
+    });
+  }
+
+  private displayPossibleActions() {
+    const actions: string[] = [];
+    actions.push("actions: ");
+
+    if (this.cmdDebugger.canGoPrevious()) {
+      actions.push("(p)revious");
+    }
+    if (this.cmdDebugger.canGoNext()) {
+      actions.push("(n)ext");
+    }
+
+    actions.push("(v)ar (l)local");
+    actions.push("(v)ar (g)lobal");
+    actions.push("(v)ar (a)ll");
+
+    if (actions.length === 1) { return; }
+
+    this.embark.logger.info("");
+    this.embark.logger.info(actions.join(" | "));
+  }
+
+  private displayVarsInLine(cb?: any) {
+    const txHash: string = this.cmdDebugger.txHash;
+    const line: string = this.cmdDebugger.getCurrentLine();
+    const knownVars: any = this.cmdDebugger.getVars();
+
+    if (knownVars.locals) {
+      knownVars.locals = this.simplifyDebuggerVars(knownVars.locals);
+    }
+    if (knownVars.contract) {
+      knownVars.contract = this.simplifyDebuggerVars(knownVars.contract);
+    }
+
+    this.find_vars_in_line(txHash, line, knownVars, (foundVars: any) => {
+      if (!foundVars) { return; }
+      this.embark.logger.info("vars:");
+      foundVars.forEach((variable: any) => {
+        this.embark.logger.info(`${variable.name}: ${variable.value}`);
+      });
+      if (cb) { cb(); }
+    });
+  }
+
+  private displayStepInfo() {
+    this.cmdDebugger.getSource().forEach((line: string) => {
+      this.embark.logger.info(line);
+    });
+    this.displayVarsInLine(() => {
+      this.displayPossibleActions();
     });
   }
 
