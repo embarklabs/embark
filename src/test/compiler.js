@@ -14,7 +14,7 @@ let ipcObject = new Ipc({
 });
 
 let generateApiObject = function() {
-  var solcVersion = "0.4.25";
+  var solcVersion = "0.5.0";
 
   var TestEvents = {
     request: (cmd, cb) => {

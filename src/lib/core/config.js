@@ -262,7 +262,7 @@ Config.prototype.loadBlockchainConfigFile = function() {
 Config.prototype.loadContractsConfigFile = function() {
   var defaultVersions = {
     "web3": "1.0.0-beta",
-    "solc": "0.4.25"
+    "solc": "0.5.0"
   };
   var versions = utils.recursiveMerge(defaultVersions, this.embarkConfig.versions || {});
 

@@ -1,6 +1,6 @@
 // https://github.com/nexusdev/erc20/blob/master/contracts/base.sol
 
-pragma solidity ^0.4.7;
+pragma solidity ^0.5.0;
 
 contract TokenStorage {
 

@@ -147,7 +147,7 @@
     "serve-static": "1.13.2",
     "shelljs": "0.5.3",
     "simples": "0.8.8",
-    "solc": "0.4.25",
+    "solc": "0.5.0",
     "source-map-support": "0.5.9",
     "string-replace-async": "1.2.1",
     "style-loader": "0.23.1",
