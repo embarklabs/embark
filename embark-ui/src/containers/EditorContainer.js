@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {withRouter} from "react-router-dom";
 import {Row, Col} from 'reactstrap';
+import classnames from 'classnames';
+import Resizable from 're-resizable';
+
 import TextEditorAsideContainer from './TextEditorAsideContainer';
 import TextEditorContainer from './TextEditorContainer';
 import FileExplorerContainer from './FileExplorerContainer';
@@ -15,9 +18,8 @@ import {
 } from '../actions';
 import {getCurrentFile, getContracts, getTransaction} from '../reducers/selectors';
 import {getDebuggerTransactionHash} from '../utils/utils';
-import classnames from 'classnames';
-import Resizable from 're-resizable';
 import {OPERATIONS} from '../constants';
+import { TextEditorToolbarTabs } from '../components/TextEditorToolbar';
 
 import './EditorContainer.css';
 
@@ -69,10 +71,10 @@ class EditorContainer extends React.Component {
       this.setState({currentFile: this.props.currentFile});
     }
 
-    if(this.props.contracts && this.props.transaction !== prevProps.transaction) {
+    if(this.props.contracts && this.props.transaction !== prevProps.transaction && this.props.transaction) {
       const debuggingContract = this.props.contracts.find(contract => contract.address === this.props.transaction.to)
       if (debuggingContract) {
-        this.setState({currentAsideTab: 'debugger'})
+        this.setState({currentAsideTab: TextEditorToolbarTabs.Debugger})
         this.props.fetchFile({path: debuggingContract.path});
       }
     }
