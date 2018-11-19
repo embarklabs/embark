@@ -72,6 +72,7 @@
     "redux": "4.0.1",
     "redux-saga": "0.16.2",
     "resolve": "1.8.1",
+    "rimraf": "2.6.2",
     "sass-loader": "7.1.0",
     "simple-line-icons": "2.4.1",
     "style-loader": "0.23.0",
@@ -85,6 +86,7 @@
   },
   "scripts": {
     "build": "node scripts/build.js",
+    "clean": "rimraf build",
     "lint": "eslint src/",
     "start": "node scripts/start.js",
     "test": "node scripts/test.js"

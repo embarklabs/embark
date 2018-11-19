@@ -3,7 +3,6 @@ os:
   - linux
   - osx
 node_js:
-  - "8.11.3"
   - "8"
   - "10"
 before_install:
@@ -11,10 +10,13 @@ before_install:
   - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 cache:
   yarn: true
+env:
+  - EMBARK_NO_PREPARE=true
 install:
   - yarn install
   - cd embark-ui && yarn install && cd ..
-  - git status && test -z "$(git status --porcelain)"
+  - npm run check-working-tree
 script:
   - npm run build:node
   - npm test
+  - npm run check-working-tree
