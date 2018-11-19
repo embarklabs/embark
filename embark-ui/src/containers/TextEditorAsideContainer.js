@@ -13,7 +13,7 @@ import { TextEditorToolbarTabs } from '../components/TextEditorToolbar';
 
 class TextEditorAsideContainer extends Component {
   renderContent(contract, index) {
-    switch (this.props.currentAsideTab) {
+    switch (this.props.currentAsideTab.label) {
       case TextEditorToolbarTabs.Details.label:
         return (
           <React.Fragment>
@@ -71,7 +71,7 @@ function mapStateToProps(state, props) {
 TextEditorAsideContainer.propTypes = {
   currentFile: PropTypes.object,
   debuggerTransactionHash: PropTypes.string,
-  currentAsideTab: PropTypes.string,
+  currentAsideTab: PropTypes.object,
   contracts: PropTypes.array
 };
 
