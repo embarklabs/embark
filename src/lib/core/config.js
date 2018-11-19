@@ -59,6 +59,11 @@ var Config = function(options) {
     };
     self.contractsFiles.push(new File({filename, type: File.types.custom, path: filename, resolver}));
   });
+
+  self.events.on('file-remove', (fileType, path) => {
+    if(fileType !== 'contract') return;
+    self.contractsFiles = self.contractsFiles.filter(file => file.filename !== path);
+  });
 };
 
 Config.prototype.loadConfigFiles = function(options) {
