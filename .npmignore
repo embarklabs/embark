@@ -9,10 +9,12 @@ CONTRIBUTING.md
 appveyor.yml
 babel.config.js
 dist/test
+dist/typings
 header.png
 npm-debug.log*
 npm-shrinkwrap.json
 package-lock.json
+scripts
 src
 test_apps
 tsconfig.json
