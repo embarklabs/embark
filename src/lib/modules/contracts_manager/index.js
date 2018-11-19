@@ -407,10 +407,15 @@ class ContractsManager {
         for (className in self.contracts) {
           contract = self.contracts[className];
 
+          self.contractDependencies[className] = self.contractDependencies[className] || [];
+
+          if (Array.isArray(contract.deps)) {
+            self.contractDependencies[className] = self.contractDependencies[className].concat(contract.deps);
+          }
+
           // look in code for dependencies
           let libMatches = (contract.code.match(/:(.*?)(?=_)/g) || []);
           for (let match of libMatches) {
-            self.contractDependencies[className] = self.contractDependencies[className] || [];
             self.contractDependencies[className].push(match.substr(1));
           }
 
@@ -427,14 +432,12 @@ class ContractsManager {
           for (let j = 0; j < ref.length; j++) {
             let arg = ref[j];
             if (arg[0] === "$" && !arg.startsWith('$accounts')) {
-              self.contractDependencies[className] = self.contractDependencies[className] || [];
               self.contractDependencies[className].push(arg.substr(1));
               self.checkDependency(className, arg.substr(1));
             }
             if (Array.isArray(arg)) {
               for (let sub_arg of arg) {
                 if (sub_arg[0] === "$" && !sub_arg.startsWith('$accounts')) {
-                  self.contractDependencies[className] = self.contractDependencies[className] || [];
                   self.contractDependencies[className].push(sub_arg.substr(1));
                   self.checkDependency(className, sub_arg.substr(1));
                 }
@@ -443,7 +446,7 @@ class ContractsManager {
           }
 
           // look in onDeploy for dependencies
-          if (contract.onDeploy !== [] && contract.onDeploy !== undefined) {
+          if (Array.isArray(contract.onDeploy)) {
             let regex = /\$\w+/g;
             contract.onDeploy.map((cmd) => {
               if (cmd.indexOf('$accounts') > -1) {
@@ -454,7 +457,6 @@ class ContractsManager {
                   // Contract self-referencing. In onDeploy, it should be available
                   return;
                 }
-                self.contractDependencies[className] = self.contractDependencies[className] || [];
                 self.contractDependencies[className].push(match.substr(1));
               });
             });

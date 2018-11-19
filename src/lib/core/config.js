@@ -330,14 +330,14 @@ Config.prototype.loadContractsConfigFile = function() {
       });
     }
 
-    if (onDeploy && onDeploy.length) {
+    if (Array.isArray(onDeploy)) {
       newContractsConfig.contracts[contractName].onDeploy = onDeploy.map(replaceZeroAddressShorthand);
     }
   });
 
   const afterDeploy = newContractsConfig.contracts.afterDeploy;
 
-  if (afterDeploy && afterDeploy.length) {
+  if (Array.isArray(afterDeploy)) {
     newContractsConfig.contracts.afterDeploy = afterDeploy.map(replaceZeroAddressShorthand);
   }
 
