@@ -1,11 +1,11 @@
 const fs = require('fs-extra');
 const path = require('path');
+const semver = require('semver');
 const constants = require('../../constants');
 const Utils = require('../../utils/utils');
 const ProcessWrapper = require('../../core/processes/processWrapper');
 const PluginManager = require('live-plugin-manager-git-fix').PluginManager;
 const NpmTimer = require('../library_manager/npmTimer');
-
 
 class SolcProcess extends ProcessWrapper {
 
@@ -55,7 +55,11 @@ class SolcProcess extends ProcessWrapper {
   compile(jsonObj, cb) {
     // TODO: only available in 0.4.11; need to make versions warn about this
     try {
-      let output = this.solc.compileStandardWrapper(JSON.stringify(jsonObj), this.findImports);
+      let func = this.solc.compileStandardWrapper;
+      if (semver.gte(this.solc.version(), '0.5.0')) {
+        func = this.solc.compile;
+      } 
+      let output = func(JSON.stringify(jsonObj), this.findImports);
       cb(null, output);
     } catch (err) {
       cb(err.message);
