@@ -83,6 +83,8 @@ function listenTo(options, callback) {
       data = {
         topic: toAscii(result.topic),
         data: payload,
+        sig: result.sig,
+        recipientPublicKey: result.recipientPublicKey,
         //from: result.from,
         time: result.timestamp
       };
