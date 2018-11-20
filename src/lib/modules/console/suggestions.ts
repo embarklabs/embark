@@ -1,14 +1,6 @@
 const fuzzySearch = require("../../utils/utils").fuzzySearch;
 
-interface Events {
-  on: any;
-  request: any;
-}
-
-interface EmbarkApi {
-  events: Events;
-  registerAPICall: any;
-}
+import { Embark, Events } from "../../../typings/embark";
 
 interface ContractsManager {
   [key: string]: any;
@@ -23,11 +15,11 @@ interface Suggestion {
 type SuggestionsList = Suggestion[];
 
 export default class Suggestions {
-  private embark: EmbarkApi;
+  private embark: Embark;
   private events: Events;
   private contracts: ContractsManager;
 
-  constructor(embark: EmbarkApi, options?: object) {
+  constructor(embark: Embark, options?: object) {
     this.embark = embark;
     this.events = embark.events;
     this.contracts = {};

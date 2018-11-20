@@ -80,7 +80,8 @@ class Engine {
       "coreProcess": this.coreProcessService,
       "processApi": this.processApiService,
       "blockchainListener": this.blockchainListenerService,
-      "embarkListener": this.embarkListenerService
+      "embarkListener": this.embarkListenerService,
+      "snark": this.snarkService
     };
 
     let service = services[serviceName];
@@ -96,6 +97,10 @@ class Engine {
 
   embarkListenerService(_options){
     this.registerModule('embark_listener');
+  }
+
+  snarkService(_options) {
+    this.registerModule('snark');
   }
 
   blockchainListenerService(_options){
@@ -212,7 +217,7 @@ class Engine {
     this.registerModule('compiler', {plugins: this.plugins, disableOptimizations: options.disableOptimizations});
     this.registerModule('solidity', {ipc: this.ipc, useDashboard: this.useDashboard});
     this.registerModule('vyper');
-    this.registerModule('contracts_manager', {compileOnceOnly: options.compileOnceOnly});
+    this.registerModule('contracts_manager', {plugins: this.plugins, compileOnceOnly: options.compileOnceOnly});
   }
 
   deploymentService(options) {

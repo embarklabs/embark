@@ -18,6 +18,7 @@ var Config = function(options) {
   this.env = options.env || 'default';
   this.blockchainConfig = {};
   this.contractsConfig  = {};
+  this.circuitsConfig  = {};
   this.pipelineConfig   = {};
   this.webServerConfig  = options.webServerConfig;
   this.chainTracker     = {};
@@ -82,6 +83,7 @@ Config.prototype.loadConfigFiles = function(options) {
   this.loadBlockchainConfigFile();
   this.loadStorageConfigFile();
   this.loadContractFiles();
+  this.loadCircuitsFile();
   this.loadCommunicationConfigFile();
   this.loadNameSystemConfigFile();
   this.loadPipelineConfigFile();
@@ -100,6 +102,7 @@ Config.prototype.reloadConfig = function() {
   this.loadBlockchainConfigFile();
   this.loadStorageConfigFile();
   this.loadContractFiles();
+  this.loadCircuitsFile();
   this.loadCommunicationConfigFile();
   this.loadNameSystemConfigFile();
   this.loadPipelineConfigFile();
@@ -399,6 +402,12 @@ Config.prototype.loadStorageConfigFile = function() {
   let configFilePath = this._getFileOrOject(this.configDir, 'storage', 'storage');
 
   this.storageConfig = this._mergeConfig(configFilePath, configObject, this.env);
+};
+
+Config.prototype.loadCircuitsFile = function() {
+  const configObject = {"default": {"circuits": {}}};
+  const configFilePath = this._getFileOrOject(this.configDir, 'circuits', 'circuits');
+  this.circuitsConfig = this._mergeConfig(configFilePath, configObject, this.env);
 };
 
 Config.prototype.loadNameSystemConfigFile = function() {

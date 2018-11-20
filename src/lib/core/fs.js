@@ -120,6 +120,10 @@ function ensureFileSync() {
   return restrictPath(fs.ensureFileSync, fs.ensureFileSync, 1, arguments);
 }
 
+function ensureDirSync() {
+  return restrictPath(fs.ensureDirSync, fs.ensureDirSync, 1, arguments);
+}
+
 function access() {
   return restrictPath(fs.access, fs.access, 1, arguments);
 }
@@ -195,6 +199,7 @@ module.exports = {
   embarkPath,
   existsSync,
   ensureFileSync,
+  ensureDirSync,
   mkdirp,
   mkdirpSync,
   move,

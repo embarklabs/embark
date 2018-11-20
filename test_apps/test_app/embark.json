@@ -1,5 +1,6 @@
 {
   "contracts": ["app/contracts/**", "contracts/**"],
+  "circuits": ["circuits/**"],
   "app": {
     "js/jquery.js": "app/js/_vendor/jquery.min.js",
     "js/bootstrap.js": "app/js/_vendor/bootstrap.min.js",

@@ -13,6 +13,7 @@ class ContractsManager {
     const self = this;
     this.logger = embark.logger;
     this.events = embark.events;
+    this.plugins = options.plugins;
 
     this.contracts = {};
     this.contractDependencies = {};
@@ -226,6 +227,11 @@ class ContractsManager {
 
     if(resetContracts) self.contracts = {};
     async.waterfall([
+      function beforeBuild(callback) {
+        self.plugins.emitAndRunActionsForEvent("build:beforeAll", () => {
+          callback();
+        });
+      },
       function loadContractFiles(callback) {
         self.events.request("config:contractsFiles", (contractsFiles) => {
           self.contractsFiles = contractsFiles;

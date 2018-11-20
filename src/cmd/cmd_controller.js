@@ -139,6 +139,7 @@ class EmbarkController {
         engine.startService("codeRunner");
         engine.startService("web3");
         engine.startService("pipeline");
+        engine.startService("snark");
         engine.startService("deployment");
         engine.startService("storage");
         engine.startService("codeGenerator");
