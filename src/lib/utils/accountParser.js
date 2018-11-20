@@ -36,7 +36,7 @@ class AccountParser {
       accountConfig.privateKey = randomAccount.privateKey;
     }
 
-    if (accountConfig.nodeAccounts) {
+    if (accountConfig.nodeAccounts || accountConfig.hardwareWallet) {
       if (!nodeAccounts) {
         logger.warn('Cannot use nodeAccounts in this context');
         return null;
@@ -107,6 +107,7 @@ class AccountParser {
       }
       return accounts;
     }
+
     logger.warn('Unsupported account configuration: ' + JSON.stringify(accountConfig));
     logger.warn('Try using one of those: ' +
       '{ "privateKey": "your-private-key", "privateKeyFile": "path/to/file/containing/key", "mnemonic": "12 word mnemonic" }');

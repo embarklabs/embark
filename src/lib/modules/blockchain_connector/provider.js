@@ -4,6 +4,11 @@ const fundAccount = require('./fundAccount');
 const constants = require('../../constants');
 const Transaction = require('ethereumjs-tx');
 const ethUtil = require('ethereumjs-util');
+const ProviderEngine = require('web3-provider-engine');
+const TransportNodeHid = require('@ledgerhq/hw-transport-node-hid').default;
+const createLedgerSubprovider = require('@ledgerhq/web3-subprovider').default;
+const FetchSubprovider = require('web3-provider-engine/subproviders/fetch');
+
 
 class Provider {
   constructor(options) {
@@ -35,9 +40,46 @@ class Provider {
 
   startWeb3Provider(callback) {
     const self = this;
-
+    
     if (this.type === 'rpc') {
       self.provider = new this.web3.providers.HttpProvider(self.web3Endpoint);
+    } else if (this.type === 'ledger') {
+        let hardwareWalletConfigs = [];
+
+        self.accountsConfig.forEach((accountConfig) => {
+          if (accountConfig.hardwareWallet) {
+            if (accountConfig.hardwareWallet === 'ledger') {
+              hardwareWalletConfigs.push(accountConfig);
+            }
+          }
+        });
+
+        if (!hardwareWalletConfigs.length) {
+          // TODO when we have documentation for it, add a link in the error message
+          return callback(__('No ledger wallet config found, please add it'));
+        }
+        if (hardwareWalletConfigs.length > 1) {
+          self.logger.warn(__('Mulitple ledger wallet configs found. Selecting the first config only.'));
+        }
+
+        const rpcUrl = hardwareWalletConfigs[0].rpcUrl;
+        const engine = new ProviderEngine();
+        const getTransport = () => TransportNodeHid.open(hardwareWalletConfigs[0].walletAddress);
+        const ledger = createLedgerSubprovider(getTransport, {
+          networkId: hardwareWalletConfigs[0].networkId,  // refer to https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md
+          accountsLength: hardwareWalletConfigs[0].numAddresses // number of accounts to load from the device
+        });
+
+        engine.addProvider(ledger); 
+        engine.addProvider(new FetchSubprovider({ rpcUrl }));
+        self.provider = engine;
+
+        // listen for hardware connectivity error
+        self.provider.on('error', (err) => self.logger.error('Error while connecting to the ledger wallet ', (err.message || err.stack) || err));
+        self.provider.on('end', () => self.logger.error('Connection to wallet ended'));
+
+        self.provider.start();
+        
     } else if (this.type === 'ws') {
     // Note: don't pass to the provider things like {headers: {Origin: "embark"}}. Origin header is for browser to fill
     // to protect user, it has no meaning if it is used server-side. See here for more details: https://github.com/ethereum/go-ethereum/issues/16608
@@ -125,7 +167,7 @@ class Provider {
   connected() {
     if (this.type === 'rpc') {
       return !!this.provider;
-    } else if (this.type === 'ws') {
+    } else if (this.type === 'ws' || this.type === 'ledger') {
       return this.provider && this.provider.connection._connection && this.provider.connection._connection.connected;
     }
 

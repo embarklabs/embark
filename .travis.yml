@@ -1,4 +1,5 @@
 language: node_js
+dist: xenial
 os:
   - linux
   - osx
@@ -15,6 +16,12 @@ install:
   - yarn install
   - cd embark-ui && yarn install && cd ..
   - git status && test -z "$(git status --porcelain)"
+addons:
+    apt:
+        packages:
+          - build-essential
+          - libudev-dev
+          - libusb-1.0-0-dev
 script:
-  - npm run build:node
-  - npm test
+   - npm run build:node
+   - npm test

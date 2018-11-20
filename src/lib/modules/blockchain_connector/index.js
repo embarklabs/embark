@@ -737,5 +737,5 @@ class BlockchainConnector {
   }
 }
 
-BlockchainConnector.ACCEPTED_TYPES = ['rpc', 'ws', 'vm'];
+BlockchainConnector.ACCEPTED_TYPES = ['rpc', 'ws', 'vm','ledger'];
 module.exports = BlockchainConnector;
