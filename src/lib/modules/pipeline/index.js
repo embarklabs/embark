@@ -22,6 +22,7 @@ class Pipeline {
     this.isFirstBuild = true;
 
     this.events.setCommandHandler('pipeline:build', (options, callback) => this.build(options, callback));
+    this.events.setCommandHandler('pipeline:build:contracts', callback => this.buildContracts(callback));
     fs.removeSync(this.buildDir);
 
     let plugin = this.plugins.createPlugin('deployment', {});
@@ -34,7 +35,7 @@ class Pipeline {
         } catch (error) {
           return res.send({error: error.message});
         }
-        
+
         const name = path.basename(req.query.path);
         const content = fs.readFileSync(req.query.path, 'utf8');
         res.send({name, content, path: req.query.path});
@@ -51,7 +52,7 @@ class Pipeline {
         } catch (error) {
           return res.send({error: error.message});
         }
-        
+
         fs.mkdirpSync(req.body.path);
         const name = path.basename(req.body.path);
         res.send({name, path: req.body.path});
@@ -97,7 +98,7 @@ class Pipeline {
         const walk = (dir, filelist = []) => fs.readdirSync(dir).map(name => {
           let isRoot = rootPath === dir;
           if (fs.statSync(path.join(dir, name)).isDirectory()) {
-            return { 
+            return {
               isRoot,
               name,
               dirname: dir,

@@ -213,10 +213,10 @@ class EmbarkController {
         engine.startService("processManager");
         engine.startService("libraryManager");
         engine.startService("codeRunner");
+        engine.startService("pipeline");
         if (!options.onlyCompile) {
           engine.startService("web3");
           engine.startService("deployment", {onlyCompile: options.onlyCompile});
-          engine.startService("pipeline");
           engine.startService("storage");
           engine.startService("codeGenerator");
         } else {
@@ -226,12 +226,14 @@ class EmbarkController {
         callback();
       },
       function buildOrBuildAndDeploy(callback) {
-        if (options.onlyCompile) {
-          engine.events.request('contracts:build', {}, err => callback(err));
-        } else {
-          // deploy:contracts will trigger a build as well
-          engine.events.request('deploy:contracts', err => callback(err));
-        }
+        if (options.onlyCompile)
+          return engine.events.request('contracts:build', {}, err => {
+            if(err !== undefined) return callback(err);
+            engine.events.request('pipeline:build:contracts', err => callback(err));
+          });
+
+        // deploy:contracts will trigger a build as well
+        engine.events.request('deploy:contracts', err => callback(err));
       },
       function waitForWriteFinish(callback) {
         if (options.onlyCompile) {
