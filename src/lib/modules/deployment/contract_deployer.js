@@ -1,6 +1,7 @@
 let async = require('async');
 //require("../utils/debug_util.js")(__filename, async);
 let utils = require('../../utils/utils.js');
+import { ZERO_ADDRESS } from '../../utils/addressUtils';
 
 class ContractDeployer {
   constructor(options) {
@@ -45,7 +46,7 @@ class ContractDeployer {
       self.events.request('contracts:contract', contractName, (referedContract) => {
         // Because we're referring to a contract that is not being deployed (ie. an interface),
         // we still need to provide a valid address so that the ABI checker won't fail.
-        cb(null, (referedContract.deployedAddress || '0x0000000000000000000000000000000000000000'));
+        cb(null, (referedContract.deployedAddress || ZERO_ADDRESS));
       });
     }
 
