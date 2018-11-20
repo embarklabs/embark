@@ -114,16 +114,8 @@ class Provider {
         self.web3.eth.defaultAccount = self.addresses[0];
       }
 
-      let realSend = undefined;
-
-      if (this.type === 'ledger') {
-        realSend = self.provider.sendAsync.bind(self.provider);
-      }
-      else {
-        realSend = self.provider.send.bind(self.provider);
-      }
-
-
+      const realSend = this.type === 'ledger' ? self.provider.sendAsync.bind(self.provider): self.provider.send.bind(self.provider);
+      
       // Allow to run transaction in parallel by resolving
       // the nonce manually.
       // For each transaction, resolve the nonce by taking the
@@ -183,13 +175,19 @@ class Provider {
   }
 
   stop() {
-    if (this.provider && this.provider.removeAllListeners) {
+    
+
+    if (this.type === 'ledger') {
+      this.provider.stop();
+    } else if (this.provider && this.provider.removeAllListeners) {
       this.provider.removeAllListeners('connect');
       this.provider.removeAllListeners('error');
       this.provider.removeAllListeners('end');
       this.provider.removeAllListeners('data');
       this.provider.responseCallbacks = {};
     }
+
+    
     this.provider = null;
     this.web3.setProvider(null);
   }
