@@ -114,7 +114,15 @@ class Provider {
         self.web3.eth.defaultAccount = self.addresses[0];
       }
 
-      const realSend = self.provider.send.bind(self.provider);
+      let realSend = undefined;
+
+      if (this.type === 'ledger') {
+        realSend = self.provider.sendAsync.bind(self.provider);
+      }
+      else {
+        realSend = self.provider.send.bind(self.provider);
+      }
+
 
       // Allow to run transaction in parallel by resolving
       // the nonce manually.
@@ -165,9 +173,9 @@ class Provider {
   }
 
   connected() {
-    if (this.type === 'rpc') {
+    if (this.type === 'rpc' || this.type === 'ledger') {
       return !!this.provider;
-    } else if (this.type === 'ws' || this.type === 'ledger') {
+    } else if (this.type === 'ws') {
       return this.provider && this.provider.connection._connection && this.provider.connection._connection.connected;
     }
 
