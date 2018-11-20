@@ -297,7 +297,7 @@ class ContractDeployer {
             }
             return next(new Error("error deploying =" + contract.className + "= due to error: " + error.message));
           }
-          self.logFunction(contract)(contract.className.bold.cyan + " " + __("deployed at").green + " " + receipt.contractAddress.bold.cyan + " " + __("using").green + " " + receipt.gasUsed + " " + __("gas").green);
+          self.logFunction(contract)(`${contract.className.bold.cyan} ${__('deployed at').green} ${receipt.contractAddress.bold.cyan} ${__("using").green} ${receipt.gasUsed} ${__("gas").green} (txHash: ${receipt.transactionHash.bold.cyan})`);
           contract.deployedAddress = receipt.contractAddress;
           contract.transactionHash = receipt.transactionHash;
           receipt.className = contract.className;
