@@ -642,7 +642,9 @@ class EmbarkController {
         });
         engine.startService("codeGenerator");
         engine.startService("codeRunner");
-        engine.startService("codeCoverage");
+        if (options.coverage) {
+          engine.startService("codeCoverage");
+        }
         engine.startService("testRunner");
         callback();
       },
