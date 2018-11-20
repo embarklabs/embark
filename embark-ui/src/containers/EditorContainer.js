@@ -47,7 +47,9 @@ class EditorContainer extends React.Component {
   componentDidMount() {
     this.props.fetchEditorTabs();
     this.props.fetchContracts();
-    this.props.fetchTransaction(this.props.debuggerTransactionHash);
+    if (this.props.debuggerTransactionHash) {
+      this.props.fetchTransaction(this.props.debuggerTransactionHash);
+    }
     window.addEventListener("resize", this.updateDimensions.bind(this));
   }
 
