@@ -64,7 +64,7 @@ class FileExplorerRowContainer extends React.Component {
 
   render() {
     return (
-      <div style={this.props.style.container}
+      <div style={this.props.style.container[0]}
            onMouseEnter={() => this.activateNode()}
            onMouseLeave={() => this.deactivateNode()}>
         <span onClick={this.props.onClick}>
