@@ -4,15 +4,12 @@ const async = require("async");
 
 export default class DebuggerManager {
   private nodeUrl: string;
-  private outputJson: any;
-  private inputJson: any;
-  private isDebugging: boolean;
+  private outputJson: any = {};
+  private inputJson: any = {};
+  private isDebugging: boolean = false;
 
   constructor(nodeUrl: string) {
     this.nodeUrl = nodeUrl;
-    this.outputJson = {};
-    this.inputJson = {};
-    this.isDebugging = false;
   }
 
   public setInputJson(inputJson: any) {
