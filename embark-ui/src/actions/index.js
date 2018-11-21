@@ -115,6 +115,13 @@ export const services = {
   failure: (error) => action(SERVICES[FAILURE], {error})
 };
 
+export const COMMAND_HISTORY = createRequestTypes('COMMAND_HISTORY');
+export const commandHistory = {
+  request: () => action(COMMAND_HISTORY[REQUEST]),
+  success: (commandHistory) => action(COMMAND_HISTORY[SUCCESS], {commandHistory}),
+  failure: (error) => action(COMMAND_HISTORY[FAILURE], {error})
+};
+
 export const COMMANDS = createRequestTypes('COMMANDS');
 export const commands = {
   post: (command) => action(COMMANDS[REQUEST], {command}),

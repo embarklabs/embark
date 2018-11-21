@@ -52,6 +52,10 @@ function destroy() {
   return request('delete', ...arguments);
 }
 
+export function fetchCommandHistory() {
+  return get('/command/history', ...arguments);
+}
+
 export function postCommand() {
   return post('/command', ...arguments);
 }

@@ -50,6 +50,7 @@ export const fetchBlocks = doRequest.bind(null, actions.blocks, api.fetchBlocks)
 export const fetchTransactions = doRequest.bind(null, actions.transactions, api.fetchTransactions);
 export const fetchProcesses = doRequest.bind(null, actions.processes, api.fetchProcesses);
 export const fetchServices = doRequest.bind(null, actions.services, api.fetchServices);
+export const fetchCommandHistory = doRequest.bind(null, actions.commandHistory, api.fetchCommandHistory);
 export const postCommand = doRequest.bind(null, actions.commands, api.postCommand);
 export const postCommandSuggestions = doRequest.bind(null, actions.commandSuggestions, api.postCommandSuggestions);
 export const fetchProcessLogs = doRequest.bind(null, actions.processLogs, api.fetchProcessLogs);
@@ -129,8 +130,16 @@ export function *watchFetchServices() {
   yield takeLatest(actions.PROCESSES[actions.REQUEST], fetchServices);
 }
 
+export function *watchFetchCommandHistory() {
+  yield takeEvery(actions.COMMAND_HISTORY[actions.REQUEST], fetchCommandHistory);
+}
+
 export function *watchPostCommand() {
   yield takeEvery(actions.COMMANDS[actions.REQUEST], postCommand);
+}
+
+export function *watchPostCommandSuccess() {
+  yield takeEvery(actions.COMMANDS[actions.SUCCESS], fetchCommandHistory);
 }
 
 export function *watchPostCommandSuggestions() {
@@ -502,7 +511,9 @@ export default function *root() {
     fork(watchListenToContractEvents),
     fork(watchFetchBlock),
     fork(watchFetchTransactions),
+    fork(watchFetchCommandHistory),
     fork(watchPostCommand),
+    fork(watchPostCommandSuccess),
     fork(watchPostCommandSuggestions),
     fork(watchFetchVersions),
     fork(watchFetchPlugins),

@@ -14,6 +14,7 @@ import {
   commandSuggestions as commandSuggestionsAction,
   listenToProcessLogs,
   processLogs as processLogsAction,
+  commandHistory as commandHistoryAction,
   stopProcessLogs
 } from "../actions";
 
@@ -22,7 +23,7 @@ import Processes from '../components/Processes';
 import Console from '../components/Console';
 import {EMBARK_PROCESS_NAME, LOG_LIMIT} from '../constants';
 import ContractsList from '../components/ContractsList';
-import {getContracts, getProcesses, getProcessLogs, getServices, getCommandSuggestions} from "../reducers/selectors";
+import {getContracts, getProcesses, getProcessLogs, getServices, getCommandSuggestions, getCommandHistory} from "../reducers/selectors";
 
 class HomeContainer extends Component {
   constructor(props) {
@@ -32,6 +33,7 @@ class HomeContainer extends Component {
 
   componentDidMount() {
     this.updateTab();
+    this.props.fetchCommandHistory()
   }
 
   isEmbark() {
@@ -60,6 +62,7 @@ class HomeContainer extends Component {
             <CardBody>
               <CardTitle>Console</CardTitle>
               <Console activeProcess={this.state.activeProcess}
+                       commandHistory={this.props.commandHistory}
                        postCommand={postCommand}
                        postCommandSuggestions={postCommandSuggestions}
                        processes={processes}
@@ -90,6 +93,7 @@ class HomeContainer extends Component {
 
 HomeContainer.propTypes = {
   processes: PropTypes.arrayOf(PropTypes.object),
+  commandHistory: PropTypes.arrayOf(PropTypes.string),
   postCommand: PropTypes.func,
   postCommandSuggestions: PropTypes.func,
   error: PropTypes.string,
@@ -110,6 +114,7 @@ function mapStateToProps(state) {
     error: state.errorMessage,
     processLogs: getProcessLogs(state),
     commandSuggestions: getCommandSuggestions(state),
+    commandHistory: getCommandHistory(state),
     loading: state.loading
   };
 }
@@ -121,6 +126,7 @@ export default connect(
     postCommandSuggestions: commandSuggestionsAction.post,
     fetchProcessLogs: processLogsAction.request,
     fetchContracts: contractsAction.request,
+    fetchCommandHistory: commandHistoryAction.request,
     listenToProcessLogs,
     stopProcessLogs
   }

@@ -60,6 +60,10 @@ export function getProcessLogs(state) {
   return state.entities.processLogs;
 }
 
+export function getCommandHistory(state) {
+  return state.commandHistory;
+}
+
 export function getCommandSuggestions(state) {
   return state.entities.commandSuggestions;
 }

@@ -2,7 +2,7 @@ import {combineReducers} from 'redux';
 import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE,
         FETCH_CREDENTIALS, UPDATE_BASE_ETHER, CHANGE_THEME, FETCH_THEME, EXPLORER_SEARCH, DEBUGGER_INFO,
         SIGN_MESSAGE, VERIFY_MESSAGE, TOGGLE_BREAKPOINT,
-        UPDATE_DEPLOYMENT_PIPELINE, WEB3_CONNECT, WEB3_DEPLOY, WEB3_ESTIMAGE_GAS, FETCH_EDITOR_TABS} from "../actions";
+        UPDATE_DEPLOYMENT_PIPELINE, WEB3_CONNECT, WEB3_DEPLOY, WEB3_ESTIMAGE_GAS, FETCH_EDITOR_TABS, COMMAND_HISTORY} from "../actions";
 import {EMBARK_PROCESS_NAME, DARK_THEME, DEPLOYMENT_PIPELINES, DEFAULT_HOST, ELEMENTS_LIMIT} from '../constants';
 
 const BN_FACTOR = 10000;
@@ -369,6 +369,13 @@ function editorTabs(state = [], action) {
   return state;
 }
 
+function commandHistory(state = [], action) {
+  if (action.type === COMMAND_HISTORY[SUCCESS]) {
+    return action.commandHistory;
+  }
+  return state;
+}
+
 const rootReducer = combineReducers({
   entities,
   loading,
@@ -385,7 +392,8 @@ const rootReducer = combineReducers({
   web3,
   debuggerInfo,
   theme,
-  editorTabs
+  editorTabs,
+  commandHistory
 });
 
 export default rootReducer;

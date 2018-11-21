@@ -77,6 +77,12 @@ class Console {
         res.send({result: stringify(result, utils.jsonFunctionReplacer, 2)});
       });
     });
+
+    plugin.registerAPICall("get", "/embark-api/command/history", (req: any, res: any) => {
+      this.events.request("console:history", (err: Error, history: string) => {
+        res.send(history.split("\n"));
+      });
+    });
   }
 
   private processEmbarkCmd(cmd: string) {

@@ -13,16 +13,19 @@ import {EMBARK_PROCESS_NAME} from '../constants';
 
 const convert = new Convert();
 
+const DEFAULT_INDEX = -1;
+
 class Console extends Component {
   constructor(props) {
     super(props);
-    this.state = {value: '', isLoading: true, options: [], activeTab: EMBARK_PROCESS_NAME};
+    this.typeahead = React.createRef();
+    this.state = {value: '', isLoading: true, options: [], activeTab: EMBARK_PROCESS_NAME, historyIndex: DEFAULT_INDEX};
   }
 
   handleSubmit(event) {
     event.preventDefault();
     this.props.postCommand(this.state.value);
-    this.setState({value: ''});
+    this.setState({value: '', historyIndex: DEFAULT_INDEX});
     this.typeahead.getInstance().clear();
   }
 
@@ -74,6 +77,28 @@ class Console extends Component {
     });
   }
 
+  moveHistoryDown() {
+    let index = this.state.historyIndex;
+    if (index <= 0) {
+      this.typeahead.getInstance().setState({text: ''});
+      this.setState({historyIndex: index, value: ''});
+      return;
+    }
+
+    index--;
+    this.typeahead.getInstance().setState({text: this.props.commandHistory[index]});
+    this.setState({historyIndex: index, value: this.props.commandHistory[index]});
+  }
+
+  moveHistoryUp() {
+    let index = this.state.historyIndex;
+    if (index >= this.props.commandHistory.length - 1) return;
+
+    index++;
+    this.typeahead.getInstance().setState({text: this.props.commandHistory[index]});
+    this.setState({historyIndex: index, value: this.props.commandHistory[index]});
+  }
+
   renderTabs() {
     const {processLogs, processes} = this.props;
 
@@ -123,6 +148,10 @@ class Console extends Component {
                     this.handleChange(e.target.value, () => {
                       this.handleSubmit(e);
                     });
+                  } else if(e.keyCode === 38) {
+                    this.moveHistoryUp();
+                  } else if(e.keyCode === 40) {
+                    this.moveHistoryDown();
                   }
                 }}
                 onSearch={(value) => {
@@ -162,6 +191,7 @@ class Console extends Component {
 }
 
 Console.propTypes = {
+  commandHistory: PropTypes.arrayOf(PropTypes.string),
   postCommand: PropTypes.func,
   postCommandSuggestions: PropTypes.func,
   isEmbark: PropTypes.func,
