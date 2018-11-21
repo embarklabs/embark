@@ -295,6 +295,10 @@ class ContractsManager {
           contract.type = 'file';
           contract.className = className;
 
+          if (contract.address) {
+            contract.deployedAddress = contract.address;
+          }
+
           self.contracts[className] = contract;
         }
         callback();
