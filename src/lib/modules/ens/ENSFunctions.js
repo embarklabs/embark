@@ -1,10 +1,10 @@
+import { ZERO_ADDRESS } from '../../utils/addressUtils';
 /*global web3*/
 const namehash = require('eth-ens-namehash');
 // Price of ENS registration contract functions
 const ENS_GAS_PRICE = 700000;
 
 const reverseAddressSuffix = '.addr.reverse';
-const voidAddr = '0x0000000000000000000000000000000000000000';
 const NoDecodeAddrErr = 'Error: Couldn\'t decode address from ABI: 0x';
 const NoDecodeStringErr = 'ERROR: The returned value is not a convertible string: 0x0';
 
@@ -66,7 +66,7 @@ function lookupAddress(address, ens, utils, createResolverContract, callback) {
     if (err) {
       return cb(err);
     }
-    if (resolverAddress === voidAddr) {
+    if (resolverAddress === ZERO_ADDRESS) {
       return cb('Address not associated to a resolver');
     }
     createResolverContract(resolverAddress, (_, resolverContract) => {
@@ -90,7 +90,7 @@ function resolveName(name, ens, createResolverContract, callback) {
     if (err) {
       return cb(err);
     }
-    if (resolverAddress === voidAddr) {
+    if (resolverAddress === ZERO_ADDRESS) {
       return cb('Name not yet registered');
     }
     createResolverContract(resolverAddress, (_, resolverContract) => {
