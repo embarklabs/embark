@@ -5,6 +5,7 @@ const async = require('async');
 const embarkJsUtils = require('embarkjs').Utils;
 const reverseAddrSuffix = '.addr.reverse';
 const ENSFunctions = require('./ENSFunctions');
+import { ZERO_ADDRESS } from '../../utils/addressUtils';
 
 const MAINNET_ID = '1';
 const ROPSTEN_ID = '3';
@@ -177,7 +178,7 @@ class ENS {
           if (err) {
             return cb(err);
           }
-          if (resolverAddress === '0x0000000000000000000000000000000000000000') {
+          if (resolverAddress === ZERO_ADDRESS) {
             return cb('Name not yet registered');
           }
           next(null, resolverAddress);
@@ -455,7 +456,7 @@ class ENS {
           if (err) {
             return next(err);
           }
-          if(resolverAddress === '0x0000000000000000000000000000000000000000') {
+          if(resolverAddress === ZERO_ADDRESS) {
             return next('Name not yet registered');
           }
           next(null, resolverAddress);
