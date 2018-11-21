@@ -19,7 +19,6 @@ module.exports = {
                         // When set to "auto", Embark will automatically set the cors to the address of the webserver
     wsHost: "localhost", // WS-RPC server listening interface (default: "localhost")
     wsPort: 8546, // WS-RPC server listening port (default: 8546)
-    simulatorMnemonic: "example exile argue silk regular smile grass bomb merge arm assist farm", // Mnemonic  used by the simulator to generate a wallet
     simulatorBlocktime: 0 // Specify blockTime in seconds for automatic mining. Default is 0 and no auto-mining.
   },
   privatenet: {
@@ -36,16 +35,17 @@ module.exports = {
     rpcPort: 8545,
     rpcCorsDomain: "auto",
     proxy: true,
-    account: {
-      // "address": "", // When specified, uses that address instead of the default one for the network
-      password: "config/privatenet/password" // Password to unlock the account
-    },
+    accounts: [
+      {
+        nodeAccounts: true,
+        password: "config/privatenet/password" // Password to unlock the account
+      }
+    ],
     targetGasLimit: 8000000,
     wsRPC: true,
     wsOrigins: "auto",
     wsHost: "localhost",
     wsPort: 8546,
-    simulatorMnemonic: "example exile argue silk regular smile grass bomb merge arm assist farm",
     simulatorBlocktime: 0
   },
   testnet: {
@@ -55,9 +55,12 @@ module.exports = {
     rpcHost: "localhost",
     rpcPort: 8545,
     rpcCorsDomain: "http://localhost:8000",
-    account: {
-      password: "config/testnet/password"
-    }
+    accounts: [
+      {
+        nodeAccounts: true,
+        password: "config/testnet/password" // Password to unlock the account
+      }
+    ]
   },
   livenet: {
     enabled: true,
@@ -66,8 +69,11 @@ module.exports = {
     rpcHost: "localhost",
     rpcPort: 8545,
     rpcCorsDomain: "http://localhost:8000",
-    account: {
-      password: "config/livenet/password"
-    }
+    accounts: [
+      {
+        nodeAccounts: true,
+        password: "config/livenet/password" // Password to unlock the account
+      }
+    ]
   }
 };

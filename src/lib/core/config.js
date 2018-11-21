@@ -212,11 +212,13 @@ Config.prototype._getFileOrOject = function(object, filePath, property) {
 
 Config.prototype.loadBlockchainConfigFile = function() {
   var configObject = {
-    "default": {
-      "enabled": true,
-      "rpcCorsDomain": "auto",
-      "wsOrigins": "auto",
-      "proxy": true
+    default: {
+      enabled: true,
+      ethereumClientName: constants.blockchain.clients.geth,
+      rpcCorsDomain: "auto",
+      wsOrigins: "auto",
+      proxy: true,
+      datadir: '.embark/' + this.env + '/datadir'
     }
   };
 
@@ -235,36 +237,53 @@ Config.prototype.loadBlockchainConfigFile = function() {
     this.blockchainConfig.gasPrice = utils.getWeiBalanceFromString(this.blockchainConfig.gasPrice, web3);
   }
 
-  if (this.blockchainConfig.account && this.blockchainConfig.account.balance && this.blockchainConfig.account.balance.toString().match(unitRegex)) {
-    this.blockchainConfig.account.balance = utils.getWeiBalanceFromString(this.blockchainConfig.account.balance, web3);
+  if (this.blockchainConfig.accounts) {
+    this.blockchainConfig.accounts.forEach(acc => {
+      if (acc.balance && acc.balance.toString().match(unitRegex)) {
+        acc.balance = utils.getWeiBalanceFromString(acc.balance, web3);
+      }
+    });
   }
 
   if (
     !this.shownNoAccountConfigMsg &&
     (/rinkeby|testnet|livenet/).test(this.blockchainConfig.networkType) &&
-    !(this.blockchainConfig.account && this.blockchainConfig.account.address && this.blockchainConfig.account.password) &&
+    !(this.blockchainConfig.accounts && this.blockchainConfig.accounts.find(acc => acc.password)) &&
     !this.blockchainConfig.isDev &&
     this.env !== 'development' && this.env !== 'test') {
-      this.logger.warn((
-        '\n=== ' + __('Cannot unlock account - account config missing').bold + ' ===\n' +
-        __('Geth is configured to sync to a testnet/livenet and needs to unlock an account ' +
+    this.logger.warn((
+      '\n=== ' + __('Cannot unlock account - account config missing').bold + ' ===\n' +
+      __('Geth is configured to sync to a testnet/livenet and needs to unlock an account ' +
         'to allow your dApp to interact with geth, however, the address and password must ' +
         'be specified in your blockchain config. Please update your blockchain config with ' +
         'a valid address and password: \n') +
-        ` - config/blockchain.js > ${this.env} > account\n\n`.italic +
-        __('Please also make sure the keystore file for the account is located at: ') +
-        '\n - Mac: ' + `~/Library/Ethereum/${this.env}/keystore`.italic +
-        '\n - Linux: ' + `~/.ethereum/${this.env}/keystore`.italic +
-        '\n - Windows: ' + `%APPDATA%\\Ethereum\\${this.env}\\keystore`.italic) +
-        __('\n\nAlternatively, you could change ' +
+      ` - config/blockchain.js > ${this.env} > account\n\n`.italic +
+      __('Please also make sure the keystore file for the account is located at: ') +
+      '\n - Mac: ' + `~/Library/Ethereum/${this.env}/keystore`.italic +
+      '\n - Linux: ' + `~/.ethereum/${this.env}/keystore`.italic +
+      '\n - Windows: ' + `%APPDATA%\\Ethereum\\${this.env}\\keystore`.italic) +
+      __('\n\nAlternatively, you could change ' +
         `config/blockchain.js > ${this.env} > networkType`.italic +
         __(' to ') +
         '"custom"\n'.italic).yellow
-      );
-      this.shownNoAccountConfigMsg = true;
-    }
+    );
+    this.shownNoAccountConfigMsg = true;
+  }
 
-    this.events.emit('config:load:blockchain', this.blockchainConfig);
+  const accountDocsMessage = __('For more info, check the docs: %s', 'https://embark.status.im/docs/blockchain_accounts_configuration.html'.underline);
+  if (this.blockchainConfig.account) {
+    this.logger.error(__('The `account` config for the blockchain was removed. Please use `accounts` instead.'));
+    this.logger.error(accountDocsMessage);
+    process.exit(1);
+  }
+
+  if (this.blockchainConfig.simulatorMnemonic) {
+    this.logger.error(__('The `simulatorMnemonic` config for the blockchain was removed. Please use `accounts` instead.'));
+    this.logger.error(accountDocsMessage);
+    process.exit(1);
+  }
+
+  this.events.emit('config:load:blockchain', this.blockchainConfig);
 };
 
 Config.prototype.loadContractsConfigFile = function() {

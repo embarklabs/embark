@@ -2,6 +2,8 @@
 const Blockchain = require('../lib/modules/blockchain_process/blockchain.js');
 const constants = require('../lib/constants.json');
 const {defaultHost} = require('../lib/utils/host');
+const path = require('path');
+const fs = require('../lib/core/fs.js');
 
 const assert = require('assert');
 
@@ -11,18 +13,18 @@ describe('embark.Blockchain', function() {
 
     describe('with empty config', function() {
       it('should have a default config', function(done) {
-        let blockchain = new Blockchain({});
-        let expectedConfig = {
+        const blockchain = new Blockchain({});
+        const expectedConfig = {
           networkType: 'custom',
           genesisBlock: false,
           ethereumClientName: 'geth',
           ethereumClientBin: 'geth',
-          datadir: false,
+          datadir: fs.dappPath(".embark/development/datadir"),
           mineWhenNeeded: false,
           rpcHost: defaultHost,
           rpcPort: 8545,
           rpcApi: ['eth', 'web3', 'net', 'debug', "personal"],
-          rpcCorsDomain: false,
+          rpcCorsDomain: "http://localhost:8000",
           networkId: 1337,
           port: 30303,
           nodiscover: false,
@@ -30,20 +32,19 @@ describe('embark.Blockchain', function() {
           mine: false,
           vmdebug: false,
           whisper: true,
-          account: {},
-          devPassword: "",
           bootnodes: "",
           wsApi: ["eth", "web3", "net", "shh", "debug", "pubsub", "personal"],
           wsHost: defaultHost,
-          wsOrigins: false,
+          wsOrigins: "http://localhost:8000",
           wsPort: 8546,
           wsRPC: true,
-          targetGasLimit: false,
+          targetGasLimit: 8000000,
           syncMode: undefined,
           verbosity: undefined,
           proxy: undefined,
-          silent: undefined          
+          silent: undefined
         };
+        expectedConfig.account = {devPassword: path.join(expectedConfig.datadir, "devPassword")};
 
         assert.deepEqual(blockchain.config, expectedConfig);
         done();
@@ -70,8 +71,6 @@ describe('embark.Blockchain', function() {
           mine: true,
           vmdebug: false,
           whisper: false,
-          account: {},
-          devPassword: "foo/bar/devpassword",
           bootnodes: "",
           wsApi: ["eth", "web3", "net", "shh", "debug", "personal"],
           wsHost: defaultHost,
@@ -81,7 +80,18 @@ describe('embark.Blockchain', function() {
           targetGasLimit: false,
           syncMode: undefined,
           verbosity: undefined,
-          proxy: true
+          proxy: true,
+          accounts: [
+            {
+              nodeAccounts: true,
+              numAddresses: "2",
+              password: "config/development/devpassword"
+            },
+            {
+              mnemonic: "example exile argue silk regular smile grass bomb merge arm assist farm",
+              numAddresses: "3"
+            }
+          ]
         };
         let blockchain = new Blockchain(config);
 
@@ -103,8 +113,6 @@ describe('embark.Blockchain', function() {
           mine: true,
           vmdebug: false,
           whisper: false,
-          account: {},
-          devPassword: "foo/bar/devpassword",
           bootnodes: "",
           wsApi: ["eth", "web3", "net", "shh", "debug", "personal"],
           wsHost: defaultHost,
@@ -115,7 +123,13 @@ describe('embark.Blockchain', function() {
           syncMode: undefined,
           verbosity: undefined,
           proxy: true,
-          silent: undefined
+          silent: undefined,
+          account: {
+            numAccounts: "2",
+            devPassword: path.normalize("/foo/datadir/devPassword"),
+            password: "config/development/devpassword",
+            balance: undefined
+          }
         };
         // We check also proxy's ports because proxy is set to true
         expectedConfig.wsPort += constants.blockchain.servicePortOnProxy;

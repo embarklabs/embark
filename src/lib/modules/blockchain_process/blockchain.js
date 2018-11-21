@@ -1,5 +1,6 @@
 const async = require('async');
 const {spawn, exec} = require('child_process');
+const path = require('path');
 const fs = require('../../core/fs.js');
 const constants = require('../../constants.json');
 const utils = require('../../utils/utils.js');
@@ -15,7 +16,7 @@ const Logger = require('../../core/logger');
 // time between IPC connection attempts (in ms)
 const IPC_CONNECT_INTERVAL = 2000;
 
-/*eslint complexity: ["error", 42]*/
+/*eslint complexity: ["error", 50]*/
 var Blockchain = function(userConfig, clientClass) {
   this.userConfig = userConfig;
   this.env = userConfig.env || 'development';
@@ -27,17 +28,18 @@ var Blockchain = function(userConfig, clientClass) {
   this.proxyIpc = null;
   this.isStandalone = userConfig.isStandalone;
 
+
   let defaultWsApi = clientClass.DEFAULTS.WS_API;
   if (this.isDev) defaultWsApi = clientClass.DEFAULTS.DEV_WS_API;
 
   this.config = {
     silent: this.userConfig.silent,
     ethereumClientName: this.userConfig.ethereumClientName,
-    ethereumClientBin: this.userConfig.ethereumClientBin || this.userConfig.ethereumClientName || 'geth',
+    ethereumClientBin: this.userConfig.ethereumClientBin || this.userConfig.ethereumClientName,
     networkType: this.userConfig.networkType || clientClass.DEFAULTS.NETWORK_TYPE,
     networkId: this.userConfig.networkId || clientClass.DEFAULTS.NETWORK_ID,
     genesisBlock: this.userConfig.genesisBlock || false,
-    datadir: this.userConfig.datadir || false,
+    datadir: this.userConfig.datadir,
     mineWhenNeeded: this.userConfig.mineWhenNeeded || false,
     rpcHost: dockerHostSwap(this.userConfig.rpcHost) || defaultHost,
     rpcPort: this.userConfig.rpcPort || 8545,
@@ -46,8 +48,7 @@ var Blockchain = function(userConfig, clientClass) {
     port: this.userConfig.port || 30303,
     nodiscover: this.userConfig.nodiscover || false,
     mine: this.userConfig.mine || false,
-    account: this.userConfig.account || {},
-    devPassword: this.userConfig.devPassword || "",
+    account: {},
     whisper: (this.userConfig.whisper !== false),
     maxpeers: ((this.userConfig.maxpeers === 0) ? 0 : (this.userConfig.maxpeers || 25)),
     bootnodes: this.userConfig.bootnodes || "",
@@ -63,32 +64,42 @@ var Blockchain = function(userConfig, clientClass) {
     proxy: this.userConfig.proxy
   };
 
-  if (this.userConfig === {} || this.userConfig.default || JSON.stringify(this.userConfig) === '{"enabled":true}') {
-    this.config.account = {};
+  if (this.userConfig.accounts) {
+    const nodeAccounts = this.userConfig.accounts.find(account => account.nodeAccounts);
+    if (nodeAccounts) {
+      this.config.account = {
+        numAccounts: nodeAccounts.numAddresses || 1,
+        password: nodeAccounts.password,
+        balance: nodeAccounts.balance
+      };
+    }
+  }
+
+  if (this.userConfig === {} || this.userConfig.default || JSON.stringify(this.userConfig) === '{"ethereumClientName":"geth"}') {
     if (this.env === 'development') {
       this.isDev = true;
     } else {
-      this.config.account.password = fs.embarkPath("templates/boilerplate/config/privatenet/password");
       this.config.genesisBlock = fs.embarkPath("templates/boilerplate/config/privatenet/genesis.json");
     }
     this.config.datadir = fs.dappPath(".embark/development/datadir");
-    this.config.wsOrigins = "http://localhost:8000";
-    this.config.rpcCorsDomain = "http://localhost:8000";
+    this.config.wsOrigins = this.config.wsOrigins || "http://localhost:8000";
+    this.config.rpcCorsDomain = this.config.rpcCorsDomain || "http://localhost:8000";
     this.config.targetGasLimit = 8000000;
   }
+  this.config.account.devPassword = path.join(this.config.datadir, "devPassword");
 
   const spaceMessage = 'The path for %s in blockchain config contains spaces, please remove them';
   if (this.config.datadir && this.config.datadir.indexOf(' ') > 0) {
     this.logger.error(__(spaceMessage, 'datadir'));
-    process.exit();
+    process.exit(1);
   }
   if (this.config.account.password && this.config.account.password.indexOf(' ') > 0) {
-    this.logger.error(__(spaceMessage, 'account.password'));
-    process.exit();
+    this.logger.error(__(spaceMessage, 'accounts.password'));
+    process.exit(1);
   }
   if (this.config.genesisBlock && this.config.genesisBlock.indexOf(' ') > 0) {
     this.logger.error(__(spaceMessage, 'genesisBlock'));
-    process.exit();
+    process.exit(1);
   }
   this.initProxy();
   this.client = new clientClass({config: this.config, env: this.env, isDev: this.isDev});
@@ -170,7 +181,7 @@ Blockchain.prototype.run = function () {
   this.logger.info("===============================================================================".magenta);
   this.logger.info("===============================================================================".magenta);
 
-  if (self.client.name === 'geth') this.checkPathLength();
+  if (self.client.name === constants.blockchain.clients.geth) this.checkPathLength();
 
   let address = '';
   async.waterfall([
@@ -320,14 +331,13 @@ Blockchain.prototype.initDevChain = function(callback) {
   const self = this;
   const ACCOUNTS_ALREADY_PRESENT = 'accounts_already_present';
   // Init the dev chain
-  self.client.initDevChain('.embark/development/datadir', (err) => {
+  self.client.initDevChain(self.config.datadir, (err) => {
     if (err) {
-      console.log(err);
       return callback(err);
     }
 
-    let needToCreateOtherAccounts = self.config.account && self.config.account.numAccounts;
-    if (!needToCreateOtherAccounts) return callback();
+    const accountsToCreate = self.config.account && self.config.account.numAccounts;
+    if (!accountsToCreate) return callback();
 
     // Create other accounts
     async.waterfall([
@@ -340,20 +350,15 @@ Blockchain.prototype.initDevChain = function(callback) {
           // List current addresses
           self.config.unlockAddressList = self.client.parseListAccountsCommandResultToAddressList(stdout);
           // Count current addresses and remove the default account from the count (because password can be different)
-          let addressCount = self.client.parseListAccountsCommandResultToAddressCount(stdout);
-          let utilityAddressCount = self.client.parseListAccountsCommandResultToAddressCount(stdout) - 1;
-          utilityAddressCount = (utilityAddressCount > 0 ? utilityAddressCount : 0);
-          let accountsToCreate = self.config.account.numAccounts - utilityAddressCount;
-          if (accountsToCreate > 0) {
-            next(null, accountsToCreate, addressCount === 0);
+          let addressCount = self.config.unlockAddressList.length;
+          if (addressCount < accountsToCreate) {
+            next(null, accountsToCreate - addressCount);
           } else {
             next(ACCOUNTS_ALREADY_PRESENT);
           }
         });
       },
-      function newAccounts(accountsToCreate, firstAccount, next) {
-        // At first launch, Geth --dev does not create its own dev account if any other account are present. Parity --dev always does. Make this choerent between the two
-        if (firstAccount && self.client.name === 'geth') accountsToCreate++;
+      function newAccounts(accountsToCreate, next) {
         var accountNumber = 0;
         async.whilst(
           function() {
@@ -361,12 +366,11 @@ Blockchain.prototype.initDevChain = function(callback) {
           },
           function(callback) {
             accountNumber++;
-            self.runCommand(self.client.newAccountCommand(firstAccount), {}, (err, stdout, _stderr) => {
+            self.runCommand(self.client.newAccountCommand(), {}, (err, stdout, _stderr) => {
               if (err) {
                 return callback(err, accountNumber);
               }
               self.config.unlockAddressList.push(self.client.parseNewAccountCommandResultToAddress(stdout));
-              firstAccount = false;
               callback(null, accountNumber);
             });
           },
@@ -391,7 +395,7 @@ Blockchain.prototype.initChainAndGetAddress = function (callback) {
   const ALREADY_INITIALIZED = 'already';
 
   // ensure datadir exists, bypassing the interactive liabilities prompt.
-  self.datadir = '.embark/' + self.env + '/datadir';
+  self.datadir = self.config.datadir;
 
   async.waterfall([
     function makeDir(next) {
@@ -402,7 +406,7 @@ Blockchain.prototype.initChainAndGetAddress = function (callback) {
     function listAccounts(next) {
       self.runCommand(self.client.listAccountsCommand(), {}, (err, stdout, _stderr) => {
         if (err || stdout === undefined || stdout.indexOf("Fatal") >= 0) {
-          this.logger.info(__("no accounts found").green);
+          self.logger.info(__("no accounts found").green);
           return next();
         }
         let firstAccountFound = self.client.parseListAccountsCommandResultToAddress(stdout);
@@ -410,14 +414,14 @@ Blockchain.prototype.initChainAndGetAddress = function (callback) {
           console.log(__("no accounts found").green);
           return next();
         }
-        this.logger.info(__("already initialized").green);
+        self.logger.info(__("already initialized").green);
         address = firstAccountFound;
         next(ALREADY_INITIALIZED);
       });
     },
     function genesisBlock(next) {
       //There's no genesis init with Parity. Custom network are set in the chain property at startup
-      if (!self.config.genesisBlock || self.client.name === 'parity') {
+      if (!self.config.genesisBlock || self.client.name === constants.blockchain.clients.parity) {
         return next();
       }
       self.logger.info(__("initializing genesis block").green);
@@ -447,21 +451,21 @@ var BlockchainClient = function(userConfig, clientName, env, onReadyCallback, on
     logger.info("===> " + __("warning: running default config on a non-development environment"));
   }
   // if client is not set in preferences, default is geth
-  if (!userConfig.ethereumClientName) userConfig.ethereumClientName = 'geth';
+  if (!userConfig.ethereumClientName) userConfig.ethereumClientName = constants.blockchain.clients.geth;
   // if clientName is set, it overrides preferences
   if (clientName) userConfig.ethereumClientName = clientName;
   // Choose correct client instance based on clientName
   let clientClass;
   switch (userConfig.ethereumClientName) {
-    case 'geth':
+    case constants.blockchain.clients.geth:
       clientClass = GethClient;
       break;
 
-    case 'parity':
+    case constants.blockchain.clients.parity:
       clientClass = ParityClient;
       break;
     default:
-      console.error(__('Unknow client "%s". Please use one of the following: %s', userConfig.ethereumClientName, 'geth, parity'));
+      console.error(__('Unknown client "%s". Please use one of the following: %s', userConfig.ethereumClientName, Object.keys(constants.blockchain.clients).join(', ')));
       process.exit();
   }
   userConfig.isDev = (userConfig.isDev || userConfig.default);

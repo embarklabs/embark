@@ -19,6 +19,7 @@ describe('embark.Config', function () {
       config.loadBlockchainConfigFile();
       let expectedConfig = {
         "enabled": true,
+        "ethereumClientName": "geth",
         "networkType": "custom",
         "genesisBlock": "config/development/genesis.json",
         "datadir": ".embark/development/datadir",
@@ -30,9 +31,11 @@ describe('embark.Config', function () {
         "rpcPort": 8545,
         "rpcCorsDomain": "http://localhost:8000",
         "wsOrigins": "auto",
-        "account": {
-          "password": "config/development/password"
-        }
+        "accounts": [
+          {
+            "password": "config/development/password"
+          }
+        ]
       };
 
       assert.deepEqual(config.blockchainConfig, expectedConfig);
@@ -41,6 +44,7 @@ describe('embark.Config', function () {
     it('should convert Ether units', function () {
       let expectedConfig = {
         "enabled": true,
+        "ethereumClientName": "geth",
         "networkType": "custom",
         "genesisBlock": "config/development/genesis.json",
         "datadir": ".embark/development/datadir",
@@ -54,10 +58,12 @@ describe('embark.Config', function () {
         "rpcPort": 8545,
         "rpcCorsDomain": "http://localhost:8000",
         "wsOrigins": "auto",
-        "account": {
-          "password": "config/development/password",
-          "balance": "3000000000000000000"
-        }
+        "accounts": [
+          {
+            "password": "config/development/password",
+            "balance": "3000000000000000000"
+          }
+        ]
       };
 
       let config = new Config({
@@ -75,6 +81,7 @@ describe('embark.Config', function () {
     it('should accept unitless gas values', function () {
       let expectedConfig = {
         "enabled": true,
+        "ethereumClientName": "geth",
         "networkType": "custom",
         "genesisBlock": "config/development/genesis.json",
         "datadir": ".embark/development/datadir",
@@ -88,10 +95,12 @@ describe('embark.Config', function () {
         "rpcPort": 8545,
         "rpcCorsDomain": "http://localhost:8000",
         "wsOrigins": "auto",
-        "account": {
-          "password": "config/development/password",
-          "balance": "3000000000000000000"
-        }
+        "accounts": [
+          {
+            "password": "config/development/password",
+            "balance": "3000000000000000000"
+          }
+        ]
       };
 
       let config = new Config({
@@ -144,9 +153,7 @@ describe('embark.Config', function () {
           "SimpleStorage": {
             "args": [100, '0x0000000000000000000000000000000000000000'],
             "address": '0x0000000000000000000000000000000000000000',
-            "onDeploy": [
-              "SimpleStorage.methods.changeAddress('0x0000000000000000000000000000000000000000')"
-            ]
+            "onDeploy": ["SimpleStorage.methods.changeAddress('0x0000000000000000000000000000000000000000')"]
           }
         },
         "afterDeploy": [

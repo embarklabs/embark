@@ -25,13 +25,7 @@ module.exports = {
     maxpeers: 0, // Maximum number of network peers (network disabled if set to 0) (default: 25)
     proxy: true, // Proxy is used to present meaningful information about transactions
     targetGasLimit: 8000000, // Target gas limit sets the artificial target gas floor for the blocks to mine
-    simulatorMnemonic: "example exile argue silk regular smile grass bomb merge arm assist farm", // Mnemonic  used by the simulator to generate a wallet
-    simulatorBlocktime: 0, // Specify blockTime in seconds for automatic mining. Default is 0 and no auto-mining.
-    account: {
-      // numAccounts: 3, // When specified, creates accounts for use in the dapp. This option only works in the development environment, and can be used as a quick start option that bypasses the need for MetaMask in development. These accounts are unlocked and funded with the below settings.
-      // password: "config/development/password", // Password for the created accounts (as specified in the `numAccounts` setting). If `mineWhenNeeded` is enabled (and isDev is not), this password is used to create a development account controlled by the node.
-      // balance: "5 ether" // Balance to be given to the created accounts (as specified in the `numAccounts` setting)
-    }
+    simulatorBlocktime: 0 // Specify blockTime in seconds for automatic mining. Default is 0 and no auto-mining.
   },
 
   // merges with the settings in default
@@ -59,14 +53,9 @@ module.exports = {
     nodiscover: true,
     maxpeers: 0,
     proxy: true,
-    account: {
-      // "address": "", // When specified, uses that address instead of the default one for the network
-      password: "config/privatenet/password" // Password to unlock the account
-    },
     targetGasLimit: 8000000,
     wsHost: "localhost",
     wsPort: 8546,
-    simulatorMnemonic: "example exile argue silk regular smile grass bomb merge arm assist farm",
     simulatorBlocktime: 0
   },
 
@@ -74,10 +63,7 @@ module.exports = {
   // used with "embark run testnet" and/or "embark blockchain testnet"
   testnet: {
     networkType: "testnet",
-    syncMode: "light",
-    account: {
-      password: "config/testnet/password"
-    }
+    syncMode: "light"
   },
 
   // merges with the settings in default
@@ -86,11 +72,8 @@ module.exports = {
     networkType: "livenet",
     syncMode: "light",
     rpcCorsDomain: "http://localhost:8000",
-    wsOrigins: "http://localhost:8000",
-    account: {
-      password: "config/livenet/password"
-    }
-  },
+    wsOrigins: "http://localhost:8000"
+  }
 
   // you can name an environment with specific settings and then specify with
   // "embark run custom_name" or "embark blockchain custom_name"

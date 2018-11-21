@@ -14,20 +14,9 @@ class Simulator {
     this.logger = options.logger;
   }
 
-  /*eslint complexity: ["error", 23]*/
+  /*eslint complexity: ["error", 25]*/
   run(options) {
     let cmds = [];
-
-    const ganache_main = require.resolve('ganache-cli', {paths: fs.embarkPath('node_modules')});
-    const ganache_json = pkgUp.sync(path.dirname(ganache_main));
-    const ganache_root = path.dirname(ganache_json);
-    const ganache_bin = require(ganache_json).bin;
-    let ganache;
-    if (typeof ganache_bin === 'string') {
-      ganache = path.join(ganache_root, ganache_bin);
-    } else {
-      ganache = path.join(ganache_root, ganache_bin['ganache-cli']);
-    }
 
     let useProxy = this.blockchainConfig.proxy || false;
     let host = (dockerHostSwap(options.host || this.blockchainConfig.rpcHost) || defaultHost);
@@ -37,15 +26,17 @@ class Simulator {
 
     cmds.push("-p " + port);
     cmds.push("-h " + host);
-    cmds.push("-a " + (options.numAccounts || 10));
-    cmds.push("-e " + (options.defaultBalance || 100));
     cmds.push("-l " + (options.gasLimit || this.blockchainConfig.targetGasLimit || 8000000));
 
     // adding mnemonic only if it is defined in the blockchainConfig or options
-    let simulatorMnemonic = this.blockchainConfig.simulatorMnemonic || options.simulatorMnemonic;
+    const mnemonicAccount = this.blockchainConfig.accounts.find(acc => acc.mnemonic) || {};
+    const simulatorMnemonic = mnemonicAccount.mnemonic || options.simulatorMnemonic;
+
     if (simulatorMnemonic) {
-      cmds.push("--mnemonic \"" + (simulatorMnemonic) +"\"");
+      cmds.push("--mnemonic \"" + (simulatorMnemonic) + "\"");
     }
+    cmds.push("-a " + (options.numAccounts || mnemonicAccount.numAddresses || 10));
+    cmds.push("-e " + (options.defaultBalance || mnemonicAccount.balance|| 100));
 
     // as ganache-cli documentation explains, the simulatorAccounts configuration overrides a mnemonic
     let simulatorAccounts = this.blockchainConfig.simulatorAccounts || options.simulatorAccounts;
@@ -70,6 +61,21 @@ class Simulator {
     let networkId = this.blockchainConfig.networkId || options.networkId;
     if (networkId) { // Don't handle networkId=="0" because it is not a valid networkId for ganache-cli.
       cmds.push("--networkId " + networkId);
+    }
+
+    this.runCommand(cmds, useProxy, host, port);
+  }
+
+  runCommand(cmds, useProxy, host, port) {
+    const ganache_main = require.resolve('ganache-cli', {paths: fs.embarkPath('node_modules')});
+    const ganache_json = pkgUp.sync(path.dirname(ganache_main));
+    const ganache_root = path.dirname(ganache_json);
+    const ganache_bin = require(ganache_json).bin;
+    let ganache;
+    if (typeof ganache_bin === 'string') {
+      ganache = path.join(ganache_root, ganache_bin);
+    } else {
+      ganache = path.join(ganache_root, ganache_bin['ganache-cli']);
     }
 
     const programName = 'ganache-cli';

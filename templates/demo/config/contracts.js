@@ -7,6 +7,7 @@ module.exports = {
       port: 8546, // Port of the blockchain node
       type: "ws" // Type of connection (ws or rpc),
       // Accounts to use instead of the default account to populate your wallet
+      // The order here corresponds to the order of `web3.eth.getAccounts`, so the first one is the `defaultAccount`
       /*,accounts: [
         {
           privateKey: "your_private_key",
@@ -22,6 +23,9 @@ module.exports = {
           addressIndex: "0", // Optionnal. The index to start getting the address
           numAddresses: "1", // Optionnal. The number of addresses to get
           hdpath: "m/44'/60'/0'/0/" // Optionnal. HD derivation path
+        },
+        {
+          "nodeAccounts": true // Uses the Ethereum node's accounts
         }
       ]*/
     },
