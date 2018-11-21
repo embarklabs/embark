@@ -282,7 +282,6 @@ class ContractDeployer {
       },
       function deployTheContract(next) {
         let estimatedCost = contract.gas * contract.gasPrice;
-        self.logFunction(contract)(__("deploying") + " " + contract.className.bold.cyan + " " + __("with").green + " " + contract.gas + " " + __("gas at the price of").green + " " + contract.gasPrice + " " + __("Wei, estimated cost:").green + " " + estimatedCost + " Wei".green);
 
         self.blockchain.deployContractFromObject(deployObject, {
           from: contract.deploymentAccount,
@@ -311,6 +310,8 @@ class ContractDeployer {
               return next(null, receipt);
             });
           });
+        }, hash => {
+          self.logFunction(contract)(__("deploying") + " " + contract.className.bold.cyan + " " + __("with").green + " " + contract.gas + " " + __("gas at the price of").green + " " + contract.gasPrice + " " + __("Wei, estimated cost:").green + " " + estimatedCost + " Wei".green + " (txHash: " + hash.bold.cyan + ")");
         });
       }
     ], callback);

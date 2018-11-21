@@ -643,10 +643,10 @@ class BlockchainConnector {
     }).catch(cb);
   }
 
-  deployContractFromObject(deployContractObject, params, cb) {
+  deployContractFromObject(deployContractObject, params, cb, hashCb) {
     embarkJsUtils.secureSend(this.web3, deployContractObject, {
       from: params.from, gas: params.gas, gasPrice: params.gasPrice
-    }, true, cb);
+    }, true, cb, hashCb);
   }
 
   determineDefaultAccount(cb) {
