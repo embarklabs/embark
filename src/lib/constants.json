@@ -31,6 +31,10 @@
     "built": "built"
   },
   "blockchain": {
+    "clients": {
+      "geth": "geth",
+      "parity": "parity"
+    },
     "blockchainReady": "blockchainReady",
     "blockchainExit": "blockchainExit",
     "init": "init",

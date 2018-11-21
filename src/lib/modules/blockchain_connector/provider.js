@@ -53,20 +53,29 @@ class Provider {
     }
     self.web3.setProvider(self.provider);
 
-    self.web3.eth.getAccounts((err, accounts) => {
+    self.web3.eth.getAccounts((err, accounts = []) => {
       if (err) {
         self.logger.warn('Error while getting the node\'s accounts.', err.message || err);
       }
 
+      self.blockchainAccounts = AccountParser.parseAccountsConfig(self.blockchainConfig.accounts, self.web3, self.logger, accounts);
+
+      accounts = accounts.concat(self.blockchainAccounts);
+
       self.accounts = AccountParser.parseAccountsConfig(self.accountsConfig, self.web3, self.logger, accounts);
+
+      if (!self.accounts.length) {
+        self.accounts = accounts;
+      }
       self.addresses = [];
 
       self.accounts.forEach(account => {
-        self.addresses.push(account.address);
+        self.addresses.push(account.address || account);
         if (account.privateKey) {
           self.web3.eth.accounts.wallet.add(account);
         }
       });
+      self.addresses = [...new Set(self.addresses)]; // Remove duplicates
 
       if (self.accounts.length) {
         self.web3.eth.defaultAccount = self.addresses[0];
@@ -153,6 +162,9 @@ class Provider {
       return callback();
     }
     async.eachLimit(self.accounts, 1, (account, eachCb) => {
+      if (!account.address) {
+        return eachCb();
+      }
       fundAccount(self.web3, account.address, account.hexBalance, eachCb);
     }, callback);
   }
