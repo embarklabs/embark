@@ -137,7 +137,7 @@ class TransactionDebugger {
       res.send({ok: true});
     });
     this.embark.registerAPICall("post", "/embark-api/debugger/StepOverBackward", (req: any, res: any) => {
-      if (this.apiDebugger.canGotPrevious()) {
+      if (this.apiDebugger.canGoPrevious()) {
         this.apiDebugger.stepOverBack(true);
       }
       res.send({ok: true});
@@ -149,7 +149,7 @@ class TransactionDebugger {
       res.send({ok: true});
     });
     this.embark.registerAPICall("post", "/embark-api/debugger/StepIntoBackward", (req: any, res: any) => {
-      if (this.apiDebugger.canGotPrevious()) {
+      if (this.apiDebugger.canGoPrevious()) {
         this.apiDebugger.stepIntoBack(true);
       }
       res.send({ok: true});
@@ -181,10 +181,10 @@ class TransactionDebugger {
   private simplifyDebuggerVars(data: any) {
     const newData: any = {};
 
-    for (const key of Object.keys(data)) {
+    Object.keys(data).forEach((key) => {
       const field = data[key];
       newData[`${key} (${field.type})`] = field.value;
-    }
+    });
 
     return newData;
   }
