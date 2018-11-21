@@ -1,6 +1,5 @@
-const RemixDebug = require("remix-debug-debugtest");
-const CmdLine = RemixDebug.CmdLine;
-const async = require("async");
+import async from "async";
+import { CmdLine } from "remix-debug-debugtest";
 
 export default class DebuggerManager {
   private nodeUrl: string;
