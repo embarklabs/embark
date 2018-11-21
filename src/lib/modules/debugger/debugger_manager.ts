@@ -69,7 +69,7 @@ export default class DebuggerManager {
           cmdLine.events.on("source", () => {
             const lines: string[] = cmdLine.getSource();
             // TODO: this is a bit of a hack
-            const line: string = lines.filter((x: string) => x.indexOf("=>") === 0)[0];
+            const line: string = lines.filter((x) => x.indexOf("=>") === 0)[0];
             outputCb(lines, line, debuggerData);
           });
 
