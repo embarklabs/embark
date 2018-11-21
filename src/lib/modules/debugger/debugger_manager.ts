@@ -80,18 +80,17 @@ export default class DebuggerManager {
           next();
         });
       },
-    ], () => {
-    });
+    ]);
   }
 
   // TODO: this is duplicated in debugger/index.js
   private simplifyDebuggerVars(data: any) {
     const newData: any = {};
 
-    for (const key of Object.keys(data)) {
+    Object.keys(data).forEach((key) => {
       const field = data[key];
       newData[`${key} (${field.type})`] = field.value;
-    }
+    });
 
     return newData;
   }
