@@ -44,7 +44,7 @@ export default class Snark {
       this.addVerifiersToContracts();
       callback();
     } catch (error) {
-      console.error(error);
+      this.logger.error(error.message);
       callback();
     }
   }
