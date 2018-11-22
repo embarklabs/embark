@@ -43,8 +43,8 @@ function registerSubDomain(ens, registrar, resolver, defaultAccount, subdomain, 
       callback(null, transaction);
     })
     .catch(err => {
-      logger.error(err.message || err);
-      callback('Failed to register with error: ' + (err.message || err));
+      logger.error('Failed to register with error:', err.message || err);
+      callback(err.message || err);
     });
 }
 

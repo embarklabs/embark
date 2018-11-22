@@ -50,37 +50,32 @@ class ContractDeployer {
       });
     }
 
-    async.map(args, (arg, nextEachCb) => {
-      if (arg[0] === "$") {
-        parseArg(arg, nextEachCb);
-      } else if (Array.isArray(arg)) {
-        async.map(arg, (sub_arg, nextSubEachCb) => {
-          if (sub_arg[0] === "$") {
-            parseArg(sub_arg, nextSubEachCb);
-          } else if(typeof sub_arg === 'string' && sub_arg.indexOf('.eth') === sub_arg.length - 4) {
-            self.events.request("ens:resolve", sub_arg, (err, name) => {
-              if(err) {
-                return nextSubEachCb(err);
+    function checkArgs(argus, cb) {
+      async.map(argus, (arg, nextEachCb) => {
+        if (arg[0] === "$") {
+          return parseArg(arg, nextEachCb);
+        }
+
+        if (Array.isArray(arg)) {
+          return checkArgs(arg, nextEachCb);
+        }
+
+        self.events.request('ens:isENSName', arg, (isENSName) => {
+          if (isENSName) {
+            return self.events.request("ens:resolve", arg, (err, address) => {
+              if (err) {
+                return nextEachCb(err);
               }
-              return nextSubEachCb(err, name);
+              nextEachCb(err, address);
             });
-          } else {
-            nextSubEachCb(null, sub_arg);
           }
-        }, (err, subRealArgs) => {
-          nextEachCb(null, subRealArgs);
+
+          nextEachCb(null, arg);
         });
-      } else if(typeof arg === 'string' && arg.indexOf('.eth') === arg.length - 4) {
-        self.events.request("ens:resolve", arg, (err, name) => {
-          if(err) {
-            return nextEachCb(err);
-          }
-          return nextEachCb(err, name);
-        });
-      } else {
-        nextEachCb(null, arg);
-      }
-    }, callback);
+      }, cb);
+    }
+
+    checkArgs(args, callback);
   }
 
   checkAndDeployContract(contract, params, callback) {

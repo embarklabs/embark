@@ -63,5 +63,11 @@
     "implicit": "implicit",
     "explicit": "explicit"
   },
-  "embarkResourceOrigin": "http://embark"
+  "embarkResourceOrigin": "http://embark",
+  "ens": {
+    "whitelist": [
+      "eth",
+      "xyz"
+    ]
+  }
 }

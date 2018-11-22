@@ -338,13 +338,6 @@ function isValidDomain(domain) {
   return isValidDomain(domain);
 }
 
-function isValidEthDomain(ethDomain) {
-  if (!isValidDomain(ethDomain)) {
-    return false;
-  }
-  return ethDomain.substring(ethDomain.lastIndexOf('.'), ethDomain.length) === '.eth';
-}
-
 function decodeParams(typesArray, hexString) {
   var Web3EthAbi = require('web3-eth-abi');
   return Web3EthAbi.decodeParameters(typesArray, hexString);
@@ -588,7 +581,6 @@ module.exports = {
   isHex,
   hashTo32ByteHexString,
   isValidDomain,
-  isValidEthDomain,
   pingEndpoint,
   decodeParams,
   runCmd,

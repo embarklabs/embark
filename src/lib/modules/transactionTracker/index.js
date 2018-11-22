@@ -18,9 +18,9 @@ class TransactionTracker {
   }
 
   onBlockHeader(blockHeader) {
-    this.events.request("blockchain:block:byNumber", blockHeader.hash, (err, block) => {
+    this.events.request("blockchain:block:byNumber", blockHeader.number , (err, block) => {
       if (err) {
-        return this.logger.error('Error getting block header', err);
+        return this.logger.error('Error getting block header', err.message || err);
       }
       // Don't know why, but sometimes we receive nothing
       if (!block || !block.transactions) {

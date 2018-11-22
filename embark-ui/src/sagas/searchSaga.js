@@ -3,12 +3,16 @@ import {getAccounts, getBlocks, getTransactions, getContracts, getEnsRecordForNa
 import {fetchAccounts, fetchBlocks, fetchTransactions, fetchContracts, fetchEnsRecord} from "./index";
 import {ELEMENTS_LIMIT} from '../constants';
 
+const ENS_WHITELIST = [
+  ".eth",
+  ".xyz"
+]; // Putting this here as I can't import from embark's constants
+
 export function *searchExplorer(entity, payload) {
   let result;
   let searchValue = payload.searchValue;
-  let isENSName = false;
-  if (searchValue.endsWith('.eth')) {
-    isENSName = true;
+  const foundEnsExt = ENS_WHITELIST.find(ensExt => searchValue.endsWith(ensExt));
+  if (foundEnsExt) {
     yield fetchEnsRecord({name: payload.searchValue});
     const ensRecord = yield select(getEnsRecordForName, searchValue);
 
@@ -63,7 +67,7 @@ export function *searchExplorer(entity, payload) {
     return yield put(entity.success(result));
   }
 
-  if (isENSName) {
+  if (foundEnsExt) {
     return yield put(entity.success({error: `ENS resolved to ${searchValue}, but Embark couldn't find what this address represents`}));
   }
 
