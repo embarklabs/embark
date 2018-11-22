@@ -145,12 +145,12 @@ describe('embark.Config', function () {
             "onDeploy": [
               "SimpleStorage.methods.changeAddress('0x0000000000000000000000000000000000000000')"
             ]
-          },
-          "afterDeploy": [
-            "SimpleStorage.methods.changeAddress('0x0000000000000000000000000000000000000000')",
-            "SimpleStorage.methods.changeAddress('$SomeToken')"
-          ]
-        }
+          }
+        },
+        "afterDeploy": [
+          "SimpleStorage.methods.changeAddress('0x0000000000000000000000000000000000000000')",
+          "SimpleStorage.methods.changeAddress('$SomeToken')"
+        ]
       };
       let zeroAddressconfig = new Config({
         env: 'zeroaddress',

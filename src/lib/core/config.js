@@ -341,10 +341,10 @@ Config.prototype.loadContractsConfigFile = function() {
     }
   });
 
-  const afterDeploy = newContractsConfig.contracts.afterDeploy;
+  const afterDeploy = newContractsConfig.afterDeploy;
 
   if (Array.isArray(afterDeploy)) {
-    newContractsConfig.contracts.afterDeploy = afterDeploy.map(replaceZeroAddressShorthand);
+    newContractsConfig.afterDeploy = afterDeploy.map(replaceZeroAddressShorthand);
   }
 
   if (!deepEqual(newContractsConfig, this.contractsConfig)) {
