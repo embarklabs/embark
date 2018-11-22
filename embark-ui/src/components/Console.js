@@ -22,11 +22,15 @@ class Console extends Component {
     this.state = {value: '', isLoading: true, options: [], activeTab: EMBARK_PROCESS_NAME, historyIndex: DEFAULT_INDEX};
   }
 
+  clear() {
+    this.setState({value: '', historyIndex: DEFAULT_INDEX});
+    this.typeahead.getInstance().clear();
+  }
+
   handleSubmit(event) {
     event.preventDefault();
     this.props.postCommand(this.state.value);
-    this.setState({value: '', historyIndex: DEFAULT_INDEX});
-    this.typeahead.getInstance().clear();
+    this.clear();
   }
 
   handleChange(value, cb) {
@@ -144,14 +148,26 @@ class Console extends Component {
                 ref={(typeahead) => this.typeahead = typeahead}
                 searchText={false}
                 onKeyDown={(e) => {
-                  if (e.keyCode === 13) {
-                    this.handleChange(e.target.value, () => {
-                      this.handleSubmit(e);
-                    });
-                  } else if(e.keyCode === 38) {
-                    this.moveHistoryUp();
-                  } else if(e.keyCode === 40) {
-                    this.moveHistoryDown();
+                  switch(e.keyCode) {
+                    case 13: {
+                      this.handleChange(e.target.value, () => {
+                        this.handleSubmit(e);
+                      });
+                      break;
+                    }
+                    case 38: {
+                      this.moveHistoryUp();
+                      break;
+                    }
+                    case 40: {
+                      this.moveHistoryDown();
+                      break;
+                    }
+                    case 27: {
+                      this.clear();
+                      break;
+                    }
+                    default: break;
                   }
                 }}
                 onSearch={(value) => {
