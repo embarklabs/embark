@@ -1,9 +1,9 @@
-import { ZERO_ADDRESS } from '../../utils/addressUtils';
 /*global web3*/
 const namehash = require('eth-ens-namehash');
 // Price of ENS registration contract functions
 const ENS_GAS_PRICE = 700000;
 
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const reverseAddressSuffix = '.addr.reverse';
 const NoDecodeAddrErr = 'Error: Couldn\'t decode address from ABI: 0x';
 const NoDecodeStringErr = 'ERROR: The returned value is not a convertible string: 0x0';
