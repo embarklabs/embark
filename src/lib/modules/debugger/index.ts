@@ -53,7 +53,7 @@ class TransactionDebugger {
           lines.forEach((errorLine: string) => {
             this.embark.logger.error(errorLine);
           });
-          this.find_vars_in_line(tx.transactionHash, line, knownVars, (foundVars: any) => {
+          this.findVarsInLine(tx.transactionHash, line, knownVars, (foundVars: any) => {
             if (!foundVars) { return; }
             this.embark.logger.info("vars:");
             foundVars.forEach((variable: any) => {
@@ -66,7 +66,7 @@ class TransactionDebugger {
     });
   }
 
-  private find_vars_in_line(txHash: string, line: string, knownVars: any, cb: any) {
+  private findVarsInLine(txHash: string, line: string, knownVars: any, cb: any) {
     const foundVars: any = [];
     this.getGlobals(txHash, (err: any, globals: any) => {
       if (err) { return cb([]); }
@@ -348,7 +348,7 @@ class TransactionDebugger {
       knownVars.contract = this.simplifyDebuggerVars(knownVars.contract);
     }
 
-    this.find_vars_in_line(txHash, line, knownVars, (foundVars: any) => {
+    this.findVarsInLine(txHash, line, knownVars, (foundVars: any) => {
       if (!foundVars) { return; }
       this.embark.logger.info("vars:");
       foundVars.forEach((variable: any) => {
