@@ -67,6 +67,8 @@ var Config = function(options) {
   });
 };
 
+Config.prototype.dappPath = fs.dappPath;
+
 Config.prototype.loadConfigFiles = function(options) {
   var interceptLogs = options.interceptLogs;
   if (options.interceptLogs === undefined) {
