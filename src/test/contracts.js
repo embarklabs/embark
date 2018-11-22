@@ -114,6 +114,7 @@ describe('embark.Contracts', function() {
     };
 
     let contractsManager = new ContractsManager(embarkObj, {
+      plugins: plugins,
       contractDirectories: ['app/contracts']
     });
 
@@ -239,6 +240,7 @@ describe('embark.Contracts', function() {
     }
 
     let contractsManager = new ContractsManager(embarkObj, {
+      plugins: plugins,
       contractDirectories: ['app/contracts']
     });
 

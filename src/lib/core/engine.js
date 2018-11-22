@@ -212,7 +212,7 @@ class Engine {
     this.registerModule('compiler', {plugins: this.plugins, disableOptimizations: options.disableOptimizations});
     this.registerModule('solidity', {ipc: this.ipc, useDashboard: this.useDashboard});
     this.registerModule('vyper');
-    this.registerModule('contracts_manager', {compileOnceOnly: options.compileOnceOnly});
+    this.registerModule('contracts_manager', {plugins: this.plugins, compileOnceOnly: options.compileOnceOnly});
   }
 
   deploymentService(options) {
