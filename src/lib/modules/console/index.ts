@@ -6,26 +6,13 @@ const EmbarkJS = require("embarkjs");
 const IpfsApi = require("ipfs-api");
 const stringify = require("json-stringify-safe");
 import Web3 from "web3";
+import { Embark, Events } from "../../../typings/embark";
 import Suggestions from "./suggestions";
 
 declare const __: any;
 
-interface Events {
-  on: any;
-  request: any;
-  emit: any;
-  once: any;
-  setCommandHandler: any;
-}
-
-interface EmbarkApi {
-  events: Events;
-  registerAPICall: any;
-  registerConsoleCommand: any;
-}
-
 class Console {
-  private embark: EmbarkApi;
+  private embark: Embark;
   private events: Events;
   private plugins: any;
   private version: string;
@@ -36,7 +23,7 @@ class Console {
   private cmdHistoryFile: string;
   private suggestions: Suggestions;
 
-  constructor(embark: any, options: any) {
+  constructor(embark: Embark, options: any) {
     this.embark = embark;
     this.events = options.events;
     this.plugins = options.plugins;
