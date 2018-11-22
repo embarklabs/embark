@@ -21,12 +21,12 @@
         "onDeploy": [
           "SimpleStorage.methods.changeAddress('0x0')"
         ]
-      },
-      "afterDeploy": [
-        "SimpleStorage.methods.changeAddress('0x0')",
-        "SimpleStorage.methods.changeAddress('$SomeToken')"
-      ]
-    }
+      }
+    },
+    "afterDeploy": [
+      "SimpleStorage.methods.changeAddress('0x0')",
+      "SimpleStorage.methods.changeAddress('$SomeToken')"
+    ]
   },
   "myenv": {
     "gas": "400 Kwei",
