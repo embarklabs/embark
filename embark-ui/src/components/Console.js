@@ -22,22 +22,27 @@ class Console extends Component {
     this.state = {value: '', isLoading: true, options: [], activeTab: EMBARK_PROCESS_NAME, suggestions: []};
   }
 
-  shouldUpdateSuggestions(prevProps) {
+  shouldUpdateSuggestions(prevProps, prevState) {
     return !equal(prevProps.commandHistory, this.props.commandHistory) ||
       !equal(prevProps.commandSuggestions, this.props.commandSuggestions) ||
+      this.state.value !== prevState.value ||
       (this.state.suggestions.length === 0 && (this.props.commandSuggestions.length > 0 || this.props.commandHistory.length > 0))
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.shouldUpdateSuggestions(prevProps)) {
+  componentDidUpdate(prevProps, prevState) {
+    if (this.shouldUpdateSuggestions(prevProps, prevState)) {
       const formattedCommandHistory = this.props.commandHistory.filter((value, index, self) => self.indexOf(value) === index)
         .map(command => ({value: command, command_type: "History", description: "Command you already typed"}));
-      this.setState({suggestions: this.props.commandSuggestions.concat(formattedCommandHistory)})
+      if (!this.state.value.length) {
+        this.setState({suggestions: formattedCommandHistory});
+      } else {
+        this.setState({suggestions: this.props.commandSuggestions.concat(formattedCommandHistory)});
+      }
     }
   }
 
   clear() {
-    this.setState({value: '', historyIndex: DEFAULT_INDEX});
+    this.setState({value: ''});
     this.typeahead.getInstance().clear();
   }
 
@@ -162,6 +167,7 @@ class Console extends Component {
                 maxHeight="200px"
                 placeholder="Type a command (e.g help)"
                 options={this.state.suggestions}
+                useCache={false}
                 renderMenuItemChildren={(option) => (
                   <div>
                     {option.value}
