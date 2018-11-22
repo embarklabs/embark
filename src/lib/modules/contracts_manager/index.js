@@ -391,7 +391,7 @@ class ContractsManager {
         for (className in self.contracts) {
           contract = self.contracts[className];
 
-          if (contract.code === undefined) {
+          if (contract.code === undefined && !contract.abiDefinition) {
             self.logger.error(__("%s has no code associated", className));
             let suggestion = utils.proposeAlternative(className, dictionary, [className]);
             if (suggestion) {
@@ -418,9 +418,11 @@ class ContractsManager {
           }
 
           // look in code for dependencies
-          let libMatches = (contract.code.match(/:(.*?)(?=_)/g) || []);
-          for (let match of libMatches) {
-            self.contractDependencies[className].push(match.substr(1));
+          if (contract.code) {
+            let libMatches = (contract.code.match(/:(.*?)(?=_)/g) || []);
+            for (let match of libMatches) {
+              self.contractDependencies[className].push(match.substr(1));
+            }
           }
 
           // look in arguments for dependencies
