@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import Convert from 'ansi-to-html';
-import _ from 'lodash';
+import equal from 'deep-equal';
 import { Col, Row,  TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import classnames from 'classnames';
 import {AsyncTypeahead} from 'react-bootstrap-typeahead';
@@ -23,8 +23,8 @@ class Console extends Component {
   }
 
   shouldUpdateSuggestions(prevProps) {
-    return !_.isEqual(prevProps.commandHistory, this.props.commandHistory) ||
-      !_.isEqual(prevProps.commandSuggestions, this.props.commandSuggestions) ||
+    return !equal(prevProps.commandHistory, this.props.commandHistory) ||
+      !equal(prevProps.commandSuggestions, this.props.commandSuggestions) ||
       (this.state.suggestions.length === 0 && (this.props.commandSuggestions.length > 0 || this.props.commandHistory.length > 0))
   }
 
