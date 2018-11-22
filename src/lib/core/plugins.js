@@ -57,6 +57,10 @@ Plugins.prototype.loadInternalPlugin = function(pluginName, pluginConfig) {
   var plugin;
   try {
     plugin = require(pluginPath);
+    
+    if (plugin.default) {
+      plugin = plugin.default;
+    }
   } catch(_e) {
     pluginPath = fs.embarkPath('modules/' + pluginName);
     plugin = require(pluginPath);
