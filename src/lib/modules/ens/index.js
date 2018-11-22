@@ -6,6 +6,9 @@ const embarkJsUtils = require('embarkjs').Utils;
 const reverseAddrSuffix = '.addr.reverse';
 const ENSFunctions = require('./ENSFunctions');
 import { ZERO_ADDRESS } from '../../utils/addressUtils';
+import {ens} from '../../constants';
+
+const ENS_WHITELIST = ens.whitelist;
 
 const MAINNET_ID = '1';
 const ROPSTEN_ID = '3';
@@ -65,6 +68,7 @@ class ENS {
     this.configured = false;
 
     this.events.setCommandHandler("ens:resolve", this.ensResolve.bind(this));
+    this.events.setCommandHandler("ens:isENSName", this.isENSName.bind(this));
 
     if (this.namesConfig === {} ||
       this.namesConfig.enabled !== true ||
@@ -148,8 +152,8 @@ class ENS {
     // Code inspired by https://github.com/monkybrain/ipfs-to-ens
     const {name, storageHash} = options;
 
-    if (!utils.isValidEthDomain(name)) {
-      return cb('Invalid domain name ' + name);
+    if (!this.isENSName(name)) {
+      return cb(__('Invalid domain name: {{name}}\nValid extensions are: {{extenstions}}', {name, extenstions: ENS_WHITELIST.join(', ')}));
     }
 
     let hashedName = namehash.hash(name);
@@ -157,7 +161,7 @@ class ENS {
     try {
       contentHash = utils.hashTo32ByteHexString(storageHash);
     } catch (e) {
-      return cb('Invalid IPFS hash');
+      return cb(__('Invalid IPFS hash'));
     }
     // Set content
     async.waterfall([
@@ -339,10 +343,18 @@ class ENS {
             return next(err);
           });
         },
-        function registrar(next) {
+        function checkRootNode(next) {
           if (!self.registration || !self.registration.rootDomain) {
             return next(NO_REGISTRATION);
           }
+          if (!self.isENSName(self.registration.rootDomain)) {
+
+            return next(__('Invalid domain name: {{name}}\nValid extensions are: {{extenstions}}',
+              {name: self.registration.rootDomain, extenstions: ENS_WHITELIST.join(', ')}));
+          }
+          next();
+        },
+        function registrar(next) {
           const registryAddress = self.ensConfig.ENSRegistry.deployedAddress;
           const rootNode = namehash.hash(self.registration.rootDomain);
           const contract = self.ensConfig.FIFSRegistrar;
@@ -479,6 +491,16 @@ class ENS {
       }
       cb(null, result);
     });
+  }
+
+  isENSName(name, callback = () => {}) {
+    if (typeof name !== 'string') {
+      callback(false);
+      return false;
+    }
+    const result = Boolean(ENS_WHITELIST.find(ensExt => name.endsWith(ensExt)));
+    callback(result);
+    return result;
   }
 }
 

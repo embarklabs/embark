@@ -249,7 +249,7 @@ class BlockchainConnector {
         function checkVersion(next) {
           // TODO: web3_clientVersion method is currently not implemented in web3.js 1.0
           self.web3._requestManager.send({method: 'web3_clientVersion', params: []}, (err, version) => {
-            if (err) {
+            if (err || !version) {
               self.isWeb3Ready = false;
               return next(null, {name: "Ethereum node not found", status: 'off'});
             }
