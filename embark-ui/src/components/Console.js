@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import Convert from 'ansi-to-html';
-
+import _ from 'lodash';
 import { Col, Row,  TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import classnames from 'classnames';
 import {AsyncTypeahead} from 'react-bootstrap-typeahead';
@@ -19,7 +19,21 @@ class Console extends Component {
   constructor(props) {
     super(props);
     this.typeahead = React.createRef();
-    this.state = {value: '', isLoading: true, options: [], activeTab: EMBARK_PROCESS_NAME, historyIndex: DEFAULT_INDEX};
+    this.state = {value: '', isLoading: true, options: [], activeTab: EMBARK_PROCESS_NAME, suggestions: []};
+  }
+
+  shouldUpdateSuggestions(prevProps) {
+    return !_.isEqual(prevProps.commandHistory, this.props.commandHistory) ||
+      !_.isEqual(prevProps.commandSuggestions, this.props.commandSuggestions) ||
+      (this.state.suggestions.length === 0 && (this.props.commandSuggestions.length > 0 || this.props.commandHistory.length > 0))
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.shouldUpdateSuggestions(prevProps)) {
+      const formattedCommandHistory = this.props.commandHistory.filter((value, index, self) => self.indexOf(value) === index)
+        .map(command => ({value: command, command_type: "History", description: "Command you already typed"}));
+      this.setState({suggestions: this.props.commandSuggestions.concat(formattedCommandHistory)})
+    }
   }
 
   clear() {
@@ -81,28 +95,6 @@ class Console extends Component {
     });
   }
 
-  moveHistoryDown() {
-    let index = this.state.historyIndex;
-    if (index <= 0) {
-      this.typeahead.getInstance().setState({text: ''});
-      this.setState({historyIndex: index, value: ''});
-      return;
-    }
-
-    index--;
-    this.typeahead.getInstance().setState({text: this.props.commandHistory[index]});
-    this.setState({historyIndex: index, value: this.props.commandHistory[index]});
-  }
-
-  moveHistoryUp() {
-    let index = this.state.historyIndex;
-    if (index >= this.props.commandHistory.length - 1) return;
-
-    index++;
-    this.typeahead.getInstance().setState({text: this.props.commandHistory[index]});
-    this.setState({historyIndex: index, value: this.props.commandHistory[index]});
-  }
-
   renderTabs() {
     const {processLogs, processes} = this.props;
 
@@ -138,6 +130,7 @@ class Console extends Component {
                 labelKey="value"
                 multiple={false}
                 maxResults={10}
+                minLength={0}
                 isLoading={this.state.isLoading}
                 onInputChange={(text) => this.handleChange(text)}
                 onChange={(text) => {
@@ -155,14 +148,6 @@ class Console extends Component {
                       });
                       break;
                     }
-                    case 38: {
-                      this.moveHistoryUp();
-                      break;
-                    }
-                    case 40: {
-                      this.moveHistoryDown();
-                      break;
-                    }
                     case 27: {
                       this.clear();
                       break;
@@ -176,7 +161,7 @@ class Console extends Component {
                 filterBy={['value', 'description']}
                 maxHeight="200px"
                 placeholder="Type a command (e.g help)"
-                options={this.props.commandSuggestions}
+                options={this.state.suggestions}
                 renderMenuItemChildren={(option) => (
                   <div>
                     {option.value}
