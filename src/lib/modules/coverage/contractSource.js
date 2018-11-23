@@ -98,6 +98,7 @@ class ContractSource {
 
     do {
       const node = nodesRequiringVisiting.pop();
+
       if(!node) continue;
 
       let children = [];
@@ -112,6 +113,8 @@ class ContractSource {
         case 'PragmaDirective':
         case 'StructDefinition':
         case 'VariableDeclaration':
+        case 'UsingForDirective':
+        case 'EnumDefinition':
           // We don't need to do anything with these. Just carry on.
           break;
 
@@ -216,6 +219,7 @@ class ContractSource {
           markLocations = [location];
           break;
         }
+        case 'WhileStatement':
         case 'ForStatement': {
           // For statements will be a bit of a special case. We want to count the body
           // iterations but we only want to count the for loop being hit once. Because
@@ -226,7 +230,7 @@ class ContractSource {
 
           location = this.sourceMapToLocations(forLoopDeclaration);
 
-          const markExpression = node.initializationExpression || node.loopExpression;
+          const markExpression = node.initializationExpression || node.loopExpression || node.condition;
           const expressionLocation = this.sourceMapToLocations(markExpression.src);
 
           if(!sourceMapToNodeType[markExpression.src]) sourceMapToNodeType[markExpression.src] = [];
@@ -282,23 +286,17 @@ class ContractSource {
       // then we bail.
 
       contractMatches = trace.structLogs.filter((step) => bytecode[step.pc]);
-      if(!contractMatches) continue;
 
+      if(!contractMatches) continue;
       contractMatches.forEach((step) => {
         step = bytecode[step.pc];
+
         if(!step.sourceMap || step.sourceMap === '' || step.sourceMap === SourceMap.empty()) return;
-
+        
         const sourceMapString = step.sourceMap.toString(this.id);
-
-        const [offsetToFind, _length, _] = sourceMapString.split(":");
-        let nodes;
-        Object.keys(sourceMapToNodeType).some(sourceMap => {
-          const [offset, _length, _] = sourceMap.split(":");
-          if (offsetToFind === offset) {
-            nodes = sourceMapToNodeType[sourceMap];
-            return true;
-          }
-        });
+        
+        const [offsetToFind, lengthToFind, _] = sourceMapString.split(":");
+        const nodes = this._findNodes(offsetToFind, lengthToFind, sourceMapToNodeType);
 
         if(!nodes) return;
 
@@ -327,6 +325,18 @@ class ContractSource {
         });
       });
     }
+  }
+
+  _findNodes(offsetToFind, _lengthToFind, sourceMapToNodeType) {
+    let nodes;
+    Object.keys(sourceMapToNodeType).some(sourceMap => {
+      const [offset, _length, _] = sourceMap.split(":");
+      if (offsetToFind === offset) {
+        nodes = sourceMapToNodeType[sourceMap];
+        return true;
+      }
+    });
+    return nodes;
   }
 
   _buildContractBytecode(contractName, contractBytecode, opcodes, sourceMaps) {
