@@ -77,7 +77,7 @@ class ContractSource {
       Object.values(this.contractBytecode).every((contractBytecode) => { return (Object.values(contractBytecode).length <= 1); });
   }
 
-  /*eslint complexity: ["error", 42]*/
+  /*eslint complexity: ["error", 50]*/
   generateCodeCoverage(trace) {
     if(!this.ast || !this.contractBytecode) throw new Error('Error generating coverage: solc output was not assigned');
 
@@ -287,8 +287,18 @@ class ContractSource {
       contractMatches.forEach((step) => {
         step = bytecode[step.pc];
         if(!step.sourceMap || step.sourceMap === '' || step.sourceMap === SourceMap.empty()) return;
+
         const sourceMapString = step.sourceMap.toString(this.id);
-        const nodes = sourceMapToNodeType[sourceMapString];
+
+        const [offsetToFind, _length, _] = sourceMapString.split(":");
+        let nodes;
+        Object.keys(sourceMapToNodeType).some(sourceMap => {
+          const [offset, _length, _] = sourceMap.split(":");
+          if (offsetToFind === offset) {
+            nodes = sourceMapToNodeType[sourceMap];
+            return true;
+          }
+        });
 
         if(!nodes) return;
 
