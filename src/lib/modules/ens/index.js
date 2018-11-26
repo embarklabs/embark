@@ -217,15 +217,25 @@ class ENS {
   }
 
   registerConfigDomains(config, cb) {
-    const self = this;
     const secureSend = embarkJsUtils.secureSend;
 
-    self.events.request("blockchain:defaultAccount:get", (defaultAccount) => {
-      async.each(Object.keys(self.registration.subdomains), (subDomainName, eachCb) => {
-        const address = self.registration.subdomains[subDomainName];
-        const reverseNode = utils.soliditySha3(address.toLowerCase().substr(2) + reverseAddrSuffix);
-        ENSFunctions.registerSubDomain(self.ensContract, self.registrarContract, self.resolverContract, defaultAccount,
-          subDomainName, self.registration.rootDomain, reverseNode, address, self.logger, secureSend, eachCb);
+    this.events.request("blockchain:defaultAccount:get", (defaultAccount) => {
+      async.each(Object.keys(this.registration.subdomains), (subDomainName, eachCb) => {
+        const address = this.registration.subdomains[subDomainName];
+        this.ensResolve(`${subDomainName}.${this.registration.rootDomain}`, (error, currentAddress) => {
+          if (currentAddress && currentAddress.toLowerCase() === address.toLowerCase()) {
+            return eachCb();
+          }
+
+          if (error) {
+            this.logger.error(error);
+            return eachCb();
+          }
+
+          const reverseNode = utils.soliditySha3(address.toLowerCase().substr(2) + reverseAddrSuffix);
+          ENSFunctions.registerSubDomain(this.ensContract, this.registrarContract, this.resolverContract, defaultAccount,
+            subDomainName, this.registration.rootDomain, reverseNode, address, this.logger, secureSend, eachCb);
+        });
       }, cb);
     });
   }
@@ -401,7 +411,7 @@ class ENS {
                   paraCb(null, web3);
                 });
             }
-          ], (err, result) => {
+          ], async (err, result) => {
             self.ensContract = result[0];
             self.registrarContract = result[1];
             self.resolverContract = result[2];
@@ -409,6 +419,12 @@ class ENS {
 
             const rootNode = namehash.hash(self.registration.rootDomain);
             var reverseNode = web3.utils.soliditySha3(web3.eth.defaultAccount.toLowerCase().substr(2) + reverseAddrSuffix);
+            const owner = await self.ensContract.methods.owner(rootNode).call();
+
+            if (owner === web3.eth.defaultAccount) {
+              return next();
+            }
+
             self.ensContract.methods.setOwner(rootNode, web3.eth.defaultAccount).send({from: web3.eth.defaultAccount, gas: ENS_GAS_PRICE}).then(() => {
               return self.ensContract.methods.setResolver(rootNode, config.resolverAddress).send({from: web3.eth.defaultAccount, gas: ENS_GAS_PRICE});
             }).then(() => {
