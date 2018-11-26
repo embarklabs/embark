@@ -62,8 +62,8 @@ class EditorContainer extends React.Component {
 
     const isSmallSize = (this.windowWidth < this.SMALL_SIZE);
     if (this.state.isSmallSize !== isSmallSize) {
-      this.setState({isSmallSize});
-      this.changeEditorWidth(isSmallSize ? OPERATIONS.MORE : OPERATIONS.LESS);
+      const editorWidth = this.getNewEditorWidth(isSmallSize ? OPERATIONS.MORE : OPERATIONS.LESS);
+      this.setState({isSmallSize, editorWidth});
       this.editor.handleResize();
     }
   }
@@ -96,22 +96,28 @@ class EditorContainer extends React.Component {
     this.setState({showHiddenFiles: !this.state.showHiddenFiles});
   }
 
-  openAsideTab(newTab) {
+  toggleAsideTab(newTab) {
+    const opening = !this.state.currentAsideTab.label;
+    const closing = newTab.label === this.state.currentAsideTab.label;
+    const newState = {currentAsideTab: newTab};
+
     if (!this.state.isSmallSize) {
-      this.changeEditorWidth((!this.state.currentAsideTab.label) ? OPERATIONS.LESS : OPERATIONS.MORE);
+      if (closing) {
+        newState.editorWidth = this.getNewEditorWidth(OPERATIONS.MORE);
+      } else if (opening) {
+        newState.editorWidth = this.getNewEditorWidth(OPERATIONS.LESS);
+      }
     }
-    if (newTab.label === this.state.currentAsideTab.label) {
-      this.editor.handleResize();
-      return this.setState({currentAsideTab: {}});
+    if (closing) {
+      newState.currentAsideTab = {};
     }
 
-    this.setState({currentAsideTab: newTab});
+    this.editor.handleResize();
+    this.setState(newState);
   }
 
-  changeEditorWidth(operation) {
-    this.setState({
-      editorWidth: (parseFloat(this.state.editorWidth) + (operation * parseFloat(this.state.asideWidth))) + '%'
-    });
+  getNewEditorWidth(operation) {
+    return (parseFloat(this.state.editorWidth) + (operation * parseFloat(this.state.asideWidth))) + '%'
   }
 
   renderTextEditor() {
@@ -194,7 +200,7 @@ class EditorContainer extends React.Component {
       <Row noGutters
            className={classnames('h-100', 'editor--grid', {'aside-opened': this.state.currentAsideTab.label})}>
         <Col xs={12}>
-          <TextEditorToolbarContainer openAsideTab={(newTab) => this.openAsideTab(newTab)}
+          <TextEditorToolbarContainer toggleAsideTab={(newTab) => this.toggleAsideTab(newTab)}
                                       isContract={this.isContract()}
                                       currentFile={this.props.currentFile}
                                       activeTab={this.state.currentAsideTab}/>
