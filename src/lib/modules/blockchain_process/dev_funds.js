@@ -12,7 +12,25 @@ class DevFunds {
     this.password = this.blockchainConfig.account.password ? readFileSync(dappPath(this.blockchainConfig.account.password), 'utf8').replace('\n', '') : 'dev_password';
     this.networkId = null;
     this.balance = Web3.utils.toWei("1", "ether");
-    this.provider = options.provider || new Web3.providers.WebsocketProvider(buildUrl('ws', this.blockchainConfig.wsHost, this.blockchainConfig.wsPort), {headers: {Origin: constants.embarkResourceOrigin}});
+    if (options.provider) {
+      this.provider = options.provider;
+    } else if (this.blockchainConfig.wsRPC) {
+      this.provider = new Web3.providers.WebsocketProvider(
+        buildUrl(
+          'ws',
+          this.blockchainConfig.wsHost,
+          this.blockchainConfig.wsPort
+        ),
+        {headers: {Origin: constants.embarkResourceOrigin}});
+    } else {
+      this.provider = new Web3.providers.HttpProvider(
+        buildUrl(
+          'http',
+          this.blockchainConfig.rpcHost,
+          this.blockchainConfig.rpcPort
+        )
+      );
+    }
     this.web3 = new Web3(this.provider);
     if (this.blockchainConfig.account.balance) {
       this.balance = this.blockchainConfig.account.balance;

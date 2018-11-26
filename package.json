@@ -84,6 +84,7 @@
     "chokidar": "2.0.4",
     "clipboardy": "1.2.3",
     "clone-deep": "4.0.0",
+    "cloneable-readable": "2.0.0",
     "colors": "1.3.2",
     "commander": "2.18.0",
     "compression-webpack-plugin": "2.0.0",
@@ -114,7 +115,7 @@
     "hard-source-webpack-plugin": "0.12.0",
     "helmet": "3.13.0",
     "hosted-git-info": "2.7.1",
-    "http-proxy": "1.17.0",
+    "http-proxy-middleware": "0.19.0",
     "http-shutdown": "1.2.0",
     "i18n": "0.8.3",
     "ipfs-api": "17.2.4",
@@ -139,6 +140,7 @@
     "pkg-up": "2.0.0",
     "promptly": "2.2.0",
     "propose": "0.0.5",
+    "pump": "3.0.0",
     "react-scripts": "1.1.5",
     "remix-debug-debugtest": "0.2.14",
     "remix-tests": "0.0.21",
@@ -150,6 +152,7 @@
     "simples": "0.8.8",
     "solc": "0.5.0",
     "source-map-support": "0.5.9",
+    "stream-json": "1.1.3",
     "string-replace-async": "1.2.1",
     "style-loader": "0.23.1",
     "subdir": "0.0.3",
@@ -164,7 +167,8 @@
     "webpack": "4.19.0",
     "webpack-bundle-analyzer": "2.13.1",
     "websocket": "1.0.28",
-    "window-size": "1.1.1"
+    "window-size": "1.1.1",
+    "ws": "6.1.2"
   },
   "devDependencies": {
     "@babel/cli": "7.1.2",
