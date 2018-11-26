@@ -382,8 +382,9 @@ class Cmd {
 
   ejectWebpack() {
     program
-      .command('eject-webpack')
-      .description(__('copy the default webpack config into your dapp for customization'))
+      .command('eject-build-config')
+      .alias('eject-webpack')
+      .description(__('copy the default build config into your dapp for customization'))
       .action(function() {
         embark.initConfig('development', {
           embarkConfig: 'embark.json',
