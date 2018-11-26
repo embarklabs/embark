@@ -11,6 +11,7 @@ class Test {
     this.options = options || {};
     this.simOptions = {};
     this.events = options.events;
+    this.plugins = options.config.plugins;
     this.logger = options.logger;
     this.ipc = options.ipc;
     this.configObj = options.config;
@@ -268,7 +269,9 @@ class Test {
               self.contracts[contract.className] = {};
             }
 
-            const newContract = Test.getWeb3Contract(contract, web3);
+            const testContractFactoryPlugin = self.plugins.getPluginsFor('testContractFactory').slice(-1)[0];
+
+            const newContract = testContractFactoryPlugin ? testContractFactoryPlugin.testContractFactory(contract, web3) : Test.getWeb3Contract(contract, web3);
             Object.setPrototypeOf(self.contracts[contract.className], newContract);
 
             eachCb();
