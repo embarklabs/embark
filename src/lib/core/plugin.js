@@ -13,6 +13,8 @@ var Plugin = function(options) {
   this.clientWeb3Providers = [];
   this.beforeDeploy = [];
   this.contractsGenerators = [];
+  this.generateCustomContractCode = null;
+  this.testContractFactory = null;
   this.pipeline = [];
   this.pipelineFiles = [];
   this.console = [];
@@ -118,6 +120,16 @@ Plugin.prototype.registerClientWeb3Provider = function(cb) {
 Plugin.prototype.registerContractsGeneration = function(cb) {
   this.contractsGenerators.push(cb);
   this.addPluginType('contractGeneration');
+};
+
+Plugin.prototype.registerCustomContractGenerator = function (cb) {
+  this.generateCustomContractCode = cb;
+  this.addPluginType('customContractGeneration');
+};
+
+Plugin.prototype.registerTestContractFactory = function(cb) {
+  this.testContractFactory = cb;
+  this.addPluginType('testContractFactory');
 };
 
 Plugin.prototype.registerPipeline = function(matcthingFiles, cb) {

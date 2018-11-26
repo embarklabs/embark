@@ -69,6 +69,18 @@ class CodeGenerator {
       cb(self.generateContractCode(contract, gasLimit));
     });
 
+    self.events.setCommandHandler('code-generator:contract:custom', (contract, cb) => {
+      const customCode = self.generateCustomContractCode(contract);
+      if (!customCode) {
+        // Fallback to generate code from vanilla contract generator.
+        //
+        // TODO: can be moved into a afterDeploy event
+        // just need to figure out the gasLimit coupling issue
+        return cb(self.generateContractCode(contract, contract._gasLimit || false));
+      }
+      cb(customCode);
+    });
+
     self.events.setCommandHandler('code-generator:embarkjs:provider-code', (cb) => {
       cb(self.getEmbarkJsProviderCode());
     });
@@ -169,6 +181,14 @@ class CodeGenerator {
     let block = "";
     block += Templates.vanilla_contract({className: contract.className, abi: abi, contract: contract, gasLimit: gasLimit});
     return block;
+  }
+
+  generateCustomContractCode(contract) {
+    const customContractGeneratorPlugin = this.plugins.getPluginsFor('customContractGeneration').splice(-1)[0];
+    if (!customContractGeneratorPlugin) {
+      return null;
+    }
+    return customContractGeneratorPlugin.generateCustomContractCode(contract);
   }
 
   generateNamesInitialization(useEmbarkJS) {
