@@ -36,7 +36,7 @@ class TextEditorToolbar extends Component {
 
   renderTab(tab) {
     return (
-      <NavLink key={tab.label} className={classnames('btn', { active: this.isActiveTab(tab)})} onClick={() => this.props.openAsideTab(tab)}>
+      <NavLink key={tab.label} className={classnames('btn', { active: this.isActiveTab(tab)})} onClick={() => this.props.toggleAsideTab(tab)}>
         <FontAwesomeIcon className="mr-2" name={tab.icon} /> {tab.label}
       </NavLink>
     );
@@ -86,7 +86,7 @@ TextEditorToolbar.propTypes = {
   saveFolder: PropTypes.func,
   remove: PropTypes.func,
   toggleShowHiddenFiles: PropTypes.func,
-  openAsideTab: PropTypes.func,
+  toggleAsideTab: PropTypes.func,
   activeTab: PropTypes.object
 };
 
