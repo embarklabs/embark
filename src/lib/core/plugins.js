@@ -52,27 +52,16 @@ Plugins.prototype.createPlugin = function(pluginName, pluginConfig) {
 };
 
 Plugins.prototype.loadInternalPlugin = function(pluginName, pluginConfig) {
-  var pluginPath = fs.embarkPath('dist/lib/modules/' + pluginName);
+  const pluginPath = fs.embarkPath('dist/lib/modules/' + pluginName);
 
-  var plugin;
-  try {
-    plugin = require(pluginPath);
-    
-    if (plugin.default) {
-      plugin = plugin.default;
-    }
-  } catch(e) {
-    try{
-      pluginPath = fs.embarkPath('modules/' + pluginName);
-      plugin = require(pluginPath);
-    } catch(e2) {
-      this.logger.error(e.message);
-      this.logger.error(e.stack);
-      throw(e2);
-    }
+  let plugin;
+  plugin = require(pluginPath);
+
+  if (plugin.default) {
+    plugin = plugin.default;
   }
 
-  var pluginWrapper = new Plugin({
+  const pluginWrapper = new Plugin({
     name: pluginName,
     pluginModule: plugin,
     pluginConfig: pluginConfig || {},
