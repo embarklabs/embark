@@ -12,6 +12,7 @@ install:
   - rm yarn-1.12.3.msi
   - node --version
   - yarn --version
+  - yarn cache clean
   - yarn install
   - cd embark-ui && yarn install && cd ..
   - git status && node -e "process.exit(require('child_process').execSync('git status --porcelain').toString().trim()===''?0:1)"
