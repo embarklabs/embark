@@ -10,7 +10,7 @@ before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.12.3
   - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 cache:
-  yarn: true
+  yarn: false
 install:
   - yarn install
   - cd embark-ui && yarn install && cd ..
