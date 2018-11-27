@@ -4,6 +4,12 @@ const fundAccount = require('./fundAccount');
 const constants = require('../../constants');
 const Transaction = require('ethereumjs-tx');
 const ethUtil = require('ethereumjs-util');
+const ProviderEngine = require('web3-provider-engine');
+const TransportNodeHid = require('@ledgerhq/hw-transport-node-hid').default;
+const createLedgerSubprovider = require('@ledgerhq/web3-subprovider').default;
+const LedgerAppEth = require('@ledgerhq/hw-transport').default;
+const FetchSubprovider = require('web3-provider-engine/subproviders/fetch.js');
+const WebSocketSubProvider = require('web3-provider-engine/subproviders/websocket.js');
 
 class Provider {
   constructor(options) {
@@ -87,11 +93,46 @@ class Provider {
         const tx = new Transaction(rawData, 'hex');
         const address = '0x' + tx.getSenderAddress().toString('hex').toLowerCase();
 
-        self.getNonce(address, (newNonce) => {
+        self.getNonce(address, async(newNonce) => {
           tx.nonce = newNonce;
-          const key = ethUtil.stripHexPrefix(self.web3.eth.accounts.wallet[address].privateKey);
-          const privKey = Buffer.from(key, 'hex');
-          tx.sign(privKey);
+
+          // then sign the ledger transaction and get the v,r and s values respectively
+          if (this.hardwareWalletConfigs.length > 0) {
+            let transport = null;
+
+            try {
+              // connect to the Ledger
+              if(process.platform === 'darwin') {
+                transport = await TransportNodeHid.open(this.hardwareWalletConfigs[0].devicePath);
+              }
+              else {
+                transport = await TransportNodeHid.create();
+              }
+
+              // sign transaction using Ledger
+              const signature = await new LedgerAppEth(transport).signTransaction("44'/60'/0'/0/0", tx.serialize().toString('hex'));
+
+              // copy the signature parameters and set the correct chainId using the newtowrkId 
+              tx.r = `0x${signature.r}`;
+              tx.s = `0x${signature.s}`;
+              tx.v = `0x${signature.v}`;
+              tx._chainId = this.hardwareWalletConfigs[0].networkId;
+            }
+            catch (error) {
+              self.logger.error("Unable to re-sign ledger transaction because ", (error.message || error.stack) || error);
+              throw error;
+            }
+            finally {
+              if (transport !== null) {
+                transport.close(); // close the transport to ensure it doesn't refuse to connect later
+              }
+            }
+          } else {
+            const key = ethUtil.stripHexPrefix(self.web3.eth.accounts.wallet[address].privateKey);
+            const privKey = Buffer.from(key, 'hex');
+            tx.sign(privKey);
+          }
+       
           payload.params[0] = '0x' + tx.serialize().toString('hex');
           return realSend(payload, (error, result) => {
             self.web3.eth.getTransaction(result.result, () => {
@@ -101,7 +142,7 @@ class Provider {
         });
       }, 1);
 
-      self.provider.send = function(payload, cb) {
+      const sendTransaction = function(payload, cb) {
         if (payload.method === 'eth_accounts') {
           return realSend(payload, function(err, result) {
             if (err) {
@@ -118,6 +159,10 @@ class Provider {
 
         realSend(payload, cb);
       };
+
+      self.provider.send = sendTransaction;
+      self.provider.sendAsync = sendTransaction;
+
       callback();
     });
   }
