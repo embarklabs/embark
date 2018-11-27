@@ -106,13 +106,16 @@ class TextEditor extends React.Component {
     ));
 
     let debuggerLine = this.props.debuggerLine;
-    newDecorations.push({
-      range: new monaco.Range(debuggerLine,1,debuggerLine,1),
-        options: {
-          isWholeLine: true,
-          className: 'text-editor__debuggerLine'
-        }
-    });
+    if (debuggerLine) {
+      newDecorations.push({
+        range: new monaco.Range(debuggerLine, 1, debuggerLine, 1),
+          options: {
+            isWholeLine: true,
+            className: 'text-editor__debuggerLine'
+          }
+      });
+    }
+
     const decorations = editor.deltaDecorations(this.state.decorations, newDecorations);
     this.setState({decorations: decorations});
   }

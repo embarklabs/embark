@@ -47,14 +47,18 @@ class EditorContainer extends React.Component {
   componentDidMount() {
     this.props.fetchEditorTabs();
     this.props.fetchContracts();
-    if (this.props.debuggerTransactionHash) {
-      this.props.fetchTransaction(this.props.debuggerTransactionHash);
-    }
+    this.initializeDebugger(this.props.debuggerTransactionHash);
     window.addEventListener("resize", this.updateDimensions.bind(this));
   }
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions.bind(this));
+  }
+
+  initializeDebugger(debuggerTransactionHash) {
+    if (debuggerTransactionHash) {
+      this.props.fetchTransaction(debuggerTransactionHash);
+    }
   }
 
   updateDimensions() {
@@ -76,7 +80,8 @@ class EditorContainer extends React.Component {
     if(this.props.contracts && this.props.transaction !== prevProps.transaction && this.props.transaction) {
       const debuggingContract = this.props.contracts.find(contract => contract.address === this.props.transaction.to)
       if (debuggingContract) {
-        this.setState({currentAsideTab: TextEditorToolbarTabs.Debugger})
+        const editorWidth = this.getNewEditorWidth(OPERATIONS.LESS)
+        this.setState({currentAsideTab: TextEditorToolbarTabs.Debugger, editorWidth})
         this.props.fetchFile({path: debuggingContract.path});
       }
     }
