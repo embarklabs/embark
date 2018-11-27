@@ -61,9 +61,15 @@ Plugins.prototype.loadInternalPlugin = function(pluginName, pluginConfig) {
     if (plugin.default) {
       plugin = plugin.default;
     }
-  } catch(_e) {
-    pluginPath = fs.embarkPath('modules/' + pluginName);
-    plugin = require(pluginPath);
+  } catch(e) {
+    try{
+      pluginPath = fs.embarkPath('modules/' + pluginName);
+      plugin = require(pluginPath);
+    } catch(e2) {
+      this.logger.error(e.message);
+      this.logger.error(e.stack);
+      throw(e2);
+    }
   }
 
   var pluginWrapper = new Plugin({
