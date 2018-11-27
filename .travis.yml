@@ -12,7 +12,6 @@ before_install:
 cache:
   yarn: true
 install:
-  - yarn cache clean
   - yarn install
   - cd embark-ui && yarn install && cd ..
   - git status && test -z "$(git status --porcelain)"
