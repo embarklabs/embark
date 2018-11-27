@@ -1,1 +1,1 @@
-declare module 'remix-debug-debugtest';
+declare module "remix-debug-debugtest";
