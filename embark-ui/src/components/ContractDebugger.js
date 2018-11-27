@@ -55,11 +55,13 @@ class ContractDebugger extends Component {
       <div>
         <Row>
           <Col>
-            <Input name="txHash" id="txHash" value={this.state.txHash} onChange={(e) => this.handleChange(e)}/>
-            <DebugButton forceDebuggable transaction={{hash: this.state.txHash}} />
+            <Input className="mb-1" name="txHash" id="txHash" value={this.state.txHash} onChange={(e) => this.handleChange(e)}/>
+            <DebugButton forceDebuggable
+                         onClick={() => this.props.startDebug(this.state.txHash)}
+                         transaction={{hash: this.state.txHash}} />
           </Col>
         </Row>
-        <Row>
+        <Row className="mt-2">
           <Col>
             <Button color="light" className="btn-square debugButton jumpBack" alt="jump to previous breakpoint" onClick={(e) => this.debugJumpBack(e)}></Button>
             <Button color="light" className="btn-square debugButton jumpForward" alt="jump to revious breakpoint" onClick={(e) => this.debugJumpForward(e)}></Button>

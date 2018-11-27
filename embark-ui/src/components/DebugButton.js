@@ -8,6 +8,7 @@ import {withRouter} from "react-router-dom";
 class DebugButton extends React.Component {
   onClick() {
     this.props.history.push(`/embark/editor?debuggerTransactionHash=${this.props.transaction.hash}`);
+    this.props.onClick();
   }
 
   isDebuggable() {
@@ -29,10 +30,12 @@ class DebugButton extends React.Component {
 }
 
 DebugButton.defaultProps = {
-  forceDebuggable: false
+  forceDebuggable: false,
+  onClick: () => undefined
 }
 
 DebugButton.propTypes = {
+  onClick: PropTypes.func,
   forceDebuggable: PropTypes.bool,
   history: PropTypes.object,
   transaction: PropTypes.object,
