@@ -47,7 +47,8 @@
   },
   "storage": {
     "init": "init",
-    "initiated": "initiated"
+    "initiated": "initiated",
+    "restart": "restart"
   },
   "tests": {
     "gasLimit": 6000000
