@@ -67,6 +67,7 @@
     "react-redux": "5.1.1",
     "react-router-dom": "4.3.1",
     "react-scroll-to-component": "1.0.2",
+    "react-scripts": "1.1.5",
     "react-treebeard": "2.1.0",
     "reactstrap": "6.5.0",
     "redux": "4.0.1",
