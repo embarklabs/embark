@@ -9,8 +9,6 @@ import Web3 from "web3";
 import { Embark, Events } from "../../../typings/embark";
 import Suggestions from "./suggestions";
 
-declare const __: any;
-
 class Console {
   private embark: Embark;
   private events: Events;

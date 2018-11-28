@@ -1,0 +1,157 @@
+pragma solidity ^0.5.0;
+
+{{#each associations}}
+import "./{{@key}}.sol";
+{{/each}}
+
+contract {{contractName}} {
+
+    uint constant IMPOSSIBLE_INDEX = 99999999999;
+
+    struct {{structName}} {
+    {{#each attributes}}
+        {{this}} {{@key}};
+    {{/each}}
+    }
+
+    {{structName}}[] items;
+
+    {{#each associations}}
+    {{#ifeq this 'hasMany'}}
+    mapping(uint => uint[]) {{lowercase @key}}Mapping;
+    {{/ifeq}}
+    {{#ifeq this 'belongsTo'}}
+    mapping(uint => uint) {{lowercase @key}}Mapping;
+    {{/ifeq}}
+    {{/each}}
+
+    {{#each ipfs}}
+    mapping(uint => string) {{@key}};
+    {{/each}}
+
+    {{#each associations}}
+    {{@key}} {{lowercase @key}};
+    {{/each}}
+
+    event ItemCreated(uint id, address createdBy);
+    event ItemDeleted(uint id, address deletedBy);
+    event ItemUpdated(uint id, address updatedBy);
+
+    constructor({{#each associations}}address _{{@key}}{{#unless @last}}, {{/unless}}{{/each}}) public {
+        {{#each associations}}
+        {{lowercase @key}} = {{@key}}(_{{@key}});
+        {{/each}}
+    }
+
+    function getLength() public view returns(uint count) {
+        return items.length;
+    }
+
+    function add({{#each attributes}}{{this}}{{#ifstring this}} memory{{/ifstring}} _{{@key}}{{#unless @last}}, {{/unless}}{{/each}}) public {
+        uint id = items.length++;
+        items[id] = {{structName}}({
+        {{#each attributes}}
+            {{@key}}: _{{@key}}{{#unless @last}},{{/unless}}
+        {{/each}}
+        });
+
+        {{#each associations}}
+        {{#ifeq this 'hasMany'}}
+        {{lowercase @key}}Mapping[id] = new uint[](0);
+        {{/ifeq}}
+        {{/each}}
+
+        emit ItemCreated(id, msg.sender);
+    }
+
+    function edit(uint _id, {{#each attributes}}{{this}}{{#ifstring this}} memory{{/ifstring}} _{{@key}}{{#unless @last}}, {{/unless}}{{/each}}) public {
+        require(_id < items.length, "Invalid {{structName}} id");
+
+        {{#each attributes}}
+        items[_id].{{@key}} = _{{@key}};
+        {{/each}}
+
+        emit ItemUpdated(_id, msg.sender);
+    }
+
+    function remove(uint _id) public {
+        require(_id < items.length, "Invalid {{structName}} id");
+
+        delete items[_id];
+        emit ItemDeleted(_id, msg.sender);
+    }
+
+    function get(uint _id) public view returns ({{#each attributes}}{{this}}{{#ifstring this}} memory{{/ifstring}}{{#unless @last}}, {{/unless}}{{/each}}) {
+        require(_id < items.length, "Invalid {{structName}} id");
+        return ({{#each attributes}}items[_id].{{@key}}{{#unless @last}},{{/unless}}{{/each}});
+    }
+
+    {{#each ipfs}}
+    function add{{capitalize @key}}(uint _id, string memory _{{@key}}) public {
+        require(_id < items.length, "Invalid {{structName}} id");
+
+        {{@key}}[_id] = _{{@key}};
+    }
+
+    function remove{{capitalize @key}}(uint _id) public {
+        require(_id < items.length, "Invalid {{structName}} id");
+
+        {{@key}}[_id] = "";
+    }
+
+    function get{{capitalize @key}}(uint _id) public view returns(string memory) {
+        require(_id < items.length, "Invalid {{structName}} id");
+
+        return {{@key}}[_id];
+    }
+
+    {{/each}}
+    {{#each associations}}
+    function add{{capitalize @key}}(uint _id, uint _{{@key}}Id) public {
+        require(_id < items.length, "Invalid {{structName}} id");
+        require(_{{@key}}Id < {{lowercase @key}}.getLength(), "Invalid {{@key}} id");
+
+        {{#ifeq this 'hasMany'}}
+        uint index = indexOf({{lowercase @key}}Mapping[_id], _{{@key}}Id);
+        require(index == IMPOSSIBLE_INDEX, "_{{@key}}Id already added");
+
+        {{lowercase @key}}Mapping[_id].push(_{{@key}}Id);
+        {{/ifeq}}
+        {{#ifeq this 'belongsTo'}}
+        {{lowercase @key}}Mapping[_id] = _{{@key}}Id;
+        {{/ifeq}}
+
+    }
+
+    function remove{{capitalize @key}}(uint _id, uint _{{@key}}Id) public {
+        require(_id < items.length, "Invalid {{structName}} id");
+        require(_{{@key}}Id < {{lowercase @key}}.getLength(), "Invalid {{@key}} id");
+
+        {{#ifeq this 'hasMany'}}
+        uint index = indexOf({{lowercase @key}}Mapping[_id], _{{@key}}Id);
+        require(index != IMPOSSIBLE_INDEX, "_{{@key}}Id not found");
+
+        delete {{lowercase @key}}Mapping[_id][index];
+        {{/ifeq}}
+        {{#ifeq this 'belongsTo'}}
+        {{lowercase @key}}Mapping[_id] = 0;
+        {{/ifeq}}
+    }
+
+    function get{{capitalize @key}}(uint _id) public view returns(uint{{#ifeq this 'hasMany'}}[] memory{{/ifeq}}) {
+        require(_id < items.length, "Invalid {{structName}} id");
+
+        return {{lowercase @key}}Mapping[_id];
+    }
+
+    {{/each}}
+
+    function indexOf(uint[] storage values, uint value) private view returns(uint) {
+        for (uint i = 0; i < values.length; i++) {
+            if (values[i] == value) {
+                return i;
+            }
+        }
+        return IMPOSSIBLE_INDEX;
+    }
+}
