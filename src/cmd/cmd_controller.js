@@ -471,9 +471,8 @@ class EmbarkController {
         callback();
       },
       function generateContract(callback) {
-        engine.events.request('scaffolding:generate:contract', options, function(err, file) {
-          // Add contract file to the manager
-          engine.events.request('config:contractsFiles:add', file);
+        engine.events.request('scaffolding:generate:contract', options, function(files) {
+          files.forEach(file => engine.events.request('config:contractsFiles:add', file));
           callback();
         });
       },

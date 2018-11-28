@@ -5,7 +5,7 @@ export interface Events {
   request: any;
   emit: any;
   once: any;
-  setCommandHandler: any;
+  setCommandHandler(name: string, callback: (options: any, cb: () => void) => void): void;
 }
 
 export interface Embark {
@@ -13,6 +13,13 @@ export interface Embark {
   registerAPICall: any;
   registerConsoleCommand: any;
   logger: Logger;
-  config: {};
+  config: {
+    embarkConfig: {
+      contracts: string[] | string;
+      config: {
+        contracts: string;
+      };
+    };
+  };
   registerActionForEvent(name: string, action: (callback: () => void) => void): void;
 }

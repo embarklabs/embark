@@ -311,39 +311,12 @@ class Cmd {
 
   scaffold() {
     program
-      .command('scaffold [contract] [fields...]')
+      .command('scaffold [contractOrFile] [fields...]')
       .option('--framework <framework>', 'UI framework to use. (default: react)')
       .option('--contract-language <language>', 'Language used for the smart contract generation (default: solidity)')
       .option('--overwrite', 'Overwrite existing files. (default: false)')
       .description(__('Generates a contract and a function tester for you\nExample: ContractName field1:uint field2:address --contract-language solidity --framework react'))
-      .action(function(contract, fields, options) {
-        if (contract === undefined) {
-          console.log("contract name is required");
-          process.exit(0);
-        }
-
-        let fieldMapping = {};
-        if (fields.length > 0) {
-          const typeRegex = /^(u?int[0-9]{0,3}(\[\])?|string|bool|address|bytes[0-9]{0,3})(\[\])?$/;
-          const varRegex = /^[a-zA-Z][a-zA-Z0-9_]*$/;
-          fieldMapping = fields.reduce((acc, curr) => {
-            const c = curr.split(':');
-
-            if (!varRegex.test(c[0])) {
-              console.log("Invalid variable name: " + c[0]);
-              process.exit(1);
-            }
-
-            if (!typeRegex.test(c[1])) {
-              console.log("Invalid datatype: " + c[1] + " - The dApp generator might not support this type at the moment");
-              process.exit(1);
-            }
-
-            acc[c[0]] = c[1];
-            return acc;
-          }, {});
-        }
-
+      .action(function(contractOrFile, fields, options) {
         i18n.setOrDetectLocale(options.locale);
         options.env = 'development';
         options.logFile = options.logfile; // fix casing
@@ -351,11 +324,8 @@ class Cmd {
         options.onlyCompile = options.contracts;
         options.client = options.client || 'geth';
         options.webpackConfigName = options.pipeline || 'development';
-        options.contract = contract;
-        options.framework = options.framework || 'react';
-        options.contractLanguage = options.contractLanguage || 'solidity';
-        options.overwrite = options.overwrite || false;
-        options.fields = fieldMapping;
+        options.contractOrFile = contractOrFile;
+        options.fields = fields;
 
         embark.scaffold(options);
       });
