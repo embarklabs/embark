@@ -61,7 +61,13 @@ var path = require('path');
 var parseJsonWithErrors = require('json-parse-better-errors');
 var pkgUp = require('pkg-up');
 var semver = require('semver');
-var subdir = require('subdir');
+var subdir = function (pdir_, dir_) {
+  var pdir = path.resolve(path.normalize(pdir_)) + (path.sep || '/');
+  var dir = path.resolve(pdir, path.normalize(dir_));
+  if (pdir === '//') pdir = '/';
+  if (pdir === dir) return false;
+  return dir.slice(0, pdir.length) === pdir;
+};
 
 // -- embark bins --------------------------------------------------------------
 
