@@ -21,6 +21,7 @@ class StorageProcessesLauncher {
     this.embark = options.embark;
     this.processes = {};
     this.corsParts = options.corsParts || [];
+    this.restartCalled = false;
 
     this.cors = this.buildCors();
 
@@ -81,6 +82,10 @@ class StorageProcessesLauncher {
   }
 
   processExited(storageName, code) {
+    if(this.restartCalled){
+      this.restartCalled = false;
+      return this.launchProcess(storageName, () => {});
+    }
     this.logger.error(__(`Storage process for {{storageName}} ended before the end of this process. Code: {{code}}`, {storageName, code}));
   }
 
@@ -143,6 +148,13 @@ class StorageProcessesLauncher {
         }
         self.logger.info(__(`${storageName} process started`).cyan);
         callback();
+      });
+
+      self.processes[storageName].on('result', constants.storage.restart, (_msg) => {
+        self.restartCalled = true;
+        self.logger.info(__(`Restarting ${storageName} process...`).cyan);
+        self.processes[storageName].kill();
+        delete this.processes[storageName];
       });
 
       self.events.on('logs:swarm:enable', () => {

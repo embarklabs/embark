@@ -62,7 +62,7 @@ function httpsGet(url, callback) {
 function httpGetJson(url, callback) {
   httpGetRequest(http, url, function (err, body) {
     try {
-      let parsed = JSON.parse(body);
+      let parsed = body && JSON.parse(body);
       return callback(err, parsed);
     } catch (e) {
       return callback(e);

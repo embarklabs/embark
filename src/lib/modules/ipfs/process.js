@@ -62,40 +62,26 @@ class IPFSProcess extends ProcessWrapper {
       else if (!self.readyCalled && data.indexOf('Daemon is ready') > -1) {
         self.readyCalled = true;
 
-        // update IPFS cors before spawning a daemon (muhaha)
-        let ipfsCorsCmd = `${self.command} config --json API.HTTPHeaders.Access-Control-Allow-Origin "[\\"${self.cors.join('\\", \\"')}\\"]"`;
-        console.trace(`Updating IPFS CORS using command: ${ipfsCorsCmd}`);
-        child_process.exec(ipfsCorsCmd, {silent: true}, (err, stdout, _stderr) => {
+        // check cors config before updating if needed
+        self.getCorsConfig((err, config) => {
           if(err){
-            err = err.toString();
-            console.error('IPFS CORS update error: ', err);
+            return console.error('Error getting IPFS CORS config: ', err);
           }
-          if(_stderr){
-            _stderr = _stderr.toString();
-            console.error(`IPFS CORS update error: ${_stderr}`);
-          }
-          child_process.exec(self.command + ' config --json API.HTTPHeaders.Access-Control-Allow-Credentials "[\\"true\\"]"', {silent: true}, (err, stdout, _stderr) => {
-            if(err){
-              err = err.toString();
-              console.error('IPFS CORS update error: ', err);
-            }
-            if(_stderr){
-              _stderr = _stderr.toString();
-              console.error(`IPFS CORS update error: ${_stderr}`);
-            }
-            child_process.exec(self.command + ' config --json API.HTTPHeaders.Access-Control-Allow-Methods "[\\"PUT\\", \\"POST\\", \\"GET\\"]"', {silent: true}, (err, stdout, _stderr) => {
+          let corsConfig = new Set(JSON.parse(config));
+          // test to ensure we have all cors needed
+          const needsUpdate = !self.cors.every(address => corsConfig.has(address));
+          if(needsUpdate){
+            // update IPFS cors config
+            return self.updateCorsConfig(err => {
               if(err){
-                err = err.toString();
                 console.error('IPFS CORS update error: ', err);
               }
-              if(_stderr){
-                _stderr = _stderr.toString();
-                console.error(`IPFS CORS update error: ${_stderr}`);
-              }
-
-              self.send({result: constants.storage.initiated});
+              self.send({result: constants.storage.restart}, () => {
+                childProcess.kill();
+              });
             });
-          });
+          }
+          self.send({result: constants.storage.initiated});
         });
       }
       console.log('IPFS: ' + data);
@@ -104,6 +90,43 @@ class IPFSProcess extends ProcessWrapper {
       if (code) {
         console.error('IPFS exited with error code ' + code);
       }
+    });
+  }
+
+  getCorsConfig(cb){
+    let ipfsCorsCmd = `${this.command} config API.HTTPHeaders.Access-Control-Allow-Origin`;
+
+    child_process.exec(ipfsCorsCmd, {silent: true}, (err, stdout, stderr) => {
+      if(err || stderr){
+        err = (err || stderr).toString();
+        return cb(err);
+      }
+      cb(null, stdout);
+    });
+  }
+
+  updateCorsConfig(cb){
+    // update IPFS cors before spawning a daemon (muhaha)
+    let ipfsCorsCmd = `${this.command} config --json API.HTTPHeaders.Access-Control-Allow-Origin "[\\"${this.cors.join('\\", \\"')}\\"]"`;
+    console.trace(`Updating IPFS CORS using command: ${ipfsCorsCmd}`);
+    child_process.exec(ipfsCorsCmd, {silent: true}, (err, _stdout, stderr) => {
+      if(err || stderr){
+        err = (err || stderr).toString();
+        return cb(err);
+      }
+      child_process.exec(this.command + ' config --json API.HTTPHeaders.Access-Control-Allow-Credentials "[\\"true\\"]"', {silent: true}, (err, _stdout, stderr) => {
+        if(err || stderr){
+          err = (err || stderr).toString();
+          return cb(err);
+        }
+        child_process.exec(this.command + ' config --json API.HTTPHeaders.Access-Control-Allow-Methods "[\\"PUT\\", \\"POST\\", \\"GET\\"]"', {silent: true}, (err, stdout, stderr) => {
+          if(err || stderr){
+            err = (err || stderr).toString();
+            return cb(err);
+          }
+          cb(null, stdout);
+        });
+      });
     });
   }
 
