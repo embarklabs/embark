@@ -334,9 +334,25 @@ function hashTo32ByteHexString(hash) {
   return '0x' + multihash.toHexString(digest);
 }
 
-function isValidDomain(domain) {
-  const isValidDomain = require('is-valid-domain');
-  return isValidDomain(domain);
+function isValidDomain(v) {
+  // from: https://github.com/miguelmota/is-valid-domain
+  if (typeof v !== 'string') return false;
+
+  var parts = v.split('.');
+  if (parts.length <= 1) return false;
+
+  var tld = parts.pop();
+  var tldRegex = /^(?:xn--)?[a-zA-Z0-9]+$/gi;
+
+  if (!tldRegex.test(tld)) return false;
+
+  var isValid = parts.every(function(host) {
+    var hostRegex = /^(?!:\/\/)([a-zA-Z0-9]+|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])$/gi;
+
+    return hostRegex.test(host);
+  });
+
+  return isValid;
 }
 
 function decodeParams(typesArray, hexString) {
