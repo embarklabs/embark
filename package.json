@@ -109,7 +109,6 @@
     "express": "4.16.3",
     "express-ws": "4.0.0",
     "file-loader": "2.0.0",
-    "finalhandler": "1.1.1",
     "find-up": "2.1.0",
     "flatted": "0.2.3",
     "follow-redirects": "1.5.7",
