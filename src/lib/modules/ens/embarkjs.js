@@ -2,6 +2,7 @@
 
 let __embarkENS = {};
 
+const NOT_REGISTERED_ERROR = 'Name not yet registered';
 // resolver interface
 __embarkENS.resolverInterface = [
   {
@@ -189,16 +190,21 @@ __embarkENS.resolve = function (name, callback) {
     callback(err, addr);
   }
 
-  return this.ens.methods.resolver(node).call((err, resolverAddress) => {
-    if (err) {
-      return cb(err);
-    }
-    if (resolverAddress === voidAddress) {
-      return cb('Name not yet registered');
-    }
-    let resolverContract = new EmbarkJS.Blockchain.Contract({abi: this.resolverInterface, address: resolverAddress, web3: web3});
-    resolverContract.methods.addr(node).call(cb);
-  });
+  return this.ens.methods.resolver(node).call()
+    .then(resolverAddress => {
+      if (resolverAddress === voidAddress) {
+        return cb(NOT_REGISTERED_ERROR);
+      }
+      let resolverContract = new EmbarkJS.Blockchain.Contract({
+        abi: this.resolverInterface,
+        address: resolverAddress,
+        web3: web3
+      });
+      return resolverContract.methods.addr(node).call(cb);
+    })
+    .catch(err => {
+      cb(err);
+    });
 };
 
 __embarkENS.lookup = function (address, callback) {
@@ -221,16 +227,21 @@ __embarkENS.lookup = function (address, callback) {
     return callback(err, name);
   }
 
-  return this.ens.methods.resolver(node).call((err, resolverAddress) => {
-    if (err) {
-      return cb(err);
-    }
-    if (resolverAddress === voidAddress) {
-      return cb('Address not associated to a resolver');
-    }
-    let resolverContract = new EmbarkJS.Blockchain.Contract({abi: this.resolverInterface, address: resolverAddress, web3: web3});
-    resolverContract.methods.name(node).call(cb);
-  });
+  return this.ens.methods.resolver(node).call()
+    .then(resolverAddress => {
+      if (resolverAddress === voidAddress) {
+        return cb('Address not associated to a resolver');
+      }
+      const resolverContract = new EmbarkJS.Blockchain.Contract({
+        abi: this.resolverInterface,
+        address: resolverAddress,
+        web3: web3
+      });
+      return resolverContract.methods.name(node).call(cb);
+    })
+    .catch(err => {
+      cb(err);
+    });
 };
 
 __embarkENS.registerSubDomain = function (name, address, callback) {
