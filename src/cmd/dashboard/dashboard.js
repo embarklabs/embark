@@ -1,4 +1,4 @@
-let windowSize = require('window-size');
+const { getWindowSize } = require('../../lib/utils/utils.js');
 
 let Monitor = require('./monitor.js');
 
@@ -15,7 +15,7 @@ class Dashboard {
   }
 
   checkWindowSize() {
-    let size = windowSize.get();
+    let size = getWindowSize();
     if (size.height < 40 || size.width < 118) {
       this.logger.warn(__("tip: you can resize the terminal or disable the dashboard with") + " embark run --nodashboard".bold.underline);
     }
