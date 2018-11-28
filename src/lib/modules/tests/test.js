@@ -311,19 +311,27 @@ class Test {
   }
 
   require(path) {
-    const prefix = 'Embark/contracts/';
-    if (!path.startsWith(prefix)) {
-      throw new Error(__('Unknown module %s', path));
-    }
-    let contractName = path.replace(prefix, "");
-    let contract = this.contracts[contractName];
-    if (contract) {
-      return contract;
+    const [contractsPrefix, embarkJSPrefix] = ['Embark/contracts/', 'Embark/EmbarkJS'];
+
+    // Contract require
+    if (path.startsWith(contractsPrefix)) {
+      const contractName = path.replace(contractsPrefix, "");
+      const contract = this.contracts[contractName];
+      if (contract) {
+        return contract;
+      }
+
+      const newContract = {};
+      this.contracts[contractName] = newContract;
+      return newContract;
     }
 
-    let newContract = {};
-    this.contracts[contractName] = newContract;
-    return newContract;
+    // EmbarkJS require
+    if (path.startsWith(embarkJSPrefix)) {
+      return EmbarkJS;
+    }
+
+    throw new Error(__('Unknown module %s', path));
   }
 }
 

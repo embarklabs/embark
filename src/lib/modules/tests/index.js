@@ -145,7 +145,7 @@ class TestRunner {
         const Module = require('module');
         const originalRequire = require('module').prototype.require;
         Module.prototype.require = function (requireName) {
-          if (requireName.startsWith('Embark/contracts')) {
+          if (requireName.startsWith('Embark')) {
             return test.require(...arguments);
           }
           return originalRequire.apply(this, arguments);
