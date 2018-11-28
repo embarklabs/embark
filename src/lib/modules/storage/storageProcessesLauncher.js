@@ -116,8 +116,8 @@ class StorageProcessesLauncher {
         silent: self.logger.logLevel !== 'trace',
         exitCallback: self.processExited.bind(this, storageName)
       });
-      this.events.once("blockchain:ready", () => {
-        this.events.request("blockchain:object", (blockchain) => {
+      this.events.request("blockchain:object", (blockchain) => {
+        blockchain.onReady(() => {
           blockchain.determineDefaultAccount((err, defaultAccount) => {
             if (err) {
               return callback(err);

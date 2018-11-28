@@ -282,7 +282,7 @@ class Engine {
       wait: options.wait
     });
 
-    this.registerModule('whisper');
+    this.registerModule('whisper', options);
   }
 
   libraryManagerService(_options) {

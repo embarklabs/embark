@@ -10,13 +10,18 @@ const {canonicalHost, defaultHost} = require('../../utils/host');
 
 class Whisper {
 
-  constructor(embark, _options) {
+  constructor(embark, options) {
     this.logger = embark.logger;
     this.events = embark.events;
     this.communicationConfig = embark.config.communicationConfig;
     this.web3 = new Web3();
     this.embark = embark;
     this.web3Ready = false;
+
+    if (embark.currentContext.includes('test') && options.node &&options.node === 'vm') {
+      this.logger.info(__('Whisper disabled in the tests'));
+      return;
+    }
 
     if (!this.communicationConfig.enabled) {
       return;

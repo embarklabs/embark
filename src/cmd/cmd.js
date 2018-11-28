@@ -2,7 +2,6 @@ const program = require('commander');
 const EmbarkController = require('./cmd_controller.js');
 const i18n = require('../lib/core/i18n/i18n.js');
 const fs = require('../lib/core/fs.js');
-const utils = require('../lib/utils/utils.js');
 
 let embark = new EmbarkController();
 
@@ -124,7 +123,6 @@ class Cmd {
         _options.logFile = _options.logfile; // fix casing
         _options.logLevel = _options.loglevel; // fix casing
         _options.onlyCompile = _options.contracts;
-        _options.client = _options.client;
         _options.webpackConfigName = _options.pipeline || 'production';
         embark.build(_options);
       });
@@ -147,9 +145,6 @@ class Cmd {
       .description(__('run dapp (default: %s)', 'development'))
       .action(function(env, options) {
         i18n.setOrDetectLocale(options.locale);
-        const nullify = (v) => {
-          return (!v || typeof v !== 'string') ? null : v;
-        };
         embark.run({
           env: env || 'development',
           serverPort: options.port,
@@ -235,6 +230,7 @@ class Cmd {
   test() {
     program
       .command('test [file]')
+      .option('-e, --env <env>', __('configuration environment to use (default: development)'))
       .option('-n , --node <node>', __('node for running the tests ["vm", "embark", <endpoint>] (default: vm)\n') +
               '                       vm - ' + __('start and use an Ethereum simulator (ganache)') + '\n' +
               '                       embark - ' + __('use the node of a running embark process') + '\n' +
@@ -262,7 +258,7 @@ class Cmd {
         }
         i18n.setOrDetectLocale(options.locale);
         embark.runTests({file, solc:options.solc, logLevel: options.loglevel, gasDetails: options.gasDetails,
-          node: options.node, coverage: options.coverage, noBrowser: options.nobrowser});
+          node: options.node, coverage: options.coverage, noBrowser: options.nobrowser, env: options.env || 'development'});
       });
   }
 
@@ -286,7 +282,6 @@ class Cmd {
         _options.ensDomain = _options.ens;
         _options.logFile = _options.logfile; // fix casing
         _options.logLevel = _options.loglevel; // fix casing
-        _options.client = _options.client;
         _options.webpackConfigName = _options.pipeline || 'production';
         embark.upload(_options);
       });
@@ -425,7 +420,7 @@ class Cmd {
 
         let suggestion;
 
-        if (cmd == 'compile') {
+        if (cmd === 'compile') {
           // we bypass `utils.proposeAlternative()` here as `build` isn't
           // similar enough
           suggestion = 'build --contracts';
