@@ -9,6 +9,7 @@ import { ZERO_ADDRESS } from '../../utils/addressUtils';
 import {ens} from '../../constants';
 
 const ENS_WHITELIST = ens.whitelist;
+const NOT_REGISTERED_ERROR = 'Name not yet registered';
 
 const MAINNET_ID = '1';
 const ROPSTEN_ID = '3';
@@ -183,7 +184,7 @@ class ENS {
             return cb(err);
           }
           if (resolverAddress === ZERO_ADDRESS) {
-            return cb('Name not yet registered');
+            return cb(NOT_REGISTERED_ERROR);
           }
           next(null, resolverAddress);
         });
@@ -227,9 +228,9 @@ class ENS {
             return eachCb();
           }
 
-          if (error) {
-            this.logger.error(error);
-            return eachCb();
+          if (error !== NOT_REGISTERED_ERROR) {
+            this.logger.error(__('Error resolving %s', `${subDomainName}.${this.registration.rootDomain}`));
+            return eachCb(error);
           }
 
           const reverseNode = utils.soliditySha3(address.toLowerCase().substr(2) + reverseAddrSuffix);
@@ -485,7 +486,7 @@ class ENS {
             return next(err);
           }
           if(resolverAddress === ZERO_ADDRESS) {
-            return next('Name not yet registered');
+            return next(NOT_REGISTERED_ERROR);
           }
           next(null, resolverAddress);
         });
@@ -500,13 +501,7 @@ class ENS {
       function resolveName(resolverContract, next) {
         resolverContract.methods.addr(hashedName).call(next);
       }
-    ], (err, result) => {
-      if (err) {
-        self.logger.error(__('Failed to resolve the ENS name: %s', name));
-        return cb(err);
-      }
-      cb(null, result);
-    });
+    ], cb);
   }
 
   isENSName(name, callback = () => {}) {
