@@ -11050,11 +11050,6 @@ style-loader@0.23.1:
     loader-utils "^1.1.0"
     schema-utils "^1.0.0"
 
-subdir@0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/subdir/-/subdir-0.0.3.tgz#d9a7d3f8c221a0d951b1ca1cfcf5a3147dc3e1a1"
-  integrity sha1-2afT+MIhoNlRscoc/PWjFH3D4aE=
-
 supports-color@5.4.0:
   version "5.4.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-5.4.0.tgz#1c6b337402c2137605efe19f10fec390f6faab54"
