@@ -6785,11 +6785,6 @@ is-utf8@^0.2.0:
   resolved "https://registry.yarnpkg.com/is-utf8/-/is-utf8-0.2.1.tgz#4b0da1442104d1b336340e80797e865cf39f7d72"
   integrity sha1-Sw2hRCEE0bM2NA6AeX6GXPOffXI=
 
-is-valid-domain@0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/is-valid-domain/-/is-valid-domain-0.0.5.tgz#48e70319fcb43009236e96b37f9843889ce7b513"
-  integrity sha1-SOcDGfy0MAkjbpazf5hDiJzntRM=
-
 is-windows@^1.0.0, is-windows@^1.0.1, is-windows@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/is-windows/-/is-windows-1.0.2.tgz#d1850eb9791ecd18e6182ce12a30f396634bb19d"
