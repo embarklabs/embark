@@ -4,7 +4,6 @@ const {canonicalHost, defaultHost, dockerHostSwap} = require('../../utils/host')
 const expressWebSocket = require('express-ws');
 const express = require('express');
 const fs = require('../../core/fs');
-require('http-shutdown').extend();
 var cors = require('cors');
 let path = require('path');
 var bodyParser = require('body-parser');

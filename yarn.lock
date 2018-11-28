@@ -6181,11 +6181,6 @@ http-proxy@^1.17.0:
     follow-redirects "^1.0.0"
     requires-port "^1.0.0"
 
-http-shutdown@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/http-shutdown/-/http-shutdown-1.2.0.tgz#df2d8067a8856e99d11e9dceb21609591e1df514"
-  integrity sha1-3y2AZ6iFbpnRHp3OshYJWR4d9RQ=
-
 http-signature@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/http-signature/-/http-signature-1.2.0.tgz#9aecd925114772f3d95b65a60abb8f7c18fbace1"
