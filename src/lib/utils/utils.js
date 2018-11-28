@@ -1,5 +1,6 @@
 let http = require('follow-redirects').http;
 let https = require('follow-redirects').https;
+let toposortGraph = require('./toposort.js');
 const {canonicalHost} = require('./host');
 
 const balanceRegex = /([0-9]+) ?([a-zA-Z]*)/;
@@ -570,6 +571,10 @@ function getWindowSize() {
   return windowSize.get();
 }
 
+function toposort(graph) {
+  return toposortGraph(graph);
+}
+
 module.exports = {
   joinPath,
   dirname,
@@ -617,5 +622,6 @@ module.exports = {
   copyToClipboard,
   fuzzySearch,
   jsonFunctionReplacer,
-  getWindowSize
+  getWindowSize,
+  toposort
 };

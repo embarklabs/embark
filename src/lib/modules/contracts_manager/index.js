@@ -1,4 +1,3 @@
-let toposort = require('toposort');
 let async = require('async');
 const cloneDeep = require('clone-deep');
 
@@ -544,7 +543,7 @@ class ContractsManager {
     let orderedDependencies;
 
     try {
-      orderedDependencies = toposort(converted_dependencies.filter((x) => x[0] !== x[1])).reverse();
+      orderedDependencies = utils.toposort(converted_dependencies.filter((x) => x[0] !== x[1])).reverse();
     } catch (e) {
       this.logger.error((__("Error: ") + e.message).red);
       this.logger.error(__("there are two or more contracts that depend on each other in a cyclic manner").bold.red);
