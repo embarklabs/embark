@@ -565,6 +565,11 @@ function jsonFunctionReplacer(_key, value) {
   return value;
 }
 
+function getWindowSize() {
+  const windowSize = require('window-size');
+  return windowSize.get();
+}
+
 module.exports = {
   joinPath,
   dirname,
@@ -611,5 +616,6 @@ module.exports = {
   fileTreeSort,
   copyToClipboard,
   fuzzySearch,
-  jsonFunctionReplacer
+  jsonFunctionReplacer,
+  getWindowSize
 };
