@@ -16,7 +16,7 @@ class ConsoleListener {
 
     this._listenForLogRequests();
     this._registerAPI();
-    
+
     this.events.on("contracts:log", this._saveLog.bind(this));
     this.events.on('outputDone', () => {
       this.outputDone = true;
@@ -80,6 +80,19 @@ class ConsoleListener {
 
   _listenForLogRequests() {
     if (this.ipc.ipcRole !== 'server') return;
+    this.events.on('deploy:contract:receipt', receipt => {
+      this.events.emit('contracts:log', {
+        name: receipt.className,
+        functionName: 'constructor',
+        paramString: '',
+        address: receipt.contractAddress,
+        status: receipt.status,
+        gasUsed: receipt.gasUsed,
+        blockNumber: receipt.blockNumber,
+        transactionHash: receipt.transactionHash
+      });
+    });
+
     this.ipc.on('log', (request) => {
       if (request.type !== 'contract-log') {
         return this.logger.info(JSON.stringify(request));

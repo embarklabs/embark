@@ -117,11 +117,44 @@ class ContractsManager {
             try {
               const gas = await contractObj.methods[req.body.method].apply(this, req.body.inputs).estimateGas();
               contractObj.methods[req.body.method].apply(this, req.body.inputs)[funcCall]({from: account, gasPrice: req.body.gasPrice, gas: Math.floor(gas)}, (error, result) => {
+                const paramString = abi.inputs.map((input, idx) => {
+                  const quote = input.type.indexOf("int") === -1 ? '"' : '';
+                  return quote + req.body.inputs[idx] + quote;
+                }).join(', ');
+
+                let contractLog = {
+                  name: req.body.contractName,
+                  functionName: req.body.method,
+                  paramString: paramString,
+                  address: contract.deployedAddress,
+                  status: '0x0'
+                };
+
                 if (error) {
+                  self.events.emit('contracts:log', contractLog);
                   return res.send({result: error.message});
                 }
 
-                res.send({result});
+                if(funcCall === 'call') {
+                  contractLog.status = '0x1';
+                  self.events.emit('contracts:log', contractLog);
+                  return res.send({result});
+                }
+
+                self.events.request("blockchain:get", web3 => {
+                  web3.eth.getTransaction(result, (err, tx) => {
+                    contractLog = Object.assign(contractLog, {
+                      data: tx.input,
+                      status: '0x1',
+                      gasUsed: tx.gas,
+                      blockNumber: tx.blockNumber,
+                      transactionHash: tx.hash
+                    });
+
+                    self.events.emit('contracts:log', contractLog);
+                    res.send({result});
+                  });
+                });
               });
             } catch (e) {
               if (funcCall === 'call' && e.message === constants.blockchain.gasAllowanceError) {
