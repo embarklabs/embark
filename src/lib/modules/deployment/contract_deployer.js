@@ -300,7 +300,8 @@ class ContractDeployer {
           contract.deployedAddress = receipt.contractAddress;
           contract.transactionHash = receipt.transactionHash;
           receipt.className = contract.className;
-          self.events.emit("deploy:contract:receipt", receipt);
+
+          if(receipt) self.events.emit("deploy:contract:receipt", receipt);
           self.events.emit("deploy:contract:deployed", contract);
 
 
