@@ -75,7 +75,11 @@ export default class Suggestions {
     suggestions.push({value: "web3", command_type: "javascript object", description: "instantiated web3.js object configured to the current environment"});
     suggestions.push({value: "EmbarkJS", command_type: "javascript object", description: "EmbarkJS static functions for Storage, Messages, Names, etc."});
 
-    if (cmd.indexOf(".") > 0) {
+    if (cmd.indexOf(".") <= 0) {
+      return cb(fuzzySearch(cmd, suggestions, (suggestion: Suggestion) => suggestion.value + " " + suggestion.description).map((x: any) => x.original));
+    }
+
+    try {
       const toRemove: string = "." + cmd.split(".").reverse()[0];
       const cmdToSearch: string = cmd.replace((new RegExp(toRemove + "$")), "");
       return this.events.request("runcode:eval", "Object.keys(" + cmdToSearch + ")", (err: any, result: any) => {
@@ -90,6 +94,7 @@ export default class Suggestions {
 
         return cb(fuzzySearch(cmd, suggestions, (suggestion: Suggestion) => suggestion.value + " " + suggestion.description).map((x: any) => x.original));
       }, false, true);
+    } catch (e) {
     }
 
     return cb(fuzzySearch(cmd, suggestions, (suggestion: Suggestion) => suggestion.value + " " + suggestion.description).map((x: any) => x.original));
