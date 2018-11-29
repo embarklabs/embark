@@ -1,4 +1,18 @@
-let async = require('../../utils/async_extend.js');
+// let async = require('../../utils/async_extend.js');
+let async = require('async');
+let faker = require('faker')
+
+function asyncEachObject(object, iterator, callback) {
+  async.each(
+    Object.keys(object || {}),
+    function (key, next) {
+      iterator(key, object[key], next);
+    },
+    callback
+  );
+}
+
+async.eachObject = asyncEachObject;
 
 class Compiler {
   constructor(embark, options) {
@@ -8,6 +22,10 @@ class Compiler {
     this.logger = embark.logger;
 
     this.disableOptimizations = options.disableOptimizations;
+
+    this.logger.info("======================");
+    this.logger.info(faker.name.findName());
+    this.logger.info("======================");
 
     this.events.setCommandHandler("compiler:contracts", function(contractFiles, options, cb) {
       self.compile_contracts(contractFiles, options, cb);
