@@ -490,7 +490,7 @@ function getWeiBalanceFromString(balanceString, web3){
     throw new Error(__('Unrecognized balance string "%s"', balanceString));
   }
   if (!match[2]) {
-    return web3.utils.toHex(parseInt(match[1], 10));
+    return web3.utils.toHex(match[1]);
   }
 
   return web3.utils.toWei(match[1], match[2]);
@@ -511,7 +511,7 @@ function getHexBalanceFromString(balanceString, web3) {
     throw new Error(__('Unrecognized balance string "%s"', balanceString));
   }
   if (!match[2]) {
-    return web3.utils.toHex(parseInt(match[1], 10));
+    return web3.utils.toHex(match[1]);
   }
 
   return web3.utils.toHex(web3.utils.toWei(match[1], match[2]));

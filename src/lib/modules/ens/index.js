@@ -135,33 +135,38 @@ class ENS {
     this.embark.registerActionForEvent("deploy:beforeAll", this.configureContractsAndRegister.bind(this));
     this.events.on('blockchain:reseted', this.reset.bind(this));
     this.events.setCommandHandler("storage:ens:associate", this.associateStorageToEns.bind(this));
+    this.events.setCommandHandler("ens:config", this.getEnsConfig.bind(this));
+  }
+
+  getEnsConfig(cb) {
+    cb({
+      env: this.env,
+      registration: this.registration,
+      registryAbi: this.ensConfig.ENSRegistry.abiDefinition,
+      registryAddress: this.ensConfig.ENSRegistry.deployedAddress,
+      registrarAbi: this.ensConfig.FIFSRegistrar.abiDefinition,
+      registrarAddress: this.ensConfig.FIFSRegistrar.deployedAddress,
+      resolverAbi: this.ensConfig.Resolver.abiDefinition,
+      resolverAddress: this.ensConfig.Resolver.deployedAddress
+    });
   }
 
   setProviderAndRegisterDomains(cb = (() => {})) {
     const self = this;
-    let config = {
-      env: self.env,
-      registration: self.registration,
-      registryAbi: self.ensConfig.ENSRegistry.abiDefinition,
-      registryAddress: self.ensConfig.ENSRegistry.deployedAddress,
-      registrarAbi: self.ensConfig.FIFSRegistrar.abiDefinition,
-      registrarAddress: self.ensConfig.FIFSRegistrar.deployedAddress,
-      resolverAbi: self.ensConfig.Resolver.abiDefinition,
-      resolverAddress: self.ensConfig.Resolver.deployedAddress
-    };
-
-    if (self.doSetENSProvider) {
-      self.addSetProvider(config);
-    }
-
-    self.events.request('blockchain:networkId', (networkId) => {
-      const isKnownNetwork = Boolean(ENS_CONTRACTS_CONFIG[networkId]);
-      const shouldRegisterSubdomain = self.registration && self.registration.subdomains && Object.keys(self.registration.subdomains).length;
-      if (isKnownNetwork || !shouldRegisterSubdomain) {
-        return cb();
+    this.getEnsConfig((config) => {
+      if (self.doSetENSProvider) {
+        self.addSetProvider(config);
       }
 
-      self.registerConfigDomains(config, cb);
+      self.events.request('blockchain:networkId', (networkId) => {
+        const isKnownNetwork = Boolean(ENS_CONTRACTS_CONFIG[networkId]);
+        const shouldRegisterSubdomain = self.registration && self.registration.subdomains && Object.keys(self.registration.subdomains).length;
+        if (isKnownNetwork || !shouldRegisterSubdomain) {
+          return cb();
+        }
+
+        self.registerConfigDomains(config, cb);
+      });
     });
   }
 
@@ -245,14 +250,20 @@ class ENS {
         const directives = directivesRegExp.exec(address);
         if (directives && directives.length) {
           this.embark.registerActionForEvent("contracts:deploy:afterAll", async (deployActionCb) => {
-            this.events.request("contracts:contract", directives[1], (contract) => {
-              if(!contract) {
-                // if the contract is not registered in the config, it will be undefined here
-                this.logger.error(__('Tried to register the subdomain "{{subdomain}}" as contract "{{contractName}}", ' +
-                  'but "{{contractName}}" does not exist. Is it configured in your contract configuration?', {contractName: directives[1], subdomain: subDomainName}));
+            this.events.request("blockchain:defaultAccount:get", (currentDefaultAccount) => {
+              if(defaultAccount !== currentDefaultAccount) {
+                this.logger.trace(`Skipping registration of subdomain "${directives[1]}" as this action was registered for a previous configuration`);
                 return deployActionCb();
               }
-              this.safeRegisterSubDomain(subDomainName, contract.deployedAddress, defaultAccount, deployActionCb);
+              this.events.request("contracts:contract", directives[1], (contract) => {
+                if(!contract) {
+                  // if the contract is not registered in the config, it will be undefined here
+                  this.logger.error(__('Tried to register the subdomain "{{subdomain}}" as contract "{{contractName}}", ' +
+                  'but "{{contractName}}" does not exist. Is it configured in your contract configuration?', {contractName: directives[1], subdomain: subDomainName}));
+                  return deployActionCb();
+                }
+                this.safeRegisterSubDomain(subDomainName, contract.deployedAddress, defaultAccount, deployActionCb);
+              });
             });
           });
           return eachCb();

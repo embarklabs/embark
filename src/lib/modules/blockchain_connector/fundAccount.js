@@ -6,7 +6,7 @@ function fundAccount(web3, accountAddress, hexBalance, callback) {
   if (!hexBalance) {
     hexBalance = TARGET;
   }
-  const targetBalance = (typeof hexBalance === 'string') ? parseInt(hexBalance, 16) : hexBalance;
+  const targetBalance = web3.utils.toBN(hexBalance);
   let accountBalance;
   let coinbaseAddress;
   let lastNonce;
@@ -18,7 +18,8 @@ function fundAccount(web3, accountAddress, hexBalance, callback) {
         if (err) {
           return next(err);
         }
-        if (balance >= targetBalance) {
+        balance = web3.utils.toBN(balance);
+        if (balance.gte(targetBalance)) {
           return next(ALREADY_FUNDED);
         }
         accountBalance = balance;
@@ -60,7 +61,7 @@ function fundAccount(web3, accountAddress, hexBalance, callback) {
       web3.eth.sendTransaction({
         from: coinbaseAddress,
         to: accountAddress,
-        value: targetBalance - accountBalance,
+        value: targetBalance.sub(accountBalance),
         gasPrice: gasPrice,
         nonce: lastNonce
       }, next);
