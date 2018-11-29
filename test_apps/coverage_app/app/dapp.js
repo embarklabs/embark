@@ -27,27 +27,11 @@ class App extends React.Component {
 
   componentDidMount() {
     EmbarkJS.onReady(() => {
-      if (EmbarkJS.isNewWeb3()) {
-        EmbarkJS.Messages.Providers.whisper.getWhisperVersion((err, _version) => {
-          if (err) {
-            return console.log(err);
-          }
-          this.setState({whisperEnabled: true});
-        });
-      } else {
-        if (EmbarkJS.Messages.providerName === 'whisper') {
-          EmbarkJS.Messages.getWhisperVersion((err, _version) => {
-            if (err) {
-              return console.log(err);
-            }
-            this.setState({whisperEnabled: true});
-          });
+      EmbarkJS.Messages.Providers.whisper.getWhisperVersion((err, _version) => {
+        if (err) {
+          return console.log(err);
         }
-      }
-      this.setState({
-        storageEnabled: EmbarkJS.Storage.isAvailable(),
-        ensEnabled: EmbarkJS.Names.isAvailable(),
-        ensNameSystems: EmbarkJS.Names.currentNameSystems
+        this.setState({whisperEnabled: true});
       });
     });
   }

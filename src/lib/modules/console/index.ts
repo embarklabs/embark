@@ -20,6 +20,7 @@ class Console {
   private history: string[];
   private cmdHistoryFile: string;
   private suggestions: Suggestions;
+  private providerReady: boolean;
 
   constructor(embark: Embark, options: any) {
     this.embark = embark;
@@ -31,6 +32,7 @@ class Console {
     this.config = options.config;
     this.history = [];
     this.cmdHistoryFile = options.cmdHistoryFile || fs.dappPath(".embark", "cmd_history");
+    this.providerReady = false;
     this.loadHistory();
 
     if (this.ipc.isServer()) {
@@ -38,6 +40,12 @@ class Console {
     }
     this.events.setCommandHandler("console:executeCmd", this.executeCmd.bind(this));
     this.events.setCommandHandler("console:history", (cb: any) => this.getHistory(this.cmdHistorySize(), cb));
+    this.events.setCommandHandler("console:provider:ready", (cb: any) => {
+      if (this.providerReady) {
+        return cb();
+      }
+      this.events.once("console:provider:done", cb);
+    });
     this.registerEmbarkJs();
     this.registerConsoleCommands();
     this.registerApi();
@@ -148,13 +156,17 @@ class Console {
       this.events.request("code-generator:embarkjs:provider-code", (code: string) => {
         const func = () => {};
         this.events.request("runcode:eval", code, func, true);
-        this.events.request("runcode:eval", this.getInitProviderCode(), func, true);
+        this.events.request("runcode:eval", this.getInitProviderCode(), () => {
+          this.events.emit("console:provider:done");
+          this.providerReady = true;
+        }, true);
       });
     });
   }
 
   private getInitProviderCode() {
     const codeTypes: any = {
+      blockchain: this.config.blockchainConfig || {},
       communication: this.config.communicationConfig || {},
       names: this.config.namesystemConfig || {},
       storage: this.config.storageConfig || {},

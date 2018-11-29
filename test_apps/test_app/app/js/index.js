@@ -49,30 +49,15 @@ $(document).ready(function() {
   $("#blockchain button.set").click(function() {
     var value = parseInt($("#blockchain input.text").val(), 10);
 
-    // If web3.js 1.0 is being used
-    if (EmbarkJS.isNewWeb3()) {
-      SimpleStorage.methods.set(value).send({from: web3.eth.defaultAccount, gas: 5300000});
-      addToLog("#blockchain", "SimpleStorage.methods.set(value).send({from: web3.eth.defaultAccount, gas: 5300000})");
-    } else {
-      SimpleStorage.set(value);
-      addToLog("#blockchain", "SimpleStorage.set(" + value + ")");
-    }
-
+    SimpleStorage.methods.set(value).send({from: web3.eth.defaultAccount, gas: 5300000});
+    addToLog("#blockchain", "SimpleStorage.methods.set(value).send({from: web3.eth.defaultAccount, gas: 5300000})");
   });
 
   $("#blockchain button.get").click(function() {
-    // If web3.js 1.0 is being used
-    if (EmbarkJS.isNewWeb3()) {
-      SimpleStorage.methods.get().call(function(err, value) {
-        $("#blockchain .value").html(value);
-      });
-      addToLog("#blockchain", "SimpleStorage.methods.get(console.log)");
-    } else {
-      SimpleStorage.get().then(function(value) {
-        $("#blockchain .value").html(value.toNumber());
-      });
-      addToLog("#blockchain", "SimpleStorage.get()");
-    }
+    SimpleStorage.methods.get().call(function(err, value) {
+      $("#blockchain .value").html(value);
+    });
+    addToLog("#blockchain", "SimpleStorage.methods.get(console.log)");
   });
 
 });

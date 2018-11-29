@@ -21,31 +21,19 @@ class Blockchain extends React.Component {
   
     setValue(e){
       e.preventDefault();
-  
+
       var value = parseInt(this.state.valueSet, 10);
-  
-      // If web3.js 1.0 is being used
-      if (EmbarkJS.isNewWeb3()) {
-        SimpleStorage.methods.set(value).send({from: web3.eth.defaultAccount});
-        this._addToLog("SimpleStorage.methods.set(value).send({from: web3.eth.defaultAccount})");
-      } else {
-        SimpleStorage.set(value);
-        this._addToLog("#blockchain", "SimpleStorage.set(" + value + ")");
-      }
+
+      SimpleStorage.methods.set(value).send({from: web3.eth.defaultAccount});
+      this._addToLog("SimpleStorage.methods.set(value).send({from: web3.eth.defaultAccount})");
     }
   
     getValue(e){
       e.preventDefault();
-      
-      if (EmbarkJS.isNewWeb3()) {
-        SimpleStorage.methods.get().call()
-          .then(_value => this.setState({valueGet: _value}))
-        this._addToLog("SimpleStorage.methods.get(console.log)");
-      } else {
-        SimpleStorage.get()
-          .then(_value => this.setState({valueGet: _value}));
-        this._addToLog("SimpleStorage.get()");
-      }
+
+      SimpleStorage.methods.get().call()
+        .then(_value => this.setState({valueGet: _value}));
+      this._addToLog("SimpleStorage.methods.get(console.log)");
     }
   
     _addToLog(txt){

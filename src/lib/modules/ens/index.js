@@ -348,6 +348,17 @@ class ENS {
     this.embark.addCodeToEmbarkJS(code);
   }
 
+  addSetProvider(config) {
+    let code = "\nEmbarkJS.Names.setProvider('ens'," + JSON.stringify(config) + ");";
+
+    let shouldInit = (namesConfig) => {
+      return (namesConfig.provider === 'ens' && namesConfig.enabled === true);
+    };
+
+    this.embark.addProviderInit('names', code, shouldInit);
+    this.embark.addConsoleProviderInit('names', code, shouldInit);
+  }
+
   configureContractsAndRegister(cb) {
     const NO_REGISTRATION = 'NO_REGISTRATION';
     const self = this;
@@ -474,17 +485,6 @@ class ENS {
         self.setProviderAndRegisterDomains(cb);
       });
     });
-  }
-
-  addSetProvider(config) {
-    let code = "\nEmbarkJS.Names.setProvider('ens'," + JSON.stringify(config) + ");";
-
-    let shouldInit = (namesConfig) => {
-      return (namesConfig.provider === 'ens' && namesConfig.enabled === true);
-    };
-
-    this.embark.addProviderInit('names', code, shouldInit);
-    this.embark.addConsoleProviderInit('names', code, shouldInit);
   }
 
   ensResolve(name, cb) {
