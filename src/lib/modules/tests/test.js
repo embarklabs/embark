@@ -261,6 +261,11 @@ class Test {
           next(null, accounts, web3);
         });
       },
+      function waitForProvidersReady(accounts, web3, next) {
+        self.events.request('console:provider:ready', () => {
+          next(null, accounts, web3);
+        });
+      },
       function createContractObject(accounts, web3, next) {
         self.events.request('contracts:all', (err, contracts) => {
 

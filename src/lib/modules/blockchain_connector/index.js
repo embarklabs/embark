@@ -14,6 +14,7 @@ const BLOCK_LIMIT = 100;
 class BlockchainConnector {
   constructor(embark, options) {
     const self = this;
+    this.embark = embark;
     this.plugins = options.plugins;
     this.logger = embark.logger;
     this.events = embark.events;
@@ -68,6 +69,7 @@ class BlockchainConnector {
     this.registerWeb3Object();
     this.registerEvents();
     this.subscribeToPendingTransactions();
+    this.addWeb3ToEmbarkJS();
   }
 
   initWeb3(cb) {
@@ -205,6 +207,25 @@ class BlockchainConnector {
       this.logger.error("==============");
       throw e;
     }
+  }
+
+  addWeb3ToEmbarkJS() {
+    let code = '';
+    code += fs.readFileSync(utils.joinPath(__dirname, 'embarkjs.js')).toString();
+    code += "\nEmbarkJS.Blockchain.registerProvider('web3', __embarkWeb3);";
+
+    // TODO when we refactor code generator, refactor this to actually do something like connect
+    code += "\nEmbarkJS.Blockchain.setProvider('web3', {});";
+
+    this.embark.addCodeToEmbarkJS(code);
+
+    code = "EmbarkJS.Blockchain.setProvider('web3', {});";
+
+    const shouldInit = (_config) => {
+      return true;
+    };
+
+    this.embark.addConsoleProviderInit('blockchain', code, shouldInit);
   }
 
   registerEvents() {
