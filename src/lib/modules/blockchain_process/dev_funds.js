@@ -11,7 +11,7 @@ class DevFunds {
     this.numAccounts = this.blockchainConfig.account.numAccounts || 0;
     this.password = this.blockchainConfig.account.password ? readFileSync(dappPath(this.blockchainConfig.account.password), 'utf8').replace('\n', '') : 'dev_password';
     this.networkId = null;
-    this.balance = Web3.utils.toWei("1", "ether");
+    this.balance = Web3.utils.toBN(Web3.utils.toWei("1", "ether"));
     if (options.provider) {
       this.provider = options.provider;
     } else if (this.blockchainConfig.wsRPC) {
@@ -33,7 +33,7 @@ class DevFunds {
     }
     this.web3 = new Web3(this.provider);
     if (this.blockchainConfig.account.balance) {
-      this.balance = this.blockchainConfig.account.balance;
+      this.balance = Web3.utils.toBN(this.blockchainConfig.account.balance);
     }
     this.logger = options.logger || console;
   }
@@ -77,8 +77,10 @@ class DevFunds {
   _fundAccounts(balance, cb) {
     async.each(this.accounts, (account, next) => {
       this.web3.eth.getBalance(account).then(currBalance => {
-        const remainingBalance = balance - currBalance;
-        if (remainingBalance <= 0) return next();
+        if(!currBalance) currBalance = 0;
+        currBalance = this.web3.utils.toBN(currBalance);
+        const remainingBalance = balance.sub(currBalance);
+        if (remainingBalance.lte(this.web3.utils.toBN(0))) return next();
         this.web3.eth.sendTransaction({to: account, value: remainingBalance}).catch(console.error);
         next();  // don't wait for the tx receipt as it never comes!
       }).catch(console.error);

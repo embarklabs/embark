@@ -5,6 +5,7 @@ const AccountParser = require('../../utils/accountParser');
 const EmbarkJS = require('embarkjs');
 const utils = require('../../utils/utils');
 const constants = require('../../constants');
+const web3Utils = require('web3-utils');
 
 const BALANCE_10_ETHER_IN_HEX = '0x8AC7230489E80000';
 
@@ -217,6 +218,13 @@ class Test {
       function changeGlobalWeb3(accounts, next) {
         self.events.request('blockchain:get', (web3) => {
           global.web3 = web3;
+          EmbarkJS.Blockchain.setProvider('web3');
+          next(null, accounts);
+        });
+      },
+      function reconfigEns(accounts, next) {
+        self.events.request("ens:config", (config) => {
+          EmbarkJS.Names.setProvider('ens', config);
           next(null, accounts);
         });
       }
@@ -259,7 +267,7 @@ class Test {
           if (err) {
             return next(err);
           }
-          if (parseInt(balance, 10) === 0) {
+          if (web3Utils.toBN(balance).eq(web3Utils.toBN(0))) {
             self.logger.warn("Warning: default account has no funds");
           }
           next(null, accounts);

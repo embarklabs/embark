@@ -140,10 +140,32 @@ describe('embark.AccountParser', function () {
       assert.strictEqual(hexBalance, '0x9cb1ed0a00');
     });
 
+    it('should convert to hex with large ether values', () => {
+      const hexBalance = utils.getHexBalanceFromString('100000 ether', Web3);
+
+      assert.strictEqual(hexBalance, '0x152d02c7e14af6800000');
+    });
+
     it('should fail when string is not good', () => {
       try {
         utils.getHexBalanceFromString('nogood', Web3);
         assert.fail('Should have failed at getHexBalance');
+      } catch (e) {
+        // Ok
+      }
+    });
+  });
+  describe('getWeiBalance', () => {
+    it('should convert to hex with large ether values', () => {
+      const weiBalance = utils.getWeiBalanceFromString('100000 ether', Web3);
+
+      assert.strictEqual(weiBalance, '100000000000000000000000');
+    });
+
+    it('should fail when string is not good', () => {
+      try {
+        utils.getWeiBalanceFromString('nogood', Web3);
+        assert.fail('Should have failed at getWeiBalance');
       } catch (e) {
         // Ok
       }
