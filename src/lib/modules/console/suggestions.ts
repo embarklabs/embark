@@ -76,7 +76,7 @@ export default class Suggestions {
     suggestions.push({value: "EmbarkJS", command_type: "javascript object", description: "EmbarkJS static functions for Storage, Messages, Names, etc."});
 
     if (cmd.indexOf(".") <= 0) {
-      return cb(fuzzySearch(cmd, suggestions, (suggestion: Suggestion) => suggestion.value + " " + suggestion.description).map((x: any) => x.original));
+      return cb(this.searchSuggestions(cmd, suggestions));
     }
 
     try {
@@ -92,11 +92,15 @@ export default class Suggestions {
         } catch (e) {
         }
 
-        return cb(fuzzySearch(cmd, suggestions, (suggestion: Suggestion) => suggestion.value + " " + suggestion.description).map((x: any) => x.original));
+        return cb(this.searchSuggestions(cmd, suggestions));
       }, false, true);
     } catch (e) {
     }
 
-    return cb(fuzzySearch(cmd, suggestions, (suggestion: Suggestion) => suggestion.value + " " + suggestion.description).map((x: any) => x.original));
+    return cb(this.searchSuggestions(cmd, suggestions));
+  }
+
+  private searchSuggestions(cmd: string, suggestions: SuggestionsList) {
+    return fuzzySearch(cmd, suggestions, (suggestion: Suggestion) => suggestion.value + " " + suggestion.description).map((x: any) => x.original);
   }
 }
