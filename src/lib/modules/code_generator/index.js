@@ -47,36 +47,11 @@ class CodeGenerator {
       cb(providerCode);
     });
 
-    // new events
-    this.events.setCommandHandler('code-vanila', function(cb) {
-      self.events.request("contracts:list", (_err, contractsList) => {
-        let vanillaABI = self.generateABI(contractsList, {useEmbarkJS: false});
-        let contractsJSON = self.generateContractsJSON(contractsList);
-        cb(vanillaABI, contractsJSON);
-      });
-    });
-
     this.events.setCommandHandler('code', function(cb) {
       self.events.request("contracts:list", (_err, contractsList) => {
         let embarkJSABI = self.generateABI(contractsList, {useEmbarkJS: true});
         let contractsJSON = self.generateContractsJSON(contractsList);
         cb(embarkJSABI, contractsJSON);
-      });
-    });
-
-    this.events.setCommandHandler('code-contracts-vanila', function(cb) {
-      self.events.request("contracts:list", (_err, contractsList) => {
-        let vanillaContractsABI = self.generateContracts(contractsList, false, true, false);
-        let contractsJSON = self.generateContractsJSON(contractsList);
-        cb(vanillaContractsABI, contractsJSON);
-      });
-    });
-
-    this.events.setCommandHandler('code-vanila-deployment', function(cb) {
-      self.events.request("contracts:list", (_err, contractsList) => {
-        let vanillaABI = self.generateABI(contractsList, {useEmbarkJS: false, deployment: true});
-        let contractsJSON = self.generateContractsJSON(contractsList);
-        cb(vanillaABI, contractsJSON);
       });
     });
 
