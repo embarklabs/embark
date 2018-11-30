@@ -1,7 +1,7 @@
 const fs = require('../../core/fs.js');
 const PluginManager = require('live-plugin-manager-git-fix').PluginManager;
 require('colors');
-const NpmTimer = require('./npmTimer.js');
+import LongRunningProcessTimer from '../../utils/longRunningProcessTimer.js';
 
 class Npm {
 
@@ -10,13 +10,14 @@ class Npm {
     this._packageName = options.packageName;
     this._version = options.version;
     this._installing = {};
+    this._useDashboard = options.useDashboard;
   }
 
-  static getPackagePath(packageName, version){
+  static getPackagePath(packageName, version) {
     return './.embark/versions/' + packageName + '/' + version + '/' + packageName;
   }
 
-  _isInstalling(packageName, version){
+  _isInstalling(packageName, version) {
     return typeof this._installing[packageName + version] !== 'undefined';
   }
 
@@ -29,23 +30,35 @@ class Npm {
     }
 
     const pluginManager = new PluginManager({pluginsPath: './.embark/versions/' + packageName + '/' + version + '/'});
-    
+
     // check if we're already installing this package
-    if(this._isInstalling(packageName, version)){
+    if (this._isInstalling(packageName, version)) {
       this._installing[packageName + version].push(callback);
-    }else{
+    } else {
       this._installing[packageName + version] = [callback];
-      
-      const timer = new NpmTimer({logger: this._logger, packageName: packageName, version: version});
+
+      const timer = new LongRunningProcessTimer(
+        this._logger, 
+        packageName,
+        version,
+        'Downloading and installing {{packageName}} {{version}}...',
+        'Still downloading and installing {{packageName}} {{version}}... ({{duration}})',
+        'Finished downloading and installing {{packageName}} {{version}} in {{duration}}',
+        {
+          showSpinner: !this._useDashboard,
+          interval: this._useDashboard ? 2000 : 1000,
+          longRunningThreshold: 10000
+        }
+      );
       timer.start();
 
       // do the package download/install
-      pluginManager.install(packageName, version).then((result) => {        
-          timer.end();
-          this._installing[packageName + version].forEach((cb) => {
-            cb(null, result.location);
-          });
-          delete this._installing[packageName + version];
+      pluginManager.install(packageName, version).then((result) => {
+        timer.end();
+        this._installing[packageName + version].forEach((cb) => {
+          cb(null, result.location);
+        });
+        delete this._installing[packageName + version];
       }).catch(err => {
         this._installing[packageName + version].forEach((cb) => {
           cb(err);

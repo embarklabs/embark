@@ -5,12 +5,13 @@ const utils = require('../../utils/utils.js');
 const ProcessLauncher = require('../../core/processes/processLauncher');
 const constants = require('../../constants');
 const WebpackConfigReader = require('../pipeline/webpackConfigReader');
+import LongRunningProcessTimer from '../../utils/longRunningProcessTimer';
 
 class Pipeline {
   constructor(embark, options) {
     this.embark = embark;
     this.env = embark.config.env;
-    this.buildDir  = embark.config.buildDir;
+    this.buildDir = embark.config.buildDir;
     this.contractsFiles = embark.config.contractsFiles;
     this.assetFiles = embark.config.assetFiles;
     this.events = embark.events;
@@ -20,6 +21,7 @@ class Pipeline {
     this.pipelinePlugins = this.plugins.getPluginsFor('pipeline');
     this.pipelineConfig = embark.config.pipelineConfig;
     this.isFirstBuild = true;
+    this.useDashboard = options.useDashboard;
 
     this.events.setCommandHandler('pipeline:build', (options, callback) => this.build(options, callback));
     this.events.setCommandHandler('pipeline:build:contracts', callback => this.buildContracts(callback));
@@ -69,7 +71,7 @@ class Pipeline {
           return res.send({error: error.message});
         }
 
-        fs.writeFileSync(req.body.path, req.body.content, { encoding: 'utf8'});
+        fs.writeFileSync(req.body.path, req.body.content, {encoding: 'utf8'});
         const name = path.basename(req.body.path);
         res.send({name, path: req.body.path, content: req.body.content});
       }
@@ -104,7 +106,8 @@ class Pipeline {
               dirname: dir,
               path: path.join(dir, name),
               isHidden: name.indexOf('.') === 0,
-              children: utils.fileTreeSort(walk(path.join(dir, name), filelist))};
+              children: utils.fileTreeSort(walk(path.join(dir, name), filelist))
+            };
           }
           return {
             name,
@@ -165,7 +168,7 @@ class Pipeline {
         self.events.request('contracts:list', (_err, contracts) => {
           // ensure the .embark/contracts directory exists (create if not exists)
           fs.mkdirp(fs.dappPath(".embark/contracts", ''), err => {
-            if(err) return next(err);
+            if (err) return next(err);
 
             // Create a file .embark/contracts/index.js that requires all contract files
             // Used to enable alternate import syntax:
@@ -182,7 +185,7 @@ class Pipeline {
 
                 // add the contract to the exports list to support alternate import syntax
                 importsHelperFile.write(`"${contract.className}": require('./${contract.className}').default`);
-                if(idx < contracts.length - 1) importsHelperFile.write(',\n'); // add a comma if we have more contracts to add
+                if (idx < contracts.length - 1) importsHelperFile.write(',\n'); // add a comma if we have more contracts to add
               });
             }, () => {
               importsHelperFile.write('\n}'); // close the module.exports = {}
@@ -191,16 +194,16 @@ class Pipeline {
           });
         });
       },
-      function shouldRunWebpack(next){
+      function shouldRunWebpack(next) {
         // assuming we got here because an asset was changed, let's check our webpack config
         // to see if the changed asset requires webpack to run
-        if(!(modifiedAssets && modifiedAssets.length)) return next(null, false);
+        if (!(modifiedAssets && modifiedAssets.length)) return next(null, false);
         const configReader = new WebpackConfigReader({webpackConfigName: self.webpackConfigName});
         return configReader.readConfig((err, config) => {
-          if(err) return next(err);
+          if (err) return next(err);
 
           if (typeof config !== 'object' || config === null) {
-            return next(__('bad webpack config, the resolved config was null or not an object'));
+            return next(__('Pipeline: bad webpack config, the resolved config was null or not an object'));
           }
 
           const shouldRun = modifiedAssets.some(modifiedAsset => config.module.rules.some(rule => rule.test.test(modifiedAsset)));
@@ -208,15 +211,31 @@ class Pipeline {
         });
       },
       function runWebpack(shouldNotRun, next) {
-        if(shouldNotRun) return next();
-        self.logger.info(__(`running webpack with '${self.webpackConfigName}' config...`));
+        if (shouldNotRun) return next();
         const assets = Object.keys(self.assetFiles).filter(key => key.match(/\.js$/));
         if (!assets || !assets.length) {
           return next();
         }
-        assets.forEach(key => {
-          self.logger.info(__("writing file") + " " + (utils.joinPath(self.buildDir, key)).bold.dim);
-        });
+        let strAssets = '';
+        if (!self.useDashboard) {
+          assets.forEach(key => {
+            strAssets += ('\n  ' + (utils.joinPath(self.buildDir, key)).bold.dim);
+          });
+        }
+        const timer = new LongRunningProcessTimer(
+          self.logger,
+          'webpack',
+          '0',
+          `${'Pipeline:'.cyan} Bundling dapp using '${self.webpackConfigName}' config...${strAssets}`,
+          `${'Pipeline:'.cyan} Still bundling dapp using '${self.webpackConfigName}' config... ({{duration}})${strAssets}`,
+          `${'Pipeline:'.cyan} Finished bundling dapp in {{duration}}${strAssets}`,
+          {
+            showSpinner: !self.useDashboard,
+            interval: self.useDashboard ? 5000 : 1000,
+            longRunningThreshold: 15000
+          }
+        );
+        timer.start();
         let built = false;
         const webpackProcess = new ProcessLauncher({
           embark: self.embark,
@@ -247,6 +266,9 @@ class Pipeline {
           webpackProcess.kill();
           return next(msg.error);
         });
+        webpackProcess.once('result', constants.pipeline.webpackDone, () => {
+          timer.end();
+        });
       },
       function assetFileWrite(next) {
         async.eachOf(
@@ -261,7 +283,7 @@ class Pipeline {
             const isDir = targetFile.slice(-1) === '/' || targetFile.slice(-1) === '\\' || targetFile.indexOf('.') === -1;
             // if it's not a directory
             if (!isDir) {
-              self.logger.info(__("writing file") + " " + (utils.joinPath(self.buildDir, targetFile)).bold.dim);
+              self.logger.info('Pipeline: '.cyan + __("writing file") + " " + (utils.joinPath(self.buildDir, targetFile)).bold.dim);
             }
             async.map(
               files,
@@ -273,10 +295,10 @@ class Pipeline {
               },
               function (err, contentFiles) {
                 if (err) {
-                  self.logger.error(__('errors found while generating') + ' ' + targetFile);
+                  self.logger.error('Pipeline: '.cyan + __('errors found while generating') + ' ' + targetFile);
                 }
                 let dir = targetFile.split('/').slice(0, -1).join('/');
-                self.logger.trace("creating dir " + utils.joinPath(self.buildDir, dir));
+                self.logger.trace(`${'Pipeline:'.cyan} creating dir ` + utils.joinPath(self.buildDir, dir));
                 fs.mkdirpSync(utils.joinPath(self.buildDir, dir));
 
                 // if it's a directory
@@ -289,7 +311,7 @@ class Pipeline {
 
                   async.each(contentFiles, function (file, eachCb) {
                     let filename = file.filename.replace(file.basedir + '/', '');
-                    self.logger.info("writing file " + (utils.joinPath(self.buildDir, targetDir, filename)).bold.dim);
+                    self.logger.info(`${'Pipeline:'.cyan} writing file ` + (utils.joinPath(self.buildDir, targetDir, filename)).bold.dim);
 
                     fs.copy(file.path, utils.joinPath(self.buildDir, targetDir, filename), {overwrite: true}, eachCb);
                   }, cb);
@@ -314,7 +336,7 @@ class Pipeline {
           next
         );
       },
-      function removePlaceholderPage(next){
+      function removePlaceholderPage(next) {
         let placeholderFile = utils.joinPath(self.buildDir, placeholderPage);
         fs.access(utils.joinPath(self.buildDir, placeholderPage), (err) => {
           if (err) return next(); // index-temp doesn't exist, do nothing
@@ -337,7 +359,7 @@ class Pipeline {
         self.events.request('contracts:list', next);
       },
       function writeContractsJSON(contracts, next) {
-        async.each(contracts,(contract, eachCb) => {
+        async.each(contracts, (contract, eachCb) => {
           fs.writeJson(fs.dappPath(
             self.buildDir,
             'contracts', contract.className + '.json'

@@ -48,37 +48,41 @@ class WebpackProcess extends ProcessWrapper {
       }
 
       if (typeof config !== 'object' || config === null) {
-        return callback('bad webpack config, the resolved config was null or not an object');
+        return callback('Pipeline: '.cyan + 'bad webpack config, the resolved config was null or not an object');
       }
 
       webpack(config).run(async (err, stats) => {
         if (err) {
           return callback(errorMessage(err));
         }
-        if (!config.stats || config.stats === 'none') {
-          return callback();
-        }
-        try {
-          this._log('info', 'writing file ' + ('.embark/stats.report').bold.dim);
-          await writeFile(
-            fs.dappPath('.embark/stats.report'),
-            stats.toString(config.stats)
-          );
-          this._log('info', 'writing file ' + ('.embark/stats.json').bold.dim);
-          await writeFile(
-            fs.dappPath('.embark/stats.json'),
-            JSON.stringify(stats.toJson(config.stats))
-          );
-          if (stats.hasErrors()) {
-            const errors = stats.toJson(config.stats).errors.join('\n');
-            return callback(errors);
-          }
-          callback();
-        } catch (e) {
-          return callback(errorMessage(e));
-        }
+        callback(null, config, stats);
       });
     });
+  }
+
+  async writeStats(config, stats, callback){
+    if (!config.stats || config.stats === 'none') {
+      return callback();
+    }
+    try {
+      this._log('info', 'Pipeline: '.cyan + 'writing file ' + ('.embark/stats.report').bold.dim);
+      await writeFile(
+        fs.dappPath('.embark/stats.report'),
+        stats.toString(config.stats)
+      );
+      this._log('info', 'Pipeline: '.cyan + 'writing file ' + ('.embark/stats.json').bold.dim);
+      await writeFile(
+        fs.dappPath('.embark/stats.json'),
+        JSON.stringify(stats.toJson(config.stats))
+      );
+      if (stats.hasErrors()) {
+        const errors = stats.toJson(config.stats).errors.join('\n');
+        return callback(errors);
+      }
+      callback();
+    } catch (e) {
+      return callback(errorMessage(e));
+    }
   }
 }
 
@@ -89,8 +93,11 @@ process.on('message', (msg) => {
   }
 
   if (msg.action === constants.pipeline.build) {
-    return webpackProcess.build(msg.assets, msg.importsList, (err) => {
-      process.send({result: constants.pipeline.built, error: err});
+    return webpackProcess.build(msg.assets, msg.importsList, (err, config, stats) => {
+      process.send({result: constants.pipeline.webpackDone, error: err});
+      webpackProcess.writeStats(config, stats, (errWriteStats) => {
+        process.send({result: constants.pipeline.built, error: (err || errWriteStats)});
+      });
     });
   }
 });

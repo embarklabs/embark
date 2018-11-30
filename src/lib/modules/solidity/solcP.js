@@ -5,11 +5,11 @@ const constants = require('../../constants');
 const Utils = require('../../utils/utils');
 const ProcessWrapper = require('../../core/processes/processWrapper');
 const PluginManager = require('live-plugin-manager-git-fix').PluginManager;
-const NpmTimer = require('../library_manager/npmTimer');
+import LongRunningProcessTimer  from '../../utils/longRunningProcessTimer';
 
 class SolcProcess extends ProcessWrapper {
 
-  constructor(options){
+  constructor(options) {
     super({pingParent: false});
     this._logger = options.logger;
     this._showSpinner = options.showSpinner === true;
@@ -33,19 +33,27 @@ class SolcProcess extends ProcessWrapper {
     return {error: 'File not found'};
   }
 
-  installAndLoadCompiler(solcVersion, packagePath){
+  installAndLoadCompiler(solcVersion, packagePath) {
     let self = this;
     return new Promise((resolve, reject) => {
       let manager = new PluginManager({pluginsPath: packagePath});
       let timer;
       if (!fs.existsSync(packagePath)) {
-        timer = new NpmTimer({logger: self._logger, packageName: 'solc', version: solcVersion, showSpinner: self._showSpinner});
+        timer = new LongRunningProcessTimer(
+          self._logger,
+          'solc',
+          solcVersion,
+          'Downloading and installing {{packageName}} {{version}}...',
+          'Still downloading and installing {{packageName}} {{version}}... ({{duration}})',
+          'Finished downloading and installing {{packageName}} {{version}} in {{duration}}',
+          { showSpinner: self._showSpinner }
+        );
       }
 
-      if(timer) timer.start();
+      if (timer) timer.start();
       manager.install('solc', solcVersion).then(() => {
         self.solc = manager.require('solc');
-        if(timer) timer.end();
+        if (timer) timer.end();
         resolve();
       }).catch(reject);
 
@@ -58,7 +66,7 @@ class SolcProcess extends ProcessWrapper {
       let func = this.solc.compileStandardWrapper;
       if (semver.gte(this.solc.version(), '0.5.0')) {
         func = this.solc.compile;
-      } 
+      }
       let output = func(JSON.stringify(jsonObj), this.findImports);
       cb(null, output);
     } catch (err) {

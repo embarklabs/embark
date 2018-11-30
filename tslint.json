@@ -10,7 +10,8 @@
     "member-ordering": [false],
     "no-var-requires": false,
     "no-empty": false,
-    "no-console": false
+    "no-console": false,
+    "variable-name": ["allow-leading-underscore"]
   },
   "rulesDirectory": []
 }
