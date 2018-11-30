@@ -136,7 +136,8 @@ class Engine {
   pipelineService(_options) {
     const self = this;
     this.registerModule('pipeline', {
-      webpackConfigName: this.webpackConfigName
+      webpackConfigName: this.webpackConfigName,
+      useDashboard: this.useDashboard
     });
     this.events.on('code-generator-ready', function (modifiedAssets) {
       self.events.request('code', function (abi, contractsJSON) {
@@ -286,7 +287,7 @@ class Engine {
   }
 
   libraryManagerService(_options) {
-    this.registerModule('library_manager');
+    this.registerModule('library_manager', {useDashboard: this.useDashboard});
   }
 
   codeCoverageService(_options) {

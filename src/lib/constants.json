@@ -28,7 +28,8 @@
     "init": "init",
     "build": "build",
     "initiated": "initiated",
-    "built": "built"
+    "built": "built",
+    "webpackDone": "webpackDone"
   },
   "blockchain": {
     "clients": {

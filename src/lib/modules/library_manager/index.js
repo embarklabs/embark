@@ -2,11 +2,12 @@ var Npm = require('./npm.js');
 
 class LibraryManager {
 
-  constructor(embark) {
+  constructor(embark, {useDashboard}) {
     this.embark = embark;
     this.config = embark.config;
     this.contractsConfig = this.config.contractsConfig;
     this.storageConfig = this.config.storageConfig;
+    this.useDashboard = useDashboard;
 
     this.determineVersions();
 
@@ -75,7 +76,7 @@ class LibraryManager {
   }
 
   listenToCommandsToGetLibrary() {
-    let npm = new Npm({logger: this.embark.logger});
+    let npm = new Npm({logger: this.embark.logger, useDashboard: this.useDashboard});
     this.embark.events.setCommandHandler('version:getPackageLocation', (libName, version, cb) => {
       npm.getPackageVersion(libName, version, cb);
     });
