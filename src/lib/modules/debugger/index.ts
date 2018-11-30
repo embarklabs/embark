@@ -116,6 +116,15 @@ class TransactionDebugger {
           this.getGlobals(txHash, (errGlobals: any, globals: any) => {
             if (errGlobals) { return res.send({ok: false}); }
             this.debuggerData.globals = globals;
+            this.debuggerData.possibleSteps = {
+              canGoNext: this.apiDebugger.canGoNext(),
+              canGoPrevious: this.apiDebugger.canGoPrevious(),
+            };
+            // TODO: currently still needed due to a bug with the debugger
+            setTimeout(() => {
+              this.apiDebugger.stepOverForward(true);
+              this.apiDebugger.stepOverBack(true);
+            }, 1000);
             res.send({ok: true});
           });
         });
@@ -163,18 +172,31 @@ class TransactionDebugger {
 
       this.apiDebugger.events.on("source", (lineColumnPos: any, rawLocation: any) => {
         this.debuggerData.sources = {lineColumnPos, rawLocation};
+        this.debuggerData.possibleSteps = {
+          canGoNext: this.apiDebugger.canGoNext(),
+          canGoPrevious: this.apiDebugger.canGoPrevious(),
+        };
         ws.send(JSON.stringify(this.debuggerData), () => {});
       });
 
       this.apiDebugger.events.on("locals", (data: any) => {
         this.debuggerData.locals = this.simplifyDebuggerVars(data);
+        this.debuggerData.possibleSteps = {
+          canGoNext: this.apiDebugger.canGoNext(),
+          canGoPrevious: this.apiDebugger.canGoPrevious(),
+        };
         ws.send(JSON.stringify(this.debuggerData), () => {});
       });
 
       this.apiDebugger.events.on("globals", (data: any) => {
         this.debuggerData.contract = this.simplifyDebuggerVars(data);
+        this.debuggerData.possibleSteps = {
+          canGoNext: this.apiDebugger.canGoNext(),
+          canGoPrevious: this.apiDebugger.canGoPrevious(),
+        };
         ws.send(JSON.stringify(this.debuggerData), () => {});
       });
+
     });
   }
 

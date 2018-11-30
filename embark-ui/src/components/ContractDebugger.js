@@ -50,6 +50,16 @@ class ContractDebugger extends Component {
     this.props.debugStepIntoBackward();
   }
 
+  canGoPrevious() {
+    const { possibleSteps } = this.props.debuggerInfo;
+    return possibleSteps && possibleSteps.canGoPrevious;
+  }
+
+  canGoNext() {
+    const { possibleSteps } = this.props.debuggerInfo;
+    return possibleSteps && possibleSteps.canGoNext;
+  }
+
   render() {
     return (
       <div>
@@ -65,8 +75,8 @@ class ContractDebugger extends Component {
           <Col>
             <Button color="light" className="btn-square debugButton jumpBack" alt="jump to previous breakpoint" onClick={(e) => this.debugJumpBack(e)}></Button>
             <Button color="light" className="btn-square debugButton jumpForward" alt="jump to revious breakpoint" onClick={(e) => this.debugJumpForward(e)}></Button>
-            <Button color="light" className="btn-square debugButton stepOverBack" alt="step back" onClick={(e) => this.debugStepOverBackward(e)}></Button>
-            <Button color="light" className="btn-square debugButton stepOverForward" alt="step over" onClick={(e) => this.debugStepOverForward(e)}></Button>
+            <Button color="light" className={"btn-square debugButton stepOverBack" + (this.canGoPrevious() ? '' : ' disabled')} alt="step back" onClick={(e) => this.debugStepOverBackward(e)}></Button>
+            <Button color="light" className={"btn-square debugButton stepOverForward" + (this.canGoNext() ? '' : ' disabled')} alt="step over" onClick={(e) => this.debugStepOverForward(e)}></Button>
             <Button color="light" className="btn-square debugButton stepIntoForward" alt="step into" onClick={(e) => this.debugStepIntoForward(e)}></Button>
             <Button color="light" className="btn-square debugButton stepIntoBack" alt="step out" onClick={(e) => this.debugStepIntoBackward(e)}></Button>
           </Col>
