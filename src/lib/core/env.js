@@ -1,5 +1,6 @@
 /* global __dirname module process require */
 
+const {execSync} = require('child_process');
 const {delimiter} = require('path');
 const {joinPath} = require('../utils/utils.js');
 
@@ -49,10 +50,24 @@ const PKG_PATH = 'PKG_PATH';
 const DEFAULT_PKG_PATH = anchoredValue(PWD);
 anchoredValue(PKG_PATH, DEFAULT_PKG_PATH);
 
+let YARN_GLOBAL_PATH;
+try {
+  YARN_GLOBAL_PATH = joinPath(
+    execSync('yarn global dir', {stdio: ['pipe', 'pipe', 'ignore']})
+      .toString()
+      .trim(),
+    'node_modules'
+  );
+} catch (e) {
+  YARN_GLOBAL_PATH = '';
+}
+
 const NODE_PATH = 'NODE_PATH';
 // NOTE: setting NODE_PATH at runtime won't effect lookup behavior in the
 // current process, but will take effect in child processes
 process.env[NODE_PATH] = joinPath(anchoredValue(EMBARK_PATH), 'node_modules') +
+  (YARN_GLOBAL_PATH ? delimiter : '') +
+  (YARN_GLOBAL_PATH || '') +
   (process.env[NODE_PATH] ? delimiter : '') +
   (process.env[NODE_PATH] || '');
 
