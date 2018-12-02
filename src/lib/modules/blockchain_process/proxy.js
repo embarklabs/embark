@@ -1,4 +1,4 @@
-/* global __ exports require */
+/* global Buffer __ exports require */
 
 const Asm = require('stream-json/Assembler');
 const {canonicalHost, defaultHost} = require('../../utils/host');
@@ -13,16 +13,30 @@ const utils = require('../../utils/utils');
 const WebSocket = require('ws');
 const WsParser = require('simples/lib/parsers/ws');
 
+const hex = (n) => {
+  let _n = n.toString(16);
+  return _n.length === 1 ? '0' + _n : _n;
+};
+
 const parseJsonMaybe = (string) => {
   let object;
-  try {
-    if (string && typeof string === 'string') object = JSON.parse(string);
-  } catch (e) {
-    console.error('Error parsing string as JSON', string);
-  } finally {
-    // eslint-disable-next-line no-unsafe-finally
-    return object;
+  if (typeof string === 'string') {
+    if (string) {
+      try {
+        object = JSON.parse(string);
+      } catch(e) {
+        if (Array.from(Buffer.from(string)).map(hex).join(':') !==
+            '03:ef:bf:bd') {
+          console.error(`Proxy: Error parsing string as JSON '${string}'`);
+        }
+      }
+    } else {
+      console.error('Proxy: Expected a non-empty string');
+    }
+  } else {
+    console.error(`Proxy: Expected a string but got type '${typeof string}'`);
   }
+  return object;
 };
 
 exports.serve = async (ipc, host, port, ws, origin) => {
@@ -46,7 +60,9 @@ exports.serve = async (ipc, host, port, ws, origin) => {
         }
       }
     } catch (e) {
-      console.error('Error tracking request message', JSON.stringify(req));
+      console.error(
+        `Proxy: Error tracking request message '${JSON.stringify(req)}'`,
+      );
     }
   };
 
@@ -80,7 +96,9 @@ exports.serve = async (ipc, host, port, ws, origin) => {
         delete receipts[res.id];
       }
     } catch (e) {
-      console.error('Error tracking response message', JSON.stringify(res));
+      console.error(
+        `Proxy: Error tracking response message '${JSON.stringify(res)}'`
+      );
     }
   };
 
@@ -111,7 +129,7 @@ exports.serve = async (ipc, host, port, ws, origin) => {
 
     onError(err, _req, _res) {
       console.error(
-        __('Error forwarding requests to blockchain/simulator'),
+        __('Proxy: Error forwarding requests to blockchain/simulator'),
         err.message
       );
     },
