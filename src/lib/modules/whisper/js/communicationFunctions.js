@@ -93,8 +93,7 @@ function listenTo(options, callback) {
         return callback(null, data);
       }
       promise.cb(payload, data, result);
-    })
-    .catch(callback);
+    });
 
   return promise;
 }

@@ -7,6 +7,15 @@ const embarkPath = process.env.EMBARK_PATH;
 
 const dappNodeModules = path.join(dappPath, 'node_modules');
 const embarkNodeModules = path.join(embarkPath, 'node_modules');
+let nodePathNodeModules;
+if (process.env.NODE_PATH) {
+  nodePathNodeModules = process.env.NODE_PATH.split(path.delimiter);
+} else {
+  nodePathNodeModules = [];
+}
+if (!nodePathNodeModules.includes(embarkNodeModules)) {
+  nodePathNodeModules.unshift(embarkNodeModules);
+}
 
 function requireFromEmbark(mod) {
   return require(requireFromEmbark.resolve(mod));
@@ -187,14 +196,16 @@ const base = {
     ],
     modules: [
       ...versions,
+      'node_modules',
       dappNodeModules,
-      embarkNodeModules
+      ...nodePathNodeModules
     ]
   },
   resolveLoader: {
     modules: [
+      'node_modules',
       dappNodeModules,
-      embarkNodeModules
+      ...nodePathNodeModules
     ]
   }
 };
