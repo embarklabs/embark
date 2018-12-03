@@ -20,20 +20,21 @@ const hex = (n) => {
 
 const parseJsonMaybe = (string) => {
   let object;
-  try {
-    if (typeof string === 'string') {
-      if (string) {
+  if (typeof string === 'string') {
+    if (string) {
+      try {
         object = JSON.parse(string);
-      } else {
-        console.error('Expected a non-empty string');
+      } catch(e) {
+        if (Array.from(Buffer.from(string)).map(hex).join(':') !==
+            '03:ef:bf:bd') {
+          console.error(`Proxy: Error parsing string as JSON '${string}'`);
+        }
       }
     } else {
-      console.error(`Expected a string but got type '${typeof string}'`);
+      console.error('Proxy: Expected a non-empty string');
     }
-  } catch (e) {
-    if (Array.from(Buffer.from(string)).map(hex).join(':') !== '03:ef:bf:bd') {
-      console.error('Error parsing string as JSON', string);
-    }
+  } else {
+    console.error(`Proxy: Expected a string but got type '${typeof string}'`);
   }
   return object;
 };
@@ -59,7 +60,9 @@ exports.serve = async (ipc, host, port, ws, origin) => {
         }
       }
     } catch (e) {
-      console.error('Error tracking request message', JSON.stringify(req));
+      console.error(
+        `Proxy: Error tracking request message '${JSON.stringify(req)}'`,
+      );
     }
   };
 
@@ -93,7 +96,9 @@ exports.serve = async (ipc, host, port, ws, origin) => {
         delete receipts[res.id];
       }
     } catch (e) {
-      console.error('Error tracking response message', JSON.stringify(res));
+      console.error(
+        `Proxy: Error tracking response message '${JSON.stringify(res)}'`
+      );
     }
   };
 
@@ -124,7 +129,7 @@ exports.serve = async (ipc, host, port, ws, origin) => {
 
     onError(err, _req, _res) {
       console.error(
-        __('Error forwarding requests to blockchain/simulator'),
+        __('Proxy: Error forwarding requests to blockchain/simulator'),
         err.message
       );
     },
