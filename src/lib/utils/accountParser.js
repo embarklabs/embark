@@ -107,9 +107,8 @@ class AccountParser {
       }
       return accounts;
     }
-    logger.warn('Unsupported account configuration: ' + JSON.stringify(accountConfig));
-    logger.warn('Try using one of those: ' +
-      '{ "privateKey": "your-private-key", "privateKeyFile": "path/to/file/containing/key", "mnemonic": "12 word mnemonic" }');
+    logger.warn(__('Unsupported account configuration: %s' ,JSON.stringify(accountConfig)));
+    logger.warn(__('Check the docs at %s', 'https://embark.status.im/docs/contracts_deployment.html#Using-accounts-in-a-wallet'.underline));
     return null;
   }
 }
