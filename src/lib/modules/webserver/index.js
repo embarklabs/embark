@@ -100,7 +100,7 @@ class WebServer {
     const self = this;
 
     this.events.request("services:register", 'Webserver', function (cb) {
-      let url = this.protocol + '://' + canonicalHost(self.host) + ':' + self.port;
+      let url = self.protocol + '://' + canonicalHost(self.host) + ':' + self.port;
       utils.checkIsAvailable(url, function (available) {
         let devServer = __('Webserver') + ' (' + url + ')';
         let serverStatus = (available ? 'on' : 'off');
