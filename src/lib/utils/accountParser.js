@@ -107,6 +107,10 @@ class AccountParser {
       }
       return accounts;
     }
+    if (accountConfig.secretKey) {
+      // Ignore simulator configs
+      return null;
+    }
     logger.warn(__('Unsupported account configuration: %s' ,JSON.stringify(accountConfig)));
     logger.warn(__('Check the docs at %s', 'https://embark.status.im/docs/contracts_deployment.html#Using-accounts-in-a-wallet'.underline));
     return null;
