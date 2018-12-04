@@ -2,6 +2,33 @@ const Base = require('mocha/lib/reporters/base');
 const ms = require('mocha/lib/ms');
 const color = Base.color;
 
+class EmbarkApiSpec extends Base {
+  constructor(runner, options) {
+    super(runner, options);
+
+    this.embark = {events: options.reporterOptions.events};
+
+    let suiteStack = [];
+
+    const formatTest = function(test) {
+      return {
+        suite: suiteStack,
+        title: test.title,
+        file: test.file,
+        duration: test.duration,
+        state: test.state,
+        speed: test.speed
+      };
+    };
+
+    runner.on('start', () => { this.embark.events.request('tests:results:reset'); });
+    runner.on('pass', test => { this.embark.events.request('tests:results:report', formatTest(test)); });
+    runner.on('fail', test => { this.embark.events.request('tests:results:report', formatTest(test)); });
+    runner.on('suite', suite => { if(suite.title !== '') suiteStack.push(suite.title); });
+    runner.on('suite end', () => suiteStack.pop());
+  }
+}
+
 class EmbarkSpec extends Base {
   constructor(runner, options) {
     super(runner, options);
@@ -149,4 +176,4 @@ class EmbarkSpec extends Base {
   }
 }
 
-module.exports = EmbarkSpec;
+module.exports = {EmbarkSpec, EmbarkApiSpec};
