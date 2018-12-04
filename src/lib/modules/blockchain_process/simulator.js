@@ -86,7 +86,7 @@ class Simulator {
 
     if(useProxy){
       let ipcObject = new Ipc({ipcRole: 'client'});
-      proxy.serve(ipcObject, host, port, false);
+      proxy.serve(ipcObject, host, port, false, undefined);
     }
   }
 }

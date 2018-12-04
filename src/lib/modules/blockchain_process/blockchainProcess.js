@@ -12,6 +12,7 @@ class BlockchainProcess extends ProcessWrapper {
     this.client = options.client;
     this.env = options.env;
     this.isDev = options.isDev;
+    this.certOptions = options.certOptions;
 
     i18n.setOrDetectLocale(options.locale);
 
@@ -20,6 +21,7 @@ class BlockchainProcess extends ProcessWrapper {
       this.blockchainConfig,
       this.client,
       this.env,
+      this.certOptions,
       this.blockchainReady.bind(this),
       this.blockchainExit.bind(this),
       console

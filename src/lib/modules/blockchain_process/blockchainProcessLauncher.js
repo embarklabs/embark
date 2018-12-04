@@ -37,7 +37,8 @@ class BlockchainProcessLauncher {
         client: this.client,
         env: this.env,
         isDev: this.isDev,
-        locale: this.locale
+        locale: this.locale,
+        certOptions: this.embark.config.webServerConfig.certOptions
       }
     });
 

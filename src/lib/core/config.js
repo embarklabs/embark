@@ -483,6 +483,7 @@ Config.prototype.loadWebServerConfigFile = function() {
       };
       webServerConfig.protocol = 'https';
     } catch (e) {
+      webServerConfig.certOptions = {};
       webServerConfig.protocol = 'http';
     }
   }
