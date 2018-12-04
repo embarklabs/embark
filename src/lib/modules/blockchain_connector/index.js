@@ -105,7 +105,8 @@ class BlockchainConnector {
 
     if (type === 'vm') {
       const sim = self._getSimulator();
-      self.provider = sim.provider(self.config.contractsConfig.deployment);
+      const options = Object.assign({}, self.config.contractsConfig.deployment, {gasPrice: "0x01", gasLimit: "0xfffffffffffff"});
+      self.provider = sim.provider(options);
 
       if (coverage) {
         // Here we patch the sendAsync method on the provider. The goal behind this is to force pure/constant/view calls to become
@@ -124,7 +125,7 @@ class BlockchainConnector {
             return self.provider.realSendAsync(payload, cb);
           }
           self.events.request('reporter:toggleGasListener');
-          let newParams = Object.assign({}, payload.params[0], {gasPrice: '0x77359400'});
+          let newParams = Object.assign({}, payload.params[0]);
           let newPayload = {
             id: payload.id + 1,
             method: 'eth_sendTransaction',

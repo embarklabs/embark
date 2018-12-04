@@ -56,7 +56,8 @@
     "restart": "restart"
   },
   "tests": {
-    "gasLimit": 6000000
+    "gasLimit": 6000000,
+    "coverageGasLimit": 4503599627370495
   },
   "codeGenerator": {
     "gasLimit": 6000000

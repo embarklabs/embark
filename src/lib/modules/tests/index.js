@@ -89,13 +89,13 @@ class TestRunner {
               if (err) {
                 return next(err);
               }
-              console.info(`Coverage report created. You can find it here: ${fs.dappPath('coverage/__root__/index.html')}\n`);
+              console.info(`Coverage report created. You can find it here: ${fs.dappPath('coverage/index.html')}\n`);
               const opn = require('opn');
               const _next = () => { next(null, results); };
               if (options.noBrowser) {
                 return next(null, results);
               }
-              opn(fs.dappPath('coverage/__root__/index.html'), {wait: false})
+              opn(fs.dappPath('coverage/index.html'), {wait: false})
                 .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
                 .then(_next, _next);
             });
@@ -185,11 +185,12 @@ class TestRunner {
         let fns = files.map((file) => {
           return (cb) => {
             const mocha = new Mocha();
+            const gasLimit = options.coverage ? constants.tests.coverageGasLimit : constants.tests.gasLimit;
             const reporter = options.inProcess ? EmbarkApiSpec : EmbarkSpec;
             mocha.reporter(reporter, {
               events: self.events,
               gasDetails: options.gasDetails,
-              gasLimit: constants.tests.gasLimit
+              gasLimit
             });
 
             mocha.addFile(file);
