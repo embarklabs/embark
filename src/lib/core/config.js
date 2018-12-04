@@ -467,13 +467,25 @@ Config.prototype.loadWebServerConfigFile = function() {
     "host": defaultHost,
     "openBrowser": true,
     "port": 8000,
-    "enableCatchAll": true
+    "enableCatchAll": true,
+    "protocol": "http" 
   };
 
   let configFilePath = this._getFileOrOject(this.configDir, 'webserver', 'webserver');
 
   let webServerConfig = this._mergeConfig(configFilePath, configObject, false);
 
+  if (webServerConfig.https){
+    try {
+      webServerConfig.certOptions = {
+        key: fs.readFileSync(webServerConfig.key),
+        cert: fs.readFileSync(webServerConfig.cert)
+      };
+      webServerConfig.protocol = 'https';
+    } catch (e) {
+      webServerConfig.protocol = 'http';
+    }
+  }
   if (configFilePath === false) {
     this.webServerConfig = {enabled: false};
     return;

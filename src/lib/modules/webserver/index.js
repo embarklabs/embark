@@ -40,7 +40,9 @@ class WebServer {
       host: this.host,
       port: this.port,
       plugins: this.plugins,
-      openBrowser: this.webServerConfig.openBrowser
+      openBrowser: this.webServerConfig.openBrowser,
+      protocol: this.webServerConfig.protocol,
+      certOptions : this.webServerConfig.certOptions
     });
 
     this.listenToCommands();
@@ -54,6 +56,8 @@ class WebServer {
       this.port = this.webServerConfig.port;
       this.server.host = this.host;
       this.server.port = this.port;
+      this.server.protocol = this.webServerConfig.protocol;
+      this.server.certOptions =  this.webServerConfig.certOptions;
 
       this.testPort(() => {
         this.events.request('processes:stop', 'webserver', _err => {
@@ -81,7 +85,7 @@ class WebServer {
       this.server.port = 0;
       return done();
     }
-    utils.pingEndpoint(this.host, this.port, 'http', 'http', '', (err) => {
+    utils.pingEndpoint(this.host, this.port, this.protocol, this.protocol, '', (err) => {
       if (err) { // Port is ok
         return done();
       }
@@ -96,7 +100,7 @@ class WebServer {
     const self = this;
 
     this.events.request("services:register", 'Webserver', function (cb) {
-      let url = 'http://' + canonicalHost(self.host) + ':' + self.port;
+      let url = this.protocol + '://' + canonicalHost(self.host) + ':' + self.port;
       utils.checkIsAvailable(url, function (available) {
         let devServer = __('Webserver') + ' (' + url + ')';
         let serverStatus = (available ? 'on' : 'off');
@@ -165,7 +169,7 @@ class WebServer {
   openBrowser(cb) {
     const _cb = () => { cb(); };
     return opn(
-      `http://${canonicalHost(this.server.hostname)}:${this.server.port}`,
+      `${this.protocol}://${canonicalHost(this.server.hostname)}:${this.server.port}`,
       {wait: false}
     ).then(_cb, _cb); // fail silently, e.g. in a docker container
   }
