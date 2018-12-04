@@ -5,7 +5,7 @@ const {runCmd} = require('../../utils/utils');
 const fs = require('../../core/fs');
 const assert = require('assert');
 const Test = require('./test');
-const EmbarkSpec = require('./reporter');
+const {EmbarkSpec, EmbarkApiSpec} = require('./reporter');
 const SolcTest = require('./solc_test');
 const constants = require('../../constants');
 
@@ -15,10 +15,33 @@ class TestRunner {
     this.logger = embark.logger;
     this.events = embark.events;
     this.ipc = options.ipc;
+    this.runResults = [];
 
     this.events.setCommandHandler('tests:run', (options, callback) => {
       this.run(options, callback);
     });
+
+    this.events.setCommandHandler('tests:results:reset', () => {
+      this.runResults = [];
+    });
+
+    this.events.setCommandHandler('tests:results:get', (callback) => {
+      callback(this.runResults);
+    });
+
+
+    this.events.setCommandHandler('tests:results:report', (test) => {
+      this.runResults.push(test);
+    });
+
+    this.embark.registerAPICall(
+      'post',
+      '/embark-api/test',
+      (req, res) => {
+        const options = {file: req.body.files, solc: true, inProcess: true};
+        this.run(options, () => res.send(this.runResults));
+      }
+    );
   }
 
   run(options, cb) {
@@ -126,7 +149,7 @@ class TestRunner {
     async.waterfall([
       function setupGlobalNamespace(next) {
         const test = new Test({loglevel: options.loglevel, node: options.node, events: self.events, logger: self.logger,
-          config: self.embark.config, ipc: self.ipc, coverage: options.coverage});
+          config: self.embark.config, ipc: self.ipc, coverage: options.coverage, inProcess: options.inProcess});
         global.embark = test;
         global.assert = assert;
         global.config = test.config.bind(test);
@@ -134,7 +157,7 @@ class TestRunner {
         let deprecatedWarning = function () {
           self.logger.error(__('%s are not supported anymore', 'EmbarkSpec & deployAll').red);
           self.logger.error(__('You can learn about the new revamped tests here: %s', 'https://embark.status.im/docs/testing.html'.underline));
-          process.exit();
+          if(!options.inProcess) process.exit();
         };
 
         global.deployAll = deprecatedWarning;
@@ -163,7 +186,8 @@ class TestRunner {
         let fns = files.map((file) => {
           return (cb) => {
             const mocha = new Mocha();
-            mocha.reporter(EmbarkSpec, {
+            const reporter = options.inProcess ? EmbarkApiSpec : EmbarkSpec;
+            mocha.reporter(reporter, {
               events: self.events,
               gasDetails: options.gasDetails,
               gasLimit: constants.tests.gasLimit
