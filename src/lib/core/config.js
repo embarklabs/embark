@@ -483,6 +483,8 @@ Config.prototype.loadWebServerConfigFile = function() {
       };
       webServerConfig.protocol = 'https';
     } catch (e) {
+      this.logger.error(e.message);
+      this.logger.warn('Invalid path for key/cert in config/webserver.js. Using http instead.');
       webServerConfig.certOptions = {};
       webServerConfig.protocol = 'http';
     }
