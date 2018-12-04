@@ -8,7 +8,6 @@ class Solidity {
     this.logger = embark.logger;
     this.events = embark.events;
     this.ipc = options.ipc;
-    this.contractDirectories = embark.config.contractDirectories;
     this.solcAlreadyLoaded = false;
     this.solcW = null;
     this.useDashboard = options.useDashboard;
@@ -169,7 +168,7 @@ class Solidity {
           function (file, fileCb) {
             let filename = file.filename;
 
-            for (let directory of self.contractDirectories) {
+            for (let directory of self.embark.config.contractDirectories) {
               let match = new RegExp("^" + directory);
               filename = filename.replace(match, '');
             }

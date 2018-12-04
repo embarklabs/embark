@@ -227,7 +227,13 @@ class Test {
     });
   }
 
-  _deploy(config, callback) {
+  async deploy(contract, deployArgs = {}, sendArgs = {}) {
+    const instance = await contract.deploy(deployArgs).send(sendArgs);
+    this.events.emit("tests:manualDeploy", instance);
+    return instance;
+  }
+
+  async _deploy(config, callback) {
     const self = this;
     async.waterfall([
       function getConfig(next) {

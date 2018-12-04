@@ -14,12 +14,14 @@ export interface Embark {
   registerConsoleCommand: any;
   logger: Logger;
   config: {
+    contractsFiles: any[];
     embarkConfig: {
       contracts: string[] | string;
       config: {
         contracts: string;
       };
     };
+    reloadConfig(): void;
   };
   registerActionForEvent(name: string, action: (callback: () => void) => void): void;
 }
