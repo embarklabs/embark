@@ -31,11 +31,20 @@ function recursiveMerge(target, source) {
 }
 
 function checkIsAvailable(url, callback) {
-  http.get(url, function (_res) {
-    callback(true);
-  }).on('error', function (_res) {
-    callback(false);
-  });
+  const protocol = url.split(':')[0];
+  if (protocol === 'http') {
+    http.get(url, function (_res) {
+      callback(true);
+    }).on('error', function (_res) {
+      callback(false);
+    });
+  } else if (protocol === 'https') {
+    https.get(url, function (_res) {
+      callback(true);
+    }).on('error', function (_res) {
+      callback(false);
+    });
+  }
 }
 
 function httpGetRequest(httpObj, url, callback) {
