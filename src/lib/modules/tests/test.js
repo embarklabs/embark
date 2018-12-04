@@ -64,7 +64,7 @@ class Test {
       this.simOptions.type = 'vm';
     } else if (this.simOptions.host || (this.options.node && this.options.node !== 'vm')) {
       let options = this.simOptions;
-      if (this.options.node) {
+      if (this.options.node && this.options.node !== 'vm') {
         options = utils.deconstructUrl(this.options.node);
       }
 
