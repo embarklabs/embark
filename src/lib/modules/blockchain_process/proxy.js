@@ -36,7 +36,7 @@ const parseJsonMaybe = (string) => {
   return object;
 };
 
-exports.serve = async (ipc, host, port, ws, origin) => {
+exports.serve = async (ipc, host, port, ws, origin, certOptions={}) => {
   const commList = {};
   const receipts = {};
   const transactions = {};
@@ -123,6 +123,7 @@ exports.serve = async (ipc, host, port, ws, origin) => {
     logLevel: 'warn',
     target: `http://${canonicalHost(host)}:${port}`,
     ws: ws,
+    ssl: certOptions,
 
     onError(err, _req, _res) {
       console.error(

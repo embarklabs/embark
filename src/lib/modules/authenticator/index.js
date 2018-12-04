@@ -62,11 +62,11 @@ class Authenticator {
     let self = this;
 
     this.events.once('outputDone', () => {
-      const {port, host, enabled} = this.embark.config.webServerConfig;
+      const {protocol, port, host, enabled} = this.embark.config.webServerConfig;
 
       if (enabled) {
         this.logger.info(__('Access the web backend with the following url: %s',
-          (`http://${host}:${port}/embark?token=${this.authToken}`.underline)));
+          (`${protocol}://${host}:${port}/embark?token=${this.authToken}`.underline)));
       }
     });
 
