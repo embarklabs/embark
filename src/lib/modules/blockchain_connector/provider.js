@@ -7,7 +7,7 @@ const ethUtil = require('ethereumjs-util');
 const ProviderEngine = require('web3-provider-engine');
 const TransportNodeHid = require('@ledgerhq/hw-transport-node-hid').default;
 const createLedgerSubprovider = require('@ledgerhq/web3-subprovider').default;
-const LedgerAppEth = require('@ledgerhq/hw-app-eth').default;
+const LedgerAppEth = require("@ledgerhq/hw-app-eth").default;
 const FetchSubprovider = require('web3-provider-engine/subproviders/fetch.js');
 const WebSocketSubProvider = require('web3-provider-engine/subproviders/websocket.js');
 
@@ -21,6 +21,9 @@ class Provider {
     this.logger = options.logger;
     this.isDev = options.isDev;
     this.nonceCache = {};
+    this.hardwareWalletConfigs = [];
+    this.checkIfHardwareWalletConfigPresent = this.checkIfHardwareWalletConfigPresent.bind(this);
+    this.handleLedgerWalletConfig = this.handleLedgerWalletConfig.bind(this);
   }
 
   getNonce(address, callback) {
@@ -39,9 +42,9 @@ class Provider {
     });
   }
 
-  startWeb3Provider(callback) {
+  async startWeb3Provider(callback) {
     const self = this;
-
+    
     if (this.type === 'rpc') {
       self.provider = new this.web3.providers.HttpProvider(self.web3Endpoint);
     } else if (this.type === 'ws') {
@@ -57,6 +60,19 @@ class Provider {
     } else {
       return callback(__("contracts config error: unknown deployment type %s", this.type));
     }
+
+    // check if the hardware wallet config is present and set it as the provider
+    if (this.checkIfHardwareWalletConfigPresent()) {
+      try {
+        await this.handleLedgerWalletConfig();
+      }
+      catch(error) {
+        self.logger.error(error);
+        return callback(error);
+      }
+     
+    }
+
     self.web3.setProvider(self.provider);
 
     self.web3.eth.getAccounts((err, accounts) => {
@@ -78,8 +94,8 @@ class Provider {
         self.web3.eth.defaultAccount = self.addresses[0];
       }
 
-      const realSend = self.provider.send.bind(self.provider);
-
+      const realSend = this.hardwareWalletConfigs.length > 0 ? self.provider.sendAsync.bind(self.provider): self.provider.send.bind(self.provider);
+      
       // Allow to run transaction in parallel by resolving
       // the nonce manually.
       // For each transaction, resolve the nonce by taking the
@@ -111,12 +127,23 @@ class Provider {
 
               // sign transaction using Ledger
               const signature = await new LedgerAppEth(transport).signTransaction("44'/60'/0'/0/0", tx.serialize().toString('hex'));
+              let v = signature['v'].toString(16);
 
-              // copy the signature parameters and set the correct chainId using the newtowrkId 
+              // copy the signature parameters and set the correct chainId using the newtworkId 
               tx.r = `0x${signature.r}`;
               tx.s = `0x${signature.s}`;
-              tx.v = `0x${signature.v}`;
-              tx._chainId = this.hardwareWalletConfigs[0].networkId;
+
+              // EIP155 support. check/recalc signature v value.
+              const rv = parseInt(v, 16);
+              const chainId = this.hardwareWalletConfigs[0].networkId;
+              let cv = (chainId * 2) + 35;
+              if (rv !== cv && (rv & cv) !== rv) { //eslint-disable-line no-bitwise
+                cv += 1; // add signature v bit.
+              }
+              v = cv.toString(16);
+
+              tx.v = `0x${v}`;
+              tx._chainId = chainId;
             }
             catch (error) {
               self.logger.error("Unable to re-sign ledger transaction because ", (error.message || error.stack) || error);
@@ -167,10 +194,115 @@ class Provider {
     });
   }
 
+  checkIfHardwareWalletConfigPresent() {
+    let ledgerHardwarePresent = false;
+    
+    if (this.accountsConfig) {
+      if(this.accountsConfig.length && this.accountsConfig.length > 0){
+        this.accountsConfig.forEach((accountConfig) => {
+          if (accountConfig.hardwareWallet) {
+            if (accountConfig.hardwareWallet === 'ledger') {
+              this.hardwareWalletConfigs.push(accountConfig);
+              ledgerHardwarePresent = true;
+            }
+          }
+        });
+      }
+     
+    }
+   
+    return ledgerHardwarePresent;
+  }
+
+  async handleLedgerWalletConfig() {
+    const self = this;
+
+    if (!this.hardwareWalletConfigs.length) {
+      // TODO when we have documentation for it, add a link in the error message
+      throw new Error('No ledger wallet config found, please add it');
+    }
+    if (this.hardwareWalletConfigs.length > 1) {
+      self.logger.warn(__('Mulitple ledger wallet configs found. Selecting the first config only.'));
+    }
+
+    let transport = null;
+    let getTransport = null;
+
+    if (process.platform === 'darwin') { // workaround for this bug in high sierra https://github.com/LedgerHQ/ledgerjs/issues/213
+      try {
+       // here we test to see if we can connect to a device and throw an error if we can't
+        self.logger.info(__('Testing connection to the ledger device using the path provided, please make sure "browser support" is set to "no" in the device'));
+        transport = await TransportNodeHid.open(this.hardwareWalletConfigs[0].devicePath);
+      }
+      catch (error) {
+        self.logger.error("Ledger device connection error. Please make sure the device is connected properly and that no other app is using it");
+        throw error; //no need to continue if no device has been detected or in case we get an error
+      }
+      finally {
+        if (transport !== null) {
+          transport.close(); // close the transport to ensure it doesn't refuse to connect later
+
+          getTransport = async () => {
+            transport = await TransportNodeHid.open(this.hardwareWalletConfigs[0].devicePath);
+            transport.setDebugMode(true);
+            return transport;
+          };
+        }
+      }
+    }
+    else {
+      try {
+       // here we test to see if we can connect to a device and throw an error if we can't
+        self.logger.info(__('Testing connection to the ledger device, please make sure "browser support" is set to "no" in the device'));
+        transport = await TransportNodeHid.create();
+      }
+      catch (error) {
+        self.logger.error("Ledger device connection error. Please make sure the device is connected properly and that no other app is using it");
+        throw error; //no need to continue if no device has been detected or in case we get an error
+      }
+      finally {
+        if (transport !== null) {
+          transport.close(); // close the transport to ensure it doesn't refuse to connect later
+
+          getTransport = async () => {
+            transport = await TransportNodeHid.create();
+            transport.setDebugMode(true);
+            return transport;
+          };
+        }
+      }
+    }
+
+    const ledger = createLedgerSubprovider(getTransport, {
+      networkId: this.hardwareWalletConfigs[0].networkId,  // id of the network you are connecting to
+      accountsLength: this.hardwareWalletConfigs[0].numAddresses, // number of accounts to load from the device
+      askConfirm: this.hardwareWalletConfigs[0].showDeviceConfirmations // actively show confirmations in the device as its transacting
+    });
+    
+    const engine = new ProviderEngine();
+    engine.addProvider(ledger); 
+
+    if (self.type === 'rpc') {
+      engine.addProvider(new FetchSubprovider({ rpcUrl: self.web3Endpoint })); 
+    }
+
+    if (self.type === 'ws') {
+      engine.addProvider(new WebSocketSubProvider({ rpcUrl: self.web3Endpoint, debug: true, origin: constants.embarkResourceOrigin })); 
+    }
+
+    engine.start();
+    
+    self.provider = engine;
+
+    // listen for hardware connectivity error
+    self.provider.on('error', (err) => self.logger.error('Ledger wallet error ', (err.message || err.stack) || err));
+    self.provider.on('end', () => self.logger.error('Connection to wallet ended'));
+  }
+
   connected() {
-    if (this.type === 'rpc') {
+    if (this.type === 'rpc' || (this.type === 'ws' && this.hardwareWalletConfigs.length > 0)) {
       return !!this.provider;
-    } else if (this.type === 'ws') {
+    } else if (this.type === 'ws' && this.hardwareWalletConfigs.length === 0) {
       return this.provider && this.provider.connection._connection && this.provider.connection._connection.connected;
     }
 
@@ -178,13 +310,17 @@ class Provider {
   }
 
   stop() {
-    if (this.provider && this.provider.removeAllListeners) {
+    if (this.hardwareWalletConfigs.length > 0) {
+      this.provider.stop();
+    } else if (this.provider && this.provider.removeAllListeners) {
       this.provider.removeAllListeners('connect');
       this.provider.removeAllListeners('error');
       this.provider.removeAllListeners('end');
       this.provider.removeAllListeners('data');
       this.provider.responseCallbacks = {};
     }
+
+    
     this.provider = null;
     this.web3.setProvider(null);
   }

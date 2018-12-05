@@ -35,8 +35,8 @@ class AccountParser {
       let randomAccount = web3.eth.accounts.create();
       accountConfig.privateKey = randomAccount.privateKey;
     }
-
-    if (accountConfig.nodeAccounts) {
+    /*eslint complexity: ["error", 22]*/
+    if (accountConfig.nodeAccounts || accountConfig.hardwareWallet) {
       if (!nodeAccounts) {
         logger.warn('Cannot use nodeAccounts in this context');
         return null;
