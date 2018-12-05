@@ -402,7 +402,7 @@ Blockchain.prototype.initChainAndGetAddress = function (callback) {
     function listAccounts(next) {
       self.runCommand(self.client.listAccountsCommand(), {}, (err, stdout, _stderr) => {
         if (err || stdout === undefined || stdout.indexOf("Fatal") >= 0) {
-          this.logger.info(__("no accounts found").green);
+          self.logger.info(__("no accounts found").green);
           return next();
         }
         let firstAccountFound = self.client.parseListAccountsCommandResultToAddress(stdout);
@@ -410,7 +410,7 @@ Blockchain.prototype.initChainAndGetAddress = function (callback) {
           console.log(__("no accounts found").green);
           return next();
         }
-        this.logger.info(__("already initialized").green);
+        self.logger.info(__("already initialized").green);
         address = firstAccountFound;
         next(ALREADY_INITIALIZED);
       });
