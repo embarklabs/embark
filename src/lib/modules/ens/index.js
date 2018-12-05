@@ -5,7 +5,7 @@ const async = require('async');
 const embarkJsUtils = require('embarkjs').Utils;
 const reverseAddrSuffix = '.addr.reverse';
 const ENSFunctions = require('./ENSFunctions');
-import { ZERO_ADDRESS } from '../../utils/addressUtils';
+import {ZERO_ADDRESS} from '../../utils/addressUtils';
 import {ens} from '../../constants';
 
 const ENS_WHITELIST = ens.whitelist;
@@ -223,6 +223,7 @@ class ENS {
     this.events.request("blockchain:defaultAccount:get", (defaultAccount) => {
       async.each(Object.keys(this.registration.subdomains), (subDomainName, eachCb) => {
         const address = this.registration.subdomains[subDomainName];
+        const directivesRegExp = new RegExp(/\$(\w+\[?\d?\]?)/g);
         this.ensResolve(`${subDomainName}.${this.registration.rootDomain}`, (error, currentAddress) => {
           if (currentAddress && currentAddress.toLowerCase() === address.toLowerCase()) {
             return eachCb();
@@ -233,12 +234,28 @@ class ENS {
             return eachCb(error);
           }
 
+          const directives = directivesRegExp.exec(address);
+          if (directives && directives.length) {
+            this.embark.registerActionForEvent("contracts:deploy:afterAll", async (deployActionCb) => {
+              this.events.request("contracts:contract", directives[1], (contract) => {
+                if(!contract) return deployActionCb(); // if the contract is not registered in the config, it will be undefined here
+                const reverseNode = utils.soliditySha3(contract.deployedAddress.toLowerCase().substr(2) + reverseAddrSuffix);
+                this.registerSubDomain(defaultAccount, subDomainName, reverseNode, contract.deployedAddress, secureSend, deployActionCb);
+              });
+            });
+            return eachCb();
+          }
+
           const reverseNode = utils.soliditySha3(address.toLowerCase().substr(2) + reverseAddrSuffix);
-          ENSFunctions.registerSubDomain(this.ensContract, this.registrarContract, this.resolverContract, defaultAccount,
-            subDomainName, this.registration.rootDomain, reverseNode, address, this.logger, secureSend, eachCb);
+          this.registerSubDomain(defaultAccount, subDomainName, reverseNode, address, secureSend, eachCb);
         });
       }, cb);
     });
+  }
+
+  registerSubDomain(defaultAccount, subDomainName, reverseNode, address, secureSend, cb) {
+    ENSFunctions.registerSubDomain(this.ensContract, this.registrarContract, this.resolverContract, defaultAccount,
+      subDomainName, this.registration.rootDomain, reverseNode, address, this.logger, secureSend, cb);
   }
 
   createResolverContract(config, callback) {
@@ -253,7 +270,7 @@ class ENS {
   registerAPI() {
     let self = this;
 
-    const createInternalResolverContract = function(resolverAddress, callback) {
+    const createInternalResolverContract = function (resolverAddress, callback) {
       self.createResolverContract({resolverAbi: self.ensConfig.Resolver.abiDefinition, resolverAddress}, callback);
     };
 
@@ -262,10 +279,10 @@ class ENS {
       '/embark-api/ens/resolve',
       (req, res) => {
         async.waterfall([
-          function(callback) {
+          function (callback) {
             ENSFunctions.resolveName(req.query.name, self.ensContract, createInternalResolverContract.bind(self), callback);
           }
-        ], function(error, address) {
+        ], function (error, address) {
           if (error) {
             return res.send({error: error.message});
           }
@@ -279,10 +296,10 @@ class ENS {
       '/embark-api/ens/lookup',
       (req, res) => {
         async.waterfall([
-          function(callback) {
+          function (callback) {
             ENSFunctions.lookupAddress(req.query.address, self.ensContract, utils, createInternalResolverContract.bind(self), callback);
           }
-        ], function(error, name) {
+        ], function (error, name) {
           if (error) {
             return res.send({error: error || error.message});
           }
@@ -315,10 +332,10 @@ class ENS {
     const self = this;
 
     // get namehash, import it into file
-    self.events.request("version:get:eth-ens-namehash", function(EnsNamehashVersion) {
+    self.events.request("version:get:eth-ens-namehash", function (EnsNamehashVersion) {
       let currentEnsNamehashVersion = require('../../../../package.json').dependencies["eth-ens-namehash"];
       if (EnsNamehashVersion !== currentEnsNamehashVersion) {
-        self.events.request("version:getPackageLocation", "eth-ens-namehash", EnsNamehashVersion, function(err, location) {
+        self.events.request("version:getPackageLocation", "eth-ens-namehash", EnsNamehashVersion, function (err, location) {
           self.embark.registerImportFile("eth-ens-namehash", fs.dappPath(location));
         });
       }
@@ -475,7 +492,7 @@ class ENS {
     if (!self.enabled) {
       return cb('ENS not enabled');
     }
-    if(!self.configured) {
+    if (!self.configured) {
       return cb('ENS not configured');
     }
     const hashedName = namehash.hash(name);
@@ -485,7 +502,7 @@ class ENS {
           if (err) {
             return next(err);
           }
-          if(resolverAddress === ZERO_ADDRESS) {
+          if (resolverAddress === ZERO_ADDRESS) {
             return next(NOT_REGISTERED_ERROR);
           }
           next(null, resolverAddress);
