@@ -7,7 +7,7 @@ const ethUtil = require('ethereumjs-util');
 const ProviderEngine = require('web3-provider-engine');
 const TransportNodeHid = require('@ledgerhq/hw-transport-node-hid').default;
 const createLedgerSubprovider = require('@ledgerhq/web3-subprovider').default;
-const LedgerAppEth = require('@ledgerhq/hw-transport').default;
+const LedgerAppEth = require('@ledgerhq/hw-app-eth').default;
 const FetchSubprovider = require('web3-provider-engine/subproviders/fetch.js');
 const WebSocketSubProvider = require('web3-provider-engine/subproviders/websocket.js');
 
