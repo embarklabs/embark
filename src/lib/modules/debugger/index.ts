@@ -1,5 +1,7 @@
 import DebuggerManager from "./debugger_manager";
 
+const NO_DEBUG_SESSION = __("No debug session active. Activate one with `debug`");
+
 interface Events {
   on: any;
   request: any;
@@ -227,15 +229,21 @@ class TransactionDebugger {
       return {
         match: () => (cmd === "next" || cmd === "n"),
         process: (cb: any) => {
+          if (!this.cmdDebugger) {
+            this.embark.logger.warn(NO_DEBUG_SESSION);
+            return cb();
+          }
           if (!this.cmdDebugger.canGoNext()) {
-            return;
+            return cb();
           }
           if (!this.cmdDebugger.currentStep()) {
             this.embark.logger.info("end of execution reached");
-            return this.cmdDebugger.unload();
+            this.cmdDebugger.unload();
+            return cb();
           }
           this.cmdDebugger.stepOverForward(true);
           this.displayStepInfo();
+          cb();
         },
       };
     });
@@ -244,8 +252,12 @@ class TransactionDebugger {
       return {
         match: () => (cmd === "previous" || cmd === "p"),
         process: (cb: any) => {
+          if (!this.cmdDebugger) {
+            this.embark.logger.warn(NO_DEBUG_SESSION);
+            return cb();
+          }
           if (!this.cmdDebugger.canGoPrevious()) {
-            return;
+            return cb();
           }
           if (!this.cmdDebugger.currentStep()) {
             this.embark.logger.info("end of execution reached");
@@ -253,6 +265,7 @@ class TransactionDebugger {
           }
           this.cmdDebugger.stepOverBack(true);
           this.displayStepInfo();
+          cb();
         },
       };
     });
@@ -261,7 +274,12 @@ class TransactionDebugger {
       return {
         match: () => (cmd === "var local" || cmd === "v l" || cmd === "vl"),
         process: (cb: any) => {
+          if (!this.cmdDebugger) {
+            this.embark.logger.warn(NO_DEBUG_SESSION);
+            return cb();
+          }
           this.cmdDebugger.displayLocals();
+          cb();
         },
       };
     });
@@ -270,7 +288,12 @@ class TransactionDebugger {
       return {
         match: () => (cmd === "var global" || cmd === "v g" || cmd === "vg"),
         process: (cb: any) => {
+          if (!this.cmdDebugger) {
+            this.embark.logger.warn(NO_DEBUG_SESSION);
+            return cb();
+          }
           this.cmdDebugger.displayGlobals();
+          cb();
         },
       };
     });
@@ -279,9 +302,17 @@ class TransactionDebugger {
       return {
         match: () => (cmd === "var all" || cmd === "v a" || cmd === "va"),
         process: (cb: any) => {
+          if (!this.cmdDebugger) {
+            this.embark.logger.warn(NO_DEBUG_SESSION);
+            return cb();
+          }
           this.getGlobals(this.currentCmdTxHash, (err: any, globals: any) => {
-            if (err) { return this.embark.logger.error(err); }
+            if (err) {
+              this.embark.logger.error(err);
+              return cb();
+            }
             this.embark.logger.info(globals);
+            cb();
           });
         },
       };
