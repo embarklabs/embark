@@ -1,5 +1,6 @@
 import Handlebars from "handlebars";
 import * as path from "path";
+import { ABIDefinition } from "web3/types";
 
 import { Contract } from "../../../../../typings/contract";
 import { Embark } from "../../../../../typings/embark";
@@ -10,6 +11,12 @@ import { SmartContractsRecipe } from "../../smartContractsRecipe";
 const fs = require("../../../../core/fs");
 const utils = require("../../../../utils/utils");
 require("../../handlebarHelpers");
+
+interface ABIDefinitionDecorated extends ABIDefinition {
+  isIpfsText?: boolean;
+  isIpfsFile?: boolean;
+  isStandard?: boolean;
+}
 
 const indexTemplatePath = path.join(__dirname, "templates", "index.html.hbs");
 const dappTemplatePath = path.join(__dirname, "templates", "dapp.js.hbs");
@@ -64,10 +71,46 @@ export class ReactBuilder implements Builder {
 
     const dappData = {
       contractName,
-      functions: contract.abiDefinition.filter((entry) => entry.type === "function"),
+      functions: this.getFunctions(contract),
     };
 
     return [indexTemplate(indexData), dappTemplate(dappData)];
+  }
+
+  private getFunctions(contract: Contract) {
+    const ipfsAttributes = this.description.ipfsAttributes(contract.className);
+
+    return contract.abiDefinition.filter((entry) => entry.type === "function").map((entry) => {
+      const decorated: ABIDefinitionDecorated = entry;
+      const inputName = entry.inputs && entry.inputs.length > 1 ? entry.inputs[1].name.substring(1, entry.inputs[1].name.length) : "";
+      const functionName = entry.name || "";
+
+      Object.keys(ipfsAttributes).forEach((name) => {
+        let text = false;
+        if (ipfsAttributes[name] === "ipfsText") {
+          text = true;
+        }
+
+        let ipfs = false;
+        if (name === inputName || `get${name.charAt(0).toUpperCase() + name.slice(1)}` === functionName) {
+          ipfs = true;
+        }
+
+        if (ipfs) {
+          if (text) {
+            decorated.isIpfsText = true;
+          } else {
+            decorated.isIpfsFile = true;
+          }
+        }
+      });
+
+      if (!decorated.isIpfsText && !decorated.isIpfsFile) {
+        decorated.isStandard = true;
+      }
+
+      return decorated;
+    });
   }
 
   private installDependencies() {
