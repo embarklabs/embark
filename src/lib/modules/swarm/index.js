@@ -5,6 +5,7 @@ const SwarmAPI = require('swarm-api');
 // TODO: not great, breaks module isolation
 const StorageProcessesLauncher = require('../storage/storageProcessesLauncher');
 const constants = require('../../constants.json');
+require('colors');
 
 class Swarm {
 
@@ -20,13 +21,20 @@ class Swarm {
     this.webServerConfig = embark.config.webServerConfig;
     this.blockchainConfig = embark.config.blockchainConfig;
 
+    const cantDetermineUrl = this.storageConfig.upload.provider !== 'swarm' && !this.storageConfig.dappConnection.some(connection => connection.provider === 'swarm');
+
+    if(this.isSwarmEnabledInTheConfig() && cantDetermineUrl){
+      console.warn('\n===== Swarm module will not be loaded =====');
+      console.warn(`Swarm is enabled in the config, however the config is not setup to provide a URL for swarm and therefore the Swarm module will not be loaded. Please either change the ${'config/storage > upload'.bold} setting to Swarm or add the Swarm config to the ${'config/storage > dappConnection'.bold} array. Please see ${'https://embark.status.im/docs/storage_configuration.html'.underline} for more information.\n`);
+    }
+    if (!this.isSwarmEnabledInTheConfig() || cantDetermineUrl) {
+      return;
+    }
+
     this.providerUrl = utils.buildUrl(this.storageConfig.upload.protocol, this.storageConfig.upload.host, this.storageConfig.upload.port);
 
     this.getUrl = this.storageConfig.upload.getUrl || this.providerUrl + '/bzz:/';
 
-    if (!this.isSwarmEnabledInTheConfig()) {
-      return;
-    }
 
     this.swarm = new SwarmAPI({gateway: this.providerUrl});
 
