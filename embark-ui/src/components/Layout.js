@@ -96,7 +96,7 @@ class Layout extends React.Component {
       }
 
       if (nextProps.searchResult.className) {
-        this.props.history.push(`/embark/contracts/${nextProps.searchResult.className}/overview`);
+        this.props.history.push(`/embark/explorer/contracts/${nextProps.searchResult.className}`);
         return false;
       }
       if (nextProps.searchResult.address) {
