@@ -51,21 +51,11 @@ class Authenticator {
       return {
         match: () => cmd === "token",
         process: (callback) => {
-          callback(null, __('Your authentication token: %s \nYou can use the command `copytoken` to copy the authentication token to your clipboard', this.authToken));
-        }
-      };
-    });
-
-    this.embark.registerConsoleCommand((cmd, _options) => {
-      return {
-        match: () => cmd === "copytoken",
-        process: (callback) => {
           utils.copyToClipboard(this.authToken);
           callback(null, __('Token copied to clipboard: %s', this.authToken));
         }
       };
     });
-
   }
 
   registerEvents() {
