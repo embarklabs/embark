@@ -89,45 +89,95 @@ function getJson(url, cb) {
   httpGetJson(url, cb);
 }
 
-function pingEndpoint(host, port, type, protocol, origin, callback) {
-  const options = {
-    protocolVersion: 13,
-    perMessageDeflate: true,
-    origin: origin,
-    host: host,
-    port: port
+function pingEndpoint(host, port, type, protocol, origin, callback, count = 0, start = Date.now()) {
+  // remove trailing api key from infura, e.g. rinkeby.infura.io/nmY8WtT4QfEwz2S7wTbl
+  const _host = host.indexOf('/') > -1 ? host.split('/')[0] : host;
+  const maxWait = 600000;
+  const timeout = 100;
+
+  const adjustTimeout = () => {
+    const t = Math.floor(
+      (1 + (0.1 * (count && Math.pow(2, count - 1)))) * timeout
+    );
+    return t > 3000 ? 3000 : t;
   };
+
+  let alreadyClosed = false;
+  let retrying = false;
+
+  const shouldCallback = (...args) => {
+    if (args.length) {
+      callback._shouldCallback = !!args[0];
+    }
+    let shouldCallback;
+    if (callback.hasOwnProperty('_shouldCallback')) {
+      shouldCallback = !!callback._shouldCallback;
+    } else {
+      shouldCallback = true;
+    }
+    return shouldCallback;
+  };
+
+  const cleanup = (req, closeMethod) => {
+    if (!alreadyClosed) {
+      alreadyClosed = true;
+      setImmediate(() => { req[closeMethod](); });
+    }
+  };
+
+  const handleEvent = (req, closeMethod, retryCond, ...args) => {
+    if (shouldCallback()) {
+      if (!retrying && retryCond) {
+        retrying = true;
+        setImmediate(() => {
+          pingEndpoint(
+            host, port, type, protocol, origin, callback, ++count, start
+          );
+        });
+      } else if (!alreadyClosed) {
+        shouldCallback(false);
+        callback(...args);
+      }
+    }
+    // following cleanup any later events on req will effectively be ignored
+    cleanup(req, closeMethod);
+  };
+
+  const handleError = (req, closeMethod) => {
+    req.on('error', (err) => {
+      handleEvent(
+        req,
+        closeMethod,
+        (/timed out/).test(err.message) && Date.now() - start < maxWait,
+        err
+      );
+    });
+  };
+
+  const handleSuccess = (req, closeMethod, event) => {
+    req.once(event, () => { handleEvent(req, closeMethod, false); });
+  };
+
+  const handleRequest = (req, closeMethod, event) => {
+    handleError(req, closeMethod);
+    handleSuccess(req, closeMethod, event);
+  };
+
   if (type === 'ws') {
-    options.headers = {
-      'Sec-WebSocket-Version': 13,
-      Connection: 'Upgrade',
-      Upgrade: 'websocket',
-      'Sec-WebSocket-Extensions': 'permessage-deflate; client_max_window_bits',
-      Origin: origin
-    };
-  }
-  let req;
-  // remove trailing api key from infura, ie rinkeby.infura.io/nmY8WtT4QfEwz2S7wTbl
-  if (options.host.indexOf('/') > -1) {
-    options.host = options.host.split('/')[0];
-  }
-  if (protocol === 'https') {
-    req = require('https').get(options);
+    const req = new (require('ws'))(
+      `${protocol === 'https' ? 'wss' : 'ws'}://${_host}:${port}/`,
+      {handshakeTimeout: adjustTimeout(), origin}
+    );
+    handleRequest(req, 'close', 'open');
   } else {
-    req = require('http').get(options);
+    const req = (protocol === 'https' ? require('https') : require('http')).get(
+      {host: _host, origin, port}
+    );
+    handleRequest(req, 'abort', 'response');
+    req.setTimeout(adjustTimeout(), () => {
+      req.emit('error', new Error('timed out'));
+    });
   }
-
-  req.on('error', (err) => {
-    callback(err);
-  });
-
-  req.on('response', (_response) => {
-    callback();
-  });
-
-  req.on('upgrade', (_res, _socket, _head) => {
-    callback();
-  });
 }
 
 function runCmd(cmd, options, callback) {
@@ -554,7 +604,7 @@ function isNotFolder(node){
 }
 
 function byName(a, b) {
-    return a.name.localeCompare(b.name);
+  return a.name.localeCompare(b.name);
 }
 
 function fileTreeSort(nodes){

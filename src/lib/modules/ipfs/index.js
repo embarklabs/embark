@@ -4,6 +4,7 @@ const fs = require('../../core/fs.js');
 const IpfsApi = require('ipfs-api');
 // TODO: not great, breaks module isolation
 const StorageProcessesLauncher = require('../storage/storageProcessesLauncher');
+const {canonicalHost} = require('../../utils/host');
 
 class IPFS {
 
@@ -67,7 +68,7 @@ class IPFS {
     });
 
     self.events.request("services:register", 'IPFS', function (cb) {
-      self._checkService((err, body) => {
+      self._checkService(true, (err, body) => {
         if (err) {
           self.logger.trace("IPFS unavailable");
           return cb({name: "IPFS ", status: 'off'});
@@ -82,21 +83,42 @@ class IPFS {
     });
   }
 
-  _getNodeUrl() {
+  _getNodeConfig() {
     if (this.storageConfig.upload.provider === 'ipfs') {
-      return utils.buildUrlFromConfig(this.storageConfig.upload) + '/api/v0/version';
+      return this.storageConfig.upload;
     }
 
     for (let connection of this.storageConfig.dappConnection) {
       if (connection.provider === 'ipfs') {
-        return utils.buildUrlFromConfig(connection) + '/api/v0/version';
+        return connection;
       }
     }
   }
 
-  _checkService(cb) {
-    let url = this._getNodeUrl();
-    utils.getJson(url, cb);
+  _checkService(getJson, cb) {
+    let _cb = cb || function () {};
+    let _getJson = getJson;
+    if (typeof getJson === 'function') {
+      _cb = getJson;
+      _getJson = false;
+    }
+    const cfg = this._getNodeConfig();
+    utils.pingEndpoint(
+      canonicalHost(cfg.host),
+      cfg.port,
+      false,
+      cfg.protocol === 'https' ? cfg.protocol : 'http',
+      utils.buildUrlFromConfig(cfg),
+      (err) => {
+        if (err) {
+          _cb(err);
+        } else if (_getJson) {
+          utils.getJson(utils.buildUrlFromConfig(cfg) + '/api/v0/version', _cb);
+        } else {
+          _cb();
+        }
+      }
+    );
   }
 
   addStorageProviderToEmbarkJS() {

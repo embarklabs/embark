@@ -109,7 +109,7 @@ exports.serve = async (ipc, host, port, ws, origin) => {
         'http',
         origin ? origin.split(',')[0] : undefined,
         (err) => {
-          if (!err || (Date.now() - start > 10000)) {
+          if (!err || (Date.now() - start > 600000)) {
             resolve();
           } else {
             utils.timer(250).then(waitOnTarget).then(resolve);
