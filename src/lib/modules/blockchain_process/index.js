@@ -52,14 +52,14 @@ class BlockchainModule {
     const self = this;
     self.embark.registerConsoleCommand((cmd, _options) => {
       return {
-        match: () => cmd === 'log geth on',
+        match: () => cmd === 'log blockchain on',
         process: (cb) => self.events.request('logs:ethereum:turnOn', cb)
       };
     });
 
     self.embark.registerConsoleCommand((cmd, _options) => {
       return {
-        match: () => cmd === 'log geth off',
+        match: () => cmd === 'log blockchain off',
         process: (cb) => self.events.request('logs:ethereum:turnOff', cb)
       };
     });
