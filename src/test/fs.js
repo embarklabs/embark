@@ -1,7 +1,7 @@
 /*globals after, before, describe, it*/
 const {assert} = require('chai');
 const os = require('os');
-
+const path = require('path');
 const underlyingFs = require('fs-extra');
 const fs = require('../lib/core/fs');
 
@@ -59,7 +59,7 @@ describe('fs', () => {
       it('should not throw exceptions on paths inside the temporary dir root', (done) => {
         assert.doesNotThrow(async () => {
           try {
-            await fs[func](os.tmpdir() + '/foo');
+            await fs[func](path.join(os.tmpdir(), 'foo'));
           } catch(e) {
             if(e.message.indexOf('EPERM') === 0) throw e;
           }
