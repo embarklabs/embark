@@ -79,7 +79,7 @@ class Console {
         "web3 - " + __("instantiated web3.js object configured to the current environment"),
         "EmbarkJS - " + __("EmbarkJS static functions for Storage, Messages, Names, etc."),
         "token - " + __("Copies and prints the token for the cockpit"),
-        "debug - " + __("Debug the last transaction or the transaction specified by a hash"),
+        "debug <txHash> - " + __("Debug the last transaction or the transaction specified by a hash"),
         "    next/n - " + __("During a debug, step over forward"),
         "    previous/p - " + __("During a debug, step over back"),
         "    var local/v l/vl - " + __("During a debug, display local variables"),
