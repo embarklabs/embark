@@ -5126,10 +5126,10 @@ elliptic@^6.0.0, elliptic@^6.2.3, elliptic@^6.4.0:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
-embarkjs@0.4.5:
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/embarkjs/-/embarkjs-0.4.5.tgz#1f3ce3bb1a772ab5f024b841bf042c52f0010183"
-  integrity sha512-WAW9tlvCiSa6DEC6M+ZfFS9WemE91DunOUP4rn7urtFgOpT0m08dFKB0F+Qfcmonb7cozEPfNv5C78xSt1JUsA==
+embarkjs@0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/embarkjs/-/embarkjs-0.5.0.tgz#b5b282289896b62f7ef4d4df40566d1777f4b83e"
+  integrity sha512-VA5/S+VCfEMUhXHHo5yh7O6FNuKBPq8+tK1+Zzwp2PWBqrCk8MY1NgZRt+Q4F0IVsbdl6XJhXM0MSDdLxZFrGg==
   dependencies:
     "@babel/runtime-corejs2" "7.0.0-rc.1"
     async "2.6.1"
