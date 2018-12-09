@@ -2,15 +2,12 @@
 
 const Asm = require('stream-json/Assembler');
 const {canonicalHost, defaultHost} = require('../../utils/host');
-const {chain}  = require('stream-chain');
-const cloneable = require('cloneable-readable');
 const constants = require('../../constants.json');
 const express = require('express');
-const {parser} = require('stream-json');
+const {parser: jsonParser} = require('stream-json');
 const proxyMiddleware = require('http-proxy-middleware');
 const pump = require('pump');
 const utils = require('../../utils/utils');
-const WebSocket = require('ws');
 const WsParser = require('simples/lib/parsers/ws');
 
 const hex = (n) => {
@@ -21,17 +18,17 @@ const hex = (n) => {
 const parseJsonMaybe = (string) => {
   let object;
   if (typeof string === 'string') {
+    // ignore empty strings
     if (string) {
       try {
         object = JSON.parse(string);
       } catch(e) {
+        // ignore client/server byte sequences sent when connections are closing
         if (Array.from(Buffer.from(string)).map(hex).join(':') !==
             '03:ef:bf:bd') {
           console.error(`Proxy: Error parsing string as JSON '${string}'`);
         }
       }
-    } else {
-      console.error('Proxy: Expected a non-empty string');
     }
   } else {
     console.error(`Proxy: Expected a string but got type '${typeof string}'`);
@@ -137,10 +134,9 @@ exports.serve = async (ipc, host, port, ws, origin) => {
     onProxyReq(_proxyReq, req, _res) {
       if (req.method === 'POST') {
         // messages TO the target
-        Asm.connectTo(chain([
-          req,
-          parser()
-        ])).on('done', ({current: object}) => {
+        Asm.connectTo(
+          pump(req, jsonParser())
+        ).on('done', ({current: object}) => {
           trackRequest(object);
         });
       }
@@ -149,10 +145,9 @@ exports.serve = async (ipc, host, port, ws, origin) => {
     onProxyRes(proxyRes, req, _res) {
       if (req.method === 'POST') {
         // messages FROM the target
-        Asm.connectTo(chain([
-          proxyRes,
-          parser()
-        ])).on('done', ({current: object}) => {
+        Asm.connectTo(
+          pump(proxyRes, jsonParser())
+        ).on('done', ({current: object}) => {
           trackResponse(object);
         });
       }
@@ -162,22 +157,18 @@ exports.serve = async (ipc, host, port, ws, origin) => {
   if (ws) {
     proxyOpts.onProxyReqWs = (_proxyReq, _req, socket, _options, _head) => {
       // messages TO the target
-      const wsp = new WsParser(0, false);
-      wsp.on('frame', ({data: buffer}) => {
+      pump(socket, new WsParser(0, false)).on('frame', ({data: buffer}) => {
         const object = parseJsonMaybe(buffer.toString());
         trackRequest(object);
       });
-      pump(cloneable(socket), wsp);
     };
 
     proxyOpts.onOpen = (proxySocket) => {
       // messages FROM the target
-      const recv = new WebSocket.Receiver();
-      recv.on('message', (data) => {
-        const object = parseJsonMaybe(data);
+      pump(proxySocket, new WsParser(0, true)).on('frame', ({data: buffer}) => {
+        const object = parseJsonMaybe(buffer.toString());
         trackResponse(object);
       });
-      pump(cloneable(proxySocket), recv);
     };
   }
 
@@ -192,7 +183,13 @@ exports.serve = async (ipc, host, port, ws, origin) => {
       () => { resolve(server); }
     );
     if (ws) {
-      server.on('upgrade', proxy.upgrade);
+      server.on('upgrade', (msg, socket, head) => {
+        const swallowError = (err) => {
+          console.error(`Proxy: Network error '${err.message}'`);
+        };
+        socket.on('error', swallowError);
+        proxy.upgrade(msg, socket, head);
+      });
     }
   });
 };
