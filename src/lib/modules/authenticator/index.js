@@ -1,4 +1,4 @@
-const uuid = require('uuid/v1');
+const uuid = require('uuid/v4');
 const utils = require("../../utils/utils.js");
 const keccak = require('keccakjs');
 
@@ -6,25 +6,39 @@ const ERROR_OBJ = {error: __('Wrong authentication token. Get your token from th
 
 class Authenticator {
   constructor(embark, _options) {
-    this.authToken = uuid();
     this.embark = embark;
     this.logger = embark.logger;
     this.events = embark.events;
+
+    this.authToken = uuid();
+    this.emittedTokens = {};
 
     this.registerCalls();
     this.registerEvents();
   }
 
-  generateRequestHash(req) {
-    let cnonce = req.headers['x-embark-cnonce'];
-    let hash = new keccak();
+  getRemoteAddress(req) {
+    return (req.headers && req.headers['x-forwarded-for']) ||
+      (req.connection && req.connection.remoteAddress) ||
+      (req.socket && req.socket.remoteAddress) ||
+      (req._socket && req._socket.remoteAddress);
+  }
+
+  generateRequestHash(req, token) {
+    const remoteAddress = this.getRemoteAddress(req);
+    const cnonce = req.headers['x-embark-cnonce'];
+
+    // We fallback to an empty string so that the hashing won't fail.
+    token = token || this.emittedTokens[remoteAddress] || '';
+
     let url = req.url;
-    let queryParamIndex = url.indexOf('?');
+    const queryParamIndex = url.indexOf('?');
     url = url.substring(0, queryParamIndex !== -1 ? queryParamIndex : url.length);
 
+    let hash = new keccak();
     hash.update(cnonce);
-    hash.update(this.authToken);
-    hash.update(req.method);
+    hash.update(token);
+    hash.update(req.method.toUpperCase());
     hash.update(url);
     return hash.digest('hex');
   }
@@ -36,14 +50,23 @@ class Authenticator {
       'post',
       '/embark-api/authenticate',
       (req, res) => {
-        let hash = self.generateRequestHash(req);
+        let hash = self.generateRequestHash(req, this.authToken);
         if(hash !== req.headers['x-embark-request-hash']) {
           this.logger.warn(__('Someone tried and failed to authenticate to the backend'));
           this.logger.warn(__('- User-Agent: %s', req.headers['user-agent']));
           this.logger.warn(__('- Referer: %s', req.headers.referer));
           return res.send(ERROR_OBJ);
         }
-        res.send({});
+
+        // Generate another authentication token.
+        this.authToken = uuid();
+        this.events.request('authenticator:displayUrl', false);
+
+        // Register token for this connection, and send it through.
+        const emittedToken = uuid();
+        const remoteAddress = this.getRemoteAddress(req);
+        this.emittedTokens[remoteAddress] = emittedToken;
+        res.send({token: emittedToken});
       }
     );
 
@@ -62,20 +85,38 @@ class Authenticator {
     let self = this;
 
     this.events.once('outputDone', () => {
+      this.events.request('authenticator:displayUrl', true);
+    });
+
+    this.events.setCommandHandler('authenticator:displayUrl', (firstOutput) => {
       const {protocol, port, host, enabled} = this.embark.config.webServerConfig;
 
       if (enabled) {
+        if(!firstOutput) this.logger.info(__('Previous token has now been used.'));
         this.logger.info(__('Access the web backend with the following url: %s',
           (`${protocol}://${host}:${port}/embark?token=${this.authToken}`.underline)));
       }
     });
 
     this.events.setCommandHandler('authenticator:authorize', (req, res, cb) => {
+      // HACK
+      if(res.send && req.url === '/embark-api/authenticate') return cb();
+
       let authenticated = false;
+
       if(!res.send) {
-        authenticated = (this.authToken === req.protocol);
+        const [cnonce, hash] = req.protocol.split('|');
+        const computedHash = this.generateRequestHash({
+            headers: {
+              'x-forwarded-for': this.getRemoteAddress(req),
+              'x-embark-cnonce': cnonce
+            },
+            url: '/embark-api/',
+            method: 'ws'
+        });
+        authenticated = (hash === computedHash);
       } else {
-        let hash = self.generateRequestHash(req);
+        const hash = self.generateRequestHash(req);
         authenticated = (hash === req.headers['x-embark-request-hash']);
       }
 
