@@ -430,6 +430,7 @@ export const STOP_NEW_PROCESS_LOGS = 'STOP_NEW_PROCESS_LOGS';
 export const WATCH_SERVICES = 'WATCH_SERVICES';
 export const WATCH_NEW_CONTRACT_LOGS = 'WATCH_NEW_CONTRACT_LOGS';
 export const WATCH_NEW_CONTRACT_EVENTS = 'WATCH_NEW_CONTRACT_EVENTS';
+export const WATCH_CONTRACTS = 'WATCH_CONTRACTS';
 export const INIT_BLOCK_HEADER = 'INIT_BLOCK_HEADER';
 export const STOP_BLOCK_HEADER = 'STOP_BLOCK_HEADER';
 export const WATCH_GAS_ORACLE = 'WATCH_GAS_ORACLE';
@@ -483,6 +484,12 @@ export function stopBlockHeader(){
 export function listenToGasOracle(){
   return {
     type: WATCH_GAS_ORACLE
+  };
+}
+
+export function listenToContracts(){
+  return {
+    type: WATCH_CONTRACTS
   };
 }
 
