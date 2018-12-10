@@ -168,16 +168,18 @@ class ContractsManager {
     embark.registerAPICall(
       'get',
       '/embark-api/contracts',
-      (req, res) => {
-        const result = [];
-        self.events.request('contracts:formatted:all', (contracts) => {
-          contracts.forEach((contract) => {
-            self.events.request('contracts:contract', contract.className, (c) => (
-              result.push(Object.assign(contract, c))
-            ));
-          });
+      (_req, res) => {
+        res.send(this._contractsForApi());
+      }
+    );
+
+    embark.registerAPICall(
+      'ws',
+      '/embark-api/contracts',
+      (ws, _res) => {
+        this.events.on('contractsDeployed', () => {
+          ws.send(JSON.stringify(this._contractsForApi()), () => undefined);
         });
-        res.send(result);
       }
     );
 
@@ -216,6 +218,19 @@ class ContractsManager {
         }, false, false);
       }
     );
+  }
+
+
+  _contractsForApi() {
+    const result = [];
+    this.events.request('contracts:formatted:all', (contracts) => {
+      contracts.forEach((contract) => {
+        this.events.request('contracts:contract', contract.className, (c) => (
+          result.push(Object.assign(contract, c))
+        ));
+      });
+    });
+    return result;
   }
 
   build(done, _useContractFiles = true, resetContracts = true) {

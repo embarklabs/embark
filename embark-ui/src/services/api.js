@@ -241,6 +241,10 @@ export function webSocketContractLogs(credentials) {
   return new WebSocket(`ws://${credentials.host}/embark-api/contracts/logs`, [credentials.token]);
 }
 
+export function webSocketContracts(credentials) {
+  return new WebSocket(`ws://${credentials.host}/embark-api/contracts`, [credentials.token]);
+}
+
 export function webSocketContractEvents(credentials) {
   return new WebSocket(`ws://${credentials.host}/embark-api/blockchain/contracts/event`, [credentials.token]);
 }

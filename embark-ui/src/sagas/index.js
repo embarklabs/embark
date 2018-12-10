@@ -491,6 +491,20 @@ export function *watchListenDebugger() {
   yield takeEvery(actions.START_DEBUG[actions.SUCCESS], listenDebugger);
 }
 
+export function *listenContracts() {
+  const credentials = yield select(getCredentials);
+  const socket = api.webSocketContracts(credentials);
+  const channel = yield call(createChannel, socket);
+  while (true) {
+    const contracts = yield take(channel);
+    yield put(actions.contracts.success(contracts));
+  }
+}
+
+export function *watchListenContracts() {
+  yield takeEvery(actions.WATCH_CONTRACTS, listenContracts);
+}
+
 export function *listenToMessages(action) {
   const credentials = yield select(getCredentials);
   const socket = api.listenToChannel(credentials, action.messageChannels[0]);
@@ -570,6 +584,7 @@ export default function *root() {
     fork(watchAddEditorTabsSuccess),
     fork(watchRemoveEditorTabsSuccess),
     fork(watchPostFileSuccess),
-    fork(watchPostFolderSuccess)
+    fork(watchPostFolderSuccess),
+    fork(watchListenContracts)
   ]);
 }
