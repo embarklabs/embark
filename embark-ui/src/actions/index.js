@@ -19,7 +19,9 @@ function action(type, payload = {}) {
 export const AUTHENTICATE = createRequestTypes('AUTHENTICATE');
 export const authenticate = {
   request: (host, token) => action(AUTHENTICATE[REQUEST], {host, token}),
-  success: (_result, payload) => action(AUTHENTICATE[SUCCESS], {host: payload.host, token: payload.token}),
+  success: (result, payload) => { 
+    return action(AUTHENTICATE[SUCCESS], {host: payload.host, token: result.token}) 
+  },
   failure: (error) => action(AUTHENTICATE[FAILURE], {error})
 };
 

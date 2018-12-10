@@ -3,7 +3,7 @@ import keccak from "keccakjs";
 
 function hash(cnonce, token, type, path, params = {}) {
   let hash = new keccak();
-  hash.update(JSON.stringify(cnonce));
+  hash.update(cnonce.toString());
   hash.update(token);
   hash.update(type.toUpperCase());
   hash.update(`/embark-api${path}`);
@@ -50,6 +50,13 @@ function post() {
 
 function destroy() {
   return request('delete', ...arguments);
+}
+
+function websocket(credentials, path) {
+  const cnonce = Date.now() + Math.random();
+  const requestHash = hash(cnonce, credentials.token, 'ws', '/', {});
+
+  return new WebSocket(`ws://${credentials.host}/embark-api${path}`, [`${cnonce}|${requestHash}`]);
 }
 
 export function postCommand() {
@@ -222,15 +229,15 @@ export function toggleBreakpoint(payload) {
 }
 
 export function listenToDebugger(credentials) {
-  return new WebSocket(`ws://${credentials.host}/embark-api/debugger`, [credentials.token]);
+  return websocket(credentials, '/debugger');
 }
 
 export function listenToChannel(credentials, channel) {
-  return new WebSocket(`ws://${credentials.host}/embark-api/communication/listenTo/${channel}`, [credentials.token]);
+  return websocket(credentials, `/communication/listenTo/${channel}`);
 }
 
 export function webSocketProcess(credentials, processName) {
-  return new WebSocket(`ws://${credentials.host}/embark-api/process-logs/${processName}`, [credentials.token]);
+  return websocket(credentials, `/process-logs/${processName}`);
 }
 
 export function webSocketServices(credentials) {
@@ -238,7 +245,7 @@ export function webSocketServices(credentials) {
 }
 
 export function webSocketContractLogs(credentials) {
-  return new WebSocket(`ws://${credentials.host}/embark-api/contracts/logs`, [credentials.token]);
+  return websocket(credentials, `/contracts/logs`);
 }
 
 export function webSocketContracts(credentials) {
@@ -246,13 +253,13 @@ export function webSocketContracts(credentials) {
 }
 
 export function webSocketContractEvents(credentials) {
-  return new WebSocket(`ws://${credentials.host}/embark-api/blockchain/contracts/event`, [credentials.token]);
+  return websocket(credentials, `/blockchain/contracts/event`);
 }
 
 export function webSocketBlockHeader(credentials) {
-  return new WebSocket(`ws://${credentials.host}/embark-api/blockchain/blockHeader`, [credentials.token]);
+  return websocket(credentials, `/blockchain/blockHeader`);
 }
 
 export function websocketGasOracle(credentials) {
-  return new WebSocket(`ws://${credentials.host}/embark-api/blockchain/gas/oracle`, [credentials.token]);
+  return websocket(credentials, `/blockchain/gas/oracle`);
 }
