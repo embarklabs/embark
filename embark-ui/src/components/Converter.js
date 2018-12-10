@@ -27,8 +27,24 @@ class Converter extends React.Component {
   }
 
   handleOnChange(event, key) {
-    const newUnits = calculateUnits(event.target.value, key);
-    this.setState({etherConversions: newUnits});
+    const value = event.target.value;
+    let newUnits;
+    if (value.slice(-1) === '.') {
+      // `calculateUnits()` turns `1.` to `1` which makes it impossible
+      // for users to get beyond the first dot when typing decimal values.
+      // That's why we bypass recalculation all together when the last character
+      // is a dot and only update the form control in question.
+      newUnits = this.state.etherConversions.map(unit => {
+        if (unit.key === key) {
+          unit.value = value;
+        }
+        return unit;
+      });
+      this.setState({etherConversions: newUnits});
+    } else {
+      newUnits = calculateUnits(value, key);
+      this.setState({etherConversions: newUnits});
+    }
     const newBaseEther = newUnits.find(unit => unit.key === 'ether');
     this.props.updateBaseEther(newBaseEther.value);
   }
