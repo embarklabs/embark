@@ -13,6 +13,7 @@ import {
   processes as processesAction,
   versions as versionsAction,
   plugins as pluginsAction,
+  listenToServices as listenToServicesAction,
   changeTheme, fetchTheme
 } from '../actions';
 
@@ -75,6 +76,7 @@ class AppContainer extends Component {
     if (this.props.credentials.authenticated && !this.props.initialized) {
       this.props.fetchProcesses();
       this.props.fetchServices();
+      this.props.listenToServices();
       this.props.fetchPlugins();
     }
   }
@@ -137,7 +139,8 @@ AppContainer.propTypes = {
   theme: PropTypes.string,
   changeTheme: PropTypes.func,
   fetchTheme: PropTypes.func,
-  history: PropTypes.object
+  history: PropTypes.object,
+  listenToServices: PropTypes.func
 };
 
 function mapStateToProps(state) {
@@ -157,6 +160,7 @@ export default withRouter(connect(
     fetchCredentials: fetchCredentials.request,
     fetchProcesses: processesAction.request,
     fetchServices: processesAction.request,
+    listenToServices: listenToServicesAction,
     fetchVersions: versionsAction.request,
     fetchPlugins: pluginsAction.request,
     changeTheme: changeTheme.request,

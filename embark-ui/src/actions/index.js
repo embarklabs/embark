@@ -427,6 +427,7 @@ export const removeEditorTabs = {
 // Web Socket
 export const WATCH_NEW_PROCESS_LOGS = 'WATCH_NEW_PROCESS_LOGS';
 export const STOP_NEW_PROCESS_LOGS = 'STOP_NEW_PROCESS_LOGS';
+export const WATCH_SERVICES = 'WATCH_SERVICES';
 export const WATCH_NEW_CONTRACT_LOGS = 'WATCH_NEW_CONTRACT_LOGS';
 export const WATCH_NEW_CONTRACT_EVENTS = 'WATCH_NEW_CONTRACT_EVENTS';
 export const INIT_BLOCK_HEADER = 'INIT_BLOCK_HEADER';
@@ -446,6 +447,12 @@ export function stopProcessLogs(processName) {
   return {
     type: STOP_NEW_PROCESS_LOGS,
     processName
+  };
+}
+
+export function listenToServices(){
+  return {
+    type: WATCH_SERVICES
   };
 }
 

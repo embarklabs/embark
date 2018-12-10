@@ -405,6 +405,20 @@ export function *watchListenToProcessLogs() {
   yield takeEvery(actions.WATCH_NEW_PROCESS_LOGS, listenToProcessLogs);
 }
 
+export function *listenServices() {
+  const credentials = yield select(getCredentials);
+  const socket = api.webSocketServices(credentials);
+  const channel = yield call(createChannel, socket);
+  while (true) {
+    const services = yield take(channel);
+    yield put(actions.services.success(services));
+  }
+}
+
+export function *watchListenServices() {
+  yield takeEvery(actions.WATCH_SERVICES, listenServices);
+}
+
 export function *listenToContractLogs() {
   const credentials = yield select(getCredentials);
   const socket = api.webSocketContractLogs(credentials);
@@ -498,6 +512,7 @@ export default function *root() {
     fork(watchFetchContractLogs),
     fork(watchFetchContractEvents),
     fork(watchListenToProcessLogs),
+    fork(watchListenServices),
     fork(watchListenToContractLogs),
     fork(watchListenToContractEvents),
     fork(watchFetchBlock),

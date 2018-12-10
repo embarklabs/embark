@@ -12,6 +12,11 @@ class ProcessManager {
     this.events = options.events;
     this.plugins = options.plugins;
     this.processes = {};
+    this.servicesState = {};
+
+    this.events.on("servicesState", (servicesState) => {
+      this.servicesState = servicesState;
+    });
 
     this._registerAsPlugin();
     this._registerEvents();
@@ -21,21 +26,21 @@ class ProcessManager {
     const self = this;
     self.plugin = this.plugins.createPlugin('processManager', {});
 
-    this.servicesState = {};
-    this.events.on("servicesState", (servicesState) => {
-      this.servicesState = servicesState;
-    });
-
     self.plugin.registerAPICall(
       'get',
       '/embark-api/services',
       (req, res) => {
-        let processList = [];
-        for (let serviceName in this.servicesState) {
-          let service = this.servicesState[serviceName];
-          processList.push({state: service.status, name: serviceName, description: service.name});
-        }
-        res.send(processList);
+        res.send(this._sevicesForApi(this.servicesState));
+      }
+    );
+
+    self.plugin.registerAPICall(
+      'ws',
+      '/embark-api/services',
+      (ws, _res) => {
+        this.events.on('servicesState', (servicesState) => {
+          ws.send(JSON.stringify(this._sevicesForApi(servicesState)), () => undefined);
+        });
       }
     );
 
@@ -50,6 +55,15 @@ class ProcessManager {
         res.send(Object.keys(self.processes).reduce(formatter, []));
       }
     );
+  }
+
+  _sevicesForApi(servicesState) {
+    let processList = [];
+    for (let serviceName in servicesState) {
+      let service = servicesState[serviceName];
+      processList.push({state: service.status, name: serviceName, description: service.name});
+    }
+    return processList;
   }
 
   _registerEvents() {
