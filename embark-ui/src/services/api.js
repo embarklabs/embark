@@ -233,6 +233,10 @@ export function webSocketProcess(credentials, processName) {
   return new WebSocket(`ws://${credentials.host}/embark-api/process-logs/${processName}`, [credentials.token]);
 }
 
+export function webSocketServices(credentials) {
+  return new WebSocket(`ws://${credentials.host}/embark-api/services`, [credentials.token]);
+}
+
 export function webSocketContractLogs(credentials) {
   return new WebSocket(`ws://${credentials.host}/embark-api/contracts/logs`, [credentials.token]);
 }
