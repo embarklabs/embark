@@ -220,7 +220,6 @@ class Engine {
     let self = this;
 
     this.setupCompilerAndContractsManagerService(options);
-    this.registerModule('compiler', {plugins: self.plugins, disableOptimizations: options.disableOptimizations});
     this.registerModule('solidity', {ipc: self.ipc, useDashboard: this.useDashboard});
     this.registerModule('vyper');
     this.registerModule('profiler', {plugins: this.plugins});
