@@ -28,6 +28,7 @@ class Console {
   private cmdHistoryFile: string;
   private suggestions: Suggestions;
   private providerReady: boolean;
+  private forceRegister: boolean;
 
   constructor(embark: Embark, options: any) {
     this.embark = embark;
@@ -37,6 +38,7 @@ class Console {
     this.logger = options.logger;
     this.ipc = options.ipc;
     this.config = options.config;
+    this.forceRegister = options.forceRegister;
     this.history = [];
     this.cmdHistoryFile = options.cmdHistoryFile || fs.dappPath(".embark", "cmd_history");
     this.providerReady = false;
@@ -179,7 +181,7 @@ class Console {
     this.events.emit("runcode:register", "EmbarkJS", EmbarkJS, false);
 
     EmbarkJS.Blockchain.done = true;
-    if (this.ipc.connected) {
+    if (this.ipc.connected && !this.forceRegister) {
       return;
     }
 

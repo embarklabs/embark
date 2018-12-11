@@ -162,14 +162,15 @@ class Engine {
     this.registerModule('plugin_cmd', {embarkConfigFile: this.embarkConfig, embarkConfig: this.config.embarkConfig, packageFile: 'package.json'});
   }
 
-  console(_options) {
+  console(options) {
     this.registerModule('console', {
       events: this.events,
       plugins: this.plugins,
       version: this.version,
       ipc: this.ipc,
       logger: this.logger,
-      config: this.config
+      config: this.config,
+      forceRegister: options.forceRegister
     });
     this.registerModule('authenticator');
   }
