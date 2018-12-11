@@ -103,7 +103,6 @@ class TestRunner {
       }
     ], (err, results) => {
       if (err) {
-        self.logger.error(err);
         return cb(err);
       }
       let totalFailures = results.reduce((acc, result) => acc + result.failures, 0);
