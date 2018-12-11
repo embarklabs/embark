@@ -1,6 +1,7 @@
 const fuzzySearch = require("../../utils/utils").fuzzySearch;
 
-import { Embark, Events } from "../../../typings/embark";
+import { Embark } from "../../../types/embark";
+import EventEmitter from "../../core/events";
 
 interface ContractsManager {
   [key: string]: any;
@@ -16,7 +17,7 @@ type SuggestionsList = Suggestion[];
 
 export default class Suggestions {
   private embark: Embark;
-  private events: Events;
+  private events: EventEmitter;
   private contracts: ContractsManager;
 
   constructor(embark: Embark, options?: object) {

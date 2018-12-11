@@ -2,7 +2,7 @@ import { red } from "colors";
 import { performance, PerformanceObserver } from "perf_hooks";
 import prettyMs from "pretty-ms";
 
-import { Logger } from "../../../src/typings/logger";
+import { Logger } from "../../types/logger";
 
 const utils = require("./utils.js");
 const ora = require("ora");

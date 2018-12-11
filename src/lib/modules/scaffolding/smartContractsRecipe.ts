@@ -1,6 +1,6 @@
 import Ajv from "ajv";
 
-import { Logger } from "../../../typings/logger";
+import { Logger } from "../../../types/logger";
 import { schema } from "./schema";
 
 const fs = require("../../core/fs");

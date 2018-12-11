@@ -2,8 +2,8 @@ import Handlebars from "handlebars";
 import * as path from "path";
 import { ABIDefinition } from "web3/types";
 
-import { Contract } from "../../../../../typings/contract";
-import { Embark } from "../../../../../typings/embark";
+import { Contract } from "../../../../../types/contract";
+import { Embark } from "../../../../../types/embark";
 import { Builder } from "../../builder";
 import { CommandOptions } from "../../commandOptions";
 import { SmartContractsRecipe } from "../../smartContractsRecipe";

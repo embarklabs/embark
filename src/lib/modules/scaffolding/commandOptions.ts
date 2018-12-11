@@ -1,6 +1,6 @@
 import Ajv from "ajv";
 
-import { Logger } from "../../../typings/logger";
+import { Logger } from "../../../types/logger";
 
 export enum Framework {
   React = "react",

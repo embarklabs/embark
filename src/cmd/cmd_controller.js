@@ -1,3 +1,5 @@
+import { ScaffoldGenerateContracts, ScaffoldGenerateUi } from "../commands";
+
 let async = require('async');
 const constants = require('../lib/constants');
 const Logger = require('../lib/core/logger');
@@ -18,7 +20,7 @@ class EmbarkController {
   }
 
   initConfig(env, options) {
-    let Events = require('../lib/core/events.js');
+    let Events = require('../lib/core/events.js').default;
     let Logger = require('../lib/core/logger.js');
     let Config = require('../lib/core/config.js');
 
@@ -471,10 +473,13 @@ class EmbarkController {
         callback();
       },
       function generateContract(callback) {
-        engine.events.request('scaffolding:generate:contract', options, function(files) {
-          files.forEach(file => engine.events.request('config:contractsFiles:add', file));
-          callback();
-        });
+        engine.events.push(new ScaffoldGenerateContracts({
+          done: (files) => {
+            files.forEach(file => engine.events.request('config:contractsFiles:add', file));
+            callback();
+          },
+          options
+        }));
       },
       function initEngineServices(callback) {
         let pluginList = engine.plugins.listPlugins();
@@ -495,9 +500,10 @@ class EmbarkController {
         });
       },
       function generateUI(callback) {
-        engine.events.request("scaffolding:generate:ui", options, () => {
-          callback();
-        });
+        engine.events.push(new ScaffoldGenerateUi({
+          done: callback,
+          options
+        }));
       }
     ], function(err) {
       if (err) {

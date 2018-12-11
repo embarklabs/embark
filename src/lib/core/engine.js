@@ -23,7 +23,7 @@ class Engine {
 
   init(_options, callback) {
     callback = callback || function() {};
-    const Events = require('./events.js');
+    const Events = require('./events.js').default;
     const Logger = require('./logger.js');
     const Config = require('./config.js');
 

@@ -6,12 +6,13 @@ const EmbarkJS = require("embarkjs");
 const IpfsApi = require("ipfs-api");
 const stringify = require("json-stringify-safe");
 import Web3 from "web3";
-import { Embark, Events } from "../../../typings/embark";
+import { Embark } from "../../../types/embark";
+import EventEmitter from "../../core/events";
 import Suggestions from "./suggestions";
 
 class Console {
   private embark: Embark;
-  private events: Events;
+  private events: EventEmitter;
   private plugins: any;
   private version: string;
   private logger: any;

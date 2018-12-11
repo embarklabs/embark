@@ -1,15 +1,9 @@
+import rx from "rxjs";
+import EventEmitter from "../lib/core/events";
 import { Logger } from "./logger";
 
-export interface Events {
-  on: any;
-  request: any;
-  emit: any;
-  once: any;
-  setCommandHandler(name: string, callback: (options: any, cb: () => void) => void): void;
-}
-
 export interface Embark {
-  events: Events;
+  events: EventEmitter;
   registerAPICall: any;
   registerConsoleCommand: any;
   logger: Logger;

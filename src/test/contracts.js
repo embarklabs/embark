@@ -4,7 +4,7 @@ let Compiler = require('../lib/modules/compiler/');
 let Logger = require('../lib/core/logger.js');
 let File = require('../lib/core/file.js');
 let TestLogger = require('../lib/utils/test_logger');
-let Events = require('../lib/core/events');
+let Events = require('../lib/core/events').default;
 let Ipc = require('../lib/core/ipc.js');
 let assert = require('assert');
 
