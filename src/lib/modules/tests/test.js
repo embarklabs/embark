@@ -181,12 +181,6 @@ class Test {
       function checkDeploymentOpts(next) {
         self.checkDeploymentOptions(options, next);
       },
-      function changeGlobalWeb3(next) {
-        self.events.request('blockchain:get', (web3) => {
-          global.web3 = web3;
-          next();
-        });
-      },
       function compileContracts(next) {
         if (!self.firstDeployment) {
           return next();
@@ -210,6 +204,12 @@ class Test {
           self.ready = true;
           self.error = false;
           self.events.emit('tests:ready');
+          next(null, accounts);
+        });
+      },
+      function changeGlobalWeb3(accounts, next) {
+        self.events.request('blockchain:get', (web3) => {
+          global.web3 = web3;
           next(null, accounts);
         });
       }
