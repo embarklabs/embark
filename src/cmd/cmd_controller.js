@@ -646,7 +646,7 @@ class EmbarkController {
         });
         engine.startService("storage");
         engine.startService("codeGenerator");
-        engine.startService("console");
+        engine.startService("console", {forceRegister: true});
         engine.startService("pluginCommand");
         if (options.coverage) {
           engine.startService("codeCoverage");
