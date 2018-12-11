@@ -129,6 +129,11 @@ class Test {
       return callback(__("contracts config error: unknown deployment type %s", type));
     }
 
+    if (this.options.coverage && type === 'rpc') {
+      this.logger.warn(__('Coverage does not work with an RPC node'));
+      this.logger.warn(__('You can change to a WS node (`"type": "ws"`) or use the simulator (no node or `"type": "vm"`)'));
+    }
+
     if (accounts || (port && port !== this.simOptions.port) || (type && type !== this.simOptions.type) ||
       (host && host !== this.simOptions.host)) {
       resetServices = true;
