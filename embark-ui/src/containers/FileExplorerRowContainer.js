@@ -11,7 +11,7 @@ import { getTheme } from '../reducers/selectors';
 
 class FileExplorerRowContainer extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {active: false};
     this.addFileModal = React.createRef();
     this.addFolderModal = React.createRef();
@@ -68,7 +68,7 @@ class FileExplorerRowContainer extends React.Component {
            onMouseEnter={() => this.activateNode()}
            onMouseLeave={() => this.deactivateNode()}>
         <span onClick={this.props.onClick}>
-          <this.props.decorators.Toggle style={this.props.style.toggle}/>
+          {this.props.node.children && <this.props.decorators.Toggle style={this.props.style.toggle}/>}
           <this.props.decorators.Header node={this.props.node} style={this.props.style.header}/>
         </span>
         {this.state.active && this.renderAction()}
