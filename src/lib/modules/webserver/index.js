@@ -22,6 +22,7 @@ class WebServer {
     }
 
     this.host = this.webServerConfig.host;
+    this.protocol = this.webServerConfig.protocol;
     this.port = parseInt(this.webServerConfig.port, 10);
     this.enableCatchAll = this.webServerConfig.enableCatchAll === true;
     this.enableCatchAll = false; // FIXME when true, some Requests end up failing (eg: process-logs)
@@ -52,6 +53,7 @@ class WebServer {
       this.embark.config.webServerConfig = null;
       this.embark.config.loadWebServerConfigFile();
       this.webServerConfig = this.embark.config.webServerConfig;
+      this.protocol = this.webServerConfig.protocol;
       this.host = this.webServerConfig.host;
       this.port = this.webServerConfig.port;
       this.server.host = this.host;
