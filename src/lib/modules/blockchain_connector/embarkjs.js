@@ -4,7 +4,9 @@ const __embarkWeb3 = {};
 
 __embarkWeb3.init = function (_config) {
   this.web3 = new Web3();
-  global.web3 = this.web3;
+  if (!global.web3) {
+    global.web3 = this.web3;
+  }
 };
 
 __embarkWeb3.getAccounts = function () {
