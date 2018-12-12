@@ -52,7 +52,14 @@ class DeployManager {
         self.logger.info(__("deploying contracts"));
         async.waterfall([
           function (next) {
-            self.plugins.emitAndRunActionsForEvent("deploy:beforeAll", next);
+            self.logger.info(__('Executing pre-deploy actions...'));
+            self.plugins.emitAndRunActionsForEvent("deploy:beforeAll", (err) => {
+              if (err) {
+                return next(err);
+              }
+              self.logger.info(__('Pre-deploy actions done. Deploying contracts'));
+              next();
+            });
           },
           function () {
             const contractDeploys = {};
