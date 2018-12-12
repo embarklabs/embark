@@ -1,7 +1,16 @@
-let fs = require('../core/fs.js');
-let hostedGitInfo = require('hosted-git-info');
-let utils = require('./utils.js');
-let semver = require('semver');
+const fs = require('../core/fs.js');
+const hostedGitInfo = require('hosted-git-info');
+const utils = require('./utils.js');
+const semver = require('semver');
+
+const REPLACEMENTS = {
+  'git@github.com/': 'git@github.com:',
+  'git@bitbucket.org/': 'git@bitbucket.org:',
+  'git@gitlab.com/': 'git@gitlab.com:',
+  'github.com/': '',
+  'bitbucket.org/': 'bitbucket:',
+  'gitlab.com/': 'gitlab:'
+};
 
 class TemplateGenerator {
   constructor(templateName) {
@@ -128,6 +137,11 @@ class TemplateGenerator {
   getExternalProject(uri) {
     let url, folder, hgi;
     let fallback, url_fallback, folder_fallback, hgi_fallback, embarkVersion;
+    
+    // reformat uri before parsing with hosted-git-info. Allows for further syntax support.
+    Object.keys(REPLACEMENTS).forEach(replacement => {
+      if(uri.indexOf(replacement) === 0) uri = uri.replace(replacement, REPLACEMENTS[replacement]);
+    });
     hgi = hostedGitInfo.fromUrl(uri);
     if (!hgi || hgi.user.includes('#')) {
       let templateAndBranch = uri.split('#');
