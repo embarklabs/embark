@@ -216,10 +216,11 @@ class Console {
     this.embark.registerConsoleCommand({
       description: __("display console commands history"),
       matches: ["history"],
+      process: (cmd: string, callback: any) => {
+        const [_cmdName, length] = cmd.split(" ");
+        this.getHistory(length, callback);
+      },
       use: "history <optionalLength>",
-    }, (cmd: string, callback: any) => {
-      const [_cmdName, length] = cmd.split(" ");
-      this.getHistory(length, callback);
     });
   }
 
