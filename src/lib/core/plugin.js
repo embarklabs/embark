@@ -160,8 +160,12 @@ Plugin.prototype.addContractFile = function(file) {
   this.addPluginType('contractFiles');
 };
 
-Plugin.prototype.registerConsoleCommand = function(cb) {
-  this.console.push(cb);
+Plugin.prototype.registerConsoleCommand = function(options, cb) {
+  if (typeof options === 'function') {
+    cb = options;
+    options = {};
+  }
+  this.console.push({options, execute: cb});
   this.addPluginType('console');
 };
 
