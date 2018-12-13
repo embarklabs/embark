@@ -9,6 +9,12 @@ import Web3 from "web3";
 import { Embark, Events } from "../../../typings/embark";
 import Suggestions from "./suggestions";
 
+interface HelpDescription {
+  matches: string[] | any; // (cmd: string): boolean;
+  description: string;
+  use?: string;
+}
+
 class Console {
   private embark: Embark;
   private events: Events;
@@ -72,7 +78,7 @@ class Console {
     });
   }
 
-  private processEmbarkCmd(cmd: string, helpDescriptions: any[]) {
+  private processEmbarkCmd(cmd: string, helpDescriptions: HelpDescription[]) {
     if (cmd === "help" || cmd === __("help") || cmd === "01189998819991197253") {
       const helpText = [
         __("Welcome to Embark") + " " + this.version,
@@ -118,19 +124,23 @@ class Console {
     const helpDescriptions = [];
     for (const plugin of plugins) {
       // New API
-      if (plugin.options.description) {
-        helpDescriptions.push(plugin.options);
+      if (plugin.description) {
+        helpDescriptions.push({
+          description: plugin.description,
+          matches: plugin.matches,
+          use: plugin.use,
+        });
       }
-      if (plugin.options.matches) {
-        const isFunction = typeof plugin.options.matches === "function";
-        if ((isFunction && plugin.options.matches.call(this, cmd))
-          || (!isFunction && plugin.options.matches.includes(cmd))) {
-          return plugin.execute.call(this, cmd, callback);
+      if (plugin.matches) {
+        const isFunction = typeof plugin.matches === "function";
+        if ((isFunction && plugin.matches.call(this, cmd))
+          || (!isFunction && plugin.matches.includes(cmd))) {
+          return plugin.process.call(this, cmd, callback);
         }
         continue;
       }
 
-      const pluginResult = plugin.execute.call(this, cmd, {});
+      const pluginResult = plugin.call(this, cmd, {});
 
       if (typeof pluginResult !== "object") {
         if (pluginResult !== false && pluginResult !== "false" && pluginResult !== undefined) {

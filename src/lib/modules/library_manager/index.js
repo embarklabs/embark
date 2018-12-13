@@ -45,13 +45,14 @@ class LibraryManager {
     }
     this.embark.registerConsoleCommand({
       matches,
-      description: __("display versions in use for libraries and tools like web3 and solc")
-    }, (cmd, callback) => {
-      let text = [__('versions in use') + ':'];
-      for (let lib in self.versions) {
-        text.push(lib + ": " + self.versions[lib]);
+      description: __("display versions in use for libraries and tools like web3 and solc"),
+      process: (cmd, callback) => {
+        let text = [__('versions in use') + ':'];
+        for (let lib in self.versions) {
+          text.push(lib + ": " + self.versions[lib]);
+        }
+        callback(null, text.join('\n'));
       }
-      callback(null, text.join('\n'));
     });
   }
 
