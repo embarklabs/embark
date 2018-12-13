@@ -89,28 +89,41 @@ class ENS {
   }
 
   registerConsoleCommands() {
-    this.embark.registerConsoleCommand((cmd, _options) => {
-      let [cmdName, domain] = cmd.split(' ');
-      return {
-        match: () => cmdName === 'resolve',
-        process: (cb) => global.EmbarkJS.Names.resolve(domain, cb)
-      };
+    this.embark.registerConsoleCommand({
+      use: 'resolve <name>',
+      description: __('Resolves an ENS name'),
+      matches: (cmd) => {
+        let [cmdName] = cmd.split(' ');
+        return cmdName === 'resolve';
+      }
+    }, (cmd, cb) => {
+      let [_cmdName, domain] = cmd.split(' ');
+      global.EmbarkJS.Names.resolve(domain, cb);
     });
 
-    this.embark.registerConsoleCommand((cmd, _options) => {
-      let [cmdName, address] = cmd.split(' ');
-      return {
-        match: () => cmdName === 'lookup',
-        process: (cb) => global.EmbarkJS.Names.lookup(address, cb)
-      };
+    this.embark.registerConsoleCommand({
+      use: 'lookup <address>',
+      description: __('Lookup an ENS address'),
+      matches: (cmd) => {
+        let [cmdName] = cmd.split(' ');
+        return cmdName === 'lookup';
+      }
+    }, (cmd, cb) => {
+      let [_cmdName, address] = cmd.split(' ');
+        global.EmbarkJS.Names.lookup(address, cb);
     });
 
-    this.embark.registerConsoleCommand((cmd, _options) => {
-      let [cmdName, name, address] = cmd.split(' ');
-      return {
-        match: () => cmdName === 'registerSubDomain',
-        process: (cb) => global.EmbarkJS.Names.registerSubDomain(name, address, cb)
-      };
+
+    this.embark.registerConsoleCommand({
+      use: 'registerSubDomain <subDomain>',
+      description: __('Register an ENS sub-domain'),
+      matches: (cmd) => {
+        let [cmdName] = cmd.split(' ');
+        return cmdName === 'registerSubDomain';
+      }
+    }, (cmd, cb) => {
+      let [_cmdName, name, address] = cmd.split(' ');
+      global.EmbarkJS.Names.registerSubDomain(name, address, cb);
     });
   }
 
