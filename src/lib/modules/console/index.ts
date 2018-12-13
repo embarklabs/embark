@@ -72,7 +72,7 @@ class Console {
     });
   }
 
-  private processEmbarkCmd(cmd: string) {
+  private processEmbarkCmd(cmd: string, helpDescriptions: any[]) {
     if (cmd === "help" || cmd === __("help") || cmd === "01189998819991197253") {
       const helpText = [
         __("Welcome to Embark") + " " + this.version,
@@ -96,10 +96,14 @@ class Console {
         "    var all/v a/va - " + __("During a debug, display all variables"),
         "log <process> on/off - " + __("Activate or deactivate the logs of a sub-process. Options: blockchain, "),
         "plugin install <package> - " + __("Installs a plugin in the Dapp. eg: plugin install embark-solc"),
-        "quit - " + __("to immediatly exit (alias: exit)"),
-        "",
-        __("The web3 object and the interfaces for the deployed contracts and their methods are also available"),
       ];
+      helpDescriptions.forEach((helpDescription) => {
+        helpText.push(`${(helpDescription.use || helpDescription.matches.join("/")).cyan} - ${helpDescription.description}`);
+      });
+      // Add end commands
+      helpText.push("quit".cyan + " - " + __("to immediatly exit (alias: exit)"),
+        "",
+        __("The web3 object and the interfaces for the deployed contracts and their methods are also available"));
       return helpText.join("\n");
     } else if (["quit", "exit", "sair", "sortir", __("quit")].indexOf(cmd) >= 0) {
       utils.exit();
@@ -112,9 +116,24 @@ class Console {
       this.history.push(cmd);
       this.saveHistory();
     }
-    const pluginCmds = this.plugins.getPluginsProperty("console", "console");
-    for (const pluginCmd of pluginCmds) {
-      const pluginResult = pluginCmd.call(this, cmd, {});
+    const plugins = this.plugins.getPluginsProperty("console", "console");
+    const helpDescriptions = [];
+    for (const plugin of plugins) {
+      // New API
+      if (plugin.options.description) {
+        helpDescriptions.push(plugin.options);
+      }
+      if (plugin.options.matches) {
+        const isFunction = typeof plugin.options.matches === "function";
+        if ((isFunction && plugin.options.matches.call(this, cmd))
+          || (!isFunction && plugin.options.matches.includes(cmd))) {
+          return plugin.execute.call(this, cmd, callback);
+        }
+        continue;
+      }
+
+      const pluginResult = plugin.execute.call(this, cmd, {});
+
       if (typeof pluginResult !== "object") {
         if (pluginResult !== false && pluginResult !== "false" && pluginResult !== undefined) {
           this.logger.warn("[DEPRECATED] In future versions of embark, we expect the console command to return an object " +
@@ -127,7 +146,7 @@ class Console {
       }
     }
 
-    const output = this.processEmbarkCmd(cmd);
+    const output = this.processEmbarkCmd(cmd, helpDescriptions);
     if (output) {
       return callback(null, output);
     }

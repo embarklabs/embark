@@ -1,6 +1,5 @@
 const repl = require("repl");
 const util = require("util");
-let fs = require('../../lib/core/fs');
 
 class REPL {
   constructor(options) {
@@ -21,17 +20,15 @@ class REPL {
     if ((typeof output) === "string") {
       if (this.logText) this.logText.log(output);
       return output;
-    } else {
-      const inspectedOutput = util.inspect(output, {colors: true});
-      if (this.logText) this.logText.log(inspectedOutput);
-      return inspectedOutput;
     }
-    return util.inspect(output, {colors: true});
+    const inspectedOutput = util.inspect(output, {colors: true});
+    if (this.logText) this.logText.log(inspectedOutput);
+    return inspectedOutput;
   }
 
   start(done) {
     this.replServer = repl.start({
-      prompt: "Embark (" + this.env + ") > ",
+      prompt: "Embark (".cyan + this.env.green + ") > ".cyan,
       useGlobal: true,
       eval: this.enhancedEval.bind(this),
       writer: this.enhancedWriter.bind(this),
