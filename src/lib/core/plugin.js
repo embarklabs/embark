@@ -160,12 +160,12 @@ Plugin.prototype.addContractFile = function(file) {
   this.addPluginType('contractFiles');
 };
 
-Plugin.prototype.registerConsoleCommand = function(options, cb) {
-  if (typeof options === 'function') {
-    cb = options;
-    options = {};
+Plugin.prototype.registerConsoleCommand = function(optionsOrCb) {
+  if (typeof optionsOrCb === 'function') {
+    this.logger.warn(__('Registering console commands with a function is deprecated'));
+    // TODO add docs on how to register
   }
-  this.console.push({options, execute: cb});
+  this.console.push(optionsOrCb);
   this.addPluginType('console');
 };
 
