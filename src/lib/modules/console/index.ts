@@ -78,8 +78,6 @@ class Console {
         __("Welcome to Embark") + " " + this.version,
         "",
         __("possible commands are:"),
-        "versions - " + __("display versions in use for libraries and tools like web3 and solc"),
-        "history - " + __("display console commands history"),
         // TODO: only if the blockchain is actually active!
         // will need to pass te current embark state here
         "ipfs - " + __("instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)"),
@@ -205,12 +203,13 @@ class Console {
   }
 
   private registerConsoleCommands() {
-    this.embark.registerConsoleCommand((cmd: string, options?: any) => {
-      const [cmdName, length] = cmd.split(" ");
-      return {
-        match: () => cmdName === "history",
-        process: (callback: any) => this.getHistory(length, callback),
-      };
+    this.embark.registerConsoleCommand({
+      description: __("display console commands history"),
+      matches: ["history"],
+      use: "history <optionalLength>",
+    }, (cmd: string, callback: any) => {
+      const [_cmdName, length] = cmd.split(" ");
+      this.getHistory(length, callback);
     });
   }
 

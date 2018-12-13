@@ -39,17 +39,19 @@ class LibraryManager {
 
   registerCommands() {
     const self = this;
-    this.embark.registerConsoleCommand((cmd, _options) => {
-      return {
-        match: () => cmd === "versions" || cmd === __('versions'),
-        process: (callback) => {
-          let text = [__('versions in use') + ':'];
-          for (let lib in self.versions) {
-            text.push(lib + ": " + self.versions[lib]);
-          }
-          callback(null, text.join('\n'));
-        }
-      };
+    const matches = ['versions'];
+    if (__('versions') !== matches[0]) {
+      matches.push(__('versions'));
+    }
+    this.embark.registerConsoleCommand({
+      matches,
+      description: __("display versions in use for libraries and tools like web3 and solc")
+    }, (cmd, callback) => {
+      let text = [__('versions in use') + ':'];
+      for (let lib in self.versions) {
+        text.push(lib + ": " + self.versions[lib]);
+      }
+      callback(null, text.join('\n'));
     });
   }
 
