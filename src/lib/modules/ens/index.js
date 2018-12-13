@@ -95,10 +95,11 @@ class ENS {
       matches: (cmd) => {
         let [cmdName] = cmd.split(' ');
         return cmdName === 'resolve';
-      }
-    }, (cmd, cb) => {
+      },
+      process: (cmd, cb) => {
       let [_cmdName, domain] = cmd.split(' ');
       global.EmbarkJS.Names.resolve(domain, cb);
+    }
     });
 
     this.embark.registerConsoleCommand({
@@ -107,10 +108,11 @@ class ENS {
       matches: (cmd) => {
         let [cmdName] = cmd.split(' ');
         return cmdName === 'lookup';
-      }
-    }, (cmd, cb) => {
-      let [_cmdName, address] = cmd.split(' ');
+      },
+      process: (cmd, cb) => {
+        let [_cmdName, address] = cmd.split(' ');
         global.EmbarkJS.Names.lookup(address, cb);
+      }
     });
 
 
@@ -120,10 +122,11 @@ class ENS {
       matches: (cmd) => {
         let [cmdName] = cmd.split(' ');
         return cmdName === 'registerSubDomain';
+      },
+      process: (cmd, cb) => {
+        let [_cmdName, name, address] = cmd.split(' ');
+        global.EmbarkJS.Names.registerSubDomain(name, address, cb);
       }
-    }, (cmd, cb) => {
-      let [_cmdName, name, address] = cmd.split(' ');
-      global.EmbarkJS.Names.registerSubDomain(name, address, cb);
     });
   }
 
