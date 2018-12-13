@@ -9,8 +9,9 @@ import Web3 from "web3";
 import { Embark, Events } from "../../../typings/embark";
 import Suggestions from "./suggestions";
 
+type MatchFunction = (cmd: string) => boolean;
 interface HelpDescription {
-  matches: string[] | any; // (cmd: string): boolean;
+  matches: string[] | MatchFunction;
   description: string;
   use?: string;
 }
@@ -102,7 +103,11 @@ class Console {
         "plugin install <package> - " + __("Installs a plugin in the Dapp. eg: plugin install embark-solc"),
       ];
       helpDescriptions.forEach((helpDescription) => {
-        helpText.push(`${(helpDescription.use || helpDescription.matches.join("/")).cyan} - ${helpDescription.description}`);
+        let matches = [] as string[];
+        if (typeof helpDescription.matches === "object") {
+          matches = helpDescription.matches as string[];
+        }
+        helpText.push(`${(helpDescription.use || matches.join("/")).cyan} - ${helpDescription.description}`);
       });
       // Add end commands
       helpText.push("quit".cyan + " - " + __("to immediatly exit (alias: exit)"),
