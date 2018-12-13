@@ -257,9 +257,6 @@ class ParityClient {
         });
       },
       function updatePasswordFile(passwordList, next) {
-        if (!self.config.account.password) {
-          return next();
-        }
         fs.writeFile(self.config.account.devPassword, passwordList, next);
       }
     ], (err) => {
