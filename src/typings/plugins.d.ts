@@ -5,4 +5,5 @@ export interface Plugin {
 export interface Plugins {
   getPluginsFor(name: string): [Plugin];
   loadInternalPlugin(name: string, options: any): void;
+  getPluginsProperty(prop: string, name: string): any[];
 }
