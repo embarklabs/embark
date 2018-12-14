@@ -3,9 +3,9 @@
 const Asm = require('stream-json/Assembler');
 const {canonicalHost, defaultHost} = require('../../utils/host');
 const constants = require('../../constants.json');
-const express = require('express');
+const http = require('http');
+const httpProxy = require('http-proxy');
 const {parser: jsonParser} = require('stream-json');
-const proxyMiddleware = require('http-proxy-middleware');
 const pump = require('pump');
 const utils = require('../../utils/utils');
 const WsParser = require('simples/lib/parsers/ws');
@@ -17,21 +17,17 @@ const hex = (n) => {
 
 const parseJsonMaybe = (string) => {
   let object;
-  if (typeof string === 'string') {
-    // ignore empty strings
-    if (string) {
-      try {
-        object = JSON.parse(string);
-      } catch(e) {
-        // ignore client/server byte sequences sent when connections are closing
-        if (Array.from(Buffer.from(string)).map(hex).join(':') !==
-            '03:ef:bf:bd') {
-          console.error(`Proxy: Error parsing string as JSON '${string}'`);
-        }
+  // ignore empty strings
+  if (string !== '') {
+    try {
+      object = JSON.parse(string);
+    } catch(e) {
+      // ignore client/server byte sequences sent when connections are closing
+      if (Array.from(Buffer.from(string)).map(hex).join(':') !==
+          '03:ef:bf:bd') {
+        console.error(`Proxy: Error parsing string as JSON '${string}'`);
       }
     }
-  } else {
-    console.error(`Proxy: Expected a string but got type '${typeof string}'`);
   }
   return object;
 };
@@ -119,78 +115,75 @@ exports.serve = async (ipc, host, port, ws, origin, certOptions={}) => {
     });
   }());
 
-  const proxyOpts = {
-    logLevel: 'warn',
-    target: `http://${canonicalHost(host)}:${port}`,
-    ws: ws,
+  let proxy = httpProxy.createProxyServer({
     ssl: certOptions,
-
-    onError(err, _req, _res) {
-      console.error(
-        __('Proxy: Error forwarding requests to blockchain/simulator'),
-        err.message
-      );
+    target: {
+      host: canonicalHost(host),
+      port: port
     },
+    ws: ws
+  });
 
-    onProxyReq(_proxyReq, req, _res) {
-      if (req.method === 'POST') {
-        // messages TO the target
-        Asm.connectTo(
-          pump(req, jsonParser())
-        ).on('done', ({current: object}) => {
-          trackRequest(object);
-        });
-      }
-    },
+  proxy.on('error', (err) => {
+    console.error(
+      __('Proxy: Error forwarding requests to blockchain/simulator'),
+      err.message
+    );
+  });
 
-    onProxyRes(proxyRes, req, _res) {
-      if (req.method === 'POST') {
-        // messages FROM the target
-        Asm.connectTo(
-          pump(proxyRes, jsonParser())
-        ).on('done', ({current: object}) => {
-          trackResponse(object);
-        });
-      }
+  proxy.on('proxyRes', (proxyRes, req, _res) => {
+    if (req.method === 'POST') {
+      // messages FROM the target
+      Asm.connectTo(
+        pump(proxyRes, jsonParser())
+      ).on('done', ({current: object}) => {
+        trackResponse(object);
+      });
     }
-  };
+  });
 
-  if (ws) {
-    proxyOpts.onProxyReqWs = (_proxyReq, _req, socket, _options, _head) => {
+  const server = http.createServer((req, res) => {
+    if (req.method === 'POST') {
       // messages TO the target
-      pump(socket, new WsParser(0, false)).on('frame', ({data: buffer}) => {
-        const object = parseJsonMaybe(buffer.toString());
+      Asm.connectTo(
+        pump(req, jsonParser())
+      ).on('done', ({current: object}) => {
         trackRequest(object);
       });
-    };
+    }
 
-    proxyOpts.onOpen = (proxySocket) => {
+    if (!ws) {
+      proxy.web(req, res);
+    }
+  });
+
+  if (ws) {
+    server.on('upgrade', function (msg, socket, head) {
+      proxy.ws(msg, socket, head);
+    });
+
+    proxy.on('open', (proxySocket) => {
       // messages FROM the target
       pump(proxySocket, new WsParser(0, true)).on('frame', ({data: buffer}) => {
         const object = parseJsonMaybe(buffer.toString());
         trackResponse(object);
       });
-    };
+    });
+
+    proxy.on('proxyReqWs', (_proxyReq, _req, socket) => {
+      // messages TO the target
+      pump(socket, new WsParser(0, false)).on('frame', ({data: buffer}) => {
+        const object = parseJsonMaybe(buffer.toString());
+        trackRequest(object);
+      });
+    });
   }
 
-  const proxy = proxyMiddleware(proxyOpts);
-  const app = express();
-  app.use('*', proxy);
-
   return new Promise(resolve => {
-    const server = app.listen(
+    server.listen(
       port - constants.blockchain.servicePortOnProxy,
       defaultHost,
       () => { resolve(server); }
     );
-    if (ws) {
-      server.on('upgrade', (msg, socket, head) => {
-        const swallowError = (err) => {
-          console.error(`Proxy: Network error '${err.message}'`);
-        };
-        socket.on('error', swallowError);
-        proxy.upgrade(msg, socket, head);
-      });
-    }
   });
 };
