@@ -30,18 +30,18 @@ class Whisper {
     this.connectToProvider();
 
     this.events.request('processes:register', 'whisper', (cb) => {
-      this.web3.shh.getInfo((err) => {
-        if (err) {
-          const message = err.message || err;
-          if (message.indexOf('not supported') > -1) {
-            this.logger.error('Whisper is not supported on your node. Are you using the simulator?');
-            return this.logger.trace(message);
+      this.waitForWeb3Ready(() => {
+        this.web3.shh.getInfo((err) => {
+          if (err) {
+            const message = err.message || err;
+            if (message.indexOf('not supported') > -1) {
+              this.logger.error('Whisper is not supported on your node. Are you using the simulator?');
+              return this.logger.trace(message);
+            }
           }
-        }
-        this.setServiceCheck();
-        this.addWhisperToEmbarkJS();
-        this.addSetProvider();
-        this.waitForWeb3Ready(() => {
+          this.setServiceCheck();
+          this.addWhisperToEmbarkJS();
+          this.addSetProvider();
           this.registerAPICalls();
           cb();
         });
