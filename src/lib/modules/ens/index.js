@@ -90,7 +90,7 @@ class ENS {
 
   registerConsoleCommands() {
     this.embark.registerConsoleCommand({
-      use: 'resolve <name>',
+      usage: 'resolve <name>',
       description: __('Resolves an ENS name'),
       matches: (cmd) => {
         let [cmdName] = cmd.split(' ');
@@ -103,7 +103,7 @@ class ENS {
     });
 
     this.embark.registerConsoleCommand({
-      use: 'lookup <address>',
+      usage: 'lookup <address>',
       description: __('Lookup an ENS address'),
       matches: (cmd) => {
         let [cmdName] = cmd.split(' ');
@@ -117,7 +117,7 @@ class ENS {
 
 
     this.embark.registerConsoleCommand({
-      use: 'registerSubDomain <subDomain>',
+      usage: 'registerSubDomain <subDomain>',
       description: __('Register an ENS sub-domain'),
       matches: (cmd) => {
         let [cmdName] = cmd.split(' ');
