@@ -1,4 +1,5 @@
 const async = require('async');
+const IPC = require('../../core/ipc');
 const NetcatClient = require('netcat/client');
 
 //Constants
@@ -43,14 +44,7 @@ class GethMiner {
       }
     }
 
-    const isWin = process.platform === "win32";
-
-    let ipcPath;
-    if (isWin) {
-      ipcPath = '\\\\.\\pipe\\geth.ipc';
-    } else {
-      ipcPath = this.datadir + '/geth.ipc';
-    }
+    const ipcPath = IPC.ipcPath('geth.ipc', true);
 
     this.client = new NetcatClient();
     this.client.unixSocket(ipcPath)

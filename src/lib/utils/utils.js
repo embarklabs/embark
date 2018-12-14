@@ -390,6 +390,12 @@ function sha3(arg) {
   return Web3.utils.sha3(arg);
 }
 
+function sha512(arg) {
+  const crypto = require('crypto');
+  const hash = crypto.createHash('sha512');
+  return hash.update(arg, 'utf8').digest('hex');
+}
+
 function soliditySha3(arg) {
   const Web3 = require('web3');
   return Web3.utils.soliditySha3(arg);
@@ -640,6 +646,7 @@ module.exports = {
   getExternalContractUrl,
   toChecksumAddress,
   sha3,
+  sha512,
   soliditySha3,
   normalizeInput,
   buildUrl,

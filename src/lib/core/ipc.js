@@ -1,15 +1,34 @@
 const fs = require('./fs.js');
 const ipc = require('node-ipc');
+const {isDappMountedFromWindowsDockerHost} = require('../utils/host');
+const os = require('os');
 const {parse, stringify} = require('flatted/cjs');
+const utils = require('../utils/utils.js');
 
 class IPC {
-
   constructor(options) {
     this.logger = options.logger;
-    this.socketPath = options.socketPath || fs.dappPath(".embark/embark.ipc");
+    this.socketPath = options.socketPath || IPC.ipcPath('embark.ipc');
     this.ipcRole = options.ipcRole;
     ipc.config.silent = true;
     this.connected = false;
+  }
+
+  static ipcPath(basename, usePipePathOnWindows = false) {
+    if (!(basename && typeof basename === 'string')) {
+      throw new TypeError('first argument must be a non-empty string');
+    }
+    let ipcDir;
+    if (process.platform === 'win32' && usePipePathOnWindows) {
+      return `\\\\.\\pipe\\${basename}`;
+    } else if (isDappMountedFromWindowsDockerHost) {
+      ipcDir = utils.joinPath(
+        os.tmpdir(), `embark-${utils.sha512(fs.dappPath()).slice(0, 8)}`
+      );
+    } else {
+      ipcDir = fs.dappPath('.embark');
+    }
+    return utils.joinPath(ipcDir, basename);
   }
 
   connect(done) {
@@ -39,7 +58,7 @@ class IPC {
   }
 
   serve() {
-    fs.mkdirpSync(fs.dappPath(".embark"));
+    fs.mkdirpSync(utils.dirname(this.socketPath));
     ipc.serve(this.socketPath, () => {});
     ipc.server.start();
 
