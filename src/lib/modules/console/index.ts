@@ -104,7 +104,7 @@ class Console {
       ];
       helpDescriptions.forEach((helpDescription) => {
         let matches = [] as string[];
-        if (typeof helpDescription.matches === "object") {
+        if (Array.isArray(helpDescription.matches)) {
           matches = helpDescription.matches as string[];
         }
         helpText.push(`${(helpDescription.usage || matches.join("/")).cyan} - ${helpDescription.description}`);
@@ -219,7 +219,10 @@ class Console {
   private registerConsoleCommands() {
     this.embark.registerConsoleCommand({
       description: __("display console commands history"),
-      matches: ["history"],
+      matches: (cmd: string) => {
+        const [cmdName] = cmd.split(" ");
+        return cmdName === "history";
+      },
       process: (cmd: string, callback: any) => {
         const [_cmdName, length] = cmd.split(" ");
         this.getHistory(length, callback);
