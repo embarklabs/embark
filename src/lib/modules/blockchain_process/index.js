@@ -49,19 +49,17 @@ class BlockchainModule {
   }
 
   registerConsoleCommands() {
-    const self = this;
-    self.embark.registerConsoleCommand((cmd, _options) => {
-      return {
-        match: () => cmd === 'log blockchain on',
-        process: (cb) => self.events.request('logs:ethereum:turnOn', cb)
-      };
+    this.embark.registerConsoleCommand({
+      matches: ['log blockchain on'],
+      process: (cmd, callback) => {
+        this.events.request('logs:ethereum:turnOn', callback);
+      }
     });
-
-    self.embark.registerConsoleCommand((cmd, _options) => {
-      return {
-        match: () => cmd === 'log blockchain off',
-        process: (cb) => self.events.request('logs:ethereum:turnOff', cb)
-      };
+    this.embark.registerConsoleCommand({
+      matches: ['log blockchain off'],
+      process: (cmd, callback) => {
+        this.events.request('logs:ethereum:turnOff', callback);
+      }
     });
   }
 

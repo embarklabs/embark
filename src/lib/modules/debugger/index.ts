@@ -217,127 +217,131 @@ class TransactionDebugger {
     this.cmdDebugger = false;
     this.currentCmdTxHash = "";
 
-    this.embark.registerConsoleCommand((cmd: string, options: any) => {
-      const cmdName = cmd.split(" ")[0];
-      const txHash = cmd.split(" ")[1];
-      return {
-        match: () => cmdName === "debug",
-        process: (cb: any) => {
-          if (txHash) {
-            this.embark.events.request("contracts:contract:byTxHash", txHash, (err: any, contract: any) => {
-              if (err) {
-                this.embark.logger.error(err);
-                return;
-              }
-              this.currentCmdTxHash = txHash;
-              this.embark.logger.info("debugging tx " + txHash);
-              this.cmdDebugger = this.debuggerManager.createDebuggerSession(txHash, contract.filename, () => {
-                this.displayStepInfo();
-              });
-            });
-            return;
-          }
-          this.currentCmdTxHash = this.lastTx;
-          const filename: string = this.txTracker[this.lastTx].contract.filename;
-          this.embark.logger.info("debugging tx " + this.lastTx);
-          this.cmdDebugger = this.debuggerManager.createDebuggerSession(this.lastTx, filename, () => {
-            this.displayStepInfo();
-          });
-        },
-      };
-    });
-
-    this.embark.registerConsoleCommand((cmd: string, options: any) => {
-      return {
-        match: () => (cmd === "next" || cmd === "n"),
-        process: (cb: any) => {
-          if (!this.cmdDebugger) {
-            this.embark.logger.warn(NO_DEBUG_SESSION);
-            return cb();
-          }
-          if (!this.cmdDebugger.canGoNext()) {
-            return cb();
-          }
-          if (!this.cmdDebugger.currentStep()) {
-            this.embark.logger.info("end of execution reached");
-            this.cmdDebugger.unload();
-            return cb();
-          }
-          this.cmdDebugger.stepOverForward(true);
-          this.displayStepInfo();
-          cb();
-        },
-      };
-    });
-
-    this.embark.registerConsoleCommand((cmd: string, options: any) => {
-      return {
-        match: () => (cmd === "previous" || cmd === "p"),
-        process: (cb: any) => {
-          if (!this.cmdDebugger) {
-            this.embark.logger.warn(NO_DEBUG_SESSION);
-            return cb();
-          }
-          if (!this.cmdDebugger.canGoPrevious()) {
-            return cb();
-          }
-          if (!this.cmdDebugger.currentStep()) {
-            this.embark.logger.info("end of execution reached");
-            return this.cmdDebugger.unload();
-          }
-          this.cmdDebugger.stepOverBack(true);
-          this.displayStepInfo();
-          cb();
-        },
-      };
-    });
-
-    this.embark.registerConsoleCommand((cmd: string, options: any) => {
-      return {
-        match: () => (cmd === "var local" || cmd === "v l" || cmd === "vl"),
-        process: (cb: any) => {
-          if (!this.cmdDebugger) {
-            this.embark.logger.warn(NO_DEBUG_SESSION);
-            return cb();
-          }
-          this.cmdDebugger.displayLocals();
-          cb();
-        },
-      };
-    });
-
-    this.embark.registerConsoleCommand((cmd: string, options: any) => {
-      return {
-        match: () => (cmd === "var global" || cmd === "v g" || cmd === "vg"),
-        process: (cb: any) => {
-          if (!this.cmdDebugger) {
-            this.embark.logger.warn(NO_DEBUG_SESSION);
-            return cb();
-          }
-          this.cmdDebugger.displayGlobals();
-          cb();
-        },
-      };
-    });
-
-    this.embark.registerConsoleCommand((cmd: string, options: any) => {
-      return {
-        match: () => (cmd === "var all" || cmd === "v a" || cmd === "va"),
-        process: (cb: any) => {
-          if (!this.cmdDebugger) {
-            this.embark.logger.warn(NO_DEBUG_SESSION);
-            return cb();
-          }
-          this.getGlobals(this.currentCmdTxHash, (err: any, globals: any) => {
+    this.embark.registerConsoleCommand({
+      description: __("Debug the last transaction or the transaction specified by a hash"),
+      matches: (cmd: string) => {
+        const [cmdName] = cmd.split(" ");
+        return cmdName === "debug";
+      },
+      process: (cmd: string, callback: (err?: string|object, output?: string) => void) => {
+        const [_cmdName, txHash] = cmd.split(" ");
+        if (txHash) {
+          this.embark.events.request("contracts:contract:byTxHash", txHash, (err: any, contract: any) => {
             if (err) {
               this.embark.logger.error(err);
-              return cb();
+              return callback();
             }
-            this.embark.logger.info(globals);
-            cb();
+            this.currentCmdTxHash = txHash;
+            this.embark.logger.info("debugging tx " + txHash);
+            this.cmdDebugger = this.debuggerManager.createDebuggerSession(txHash, contract.filename, () => {
+              this.displayStepInfo();
+              callback();
+            });
           });
-        },
-      };
+          return;
+        }
+        this.currentCmdTxHash = this.lastTx;
+        const filename: string = this.txTracker[this.lastTx].contract.filename;
+        this.embark.logger.info("debugging tx " + this.lastTx);
+        this.cmdDebugger = this.debuggerManager.createDebuggerSession(this.lastTx, filename, () => {
+          this.displayStepInfo();
+          callback();
+        });
+      },
+      usage: "debug <txHash>",
+    });
+
+    this.embark.registerConsoleCommand({
+      description: __("During a debug, step over forward"),
+      matches: ["next", "n"],
+      process: (cmd: string, callback: (err?: string|object, output?: string) => void) => {
+        if (!this.cmdDebugger) {
+          this.embark.logger.warn(NO_DEBUG_SESSION);
+          return callback();
+        }
+        if (!this.cmdDebugger.canGoNext()) {
+          return callback();
+        }
+        if (!this.cmdDebugger.currentStep()) {
+          this.embark.logger.info("end of execution reached");
+          this.cmdDebugger.unload();
+          return callback();
+        }
+        this.cmdDebugger.stepOverForward(true);
+        this.displayStepInfo();
+        callback();
+      },
+      usage: "    next/n",
+    });
+
+    this.embark.registerConsoleCommand({
+      description: __("During a debug, step over back"),
+      matches: ["previous", "p"],
+      process: (cmd: string, callback: (err?: string|object, output?: string) => void) => {
+        if (!this.cmdDebugger) {
+          this.embark.logger.warn(NO_DEBUG_SESSION);
+          return callback();
+        }
+        if (!this.cmdDebugger.canGoPrevious()) {
+          return callback();
+        }
+        if (!this.cmdDebugger.currentStep()) {
+          this.embark.logger.info("end of execution reached");
+          return this.cmdDebugger.unload();
+        }
+        this.cmdDebugger.stepOverBack(true);
+        this.displayStepInfo();
+        callback();
+      },
+      usage: "    previous/p",
+    });
+
+    this.embark.registerConsoleCommand({
+      description: __("During a debug, display local variables"),
+      matches: ["var local", "v l", "vl"],
+      process: (cmd: string, callback: (err?: string|object, output?: string) => void) => {
+        if (!this.cmdDebugger) {
+          this.embark.logger.warn(NO_DEBUG_SESSION);
+          return callback();
+        }
+        this.cmdDebugger.displayLocals();
+        callback();
+      },
+      usage: "    var local/v l/vl",
+    });
+
+    this.embark.registerConsoleCommand({
+      description: __("During a debug, display global variables"),
+      matches: ["var global", "v g", "vg"],
+      process: (cmd: string, callback: (err?: string|object, output?: string) => void) => {
+        if (!this.cmdDebugger) {
+          this.embark.logger.warn(NO_DEBUG_SESSION);
+          return callback();
+        }
+        this.cmdDebugger.displayGlobals();
+        callback();
+      },
+      usage: "    var global/v g/vg",
+    });
+
+    this.embark.registerConsoleCommand({
+      description: __("During a debug, display all variables"),
+      matches: ["var all", "v a", "va"],
+      process: (cmd: string, callback: (err?: string|object, output?: string) => void) => {
+        if (!this.cmdDebugger) {
+          this.embark.logger.warn(NO_DEBUG_SESSION);
+          return callback();
+        }
+        this.getGlobals(this.currentCmdTxHash, (err: any, globals: any) => {
+          if (err) {
+            this.embark.logger.error(err);
+            return callback();
+          }
+          this.embark.logger.info(globals);
+          callback();
+        });
+      },
+      usage: "    var all/v a/va",
     });
   }
 

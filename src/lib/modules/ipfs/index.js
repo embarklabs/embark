@@ -154,19 +154,17 @@ class IPFS {
   }
 
   registerConsoleCommands() {
-    const self = this;
-    self.embark.registerConsoleCommand((cmd, _options) => {
-      return {
-        match: () => cmd === 'log ipfs on',
-        process: (cb) => self.events.request('logs:ipfs:turnOn', cb)
-      };
+    this.embark.registerConsoleCommand({
+      matches: ['log ipfs on'],
+      process: (cmd, callback) => {
+        this.events.request('logs:ipfs:turnOn', callback);
+      }
     });
-
-    self.embark.registerConsoleCommand((cmd, _options) => {
-      return {
-        match: () => cmd === 'log ipfs off',
-        process: (cb) => self.events.request('logs:ipfs:turnOff', cb)
-      };
+    this.embark.registerConsoleCommand({
+      matches: ['log ipfs off'],
+      process: (cmd, callback) => {
+        this.events.request('logs:ipfs:turnOff', callback);
+      }
     });
   }
 

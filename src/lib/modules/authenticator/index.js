@@ -70,14 +70,13 @@ class Authenticator {
       }
     );
 
-    this.embark.registerConsoleCommand((cmd, _options) => {
-      return {
-        match: () => cmd === "token",
-        process: (callback) => {
-          utils.copyToClipboard(this.authToken);
-          callback(null, __('Token copied to clipboard: %s', this.authToken));
-        }
-      };
+    this.embark.registerConsoleCommand({
+      matches: ["token"],
+      description: __("Copies and prints the token for the cockpit"),
+      process: (cmd, callback) => {
+        utils.copyToClipboard(this.authToken);
+        callback(null, __('Token copied to clipboard: %s', this.authToken));
+      }
     });
   }
 

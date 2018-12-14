@@ -125,40 +125,42 @@ class WebServer {
   }
 
   registerConsoleCommands() {
-    const self = this;
-    self.embark.registerConsoleCommand((cmd, _options) => {
-      return {
-        match: () => cmd === 'webserver start',
-        process: (cb) => self.events.request('start-webserver', cb)
-      };
+    this.embark.registerConsoleCommand({
+      usage: "webserver start/stop",
+      description: __("Start or stop the websever"),
+      matches: ['webserver start'],
+      process: (cmd, callback) => {
+        this.events.request('start-webserver', callback);
+      }
     });
 
-    self.embark.registerConsoleCommand((cmd, _options) => {
-      return {
-        match: () => cmd === 'webserver stop',
-        process: (cb) => self.events.request('stop-webserver', cb)
-      };
+    this.embark.registerConsoleCommand({
+      matches: ['webserver stop'],
+      process: (cmd, callback) => {
+        this.events.request('stop-webserver', callback);
+      }
     });
 
-    self.embark.registerConsoleCommand((cmd, _options) => {
-      return {
-        match: () => cmd === 'browser open',
-        process: (cb) => self.events.request('open-browser', cb)
-      };
+    this.embark.registerConsoleCommand({
+      description: __("Open a browser window at the Dapp's url"),
+      matches: ['browser open'],
+      process: (cmd, callback) => {
+        this.events.request('open-browser', callback);
+      }
     });
 
-    self.embark.registerConsoleCommand((cmd, _options) => {
-      return {
-        match: () => cmd === 'log webserver on',
-        process: (cb) => self.events.request('logs:webserver:turnOn', cb)
-      };
+    this.embark.registerConsoleCommand({
+      matches: ['log webserver on'],
+      process: (cmd, callback) => {
+        this.events.request('logs:webserver:turnOn', callback);
+      }
     });
 
-    self.embark.registerConsoleCommand((cmd, _options) => {
-      return {
-        match: () => cmd === 'log webserver off',
-        process: (cb) => self.events.request('logs:webserver:turnOff', cb)
-      };
+    this.embark.registerConsoleCommand({
+      matches: ['log webserver off'],
+      process: (cmd, callback) => {
+        this.events.request('logs:webserver:turnOff', callback);
+      }
     });
   }
 

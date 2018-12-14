@@ -69,31 +69,28 @@ class Profiler {
   }
 
   registerConsoleCommand() {
-    const self = this;
-    self.embark.registerConsoleCommand((cmd, _options) => {
-      let cmdName = cmd.split(' ')[0];
-      let contractName = cmd.split(' ')[1];
-
-      return {
-        match: () => cmdName === 'profile',
-        process: (callback) => {
-          this.profile(contractName, callback);
-        }
-      };
+    this.embark.registerConsoleCommand({
+      description: "Outputs the function profile of a contract",
+      usage: "profile <contractName>",
+      matches: (cmd) => {
+        const [cmdName] = cmd.split(' ');
+        return cmdName === 'profile';
+      },
+      process: (cmd, callback) => {
+        const [_cmdName, contractName] = cmd.split(' ');
+        this.profile(contractName, callback);
+      }
     });
   }
 
   registerApi() {
-    const self = this;
-
-    let plugin = this.plugins.createPlugin('profiler', {});
-    plugin.registerAPICall(
+    this.embark.registerAPICall(
       'get',
       '/embark-api/profiler/:contractName',
       (req, res) => {
         let contractName = req.params.contractName;
 
-        self.profileJSON(contractName, (err, table) => {
+        this.profileJSON(contractName, (err, table) => {
           if (err) {
             return res.send({error: err.message});
           }

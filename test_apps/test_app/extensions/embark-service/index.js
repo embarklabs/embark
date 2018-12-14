@@ -28,12 +28,12 @@ module.exports = function (embark) {
     cb();
   });
 
-  embark.registerConsoleCommand((cmd) => {
-    if (cmd === "hello") {
-      return "hello there!";
+  embark.registerConsoleCommand({
+    matches: ["hello"],
+    description: 'Says Hello',
+    process: (cmd, callback) => {
+      callback(null, 'Hello there');
     }
-    // continue to embark or next plugin;
-    return false;
   });
 
   embark.events.on("contractsDeployed", function() {

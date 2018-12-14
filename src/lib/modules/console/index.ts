@@ -89,20 +89,11 @@ class Console {
         __("possible commands are:"),
         // TODO: only if the blockchain is actually active!
         // will need to pass te current embark state here
-        "ipfs - " + __("instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)"),
-        "swarm - " + __("instantiated swarm-api object configured to the current environment (available if swarm is enabled)"),
-        "web3 - " + __("instantiated web3.js object configured to the current environment"),
-        "EmbarkJS - " + __("EmbarkJS static functions for Storage, Messages, Names, etc."),
-        "token - " + __("Copies and prints the token for the cockpit"),
-        "debug <txHash> - " + __("Debug the last transaction or the transaction specified by a hash"),
-        "    next/n - " + __("During a debug, step over forward"),
-        "    previous/p - " + __("During a debug, step over back"),
-        "    var local/v l/vl - " + __("During a debug, display local variables"),
-        "    var global/v g/vg - " + __("During a debug, display global variables"),
-        "    var all/v a/va - " + __("During a debug, display all variables"),
-        "    var all/v a/va - " + __("During a debug, display all variables"),
-        "log <process> on/off - " + __("Activate or deactivate the logs of a sub-process. Options: blockchain, "),
-        "plugin install <package> - " + __("Installs a plugin in the Dapp. eg: plugin install embark-solc"),
+        "ipfs".cyan + " - " + __("instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)"),
+        "swarm".cyan + " - " + __("instantiated swarm-api object configured to the current environment (available if swarm is enabled)"),
+        "web3".cyan + " - " + __("instantiated web3.js object configured to the current environment"),
+        "EmbarkJS".cyan + " - " + __("EmbarkJS static functions for Storage, Messages, Names, etc."),
+        "log <process> on/off".cyan + " - " + __("Activate or deactivate the logs of a sub-process. Options: blockchain, ipfs, webserver"),
       ];
       helpDescriptions.forEach((helpDescription) => {
         let matches = [] as string[];
