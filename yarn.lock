@@ -4965,17 +4965,7 @@ http-https@^1.0.0:
   resolved "https://registry.yarnpkg.com/http-https/-/http-https-1.0.0.tgz#2f908dd5f1db4068c058cd6e6d4ce392c913389b"
   integrity sha1-L5CN1fHbQGjAWM1ubUzjkskTOJs=
 
-http-proxy-middleware@0.19.0:
-  version "0.19.0"
-  resolved "https://registry.yarnpkg.com/http-proxy-middleware/-/http-proxy-middleware-0.19.0.tgz#40992b5901dc44bc7bc3795da81b0b248eca02d8"
-  integrity sha512-Ab/zKDy2B0404mz83bgki0HHv/xqpYKAyFXhopAiJaVAUSJfLYrpBYynTl4ZSUJ7TqrAgjarTsxdX5yBb4unRQ==
-  dependencies:
-    http-proxy "^1.17.0"
-    is-glob "^4.0.0"
-    lodash "^4.17.10"
-    micromatch "^3.1.10"
-
-http-proxy@^1.17.0:
+http-proxy@1.17.0:
   version "1.17.0"
   resolved "https://registry.yarnpkg.com/http-proxy/-/http-proxy-1.17.0.tgz#7ad38494658f84605e2f6db4436df410f4e5be9a"
   integrity sha512-Taqn+3nNvYRfJ3bGvKfBSRwy1v6eePlm3oc/aWVxZp57DQr5Eq3xhKJi7Z4hZpS8PC3H4qI+Yly5EmFacGuA/g==
