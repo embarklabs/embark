@@ -162,8 +162,8 @@ Plugin.prototype.addContractFile = function(file) {
 
 Plugin.prototype.registerConsoleCommand = function(optionsOrCb) {
   if (typeof optionsOrCb === 'function') {
-    this.logger.warn(__('Registering console commands with a function is deprecated'));
-    // TODO add docs on how to register
+    this.logger.warn(__('Registering console commands with function syntax is deprecated and will likely be removed in future versions of Embark.'));
+    // TODO add docs on how to register when they are written
   }
   this.console.push(optionsOrCb);
   this.addPluginType('console');

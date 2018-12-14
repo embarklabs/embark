@@ -13,7 +13,7 @@ type MatchFunction = (cmd: string) => boolean;
 interface HelpDescription {
   matches: string[] | MatchFunction;
   description: string;
-  use?: string;
+  usage?: string;
 }
 
 class Console {
@@ -107,7 +107,7 @@ class Console {
         if (typeof helpDescription.matches === "object") {
           matches = helpDescription.matches as string[];
         }
-        helpText.push(`${(helpDescription.use || matches.join("/")).cyan} - ${helpDescription.description}`);
+        helpText.push(`${(helpDescription.usage || matches.join("/")).cyan} - ${helpDescription.description}`);
       });
       // Add end commands
       helpText.push("quit".cyan + " - " + __("to immediatly exit (alias: exit)"),
@@ -128,12 +128,11 @@ class Console {
     const plugins = this.plugins.getPluginsProperty("console", "console");
     const helpDescriptions = [];
     for (const plugin of plugins) {
-      // New API
       if (plugin.description) {
         helpDescriptions.push({
           description: plugin.description,
           matches: plugin.matches,
-          use: plugin.use,
+          usage: plugin.usage,
         });
       }
       if (plugin.matches) {
@@ -225,7 +224,7 @@ class Console {
         const [_cmdName, length] = cmd.split(" ");
         this.getHistory(length, callback);
       },
-      use: "history <optionalLength>",
+      usage: "history <optionalLength>",
     });
   }
 
