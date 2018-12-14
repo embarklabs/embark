@@ -55,7 +55,7 @@
     "start:embark:type-check": "npm run type-check:watch",
     "start:ui": "cd embark-ui && npm run start",
     "test": "npm-run-all lint test:*",
-    "test:core": "nyc --reporter=html mocha dist/test/ --exit --no-timeouts --require source-map-support/register",
+    "test:core": "cross-env nyc --reporter=html mocha 'dist/test/**/*.js' --exit --no-timeouts --require source-map-support/register",
     "test:test_app": "cross-env DAPP=test_app npm run test_dapp",
     "test:contracts_app": "cross-env DAPP=contracts_app npm run test_dapp",
     "test_dapp": "cross-env-shell \"cd test_apps/$DAPP && npm install && npm test\"",
