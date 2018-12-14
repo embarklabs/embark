@@ -121,7 +121,7 @@ class Provider {
             }
             cb(null, result);
           });
-        } else if (payload.method === 'eth_sendRawTransaction') {
+        } else if (payload.method === constants.blockchain.transactionMethods.eth_sendRawTransaction) {
           return self.runTransaction.push({payload}, cb);
         }
 

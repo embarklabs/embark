@@ -7,7 +7,7 @@ const utils = require('../../utils/utils.js');
 const GethClient = require('./gethClient.js');
 const ParityClient = require('./parityClient.js');
 const DevFunds = require('./dev_funds.js');
-const proxy = require('./proxy');
+const Proxy = require('./proxy');
 const Ipc = require('../../core/ipc');
 
 const {defaultHost, dockerHostSwap} = require('../../utils/host');
@@ -154,10 +154,10 @@ Blockchain.prototype.setupProxy = async function () {
 
   let wsProxy;
   if (this.config.wsRPC) {
-    wsProxy = proxy.serve(this.proxyIpc, this.config.wsHost, this.config.wsPort, true, this.config.wsOrigins, addresses, this.certOptions);
+    wsProxy = new Proxy(this.proxyIpc).serve(this.config.wsHost, this.config.wsPort, true, this.config.wsOrigins, addresses, this.certOptions);
   }
 
-  [this.rpcProxy, this.wsProxy] = await Promise.all([proxy.serve(this.proxyIpc, this.config.rpcHost, this.config.rpcPort, false, null, addresses, this.certOptions), wsProxy]);
+  [this.rpcProxy, this.wsProxy] = await Promise.all([new Proxy(this.proxyIpc).serve(this.config.rpcHost, this.config.rpcPort, false, null, addresses, this.certOptions), wsProxy]);
 };
 
 Blockchain.prototype.shutdownProxy = function () {

@@ -128,7 +128,7 @@ class BlockchainConnector {
           let newParams = Object.assign({}, payload.params[0]);
           let newPayload = {
             id: payload.id + 1,
-            method: 'eth_sendTransaction',
+            method: constants.blockchain.transactionMethods.eth_sendTransaction,
             params: [newParams],
             jsonrpc: payload.jsonrpc
           };
