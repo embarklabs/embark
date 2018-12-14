@@ -93,44 +93,61 @@ function getJson(url, cb) {
 }
 
 function pingEndpoint(host, port, type, protocol, origin, callback) {
-  const options = {
-    protocolVersion: 13,
-    perMessageDeflate: true,
-    origin: origin,
-    host: host,
-    port: port
+  // remove any extra information from a host string, e.g. port, path, query
+  const _host = require('url').parse(
+    // url.parse() expects a protocol segment else it won't parse as desired
+    host.slice(0, 4) === 'http' ? host : `${protocol}://${host}`
+  ).hostname;
+
+  let closed = false;
+  const close = (req, closeMethod) => {
+    if (!closed) {
+      closed = true;
+      req[closeMethod]();
+    }
   };
+
+  const handleEvent = (req, closeMethod, ...args) => {
+    close(req, closeMethod);
+    setImmediate(() => { callback(...args); });
+  };
+
+  const handleError = (req, closeMethod) => {
+    req.on('error', (err) => {
+      if (err.code !== 'ECONNREFUSED') {
+        console.error(
+          `Ping: Network error` +
+            (err.message ? ` '${err.message}'` : '') +
+            (err.code ? ` (code: ${err.code})` : '')
+        );
+      }
+      // when closed additional error events will not callback
+      if (!closed) { handleEvent(req, closeMethod, err); }
+    });
+  };
+
+  const handleSuccess = (req, closeMethod, event) => {
+    req.once(event, () => { handleEvent(req, closeMethod); });
+  };
+
+  const handleRequest = (req, closeMethod, event) => {
+    handleError(req, closeMethod);
+    handleSuccess(req, closeMethod, event);
+  };
+
   if (type === 'ws') {
-    options.headers = {
-      'Sec-WebSocket-Version': 13,
-      Connection: 'Upgrade',
-      Upgrade: 'websocket',
-      'Sec-WebSocket-Extensions': 'permessage-deflate; client_max_window_bits',
-      Origin: origin
-    };
-  }
-  let req;
-  // remove trailing api key from infura, ie rinkeby.infura.io/nmY8WtT4QfEwz2S7wTbl
-  if (options.host.indexOf('/') > -1) {
-    options.host = options.host.split('/')[0];
-  }
-  if (protocol === 'https') {
-    req = require('https').get(options);
+    const req = new (require('ws'))(
+      `${protocol === 'https' ? 'wss' : 'ws'}://${_host}:${port}/`,
+      origin ? {origin} : {}
+    );
+    handleRequest(req, 'close', 'open');
   } else {
-    req = require('http').get(options);
+    const headers = origin ? {Origin: origin} : {};
+    const req = (protocol === 'https' ? require('https') : require('http')).get(
+      {headers, host: _host, port}
+    );
+    handleRequest(req, 'abort', 'response');
   }
-
-  req.on('error', (err) => {
-    callback(err);
-  });
-
-  req.on('response', (_response) => {
-    callback();
-  });
-
-  req.on('upgrade', (_res, _socket, _head) => {
-    callback();
-  });
 }
 
 function runCmd(cmd, options, callback) {
@@ -557,7 +574,7 @@ function isNotFolder(node){
 }
 
 function byName(a, b) {
-    return a.name.localeCompare(b.name);
+  return a.name.localeCompare(b.name);
 }
 
 function fileTreeSort(nodes){
