@@ -141,19 +141,17 @@ class Swarm {
   }
 
   registerConsoleCommands() {
-    const self = this;
-    self.embark.registerConsoleCommand((cmd, _options) => {
-      return {
-        match: () => cmd === 'log swarm on',
-        process: (cb) => self.events.request('logs:swarm:turnOn', cb)
-      };
+    this.embark.registerConsoleCommand({
+      matches: ['log swarm on'],
+      process: (cmd, callback) => {
+        this.events.request('logs:swarm:turnOn', callback);
+      }
     });
-
-    self.embark.registerConsoleCommand((cmd, _options) => {
-      return {
-        match: () => cmd === 'log swarm off',
-        process: (cb) => self.events.request('logs:swarm:turnOff', cb)
-      };
+    this.embark.registerConsoleCommand({
+      matches: ['log swarm off'],
+      process: (cmd, callback) => {
+        this.events.request('logs:swarm:turnOff', callback);
+      }
     });
   }
 

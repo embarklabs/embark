@@ -11,14 +11,18 @@ class PluginCommand {
   }
 
   registerCommand() {
-    this.embark.registerConsoleCommand((cmd, _options) => {
-      let cmdArray = cmd.split(' ');
-      cmdArray = cmdArray.filter(cmd => cmd.trim().length > 0);
-      let cmdName = cmdArray[0];
-      return {
-        match: () => cmdName === 'plugin',
-        process: this.installPlugin.bind(this, cmdArray)
-      };
+    this.embark.registerConsoleCommand({
+      description: "Installs a plugin in the Dapp. eg: plugin install embark-solc",
+      usage: "plugin install <package>",
+      matches: (cmd) => {
+        const [cmdName] = cmd.split(' ');
+        return cmdName === 'plugin';
+      },
+      process: (cmd, callback) => {
+        let cmdArray = cmd.split(' ');
+        cmdArray = cmdArray.filter(cmd => cmd.trim().length > 0);
+        this.installPlugin(cmdArray, callback);
+      }
     });
   }
 
