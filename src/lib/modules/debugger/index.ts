@@ -1,6 +1,8 @@
+import * as constants from "../../constants.json";
 import DebuggerManager from "./debugger_manager";
 
 const NO_DEBUG_SESSION = __("No debug session active. Activate one with `debug`");
+const CONSTANTS = constants as any;
 
 interface Events {
   on: any;
@@ -45,11 +47,13 @@ class TransactionDebugger {
   private listenToEvents() {
     this.embark.events.on("blockchain:tx", (tx: any) => {
       this.embark.events.request("contracts:contract", tx.name, (contract: any) => {
-        this.txTracker[tx.transactionHash] = {tx, contract};
+        this.txTracker[tx.transactionHash] = { tx, contract };
         this.lastTx = tx.transactionHash;
-        if (tx.status !== "0x0") { return; }
+        if (tx.status !== CONSTANTS.blockchain.statusCodes.failure) { return; }
 
         this.embark.logger.info("Transaction failed");
+
+        if (!this.lastTx) { return; } // can't debug a tx that didn't get to the chain
 
         this.debuggerManager.getLastLine(tx.transactionHash, contract.filename, (lines: string[], line: string, knownVars: any) => {
           lines.forEach((errorLine: string) => {
@@ -75,7 +79,7 @@ class TransactionDebugger {
       for (const variable of Object.keys(globals || {})) {
         const value: any = globals[variable];
         if (line.indexOf(variable) >= 0) {
-          foundVars.push({name: variable, value});
+          foundVars.push({ name: variable, value });
         }
       }
 
@@ -83,7 +87,7 @@ class TransactionDebugger {
         const value: any = knownVars.locals[variable];
         const variableName: string = variable.split(" ")[0];
         if (line.indexOf(variableName) >= 0) {
-          foundVars.push({name: variable, value});
+          foundVars.push({ name: variable, value });
         }
       }
 
@@ -91,7 +95,7 @@ class TransactionDebugger {
         const value: any = knownVars.contract[variable];
         const variableName: string = variable.split(" ")[0];
         if (line.indexOf(variableName) >= 0) {
-          foundVars.push({name: variable, value});
+          foundVars.push({ name: variable, value });
         }
       }
 
@@ -109,14 +113,14 @@ class TransactionDebugger {
       this.embark.events.request("contracts:contract:byTxHash", txHash, (err: any, contract: any) => {
         if (err) {
           this.embark.logger.error(err);
-          return res.send({error: err});
+          return res.send({ error: err });
         }
 
         const filename: string = contract.filename;
 
         this.apiDebugger = this.debuggerManager.createDebuggerSession(txHash, filename, () => {
           this.getGlobals(txHash, (errGlobals: any, globals: any) => {
-            if (errGlobals) { return res.send({ok: false}); }
+            if (errGlobals) { return res.send({ ok: false }); }
             this.debuggerData.globals = globals;
             this.debuggerData.possibleSteps = {
               canGoNext: this.apiDebugger.canGoNext(),
@@ -127,7 +131,7 @@ class TransactionDebugger {
               this.apiDebugger.stepOverForward(true);
               this.apiDebugger.stepOverBack(true);
             }, 1000);
-            res.send({ok: true});
+            res.send({ ok: true });
           });
         });
       });
@@ -135,50 +139,50 @@ class TransactionDebugger {
 
     this.embark.registerAPICall("post", "/embark-api/debugger/JumpBack", (req: any, res: any) => {
       this.apiDebugger.stepJumpNextBreakpoint();
-      res.send({ok: true});
+      res.send({ ok: true });
     });
     this.embark.registerAPICall("post", "/embark-api/debugger/JumpForward", (req: any, res: any) => {
       this.apiDebugger.stepJumpPreviousBreakpoint();
-      res.send({ok: true});
+      res.send({ ok: true });
     });
     this.embark.registerAPICall("post", "/embark-api/debugger/StepOverForward", (req: any, res: any) => {
       if (this.apiDebugger.canGoNext()) {
         this.apiDebugger.stepOverForward(true);
       }
-      res.send({ok: true});
+      res.send({ ok: true });
     });
     this.embark.registerAPICall("post", "/embark-api/debugger/StepOverBackward", (req: any, res: any) => {
       if (this.apiDebugger.canGoPrevious()) {
         this.apiDebugger.stepOverBack(true);
       }
-      res.send({ok: true});
+      res.send({ ok: true });
     });
     this.embark.registerAPICall("post", "/embark-api/debugger/StepIntoForward", (req: any, res: any) => {
       if (this.apiDebugger.canGoNext()) {
         this.apiDebugger.stepIntoForward(true);
       }
-      res.send({ok: true});
+      res.send({ ok: true });
     });
     this.embark.registerAPICall("post", "/embark-api/debugger/StepIntoBackward", (req: any, res: any) => {
       if (this.apiDebugger.canGoPrevious()) {
         this.apiDebugger.stepIntoBack(true);
       }
-      res.send({ok: true});
+      res.send({ ok: true });
     });
     this.embark.registerAPICall("post", "/embark-api/debugger/breakpoint", (req: any, res: any) => {
-      res.send({ok: true});
+      res.send({ ok: true });
     });
 
     this.embark.registerAPICall("ws", "/embark-api/debugger", (ws: any, req: any) => {
       if (!this.apiDebugger) { return; }
 
       this.apiDebugger.events.on("source", (lineColumnPos: any, rawLocation: any) => {
-        this.debuggerData.sources = {lineColumnPos, rawLocation};
+        this.debuggerData.sources = { lineColumnPos, rawLocation };
         this.debuggerData.possibleSteps = {
           canGoNext: this.apiDebugger.canGoNext(),
           canGoPrevious: this.apiDebugger.canGoPrevious(),
         };
-        ws.send(JSON.stringify(this.debuggerData), () => {});
+        ws.send(JSON.stringify(this.debuggerData), () => { });
       });
 
       this.apiDebugger.events.on("locals", (data: any) => {
@@ -187,7 +191,7 @@ class TransactionDebugger {
           canGoNext: this.apiDebugger.canGoNext(),
           canGoPrevious: this.apiDebugger.canGoPrevious(),
         };
-        ws.send(JSON.stringify(this.debuggerData), () => {});
+        ws.send(JSON.stringify(this.debuggerData), () => { });
       });
 
       this.apiDebugger.events.on("globals", (data: any) => {
@@ -196,7 +200,7 @@ class TransactionDebugger {
           canGoNext: this.apiDebugger.canGoNext(),
           canGoPrevious: this.apiDebugger.canGoPrevious(),
         };
-        ws.send(JSON.stringify(this.debuggerData), () => {});
+        ws.send(JSON.stringify(this.debuggerData), () => { });
       });
 
     });

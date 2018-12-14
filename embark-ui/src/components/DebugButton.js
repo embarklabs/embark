@@ -12,8 +12,9 @@ class DebugButton extends React.Component {
   }
 
   isDebuggable() {
-    return this.props.forceDebuggable ||
-      (this.props.contracts && this.props.contracts.find(contract => contract.address === this.props.transaction.to));
+    return this.props.transaction.hash && 
+      (this.props.forceDebuggable ||
+      (this.props.contracts && this.props.contracts.find(contract => contract.address === this.props.transaction.to)));
   }
 
   render() {

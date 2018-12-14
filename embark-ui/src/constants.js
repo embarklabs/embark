@@ -12,3 +12,8 @@ export const OPERATIONS = {
   MORE: 1,
   LESS: -1
 };
+export const TX_STATUS_CODES = {
+  "success": "0x1",
+  "failure": "0x0",
+  "unknown": "0x01"
+}

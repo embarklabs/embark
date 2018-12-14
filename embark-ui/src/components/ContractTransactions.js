@@ -1,10 +1,12 @@
+import {TX_STATUS_CODES} from "../constants";
 import PropTypes from "prop-types";
 import React from 'react';
 import {Row, Col, Table, FormGroup, Label, Input, Form} from 'reactstrap';
+import * as classNames from 'classnames';
 
 import DebugButton from './DebugButton'
 
-const TX_STATES = {Success: '0x1', Fail: '0x0', Any: ''};
+const TX_STATES = {Success: TX_STATUS_CODES.success, Fail: TX_STATUS_CODES.failure, Any: ''};
 const EVENT = 'event';
 const FUNCTION = 'function';
 const CONSTRUCTOR = 'constructor';
@@ -115,21 +117,24 @@ class ContractTransactions extends React.Component {
                   <th>Gas Used</th>
                   <th>Block number</th>
                   <th>Status</th>
-                  <th>Transaction hash</th>
+                  <th>Result</th>
                 </tr>
               </thead>
               <tbody>
                 {
                   this.dataToDisplay().map((log, index) => {
+                    const rowClass = classNames({'bg-danger': log.error});
+                    const cellClass = classNames({'text-light': log.error});
                     return (
-                      <tr key={'log-' + index}>
-                        <td><DebugButton forceDebuggable transaction={{hash: log.transactionHash}}/></td>
-                        <td>{`${log.name}.${log.functionName}(${log.paramString})`}</td>
-                        <td>{log.events.join(', ')}</td>
-                        <td>{log.gasUsed}</td>
-                        <td>{log.blockNumber}</td>
-                        <td>{log.status}</td>
-                        <td>{log.transactionHash}</td>
+                      <tr key={'log-' + index} className={rowClass}>
+                        <td className={cellClass}><DebugButton forceDebuggable transaction={{hash: log.transactionHash}}/></td>
+                        <td className={cellClass}>{`${log.name}.${log.functionName}(${log.paramString})`}</td>
+                        <td className={cellClass}>{log.events.join(', ')}</td>
+                        <td className={cellClass}>{log.gasUsed}</td>
+                        <td className={cellClass}>{log.blockNumber}</td>
+                        <td className={cellClass}>{log.status}</td>
+                        {log.transactionHash && <td className={cellClass}>{log.transactionHash}</td>}
+                        {log.error && <td className={cellClass}>{log.error}</td>}
                       </tr>
                     );
                   })
