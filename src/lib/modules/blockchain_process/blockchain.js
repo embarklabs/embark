@@ -146,14 +146,17 @@ Blockchain.prototype.initProxy = function () {
 };
 
 Blockchain.prototype.setupProxy = async function () {
+  const AccountParser = require('../../utils/accountParser');
   if (!this.proxyIpc) this.proxyIpc = new Ipc({ipcRole: 'client'});
+
+  const addresses = AccountParser.parseAccountsConfig(this.userConfig.accounts, false, this.logger);
 
   let wsProxy;
   if (this.config.wsRPC) {
-    wsProxy = proxy.serve(this.proxyIpc, this.config.wsHost, this.config.wsPort, true, this.config.wsOrigins);
+    wsProxy = proxy.serve(this.proxyIpc, this.config.wsHost, this.config.wsPort, true, this.config.wsOrigins, addresses);
   }
 
-  [this.rpcProxy, this.wsProxy] = await Promise.all([proxy.serve(this.proxyIpc, this.config.rpcHost, this.config.rpcPort, false), wsProxy]);
+  [this.rpcProxy, this.wsProxy] = await Promise.all([proxy.serve(this.proxyIpc, this.config.rpcHost, this.config.rpcPort, false, null, addresses), wsProxy]);
 };
 
 Blockchain.prototype.shutdownProxy = function () {

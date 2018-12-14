@@ -290,7 +290,7 @@ class CodeGenerator {
       function getWeb3Location(next) {
         self.events.request("version:get:web3", function(web3Version) {
           if (web3Version === "1.0.0-beta") {
-            return next(null, require.resolve("web3", {paths: fs.embarkPath("node_modules")}));
+            return next(null, require.resolve("web3", {paths: [fs.embarkPath("node_modules")]}));
           }
           self.events.request("version:getPackageLocation", "web3", web3Version, function(err, location) {
             return next(null, fs.dappPath(location));
@@ -356,7 +356,7 @@ class CodeGenerator {
       function getWeb3Location(next) {
         self.events.request("version:get:web3", function(web3Version) {
           if (web3Version === "1.0.0-beta") {
-            return next(null, require.resolve("web3", {paths: fs.embarkPath("node_modules")}));
+            return next(null, require.resolve("web3", {paths: [fs.embarkPath("node_modules")]}));
           }
           self.events.request("version:getPackageLocation", "web3", web3Version, function(err, location) {
             return next(null, fs.dappPath(location));

@@ -1,28 +1,37 @@
-/*global describe, it*/
+/*global describe, it, before, after*/
 const assert = require('assert');
 const sinon = require('sinon');
 const utils = require('../lib/utils/utils');
 const AccountParser = require('../lib/utils/accountParser');
 let TestLogger = require('../lib/utils/test_logger');
 const Web3 = require('web3');
-const i18n = require('../lib/core/i18n/i18n.js');
+const i18n = require('../lib/core/i18n/i18n');
 i18n.setOrDetectLocale('en');
 
 describe('embark.AccountParser', function () {
   describe('#getAccount', function () {
-    const web3 = {
-      eth: {
-        accounts: {
-          privateKeyToAccount: sinon.stub().callsFake((key) => {
-            return {key};
-          })
+    let web3;
+    let testLogger;
+    let isHexStrictStub;
+
+    before(() => {
+      testLogger = new TestLogger({});
+      web3 = {
+        eth: {
+          accounts: {
+            privateKeyToAccount: sinon.stub().callsFake((key) => {
+              return {key};
+            })
+          }
         }
-      },
-      utils: {
-        isHexStrict: sinon.stub().returns(true)
-      }
-    };
-    const testLogger = new TestLogger({});
+      };
+      isHexStrictStub = sinon.stub(Web3.utils, 'isHexStrict').returns(true);
+      // Web3.utils.isHexStrict = sinon.stub().returns(true);
+    });
+
+    after(() => {
+      isHexStrictStub.restore();
+    });
 
     it('should return one account with the key', function () {
       const account = AccountParser.getAccount({
@@ -71,6 +80,32 @@ describe('embark.AccountParser', function () {
       }, web3, testLogger);
 
       assert.strictEqual(account, null);
+    });
+
+    it('should just return the addresses when no web3', function () {
+      const accounts = AccountParser.getAccount({
+        mnemonic: 'example exile argue silk regular smile grass bomb merge arm assist farm',
+        numAddresses: 2
+      }, false, testLogger);
+
+      assert.deepEqual(accounts,
+        [
+          "0xb8d851486d1c953e31a44374aca11151d49b8bb3",
+          "0xf6d5c6d500cac10ee7e6efb5c1b479cfb789950a"
+        ]);
+    });
+
+    it('should return nodeAccounts', function() {
+      const accounts = AccountParser.getAccount({nodeAccounts: true}, web3, testLogger, [
+        "0xb8d851486d1c953e31a44374aca11151d49b8bb3",
+        "0xf6d5c6d500cac10ee7e6efb5c1b479cfb789950a"
+      ]);
+
+      assert.deepEqual(accounts,
+        [
+          {"address": "0xb8d851486d1c953e31a44374aca11151d49b8bb3"},
+          {"address": "0xf6d5c6d500cac10ee7e6efb5c1b479cfb789950a"}
+        ]);
     });
   });
 
