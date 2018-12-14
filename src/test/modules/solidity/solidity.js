@@ -1,8 +1,8 @@
 /*globals describe, it*/
-let SolidityCompiler = require('../lib/modules/solidity');
-let TestLogger = require('../lib/utils/test_logger');
-let File = require('../lib/core/file.js');
-let Ipc = require('../lib/core/ipc.js');
+let SolidityCompiler = require('../../../lib/modules/solidity');
+let TestLogger = require('../../../lib/utils/test_logger');
+let File = require('../../../lib/core/file.js');
+let Ipc = require('../../../lib/core/ipc.js');
 let assert = require('assert');
 
 let readFile = function(file) {
@@ -44,7 +44,7 @@ let generateApiObject = function() {
   return apiObject;
 }
 
-describe('embark.Compiler', function() {
+describe('embark.Solidity', function() {
   describe('#compile_solidity', function() {
     this.timeout(0);
 
@@ -61,7 +61,7 @@ describe('embark.Compiler', function() {
       "gasEstimates":{"creation":{"codeDepositCost":"45000","executionCost":"20141","totalCost":"65141"},"external":{"get()":"428","set(uint256)":"20161","storedData()":"384"}},
       "functionHashes":{"get()":"6d4ce63c","set(uint256)":"60fe47b1","storedData()":"2a1afcd9"},
       "abiDefinition":[{"constant":true,"inputs":[],"name":"storedData","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"x","type":"uint256"}],"name":"set","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"retVal","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"initialValue","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"}],
-      "filename":"dist/test/contracts/simple_storage.sol"
+      "filename":"dist/test/modules/solidity/contracts/simple_storage.sol"
     };
 
     expectedObject["Token"] = {
@@ -72,13 +72,13 @@ describe('embark.Compiler', function() {
       "gasEstimates":{"creation":{"codeDepositCost":"209600","executionCost":"40385","totalCost":"249985"},"external":{"allowance(address,address)":"818","approve(address,uint256)":"22332","balanceOf(address)":"675","totalSupply()":"406","transfer(address,uint256)":"43544","transferFrom(address,address,uint256)":"64387"},"internal":{"safeToAdd(uint256,uint256)":"24"}},
       "functionHashes":{"allowance(address,address)":"dd62ed3e","approve(address,uint256)":"095ea7b3","balanceOf(address)":"70a08231","totalSupply()":"18160ddd","transfer(address,uint256)":"a9059cbb","transferFrom(address,address,uint256)":"23b872dd"},
       "abiDefinition":[{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"value","type":"uint256"}],"name":"approve","outputs":[{"name":"ok","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"supply","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"ok","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"who","type":"address"}],"name":"balanceOf","outputs":[{"name":"value","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"value","type":"uint256"}],"name":"transfer","outputs":[{"name":"ok","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"owner","type":"address"},{"name":"spender","type":"address"}],"name":"allowance","outputs":[{"name":"_allowance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"initial_balance","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Approval","type":"event"}],
-      "filename":"dist/test/contracts/token.sol"
+      "filename":"dist/test/modules/solidity/contracts/token.sol"
     };
 
     it('should generate compiled code and abi', function(done) {
       compiler.compile_solidity([
-        readFile('dist/test/contracts/simple_storage.sol'),
-        readFile('dist/test/contracts/token.sol')
+        readFile('dist/test/modules/solidity/contracts/simple_storage.sol'),
+        readFile('dist/test/modules/solidity/contracts/token.sol')
       ], {}, function(err, compiledContracts) {
         //assert.deepEqual(compiledContracts, expectedObject);
         done();
@@ -104,7 +104,7 @@ describe('embark.Compiler', function() {
       "gasEstimates":{"creation":{"codeDepositCost":"55800","executionCost":"20205","totalCost":"76005"},"external":{"get()":"446","set(uint256)":"20227","storedData()":"394"}},
       "functionHashes":{"get()":"6d4ce63c","set(uint256)":"60fe47b1","storedData()":"2a1afcd9"},
       "abiDefinition":[{"constant":true,"inputs":[],"name":"storedData","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"x","type":"uint256"}],"name":"set","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"retVal","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"initialValue","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"}],
-      "filename":"dist/test/contracts/simple_storage.sol"
+      "filename":"dist/test/modules/solidity/contracts/simple_storage.sol"
     };
 
     expectedObject["Token"] = {
@@ -115,13 +115,13 @@ describe('embark.Compiler', function() {
       "gasEstimates":{"creation":{"codeDepositCost":"470000","executionCost":"40708","totalCost":"510708"},"external":{"allowance(address,address)":"794","approve(address,uint256)":"22331","balanceOf(address)":"625","totalSupply()":"424","transfer(address,uint256)":"43562","transferFrom(address,address,uint256)":"64373"},"internal":{"safeToAdd(uint256,uint256)":"45"}},
       "functionHashes":{"allowance(address,address)":"dd62ed3e","approve(address,uint256)":"095ea7b3","balanceOf(address)":"70a08231","totalSupply()":"18160ddd","transfer(address,uint256)":"a9059cbb","transferFrom(address,address,uint256)":"23b872dd"},
       "abiDefinition":[{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"value","type":"uint256"}],"name":"approve","outputs":[{"name":"ok","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"supply","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"ok","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"who","type":"address"}],"name":"balanceOf","outputs":[{"name":"value","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"value","type":"uint256"}],"name":"transfer","outputs":[{"name":"ok","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"owner","type":"address"},{"name":"spender","type":"address"}],"name":"allowance","outputs":[{"name":"_allowance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"initial_balance","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Approval","type":"event"}],
-      "filename":"dist/test/contracts/token.sol"
+      "filename":"dist/test/modules/solidity/contracts/token.sol"
     };
 
     it('should generate compiled code and abi', function(done) {
       compiler.compile_solidity([
-        readFile('dist/test/contracts/simple_storage.sol'),
-        readFile('dist/test/contracts/token.sol')
+        readFile('dist/test/modules/solidity/contracts/simple_storage.sol'),
+        readFile('dist/test/modules/solidity/contracts/token.sol')
       ], {}, function(err, compiledContracts) {
         //assert.deepEqual(compiledContracts, expectedObject);
         done();
