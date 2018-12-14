@@ -1,7 +1,7 @@
 const path = require('path');
 const pkgUp = require('pkg-up');
 let shelljs = require('shelljs');
-let proxy = require('./proxy');
+let Proxy = require('./proxy');
 const Ipc = require('../../core/ipc');
 const constants = require('../../constants.json');
 const {defaultHost, dockerHostSwap} = require('../../utils/host');
@@ -86,7 +86,7 @@ class Simulator {
 
     if(useProxy){
       let ipcObject = new Ipc({ipcRole: 'client'});
-      proxy.serve(ipcObject, host, port, false, undefined);
+      new Proxy(ipcObject).serve(host, port, false);
     }
   }
 }
