@@ -7,6 +7,9 @@ let TestLogger = require('../lib/utils/test_logger');
 let Events = require('../lib/core/events');
 let Ipc = require('../lib/core/ipc.js');
 let assert = require('assert');
+const sinon = require('sinon');
+const {expect} = require('chai');
+require('colors');
 
 //let SolidityCompiler = require('../lib/modules/solidity');
 let Plugins = require('../lib/core/plugins.js');
@@ -302,6 +305,60 @@ describe('embark.Contracts', function() {
           assert.equal(contracts[1].runtimeBytecode, parentContract.runtimeBytecode);
           done();
         });
+      });
+    });
+
+    let eventsEmitted = [],
+    logsEmitted = [];
+    describe('#contract logging', function(){
+      before('stub events', function(done){
+        sinon.stub(events, 'emit').callsFake((eventName, data) => {
+          eventsEmitted.push({eventName, data});
+          return true;
+        });
+        sinon.stub(embarkObj.logger, 'info').callsFake((args) => {
+          logsEmitted.push(args);
+        });
+        done();
+      });
+      it('should emit a contract error log', function(done){
+        const log = {
+          type: 'contract-log',
+          address: '0x12345',
+          status: '0x0',
+          name: 'TestContract',
+          functionName: 'set',
+          paramString: 'abc',
+          error: 'Testing error message'
+        };
+
+        const {address, name, error} = log;
+
+
+        contractsManager._emitContractLogError(address, name, {
+          "constant": false,
+          "inputs": [
+            {
+              "name": "x",
+              "type": "uint256"
+            }
+          ],
+          "name": "set",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }, ['abc'], error);
+
+        const contractLogEmitted = eventsEmitted.find(event => event.eventName === 'contracts:log');
+        expect(contractLogEmitted).to.deep.equal({eventName: 'contracts:log', data: log});
+        
+        const blockchainTxLogEmitted = eventsEmitted.find(event => event.eventName === 'blockchain:tx');
+        expect(blockchainTxLogEmitted).to.deep.equal({eventName: 'blockchain:tx', data: log});
+
+        expect(logsEmitted[0]).to.be.equal(`Blockchain>`.underline + ` ${log.name}.${log.functionName}(${log.paramString})`.bold + ` | ${log.error} | gas: --- | blk: --- | status:${log.status}`);
+
+        done();
       });
     });
   });

@@ -117,49 +117,19 @@ class ContractsManager {
             try {
               const gas = await contractObj.methods[req.body.method].apply(this, req.body.inputs).estimateGas();
               contractObj.methods[req.body.method].apply(this, req.body.inputs)[funcCall]({from: account, gasPrice: req.body.gasPrice, gas: Math.floor(gas)}, (error, result) => {
-                const paramString = abi.inputs.map((input, idx) => {
-                  const quote = input.type.indexOf("int") === -1 ? '"' : '';
-                  return quote + req.body.inputs[idx] + quote;
-                }).join(', ');
-
-                let contractLog = {
-                  name: req.body.contractName,
-                  functionName: req.body.method,
-                  paramString: paramString,
-                  address: contract.deployedAddress,
-                  status: '0x0'
-                };
-
                 if (error) {
-                  self.events.emit('contracts:log', contractLog);
+                  this._emitContractLogError(contract.deployedAddress, req.body.contractName, abi, req.body.inputs, error.message);
                   return res.send({result: error.message});
                 }
 
-                if(funcCall === 'call') {
-                  contractLog.status = '0x1';
-                  self.events.emit('contracts:log', contractLog);
-                  return res.send({result});
-                }
-
-                self.events.request("blockchain:get", web3 => {
-                  web3.eth.getTransaction(result, (err, tx) => {
-                    contractLog = Object.assign(contractLog, {
-                      data: tx.input,
-                      status: '0x1',
-                      gasUsed: tx.gas,
-                      blockNumber: tx.blockNumber,
-                      transactionHash: tx.hash
-                    });
-
-                    self.events.emit('contracts:log', contractLog);
-                    res.send({result});
-                  });
-                });
+                res.send({result});
               });
             } catch (e) {
               if (funcCall === 'call' && e.message === constants.blockchain.gasAllowanceError) {
+                this._emitContractLogError(contract.deployedAddress, req.body.contractName, abi, req.body.inputs, e.message);
                 return res.send({result: constants.blockchain.gasAllowanceErrorMessage});
               }
+              this._emitContractLogError(contract.deployedAddress, req.body.contractName, abi, req.body.inputs, e.message);
               res.send({result: e.message});
             }
           });
@@ -253,6 +223,27 @@ class ContractsManager {
     );
   }
 
+  _emitContractLogError(address, contractName, functionAbi, inputs, errorMessage){
+    let idx = 0;
+    let paramString = '';
+    functionAbi.inputs.forEach((input) => {
+      let quote = input.type.indexOf("int") === -1 ? '"' : '';
+      paramString += quote + inputs[idx++] + quote + ", ";
+    });
+    paramString = paramString.substring(0, paramString.length - 2);
+    const log = {
+      type: 'contract-log',
+      address: address,
+      status: constants.blockchain.statusCodes.failure,
+      name: contractName,
+      functionName: functionAbi.name,
+      paramString,
+      error: errorMessage
+    };
+    this.events.emit('contracts:log', log);
+    this.logger.info(`Blockchain>`.underline + ` ${log.name}.${log.functionName}(${log.paramString})`.bold + ` | ${log.error} | gas: --- | blk: --- | status:${log.status}`);
+    this.events.emit('blockchain:tx', log);
+  }
 
   _contractsForApi() {
     const result = [];

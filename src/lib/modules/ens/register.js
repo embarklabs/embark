@@ -1,5 +1,6 @@
 /*global web3*/
 const namehash = require('eth-ens-namehash');
+const constants = require('../../constants');
 // Price of ENS registration contract functions
 const ENS_GAS_PRICE = 700000;
 
@@ -15,7 +16,7 @@ function registerSubDomain(ens, registrar, resolver, defaultAccount, subdomain, 
   secureSend(web3, toSend, {from: defaultAccount, gas: ENS_GAS_PRICE}, false)
     // Set resolver for the node
     .then(transac => {
-      if (transac.status !== "0x1" && transac.status !== "0x01" && transac.status !== true) {
+      if (transaction.status !== constants.blockchain.statusCodes.success && transaction.status !== constants.blockchain.statusCodes.unknown  && transac.status !== true) {
         logger.warn('Failed transaction', transac);
         return callback('Failed to register. Check gas cost.');
       }

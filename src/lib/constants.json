@@ -53,6 +53,11 @@
       "eth_sendTransaction": "eth_sendTransaction",
       "eth_sendRawTransaction": "eth_sendRawTransaction",
       "eth_getTransactionReceipt": "eth_getTransactionReceipt"
+    },
+    "statusCodes": {
+      "success": "0x1",
+      "failure": "0x0",
+      "unknown": "0x01"
     }
   },
   "storage": {

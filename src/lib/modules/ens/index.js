@@ -6,7 +6,7 @@ const embarkJsUtils = require('embarkjs').Utils;
 const reverseAddrSuffix = '.addr.reverse';
 const ENSFunctions = require('./ENSFunctions');
 import {ZERO_ADDRESS} from '../../utils/addressUtils';
-import {ens} from '../../constants';
+import {ens, blockchain} from '../../constants';
 
 const ENS_WHITELIST = ens.whitelist;
 const NOT_REGISTERED_ERROR = 'Name not yet registered';
@@ -224,7 +224,7 @@ class ENS {
       },
       function setContent(resolver, defaultAccount, next) {
         resolver.methods.setContent(hashedName, contentHash).send({from: defaultAccount}).then((transaction) => {
-          if (transaction.status !== "0x1" && transaction.status !== "0x01" && transaction.status !== true) {
+          if (transaction.status !== blockchain.statusCodes.success && transaction.status !== blockchain.statusCodes.unknown && transaction.status !== true) {
             return next('Association failed. Status: ' + transaction.status);
           }
           next();
