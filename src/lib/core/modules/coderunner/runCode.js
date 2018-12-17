@@ -1,10 +1,13 @@
 const vm = require('vm');
+const fs = require('../../fs');
 
 class RunCode {
   constructor({logger}) {
     this.logger = logger;
+    const newGlobal = Object.create(global);
+    newGlobal.fs = fs;
     this.context = Object.assign({}, {
-      global, console, exports, require, module, __filename, __dirname, process,
+      global: newGlobal, console, exports, require, module, __filename, __dirname, process,
       setTimeout, setInterval, clearTimeout, clearInterval
     });
   }
