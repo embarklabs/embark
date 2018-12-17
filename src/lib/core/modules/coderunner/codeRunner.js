@@ -96,7 +96,7 @@ class CodeRunner {
       cb(null, value);
     } catch (error) {
       // Improve error message when there's no connection to node
-      if (error.message.indexOf(WEB3_INVALID_RESPONSE_ERROR) !== -1) {
+      if (error.message && error.message.indexOf(WEB3_INVALID_RESPONSE_ERROR) !== -1) {
         error.message += '. Are you connected to an Ethereum node?';
       }
 
