@@ -1,14 +1,30 @@
 /* global Buffer __ exports require */
 
+require('./httpProxyOverride');
 const Asm = require('stream-json/Assembler');
 const {canonicalHost, defaultHost} = require('../../utils/host');
 const constants = require('../../constants.json');
+const {Duplex} = require('stream');
 const http = require('http');
 const httpProxy = require('http-proxy');
 const {parser: jsonParser} = require('stream-json');
 const pump = require('pump');
 const utils = require('../../utils/utils');
 const WsParser = require('simples/lib/parsers/ws');
+const WsWrapper = require('simples/lib/ws/wrapper');
+const modifyResponse = require('node-http-proxy-json');
+
+const METHODS_TO_MODIFY = {accounts: 'eth_accounts'};
+
+const modifyPayload = (toModifyPayloads, body, accounts) => {
+  switch (toModifyPayloads[body.id]) {
+    case METHODS_TO_MODIFY.accounts:
+      body.result = body.result.concat(accounts);
+      break;
+    default:
+  }
+  return body;
+};
 
 const hex = (n) => {
   let _n = n.toString(16);
@@ -32,14 +48,18 @@ const parseJsonMaybe = (string) => {
   return object;
 };
 
-exports.serve = async (ipc, host, port, ws, origin, certOptions={}) => {
+exports.serve = async (ipc, host, port, ws, origin, accounts, certOptions={}) => {
   const commList = {};
   const receipts = {};
   const transactions = {};
+  const toModifyPayloads = {};
 
   const trackRequest = (req) => {
     if (!req) return;
     try {
+      if (Object.values(METHODS_TO_MODIFY).includes(req.method)) {
+        toModifyPayloads[req.id] = req.method;
+      }
       if (req.method === 'eth_sendTransaction') {
         commList[req.id] = {
           type: 'contract-log',
@@ -121,7 +141,32 @@ exports.serve = async (ipc, host, port, ws, origin, certOptions={}) => {
       host: canonicalHost(host),
       port: port
     },
-    ws: ws
+    ws: ws,
+    createWsServerTransformStream: (_req, _proxyReq, _proxyRes) => {
+      const parser = new WsParser(0, true);
+      parser.on('frame', ({data: buffer}) => {
+        let object = parseJsonMaybe(buffer.toString());
+        if (object) {
+          object = modifyPayload(toModifyPayloads, object, accounts);
+          // track the modified response
+          trackResponse(object);
+          // send the modified response
+          WsWrapper.wrap(
+            {connection: dupl, masked: 0},
+            Buffer.from(JSON.stringify(object)),
+            () => {}
+          );
+        }
+      });
+      const dupl = new Duplex({
+        read(_size) {},
+        write(chunk, encoding, callback) {
+          parser.write(chunk);
+          callback();
+        }
+      });
+      return dupl;
+    }
   });
 
   proxy.on('error', (err) => {
@@ -131,15 +176,14 @@ exports.serve = async (ipc, host, port, ws, origin, certOptions={}) => {
     );
   });
 
-  proxy.on('proxyRes', (proxyRes, req, _res) => {
-    if (req.method === 'POST') {
-      // messages FROM the target
-      Asm.connectTo(
-        pump(proxyRes, jsonParser())
-      ).on('done', ({current: object}) => {
-        trackResponse(object);
-      });
-    }
+  proxy.on('proxyRes', (proxyRes, req, res) => {
+    modifyResponse(res, proxyRes, (body) => {
+      if (body) {
+        body = modifyPayload(toModifyPayloads, body, accounts);
+        trackResponse(body);
+      }
+      return body;
+    });
   });
 
   const server = http.createServer((req, res) => {
@@ -158,17 +202,11 @@ exports.serve = async (ipc, host, port, ws, origin, certOptions={}) => {
   });
 
   if (ws) {
-    server.on('upgrade', function (msg, socket, head) {
+    server.on('upgrade', (msg, socket, head) => {
       proxy.ws(msg, socket, head);
     });
 
-    proxy.on('open', (proxySocket) => {
-      // messages FROM the target
-      pump(proxySocket, new WsParser(0, true)).on('frame', ({data: buffer}) => {
-        const object = parseJsonMaybe(buffer.toString());
-        trackResponse(object);
-      });
-    });
+    proxy.on('open', (_proxySocket) => { /* messages FROM the target */ });
 
     proxy.on('proxyReqWs', (_proxyReq, _req, socket) => {
       // messages TO the target

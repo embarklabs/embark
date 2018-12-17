@@ -11,7 +11,7 @@ class AccountParser {
     let accounts = [];
     if (accountsConfig && accountsConfig.length) {
       accountsConfig.forEach(accountConfig => {
-        const account = AccountParser.getAccount(accountConfig, web3, logger, nodeAccounts);
+        let account = AccountParser.getAccount(accountConfig, web3, logger, nodeAccounts);
         if (!account) {
           return;
         }
@@ -25,23 +25,30 @@ class AccountParser {
     return accounts;
   }
 
+  /*eslint complexity: ["error", 30]*/
   static getAccount(accountConfig, web3, logger = console, nodeAccounts) {
+    const {utils} = require('web3');
+    const returnAddress = web3 === false;
     let hexBalance = null;
-    if (accountConfig.balance) {
+    if (accountConfig.balance && web3) {
       hexBalance = getHexBalanceFromString(accountConfig.balance, web3);
     }
 
     if (accountConfig.privateKey === 'random') {
+      if (!web3) {
+        logger.warn('Cannot use random in this context');
+        return null;
+      }
       let randomAccount = web3.eth.accounts.create();
       accountConfig.privateKey = randomAccount.privateKey;
     }
 
     if (accountConfig.nodeAccounts) {
-      if (!nodeAccounts) {
+      if (!nodeAccounts && !returnAddress) {
         logger.warn('Cannot use nodeAccounts in this context');
         return null;
       }
-      if (!nodeAccounts.length) {
+      if (!nodeAccounts || !nodeAccounts.length) {
         return null;
       }
 
@@ -54,9 +61,12 @@ class AccountParser {
       if (!accountConfig.privateKey.startsWith('0x')) {
         accountConfig.privateKey = '0x' + accountConfig.privateKey;
       }
-      if (!web3.utils.isHexStrict(accountConfig.privateKey)) {
+      if (!utils.isHexStrict(accountConfig.privateKey)) {
         logger.warn(`Private key ending with ${accountConfig.privateKey.substr(accountConfig.privateKey.length - 5)} is not a HEX string`);
         return null;
+      }
+      if (returnAddress) {
+        return ethereumjsWallet.fromPrivateKey(accountConfig.privateKey).getChecksumAddressString();
       }
       return Object.assign(web3.eth.accounts.privateKeyToAccount(accountConfig.privateKey), {hexBalance});
     }
@@ -73,6 +83,9 @@ class AccountParser {
           }
           const wallet = ethereumjsWallet['fromV' + fileContent.version](fileContent, accountConfig.password);
 
+          if (returnAddress) {
+            return wallet.getChecksumAddressString();
+          }
           return Object.assign(web3.eth.accounts.privateKeyToAccount('0x' + wallet.getPrivateKey().toString('hex')), {hexBalance});
         } catch (e) {
           logger.error('Private key file is not a keystore JSON file but a password was provided');
@@ -86,9 +99,12 @@ class AccountParser {
         if (!key.startsWith('0x')) {
           key = '0x' + key;
         }
-        if (!web3.utils.isHexStrict(key)) {
+        if (!utils.isHexStrict(key)) {
           logger.warn(`Private key is not a HEX string in file ${accountConfig.privateKeyFile} at index ${index}`);
           return null;
+        }
+        if (returnAddress) {
+          return ethereumjsWallet.fromPrivateKey(key).getChecksumAddressString();
         }
         return Object.assign(web3.eth.accounts.privateKeyToAccount(key), {hexBalance});
       });
@@ -104,7 +120,11 @@ class AccountParser {
       const accounts = [];
       for (let i = addressIndex; i < addressIndex + numAddresses; i++) {
         const wallet = hdwallet.derivePath(wallet_hdpath + i).getWallet();
-        accounts.push(Object.assign(web3.eth.accounts.privateKeyToAccount('0x' + wallet.getPrivateKey().toString('hex')), {hexBalance}));
+        if (returnAddress) {
+          accounts.push(wallet.getAddressString());
+        } else {
+          accounts.push(Object.assign(web3.eth.accounts.privateKeyToAccount('0x' + wallet.getPrivateKey().toString('hex')), {hexBalance}));
+        }
       }
       return accounts;
     }

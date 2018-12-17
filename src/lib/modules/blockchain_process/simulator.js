@@ -67,7 +67,7 @@ class Simulator {
   }
 
   runCommand(cmds, useProxy, host, port) {
-    const ganache_main = require.resolve('ganache-cli', {paths: fs.embarkPath('node_modules')});
+    const ganache_main = require.resolve('ganache-cli', {paths: [fs.embarkPath('node_modules')]});
     const ganache_json = pkgUp.sync(path.dirname(ganache_main));
     const ganache_root = path.dirname(ganache_json);
     const ganache_bin = require(ganache_json).bin;
