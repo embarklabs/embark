@@ -1,6 +1,6 @@
 import Handlebars from "handlebars";
 import * as path from "path";
-import { ABIDefinition } from "web3/types";
+import { ABIDefinition } from "web3/eth/abi";
 
 import { Contract } from "../../../../../typings/contract";
 import { Embark } from "../../../../../typings/embark";

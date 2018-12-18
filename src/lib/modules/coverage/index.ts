@@ -1,6 +1,6 @@
 import * as globule from "globule";
 import * as path from "path";
-import { Contract as Web3Contract } from "web3/types";
+import Web3Contract from "web3/eth/contract";
 
 import { Contract } from "../../../typings/contract";
 import { Embark } from "../../../typings/embark";

@@ -1,6 +1,6 @@
 import { Location } from "solidity-parser-antlr";
 
-export type InjectionPointType = "statement" | "branch" | "function" | "contractDefinition";
+export type InjectionPointType = "statement" | "contractDefinition";
 export type BranchType = "if" | "switch";
 
 export interface InjectionPoint {

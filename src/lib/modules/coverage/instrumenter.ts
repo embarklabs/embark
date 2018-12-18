@@ -44,8 +44,7 @@ export class Instrumenter {
       return;
     }
 
-    const id = this.contract.addFunction(node.loc, node.name);
-    this.addInjectionPoints("function", id, node.body.loc);
+    this.contract.addFunction(node.loc, node.name, node.body.loc);
   }
 
   public instrumentStatement(node: Statement) {
@@ -69,10 +68,7 @@ export class Instrumenter {
       return acc;
     }, []);
 
-    const id = this.contract.addBranch(node.loc.start.line, "if", locations);
-    locations.forEach((location, index) => {
-      this.addInjectionPoints("branch", id, location, index);
-    });
+    this.contract.addBranch(node.loc.start.line, "if", locations);
   }
 
   private addInjectionPoints(type: InjectionPointType, id: number, location: Location, locationIdx?: number) {
