@@ -11,7 +11,6 @@ npm-debug.log*
 npm-shrinkwrap.json
 package
 package-lock.json
-src/test/cli_shim/.cid
 yarn-debug.log*
 yarn-error.log*
 coverage
