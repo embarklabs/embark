@@ -7,6 +7,7 @@ const reverseAddrSuffix = '.addr.reverse';
 const ENSFunctions = require('./ENSFunctions');
 import {ZERO_ADDRESS} from '../../utils/addressUtils';
 import {ens} from '../../constants';
+import EmbarkJS from 'embarkjs';
 
 const ENS_WHITELIST = ens.whitelist;
 const NOT_REGISTERED_ERROR = 'Name not yet registered';
@@ -97,9 +98,9 @@ class ENS {
         return cmdName === 'resolve';
       },
       process: (cmd, cb) => {
-      let [_cmdName, domain] = cmd.split(' ');
-      global.EmbarkJS.Names.resolve(domain, cb);
-    }
+        let [_cmdName, domain] = cmd.split(' ');
+        EmbarkJS.Names.resolve(domain, cb);
+      }
     });
 
     this.embark.registerConsoleCommand({
@@ -111,13 +112,13 @@ class ENS {
       },
       process: (cmd, cb) => {
         let [_cmdName, address] = cmd.split(' ');
-        global.EmbarkJS.Names.lookup(address, cb);
+        EmbarkJS.Names.lookup(address, cb);
       }
     });
 
 
     this.embark.registerConsoleCommand({
-      usage: 'registerSubDomain <subDomain>',
+      usage: 'registerSubDomain <subDomain> <address>',
       description: __('Register an ENS sub-domain'),
       matches: (cmd) => {
         let [cmdName] = cmd.split(' ');
@@ -125,7 +126,7 @@ class ENS {
       },
       process: (cmd, cb) => {
         let [_cmdName, name, address] = cmd.split(' ');
-        global.EmbarkJS.Names.registerSubDomain(name, address, cb);
+        EmbarkJS.Names.registerSubDomain(name, address, cb);
       }
     });
   }
