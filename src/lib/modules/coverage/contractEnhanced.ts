@@ -1,5 +1,5 @@
 import * as path from "path";
-import parser, { Location } from "solidity-parser-antlr";
+import parser, { LineColumn, Location } from "solidity-parser-antlr";
 import { EventLog } from "web3/types";
 
 import { decrypt } from "./eventId";
@@ -12,11 +12,8 @@ import { BranchType, Coverage } from "./types";
 
 const fs = require("../../core/fs");
 
-enum EventEnum {
-  statement = "__StatementCoverage",
-  branch = "__BranchCoverage",
-  function = "__FunctionCoverage",
-}
+const STATEMENT_EVENT = "__StatementCoverage";
+const POINT_FACTOR = 1000000000;
 
 let id = 0;
 function nextId() {
@@ -31,6 +28,7 @@ export class ContractEnhanced {
   public source: string;
   private ast: parser.ASTNode;
   private coverageFilepath: string;
+  private functionsBodyLocation: {[id: number]: Location} = {};
 
   constructor(public filepath: string) {
     this.id = nextId();
@@ -71,29 +69,24 @@ export class ContractEnhanced {
   public updateCoverage(events: EventLog[]) {
     events.filter(this.filterCoverageEvent).forEach((event) => {
       const value = parseInt(event.returnValues[0], 10);
-      const {contractId, injectionPointId, locationIdx} = decrypt(value);
+      const {contractId, injectionPointId} = decrypt(value);
 
       if (contractId !== this.id) {
         return;
       }
 
-      switch (event.event) {
-        case "__StatementCoverage": {
-          this.coverage.s[injectionPointId] += 1;
-          const statement = this.coverage.statementMap[injectionPointId];
-          this.coverage.l[statement.start.line] += 1;
-          break;
-        }
-        case "__FunctionCoverage": {
-          this.coverage.f[injectionPointId] += 1;
-          const fn = this.coverage.fnMap[injectionPointId];
-          this.coverage.l[fn.line] += 1;
-          break;
-        }
-        case "__BranchCoverage": {
-          this.coverage.b[injectionPointId][locationIdx] += 1;
-          break;
-        }
+      this.coverage.s[injectionPointId] += 1;
+      const location = this.coverage.statementMap[injectionPointId];
+      this.coverage.l[location.start.line] += 1;
+
+      const fnMapId = this.findFnMapId(location);
+      if (fnMapId) {
+        this.coverage.f[fnMapId] += 1;
+      }
+
+      const [fnBranchId, locationId] = this.findFnBranchIdAndLocationId(location);
+      if (fnBranchId) {
+        this.coverage.b[fnBranchId][locationId] += 1;
       }
     });
   }
@@ -118,7 +111,7 @@ export class ContractEnhanced {
     return coverageId;
   }
 
-  public addFunction(location: Location, name: string) {
+  public addFunction(location: Location, name: string, bodyLocation: Location) {
     const coverageId = this.getNewCoverageId(this.coverage.fnMap);
     const line = location.start.line;
     this.coverage.fnMap[coverageId] = {
@@ -127,7 +120,7 @@ export class ContractEnhanced {
       name,
     };
     this.coverage.f[coverageId] = 0;
-    this.coverage.l[line] = 0;
+    this.functionsBodyLocation[coverageId] = bodyLocation;
     return coverageId;
   }
 
@@ -137,7 +130,51 @@ export class ContractEnhanced {
   }
 
   private filterCoverageEvent(event: EventLog) {
-    return [EventEnum.function, EventEnum.branch, EventEnum.statement].includes(event.event as EventEnum);
+    return STATEMENT_EVENT === event.event;
+  }
+
+  private findFnMapId(location: Location) {
+    const result = Object.keys(this.functionsBodyLocation).find((value: string) => {
+      const bodyLocation = this.functionsBodyLocation[parseInt(value, 10)];
+
+      return this.isWithin(location.start, bodyLocation);
+    });
+
+    if (result) {
+      return parseInt(result, 10);
+    }
+
+    return 0;
+  }
+
+  private findFnBranchIdAndLocationId(location: Location) {
+    let fnBranchId = 0;
+    let locationId = 0;
+    Object.keys(this.coverage.branchMap).forEach((value: string) => {
+      if (fnBranchId && locationId) {
+        return;
+      }
+
+      const branch = this.coverage.branchMap[parseInt(value, 10)];
+
+      branch.locations.forEach((branchLocation, index) => {
+        if (this.isWithin(location.start, branchLocation)) {
+          fnBranchId = parseInt(value, 10);
+          locationId = index;
+        }
+      });
+    });
+
+    return [fnBranchId, locationId];
+  }
+
+  private isWithin(point: LineColumn, location: Location) {
+    const toCompare = this.getComparablePoint(point);
+    return toCompare >= this.getComparablePoint(location.start) && toCompare <= this.getComparablePoint(location.end);
+  }
+
+  private getComparablePoint(point: LineColumn) {
+    return point.line * POINT_FACTOR + point.column;
   }
 
 }

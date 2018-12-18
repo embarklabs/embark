@@ -11,10 +11,6 @@ export class Injector {
     switch (injectionPoint.type) {
       case "statement":
         return this.statement(injectionPoint);
-      case "function":
-        return this.function(injectionPoint);
-      case "branch":
-      return this.branch(injectionPoint);
       case "contractDefinition":
         return this.contractDefinition(injectionPoint);
     }
@@ -25,21 +21,9 @@ export class Injector {
     this.insertAt(injectionPoint.location.start.line - 1, data);
   }
 
-  private function(injectionPoint: InjectionPoint) {
-    const data = `emit __FunctionCoverage(${encrypt(this.contract.id, injectionPoint.id)});`;
-    this.insertAt(injectionPoint.location.start.line, data);
-  }
-
-  private branch(injectionPoint: InjectionPoint) {
-    const data = `emit __BranchCoverage(${encrypt(this.contract.id, injectionPoint.id, injectionPoint.locationIdx)});`;
-    this.insertAt(injectionPoint.location.start.line, data);
-  }
-
   private contractDefinition(injectionPoint: InjectionPoint) {
     const data = [
-      "event __FunctionCoverage(uint32 value);",
       "event __StatementCoverage(uint32 value);",
-      "event __BranchCoverage(uint32 value);",
     ].join("\n");
 
     this.insertAt(injectionPoint.location.start.line, data);
