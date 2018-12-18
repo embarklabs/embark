@@ -32,7 +32,8 @@ class EmbarkController {
 
   blockchain(env, client) {
     this.context = [constants.contexts.blockchain];
-    return require('../lib/modules/blockchain_process/blockchain.js')(this.config.blockchainConfig, client, env, null, null, this.logger, this.events, true).run();
+    return require('../lib/modules/blockchain_process/blockchain.js')(this.config.blockchainConfig, client, env,
+      this.config.webServerConfig.certOptions, null, null, this.logger, this.events, true).run();
   }
 
   simulator(options) {
