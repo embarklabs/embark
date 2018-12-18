@@ -235,38 +235,48 @@ class ENS {
   }
 
   registerConfigDomains(config, cb) {
-    const secureSend = embarkJsUtils.secureSend;
 
     this.events.request("blockchain:defaultAccount:get", (defaultAccount) => {
       async.each(Object.keys(this.registration.subdomains), (subDomainName, eachCb) => {
         const address = this.registration.subdomains[subDomainName];
         const directivesRegExp = new RegExp(/\$(\w+\[?\d?\]?)/g);
-        this.ensResolve(`${subDomainName}.${this.registration.rootDomain}`, (error, currentAddress) => {
-          if (currentAddress && currentAddress.toLowerCase() === address.toLowerCase()) {
-            return eachCb();
-          }
 
-          if (error !== NOT_REGISTERED_ERROR) {
-            this.logger.error(__('Error resolving %s', `${subDomainName}.${this.registration.rootDomain}`));
-            return eachCb(error);
-          }
 
-          const directives = directivesRegExp.exec(address);
-          if (directives && directives.length) {
-            this.embark.registerActionForEvent("contracts:deploy:afterAll", async (deployActionCb) => {
-              this.events.request("contracts:contract", directives[1], (contract) => {
-                if(!contract) return deployActionCb(); // if the contract is not registered in the config, it will be undefined here
-                const reverseNode = utils.soliditySha3(contract.deployedAddress.toLowerCase().substr(2) + reverseAddrSuffix);
-                this.registerSubDomain(defaultAccount, subDomainName, reverseNode, contract.deployedAddress, secureSend, deployActionCb);
-              });
+        const directives = directivesRegExp.exec(address);
+        if (directives && directives.length) {
+          this.embark.registerActionForEvent("contracts:deploy:afterAll", async (deployActionCb) => {
+            this.events.request("contracts:contract", directives[1], (contract) => {
+              if(!contract) {
+                // if the contract is not registered in the config, it will be undefined here
+                this.logger.error(__('Tried to register the subdomain "{{subdomain}}" as contract "{{contractName}}", ' +
+                  'but "{{contractName}}" does not exist. Is it configured in your contract configuration?', {contractName: directives[1], subdomain: subDomainName}));
+                return deployActionCb();
+              }
+              this.safeRegisterSubDomain(subDomainName, contract.deployedAddress, defaultAccount, deployActionCb);
             });
-            return eachCb();
-          }
+          });
+          return eachCb();
+        }
 
-          const reverseNode = utils.soliditySha3(address.toLowerCase().substr(2) + reverseAddrSuffix);
-          this.registerSubDomain(defaultAccount, subDomainName, reverseNode, address, secureSend, eachCb);
-        });
+        this.safeRegisterSubDomain(subDomainName, address, defaultAccount, eachCb);
       }, cb);
+    });
+  }
+
+  safeRegisterSubDomain(subDomainName, address, defaultAccount, callback) {
+    const secureSend = embarkJsUtils.secureSend;
+    this.ensResolve(`${subDomainName}.${this.registration.rootDomain}`, (error, currentAddress) => {
+      if (currentAddress && currentAddress.toLowerCase() === address.toLowerCase()) {
+        return callback();
+      }
+
+      if (error && error !== NOT_REGISTERED_ERROR) {
+        this.logger.error(__('Error resolving %s', `${subDomainName}.${this.registration.rootDomain}`));
+        return callback(error);
+      }
+
+      const reverseNode = utils.soliditySha3(address.toLowerCase().substr(2) + reverseAddrSuffix);
+      this.registerSubDomain(defaultAccount, subDomainName, reverseNode, address, secureSend, callback);
     });
   }
 
