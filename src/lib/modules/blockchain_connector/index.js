@@ -454,7 +454,7 @@ class BlockchainConnector {
       (req, res) => {
         const signer = req.body.address;
         const message = req.body.message;
-        this.web3.eth.personal.sign(message, signer).then(signature => {
+        this.web3.eth.sign(message, signer).then(signature => {
           res.send({signer, signature, message});
         }).catch(e => res.send({ error: e.message }));
       }
