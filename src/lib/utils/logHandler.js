@@ -55,9 +55,13 @@ class LogHandler {
       processedMessages = [msg.message];
     } else if (Array.isArray(msg.message)) {
       msg.message.forEach(message => {
-        if (Array.isArray(message)) message = message.join('\n');
-        let lines = message.split("\n");
-        lines.forEach(line => processedMessages.push(line));
+        if (Array.isArray(message)) {
+          return message.forEach(line => processedMessages.push(line));
+        }
+        if (typeof message === 'object') {
+          return processedMessages.push(JSON.stringify(msg.message));
+        }
+        message.toString().split("\n").forEach(line => processedMessages.push(line));
       });
     } else if (typeof msg.message === 'object') {
       processedMessages.push(JSON.stringify(msg.message));
