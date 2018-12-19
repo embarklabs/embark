@@ -21,7 +21,8 @@ const METHODS_TO_MODIFY = {accounts: 'eth_accounts'};
 const modifyPayload = (toModifyPayloads, body, accounts) => {
   switch (toModifyPayloads[body.id]) {
     case METHODS_TO_MODIFY.accounts:
-      body.result = body.result.concat(accounts);
+      delete toModifyPayloads[body.id];
+      body.result = Array.isArray(body.result) && body.result.concat(accounts);
       break;
     default:
   }
