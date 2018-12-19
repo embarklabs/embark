@@ -1,3 +1,5 @@
+import * as utilsContractsConfig from "../../utils/contractsConfig";
+
 const async = require('async');
 const AccountParser = require('../../utils/accountParser');
 const EmbarkJS = require('embarkjs');
@@ -236,7 +238,8 @@ class Test {
   async _deploy(config, callback) {
     const self = this;
     async.waterfall([
-      function getConfig(next) {
+      function setConfig(next) {
+        utilsContractsConfig.prepare(config);
         self.events.request('config:contractsConfig:set',
           {contracts: config.contracts, versions: self.versions_default}, next);
       },
