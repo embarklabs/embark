@@ -8,10 +8,11 @@ const web3 = require('web3');
 const constants = require('../constants');
 const {canonicalHost, defaultHost} = require('../utils/host');
 const cloneDeep = require('lodash.clonedeep');
-import { extendZeroAddressShorthand, replaceZeroAddressShorthand } from '../utils/addressUtils';
+import { replaceZeroAddressShorthand } from '../utils/addressUtils';
+import { unitRegex } from "../utils/regexConstants";
+import * as utilsContractsConfig from "../utils/contractsConfig";
 
 const DEFAULT_CONFIG_PATH = 'config/';
-const unitRegex = /([0-9]+) ([a-zA-Z]+)/;
 
 var Config = function(options) {
   const self = this;
@@ -329,40 +330,8 @@ Config.prototype.loadContractsConfigFile = function() {
     });
   }
 
-  Object.keys(newContractsConfig.contracts).forEach(contractName => {
-
-    const gas = newContractsConfig.contracts[contractName].gas;
-    const gasPrice = newContractsConfig.contracts[contractName].gasPrice;
-    const address = newContractsConfig.contracts[contractName].address;
-    const args = newContractsConfig.contracts[contractName].args;
-    const onDeploy = newContractsConfig.contracts[contractName].onDeploy;
-
-    if (gas && gas.match(unitRegex)) {
-      newContractsConfig.contracts[contractName].gas = utils.getWeiBalanceFromString(gas, web3);
-    }
-
-    if (gasPrice && gasPrice.match(unitRegex)) {
-      newContractsConfig.contracts[contractName].gasPrice = utils.getWeiBalanceFromString(gasPrice, web3);
-    }
-
-    if (address) {
-      newContractsConfig.contracts[contractName].address = extendZeroAddressShorthand(address);
-    }
-
-    if (args && args.length) {
-      newContractsConfig.contracts[contractName].args = args.map(val => {
-        if (typeof val === 'string') {
-          return extendZeroAddressShorthand(val);
-        }
-        return val;
-      });
-    }
-
-    if (Array.isArray(onDeploy)) {
-      newContractsConfig.contracts[contractName].onDeploy = onDeploy.map(replaceZeroAddressShorthand);
-    }
-  });
-
+  newContractsConfig = utilsContractsConfig.prepare(newContractsConfig);
+  
   const afterDeploy = newContractsConfig.afterDeploy;
 
   if (Array.isArray(afterDeploy)) {
