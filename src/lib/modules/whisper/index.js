@@ -67,6 +67,7 @@ class Whisper {
       return cb();
     }
     if (this.web3.currentProvider.connection.readyState !== 1) {
+      this.connectToProvider();
       return setTimeout(this.waitForWeb3Ready.bind(this, cb), 50);
     }
     this.web3Ready = true;
