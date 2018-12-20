@@ -179,36 +179,17 @@ class Console {
     }
 
     this.events.once("code-generator-ready", () => {
-      this.events.request("code-generator:embarkjs:provider-code", (code: string) => {
+      this.events.request("code-generator:embarkjs:provider-code", (providerCode: string) => {
         const func = () => {};
-        this.events.request("runcode:eval", code, func, true);
-        this.events.request("runcode:eval", this.getInitProviderCode(), () => {
-          this.events.emit("console:provider:done");
-          this.providerReady = true;
-        }, true);
-      });
-    });
-  }
-
-  private getInitProviderCode() {
-    const codeTypes: any = {
-      blockchain: this.config.blockchainConfig || {},
-      communication: this.config.communicationConfig || {},
-      names: this.config.namesystemConfig || {},
-      storage: this.config.storageConfig || {},
-    };
-
-    return this.plugins.getPluginsFor("initConsoleCode").reduce((acc: any, plugin: any) => {
-      Object.keys(codeTypes).forEach((codeTypeName: string) => {
-        (plugin.embarkjs_init_console_code[codeTypeName] || []).forEach((initCode: any) => {
-          const [block, shouldInit] = initCode;
-          if (shouldInit.call(plugin, codeTypes[codeTypeName])) {
-            acc += block;
-          }
+        this.events.request("runcode:eval", providerCode, func, true);
+        this.events.request("code-generator:embarkjs:init-provider-code", (initCode: string) => {
+          this.events.request("runcode:eval", initCode, () => {
+            this.events.emit("console:provider:done");
+            this.providerReady = true;
+          }, true);
         });
       });
-      return acc;
-    }, "");
+    });
   }
 
   private registerConsoleCommands() {

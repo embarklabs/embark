@@ -1,7 +1,5 @@
-const RunCode = require('./runCode.js');
-const Utils = require('../../../utils/utils');
-
-const WEB3_INVALID_RESPONSE_ERROR = 'Invalid JSON RPC response';
+const VM = require('./vm');
+const fs = require('../../fs');
 
 class CodeRunner {
   constructor(options) {
@@ -11,7 +9,29 @@ class CodeRunner {
     this.events = options.events;
     this.ipc = options.ipc;
     this.commands = [];
-    this.runCode = new RunCode({logger: this.logger});
+    this.vm = new VM({
+      require: {
+        mock: {
+          fs: {
+            access: fs.access,
+            diagramPath: fs.diagramPath,
+            dappPath: fs.dappPath,
+            embarkPath: fs.embarkPath,
+            existsSync: fs.existsSync,
+            ipcPath: fs.ipcPath,
+            pkgPath: fs.pkgPath,
+            readFile: fs.readFile,
+            readFileSync: fs.readFileSync,
+            readJSONSync: fs.readJSONSync,
+            readdir: fs.readdir,
+            readdirSync: fs.readdirSync,
+            stat: fs.stat,
+            statSync: fs.statSync,
+            tmpDir: fs.tmpDir
+          }
+        }
+      }
+    }, this.logger);
     this.registerIpcEvents();
     this.IpcClientListen();
     this.registerEvents();
@@ -24,7 +44,7 @@ class CodeRunner {
     }
 
     this.ipc.on('runcode:getCommands', (_err, callback) => {
-      let result = {web3Config: this.runCode.getWeb3Config(), commands: this.commands};
+      let result = {web3Config: this.vm.getWeb3Config(), commands: this.commands};
       callback(null, result);
     });
   }
@@ -49,7 +69,7 @@ class CodeRunner {
 
   registerCommands() {
     this.events.setCommandHandler('runcode:getContext', (cb) => {
-      cb(this.runCode.context);
+      cb(this.vm.options.sandbox);
     });
     this.events.setCommandHandler('runcode:eval', this.evalCode.bind(this));
   }
@@ -59,49 +79,26 @@ class CodeRunner {
       this.commands.push({varName, code});
       this.ipc.broadcast("runcode:newCommand", {varName, code});
     }
-    this.runCode.registerVar(varName, code);
+    this.vm.registerVar(varName, code);
   }
 
-  async evalCode(code, cb, forConsoleOnly = false, tolerateError = false) {
-    cb = cb || function() {};
-    const awaitIdx = code.indexOf('await');
-    let awaiting = false;
+  async evalCode(code, cb, isNotUserInput = false, tolerateError = false) {
+    cb = cb || function () {};
 
-    if (awaitIdx > -1) {
-      awaiting = true;
-      const instructions = Utils.compact(code.split(';'));
-      const last = instructions.pop();
+    if (!code) return cb(null, '');
 
-      if (!last.trim().startsWith('return')) {
-        instructions.push(`return ${last}`);
-      } else {
-        instructions.push(last);
+    this.vm.doEval(code, tolerateError, (err, result) => {
+      if(err) {
+        return cb(err);
       }
-
-      code = `(async function() {${instructions.join(';')}})();`;
-    }
-    let result = this.runCode.doEval(code, tolerateError, forConsoleOnly);
-
-    if (forConsoleOnly && this.ipc.isServer()) {
-      this.commands.push({code});
-      this.ipc.broadcast("runcode:newCommand", {code});
-    }
-
-    if (!awaiting) {
-      return cb(null, result);
-    }
-
-    try {
-      const value = await result;
-      cb(null, value);
-    } catch (error) {
-      // Improve error message when there's no connection to node
-      if (error.message && error.message.indexOf(WEB3_INVALID_RESPONSE_ERROR) !== -1) {
-        error.message += '. Are you connected to an Ethereum node?';
+      
+      if (isNotUserInput && this.ipc.isServer()) {
+        this.commands.push({code});
+        this.ipc.broadcast("runcode:newCommand", {code});
       }
-
-      cb(error);
-    }
+      
+      cb(null, result);
+    });
   }
 
 }

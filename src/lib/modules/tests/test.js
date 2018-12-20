@@ -6,6 +6,9 @@ const EmbarkJS = require('embarkjs');
 const utils = require('../../utils/utils');
 const constants = require('../../constants');
 const web3Utils = require('web3-utils');
+const VM = require('../../core/modules/coderunner/vm');
+const Web3 = require('web3');
+const IpfsApi = require("ipfs-api");
 
 const BALANCE_10_ETHER_IN_HEX = '0x8AC7230489E80000';
 
@@ -37,7 +40,7 @@ class Test {
     }
     if (!this.ipc.connected) {
       this.logger.error("Could not connect to Embark's IPC. Is embark running?");
-      if(!this.options.inProcess) process.exit(1);
+      if (!this.options.inProcess) process.exit(1);
     }
     return this.connectToIpcNode(callback);
   }
@@ -177,7 +180,7 @@ class Test {
       options = {};
     }
     if (!callback) {
-      callback = function() {
+      callback = function () {
       };
     }
     if (!options.contracts) {
@@ -218,20 +221,30 @@ class Test {
       function changeGlobalWeb3(accounts, next) {
         self.events.request('blockchain:get', (web3) => {
           global.web3 = web3;
-          EmbarkJS.Blockchain.setProvider('web3');
-          next(null, accounts);
-        });
-      },
-      function reconfigEns(accounts, next) {
-        self.events.request("ens:config", (config) => {
-          EmbarkJS.Names.setProvider('ens', config);
-          next(null, accounts);
+          self.vm = new VM({
+            sandbox: {
+              EmbarkJS,
+              web3: web3,
+              Web3: Web3,
+              IpfsApi
+            }
+          });
+          self.events.request("code-generator:embarkjs:provider-code", (code) => {
+            self.vm.doEval(code, false, (err, _result) => {
+              if(err) return next(err);
+              self.events.request("code-generator:embarkjs:init-provider-code", (code) => {
+                self.vm.doEval(code, false, (err, _result) => {
+                  next(err, accounts);
+                });
+              });
+            });
+          });
         });
       }
     ], (err, accounts) => {
       if (err) {
         // TODO Do not exit in case of not a normal run (eg after a change)
-        if(!self.options.inProcess) process.exit(1);
+        if (!self.options.inProcess) process.exit(1);
       }
       callback(null, accounts);
     });
@@ -308,7 +321,7 @@ class Test {
 
         });
       }
-    ], function(err, accounts) {
+    ], function (err, accounts) {
       if (err) {
         self.logger.error(__('terminating due to error'));
         self.logger.error(err.message || err);

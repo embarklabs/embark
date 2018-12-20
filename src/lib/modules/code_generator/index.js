@@ -85,6 +85,10 @@ class CodeGenerator {
     self.events.setCommandHandler('code-generator:embarkjs:provider-code', (cb) => {
       cb(self.getEmbarkJsProviderCode());
     });
+
+    self.events.setCommandHandler('code-generator:embarkjs:init-provider-code', (cb) => {
+      cb(self.getInitProviderCode());
+    });
   }
 
   generateProvider(isDeployment) {
@@ -336,6 +340,27 @@ class CodeGenerator {
     return this.plugins.getPluginsFor('embarkjsCode').reduce((code, plugin) => (
       code += plugin.embarkjs_code.join('\n')
     ), '');
+  }
+
+  getInitProviderCode() {
+    const codeTypes = {
+      blockchain: this.blockchainConfig || {},
+      communication: this.communicationConfig || {},
+      names: this.namesystemConfig || {},
+      storage: this.storageConfig || {}
+    };
+  
+    return this.plugins.getPluginsFor("initConsoleCode").reduce((acc, plugin) => {
+      Object.keys(codeTypes).forEach((codeTypeName) => {
+        (plugin.embarkjs_init_console_code[codeTypeName] || []).forEach((initCode) => {
+          const [block, shouldInit] = initCode;
+          if (shouldInit.call(plugin, codeTypes[codeTypeName])) {
+            acc += block;
+          }
+        });
+      });
+      return acc;
+    }, "");
   }
 
   buildContractJS(contractName, contractJSON, cb) {
