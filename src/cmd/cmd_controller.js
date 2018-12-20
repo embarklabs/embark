@@ -108,23 +108,6 @@ class EmbarkController {
           callback();
         });
       },
-      function startDashboard(callback) {
-        if (!options.useDashboard) {
-          return callback();
-        }
-
-        let dashboard = new Dashboard({
-          events: engine.events,
-          logger: engine.logger,
-          plugins: engine.plugins,
-          version: self.version,
-          env: engine.env
-        });
-        dashboard.start(function () {
-          engine.logger.info(__('dashboard start'));
-          callback();
-        });
-      },
       function (callback) {
         let pluginList = engine.plugins.listPlugins();
         if (pluginList.length > 0) {
@@ -168,6 +151,24 @@ class EmbarkController {
         }
         engine.startService("fileWatcher");
         callback();
+      },
+      function startDashboard(callback) {
+        if (!options.useDashboard) {
+          return callback();
+        }
+
+        let dashboard = new Dashboard({
+          events: engine.events,
+          logger: engine.logger,
+          plugins: engine.plugins,
+          version: self.version,
+          env: engine.env,
+          ipc: engine.ipc
+        });
+        dashboard.start(function () {
+          engine.logger.info(__('dashboard start'));
+          callback();
+        });
       }
     ], function (err, _result) {
       if (err) {
