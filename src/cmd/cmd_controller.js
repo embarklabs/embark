@@ -360,7 +360,11 @@ class EmbarkController {
         });
       },
       function startREPL(callback) {
-        new REPL({events: engine.events, env: engine.env}).start(callback);
+        new REPL({
+          events: engine.events,
+          env: engine.env,
+          ipc: engine.ipc
+        }).start(callback);
       }
     ], function (err, _result) {
       if (err) {

@@ -10,6 +10,7 @@ class Monitor {
     this.events = options.events;
     this.color = options.color || "green";
     this.minimal = options.minimal || false;
+    this.ipc = options.ipc;
 
     this.screen = blessed.screen({
       smartCSR: true,
@@ -53,7 +54,8 @@ class Monitor {
       env: this.env,
       inputStream: this.terminalReadableStream,
       outputStream: terminalWritableStream,
-      logText: this.logText
+      logText: this.logText,
+      ipc: this.ipc
     }).start(() => {
       this.terminal.focus();
     });

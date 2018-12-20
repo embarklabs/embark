@@ -46,6 +46,9 @@ class Console {
 
     if (this.ipc.isServer()) {
       this.ipc.on("console:executeCmd", this.executeCmd.bind(this));
+      this.ipc.on("console:history:save", true, (cmd: string) => {
+        this.saveHistory(cmd, true);
+      });
     }
     this.events.setCommandHandler("console:executeCmd", this.executeCmd.bind(this));
     this.events.setCommandHandler("console:history", (cb: any) => this.getHistory(this.cmdHistorySize(), cb));
@@ -115,8 +118,7 @@ class Console {
 
   private executeCmd(cmd: string, callback: any) {
     if (!(cmd.split(" ")[0] === "history" || cmd === __("history"))) {
-      this.history.push(cmd);
-      this.saveHistory();
+      this.saveHistory(cmd);
     }
     const plugins = this.plugins.getPluginsProperty("console", "console");
     const helpDescriptions = [];
@@ -247,14 +249,32 @@ class Console {
                               .join("\n"));
   }
 
-  private saveHistory() {
+  private saveHistory(cmd: string, fromIpcClient = false) {
+    const history = this.history;
+    if (fromIpcClient) {
+      if (history[history.length - 1] !== cmd) {
+        history.push(cmd);
+      }
+      this.events.emit("console:history:save", cmd);
+      return this.ipc.broadcast("console:history:save", cmd, true);
+    }
+
+    history.push(cmd);
+    if (this.ipc.isServer()) {
+      this.ipc.broadcast("console:history:save", cmd, true);
+    } else if (this.ipc.connected) {
+      this.ipc.client.emit("console:history:save", cmd);
+    }
+
     if (fs.existsSync(utils.dirname(this.cmdHistoryFile))) {
-      fs.writeFileSync(this.cmdHistoryFile,
-                       this.history
-                        .slice(Math.max(0, this.history.length - this.cmdHistorySize()))
-                        .reverse()
-                        .filter((line: string) => line.trim())
-                        .join("\n"));
+      fs.writeFileSync(
+        this.cmdHistoryFile,
+        history
+          .slice(Math.max(0, history.length - this.cmdHistorySize()))
+          .reverse()
+          .filter((line: string) => line.trim())
+          .join("\n"),
+      );
     }
   }
 }

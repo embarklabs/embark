@@ -9,6 +9,7 @@ class Dashboard {
     this.plugins = options.plugins;
     this.version = options.version;
     this.env = options.env;
+    this.ipc = options.ipc;
 
     this.events.on('firstDeploymentDone', this.checkWindowSize.bind(this));
     this.events.on('outputDone', this.checkWindowSize.bind(this));
@@ -24,7 +25,7 @@ class Dashboard {
   start(done) {
     let monitor;
 
-    monitor = new Monitor({env: this.env, events: this.events, version: this.version});
+    monitor = new Monitor({env: this.env, events: this.events, version: this.version, ipc: this.ipc});
     this.logger.logFunction = monitor.logEntry;
     let plugin = this.plugins.createPlugin('dashboard', {});
     plugin.registerAPICall(

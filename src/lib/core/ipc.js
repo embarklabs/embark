@@ -1,7 +1,11 @@
+/* global module process require */
+
 const fs = require('./fs');
 const ipc = require('node-ipc');
 const {parse, stringify} = require('flatted/cjs');
 const utils = require('../utils/utils');
+
+const EMBARK = 'embark';
 
 class IPC {
   constructor(options) {
@@ -12,77 +16,95 @@ class IPC {
     this.connected = false;
   }
 
+  get client() {
+    return ipc.of[EMBARK];
+  }
+
+  get server() {
+    return ipc.server;
+  }
+
   connect(done) {
-    const self = this;
-    function connecting(_socket) {
+    const connecting = (_socket) => {
       let connectedBefore = false, alreadyDisconnected = false;
-      ipc.of['embark'].on('connect',function() {
+      this.client.on('connect', () => {
         connectedBefore = true;
         if (!alreadyDisconnected) {
-          self.connected = true;
+          this.connected = true;
           done();
         }
       });
-      ipc.of['embark'].on('disconnect',function() {
-        self.connected = false;
-        ipc.disconnect('embark');
+
+      this.client.on('disconnect', () => {
+        this.connected = false;
+        this.disconnect();
 
         // we only want to trigger the error callback the first time
         if (!connectedBefore && !alreadyDisconnected) {
           alreadyDisconnected = true;
-          done(new Error("no connection found"));
+          done(new Error('no connection found'));
         }
       });
-    }
+    };
 
-    ipc.connectTo('embark', this.socketPath, connecting);
+    ipc.connectTo(EMBARK, this.socketPath, connecting);
+  }
+
+  disconnect() {
+    ipc.disconnect(EMBARK);
   }
 
   serve() {
     fs.mkdirpSync(utils.dirname(this.socketPath));
     ipc.serve(this.socketPath, () => {});
-    ipc.server.start();
+    this.server.start();
 
     this.logger.info(`pid ${process.pid} listening on ${this.socketPath}`);
   }
 
-  on(action, done) {
-    const self = this;
-    ipc.server.on('message', function(messageString, socket) {
+  on(action, raw, done) {
+    let _raw = raw;
+    let _done = done;
+    if (typeof raw === 'function') {
+      _raw = false;
+      _done = raw;
+    }
+    if (_raw) return this.server.on(action, _done);
+    this.server.on('message', (messageString, socket) => {
       const message = parse(messageString);
       if (message.action !== action) {
         return;
       }
-      let reply = function(error, replyData) {
-        self.reply(socket, action, error, replyData);
+      let reply = (error, replyData) => {
+        this.reply(socket, action, error, replyData);
       };
-      done(message.data, reply, socket);
+      _done(message.data, reply, socket);
     });
   }
 
   reply(client, action, error, data) {
     const message = stringify({action, data, error: (error && error.stack)});
-    ipc.server.emit(client, 'message', message);
+    this.server.emit(client, 'message', message);
   }
 
   listenTo(action, callback = () => {}) {
     if (!this.connected) {
       return callback();
     }
-    ipc.of['embark'].on(action, (messageString) => {
+    this.client.on(action, (messageString) => {
       callback(parse(messageString));
     });
   }
 
-  broadcast(action, data) {
-    ipc.server.broadcast(action, stringify(data));
+  broadcast(action, data, raw = false) {
+    this.server.broadcast(action, raw ? data: stringify(data));
   }
 
   once(action, cb = () => {}) {
     if (!this.connected) {
       return cb();
     }
-    ipc.of['embark'].once('message', function(messageString) {
+    this.client.once('message', (messageString) => {
       const message = parse(messageString);
       if (message.action !== action) {
         return;
@@ -99,7 +121,7 @@ class IPC {
     if (cb) {
       this.once(action, cb);
     }
-    ipc.of['embark'].emit('message', stringify({action: action, data: data}));
+    this.client.emit('message', stringify({action: action, data: data}));
   }
 
   isClient() {
