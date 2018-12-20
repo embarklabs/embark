@@ -30,7 +30,9 @@ Process.propTypes = {
 
 const Processes = ({processes}) => (
   <Row>
-    {processes.map((process) => <Process key={process.name} process={process} />)}
+    {processes
+      .sort((a, b) => a.name < b.name ? 1 : 0)
+      .map((process) => <Process key={process.name} process={process} />)}
   </Row>
 );
 
