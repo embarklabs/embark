@@ -80,7 +80,7 @@ class CodeRunner {
 
       code = `(async function() {${instructions.join(';')}})();`;
     }
-    let result = this.runCode.doEval(code, tolerateError);
+    let result = this.runCode.doEval(code, tolerateError, forConsoleOnly);
 
     if (forConsoleOnly && this.ipc.isServer()) {
       this.commands.push({code});
