@@ -8,6 +8,14 @@ class REPL {
     this.inputStream = options.inputStream || process.stdin;
     this.outputStream = options.outputStream || process.stdout;
     this.logText = options.logText;
+    this.ipc = options.ipc;
+  }
+
+  addHistory(cmd) {
+    const history = this.replServer.history;
+    if (history[0] !== cmd) {
+      history.unshift(cmd);
+    }
   }
 
   enhancedEval(cmd, context, filename, callback) {
@@ -42,6 +50,12 @@ class REPL {
         .split('\n')
         .forEach((cmd) => { this.replServer.history.push(cmd); });
     });
+
+    if (this.ipc.isServer()) {
+      this.events.on('console:history:save', this.addHistory.bind(this));
+    } else if (this.ipc.connected) {
+      this.ipc.client.on('console:history:save', this.addHistory.bind(this));
+    }
 
     this.events.request("runcode:getContext", (context) => {
       this.replServer.context = context;
