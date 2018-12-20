@@ -1,4 +1,5 @@
 const async = require('async');
+const {spawn, exec} = require('child_process');
 const GethMiner = require('./miner');
 const semver = require('semver');
 const constants = require('../../constants');
@@ -140,7 +141,7 @@ class GethClient {
 
   newAccountCommand() {
     if (!(this.config.account && this.config.account.password)) {
-      console.warn(__('Your blockchain is missing a password and creating an account may fail. Please consider updating ').yellow + __('config/blockchain > account > password').cyan + __(' then re-run the command').yellow);
+      console.warn(__('Your blockchain config is missing a password and creating an account may fail. Please consider updating ').yellow + __('config/blockchain > accounts').cyan + __(' then re-run the command').yellow);
     }
     return this.bin + " " + this.commonOptions().join(' ') + " account new ";
   }
@@ -220,8 +221,34 @@ class GethClient {
   }
 
   initDevChain(datadir, callback) {
-    // No specific configuration needed for the dev chain
-    return callback();
+    exec(this.listAccountsCommand(), {}, (err, stdout, _stderr) => {
+      if (err || stdout === undefined || stdout.indexOf("Fatal") >= 0) {
+        return callback(err || stdout);
+      }
+      this.config.unlockAddressList = this.parseListAccountsCommandResultToAddressList(stdout);
+      if (this.config.unlockAddressList.length) {
+        return callback();
+      }
+
+      // No accounts. We need to run the geth --dev command for it to create the dev account
+      const args = this.commonOptions();
+      args.push('--dev');
+      console.log(__('Creating Geth dev account. Please wait...'));
+      this.child = spawn(this.bin, args, {cwd: process.cwd()});
+
+      this.child.stderr.on('data', async (data) => {
+        data = data.toString();
+        if (data.indexOf('Using developer account') > -1) {
+          this.child.kill();
+          callback();
+        }
+      });
+
+      setTimeout(() => {
+        this.child.kill();
+        return callback(__('Geth dev command never returned a developer account'));
+      }, 10 * 1000);
+    });
   }
 
   mainCommand(address, done) {
