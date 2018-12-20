@@ -217,6 +217,15 @@ class TransactionDebugger {
     this.cmdDebugger = false;
     this.currentCmdTxHash = "";
 
+    const self = this;
+    function startDebug(txHash: string, filename: string, callback: (err?: string|object, output?: string) => void) {
+      self.currentCmdTxHash = txHash;
+      self.embark.logger.info("debugging tx " + txHash);
+      self.cmdDebugger = self.debuggerManager.createDebuggerSession(txHash, filename, () => {
+        self.displayStepInfo(callback);
+      });
+    }
+
     this.embark.registerConsoleCommand({
       description: __("Debug the last transaction or the transaction specified by a hash"),
       matches: (cmd: string) => {
@@ -232,21 +241,13 @@ class TransactionDebugger {
               return callback();
             }
             this.currentCmdTxHash = txHash;
-            this.embark.logger.info("debugging tx " + txHash);
-            this.cmdDebugger = this.debuggerManager.createDebuggerSession(txHash, contract.filename, () => {
-              this.displayStepInfo();
-              callback();
-            });
+            startDebug(txHash, contract.filename, callback);
           });
           return;
         }
         this.currentCmdTxHash = this.lastTx;
         const filename: string = this.txTracker[this.lastTx].contract.filename;
-        this.embark.logger.info("debugging tx " + this.lastTx);
-        this.cmdDebugger = this.debuggerManager.createDebuggerSession(this.lastTx, filename, () => {
-          this.displayStepInfo();
-          callback();
-        });
+        startDebug(txHash, filename, callback);
       },
       usage: "debug <txHash>",
     });
@@ -268,8 +269,7 @@ class TransactionDebugger {
           return callback();
         }
         this.cmdDebugger.stepOverForward(true);
-        this.displayStepInfo();
-        callback();
+        this.displayStepInfo(callback);
       },
       usage: "    next/n",
     });
@@ -290,8 +290,7 @@ class TransactionDebugger {
           return this.cmdDebugger.unload();
         }
         this.cmdDebugger.stepOverBack(true);
-        this.displayStepInfo();
-        callback();
+        this.displayStepInfo(callback);
       },
       usage: "    previous/p",
     });
@@ -337,7 +336,7 @@ class TransactionDebugger {
             this.embark.logger.error(err);
             return callback();
           }
-          this.embark.logger.info(globals);
+          this.embark.logger.info(JSON.stringify(globals, null, 2));
           callback();
         });
       },
@@ -406,7 +405,9 @@ class TransactionDebugger {
     }
 
     this.findVarsInLine(txHash, line, knownVars, (foundVars: any) => {
-      if (!foundVars) { return; }
+      if (!foundVars) {
+        return cb ? cb() : null;
+      }
       this.embark.logger.info("vars:");
       foundVars.forEach((variable: any) => {
         this.embark.logger.info(`${variable.name}: ${variable.value}`);
@@ -415,12 +416,13 @@ class TransactionDebugger {
     });
   }
 
-  private displayStepInfo() {
+  private displayStepInfo(cb?: any) {
     this.cmdDebugger.getSource().forEach((line: string) => {
       this.embark.logger.info(line);
     });
     this.displayVarsInLine(() => {
       this.displayPossibleActions();
+      if (cb) { cb(); }
     });
   }
 
