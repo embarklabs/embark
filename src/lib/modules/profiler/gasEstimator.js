@@ -33,7 +33,10 @@ class GasEstimator {
             contractObj.methods[name]
             .apply(contractObj.methods[name], [])
             .estimateGas((err, gasAmount) => {
-              if (err) return gasCb(err, name, abiMethod.type);
+              if (err) {
+                self.logger.error(`Error getting gas estimate for "${name}"`, err.message || err);
+                return gasCb(null, name, abiMethod.type);
+              }
               gasMap[name] = gasAmount;
               return gasCb(null, name, abiMethod.type);              
             });
@@ -42,7 +45,10 @@ class GasEstimator {
             async.concat(fuzzMap[name], (values, getVarianceCb) => {
               contractObj.methods[name].apply(contractObj.methods[name], values)
                 .estimateGas((err, gasAmount) => {
-                  getVarianceCb(err, gasAmount);
+                  if (err) {
+                    self.logger.error(`Error getting gas estimate for "${name}"`, err.message || err);
+                  }
+                  getVarianceCb(null, gasAmount);
                 });
               }, (err, variance) => {
                 if (variance.every(v => v === variance[0])) {
