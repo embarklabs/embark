@@ -35,7 +35,7 @@ class Test {
       return callback();
     }
     if (!this.ipc.connected) {
-      this.engine.logger.error("Could not connect to Embark's IPC. Is embark running?");
+      this.logger.error("Could not connect to Embark's IPC. Is embark running?");
       if(!this.options.inProcess) process.exit(1);
     }
     return this.connectToIpcNode(callback);
