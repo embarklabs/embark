@@ -43,8 +43,14 @@ class Provider {
     // to protect user, it has no meaning if it is used server-side. See here for more details: https://github.com/ethereum/go-ethereum/issues/16608
     // Moreover, Parity reject origins that are not urls so if you try to connect with Origin: "embark" it gives the following error:
     // << Blocked connection to WebSockets server from untrusted origin: Some("embark") >>
-    // The best choice is to use void origin, BUT Geth rejects void origin, so to keep both clients happy we can use http://embark
-      self.provider = new this.web3.providers.WebsocketProvider(self.web3Endpoint, {headers: {Origin: constants.embarkResourceOrigin}});
+      // The best choice is to use void origin, BUT Geth rejects void origin, so to keep both clients happy we can use http://embark
+      self.provider = new this.web3.providers.WebsocketProvider(self.web3Endpoint, {
+        headers: {Origin: constants.embarkResourceOrigin},
+        // TODO remove this when Geth fixes this: https://github.com/ethereum/go-ethereum/issues/16846
+        clientConfig: {
+          fragmentationThreshold: 81920
+        }
+      });
 
       self.provider.on('error', () => self.logger.error('Websocket Error'));
       self.provider.on('end', () => self.logger.error('Websocket connection ended'));
