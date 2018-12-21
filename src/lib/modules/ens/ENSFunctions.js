@@ -1,4 +1,3 @@
-/*global web3*/
 const namehash = require('eth-ens-namehash');
 // Price of ENS registration contract functions
 const ENS_GAS_PRICE = 700000;
@@ -8,7 +7,7 @@ const reverseAddressSuffix = '.addr.reverse';
 const NoDecodeAddrErr = 'Error: Couldn\'t decode address from ABI: 0x';
 const NoDecodeStringErr = 'ERROR: The returned value is not a convertible string: 0x0';
 
-function registerSubDomain(ens, registrar, resolver, defaultAccount, subdomain, rootDomain, reverseNode, address, logger, secureSend, callback) {
+function registerSubDomain(web3, ens, registrar, resolver, defaultAccount, subdomain, rootDomain, reverseNode, address, logger, secureSend, callback) {
   const subnode = namehash.hash(subdomain);
   const rootNode = namehash.hash(rootDomain);
   const node = namehash.hash(`${subdomain}.${rootDomain}`);

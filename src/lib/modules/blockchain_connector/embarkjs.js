@@ -2,11 +2,13 @@
 
 const __embarkWeb3 = {};
 
-__embarkWeb3.init = function (_config) {
-  this.web3 = new Web3();
-  if (!global.web3) {
-    global.web3 = this.web3;
-  }
+__embarkWeb3.init = function(_config) {
+  this.web3 = global.web3 || new Web3();
+  global.web3 = global.web3 || this.web3;
+};
+
+__embarkWeb3.getInstance = function () {
+  return this.web3;
 };
 
 __embarkWeb3.getAccounts = function () {
@@ -43,6 +45,10 @@ __embarkWeb3.send = function () {
 
 __embarkWeb3.toWei = function () {
   return this.web3.toWei(...arguments);
+};
+
+__embarkWeb3.getNetworkId = function () {
+  return this.web3.eth.net.getId();
 };
 
 
