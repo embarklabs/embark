@@ -371,7 +371,6 @@ class CodeGenerator {
         code += "\n if (typeof web3 === 'undefined') {";
         code += "\n var web3 = new Web3();\n";
         code += "\n }";
-        code += "\nglobal.web3 = web3;\n";
 
         let providerCode = self.generateProvider(false);
         code += providerCode;

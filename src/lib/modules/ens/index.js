@@ -281,8 +281,10 @@ class ENS {
   }
 
   registerSubDomain(defaultAccount, subDomainName, reverseNode, address, secureSend, cb) {
-    ENSFunctions.registerSubDomain(this.ensContract, this.registrarContract, this.resolverContract, defaultAccount,
-      subDomainName, this.registration.rootDomain, reverseNode, address, this.logger, secureSend, cb);
+    this.events.request("blockchain:get", (web3) => {
+      ENSFunctions.registerSubDomain(web3, this.ensContract, this.registrarContract, this.resolverContract, defaultAccount,
+        subDomainName, this.registration.rootDomain, reverseNode, address, this.logger, secureSend, cb);
+    });
   }
 
   createResolverContract(config, callback) {
@@ -311,7 +313,7 @@ class ENS {
           }
         ], function (error, address) {
           if (error) {
-            return res.send({error: error.message});
+            return res.send({error: error.message || error});
           }
           res.send({address});
         });
@@ -328,7 +330,7 @@ class ENS {
           }
         ], function (error, name) {
           if (error) {
-            return res.send({error: error || error.message});
+            return res.send({error: error.message || error});
           }
           res.send({name});
         });
@@ -340,16 +342,13 @@ class ENS {
       '/embark-api/ens/register',
       (req, res) => {
         self.events.request("blockchain:defaultAccount:get", (defaultAccount) => {
-          const secureSend = embarkJsUtils.secureSend;
           const {subdomain, address} = req.body;
-          const reverseNode = utils.soliditySha3(address.toLowerCase().substr(2) + reverseAddrSuffix);
-          ENSFunctions.registerSubDomain(self.ensContract, self.registrarContract, self.resolverContract, defaultAccount,
-            subdomain, self.registration.rootDomain, reverseNode, address, self.logger, secureSend, (error) => {
-              if (error) {
-                return res.send({error: error || error.message});
-              }
-              res.send({name: `${req.body.subdomain}.${self.registration.rootDomain}`, address: req.body.address});
-            });
+          this.safeRegisterSubDomain(subdomain, address, defaultAccount, (error) => {
+            if (error) {
+              return res.send({error: error.message || error});
+            }
+            res.send({name: `${req.body.subdomain}.${self.registration.rootDomain}`, address: req.body.address});
+          });
         });
       }
     );
