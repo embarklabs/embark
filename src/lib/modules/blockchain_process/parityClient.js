@@ -120,7 +120,7 @@ class ParityClient {
 
   parseVersion(rawVersionOutput) {
     let parsed;
-    const match = rawVersionOutput.match(/version Parity-Ethereum\/(.*?)\//);
+    const match = rawVersionOutput.match(/version Parity(?:-Ethereum)?\/(.*?)\//);
     if (match) {
       parsed = match[1].trim();
     }
