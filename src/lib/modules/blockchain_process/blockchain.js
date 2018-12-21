@@ -65,6 +65,8 @@ var Blockchain = function(userConfig, clientClass) {
     proxy: this.userConfig.proxy
   };
 
+  this.devFunds = null;
+
   if (this.userConfig.accounts) {
     const nodeAccounts = this.userConfig.accounts.find(account => account.nodeAccounts);
     if (nodeAccounts) {
@@ -120,7 +122,7 @@ Blockchain.prototype.initStandaloneProcess = function () {
   if (this.isStandalone) {
     // on every log logged in logger (say that 3x fast), send the log
     // to the IPC serve listening (only if we're connected of course)
-    this.events.on('log', (logLevel, message) => {
+    this.logger.events.on('log', (logLevel, message) => {
       if (this.ipc.connected) {
         this.ipc.request('blockchain:log', {logLevel, message});
       }
@@ -133,7 +135,14 @@ Blockchain.prototype.initStandaloneProcess = function () {
     // `embark run` without restarting `embark blockchain`)
     setInterval(() => {
       if (!this.ipc.connected) {
-        this.ipc.connect(() => {});
+        this.ipc.connect(() => { 
+          if (this.ipc.connected) {
+            this.ipc.listenTo('regularTxs', (mode) => { 
+              if(mode === 'start') this.startRegularTxs(() => {}); 
+              else if (mode === 'stop') this.stopRegularTxs(() => {});
+            });
+          }
+        });
       }
     }, IPC_CONNECT_INTERVAL);
   }
@@ -244,11 +253,6 @@ Blockchain.prototype.run = function () {
       data = data.toString();
       if (!self.readyCalled && self.client.isReady(data)) {
         self.readyCalled = true;
-        if (self.isDev) {
-          self.fundAccounts((err) => {
-            if (err) this.logger.error('Error funding accounts', err);
-          });
-        }
         if (self.config.proxy) {
           await self.setupProxy();
         }
@@ -280,14 +284,50 @@ Blockchain.prototype.run = function () {
 };
 
 Blockchain.prototype.fundAccounts = function(cb) {
-  DevFunds.new({blockchainConfig: this.config}).then(devFunds => {
-    devFunds.fundAccounts(this.client.needKeepAlive(), (err) => {
+  if(this.isDev && this.devFunds){
+    this.devFunds.fundAccounts((err) => {
       cb(err);
     });
-  });
+  }
+};
+
+Blockchain.prototype.startRegularTxs = function(cb) {
+  if (this.client.needKeepAlive() && this.devFunds){
+    return this.devFunds.startRegularTxs(() => {
+      this.logger.info('Regular transactions have been enabled.');
+      cb();
+    });
+  }
+  cb();
+};
+
+Blockchain.prototype.stopRegularTxs = function(cb) {
+  if (this.client.needKeepAlive() && this.devFunds){
+    return this.devFunds.stopRegularTxs(() => {
+      this.logger.info('Regular transactions have been disabled.');
+      cb();
+    });
+  }
+  cb();
 };
 
 Blockchain.prototype.readyCallback = function () {
+  if (this.isDev) {
+    if(!this.devFunds) {
+      DevFunds.new({blockchainConfig: this.config}).then(devFunds => {
+        this.devFunds = devFunds;
+        this.fundAccounts((err) => {
+          if (err) this.logger.error('Error funding accounts', err);
+        });
+      });
+    }
+    else {
+      this.fundAccounts((err) => {
+        if (err) this.logger.error('Error funding accounts', err);
+      });
+    }
+  }
+
   if (this.onReadyCallback) {
     this.onReadyCallback();
   }
@@ -450,7 +490,7 @@ Blockchain.prototype.initChainAndGetAddress = function (callback) {
   });
 };
 
-var BlockchainClient = function(userConfig, clientName, env, certOptions, onReadyCallback, onExitCallback, logger, _events, _isStandalone) {
+var BlockchainClient = function(userConfig, clientName, env, certOptions, onReadyCallback, onExitCallback, logger, _events, isStandalone) {
   if ((userConfig === {} || JSON.stringify(userConfig) === '{"enabled":true}') && env !== 'development') {
     logger.info("===> " + __("warning: running default config on a non-development environment"));
   }
@@ -478,6 +518,7 @@ var BlockchainClient = function(userConfig, clientName, env, certOptions, onRead
   userConfig.onExitCallback = onExitCallback;
   userConfig.logger = logger;
   userConfig.certOptions = certOptions;
+  userConfig.isStandalone = isStandalone;
   return new Blockchain(userConfig, clientClass);
 };
 

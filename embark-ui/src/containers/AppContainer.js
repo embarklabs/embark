@@ -6,7 +6,7 @@ import routes from '../routes';
 import Login from '../components/Login';
 import Layout from "../components/Layout";
 import {DEFAULT_HOST} from '../constants';
-import {getQueryToken, stripQueryToken} from '../utils/utils';
+import {getQueryToken, stripQueryToken, getQueryParam, stripQueryParam} from '../utils/utils';
 import {Helmet} from "react-helmet";
 
 import {
@@ -16,6 +16,7 @@ import {
   plugins as pluginsAction,
   listenToServices as listenToServicesAction,
   listenToContracts as listenToContractsAction,
+  initRegularTxs as initRegularTxsAction,
   changeTheme, fetchTheme
 } from '../actions';
 
@@ -24,6 +25,8 @@ import {LIGHT_THEME, DARK_THEME, PAGE_TITLE_PREFIX} from '../constants';
 import {
   getCredentials, getAuthenticationError, getProcesses, getTheme
 } from '../reducers/selectors';
+
+const ENABLE_REGULAR_TXS = 'enableRegularTxs';
 
 class AppContainer extends Component {
   componentDidMount() {
@@ -50,26 +53,28 @@ class AppContainer extends Component {
 
     const queryToken = getQueryToken(this.props.location);
     if (queryToken && !(queryToken === this.props.credentials.token &&
-                        this.props.credentials.host === DEFAULT_HOST)) {
+      this.props.credentials.host === DEFAULT_HOST)) {
       return true;
     }
 
     if (!this.props.credentials.authenticated &&
-        this.props.credentials.host &&
-        this.props.credentials.token) {
+      this.props.credentials.host &&
+      this.props.credentials.token) {
       return true;
     }
 
     return false;
   }
 
-  componentDidUpdate(){
+  componentDidUpdate() {
     if (this.requireAuthentication()) {
       this.doAuthenticate();
     }
 
-    if (getQueryToken(this.props.location) &&
-        (!this.props.credentials.authenticating ||
+    const enableRegularTxs = !!getQueryParam(this.props.location, ENABLE_REGULAR_TXS);
+
+    if (getQueryToken(this.props.location) && 
+        (!this.props.credentials.authenticating || 
          this.props.credentials.authenticated)) {
       this.props.history.replace(stripQueryToken(this.props.location));
     }
@@ -80,6 +85,10 @@ class AppContainer extends Component {
       this.props.listenToServices();
       this.props.fetchPlugins();
       this.props.listenToContracts();
+      if (enableRegularTxs) {
+        this.props.initRegularTxs();
+        this.props.history.replace(stripQueryParam(this.props.location, ENABLE_REGULAR_TXS));
+      }
     }
   }
 
@@ -99,18 +108,18 @@ class AppContainer extends Component {
   renderBody() {
     if (this.shouldRenderLogin()) {
       return (
-          <Login credentials={this.props.credentials}
-                 authenticate={this.props.authenticate}
-                 error={this.props.authenticationError} />
+        <Login credentials={this.props.credentials}
+          authenticate={this.props.authenticate}
+          error={this.props.authenticationError} />
       );
     } else if (this.props.credentials.authenticating) {
-      return <React.Fragment/>;
+      return <React.Fragment />;
     }
     return (
       <Layout location={this.props.location}
-              logout={this.props.logout}
-              toggleTheme={() => this.toggleTheme()}
-              currentTheme={this.props.theme}>
+        logout={this.props.logout}
+        toggleTheme={() => this.toggleTheme()}
+        currentTheme={this.props.theme}>
         <React.Fragment>{routes}</React.Fragment>
       </Layout>
     );
@@ -148,7 +157,8 @@ AppContainer.propTypes = {
   fetchTheme: PropTypes.func,
   history: PropTypes.object,
   listenToServices: PropTypes.func,
-  listenToContracts: PropTypes.func
+  listenToContracts: PropTypes.func,
+  initRegularTxs: PropTypes.func
 };
 
 function mapStateToProps(state) {
@@ -173,6 +183,7 @@ export default withRouter(connect(
     fetchPlugins: pluginsAction.request,
     changeTheme: changeTheme.request,
     fetchTheme: fetchTheme.request,
-    listenToContracts: listenToContractsAction
+    listenToContracts: listenToContractsAction,
+    initRegularTxs: initRegularTxsAction.request
   },
 )(AppContainer));

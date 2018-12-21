@@ -228,6 +228,10 @@ export function toggleBreakpoint(payload) {
   return post('/debugger/breakpoint', {params: payload, credentials: payload.credentials});
 }
 
+export function initRegularTxs(payload) {
+  return get('/regular-txs', {params: payload, credentials: payload.credentials});
+}
+
 export function listenToDebugger(credentials) {
   return websocket(credentials, '/debugger');
 }
