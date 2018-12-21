@@ -2,7 +2,7 @@
 
 require('./httpProxyOverride');
 const Asm = require('stream-json/Assembler');
-const {canonicalHost, defaultHost} = require('../../utils/host');
+const {canonicalHost} = require('../../utils/host');
 const constants = require('../../constants.json');
 const {Duplex} = require('stream');
 const http = require('http');
@@ -237,7 +237,7 @@ class Proxy {
     return new Promise(resolve => {
       server.listen(
         port - constants.blockchain.servicePortOnProxy,
-        defaultHost,
+        host,
         () => { resolve(server); }
       );
     });
