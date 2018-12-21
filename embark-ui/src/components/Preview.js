@@ -1,5 +1,6 @@
 import React from 'react';
 import {Button, InputGroup, Input, InputGroupAddon} from 'reactstrap';
+import FontAwesome from 'react-fontawesome';
 
 class Preview extends React.Component {
   constructor(props) {
@@ -31,9 +32,11 @@ class Preview extends React.Component {
         <InputGroup>
           <Input placeholder="URL"
                  value={this.state.previewUrl}
-                 onChange={(e) => this.handlePreviewUrlChange(e)} />
+                 onChange={(e) => this.handlePreviewUrlChange(e)}/>
           <InputGroupAddon addonType="append">
-            <Button className="ml-auto" color="primary" onClick={(e) => this.handlePreviewGo(e)}>Go</Button>
+            <Button className="ml-auto" color="primary" onClick={(e) => this.handlePreviewGo(e)}>
+              <FontAwesome name="refresh"/>
+            </Button>
           </InputGroupAddon>
         </InputGroup>
         <iframe width="100%"
