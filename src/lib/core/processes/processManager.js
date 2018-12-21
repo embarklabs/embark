@@ -1,4 +1,3 @@
-
 const ProcessState = {
   Unstarted: 'unstarted',
   Starting: 'starting',

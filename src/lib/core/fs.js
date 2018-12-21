@@ -148,6 +148,19 @@ function diagramPath() {
   return anchoredPath(env.DIAGRAM_PATH, ...arguments);
 }
 
+function ipcPath(basename, usePipePathOnWindows = false) {
+  if (!(basename && typeof basename === 'string')) {
+    throw new TypeError('first argument must be a non-empty string');
+  }
+  if (process.platform === 'win32' && usePipePathOnWindows) {
+    return `\\\\.\\pipe\\${basename}`;
+  }
+  return utils.joinPath(
+    tmpDir(`embark-${utils.sha512(dappPath()).slice(0, 8)}`),
+    basename
+  );
+}
+
 function pkgPath() {
   return anchoredPath(env.PKG_PATH, ...arguments);
 }
@@ -200,6 +213,7 @@ module.exports = {
   existsSync,
   ensureFileSync,
   ensureDirSync,
+  ipcPath,
   mkdirp,
   mkdirpSync,
   move,
