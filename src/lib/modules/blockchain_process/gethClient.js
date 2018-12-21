@@ -225,12 +225,22 @@ class GethClient {
 
   initDevChain(datadir, callback) {
     exec(this.listAccountsCommand(), {}, (err, stdout, _stderr) => {
+      const readyTimeout = setTimeout(() => {
+        this.child.kill();
+        return cb(__('Geth dev command never returned a developer account'));
+      }, 10 * 1000);
+
+      function cb(err) {
+        clearTimeout(readyTimeout);
+        callback(err);
+      }
+
       if (err || stdout === undefined || stdout.indexOf("Fatal") >= 0) {
-        return callback(err || stdout);
+        return cb(err || stdout);
       }
       this.config.unlockAddressList = this.parseListAccountsCommandResultToAddressList(stdout);
       if (this.config.unlockAddressList.length) {
-        return callback();
+        return cb();
       }
 
       // No accounts. We need to run the geth --dev command for it to create the dev account
@@ -243,14 +253,9 @@ class GethClient {
         data = data.toString();
         if (data.indexOf('Using developer account') > -1) {
           this.child.kill();
-          callback();
+          cb();
         }
       });
-
-      setTimeout(() => {
-        this.child.kill();
-        return callback(__('Geth dev command never returned a developer account'));
-      }, 10 * 1000);
     });
   }
 
@@ -341,8 +346,11 @@ class GethClient {
           accountAddress = address;
         }
         if (accountAddress) {
-          if(!(self.config && self.config.account && self.config.account.password)){
-            console.warn(__("\n===== Password needed =====\nPassword for account {{account}} not found. Unlocking this account may fail. Please ensure a password is specified in config/blockchain.js > {{env}} > account > password.\n", {account: address, env: self.env}));
+          if (!(self.config && self.config.account && self.config.account.password)) {
+            console.warn(__("\n===== Password needed =====\nPassword for account {{account}} not found. Unlocking this account may fail. Please ensure a password is specified in config/blockchain.js > {{env}} > account > password.\n", {
+              account: address,
+              env: self.env
+            }));
           }
           args.push("--unlock=" + accountAddress);
           return callback(null, "--unlock=" + accountAddress);
