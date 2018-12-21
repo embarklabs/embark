@@ -1,30 +1,29 @@
+const {execSync} = require("child_process");
+const {hostname} = require("os");
+
 const isDocker = (() => {
-  let isDockerProcess;
-
-  const hostname = require("os").hostname();
-  const pattern = new RegExp(
-    "[0-9]+\:[a-z_-]+\:\/docker\/" + hostname + "[0-9a-z]+", "i",
-  );
-
+  // assumption: an Embark container is always a Linux Docker container, though
+  // the Docker host may be Linux, macOS, or Windows
+  if (process.platform !== "linux") { return false; }
   try {
-    isDockerProcess = require("child_process")
-    .execSync(
-      "cat /proc/self/cgroup",
-      {stdio: ["ignore", "pipe", "ignore"]},
-    )
-    .toString().match(pattern) !== null;
+    return (
+      new RegExp(`[0-9]+\:[a-z_-]+\:\/docker\/${hostname()}[0-9a-z]+`, "i")
+    ).test(
+      execSync(
+        "cat /proc/self/cgroup",
+        {stdio: ["ignore", "pipe", "ignore"]},
+      ).toString(),
+    );
   } catch (e) {
-    isDockerProcess = false;
+    return false;
   }
-
-  return isDockerProcess;
 })();
 
 const defaultHost = isDocker ? "0.0.0.0" : "localhost";
 
-// when we"re runing in Docker, we can expect (generally, in a development
+// when we're runing in Docker, we can expect (generally, in a development
 // scenario) that the user would like to connect to the service in the
-// container via the **host"s** loopback address, so this helper can be used to
+// container via the **host's** loopback address, so this helper can be used to
 // swap 0.0.0.0 for localhost in code/messages that pertain to client-side
 function canonicalHost(host: string): string {
   return isDocker && host === "0.0.0.0" ? "localhost" : host;

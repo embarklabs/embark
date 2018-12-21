@@ -1,5 +1,6 @@
 const async = require('async');
-const {spawn, exec} = require('child_process');
+const {exec, spawn} = require('child_process');
+const fs = require('../../core/fs');
 const GethMiner = require('./miner');
 const semver = require('semver');
 const constants = require('../../constants');
@@ -51,7 +52,7 @@ class GethClient {
   needKeepAlive() {
     // TODO: check version also (geth version < 1.8.15)
     if (this.isDev) {
-      // Trigger regular txs due to a bug in geth (< 1.8.15) and stuck transactions in --dev mode.   
+      // Trigger regular txs due to a bug in geth (< 1.8.15) and stuck transactions in --dev mode.
       return true;
     }
     return false;
@@ -78,6 +79,8 @@ class GethClient {
     if (Number.isInteger(config.verbosity) && config.verbosity >= 0 && config.verbosity <= 5) {
       cmd.push("--verbosity=" + config.verbosity);
     }
+
+    cmd.push(`--ipcpath=${fs.ipcPath('geth.ipc', true)}`);
 
     return cmd;
   }

@@ -31,6 +31,7 @@ describe('fs', () => {
     'dappPath',
     'diagramPath',
     'embarkPath',
+    'ipcPath',
     'pkgPath',
     'tmpDir'
   ];
