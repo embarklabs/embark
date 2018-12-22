@@ -2,7 +2,7 @@
 
 const path = require('path');
 
-const dappPath = path.normalize(process.env.DAPP_PATH);
+const dappPath = process.env.DAPP_PATH;
 const embarkPath = process.env.EMBARK_PATH;
 
 const dappNodeModules = path.join(dappPath, 'node_modules');
