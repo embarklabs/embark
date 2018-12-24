@@ -1,20 +1,18 @@
 // util to map async method names
 
-function extend(filename, async) {
+export default function extend(filename: string, async: any) {
   if (async._waterfall !== undefined) {
     return;
   }
   async._waterfall = async.waterfall;
-  async.waterfall = function (_tasks, callback) {
-    let tasks = _tasks.map(function (t) {
-      let fn = function () {
+  async.waterfall = (_tasks: any[], callback: any) => {
+    const tasks = _tasks.map((t) => {
+      const fn = (...args: any) => {
         console.log("async " + filename + ": " + t.name);
-        t.apply(t, arguments);
+        t.apply(t, args);
       };
       return fn;
     });
     async._waterfall(tasks, callback);
   };
 }
-
-module.exports = extend;
