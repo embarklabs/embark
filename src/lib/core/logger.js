@@ -12,7 +12,6 @@ class Logger {
     this.logLevel = options.logLevel || 'info';
     this.logFunction = options.logFunction || console.log;
     this.logFile = options.logFile;
-    this.context = options.context;
   }
 
   /**
