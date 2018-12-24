@@ -309,9 +309,8 @@ class ContractsManager {
         // we can skip this entirely
         if(!resetContracts) return callback();
 
-        let className, contract;
-        for (className in self.contractsConfig.contracts) {
-          contract = self.contractsConfig.contracts[className];
+        for (const className in self.contractsConfig.contracts) {
+          const contract = self.contractsConfig.contracts[className];
 
           contract.className = className;
           contract.args = contract.args || [];
@@ -324,12 +323,11 @@ class ContractsManager {
         return callback(null, self.contractsConfig.gasPrice);
       },
       function prepareContractsForCompilation(gasPrice, callback) {
-        let className, compiledContract, contractConfig, contract;
-        for (className in self.compiledContracts) {
-          compiledContract = self.compiledContracts[className];
-          contractConfig = self.contractsConfig.contracts[className];
+        for (const className in self.compiledContracts) {
+          const compiledContract = self.compiledContracts[className];
+          const contractConfig = self.contractsConfig.contracts[className];
 
-          contract = self.contracts[className] || {className: className, args: []};
+          const contract = self.contracts[className] || {className: className, args: []};
 
           contract.code = compiledContract.code;
           contract.runtimeBytecode = compiledContract.runtimeBytecode;
@@ -460,9 +458,8 @@ class ContractsManager {
       /*eslint complexity: ["error", 19]*/
       /*eslint max-depth: ["error", 19]*/
       function determineDependencies(callback) {
-        let className, contract;
-        for (className in self.contracts) {
-          contract = self.contracts[className];
+        for (const className in self.contracts) {
+          const contract = self.contracts[className];
 
           self.contractDependencies[className] = self.contractDependencies[className] || [];
 
