@@ -1,4 +1,4 @@
-let async = require('../../utils/async_extend.js');
+let async = require('../../utils/async_extend.js').default;
 let SolcW = require('./solcW.js');
 
 class Solidity {
@@ -70,7 +70,7 @@ class Solidity {
         if (self.solcAlreadyLoaded) {
           return callback();
         }
-        
+
         let storageConfig = self.storageConfig;
         if (storageConfig && storageConfig.upload && storageConfig.upload.getUrl) {
             self.providerUrl = storageConfig.upload.getUrl;

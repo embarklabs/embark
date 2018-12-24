@@ -1,4 +1,4 @@
-let async = require('../utils/async_extend.js');
+let async = require('../utils/async_extend.js').default;
 
 class ServicesMonitor {
   constructor(options) {

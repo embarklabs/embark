@@ -1,4 +1,4 @@
-const async = require("../../utils/async_extend.js");
+const async = require("../../utils/async_extend.js").default;
 import { Embark } from "../../../typings/embark";
 import { CompilerPluginObject, Plugins } from "../../../typings/plugins";
 
