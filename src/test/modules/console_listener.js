@@ -12,14 +12,12 @@ let events,
   consoleListener,
   ipc,
   embark,
-  loggerErrors = [],
   loggerInfos = [],
   eventsEmitted = [],
   ipcRequest,
   contractsList;
 
 function resetTest() {
-  loggerErrors = [];
   loggerInfos = [];
   eventsEmitted = [];
   ipcRequest = {
@@ -31,66 +29,68 @@ function resetTest() {
     gasUsed: "0x0",
     status: "yay"
   };
-  contractsList = [{
-    abiDefinition: [
-      {
-        "constant": true,
-        "inputs": [],
-        "name": "storedData",
-        "outputs": [
-          {
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "constant": false,
-        "inputs": [
-          {
-            "name": "x",
-            "type": "uint256"
-          }
-        ],
-        "name": "set",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [],
-        "name": "get",
-        "outputs": [
-          {
-            "name": "retVal",
-            "type": "uint256"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "name": "initialValue",
-            "type": "uint256"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "constructor"
-      }
-    ],
-    deployedAddress: "0x12345",
-    className: "SimpleStorage",
-    silent: true
-  }];
+  contractsList = [
+    {
+      abiDefinition: [
+        {
+          "constant": true,
+          "inputs": [],
+          "name": "storedData",
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "constant": false,
+          "inputs": [
+            {
+              "name": "x",
+              "type": "uint256"
+            }
+          ],
+          "name": "set",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "constant": true,
+          "inputs": [],
+          "name": "get",
+          "outputs": [
+            {
+              "name": "retVal",
+              "type": "uint256"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "name": "initialValue",
+              "type": "uint256"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        }
+      ],
+      deployedAddress: "0x12345",
+      className: "SimpleStorage",
+      silent: true
+    }
+  ];
 
   events = new Events();
   logger = new Logger(events);
