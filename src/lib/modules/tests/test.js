@@ -1,7 +1,7 @@
 import * as utilsContractsConfig from "../../utils/contractsConfig";
 
 const async = require('async');
-const AccountParser = require('../../utils/accountParser');
+const AccountParser = require('../../utils/accountParser').default;
 const EmbarkJS = require('embarkjs');
 const utils = require('../../utils/utils');
 const constants = require('../../constants');

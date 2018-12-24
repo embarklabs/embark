@@ -147,7 +147,7 @@ Blockchain.prototype.initProxy = function () {
 };
 
 Blockchain.prototype.setupProxy = async function () {
-  const AccountParser = require('../../utils/accountParser');
+  const AccountParser = require('../../utils/accountParser').default;
   if (!this.proxyIpc) this.proxyIpc = new Ipc({ipcRole: 'client'});
 
   const addresses = AccountParser.parseAccountsConfig(this.userConfig.accounts, false, this.logger);

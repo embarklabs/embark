@@ -42,7 +42,7 @@ class Simulator {
     let simulatorAccounts = this.blockchainConfig.simulatorAccounts || options.simulatorAccounts;
     if (simulatorAccounts && simulatorAccounts.length > 0) {
       let web3 = new (require('web3'))();
-      let AccountParser = require('../../utils/accountParser.js');
+      let AccountParser = require('../../utils/accountParser.js').default;
       let parsedAccounts = AccountParser.parseAccountsConfig(simulatorAccounts, web3, this.logger);
       parsedAccounts.forEach((account) => {
         let cmd = '--account="' + account.privateKey + ','+account.hexBalance + '"';

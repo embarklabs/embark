@@ -1,5 +1,5 @@
 const async = require('async');
-const AccountParser = require('../../utils/accountParser');
+const AccountParser = require('../../utils/accountParser').default;
 const fundAccount = require('./fundAccount');
 const constants = require('../../constants');
 const Transaction = require('ethereumjs-tx');
