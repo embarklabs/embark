@@ -3,7 +3,7 @@ const assert = require('assert');
 const sinon = require('sinon');
 const utils = require('../lib/utils/utils');
 const AccountParser = require('../lib/utils/accountParser');
-let TestLogger = require('../lib/utils/test_logger');
+let TestLogger = require('../lib/utils/test_logger').default;
 const Web3 = require('web3');
 const i18n = require('../lib/core/i18n/i18n');
 i18n.setOrDetectLocale('en');

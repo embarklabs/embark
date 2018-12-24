@@ -7,7 +7,7 @@ require('../../../lib/core/i18n/i18n');
 const Compiler = require('../../../lib/modules/compiler');
 const File = require('../../../lib/core/file.js');
 const Plugins = require('../../../lib/core/plugins.js');
-const TestLogger = require('../../../lib/utils/test_logger');
+const TestLogger = require('../../../lib/utils/test_logger').default;
 const Events = require('../../../lib/core/events');
 
 const readFile = function(file) {

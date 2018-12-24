@@ -1,6 +1,6 @@
 /*globals describe, it*/
 let SolidityCompiler = require('../../../lib/modules/solidity');
-let TestLogger = require('../../../lib/utils/test_logger');
+let TestLogger = require('../../../lib/utils/test_logger').default;
 let File = require('../../../lib/core/file.js');
 let Ipc = require('../../../lib/core/ipc.js');
 let assert = require('assert');
