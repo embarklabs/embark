@@ -12,4 +12,3 @@ If any member of the community violates this code of conduct, the maintainers of
 
 If you are subject to or witness unacceptable behavior, or have any other concerns, please email us at [embark@status.im](mailto:embark@status.im).
 
-
