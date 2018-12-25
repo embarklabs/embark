@@ -1,6 +1,6 @@
 /*globals describe, it, before*/
 const assert = require('assert');
-const TemplateGenerator = require('../lib/utils/template_generator');
+const TemplateGenerator = require('../lib/utils/template_generator').default;
 const semver = require('semver');
 const sinon = require('sinon');
 const request = require('request');

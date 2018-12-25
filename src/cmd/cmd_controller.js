@@ -49,7 +49,7 @@ class EmbarkController {
 
   generateTemplate(templateName, destinationFolder, name, url) {
     this.context = [constants.contexts.templateGeneration];
-    let TemplateGenerator = require('../lib/utils/template_generator.js');
+    let TemplateGenerator = require('../lib/utils/template_generator.js').default;
     let templateGenerator = new TemplateGenerator(templateName);
 
     if (url) {
