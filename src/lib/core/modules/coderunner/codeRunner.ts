@@ -1,10 +1,19 @@
-const RunCode = require('./runCode.js');
-const Utils = require('../../../utils/utils');
+// @ts-ignore
+const RunCode = require("./runCode.js").default;
+const Utils = require("../../../utils/utils");
 
-const WEB3_INVALID_RESPONSE_ERROR = 'Invalid JSON RPC response';
+const WEB3_INVALID_RESPONSE_ERROR = "Invalid JSON RPC response";
 
 class CodeRunner {
-  constructor(options) {
+  private config: any;
+  private plugins: any;
+  private logger: any;
+  private events: any;
+  private ipc: any;
+  private commands: any;
+  private runCode: any;
+
+  constructor(options: any) {
     this.config = options.config;
     this.plugins = options.plugins;
     this.logger = options.logger;
@@ -18,23 +27,23 @@ class CodeRunner {
     this.registerCommands();
   }
 
-  registerIpcEvents() {
+  private registerIpcEvents() {
     if (!this.ipc.isServer()) {
       return;
     }
 
-    this.ipc.on('runcode:getCommands', (_err, callback) => {
-      let result = {web3Config: this.runCode.getWeb3Config(), commands: this.commands};
+    this.ipc.on("runcode:getCommands", (_err: any, callback: any) => {
+      const result = {web3Config: this.runCode.getWeb3Config(), commands: this.commands};
       callback(null, result);
     });
   }
 
-  IpcClientListen() {
+  private IpcClientListen() {
     if (!this.ipc.isClient() || !this.ipc.connected) {
       return;
     }
 
-    this.ipc.listenTo('runcode:newCommand', (command) => {
+    this.ipc.listenTo("runcode:newCommand", (command: any) => {
       if (command.varName) {
         this.events.emit("runcode:register", command.varName, command.code);
       } else {
@@ -43,18 +52,18 @@ class CodeRunner {
     });
   }
 
-  registerEvents() {
+  private registerEvents() {
     this.events.on("runcode:register", this.registerVar.bind(this));
   }
 
-  registerCommands() {
-    this.events.setCommandHandler('runcode:getContext', (cb) => {
+  private registerCommands() {
+    this.events.setCommandHandler("runcode:getContext", (cb: any) => {
       cb(this.runCode.context);
     });
-    this.events.setCommandHandler('runcode:eval', this.evalCode.bind(this));
+    this.events.setCommandHandler("runcode:eval", this.evalCode.bind(this));
   }
 
-  registerVar(varName, code, toRecord = true) {
+  private registerVar(varName: string, code: string, toRecord = true) {
     if (this.ipc.isServer() && toRecord) {
       this.commands.push({varName, code});
       this.ipc.broadcast("runcode:newCommand", {varName, code});
@@ -62,25 +71,25 @@ class CodeRunner {
     this.runCode.registerVar(varName, code);
   }
 
-  async evalCode(code, cb, forConsoleOnly = false, tolerateError = false) {
-    cb = cb || function() {};
-    const awaitIdx = code.indexOf('await');
+  private async evalCode(code: string, cb: any, forConsoleOnly = false, tolerateError = false) {
+    cb = cb || (() => {});
+    const awaitIdx = code.indexOf("await");
     let awaiting = false;
 
     if (awaitIdx > -1) {
       awaiting = true;
-      const instructions = Utils.compact(code.split(';'));
+      const instructions = Utils.compact(code.split(";"));
       const last = instructions.pop();
 
-      if (!last.trim().startsWith('return')) {
+      if (!last.trim().startsWith("return")) {
         instructions.push(`return ${last}`);
       } else {
         instructions.push(last);
       }
 
-      code = `(async function() {${instructions.join(';')}})();`;
+      code = `(async function() {${instructions.join(";")}})();`;
     }
-    let result = this.runCode.doEval(code, tolerateError, forConsoleOnly);
+    const result = this.runCode.doEval(code, tolerateError, forConsoleOnly);
 
     if (forConsoleOnly && this.ipc.isServer()) {
       this.commands.push({code});
@@ -95,9 +104,9 @@ class CodeRunner {
       const value = await result;
       cb(null, value);
     } catch (error) {
-      // Improve error message when there's no connection to node
+      // Improve error message when there"s no connection to node
       if (error.message && error.message.indexOf(WEB3_INVALID_RESPONSE_ERROR) !== -1) {
-        error.message += '. Are you connected to an Ethereum node?';
+        error.message += ". Are you connected to an Ethereum node?";
       }
 
       cb(error);
