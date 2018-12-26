@@ -3,7 +3,7 @@ process.on('uncaughtException', function(e) {
 });
 
 const constants = require('../../constants');
-const Events = require('./eventsWrapper');
+const Events = require('./eventsWrapper').default;
 
 class ProcessWrapper {
 

@@ -1,7 +1,10 @@
-const uuid = require('uuid/v1');
-const constants = require('../../constants');
+declare var process: any;
+// @ts-ignore
+import uuid from "uuid/v1";
+const constants = require("../../constants");
 
 class Events {
+  private subscribedEvents: any;
 
   /**
    * Constructs an event wrapper for processes.
@@ -14,8 +17,8 @@ class Events {
     this.listenToParentProcess();
   }
 
-  listenToParentProcess() {
-    process.on('message', (msg) => {
+  private listenToParentProcess() {
+    process.on("message", (msg: any) => {
       if (!msg.event || msg.event !== constants.process.events.response) {
         return;
       }
@@ -26,30 +29,30 @@ class Events {
     });
   }
 
-  sendEvent() {
-    const eventType = arguments[0];
-    const requestName = arguments[1];
+  private sendEvent(..._args: any) {
+    const eventType = _args[0];
+    const requestName = _args[1];
 
-    let args = [].slice.call(arguments, 2);
+    let args = [].slice.call(_args, 2);
     const eventId = uuid();
     this.subscribedEvents[eventId] = args[args.length - 1];
     args = args.splice(0, args.length - 2);
 
     process.send({
-      event: eventType,
-      requestName,
       args,
-      eventId: eventId
+      event: eventType,
+      eventId,
+      requestName,
     });
   }
 
-  on() {
-    this.sendEvent(constants.process.events.on, ...arguments);
+  public on(...args: any) {
+    this.sendEvent(constants.process.events.on, ...args);
   }
 
-  request() {
-    this.sendEvent(constants.process.events.request, ...arguments);
+  public request(...args: any) {
+    this.sendEvent(constants.process.events.request, ...args);
   }
 }
 
-module.exports = Events;
+export default Events;
