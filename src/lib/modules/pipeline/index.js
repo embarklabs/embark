@@ -2,7 +2,7 @@ const fs = require('../../core/fs.js');
 const path = require('path');
 const async = require('async');
 const utils = require('../../utils/utils.js');
-const ProcessLauncher = require('../../core/processes/processLauncher');
+const ProcessLauncher = require('../../core/processes/processLauncher').default;
 const constants = require('../../constants');
 const WebpackConfigReader = require('../pipeline/webpackConfigReader');
 import LongRunningProcessTimer from '../../utils/longRunningProcessTimer';

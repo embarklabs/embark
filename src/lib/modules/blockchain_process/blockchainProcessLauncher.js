@@ -1,4 +1,4 @@
-const ProcessLauncher = require('../../core/processes/processLauncher');
+const ProcessLauncher = require('../../core/processes/processLauncher').default;
 const utils = require('../../utils/utils.js');
 const constants = require('../../constants');
 

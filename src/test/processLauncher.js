@@ -3,7 +3,7 @@ const assert = require('assert');
 const sinon = require('sinon');
 const TestLogger = require('../lib/utils/test_logger').default;
 const path = require('path');
-const ProcessLauncher = require('../lib/core/processes/processLauncher');
+const ProcessLauncher = require('../lib/core/processes/processLauncher').default;
 
 let logger = new TestLogger({});
 
