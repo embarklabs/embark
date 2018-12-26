@@ -117,7 +117,7 @@ class Engine {
   }
 
   processManagerService(_options) {
-    const ProcessManager = require('./processes/processManager.js');
+    const ProcessManager = require('./processes/processManager.js').default;
     this.processManager = new ProcessManager({
       events: this.events,
       logger: this.logger,
