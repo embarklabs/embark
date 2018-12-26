@@ -1,7 +1,7 @@
 const fs = require('../../core/fs');
 const shellJs = require('shelljs');
 const utils = require('../../utils/utils');
-const ProcessLauncher = require('../../core/processes/processLauncher');
+const ProcessLauncher = require('../../core/processes/processLauncher').default;
 const constants = require('../../constants');
 const {canonicalHost} = require('../../utils/host');
 const cloneDeep = require('lodash.clonedeep');
@@ -138,7 +138,7 @@ class StorageProcessesLauncher {
           });
         });
       });
-      
+
 
       self.processes[storageName].on('result', constants.storage.initiated, (msg) => {
         if (msg.error) {

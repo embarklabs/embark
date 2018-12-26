@@ -1,10 +1,20 @@
-const child_process = require('child_process');
-const constants = require('../../constants');
-const path = require('path');
-const ProcessLogsApi = require('../../modules/process_logs_api');
+const child_process = require("child_process");
+const constants = require("../../constants");
+const path = require("path");
+const ProcessLogsApi = require("../../modules/process_logs_api");
 
 let processCount = 1;
 class ProcessLauncher {
+  private name: string;
+  private logger: any;
+  private events: any;
+  private silent: any;
+  private exitCallback: any;
+  private embark: any;
+  private logs: any[];
+  private processLogsApi: any;
+  private subscriptions: any;
+  private process: any;
 
   /**
    * Constructor of ProcessLauncher. Forks the module and sets up the message handling
@@ -14,11 +24,11 @@ class ProcessLauncher {
    *        * events          {Function}  Events Emitter instance
    * @return {ProcessLauncher}    The ProcessLauncher instance
    */
-  constructor(options) {
+  constructor(options: any) {
     this.name = options.name || path.basename(options.modulePath);
 
     if (this._isDebug()) {
-      const childOptions = {stdio: 'pipe', execArgv: ['--inspect-brk=' + (60000 + processCount)]};
+      const childOptions = {stdio: "pipe", execArgv: ["--inspect-brk=" + (60000 + processCount)]};
       processCount++;
       this.process = child_process.fork(options.modulePath, [], childOptions);
     } else {
@@ -36,15 +46,15 @@ class ProcessLauncher {
     this._subscribeToMessages();
   }
 
-  _isDebug() {
-    const argvString= process.execArgv.join();
-    return argvString.includes('--debug') || argvString.includes('--inspect');
+  private _isDebug() {
+    const argvString = process.execArgv.join();
+    return argvString.includes("--debug") || argvString.includes("--inspect");
   }
 
   // Subscribes to messages from the child process and delegates to the right methods
-  _subscribeToMessages() {
+  private _subscribeToMessages() {
     const self = this;
-    this.process.on('message', (msg) => {
+    this.process.on("message", (msg: any) => {
       if (msg.error) {
         self.logger.error(msg.error);
       }
@@ -57,7 +67,7 @@ class ProcessLauncher {
       self._checkSubscriptions(msg);
     });
 
-    this.process.on('exit', (code) => {
+    this.process.on("exit", (code: any) => {
       if (self.exitCallback) {
         return self.exitCallback(code);
       }
@@ -68,35 +78,35 @@ class ProcessLauncher {
   }
 
   // Handle event calls from the child process
-  _handleEvent(msg) {
+  private _handleEvent(msg: any) {
     const self = this;
     if (!self.events[msg.event]) {
-      self.logger.warn('Unknown event method called: ' + msg.event);
+      self.logger.warn("Unknown event method called: " + msg.event);
       return;
     }
     if (!msg.args || !Array.isArray(msg.args)) {
       msg.args = [];
     }
     // Add callback in the args
-    msg.args.push((result) => {
+    msg.args.push((result: any) => {
       self.process.send({
         event: constants.process.events.response,
+        eventId: msg.eventId,
         result,
-        eventId: msg.eventId
       });
     });
     self.events[msg.event](msg.requestName, ...msg.args);
   }
 
   // Looks at the subscriptions to see if there is a callback to call
-  _checkSubscriptions(msg) {
+  private _checkSubscriptions(msg: any) {
     const messageKeys = Object.keys(msg);
     const subscriptionsKeys = Object.keys(this.subscriptions);
-    let subscriptionsForKey;
-    let messageKey;
+    let subscriptionsForKey: any;
+    let messageKey: any;
     // Find if the message contains a key that we are subscribed to
-    messageKeys.some(_messageKey => {
-      return subscriptionsKeys.some(subscriptionKey => {
+    messageKeys.some((_messageKey: any) => {
+      return subscriptionsKeys.some((subscriptionKey: any) => {
         if (_messageKey === subscriptionKey) {
           subscriptionsForKey = this.subscriptions[subscriptionKey];
           messageKey = _messageKey;
@@ -108,8 +118,8 @@ class ProcessLauncher {
 
     if (subscriptionsForKey) {
       // Find if we are subscribed to one of the values
-      let subsIndex = [];
-      const subscriptionsForValue = subscriptionsForKey.filter((sub, index) => {
+      const subsIndex: any[] = [];
+      const subscriptionsForValue: any[] = subscriptionsForKey.filter((sub: any, index: number) => {
         if (msg[messageKey] === sub.value) {
           subsIndex.push(index);
           return true;
@@ -119,7 +129,7 @@ class ProcessLauncher {
 
       if (subscriptionsForValue.length) {
         // We are subscribed to that message, call the callback
-        subscriptionsForValue.forEach((subscription, index) => {
+        subscriptionsForValue.forEach((subscription: any, index: number) => {
           subscription.callback(msg);
 
           if (subscription.once) {
@@ -139,7 +149,7 @@ class ProcessLauncher {
    * @param {Function}  callback  callback(response)
    * @return {void}
    */
-  on(key, value, callback) {
+  public on(key: any, value: any, callback: any) {
     if (this.subscriptions[key]) {
       this.subscriptions[key].push({value, callback});
       return;
@@ -154,7 +164,7 @@ class ProcessLauncher {
    * @param {Function}  callback  callback(response)
    * @return {void}
    */
-  once(key, value, callback) {
+  public once(key: any, value: any, callback: any) {
     const obj = {value, callback, once: true};
     if (this.subscriptions[key]) {
       this.subscriptions[key].push(obj);
@@ -170,12 +180,12 @@ class ProcessLauncher {
    *                            If there is no value, unsubscribes from all the values of that key
    * @return {void}
    */
-  unsubscribeTo(key, value) {
+  public unsubscribeTo(key: any, value: any) {
     if (!value) {
       this.subscriptions[key] = [];
     }
     if (this.subscriptions[key]) {
-      this.subscriptions[key].filter((val, index) => {
+      this.subscriptions[key].filter((val: any, index: number) => {
         if (val.value === value) {
           this.subscriptions[key].splice(index, 1);
         }
@@ -187,7 +197,7 @@ class ProcessLauncher {
    * Unsubscribes from all subscriptions
    * @return {void}
    */
-  unsubscribeToAll() {
+  public unsubscribeToAll() {
     this.subscriptions = {};
   }
 
@@ -198,18 +208,18 @@ class ProcessLauncher {
    *  https://nodejs.org/api/child_process.html#child_process_subprocess_send_message_sendhandle_options_callback
    * @return {void}
    */
-  send() {
+  public send(...args: any) {
     if (!this.process.connected) {
       return false;
     }
-    return this.process.send(...arguments);
+    return this.process.send(...args);
   }
 
   /**
    * Disconnects the child process. It will exit on its own
    * @return {void}
    */
-  disconnect() {
+  public disconnect() {
     this.process.disconnect();
   }
 
@@ -218,9 +228,9 @@ class ProcessLauncher {
    *  https://nodejs.org/api/child_process.html#child_process_subprocess_kill_signal
    * @return {void}
    */
-  kill() {
-    this.process.kill(...arguments);
+  public kill(...args: any) {
+    this.process.kill(...args);
   }
 }
 
-module.exports = ProcessLauncher;
+export default ProcessLauncher;
