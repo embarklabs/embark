@@ -1,6 +1,6 @@
-const ProcessLogsApi = require('../process_logs_api');
+const ProcessLogsApi = require("../process_logs_api");
 
-const EMBARK_PROCESS_NAME = 'embark';
+const EMBARK_PROCESS_NAME = "embark";
 
 /**
  * EmbarkListener has two functions:
@@ -9,11 +9,15 @@ const EMBARK_PROCESS_NAME = 'embark';
  *    through the LogHandler.
  */
 class EmbarkListener {
+  private embark: any;
+  private events: any;
+  private logger: any;
+  private processLogsApi: any;
 
   /**
    * @param {Plugin} embark EmbarkListener module plugin object
    */
-  constructor(embark) {
+  constructor(embark: any) {
     this.embark = embark;
     this.events = embark.events;
     this.logger = embark.logger;
@@ -25,13 +29,14 @@ class EmbarkListener {
   /**
    * Listens to log events emitted by the Embark application and ensures
    * they are processed through the LogHandler.
-   * 
+   *
    * @return {void}
    */
-  _listenToEmbarkLogs() {
-    this.events.on("log", (logLevel, message) => {
+  private _listenToEmbarkLogs() {
+    this.events.on("log", (logLevel: any, message: any) => {
       this.processLogsApi.logHandler.handleLog({logLevel, message}, true);
     });
   }
 }
-module.exports = EmbarkListener;
+
+export default EmbarkListener;
