@@ -81,7 +81,7 @@ class EmbarkController {
       webServerConfig.openBrowser = options.openBrowser;
     }
 
-    const Engine = require('../lib/core/engine.js');
+    const Engine = require('../lib/core/engine.js').default;
     const engine = new Engine({
       env: options.env,
       client: options.client,
@@ -183,7 +183,7 @@ class EmbarkController {
   build(options) {
     this.context = options.context || [constants.contexts.build];
 
-    const Engine = require('../lib/core/engine.js');
+    const Engine = require('../lib/core/engine.js').default;
     const engine = new Engine({
       env: options.env,
       client: options.client,
@@ -262,7 +262,7 @@ class EmbarkController {
   console(options) {
     this.context = options.context || [constants.contexts.run, constants.contexts.console];
     const REPL = require('./dashboard/repl.js');
-    const Engine = require('../lib/core/engine.js');
+    const Engine = require('../lib/core/engine.js').default;
     const engine = new Engine({
       env: options.env,
       client: options.client,
@@ -376,7 +376,7 @@ class EmbarkController {
     this.context = options.context || [constants.contexts.graph];
     options.onlyCompile = true;
 
-    const Engine = require('../lib/core/engine.js');
+    const Engine = require('../lib/core/engine.js').default;
     const engine = new Engine({
       env: options.env,
       version: this.version,
@@ -446,7 +446,7 @@ class EmbarkController {
   scaffold(options) {
     this.context = options.context || [constants.contexts.scaffold];
 
-    const Engine = require('../lib/core/engine.js');
+    const Engine = require('../lib/core/engine.js').default;
     const engine = new Engine({
       env: options.env,
       client: options.client,
@@ -516,7 +516,7 @@ class EmbarkController {
   upload(options) {
     this.context = options.context || [constants.contexts.upload, constants.contexts.build];
 
-    const Engine = require('../lib/core/engine.js');
+    const Engine = require('../lib/core/engine.js').default;
     const engine = new Engine({
       env: options.env,
       client: options.client,
@@ -615,7 +615,7 @@ class EmbarkController {
   runTests(options) {
     this.context = [constants.contexts.test];
 
-    const Engine = require('../lib/core/engine.js');
+    const Engine = require('../lib/core/engine.js').default;
     const engine = new Engine({
       env: options.env,
       client: options.client,
