@@ -1,5 +1,12 @@
+
 class TransactionTracker {
-  constructor(embark, _options) {
+  private logger: any;
+  private events: any;
+  private transactions: any;
+  private embark: any;
+  private startTimestamp: any;
+
+  constructor(embark: any, _options: any) {
     this.logger = embark.logger;
     this.events = embark.events;
     this.transactions = {};
@@ -11,22 +18,22 @@ class TransactionTracker {
     this.registerAPICalls();
   }
 
-  onPendingTransaction(pendingTransactionHash) {
+  private onPendingTransaction(pendingTransactionHash: string) {
     this.transactions[pendingTransactionHash] = {
-      startTimestamp: Date.now() / 1000
+      startTimestamp: Date.now() / 1000,
     };
   }
 
-  onBlockHeader(blockHeader) {
-    this.events.request("blockchain:block:byNumber", blockHeader.number , (err, block) => {
+  private onBlockHeader(blockHeader: any) {
+    this.events.request("blockchain:block:byNumber", blockHeader.number , (err: any, block: any) => {
       if (err) {
-        return this.logger.error('Error getting block header', err.message || err);
+        return this.logger.error("Error getting block header", err.message || err);
       }
-      // Don't know why, but sometimes we receive nothing
+      // Don"t know why, but sometimes we receive nothing
       if (!block || !block.transactions) {
         return;
       }
-      block.transactions.forEach(transaction => {
+      block.transactions.forEach((transaction: any) => {
         if (this.transactions[transaction.hash]) {
           let wait = block.timestamp - this.transactions[transaction.hash].startTimestamp;
           if (wait < 0.1) {
@@ -36,25 +43,25 @@ class TransactionTracker {
             {endTimestamp: block.timestamp, wait, gasPrice: transaction.gasPrice});
         }
       });
-      this.events.emit('blockchain:gas:oracle:new');
+      this.events.emit("blockchain:gas:oracle:new");
       this.cullOldTransactions();
     });
   }
 
-  cullOldTransactions() {
+  private cullOldTransactions() {
     const timeLimit = (Date.now() / 1000) - 600; // Transactions old of 10 minutes are not to be counted anymore
     if (this.startTimestamp > timeLimit) {
       return;
     }
-    Object.keys(this.transactions).forEach(transactionHash => {
+    Object.keys(this.transactions).forEach((transactionHash: string) => {
       if (this.transactions[transactionHash].startTimestamp < timeLimit) {
         delete this.transactions[transactionHash];
       }
     });
   }
 
-  calculateGasPriceSpeeds() {
-    return Object.keys(this.transactions).reduce((acc, transactionHash) => {
+  private calculateGasPriceSpeeds() {
+    return Object.keys(this.transactions).reduce((acc: any, transactionHash: string) => {
       const transaction = this.transactions[transactionHash];
       if (!transaction.gasPrice) {
         return acc;
@@ -62,7 +69,7 @@ class TransactionTracker {
       if (!acc[transaction.gasPrice]) {
         acc[transaction.gasPrice] = {
           nbTxs: 0,
-          totalWait: 0
+          totalWait: 0,
         };
       }
       acc[transaction.gasPrice].nbTxs++;
@@ -73,25 +80,24 @@ class TransactionTracker {
     }, {});
   }
 
-  registerAPICalls() {
-    const self = this;
-    self.embark.registerAPICall(
-      'get',
-      '/embark-api/blockchain/gas/oracle',
-      (req, res) => {
-        res.send(self.calculateGasPriceSpeeds());
-      }
+  private registerAPICalls() {
+    this.embark.registerAPICall(
+      "get",
+      "/embark-api/blockchain/gas/oracle",
+      (req: any, res: any) => {
+        res.send(this.calculateGasPriceSpeeds());
+      },
     );
-    self.embark.registerAPICall(
-      'ws',
-      '/embark-api/blockchain/gas/oracle',
-      (ws) => {
-        self.events.on('blockchain:gas:oracle:new', () => {
-          ws.send(JSON.stringify(self.calculateGasPriceSpeeds()), () => {});
+    this.embark.registerAPICall(
+      "ws",
+      "/embark-api/blockchain/gas/oracle",
+      (ws: any) => {
+        this.events.on("blockchain:gas:oracle:new", () => {
+          ws.send(JSON.stringify(this.calculateGasPriceSpeeds()), () => {});
         });
-      }
+      },
     );
   }
 }
 
-module.exports = TransactionTracker;
+export default TransactionTracker;
