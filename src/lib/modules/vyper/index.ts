@@ -1,10 +1,13 @@
-let async = require('../../utils/async_extend.js').default;
-const shelljs = require('shelljs');
-const path = require('path');
+import async from "../../utils/async_extend.js"; // @ts-ignore
+const shelljs = require("shelljs");
+const path = require("path");
 
 class Vyper {
+  private logger: any;
+  private events: any;
+  private contractDirectories: any;
 
-  constructor(embark, _options) {
+  constructor(embark: any, _options: any) {
     this.logger = embark.logger;
     this.events = embark.events;
     this.contractDirectories = embark.config.contractDirectories;
@@ -14,46 +17,45 @@ class Vyper {
     embark.registerCompiler(".vy", this.compile_vyper.bind(this));
   }
 
-  compileVyperContract(filename, compileABI, callback) {
-    const self = this;
-    const params = compileABI ?  '-f=json ' : '';
-    shelljs.exec(`vyper ${params}${filename}`, {silent: true}, (code, stdout, stderr) => {
+  private compileVyperContract(filename: any, compileABI: any, callback: any) {
+    const params = compileABI ?  "-f=json " : "";
+    shelljs.exec(`vyper ${params}${filename}`, {silent: true}, (code: any, stdout: any, stderr: any) => {
       if (stderr) {
         return callback(stderr);
       }
       if (code !== 0) {
-        self.logger.error(stdout);
-        return callback(__('Vyper exited with error code ') + code);
+        this.logger.error(stdout);
+        return callback(__("Vyper exited with error code ") + code);
       }
       if (!stdout) {
-        return callback(__('Execution returned no result'));
+        return callback(__("Execution returned no result"));
       }
-      callback(null, stdout.replace(/\n/g, ''));
+      callback(null, stdout.replace(/\n/g, ""));
     });
   }
 
-  compile_vyper(contractFiles, _options, cb) {
+  private compile_vyper(contractFiles: any, _options: any, cb: any) {
     const self = this;
     if (!contractFiles || !contractFiles.length) {
       return cb();
     }
 
-    const vyper = shelljs.which('vyper');
+    const vyper = shelljs.which("vyper");
     if (!vyper) {
-      self.logger.warn(__('%s is not installed on your machine', 'Vyper'));
-      self.logger.info(__('You can install it by visiting: %s', 'https://vyper.readthedocs.io/en/latest/installing-vyper.html'));
+      self.logger.warn(__("%s is not installed on your machine", "Vyper"));
+      self.logger.info(__("You can install it by visiting: %s", "https://vyper.readthedocs.io/en/latest/installing-vyper.html"));
       return cb();
     }
     self.logger.info(__("compiling Vyper contracts") + "...");
 
-    const compiled_object = {};
+    const compiled_object: any = {};
     async.each(contractFiles,
-      function (file, fileCb) {
-        const className = path.basename(file.filename).split('.')[0];
+      (file: any, fileCb: any) => {
+        const className = path.basename(file.filename).split(".")[0];
         compiled_object[className] = {};
         async.parallel([
-          function getByteCode(paraCb) {
-            self.compileVyperContract(file.filename, false, (err, byteCode) => {
+          function getByteCode(paraCb: any) {
+            self.compileVyperContract(file.filename, false, (err: any, byteCode: any) => {
               if (err) {
                 return paraCb(err);
               }
@@ -63,8 +65,8 @@ class Vyper {
               paraCb();
             });
           },
-          function getABI(paraCb) {
-            self.compileVyperContract(file.filename, true, (err, ABIString) => {
+          function getABI(paraCb: any) {
+            self.compileVyperContract(file.filename, true, (err: any, ABIString: any) => {
               if (err) {
                 return paraCb(err);
               }
@@ -72,15 +74,15 @@ class Vyper {
               try {
                 ABI = JSON.parse(ABIString);
               } catch (e) {
-                return paraCb('ABI is not valid JSON');
+                return paraCb("ABI is not valid JSON");
               }
               compiled_object[className].abiDefinition = ABI;
               paraCb();
             });
-          }
+          },
         ], fileCb);
       },
-      function (err) {
+      (err: any) => {
         cb(err, compiled_object);
       });
   }
