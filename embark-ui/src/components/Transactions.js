@@ -18,7 +18,7 @@ const Transactions = ({transactions, contracts, changePage, currentPage, numberO
           {transactions.map(transaction => (
             <div className="explorer-row border-top" key={transaction.hash}>
               <CardTitleIdenticon id={transaction.hash}>Transaction&nbsp;
-                <Link to={`/embark/explorer/transactions/${transaction.hash}`}>
+                <Link to={`/explorer/transactions/${transaction.hash}`}>
                   {transaction.hash}
                 </Link>
               </CardTitleIdenticon>

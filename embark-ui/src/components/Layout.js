@@ -39,27 +39,27 @@ import logo from '../images/logo-new.svg';
 import './Layout.css';
 
 const HEADER_NAV_ITEMS = [
-  {name: "Dashboard", to: "/embark", icon: 'tachometer'},
-  {name: "Deployment", to: "/embark/deployment", icon: "arrow-up"},
-  {name: "Explorer", to: "/embark/explorer/overview", icon: "compass"},
-  {name: "Editor", to: "/embark/editor", icon: "codepen"},
-  {name: "Utils", to: "/embark/utilities/converter", icon: "cog"}
+  {name: "Dashboard", to: "/", icon: 'tachometer'},
+  {name: "Deployment", to: "/deployment", icon: "arrow-up"},
+  {name: "Explorer", to: "/explorer/overview", icon: "compass"},
+  {name: "Editor", to: "/editor", icon: "codepen"},
+  {name: "Utils", to: "/utilities/converter", icon: "cog"}
 ];
 
 const SIDEBAR_NAV_ITEMS = {
-  "/embark/explorer" : {items: [
-    {url: "/embark/explorer/overview", icon: "fa fa-signal", name: "Overview"},
-    {url: "/embark/explorer/accounts", icon: "fa fa-users", name: "Accounts"},
-    {url: "/embark/explorer/blocks", icon: "fa fa-stop", name: "Blocks"},
-    {url: "/embark/explorer/contracts", icon: "fa fa-file-code-o", name: "Contracts"},
-    {url: "/embark/explorer/transactions", icon: "fa fa-exchange", name: "Transactions"}
+  "/explorer" : {items: [
+    {url: "/explorer/overview", icon: "fa fa-signal", name: "Overview"},
+    {url: "/explorer/accounts", icon: "fa fa-users", name: "Accounts"},
+    {url: "/explorer/blocks", icon: "fa fa-stop", name: "Blocks"},
+    {url: "/explorer/contracts", icon: "fa fa-file-code-o", name: "Contracts"},
+    {url: "/explorer/transactions", icon: "fa fa-exchange", name: "Transactions"}
   ]},
-  "/embark/utilities/": {items: [
-    {url: "/embark/utilities/converter", icon: "fa fa-plug", name: "Converter"},
-    {url: "/embark/utilities/communication", icon: "fa fa-phone", name: "Communication"},
-    {url: "/embark/utilities/ens", icon: "fa fa-circle", name: "ENS"},
-    {url: "/embark/utilities/sign-and-verify", icon: "fa fa-edit", name: "Sign & Verify"},
-    {url: "/embark/utilities/transaction-decoder", icon: "fa fa-edit", name: "Transaction Decoder"}
+  "/utilities/": {items: [
+    {url: "/utilities/converter", icon: "fa fa-plug", name: "Converter"},
+    {url: "/utilities/communication", icon: "fa fa-phone", name: "Communication"},
+    {url: "/utilities/ens", icon: "fa fa-circle", name: "ENS"},
+    {url: "/utilities/sign-and-verify", icon: "fa fa-edit", name: "Sign & Verify"},
+    {url: "/utilities/transaction-decoder", icon: "fa fa-edit", name: "Transaction Decoder"}
   ]}
 };
 
@@ -96,19 +96,19 @@ class Layout extends React.Component {
       }
 
       if (nextProps.searchResult.className) {
-        this.props.history.push(`/embark/explorer/contracts/${nextProps.searchResult.className}`);
+        this.props.history.push(`/explorer/contracts/${nextProps.searchResult.className}`);
         return false;
       }
       if (nextProps.searchResult.address) {
-        this.props.history.push(`/embark/explorer/accounts/${nextProps.searchResult.address}`);
+        this.props.history.push(`/explorer/accounts/${nextProps.searchResult.address}`);
         return false;
       }
       if (nextProps.searchResult.hasOwnProperty('transactionIndex')) {
-        this.props.history.push(`/embark/explorer/transactions/${nextProps.searchResult.hash}`);
+        this.props.history.push(`/explorer/transactions/${nextProps.searchResult.hash}`);
         return false;
       }
       if (nextProps.searchResult.hasOwnProperty('number')) {
-        this.props.history.push(`/embark/explorer/blocks/${nextProps.searchResult.number}`);
+        this.props.history.push(`/explorer/blocks/${nextProps.searchResult.number}`);
         return false;
       }
       // Returned something we didn't know existed

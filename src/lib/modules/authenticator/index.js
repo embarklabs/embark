@@ -81,20 +81,15 @@ class Authenticator {
   }
 
   registerEvents() {
-    let self = this;
-
     this.events.once('outputDone', () => {
       this.events.request('authenticator:displayUrl', true);
     });
 
     this.events.setCommandHandler('authenticator:displayUrl', (firstOutput) => {
-      const {protocol, port, host, enabled} = this.embark.config.webServerConfig;
-
-      if (enabled) {
-        if(!firstOutput) this.logger.info(__('Previous token has now been used.'));
-        this.logger.info(__('Access the web backend with the following url: %s',
-          (`${protocol}://${host}:${port}/embark?token=${this.authToken}`.underline)));
-      }
+      if(!firstOutput) this.logger.info(__('Previous token has now been used.'));
+      this.events.request('api:url', (apiUrl) => {
+        this.logger.info(__('Access the web backend with the following url: %s', (`${apiUrl}?token=${this.authToken}`.underline)));
+      });
     });
 
     this.events.setCommandHandler('authenticator:authorize', (req, res, cb) => {
@@ -115,7 +110,7 @@ class Authenticator {
         });
         authenticated = (hash === computedHash);
       } else {
-        const hash = self.generateRequestHash(req);
+        const hash = this.generateRequestHash(req);
         authenticated = (hash === req.headers['x-embark-request-hash']);
       }
 

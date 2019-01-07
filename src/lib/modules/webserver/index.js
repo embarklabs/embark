@@ -1,8 +1,11 @@
+import {findNextPort} from "../../utils/network";
+
 const fs = require('../../core/fs.js');
 var {canonicalHost} = require('../../utils/host.js');
 var utils = require('../../utils/utils.js');
 var Server = require('./server.js');
 const opn = require('opn');
+
 
 require('ejs');
 const Templates = {
@@ -10,12 +13,11 @@ const Templates = {
 };
 
 class WebServer {
-  constructor(embark, options) {
+  constructor(embark, _options) {
     this.embark = embark;
     this.logger = embark.logger;
     this.events = embark.events;
     this.buildDir = embark.config.buildDir;
-    this.plugins = options.plugins;
     this.webServerConfig = embark.config.webServerConfig;
     if (!this.webServerConfig.enabled) {
       return;
@@ -40,7 +42,6 @@ class WebServer {
       events: this.events,
       host: this.host,
       port: this.port,
-      plugins: this.plugins,
       openBrowser: this.webServerConfig.openBrowser,
       protocol: this.webServerConfig.protocol,
       certOptions : this.webServerConfig.certOptions
@@ -72,29 +73,13 @@ class WebServer {
       });
     });
 
-    this.testPort(() => {
+    findNextPort(this.port).then((newPort) => {
+      this.server.port = newPort;
       this.events.request('processes:launch', 'webserver', (_err, message, port) => {
         this.logger.info(message);
         this.port = port;
         this.setServiceCheck();
       });
-    });
-  }
-
-  testPort(done) {
-    if (this.port === 0) {
-      this.logger.warn(__('Assigning an available port'));
-      this.server.port = 0;
-      return done();
-    }
-    utils.pingEndpoint(this.host, this.port, this.protocol, this.protocol, '', (err) => {
-      if (err) { // Port is ok
-        return done();
-      }
-      this.logger.warn(__('Webserver already running on port %s. Assigning an available port', this.port));
-      this.port = 0;
-      this.server.port = 0;
-      done();
     });
   }
 

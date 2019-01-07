@@ -23,7 +23,7 @@ const Transaction = ({transaction, contracts}) => (
         </CardHeader>
         <CardBody>
           <dl className="row">
-            <Description label="Block" value={<Link to={`/embark/explorer/blocks/${transaction.blockNumber}`}>{transaction.blockNumber}</Link>} />
+            <Description label="Block" value={<Link to={`/explorer/blocks/${transaction.blockNumber}`}>{transaction.blockNumber}</Link>} />
             <Description label="From" value={transaction.from} />
             <Description label="To" value={transaction.to} />
             <Description label="Value" value={`${utils.fromWei(transaction.value)} Ether`}/>

@@ -17,7 +17,7 @@ const Blocks = ({blocks, changePage, currentPage, numberOfPages}) => (
           {blocks.map(block => (
             <div className="explorer-row border-top" key={block.number}>
               <CardTitleIdenticon id={block.hash}>Block&nbsp;
-                <Link to={`/embark/explorer/blocks/${block.number}`}>
+                <Link to={`/explorer/blocks/${block.number}`}>
                   {block.number}
                 </Link>
               </CardTitleIdenticon>

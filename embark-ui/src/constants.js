@@ -7,7 +7,7 @@ export const DEPLOYMENT_PIPELINES = {
   injectedWeb3: 'injectedWeb3',
   embark: 'embark'
 };
-export const DEFAULT_HOST = process.env.NODE_ENV === 'development' ? 'localhost:8000' : window.location.host;
+export const DEFAULT_HOST = 'localhost:55555';
 export const OPERATIONS = {
   MORE: 1,
   LESS: -1
