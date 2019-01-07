@@ -458,6 +458,7 @@ class ContractsManager {
       /*eslint complexity: ["error", 19]*/
       /*eslint max-depth: ["error", 19]*/
       function determineDependencies(callback) {
+        const toChange = {};
         for (const className in self.contracts) {
           const contract = self.contracts[className];
 
@@ -469,9 +470,19 @@ class ContractsManager {
 
           // look in code for dependencies
           if (contract.code) {
-            let libMatches = (contract.code.match(/:(.*?)(?=_)/g) || []);
-            for (let match of libMatches) {
-              self.contractDependencies[className].push(match.substr(1));
+            const regex = /__(\w*?\.[\w]+):(.*?)__/g;
+            let matches;
+            while ((matches = regex.exec(contract.code)) !== null) {
+              // Check if the library is truncated and if it is, change the original contract to use the truncated name
+              Object.keys(self.contracts).find(name => {
+                if (name === matches[2] || toChange[name] || self.contracts[name].filename !== matches[1] || !name.startsWith(matches[2])) {
+                  return false;
+                }
+                toChange[name] = matches[2];
+                return true;
+              });
+
+              self.contractDependencies[className].push(matches[2]);
             }
           }
 
@@ -527,6 +538,19 @@ class ContractsManager {
             self.contractDependencies[className] = Object.keys(o);
           }
         }
+        // Change library contracts that have been truncated by solc
+        Object.keys(toChange).forEach(name => {
+          const newName = toChange[name];
+          self.contracts[newName] = self.contracts[name];
+          self.contracts[newName].className = newName;
+
+          if (self.contractDependencies[name]) {
+            self.contractDependencies[newName] = self.contractDependencies[name];
+          }
+
+          delete self.contracts[name];
+          delete self.contractDependencies[name];
+        });
         callback();
       }
     ], function (err) {
