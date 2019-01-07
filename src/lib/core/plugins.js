@@ -12,6 +12,7 @@ var Plugins = function(options) {
   this.config = options.config;
   this.context = options.context;
   this.env = options.env;
+  this.version = options.version;
 };
 
 Plugins.prototype.loadPlugins = function() {
@@ -94,7 +95,8 @@ Plugins.prototype.loadPlugin = function(pluginName, pluginConfig) {
     config: this.config,
     plugins: this.plugins,
     isInternal: false,
-    context: this.context
+    context: this.context,
+    version: this.version
   });
   pluginWrapper.loadPlugin();
   this.plugins.push(pluginWrapper);
