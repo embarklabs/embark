@@ -31,6 +31,7 @@ var Config = function(options) {
   this.events = options.events;
   this.embarkConfig = {};
   this.context = options.context || [constants.contexts.any];
+  this.version = options.version;
   this.shownNoAccountConfigMsg = false; // flag to ensure "no account config" message is only displayed once to the user
   this.corsParts = [];
   this.providerUrl = null;
@@ -84,7 +85,7 @@ Config.prototype.loadConfigFiles = function(options) {
   this.embarkConfig = fs.readJSONSync(options.embarkConfig);
   this.embarkConfig.plugins = this.embarkConfig.plugins || {};
 
-  this.plugins = new Plugins({plugins: this.embarkConfig.plugins, logger: this.logger, interceptLogs: interceptLogs, events: this.events, config: this, context: this.context, env: this.env});
+  this.plugins = new Plugins({plugins: this.embarkConfig.plugins, logger: this.logger, interceptLogs: interceptLogs, events: this.events, config: this, context: this.context, env: this.env, version: this.version});
   this.plugins.loadPlugins();
 
   this.loadEmbarkConfigFile();
