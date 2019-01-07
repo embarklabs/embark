@@ -61,6 +61,7 @@ class Engine {
     let services = {
       "serviceMonitor": this.serviceMonitor,
       "pipeline": this.pipelineService,
+      "cockpit": this.cockpitService,
       "codeRunner": this.codeRunnerService,
       "codeGenerator": this.codeGeneratorService,
       "compiler": this.setupCompilerAndContractsManagerService,
@@ -172,7 +173,6 @@ class Engine {
       config: this.config,
       forceRegister: options.forceRegister
     });
-    this.registerModule('authenticator');
   }
 
   codeRunnerService(_options) {
@@ -257,8 +257,13 @@ class Engine {
     this.events.request('watcher:start');
   }
 
+  cockpitService() {
+    this.registerModule('authenticator');
+    this.registerModule('api', {plugins: this.plugins});
+  }
+
   webServerService() {
-    this.registerModule('webserver', {plugins: this.plugins});
+    this.registerModule('webserver');
   }
 
   storageService(_options) {

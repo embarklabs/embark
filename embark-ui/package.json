@@ -92,7 +92,6 @@
     "start": "node scripts/start.js",
     "test": "node scripts/test.js"
   },
-  "homepage": "http://localhost:8000/embark",
   "eslintConfig": {
     "extends": "react-app",
     "rules": {

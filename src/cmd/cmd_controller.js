@@ -127,6 +127,7 @@ class EmbarkController {
         engine.startService("storage");
         engine.startService("codeGenerator");
         engine.startService("console");
+        engine.startService("cockpit");
         engine.startService("pluginCommand");
 
         engine.events.on('check:backOnline:Ethereum', function () {
@@ -300,6 +301,7 @@ class EmbarkController {
         engine.startService("storage");
         engine.startService("codeGenerator");
         engine.startService("console");
+        engine.startService("cockpit");
         engine.startService("pluginCommand");
         engine.events.once('check:backOnline:Ethereum', () => callback());
       },

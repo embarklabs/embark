@@ -8,6 +8,15 @@ export interface Events {
   setCommandHandler(name: string, callback: (options: any, cb: () => void) => void): void;
 }
 
+export interface Plugins {
+  getPluginsProperty(pluginType: string, property: string, sub_property?: string): any[];
+  plugins: Plugin[];
+}
+
+export interface Plugin {
+  name: string;
+}
+
 export interface Embark {
   events: Events;
   registerAPICall: any;

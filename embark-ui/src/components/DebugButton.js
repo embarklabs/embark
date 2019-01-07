@@ -7,7 +7,7 @@ import {withRouter} from "react-router-dom";
 
 class DebugButton extends React.Component {
   onClick() {
-    this.props.history.push(`/embark/editor?debuggerTransactionHash=${this.props.transaction.hash}`);
+    this.props.history.push(`/editor?debuggerTransactionHash=${this.props.transaction.hash}`);
     this.props.onClick();
   }
 

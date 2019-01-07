@@ -9,11 +9,11 @@ import TransactionDecoderContainer from '../containers/TransactionDecoderContain
 
 const UtilsLayout = () => (
   <Switch>
-    <Route exact path="/embark/utilities/converter" component={ConverterContainer} />
-    <Route exact path="/embark/utilities/communication" component={CommunicationContainer} />
-    <Route exact path="/embark/utilities/ens" component={EnsContainer} />
-    <Route exact path="/embark/utilities/sign-and-verify" component={SignAndVerifyContainer} />
-    <Route exact path="/embark/utilities/transaction-decoder" component={TransactionDecoderContainer} />
+    <Route exact path="/utilities/converter" component={ConverterContainer} />
+    <Route exact path="/utilities/communication" component={CommunicationContainer} />
+    <Route exact path="/utilities/ens" component={EnsContainer} />
+    <Route exact path="/utilities/sign-and-verify" component={SignAndVerifyContainer} />
+    <Route exact path="/utilities/transaction-decoder" component={TransactionDecoderContainer} />
   </Switch>
 );
 

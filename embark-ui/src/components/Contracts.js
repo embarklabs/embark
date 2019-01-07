@@ -21,7 +21,7 @@ const Contracts = ({contracts, title = "Contracts"}) => (
               return (
                 <div className="explorer-row border-top" key={contract.address}>
                   <CardTitleIdenticon id={contract.className}>
-                    <Link to={`/embark/explorer/contracts/${contract.className}`}>{contract.className}</Link>
+                    <Link to={`/explorer/contracts/${contract.className}`}>{contract.className}</Link>
                   </CardTitleIdenticon>
                   <Row>
                     <Col>

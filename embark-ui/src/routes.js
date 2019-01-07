@@ -12,12 +12,12 @@ import UtilsLayout from './components/UtilsLayout';
 const routes = (
   <React.Fragment>
     <Switch>
-      <Route exact path="/embark/" component={HomeContainer} />
-      <Route exact path="/embark/explorer/overview" component={ExplorerDashboardLayout} />
-      <Route path="/embark/explorer" component={ExplorerLayout} />
-      <Route path="/embark/deployment/" component={DeploymentContainer} />
-      <Route path="/embark/editor" component={EditorContainer} />
-      <Route path="/embark/utilities" component={UtilsLayout} />
+      <Route exact path="/" component={HomeContainer} />
+      <Route exact path="/explorer/overview" component={ExplorerDashboardLayout} />
+      <Route path="/explorer" component={ExplorerLayout} />
+      <Route path="/deployment/" component={DeploymentContainer} />
+      <Route path="/editor" component={EditorContainer} />
+      <Route path="/utilities" component={UtilsLayout} />
       <Route component={NoMatch} />
     </Switch>
   </React.Fragment>

@@ -16,7 +16,7 @@ const Accounts = ({accounts}) => (
           {accounts.map(account => (
             <div className="explorer-row border-top" key={account.address}>
               <CardTitleIdenticon id={account.address}>Account&nbsp;
-                <Link to={`/embark/explorer/accounts/${account.address}`}>{account.address}</Link>
+                <Link to={`/explorer/accounts/${account.address}`}>{account.address}</Link>
               </CardTitleIdenticon>
               <Row>
                 <Col>
