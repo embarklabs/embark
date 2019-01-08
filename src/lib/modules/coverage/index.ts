@@ -18,7 +18,6 @@ export default class Coverage {
 
   constructor(private embark: Embark, options: any) {
     fs.ensureDirSync(coverageContractsPath());
-
     const contractsDirConfig = this.embark.config.embarkConfig.contracts;
     this.contractsDir = Array.isArray(contractsDirConfig) ? contractsDirConfig : [contractsDirConfig];
 
@@ -33,12 +32,13 @@ export default class Coverage {
   }
 
   private getContracts() {
+    const solcVersion = this.embark.config.embarkConfig.versions.solc;
     const filepaths = this.contractsDir.reduce((acc: string[], pattern: string) => (
       acc.concat(globule.find(pattern, { prefixBase: false, srcBase: fs.dappPath() }))
     ), []);
 
     return filepaths.filter((filepath) => fs.statSync(filepath).isFile())
-                    .map((filepath) => new ContractEnhanced(filepath));
+                    .map((filepath) => new ContractEnhanced(filepath, solcVersion));
   }
 
   private instrumentContracts() {
