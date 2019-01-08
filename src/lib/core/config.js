@@ -163,13 +163,15 @@ Config.prototype._updateBlockchainCors = function(){
   corsParts.push(constants.embarkResourceOrigin);
 
   let cors = corsParts.join(',');
-  if(blockchainConfig.rpcCorsDomain === 'auto'){
-    if(cors.length) blockchainConfig.rpcCorsDomain = cors;
-    else blockchainConfig.rpcCorsDomain = '';
+  if (blockchainConfig.rpcCorsDomain === 'auto') {
+    blockchainConfig.rpcCorsDomain = cors;
+  } else if (blockchainConfig.rpcCorsDomain.indexOf('auto') > -1) {
+    blockchainConfig.rpcCorsDomain = blockchainConfig.rpcCorsDomain.replace('auto', cors);
   }
-  if(blockchainConfig.wsOrigins === 'auto'){
-    if(cors.length) blockchainConfig.wsOrigins = cors;
-    else blockchainConfig.wsOrigins = '';
+  if (blockchainConfig.wsOrigins === 'auto') {
+    blockchainConfig.wsOrigins = cors;
+  } else if (blockchainConfig.wsOrigins.indexOf('auto') > -1) {
+    blockchainConfig.wsOrigins = blockchainConfig.wsOrigins.replace('auto', cors);
   }
 };
 
