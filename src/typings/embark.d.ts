@@ -20,6 +20,9 @@ export interface Embark {
       config: {
         contracts: string;
       };
+      versions: {
+        solc: string;
+      }
     };
     reloadConfig(): void;
   };

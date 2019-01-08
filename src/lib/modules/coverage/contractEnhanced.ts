@@ -30,7 +30,7 @@ export class ContractEnhanced {
   private coverageFilepath: string;
   private functionsBodyLocation: {[id: number]: Location} = {};
 
-  constructor(public filepath: string) {
+  constructor(public filepath: string, public solcVersion: string) {
     this.id = nextId();
     this.source = fs.readFileSync(filepath, "utf-8");
     this.originalSource = this.source;

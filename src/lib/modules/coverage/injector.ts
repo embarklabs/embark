@@ -1,10 +1,15 @@
+import * as semver from "semver";
 import { ContractEnhanced } from "./contractEnhanced";
 import { encrypt } from "./eventId";
 import { InjectionPoint } from "./types";
 
+const EMIT_VERSION =  "0.4.21";
+
 export class Injector {
+  private isEmitSupported: boolean;
 
   constructor(private contract: ContractEnhanced) {
+    this.isEmitSupported = semver.gte(this.contract.solcVersion, EMIT_VERSION);
   }
 
   public process(injectionPoint: InjectionPoint) {
@@ -17,7 +22,7 @@ export class Injector {
   }
 
   private statement(injectionPoint: InjectionPoint) {
-    const data = `emit __StatementCoverage(${encrypt(this.contract.id, injectionPoint.id)});`;
+    const data = `${this.isEmitSupported ? "emit" : ""} __StatementCoverage(${encrypt(this.contract.id, injectionPoint.id)});`;
     this.insertAt(injectionPoint.location.start.line - 1, data);
   }
 
