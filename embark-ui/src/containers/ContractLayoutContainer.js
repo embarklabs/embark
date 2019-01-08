@@ -5,6 +5,7 @@ import {withRouter} from 'react-router-dom';
 
 import {contract as contractAction} from '../actions';
 import ContractLayout from '../components/ContractLayout';
+import PageHead from '../components/PageHead';
 import {getContract} from "../reducers/selectors";
 
 class ContractLayoutContainer extends Component {
@@ -14,7 +15,12 @@ class ContractLayoutContainer extends Component {
 
   render() {
     if (this.props.contract){
-      return <ContractLayout contract={this.props.contract}/>;
+      return (
+        <React.Fragment>
+          <PageHead title={this.props.match.params.contractName} description={`Interact with, view details of, and see all transactions for the ${this.props.match.params.contractName} contract`} />
+          <ContractLayout contract={this.props.contract}/>
+        </React.Fragment>
+      );
     } else {
       return <React.Fragment />;
     }

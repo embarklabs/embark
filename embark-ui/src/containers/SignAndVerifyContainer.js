@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component }  from 'react';
 import {connect} from 'react-redux';
 import SignAndVerify from '../components/SignAndVerify';
+import PageHead from '../components/PageHead';
 import {
   accounts as accountsAction,
   signMessage as signMessageAction,
@@ -26,6 +27,7 @@ class SignAndVerifyContainer extends Component {
   render() {
     return (
       <React.Fragment>
+        <PageHead title="Sign & Verify" description="Sign a message with any account configured for Embark. Verify that message signatures were signed by the specified account." />
         {this.props.accounts.length &&
           <SignAndVerify accounts={this.props.accounts}
                          signMessage={this.props.signMessage}

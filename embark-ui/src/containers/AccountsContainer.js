@@ -6,6 +6,7 @@ import {accounts as accountsAction} from '../actions';
 import Accounts from '../components/Accounts';
 import DataWrapper from "../components/DataWrapper";
 import {getAccounts} from "../reducers/selectors";
+import PageHead from "../components/PageHead";
 
 class AccountsContainer extends Component {
   componentDidMount() {
@@ -14,9 +15,12 @@ class AccountsContainer extends Component {
 
   render() {
     return (
-      <DataWrapper shouldRender={this.props.accounts.length > 0} {...this.props} render={({accounts}) => (
-        <Accounts accounts={accounts} />
-      )} />
+      <React.Fragment>
+        <PageHead title="Accounts" enabled={this.props.overridePageHead} description="Summary view of the accounts configured for Embark" />
+        <DataWrapper shouldRender={this.props.accounts.length > 0} {...this.props} render={({accounts}) => (
+          <Accounts accounts={accounts} />
+        )} />
+      </React.Fragment>
     );
   }
 }
@@ -29,7 +33,8 @@ AccountsContainer.propTypes = {
   accounts: PropTypes.arrayOf(PropTypes.object),
   fetchAccounts: PropTypes.func,
   error: PropTypes.string,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  overridePageHead: PropTypes.bool
 };
 
 export default connect(

@@ -12,3 +12,4 @@ export const OPERATIONS = {
   MORE: 1,
   LESS: -1
 };
+export const PAGE_TITLE_PREFIX = "Embark Cockpit";

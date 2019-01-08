@@ -22,6 +22,7 @@ import Processes from '../components/Processes';
 import Console from '../components/Console';
 import {EMBARK_PROCESS_NAME, LOG_LIMIT} from '../constants';
 import ContractsList from '../components/ContractsList';
+import PageHead from '../components/PageHead';
 import {getContracts, getProcesses, getProcessLogs, getServices, getCommandSuggestions} from "../reducers/selectors";
 
 class HomeContainer extends Component {
@@ -51,6 +52,7 @@ class HomeContainer extends Component {
   render() {
     return (
       <React.Fragment>
+        <PageHead title="Dashboard" description="Overview of available services and logs. Interact with Embark using the console. Summary of deployed contracts." />
         <DataWrapper shouldRender={this.props.services.length > 0 } {...this.props} render={({services}) => (
           <Processes processes={services} />
         )} />

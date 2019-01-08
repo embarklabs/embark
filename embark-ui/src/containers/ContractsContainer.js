@@ -5,6 +5,7 @@ import {contracts as contractsAction} from "../actions";
 
 import Contracts from '../components/Contracts';
 import DataWrapper from "../components/DataWrapper";
+import PageHead from "../components/PageHead";
 import {getContracts} from "../reducers/selectors";
 
 class ContractsContainer extends Component {
@@ -15,6 +16,7 @@ class ContractsContainer extends Component {
   render() {
     return (
       <React.Fragment>
+        <PageHead title="Contracts" description="Summary of all deployed contracts" />
         <DataWrapper shouldRender={this.props.contracts.length > 0} {...this.props} render={({contracts}) => (
             <Contracts contracts={contracts} />
         )} />
