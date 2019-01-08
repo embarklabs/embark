@@ -209,32 +209,46 @@ class ContractDeployer {
 
     async.waterfall([
       function doLinking(next) {
+
+        if (!contract.linkReferences || !Object.keys(contract.linkReferences).length) {
+          return next();
+        }
         let contractCode = contract.code;
-        self.events.request('contracts:list', (_err, contracts) => {
-          for (let contractObj of contracts) {
-            let filename = contractObj.filename;
-            let deployedAddress = contractObj.deployedAddress;
-            if (deployedAddress) {
-              deployedAddress = deployedAddress.substr(2);
-            }
-            let linkReference = '__' + filename + ":" + contractObj.className;
-            if (contractCode.indexOf(linkReference.substr(0, 38)) < 0) { // substr to simulate the cut that solc does
-              continue;
-            }
-            if (linkReference.length > 40) {
-              return next(new Error(__("{{linkReference}} is too long, try reducing the path of the contract ({{filename}}) and/or its name {{contractName}}", {linkReference: linkReference, filename: filename, contractName: contractObj.className})));
-            }
-            let toReplace = linkReference + "_".repeat(40 - linkReference.length);
-            if (deployedAddress === undefined) {
-              let libraryName = contractObj.className;
-              return next(new Error(__("{{contractName}} needs {{libraryName}} but an address was not found, did you deploy it or configured an address?", {contractName: contract.className, libraryName: libraryName})));
-            }
-            contractCode = contractCode.replace(new RegExp(toReplace, "g"), deployedAddress);
-          }
-          // saving code changes back to the contract object
+        let offset = 0;
+
+        async.eachLimit(contract.linkReferences, 1, (fileReference, eachCb1) => {
+          async.eachOfLimit(fileReference, 1, (references, libName, eachCb2) => {
+            self.events.request("contracts:contract", libName, (libContract) => {
+              async.eachLimit(references, 1, (reference, eachCb3) => {
+                if (!libContract) {
+                  return eachCb3(new Error(__('{{contractName}} has a link to the library {{libraryName}}, but it was not found. Is it in your contract folder?'), {
+                    contractName: contract.className,
+                    libraryName: libName
+                  }));
+                }
+
+                let libAddress = libContract.deployedAddress;
+                if (!libAddress) {
+                  return eachCb3(new Error(__("{{contractName}} needs {{libraryName}} but an address was not found, did you deploy it or configured an address?", {
+                    contractName: contract.className,
+                    libraryName: libName
+                  })));
+                }
+
+                libAddress = libAddress.substr(2).toLowerCase();
+
+                // Multiplying by two because the original pos and length are in bytes, but we have an hex string
+                contractCode = contractCode.substring(0, (reference.start * 2) + offset) + libAddress + contractCode.substring((reference.start * 2) + offset + (reference.length * 2));
+                // Calculating an offset in case the length is at some point different than the address length
+                offset += libAddress.length - (reference.length * 2);
+
+                eachCb3();
+              }, eachCb2);
+            });
+          }, eachCb1);
+        }, (err) => {
           contract.code = contractCode;
-          self.events.request('contracts:setBytecode', contract.className, contractCode);
-          next();
+          next(err);
         });
       },
       function applyBeforeDeploy(next) {

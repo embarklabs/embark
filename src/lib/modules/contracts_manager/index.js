@@ -332,6 +332,7 @@ class ContractsManager {
           contract.code = compiledContract.code;
           contract.runtimeBytecode = compiledContract.runtimeBytecode;
           contract.realRuntimeBytecode = (compiledContract.realRuntimeBytecode || compiledContract.runtimeBytecode);
+          contract.linkReferences = compiledContract.linkReferences;
           contract.swarmHash = compiledContract.swarmHash;
           contract.gasEstimates = compiledContract.gasEstimates;
           contract.functionHashes = compiledContract.functionHashes;
@@ -467,12 +468,13 @@ class ContractsManager {
             self.contractDependencies[className] = self.contractDependencies[className].concat(contract.deps);
           }
 
-          // look in code for dependencies
-          if (contract.code) {
-            let libMatches = (contract.code.match(/:(.*?)(?=_)/g) || []);
-            for (let match of libMatches) {
-              self.contractDependencies[className].push(match.substr(1));
-            }
+          // look in linkReferences for dependencies
+          if (contract.linkReferences) {
+            Object.values(contract.linkReferences).forEach(fileReference => {
+              Object.keys(fileReference).forEach(libName => {
+                self.contractDependencies[className].push(libName);
+              });
+            });
           }
 
           // look in arguments for dependencies
