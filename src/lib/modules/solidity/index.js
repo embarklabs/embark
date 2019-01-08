@@ -136,6 +136,7 @@ class Solidity {
 
             compiled_object[className] = {};
             compiled_object[className].code = contract.evm.bytecode.object;
+            compiled_object[className].linkReferences = contract.evm.bytecode.linkReferences;
             compiled_object[className].runtimeBytecode = contract.evm.deployedBytecode.object;
             compiled_object[className].realRuntimeBytecode = contract.evm.deployedBytecode.object.slice(0, -68);
             compiled_object[className].swarmHash = contract.evm.deployedBytecode.object.slice(-68).slice(0, 64);
