@@ -6,11 +6,21 @@ const noop = function() {};
 class RunCode {
   constructor({logger}) {
     this.logger = logger;
+    const customRequire = (mod) => {
+      return require(customRequire.resolve(mod));
+    };
+    customRequire.resolve = (mod) => {
+      return require.resolve(
+        mod,
+        {paths: [fs.dappPath('node_modules'), fs.embarkPath('node_modules')]}
+      );
+    };
     const newGlobal = Object.create(global);
     newGlobal.fs = fs;
     this.context = Object.assign({}, {
-      global: newGlobal, console, exports, require, module, __filename, __dirname, process,
-      setTimeout, setInterval, clearTimeout, clearInterval
+      global: newGlobal, console, exports, require: customRequire, module,
+      __filename, __dirname, process, setTimeout, setInterval, clearTimeout,
+      clearInterval
     });
   }
 
