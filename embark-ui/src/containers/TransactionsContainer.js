@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import {transactions as transactionsAction, initBlockHeader, stopBlockHeader, contracts as contractsAction} from '../actions';
 import Transactions from '../components/Transactions';
 import DataWrapper from "../components/DataWrapper";
+import PageHead from "../components/PageHead";
 import {getTransactions, getContracts} from "../reducers/selectors";
 
 const MAX_TXS = 10; // TODO use same constant as API
@@ -59,6 +60,7 @@ class TransactionsContainer extends Component {
     }
     return (
       <React.Fragment>
+        <PageHead title="Transactions" enabled={this.props.overridePageHead} description="Summary view of all transactions occuring on the node configured for Embark" />
         <DataWrapper shouldRender={this.currentTxs.length > 0} {...this.props} render={() => (
           <Transactions transactions={this.currentTxs} 
                         contracts={this.props.contracts}
@@ -88,7 +90,8 @@ TransactionsContainer.propTypes = {
   initBlockHeader: PropTypes.func,
   stopBlockHeader: PropTypes.func,
   error: PropTypes.string,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  overridePageHead: PropTypes.bool
 };
 
 export default connect(

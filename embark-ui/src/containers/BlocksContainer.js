@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import {blocks as blocksAction, initBlockHeader, stopBlockHeader} from '../actions';
 import Blocks from '../components/Blocks';
 import DataWrapper from "../components/DataWrapper";
+import PageHead from "../components/PageHead";
 import {getBlocks} from "../reducers/selectors";
 
 const MAX_BLOCKS = 10; // TODO use same constant as API
@@ -58,6 +59,7 @@ class BlocksContainer extends Component {
     }
     return (
       <React.Fragment>
+        <PageHead title="Blocks" enabled={this.props.overridePageHead} description="Summary of the most recent blocks" />
         <DataWrapper shouldRender={this.currentBlocks.length > 0} {...this.props} render={() => (
           <Blocks blocks={this.currentBlocks} numberOfPages={this.getNumberOfPages()}
                   changePage={(newPage) => this.changePage(newPage)}
@@ -78,7 +80,8 @@ BlocksContainer.propTypes = {
   initBlockHeader: PropTypes.func,
   stopBlockHeader: PropTypes.func,
   error: PropTypes.string,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  overridePageHead: PropTypes.bool
 };
 
 export default connect(

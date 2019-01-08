@@ -20,6 +20,7 @@ import {getCurrentFile, getContracts, getTransaction} from '../reducers/selector
 import {getDebuggerTransactionHash} from '../utils/utils';
 import {OPERATIONS} from '../constants';
 import { TextEditorToolbarTabs } from '../components/TextEditorToolbar';
+import PageHead from '../components/PageHead';
 
 import './EditorContainer.css';
 
@@ -202,24 +203,27 @@ class EditorContainer extends React.Component {
 
   render() {
     return (
-      <Row noGutters
-           className={classnames('h-100', 'editor--grid', {'aside-opened': this.state.currentAsideTab.label})}>
-        <Col xs={12}>
-          <TextEditorToolbarContainer toggleAsideTab={(newTab) => this.toggleAsideTab(newTab)}
-                                      isContract={this.isContract()}
-                                      currentFile={this.props.currentFile}
-                                      activeTab={this.state.currentAsideTab}/>
-        </Col>
+      <React.Fragment>
+        <PageHead title="Editor" description="Create, read, edit, and delete your dApp's files. Interact and debug your dApp's contracts. Live preview your dApp when changes are saved." />
+        <Row noGutters
+            className={classnames('h-100', 'editor--grid', {'aside-opened': this.state.currentAsideTab.label})}>
+          <Col xs={12}>
+            <TextEditorToolbarContainer toggleAsideTab={(newTab) => this.toggleAsideTab(newTab)}
+                                        isContract={this.isContract()}
+                                        currentFile={this.props.currentFile}
+                                        activeTab={this.state.currentAsideTab}/>
+          </Col>
 
-        <Col className="border-right">
-          <FileExplorerContainer showHiddenFiles={this.state.showHiddenFiles}
-                                 toggleShowHiddenFiles={() => this.toggleShowHiddenFiles()}/>
-        </Col>
+          <Col className="border-right">
+            <FileExplorerContainer showHiddenFiles={this.state.showHiddenFiles}
+                                  toggleShowHiddenFiles={() => this.toggleShowHiddenFiles()}/>
+          </Col>
 
-        {this.renderTextEditor()}
+          {this.renderTextEditor()}
 
-        {this.state.currentAsideTab.label && this.renderAside()}
-      </Row>
+          {this.state.currentAsideTab.label && this.renderAside()}
+        </Row>
+      </React.Fragment>
     );
   }
 }

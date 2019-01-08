@@ -4,6 +4,7 @@ import connect from "react-redux/es/connect/connect";
 import { Alert } from 'reactstrap';
 import {messageSend, messageListen, versions} from "../actions";
 import Communication from "../components/Communication";
+import PageHead from "../components/PageHead";
 import {getMessages, getMessageChannels, isOldWeb3, isWeb3Enabled} from "../reducers/selectors";
 
 class CommunicationContainer extends Component {
@@ -32,10 +33,15 @@ class CommunicationContainer extends Component {
   }
 
   showCommunication() {
-    return <Communication listenToMessages={(channel) => this.listenToChannel(channel)}
-                          sendMessage={(channel, message) => this.sendMessage(channel, message)}
-                          channels={this.props.messages}
-                          subscriptions={this.props.messageChannels}/>;
+    return (
+      <React.Fragment>
+        <PageHead title="Communication" description="Interact with the decentralised communication protocols configured for Embark (ie Whisper)" />
+        <Communication listenToMessages={(channel) => this.listenToChannel(channel)}
+                       sendMessage={(channel, message) => this.sendMessage(channel, message)}
+                       channels={this.props.messages}
+                       subscriptions={this.props.messageChannels}/>
+      </React.Fragment>
+    );
   }
 
   render() {

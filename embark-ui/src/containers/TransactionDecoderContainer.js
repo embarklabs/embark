@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import qs from 'qs';
 import {withRouter} from 'react-router-dom';
 import TransactionDecoder from '../components/TransactionDecoder';
+import PageHead from '../components/PageHead';
 import { Row, Col } from 'reactstrap';
 import { transaction as transactionAction } from '../actions';
 import {getTransaction} from "../reducers/selectors";
@@ -33,12 +34,15 @@ class TransactionDecoderContainer extends Component {
 
   render() {
     return (
-      <Row>
-        <Col>
-          <TransactionDecoder transaction={this.props.transaction}
-                              transactionHash={getQueryParams(this.props).hash}/>
-        </Col>
-      </Row>
+      <React.Fragment>
+        <PageHead title="Transaction Decoder" description="Decode values encoded in a transaction" />
+        <Row>
+          <Col>
+            <TransactionDecoder transaction={this.props.transaction}
+                                transactionHash={getQueryParams(this.props).hash}/>
+          </Col>
+        </Row>
+      </React.Fragment>
     );
   }
 }

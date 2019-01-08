@@ -7,6 +7,7 @@ import Login from '../components/Login';
 import Layout from "../components/Layout";
 import {DEFAULT_HOST} from '../constants';
 import {getQueryToken, stripQueryToken} from '../utils/utils';
+import {Helmet} from "react-helmet";
 
 import {
   authenticate, fetchCredentials, logout,
@@ -18,7 +19,7 @@ import {
   changeTheme, fetchTheme
 } from '../actions';
 
-import {LIGHT_THEME, DARK_THEME} from '../constants';
+import {LIGHT_THEME, DARK_THEME, PAGE_TITLE_PREFIX} from '../constants';
 
 import {
   getCredentials, getAuthenticationError, getProcesses, getTheme
@@ -118,6 +119,11 @@ class AppContainer extends Component {
   render() {
     return (
       <div className={(this.props.theme) + "-theme"}>
+        <Helmet>
+          <meta charSet="utf-8" />
+          <title>{PAGE_TITLE_PREFIX}</title>
+          <meta name="description" content="Interact with a running Embark instance using the Embark Cockpit" />
+        </Helmet>
         {this.renderBody()}
       </div>
     );

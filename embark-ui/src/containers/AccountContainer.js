@@ -7,6 +7,7 @@ import {account as accountAction} from '../actions';
 import Account from '../components/Account';
 import DataWrapper from "../components/DataWrapper";
 import Transactions from '../components/Transactions';
+import PageHead from '../components/PageHead';
 import {getAccount, getTransactionsByAccount} from "../reducers/selectors";
 
 class AccountContainer extends Component {
@@ -16,12 +17,15 @@ class AccountContainer extends Component {
 
   render() {
     return (
-      <DataWrapper shouldRender={this.props.account !== undefined } {...this.props} render={({account, transactions}) => (
-        <React.Fragment>
-          <Account account={account} />
-          <Transactions transactions={transactions || []} />
-        </React.Fragment>
-      )} />
+      <React.Fragment>
+        <PageHead title={`Account ${this.props.match.params.address}`} description={`Details of address ${this.props.match.params.address} and a summary view of it's recent transactions`} />
+        <DataWrapper shouldRender={this.props.account !== undefined } {...this.props} render={({account, transactions}) => (
+          <React.Fragment>
+            <Account account={account} />
+            <Transactions transactions={transactions || []} />
+          </React.Fragment>
+        )} />
+      </React.Fragment>
     );
   }
 }

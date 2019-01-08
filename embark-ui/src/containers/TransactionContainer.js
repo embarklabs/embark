@@ -6,6 +6,7 @@ import {withRouter} from 'react-router-dom';
 import {transaction as transactionAction, contracts as contractsAction} from '../actions';
 import Transaction from '../components/Transaction';
 import DataWrapper from "../components/DataWrapper";
+import PageHead from "../components/PageHead";
 import {getTransaction, getContracts} from "../reducers/selectors";
 
 class TransactionContainer extends Component {
@@ -16,9 +17,12 @@ class TransactionContainer extends Component {
 
   render() {
     return (
-      <DataWrapper shouldRender={this.props.transaction !== undefined } {...this.props} render={({transaction}) => (
-        <Transaction contracts={this.props.contracts} transaction={transaction} />
-      )} />
+      <React.Fragment>
+        <PageHead title={`Transaction ${this.props.match.params.hash}`} description={`View details of transaction ${this.props.match.params.hash}`} />
+        <DataWrapper shouldRender={this.props.transaction !== undefined } {...this.props} render={({transaction}) => (
+          <Transaction contracts={this.props.contracts} transaction={transaction} />
+        )} />
+      </React.Fragment>
     );
   }
 }

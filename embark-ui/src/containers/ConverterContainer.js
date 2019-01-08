@@ -5,11 +5,16 @@ import PropTypes from 'prop-types';
 import {updateBaseEther} from '../actions';
 import {getBaseEther} from "../reducers/selectors";
 import Converter from '../components/Converter';
+import PageHead from '../components/PageHead';
 
 class ConverterContainer extends React.Component {
   render() {
-    return <Converter baseEther={this.props.baseEther}
-                      updateBaseEther={this.props.updateBaseEther} />;
+    return (
+      <React.Fragment>
+        <PageHead title="Converter" description="A tool that converts a number between the different ether units" />
+        <Converter baseEther={this.props.baseEther} updateBaseEther={this.props.updateBaseEther} />
+      </React.Fragment>
+    );
   }
 }
 
