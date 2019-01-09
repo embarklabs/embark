@@ -4,6 +4,8 @@ const constants = require('../../constants');
 
 let ipfsProcess; // eslint-disable-line no-unused-vars
 
+const IPFS_DEFAULT_CONFIG_ERROR = "API.HTTPHeaders key has no attributes";
+
 class IPFSProcess extends ProcessWrapper {
   constructor(options) {
     super();
@@ -64,12 +66,18 @@ class IPFSProcess extends ProcessWrapper {
 
         // check cors config before updating if needed
         self.getCorsConfig((err, config) => {
-          if(err){
+          if(err && err.indexOf(IPFS_DEFAULT_CONFIG_ERROR) === -1){
             return console.error('Error getting IPFS CORS config: ', err);
           }
-          let corsConfig = new Set(JSON.parse(config));
-          // test to ensure we have all cors needed
-          const needsUpdate = !self.cors.every(address => corsConfig.has(address));
+          let needsUpdate = false;
+          try {
+            let corsConfig = new Set(JSON.parse(config));
+            // test to ensure we have all cors needed
+            needsUpdate = !self.cors.every(address => corsConfig.has(address));
+          }
+          catch (_e) {
+            needsUpdate = true;
+          }
           if(needsUpdate){
             // update IPFS cors config
             return self.updateCorsConfig(err => {
