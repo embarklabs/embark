@@ -22,7 +22,7 @@ export default class Server {
   private expressInstance: expressWs.Instance;
   private server?: http.Server;
 
-  constructor(private embark: Embark, private port: number, private plugins: Plugins) {
+  constructor(private embark: Embark, private port: number, private hostname: string, private plugins: Plugins) {
     this.expressInstance = this.initApp();
   }
 
@@ -41,7 +41,7 @@ export default class Server {
         return reject(new Error(message));
       }
 
-      this.server = this.expressInstance.app.listen(this.port, () => {
+      this.server = this.expressInstance.app.listen(this.port, this.hostname, () => {
         resolve();
       });
     });
