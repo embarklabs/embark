@@ -165,13 +165,17 @@ Config.prototype._updateBlockchainCors = function(){
   let cors = corsParts.join(',');
   if (blockchainConfig.rpcCorsDomain === 'auto') {
     blockchainConfig.rpcCorsDomain = cors;
-  } else if (blockchainConfig.rpcCorsDomain.indexOf('auto') > -1) {
-    blockchainConfig.rpcCorsDomain = blockchainConfig.rpcCorsDomain.replace('auto', cors);
+  } else if (typeof blockchainConfig.rpcCorsDomain === 'object') {
+    let tempCors = blockchainConfig.rpcCorsDomain.auto ? corsParts : [];
+    tempCors = tempCors.concat(blockchainConfig.rpcCorsDomain.additionalCors || []);
+    blockchainConfig.rpcCorsDomain = tempCors.join(',');
   }
   if (blockchainConfig.wsOrigins === 'auto') {
     blockchainConfig.wsOrigins = cors;
-  } else if (blockchainConfig.wsOrigins.indexOf('auto') > -1) {
-    blockchainConfig.wsOrigins = blockchainConfig.wsOrigins.replace('auto', cors);
+  } else if (typeof blockchainConfig.wsOrigins === 'object') {
+    let tempCors = blockchainConfig.wsOrigins.auto ? corsParts : [];
+    tempCors = tempCors.concat(blockchainConfig.wsOrigins.additionalCors || []);
+    blockchainConfig.wsOrigins = tempCors.join(',');
   }
 };
 
