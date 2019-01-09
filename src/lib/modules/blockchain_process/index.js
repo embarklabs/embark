@@ -17,6 +17,19 @@ class BlockchainModule {
     this.client = options.client;
 
     this.registerBlockchainProcess();
+
+    embark.registerConsoleCommand({
+      matches: (cmd) => {
+        const [cmdName] = cmd.split(' ');
+        return cmdName === 'addBlockchainCors' || cmdName === 'addCors';
+      },
+      usage: 'addBlockchainCors/addCors <url>',
+      description: 'Adds a CORS domain/origin to the blockchain configuration',
+      process: (cmd, callback) => {
+        const [_cmdName, url] = cmd.split(' ');
+        this.events.request('config:cors:add', url, callback);
+      }
+    });
   }
 
   registerBlockchainProcess() {
