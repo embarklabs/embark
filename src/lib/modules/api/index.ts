@@ -1,11 +1,12 @@
-import { Embark } from "../../../typings/embark";
-import {canonicalHost} from "../../utils/host.js";
+import {Embark} from "../../../typings/embark";
+import {dockerHostSwap} from "../../utils/host.js";
 import {findNextPort} from "../../utils/network";
 import Server from "./server";
 
 const utils = require("../../utils/utils.js");
 
 const DEFAULT_PORT = 55555;
+const DEFAULT_HOSTNAME = "localhost";
 
 export default class Api {
   private port!: number;
@@ -16,9 +17,9 @@ export default class Api {
     this.embark.events.emit("status", __("Starting API"));
     findNextPort(DEFAULT_PORT).then((port) => {
       this.port = port;
-      this.apiUrl = "http://" + canonicalHost("127.0.0.1") + ":" + this.port;
+      this.apiUrl = `http://${DEFAULT_HOSTNAME}:${this.port}`;
 
-      this.api = new Server(this.embark, this.port, options.plugins);
+      this.api = new Server(this.embark, this.port, dockerHostSwap(DEFAULT_HOSTNAME), options.plugins);
 
       this.listenToCommands();
       this.registerConsoleCommands();
