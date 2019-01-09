@@ -1,6 +1,7 @@
 import bodyParser from "body-parser";
 import cors from "cors";
 import express, { NextFunction, Request, Response } from "express";
+import proxy from "express-http-proxy";
 import expressWs from "express-ws";
 import helmet from "helmet";
 import * as http from "http";
@@ -96,7 +97,13 @@ export default class Server {
 
     this.embark.events.on("plugins:register:api", (callDescription: CallDescription) => this.registerCallDescription(instance, callDescription));
 
-    const ui = express.static(path.join(__dirname, "../../../../embark-ui/build"));
+    let ui: express.RequestHandler;
+    if (process.env.DEVELOPMENT) {
+      ui = proxy("http://localhost:3000");
+    } else {
+      ui = express.static(path.join(__dirname, "../../../../embark-ui/build"));
+    }
+
     instance.app.use("/", ui);
     instance.app.use("/*", ui);
 
