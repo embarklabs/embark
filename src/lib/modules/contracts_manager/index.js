@@ -566,7 +566,9 @@ class ContractsManager {
 
   getContractByTxHash(txHash, cb) {
     this.events.request("blockchain:getTransaction", txHash, (err, tx) => {
-      if (err) return cb(err);
+      if (err) return cb(err.message);
+      if (!tx) return cb("tx hash not found");
+
       for (let contractName in this.contracts) {
         let contract = this.contracts[contractName];
         if (tx.to === contract.deployedAddress) {
