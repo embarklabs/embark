@@ -227,7 +227,7 @@ class TransactionDebugger {
     }
 
     this.embark.registerConsoleCommand({
-      description: __("Debug the last transaction or the transaction specified by a hash"),
+      description: __("Start a debugging session using, the last transaction or the transaction specified by hash"),
       matches: (cmd: string) => {
         const [cmdName] = cmd.split(" ");
         return cmdName === "debug";
@@ -253,7 +253,22 @@ class TransactionDebugger {
     });
 
     this.embark.registerConsoleCommand({
-      description: __("During a debug, step over forward"),
+      description: __("Stops the active debugging session."),
+      matches: ["sd", "stop debugger"],
+      process: (cmd: string, callback: (err?: string|object, output?: string) => void) => {
+        if (!this.cmdDebugger) {
+          this.embark.logger.warn(NO_DEBUG_SESSION);
+          return callback();
+        }
+        this.cmdDebugger = null;
+        this.embark.logger.info(__("The debug session has been stopped"));
+        this.cmdDebugger.unload();
+      },
+      usage: "    stop debugger/sd",
+    });
+
+    this.embark.registerConsoleCommand({
+      description: __("Step over forward on the current debugging session"),
       matches: ["next", "n"],
       process: (cmd: string, callback: (err?: string|object, output?: string) => void) => {
         if (!this.cmdDebugger) {
@@ -275,7 +290,7 @@ class TransactionDebugger {
     });
 
     this.embark.registerConsoleCommand({
-      description: __("During a debug, step over back"),
+      description: __("Step over back on the current debugging session"),
       matches: ["previous", "p"],
       process: (cmd: string, callback: (err?: string|object, output?: string) => void) => {
         if (!this.cmdDebugger) {
@@ -296,7 +311,7 @@ class TransactionDebugger {
     });
 
     this.embark.registerConsoleCommand({
-      description: __("During a debug, display local variables"),
+      description: __("Display local variables of the current debugging session"),
       matches: ["var local", "v l", "vl"],
       process: (cmd: string, callback: (err?: string|object, output?: string) => void) => {
         if (!this.cmdDebugger) {
@@ -310,7 +325,7 @@ class TransactionDebugger {
     });
 
     this.embark.registerConsoleCommand({
-      description: __("During a debug, display global variables"),
+      description: __("Display global variables of the current debugging session"),
       matches: ["var global", "v g", "vg"],
       process: (cmd: string, callback: (err?: string|object, output?: string) => void) => {
         if (!this.cmdDebugger) {
@@ -324,7 +339,7 @@ class TransactionDebugger {
     });
 
     this.embark.registerConsoleCommand({
-      description: __("During a debug, display all variables"),
+      description: __("Display all variables of the current debugging session"),
       matches: ["var all", "v a", "va"],
       process: (cmd: string, callback: (err?: string|object, output?: string) => void) => {
         if (!this.cmdDebugger) {
@@ -382,9 +397,10 @@ class TransactionDebugger {
       actions.push("(n)ext");
     }
 
-    actions.push("(v)ar (l)local");
-    actions.push("(v)ar (g)lobal");
-    actions.push("(v)ar (a)ll");
+    actions.push("(vl) var local");
+    actions.push("(vg) var global");
+    actions.push("(va) var all");
+    actions.push("(sd) stop debugger");
 
     if (actions.length === 1) { return; }
 
@@ -425,7 +441,6 @@ class TransactionDebugger {
       if (cb) { cb(); }
     });
   }
-
 }
 
 module.exports = TransactionDebugger;
