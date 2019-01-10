@@ -5,10 +5,11 @@ const keccak = require('keccakjs');
 const ERROR_OBJ = {error: __('Wrong authentication token. Get your token from the Embark console by typing `token`')};
 
 class Authenticator {
-  constructor(embark, _options) {
+  constructor(embark, options) {
     this.embark = embark;
     this.logger = embark.logger;
     this.events = embark.events;
+    this.singleUseToken = options.singleUseAuthToken;
 
     this.authToken = uuid();
     this.emittedTokens = {};
@@ -58,12 +59,17 @@ class Authenticator {
           return res.send(ERROR_OBJ);
         }
 
-        // Generate another authentication token.
-        this.authToken = uuid();
-        this.events.request('authenticator:displayUrl', false);
+        let emittedToken;
+        if (this.singleUseToken) {
+          // Generate another authentication token.
+          this.authToken = uuid();
+          this.events.request('authenticator:displayUrl', false);
+          emittedToken = uuid();
+        } else {
+          emittedToken = this.authToken;
+        }
 
         // Register token for this connection, and send it through.
-        const emittedToken = uuid();
         const remoteAddress = this.getRemoteAddress(req);
         this.emittedTokens[remoteAddress] = emittedToken;
         res.send({token: emittedToken});

@@ -18,6 +18,7 @@ class Engine {
     this.useDashboard = options.useDashboard;
     this.webServerConfig = options.webServerConfig;
     this.webpackConfigName = options.webpackConfigName;
+    this.singleUseAuthToken = options.singleUseAuthToken;
     this.ipcRole = options.ipcRole || 'client';
   }
 
@@ -258,7 +259,7 @@ class Engine {
   }
 
   cockpitService() {
-    this.registerModule('authenticator');
+    this.registerModule('authenticator', {singleUseAuthToken: this.singleUseAuthToken});
     this.registerModule('api', {plugins: this.plugins});
   }
 

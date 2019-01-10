@@ -94,6 +94,7 @@ class EmbarkController {
       useDashboard: options.useDashboard,
       webServerConfig: webServerConfig,
       webpackConfigName: options.webpackConfigName,
+      singleUseAuthToken: options.singleUseAuthToken,
       ipcRole: 'server'
     });
 
@@ -273,6 +274,7 @@ class EmbarkController {
       logFile: options.logFile,
       logLevel: options.logLevel,
       context: this.context,
+      singleUseAuthToken: options.singleUseAuthToken,
       webpackConfigName: options.webpackConfigName
     });
 
