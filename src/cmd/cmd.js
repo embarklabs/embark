@@ -142,6 +142,7 @@ class Cmd {
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'debug')
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('--pipeline [pipeline]', __('webpack config to use (default: development)'))
+      .option('--no-single-use-auth-token', __('disable the single use of token in cockpit'))
       .description(__('run dapp (default: %s)', 'development'))
       .action(function(env, options) {
         i18n.setOrDetectLocale(options.locale);
@@ -156,7 +157,8 @@ class Cmd {
           logFile: options.logfile,
           logLevel: options.loglevel,
           webpackConfigName: options.pipeline || 'development',
-          openBrowser: !options.nobrowser ? null : false
+          openBrowser: !options.nobrowser ? null : false,
+          singleUseAuthToken: options.singleUseAuthToken
         });
       });
   }
@@ -169,6 +171,7 @@ class Cmd {
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'debug')
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('--pipeline [pipeline]', __('webpack config to use (default: development)'))
+      .option('--no-single-use-auth-token', __('disable the single use of token in cockpit'))
       .description(__('Start the Embark console'))
       .action(function(env, options) {
         i18n.setOrDetectLocale(options.locale);
@@ -178,6 +181,7 @@ class Cmd {
           locale: options.locale,
           logFile: options.logfile,
           logLevel: options.loglevel,
+          singleUseAuthToken: options.singleUseAuthToken,
           webpackConfigName: options.pipeline || 'development'
         });
       });
