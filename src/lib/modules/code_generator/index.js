@@ -120,7 +120,7 @@ class CodeGenerator {
         web3Load = Templates.define_web3_simple({url: connection, done: 'done();'});
       } else {
         let connectionList = "[" + this.contractsConfig.dappConnection.map((x) => '"' + x + '"').join(',') + "]";
-        let isDev = (self.env === 'development');
+        let isDev = self.blockchainConfig.isDev;
         web3Load = Templates.web3_connector({
           autoEnable: this.contractsConfig.dappAutoEnable,
           connectionList: connectionList,
