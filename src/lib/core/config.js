@@ -15,6 +15,7 @@ import * as utilsContractsConfig from "../utils/contractsConfig";
 const DEFAULT_CONFIG_PATH = 'config/';
 
 var Config = function(options) {
+  const self = this;
   this.env = options.env || 'default';
   this.blockchainConfig = {};
   this.contractsConfig  = {};
@@ -34,75 +35,37 @@ var Config = function(options) {
   this.shownNoAccountConfigMsg = false; // flag to ensure "no account config" message is only displayed once to the user
   this.corsParts = [];
   this.providerUrl = null;
-
-  this.registerEvents();
-};
-
-Config.prototype.registerEvents = function() {
-  this.events.setCommandHandler("config:cors:add", (url, cb = () => {}) => {
+  this.events.setCommandHandler("config:cors:add", (url) => {
     this.corsParts.push(url);
     this._updateBlockchainCors();
-
-    let configFilePath = this._getFileOrOject(this.configDir, 'blockchain', 'blockchain');
-    const completeConfig = this._mergeConfig(configFilePath, {}, null, true);
-    const envConfig = completeConfig[this.env];
-
-    if (!envConfig.rpcCorsDomain || envConfig.rpcCorsDomain === 'auto') {
-      envConfig.rpcCorsDomain = {auto: true, additionalCors: []};
-    } else if (typeof envConfig.rpcCorsDomain === 'string') {
-      envConfig.rpcCorsDomain = {auto: false, additionalCors: envConfig.rpcCorsDomain.join(',')};
-    } else if (!envConfig.rpcCorsDomain.additionalCors) {
-      envConfig.rpcCorsDomain.additionalCors = [];
-    }
-    if (!envConfig.wsOrigins || envConfig.wsOrigins === 'auto') {
-      envConfig.wsOrigins = {auto: true, additionalCors: []};
-    } else if (typeof envConfig.wsOrigins === 'string') {
-      envConfig.wsOrigins = {auto: false, additionalCors: envConfig.wsOrigins.join(',')};
-    } else if (!envConfig.wsOrigins.additionalCors) {
-      envConfig.wsOrigins.additionalCors = [];
-    }
-
-    envConfig.rpcCorsDomain.additionalCors.push(url);
-    envConfig.wsOrigins.additionalCors.push(url);
-
-    let configString = JSON.stringify(completeConfig, null, 2);
-    if (fs.existsSync(configFilePath + '.js')) {
-      configFilePath += '.js';
-      // TODO Find a better way, because if the users have more than the config, this doesn't work
-      configString = 'module.exports = ' + configString;
-    } else {
-      configFilePath += '.json';
-    }
-
-    fs.writeFile(configFilePath, configString, cb);
-    this.logger.info(__('Added "%s" to the CORS. You will need to restart your blockchain node or Embark for the changes to take effect', url));
   });
 
-  this.events.setCommandHandler("config:contractsConfig", (cb) => {
-    cb(this.contractsConfig);
+
+  self.events.setCommandHandler("config:contractsConfig", (cb) => {
+    cb(self.contractsConfig);
   });
 
-  this.events.setCommandHandler("config:contractsConfig:set", (config, cb) => {
-    this.contractsConfig = config;
+  self.events.setCommandHandler("config:contractsConfig:set", (config, cb) => {
+    self.contractsConfig = config;
     cb();
   });
 
-  this.events.setCommandHandler("config:contractsFiles", (cb) => {
-    cb(this.contractsFiles);
+  self.events.setCommandHandler("config:contractsFiles", (cb) => {
+    cb(self.contractsFiles);
   });
 
   // TODO: refactor this so reading the file can be done with a normal resolver or something that takes advantage of the plugin api
-  this.events.setCommandHandler("config:contractsFiles:add", (filename, resolver) => {
+  self.events.setCommandHandler("config:contractsFiles:add", (filename, resolver) => {
     resolver = resolver || function(callback) {
       callback(fs.readFileSync(filename).toString());
     };
-    this.contractsFiles.push(new File({filename, type: File.types.custom, path: filename, resolver}));
+    self.contractsFiles.push(new File({filename, type: File.types.custom, path: filename, resolver}));
   });
 
-  this.events.on('file-remove', (fileType, removedPath) => {
+  self.events.on('file-remove', (fileType, removedPath) => {
     if(fileType !== 'contract') return;
     const normalizedPath = path.normalize(removedPath);
-    this.contractsFiles = this.contractsFiles.filter(file => path.normalize(file.filename) !== normalizedPath);
+    self.contractsFiles = self.contractsFiles.filter(file => path.normalize(file.filename) !== normalizedPath);
   });
 };
 
