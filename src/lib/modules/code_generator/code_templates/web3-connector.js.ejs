@@ -1,4 +1,4 @@
 EmbarkJS.Blockchain.autoEnable = <%= autoEnable %>;
-EmbarkJS.Blockchain.connect(<%- connectionList %>, {warnAboutMetamask: <%= warnAboutMetamask %>}, function(err) {
+EmbarkJS.Blockchain.connect(<%- connectionList %>, {warnAboutMetamask: <%= warnAboutMetamask %>, blockchainClient: "<%= blockchainClient %>"}, function(err) {
   <%- done  %>
 });

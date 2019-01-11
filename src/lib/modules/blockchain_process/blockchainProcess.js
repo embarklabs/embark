@@ -52,4 +52,10 @@ process.on('message', (msg) => {
     blockchainProcess = new BlockchainProcess(msg.options);
     return blockchainProcess.send({result: constants.blockchain.initiated});
   }
+  else if(msg.action === constants.blockchain.startRegularTxs){
+    blockchainProcess.blockchain.startRegularTxs(() => {});
+  }
+  else if(msg.action === constants.blockchain.stopRegularTxs){
+    blockchainProcess.blockchain.stopRegularTxs(() => {});
+  }
 });

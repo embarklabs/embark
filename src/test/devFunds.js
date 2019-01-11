@@ -110,7 +110,7 @@ describe('embark.DevFunds', function() {
         // provider.injectResult('0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe'); // send tx response
       });
 
-      devFunds.fundAccounts(devFunds.balance, (errFundAccounts) => {
+      devFunds.fundAccounts((errFundAccounts) => {
         assert.equal(errFundAccounts, null);
 
         // inject response for web3.eth.getAccounts

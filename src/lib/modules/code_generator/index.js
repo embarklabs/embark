@@ -26,6 +26,7 @@ class CodeGenerator {
     this.storageConfig = embark.config.storageConfig || {};
     this.communicationConfig = embark.config.communicationConfig || {};
     this.namesystemConfig = embark.config.namesystemConfig || {};
+    this.webServerConfig = embark.config.webServerConfig || {};
     this.env = options.env || 'development';
     this.plugins = options.plugins;
     this.events = embark.events;
@@ -124,7 +125,8 @@ class CodeGenerator {
           autoEnable: this.contractsConfig.dappAutoEnable,
           connectionList: connectionList,
           done: 'done(err);',
-          warnAboutMetamask: isDev
+          warnAboutMetamask: isDev,
+          blockchainClient: this.blockchainConfig.ethereumClientName
         });
       }
 

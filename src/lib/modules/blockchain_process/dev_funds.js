@@ -60,18 +60,26 @@ class DevFunds {
     this.web3.eth.sendTransaction({value: "1000000000000000", to: "0xA2817254cb8E7b6269D1689c3E0eBadbB78889d1", from: this.web3.eth.defaultAccount});
   }
 
-  _regularTxs(cb) {
+  startRegularTxs(cb) {
     const self = this;
     self.web3.eth.net.getId().then((networkId) => {
       self.networkId = networkId;
       if (self.networkId !== 1337) {
         return;
       }
-      setInterval(function() { self._sendTx(); }, 1500);
+      this.regularTxsInt = setInterval(function() { self._sendTx(); }, 1500);
       if (cb) {
         cb();
       }
     });
+  }
+
+  stopRegularTxs(cb) {
+    if(this.regularTxsInt) {
+      clearInterval(this.regularTxsInt);
+      return cb();
+    }
+    cb('Regular txs not enabled.');
   }
 
   _fundAccounts(balance, cb) {
@@ -113,13 +121,12 @@ class DevFunds {
     }, cb);
   }
 
-  fundAccounts(pingForever = false, cb) {
+  fundAccounts(cb) {
     if (!this.web3) {
       return cb();
     }
     async.waterfall([
       (next) => {
-        if (pingForever) this._regularTxs();
         this._fundAccounts(this.balance, next);
       }
     ], cb);

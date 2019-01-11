@@ -23,8 +23,12 @@ export function ansiToHtml(text) {
   return convert.toHtml(text.replace(/\n/g,'<br>'));
 }
 
+export function getQueryParam(location, param) {
+  return qs.parse(location.search, {ignoreQueryPrefix: true})[param];
+}
+
 export function getQueryToken(location) {
-  return qs.parse(location.search, {ignoreQueryPrefix: true}).token;
+  return getQueryParam(location, 'token');
 }
 
 export function getDebuggerTransactionHash(location) {
@@ -32,9 +36,13 @@ export function getDebuggerTransactionHash(location) {
 }
 
 export function stripQueryToken(location) {
+  return stripQueryParam(location, 'token');
+}
+
+export function stripQueryParam(location, param) {
   const _location = Object.assign({}, location);
   _location.search = _location.search.replace(
-    /(\?|&?)(token=[\w-]*)(&?)/,
+    new RegExp(`(\\?|&?)(${param}=[\\w-]*)(&?)`),
     (_, p1, p2, p3) => (p2 ? (p3 === '&' ? p1 : '') : '')
   );
   return _location;

@@ -53,7 +53,9 @@
       "eth_sendTransaction": "eth_sendTransaction",
       "eth_sendRawTransaction": "eth_sendRawTransaction",
       "eth_getTransactionReceipt": "eth_getTransactionReceipt"
-    }
+    },
+    "startRegularTxs": "startRegularTxs",
+    "stopRegularTxs": "stopRegularTxs"
   },
   "storage": {
     "init": "init",

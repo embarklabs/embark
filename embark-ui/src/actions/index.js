@@ -426,6 +426,13 @@ export const removeEditorTabs = {
   failure: () => action(REMOVE_EDITOR_TABS[FAILURE])
 };
 
+export const INIT_REGULAR_TXS = createRequestTypes('INIT_REGULAR_TXS');
+export const initRegularTxs = {
+  request: () => action(INIT_REGULAR_TXS[REQUEST], {mode: 'on'}),
+  success: () => action(INIT_REGULAR_TXS[SUCCESS]),
+  failure: () => action(INIT_REGULAR_TXS[FAILURE])
+};
+
 // Web Socket
 export const WATCH_NEW_PROCESS_LOGS = 'WATCH_NEW_PROCESS_LOGS';
 export const STOP_NEW_PROCESS_LOGS = 'STOP_NEW_PROCESS_LOGS';
