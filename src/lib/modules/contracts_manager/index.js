@@ -423,6 +423,9 @@ class ContractsManager {
             }));
           }
 
+          contract.path = parentContract.path;
+          contract.originalFilename = parentContract.originalFilename;
+          contract.filename = parentContract.filename;
           contract.code = parentContract.code;
           contract.runtimeBytecode = parentContract.runtimeBytecode;
           contract.realRuntimeBytecode = (parentContract.realRuntimeBytecode || parentContract.runtimeBytecode);

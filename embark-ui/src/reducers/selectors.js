@@ -234,7 +234,7 @@ export function getDebuggerInfo(state) {
 }
 
 export function getDebuggerLine(state) {
-  if (!state.debuggerInfo.sources) return;
+  if (!state.debuggerInfo.sources || !state.debuggerInfo.sources.lineColumnPos[0]) return;
   return state.debuggerInfo.sources.lineColumnPos[0].start.line + 1;
 }
 

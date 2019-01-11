@@ -35,6 +35,7 @@ class EditorContainer extends React.Component {
 
     this.state = {
       currentAsideTab: {},
+      debuggingContract: null,
       showHiddenFiles: false,
       currentFile: this.props.currentFile,
       editorHeight: this.DEFAULT_HEIGHT,
@@ -78,11 +79,11 @@ class EditorContainer extends React.Component {
       this.setState({currentFile: this.props.currentFile});
     }
 
-    if(this.props.contracts && this.props.transaction !== prevProps.transaction && this.props.transaction) {
+    if(this.props.contracts.length && this.props.transaction) {
       const debuggingContract = this.props.contracts.find(contract => contract.address === this.props.transaction.to)
-      if (debuggingContract) {
+      if (this.state.debuggingContract !== debuggingContract) {
         const editorWidth = this.getNewEditorWidth(OPERATIONS.LESS)
-        this.setState({currentAsideTab: TextEditorToolbarTabs.Debugger, editorWidth})
+        this.setState({currentAsideTab: TextEditorToolbarTabs.Debugger, editorWidth, debuggingContract})
         this.props.fetchFile({path: debuggingContract.path});
       }
     }
