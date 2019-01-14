@@ -219,26 +219,8 @@ class Test {
         });
       },
       function changeGlobalWeb3(accounts, next) {
-        self.events.request('blockchain:get', (web3) => {
-          global.web3 = web3;
-          self.vm = new VM({
-            sandbox: {
-              EmbarkJS,
-              web3: web3,
-              Web3: Web3,
-              IpfsApi
-            }
-          });
-          self.events.request("code-generator:embarkjs:provider-code", (code) => {
-            self.vm.doEval(code, false, (err, _result) => {
-              if(err) return next(err);
-              self.events.request("code-generator:embarkjs:init-provider-code", (code) => {
-                self.vm.doEval(code, false, (err, _result) => {
-                  next(err, accounts);
-                });
-              });
-            });
-          });
+        self.resetEmbarkJS((err) => {
+          next(err, accounts);
         });
       }
     ], (err, accounts) => {
@@ -247,6 +229,30 @@ class Test {
         if (!self.options.inProcess) process.exit(1);
       }
       callback(null, accounts);
+    });
+  }
+
+  resetEmbarkJS(cb) {
+    this.events.request('blockchain:get', (web3) => {
+      global.web3 = web3;
+      this.vm = new VM({
+        sandbox: {
+          EmbarkJS,
+          web3: web3,
+          Web3: Web3,
+          IpfsApi
+        }
+      });
+      this.events.request("code-generator:embarkjs:provider-code", (code) => {
+        this.vm.doEval(code, false, (err, _result) => {
+          if(err) return cb(err);
+          this.events.request("code-generator:embarkjs:init-provider-code", (code) => {
+            this.vm.doEval(code, false, (err, _result) => {
+              cb(err);
+            });
+          });
+        });
+      });
     });
   }
 

@@ -66,6 +66,11 @@ class SolcTest extends Test {
           fns.push(fn);
         });
         async.series(fns, next);
+      },
+      function resetEmbarkJs(file, next) {
+        self.resetEmbarkJS((err) => {
+          next(err, file);
+        });
       }
     ], cb);
   }
@@ -97,13 +102,25 @@ class SolcTest extends Test {
           next(null, contracts, web3);
         });
       },
-      function run(contracts, web3, next) {
+      function getAccounts(contracts, web3, next) {
+        self.events.request('blockchain:getAccounts', (err, accounts) => {
+          if (err) return next(err);
+          next(null, contracts, web3, accounts);
+        });
+      },
+      function run(contracts, web3, accounts, next) {
         let fns = [];
         contracts.forEach((contract) => {
           let fn = (_callback) => {
             // TODO: web3 is not injected into the function. Issue has been raised on remixTests.
             // To fix once web3 has been made injectable.
-            remixTests.runTest(contract.className, Test.getWeb3Contract(contract, web3),
+            const contractDetails = { 
+              userdoc: (contract.userdoc || { methods: [] }), 
+              evm: { 
+                methodIdentifiers: contract.functionHashes 
+              }
+            };
+            remixTests.runTest(contract.className, Test.getWeb3Contract(contract, web3), contractDetails, {accounts},
               self._prettyPrint.bind(self), _callback);
           };
           fns.push(fn);
