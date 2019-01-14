@@ -1,5 +1,4 @@
 const fs = require('./fs.js');
-const File = require('./file.js');
 const Plugins = require('./plugins.js');
 const utils = require('../utils/utils.js');
 const path = require('path');
@@ -11,6 +10,7 @@ const cloneDeep = require('lodash.clonedeep');
 import { replaceZeroAddressShorthand } from '../utils/addressUtils';
 import { unitRegex } from "../utils/regexConstants";
 import * as utilsContractsConfig from "../utils/contractsConfig";
+import { File, Types } from "./file";
 
 const DEFAULT_CONFIG_PATH = 'config/';
 
@@ -59,13 +59,13 @@ var Config = function(options) {
     resolver = resolver || function(callback) {
       callback(fs.readFileSync(filename).toString());
     };
-    self.contractsFiles.push(new File({filename, type: File.types.custom, path: filename, resolver}));
+    self.contractsFiles.push(new File({path: filename, type: Types.custom, resolver}));
   });
 
   self.events.on('file-remove', (fileType, removedPath) => {
     if(fileType !== 'contract') return;
     const normalizedPath = path.normalize(removedPath);
-    self.contractsFiles = self.contractsFiles.filter(file => path.normalize(file.filename) !== normalizedPath);
+    self.contractsFiles = self.contractsFiles.filter(file => path.normalize(file.path) !== normalizedPath);
   });
 };
 
@@ -127,7 +127,7 @@ Config.prototype.loadContractFiles = function() {
   if (!this.contractFiles || newContractsFiles.length !== this.contractFiles.length || !deepEqual(newContractsFiles, this.contractFiles)) {
     this.contractsFiles = this.contractsFiles.concat(newContractsFiles).filter((file, index, arr) => {
       return !arr.some((file2, index2) => {
-        return file.filename === file2.filename && index < index2;
+        return file.path === file2.path && index < index2;
       });
     });
   }
@@ -369,11 +369,11 @@ Config.prototype.loadExternalContractsFiles = function() {
         return this.logger.error(__("HTTP contract file not found") + ": " + contract.file);
       }
       const localFile = fileObj.filePath;
-      this.contractsFiles.push(new File({filename: localFile, type: File.types.http, basedir: '', path: fileObj.url, storageConfig: storageConfig}));
+      this.contractsFiles.push(new File({path: localFile, type: Types.http, basedir: '', externalUrl: fileObj.url, storageConfig: storageConfig}));
     } else if (fs.existsSync(contract.file)) {
-      this.contractsFiles.push(new File({filename: contract.file, type: File.types.dapp_file, basedir: '', path: contract.file, storageConfig: storageConfig}));
+      this.contractsFiles.push(new File({path: contract.file, type: Types.dappFile, basedir: '', storageConfig: storageConfig}));
     } else if (fs.existsSync(path.join('./node_modules/', contract.file))) {
-      this.contractsFiles.push(new File({filename: path.join('./node_modules/', contract.file), type: File.types.dapp_file, basedir: '', path: path.join('./node_modules/', contract.file), storageConfig: storageConfig}));
+      this.contractsFiles.push(new File({path: path.join('./node_modules/', contract.file), type: Types.dappFile, basedir: '', storageConfig: storageConfig}));
     } else {
       this.logger.error(__("contract file not found") + ": " + contract.file);
     }
@@ -571,7 +571,7 @@ Config.prototype.loadFiles = function(files) {
     return (file[0] === '$' || file.indexOf('.') >= 0);
   }).filter(function(file) {
     let basedir = findMatchingExpression(file, files);
-    readFiles.push(new File({filename: file, type: File.types.dapp_file, basedir: basedir, path: file, storageConfig: storageConfig}));
+    readFiles.push(new File({path: file, type: Types.dappFile, basedir: basedir, storageConfig: storageConfig}));
   });
 
   var filesFromPlugins = [];
@@ -605,7 +605,7 @@ Config.prototype.loadPluginContractFiles = function() {
   contractsPlugins.forEach(function(plugin) {
     plugin.contractsFiles.forEach(function(file) {
       var filename = file.replace('./','');
-      self.contractsFiles.push(new File({filename: filename, pluginPath: plugin.pluginPath, type: File.types.custom, path: filename, storageConfig: storageConfig, resolver: function(callback) {
+      self.contractsFiles.push(new File({path: filename, pluginPath: plugin.pluginPath, type: Types.custom, storageConfig: storageConfig, resolver: function(callback) {
         callback(plugin.loadPluginFile(file));
       }}));
     });

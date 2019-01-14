@@ -1,12 +1,12 @@
 /*globals describe, it*/
+import { File, Types } from "../../../lib/core/file.js";
+
 let SolidityCompiler = require('../../../lib/modules/solidity');
 let TestLogger = require('../../../lib/utils/test_logger');
-let File = require('../../../lib/core/file.js');
 let Ipc = require('../../../lib/core/ipc.js');
-let assert = require('assert');
 
 let readFile = function(file) {
-  return new File({filename: file, type: File.types.dapp_file, path: file});
+  return new File({filename: file, type: Types.dappFile, path: file});
 };
 
 let ipcObject = new Ipc({

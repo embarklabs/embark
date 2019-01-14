@@ -624,6 +624,22 @@ function isEs6Module(module) {
   return typeof module === 'object' && typeof module.default === 'function' && module.__esModule;
 }
 
+function urlJoin(url, path) {
+  let urlChunks = url.split('/');
+  let levels = path.split('../');
+
+  // remove relative path parts from end of url
+  urlChunks = urlChunks.slice(0, urlChunks.length - levels.length);
+
+  // remove relative path parts from start of match
+  levels.splice(0, levels.length - 1);
+
+  // add on our match so we can join later
+  urlChunks = urlChunks.concat(levels.join().replace('./', ''));
+
+  return urlChunks.join('/');
+}
+
 module.exports = {
   joinPath,
   dirname,
@@ -674,5 +690,6 @@ module.exports = {
   jsonFunctionReplacer,
   getWindowSize,
   toposort,
-  isEs6Module
+  isEs6Module,
+  urlJoin
 };

@@ -287,11 +287,10 @@ class Pipeline {
             }
             async.map(
               files,
-              function (file, fileCb) {
-                self.logger.trace("reading " + file.filename);
-                return file.content(fileContent => {
-                  self.runPlugins(file, fileContent, fileCb);
-                });
+              async function (file, fileCb) {
+                self.logger.trace("reading " + file.path);
+                const fileContent = await file.content;
+                self.runPlugins(file, fileContent, fileCb);
               },
               function (err, contentFiles) {
                 if (err) {
@@ -310,7 +309,7 @@ class Pipeline {
                   }
 
                   async.each(contentFiles, function (file, eachCb) {
-                    let filename = file.filename.replace(file.basedir + '/', '');
+                    let filename = file.path.replace(file.basedir + '/', '');
                     self.logger.info(`${'Pipeline:'.cyan} writing file ` + (utils.joinPath(self.buildDir, targetDir, filename)).bold.dim);
 
                     fs.copy(file.path, utils.joinPath(self.buildDir, targetDir, filename), {overwrite: true}, eachCb);
@@ -387,21 +386,21 @@ class Pipeline {
   runPlugins(file, fileContent, fileCb) {
     const self = this;
     if (self.pipelinePlugins.length <= 0) {
-      return fileCb(null, {content: fileContent, filename: file.filename, path: file.path, basedir: file.basedir, modified: true});
+      return fileCb(null, {content: fileContent, path: file.path, basedir: file.basedir, modified: true});
     }
     async.eachSeries(self.pipelinePlugins, (plugin, pluginCB) => {
       if (file.options && file.options.skipPipeline) {
         return pluginCB();
       }
 
-      fileContent = plugin.runPipeline({targetFile: file.filename, source: fileContent});
+      fileContent = plugin.runPipeline({targetFile: file.path, source: fileContent});
       file.modified = true;
       pluginCB();
     }, err => {
       if (err) {
         self.logger.error(err.message);
       }
-      return fileCb(null, {content: fileContent, filename: file.filename, path: file.path, basedir: file.basedir, modified: true});
+      return fileCb(null, {content: fileContent, path: file.path, basedir: file.basedir, modified: true});
     });
   }
 

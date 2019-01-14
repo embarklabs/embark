@@ -652,7 +652,7 @@ class EmbarkController {
         engine.startService("deployment", {
           trackContracts: false,
           compileOnceOnly: true,
-          disableOptimizations: options.coverage
+          isCoverage: options.coverage
         });
         engine.startService("storage");
         engine.startService("codeGenerator");

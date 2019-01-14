@@ -206,6 +206,7 @@
     "@types/node": "10.11.7",
     "@types/os-locale": "2.1.0",
     "@types/pretty-ms": "3.2.0",
+    "@types/request": "2.48.1",
     "@types/web3": "1.0.12",
     "babel-plugin-dynamic-import-node": "2.2.0",
     "chai": "4.1.2",

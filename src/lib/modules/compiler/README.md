@@ -9,7 +9,7 @@ This module abstracts the compiler interface. It exposes a plugin api to registe
 arguments:
 
 * `contractFiles` - <array of embark File Objects>
-* `options` - <object> config object `{disableOptimizations: boolean (default: false)}`
+* `options` - <object> config object `{isCoverage: boolean (default: false)}`
 
 response:
 
@@ -33,8 +33,8 @@ response:
 example:
 
 ```
-const File = require('src/lib/core/file.js');
-const contractFiles = [(new File({filename: "simplestorage.sol", type: "custom", path: "simplestorage.sol", resolver: (cb) => { return cb(".. contract code...") }}))];
+import { File } from 'src/lib/core/file.js';
+const contractFiles = [(new File({path: "simplestorage.sol", type: "custom", resolver: (cb) => { return cb(".. contract code...") }}))];
 
 embark.events.request("compiler:contracts", contractFiles, {}, (err, compiledObject) => {
 })

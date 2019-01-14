@@ -1,17 +1,18 @@
 /*globals describe, it*/
+import { File, Types } from "../../../lib/core/file";
+
 const assert = require('assert');
 
 // TODO: need to rethink i18n and how that is required in each module
 require('../../../lib/core/i18n/i18n');
 
 const Compiler = require('../../../lib/modules/compiler');
-const File = require('../../../lib/core/file.js');
 const Plugins = require('../../../lib/core/plugins.js');
 const TestLogger = require('../../../lib/utils/test_logger');
 const Events = require('../../../lib/core/events');
 
 const readFile = function(file) {
-  return new File({filename: file, type: File.types.dapp_file, path: file});
+  return new File({filename: file, type: Types.dappFile, path: file});
 };
 
 const currentSolcVersion = require('../../../../package.json').dependencies.solc;
@@ -67,7 +68,7 @@ describe('embark.Compiler', function() {
         readFile('dist/test/contracts/simple_storage.sol'),
         readFile('dist/test/contracts/token.sol'),
         readFile('dist/test/contracts/erc20.vy')
-      ], {}, (err, compiledObject) => {
+      ], (err, compiledObject) => {
         assert.deepEqual(compiledObject, { contractA: 'solResult', contractB: 'vyResult' })
         done();
       })

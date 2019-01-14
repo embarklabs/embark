@@ -1,6 +1,6 @@
 pragma solidity ^0.4.17;
 
-import "another_folder/another_test.sol";
+import "../another_folder/another_test.sol";
 import "zeppelin-solidity/contracts/ownership/Ownable.sol";
 
 contract SimpleStorageTest is Ownable {

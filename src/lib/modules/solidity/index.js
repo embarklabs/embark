@@ -1,5 +1,6 @@
 let async = require('../../utils/async_extend.js');
 let SolcW = require('./solcW.js');
+const remapImports = require('../../utils/solidity/remapImports');
 
 class Solidity {
 
@@ -21,7 +22,7 @@ class Solidity {
       'post',
       '/embark-api/contract/compile',
       (req, res) => {
-        if(typeof req.body.code !== 'string'){
+        if (typeof req.body.code !== 'string') {
           return res.send({error: 'Body parameter \'code\' must be a string'});
         }
         const input = {[req.body.name]: {content: req.body.code.replace(/\r\n/g, '\n')}};
@@ -39,7 +40,7 @@ class Solidity {
     self.solcW.compile(jsonObj, function (err, output) {
       self.events.emit('contracts:compile:solc', jsonObj);
 
-      if(err){
+      if (err) {
         return callback(err);
       }
       if (output.errors && returnAllErrors) {
@@ -47,7 +48,7 @@ class Solidity {
       }
 
       if (output.errors) {
-        for (let i=0; i<output.errors.length; i++) {
+        for (let i = 0; i < output.errors.length; i++) {
           if (output.errors[i].type === 'Warning') {
             self.logger.warn(output.errors[i].formattedMessage);
           }
@@ -70,10 +71,10 @@ class Solidity {
         if (self.solcAlreadyLoaded) {
           return callback();
         }
-        
+
         let storageConfig = self.storageConfig;
         if (storageConfig && storageConfig.upload && storageConfig.upload.getUrl) {
-            self.providerUrl = storageConfig.upload.getUrl;
+          self.providerUrl = storageConfig.upload.getUrl;
         }
         self.solcW = new SolcW(self.embark, {logger: self.logger, events: self.events, ipc: self.ipc, useDashboard: self.useDashboard, providerUrl: self.providerUrl});
 
@@ -90,7 +91,7 @@ class Solidity {
           sources: codeInputs,
           settings: {
             optimizer: {
-              enabled: (!options.disableOptimizations && self.options.optimize),
+              enabled: (!options.isCoverage && self.options.optimize),
               runs: self.options["optimize-runs"]
             },
             outputSelection: {
@@ -168,23 +169,23 @@ class Solidity {
       function prepareInput(callback) {
         async.each(contractFiles,
           function (file, fileCb) {
-            let filename = file.filename;
+            let filename = file.path;
 
             for (let directory of self.embark.config.contractDirectories) {
               let match = new RegExp("^" + directory);
               filename = filename.replace(match, '');
             }
 
-            originalFilepath[filename] = file.filename;
-
-            file.content(function (fileContent) {
-              if (!fileContent) {
+            originalFilepath[filename] = file.path;
+            
+            remapImports.prepareForCompilation(file, options.isCoverage)
+              .then(fileContent => {
+                input[filename] = {content: fileContent.replace(/\r\n/g, '\n')};
+                fileCb();
+              }).catch((_e) => {
                 self.logger.error(__('Error while loading the content of ') + filename);
-                return fileCb();
-              }
-              input[filename] = {content: fileContent.replace(/\r\n/g, '\n')};
-              fileCb();
-            });
+                fileCb();
+              });
           },
           function (err) {
             callback(err);

@@ -7,7 +7,6 @@ export interface InjectionPoint {
   type: InjectionPointType;
   id: number;
   location: Location;
-  locationIdx?: number;
 }
 
 export interface Coverage {

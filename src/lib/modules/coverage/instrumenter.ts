@@ -71,7 +71,7 @@ export class Instrumenter {
     this.contract.addBranch(node.loc.start.line, "if", locations);
   }
 
-  private addInjectionPoints(type: InjectionPointType, id: number, location: Location, locationIdx?: number) {
-    this.injectionPoints.push({type, id, location, locationIdx});
+  private addInjectionPoints(type: InjectionPointType, id: number, location: Location) {
+    this.injectionPoints.push({type, id, location});
   }
 }

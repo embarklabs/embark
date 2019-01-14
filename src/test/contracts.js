@@ -1,8 +1,9 @@
 /*globals describe, it*/
+import { File, Types } from "../lib/core/file";
+
 let ContractsManager = require('../lib/modules/contracts_manager/index.js');
 let Compiler = require('../lib/modules/compiler/');
 let Logger = require('../lib/core/logger.js');
-let File = require('../lib/core/file.js');
 let TestLogger = require('../lib/utils/test_logger');
 let Events = require('../lib/core/events');
 let Ipc = require('../lib/core/ipc.js');
@@ -12,7 +13,7 @@ let assert = require('assert');
 let Plugins = require('../lib/core/plugins.js');
 
 let readFile = function(file) {
-  return new File({filename: file, type: File.types.dapp_file, path: file});
+  return new File({filename: file, type: Types.dappFile, path: file});
 };
 
 const currentSolcVersion = require('../../package.json').dependencies.solc;

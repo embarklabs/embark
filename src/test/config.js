@@ -189,40 +189,37 @@ describe('embark.Config', function () {
       ];
       const expected = [
         {
-          "filename": ".embark/contracts/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol",
           "type": "http",
-          "path": "https://raw.githubusercontent.com/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol",
+          "externalUrl": "https://raw.githubusercontent.com/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol",
+          "path": ".embark/contracts/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol",
           "pluginPath": '',
-          "importRemappings": [],
           "basedir": "",
+          "importRemappings": [],
           "resolver": undefined,
           "storageConfig": undefined,
-          "providerUrl": undefined,
-          "downloadedImports": false
+          "providerUrl": ""
         },
         {
-          "filename": ".embark/contracts/status-im/contracts/master/contracts/identity/ERC725.sol",
           "type": "http",
-          "path": "https://raw.githubusercontent.com/status-im/contracts/master/contracts/identity/ERC725.sol",
+          "externalUrl": "https://raw.githubusercontent.com/status-im/contracts/master/contracts/identity/ERC725.sol",
+          "path": ".embark/contracts/status-im/contracts/master/contracts/identity/ERC725.sol",
           "pluginPath": '',
-          "importRemappings": [],
           "basedir": "",
+          "importRemappings": [],
           "resolver": undefined,
           "storageConfig": undefined,
-          "providerUrl": undefined,
-          "downloadedImports": false
+          "providerUrl": ""
         },
         {
-          "filename": ".embark/contracts/bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63",
+          "externalUrl": "https://swarm-gateways.net/bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63",
+          "path": ".embark/contracts/bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63",
           "type": "http",
-          "path": "https://swarm-gateways.net/bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63",
           "pluginPath": '',
-          "importRemappings": [],
           "basedir": "",
+          "importRemappings": [],
           "resolver": undefined,
           "storageConfig": undefined,
-          "providerUrl": undefined,
-          "downloadedImports": false
+          "providerUrl": ""
         }
       ];
       config.loadExternalContractsFiles();

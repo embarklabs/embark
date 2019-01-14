@@ -107,10 +107,14 @@ class BlockchainConnector {
 
     if (type === 'vm') {
       const sim = self._getSimulator();
-      const options = Object.assign({}, self.config.contractsConfig.deployment, {gasPrice: "0x01", gasLimit: "0xfffffffffffff"});
-      self.provider = sim.provider(options);
+      const options = Object.assign({}, self.config.contractsConfig.deployment, {
+        gasPrice: "0x01",
+        gasLimit: "0xfffffffffffff"
+      });
 
       if (coverage) {
+        options.allowUnlimitedContractSize = true;
+        self.provider = sim.provider(options);
         // Here we patch the sendAsync method on the provider. The goal behind this is to force pure/constant/view calls to become
         // transactions, so that we can pull in execution traces and account for those executions in code coverage.
         //
@@ -143,6 +147,8 @@ class BlockchainConnector {
             });
           });
         };
+      } else {
+        self.provider = sim.provider(options);
       }
 
       self.web3.setProvider(self.provider);

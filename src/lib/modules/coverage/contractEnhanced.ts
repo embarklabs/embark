@@ -7,9 +7,9 @@ import { Injector } from "./injector";
 import { Instrumenter } from "./instrumenter";
 import { InstrumentWalker } from "./instrumentWalker";
 import { coverageContractsPath } from "./path";
-import { Suppressor } from "./suppressor";
 import { BranchType, Coverage } from "./types";
 
+const File = require("../../core/file");
 const fs = require("../../core/fs");
 
 const STATEMENT_EVENT = "__StatementCoverage";
@@ -24,10 +24,10 @@ function nextId() {
 export class ContractEnhanced {
   public id: number;
   public coverage: Coverage;
+  public coverageFilepath: string;
   public originalSource: string;
   public source: string;
   private ast: parser.ASTNode;
-  private coverageFilepath: string;
   private functionsBodyLocation: {[id: number]: Location} = {};
 
   constructor(public filepath: string, public solcVersion: string) {
@@ -52,7 +52,6 @@ export class ContractEnhanced {
   }
 
   public instrument() {
-    new Suppressor(this).process();
     const instrumenter = new Instrumenter(this);
     const instrumentWalker = new InstrumentWalker(instrumenter);
     instrumentWalker.walk(this.ast);

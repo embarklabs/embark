@@ -19,7 +19,6 @@ class ContractsManager {
     this.deployOnlyOnConfig = false;
     this.compileError = false;
     this.compileOnceOnly = options.compileOnceOnly;
-    this.disableOptimizations = options.disableOptimizations;
 
     self.events.setCommandHandler('contracts:list', (cb) => {
       cb(self.compileError, self.listContracts());
@@ -270,8 +269,6 @@ class ContractsManager {
     let self = this;
     self.contracts = {};
 
-    let compilerOptions = {disableOptimizations: this.disableOptimizations};
-
     if(resetContracts) self.contracts = {};
     async.waterfall([
       function beforeBuild(callback) {
@@ -308,7 +305,7 @@ class ContractsManager {
         if (self.compileOnceOnly && hasCompiledContracts && allContractsCompiled) {
           return callback();
         }
-        self.events.request("compiler:contracts", self.contractsFiles, compilerOptions, function (err, compiledObject) {
+        self.events.request("compiler:contracts", self.contractsFiles, function (err, compiledObject) {
           self.compiledContracts = compiledObject;
           callback(err);
         });
