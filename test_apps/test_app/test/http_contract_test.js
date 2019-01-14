@@ -3,7 +3,6 @@ const fs = require('fs-extra');
 const assert = require('assert');
 
 describe('http contracts', () => {
-
   it('should have downloaded the file in .embark/contracts', (done) => {
     const contractPath = '.embark/contracts/status-im/contracts/151-embark31/contracts/token/StandardToken.sol';
     fs.access(contractPath, (err) => {

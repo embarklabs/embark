@@ -4,6 +4,7 @@ import Web3Contract from "web3/eth/contract";
 
 import { Contract } from "../../../typings/contract";
 import { Embark } from "../../../typings/embark";
+import { removePureView } from "../../utils/solidity/code";
 import { ContractEnhanced } from "./contractEnhanced";
 import { coverageContractsPath } from "./path";
 import { Coverage as ICoverage } from "./types";
@@ -23,8 +24,11 @@ export default class Coverage {
 
     this.contracts = this.getContracts();
 
-    this.instrumentContracts();
-    this.swapContracts();
+    this.embark.events.setCommandHandler("coverage:prepareContracts", async (done) => {
+      await this.prepareContracts();
+      this.swapContracts();
+      done();
+    });
 
     this.embark.events.on("tests:ready", this.pushDeployedContracts.bind(this));
     this.embark.events.on("tests:finished", this.produceCoverageReport.bind(this));
@@ -41,15 +45,16 @@ export default class Coverage {
                     .map((filepath) => new ContractEnhanced(filepath, solcVersion));
   }
 
-  private instrumentContracts() {
-    this.contracts.forEach((contract) => contract.instrument());
+  private async prepareContracts() {
+    const promises = this.contracts.map(async (contract) => {
+      contract.instrument();
+      contract.save();
+    });
+    await Promise.all(promises);
+    removePureView(coverageContractsPath());
   }
 
   private swapContracts() {
-    this.contracts.forEach((contract) => {
-      contract.save();
-    });
-
     this.embark.config.embarkConfig.contracts = this.contractsDir.reduce((acc: string[], value: string) => (
       acc.concat(path.join(coverageContractsPath(), value))
     ), []);

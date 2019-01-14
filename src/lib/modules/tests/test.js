@@ -192,6 +192,13 @@ class Test {
       function checkDeploymentOpts(next) {
         self.checkDeploymentOptions(options, next);
       },
+      function prepareContracts(next) {
+        if (!self.firstDeployment || !self.options.coverage) {
+          return next();
+        }
+        console.info('Preparing contracts for coverage'.cyan);
+        self.events.request("coverage:prepareContracts", next);
+      },
       function compileContracts(next) {
         if (!self.firstDeployment) {
           return next();
@@ -260,6 +267,13 @@ class Test {
     const instance = await contract.deploy(deployArgs).send(sendArgs);
     this.events.emit("tests:manualDeploy", instance);
     return instance;
+  }
+
+  track(jsonInterface, address) {
+    this.events.request('blockchain:get', (web3) => {
+      const instance = new web3.eth.Contract(jsonInterface, address);
+      this.events.emit("tests:manualDeploy", instance);
+    });
   }
 
   async _deploy(config, callback) {

@@ -7,17 +7,17 @@ import { CompilerPluginObject, Plugins } from "../../../typings/plugins";
 class Compiler {
   private logger: any;
   private plugins: Plugins;
-  private disableOptimizations: any;
+  private isCoverage: boolean;
 
   constructor(embark: Embark, options: any) {
     this.logger = embark.logger;
     this.plugins = options.plugins;
-    this.disableOptimizations = options.disableOptimizations;
+    this.isCoverage = options.isCoverage;
 
     embark.events.setCommandHandler("compiler:contracts", this.compile_contracts.bind(this));
   }
 
-  private compile_contracts(contractFiles: any[], options: any, cb: any) {
+  private compile_contracts(contractFiles: any[], cb: any) {
     if (contractFiles.length === 0) {
       return cb(null, {});
     }
@@ -25,7 +25,7 @@ class Compiler {
     const compiledObject: {[index: string]: any} = {};
 
     const compilerOptions = {
-      disableOptimizations: this.disableOptimizations || options.disableOptimizations,
+      isCoverage: this.isCoverage,
     };
 
     async.eachObject(this.getAvailableCompilers(),
@@ -60,7 +60,7 @@ class Compiler {
       },
       (err: any) => {
         contractFiles.filter((f: any) => !f.compiled).forEach((file: any) => {
-          this.logger.warn(__("%s doesn't have a compatible contract compiler. Maybe a plugin exists for it.", file.filename));
+          this.logger.warn(__("%s doesn't have a compatible contract compiler. Maybe a plugin exists for it.", file.path));
         });
 
         cb(err, compiledObject);
@@ -81,7 +81,7 @@ class Compiler {
 
   private filesMatchingExtension(extension: string) {
     return (file: any) => {
-      const fileMatch = file.filename.match(/\.[0-9a-z]+$/);
+      const fileMatch = file.path.match(/\.[0-9a-z]+$/);
       if (fileMatch && (fileMatch[0] === extension)) {
         file.compiled = true;
         return true;
