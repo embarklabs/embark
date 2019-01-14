@@ -24,7 +24,7 @@ class TransactionDecoderContainer extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const hash = getQueryParams(this.props).hash;
+    const { hash } = getQueryParams(this.props);
     const prevHash = getQueryParams(prevProps).hash;
 
     if (hash && hash !== prevHash) {

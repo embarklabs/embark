@@ -26,7 +26,7 @@ class TransactionDecoder extends React.Component {
 
   handleTransactionHashChange(event) {
     const transactionHash = event.target.value;
-    this.setState({transactionHash});
+    this.setState({...this.state, transactionHash});
   }
 
   fetchTransaction(e) {
@@ -48,14 +48,14 @@ class TransactionDecoder extends React.Component {
           <Form onSubmit={e => this.fetchTransaction(e)}>
             <FormGroup>
               <InputGroup>
-                <Input type="text" id="transactionHash" placeholder="Enter transaction hash" value={this.state.transactionHash} onChange={e => this.handleTransactionHashChange(e)}/>
+                <Input type="text" id="transactionHash" placeholder="Enter raw transaction hash" value={this.state.transactionHash} onChange={e => this.handleTransactionHashChange(e)}/>
                 <InputGroupAddon addonType="append">
                   <Button color="primary" type="submit">Decode</Button>
                 </InputGroupAddon>
               </InputGroup>
             </FormGroup>
           </Form>
-          {this.props.transactionHash && !this.props.transaction && <Alert color="danger">Couldn't find transaction for hash {this.props.transactionHash}</Alert>}
+          {this.props.transactionHash && !this.props.transaction && <Alert color="danger">Couldn't decode transaction with raw hash {this.props.transactionHash}</Alert>}
 
           <div className="mt-3">
             {this.props.transaction && <ReactJson src={this.props.transaction} theme="monokai" sortKeys={true} collapsed={1} />}
@@ -67,7 +67,7 @@ class TransactionDecoder extends React.Component {
 }
 
 TransactionDecoder.propTypes = {
-  history: PropTypes.array,
+  history: PropTypes.object,
   transaction: PropTypes.object,
   transactionHash: PropTypes.string
 };
