@@ -143,6 +143,7 @@ class Solidity {
             compiled_object[className].gasEstimates = contract.evm.gasEstimates;
             compiled_object[className].functionHashes = contract.evm.methodIdentifiers;
             compiled_object[className].abiDefinition = contract.abi;
+            compiled_object[className].userdoc = contract.userdoc;
             compiled_object[className].filename = filename;
             compiled_object[className].originalFilename = originalFilepaths[filename];
           }

@@ -291,9 +291,21 @@ class ContractsManager {
           callback();
         });
       },
-      function compileContracts(callback) {
+      function allContractsCompiled(callback) {
+        const allContractsCompiled = 
+          self.compiledContracts && 
+          self.contractsFiles && 
+          self.contractsFiles.every(contractFile => 
+            Object.values(self.compiledContracts).find(contract => 
+              contract.originalFilename === contractFile.filename
+            )
+          );
+        callback(null, allContractsCompiled);
+      },
+      function compileContracts(allContractsCompiled, callback) {
         self.events.emit("status", __("Compiling..."));
-        if (self.compileOnceOnly && self.compiledContracts && Object.keys(self.compiledContracts).length) {
+        const hasCompiledContracts = self.compiledContracts && Object.keys(self.compiledContracts).length;
+        if (self.compileOnceOnly && hasCompiledContracts && allContractsCompiled) {
           return callback();
         }
         self.events.request("compiler:contracts", self.contractsFiles, compilerOptions, function (err, compiledObject) {
