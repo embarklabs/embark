@@ -91,7 +91,9 @@
     "clean": "rimraf build",
     "lint": "eslint src/",
     "start": "node scripts/start.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "eslintConfig": {
     "extends": "react-app",
@@ -155,5 +157,14 @@
     "node": ">=8.11.3",
     "npm": ">666",
     "yarn": ">=1.12.3"
+  },
+  "devDependencies": {
+    "@storybook/addon-actions": "^4.1.6",
+    "@storybook/addon-info": "4.1.6",
+    "@storybook/addon-knobs": "4.1.6",
+    "@storybook/addon-links": "^4.1.6",
+    "@storybook/addon-options": "4.1.6",
+    "@storybook/addons": "^4.1.6",
+    "@storybook/react": "^4.1.6"
   }
 }
