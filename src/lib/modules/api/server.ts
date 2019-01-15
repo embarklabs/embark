@@ -98,7 +98,7 @@ export default class Server {
     this.embark.events.on("plugins:register:api", (callDescription: CallDescription) => this.registerCallDescription(instance, callDescription));
 
     let ui: express.RequestHandler;
-    if (process.env.DEVELOPMENT) {
+    if (process.env.EMBARK_DEVELOPMENT) {
       ui = proxy("http://localhost:3000");
     } else {
       ui = express.static(path.join(__dirname, "../../../../embark-ui/build"));
