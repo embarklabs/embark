@@ -94,7 +94,7 @@ Plugin.prototype.loadPlugin = function() {
     this.pluginModule = this.pluginModule.default;
     return new this.pluginModule(this);
   }
-  (this.pluginModule.call(this, this));
+  this.pluginModule.call(this, this);
 };
 
 Plugin.prototype.loadInternalPlugin = function() {
