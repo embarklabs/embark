@@ -1,9 +1,10 @@
+import { each } from "async";
 import { NodeVM, NodeVMOptions } from "vm2";
 import { Callback } from "../../../../typings/callbacks";
 import { Logger } from "../../../../typings/logger";
 
 const fs = require("../../fs");
-const { recursiveMerge } = require("../../../utils/utils");
+const { recursiveMerge, isEs6Module } = require("../../../utils/utils");
 const Utils = require("../../../utils/utils");
 
 const WEB3_INVALID_RESPONSE_ERROR: string = "Invalid JSON RPC response";
@@ -49,7 +50,7 @@ class VM {
   constructor(options: NodeVMOptions, private logger: Logger) {
     this.options = recursiveMerge(this.options, options);
 
-    this.setupNodeVm();
+    this.setupNodeVm(() => { });
   }
 
   /**
@@ -108,12 +109,33 @@ class VM {
    * @param {String} varName Name of the variable to register.
    * @param {any} code Value of the variable to register.
    */
-  public registerVar(varName: string, code: any) {
+  public registerVar(varName: string, code: any, cb: Callback<null>) {
     // Disallow `eval` and `require`, just in case.
     if (code === eval || code === require) { return; }
 
-    this.options.sandbox[varName] = code;
-    this.setupNodeVm();
+    // handle ES6 modules
+    if (isEs6Module(code)) {
+      code = code.default;
+    }
+
+    this.updateState((_err) => {
+      this.options.sandbox[varName] = code;
+      this.setupNodeVm(cb);
+    });
+  }
+
+  private updateState(cb: Callback<null>) {
+    if (!this.vm) { return cb(); }
+
+    // update sandbox state from VM
+    each(Object.keys(this.options.sandbox), (sandboxVar: string, next: Callback<null>) => {
+      this.doEval(sandboxVar, false, (err, result) => {
+        if (!err) {
+          this.options.sandbox[sandboxVar] = result;
+        }
+        next(err);
+      });
+    }, cb);
   }
 
   /**
@@ -121,8 +143,9 @@ class VM {
    * @type {VM} class is instantiated. The "sandbox" member of the options can be modified
    * by calling @function {registerVar}.
    */
-  private setupNodeVm() {
+  private setupNodeVm(cb: Callback<null>) {
     this.vm = new NodeVM(this.options);
+    cb();
   }
 
   /**

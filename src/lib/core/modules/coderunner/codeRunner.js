@@ -32,10 +32,12 @@ class CodeRunner {
         }
       }
     }, this.logger);
+
     this.registerIpcEvents();
     this.IpcClientListen();
     this.registerEvents();
     this.registerCommands();
+    this.events.emit('runcode:ready');
   }
 
   registerIpcEvents() {
@@ -74,12 +76,12 @@ class CodeRunner {
     this.events.setCommandHandler('runcode:eval', this.evalCode.bind(this));
   }
 
-  registerVar(varName, code, toRecord = true) {
+  registerVar(varName, code, toRecord = true, cb = () => {}) {
     if (this.ipc.isServer() && toRecord) {
       this.commands.push({varName, code});
       this.ipc.broadcast("runcode:newCommand", {varName, code});
     }
-    this.vm.registerVar(varName, code);
+    this.vm.registerVar(varName, code, cb);
   }
 
   async evalCode(code, cb, isNotUserInput = false, tolerateError = false) {
