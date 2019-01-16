@@ -1,3 +1,5 @@
+import {Callback} from "../../../typings/callbacks";
+
 const async = require("../../utils/async_extend.js");
 import { Embark } from "../../../typings/embark";
 import { CompilerPluginObject, Plugins } from "../../../typings/plugins";
@@ -27,15 +29,33 @@ class Compiler {
     };
 
     async.eachObject(this.getAvailableCompilers(),
-      (extension: string, compiler: any, next: any) => {
+      (extension: string, compilers: any, next: any) => {
         const matchingFiles = contractFiles.filter(this.filesMatchingExtension(extension));
         if (matchingFiles.length === 0) {
           return next();
         }
 
-        compiler.call(compiler, matchingFiles, compilerOptions, (err: any, compileResult: any) => {
-          Object.assign(compiledObject, compileResult);
-          next(err, compileResult);
+        async.someLimit(compilers, 1, (compiler: any, someCb: Callback<boolean>) => {
+          compiler.call(compiler, matchingFiles, compilerOptions, (err: any, compileResult: any) => {
+            if (err) {
+              return someCb(err);
+            }
+            if (compileResult === false) {
+              // Compiler not compatible, trying the next one
+              return someCb(null, false);
+            }
+            Object.assign(compiledObject, compileResult);
+            someCb(null, true);
+          });
+        }, (err: Error, result: boolean) => {
+          if (err) {
+            return next(err);
+          }
+          if (!result) {
+            // No compiler was compatible
+            return next(new Error(__("No installed compiler was compatible with your version of %s files", extension)));
+          }
+          next();
         });
       },
       (err: any) => {
@@ -51,7 +71,10 @@ class Compiler {
   private getAvailableCompilers() {
     const available_compilers: { [index: string]: any } = {};
     this.plugins.getPluginsProperty("compilers", "compilers").forEach((compilerObject: CompilerPluginObject) => {
-      available_compilers[compilerObject.extension] = compilerObject.cb;
+      if (!available_compilers[compilerObject.extension]) {
+        available_compilers[compilerObject.extension] = [];
+      }
+      available_compilers[compilerObject.extension].unshift(compilerObject.cb);
     });
     return available_compilers;
   }

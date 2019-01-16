@@ -77,7 +77,7 @@ class Solidity {
         }
         self.solcW = new SolcW(self.embark, {logger: self.logger, events: self.events, ipc: self.ipc, useDashboard: self.useDashboard, providerUrl: self.providerUrl});
 
-        self.logger.info(__("loading solc compiler") + "..");
+        self.logger.info(__("loading solc compiler") + "...");
         self.solcW.load_compiler(function (err) {
           self.solcAlreadyLoaded = true;
           callback(err);
