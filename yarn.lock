@@ -4089,6 +4089,18 @@ elliptic@^6.0.0, elliptic@^6.2.3, elliptic@^6.4.0:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
+embark-test-contract-0@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/embark-test-contract-0/-/embark-test-contract-0-0.0.2.tgz#53913fb40e3df4b816a7bef9f00a5f78fa3d56b4"
+  integrity sha512-bETRyZERYMGwmHuXBlgQGkRmSZoB5sb8kW5M240PsxbO05FE1YyPNcPcDM2+FEJozHFMl9hqxrbt69X7Zzn7xw==
+  dependencies:
+    embark-test-contract-1 "^0.0.1"
+
+embark-test-contract-1@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/embark-test-contract-1/-/embark-test-contract-1-0.0.1.tgz#802b84150e8038fef6681a3f23b6f4c0dc5b3e80"
+  integrity sha512-yFaXMOXOMfYRNFOKEspdXrZzyovceWedtegHtbfs8RZWRzRYY+v6ZDtGm13TRJt3Qt4VZhKky0l7G/SHZMGHCA==
+
 embarkjs@0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/embarkjs/-/embarkjs-0.5.0.tgz#b5b282289896b62f7ef4d4df40566d1777f4b83e"

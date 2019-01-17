@@ -6,7 +6,7 @@ const utils = require('../utils/utils');
 
 class File {
 
-  constructor (options) {
+  constructor(options) {
     this.filename = options.filename.replace(/\\/g, '/');
     this.type = options.type;
     this.path = options.path;
@@ -19,74 +19,108 @@ class File {
     this.providerUrl = null;
   }
 
+  addRemappings(prefix, httpFileObj, level, callback) {
+    let target = prefix;
+    if (httpFileObj) {
+      target = httpFileObj.filePath;
+    } else if (fs.existsSync(path.join(path.dirname(this.filename), prefix))) {
+      target = path.join(path.dirname(this.filename), prefix);
+    } else if (fs.existsSync(path.join("node_modules", prefix))) {
+      target = path.join("node_modules", prefix);
+    }
+
+    if (target === prefix) return callback();
+
+    target = fs.dappPath(target);
+
+    const remapping = {
+      prefix,
+      target
+    };
+
+    if (httpFileObj) return callback();
+
+    if (!this.importRemappings.some(existing => existing.prefix === remapping.prefix)) {
+      this.importRemappings.push(remapping);
+    }
+
+    fs.readFile(target, (err, importedContract) => {
+      if (err) return callback(err);
+      if (!importedContract) return callback(`File not found: ${target}`);
+      this._parseFileForImport(importedContract.toString(), false, ++level, callback);
+    });
+  }
+
+  _parseFileForImport(content, isHttpContract, level, callback) {
+    const self = this;
+    if (self.filename.indexOf('.sol') < 0) {
+      // Only supported in Solidity
+      return callback(null, content);
+    }
+    const regex = /import ["']([-a-zA-Z0-9@:%_+.~#?&\/=]+)["'];/g;
+    const filesToDownload = [];
+    const pathWithoutFile = path.dirname(self.path);
+    let newContent = content;
+    let storageConfig = self.storageConfig;
+    if (storageConfig && storageConfig.upload && storageConfig.upload.getUrl) {
+      self.providerUrl = storageConfig.upload.getUrl;
+    }
+    let m, matches = [];
+    while ((m = regex.exec(content))) {
+      matches.push(m[1]);
+    }
+    async.each(matches, (match, next) => {
+      const httpFileObj = utils.getExternalContractUrl(match, self.providerUrl);
+      const fileObj = {
+        fileRelativePath: path.join(path.dirname(self.filename), match),
+        url: `${pathWithoutFile}/${match}`
+      };
+
+      self.addRemappings(match, httpFileObj, level, (err) => {
+        if (err) return next(err);
+        if (httpFileObj) {
+          newContent = newContent.replace(match, httpFileObj.filePath);
+
+          fileObj.fileRelativePath = httpFileObj.filePath;
+          fileObj.url = httpFileObj.url;
+        } else if (!isHttpContract) {
+          // Just a normal import
+          return next();
+        }
+        filesToDownload.push(fileObj);
+        next();
+      });
+    }, (err) => {
+      callback(err, newContent, filesToDownload);
+    });
+  }
+
   parseFileForImport(content, isHttpContract, callback) {
     const self = this;
     if (typeof isHttpContract === 'function') {
       callback = isHttpContract;
       isHttpContract = false;
     }
-    if (self.filename.indexOf('.sol') < 0) {
-      // Only supported in Solidity
-      return callback(null, content);
-    }
-    const regex = /import ["']([-a-zA-Z0-9@:%_+.~#?&\/=]+)["'];/g;
-    let matches;
-    const filesToDownload = [];
-    const pathWithoutFile = path.dirname(self.path);
-    let newContent = content;
-    let storageConfig = self.storageConfig;
-    if (storageConfig && storageConfig.upload && storageConfig.upload.getUrl) {
-        self.providerUrl = storageConfig.upload.getUrl;
-    }
-    while ((matches = regex.exec(content))) {
-      const httpFileObj = utils.getExternalContractUrl(matches[1],self.providerUrl);
-      const fileObj = {
-        fileRelativePath: path.join(path.dirname(self.filename), matches[1]),
-        url: `${pathWithoutFile}/${matches[1]}`
-      };
 
-      var target = matches[1];
-      if (httpFileObj) {
-        target = httpFileObj.filePath;
-      } else if (fs.existsSync(path.join(path.dirname(self.filename), matches[1]))) {
-        target = path.join(path.dirname(self.filename), matches[1]);
-      } else if (fs.existsSync(path.join("node_modules", matches[1]))) {
-        target = path.join("node_modules", matches[1]);
+    this._parseFileForImport(content, isHttpContract, 0, (err, newContent, filesToDownload) => {
+      if (err) return callback(err);
+
+      if (self.downloadedImports) {
+        // We already parsed this file
+        return callback(null, newContent);
       }
-
-      self.importRemappings.push({
-        prefix: matches[1],
-        target: fs.dappPath(target)
+      async.each(filesToDownload, ((fileObj, eachCb) => {
+        self.downloadFile(fileObj.fileRelativePath, fileObj.url, (_content) => {
+          eachCb();
+        });
+      }), (err) => {
+        self.downloadedImports = true;
+        callback(err, newContent);
       });
-
-      if (httpFileObj) {
-        // Replace http import by filePath import in content
-        newContent = newContent.replace(matches[1], httpFileObj.filePath);
-
-        fileObj.fileRelativePath = httpFileObj.filePath;
-        fileObj.url = httpFileObj.url;
-      } else if (!isHttpContract) {
-        // Just a normal import
-        continue;
-      }
-      filesToDownload.push(fileObj);
-    }
-
-    if (self.downloadedImports) {
-      // We already parsed this file
-      return callback(null, newContent);
-    }
-    async.each(filesToDownload, ((fileObj, eachCb) => {
-      self.downloadFile(fileObj.fileRelativePath, fileObj.url, (_content) => {
-        eachCb();
-      });
-    }), (err) => {
-      self.downloadedImports = true;
-      callback(err, newContent);
     });
   }
 
-  downloadFile (filename, url, callback) {
+  downloadFile(filename, url, callback) {
     const self = this;
     async.waterfall([
       function makeTheDir(next) {
@@ -128,14 +162,14 @@ class File {
       }
     ], (err, content) => {
       if (err) {
-        console.error(__('Error while downloading the file'), url,  err);
+        console.error(__('Error while downloading the file'), url, err);
         return callback('');
       }
       callback(content.toString());
     });
   }
 
-  content (callback) {
+  content(callback) {
     let content;
     if (this.type === File.types.embark_internal) {
       content = fs.readFileSync(fs.embarkPath(utils.joinPath('dist', this.path))).toString();
