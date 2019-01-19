@@ -318,7 +318,11 @@ class TransactionDebugger {
           this.embark.logger.warn(NO_DEBUG_SESSION);
           return callback();
         }
-        this.cmdDebugger.displayLocals();
+        this.embark.logger.info("Locals:");
+        const debugVars = this.simplifyDebuggerVars(this.cmdDebugger.solidityLocals);
+        for (const debugVar of Object.keys(debugVars)) {
+          this.embark.logger.info(`${debugVar}: ` + `${debugVars[debugVar]}`.white);
+        }
         callback();
       },
       usage: "    var local/v l/vl",
@@ -332,14 +336,18 @@ class TransactionDebugger {
           this.embark.logger.warn(NO_DEBUG_SESSION);
           return callback();
         }
-        this.cmdDebugger.displayGlobals();
+        this.embark.logger.info("Globals:");
+        const debugVars = this.simplifyDebuggerVars(this.cmdDebugger.solidityState);
+        for (const debugVar of Object.keys(debugVars)) {
+          this.embark.logger.info(`${debugVar}: ` + `${debugVars[debugVar]}`.white);
+        }
         callback();
       },
       usage: "    var global/v g/vg",
     });
 
     this.embark.registerConsoleCommand({
-      description: __("Display all variables of the current debugging session"),
+      description: __("Display solidity global variables of the current debugging session"),
       matches: ["var all", "v a", "va"],
       process: (cmd: string, callback: (err?: string|object, output?: string) => void) => {
         if (!this.cmdDebugger) {
@@ -351,7 +359,10 @@ class TransactionDebugger {
             this.embark.logger.error(err);
             return callback();
           }
-          this.embark.logger.info(JSON.stringify(globals, null, 2));
+          this.embark.logger.info("Solidity Global Variables:");
+          for (const debugVar of Object.keys(globals)) {
+            this.embark.logger.info(`${debugVar}: ` + `${globals[debugVar]}`.white);
+          }
           callback();
         });
       },
@@ -426,7 +437,7 @@ class TransactionDebugger {
       }
       this.embark.logger.info("vars:");
       foundVars.forEach((variable: any) => {
-        this.embark.logger.info(`${variable.name}: ${variable.value}`);
+        this.embark.logger.info(`${variable.name}: ` + `${variable.value}`.white);
       });
       if (cb) { cb(); }
     });
