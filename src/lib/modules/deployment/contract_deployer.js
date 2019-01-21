@@ -5,13 +5,15 @@ import { ZERO_ADDRESS } from '../../utils/addressUtils';
 
 class ContractDeployer {
   constructor(options) {
-    const self = this;
     this.logger = options.logger;
     this.events = options.events;
     this.plugins = options.plugins;
 
-    self.events.setCommandHandler('deploy:contract', (contract, cb) => {
-      self.checkAndDeployContract(contract, null, cb);
+    this.events.setCommandHandler('deploy:contract', (contract, cb) => {
+      this.checkAndDeployContract(contract, null, cb);
+    });
+    this.events.setCommandHandler('deploy:contract:object', (contract, cb) => {
+      this.checkAndDeployContract(contract, null, cb, true);
     });
   }
 
@@ -78,7 +80,7 @@ class ContractDeployer {
     checkArgs(args, callback);
   }
 
-  checkAndDeployContract(contract, params, callback) {
+  checkAndDeployContract(contract, params, callback, returnObject) {
     let self = this;
     contract.error = false;
     let accounts = [];
@@ -155,6 +157,10 @@ class ContractDeployer {
           skipBytecodeCheck = true;
         }
 
+        if (returnObject) {
+          return self.deployContract(contract, next, returnObject);
+        }
+
         self.plugins.emitAndRunActionsForEvent('deploy:contract:shouldDeploy', {contract: contract, shouldDeploy: true}, function(_err, params) {
           let trackedContract = params.contract;
           if (!params.shouldDeploy) {
@@ -203,7 +209,7 @@ class ContractDeployer {
     return contract.silent ? this.logger.trace.bind(this.logger) : this.logger.info.bind(this.logger);
   }
 
-  deployContract(contract, callback) {
+  deployContract(contract, callback, returnObject) {
     let self = this;
     let deployObject;
 
@@ -273,6 +279,9 @@ class ContractDeployer {
         try {
           const dataCode = contractCode.startsWith('0x') ? contractCode : "0x" + contractCode;
           deployObject = self.blockchain.deployContractObject(contractObject, {arguments: contractParams, data: dataCode});
+          if (returnObject) {
+            return callback(null, deployObject);
+          }
         } catch(e) {
           if (e.message.indexOf('Invalid number of parameters for "undefined"') >= 0) {
             return next(new Error(__("attempted to deploy %s without specifying parameters", contract.className)) + ". " + __("check if there are any params defined for this contract in this environment in the contracts configuration file"));
