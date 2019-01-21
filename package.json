@@ -47,6 +47,7 @@
     "lint:js:ui": "cd embark-ui && npm run lint",
     "lint:ts": "tslint -c tslint.json 'src/**/*.ts'",
     "prepare": "npm run --silent check-no-prepare && npm-run-all install_all clean build || exit 0",
+    "preinstall": "node -e \"if (process.env.npm_execpath.indexOf('yarn') === -1) { console.log('\u001b[31mPlease use yarn for installing\u001b[0m'); process.exit(1); }\"",
     "prepublishOnly": "npm-run-all test check-working-tree",
     "release": "node scripts/release.js",
     "start": "run-p start:*",
@@ -224,7 +225,7 @@
   },
   "engines": {
     "node": ">=8.11.3",
-    "npm": ">666",
+    "npm": ">=>5.6.0",
     "yarn": ">=1.12.3"
   }
 }
