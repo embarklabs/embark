@@ -149,7 +149,7 @@ class Pipeline {
           self.isFirstBuild = false;
           return next();
         }
-        self.events.request('build-placeholder', next);
+        self.events.request('placeholder:build', next);
       },
       (next) => self.buildContracts(next),
       (next) => self.buildWeb3JS(next),

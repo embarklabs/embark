@@ -142,12 +142,12 @@ class IPFS {
   }
 
   listenToCommands() {
-    this.events.setCommandHandler('logs:ipfs:turnOn',  (cb) => {
+    this.events.setCommandHandler('logs:ipfs:enable',  (cb) => {
       this.events.emit('logs:storage:enable');
       return cb(null, 'Enabling IPFS logs');
     });
 
-    this.events.setCommandHandler('logs:ipfs:turnOff',  (cb) => {
+    this.events.setCommandHandler('logs:ipfs:disable',  (cb) => {
       this.events.emit('logs:storage:disable');
       return cb(null, 'Disabling IPFS logs');
     });
@@ -157,13 +157,13 @@ class IPFS {
     this.embark.registerConsoleCommand({
       matches: ['log ipfs on'],
       process: (cmd, callback) => {
-        this.events.request('logs:ipfs:turnOn', callback);
+        this.events.request('logs:ipfs:enable', callback);
       }
     });
     this.embark.registerConsoleCommand({
       matches: ['log ipfs off'],
       process: (cmd, callback) => {
-        this.events.request('logs:ipfs:turnOff', callback);
+        this.events.request('logs:ipfs:disable', callback);
       }
     });
   }
