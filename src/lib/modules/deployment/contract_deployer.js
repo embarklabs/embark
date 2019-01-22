@@ -3,6 +3,9 @@ let async = require('async');
 let utils = require('../../utils/utils.js');
 import { ZERO_ADDRESS } from '../../utils/addressUtils';
 
+// Check out definition 97 of the yellow paper: https://ethereum.github.io/yellowpaper/paper.pdf
+const MAX_CONTRACT_BYTECODE_LENGTH = 24576;
+
 class ContractDeployer {
   constructor(options) {
     const self = this;
@@ -90,10 +93,18 @@ class ContractDeployer {
     }
 
     async.waterfall([
-      function requestBlockchainConnector(callback) {
+      function checkContractBytesize(next) {
+        if(contract.code.length > MAX_CONTRACT_BYTECODE_LENGTH) {
+          return next(new Error(`Bytecode for ${contract.className} contract is too large. Not deploying.`));
+        }
+
+        next();
+      },
+
+      function requestBlockchainConnector(next) {
         self.events.request("blockchain:object", (blockchain) => {
           self.blockchain = blockchain;
-          callback();
+          next();
         });
       },
 
