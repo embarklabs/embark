@@ -64,13 +64,13 @@ export default class Api {
 
   private listenToCommands() {
     this.embark.events.setCommandHandler("api:url", (cb) => cb(this.apiUrl));
-    this.embark.events.setCommandHandler("start-api", (cb) => this.embark.events.request("processes:launch", "api", cb));
-    this.embark.events.setCommandHandler("stop-api",  (cb) => this.embark.events.request("processes:stop", "api", cb));
-    this.embark.events.setCommandHandler("logs:api:turnOn",  (cb) => {
+    this.embark.events.setCommandHandler("api:start", (cb) => this.embark.events.request("processes:launch", "api", cb));
+    this.embark.events.setCommandHandler("api:stop",  (cb) => this.embark.events.request("processes:stop", "api", cb));
+    this.embark.events.setCommandHandler("logs:api:enable",  (cb) => {
       this.api.enableLogging();
       cb();
     });
-    this.embark.events.setCommandHandler("logs:api:turnOff",  (cb) => {
+    this.embark.events.setCommandHandler("logs:api:disable",  (cb) => {
       this.api.disableLogging();
       cb();
     });
@@ -81,7 +81,7 @@ export default class Api {
       description: __("Start or stop the API"),
       matches: ["api start"],
       process: (cmd: string, callback: () => void) => {
-        this.embark.events.request("start-api", callback);
+        this.embark.events.request("api:start", callback);
       },
       usage: "api start/stop",
     });
@@ -89,21 +89,21 @@ export default class Api {
     this.embark.registerConsoleCommand({
       matches: ["api stop"],
       process: (cmd: string, callback: () => void) => {
-        this.embark.events.request("stop-api", callback);
+        this.embark.events.request("api:stop", callback);
       },
     });
 
     this.embark.registerConsoleCommand({
       matches: ["log api on"],
       process: (cmd: string, callback: () => void) => {
-        this.embark.events.request("logs:api:turnOn", callback);
+        this.embark.events.request("logs:api:enable", callback);
       },
     });
 
     this.embark.registerConsoleCommand({
       matches: ["log api off"],
       process: (cmd: string, callback: () => void) => {
-        this.embark.events.request("logs:api:turnOff", callback);
+        this.embark.events.request("logs:api:disable", callback);
       },
     });
   }

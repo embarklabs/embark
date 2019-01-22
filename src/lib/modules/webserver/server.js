@@ -23,7 +23,7 @@ class Server {
 
     this.protocol = options.protocol || 'http';
     this.certOptions = options.certOptions;
-    
+
     this.events.once('outputDone', () => {
       this.logger.info(this._getMessage());
     });
@@ -56,7 +56,7 @@ class Server {
     this.app = express();
     this.secureServer = this.protocol === 'https' ? https.createServer(self.certOptions, (req, res) => self.app.handle(req, res)) : null;
     const expressWs = this.protocol === 'https' ? expressWebSocket(this.app, this.secureServer) : expressWebSocket(this.app);
-    
+
     // Assign Logging Function
     this.app.use(function(req, res, next) {
       if (self.logging) {
@@ -101,7 +101,7 @@ class Server {
           return next();
         }
         self.isFirstStart = false;
-        self.events.request('build-placeholder', next);
+        self.events.request('placeholder:build', next);
       },
       function listen(next) {
         if (self.protocol === 'https'){
@@ -122,7 +122,7 @@ class Server {
           return next();
         }
         self.opened = true;
-        self.events.request('open-browser', next);
+        self.events.request('browser:open', next);
       }
     ], function(err) {
       if (err) {

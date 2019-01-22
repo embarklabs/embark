@@ -37,12 +37,12 @@ class BlockchainModule {
   }
 
   listenToCommands() {
-    this.events.setCommandHandler('logs:ethereum:turnOn',  (cb) => {
+    this.events.setCommandHandler('logs:ethereum:enable',  (cb) => {
       this.events.emit('logs:ethereum:enable');
       return cb(null, 'Enabling Geth logs');
     });
 
-    this.events.setCommandHandler('logs:ethereum:turnOff',  (cb) => {
+    this.events.setCommandHandler('logs:ethereum:disable',  (cb) => {
       this.events.emit('logs:ethereum:disable');
       return cb(null, 'Disabling Geth logs');
     });
@@ -52,13 +52,13 @@ class BlockchainModule {
     this.embark.registerConsoleCommand({
       matches: ['log blockchain on'],
       process: (cmd, callback) => {
-        this.events.request('logs:ethereum:turnOn', callback);
+        this.events.request('logs:ethereum:enable', callback);
       }
     });
     this.embark.registerConsoleCommand({
       matches: ['log blockchain off'],
       process: (cmd, callback) => {
-        this.events.request('logs:ethereum:turnOff', callback);
+        this.events.request('logs:ethereum:disable', callback);
       }
     });
   }

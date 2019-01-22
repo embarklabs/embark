@@ -67,7 +67,7 @@ class WebServer {
           this.events.request('processes:launch', 'webserver', (_err, message, port) => {
             this.logger.info(message);
             this.port = port;
-            this.events.request('open-browser', () => {});
+            this.events.request('browser:open', () => {});
           });
         });
       });
@@ -101,12 +101,12 @@ class WebServer {
   }
 
   listenToCommands() {
-    this.events.setCommandHandler('build-placeholder', (cb) => this.buildPlaceholderPage(cb));
-    this.events.setCommandHandler('open-browser', (cb) => this.openBrowser(cb));
-    this.events.setCommandHandler('start-webserver', (cb) => this.events.request('processes:launch', 'webserver', cb));
-    this.events.setCommandHandler('stop-webserver',  (cb) => this.events.request('processes:stop', 'webserver', cb));
-    this.events.setCommandHandler('logs:webserver:turnOn',  (cb) => this.server.enableLogging(cb));
-    this.events.setCommandHandler('logs:webserver:turnOff',  (cb) => this.server.disableLogging(cb));
+    this.events.setCommandHandler('placeholder:build', (cb) => this.buildPlaceholderPage(cb));
+    this.events.setCommandHandler('browser:open', (cb) => this.openBrowser(cb));
+    this.events.setCommandHandler('webserver:start', (cb) => this.events.request('processes:launch', 'webserver', cb));
+    this.events.setCommandHandler('webserver:stop',  (cb) => this.events.request('processes:stop', 'webserver', cb));
+    this.events.setCommandHandler('logs:webserver:enable',  (cb) => this.server.enableLogging(cb));
+    this.events.setCommandHandler('logs:webserver:disable',  (cb) => this.server.disableLogging(cb));
   }
 
   registerConsoleCommands() {
@@ -115,14 +115,14 @@ class WebServer {
       description: __("Start or stop the websever"),
       matches: ['webserver start'],
       process: (cmd, callback) => {
-        this.events.request('start-webserver', callback);
+        this.events.request('webserver:start', callback);
       }
     });
 
     this.embark.registerConsoleCommand({
       matches: ['webserver stop'],
       process: (cmd, callback) => {
-        this.events.request('stop-webserver', callback);
+        this.events.request('webserver:stop', callback);
       }
     });
 
@@ -130,21 +130,21 @@ class WebServer {
       description: __("Open a browser window at the Dapp's url"),
       matches: ['browser open'],
       process: (cmd, callback) => {
-        this.events.request('open-browser', callback);
+        this.events.request('browser:open', callback);
       }
     });
 
     this.embark.registerConsoleCommand({
       matches: ['log webserver on'],
       process: (cmd, callback) => {
-        this.events.request('logs:webserver:turnOn', callback);
+        this.events.request('logs:webserver:enable', callback);
       }
     });
 
     this.embark.registerConsoleCommand({
       matches: ['log webserver off'],
       process: (cmd, callback) => {
-        this.events.request('logs:webserver:turnOff', callback);
+        this.events.request('logs:webserver:disable', callback);
       }
     });
   }

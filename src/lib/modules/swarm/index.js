@@ -129,12 +129,12 @@ class Swarm {
   }
 
   listenToCommands() {
-    this.events.setCommandHandler('logs:swarm:turnOn',  (cb) => {
+    this.events.setCommandHandler('logs:swarm:enable',  (cb) => {
       this.events.emit('logs:storage:enable');
       return cb(null, 'Enabling Swarm logs');
     });
 
-    this.events.setCommandHandler('logs:swarm:turnOff',  (cb) => {
+    this.events.setCommandHandler('logs:swarm:disable',  (cb) => {
       this.events.emit('logs:storage:disable');
       return cb(null, 'Disabling Swarm logs');
     });
@@ -144,13 +144,13 @@ class Swarm {
     this.embark.registerConsoleCommand({
       matches: ['log swarm on'],
       process: (cmd, callback) => {
-        this.events.request('logs:swarm:turnOn', callback);
+        this.events.request('logs:swarm:enable', callback);
       }
     });
     this.embark.registerConsoleCommand({
       matches: ['log swarm off'],
       process: (cmd, callback) => {
-        this.events.request('logs:swarm:turnOff', callback);
+        this.events.request('logs:swarm:disable', callback);
       }
     });
   }

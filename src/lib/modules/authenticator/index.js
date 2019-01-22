@@ -63,7 +63,7 @@ class Authenticator {
         if (this.singleUseToken) {
           // Generate another authentication token.
           this.authToken = uuid();
-          this.events.request('authenticator:displayUrl', false);
+          this.events.request('authenticator:url:display', false);
           emittedToken = uuid();
         } else {
           emittedToken = this.authToken;
@@ -88,10 +88,10 @@ class Authenticator {
 
   registerEvents() {
     this.events.once('outputDone', () => {
-      this.events.request('authenticator:displayUrl', true);
+      this.events.request('authenticator:url:display', true);
     });
 
-    this.events.setCommandHandler('authenticator:displayUrl', (firstOutput) => {
+    this.events.setCommandHandler('authenticator:url:display', (firstOutput) => {
       if(!firstOutput) this.logger.info(__('Previous token has now been used.'));
       this.events.request('api:url', (apiUrl) => {
         this.logger.info(__('Access the web backend with the following url: %s', (`${apiUrl}?token=${this.authToken}`.underline)));
