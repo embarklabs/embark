@@ -83,5 +83,9 @@
       "eth",
       "xyz"
     ]
+  },
+  "dappConfig": {
+    "dir": "config",
+    "blockchain": "blockchain.json"
   }
 }

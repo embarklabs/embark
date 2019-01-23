@@ -27,14 +27,15 @@ describe('embark.CodeGenerator', function() {
         deployedAddress: "0x124",
         code: '123456'
       }
-    ]
+    ];
 
     const TestEvents = {
       request: (cmd, cb) => {
         cb(currentSolcVersion);
       },
       setCommandHandler: () => {
-      }
+      },
+      on: () => {}
     };
     let generator = new CodeGenerator({config: {blockchainConfig: {}}, events: TestEvents}, {});
 
