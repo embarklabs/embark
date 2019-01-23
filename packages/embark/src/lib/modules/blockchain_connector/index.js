@@ -222,11 +222,11 @@ class BlockchainConnector {
     code += "\nEmbarkJS.Blockchain.registerProvider('web3', __embarkWeb3);";
 
     // TODO when we refactor code generator, refactor this to actually do something like connect
-    code += "\nEmbarkJS.Blockchain.setProvider('web3', {});";
+    code += "\nEmbarkJS.Blockchain.setProvider('web3', {web3});"; // web3 is globally available in the vm sandbox
 
     this.embark.addCodeToEmbarkJS(code);
 
-    code = "EmbarkJS.Blockchain.setProvider('web3', {});";
+    code = "EmbarkJS.Blockchain.setProvider('web3', {web3});"; // web3 is globally available in the vm sandbox
 
     const shouldInit = (_config) => {
       return true;

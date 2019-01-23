@@ -2,7 +2,8 @@
 
 const __embarkWeb3 = {};
 
-__embarkWeb3.init = function(_config) {
+__embarkWeb3.init = function(config) {
+  global.web3 = config.web3 || global.web3;
   // Check if the global web3 object uses the old web3 (0.x)
   if (global.web3 && typeof global.web3.version !== 'string') {
     // If so, use a new instance using 1.0, but use its provider

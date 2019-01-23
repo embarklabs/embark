@@ -3,6 +3,7 @@ const fs = require('../../fs');
 
 class CodeRunner {
   constructor(options) {
+    this.ready = false;
     this.config = options.config;
     this.plugins = options.plugins;
     this.logger = options.logger;
@@ -38,6 +39,7 @@ class CodeRunner {
     this.registerEvents();
     this.registerCommands();
     this.events.emit('runcode:ready');
+    this.ready = true;
   }
 
   registerIpcEvents() {
@@ -74,6 +76,23 @@ class CodeRunner {
       cb(this.vm.options.sandbox);
     });
     this.events.setCommandHandler('runcode:eval', this.evalCode.bind(this));
+    this.events.setCommandHandler('runcode:ready', (cb) => {
+      if (this.ready) {
+        return cb();
+      }
+      this.events.once("runcode:ready", cb);
+    });
+    this.events.setCommandHandler('runcode:embarkjs:reset', this.resetEmbarkJS.bind(this));
+  }
+
+  resetEmbarkJS(cb) {
+    this.events.request('blockchain:get', (web3) => {
+      this.events.emit("runcode:register", "web3", web3, false, () => {
+        this.events.request("code-generator:embarkjs:init-provider-code", async (code) => {
+          await this.evalCode(code, cb, true);
+        });
+      });
+    });
   }
 
   registerVar(varName, code, toRecord = true, cb = () => {}) {
