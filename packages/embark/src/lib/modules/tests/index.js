@@ -16,6 +16,7 @@ class TestRunner {
     this.fs = embark.fs;
     this.ipc = options.ipc;
     this.runResults = [];
+    this.embarkjs = null;
 
     this.events.setCommandHandler('tests:run', (options, callback) => {
       this.run(options, callback);
@@ -145,10 +146,10 @@ class TestRunner {
 
   runJSTests(files, options, cb) {
     const self = this;
+    const test = new Test({loglevel: options.loglevel, node: options.node, events: self.events, logger: self.logger,
+      config: self.embark.config, ipc: self.ipc, coverage: options.coverage, inProcess: options.inProcess});
     async.waterfall([
       function setupGlobalNamespace(next) {
-        const test = new Test({loglevel: options.loglevel, node: options.node, events: self.events, logger: self.logger,
-          config: self.embark.config, ipc: self.ipc, coverage: options.coverage, inProcess: options.inProcess});
         global.embark = test;
         global.assert = assert;
         global.config = test.config.bind(test);
@@ -162,20 +163,27 @@ class TestRunner {
         global.deployAll = deprecatedWarning;
         global.EmbarkSpec = {};
         global.EmbarkSpec.deployAll = deprecatedWarning;
-
+        global.contract = function (describeName, callback) {
+          return Mocha.describe(describeName, callback);
+        };
+        next();
+      },
+      function overrideRequire (next) {
         // Override require to enable `require('Embark/contracts/contractName');`
         const Module = require('module');
         const originalRequire = require('module').prototype.require;
         Module.prototype.require = function (requireName) {
+          if (requireName.startsWith('Embark/EmbarkJS')) {
+            return self.embarkjs;
+          }
           if (requireName.startsWith('Embark')) {
             return test.require(...arguments);
           }
           return originalRequire.apply(this, arguments);
         };
-
-        global.contract = function (describeName, callback) {
-          return Mocha.describe(describeName, callback);
-        };
+        next();
+      },
+      function initTest(next) {
 
         test.init((err) => {
           next(err, files);
@@ -200,7 +208,11 @@ class TestRunner {
                 global.config({});
               }
               global.embark.onReady((err) => {
-                done(err);
+                if(err) return done(err);
+                self.events.request('runcode:eval', 'EmbarkJS', (err, embarkjs) => {
+                  self.embarkjs = embarkjs;
+                  done(err);
+                });
               });
             });
             mocha.run(function (fails) {
