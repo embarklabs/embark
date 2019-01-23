@@ -20,6 +20,9 @@ const Templates = {
 class CodeGenerator {
   constructor(embark, options) {
     this.blockchainConfig = embark.config.blockchainConfig || {};
+    this.embarkConfig = embark.config.embarkConfig;
+    this.dappConfigs = {};
+    this.logger = embark.logger;
     this.rpcHost = this.blockchainConfig.rpcHost || '';
     this.rpcPort = this.blockchainConfig.rpcPort || '';
     this.contractsConfig = embark.config.contractsConfig || {};
@@ -41,6 +44,10 @@ class CodeGenerator {
 
   listenToCommands() {
     let self = this;
+
+    this.events.on('config:load:contracts', (contractConfig) => {
+      this.generateConfigs(contractConfig);
+    });
 
     this.events.setCommandHandler('provider-code', function(cb) {
       let providerCode = self.generateProvider(false);
@@ -184,6 +191,23 @@ class CodeGenerator {
     }
 
     return result;
+  }
+
+  generateConfigs(contractConfig) {
+    this.dappConfigs.blockchain = {dappConnection: contractConfig.dappConnection};
+    async.waterfall([
+      (next) => {
+        fs.mkdirp(utils.joinPath(this.embarkConfig.buildDir, constants.dappConfig.dir), next);
+      },
+      (_dir, next) => {
+        fs.writeFile(utils.joinPath(this.embarkConfig.buildDir, constants.dappConfig.dir, constants.dappConfig.blockchain),
+          JSON.stringify(this.dappConfigs.blockchain, null, 2), next);
+      }
+    ], (err) => {
+      if (err) {
+        this.logger.error(err.message || err);
+      }
+    });
   }
 
   generateContractCode(contract, gasLimit) {
