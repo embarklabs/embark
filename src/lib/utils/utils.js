@@ -127,7 +127,9 @@ function pingEndpoint(host, port, type, protocol, origin, callback) {
   };
 
   const handleSuccess = (req, closeMethod, event) => {
-    req.once(event, () => { handleEvent(req, closeMethod); });
+    req.once(event, () => { 
+      handleEvent(req, closeMethod); 
+    });
   };
 
   const handleRequest = (req, closeMethod, event) => {
@@ -136,10 +138,8 @@ function pingEndpoint(host, port, type, protocol, origin, callback) {
   };
 
   if (type === 'ws') {
-    const req = new (require('ws'))(
-      `${protocol === 'https' ? 'wss' : 'ws'}://${_host}:${port}/`,
-      origin ? {origin} : {}
-    );
+    const url = `${protocol === 'https' ? 'wss' : 'ws'}://${_host}:${port}/`;
+    const req = new (require('ws'))(url, origin ? {origin} : {});
     handleRequest(req, 'close', 'open');
   } else {
     const headers = origin ? {Origin: origin} : {};

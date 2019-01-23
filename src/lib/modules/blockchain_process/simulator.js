@@ -86,6 +86,10 @@ class Simulator {
 
     if(useProxy){
       let ipcObject = new Ipc({ipcRole: 'client'});
+      if (this.blockchainConfig.wsRPC) {
+        return new Proxy(ipcObject).serve(host, port, true, this.blockchainConfig.wsOrigins, []);
+      }
+
       new Proxy(ipcObject).serve(host, port, false);
     }
   }
