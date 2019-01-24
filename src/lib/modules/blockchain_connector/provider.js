@@ -19,7 +19,7 @@ class Provider {
 
   getNonce(address, callback) {
     this.web3.eth.getTransactionCount(address, (_error, transactionCount) => {
-      if(!this.nonceCache[address]) {
+      if(this.nonceCache[address] === undefined) {
         this.nonceCache[address] = -1;
       }
 
