@@ -112,7 +112,6 @@ class Solidity {
             }
           }
         };
-
         self._compile(jsonObj, returnAllErrors, callback);
       },
       function createCompiledObject(output, callback) {
@@ -164,7 +163,7 @@ class Solidity {
     let self = this;
     let input = {};
     let originalFilepath = {};
-
+    
     async.waterfall([
       function prepareInput(callback) {
         async.each(contractFiles,
@@ -180,7 +179,7 @@ class Solidity {
             
             remapImports.prepareForCompilation(file, options.isCoverage)
               .then(fileContent => {
-                input[filename] = {content: fileContent.replace(/\r\n/g, '\n')};
+                input[file.path] = {content: fileContent.replace(/\r\n/g, '\n')};
                 fileCb();
               }).catch((_e) => {
                 self.logger.error(__('Error while loading the content of ') + filename);

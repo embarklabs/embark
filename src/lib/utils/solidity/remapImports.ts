@@ -84,10 +84,15 @@ const buildNewFile = (file: File, importPath: string) => {
   return new File({ path: to, type: Types.dappFile });
 };
 
-const rescursivelyFindRemapImports = async (file: File) => {
+const rescursivelyFindRemapImports = async (file: File, filesProcessed: string[] = []) => {
   let remapImports: RemapImport[] = [];
   const content = await file.content;
   const imports = getImports(content);
+
+  if (filesProcessed.includes(file.path)) {
+    return [];
+  }
+  filesProcessed.push(file.path);
 
   // if no imports, break recursion
   if (!imports.length) {
@@ -99,7 +104,7 @@ const rescursivelyFindRemapImports = async (file: File) => {
     file.importRemappings.push({prefix: importPath, target: newFile.path});
     remapImports.push({path: file.path, searchValue: importPath, replaceValue: newFile.path});
     remapImports = remapImports.concat(
-      await rescursivelyFindRemapImports(newFile),
+      await rescursivelyFindRemapImports(newFile, filesProcessed),
     );
   }
 
@@ -123,7 +128,7 @@ const replaceImports = (remapImports: RemapImport[]) => {
   Object.keys(byPath).forEach((p) => {
     let source = fs.readFileSync(p, "utf-8");
     byPath[p].forEach(({searchValue, replaceValue}) => {
-      source = source.replace(`import "${searchValue}";`, `import "${replaceValue}";`);
+      source = source.replace(`${searchValue}`, `${replaceValue}`);
     });
     fs.writeFileSync(p, source);
   });
