@@ -129,7 +129,7 @@ class CodeGenerator {
           autoEnable: this.contractsConfig.dappAutoEnable,
           connectionList: connectionList,
           done: 'done(err);',
-          warnAboutMetamask: isDev,
+          warnAboutMetamask: isDev || false,
           blockchainClient: this.blockchainConfig.ethereumClientName
         });
       }
