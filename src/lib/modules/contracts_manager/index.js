@@ -318,15 +318,29 @@ class ContractsManager {
         // we can skip this entirely
         if(!resetContracts) return callback();
 
-        for (const className in self.contractsConfig.contracts) {
-          const contract = self.contractsConfig.contracts[className];
+        async.eachOf(self.contractsConfig.contracts, (contract, className, eachCb) => {
+          if (!contract.artifact) {
+            contract.className = className;
+            contract.args = contract.args || [];
 
-          contract.className = className;
-          contract.args = contract.args || [];
+            self.contracts[className] = contract;
+            return eachCb();
+          }
 
-          self.contracts[className] = contract;
-        }
-        callback();
+          fs.readFile(fs.dappPath(contract.artifact), (err, artifactBuf) => {
+            if (err) {
+              self.logger.error(__('Error while reading the artifact for "{{className}}" at {{path}}', {className, path: contract.artifact}));
+              return eachCb(err);
+            }
+            try {
+              self.contracts[className] = JSON.parse(artifactBuf.toString());
+              eachCb();
+            } catch (e) {
+              self.logger.error(__('Artifact file does not seem to be valid JSON (%s)', contract.artifact));
+              eachCb(e.message);
+            }
+          });
+        }, callback);
       },
       function getGasPriceForNetwork(callback) {
         return callback(null, self.contractsConfig.gasPrice);
