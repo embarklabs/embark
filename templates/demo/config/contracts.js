@@ -20,9 +20,9 @@ module.exports = {
         },
         {
           mnemonic: "12 word mnemonic",
-          addressIndex: "0", // Optionnal. The index to start getting the address
-          numAddresses: "1", // Optionnal. The number of addresses to get
-          hdpath: "m/44'/60'/0'/0/" // Optionnal. HD derivation path
+          addressIndex: "0", // Optional. The index to start getting the address
+          numAddresses: "1", // Optional. The number of addresses to get
+          hdpath: "m/44'/60'/0'/0/" // Optional. HD derivation path
         },
         {
           "nodeAccounts": true // Uses the Ethereum node's accounts
