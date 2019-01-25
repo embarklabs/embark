@@ -630,9 +630,9 @@ PkgJsonLocalExpected.prototype.logMissingFile = function () {
 
 PkgJsonLocalExpected.prototype.setEmbarkDep = function () {
   if (isObject(this.json)) {
-    if (this.json.dependencies) {
+    if (this.json.dependencies && this.json.dependencies.embark) {
       this.embarkDep = this.json.dependencies.embark;
-    } else if (this.json.devDependencies) {
+    } else if (this.json.devDependencies && this.json.devDependencies.embark) {
       this.embarkDep = this.json.devDependencies.embark;
     }
   }
