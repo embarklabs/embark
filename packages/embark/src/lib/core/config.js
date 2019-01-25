@@ -99,7 +99,6 @@ Config.prototype.loadConfigFiles = function(options) {
   this.loadContractsConfigFile();
   this.loadExternalContractsFiles();
   this.loadWebServerConfigFile();
-  this.loadChainTrackerFile();
   this.loadPluginContractFiles();
 
   this._updateBlockchainCors();
@@ -116,7 +115,6 @@ Config.prototype.reloadConfig = function() {
   this.loadAssetFiles();
   this.loadContractsConfigFile();
   this.loadExternalContractsFiles();
-  this.loadChainTrackerFile();
 
   this._updateBlockchainCors();
 };
@@ -539,15 +537,6 @@ Config.prototype.loadAssetFiles = function () {
   Object.keys(this.embarkConfig.app).forEach(targetFile => {
     this.assetFiles[targetFile] = this.loadFiles(this.embarkConfig.app[targetFile]);
   });
-};
-
-Config.prototype.loadChainTrackerFile = function() {
-  if (!fs.existsSync(this.chainsFile)) {
-    this.logger.info(this.chainsFile + ' ' + __('file not found, creating it...'));
-    fs.writeJSONSync(this.chainsFile, {});
-  }
-
-  this.chainTracker = fs.readJSONSync(this.chainsFile);
 };
 
 function findMatchingExpression(filename, filesExpressions) {

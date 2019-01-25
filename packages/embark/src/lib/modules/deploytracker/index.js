@@ -11,12 +11,26 @@ class DeployTracker {
 
     // TODO: unclear where it comes from
     this.env = options.env;
-    //this.chainConfig = options.chainConfig;
-    this.chainConfig = embark.config.chainTracker;
+    this.chainConfig = {};
+    this.chainFile = embark.config.contractsConfig.tracking;
+    this.loadChainTrackerFile();
     this.registerEvents();
   }
 
+  loadChainTrackerFile() {
+    if (this.chainFile === false) return;
+    if (this.chainFile === undefined) this.chainFile = ".embark/chains.json";
+    this.chainFile = fs.dappPath(this.chainFile);
+    if (!fs.existsSync(this.chainFile)) {
+      this.logger.info(this.chainFile + ' ' + __('file not found, creating it...'));
+      fs.outputJSONSync(this.chainFile, {});
+    }
+
+    this.chainConfig = fs.readJSONSync(this.chainFile);
+  }
+
   registerEvents() {
+    if (this.chainFile === false) return;
     const self = this;
 
     this.embark.registerActionForEvent("deploy:beforeAll", this.setCurrentChain.bind(this));
@@ -91,7 +105,7 @@ class DeployTracker {
     if (this.chainConfig === false) {
       return;
     }
-    fs.writeJSONSync("./chains.json", this.chainConfig, {spaces: 2});
+    fs.writeJSONSync(this.chainFile, this.chainConfig, {spaces: 2});
   }
 
 }
