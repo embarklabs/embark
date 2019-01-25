@@ -108,6 +108,10 @@ function writeJSONSync() {
   return restrictPath(fs.writeJSONSync, fs.writeJSONSync, 1, arguments);
 }
 
+function outputJSONSync() {
+  return restrictPath(fs.outputJSONSync, fs.outputJSONSync, 1, arguments);
+}
+
 function writeJson() {
   return restrictPath(fs.writeJson, fs.writeJson, 1, arguments);
 }
@@ -219,6 +223,7 @@ module.exports = {
   move,
   moveSync,
   outputFileSync,
+  outputJSONSync,
   pkgPath,
   readFile,
   readFileSync,
