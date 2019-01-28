@@ -486,7 +486,8 @@ Config.prototype.loadEmbarkConfigFile = function() {
         "optimize": true,
         "optimize-runs": 200
       }
-    }
+    },
+    "generationDir": "embarkArtifacts"
   };
 
   this.embarkConfig = utils.recursiveMerge(configObject, this.embarkConfig);
