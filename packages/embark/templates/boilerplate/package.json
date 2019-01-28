@@ -1,0 +1,11 @@
+{
+  "name": "%APP_NAME%",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "test": "embark test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT"
+}

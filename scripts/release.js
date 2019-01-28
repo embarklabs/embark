@@ -1,188 +1,210 @@
-/* global process require */
+/* global __dirname process require */
 
 const chalk = require('chalk');
 const {execSync} = require('child_process');
 const minimist = require('minimist');
+const path = require('path');
 const {prompt} = require('promptly');
-const standardVersion = require('standard-version');
+const semver = require('semver');
 
 const args = minimist(process.argv.slice(2));
 
-const DEFAULT_UPSTREAM_REPO_BRANCH = 'master';
-const DEFAULT_UPSTREAM_REPO_ORIGIN = 'origin';
-const branch = args['repo-branch'] || DEFAULT_UPSTREAM_REPO_BRANCH;
-const origin = args['repo-origin'] || DEFAULT_UPSTREAM_REPO_ORIGIN;
+const DEFAULT_BUMP = null;
+const bump = args._[0] || DEFAULT_BUMP;
 
-const distTag = args['npm-dist-tag'];
-const dryRun = args['dry-run'];
-const prerelease = args.prerelease;
-const releaseAs = args['release-as'];
-const sign = args.sign;
+const DEFAULT_COMMIT_MSG = `chore(release): %v`;
+const commitMsg = args['commit-message'] || DEFAULT_COMMIT_MSG;
 
-// eslint-disable-next-line no-confusing-arrow
-const dryRunMaybe = () => dryRun ? leftPad1(chalk.yellow('(DRY RUN)')) : '';
+const DEFAULT_DIST_TAG = `latest`;
+const distTag = args['dist-tag'] || DEFAULT_DIST_TAG;
+
+const DEFAULT_GIT_REMOTE = `origin`;
+const remote = args['git-remote'] || DEFAULT_GIT_REMOTE;
+
+const DEFAULT_PRE_ID = null;
+const preId = args.preid || DEFAULT_PRE_ID;
+
+const DEFAULT_RELEASE_BRANCH = `master`;
+const branch = args['release-branch'] || DEFAULT_RELEASE_BRANCH;
+
+const DEFAULT_SIGN = false;
+const sign = args.sign || DEFAULT_SIGN;
+
+const cyan = (str) => chalk.cyan(str);
 const execSyncInherit = (cmd) => execSync(cmd, {stdio: 'inherit'});
-// eslint-disable-next-line no-confusing-arrow
-const leftPad1 = (str) => ' ' + str;
-// eslint-disable-next-line no-confusing-arrow
-const leftPad1Maybe = (str) => str ? leftPad1(str) : str;
-const log = (mark, str) => console.log(mark, str.filter(s => !!s).join(' '));
-const logError = (...str) => log(chalk.red('✘'), str);
-const logInfo = (...str) => log(chalk.blue('ℹ'), str);
-const logSuccess = (...str) => log(chalk.green('✔'), str);
+const log = (mark, str, which = 'log') => console[which](
+  mark, str.filter(s => !!s).join(` `)
+);
+const logError = (...str) => log(chalk.red(`✘`), str, 'error');
+const logInfo = (...str) => log(chalk.blue(`ℹ`), str);
+const logSuccess = (...str) => log(chalk.green(`✔`), str);
 const logWarning = (...str) => log(chalk.yellow('‼︎'), str);
 
-const yesNoValidator = (input) => {
-  const _input = input && input[0].toLowerCase();
-  if (!['y', 'n'].includes(_input)) {
-    throw new Error(chalk.red('✘') + leftPad1(`Please answer [y]es or [n]o.`));
-  }
-  return _input;
+const failMsg = `${chalk.red(`RELEASE FAILED!`)} Stopping right here.`;
+
+const reportSetting = (desc, val, def) => {
+  logInfo(`${desc} is set to ${cyan(val)}${val === def ? ` (default).`: `.`}`);
 };
 
-const promptOpts = {default: 'blank', validator: yesNoValidator};
-
-const proceedAnywayPrompt = async () => {
-  let answer = await prompt(
-    `${chalk.yellow('⁉︎')} Proceed anyway? [y/n]`,
-    promptOpts
-  );
-  if (answer === 'n') {
-    logWarning(`Stopping right here.`);
-    process.exit(0);
+const runCommand = (cmd, inherit = true, display) => {
+  logInfo(`Running command ${cyan(display || cmd)}.`);
+  let out;
+  if (inherit) {
+    execSyncInherit(cmd);
+  } else {
+    out = execSync(cmd);
   }
-};
-
-const dryRunPrompt = async () => {
-  let answer = await prompt(
-    `${chalk.blue('⁇')} This is ${chalk.yellow('NOT')} a --dry-run.` +
-      leftPad1(`Did you complete a successful --dry-run first? [y/n]`),
-    promptOpts
-  );
-  if (answer === 'n') await proceedAnywayPrompt();
+  return out;
 };
 
 (async () => {
   try {
-    if (!dryRun) await dryRunPrompt();
-
-    logInfo(`Determining the current branch...`);
-
-    let currentBranch;
+    let DEFAULT_REGISTRY, registry;
+    const lernaJsonPath = path.join(__dirname, '../lerna.json');
     try {
-      currentBranch = execSync(`git rev-parse --abbrev-ref HEAD`)
-        .toString()
-        .trim();
-    } catch (e) {
-      logError(`Couldn't determine the branch. Please check the error above.`);
-      throw new Error();
-    }
+      const lernaJson = require(lernaJsonPath);
 
-    if (currentBranch !== branch) {
+      DEFAULT_REGISTRY = lernaJson.command.publish.registry;
+      if (!DEFAULT_REGISTRY) throw new Error('missing registry in lerna.json');
+      registry = args.registry || DEFAULT_REGISTRY;
+    } catch (e) {
+      console.error(e.stack);
       logError(
-        `Current branch '${currentBranch}' is not the same as release branch`,
-        `'${branch}'. Please checkout the release branch before rerunning this`,
-        `script or rerun with '--repo-branch ${currentBranch}'.`
-      );
-      throw new Error();
-    }
-
-    logSuccess(`Current branch and release branch are the same.`);
-    logInfo(`Checking the working tree...`);
-
-    try {
-      execSyncInherit(`npm run --silent check-working-tree`);
-      logSuccess(`Working tree is clean.`);
-    } catch (e) {
-      logError(
-        `Working tree is dirty or has untracked files. Please make necessary`,
-        `changes or commits before rerunning this script.`
-      );
-      throw new Error();
-    }
-
-    logInfo(
-      `Fetching from origin '${origin}' to compare local and remote branches...`
-    );
-
-    try {
-      execSyncInherit(`git fetch ${origin}`);
-    } catch (e) {
-      logError(`Couldn't fetch latest commits. Please check the error above.`);
-      throw new Error();
-    }
-
-    let localRef, originRef;
-    try {
-      localRef = execSync(`git rev-parse ${branch}`).toString();
-      originRef = execSync(`git rev-parse ${origin}/${branch}`).toString();
-    } catch (e) {
-      logError(`A problem occured. Please check the error above.`);
-      throw new Error();
-    }
-
-    if (localRef !== originRef) {
-      logError(
-        `Local branch '${branch}' is not in sync with '${origin}/${branch}'.`,
-        `Please sync branches before rerunning this script.`
-      );
-      throw new Error();
-    }
-
-    logSuccess(`Local branch is in sync with remote branch.`);
-    logInfo(`Running Standard Version${dryRunMaybe()}...`);
-
-    await standardVersion({
-      dryRun,
-      prerelease,
-      releaseAs,
-      sign
-    });
-
-    logInfo(`Publishing new Embark version on npm${dryRunMaybe()}...`);
-
-    const npmPublishCommand = [
-      `npm publish`,
-      leftPad1Maybe(`${distTag ? `--tag ${distTag}` : ''}`),
-      leftPad1Maybe(`${dryRun ? '--dry-run' : ''}`)
-    ].join('');
-
-    try {
-      execSyncInherit(npmPublishCommand);
-      logSuccess(`Successfully published latest version${dryRunMaybe()}.`);
-    } catch (e) {
-      logError(
-        `Couldn't publish version on npm${dryRunMaybe()}.`,
+        `Could not read values from ${cyan(lernaJsonPath)}.`,
         `Please check the error above.`
       );
       throw new Error();
     }
 
-    logInfo(
-      `Pushing release commit and tag to origin '${origin}' on branch`,
-      `'${branch}'${dryRunMaybe()}...`
-    );
-
-    const gitPushCommand = [
-      `git push --follow-tags ${origin} ${branch}`,
-      leftPad1Maybe(`${dryRun ? '--dry-run' : ''}`)
-    ].join('');
+    logInfo(`Checking the working tree...`);
 
     try {
-      execSyncInherit(gitPushCommand);
-      logSuccess(`Successfully pushed${dryRunMaybe()}.`);
+      runCommand(`npm run --silent cwtree`, true, `npm run cwtree`);
+      logSuccess(`Working tree is clean.`);
     } catch (e) {
       logError(
-        `Couldn't push${dryRunMaybe()}. Please check the error above.`
+        `Working tree is dirty or has untracked files.`,
+        `Please make necessary changes or commits before rerunning this script.`
       );
       throw new Error();
     }
 
-    logSuccess(`Woohoo! Done${dryRunMaybe()}.`);
+    reportSetting(`Release branch`, branch, DEFAULT_RELEASE_BRANCH);
+    logInfo(`Determining the current branch...`);
+
+    let currentBranch;
+    try {
+      currentBranch = runCommand(`git rev-parse --abbrev-ref HEAD`, false)
+        .toString()
+        .trim();
+    } catch (e) {
+      logError(`Could not determine the branch. Please check the error above.`);
+      throw new Error();
+    }
+
+    if (currentBranch === branch) {
+      logSuccess(`Current branch and release branch are the same.`);
+    } else {
+      logError(
+        `Current branch ${cyan(currentBranch)} is not the same as release`,
+        `branch ${cyan(branch)}. Please checkout the release branch before`,
+        `rerunning this script or rerun with`,
+        `${cyan(`--release-branch ${currentBranch}`)}.`
+      );
+      throw new Error();
+    }
+
+    reportSetting(`Git remote`, remote, DEFAULT_GIT_REMOTE);
+    logInfo(
+      `Fetching commits from ${cyan(remote)}`,
+      `to compare local and remote branches...`
+    );
+
+    try {
+      runCommand(`git fetch ${remote}`, false);
+    } catch (e) {
+      logError(`Could not fetch latest commits. Please check the error above.`);
+      throw new Error();
+    }
+
+    let localRef, remoteRef;
+    try {
+      localRef = runCommand(`git rev-parse ${branch}`, false).toString().trim();
+      remoteRef = (
+        runCommand(`git rev-parse ${remote}/${branch}`, false).toString().trim()
+      );
+    } catch (e) {
+      logError(`A problem occured. Please check the error above.`);
+      throw new Error();
+    }
+
+    if (localRef === remoteRef) {
+      logSuccess(`Local branch is in sync with remote branch.`);
+    } else {
+      logError(
+        `Local branch ${cyan(branch)} is not in sync with`,
+        `${cyan(`${remote}/${branch}`)}.`,
+        `Please sync branches before rerunning this script.`
+      );
+      throw new Error();
+    }
+
+    logInfo(
+      `It's time to run the QA suite, this will take awhile...`
+    );
+
+    try {
+      runCommand(`npm run qa`);
+      logSuccess(`All steps succeeded in the QA suite.`);
+    } catch (e) {
+      logError(`A step failed in the QA suite. Please check the error above.`);
+      throw new Error();
+    }
+
+    logInfo(`Publishing with Lerna...`);
+    if (bump) reportSetting(`Version bump`, bump, DEFAULT_BUMP);
+    if (preId) reportSetting(`Prerelease identifier`, preId, DEFAULT_PRE_ID);
+    reportSetting(`Package distribution tag`, distTag, DEFAULT_DIST_TAG);
+    reportSetting(`Commit message format`, commitMsg, DEFAULT_COMMIT_MSG);
+    reportSetting(`Signature option`, sign, DEFAULT_SIGN);
+    reportSetting(`Package registry`, registry, DEFAULT_REGISTRY);
+
+    const lernaPublish = [
+      `lerna publish`,
+      bump || ``,
+      (preId && `--preid ${preId}`) || ``,
+      `--dist-tag ${distTag}`,
+      `--conventional-commits`,
+      `--message "${commitMsg}"`,
+      (sign && `--sign-git-commit`) || ``,
+      (sign && `--sign-git-tag`) || ``,
+      `--git-remote ${remote}`,
+      `--registry ${registry}`
+    ].filter(str => !!str).join(` `);
+
+    try {
+      runCommand(lernaPublish);
+      if (localRef ===
+          runCommand(`git rev-parse ${branch}`, false).toString().trim()) {
+        logWarning(
+          chalk.yellow(`RELEASE STOPPED!`),
+          `No commit or tag was created. No packages were published.`
+        );
+        process.exit(0);
+      }
+    } catch (e) {
+      console.error();
+      logError(`A problem occured. Please check the error above.`);
+      throw new Error();
+    }
+
+    logSuccess(`${chalk.green(`RELEASE SUCCEEDED!`)} Woohoo! Done.`);
   } catch (e) {
     logError(
-      `Stopping right here${dryRunMaybe()}.`,
-      dryRun ? '' : `Make sure to clean up commits and tags as necessary.`
+      failMsg,
+      `Make sure to clean up the working tree and local/remote commits and`,
+      `tags as necessary. Check the package registry to verify no packages`,
+      `were published.`
     );
     process.exit(1);
   }

@@ -1,0 +1,11 @@
+!**/package-lock.json
+!/yarn.lock
+**/.embark
+**/chains.json
+**/config/production/password
+**/config/livenet/password
+**/coverage
+**/dist
+**/embarkArtifacts
+**/node_modules
+packages/embark_demo
