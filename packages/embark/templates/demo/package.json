@@ -1,0 +1,16 @@
+{
+  "name": "embark_demo",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "test": "embark test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "react": "16.7.0",
+    "react-bootstrap": "0.32.4",
+    "react-dom": "16.7.0"
+  }
+}

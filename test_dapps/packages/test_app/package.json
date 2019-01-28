@@ -1,0 +1,23 @@
+{
+  "devDependencies": {
+    "@babel/code-frame": "7.0.0",
+    "bootstrap": "3.4.0",
+    "cross-env": "5.2.0",
+    "embark-service": "file:extensions/embark-service",
+    "fs-extra": "7.0.1",
+    "haml": "0.4.3",
+    "jquery": "3.3.1",
+    "react": "16.7.0",
+    "react-bootstrap": "0.32.4",
+    "react-dom": "16.7.0",
+    "rimraf": "2.6.3",
+    "zeppelin-solidity": "1.12.0"
+  },
+  "name": "test_app",
+  "private": true,
+  "scripts": {
+    "clean": "npx cross-env-shell \"node $EMBARK_BIN reset || exit 0\"",
+    "reset": "npm run clean && npx rimraf extensions/**/node_modules node_modules",
+    "test": "cross-env-shell \"node $EMBARK_BIN test\""
+  }
+}

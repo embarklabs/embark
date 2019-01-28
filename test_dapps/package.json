@@ -1,0 +1,42 @@
+{
+  "devDependencies": {
+    "cross-env": "5.2.0",
+    "fs-extra": "7.0.1",
+    "glob": "7.1.3",
+    "lerna": "3.10.7",
+    "npm-run-all": "4.1.5",
+    "rimraf": "2.6.3"
+  },
+  "engines": {
+    "node": ">=8.12.0",
+    "npm": ">=6.4.1",
+    "yarn": ">=1.12.3"
+  },
+  "name": "test_dapps",
+  "private": true,
+  "scripts": {
+    "ci": "yarn install && npm run qa_",
+    "clean": "npx cross-env CMD=clean_ npm run with-embark",
+    "clean_": "npx lerna run --parallel clean",
+    "install:embark": "node scripts/install-embark",
+    "postinstall": "lerna bootstrap --no-ci",
+    "preqa": "npm run reset:demo && yarn install",
+    "pretest_": "npm run setup:demo",
+    "qa": "npm-run-all reboot:full qa_",
+    "qa_": "npm-run-all install:embark test:qa",
+    "reboot": "npm run reset && yarn install",
+    "reboot:full": "npm run reset:full && yarn install",
+    "reset": "npx cross-env CMD=reset_ npm run with-embark",
+    "reset:demo": "npx rimraf packages/embark_demo",
+    "reset:full": "npx npm-run-all reset:demo reset reset:top",
+    "reset:top": "npx rimraf .embark node_modules",
+    "reset_": "npx lerna run --parallel reset",
+    "setup:demo": "node scripts/setup-demo",
+    "test": "cross-env CMD=test_ npm run with-embark",
+    "test:qa": "cross-env CMD=test_ npm run with-embark:pkg",
+    "test_": "lerna run --concurrency=1 --stream test",
+    "with-embark": "npx cross-env EMBARK_BIN=../../../packages/embark/bin/embark SCRIPT_EMBARK_BIN=../../packages/embark/bin/embark npm run with-embark_",
+    "with-embark:pkg": "cross-env EMBARK_BIN=../../.embark/packaged/node_modules/embark/bin/embark SCRIPT_EMBARK_BIN=../.embark/packaged/node_modules/embark/bin/embark npm run with-embark_",
+    "with-embark_": "npx cross-env-shell EMBARK_NO_SHIM=t \"npm run $CMD\""
+  }
+}
