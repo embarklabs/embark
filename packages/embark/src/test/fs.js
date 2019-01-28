@@ -1,0 +1,77 @@
+/*global after, before, describe, it, require, process*/
+const {assert} = require('chai');
+const os = require('os');
+const path = require('path');
+const underlyingFs = require('fs-extra');
+const fs = require('../lib/core/fs');
+
+describe('fs', () => {
+  let fsMethods = {};
+  let oldDappPath;
+  let oldProcessExit;
+
+  before(() => {
+    oldDappPath = process.env.DAPP_PATH;
+    process.env.DAPP_PATH = fs.embarkPath();
+    oldProcessExit = process.exit;
+    process.exit = function() {};
+
+    for(const method in underlyingFs) {
+      fsMethods[method] = underlyingFs[method];
+      underlyingFs[method] = function() {};
+    }
+  });
+
+  after(() => {
+    process.env.DAPP_PATH = oldDappPath;
+    process.exit = oldProcessExit;
+
+    for(const method in underlyingFs) {
+      underlyingFs[method] = fsMethods[method];
+    }
+  });
+
+  const helperFunctions = [
+    'dappPath',
+    'diagramPath',
+    'embarkPath',
+    'ipcPath',
+    'pkgPath',
+    'tmpDir'
+  ];
+
+  const paths = [
+    '/etc',
+    '/home/testuser/src',
+    '/usr',
+    '../'
+  ];
+
+  for(let func in fs) {
+    if(helperFunctions.includes(func)) continue;
+
+    describe(`fs.${func}`, () => {
+      it('should throw exceptions on paths outside the DApp root', (done) => {
+        paths.forEach(path => {
+          assert.throws(() => {
+            fs[func](path);
+          }, /EPERM: Operation not permitted/);
+        });
+
+        done();
+      });
+
+      it('should not throw exceptions on paths inside the temporary dir root', (done) => {
+        assert.doesNotThrow(async () => {
+          try {
+            await fs[func](path.join(os.tmpdir(), 'foo'));
+          } catch(e) {
+            if(e.message.indexOf('EPERM') === 0) throw e;
+          }
+        }, /EPERM: Operation not permitted/);
+
+        done();
+      });
+    });
+  }
+});

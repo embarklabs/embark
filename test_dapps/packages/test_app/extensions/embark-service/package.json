@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "haml": "0.4.3"
+  },
+  "main": "index.js",
+  "name": "embark-service",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

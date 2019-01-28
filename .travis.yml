@@ -5,18 +5,31 @@ os:
 node_js:
   - "8"
   - "10"
+cache: yarn
 before_install:
-  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.12.3
-  - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-cache:
-  yarn: true
-env:
-  - EMBARK_NO_PREPARE=true
+  - |
+    echo installing IPFS
+    IPFS_VER=0.4.18
+    pushd "$PWD" &>/dev/null
+    mkdir -p ~/Downloads && cd ~/Downloads
+    if [[ "$TRAVIS_OS_NAME" = "linux" ]]; then
+        URL="https://dist.ipfs.io/go-ipfs/v${IPFS_VER}/go-ipfs_v${IPFS_VER}_linux-amd64.tar.gz"
+    fi
+    if [[ "$TRAVIS_OS_NAME" = "osx" ]]; then
+        URL="https://dist.ipfs.io/go-ipfs/v${IPFS_VER}/go-ipfs_v${IPFS_VER}_darwin-amd64.tar.gz"
+    fi
+    curl -O -L "$URL" && unset IPFS_VER URL
+    tar xzvf go-ipfs* && export PATH="$PWD/go-ipfs:$PATH"
+    popd &>/dev/null
+    ipfs init
+  - |
+    echo installing Yarn
+    YARN_VER="1.12.3"
+    curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version "$YARN_VER"
+    unset YARN_VER
+    export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+  - yarn --version
 install:
-  - yarn install
-  - cd embark-ui && yarn install && cd ..
-  - npm run check-working-tree
+  - echo embark installation managed by package.json script 'ci'
 script:
-  - npm run build:node
-  - npm test
-  - npm run check-working-tree
+  - npm run ci
