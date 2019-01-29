@@ -8,10 +8,14 @@ const fs = require("../../core/fs");
 const FIND_IMPORTS_REGEX = /^import[\s]*(['"])(.*)\1;/gm;
 const FIND_FILE_REGEX = /import[\s]*(['"])(.*)\1;/;
 
+export interface ImportRemapping {
+  prefix: string;
+  target: string;
+}
+
 interface RemapImport {
   path: string;
-  searchValue: string;
-  replaceValue: string;
+  remapping: ImportRemapping;
 }
 
 const getImports = (source: string) => {
@@ -33,12 +37,8 @@ const prepareInitialFile = async (file: File) => {
   }
 
   const destination = fs.dappPath(".embark", file.path);
-  if (file.type === Types.dappFile) {
+  if (file.type === Types.dappFile || file.type === Types.custom) {
     fs.copySync(fs.dappPath(file.path), destination);
-  }
-
-  if (file.type === Types.custom) {
-    fs.writeFileSync(destination);
   }
 
   file.path = destination;
@@ -101,8 +101,9 @@ const rescursivelyFindRemapImports = async (file: File, filesProcessed: string[]
 
   for (const importPath of imports) {
     const newFile = buildNewFile(file, importPath);
-    file.importRemappings.push({prefix: importPath, target: newFile.path});
-    remapImports.push({path: file.path, searchValue: importPath, replaceValue: newFile.path});
+    const remapping = { prefix: importPath, target: newFile.path };
+    file.importRemappings.push(remapping);
+    remapImports.push({ path: file.path, remapping });
     remapImports = remapImports.concat(
       await rescursivelyFindRemapImports(newFile, filesProcessed),
     );
@@ -124,30 +125,55 @@ const isHttp = (input: string) => {
 };
 
 const replaceImports = (remapImports: RemapImport[]) => {
-  const byPath: {[path: string]: [{searchValue: string, replaceValue: string}]} = groupBy(remapImports, "path");
+  const byPath: { [path: string]: [{ remapping: ImportRemapping }] } = groupBy(remapImports, "path");
   Object.keys(byPath).forEach((p) => {
     let source = fs.readFileSync(p, "utf-8");
-    byPath[p].forEach(({searchValue, replaceValue}) => {
-      source = source.replace(`import "${searchValue}"`, `import "${replaceValue}"`);
+    byPath[p].forEach(({ remapping }) => {
+      source = source.replace(`import "${remapping.prefix}"`, `import "${remapping.target}"`);
     });
     fs.writeFileSync(p, source);
   });
 };
 
+const addRemappingsToFile = (file: File, remapImports: RemapImport[]) => {
+  const byPath: { [path: string]: [{ remapping: ImportRemapping }] } = groupBy(remapImports, "path");
+  const paths = Object.keys(byPath);
+  if (paths) {
+    file.importRemappings = []; // clear as we already have the first remapping added
+    paths.forEach((p) => {
+      const [...remappings] = byPath[p].map((importRemapping) => importRemapping.remapping);
+      file.importRemappings = file.importRemappings.concat(remappings);
+    });
+  }
+};
+
 const resolve = (input: string) => {
   try {
-    return require.resolve(input, {paths: [fs.dappPath("node_modules")]});
+    const result = require.resolve(input, { paths: [fs.dappPath("node_modules"), fs.embarkPath("node_modules")] });
+    return result;
   } catch (e) {
     return "";
   }
 };
 
 export const prepareForCompilation = async (file: File, isCoverage = false) => {
-  await prepareInitialFile(file);
-  const remapImports = await rescursivelyFindRemapImports(file);
-  replaceImports(remapImports);
+  if (!file.isPrepared) {
+    await prepareInitialFile(file);
+    const remapImports = await rescursivelyFindRemapImports(file);
+    replaceImports(remapImports);
+    // add all remappings to top-level file
+    addRemappingsToFile(file, remapImports);
 
-  const content = await file.content;
+    // set flag to prevent copying, remapping, and changing of paths again
+    file.isPrepared = true;
+  }
+  let content;
+  if (file.type === Types.http) {
+    content = (await fs.readFile(file.path)).toString();
+  } else {
+    content = await file.content;
+  }
+
   if (!isCoverage) {
     return content;
   }
