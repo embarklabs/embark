@@ -1,6 +1,5 @@
 let async = require('../../utils/async_extend.js');
 let SolcW = require('./solcW.js');
-const remapImports = require('../../utils/solidity/remapImports');
 
 class Solidity {
 
@@ -177,7 +176,7 @@ class Solidity {
 
             originalFilepath[filename] = file.path;
             
-            remapImports.prepareForCompilation(file, options.isCoverage)
+            file.prepareForCompilation(options.isCoverage)
               .then(fileContent => {
                 input[file.path] = {content: fileContent.replace(/\r\n/g, '\n')};
                 fileCb();

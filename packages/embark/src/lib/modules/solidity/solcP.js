@@ -1,8 +1,5 @@
 const fs = require('fs-extra');
-const path = require('path');
 const semver = require('semver');
-const constants = require('../../constants');
-const Utils = require('../../utils/utils');
 const ProcessWrapper = require('../../core/processes/processWrapper');
 const PluginManager = require('live-plugin-manager-git-fix').PluginManager;
 import LongRunningProcessTimer  from '../../utils/longRunningProcessTimer';
@@ -17,18 +14,8 @@ class SolcProcess extends ProcessWrapper {
   }
 
   findImports(filename) {
-    if (filename.startsWith('http') || filename.startsWith('git')) {
-      const fileObj = Utils.getExternalContractUrl(filename, this._providerUrl);
-      filename = fileObj.filePath;
-    }
     if (fs.existsSync(filename)) {
       return {contents: fs.readFileSync(filename).toString()};
-    }
-    if (fs.existsSync(path.join('./node_modules/', filename))) {
-      return {contents: fs.readFileSync(path.join('./node_modules/', filename)).toString()};
-    }
-    if (fs.existsSync(path.join(constants.httpContractsDirectory, filename))) {
-      return {contents: fs.readFileSync(path.join(constants.httpContractsDirectory, filename)).toString()};
     }
     return {error: 'File not found'};
   }

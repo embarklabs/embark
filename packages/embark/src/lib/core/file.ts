@@ -1,4 +1,5 @@
 import * as path from "path";
+import { ImportRemapping, prepareForCompilation } from "../utils/solidity/remapImports";
 
 const fs = require("./fs.js");
 const utils = require("../utils/utils");
@@ -8,11 +9,6 @@ export enum Types {
   dappFile = "dapp_file",
   custom = "custom",
   http = "http",
-}
-
-interface ImportRemapping {
-  prefix: string;
-  target: string;
 }
 
 export class File {
@@ -30,20 +26,32 @@ export class File {
   constructor(options: any) {
     this.type = options.type;
 
-    this.basedir = options.basedir;
+    this.basedir = options.basedir || "";
     this.resolver = options.resolver;
     this.pluginPath = options.pluginPath ? options.pluginPath : "";
     this.storageConfig = options.storageConfig;
     this.providerUrl = "";
     this.originalPath = options.originalPath || "";
 
-    if (this.type === Types.http) {
+    if (this.type === Types.custom && this.pluginPath) {
+      this.path = path.join(this.pluginPath, options.path).replace(fs.dappPath(), "");
+      if (this.path.startsWith("/")) {
+        this.path = this.path.substring(1);
+      }
+    } else if (this.type === Types.http) {
       const external = utils.getExternalContractUrl(options.externalUrl, this.providerUrl);
       this.externalUrl = external.url;
-      this.path = external.filePath;
+      this.path = fs.dappPath(external.filePath);
     } else {
       this.path = options.path.replace(/\\/g, "/");
     }
+  }
+
+  public async prepareForCompilation(isCoverage = false) {
+    if (!this.path.endsWith(".sol")) {
+      return Promise.reject("this method is only supported for Solidity files");
+    }
+    return prepareForCompilation(this, isCoverage);
   }
 
   public get content(): Promise<string> {
