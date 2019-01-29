@@ -287,10 +287,11 @@ class Pipeline {
             }
             async.map(
               files,
-              async function (file, fileCb) {
+              function (file, fileCb) {
                 self.logger.trace("reading " + file.path);
-                const fileContent = await file.content;
-                self.runPlugins(file, fileContent, fileCb);
+                file.content.then((fileContent) => {
+                  self.runPlugins(file, fileContent, fileCb);
+                });
               },
               function (err, contentFiles) {
                 if (err) {
