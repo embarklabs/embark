@@ -291,7 +291,7 @@ class Pipeline {
                 self.logger.trace("reading " + file.path);
                 file.content.then((fileContent) => {
                   self.runPlugins(file, fileContent, fileCb);
-                });
+                }).catch(fileCb);
               },
               function (err, contentFiles) {
                 if (err) {

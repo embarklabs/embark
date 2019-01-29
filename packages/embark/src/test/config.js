@@ -4,6 +4,7 @@ const Plugins = require('../lib/core/plugins.js');
 const assert = require('assert');
 const TestLogger = require('../lib/utils/test_logger');
 const Events = require('../lib/core/events');
+const fs = require('../lib/core/fs');
 
 describe('embark.Config', function () {
   let config = new Config({
@@ -191,10 +192,11 @@ describe('embark.Config', function () {
         {
           "type": "http",
           "externalUrl": "https://raw.githubusercontent.com/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol",
-          "path": ".embark/contracts/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol",
+          "path": fs.dappPath(".embark/contracts/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol"),
           "pluginPath": '',
           "basedir": "",
           "importRemappings": [],
+          "isPrepared": false,
           "resolver": undefined,
           "storageConfig": undefined,
           "providerUrl": ""
@@ -202,21 +204,23 @@ describe('embark.Config', function () {
         {
           "type": "http",
           "externalUrl": "https://raw.githubusercontent.com/status-im/contracts/master/contracts/identity/ERC725.sol",
-          "path": ".embark/contracts/status-im/contracts/master/contracts/identity/ERC725.sol",
+          "path": fs.dappPath(".embark/contracts/status-im/contracts/master/contracts/identity/ERC725.sol"),
           "pluginPath": '',
           "basedir": "",
           "importRemappings": [],
+          "isPrepared": false,
           "resolver": undefined,
           "storageConfig": undefined,
           "providerUrl": ""
         },
         {
           "externalUrl": "https://swarm-gateways.net/bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63",
-          "path": ".embark/contracts/bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63",
+          "path": fs.dappPath(".embark/contracts/bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63"),
           "type": "http",
           "pluginPath": '',
           "basedir": "",
           "importRemappings": [],
+          "isPrepared": false,
           "resolver": undefined,
           "storageConfig": undefined,
           "providerUrl": ""
