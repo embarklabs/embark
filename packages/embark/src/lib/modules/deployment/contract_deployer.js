@@ -302,7 +302,7 @@ class ContractDeployer {
         next();
       },
       function estimateCorrectGas(next) {
-        if (contract.gas === 'auto') {
+        if (contract.gas === 'auto' || !contract.gas) {
           return self.blockchain.estimateDeployContractGas(deployObject, (err, gasValue) => {
             if (err) {
               return next(err);
