@@ -52,6 +52,10 @@ class CodeGenerator {
       this.generateStorageConfig(storageConfig);
     });
 
+    this.events.on('config:load:communication', (communicationConfig) => {
+      this.generateCommunicationConfig(communicationConfig);
+    });
+
     this.events.setCommandHandler('code', function(cb) {
       self.events.request("contracts:list", (_err, contractsList) => {
         let embarkJSABI = self.generateABI(contractsList, {useEmbarkJS: true});
@@ -165,6 +169,13 @@ class CodeGenerator {
       dappConnection: storageConfig.dappConnection
     };
     this.generateConfig(this.dappConfigs.storage, constants.dappConfig.storage);
+  }
+
+  generateCommunicationConfig(communicationConfig) {
+    this.dappConfigs.communication = {
+      connection: communicationConfig.connection
+    };
+    this.generateConfig(this.dappConfigs.communication, constants.dappConfig.communication);
   }
 
   generateConfig(configObj, filepathName) {
