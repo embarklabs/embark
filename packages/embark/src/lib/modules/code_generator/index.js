@@ -45,7 +45,11 @@ class CodeGenerator {
     let self = this;
 
     this.events.on('config:load:contracts', (contractConfig) => {
-      this.generateConfigs(contractConfig);
+      this.generateContractConfig(contractConfig);
+    });
+
+    this.events.on('config:load:storage', (storageConfig) => {
+      this.generateStorageConfig(storageConfig);
     });
 
     this.events.setCommandHandler('code', function(cb) {
@@ -146,16 +150,27 @@ class CodeGenerator {
     });
   }
 
-  generateConfigs(contractConfig) {
+  generateContractConfig(contractConfig) {
     this.dappConfigs.blockchain = {
       dappConnection: contractConfig.dappConnection,
       dappAutoEnable: contractConfig.dappAutoEnable,
       warnIfMetamask: this.blockchainConfig.isDev,
       blockchainClient: this.blockchainConfig.ethereumClientName
     };
+    this.generateConfig(this.dappConfigs.blockchain, constants.dappConfig.blockchain);
+  }
+
+  generateStorageConfig(storageConfig) {
+    this.dappConfigs.storage = {
+      dappConnection: storageConfig.dappConnection
+    };
+    this.generateConfig(this.dappConfigs.storage, constants.dappConfig.storage);
+  }
+
+  generateConfig(configObj, filepathName) {
     const dir = utils.joinPath(this.embarkConfig.generationDir, constants.dappConfig.dir);
-    const filePath = utils.joinPath(dir, constants.dappConfig.blockchain);
-    const configString = JSON.stringify(this.dappConfigs.blockchain, null, 2);
+    const filePath = utils.joinPath(dir, filepathName);
+    const configString = JSON.stringify(configObj, null, 2);
     async.waterfall([
       (next) => {
         fs.mkdirp(dir, next);
@@ -338,7 +353,7 @@ class CodeGenerator {
       names: this.namesystemConfig || {},
       storage: this.storageConfig || {}
     };
-  
+
     return this.plugins.getPluginsFor("initConsoleCode").reduce((acc, plugin) => {
       Object.keys(codeTypes).forEach((codeTypeName) => {
         (plugin.embarkjs_init_console_code[codeTypeName] || []).forEach((initCode) => {

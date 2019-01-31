@@ -86,6 +86,8 @@
   },
   "dappConfig": {
     "dir": "config",
-    "blockchain": "blockchain.json"
+    "blockchain": "blockchain.json",
+    "storage": "storage.json",
+    "communication": "communication.json"
   }
 }

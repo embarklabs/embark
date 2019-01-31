@@ -401,6 +401,7 @@ Config.prototype.loadStorageConfigFile = function() {
   let configFilePath = this._getFileOrObject(this.configDir, 'storage', 'storage');
 
   this.storageConfig = this._mergeConfig(configFilePath, configObject, this.env);
+  this.events.emit('config:load:storage', this.storageConfig);
 };
 
 Config.prototype.loadNameSystemConfigFile = function() {
