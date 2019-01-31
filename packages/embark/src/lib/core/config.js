@@ -434,6 +434,7 @@ Config.prototype.loadCommunicationConfigFile = function() {
   let configFilePath = this._getFileOrObject(this.configDir, 'communication', 'communication');
 
   this.communicationConfig = this._mergeConfig(configFilePath, configObject, this.env);
+  this.events.emit('config:load:communication', this.communicationConfig);
 };
 
 Config.prototype.loadWebServerConfigFile = function() {
