@@ -42,60 +42,48 @@ class CodeGenerator {
   }
 
   listenToCommands() {
-    let self = this;
-
-    this.events.on('config:load:contracts', (contractConfig) => {
-      this.generateContractConfig(contractConfig);
-    });
-
-    this.events.on('config:load:storage', (storageConfig) => {
-      this.generateStorageConfig(storageConfig);
-    });
-
-    this.events.on('config:load:communication', (communicationConfig) => {
-      this.generateCommunicationConfig(communicationConfig);
-    });
+    this.events.on('config:load:contracts', this.generateContractConfig.bind(this));
+    this.events.on('config:load:storage', this.generateStorageConfig.bind(this));
+    this.events.on('config:load:communication', this.generateCommunicationConfig.bind(this));
 
     this.events.setCommandHandler('code', function(cb) {
-      self.events.request("contracts:list", (_err, contractsList) => {
-        let embarkJSABI = self.generateABI(contractsList, {useEmbarkJS: true});
-        let contractsJSON = self.generateContractsJSON(contractsList);
+      this.events.request("contracts:list", (_err, contractsList) => {
+        let embarkJSABI = this.generateABI(contractsList, {useEmbarkJS: true});
+        let contractsJSON = this.generateContractsJSON(contractsList);
         cb(embarkJSABI, contractsJSON);
       });
     });
 
-    this.events.setCommandHandler('code-generator:web3js', function(cb) {
-      self.buildWeb3JS(cb);
-    });
+    this.events.setCommandHandler('code-generator:web3js', this.buildWeb3JS.bind(this));
 
-    self.events.setCommandHandler('code-generator:contract', (contractName, cb) => {
-      self.events.request('contracts:contract', contractName, (contract) => {
-        self.buildContractJS(contractName, self.generateContractJSON(contract, contract), cb);
+    this.events.setCommandHandler('code-generator:contract', (contractName, cb) => {
+      this.events.request('contracts:contract', contractName, (contract) => {
+        this.buildContractJS(contractName, this.generateContractJSON(contract, contract), cb);
       });
     });
 
-    self.events.setCommandHandler('code-generator:contract:vanilla', (contract, gasLimit, cb) => {
-      cb(self.generateContractCode(contract, gasLimit));
+    this.events.setCommandHandler('code-generator:contract:vanilla', (contract, gasLimit, cb) => {
+      cb(this.generateContractCode(contract, gasLimit));
     });
 
-    self.events.setCommandHandler('code-generator:contract:custom', (contract, cb) => {
-      const customCode = self.generateCustomContractCode(contract);
+    this.events.setCommandHandler('code-generator:contract:custom', (contract, cb) => {
+      const customCode = this.generateCustomContractCode(contract);
       if (!customCode) {
         // Fallback to generate code from vanilla contract generator.
         //
         // TODO: can be moved into a afterDeploy event
         // just need to figure out the gasLimit coupling issue
-        return cb(self.generateContractCode(contract, contract._gasLimit || false));
+        return cb(this.generateContractCode(contract, contract._gasLimit || false));
       }
       cb(customCode);
     });
 
-    self.events.setCommandHandler('code-generator:embarkjs:provider-code', (cb) => {
-      cb(self.getEmbarkJsProviderCode());
+    this.events.setCommandHandler('code-generator:embarkjs:provider-code', (cb) => {
+      cb(this.getEmbarkJsProviderCode());
     });
 
-    self.events.setCommandHandler('code-generator:embarkjs:init-provider-code', (cb) => {
-      cb(self.getInitProviderCode());
+    this.events.setCommandHandler('code-generator:embarkjs:init-provider-code', (cb) => {
+      cb(this.getInitProviderCode());
     });
   }
 
