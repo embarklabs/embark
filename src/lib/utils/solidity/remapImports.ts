@@ -128,7 +128,7 @@ const replaceImports = (remapImports: RemapImport[]) => {
   Object.keys(byPath).forEach((p) => {
     let source = fs.readFileSync(p, "utf-8");
     byPath[p].forEach(({searchValue, replaceValue}) => {
-      source = source.replace(`${searchValue}`, `${replaceValue}`);
+      source = source.replace(`import "${searchValue}"`, `import "${replaceValue}"`);
     });
     fs.writeFileSync(p, source);
   });
