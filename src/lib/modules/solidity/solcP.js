@@ -67,7 +67,7 @@ class SolcProcess extends ProcessWrapper {
       if (semver.gte(this.solc.version(), '0.5.0')) {
         func = this.solc.compile;
       }
-      let output = func(JSON.stringify(jsonObj), this.findImports);
+      let output = func(JSON.stringify(jsonObj), this.findImports.bind(this));
       cb(null, output);
     } catch (err) {
       cb(err.message);
