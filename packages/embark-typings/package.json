@@ -14,37 +14,30 @@
     "solc",
     "solidity"
   ],
-  "main": "./dist/index.js",
+  "license": "MIT",
+  "repository": "github:embark-framework/embark",
   "scripts": {
-    "build": "cross-env BABEL_ENV=node babel src --copy-files --extensions \".js,.ts\" --out-dir dist --source-maps",
     "ci": "npm run qa",
-    "clean": "npx npm-run-all clean:* && npx rimraf .nyc_output coverage dist embark-*.tgz package",
-    "clean:templates": "node scripts/templates-reset",
-    "lint": "npm-run-all lint:*",
-    "lint:js": "eslint babel.config.js bin/embark src/bin/ src/lib/",
-    "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
+    "lint": "tslint -c tslint.json \"src/**/*.ts\"",
     "package": "npm pack",
-    "qa": "npm-run-all lint typecheck build package",
-    "reset": "npm run clean && npx rimraf node_modules templates/**/node_modules",
+    "qa": "npm-run-all lint typecheck package",
+    "reset": "npx rimraf node_modules",
     "start": "npm run watch",
     "typecheck": "tsc",
     "watch": "run-p watch:*",
-    "watch:build": "npm run build -- --verbose --watch",
     "watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
   },
-  "license": "MIT",
-  "repository": "github:embark-framework/embark",
+  "devDependencies": {
+    "eslint": "5.7.0",
+    "npm-run-all": "4.1.5",
+    "rimraf": "2.6.3",
+    "tslint": "5.11.0",
+    "typescript": "3.1.3",
+    "web3-eth-abi": "1.0.0-beta.37"
+  },
   "engines": {
     "node": ">=8.12.0",
     "npm": ">=6.4.1",
     "yarn": ">=1.12.3"
-  },
-  "runtime": {
-    "engines": {
-      "node": ">=8.11.3"
-    }
-  },
-  "devDependencies": {
-    "@babel/plugin-proposal-export-default-from": "7.2.0"
   }
 }
