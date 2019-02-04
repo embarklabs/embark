@@ -2,7 +2,7 @@ import { red } from "colors";
 import { performance, PerformanceObserver } from "perf_hooks";
 import prettyMs from "pretty-ms";
 
-import { Logger } from "../../../src/typings/logger";
+import { Logger } from "embark";
 
 const utils = require("./utils.js");
 const ora = require("ora");
@@ -21,7 +21,7 @@ export default class LongRunningProcessTimer {
   private endMark: string;
   private downloadComplete: string;
   private spinner!: any;
-  private intOngoingDownload!: number;
+  private intOngoingDownload!: NodeJS.Timeout;
 
   // backing variables
   private _observer!: PerformanceObserver;
@@ -116,7 +116,7 @@ export default class LongRunningProcessTimer {
       () => {
         performance.mark(this.ongoingMark);
         performance.measure(this.downloadOngoing, this.startMark, this.ongoingMark);
-      }, this.options.interval);
+      }, this.options.interval || 0);
   }
 
   public end() {

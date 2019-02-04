@@ -1,14 +1,15 @@
 import bodyParser from "body-parser";
 import cors from "cors";
+import { Embark, Plugins } from "embark";
 import express, { NextFunction, Request, Response } from "express";
 import proxy from "express-http-proxy";
 import expressWs from "express-ws";
 import findUp from "find-up";
 import helmet from "helmet";
 import * as http from "http";
+import {__} from "i18n";
 import * as path from "path";
 import * as ws from "ws";
-import { Embark, Plugins } from "../../../typings/embark";
 // @ts-ignore
 import { embarkPath } from "../../core/fs";
 

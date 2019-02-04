@@ -1,4 +1,5 @@
-import {Embark} from "../../../typings/embark";
+import {Embark} from "embark";
+import {__} from "i18n";
 import {dockerHostSwap} from "../../utils/host.js";
 import {findNextPort} from "../../utils/network";
 import Server from "./server";

@@ -1,7 +1,7 @@
+import { Embark } from "embark";
 import Handlebars from "handlebars";
+import {__} from "i18n";
 import * as path from "path";
-
-import { Embark } from "../../../../../typings/embark";
 import { Builder } from "../../builder";
 import { CommandOptions } from "../../commandOptions";
 import { SmartContractsRecipe } from "../../smartContractsRecipe";
