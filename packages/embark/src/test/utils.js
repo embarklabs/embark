@@ -7,18 +7,18 @@ describe('embark.utils', function () {
   describe('#getExternalContractUrl', function () {
     it('should get the right url for a https://github file', function () {
       const fileObj = Utils.getExternalContractUrl(
-        'https://github.com/embark-framework/embark/blob/master/test_app/app/contracts/simple_storage.sol'
+        'https://github.com/embark-framework/embark/blob/master/test_dapps/packages/test_app/app/contracts/simple_storage.sol'
       );
       assert.deepEqual(fileObj,
         {
-          filePath: constants.httpContractsDirectory + 'embark-framework/embark/master/test_app/app/contracts/simple_storage.sol',
-          url: 'https://raw.githubusercontent.com/embark-framework/embark/master/test_app/app/contracts/simple_storage.sol'
+          filePath: constants.httpContractsDirectory + 'embark-framework/embark/master/test_dapps/packages/test_app/app/contracts/simple_storage.sol',
+          url: 'https://raw.githubusercontent.com/embark-framework/embark/master/test_dapps/packages/test_app/app/contracts/simple_storage.sol'
         });
     });
 
     it('should fail for a malformed https://github file', function () {
       const fileObj = Utils.getExternalContractUrl(
-        'https://github/embark-framework/embark/blob/master/test_app/app/contracts/simple_storage.sol'
+        'https://github/embark-framework/embark/blob/master/test_dapps/packages/test_app/app/contracts/simple_storage.sol'
       );
       assert.strictEqual(fileObj, null);
     });
@@ -92,7 +92,7 @@ describe('embark.utils', function () {
     });
 
     it('should get the correct default url for a correct bzz:/ swarm file', function () {
-      const swarmFile = 'bzz:/someensdomain.eth/ERC725.sol'
+      const swarmFile = 'bzz:/someensdomain.eth/ERC725.sol';
       const fileObj = Utils.getExternalContractUrl(
         swarmFile
       );
@@ -103,7 +103,7 @@ describe('embark.utils', function () {
     });
 
     it('should get the correct url for a correct bzz:/ swarm file when a http swarm gateway is explicitly provided', function () {
-      const swarmFile = 'bzz:/someensdomain.eth/ERC725.sol'
+      const swarmFile = 'bzz:/someensdomain.eth/ERC725.sol';
       const fileObj = Utils.getExternalContractUrl(
         swarmFile,
         'http://localhost:8500'
@@ -115,7 +115,7 @@ describe('embark.utils', function () {
     });
 
     it('should get the correct url for a correct bzz:/ swarm file when a https swarm gateway is provided', function () {
-      const swarmFile = 'bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63'
+      const swarmFile = 'bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63';
       const fileObj = Utils.getExternalContractUrl(
         swarmFile,
         'https://swarm-gateways.net'
