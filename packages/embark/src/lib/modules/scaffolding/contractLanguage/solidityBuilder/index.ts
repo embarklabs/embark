@@ -1,7 +1,7 @@
 import Handlebars from "handlebars";
 import * as path from "path";
 
-import { Embark } from "../../../../../typings/embark";
+import { Embark } from "embark-typings";
 import { Builder } from "../../builder";
 import { CommandOptions } from "../../commandOptions";
 import { SmartContractsRecipe } from "../../smartContractsRecipe";

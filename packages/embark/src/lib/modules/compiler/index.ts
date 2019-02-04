@@ -1,8 +1,6 @@
-import {Callback} from "../../../typings/callbacks";
+import {Callback, Embark, CompilerPluginObject, Plugins} from "embark-typings";
 
 const async = require("../../utils/async_extend.js");
-import { Embark } from "../../../typings/embark";
-import { CompilerPluginObject, Plugins } from "../../../typings/plugins";
 
 class Compiler {
   private logger: any;

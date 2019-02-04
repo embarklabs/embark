@@ -8,7 +8,7 @@ import helmet from "helmet";
 import * as http from "http";
 import * as path from "path";
 import * as ws from "ws";
-import { Embark, Plugins } from "../../../typings/embark";
+import { Embark, Plugins } from "embark-typings";
 // @ts-ignore
 import { embarkPath } from "../../core/fs";
 

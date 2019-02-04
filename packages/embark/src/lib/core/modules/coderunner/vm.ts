@@ -1,7 +1,6 @@
 import { each } from "async";
 import { NodeVM, NodeVMOptions } from "vm2";
-import { Callback } from "../../../../typings/callbacks";
-import { Logger } from "../../../../typings/logger";
+import { Callback, Logger } from "embark-typings";
 
 const fs = require("../../fs");
 const { recursiveMerge, isEs6Module } = require("../../../utils/utils");

@@ -2,8 +2,7 @@ import Handlebars from "handlebars";
 import * as path from "path";
 import { ABIDefinition } from "web3/eth/abi";
 
-import { Contract } from "../../../../../typings/contract";
-import { Embark } from "../../../../../typings/embark";
+import { Contract, Embark } from "embark-typings";
 import { Builder } from "../../builder";
 import { CommandOptions } from "../../commandOptions";
 import { SmartContractsRecipe } from "../../smartContractsRecipe";

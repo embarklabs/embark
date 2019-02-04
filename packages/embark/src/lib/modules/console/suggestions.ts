@@ -1,6 +1,6 @@
 const fuzzySearch = require("../../utils/utils").fuzzySearch;
 
-import { Embark, Events } from "../../../typings/embark";
+import { Embark, Events } from "embark-typings";
 
 interface ContractsManager {
   [key: string]: any;
