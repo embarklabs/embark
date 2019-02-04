@@ -5,8 +5,9 @@ const utils = require("../../utils/utils");
 const EmbarkJS = require("embarkjs");
 const IpfsApi = require("ipfs-api");
 const stringify = require("json-stringify-safe");
+import { Embark, Events } from "embark";
+import {__} from "i18n";
 import Web3 from "web3";
-import { Embark, Events } from "../../../typings/embark";
 import Suggestions from "./suggestions";
 
 type MatchFunction = (cmd: string) => boolean;

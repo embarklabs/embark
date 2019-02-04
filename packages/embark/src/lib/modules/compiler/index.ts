@@ -1,8 +1,7 @@
-import {Callback} from "../../../typings/callbacks";
+import {Callback, CompilerPluginObject, Embark, Plugins} from "embark";
+import {__} from "i18n";
 
 const async = require("../../utils/async_extend.js");
-import { Embark } from "../../../typings/embark";
-import { CompilerPluginObject, Plugins } from "../../../typings/plugins";
 
 class Compiler {
   private logger: any;

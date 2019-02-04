@@ -3,7 +3,7 @@ import * as i18n from "i18n";
 import * as osLocale from "os-locale";
 import * as path from "path";
 
-import { Maybe } from "../../../typings/maybe";
+import { Maybe } from "embark";
 
 enum LocalType {
   Specified = "specified",

@@ -1,9 +1,8 @@
+import { Contract, Embark } from "embark";
 import Handlebars from "handlebars";
+import {__} from "i18n";
 import * as path from "path";
 import { ABIDefinition } from "web3/eth/abi";
-
-import { Contract } from "../../../../../typings/contract";
-import { Embark } from "../../../../../typings/embark";
 import { Builder } from "../../builder";
 import { CommandOptions } from "../../commandOptions";
 import { SmartContractsRecipe } from "../../smartContractsRecipe";
@@ -31,16 +30,19 @@ export class ReactBuilder implements Builder {
   public async build() {
     await this.installDependencies();
 
-    return [].concat.apply([], Object.keys(this.description.data).map((contractName) => {
-      const [indexCode, dappCode] = this.generateCodes(contractName);
-      if (indexCode && dappCode) {
-        const files = this.saveFiles(contractName, indexCode, dappCode);
-        this.updateEmbarkJson(contractName, files);
-        return files;
-      } else {
-        return [];
-      }
-    }));
+    const arr: string[] = [];
+    return arr.concat(
+      ...Object.keys(this.description.data).map((contractName) => {
+        const [indexCode, dappCode] = this.generateCodes(contractName);
+        if (indexCode && dappCode) {
+          const files = this.saveFiles(contractName, indexCode, dappCode);
+          this.updateEmbarkJson(contractName, files);
+          return files;
+        } else {
+          return [];
+        }
+      }),
+    );
   }
 
   private updateEmbarkJson(contractName: string, files: string[]) {

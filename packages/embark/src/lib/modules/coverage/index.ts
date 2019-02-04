@@ -2,8 +2,7 @@ import * as globule from "globule";
 import * as path from "path";
 import Web3Contract from "web3/eth/contract";
 
-import { Contract } from "../../../typings/contract";
-import { Embark } from "../../../typings/embark";
+import { Contract, Embark } from "embark";
 import { removePureView } from "../../utils/solidity/code";
 import { ContractEnhanced } from "./contractEnhanced";
 import { coverageContractsPath } from "./path";

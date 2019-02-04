@@ -1,5 +1,4 @@
-import { Contract } from "../../../typings/contract";
-import { Embark } from "../../../typings/embark";
+import { Contract, Embark } from "embark";
 import { CommandOptions, ContractLanguage, Framework } from "./commandOptions";
 import { SolidityBuilder } from "./contractLanguage/solidityBuilder";
 import { ReactBuilder } from "./framework/reactBuilder";
