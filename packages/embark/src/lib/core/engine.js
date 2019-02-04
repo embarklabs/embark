@@ -56,6 +56,10 @@ class Engine {
     this.plugins.loadInternalPlugin(moduleName, options || {});
   }
 
+  registerModulePackage(moduleName, options) {
+    this.plugins.loadInternalPlugin(moduleName, options || {}, true);
+  }
+
   startService(serviceName, _options) {
     let options = _options || {};
 
@@ -212,7 +216,7 @@ class Engine {
   }
 
   setupCompilerAndContractsManagerService(options) {
-    this.registerModule('compiler', {plugins: this.plugins, isCoverage: options.isCoverage});
+    this.registerModulePackage('embark-compiler', {plugins: this.plugins, isCoverage: options.isCoverage});
     this.registerModule('solidity', {ipc: this.ipc, useDashboard: this.useDashboard});
     this.registerModule('vyper');
     this.registerModule('contracts_manager', {plugins: this.plugins, compileOnceOnly: options.compileOnceOnly});
