@@ -53,6 +53,7 @@ class Engine {
   }
 
   registerModule(moduleName, options) {
+    console.dir('registering module' + moduleName);
     this.plugins.loadInternalPlugin(moduleName, options || {});
   }
 
