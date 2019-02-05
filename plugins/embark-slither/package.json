@@ -1,0 +1,47 @@
+{
+  "name": "embark-slither",
+  "version": "4.0.0-beta.0",
+  "author": "Iuri Matias <iuri.matias@gmail.com>",
+  "contributors": [],
+  "description": "Embark Slither plugin",
+  "homepage": "https://embark.status.im/",
+  "keywords": [
+    "blockchain",
+    "dapps",
+    "ethereum",
+    "serverless",
+    "solc",
+    "solidity",
+    "slither"
+  ],
+  "license": "MIT",
+  "repository": "github:embark-framework/embark",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "cross-env BABEL_ENV=node babel src --copy-files --extensions \".js,.ts\" --out-dir dist --source-maps",
+    "ci": "npm run qa",
+    "clean": "npx npm-run-all clean:* && npx rimraf .nyc_output coverage dist embark-*.tgz package",
+    "clean:templates": "node scripts/templates-reset",
+    "lint": "npm-run-all lint:*",
+    "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
+    "package": "npm pack",
+    "qa": "npm-run-all lint typecheck build package",
+    "reset": "npm run clean && npx rimraf node_modules templates/**/node_modules",
+    "start": "npm run watch",
+    "typecheck": "tsc",
+    "watch": "run-p watch:*",
+    "watch:build": "npm run build -- --verbose --watch",
+    "watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
+  },
+  "dependencies": {
+    "fs-extra": "7.0.1",
+    "shelljs": "0.8.3"
+  },
+  "devDependencies": {
+    "@types/shelljs": "0.8.2",
+    "@types/fs-extra": "5.0.4",
+    "@types/node": "10.12.21",
+    "tslint": "5.11.0",
+    "typescript": "3.1.3"
+  }
+}

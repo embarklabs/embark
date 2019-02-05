@@ -1,0 +1,17 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended"
+  ],
+  "jsRules": {},
+  "rules": {
+    "max-line-length": [true, 200],
+    "interface-name": [true, "never-prefix"],
+    "member-ordering": [false],
+    "no-var-requires": false,
+    "no-empty": false,
+    "no-console": false,
+    "variable-name": ["allow-leading-underscore"]
+  },
+  "rulesDirectory": []
+}

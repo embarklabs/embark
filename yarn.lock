@@ -2675,7 +2675,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/fs-extra@^5.0.2":
+"@types/fs-extra@5.0.4", "@types/fs-extra@^5.0.2":
   version "5.0.4"
   resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-5.0.4.tgz#b971134d162cc0497d221adde3dbb67502225599"
   integrity sha512-DsknoBvD8s+RFfSGjmERJ7ZOP1HI0UZRA3FSI+Zakhrc/Gy26YQsLI+m5V5DHxroHRJqCDLKJp7Hixn8zyaF7g==
@@ -2748,6 +2748,11 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.11.7.tgz#0e75ca9357d646ca754016ca1d68a127ad7e7300"
   integrity sha512-yOxFfkN9xUFLyvWaeYj90mlqTJ41CsQzWKS3gXdOMOyPVacUsymejKxJ4/pMW7exouubuEeZLJawGgcNGYlTeg==
 
+"@types/node@10.12.21":
+  version "10.12.21"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.21.tgz#7e8a0c34cf29f4e17a36e9bd0ea72d45ba03908e"
+  integrity sha512-CBgLNk4o3XMnqMc0rhb6lc77IwShMEglz05deDcn2lQxyXEZivfwgYJu7SMha9V5XcrP6qZuevTHV/QrN2vjKQ==
+
 "@types/os-locale@2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@types/os-locale/-/os-locale-2.1.0.tgz#0ded736612a79e900fa76f02c6ad566d046ad17a"
@@ -2790,6 +2795,14 @@
   dependencies:
     "@types/express-serve-static-core" "*"
     "@types/mime" "*"
+
+"@types/shelljs@0.8.2":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@types/shelljs/-/shelljs-0.8.2.tgz#6fa9314497ec7b61c28a21485bfa915e64894751"
+  integrity sha512-vVp7BCQn0yUQgpiohrdxAhHdm/bTlXshB4HG3LEBq1PgvjKiyeYHohIPIv0QBt/jipb140iMS5Xy1iR6qKovKw==
+  dependencies:
+    "@types/glob" "*"
+    "@types/node" "*"
 
 "@types/tapable@1.0.2":
   version "1.0.2"
@@ -19270,7 +19283,7 @@ shelljs@0.5.3:
   resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.5.3.tgz#c54982b996c76ef0c1e6b59fbdc5825f5b713113"
   integrity sha1-xUmCuZbHbvDB5rWfvcWCX1txMRM=
 
-shelljs@^0.8.2:
+shelljs@0.8.3, shelljs@^0.8.2:
   version "0.8.3"
   resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.8.3.tgz#a7f3319520ebf09ee81275b2368adb286659b097"
   integrity sha512-fc0BKlAWiLpwZljmOvAOTE/gXawtCoNrP5oaY7KIaQbbyHeQVg01pSEuEGvGh3HEdBU4baCD7wQBwADmM/7f7A==

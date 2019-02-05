@@ -15,3 +15,5 @@ yarn-debug.log*
 yarn-error.log*
 yarn.lock
 !/yarn.lock
+packages/*/dist
+plugins/*/dist

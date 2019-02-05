@@ -47,7 +47,8 @@
   },
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/*",
+      "plugins/*"
     ],
     "nohoist": [
       "embark/embark-test-contract-0",
