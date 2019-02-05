@@ -1,4 +1,4 @@
-let async = require('../../utils/async_extend.js');
+let async = require('./utils/async_extend.js');
 const shelljs = require('shelljs');
 const path = require('path');
 
