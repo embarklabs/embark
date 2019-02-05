@@ -2,11 +2,15 @@ import { each } from "async";
 import { Callback, Logger } from "embark";
 import { NodeVM, NodeVMOptions } from "vm2";
 
-const fs = require("../../fs");
-const { recursiveMerge, isEs6Module } = require("../../../utils/utils");
-const Utils = require("../../../utils/utils");
+const fs = require("../../core/fs");
+const { recursiveMerge, isEs6Module, compact } = require("../../utils/utils");
 
 const WEB3_INVALID_RESPONSE_ERROR: string = "Invalid JSON RPC response";
+
+interface Command {
+  varName: string;
+  code: any;
+}
 
 /**
  * Wraps an instance of NodeVM from VM2 (https://github.com/patriksimek/vm2) and allows
@@ -59,18 +63,18 @@ class VM {
    * @returns Formatted code.
    */
   private static formatCode(code: string) {
-    const instructions = Utils.compact(code.split(";"));
+    const instructions = compact(code.split(";"));
     const last = instructions.pop().trim();
     const awaiting = code.indexOf("await") > -1;
 
-    if (!(last.startsWith("return") || last.indexOf("=") > -1)) {
+    if (!(last.includes("return") || last.includes("="))) {
       instructions.push(`return ${last}`);
     } else {
       instructions.push(last);
     }
     code = instructions.join(";");
 
-    return `module.exports = (${awaiting ? "async" : ""} () => {${code};})()`;
+    return `module.exports = (${awaiting ? "async" : ""} function () {${code};})()`;
   }
 
   /**
@@ -89,10 +93,10 @@ class VM {
       if (!tolerateError) {
         this.logger.error(e.message);
       }
-      return cb(null, e.message);
+      return cb(e);
     }
     try {
-      return cb(null, await result);
+      result = await result;
     } catch (error) {
       // Improve error message when there's no connection to node
       if (error.message && error.message.indexOf(WEB3_INVALID_RESPONSE_ERROR) !== -1) {
@@ -101,6 +105,7 @@ class VM {
 
       return cb(error);
     }
+    return cb(null, result);
   }
 
   /**
@@ -117,7 +122,7 @@ class VM {
       code = code.default;
     }
 
-    this.updateState((_err) => {
+    this.updateState(() => {
       this.options.sandbox[varName] = code;
       this.setupNodeVm(cb);
     });
@@ -128,7 +133,7 @@ class VM {
 
     // update sandbox state from VM
     each(Object.keys(this.options.sandbox), (sandboxVar: string, next: Callback<null>) => {
-      this.doEval(sandboxVar, false, (err, result) => {
+      this.doEval(sandboxVar, false, (err?: Error | null, result?: any) => {
         if (!err) {
           this.options.sandbox[sandboxVar] = result;
         }

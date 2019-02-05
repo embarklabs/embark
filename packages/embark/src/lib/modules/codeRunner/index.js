@@ -1,16 +1,25 @@
 const VM = require('./vm');
-const fs = require('../../fs');
+const fs = require('../../core/fs');
+const deepEqual = require('deep-equal');
+const EmbarkJS = require('embarkjs');
+const IpfsApi = require("ipfs-api");
+const Web3 = require('web3');
 
 class CodeRunner {
-  constructor(options) {
+  constructor(embark, options) {
     this.ready = false;
-    this.config = options.config;
-    this.plugins = options.plugins;
-    this.logger = options.logger;
-    this.events = options.events;
+    this.blockchainConnected = false;
+    this.config = embark.config;
+    this.plugins = embark.plugins;
+    this.logger = embark.logger;
+    this.events = embark.events;
     this.ipc = options.ipc;
-    this.commands = [];
     this.vm = new VM({
+      sandbox: {
+        IpfsApi,
+        Web3,
+        EmbarkJS
+      },
       require: {
         mock: {
           fs: {
@@ -33,6 +42,8 @@ class CodeRunner {
         }
       }
     }, this.logger);
+    this.embark = embark;
+    this.commands = [];
 
     this.registerIpcEvents();
     this.IpcClientListen();
@@ -69,6 +80,28 @@ class CodeRunner {
 
   registerEvents() {
     this.events.on("runcode:register", this.registerVar.bind(this));
+
+    this.events.on("runcode:init-console-code:updated", (code, cb) => {
+      this.evalCode(code, (err, _result) => {
+        if(err) {
+          this.logger.error("Error running init console code: ", err);
+        }
+        else if(code.includes("EmbarkJS.Blockchain.setProvider")) {
+          this.events.emit('runcode:blockchain:connected');
+          this.blockchainConnected = true;
+        }
+        cb();
+      });
+    });
+
+    this.events.on("runcode:embarkjs-code:updated", (code, cb) => {
+      this.evalCode(code, (err, _result) => {
+        if(err) {
+          this.logger.error("Error running embarkjs code: ", err);
+        }
+        cb();
+      });
+    });
   }
 
   registerCommands() {
@@ -82,28 +115,42 @@ class CodeRunner {
       }
       this.events.once("runcode:ready", cb);
     });
+    this.events.setCommandHandler('runcode:blockchain:connected', (cb) => {
+      if (this.blockchainConnected) {
+        return cb();
+      }
+      this.events.once("runcode:blockchain:connected", cb);
+    });
     this.events.setCommandHandler('runcode:embarkjs:reset', this.resetEmbarkJS.bind(this));
   }
 
   resetEmbarkJS(cb) {
-    this.events.request('blockchain:get', (web3) => {
-      this.events.emit("runcode:register", "web3", web3, false, () => {
-        this.events.request("code-generator:embarkjs:init-provider-code", async (code) => {
-          await this.evalCode(code, cb, true);
+    this.events.request("code-generator:embarkjs:provider-code", (code) => {
+      this.evalCode(code, (err) => {
+        if (err) {
+          return cb(err);
+        }
+        this.events.request("code-generator:embarkjs:init-provider-code", (providerCode) => {
+          this.evalCode(providerCode, (err, _result) => {
+            cb(err);
+          }, false, true);
         });
-      });
+      }, true);
     });
   }
 
   registerVar(varName, code, toRecord = true, cb = () => {}) {
-    if (this.ipc.isServer() && toRecord) {
-      this.commands.push({varName, code});
-      this.ipc.broadcast("runcode:newCommand", {varName, code});
+    const command = {varName, code};
+    if (toRecord && !this.commands.some(cmd => deepEqual(cmd, command))) {
+      if (this.ipc.isServer()) {
+        this.commands.push(command);
+        this.ipc.broadcast("runcode:newCommand", command);
+      }
     }
     this.vm.registerVar(varName, code, cb);
   }
 
-  async evalCode(code, cb, isNotUserInput = false, tolerateError = false) {
+  evalCode(code, cb, isNotUserInput = false, tolerateError = false) {
     cb = cb || function () {};
 
     if (!code) return cb(null, '');
@@ -112,16 +159,15 @@ class CodeRunner {
       if(err) {
         return cb(err);
       }
-      
-      if (isNotUserInput && this.ipc.isServer()) {
-        this.commands.push({code});
-        this.ipc.broadcast("runcode:newCommand", {code});
+      const command = {code};
+      if (isNotUserInput && this.ipc.isServer() && !this.commands.some(cmd => cmd.code === command.code)) {
+          this.commands.push(command);
+          this.ipc.broadcast("runcode:newCommand", command);
       }
       
       cb(null, result);
     });
   }
-
 }
 
 module.exports = CodeRunner;

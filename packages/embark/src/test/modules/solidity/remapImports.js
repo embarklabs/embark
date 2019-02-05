@@ -18,42 +18,42 @@ describe('embark.RemapImports', function () {
     it("should find and add remappings for all recursive imports", (done) => {
       expect(file.importRemappings[0]).to.deep.equal({
         prefix: "./recursive_test_1.sol",
-        target: fs.dappPath(".embark/contracts/recursive_test_1.sol")
+        target: path.normalize(fs.dappPath(".embark/contracts/recursive_test_1.sol"))
       });
       expect(file.importRemappings[1]).to.deep.equal({
         prefix: "./recursive_test_2.sol",
-        target: fs.dappPath(".embark/contracts/recursive_test_2.sol")
+        target: path.normalize(fs.dappPath(".embark/contracts/recursive_test_2.sol"))
       });
       expect(file.importRemappings[2]).to.deep.equal({
         prefix: "embark-test-contract-0/recursive_test_3.sol",
-        target: fs.dappPath(".embark/node_modules/embark-test-contract-0/recursive_test_3.sol")
+        target: path.normalize(fs.dappPath(".embark/node_modules/embark-test-contract-0/recursive_test_3.sol"))
       });
       expect(file.importRemappings[3]).to.deep.equal({
         prefix: "embark-test-contract-1/recursive_test_4.sol",
-        target: fs.dappPath(".embark/node_modules/embark-test-contract-1/recursive_test_4.sol")
+        target: path.normalize(fs.dappPath(".embark/node_modules/embark-test-contract-1/recursive_test_4.sol"))
       });
       done();
     });
 
     it("should update the contract content to use the remapped imports", function (done) {
       expect(content).to.not.contain("./recursive_test_1.sol");
-      expect(content).to.contain(".embark/contracts/recursive_test_1.sol");
+      expect(content).to.contain(path.normalize(".embark/contracts/recursive_test_1.sol").replace(/\\/g, "/"));
 
       let contractFromFilesystem = fsNode.readFileSync(fs.dappPath(".embark/contracts/recursive_test_0.sol")).toString();
       expect(contractFromFilesystem).to.not.contain("./recursive_test_1.sol");
-      expect(contractFromFilesystem).to.contain(".embark/contracts/recursive_test_1.sol");
+      expect(contractFromFilesystem).to.contain(path.normalize(".embark/contracts/recursive_test_1.sol").replace(/\\/g, "/"));
       
       contractFromFilesystem = fsNode.readFileSync(fs.dappPath(".embark/contracts/recursive_test_1.sol")).toString();
       expect(contractFromFilesystem).to.not.contain("./recursive_test_2.sol");
-      expect(contractFromFilesystem).to.contain(".embark/contracts/recursive_test_2.sol");
+      expect(contractFromFilesystem).to.contain(path.normalize(".embark/contracts/recursive_test_2.sol").replace(/\\/g, "/"));
 
       contractFromFilesystem = fsNode.readFileSync(fs.dappPath(".embark/contracts/recursive_test_2.sol")).toString();
       expect(contractFromFilesystem).to.not.contain("import \"embark-test-contract-0/recursive_test_3.sol\"");
-      expect(contractFromFilesystem).to.contain(`import "${fs.dappPath(".embark/node_modules/embark-test-contract-0/recursive_test_3.sol")}"`);
+      expect(contractFromFilesystem).to.contain(`import "${path.normalize(fs.dappPath(".embark/node_modules/embark-test-contract-0/recursive_test_3.sol")).replace(/\\/g, "/")}"`);
       
       contractFromFilesystem = fsNode.readFileSync(fs.dappPath(".embark/node_modules/embark-test-contract-0/recursive_test_3.sol")).toString();
       expect(contractFromFilesystem).to.not.contain("import \"embark-test-contract-1/recursive_test_4.sol\"");
-      expect(contractFromFilesystem).to.contain(`import "${fs.dappPath(".embark/node_modules/embark-test-contract-1/recursive_test_4.sol")}"`);
+      expect(contractFromFilesystem).to.contain(`import "${path.normalize(fs.dappPath(".embark/node_modules/embark-test-contract-1/recursive_test_4.sol")).replace(/\\/g, "/")}"`);
       
       done();
     });
@@ -62,41 +62,41 @@ describe('embark.RemapImports', function () {
 
   describe('Import remappings from external URL', function () {
     before('do the external HTTP contract remappings', async () => {
-      file = new File({externalUrl: 'https://github.com/embark-framework/embark/blob/master/src/test/contracts/recursive_test_0.sol', type: Types.http});
+      file = new File({externalUrl: 'https://github.com/embark-framework/embark/master/packages/embark/src/test/contracts/recursive_test_0.sol', type: Types.http});
       content = await remapImports.prepareForCompilation(file);
     });
 
     it("should find and add remappings for all recursive imports", (done) => {
       expect(file.importRemappings[0]).to.deep.equal({
         prefix: "./recursive_test_1.sol",
-        target: fs.dappPath(".embark/contracts/embark-framework/embark/master/src/test/contracts/recursive_test_1.sol")
+        target: path.normalize(fs.dappPath(".embark/contracts/embark-framework/embark/master/packages/embark/src/test/contracts/recursive_test_1.sol"))
       });
       expect(file.importRemappings[1]).to.deep.equal({
         prefix: "./recursive_test_2.sol",
-        target: fs.dappPath(".embark/contracts/embark-framework/embark/master/src/test/contracts/recursive_test_2.sol")
+        target: path.normalize(fs.dappPath(".embark/contracts/embark-framework/embark/master/packages/embark/src/test/contracts/recursive_test_2.sol"))
       });
       expect(file.importRemappings[2]).to.deep.equal({
         prefix: "embark-test-contract-0/recursive_test_3.sol",
-        target: fs.dappPath(".embark/contracts/embark-framework/embark/master/src/test/contracts/embark-test-contract-0/recursive_test_3.sol")
+        target: path.normalize(fs.dappPath(".embark/contracts/embark-framework/embark/master/packages/embark/src/test/contracts/embark-test-contract-0/recursive_test_3.sol"))
       });
       done();
     });
 
     it("should update the contract content to use the remapped imports", function (done) {
       expect(content).to.not.contain("./recursive_test_1.sol");
-      expect(content).to.contain(".embark/contracts/embark-framework/embark/master/src/test/contracts/recursive_test_1.sol");
+      expect(content).to.contain(path.normalize(".embark/contracts/embark-framework/embark/master/packages/embark/src/test/contracts/recursive_test_1.sol").replace(/\\/g, "/"));
 
-      let contractFromFilesystem = fsNode.readFileSync(fs.dappPath(".embark/contracts/embark-framework/embark/master/src/test/contracts/recursive_test_0.sol")).toString();
+      let contractFromFilesystem = fsNode.readFileSync(fs.dappPath(".embark/contracts/embark-framework/embark/master/packages/embark/src/test/contracts/recursive_test_0.sol")).toString();
       expect(contractFromFilesystem).to.not.contain("./recursive_test_1.sol");
-      expect(contractFromFilesystem).to.contain(".embark/contracts/embark-framework/embark/master/src/test/contracts/recursive_test_1.sol");
+      expect(contractFromFilesystem).to.contain(path.normalize(".embark/contracts/embark-framework/embark/master/packages/embark/src/test/contracts/recursive_test_1.sol").replace(/\\/g, "/"));
       
-      contractFromFilesystem = fsNode.readFileSync(fs.dappPath(".embark/contracts/embark-framework/embark/master/src/test/contracts/recursive_test_1.sol")).toString();
+      contractFromFilesystem = fsNode.readFileSync(fs.dappPath(".embark/contracts/embark-framework/embark/master/packages/embark/src/test/contracts/recursive_test_1.sol")).toString();
       expect(contractFromFilesystem).to.not.contain("./recursive_test_2.sol");
-      expect(contractFromFilesystem).to.contain(".embark/contracts/embark-framework/embark/master/src/test/contracts/recursive_test_2.sol");
+      expect(contractFromFilesystem).to.contain(path.normalize(".embark/contracts/embark-framework/embark/master/packages/embark/src/test/contracts/recursive_test_2.sol").replace(/\\/g, "/"));
 
-      contractFromFilesystem = fsNode.readFileSync(fs.dappPath(".embark/contracts/embark-framework/embark/master/src/test/contracts/recursive_test_2.sol")).toString();
+      contractFromFilesystem = fsNode.readFileSync(fs.dappPath(".embark/contracts/embark-framework/embark/master/packages/embark/src/test/contracts/recursive_test_2.sol")).toString();
       expect(contractFromFilesystem).to.not.contain("import \"embark-test-contract-0/recursive_test_3.sol\"");
-      expect(contractFromFilesystem).to.contain(`import "${fs.dappPath(".embark/contracts/embark-framework/embark/master/src/test/contracts/embark-test-contract-0/recursive_test_3.sol")}"`);
+      expect(contractFromFilesystem).to.contain(`import "${path.normalize(fs.dappPath(".embark/contracts/embark-framework/embark/master/packages/embark/src/test/contracts/embark-test-contract-0/recursive_test_3.sol")).replace(/\\/g, "/")}"`);
 
       done();
     });

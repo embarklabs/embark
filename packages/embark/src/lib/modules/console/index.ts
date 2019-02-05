@@ -1,12 +1,11 @@
 /*globals __*/
 const env = require("../../core/env");
 const utils = require("../../utils/utils");
-const EmbarkJS = require("embarkjs");
-const IpfsApi = require("ipfs-api");
+import { Callback } from "embark";
 const stringify = require("json-stringify-safe");
+import { waterfall } from "async";
 import { Embark, Events } from "embark";
 import {__} from "i18n";
-import Web3 from "web3";
 import Suggestions from "./suggestions";
 
 type MatchFunction = (cmd: string) => boolean;
@@ -60,7 +59,13 @@ class Console {
       }
       this.events.once("console:provider:done", cb);
     });
-    this.registerEmbarkJs();
+    this.registerEmbarkJs((err?: Error |  null) => {
+      if (err) {
+        return this.logger.error(err);
+      }
+      this.providerReady = true;
+      this.events.emit("console:provider:done");
+    });
     this.registerConsoleCommands();
     this.registerApi();
 
@@ -76,12 +81,12 @@ class Console {
     plugin.registerAPICall("post", "/embark-api/command", (req: any, res: any) => {
       this.executeCmd(req.body.command, (err: any, result: any) => {
         if (err) {
-          return res.send({result: err.message || err});
+          return res.send({ result: err.message || err });
         }
         if (typeof result === "string") {
-          return res.send({result});
+          return res.send({ result });
         }
-        res.send({result: stringify(result, utils.jsonFunctionReplacer, 2)});
+        res.send({ result: stringify(result, utils.jsonFunctionReplacer, 2) });
       });
     });
   }
@@ -170,37 +175,41 @@ class Console {
     }
   }
 
-  private registerEmbarkJs() {
-    this.events.emit("runcode:register", "IpfsApi", IpfsApi, false);
-    this.events.emit("runcode:register", "Web3", Web3, false);
-    this.events.emit("runcode:register", "EmbarkJS", EmbarkJS, false);
-
-    EmbarkJS.Blockchain.done = true;
-    if (this.ipc.connected && !this.forceRegister) {
-      return;
-    }
-
-    this.events.once("code-generator-ready", () => {
-      const waitingForReady = setTimeout(() => {
-        this.logger.warn(__("Waiting for the blockchain connector to be ready..."));
-        // TODO add docs link to how to install one
-        this.logger.warn(__("If you did not install a blockchain connector, stop this process and install one"));
-      }, 5000);
-      this.events.request("blockchain:connector:ready", () => {
-        clearTimeout(waitingForReady);
-        this.events.request("code-generator:embarkjs:provider-code", (providerCode: string) => {
-          const func = () => {
-          };
-          this.events.request("runcode:eval", providerCode, func, true);
-          this.events.request("code-generator:embarkjs:init-provider-code", (initCode: string) => {
-            this.events.request("runcode:eval", initCode, () => {
-              this.events.emit("console:provider:done");
-              this.providerReady = true;
-            }, true);
-          });
+  private registerEmbarkJs(cb: Callback<null>) {
+    waterfall([
+      // wait for the VM to be setup
+      (next: any) => {
+        this.events.request("runcode:ready", next);
+      },
+      (next: any) => {
+        const waitingForReady = setTimeout(() => {
+          this.logger.warn(__("Waiting for the blockchain connector to be ready..."));
+          // TODO add docs link to how to install one
+          this.logger.warn(__("If you did not install a blockchain connector, stop this process and install one"));
+        }, 5000);
+        this.events.once("blockchain:connector:ready", () => {
+          clearTimeout(waitingForReady);
+          next();
         });
-      });
-    });
+      },
+      (next: any) => {
+        this.events.request("runcode:blockchain:connected", next);
+      },
+      // for every other case (including when asked for force), get the embarkjs
+      // provider code and eval it in the VM (either main running VM or console VM
+      // in the secondary process)
+      (next: any) => {
+        if (this.ipc.connected && !this.forceRegister) {
+          return next();
+        }
+        const connectCode = `EmbarkJS.Blockchain.connectConsole((err) => {
+          if(err) throw new Error("[VM]: Error connecting to blockchain. " + err);
+        });`;
+        this.events.request("runcode:eval", connectCode, (err: Error, _result: any) => {
+          cb(err);
+        });
+      },
+    ], cb);
   }
 
   private registerConsoleCommands() {
@@ -229,16 +238,16 @@ class Console {
   }
 
   private getHistory(historySize: any, callback: any) {
-      if (typeof historySize === "string") {
-        historySize = parseInt(historySize, 10);
-        if (isNaN(historySize)) { return callback("Invalid argument. Please provide an integer."); }
-      }
-      const length = historySize || this.cmdHistorySize();
-      return callback(null, this.history
-                              .slice(Math.max(0, this.history.length - length))
-                              .filter((line: string) => line.trim())
-                              .reverse()
-                              .join("\n"));
+    if (typeof historySize === "string") {
+      historySize = parseInt(historySize, 10);
+      if (isNaN(historySize)) { return callback("Invalid argument. Please provide an integer."); }
+    }
+    const length = historySize || this.cmdHistorySize();
+    return callback(null, this.history
+      .slice(Math.max(0, this.history.length - length))
+      .filter((line: string) => line.trim())
+      .reverse()
+      .join("\n"));
   }
 
   private saveHistory(cmd: string, fromIpcClient = false) {

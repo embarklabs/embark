@@ -1,3 +1,4 @@
+import {__} from "i18n";
 import * as path from "path";
 import { ImportRemapping, prepareForCompilation } from "../utils/solidity/remapImports";
 
@@ -41,15 +42,15 @@ export class File {
     } else if (this.type === Types.http) {
       const external = utils.getExternalContractUrl(options.externalUrl, this.providerUrl);
       this.externalUrl = external.url;
-      this.path = fs.dappPath(external.filePath);
+      this.path = path.normalize(fs.dappPath(external.filePath));
     } else {
-      this.path = options.path.replace(/\\/g, "/");
+      this.path = path.normalize(options.path);
     }
   }
 
   public async prepareForCompilation(isCoverage = false) {
     if (!this.path.endsWith(".sol")) {
-      return Promise.reject("this method is only supported for Solidity files");
+      return Promise.reject(__("This method is only supported for Solidity files"));
     }
     return prepareForCompilation(this, isCoverage);
   }

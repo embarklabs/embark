@@ -29,6 +29,7 @@ describe('embark.CodeGenerator', function() {
       }
     ];
 
+    const currentSolcVersion = require('../../package.json').dependencies.solc;
     const TestEvents = {
       request: (cmd, cb) => {
         cb(currentSolcVersion);
