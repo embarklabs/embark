@@ -182,12 +182,7 @@ class Engine {
   }
 
   codeRunnerService(_options) {
-    const CodeRunner = require('./modules/coderunner/codeRunner.js');
-    this.codeRunner = new CodeRunner({
-      config: this.config,
-      plugins: this.plugins,
-      events: this.events,
-      logger: this.logger,
+    this.registerModule('codeRunner', {
       ipc: this.ipc
     });
   }

@@ -45,6 +45,8 @@ class BlockchainConnector {
       });
     });
 
+    self.events.setCommandHandler("blockchain:ready", self.onReady.bind(this));
+
     self.events.setCommandHandler("blockchain:web3:isReady", (cb) => {
       cb(self.isWeb3Ready);
     });
@@ -68,7 +70,6 @@ class BlockchainConnector {
     this.registerServiceCheck();
     this.registerRequests();
     this.registerAPIRequests();
-    this.registerWeb3Object();
     this.registerEvents();
     this.subscribeToPendingTransactions();
   }
@@ -192,8 +193,9 @@ class BlockchainConnector {
 
   _emitWeb3Ready() {
     this.isWeb3Ready = true;
-    this.events.emit(WEB3_READY);
-    this.registerWeb3Object();
+    this.registerWeb3Object(() => {
+      this.events.emit(WEB3_READY);
+    });
     this.subscribeToPendingTransactions();
   }
 
@@ -690,10 +692,10 @@ class BlockchainConnector {
     });
   }
 
-  registerWeb3Object() {
+  registerWeb3Object(cb = () => {}) {
     // doesn't feel quite right, should be a cmd or plugin method
     // can just be a command without a callback
-    this.events.emit("runcode:register", "web3", this.web3, false);
+    this.events.emit("runcode:register", "web3", this.web3, false, cb);
   }
 
   subscribeToPendingTransactions() {

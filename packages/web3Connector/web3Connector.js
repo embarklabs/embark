@@ -1,7 +1,7 @@
 /*global Web3*/
 const web3Connector = {};
 
-web3Connector.init = function(_config) {
+web3Connector.init = function(config) {
   global.web3 = config.web3 || global.web3;
   // Check if the global web3 object uses the old web3 (0.x)
   if (global.web3 && typeof global.web3.version !== 'string') {

@@ -1,6 +1,7 @@
 const utils = require('../utils/utils.js');
 const constants = require('../constants');
 const fs = require('./fs.js');
+const deepEqual = require('deep-equal');
 
 // TODO: pass other params like blockchainConfig, contract files, etc..
 var Plugin = function(options) {
@@ -217,8 +218,13 @@ Plugin.prototype.registerUploadCommand = function(cmd, cb) {
 };
 
 Plugin.prototype.addCodeToEmbarkJS = function(code) {
-  this.embarkjs_code.push(code);
   this.addPluginType('embarkjsCode');
+  if (!this.embarkjs_code.some((existingCode) => deepEqual(existingCode, code))) {
+    this.embarkjs_code.push(code);
+    this.events.request('blockchain:ready', () => {
+      this.events.emit('runcode:embarkjs-code:updated', code, () => {});
+    });
+  }
 };
 
 Plugin.prototype.addProviderInit = function(providerType, code, initCondition) {
@@ -229,8 +235,14 @@ Plugin.prototype.addProviderInit = function(providerType, code, initCondition) {
 
 Plugin.prototype.addConsoleProviderInit = function(providerType, code, initCondition) {
   this.embarkjs_init_console_code[providerType] = this.embarkjs_init_console_code[providerType] || [];
-  this.embarkjs_init_console_code[providerType].push([code, initCondition]);
   this.addPluginType('initConsoleCode');
+  const toAdd = [code, initCondition];
+  if (!this.embarkjs_init_console_code[providerType].some((initConsoleCode) => deepEqual(initConsoleCode, toAdd))) {
+    this.embarkjs_init_console_code[providerType].push(toAdd);
+    this.events.request('blockchain:ready', () => {
+      this.events.emit('runcode:init-console-code:updated', code, () => {});
+    });
+  }
 };
 
 Plugin.prototype.registerImportFile = function(importName, importLocation) {

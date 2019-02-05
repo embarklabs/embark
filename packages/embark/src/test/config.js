@@ -191,13 +191,12 @@ describe('embark.Config', function () {
       const expected = [
         {
           "type": "http",
-          "externalUrl": "https://raw.githubusercontent.com/embark-framework/embark/master/test_dapps/packages/test_app/app/contracts/simple_storage.sol",
-          "path": fs.dappPath(".embark/contracts/embark-framework/embark/master/test_dapps/packages/test_app/app/contracts/simple_storage.sol"),
-          "originalPath": ".embark/contracts/embark-framework/embark/master/test_dapps/packages/test_app/app/contracts/simple_storage.sol",
+          "externalUrl": "https://raw.githubusercontent.com/embark-framework/embark/master/test_dapps/test_app/app/contracts/simple_storage.sol",
+          "path": fs.dappPath(".embark/contracts/embark-framework/embark/master/test_dapps/test_app/app/contracts/simple_storage.sol"),
+          "originalPath": ".embark/contracts/embark-framework/embark/master/test_dapps/test_app/app/contracts/simple_storage.sol",
           "pluginPath": '',
           "basedir": "",
           "importRemappings": [],
-          "isPrepared": false,
           "resolver": undefined,
           "storageConfig": undefined,
           "providerUrl": ""
@@ -210,7 +209,6 @@ describe('embark.Config', function () {
           "pluginPath": '',
           "basedir": "",
           "importRemappings": [],
-          "isPrepared": false,
           "resolver": undefined,
           "storageConfig": undefined,
           "providerUrl": ""
@@ -223,7 +221,6 @@ describe('embark.Config', function () {
           "pluginPath": '',
           "basedir": "",
           "importRemappings": [],
-          "isPrepared": false,
           "resolver": undefined,
           "storageConfig": undefined,
           "providerUrl": ""

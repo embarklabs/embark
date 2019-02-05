@@ -1,17 +1,17 @@
-/*globals describe, it, before*/
+/*globals describe, it*/
 const {File, Types} = require("../lib/core/file");
 const path = require("path");
-const {expect, assert} = require("chai");
+const {expect} = require("chai");
 const fs = require("../lib/core/fs");
 const fsNode = require("fs");
 
 describe('embark.File', function () {
   describe('Read file contents', function () {
     it('should be able to download a file when type is "http"', async () => {
-      const file = new File({externalUrl: 'https://raw.githubusercontent.com/embark-framework/embark/master/test_apps/test_app/app/contracts/simple_storage.sol', type: Types.http});
+      const file = new File({externalUrl: 'https://raw.githubusercontent.com/embark-framework/embark/master/test_dapps/test_app/app/contracts/simple_storage.sol', type: Types.http});
       const content = await file.content;
 
-      const contentFromFileSystem = fsNode.readFileSync(path.join(fs.embarkPath(), "../../", "test_dapps/packages/test_app/app/contracts/simple_storage.sol")).toString();
+      const contentFromFileSystem = fsNode.readFileSync(path.join(fs.embarkPath(), "../../", "test_dapps/test_app/app/contracts/simple_storage.sol")).toString();
       expect(content).to.equal(contentFromFileSystem);
     });
 

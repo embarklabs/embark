@@ -36,12 +36,21 @@ const prepareInitialFile = async (file: File) => {
     return await file.content;
   }
 
-  const destination = fs.dappPath(".embark", file.path);
+  let to = file.path.includes(fs.dappPath(".embark")) ? file.path : fs.dappPath(".embark", file.path);
+  to = path.normalize(to);
   if (file.type === Types.dappFile || file.type === Types.custom) {
-    fs.copySync(fs.dappPath(file.path), destination);
+    if (file.resolver) {
+      fs.mkdirpSync(path.dirname(to));
+      fs.writeFileSync(to, await file.content);
+    } else {
+      const from = file.path.includes(fs.dappPath()) ? file.path : fs.dappPath(file.path);
+      if (from !== to) {
+        fs.copySync(from, to);
+      }
+    }
   }
 
-  file.path = destination;
+  file.path = to;
 };
 
 const buildNewFile = (file: File, importPath: string) => {
@@ -63,24 +72,30 @@ const buildNewFile = (file: File, importPath: string) => {
   // imported from node_modules, ie import "@aragon/os/contracts/acl/ACL.sol"
   if (isNodeModule(importPath)) {
     from = resolve(importPath);
-    to = fs.dappPath(".embark", "node_modules", importPath);
-    fs.copySync(from, to);
-    return new File({ path: to, type: Types.dappFile, originalPath: from });
+    to = importPath.includes(fs.dappPath(".embark")) ? importPath : fs.dappPath(".embark", "node_modules", importPath);
+    to = path.normalize(to);
+    if (from !== to) {
+      fs.copySync(from, to);
+    }
+    return new File({ path: to, type: Types.dappFile });
   }
 
   // started with node_modules then further imports local paths in it's own repo/directory
   if (isEmbarkNodeModule(file.path)) {
     from = path.join(path.dirname(file.path.replace(".embark", ".")), importPath);
-    to = path.join(path.dirname(file.path), importPath);
+    to = path.normalize(path.join(path.dirname(file.path), importPath));
     fs.copySync(from, to);
     return new File({ path: to, type: Types.dappFile, originalPath: from });
   }
 
   // local import, ie import "../path/to/contract" or "./path/to/contract"
   from = path.join(path.dirname(file.path.replace(".embark", ".")), importPath);
-  to = path.join(path.dirname(file.path), importPath);
-
-  fs.copySync(from, to);
+  if (importPath === "remix_tests.sol") {
+    to = path.normalize(fs.dappPath(".embark", "remix_tests.sol"));
+  } else {
+    to = path.normalize(path.join(path.dirname(file.path), importPath));
+    fs.copySync(from, to);
+  }
   return new File({ path: to, type: Types.dappFile, originalPath: from });
 };
 
@@ -129,7 +144,7 @@ const replaceImports = (remapImports: RemapImport[]) => {
   Object.keys(byPath).forEach((p) => {
     let source = fs.readFileSync(p, "utf-8");
     byPath[p].forEach(({ remapping }) => {
-      source = source.replace(`import "${remapping.prefix}"`, `import "${remapping.target}"`);
+      source = source.replace(`import "${remapping.prefix}"`, `import "${remapping.target.replace(/\\/g, "/")}"`);
     });
     fs.writeFileSync(p, source);
   });
@@ -138,10 +153,10 @@ const replaceImports = (remapImports: RemapImport[]) => {
 const addRemappingsToFile = (file: File, remapImports: RemapImport[]) => {
   const byPath: { [path: string]: [{ remapping: ImportRemapping }] } = groupBy(remapImports, "path");
   const paths = Object.keys(byPath);
-  if (paths) {
+  if (paths.length) {
     file.importRemappings = []; // clear as we already have the first remapping added
     paths.forEach((p) => {
-      const [...remappings] = byPath[p].map((importRemapping) => importRemapping.remapping);
+      const remappings = byPath[p].map((importRemapping) => importRemapping.remapping);
       file.importRemappings = file.importRemappings.concat(remappings);
     });
   }
@@ -149,26 +164,21 @@ const addRemappingsToFile = (file: File, remapImports: RemapImport[]) => {
 
 const resolve = (input: string) => {
   try {
-    const result = require.resolve(input, { paths: [fs.dappPath("node_modules"), fs.embarkPath("node_modules")] });
-    return result;
+    return require.resolve(input, { paths: [fs.dappPath("node_modules"), fs.embarkPath("node_modules")] });
   } catch (e) {
     return "";
   }
 };
 
 export const prepareForCompilation = async (file: File, isCoverage = false) => {
-  if (!file.isPrepared) {
-    await prepareInitialFile(file);
-    const remapImports = await rescursivelyFindRemapImports(file);
-    replaceImports(remapImports);
-    // add all remappings to top-level file
-    addRemappingsToFile(file, remapImports);
+  await prepareInitialFile(file);
+  const remapImports = await rescursivelyFindRemapImports(file);
+  replaceImports(remapImports);
+  // add all remappings to top-level file
+  addRemappingsToFile(file, remapImports);
 
-    // set flag to prevent copying, remapping, and changing of paths again
-    file.isPrepared = true;
-  }
   let content;
-  if (file.type === Types.http) {
+  if (file.type === Types.http || file.type === Types.custom) {
     content = (await fs.readFile(file.path)).toString();
   } else {
     content = await file.content;

@@ -5,7 +5,6 @@ const AccountParser = require('../../utils/accountParser');
 const utils = require('../../utils/utils');
 const constants = require('../../constants');
 const web3Utils = require('web3-utils');
-const EmbarkJS = require('embarkjs');
 
 const BALANCE_10_ETHER_IN_HEX = '0x8AC7230489E80000';
 
@@ -26,30 +25,42 @@ class Test {
     this.needConfig = true;
     this.provider = null;
     this.accounts = [];
+    this.embarkjs = {};
   }
 
   init(callback) {
-    this.events.request('runcode:ready', () => {
-      this.gasLimit = constants.tests.gasLimit;
-      this.events.request('deploy:setGasLimit', this.gasLimit);
-      const waitingForReady = setTimeout(() => {
-        this.logger.warn('Waiting for the blockchain connector to be ready...');
-        // TODO add docs link to how to install one
-        this.logger.warn('If you did not install a blockchain connector, stop this process and install one');
-      }, 5000);
-      this.events.request('blockchain:connector:ready', () => {
-        clearTimeout(waitingForReady);
+    async.waterfall([
+      (next) => {
+        this.events.request('runcode:ready', next);
+      },
+      (next) => {
+        this.initWeb3Provider(next);
+      },
+      (next) => {
+        const waitingForReady = setTimeout(() => {
+          this.logger.warn('Waiting for the blockchain connector to be ready...');
+          // TODO add docs link to how to install one
+          this.logger.warn('If you did not install a blockchain connector, stop this process and install one');
+        }, 5000);
+        this.events.request('blockchain:connector:ready', () => {
+          clearTimeout(waitingForReady);
+          next();
+        });
+      },
+      (next) => {
+        this.gasLimit = constants.tests.gasLimit;
+        this.events.request('deploy:setGasLimit', this.gasLimit);
         if (this.options.node !== 'embark') {
           this.showNodeHttpWarning();
-          return callback();
+          return next();
         }
         if (!this.ipc.connected) {
           this.logger.error("Could not connect to Embark's IPC. Is embark running?");
           if (!this.options.inProcess) process.exit(1);
         }
-        this.connectToIpcNode(callback);
-      });
-    });
+        return this.connectToIpcNode(next);
+      }
+    ], callback);
   }
 
   connectToIpcNode(cb) {
@@ -174,7 +185,7 @@ class Test {
           return callback(err);
         }
         self.firstRunConfig = false;
-        callback();
+        self.events.request("runcode:embarkjs:reset", callback);
       });
     });
   }
@@ -230,11 +241,6 @@ class Test {
           self.error = false;
           next(null, accounts);
         });
-      },
-      function changeGlobalWeb3(accounts, next) {
-        self.resetEmbarkJS((err) => {
-          next(err, accounts);
-        });
       }
     ], (err, accounts) => {
       if (err) {
@@ -243,14 +249,6 @@ class Test {
       }
       self.events.emit('tests:ready');
       callback(null, accounts);
-    });
-  }
-
-  resetEmbarkJS(cb) {
-    this.events.request('blockchain:get', (web3) => {
-      // global web3 used in the tests, not in the vm
-      global.web3 = web3;
-      this.events.request("runcode:embarkjs:reset", cb);
     });
   }
 
@@ -297,13 +295,15 @@ class Test {
           next(null, accounts);
         });
       },
-      function deploy(accounts, next) {
-        self.events.request('deploy:contracts:test', () => {
-          next(null, accounts);
-        });
-      },
       function getWeb3Object(accounts, next) {
         self.events.request('blockchain:get', (web3) => {
+          // global web3 used in the tests, not in the vm
+          global.web3 = web3;
+          next(null, accounts, web3);
+        });
+      },
+      function deploy(accounts, web3, next) {
+        self.events.request('deploy:contracts:test', () => {
           next(null, accounts, web3);
         });
       },
@@ -322,22 +322,31 @@ class Test {
 
             const testContractFactoryPlugin = self.plugins.getPluginsFor('testContractFactory').slice(-1)[0];
 
-            if (!testContractFactoryPlugin) {
-              return self.getWeb3Contract(contract, web3, (err, web3Contract) => {
-                Object.setPrototypeOf(self.contracts[contract.className], web3Contract);
-                eachCb();
-              });
+            if (testContractFactoryPlugin) {
+              const newContract = testContractFactoryPlugin.testContractFactory(contract, web3);
+              Object.setPrototypeOf(self.contracts[contract.className], newContract);
+              return eachCb();
             }
-
-            const newContract = testContractFactoryPlugin.testContractFactory(contract, web3);
-            Object.setPrototypeOf(self.contracts[contract.className], newContract);
-
-            eachCb();
+            self.getEmbarkJSContract(contract, (err, vmContract) => {
+              if(err) {
+                self.logger.error(`Erroring creating contract instance '${contract.className}' for import in to test. Error: ${err}`);
+              }
+              Object.setPrototypeOf(self.contracts[contract.className], vmContract || null);
+              eachCb();
+            });            
           }, (err) => {
             next(err, accounts);
           });
 
         });
+      },
+      function updateEmbarkJsRef(accounts, next) {
+        self.events.request("runcode:eval", "EmbarkJS", (err, embarkjs) => {
+          if (!err && embarkjs) {
+            Object.setPrototypeOf(self.embarkjs, embarkjs);
+          }
+          next(err, accounts);
+        }, true);
       }
     ], function (err, accounts) {
       if (err) {
@@ -349,30 +358,31 @@ class Test {
     });
   }
 
-  getWeb3Contract(contract, web3, cb) {
-    const newContract = new EmbarkJS.Blockchain.Contract({
-      abi: contract.abiDefinition,
-      address: contract.deployedAddress,
-      from: contract.deploymentAccount || web3.eth.defaultAccount,
-      gas: constants.tests.gasLimit,
-      web3: web3
-    });
+  getEmbarkJSContract(contract, cb) {
+    const codeToRun = `
+      const newContract = new EmbarkJS.Blockchain.Contract({
+        abi: ${JSON.stringify(contract.abiDefinition)},
+        address: "${contract.deployedAddress || ""}" || undefined,
+        from: "${contract.deploymentAccount || ""}" || web3.eth.defaultAccount,
+        gas: "${constants.tests.gasLimit}",
+        web3: web3
+      });
 
-    newContract.filename = contract.filename;
-    if (newContract.options) {
-      newContract.options.from = contract.deploymentAccount || web3.eth.defaultAccount;
-      newContract.options.data = contract.code;
-      if (!newContract.options.data.startsWith('0x')) {
-        newContract.options.data = '0x' + newContract.options.data;
+      newContract.filename = "${contract.filename}";
+      if (newContract.options) {
+        newContract.options.from = "${contract.deploymentAccount || ""}" || web3.eth.defaultAccount;
+        newContract.options.data = "${contract.code}";
+        if (newContract.options.data && !newContract.options.data.startsWith('0x')) {
+          newContract.options.data = '0x' + newContract.options.data;
+        }
+        newContract.options.gas = "${constants.tests.gasLimit}";
       }
-      newContract.options.gas = constants.tests.gasLimit;
-    }
-
-    cb(null, newContract);
+      return newContract;`;
+    this.events.request("runcode:eval", codeToRun, cb, false, true); 
   }
 
   require(path) {
-    const contractsPrefix = 'Embark/contracts/';
+    const [contractsPrefix, embarkJSPrefix] = ['Embark/contracts/', 'Embark/EmbarkJS'];
 
     // Contract require
     if (path.startsWith(contractsPrefix)) {
@@ -385,6 +395,11 @@ class Test {
       const newContract = {};
       this.contracts[contractName] = newContract;
       return newContract;
+    }
+    
+    // EmbarkJS require
+    if (path.startsWith(embarkJSPrefix)) {
+      return this.embarkjs;
     }
 
     throw new Error(__('Unknown module %s', path));

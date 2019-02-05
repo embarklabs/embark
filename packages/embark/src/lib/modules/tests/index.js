@@ -16,7 +16,6 @@ class TestRunner {
     this.fs = embark.fs;
     this.ipc = options.ipc;
     this.runResults = [];
-    this.embarkjs = null;
 
     this.events.setCommandHandler('tests:run', (options, callback) => {
       this.run(options, callback);
@@ -173,9 +172,6 @@ class TestRunner {
         const Module = require('module');
         const originalRequire = require('module').prototype.require;
         Module.prototype.require = function (requireName) {
-          if (requireName.startsWith('Embark/EmbarkJS')) {
-            return self.embarkjs;
-          }
           if (requireName.startsWith('Embark')) {
             return test.require(...arguments);
           }
@@ -207,13 +203,7 @@ class TestRunner {
               if (global.embark.needConfig) {
                 global.config({});
               }
-              global.embark.onReady((err) => {
-                if(err) return done(err);
-                self.events.request('runcode:eval', 'EmbarkJS', (err, embarkjs) => {
-                  self.embarkjs = embarkjs;
-                  done(err);
-                });
-              });
+              global.embark.onReady(done);
             });
             mocha.run(function (fails) {
               mocha.suite.removeAllListeners();

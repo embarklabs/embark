@@ -68,7 +68,7 @@ class SolcTest extends Test {
         async.series(fns, next);
       },
       function resetEmbarkJs(file, next) {
-        self.resetEmbarkJS((err) => {
+        self.events.request("runcode:embarkjs:reset", (err) => {
           next(err, file);
         });
       }
@@ -120,11 +120,11 @@ class SolcTest extends Test {
                 methodIdentifiers: contract.functionHashes 
               }
             };
-            this.getWeb3Contract(contract, web3, (err, web3contract) => {
+            this.getEmbarkJSContract(contract, (err, embarkjsContract) => {
               if(err) {
                 return _callback(err);
               }
-              remixTests.runTest(contract.className, web3contract, contractDetails, {accounts},
+              remixTests.runTest(contract.className, embarkjsContract, contractDetails, {accounts},
                 self._prettyPrint.bind(self), _callback);
             });
           };
