@@ -1,4 +1,4 @@
-const fs = require('../../core/fs');
+import {fs} from 'embark-core';
 const shellJs = require('shelljs');
 const utils = require('../../utils/utils');
 const ProcessLauncher = require('../../core/processes/processLauncher');
@@ -138,7 +138,7 @@ class StorageProcessesLauncher {
           });
         });
       });
-      
+
 
       self.processes[storageName].on('result', constants.storage.initiated, (msg) => {
         if (msg.error) {

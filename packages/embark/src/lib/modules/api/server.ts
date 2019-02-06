@@ -1,6 +1,7 @@
 import bodyParser from "body-parser";
 import cors from "cors";
 import { Embark, Plugins } from "embark";
+import {fs} from "embark-core";
 import express, { NextFunction, Request, Response } from "express";
 import proxy from "express-http-proxy";
 import expressWs from "express-ws";
@@ -11,7 +12,6 @@ import {__} from "i18n";
 import * as path from "path";
 import * as ws from "ws";
 // @ts-ignore
-import { embarkPath } from "../../core/fs";
 
 type Method = "get" | "post" | "ws" | "delete";
 
@@ -106,8 +106,8 @@ export default class Server {
       ui = proxy("http://localhost:3000");
     } else {
       ui = express.static(
-        findUp.sync("node_modules/embark-ui/build", {cwd: embarkPath()}) ||
-          embarkPath("node_modules/embark-ui/build"),
+        findUp.sync("node_modules/embark-ui/build", {cwd: fs.embarkPath()}) ||
+          fs.embarkPath("node_modules/embark-ui/build"),
       );
     }
 

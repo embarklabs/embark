@@ -6,7 +6,7 @@ const ethUtil = require('ethereumjs-util');
 const utils = require('../../utils/utils');
 const constants = require('../../constants');
 const embarkJsUtils = require('embarkjs').Utils;
-const fs = require('../../core/fs');
+import {fs} from 'embark-core';
 
 const WEB3_READY = 'blockchain:ready';
 

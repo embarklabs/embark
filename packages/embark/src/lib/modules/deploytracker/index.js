@@ -1,5 +1,5 @@
 let utils = require('../../utils/utils.js');
-let fs = require('../../core/fs.js');
+import {fs} from 'embark-core';
 
 class DeployTracker {
 

@@ -1,4 +1,4 @@
-const fs = require('../core/fs.js');
+import {fs} from 'embark-core';
 const hostedGitInfo = require('hosted-git-info');
 const utils = require('./utils.js');
 const semver = require('semver');
@@ -137,7 +137,7 @@ class TemplateGenerator {
   getExternalProject(uri) {
     let url, folder, hgi;
     let fallback, url_fallback, folder_fallback, hgi_fallback, embarkVersion;
-    
+
     // reformat uri before parsing with hosted-git-info. Allows for further syntax support.
     Object.keys(REPLACEMENTS).forEach(replacement => {
       if(uri.indexOf(replacement) === 0) uri = uri.replace(replacement, REPLACEMENTS[replacement]);

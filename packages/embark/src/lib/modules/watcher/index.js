@@ -1,7 +1,7 @@
 let chokidar = require('chokidar');
 let path = require('path');
 
-let fs = require('../../core/fs.js');
+import {fs} from 'embark-core';
 
 const DAPP_PIPELINE_CONFIG_FILE = 'pipeline.js';
 const DAPP_WEBPACK_CONFIG_FILE = 'webpack.config.js';

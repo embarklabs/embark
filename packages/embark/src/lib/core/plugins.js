@@ -1,6 +1,6 @@
 const async = require('async');
 var Plugin = require('./plugin.js');
-var fs = require('../core/fs.js');
+import {fs} from 'embark-core';
 
 var Plugins = function(options) {
   this.pluginList = options.plugins || [];

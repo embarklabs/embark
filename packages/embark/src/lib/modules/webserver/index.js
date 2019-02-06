@@ -1,6 +1,6 @@
 import {findNextPort} from "../../utils/network";
 
-const fs = require('../../core/fs.js');
+import {fs} from 'embark-core';
 var {canonicalHost} = require('../../utils/host.js');
 var utils = require('../../utils/utils.js');
 var Server = require('./server.js');

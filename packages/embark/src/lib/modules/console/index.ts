@@ -1,8 +1,7 @@
 /*globals __*/
-const env = require("../../core/env");
-const fs = require("../../core/fs");
 const utils = require("../../utils/utils");
 const EmbarkJS = require("embarkjs");
+import {env, fs} from "embark-core";
 const IpfsApi = require("ipfs-api");
 const stringify = require("json-stringify-safe");
 import { Embark, Events } from "embark";

@@ -1,5 +1,5 @@
 let async = require('async');
-let fs = require('../../core/fs.js');
+import {fs} from 'embark-core';
 const utils = require('../../utils/utils.js');
 const constants = require('../../constants');
 

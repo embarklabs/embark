@@ -6,7 +6,7 @@ import { Builder } from "../../builder";
 import { CommandOptions } from "../../commandOptions";
 import { SmartContractsRecipe } from "../../smartContractsRecipe";
 
-const fs = require("../../../../core/fs");
+import {fs} from "embark-core";
 require("../../handlebarHelpers");
 
 const templatePath = path.join(__dirname, "templates", "contract.sol.hbs");

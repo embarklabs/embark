@@ -1,4 +1,4 @@
-const fs = require('../../core/fs.js');
+import {fs} from 'embark-core';
 const path = require('path');
 const async = require('async');
 const utils = require('../../utils/utils.js');

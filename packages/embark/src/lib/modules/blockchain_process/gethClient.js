@@ -1,6 +1,6 @@
 const async = require('async');
 const {exec, spawn} = require('child_process');
-const fs = require('../../core/fs');
+import {fs} from 'embark-core';
 const GethMiner = require('./miner');
 const semver = require('semver');
 const constants = require('../../constants');

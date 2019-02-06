@@ -1,6 +1,6 @@
 import * as path from "path";
 
-const fs = require("./fs.js");
+import {fs} from "embark-core";
 const utils = require("../utils/utils");
 
 export enum Types {

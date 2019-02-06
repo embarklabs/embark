@@ -8,7 +8,7 @@ import { ContractEnhanced } from "./contractEnhanced";
 import { coverageContractsPath } from "./path";
 import { Coverage as ICoverage } from "./types";
 
-const fs = require("../../core/fs");
+import {fs} from "embark-core";
 
 export default class Coverage {
   private contracts: ContractEnhanced[];

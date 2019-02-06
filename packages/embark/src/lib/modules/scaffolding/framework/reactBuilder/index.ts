@@ -7,7 +7,7 @@ import { Builder } from "../../builder";
 import { CommandOptions } from "../../commandOptions";
 import { SmartContractsRecipe } from "../../smartContractsRecipe";
 
-const fs = require("../../../../core/fs");
+import {fs} from "embark-core";
 const utils = require("../../../../utils/utils");
 require("../../handlebarHelpers");
 

@@ -1,7 +1,7 @@
 const bip39 = require("bip39");
 const hdkey = require('ethereumjs-wallet/hdkey');
 const ethereumjsWallet = require('ethereumjs-wallet');
-const fs = require('../core/fs');
+import {fs} from 'embark-core';
 const {getHexBalanceFromString} = require('../utils/utils');
 
 const path = require('path');

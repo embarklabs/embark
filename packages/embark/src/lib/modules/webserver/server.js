@@ -3,7 +3,7 @@ let serveStatic = require('serve-static');
 const {canonicalHost, defaultHost, dockerHostSwap} = require('../../utils/host');
 const expressWebSocket = require('express-ws');
 const express = require('express');
-const fs = require('../../core/fs');
+import {fs} from 'embark-core';
 const https = require('https');
 let path = require('path');
 

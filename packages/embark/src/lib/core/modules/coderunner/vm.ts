@@ -2,7 +2,7 @@ import { each } from "async";
 import { Callback, Logger } from "embark";
 import { NodeVM, NodeVMOptions } from "vm2";
 
-const fs = require("../../fs");
+import {fs} from "embark-core";
 const { recursiveMerge, isEs6Module } = require("../../../utils/utils");
 const Utils = require("../../../utils/utils");
 
