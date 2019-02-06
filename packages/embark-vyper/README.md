@@ -33,7 +33,7 @@ response:
 example:
 
 ```
-import { File } from 'src/lib/core/file.js';
+import { File } from 'embark-core';
 const contractFiles = [(new File({path: "simplestorage.sol", type: "custom", resolver: (cb) => { return cb(".. contract code...") }}))];
 
 embark.events.request("compiler:contracts", contractFiles, {}, (err, compiledObject) => {

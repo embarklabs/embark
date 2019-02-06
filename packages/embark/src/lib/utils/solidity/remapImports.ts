@@ -1,9 +1,8 @@
+import { File, fs, Types } from "embark-core";
 import * as path from "path";
-import { File, Types } from "../../core/file";
 import { removePureView, replacePureView } from "./code";
 
 const { urlJoin, groupBy } = require("../../utils/utils");
-import {fs} from "embark-core";
 
 const FIND_IMPORTS_REGEX = /^import[\s]*(['"])(.*)\1;/gm;
 const FIND_FILE_REGEX = /import[\s]*(['"])(.*)\1;/;

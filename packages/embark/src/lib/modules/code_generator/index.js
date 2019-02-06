@@ -46,7 +46,7 @@ class CodeGenerator {
     this.events.on('config:load:storage', this.generateStorageConfig.bind(this));
     this.events.on('config:load:communication', this.generateCommunicationConfig.bind(this));
 
-    this.events.setCommandHandler('code', function(cb) {
+    this.events.setCommandHandler('code', (cb) => {
       this.events.request("contracts:list", (_err, contractsList) => {
         let embarkJSABI = this.generateABI(contractsList, {useEmbarkJS: true});
         let contractsJSON = this.generateContractsJSON(contractsList);
