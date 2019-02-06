@@ -235,7 +235,7 @@ class Engine {
     this.registerModule('console_listener', {ipc: self.ipc});
     this.registerModule('deployment', {plugins: this.plugins, onlyCompile: options.onlyCompile});
     this.registerModule('transactionTracker');
-    this.registerModule('debugger');
+    this.registerModulePackage('embark-debugger');
 
     this.events.on('file-event', function ({fileType, path}) {
       clearTimeout(self.fileTimeout);
