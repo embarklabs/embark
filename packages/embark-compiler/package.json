@@ -20,7 +20,7 @@
   "scripts": {
     "build": "cross-env BABEL_ENV=node babel src --extensions \".js,.ts\" --out-dir dist --root-mode upward --source-maps",
     "ci": "npm run qa",
-    "clean": "npx rimraf .nyc_output coverage dist embark-*.tgz package",
+    "clean": "npx rimraf dist embark-*.tgz package",
     "lint": "npm-run-all lint:*",
     "lint:js": "eslint src/",
     "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
