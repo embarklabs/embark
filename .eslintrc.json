@@ -5,18 +5,17 @@
     "node": true
   },
   "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended"
+    "eslint:recommended"
   ],
-  "parserOptions": {
-    "sourceType": "module",
-    "ecmaVersion": 2018,
-    "ecmaFeatures": {
-      "jsx": true
-    }
-  },
   "globals": {
     "__": true
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module"
   },
   "plugins": [
     "react"
@@ -200,10 +199,13 @@
     "no-unmodified-loop-condition": "error",
     "no-unneeded-ternary": "error",
     "no-unused-expressions": "error",
-    "no-unused-vars": ["error", {
-      "argsIgnorePattern": "^_",
-      "varsIgnorePattern": "^_"
-    }],
+    "no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
     "no-use-before-define": "off",
     "no-useless-call": "off",
     "no-useless-computed-key": "error",
