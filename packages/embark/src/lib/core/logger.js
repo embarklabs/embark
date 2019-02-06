@@ -1,5 +1,5 @@
 require('colors');
-let fs = require('./fs.js');
+import {fs} from 'embark-core';
 const date = require('date-and-time');
 
 const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss:SSS';

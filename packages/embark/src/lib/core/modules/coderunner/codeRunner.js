@@ -1,5 +1,5 @@
 const VM = require('./vm');
-const fs = require('../../fs');
+import {fs} from 'embark-core';
 
 class CodeRunner {
   constructor(options) {
@@ -93,12 +93,12 @@ class CodeRunner {
       if(err) {
         return cb(err);
       }
-      
+
       if (isNotUserInput && this.ipc.isServer()) {
         this.commands.push({code});
         this.ipc.broadcast("runcode:newCommand", {code});
       }
-      
+
       cb(null, result);
     });
   }

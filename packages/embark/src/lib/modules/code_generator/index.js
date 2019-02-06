@@ -1,5 +1,5 @@
 let async = require('async');
-let fs = require('../../core/fs.js');
+import {fs} from 'embark-core';
 const utils = require('../../utils/utils.js');
 const constants = require('../../constants');
 
@@ -338,7 +338,7 @@ class CodeGenerator {
       names: this.namesystemConfig || {},
       storage: this.storageConfig || {}
     };
-  
+
     return this.plugins.getPluginsFor("initConsoleCode").reduce((acc, plugin) => {
       Object.keys(codeTypes).forEach((codeTypeName) => {
         (plugin.embarkjs_init_console_code[codeTypeName] || []).forEach((initCode) => {

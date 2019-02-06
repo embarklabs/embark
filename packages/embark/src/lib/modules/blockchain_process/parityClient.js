@@ -1,5 +1,5 @@
 const async = require('async');
-const fs = require('../../core/fs.js');
+import {fs} from 'embark-core';
 const path = require('path');
 const os = require('os');
 const semver = require('semver');

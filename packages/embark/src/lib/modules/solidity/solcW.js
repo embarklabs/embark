@@ -1,5 +1,5 @@
 let utils = require('../../utils/utils.js');
-let fs = require('../../core/fs.js');
+import {fs} from 'embark-core';
 let currentSolcVersion = require('../../../../package.json').dependencies.solc;
 const ProcessLauncher = require('../../core/processes/processLauncher.js');
 const uuid = require('uuid/v1');

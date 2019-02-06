@@ -3,7 +3,7 @@ import { File, Types } from "../../core/file";
 import { removePureView, replacePureView } from "./code";
 
 const { urlJoin, groupBy } = require("../../utils/utils");
-const fs = require("../../core/fs");
+import {fs} from 'embark-core';
 
 const FIND_IMPORTS_REGEX = /^import[\s]*(['"])(.*)\1;/gm;
 const FIND_FILE_REGEX = /import[\s]*(['"])(.*)\1;/;

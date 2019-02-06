@@ -428,7 +428,7 @@ class EmbarkController {
   }
 
   reset() {
-    var fs = require('../lib/core/fs.js');
+    var {fs} = require('embark-core');
     fs.removeSync('chains.json');
     fs.removeSync('.embark/');
     fs.removeSync('node_modules/.cache');
@@ -439,7 +439,7 @@ class EmbarkController {
   }
 
   ejectWebpack() {
-    var fs = require('../lib/core/fs.js');
+    var {fs} = require('embark-core');
     var embarkConfig = fs.embarkPath('dist/lib/modules/pipeline/webpack.config.js');
     var dappConfig = fs.dappPath('webpack.config.js');
     fs.copyPreserve(embarkConfig, dappConfig);

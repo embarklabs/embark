@@ -1,6 +1,6 @@
 const UploadSwarm = require('./upload.js');
 const utils = require('../../utils/utils.js');
-const fs = require('../../core/fs.js');
+import {fs} from 'embark-core';
 const SwarmAPI = require('swarm-api');
 // TODO: not great, breaks module isolation
 const StorageProcessesLauncher = require('../storage/storageProcessesLauncher');

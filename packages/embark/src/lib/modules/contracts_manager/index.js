@@ -2,7 +2,7 @@ let async = require('async');
 const cloneDeep = require('clone-deep');
 
 const utils = require('../../utils/utils.js');
-const fs = require('../../core/fs');
+import {fs} from 'embark-core';
 const constants = require('../../constants');
 
 // TODO: create a contract object
@@ -289,11 +289,11 @@ class ContractsManager {
         });
       },
       function allContractsCompiled(callback) {
-        const allContractsCompiled = 
-          self.compiledContracts && 
-          self.contractsFiles && 
-          self.contractsFiles.every(contractFile => 
-            Object.values(self.compiledContracts).find(contract => 
+        const allContractsCompiled =
+          self.compiledContracts &&
+          self.contractsFiles &&
+          self.contractsFiles.every(contractFile =>
+            Object.values(self.compiledContracts).find(contract =>
               contract.originalFilename === contractFile.filename
             )
           );

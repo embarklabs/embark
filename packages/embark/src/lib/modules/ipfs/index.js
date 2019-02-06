@@ -1,6 +1,6 @@
 const UploadIPFS = require('./upload.js');
 const utils = require('../../utils/utils.js');
-const fs = require('../../core/fs.js');
+import {fs} from 'embark-core';
 const IpfsApi = require('ipfs-api');
 // TODO: not great, breaks module isolation
 const StorageProcessesLauncher = require('../storage/storageProcessesLauncher');

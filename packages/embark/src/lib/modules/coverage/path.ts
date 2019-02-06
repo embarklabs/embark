@@ -1,5 +1,5 @@
 import * as path from "path";
 
-const fs = require("../../core/fs");
+import {fs} from 'embark-core';
 
 export const coverageContractsPath = () => path.join("coverage", "instrumentedContracts");

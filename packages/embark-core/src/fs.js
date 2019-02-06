@@ -2,9 +2,17 @@ const parseJson = require('parse-json');
 const os = require('os');
 let path = require('path');
 let fs = require('fs-extra');
-let utils = require('../utils/utils.js');
 let env = require('./env.js');
 require('colors');
+
+function sha512(arg) {
+  if (typeof arg !== 'string') {
+    throw new TypeError('argument must be a string');
+  }
+  const crypto = require('crypto');
+  const hash = crypto.createHash('sha512');
+  return hash.update(arg).digest('hex');
+}
 
 function restrictPath(receiver, binding, count, args) {
   const dapp = dappPath();
@@ -133,7 +141,7 @@ function removeSync() {
 }
 
 function anchoredPath(anchor, ...args) {
-  return utils.joinPath(env.anchoredValue(anchor), ...args);
+  return path.join(env.anchoredValue(anchor), ...args);
 }
 
 function embarkPath() {
@@ -155,8 +163,8 @@ function ipcPath(basename, usePipePathOnWindows = false) {
   if (process.platform === 'win32' && usePipePathOnWindows) {
     return `\\\\.\\pipe\\${basename}`;
   }
-  return utils.joinPath(
-    tmpDir(`embark-${utils.sha512(dappPath()).slice(0, 8)}`),
+  return path.join(
+    tmpDir(`embark-${sha512(dappPath()).slice(0, 8)}`),
     basename
   );
 }
@@ -171,7 +179,7 @@ function createWriteStream() {
 
 function tmpDir() {
   let os = require('os');
-  return utils.joinPath(os.tmpdir(), ...arguments);
+  return path.join(os.tmpdir(), ...arguments);
 }
 
 function copyPreserve(sourceFilePath, targetFilePath) {
@@ -181,7 +189,7 @@ function copyPreserve(sourceFilePath, targetFilePath) {
     let preserved = targetFilePath;
     while (fs.existsSync(preserved)) {
       let extname = path.extname(targetFilePath);
-      preserved = utils.joinPath(
+      preserved = path.join(
         path.dirname(targetFilePath),
         `${path.basename(targetFilePath, extname)}.${ext}${extname}`
       );

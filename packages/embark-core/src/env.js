@@ -1,8 +1,7 @@
 /* global __dirname module process require */
 
-const {delimiter} = require('path');
+const path = require('path');
 const findUp = require('find-up');
-const {joinPath} = require('../utils/utils.js');
 
 function anchoredValue(anchor, value) {
   if (!arguments.length) {
@@ -39,11 +38,11 @@ const DEFAULT_CMD_HISTORY_SIZE = 20;
 anchoredValue(CMD_HISTORY_SIZE, DEFAULT_CMD_HISTORY_SIZE);
 
 const DIAGRAM_PATH = 'DIAGRAM_PATH';
-const DEFAULT_DIAGRAM_PATH = joinPath(anchoredValue(DAPP_PATH), 'diagram.svg');
+const DEFAULT_DIAGRAM_PATH = path.join(anchoredValue(DAPP_PATH), 'diagram.svg');
 anchoredValue(DIAGRAM_PATH, DEFAULT_DIAGRAM_PATH);
 
 const EMBARK_PATH = 'EMBARK_PATH';
-const DEFAULT_EMBARK_PATH = joinPath(__dirname, '../../..');
+const DEFAULT_EMBARK_PATH = path.join(__dirname, '../../..');
 anchoredValue(EMBARK_PATH, DEFAULT_EMBARK_PATH);
 
 const PKG_PATH = 'PKG_PATH';
@@ -57,7 +56,7 @@ let start = anchoredValue(EMBARK_PATH);
 while (true) {
   const found = findUp.sync('node_modules', {cwd: start});
   if (!found) break;
-  start = joinPath(start, '..');
+  start = path.join(start, '..');
   if (EMBARK_NODE_MODULES_PATHS[len - 1] !== found) {
     len = EMBARK_NODE_MODULES_PATHS.push(found);
   }
@@ -66,8 +65,8 @@ while (true) {
 const NODE_PATH = 'NODE_PATH';
 // NOTE: setting NODE_PATH at runtime won't effect lookup behavior in the
 // current process, but will take effect in child processes
-process.env[NODE_PATH] = EMBARK_NODE_MODULES_PATHS.join(delimiter) +
-  (process.env[NODE_PATH] ? delimiter : '') +
+process.env[NODE_PATH] = EMBARK_NODE_MODULES_PATHS.join(path.delimiter) +
+  (process.env[NODE_PATH] ? path.delimiter : '') +
   (process.env[NODE_PATH] || '');
 
 module.exports = {

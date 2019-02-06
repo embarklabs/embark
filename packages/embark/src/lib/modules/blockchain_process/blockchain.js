@@ -1,7 +1,7 @@
 const async = require('async');
 const {spawn, exec} = require('child_process');
 const path = require('path');
-const fs = require('../../core/fs.js');
+import {fs} from 'embark-core';
 const constants = require('../../constants.json');
 const utils = require('../../utils/utils.js');
 const GethClient = require('./gethClient.js');
@@ -135,10 +135,10 @@ Blockchain.prototype.initStandaloneProcess = function () {
     // `embark run` without restarting `embark blockchain`)
     setInterval(() => {
       if (!this.ipc.connected) {
-        this.ipc.connect(() => { 
+        this.ipc.connect(() => {
           if (this.ipc.connected) {
-            this.ipc.listenTo('regularTxs', (mode) => { 
-              if(mode === 'start') this.startRegularTxs(() => {}); 
+            this.ipc.listenTo('regularTxs', (mode) => {
+              if(mode === 'start') this.startRegularTxs(() => {});
               else if (mode === 'stop') this.stopRegularTxs(() => {});
             });
           }

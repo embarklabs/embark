@@ -1,6 +1,6 @@
 
 const {errorMessage} = require('../../utils/utils');
-const fs = require('../../core/fs');
+import {fs} from 'embark-core';
 
 class WebpackConfigReader {
   constructor(options) {
@@ -41,7 +41,7 @@ class WebpackConfigReader {
     } catch (e) {
       console.error(`error while loading webpack config ${configPath}`);
       callback(errorMessage(e));
-    }    
+    }
   }
 }
 

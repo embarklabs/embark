@@ -2,7 +2,7 @@ const async = require('async');
 const Mocha = require('mocha');
 const path = require('path');
 const {runCmd} = require('../../utils/utils');
-const fs = require('../../core/fs');
+import {fs} from 'embark-core';
 const assert = require('assert');
 const Test = require('./test');
 const {EmbarkSpec, EmbarkApiSpec} = require('./reporter');

@@ -127,8 +127,8 @@ function pingEndpoint(host, port, type, protocol, origin, callback) {
   };
 
   const handleSuccess = (req, closeMethod, event) => {
-    req.once(event, () => { 
-      handleEvent(req, closeMethod); 
+    req.once(event, () => {
+      handleEvent(req, closeMethod);
     });
   };
 
@@ -388,15 +388,6 @@ function toChecksumAddress(address) {
 function sha3(arg) {
   const Web3 = require('web3');
   return Web3.utils.sha3(arg);
-}
-
-function sha512(arg) {
-  if (typeof arg !== 'string') {
-    throw new TypeError('argument must be a string');
-  }
-  const crypto = require('crypto');
-  const hash = crypto.createHash('sha512');
-  return hash.update(arg).digest('hex');
 }
 
 function soliditySha3(arg) {
@@ -669,7 +660,6 @@ module.exports = {
   getExternalContractUrl,
   toChecksumAddress,
   sha3,
-  sha512,
   soliditySha3,
   normalizeInput,
   buildUrl,

@@ -1,5 +1,5 @@
 let utils = require('../../utils/utils.js');
-let fs = require('../../core/fs.js');
+import {fs} from 'embark-core';
 let Web3 = require('web3');
 const {parallel} = require('async');
 const {sendMessage, listenTo} = require('./js/communicationFunctions');

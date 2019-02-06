@@ -1,6 +1,6 @@
 const async = require('async');
 const utils = require('../../utils/utils.js');
-const fs = require('../../core/fs');
+import {fs} from 'embark-core';
 
 class ConsoleListener {
   constructor(embark, options) {

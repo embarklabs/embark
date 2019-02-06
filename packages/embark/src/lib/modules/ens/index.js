@@ -1,4 +1,4 @@
-const fs = require('../../core/fs.js');
+import {fs} from 'embark-core';
 const utils = require('../../utils/utils.js');
 const namehash = require('eth-ens-namehash');
 const async = require('async');

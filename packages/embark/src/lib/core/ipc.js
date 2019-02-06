@@ -1,6 +1,6 @@
 /* global module process require */
 
-const fs = require('./fs');
+import {fs} from 'embark-core';
 const ipc = require('node-ipc');
 const {parse, stringify} = require('flatted/cjs');
 const utils = require('../utils/utils');

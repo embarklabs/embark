@@ -1,7 +1,7 @@
 const async = require('async');
 const Web3 = require('web3');
 const {buildUrl} = require('../../utils/utils.js');
-const {readFileSync, dappPath} = require('../../core/fs');
+const {readFileSync, dappPath} = require('embark-core').fs;
 const constants = require('../../constants');
 
 class DevFunds {
