@@ -258,7 +258,7 @@ class Engine {
   }
 
   fileWatchService() {
-    this.registerModule('watcher');
+    this.registerModulePackage('embark-watcher');
     this.events.request('watcher:start');
   }
 
