@@ -197,24 +197,6 @@ function exit(code) {
   process.exit(code);
 }
 
-function downloadFile(url, dest, cb) {
-  const o_fs = require('fs-extra');
-  var file = o_fs.createWriteStream(dest);
-  (url.substring(0, 5) === 'https' ? https : http).get(url, function (response) {
-    if (response.statusCode !== 200) {
-      cb(`Download failed, response code ${response.statusCode}`);
-      return;
-    }
-    response.pipe(file);
-    file.on('finish', function () {
-      file.close(cb);
-    });
-  }).on('error', function (err) {
-    o_fs.unlink(dest);
-    cb(err.message);
-  });
-}
-
 function extractTar(filename, packageDirectory, cb) {
   const o_fs = require('fs-extra');
   const tar = require('tar');
@@ -653,7 +635,6 @@ module.exports = {
   cd,
   sed,
   exit,
-  downloadFile,
   extractTar,
   extractZip,
   proposeAlternative,

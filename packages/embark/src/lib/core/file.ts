@@ -1,6 +1,7 @@
 import * as path from "path";
 
 import {fs} from 'embark-core';
+import {downloadFile} from 'embark-utils';
 const utils = require("../utils/utils");
 
 export enum Types {
@@ -65,7 +66,7 @@ export class File {
 
         case Types.http: {
           fs.ensureFileSync(this.path);
-          return utils.downloadFile(this.externalUrl, this.path, () => {
+          return downloadFile(this.externalUrl, this.path, () => {
             const content = fs.readFileSync(this.path, "utf-8");
             resolve(content);
           });

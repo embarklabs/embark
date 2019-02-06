@@ -1,6 +1,7 @@
 import {fs} from 'embark-core';
 const hostedGitInfo = require('hosted-git-info');
 const utils = require('./utils.js');
+import {downloadFile} from 'embark-utils';
 const semver = require('semver');
 
 const REPLACEMENTS = {
@@ -29,7 +30,7 @@ class TemplateGenerator {
     console.log(__('Downloading template...').green);
     fs.mkdirpSync(utils.dirname(tmpFilePath));
     return new Promise((resolve, reject) => {
-      utils.downloadFile(url, tmpFilePath, (err) => {
+      downloadFile(url, tmpFilePath, (err) => {
         if (err) {
           console.error(utils.errorMessage(err).red);
           reject(err);
