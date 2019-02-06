@@ -1,7 +1,7 @@
 import * as path from "path";
 
 import {fs} from "embark-core";
-import {downloadFile} from 'embark-utils';
+import {downloadFile, getExternalContractUrl} from "embark-utils";
 const utils = require("../utils/utils");
 
 export enum Types {
@@ -37,7 +37,7 @@ export class File {
     this.providerUrl = "";
 
     if (this.type === Types.http) {
-      const external = utils.getExternalContractUrl(options.externalUrl, this.providerUrl);
+      const external = getExternalContractUrl(options.externalUrl, this.providerUrl);
       this.externalUrl = external.url;
       this.path = external.filePath;
     } else {

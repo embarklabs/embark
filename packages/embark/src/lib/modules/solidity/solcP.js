@@ -2,7 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const semver = require('semver');
 const constants = require('../../constants');
-const Utils = require('../../utils/utils');
+import {getExternalContractUrl} from 'embark-utils';
 const ProcessWrapper = require('../../core/processes/processWrapper');
 const PluginManager = require('live-plugin-manager-git-fix').PluginManager;
 import LongRunningProcessTimer  from '../../utils/longRunningProcessTimer';
@@ -18,7 +18,7 @@ class SolcProcess extends ProcessWrapper {
 
   findImports(filename) {
     if (filename.startsWith('http') || filename.startsWith('git')) {
-      const fileObj = Utils.getExternalContractUrl(filename, this._providerUrl);
+      const fileObj = getExternalContractUrl(filename, this._providerUrl);
       filename = fileObj.filePath;
     }
     if (fs.existsSync(filename)) {

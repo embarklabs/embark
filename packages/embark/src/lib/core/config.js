@@ -1,6 +1,7 @@
 import {fs} from 'embark-core';
 const Plugins = require('./plugins.js');
 const utils = require('../utils/utils.js');
+import {getExternalContractUrl} from 'embark-utils';
 const path = require('path');
 const deepEqual = require('deep-equal');
 const web3 = require('web3');
@@ -362,7 +363,7 @@ Config.prototype.loadExternalContractsFiles = function() {
       continue;
     }
     if (contract.file.startsWith('http') || contract.file.startsWith('git') || contract.file.startsWith('ipfs') || contract.file.startsWith('bzz')) {
-      const fileObj = utils.getExternalContractUrl(contract.file,this.providerUrl);
+      const fileObj = getExternalContractUrl(contract.file,this.providerUrl);
       if (!fileObj) {
         return this.logger.error(__("HTTP contract file not found") + ": " + contract.file);
       }
