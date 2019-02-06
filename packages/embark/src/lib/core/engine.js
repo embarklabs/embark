@@ -218,7 +218,7 @@ class Engine {
   setupCompilerAndContractsManagerService(options) {
     this.registerModulePackage('embark-compiler', {plugins: this.plugins, isCoverage: options.isCoverage});
     this.registerModule('solidity', {ipc: this.ipc, useDashboard: this.useDashboard});
-    this.registerModule('vyper');
+    this.registerModulePackage('embark-vyper');
     this.registerModule('contracts_manager', {plugins: this.plugins, compileOnceOnly: options.compileOnceOnly});
   }
 
@@ -227,7 +227,7 @@ class Engine {
 
     this.setupCompilerAndContractsManagerService(options);
     this.registerModule('solidity', {ipc: self.ipc, useDashboard: this.useDashboard});
-    this.registerModule('vyper');
+    this.registerModulePackage('embark-vyper');
     this.registerModule('profiler', {plugins: this.plugins});
     this.registerModule('deploytracker', {trackContracts: options.trackContracts});
     this.registerModule('specialconfigs');
