@@ -1,7 +1,7 @@
 /*global describe, it*/
-const Utils = require('../lib/utils/utils');
+const Utils = require('embark-utils');
 const assert = require('assert');
-const constants = require('../lib/constants');
+const HTTP_CONTRACTS_DIRECTORY = ".embark/contracts/";
 
 describe('embark.utils', function () {
   describe('#getExternalContractUrl', function () {
@@ -11,7 +11,7 @@ describe('embark.utils', function () {
       );
       assert.deepEqual(fileObj,
         {
-          filePath: constants.httpContractsDirectory + 'embark-framework/embark/master/test_dapps/packages/test_app/app/contracts/simple_storage.sol',
+          filePath: HTTP_CONTRACTS_DIRECTORY + 'embark-framework/embark/master/test_dapps/packages/test_app/app/contracts/simple_storage.sol',
           url: 'https://raw.githubusercontent.com/embark-framework/embark/master/test_dapps/packages/test_app/app/contracts/simple_storage.sol'
         });
     });
@@ -29,7 +29,7 @@ describe('embark.utils', function () {
       );
       assert.deepEqual(fileObj,
         {
-          filePath: constants.httpContractsDirectory + 'status-im/contracts/master/contracts/identity/ERC725.sol',
+          filePath: HTTP_CONTRACTS_DIRECTORY + 'status-im/contracts/master/contracts/identity/ERC725.sol',
           url: 'https://raw.githubusercontent.com/status-im/contracts/master/contracts/identity/ERC725.sol'
         });
     });
@@ -40,7 +40,7 @@ describe('embark.utils', function () {
       );
       assert.deepEqual(fileObj,
         {
-          filePath: constants.httpContractsDirectory + 'status-im/contracts/myBranch/contracts/identity/ERC725.sol',
+          filePath: HTTP_CONTRACTS_DIRECTORY + 'status-im/contracts/myBranch/contracts/identity/ERC725.sol',
           url: 'https://raw.githubusercontent.com/status-im/contracts/myBranch/contracts/identity/ERC725.sol'
         });
     });
@@ -58,7 +58,7 @@ describe('embark.utils', function () {
       );
       assert.deepEqual(fileObj,
         {
-          filePath: constants.httpContractsDirectory + 'status-im/contracts/master/contracts/identity/ERC725.sol',
+          filePath: HTTP_CONTRACTS_DIRECTORY + 'status-im/contracts/master/contracts/identity/ERC725.sol',
           url: 'https://raw.githubusercontent.com/status-im/contracts/master/contracts/identity/ERC725.sol'
         });
     });
@@ -69,7 +69,7 @@ describe('embark.utils', function () {
       );
       assert.deepEqual(fileObj,
         {
-          filePath: constants.httpContractsDirectory + 'status-im/contracts/theBranch/contracts/identity/ERC725.sol',
+          filePath: HTTP_CONTRACTS_DIRECTORY + 'status-im/contracts/theBranch/contracts/identity/ERC725.sol',
           url: 'https://raw.githubusercontent.com/status-im/contracts/theBranch/contracts/identity/ERC725.sol'
         });
     });
@@ -86,7 +86,7 @@ describe('embark.utils', function () {
         'http://myurl.com/myFile.sol'
       );
       assert.deepEqual(fileObj, {
-        filePath: constants.httpContractsDirectory + 'myFile.sol',
+        filePath: HTTP_CONTRACTS_DIRECTORY + 'myFile.sol',
         url: 'http://myurl.com/myFile.sol'
       });
     });
@@ -97,7 +97,7 @@ describe('embark.utils', function () {
         swarmFile
       );
       assert.deepEqual(fileObj, {
-        filePath: constants.httpContractsDirectory + swarmFile,
+        filePath: HTTP_CONTRACTS_DIRECTORY + swarmFile,
         url: 'https://swarm-gateways.net/' + swarmFile
       });
     });
@@ -109,7 +109,7 @@ describe('embark.utils', function () {
         'http://localhost:8500'
       );
       assert.deepEqual(fileObj, {
-        filePath: constants.httpContractsDirectory + 'ERC725.sol',
+        filePath: HTTP_CONTRACTS_DIRECTORY + 'ERC725.sol',
         url: 'http://localhost:8500/' + swarmFile
       });
     });
@@ -121,7 +121,7 @@ describe('embark.utils', function () {
         'https://swarm-gateways.net'
       );
       assert.deepEqual(fileObj, {
-        filePath: constants.httpContractsDirectory + swarmFile,
+        filePath: HTTP_CONTRACTS_DIRECTORY + swarmFile,
         url: 'https://swarm-gateways.net/' + swarmFile
       });
     });
