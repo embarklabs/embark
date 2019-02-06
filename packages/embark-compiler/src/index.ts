@@ -1,7 +1,7 @@
 import {Callback, CompilerPluginObject, Embark, Plugins} from "embark";
 import {__} from "i18n";
 
-const async = require("../../utils/async_extend.js");
+const async = require("./utils/async_extend.js");
 
 class Compiler {
   private logger: any;
