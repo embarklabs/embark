@@ -415,10 +415,6 @@ function groupBy(array, key) {
   }, {});
 }
 
-function sample(array) {
-  return array[Math.floor(Math.random() * array.length)];
-}
-
 function last(array) {
   return array[array.length - 1];
 }
@@ -563,7 +559,6 @@ module.exports = {
   getHexBalanceFromString,
   compact,
   groupBy,
-  sample,
   last,
   interceptLogs,
   errorMessage,

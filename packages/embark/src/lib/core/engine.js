@@ -228,7 +228,7 @@ class Engine {
     this.setupCompilerAndContractsManagerService(options);
     this.registerModule('solidity', {ipc: self.ipc, useDashboard: this.useDashboard});
     this.registerModulePackage('embark-vyper');
-    this.registerModule('profiler', {plugins: this.plugins});
+    this.registerModulePackage('embark-profiler', {plugins: this.plugins});
     this.registerModule('deploytracker', {trackContracts: options.trackContracts});
     this.registerModule('specialconfigs');
     this.registerModule('ens');
