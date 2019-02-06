@@ -2,7 +2,7 @@
 import { File, Types } from "../lib/core/file";
 
 let ContractsManager = require('../lib/modules/contracts_manager/index.js');
-let Compiler = require('../lib/modules/compiler/');
+let Compiler = require('embark-compiler');
 let Logger = require('../lib/core/logger.js');
 let TestLogger = require('../lib/utils/test_logger');
 let Events = require('../lib/core/events');
