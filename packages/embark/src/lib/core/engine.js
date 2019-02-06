@@ -132,7 +132,7 @@ class Engine {
   }
 
   graphService(_options) {
-    this.registerModule('graph');
+    this.registerModulePackage('embark-graph');
   }
 
   scaffoldingService(_options) {
