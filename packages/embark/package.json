@@ -22,7 +22,8 @@
   "main": "./dist/lib/index.js",
   "scripts": {
     "build": "cross-env BABEL_ENV=node babel src --copy-files --extensions \".js,.ts\" --out-dir dist --root-mode upward --source-maps",
-    "ci": "npm run qa",
+    "ci": "npm-run-all qa ci:*",
+    "ci:coverage-report": "nyc report --reporter=text-lcov | coveralls || exit 0",
     "clean": "npx npm-run-all clean:* && npx rimraf .nyc_output coverage dist embark-*.tgz package",
     "clean:templates": "node scripts/templates-reset",
     "lint": "npm-run-all lint:*",
@@ -188,6 +189,7 @@
     "@types/request": "2.48.1",
     "@types/web3": "1.0.12",
     "chai": "4.1.2",
+    "coveralls": "3.0.2",
     "cross-env": "5.2.0",
     "embark-test-contract-0": "0.0.2",
     "embark-test-contract-1": "0.0.1",
