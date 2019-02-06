@@ -28,13 +28,14 @@
     "lint:js": "eslint src/",
     "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
     "package": "npm pack",
-    "qa": "npm-run-all lint typecheck build package",
+    "// qa": "npm-run-all lint typecheck build package",
+    "qa": "npm-run-all lint build package",
     "reset": "npm run clean && npx rimraf node_modules",
     "start": "npm run watch",
-    "typecheck": "tsc",
+    "// typecheck": "tsc",
     "watch": "run-p watch:*",
     "watch:build": "npm run build -- --verbose --watch",
-    "watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
+    "// watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
   },
   "eslintConfig": {
     "extends": "../../.eslintrc.json"
@@ -60,4 +61,3 @@
     "yarn": ">=1.12.3"
   }
 }
-

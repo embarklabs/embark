@@ -5,6 +5,7 @@
     "lib": ["ES2017"],
     "module": "CommonJS",
     "noEmit": true,
+    "noImplicitThis": false,
     "strict": true,
     "target": "ES2017"
   }
