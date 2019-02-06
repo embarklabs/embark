@@ -9,8 +9,7 @@ import { InstrumentWalker } from "./instrumentWalker";
 import { coverageContractsPath } from "./path";
 import { BranchType, Coverage } from "./types";
 
-const File = require("../../core/file");
-import {fs} from 'embark-core';
+import {fs, File} from 'embark-core';
 
 const STATEMENT_EVENT = "__StatementCoverage";
 const POINT_FACTOR = 1000000000;

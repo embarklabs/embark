@@ -1,8 +1,7 @@
 import * as path from "path";
 
-import {fs} from 'embark-core';
+import fs from './fs';
 import {downloadFile, getExternalContractUrl} from 'embark-utils';
-const utils = require("../utils/utils");
 
 export enum Types {
   embarkInternal = "embark_internal",

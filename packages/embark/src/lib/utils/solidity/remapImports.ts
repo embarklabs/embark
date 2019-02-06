@@ -1,5 +1,5 @@
 import * as path from "path";
-import { File, Types } from "../../core/file";
+import { File, Types } from "embark-core";
 import { removePureView, replacePureView } from "./code";
 
 const { urlJoin, groupBy } = require("../../utils/utils");

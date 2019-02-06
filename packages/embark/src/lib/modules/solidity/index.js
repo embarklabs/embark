@@ -163,7 +163,7 @@ class Solidity {
     let self = this;
     let input = {};
     let originalFilepath = {};
-    
+
     async.waterfall([
       function prepareInput(callback) {
         async.each(contractFiles,
@@ -176,12 +176,13 @@ class Solidity {
             }
 
             originalFilepath[filename] = file.path;
-            
+
             remapImports.prepareForCompilation(file, options.isCoverage)
               .then(fileContent => {
                 input[file.path] = {content: fileContent.replace(/\r\n/g, '\n')};
                 fileCb();
               }).catch((_e) => {
+                console.dir(_e)
                 self.logger.error(__('Error while loading the content of ') + filename);
                 fileCb();
               });

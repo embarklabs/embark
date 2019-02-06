@@ -1,4 +1,4 @@
-import {fs} from 'embark-core';
+import {fs, File, Types} from 'embark-core';
 const Plugins = require('./plugins.js');
 const utils = require('../utils/utils.js');
 import {getExternalContractUrl} from 'embark-utils';
@@ -11,7 +11,6 @@ const cloneDeep = require('lodash.clonedeep');
 import { replaceZeroAddressShorthand } from '../utils/addressUtils';
 import { unitRegex } from "../utils/regexConstants";
 import * as utilsContractsConfig from "../utils/contractsConfig";
-import { File, Types } from "./file";
 
 const DEFAULT_CONFIG_PATH = 'config/';
 

@@ -1,5 +1,5 @@
 /*global describe, it, require*/
-import { File, Types } from "../lib/core/file";
+import { File, Types } from "embark-core";
 
 let ContractsManager = require('../lib/modules/contracts_manager/index.js');
 let Compiler = require('../lib/modules/compiler/');
