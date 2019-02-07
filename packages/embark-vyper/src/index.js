@@ -1,4 +1,4 @@
-let async = require('./utils/async_extend.js');
+const async = require("embark-async-wrapper");
 const shelljs = require('shelljs');
 const path = require('path');
 
