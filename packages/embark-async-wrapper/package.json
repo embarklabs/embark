@@ -1,5 +1,5 @@
 {
-  "name": "embark-vyper",
+  "name": "embark-async-wrapper",
   "version": "4.0.0-beta.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
@@ -25,22 +25,20 @@
     "lint:js": "eslint src/",
     "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
     "package": "npm pack",
-    "// qa": "npm-run-all lint typecheck build package",
     "qa": "npm-run-all lint build package",
     "reset": "npm run clean && npx rimraf node_modules",
     "start": "npm run watch",
-    "// typecheck": "tsc",
+    "typecheck": "tsc",
     "watch": "run-p watch:*",
     "watch:build": "npm run build -- --verbose --watch",
-    "// watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
+    "watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
   },
   "eslintConfig": {
     "extends": "../../.eslintrc.json"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "7.3.1",
-    "embark-async-wrapper": "4.0.0-beta.0",
-    "shelljs": "0.5.3"
+    "async": "2.6.1",
+    "@babel/runtime-corejs2": "7.3.1"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
@@ -58,3 +56,4 @@
     "yarn": ">=1.12.3"
   }
 }
+
