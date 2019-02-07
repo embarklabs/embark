@@ -100,10 +100,10 @@ class DeployManager {
                 return done(_err);
               }
               if (contracts.length === 0) {
-                self.logger.info(__("no contracts found"));
+                self.logger.info(__("None of your Smart Contracts needed compilation, nothing to deploy."));
                 return done();
               }
-              self.logger.info(__("finished deploying contracts"));
+              self.logger.info(__("Finished deployment."));
               done(err);
             });
           }

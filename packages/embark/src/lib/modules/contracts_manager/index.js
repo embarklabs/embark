@@ -1,9 +1,10 @@
 let async = require('async');
 const cloneDeep = require('clone-deep');
-
 const utils = require('../../utils/utils.js');
 const fs = require('../../core/fs');
 const constants = require('../../constants');
+
+const CONTRACTS_HASHES_FILE = fs.dappPath('.embark/contract-hashes.json');
 
 // TODO: create a contract object
 
@@ -299,6 +300,25 @@ class ContractsManager {
           );
         callback(null, allContractsCompiled);
       },
+      function filterUnchangedContracts(allContractsCompiled, callback) {
+        let contractHashMap = fs.existsSync(CONTRACTS_HASHES_FILE) ? require(CONTRACTS_HASHES_FILE) : {};
+
+        async.each(self.contractsFiles, function (contractFile, cb) {
+          contractFile.content.then(content => {
+            const oldHash = contractHashMap[contractFile.originalPath];
+            const newHash = utils.sha3(content);
+            contractHashMap[contractFile.originalPath] = newHash;
+            if (newHash === oldHash) {
+              self.contractsFiles = self.contractsFiles.filter(file => file.originalPath !== contractFile.originalPath);
+            }
+            cb();
+          }, cb);
+        }, (err) => {
+          fs.ensureFileSync(CONTRACTS_HASHES_FILE);
+          fs.writeJSONSync(CONTRACTS_HASHES_FILE, contractHashMap, { spaces: 2 });
+          callback(err, allContractsCompiled);
+        });
+      },
       function compileContracts(allContractsCompiled, callback) {
         self.events.emit("status", __("Compiling..."));
         const hasCompiledContracts = self.compiledContracts && Object.keys(self.compiledContracts).length;
@@ -464,20 +484,26 @@ class ContractsManager {
         callback();
       },
       function removeContractsWithNoCode(callback) {
-        let className, contract;
+        let contract;
         let dictionary = Object.keys(self.contracts);
-        for (className in self.contracts) {
+
+        dictionary.forEach(className => {
           contract = self.contracts[className];
 
           if (contract.code === undefined && !contract.abiDefinition) {
-            self.logger.error(__("%s has no code associated", className));
-            let suggestion = utils.proposeAlternative(className, dictionary, [className]);
-            if (suggestion) {
-              self.logger.warn(__('did you mean "%s"?', suggestion));
+            // We only want to output this error/warning if the Smart Contract in
+            // question was actually compiled, which, in case of smart compilation,
+            // might not have been the case.
+            if (self.compiledContracts[className]) {
+              self.logger.error(__("%s has no code associated", className));
+              let suggestion = utils.proposeAlternative(className, dictionary, [className]);
+              if (suggestion) {
+                self.logger.warn(__('did you mean "%s"?', suggestion));
+              }
             }
             delete self.contracts[className];
           }
-        }
+        });
         self.logger.trace(self.contracts);
         callback();
       },

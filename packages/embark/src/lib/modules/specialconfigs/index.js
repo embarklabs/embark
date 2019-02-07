@@ -82,33 +82,37 @@ class SpecialConfigs {
   registerAfterDeployAction() {
     const self = this;
 
-    this.embark.registerActionForEvent("contracts:deploy:afterAll", async (cb) => {
-      if (typeof self.config.contractsConfig.afterDeploy === 'function') {
-        try {
-          const dependencies = await this.getAfterDeployLifecycleHookDependencies();
-          await self.config.contractsConfig.afterDeploy(dependencies);
-          cb();
-        } catch (err) {
-          return cb(new Error(`Error registering afterDeploy lifecycle hook: ${err.message}`));
-        }
-      } else {
-        let afterDeployCmds = self.config.contractsConfig.afterDeploy || [];
-        async.mapLimit(afterDeployCmds, 1, (cmd, nextMapCb) => {
-          async.waterfall([
-            function replaceWithAddresses(next) {
-              self.replaceWithAddresses(cmd, next);
-            },
-            self.replaceWithENSAddress.bind(self)
-          ], nextMapCb);
-        }, (err, onDeployCode) => {
-          if (err) {
-            self.logger.trace(err);
-            return cb(new Error("error running afterDeploy"));
-          }
+    this.embark.registerActionForEvent("contracts:deploy:afterAll", (cb) => {
+      this.events.request('contracts:all', async (err, contracts) => {
+        if (Object.keys(contracts).length) {
+          if (typeof self.config.contractsConfig.afterDeploy === 'function') {
+            try {
+              const dependencies = await this.getAfterDeployLifecycleHookDependencies();
+              await self.config.contractsConfig.afterDeploy(dependencies);
+              cb();
+            } catch (err) {
+              return cb(new Error(`Error registering afterDeploy lifecycle hook: ${err.message}`));
+            }
+          } else {
+            let afterDeployCmds = self.config.contractsConfig.afterDeploy || [];
+            async.mapLimit(afterDeployCmds, 1, (cmd, nextMapCb) => {
+              async.waterfall([
+                function replaceWithAddresses(next) {
+                  self.replaceWithAddresses(cmd, next);
+                },
+                self.replaceWithENSAddress.bind(self)
+              ], nextMapCb);
+            }, (err, onDeployCode) => {
+              if (err) {
+                self.logger.trace(err);
+                return cb(new Error("error running afterDeploy"));
+              }
 
-          self.runOnDeployCode(onDeployCode, cb);
-        });
-      }
+              self.runOnDeployCode(onDeployCode, cb);
+            });
+          }
+        }
+      });
     });
   }
 
