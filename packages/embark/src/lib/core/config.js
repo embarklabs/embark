@@ -59,7 +59,7 @@ var Config = function(options) {
     resolver = resolver || function(callback) {
       callback(fs.readFileSync(filename).toString());
     };
-    self.contractsFiles.push(new File({path: filename, type: Types.custom, resolver}));
+    self.contractsFiles.push(new File({path: filename, originalPath: filename, type: Types.custom, resolver}));
   });
 
   self.events.on('file-remove', (fileType, removedPath) => {
@@ -120,15 +120,16 @@ Config.prototype.reloadConfig = function() {
 };
 
 Config.prototype.loadContractFiles = function() {
-  const contracts = this.embarkConfig.contracts;
-  const newContractsFiles = this.loadFiles(contracts);
-  if (!this.contractFiles || newContractsFiles.length !== this.contractFiles.length || !deepEqual(newContractsFiles, this.contractFiles)) {
-    this.contractsFiles = this.contractsFiles.concat(newContractsFiles).filter((file, index, arr) => {
-      return !arr.some((file2, index2) => {
-        return file.path === file2.path && index < index2;
-      });
-    });
-  }
+  const loadedContractFiles = this.loadFiles(this.embarkConfig.contracts);
+  // `this.contractsFiles` could've been mutated at runtime using
+  // either `config:contractsFiles:add` event or through calls to
+  // `loadExternalContractsFiles()`, so we have to make sure we preserve
+  // those added files before we reset `this.contractsFiles`.
+  //
+  // We do that by determining the difference between `loadedContractFiles` and the ones
+  // already in memory in `this.contractsFiles`.
+  const addedContractFiles = this.contractsFiles.filter(existingFile => !loadedContractFiles.some(file => file.originalPath === existingFile.originalPath));
+  this.contractsFiles = loadedContractFiles.concat(addedContractFiles);
 };
 
 Config.prototype._updateBlockchainCors = function(){
@@ -358,20 +359,36 @@ Config.prototype.loadExternalContractsFiles = function() {
   }
   for (let contractName in contracts) {
     let contract = contracts[contractName];
+
     if (!contract.file) {
       continue;
     }
+
+    let externalContractFile = null;
+
     if (contract.file.startsWith('http') || contract.file.startsWith('git') || contract.file.startsWith('ipfs') || contract.file.startsWith('bzz')) {
-      const fileObj = utils.getExternalContractUrl(contract.file,this.providerUrl);
+      const fileObj = utils.getExternalContractUrl(contract.file, this.providerUrl);
       if (!fileObj) {
         return this.logger.error(__("HTTP contract file not found") + ": " + contract.file);
       }
-      const localFile = fileObj.filePath;
-      this.contractsFiles.push(new File({path: localFile, type: Types.http, basedir: '', externalUrl: fileObj.url, storageConfig: storageConfig}));
+      externalContractFile = new File({ path: fileObj.filePath, originalPath: fileObj.filePath, type: Types.http, basedir: '', externalUrl: fileObj.url, storageConfig });
     } else if (fs.existsSync(contract.file)) {
-      this.contractsFiles.push(new File({path: contract.file, type: Types.dappFile, basedir: '', storageConfig: storageConfig}));
+      externalContractFile = new File({ path: contract.file, originalPath: contract.file, type: Types.dappFile, basedir: '', storageConfig });
     } else if (fs.existsSync(path.join('./node_modules/', contract.file))) {
-      this.contractsFiles.push(new File({path: path.join('./node_modules/', contract.file), type: Types.dappFile, basedir: '', storageConfig: storageConfig}));
+      const completePath = path.join('./node_modules/', contract.file);
+      externalContractFile = new File({ path: completePath, originalPath: completePath, type: Types.dappFile, basedir: '', storageConfig });
+    }
+
+    if (externalContractFile) {
+      const index = this.contractsFiles.findIndex(contractFile => contractFile.originalPath === externalContractFile.originalPath);
+      // It's important that we only add `externalContractFile` if it doesn't exist already
+      // within `contractsFiles`, otherwise we keep adding duplicates in subsequent
+      // compilation routines creating a memory leak.
+      if (index > -1) {
+        this.contractsFiles[index] = externalContractFile;
+      } else {
+        this.contractsFiles.push(externalContractFile);
+      }
     } else {
       this.logger.error(__("contract file not found") + ": " + contract.file);
     }
@@ -563,7 +580,7 @@ Config.prototype.loadFiles = function(files) {
     return (file[0] === '$' || file.indexOf('.') >= 0);
   }).filter(function(file) {
     let basedir = findMatchingExpression(file, files);
-    readFiles.push(new File({path: file, type: Types.dappFile, basedir: basedir, storageConfig: storageConfig}));
+    readFiles.push(new File({path: file, originalPath: file, type: Types.dappFile, basedir: basedir, storageConfig: storageConfig}));
   });
 
   var filesFromPlugins = [];
@@ -597,9 +614,11 @@ Config.prototype.loadPluginContractFiles = function() {
   contractsPlugins.forEach(function(plugin) {
     plugin.contractsFiles.forEach(function(file) {
       var filename = file.replace('./','');
-      self.contractsFiles.push(new File({path: filename, pluginPath: plugin.pluginPath, type: Types.custom, storageConfig: storageConfig, resolver: function(callback) {
-        callback(plugin.loadPluginFile(file));
-      }}));
+      self.contractsFiles.push(new File({ path: filename, originalPath: path.join(plugin.pluginPath, filename), pluginPath: plugin.pluginPath, type: Types.custom, storageConfig,
+        resolver: function(callback) {
+          callback(plugin.loadPluginFile(file));
+        }
+      }));
     });
   });
 };

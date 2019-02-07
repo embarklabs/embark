@@ -25,6 +25,7 @@ export class File {
   public storageConfig: any;
   public providerUrl: string;
   public importRemappings: ImportRemapping[] = [];
+  public originalPath: string;
 
   constructor(options: any) {
     this.type = options.type;
@@ -34,6 +35,7 @@ export class File {
     this.pluginPath = options.pluginPath ? options.pluginPath : "";
     this.storageConfig = options.storageConfig;
     this.providerUrl = "";
+    this.originalPath = options.originalPath || "";
 
     if (this.type === Types.http) {
       const external = utils.getExternalContractUrl(options.externalUrl, this.providerUrl);
