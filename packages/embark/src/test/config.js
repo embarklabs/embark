@@ -192,6 +192,7 @@ describe('embark.Config', function () {
           "type": "http",
           "externalUrl": "https://raw.githubusercontent.com/embark-framework/embark/master/test_dapps/packages/test_app/app/contracts/simple_storage.sol",
           "path": ".embark/contracts/embark-framework/embark/master/test_dapps/packages/test_app/app/contracts/simple_storage.sol",
+          "originalPath": ".embark/contracts/embark-framework/embark/master/test_dapps/packages/test_app/app/contracts/simple_storage.sol",
           "pluginPath": '',
           "basedir": "",
           "importRemappings": [],
@@ -203,6 +204,7 @@ describe('embark.Config', function () {
           "type": "http",
           "externalUrl": "https://raw.githubusercontent.com/status-im/contracts/master/contracts/identity/ERC725.sol",
           "path": ".embark/contracts/status-im/contracts/master/contracts/identity/ERC725.sol",
+          "originalPath": ".embark/contracts/status-im/contracts/master/contracts/identity/ERC725.sol",
           "pluginPath": '',
           "basedir": "",
           "importRemappings": [],
@@ -213,6 +215,7 @@ describe('embark.Config', function () {
         {
           "externalUrl": "https://swarm-gateways.net/bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63",
           "path": ".embark/contracts/bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63",
+          "originalPath": ".embark/contracts/bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63",
           "type": "http",
           "pluginPath": '',
           "basedir": "",

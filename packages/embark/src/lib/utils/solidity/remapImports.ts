@@ -65,7 +65,7 @@ const buildNewFile = (file: File, importPath: string) => {
     from = resolve(importPath);
     to = fs.dappPath(".embark", "node_modules", importPath);
     fs.copySync(from, to);
-    return new File({ path: to, type: Types.dappFile });
+    return new File({ path: to, type: Types.dappFile, originalPath: from });
   }
 
   // started with node_modules then further imports local paths in it's own repo/directory
@@ -73,7 +73,7 @@ const buildNewFile = (file: File, importPath: string) => {
     from = path.join(path.dirname(file.path.replace(".embark", ".")), importPath);
     to = path.join(path.dirname(file.path), importPath);
     fs.copySync(from, to);
-    return new File({ path: to, type: Types.dappFile });
+    return new File({ path: to, type: Types.dappFile, originalPath: from });
   }
 
   // local import, ie import "../path/to/contract" or "./path/to/contract"
@@ -81,7 +81,7 @@ const buildNewFile = (file: File, importPath: string) => {
   to = path.join(path.dirname(file.path), importPath);
 
   fs.copySync(from, to);
-  return new File({ path: to, type: Types.dappFile });
+  return new File({ path: to, type: Types.dappFile, originalPath: from });
 };
 
 const rescursivelyFindRemapImports = async (file: File, filesProcessed: string[] = []) => {
