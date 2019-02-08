@@ -189,7 +189,7 @@ class CodeGenerator {
       if (err) {
         this.logger.error(err.message || err);
       }
-      cb(err);
+      cb(err, filePath);
     });
   }
 
@@ -376,7 +376,8 @@ class CodeGenerator {
     contractCode += `let ${contractName} = new EmbarkJS.Blockchain.Contract(${contractName}JSONConfig);\n`;
 
     contractCode += "export default " + contractName + ";\n";
-    cb(contractCode);
+
+    this.generateArtifact(contractCode, contractName + '.js', constants.dappConfig.contractsJs, cb);
   }
 
   buildWeb3JS(cb) {
