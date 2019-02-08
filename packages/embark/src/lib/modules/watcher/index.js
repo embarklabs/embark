@@ -1,8 +1,6 @@
 let chokidar = require('chokidar');
 let path = require('path');
 
-let fs = require('../../core/fs.js');
-
 const DAPP_PIPELINE_CONFIG_FILE = 'pipeline.js';
 const DAPP_WEBPACK_CONFIG_FILE = 'webpack.config.js';
 const DAPP_BABEL_LOADER_OVERRIDES_CONFIG_FILE = 'babel-loader-overrides.js';
@@ -13,6 +11,7 @@ class Watcher {
   constructor(embark) {
     this.logger = embark.logger;
     this.events = embark.events;
+    this.fs = embark.fs;
     this.fileWatchers = [];
 
     this.events.setCommandHandler('watcher:start', () => this.start());
@@ -24,7 +23,7 @@ class Watcher {
     let self = this;
     // TODO: should come from the config object instead of reading the file
     // directly
-    let embarkConfig = fs.readJSONSync("embark.json");
+    let embarkConfig = this.fs.readJSONSync("embark.json");
 
     this.watchAssets(embarkConfig, function () {
       self.logger.trace('ready to watch asset changes');
@@ -164,14 +163,14 @@ class Watcher {
 
   watchPipelineConfig(embarkConfig, callback) {
     let filesToWatch = [
-      fs.dappPath('', DAPP_WEBPACK_CONFIG_FILE),
-      fs.dappPath('', DAPP_BABEL_LOADER_OVERRIDES_CONFIG_FILE)
+      this.fs.dappPath('', DAPP_WEBPACK_CONFIG_FILE),
+      this.fs.dappPath('', DAPP_BABEL_LOADER_OVERRIDES_CONFIG_FILE)
     ];
 
     if (typeof embarkConfig.config === 'object' && embarkConfig.config.pipeline) {
       filesToWatch.push(embarkConfig.config.pipeline);
     } else if (typeof embarkConfig.config === 'string') {
-      filesToWatch.push(fs.dappPath(embarkConfig.config, DAPP_PIPELINE_CONFIG_FILE));
+      filesToWatch.push(this.fs.dappPath(embarkConfig.config, DAPP_PIPELINE_CONFIG_FILE));
     }
 
     this.watchFiles(filesToWatch, (eventName, path) => {

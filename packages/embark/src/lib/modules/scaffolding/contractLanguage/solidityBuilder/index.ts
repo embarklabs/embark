@@ -6,7 +6,6 @@ import { Builder } from "../../builder";
 import { CommandOptions } from "../../commandOptions";
 import { SmartContractsRecipe } from "../../smartContractsRecipe";
 
-const fs = require("../../../../core/fs");
 require("../../handlebarHelpers");
 
 const templatePath = path.join(__dirname, "templates", "contract.sol.hbs");
@@ -27,7 +26,7 @@ export class SolidityBuilder implements Builder {
   }
 
   private generateCode(contractName: string) {
-    const source = fs.readFileSync(templatePath, "utf-8");
+    const source = this.embark.fs.readFileSync(templatePath, "utf-8");
     const template = Handlebars.compile(source);
 
     const attributes = this.description.standardAttributes(contractName);
@@ -49,13 +48,13 @@ export class SolidityBuilder implements Builder {
     const filename = `${contractName}.sol`;
     const contractDirs = this.embark.config.embarkConfig.contracts;
     const contractDir = Array.isArray(contractDirs) ? contractDirs[0] : contractDirs;
-    const filePath = fs.dappPath(contractDir.replace(/\*/g, ""), filename);
-    if (!this.options.overwrite && fs.existsSync(filePath)) {
+    const filePath = this.embark.fs.dappPath(contractDir.replace(/\*/g, ""), filename);
+    if (!this.options.overwrite && this.embark.fs.existsSync(filePath)) {
       this.embark.logger.error(__(`The contract ${contractName} already exists, skipping.`));
       return;
     }
 
-    fs.writeFileSync(filePath, code);
+    this.embark.fs.writeFileSync(filePath, code);
     return filePath;
   }
 

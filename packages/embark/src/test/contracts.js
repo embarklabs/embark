@@ -51,6 +51,10 @@ describe('embark.Contracts', function() {
     let embarkObject = {
       registerAPICall: () => {},
       events: events,
+      fs: {
+        existsSync: () => { return false },
+        dappPath: () => { return "ok" }
+      },
       logger: plugins.logger,
       embarkConfig: {
         options: {
@@ -111,6 +115,10 @@ describe('embark.Contracts', function() {
 
     let embarkObj = {
       registerAPICall: () => {},
+      fs: {
+        existsSync: () => { return false },
+        dappPath: () => { return "ok" }
+      },
       logger: new Logger({}),
       events: events
     };
@@ -238,6 +246,10 @@ describe('embark.Contracts', function() {
 
     let embarkObj = {
       registerAPICall: () => {},
+      fs: {
+        existsSync: () => { return false },
+        dappPath: () => { return "ok" }
+      },
       logger: new Logger({}),
       events: events
     };

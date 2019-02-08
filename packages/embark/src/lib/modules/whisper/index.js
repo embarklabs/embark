@@ -1,5 +1,4 @@
 let utils = require('../../utils/utils.js');
-let fs = require('../../core/fs.js');
 let Web3 = require('web3');
 const {parallel} = require('async');
 const {sendMessage, listenTo} = require('./js/communicationFunctions');
@@ -13,6 +12,7 @@ class Whisper {
   constructor(embark, options) {
     this.logger = embark.logger;
     this.events = embark.events;
+    this.fs = embark.fs;
     this.communicationConfig = embark.config.communicationConfig;
     this.web3 = new Web3();
     this.embark = embark;
@@ -119,15 +119,15 @@ class Whisper {
     // TODO: possible race condition could be a concern
     this.events.request("version:get:web3", function(web3Version) {
       let code = "";
-      code += "\n" + fs.readFileSync(utils.joinPath(__dirname, 'js', 'message_events.js')).toString();
+      code += "\n" + self.fs.readFileSync(utils.joinPath(__dirname, 'js', 'message_events.js')).toString();
 
       if (web3Version[0] === "0") {
         self.isOldWeb3 = true;
-        code += "\n" + fs.readFileSync(utils.joinPath(__dirname, 'js', 'embarkjs_old_web3.js')).toString();
+        code += "\n" + self.fs.readFileSync(utils.joinPath(__dirname, 'js', 'embarkjs_old_web3.js')).toString();
         code += "\nEmbarkJS.Messages.registerProvider('whisper', __embarkWhisperOld);";
       } else {
-        code += "\n" + fs.readFileSync(utils.joinPath(__dirname, 'js', 'communicationFunctions.js')).toString();
-        code += "\n" + fs.readFileSync(utils.joinPath(__dirname, 'js', 'embarkjs.js')).toString();
+        code += "\n" + self.fs.readFileSync(utils.joinPath(__dirname, 'js', 'communicationFunctions.js')).toString();
+        code += "\n" + self.fs.readFileSync(utils.joinPath(__dirname, 'js', 'embarkjs.js')).toString();
         code += "\nEmbarkJS.Messages.registerProvider('whisper', __embarkWhisperNewWeb3);";
       }
       self.embark.addCodeToEmbarkJS(code);

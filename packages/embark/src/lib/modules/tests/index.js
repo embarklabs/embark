@@ -2,7 +2,6 @@ const async = require('async');
 const Mocha = require('mocha');
 const path = require('path');
 const {runCmd} = require('../../utils/utils');
-const fs = require('../../core/fs');
 const assert = require('assert');
 const Test = require('./test');
 const {EmbarkSpec, EmbarkApiSpec} = require('./reporter');
@@ -14,6 +13,7 @@ class TestRunner {
     this.embark = embark;
     this.logger = embark.logger;
     this.events = embark.events;
+    this.fs = embark.fs;
     this.ipc = options.ipc;
     this.runResults = [];
 
@@ -84,18 +84,18 @@ class TestRunner {
         }
 
         global.embark.events.emit('tests:finished', function() {
-          runCmd(`${fs.embarkPath('node_modules/.bin/istanbul')} report --root .embark --format html`,
+          runCmd(`${self.fs.embarkPath('node_modules/.bin/istanbul')} report --root .embark --format html`,
             {silent: false, exitOnError: false}, (err) => {
               if (err) {
                 return next(err);
               }
-              console.info(`Coverage report created. You can find it here: ${fs.dappPath('coverage/index.html')}\n`);
+              console.info(`Coverage report created. You can find it here: ${self.fs.dappPath('coverage/index.html')}\n`);
               const opn = require('opn');
               const _next = () => { next(null, results); };
               if (options.noBrowser) {
                 return next(null, results);
               }
-              opn(fs.dappPath('coverage/index.html'), {wait: false})
+              opn(self.fs.dappPath('coverage/index.html'), {wait: false})
                 .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
                 .then(_next, _next);
             });
@@ -118,14 +118,14 @@ class TestRunner {
   getFilesFromDir(filePath, cb) {
     const self = this;
 
-    fs.stat(filePath, (err, fileStat) => {
+    self.fs.stat(filePath, (err, fileStat) => {
       const errorMessage = `File "${filePath}" doesn't exist or you don't have permission to it`.red;
       if (err) {
         return cb(errorMessage);
       }
       let isDirectory = fileStat.isDirectory();
       if (isDirectory) {
-        return fs.readdir(filePath, (err, files) => {
+        return self.fs.readdir(filePath, (err, files) => {
           if (err) {
             return cb(err);
           }
@@ -217,7 +217,7 @@ class TestRunner {
         return cb(err);
       }
       let failures = runs.reduce((acc, val) => acc + val, 0);
-      fs.remove('.embark/contracts', (_err) => {
+      self.fs.remove('.embark/contracts', (_err) => {
         cb(null, {failures});
       });
     });

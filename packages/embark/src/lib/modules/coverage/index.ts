@@ -8,16 +8,16 @@ import { ContractEnhanced } from "./contractEnhanced";
 import { coverageContractsPath } from "./path";
 import { Coverage as ICoverage } from "./types";
 
-const fs = require("../../core/fs");
-
 export default class Coverage {
   private contracts: ContractEnhanced[];
   private deployedContracts: Contract[] = [];
   private web3Contracts: Web3Contract[] = [];
   private contractsDir: string[] = [];
+  private fs: any;
 
   constructor(private embark: Embark, options: any) {
-    fs.ensureDirSync(coverageContractsPath());
+    this.fs = embark.fs;
+    this.fs.ensureDirSync(coverageContractsPath());
     const contractsDirConfig = this.embark.config.embarkConfig.contracts;
     this.contractsDir = Array.isArray(contractsDirConfig) ? contractsDirConfig : [contractsDirConfig];
 
@@ -37,10 +37,10 @@ export default class Coverage {
   private getContracts() {
     const solcVersion = this.embark.config.embarkConfig.versions.solc;
     const filepaths = this.contractsDir.reduce((acc: string[], pattern: string) => (
-      acc.concat(globule.find(pattern, { prefixBase: false, srcBase: fs.dappPath() }))
+      acc.concat(globule.find(pattern, { prefixBase: false, srcBase: this.fs.dappPath() }))
     ), []);
 
-    return filepaths.filter((filepath) => fs.statSync(filepath).isFile())
+    return filepaths.filter((filepath) => this.fs.statSync(filepath).isFile())
                     .map((filepath) => new ContractEnhanced(filepath, solcVersion));
   }
 
@@ -73,15 +73,15 @@ export default class Coverage {
   }
 
   private writeCoverageReport(cb: () => void) {
-    fs.ensureDirSync(path.join(fs.dappPath(), ".embark"));
-    const coveragePath = path.join(fs.dappPath(), ".embark", "coverage.json");
+    this.fs.ensureDirSync(path.join(this.fs.dappPath(), ".embark"));
+    const coveragePath = path.join(this.fs.dappPath(), ".embark", "coverage.json");
 
     const coverageReport = this.contracts.reduce((acc: {[name: string]: ICoverage}, contract) => {
       acc[contract.filepath] = contract.coverage;
       return acc;
     }, {});
 
-    fs.writeFile(coveragePath, JSON.stringify(coverageReport, null, 2), cb);
+    this.fs.writeFile(coveragePath, JSON.stringify(coverageReport, null, 2), cb);
   }
 
   private collectEvents(web3Contracts: Web3Contract[]) {

@@ -1,5 +1,4 @@
 let utils = require('../../utils/utils.js');
-let fs = require('../../core/fs.js');
 let currentSolcVersion = require('../../../../package.json').dependencies.solc;
 const ProcessLauncher = require('../../core/processes/processLauncher.js');
 const uuid = require('uuid/v1');
@@ -59,7 +58,7 @@ class SolcW {
           if (err) {
             return done(err);
           }
-          let requirePath = fs.dappPath(path);
+          let requirePath = self.embark.fs.dappPath(path);
           self.solcProcess.send({action: 'installAndLoadCompiler', solcVersion: solcVersion, packagePath: requirePath});
         });
       });

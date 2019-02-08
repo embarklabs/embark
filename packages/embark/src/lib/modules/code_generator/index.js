@@ -1,5 +1,4 @@
 let async = require('async');
-let fs = require('../../core/fs.js');
 const utils = require('../../utils/utils.js');
 const constants = require('../../constants');
 
@@ -20,6 +19,7 @@ class CodeGenerator {
   constructor(embark, options) {
     this.blockchainConfig = embark.config.blockchainConfig || {};
     this.embarkConfig = embark.config.embarkConfig;
+    this.fs = embark.fs;
     this.dappConfigs = {};
     this.logger = embark.logger;
     this.rpcHost = this.blockchainConfig.rpcHost || '';
@@ -46,7 +46,7 @@ class CodeGenerator {
     this.events.on('config:load:storage', this.generateStorageConfig.bind(this));
     this.events.on('config:load:communication', this.generateCommunicationConfig.bind(this));
 
-    this.events.setCommandHandler('code', function(cb) {
+    this.events.setCommandHandler('code', (cb) => {
       this.events.request("contracts:list", (_err, contractsList) => {
         let embarkJSABI = this.generateABI(contractsList, {useEmbarkJS: true});
         let contractsJSON = this.generateContractsJSON(contractsList);
@@ -134,7 +134,7 @@ class CodeGenerator {
   }
 
   checkIfNeedsUpdate(file, newOutput, callback) {
-    fs.readFile(file, (err, content) => {
+    this.fs.readFile(file, (err, content) => {
       if (err) {
         return callback(null, true);
       }
@@ -174,7 +174,7 @@ class CodeGenerator {
     }
     async.waterfall([
       (next) => {
-        fs.mkdirp(dir, next);
+        this.fs.mkdirp(dir, next);
       },
       (_dir, next) => {
         this.checkIfNeedsUpdate(filePath, artifactInput, next);
@@ -183,7 +183,7 @@ class CodeGenerator {
         if (!needsUpdate) {
           return next();
         }
-        fs.writeFile(filePath, artifactInput, next);
+        this.fs.writeFile(filePath, artifactInput, next);
       }
     ], (err) => {
       if (err) {
@@ -302,10 +302,10 @@ class CodeGenerator {
       function getWeb3Location(next) {
         self.events.request("version:get:web3", function(web3Version) {
           if (web3Version === "1.0.0-beta") {
-            return next(null, require.resolve("web3", {paths: [fs.embarkPath("node_modules")]}));
+            return next(null, require.resolve("web3", {paths: [self.fs.embarkPath("node_modules")]}));
           }
           self.events.request("version:getPackageLocation", "web3", web3Version, function(err, location) {
-            return next(null, fs.dappPath(location));
+            return next(null, self.fs.dappPath(location));
           });
         });
       },
@@ -337,7 +337,7 @@ class CodeGenerator {
   }
 
   getReloadPageCode() {
-    return this.env === 'development' ? fs.readFileSync(require('path').join(__dirname,'/code/reload-on-change.js'), 'utf8') : '';
+    return this.env === 'development' ? this.fs.readFileSync(require('path').join(__dirname,'/code/reload-on-change.js'), 'utf8') : '';
   }
 
   getEmbarkJsProviderCode() {
@@ -388,10 +388,10 @@ class CodeGenerator {
       function getWeb3Location(next) {
         self.events.request("version:get:web3", function(web3Version) {
           if (web3Version === "1.0.0-beta") {
-            return next(null, require.resolve("web3", {paths: [fs.embarkPath("node_modules")]}));
+            return next(null, require.resolve("web3", {paths: [self.fs.embarkPath("node_modules")]}));
           }
           self.events.request("version:getPackageLocation", "web3", web3Version, function(err, location) {
-            return next(null, fs.dappPath(location));
+            return next(null, self.fs.dappPath(location));
           });
         });
       },

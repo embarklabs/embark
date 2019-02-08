@@ -1,4 +1,3 @@
-const fs = require('../../core/fs.js');
 const utils = require('../../utils/utils.js');
 const namehash = require('eth-ens-namehash');
 const async = require('async');
@@ -62,6 +61,7 @@ class ENS {
     this.env = embark.env;
     this.logger = embark.logger;
     this.events = embark.events;
+    this.fs = embark.fs;
     this.namesConfig = embark.config.namesystemConfig;
     this.enabled = false;
     this.registration = this.namesConfig.register || {};
@@ -373,13 +373,13 @@ class ENS {
       let currentEnsNamehashVersion = require('../../../../package.json').dependencies["eth-ens-namehash"];
       if (EnsNamehashVersion !== currentEnsNamehashVersion) {
         self.events.request("version:getPackageLocation", "eth-ens-namehash", EnsNamehashVersion, function (err, location) {
-          self.embark.registerImportFile("eth-ens-namehash", fs.dappPath(location));
+          self.embark.registerImportFile("eth-ens-namehash", self.fs.dappPath(location));
         });
       }
     });
 
-    let code = fs.readFileSync(utils.joinPath(__dirname, 'ENSFunctions.js')).toString();
-    code += "\n" + fs.readFileSync(utils.joinPath(__dirname, 'embarkjs.js')).toString();
+    let code = self.fs.readFileSync(utils.joinPath(__dirname, 'ENSFunctions.js')).toString();
+    code += "\n" + self.fs.readFileSync(utils.joinPath(__dirname, 'embarkjs.js')).toString();
     code += "\nEmbarkJS.Names.registerProvider('ens', __embarkENS);";
 
     this.embark.addCodeToEmbarkJS(code);

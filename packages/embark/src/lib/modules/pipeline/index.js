@@ -1,4 +1,3 @@
-const fs = require('../../core/fs.js');
 const path = require('path');
 const async = require('async');
 const utils = require('../../utils/utils.js');
@@ -18,6 +17,7 @@ class Pipeline {
     this.events = embark.events;
     this.logger = embark.config.logger;
     this.plugins = embark.config.plugins;
+    this.fs = embark.fs;
     this.webpackConfigName = options.webpackConfigName;
     this.pipelinePlugins = this.plugins.getPluginsFor('pipeline');
     this.pipelineConfig = embark.config.pipelineConfig;
@@ -26,7 +26,7 @@ class Pipeline {
 
     this.events.setCommandHandler('pipeline:build', (options, callback) => this.build(options, callback));
     this.events.setCommandHandler('pipeline:build:contracts', callback => this.buildContracts(callback));
-    fs.removeSync(this.buildDir);
+    this.fs.removeSync(this.buildDir);
 
     let plugin = this.plugins.createPlugin('deployment', {});
     plugin.registerAPICall(
@@ -40,7 +40,7 @@ class Pipeline {
         }
 
         const name = path.basename(req.query.path);
-        const content = fs.readFileSync(req.query.path, 'utf8');
+        const content = this.fs.readFileSync(req.query.path, 'utf8');
         res.send({name, content, path: req.query.path});
 
       }
@@ -56,7 +56,7 @@ class Pipeline {
           return res.send({error: error.message});
         }
 
-        fs.mkdirpSync(req.body.path);
+        this.fs.mkdirpSync(req.body.path);
         const name = path.basename(req.body.path);
         res.send({name, path: req.body.path});
       }
@@ -72,7 +72,7 @@ class Pipeline {
           return res.send({error: error.message});
         }
 
-        fs.writeFileSync(req.body.path, req.body.content, {encoding: 'utf8'});
+        this.fs.writeFileSync(req.body.path, req.body.content, {encoding: 'utf8'});
         const name = path.basename(req.body.path);
         res.send({name, path: req.body.path, content: req.body.content});
       }
@@ -87,7 +87,7 @@ class Pipeline {
         } catch (error) {
           return res.send({error: error.message});
         }
-        fs.removeSync(req.query.path);
+        this.fs.removeSync(req.query.path);
         res.send();
       }
     );
@@ -96,11 +96,11 @@ class Pipeline {
       'get',
       '/embark-api/files',
       (req, res) => {
-        const rootPath = fs.dappPath();
+        const rootPath = this.fs.dappPath();
 
-        const walk = (dir, filelist = []) => fs.readdirSync(dir).map(name => {
+        const walk = (dir, filelist = []) => this.fs.readdirSync(dir).map(name => {
           let isRoot = rootPath === dir;
-          if (fs.statSync(path.join(dir, name)).isDirectory()) {
+          if (this.fs.statSync(path.join(dir, name)).isDirectory()) {
             return {
               isRoot,
               name,
@@ -118,7 +118,7 @@ class Pipeline {
             isHidden: name.indexOf('.') === 0
           };
         });
-        const files = utils.fileTreeSort(walk(fs.dappPath()));
+        const files = utils.fileTreeSort(walk(this.fs.dappPath()));
         res.send(files);
       }
     );
@@ -127,10 +127,10 @@ class Pipeline {
   apiGuardBadFile(pathToCheck, options = {ensureExists: false}) {
     const dir = path.dirname(pathToCheck);
     const error = new Error('Path is invalid');
-    if (options.ensureExists && !fs.existsSync(pathToCheck)) {
+    if (options.ensureExists && !this.fs.existsSync(pathToCheck)) {
       throw error;
     }
-    if (!dir.startsWith(fs.dappPath())) {
+    if (!dir.startsWith(this.fs.dappPath())) {
       throw error;
     }
   }
@@ -139,7 +139,7 @@ class Pipeline {
     let self = this;
     const importsList = {};
     let placeholderPage;
-    const contractsDir = fs.dappPath(self.embarkConfig.generationDir, constants.dappConfig.contractsJs);
+    const contractsDir = this.fs.dappPath(self.embarkConfig.generationDir, constants.dappConfig.contractsJs);
 
     if (!self.assetFiles || !Object.keys(self.assetFiles).length) {
       return self.buildContracts(callback);
@@ -156,8 +156,8 @@ class Pipeline {
       (next) => self.buildContracts(next),
       (next) => self.buildWeb3JS(next),
       function createImportList(next) {
-        importsList["Embark/EmbarkJS"] = fs.dappPath(self.embarkConfig.generationDir, constants.dappConfig.embarkjs);
-        importsList["Embark/web3"] = fs.dappPath(".embark", 'web3_instance.js');
+        importsList["Embark/EmbarkJS"] = self.fs.dappPath(self.embarkConfig.generationDir, constants.dappConfig.embarkjs);
+        importsList["Embark/web3"] = self.fs.dappPath(".embark", 'web3_instance.js');
         importsList["Embark/contracts"] = contractsDir;
 
         self.plugins.getPluginsProperty('imports', 'imports').forEach(importObject => {
@@ -168,14 +168,14 @@ class Pipeline {
       },
       function writeContracts(next) {
         self.events.request('contracts:list', (_err, contracts) => {
-          fs.mkdirp(contractsDir, err => {
+          self.fs.mkdirp(contractsDir, err => {
             if (err) return next(err);
 
             // Create a file index.js that requires all contract files
             // Used to enable alternate import syntax:
             // e.g. import {Token} from 'Embark/contracts'
             // e.g. import * as Contracts from 'Embark/contracts'
-            let importsHelperFile = fs.createWriteStream(utils.joinPath(contractsDir, 'index.js'));
+            let importsHelperFile = self.fs.createWriteStream(utils.joinPath(contractsDir, 'index.js'));
             importsHelperFile.write('module.exports = {\n');
 
             async.eachOf(contracts, (contract, idx, eachCb) => {
@@ -302,7 +302,7 @@ class Pipeline {
                 }
                 let dir = targetFile.split('/').slice(0, -1).join('/');
                 self.logger.trace(`${'Pipeline:'.cyan} creating dir ` + utils.joinPath(self.buildDir, dir));
-                fs.mkdirpSync(utils.joinPath(self.buildDir, dir));
+                self.fs.mkdirpSync(utils.joinPath(self.buildDir, dir));
 
                 // if it's a directory
                 if (isDir) {
@@ -316,7 +316,7 @@ class Pipeline {
                     let filename = file.path.replace(file.basedir + '/', '');
                     self.logger.info(`${'Pipeline:'.cyan} writing file ` + (utils.joinPath(self.buildDir, targetDir, filename)).bold.dim);
 
-                    fs.copy(file.path, utils.joinPath(self.buildDir, targetDir, filename), {overwrite: true}, eachCb);
+                    self.fs.copy(file.path, utils.joinPath(self.buildDir, targetDir, filename), {overwrite: true}, eachCb);
                   }, cb);
                   return;
                 }
@@ -332,7 +332,7 @@ class Pipeline {
                   targetFile = targetFile.replace('index', 'index-temp');
                   placeholderPage = targetFile;
                 }
-                fs.writeFile(utils.joinPath(self.buildDir, targetFile), content, cb);
+                self.fs.writeFile(utils.joinPath(self.buildDir, targetFile), content, cb);
               }
             );
           },
@@ -341,12 +341,12 @@ class Pipeline {
       },
       function removePlaceholderPage(next) {
         let placeholderFile = utils.joinPath(self.buildDir, placeholderPage);
-        fs.access(utils.joinPath(self.buildDir, placeholderPage), (err) => {
+        self.fs.access(utils.joinPath(self.buildDir, placeholderPage), (err) => {
           if (err) return next(); // index-temp doesn't exist, do nothing
 
           // rename index-temp.htm/l to index.htm/l, effectively replacing our placeholder page
           // with the contents of the built index.html page
-          fs.move(placeholderFile, placeholderFile.replace('index-temp', 'index'), {overwrite: true}, next);
+          self.fs.move(placeholderFile, placeholderFile.replace('index-temp', 'index'), {overwrite: true}, next);
         });
       }
     ], callback);
@@ -356,14 +356,14 @@ class Pipeline {
     const self = this;
     async.waterfall([
       function makeDirectory(next) {
-        fs.mkdirp(fs.dappPath(self.buildDir, 'contracts'), err => next(err));
+        self.fs.mkdirp(self.fs.dappPath(self.buildDir, 'contracts'), err => next(err));
       },
       function getContracts(next) {
         self.events.request('contracts:list', next);
       },
       function writeContractsJSON(contracts, next) {
         async.each(contracts, (contract, eachCb) => {
-          fs.writeJson(fs.dappPath(
+          self.fs.writeJson(self.fs.dappPath(
             self.buildDir,
             'contracts', contract.className + '.json'
           ), contract, {spaces: 2}, eachCb);
@@ -376,13 +376,13 @@ class Pipeline {
     const self = this;
     async.waterfall([
       function makeDirectory(next) {
-        fs.mkdirp(fs.dappPath(".embark"), err => next(err));
+        self.fs.mkdirp(self.fs.dappPath(".embark"), err => next(err));
       },
       function getWeb3Code(next) {
         self.events.request('code-generator:web3js', next);
       },
       function writeFile(code, next) {
-        fs.writeFile(fs.dappPath(".embark", 'web3_instance.js'), code, next);
+        self.fs.writeFile(self.fs.dappPath(".embark", 'web3_instance.js'), code, next);
       }
     ], cb);
   }
