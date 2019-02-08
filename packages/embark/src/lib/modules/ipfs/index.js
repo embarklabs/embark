@@ -1,6 +1,5 @@
 const UploadIPFS = require('./upload.js');
 const utils = require('../../utils/utils.js');
-const fs = require('../../core/fs.js');
 const IpfsApi = require('ipfs-api');
 // TODO: not great, breaks module isolation
 const StorageProcessesLauncher = require('../storage/storageProcessesLauncher');
@@ -15,6 +14,7 @@ class IPFS {
     this.storageConfig = embark.config.storageConfig;
     this.namesystemConfig = embark.config.namesystemConfig;
     this.embark = embark;
+    this.fs = embark.fs;
 
     this.webServerConfig = embark.config.webServerConfig;
     this.blockchainConfig = embark.config.blockchainConfig;
@@ -49,7 +49,7 @@ class IPFS {
       let currentIpfsApiVersion = require('../../../../package.json').dependencies["ipfs-api"];
       if (ipfsApiVersion !== currentIpfsApiVersion) {
         self.events.request("version:getPackageLocation", "ipfs-api", ipfsApiVersion, function(err, location) {
-          self.embark.registerImportFile("ipfs-api", fs.dappPath(location));
+          self.embark.registerImportFile("ipfs-api", self.fs.dappPath(location));
         });
       }
     });
@@ -101,7 +101,7 @@ class IPFS {
 
   addStorageProviderToEmbarkJS() {
     let code = "";
-    code += "\n" + fs.readFileSync(utils.joinPath(__dirname, 'embarkjs.js')).toString();
+    code += "\n" + this.fs.readFileSync(utils.joinPath(__dirname, 'embarkjs.js')).toString();
     code += "\nEmbarkJS.Storage.registerProvider('ipfs', __embarkIPFS);";
 
     this.embark.addCodeToEmbarkJS(code);

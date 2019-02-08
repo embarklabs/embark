@@ -1,6 +1,5 @@
 const async = require('async');
 const utils = require('../../utils/utils.js');
-const fs = require('../../core/fs');
 
 class ConsoleListener {
   constructor(embark, options) {
@@ -8,11 +7,12 @@ class ConsoleListener {
     this.logger = embark.logger;
     this.ipc = options.ipc;
     this.events = embark.events;
+    this.fs = embark.fs;
     this.addressToContract = [];
     this.contractsConfig = embark.config.contractsConfig;
     this.contractsDeployed = false;
     this.outputDone = false;
-    this.logFile = fs.dappPath(".embark", "contractLogs.json");
+    this.logFile = this.fs.dappPath(".embark", "contractLogs.json");
 
     if (this.ipc.ipcRole === 'server') {
       this._listenForLogRequests();
@@ -38,7 +38,7 @@ class ConsoleListener {
         data[new Date().getTime()] = task;
       });
 
-      fs.writeJson(this.logFile, data, err => {
+      this.fs.writeJson(this.logFile, data, err => {
         if (err) {
           console.error(err);
         }
@@ -182,9 +182,9 @@ class ConsoleListener {
   }
 
   _readLogs() {
-    fs.ensureFileSync(this.logFile);
+    this.fs.ensureFileSync(this.logFile);
     try {
-      return JSON.parse(fs.readFileSync(this.logFile));
+      return JSON.parse(this.fs.readFileSync(this.logFile));
     } catch (_error) {
       return {};
     }

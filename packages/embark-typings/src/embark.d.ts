@@ -13,6 +13,7 @@ export interface Embark {
   registerAPICall: any;
   registerConsoleCommand: any;
   logger: Logger;
+  fs: any;
   config: {
     contractsFiles: any[];
     embarkConfig: {

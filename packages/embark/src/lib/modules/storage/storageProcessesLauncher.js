@@ -1,4 +1,3 @@
-const fs = require('../../core/fs');
 const shellJs = require('shelljs');
 const utils = require('../../utils/utils');
 const ProcessLauncher = require('../../core/processes/processLauncher');
@@ -97,7 +96,7 @@ class StorageProcessesLauncher {
       return callback(__('Storage process already started'));
     }
     const filePath = utils.joinPath(__dirname, `../${storageName}/process.js`);
-    fs.access(filePath, (err) => {
+    this.embark.fs.access(filePath, (err) => {
       if (err) {
         return callback(__('No process file for this storage type (%s) exists. Please start the process locally.', storageName));
       }
@@ -138,7 +137,7 @@ class StorageProcessesLauncher {
           });
         });
       });
-      
+
 
       self.processes[storageName].on('result', constants.storage.initiated, (msg) => {
         if (msg.error) {

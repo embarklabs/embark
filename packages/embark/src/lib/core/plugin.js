@@ -1,4 +1,3 @@
-const fs = require('./fs.js');
 const utils = require('../utils/utils.js');
 const constants = require('../constants');
 
@@ -38,6 +37,7 @@ var Plugin = function(options) {
   this.events = options.events;
   this.config = options.config;
   this.plugins = options.plugins;
+  this.fs = options.fs;
   this.env = options.env;
   this.loaded = false;
   this.currentContext = options.context;
@@ -102,7 +102,7 @@ Plugin.prototype.loadInternalPlugin = function() {
 };
 
 Plugin.prototype.loadPluginFile = function(filename) {
-  return fs.readFileSync(this.pathToFile(filename)).toString();
+  return this.fs.readFileSync(this.pathToFile(filename)).toString();
 };
 
 Plugin.prototype.pathToFile = function(filename) {

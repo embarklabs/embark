@@ -2,7 +2,6 @@ let async = require('async');
 const cloneDeep = require('clone-deep');
 
 const utils = require('../../utils/utils.js');
-const fs = require('../../core/fs');
 const constants = require('../../constants');
 
 // TODO: create a contract object
@@ -12,6 +11,7 @@ class ContractsManager {
     const self = this;
     this.logger = embark.logger;
     this.events = embark.events;
+    this.fs = embark.fs;
     this.plugins = options.plugins;
 
     this.contracts = {};
@@ -289,11 +289,11 @@ class ContractsManager {
         });
       },
       function allContractsCompiled(callback) {
-        const allContractsCompiled = 
-          self.compiledContracts && 
-          self.contractsFiles && 
-          self.contractsFiles.every(contractFile => 
-            Object.values(self.compiledContracts).find(contract => 
+        const allContractsCompiled =
+          self.compiledContracts &&
+          self.contractsFiles &&
+          self.contractsFiles.every(contractFile =>
+            Object.values(self.compiledContracts).find(contract =>
               contract.originalFilename === contractFile.filename
             )
           );
@@ -327,7 +327,7 @@ class ContractsManager {
             return eachCb();
           }
 
-          fs.readFile(fs.dappPath(contract.artifact), (err, artifactBuf) => {
+          self.fs.readFile(self.fs.dappPath(contract.artifact), (err, artifactBuf) => {
             if (err) {
               self.logger.error(__('Error while reading the artifact for "{{className}}" at {{path}}', {className, path: contract.artifact}));
               return eachCb(err);
@@ -362,7 +362,7 @@ class ContractsManager {
           contract.abiDefinition = compiledContract.abiDefinition;
           contract.filename = compiledContract.filename;
           contract.originalFilename = compiledContract.originalFilename || ("contracts/" + contract.filename);
-          contract.path = fs.dappPath(contract.originalFilename);
+          contract.path = self.fs.dappPath(contract.originalFilename);
 
           contract.gas = (contractConfig && contractConfig.gas) || self.contractsConfig.gas || 'auto';
 

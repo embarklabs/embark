@@ -6,7 +6,6 @@ const ethUtil = require('ethereumjs-util');
 const utils = require('../../utils/utils');
 const constants = require('../../constants');
 const embarkJsUtils = require('embarkjs').Utils;
-const fs = require('../../core/fs');
 
 const WEB3_READY = 'blockchain:ready';
 
@@ -28,7 +27,8 @@ class BlockchainConnector {
     this.wait = options.wait;
     this.contractsSubscriptions = [];
     this.contractsEvents = [];
-    this.logFile = fs.dappPath(".embark", "contractEvents.json");
+    this.fs = embark.fs;
+    this.logFile = this.fs.dappPath(".embark", "contractEvents.json");
 
     this.writeLogFile = async.cargo((tasks, callback) => {
       const data = this._readEvents();
@@ -37,7 +37,7 @@ class BlockchainConnector {
         data[new Date().getTime()] = task;
       });
 
-      fs.writeJson(this.logFile, data, err => {
+      this.fs.writeJson(this.logFile, data, err => {
         if (err) {
           console.error(err);
         }
@@ -218,7 +218,7 @@ class BlockchainConnector {
 
   addWeb3ToEmbarkJS() {
     let code = '';
-    code += fs.readFileSync(utils.joinPath(__dirname, 'embarkjs.js')).toString();
+    code += this.fs.readFileSync(utils.joinPath(__dirname, 'embarkjs.js')).toString();
     code += "\nEmbarkJS.Blockchain.registerProvider('web3', __embarkWeb3);";
 
     // TODO when we refactor code generator, refactor this to actually do something like connect
@@ -774,9 +774,9 @@ class BlockchainConnector {
   }
 
   _readEvents() {
-    fs.ensureFileSync(this.logFile);
+    this.fs.ensureFileSync(this.logFile);
     try {
-      return JSON.parse(fs.readFileSync(this.logFile));
+      return JSON.parse(this.fs.readFileSync(this.logFile));
     } catch(_error) {
       return {};
     }

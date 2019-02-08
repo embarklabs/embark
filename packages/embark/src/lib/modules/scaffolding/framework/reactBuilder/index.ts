@@ -7,7 +7,6 @@ import { Builder } from "../../builder";
 import { CommandOptions } from "../../commandOptions";
 import { SmartContractsRecipe } from "../../smartContractsRecipe";
 
-const fs = require("../../../../core/fs");
 const utils = require("../../../../utils/utils");
 require("../../handlebarHelpers");
 
@@ -46,17 +45,17 @@ export class ReactBuilder implements Builder {
   }
 
   private updateEmbarkJson(contractName: string, files: string[]) {
-    const embarkJsonPath = path.join(fs.dappPath(), "embark.json");
-    const embarkJson = fs.readJSONSync(embarkJsonPath);
+    const embarkJsonPath = path.join(this.embark.fs.dappPath(), "embark.json");
+    const embarkJson = this.embark.fs.readJSONSync(embarkJsonPath);
     embarkJson.app[`js/${contractName}.js`] = `app/${contractName}.js`;
     embarkJson.app[`${contractName}.html`] = `app/${contractName}.html`;
 
-    fs.writeFileSync(embarkJsonPath, JSON.stringify(embarkJson, null, 2));
+    this.embark.fs.writeFileSync(embarkJsonPath, JSON.stringify(embarkJson, null, 2));
   }
 
   private generateCodes(contractName: string) {
-    const indexSource = fs.readFileSync(indexTemplatePath, "utf-8");
-    const dappSource = fs.readFileSync(dappTemplatePath, "utf-8");
+    const indexSource = this.embark.fs.readFileSync(indexTemplatePath, "utf-8");
+    const dappSource = this.embark.fs.readFileSync(dappTemplatePath, "utf-8");
 
     const indexTemplate = Handlebars.compile(indexSource);
     const dappTemplate = Handlebars.compile(dappSource);
@@ -129,15 +128,15 @@ export class ReactBuilder implements Builder {
   }
 
   private saveFiles(contractName: string, indexCode: string, dappCode: string) {
-    const indexFilePath = path.join(fs.dappPath(), "app", `${contractName}.html`);
-    const dappFilePath = path.join(fs.dappPath(), "app", `${contractName}.js`);
+    const indexFilePath = path.join(this.embark.fs.dappPath(), "app", `${contractName}.html`);
+    const dappFilePath = path.join(this.embark.fs.dappPath(), "app", `${contractName}.js`);
 
-    if (!this.options.overwrite && (fs.existsSync(indexFilePath) || fs.existsSync(dappFilePath))) {
+    if (!this.options.overwrite && (this.embark.fs.existsSync(indexFilePath) || this.embark.fs.existsSync(dappFilePath))) {
       return [];
     }
 
-    fs.writeFileSync(indexFilePath, indexCode);
-    fs.writeFileSync(dappFilePath, dappCode);
+    this.embark.fs.writeFileSync(indexFilePath, indexCode);
+    this.embark.fs.writeFileSync(dappFilePath, dappCode);
 
     this.embark.logger.info(__(`${indexFilePath} generated`));
     this.embark.logger.info(__(`${dappFilePath} generated`));

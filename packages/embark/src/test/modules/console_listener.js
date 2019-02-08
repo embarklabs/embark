@@ -98,6 +98,10 @@ function resetTest() {
   embark = {
     events,
     logger,
+    fs: {
+      existsSync: () => { return false },
+      dappPath: () => { return "ok" }
+    },
     config: {
       contractsConfig: {}
     },

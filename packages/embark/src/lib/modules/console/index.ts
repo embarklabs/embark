@@ -1,6 +1,5 @@
 /*globals __*/
 const env = require("../../core/env");
-const fs = require("../../core/fs");
 const utils = require("../../utils/utils");
 const EmbarkJS = require("embarkjs");
 const IpfsApi = require("ipfs-api");
@@ -24,6 +23,7 @@ class Console {
   private version: string;
   private logger: any;
   private ipc: any;
+  private fs: any;
   private config: any;
   private history: string[];
   private cmdHistoryFile: string;
@@ -37,11 +37,12 @@ class Console {
     this.plugins = options.plugins;
     this.version = options.version;
     this.logger = options.logger;
+    this.fs = embark.fs;
     this.ipc = options.ipc;
     this.config = options.config;
     this.forceRegister = options.forceRegister;
     this.history = [];
-    this.cmdHistoryFile = options.cmdHistoryFile || fs.dappPath(".embark", "cmd_history");
+    this.cmdHistoryFile = options.cmdHistoryFile || this.fs.dappPath(".embark", "cmd_history");
     this.providerReady = false;
     this.loadHistory();
 
@@ -209,8 +210,8 @@ class Console {
   }
 
   private loadHistory() {
-    if (fs.existsSync(this.cmdHistoryFile)) {
-      fs.readFileSync(this.cmdHistoryFile)
+    if (this.fs.existsSync(this.cmdHistoryFile)) {
+      this.fs.readFileSync(this.cmdHistoryFile)
         .toString()
         .split("\n")
         .reverse()
@@ -248,8 +249,8 @@ class Console {
       this.ipc.client.emit("console:history:save", cmd);
     }
 
-    if (fs.existsSync(utils.dirname(this.cmdHistoryFile))) {
-      fs.writeFileSync(
+    if (this.fs.existsSync(utils.dirname(this.cmdHistoryFile))) {
+      this.fs.writeFileSync(
         this.cmdHistoryFile,
         history
           .slice(Math.max(0, history.length - this.cmdHistorySize()))

@@ -1,10 +1,10 @@
-const fs = require('./../../core/fs.js');
 const utils = require('./../../utils/utils.js');
 const async = require('async');
 
 class PluginCommand {
   constructor(embark) {
     this.embark = embark;
+    this.fs = embark.fs;
     this.config = this.embark.pluginConfig;
     this.embarkConfig = this.config.embarkConfig;
     this.registerCommand();
@@ -50,11 +50,11 @@ class PluginCommand {
       },
       function addToEmbarkConfig(cb) {
         // get the installed package from package.json
-        let packageFile = fs.readJSONSync(self.config.packageFile);
+        let packageFile = self.fs.readJSONSync(self.config.packageFile);
         let dependencies = Object.keys(packageFile.dependencies);
         let installedPackage = dependencies.filter((dep) => npmPackage.indexOf(dep) >= 0);
         self.embarkConfig.plugins[installedPackage[0]] = {};
-        fs.writeFile(self.config.embarkConfigFile, JSON.stringify(self.embarkConfig, null, 2), cb);
+        self.fs.writeFile(self.config.embarkConfigFile, JSON.stringify(self.embarkConfig, null, 2), cb);
       }
     ], (err) => {
       if (err) {

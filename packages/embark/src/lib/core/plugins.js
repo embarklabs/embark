@@ -11,6 +11,7 @@ var Plugins = function(options) {
   this.events = options.events;
   this.config = options.config;
   this.context = options.context;
+  this.fs = fs;
   this.env = options.env;
   this.version = options.version;
 };
@@ -45,6 +46,7 @@ Plugins.prototype.createPlugin = function(pluginName, pluginConfig) {
     events: this.events,
     config: this.config,
     plugins: this.plugins,
+    fs: this.fs,
     isInternal: true,
     context: this.context
   });
@@ -58,7 +60,7 @@ Plugins.prototype.loadInternalPlugin = function(pluginName, pluginConfig, isPack
     pluginPath = pluginName;
     plugin = require(pluginName);
   } else {
-    pluginPath = fs.embarkPath('dist/lib/modules/' + pluginName);
+    pluginPath = this.fs.embarkPath('dist/lib/modules/' + pluginName);
     plugin = require(pluginPath);
   }
 
@@ -76,6 +78,7 @@ Plugins.prototype.loadInternalPlugin = function(pluginName, pluginConfig, isPack
     events: this.events,
     config: this.config,
     plugins: this.plugins,
+    fs: this.fs,
     isInternal: true,
     context: this.context,
     env: this.env
@@ -85,7 +88,7 @@ Plugins.prototype.loadInternalPlugin = function(pluginName, pluginConfig, isPack
 };
 
 Plugins.prototype.loadPlugin = function(pluginName, pluginConfig) {
-  var pluginPath = fs.dappPath('node_modules', pluginName);
+  var pluginPath = this.fs.dappPath('node_modules', pluginName);
   var plugin = require(pluginPath);
 
   var pluginWrapper = new Plugin({
@@ -98,6 +101,7 @@ Plugins.prototype.loadPlugin = function(pluginName, pluginConfig) {
     events: this.events,
     config: this.config,
     plugins: this.plugins,
+    fs: this.fs,
     isInternal: false,
     context: this.context,
     version: this.version

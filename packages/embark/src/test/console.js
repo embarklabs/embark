@@ -13,6 +13,10 @@ describe('embark.Console', function() {
     registerAPICall: () => {},
     events: events,
     logger: plugins.logger,
+    fs: {
+      existsSync: () => { return false },
+      dappPath: () => { return "ok" }
+    },
     registerConsoleCommand: (cmd, opt) => {},
     embarkConfig: {
       options: {
