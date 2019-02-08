@@ -53,8 +53,6 @@ class CodeGenerator {
       });
     });
 
-    this.events.setCommandHandler('code-generator:web3js', this.buildWeb3JS.bind(this));
-
     this.events.setCommandHandler('code-generator:contract', (contractName, cb) => {
       this.events.request('contracts:contract', contractName, (contract) => {
         this.buildContractJS(contractName, this.generateContractJSON(contract, contract), cb);
