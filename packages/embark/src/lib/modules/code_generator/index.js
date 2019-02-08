@@ -149,44 +149,47 @@ class CodeGenerator {
       warnIfMetamask: this.blockchainConfig.isDev,
       blockchainClient: this.blockchainConfig.ethereumClientName
     };
-    this.generateConfig(this.dappConfigs.blockchain, constants.dappConfig.blockchain);
+    this.generateArtifact(this.dappConfigs.blockchain, constants.dappConfig.blockchain, constants.dappConfig.dir);
   }
 
   generateStorageConfig(storageConfig) {
     this.dappConfigs.storage = {
       dappConnection: storageConfig.dappConnection
     };
-    this.generateConfig(this.dappConfigs.storage, constants.dappConfig.storage);
+    this.generateArtifact(this.dappConfigs.storage, constants.dappConfig.storage, constants.dappConfig.dir);
   }
 
   generateCommunicationConfig(communicationConfig) {
     this.dappConfigs.communication = {
       connection: communicationConfig.connection
     };
-    this.generateConfig(this.dappConfigs.communication, constants.dappConfig.communication);
+    this.generateArtifact(this.dappConfigs.communication, constants.dappConfig.communication, constants.dappConfig.dir);
   }
 
-  generateConfig(configObj, filepathName) {
-    const dir = utils.joinPath(this.embarkConfig.generationDir, constants.dappConfig.dir);
-    const filePath = utils.joinPath(dir, filepathName);
-    const configString = JSON.stringify(configObj, null, 2);
+  generateArtifact(artifactInput, fileName, dirName, cb = () => {}) {
+    const dir = utils.joinPath(this.embarkConfig.generationDir, dirName);
+    const filePath = utils.joinPath(dir, fileName);
+    if (typeof artifactInput !== 'string') {
+      artifactInput = JSON.stringify(artifactInput, null, 2);
+    }
     async.waterfall([
       (next) => {
         fs.mkdirp(dir, next);
       },
       (_dir, next) => {
-        this.checkIfNeedsUpdate(filePath, configString, next);
+        this.checkIfNeedsUpdate(filePath, artifactInput, next);
       },
       (needsUpdate, next) => {
         if (!needsUpdate) {
           return next();
         }
-        fs.writeFile(filePath, configString, next);
+        fs.writeFile(filePath, artifactInput, next);
       }
     ], (err) => {
       if (err) {
         this.logger.error(err.message || err);
       }
+      cb(err);
     });
   }
 
@@ -326,9 +329,7 @@ class CodeGenerator {
         next();
       },
       function writeFile(next) {
-        fs.mkdirpSync(fs.dappPath(".embark"));
-        fs.writeFileSync(fs.dappPath(".embark", 'embark.js'), code);
-        next();
+        self.generateArtifact(code, constants.dappConfig.embarkjs, '', next);
       }
     ], function(_err, _result) {
       cb();

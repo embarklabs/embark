@@ -14,6 +14,7 @@ class Pipeline {
     this.buildDir = embark.config.buildDir;
     this.contractsFiles = embark.config.contractsFiles;
     this.assetFiles = embark.config.assetFiles;
+    this.embarkConfig = embark.config.embarkConfig;
     this.events = embark.events;
     this.logger = embark.config.logger;
     this.plugins = embark.config.plugins;
@@ -154,7 +155,7 @@ class Pipeline {
       (next) => self.buildContracts(next),
       (next) => self.buildWeb3JS(next),
       function createImportList(next) {
-        importsList["Embark/EmbarkJS"] = fs.dappPath(".embark", 'embark.js');
+        importsList["Embark/EmbarkJS"] = fs.dappPath(self.embarkConfig.generationDir, constants.dappConfig.embarkjs);
         importsList["Embark/web3"] = fs.dappPath(".embark", 'web3_instance.js');
         importsList["Embark/contracts"] = fs.dappPath(".embark/contracts", '');
 
