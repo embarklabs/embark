@@ -89,6 +89,7 @@
     "blockchain": "blockchain.json",
     "storage": "storage.json",
     "communication": "communication.json",
-    "embarkjs": "embarkjs.js"
+    "embarkjs": "embarkjs.js",
+    "contractsJs": "contracts"
   }
 }
