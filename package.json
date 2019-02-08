@@ -54,7 +54,8 @@
     "test_dapps": "cd test_dapps && yarn install && npm run test",
     "test_dapps:ci": "cd test_dapps && npm run ci",
     "test_dapps:qa": "cd test_dapps && npm run qa",
-    "typecheck": "lerna run --parallel typecheck"
+    "typecheck": "lerna run --parallel typecheck",
+    "watch": "lerna run --parallel watch"
   },
   "workspaces": {
     "packages": [
