@@ -312,7 +312,7 @@ class CodeGenerator {
       function getImports(web3Location, next) {
         web3Location = web3Location.replace(/\\/g, '/'); // Import paths must always have forward slashes
         code += `\nimport Web3 from '${web3Location}';\n`;
-        code += "\nimport web3 from 'Embark/web3';\n";
+        code += `\nglobal.Web3 = Web3;`;
         code += "\nimport IpfsApi from 'ipfs-api';\n";
 
         next();
@@ -375,37 +375,6 @@ class CodeGenerator {
     contractCode += "export default " + contractName + ";\n";
 
     this.generateArtifact(contractCode, contractName + '.js', constants.dappConfig.contractsJs, cb);
-  }
-
-  buildWeb3JS(cb) {
-    const self = this;
-    let code = "";
-
-    async.waterfall([
-      function getWeb3Location(next) {
-        self.events.request("version:get:web3", function(web3Version) {
-          if (web3Version === "1.0.0-beta") {
-            return next(null, require.resolve("web3", {paths: [self.fs.embarkPath("node_modules")]}));
-          }
-          self.events.request("version:getPackageLocation", "web3", web3Version, function(err, location) {
-            return next(null, self.fs.dappPath(location));
-          });
-        });
-      },
-      function getImports(web3Location, next) {
-        web3Location = web3Location.replace(/\\/g, '/'); // Import paths must always have forward slashes
-        code += `\nimport Web3 from '${web3Location}';\n`;
-        code += "\nglobal.Web3 = Web3;\n";
-
-        code += "\nconsole.log('GLOBAL WEB3', global.web3);";
-        code += "\nif (typeof web3 === 'undefined') {";
-        code += "\n  var web3 = new Web3();";
-        code += "\n}";
-
-        code += "\nexport default web3;\n";
-        next(null, code);
-      }
-    ], cb);
   }
 }
 
