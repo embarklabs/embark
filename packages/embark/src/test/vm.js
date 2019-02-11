@@ -6,7 +6,7 @@ const {expect} = require('chai');
 describe('embark.vm', function () {
   const testObj = {
     shouldReturnEmbark: 'embark',
-    shouldReturnEmbarkAwait: async () => {return new Promise(resolve => resolve('embark'));}
+    shouldReturnEmbarkAwait: async () => 'embark'
   };
   const vm = new VM({sandbox: {testObj}}, new TestLogger({}));
 

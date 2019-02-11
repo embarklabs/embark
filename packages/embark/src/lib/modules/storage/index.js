@@ -1,4 +1,3 @@
-
 class Storage {
   constructor(embark, options){
     this.embark = embark;

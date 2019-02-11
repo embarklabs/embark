@@ -1,4 +1,3 @@
-
 const {errorMessage} = require('../../utils/utils');
 const fs = require('../../core/fs');
 
@@ -41,7 +40,7 @@ class WebpackConfigReader {
     } catch (e) {
       console.error(`error while loading webpack config ${configPath}`);
       callback(errorMessage(e));
-    }    
+    }
   }
 }
 

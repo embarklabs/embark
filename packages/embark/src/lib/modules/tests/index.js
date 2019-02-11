@@ -1,7 +1,7 @@
 const async = require('async');
 const Mocha = require('mocha');
 const path = require('path');
-const {runCmd} = require('../../utils/utils');
+const {runCmd, timer} = require('../../utils/utils');
 const assert = require('assert');
 const Test = require('./test');
 const {EmbarkSpec, EmbarkApiSpec} = require('./reporter');
@@ -96,7 +96,7 @@ class TestRunner {
                 return next(null, results);
               }
               opn(self.fs.dappPath('coverage/index.html'), {wait: false})
-                .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
+                .then(() => timer(1000))
                 .then(_next, _next);
             });
         });

@@ -5,6 +5,10 @@ const semver = require('semver');
 const sinon = require('sinon');
 const request = require('request');
 
+let {rejects} = assert;
+// NodeJS verion < 10.0.0 lacks built-in assert.rejects
+if (!rejects) ({rejects} = require('rejected-or-not'));
+
 describe('TemplateGenerator', function () {
   describe('getExternalProject', function () {
     let templateGenerator;
@@ -21,15 +25,15 @@ describe('TemplateGenerator', function () {
 
     describe('with named template', function () {
 
-      it('returns correct info for named template', function () {
-        let result = templateGenerator.getExternalProject("typescript");
+      it('returns correct info for named template', async function () {
+        let result = await templateGenerator.getExternalProject("typescript");
         let embarkVersion = semver(require('../../package.json').version);
         let branch = `${embarkVersion.major}.${embarkVersion.minor}`;
         assert.strictEqual(result.url, `https://codeload.github.com/embark-framework/embark-typescript-template/tar.gz/${branch}`);
         assert.strictEqual(result.filePath.replace(/\\/g, '/'), `.embark/templates/embark-framework/embark-typescript-template/${branch}/archive.zip`);
         assert.strictEqual(result.browse, `https://github.com/embark-framework/embark-typescript-template/tree/${branch}`);
 
-        result = templateGenerator.getExternalProject("typescript#features/branch");
+        result = await templateGenerator.getExternalProject("typescript#features/branch");
         assert.strictEqual(result.url, "https://codeload.github.com/embark-framework/embark-typescript-template/tar.gz/features%2Fbranch");
         assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark-typescript-template/features/branch/archive.zip");
         assert.strictEqual(result.browse, "https://github.com/embark-framework/embark-typescript-template/tree/features/branch");
@@ -202,10 +206,12 @@ describe('TemplateGenerator', function () {
     });
 
     describe('with unsupported template specifier', function () {
-      it('raises an exception', function () {
-        assert.throws(() => templateGenerator.getExternalProject("bad://format"), /Unsupported/);
-        assert.throws(() => templateGenerator.getExternalProject("bad://format#/also/bad"), /Unsupported/);
-        assert.throws(() => templateGenerator.getExternalProject(/force an error/), Error);
+      it('raises an exception', async function () {
+        await Promise.all([
+          rejects(() => templateGenerator.getExternalProject("bad://format"), /Unsupported/),
+          rejects(() => templateGenerator.getExternalProject("bad://format#/also/bad"), /Unsupported/),
+          rejects(() => templateGenerator.getExternalProject(/force an error/), Error)
+        ]);
       });
     });
 

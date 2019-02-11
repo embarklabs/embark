@@ -28,7 +28,7 @@ class VM {
    */
   private options: NodeVMOptions = {
     require: {
-      builtin: ["path"],
+      builtin: ["path", "rxjs", "util"],
       external: [
         "@babel/runtime-corejs2/helpers/interopRequireDefault",
         "@babel/runtime-corejs2/core-js/json/stringify",

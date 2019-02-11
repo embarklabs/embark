@@ -1,4 +1,4 @@
-/*global EmbarkJS, Web3, __MessageEvents, sendMessage, listenTo*/
+/* global EmbarkJS Web3 listenTo sendMessage */
 
 // for the whisper v5 and web3.js 1.0
 let __embarkWhisperNewWeb3 = {};
@@ -56,16 +56,15 @@ __embarkWhisperNewWeb3.sendMessage = function(options) {
   });
 };
 
-__embarkWhisperNewWeb3.listenTo = function (options, callback) {
+__embarkWhisperNewWeb3.listenTo = function (options) {
   Object.assign(options, {
-    sig: this.sig,
     toAscii: EmbarkJS.Utils.toAscii,
     toHex: this.web3.utils.toHex,
-    symKeyID: options.symKeyID || this.symKeyID,
-    messageEvents: __MessageEvents,
-    subscribe: this.web3.shh.subscribe
+    sig: this.sig,
+    subscribe: this.web3.shh.subscribe,
+    symKeyID: options.symKeyID || this.symKeyID
   });
-  listenTo(options, callback);
+  return listenTo(options);
 };
 
 __embarkWhisperNewWeb3.getWhisperVersion = function(cb) {
@@ -108,4 +107,3 @@ __embarkWhisperNewWeb3.isAvailable = function() {
     }
   });
 };
-

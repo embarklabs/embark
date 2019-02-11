@@ -2,6 +2,7 @@ const fs = require('../core/fs.js');
 const hostedGitInfo = require('hosted-git-info');
 const utils = require('./utils.js');
 const semver = require('semver');
+const {promisify} = require('util');
 
 const REPLACEMENTS = {
   'git@github.com/': 'git@github.com:',
@@ -24,20 +25,16 @@ class TemplateGenerator {
     }
   }
 
-  download(url, tmpFilePath, browse) {
+  async download(url, tmpFilePath, browse) {
     console.log(__('Installing template from ' + browse).green);
     console.log(__('Downloading template...').green);
     fs.mkdirpSync(utils.dirname(tmpFilePath));
-    return new Promise((resolve, reject) => {
-      utils.downloadFile(url, tmpFilePath, (err) => {
-        if (err) {
-          console.error(utils.errorMessage(err).red);
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
-    });
+    try {
+      await promisify(utils.downloadFile)(url, tmpFilePath);
+    } catch (e) {
+      console.error(utils.errorMessage(e).red);
+      throw e;
+    }
   }
 
   downloadFailed() {
@@ -134,10 +131,10 @@ class TemplateGenerator {
     }
   }
 
-  getExternalProject(uri) {
+  async getExternalProject(uri) {
     let url, folder, hgi;
     let fallback, url_fallback, folder_fallback, hgi_fallback, embarkVersion;
-    
+
     // reformat uri before parsing with hosted-git-info. Allows for further syntax support.
     Object.keys(REPLACEMENTS).forEach(replacement => {
       if(uri.indexOf(replacement) === 0) uri = uri.replace(replacement, REPLACEMENTS[replacement]);

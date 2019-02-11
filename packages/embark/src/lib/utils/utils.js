@@ -127,8 +127,8 @@ function pingEndpoint(host, port, type, protocol, origin, callback) {
   };
 
   const handleSuccess = (req, closeMethod, event) => {
-    req.once(event, () => { 
-      handleEvent(req, closeMethod); 
+    req.once(event, () => {
+      handleEvent(req, closeMethod);
     });
   };
 
@@ -571,7 +571,10 @@ function errorMessage(e) {
 }
 
 function timer(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  const then = Date.now();
+  return new Promise(resolve => (
+    setTimeout(() => resolve(Date.now() - then), ms)
+  ));
 }
 
 function isFolder(node) {
