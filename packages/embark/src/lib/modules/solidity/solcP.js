@@ -80,6 +80,7 @@ class SolcProcess extends ProcessWrapper {
 let solcProcess;
 process.on('message', (msg) => {
   if (msg.action === "init") {
+    msg.options.logger = console;
     solcProcess = new SolcProcess(msg.options);
     return process.send({result: "initiated"});
   }

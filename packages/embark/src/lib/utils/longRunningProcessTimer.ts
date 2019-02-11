@@ -84,7 +84,7 @@ export default class LongRunningProcessTimer {
         }
 
         // log our measurement and make it red if it has taken too long
-        if (!this.options.showSpinner && entry && strDuration && this.options && this.options.longRunningThreshold) {
+        if (!this.options.showSpinner && entry && strDuration !== undefined && this.options && this.options.longRunningThreshold) {
           if (entry.duration > this.options.longRunningThreshold) {
             strDuration = strDuration.red;
           }
