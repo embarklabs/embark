@@ -38,11 +38,14 @@ module.exports = async (embark) => {
     if (blockchainConnectorReady) {
       return cb();
     }
-    web3LocationPromise.then((_web3Location) => {
-      blockchainConnectorReady = true;
-      embark.events.emit('blockchain:connector:ready');
+    embark.events.once("blockchain:connector:ready", () => {
       cb();
     });
+  });
+
+  web3LocationPromise.then((_web3Location) => {
+    blockchainConnectorReady = true;
+    embark.events.emit('blockchain:connector:ready');
   });
 
   let web3Location = await web3LocationPromise;
@@ -50,7 +53,7 @@ module.exports = async (embark) => {
   web3Location = web3Location.replace(/\\/g, '/');
 
 
-  embark.events.emit('runcode:register', '__Web3', require(web3Location), false);
+  embark.events.emit('runcode:register', '__Web3', require(web3Location));
 
   let code = `\nconst Web3 = global.__Web3 || require('${web3Location}');`;
   code += `\nglobal.Web3 = Web3;`;
@@ -60,7 +63,7 @@ module.exports = async (embark) => {
 
   code += "\nEmbarkJS.Blockchain.registerProvider('web3', web3Connector);";
 
-  code += "\nEmbarkJS.Blockchain.setProvider('web3', {web3});";
+  code += "\nEmbarkJS.Blockchain.setProvider('web3', {});";
 
   embark.addCodeToEmbarkJS(code);
 

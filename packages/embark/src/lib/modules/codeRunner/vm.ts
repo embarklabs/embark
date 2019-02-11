@@ -40,6 +40,8 @@ class VM {
         "@babel/runtime-corejs2/core-js/object/assign",
         "eth-ens-namehash",
         "swarm-api",
+        "rxjs",
+        "rxjs/operators",
       ],
     },
     sandbox: { __dirname: fs.dappPath() },
@@ -102,7 +104,9 @@ class VM {
       if (error.message && error.message.indexOf(WEB3_INVALID_RESPONSE_ERROR) !== -1) {
         error.message += ". Are you connected to an Ethereum node?";
       }
-
+      if (typeof error === "string") {
+        error = new Error(error);
+      }
       return cb(error);
     }
     return cb(null, result);
@@ -150,27 +154,6 @@ class VM {
   private setupNodeVm(cb: Callback<null>) {
     this.vm = new NodeVM(this.options);
     cb();
-  }
-
-  /**
-   * Gets the registered @type {Web3} object, and returns an @type {object} with it's
-   * defaultAccount and provider URL.
-   * @typedef {getWeb3Config}
-   * @property {string} defaultAccount
-   * @property {string} providerUrl
-   * @returns {getWeb3Config} The configured values of the web3 object registered to this
-   *  VM instance.
-   */
-  public getWeb3Config() {
-    const Web3 = require("web3");
-    const provider = this.options.sandbox.web3.currentProvider;
-    let providerUrl;
-    if (provider instanceof Web3.providers.HttpProvider) {
-      providerUrl = provider.host;
-    } else if (provider instanceof Web3.providers.WebsocketProvider) {
-      providerUrl = provider.connection._url;
-    }
-    return { defaultAccount: this.options.sandbox.web3.eth.defaultAccount, providerUrl };
   }
 }
 

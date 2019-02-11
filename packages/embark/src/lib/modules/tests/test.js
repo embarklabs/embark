@@ -34,20 +34,6 @@ class Test {
         this.events.request('runcode:ready', next);
       },
       (next) => {
-        this.initWeb3Provider(next);
-      },
-      (next) => {
-        const waitingForReady = setTimeout(() => {
-          this.logger.warn('Waiting for the blockchain connector to be ready...');
-          // TODO add docs link to how to install one
-          this.logger.warn('If you did not install a blockchain connector, stop this process and install one');
-        }, 5000);
-        this.events.request('blockchain:connector:ready', () => {
-          clearTimeout(waitingForReady);
-          next();
-        });
-      },
-      (next) => {
         this.gasLimit = constants.tests.gasLimit;
         this.events.request('deploy:setGasLimit', this.gasLimit);
         if (this.options.node !== 'embark') {
@@ -185,7 +171,9 @@ class Test {
           return callback(err);
         }
         self.firstRunConfig = false;
-        self.events.request("runcode:embarkjs:reset", callback);
+        self.events.request("blockchain:ready", () => {
+          self.events.request("runcode:embarkjs:reset", callback);
+        });
       });
     });
   }
@@ -346,7 +334,7 @@ class Test {
             Object.setPrototypeOf(self.embarkjs, embarkjs);
           }
           next(err, accounts);
-        }, true);
+        });
       }
     ], function (err, accounts) {
       if (err) {

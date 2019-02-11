@@ -278,6 +278,8 @@ class EmbarkController {
       webpackConfigName: options.webpackConfigName
     });
 
+    const isSecondaryProcess = (engine) => { return engine.ipc.connected && engine.ipc.isClient(); };
+
     async.waterfall([
       function initEngine(callback) {
         engine.init({}, callback);
@@ -288,63 +290,36 @@ class EmbarkController {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
 
-        if (engine.ipc.connected) {
-          engine.startService("codeRunner");
-          engine.startService("console");
+        engine.startService("web3");
+        engine.startService("deployment");
+        engine.startService("codeGenerator");
+        engine.startService("codeRunner");
+        engine.startService("console");
+        
+        if (isSecondaryProcess(engine)) {
           return callback();
         }
         engine.startService("processManager");
         engine.startService("serviceMonitor");
         engine.startService("libraryManager");
-        engine.startService("codeRunner");
-        engine.startService("web3");
         engine.startService("pipeline");
-        engine.startService("deployment");
         engine.startService("storage");
-        engine.startService("codeGenerator");
-        engine.startService("console");
         engine.startService("cockpit");
         engine.startService("pluginCommand");
-        engine.events.once('check:backOnline:Ethereum', () => callback());
+        engine.events.request('blockchain:ready', callback);
       },
       function ipcConnect(callback) {
         // Do specific work in case we are connected to a socket:
         //  - Setup Web3
         //  - Apply history
-        if(!engine.ipc.connected || engine.ipc.isServer()) {
+        if(isSecondaryProcess(engine)) {
           return callback();
         }
-        const Provider = require('../lib/modules/blockchain_connector/provider');
-        const Web3 = require('web3');
-        let web3 = new Web3();
-        engine.ipc.request("runcode:getCommands", null, (_, {web3Config, commands}) => {
-          const providerOptions = {
-            web3: web3,
-            accountsConfig: engine.config.contractsConfig.deployment.accounts,
-            blockchainConfig: engine.config.blockchainConfig,
-            logger: engine.logger,
-            isDev: engine.isDev,
-            type: engine.config.contractsConfig.deployment.type,
-            web3Endpoint: web3Config.providerUrl
-          };
-          const provider = new Provider(providerOptions);
-          web3.eth.defaultAccount = web3Config.defaultAccount;
-          provider.startWeb3Provider(() => {
-            engine.events.emit("runcode:register", "web3", web3);
-            async.each(commands, ({varName, code}, next) => {
-              if (varName) {
-                engine.events.emit("runcode:register", varName, code);
-              } else {
-                engine.events.request("runcode:eval", code);
-              }
-              next();
-            }, callback);
-          });
-        });
+        engine.events.request("console:provider:ready", callback);
       },
       function deploy(callback) {
         // Skip if we are connected to a websocket, the server will do it
-        if(engine.ipc.connected && engine.ipc.isClient()) {
+        if(isSecondaryProcess(engine)) {
           return callback();
         }
         engine.config.reloadConfig();
@@ -354,7 +329,7 @@ class EmbarkController {
       },
       function waitForWriteFinish(callback) {
         // Skip if we are connected to a websocket, the server will do it
-        if(engine.ipc.connected && engine.ipc.isClient()) {
+        if(isSecondaryProcess(engine)) {
           return callback();
         }
         engine.logger.info("Finished deploying".underline);
@@ -657,7 +632,7 @@ class EmbarkController {
         });
         engine.startService("storage");
         engine.startService("codeGenerator");
-        engine.startService("console", {forceRegister: true});
+        engine.startService("console");
         engine.startService("pluginCommand");
         if (options.coverage) {
           engine.startService("codeCoverage");

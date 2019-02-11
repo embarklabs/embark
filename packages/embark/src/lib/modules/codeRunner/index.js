@@ -1,6 +1,5 @@
 const VM = require('./vm');
 const fs = require('../../core/fs');
-const deepEqual = require('deep-equal');
 const EmbarkJS = require('embarkjs');
 const IpfsApi = require("ipfs-api");
 const Web3 = require('web3');
@@ -45,37 +44,10 @@ class CodeRunner {
     this.embark = embark;
     this.commands = [];
 
-    this.registerIpcEvents();
-    this.IpcClientListen();
     this.registerEvents();
     this.registerCommands();
     this.events.emit('runcode:ready');
     this.ready = true;
-  }
-
-  registerIpcEvents() {
-    if (!this.ipc.isServer()) {
-      return;
-    }
-
-    this.ipc.on('runcode:getCommands', (_err, callback) => {
-      let result = {web3Config: this.vm.getWeb3Config(), commands: this.commands};
-      callback(null, result);
-    });
-  }
-
-  IpcClientListen() {
-    if (!this.ipc.isClient() || !this.ipc.connected) {
-      return;
-    }
-
-    this.ipc.listenTo('runcode:newCommand', (command) => {
-      if (command.varName) {
-        this.events.emit("runcode:register", command.varName, command.code);
-      } else {
-        this.events.request("runcode:eval", command.code);
-      }
-    });
   }
 
   registerEvents() {
@@ -133,36 +105,24 @@ class CodeRunner {
         this.events.request("code-generator:embarkjs:init-provider-code", (providerCode) => {
           this.evalCode(providerCode, (err, _result) => {
             cb(err);
-          }, false, true);
+          }, true);
         });
       }, true);
     });
   }
 
-  registerVar(varName, code, toRecord = true, cb = () => {}) {
-    const command = {varName, code};
-    if (toRecord && !this.commands.some(cmd => deepEqual(cmd, command))) {
-      if (this.ipc.isServer()) {
-        this.commands.push(command);
-        this.ipc.broadcast("runcode:newCommand", command);
-      }
-    }
+  registerVar(varName, code, cb = () => {}) {
     this.vm.registerVar(varName, code, cb);
   }
 
-  evalCode(code, cb, isNotUserInput = false, tolerateError = false) {
+  evalCode(code, cb, tolerateError = false) {
     cb = cb || function () {};
 
     if (!code) return cb(null, '');
 
     this.vm.doEval(code, tolerateError, (err, result) => {
-      if(err) {
+      if (err) {
         return cb(err);
-      }
-      const command = {code};
-      if (isNotUserInput && this.ipc.isServer() && !this.commands.some(cmd => cmd.code === command.code)) {
-          this.commands.push(command);
-          this.ipc.broadcast("runcode:newCommand", command);
       }
       
       cb(null, result);
