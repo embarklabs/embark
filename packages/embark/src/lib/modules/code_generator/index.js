@@ -368,11 +368,8 @@ class CodeGenerator {
   }
 
   buildContractJS(contractName, contractJSON, cb) {
-    let contractCode = "";
-    contractCode += "import web3 from 'Embark/web3';\n";
-    contractCode += "import EmbarkJS from 'Embark/EmbarkJS';\n";
+    let contractCode = "import EmbarkJS from 'Embark/EmbarkJS';\n";
     contractCode += `let ${contractName}JSONConfig = ${JSON.stringify(contractJSON)};\n`;
-    contractCode += `${contractName}JSONConfig.web3 = web3;\n`;
     contractCode += `let ${contractName} = new EmbarkJS.Blockchain.Contract(${contractName}JSONConfig);\n`;
 
     contractCode += "export default " + contractName + ";\n";
@@ -400,6 +397,7 @@ class CodeGenerator {
         code += `\nimport Web3 from '${web3Location}';\n`;
         code += "\nglobal.Web3 = Web3;\n";
 
+        code += "\nconsole.log('GLOBAL WEB3', global.web3);";
         code += "\nif (typeof web3 === 'undefined') {";
         code += "\n  var web3 = new Web3();";
         code += "\n}";
