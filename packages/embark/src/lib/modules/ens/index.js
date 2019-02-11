@@ -559,16 +559,23 @@ class ENS {
   }
 
   isENSName(name, callback = () => {}) {
+    // TODO in general (not just this function) control flow at callsite of
+    // internal/external APIs should be consistently async or sync:
+    //   + shouldn't both return a meaningful value and invoke callback, should
+    //     yield control flow to caller / it's callback one way or the other
+    //   + should return a promise if no callback is supplied
+    //   + NodeJS style callback-last callbacks should be expected to have
+    //     consistent `(err, value)` signature/behavior
+    //   + callback should executed async; see: built-in util.callbackify
+    let test;
     if (typeof name !== 'string') {
-      callback(false);
-      return false;
+      test = false;
+    } else {
+      test = ENS_WHITELIST.some(ensExt => name.endsWith(ensExt));
     }
-    const result = Boolean(ENS_WHITELIST.find(ensExt => name.endsWith(ensExt)));
-    callback(result);
-    return result;
+    callback(test);
+    return test;
   }
 }
 
 module.exports = ENS;
-
-

@@ -1,14 +1,15 @@
+/* global __ __dirname module require setTimeout */
+
 let utils = require('../../utils/utils.js');
 let Web3 = require('web3');
 const {parallel} = require('async');
 const {sendMessage, listenTo} = require('./js/communicationFunctions');
-const messageEvents = require('./js/message_events');
 const constants = require('../../constants');
-
 const {canonicalHost, defaultHost} = require('../../utils/host');
+const {fromEvent} = require('rxjs');
+const {map, takeUntil} = require('rxjs/operators');
 
 class Whisper {
-
   constructor(embark, options) {
     this.logger = embark.logger;
     this.events = embark.events;
@@ -119,8 +120,6 @@ class Whisper {
     // TODO: possible race condition could be a concern
     this.events.request("version:get:web3", function(web3Version) {
       let code = "";
-      code += "\n" + self.fs.readFileSync(utils.joinPath(__dirname, 'js', 'message_events.js')).toString();
-
       if (web3Version[0] === "0") {
         self.isOldWeb3 = true;
         code += "\n" + self.fs.readFileSync(utils.joinPath(__dirname, 'js', 'embarkjs_old_web3.js')).toString();
@@ -203,22 +202,19 @@ class Whisper {
         'ws',
         '/embark-api/communication/listenTo/:topic',
         (ws, req) => {
-          self.webSocketsChannels[req.params.topic] = listenTo({
-            topic: req.params.topic,
-            messageEvents,
-            toHex: self.web3.utils.toHex,
+          const obs = listenTo({
             toAscii: self.web3.utils.hexToAscii,
+            toHex: self.web3.utils.toHex,
+            topic: req.params.topic,
             sig,
-            symKeyID,
-            subscribe: self.web3.shh.subscribe
-          }, (err, result) => {
-            if (ws.readyState === ws.CLOSED) {
-              return;
-            }
-            if (err) {
-              return ws.status(500).send(JSON.stringify({error: err}));
-            }
-            ws.send(JSON.stringify(result));
+            subscribe: self.web3.shh.subscribe,
+            symKeyID
+          }).pipe(takeUntil(fromEvent(ws, 'close').pipe(map(() => (
+            delete self.webSocketsChannels[req.params.topic]
+          )))));
+          self.webSocketsChannels[req.params.topic] = obs;
+          obs.subscribe(data => {
+            ws.send(JSON.stringify(data));
           });
         });
     });

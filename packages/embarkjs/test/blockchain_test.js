@@ -3,6 +3,7 @@
 const {startRPCMockServer, TestProvider} = require('./test');
 const {assert} = require('chai');
 const Blockchain = require('../dist/blockchain');
+const {promisify} = require('util');
 
 describe('Blockchain', () => {
   describe('#connect', () => {
@@ -36,15 +37,9 @@ describe('Blockchain', () => {
       it(description, async () => {
         const makeServers = async () => {
           const servers = await Promise.all(
-            scenario.servers.map(
-              server => {
-                return new Promise((resolve, reject) => {
-                  startRPCMockServer({successful: server}, (err, server) => {
-                    return err ? reject(err) : resolve(server);
-                  });
-                });
-              }
-            )
+            scenario.servers.map(server => (
+              promisify(startRPCMockServer)({successful: server})
+            ))
           );
           const dappConnection = servers.map(server => server.connectionString);
           return {servers, dappConnection};
@@ -54,14 +49,8 @@ describe('Blockchain', () => {
         let {servers, dappConnection} = await makeServers();
         await new Promise((resolve, reject) => {
           Blockchain.default.connect({dappConnection}, err => {
-            if (scenario.error) {
-              try {
-                assert(err);
-              } catch (e) {
-                return reject(e);
-              }
-            }
             try {
+              assert(scenario.error ? err : !err);
               servers.forEach((server, idx) => {
                 assert.strictEqual(server.visited, scenario.visited[idx]);
               });

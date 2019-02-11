@@ -1,3 +1,5 @@
+/* global Web3 clearInterval setInterval */
+
 let Utils = {
   fromAscii: function(str) {
     var _web3 = new Web3();
@@ -8,9 +10,9 @@ let Utils = {
     return _web3.utils.toAscii(str);
   },
   secureSend: function(web3, toSend, params, isContractDeploy, cb, hashCb) {
-    cb = cb || function() {};
-    hashCb = hashCb || function () {};
-    return new Promise((resolve, reject) => {
+    const _cb = function() {};
+    const _hashCb = function() {};
+    const promise = new Promise((resolve, reject) => {
       let hash;
       let calledBacked = false;
 
@@ -25,7 +27,7 @@ let Utils = {
           clearInterval(interval);
         }
         calledBacked = true;
-        cb(err, receipt);
+        (cb || _cb)(err, receipt);
         if (err) {
           return reject(err);
         }
@@ -53,26 +55,29 @@ let Utils = {
 
       //toSend.estimateGas()
       //  .then(gasEstimated => {
-          //params.gas = gasEstimated + 1000;
-          return toSend.send(params, function(err, transactionHash) {
-            if (err) {
-              return callback(err);
-            }
-            hash = transactionHash;
-            hashCb(hash);
-          })
-          .on('receipt', function(receipt) {
-            if (!isContractDeploy || receipt.contractAddress) {
-              callback(null, receipt);
-            }
-          }).then(function(_contract) {
-            if (!hash) {
-              return; // Somehow we didn't get the receipt yet... Interval will catch it
-            }
-            web3.eth.getTransactionReceipt(hash, callback);
-          }).catch(callback);
-        //});
+      //params.gas = gasEstimated + 1000;
+      return toSend.send(params, function(err, transactionHash) {
+        if (err) {
+          return callback(err);
+        }
+        hash = transactionHash;
+        (hashCb || _hashCb)(hash);
+      })
+        .on('receipt', function(receipt) {
+          if (!isContractDeploy || receipt.contractAddress) {
+            callback(null, receipt);
+          }
+        }).then(function(_contract) {
+          if (!hash) {
+            return; // Somehow we didn't get the receipt yet... Interval will catch it
+          }
+          web3.eth.getTransactionReceipt(hash, callback);
+        }).catch(callback);
+      //});
     });
+
+    if (cb) { promise.then(_cb).catch(_cb); return; }
+    return promise;
   }
 };
 

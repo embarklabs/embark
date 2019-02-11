@@ -45,17 +45,17 @@ class Whisper extends React.Component {
       subscribedChannels
     });
 
-    EmbarkJS.Messages.listenTo({topic: [this.state.listenTo]}, (error, message) => {
-      const messageList = this.state.messageList;
-      if (error) {
-        messageList.push(<span className="alert-danger">Error: {error}</span>);
-      } else {
+    const messageList = this.state.messageList;
+    EmbarkJS.Messages.listenTo({topic: [this.state.listenTo]}).subscribe(
+      message => {
         messageList.push(<span>Channel: <b>{message.topic}</b> |  Message: <b>{message.data}</b></span>);
+        this.setState({messageList});
+      },
+      error => {
+        messageList.push(<span className="alert-danger">Error: {error}</span>);
+        this.setState({messageList});
       }
-      this.setState({
-        messageList
-      });
-    });
+    );
 
     this.addToLog("EmbarkJS.Messages.listenTo({topic: ['" + this.state.listenTo + "']}).then(function(message) {})");
   }

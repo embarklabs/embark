@@ -1,6 +1,8 @@
-/*global EmbarkJS, Web3, registerSubDomain, namehash*/
+/* global EmbarkJS Web3 namehash registerSubDomain require */
 
-let __embarkENS = {};
+const {callbackify} = require('util');
+
+const __embarkENS = {};
 
 // resolver interface
 __embarkENS.resolverInterface = [
@@ -184,81 +186,80 @@ __embarkENS.setProvider = function (config) {
 };
 
 __embarkENS.resolve = function (name, callback) {
-  return new Promise((resolve, reject) => {
-
-    function resolveOrReject(err, addr) {
-      if (err) {
-        if (err === NoDecodeAddrError) {
-          err = `${name} is not registered`;
-          addr = '0x';
-        }
-        return !callback ? reject(err) : callback(err);
-      }
-      return !callback ? resolve(addr) : callback(err, addr);
-    }
-
+  const resolve = async (name) => {
     if (!this.ens) {
-      resolveOrReject(providerNotSetError);
+      throw new Error(providerNotSetError);
     }
-  if (!EmbarkJS.Blockchain.blockchainConnector.getDefaultAccount()) {
-      resolveOrReject(defaultAccountNotSetError);
+    if (!EmbarkJS.Blockchain.blockchainConnector.getDefaultAccount()) {
+      throw new Error(defaultAccountNotSetError);
     }
 
     let node = namehash.hash(name);
 
-    this.ens.methods.resolver(node).call().then(resolvedAddress => {
+    try {
+      const resolvedAddress = await this.ens.methods.resolver(node).call();
       if (resolvedAddress === voidAddress) {
-        return resolveOrReject('Name not yet registered');
+        throw new Error('Name not yet registered');
       }
-      let resolverContract = new EmbarkJS.Blockchain.Contract({
+      const resolverContract = new EmbarkJS.Blockchain.Contract({
         abi: this.resolverInterface,
         address: resolvedAddress,
         web3: EmbarkJS.Blockchain.blockchainConnector.getInstance()
       });
-      resolverContract.methods.addr(node).call(resolveOrReject);
-    }).catch(resolveOrReject);
-  });
+      return await resolverContract.methods.addr(node).call();
+    } catch (err) {
+      const msg = err.message;
+      if (msg === NoDecodeAddrError) {
+        throw new Error(`${name} is not registered`);
+      }
+      throw err;
+    }
+  };
+
+  if (callback) {
+    return callbackify(resolve)(name, callback);
+  }
+  return resolve(name);
 };
 
 __embarkENS.lookup = function (address, callback) {
-  return new Promise((resolve, reject) => {
-
-    function resolveOrReject(err, name) {
-      if (err) {
-        if (err === NoDecodeStringError || err === NoDecodeAddrError) {
-          err = 'Address does not resolve to name. Try syncing chain.';
-        }
-        return !callback ? reject(err) : callback(err);
-      }
-      return !callback ? resolve(name) : callback(err, name);
-    }
-
+  const lookup = async (address) => {
     if (!this.ens) {
-      return resolveOrReject(providerNotSetError);
+      throw new Error(providerNotSetError);
     }
-
     if (!EmbarkJS.Blockchain.blockchainConnector.getDefaultAccount()) {
-      return resolveOrReject(defaultAccountNotSetError);
+      throw new Error(defaultAccountNotSetError);
     }
-
     if (address.startsWith("0x")) {
       address = address.slice(2);
     }
 
     let node = Web3.utils.soliditySha3(address.toLowerCase() + reverseAddrSuffix);
 
-    this.ens.methods.resolver(node).call().then(resolverAddress => {
+    try {
+      const resolverAddress = await this.ens.methods.resolver(node).call();
       if (resolverAddress === voidAddress) {
-        return resolveOrReject('Address not associated to a resolver');
+        throw new Error('Address not associated to a resolver');
       }
       const resolverContract = new EmbarkJS.Blockchain.Contract({
         abi: this.resolverInterface,
         address: resolverAddress,
         web3: EmbarkJS.Blockchain.blockchainConnector.getInstance()
       });
-      resolverContract.methods.name(node).call(resolveOrReject);
-    }).catch(resolveOrReject);
-  });
+      return await resolverContract.methods.name(node).call();
+    } catch (err) {
+      const msg = err.message;
+      if (msg === NoDecodeStringError || msg === NoDecodeAddrError) {
+        throw new Error('Address does not resolve to name. Try syncing chain.');
+      }
+      throw err;
+    }
+  };
+
+  if (callback) {
+    return callbackify(lookup)(address, callback);
+  }
+  return lookup(address);
 };
 
 __embarkENS.registerSubDomain = function (name, address, callback) {

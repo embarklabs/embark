@@ -1,5 +1,8 @@
+/* global __ module require */
+
 const stringReplaceAsync = require('string-replace-async');
 const async = require('async');
+const {callbackify} = require('util');
 
 class SpecialConfigs {
 
@@ -15,114 +18,120 @@ class SpecialConfigs {
     this.registerDeployIfAction();
   }
 
-  replaceWithENSAddress(cmd, cb) {
-    const self = this;
-    let regex = /\'[a-zA-Z0-9.]+\.eth\'/g;
-    return stringReplaceAsync.seq(cmd, regex, (ensDomain) => {
-      ensDomain = ensDomain.slice(1, ensDomain.length - 1);
-      return (new Promise((resolve, reject) => {
-        self.events.request("ens:resolve", ensDomain, (err, address) => {
-          if(err) {
-            return reject(new Error(err));
-          }
-          address = `'${address}'`;
-          return resolve(address);
-        });
-      }));
-    }).then((address) => {
-      cb(null, address);
-    }).catch(cb);
+  replaceWithENSAddress(cmd, callback) {
+    const replaceWithENSAddress = (cmd) => {
+      let regex = /\'[a-zA-Z0-9.]+\.eth\'/g;
+      return stringReplaceAsync.seq(cmd, regex, (ensDomain) => {
+        ensDomain = ensDomain.slice(1, ensDomain.length - 1);
+        return (new Promise((resolve, reject) => {
+          this.events.request("ens:resolve", ensDomain, (err, address) => {
+            if(err) {
+              return reject(new Error(err));
+            }
+            address = `'${address}'`;
+            return resolve(address);
+          });
+        }));
+      });
+    };
+
+    if (callback) {
+      return callbackify(replaceWithENSAddress)(cmd, callback);
+    }
+    return replaceWithENSAddress(cmd);
   }
 
-  replaceWithAddresses(cmd, cb) {
-    const self = this;
+  replaceWithAddresses(cmd, callback) {
+    const replaceWithAddresses = (cmd) => {
+      let regex = /\$\w+\[?\d?\]?/g;
+      return stringReplaceAsync.seq(cmd, regex, (match, index) => {
+        return (new Promise((resolve, reject) => {
+          if (match.startsWith('$accounts')) {
+            let accountIndex = cmd.substring(index + 10, index + 12);
+            accountIndex = parseInt(accountIndex, 10);
+            return this.events.request('blockchain:getAccounts', (err, accounts) => {
+              if (err) {
+                return reject('Error getting accounts: ' + err.message || err);
+              }
+              if (!accounts[accountIndex]) {
+                return reject(__('No corresponding account at index %d', accountIndex));
+              }
+              resolve(accounts[accountIndex]);
+            });
+          }
 
-    let regex = /\$\w+\[?\d?\]?/g;
-    stringReplaceAsync.seq(cmd, regex, (match, index) => {
-      return (new Promise((resolve, reject) => {
-        if (match.startsWith('$accounts')) {
-          let accountIndex = cmd.substring(index + 10, index + 12);
-          accountIndex = parseInt(accountIndex, 10);
-          return self.events.request('blockchain:getAccounts', (err, accounts) => {
-            if (err) {
-              return reject('Error getting accounts: ' + err.message || err);
+          let referedContractName = match.slice(1);
+          this.events.request('contracts:contract', referedContractName, (referedContract) => {
+            if (!referedContract) {
+              this.logger.error(referedContractName + ' does not exist');
+              this.logger.error("error running cmd: " + cmd);
+              return reject(new Error("ReferedContractDoesNotExist"));
             }
-            if (!accounts[accountIndex]) {
-              return reject(__('No corresponding account at index %d', accountIndex));
+            if (referedContract && referedContract.deploy === false) {
+              this.logger.error(referedContractName + " exists but has been set to not deploy");
+              this.logger.error("error running cmd: " + cmd);
+              return reject(new Error("ReferedContracSetToNotdeploy"));
             }
-            resolve(accounts[accountIndex]);
+            if (referedContract && !referedContract.deployedAddress) {
+              this.logger.error(
+                "couldn't find a valid address for " + referedContractName + ". has it been deployed?"
+              );
+              this.logger.error("error running cmd: " + cmd);
+              return reject(new Error("ReferedContractAddressNotFound"));
+            }
+            return resolve(referedContract.deployedAddress);
           });
-        }
+        }));
+      });
+    };
 
-        let referedContractName = match.slice(1);
-        self.events.request('contracts:contract', referedContractName, (referedContract) => {
-          if (!referedContract) {
-            self.logger.error(referedContractName + ' does not exist');
-            self.logger.error("error running cmd: " + cmd);
-            return reject(new Error("ReferedContractDoesNotExist"));
-          }
-          if (referedContract && referedContract.deploy === false) {
-            self.logger.error(referedContractName + " exists but has been set to not deploy");
-            self.logger.error("error running cmd: " + cmd);
-            return reject(new Error("ReferedContracSetToNotdeploy"));
-          }
-          if (referedContract && !referedContract.deployedAddress) {
-            self.logger.error("couldn't find a valid address for " + referedContractName + ". has it been deployed?");
-            self.logger.error("error running cmd: " + cmd);
-            return reject(new Error("ReferedContractAddressNotFound"));
-          }
-          return resolve(referedContract.deployedAddress);
-        });
-      }));
-    }).then((address) => {
-      cb(null, address);
-    }).catch(cb);
+    if (callback) {
+      return callbackify(replaceWithAddresses)(cmd, callback);
+    }
+    return replaceWithAddresses(cmd);
   }
 
   registerAfterDeployAction() {
-    const self = this;
-
     this.embark.registerActionForEvent("contracts:deploy:afterAll", async (cb) => {
-      if (typeof self.config.contractsConfig.afterDeploy === 'function') {
+      if (typeof this.config.contractsConfig.afterDeploy === 'function') {
         try {
           const dependencies = await this.getAfterDeployLifecycleHookDependencies();
-          await self.config.contractsConfig.afterDeploy(dependencies);
+          await this.config.contractsConfig.afterDeploy(dependencies);
           cb();
         } catch (err) {
           return cb(new Error(`Error registering afterDeploy lifecycle hook: ${err.message}`));
         }
       } else {
-        let afterDeployCmds = self.config.contractsConfig.afterDeploy || [];
+        let afterDeployCmds = this.config.contractsConfig.afterDeploy || [];
         async.mapLimit(afterDeployCmds, 1, (cmd, nextMapCb) => {
           async.waterfall([
-            function replaceWithAddresses(next) {
-              self.replaceWithAddresses(cmd, next);
+            (next) => {
+              this.replaceWithAddresses(cmd, next);
             },
-            self.replaceWithENSAddress.bind(self)
+            this.replaceWithENSAddress.bind(this)
           ], nextMapCb);
         }, (err, onDeployCode) => {
           if (err) {
-            self.logger.trace(err);
+            this.logger.trace(err);
             return cb(new Error("error running afterDeploy"));
           }
 
-          self.runOnDeployCode(onDeployCode, cb);
+          this.runOnDeployCode(onDeployCode, cb);
         });
       }
     });
   }
 
   runOnDeployCode(onDeployCode, callback, silent) {
-    const self = this;
-    const logFunction = silent ? self.logger.trace.bind(self.logger) : self.logger.info.bind(self.logger);
+    const logFunction = silent ? this.logger.trace.bind(this.logger) : this.logger.info.bind(this.logger);
     async.each(onDeployCode, (cmd, eachCb) => {
       if (!cmd) {
         return eachCb();
       }
       logFunction("==== executing: " + cmd);
-      self.events.request('runcode:eval', cmd, (err) => {
+      this.events.request('runcode:eval', cmd, (err) => {
         if (err && err.message.indexOf("invalid opcode") >= 0) {
-          self.logger.error('the transaction was rejected; this usually happens due to a throw or a require, it can also happen due to an invalid operation');
+          this.logger.error('the transaction was rejected; this usually happens due to a throw or a require, it can also happen due to an invalid operation');
         }
         eachCb(err);
       });
@@ -130,8 +139,6 @@ class SpecialConfigs {
   }
 
   registerOnDeployAction() {
-    const self = this;
-
     this.embark.registerActionForEvent("deploy:contract:deployed", async (params, cb) => {
       let contract = params.contract;
 
@@ -140,7 +147,7 @@ class SpecialConfigs {
       }
 
       if (!contract.silent) {
-        self.logger.info(__('executing onDeploy commands'));
+        this.logger.info(__('executing onDeploy commands'));
       }
 
       if (typeof contract.onDeploy === 'function') {
@@ -155,13 +162,13 @@ class SpecialConfigs {
         let onDeployCmds = contract.onDeploy;
         async.mapLimit(onDeployCmds, 1, (cmd, nextMapCb) => {
           async.waterfall([
-            function replaceWithAddresses(next) {
-              self.replaceWithAddresses(cmd, next);
+            (next) => {
+              this.replaceWithAddresses(cmd, next);
             },
-            self.replaceWithENSAddress.bind(self)
+            this.replaceWithENSAddress.bind(this)
           ], (err, code) => {
             if (err) {
-              self.logger.error(err.message || err);
+              this.logger.error(err.message || err);
               return nextMapCb(); // Don't return error as we just skip the failing command
             }
             nextMapCb(null, code);
@@ -171,16 +178,14 @@ class SpecialConfigs {
             return cb(new Error("error running onDeploy for " + contract.className.cyan));
           }
 
-          self.runOnDeployCode(onDeployCode, cb, contract.silent);
+          this.runOnDeployCode(onDeployCode, cb, contract.silent);
         });
       }
     });
   }
 
   registerDeployIfAction() {
-    const self = this;
-
-    self.embark.registerActionForEvent("deploy:contract:shouldDeploy", async (params, cb) => {
+    this.embark.registerActionForEvent("deploy:contract:shouldDeploy", async (params, cb) => {
       let cmd = params.contract.deployIf;
       const contract = params.contract;
       if (!cmd) {
@@ -197,13 +202,13 @@ class SpecialConfigs {
         }
       } else {
 
-        self.events.request('runcode:eval', cmd, (err, result) => {
+        this.events.request('runcode:eval', cmd, (err, result) => {
           if (err) {
-            self.logger.error(params.contract.className + ' deployIf directive has an error; contract will not deploy');
-            self.logger.error(err.message || err);
+            this.logger.error(params.contract.className + ' deployIf directive has an error; contract will not deploy');
+            this.logger.error(err.message || err);
             params.shouldDeploy = false;
           } else if (!result) {
-            self.logger.info(params.contract.className + ' deployIf directive returned false; contract will not deploy');
+            this.logger.info(params.contract.className + ' deployIf directive returned false; contract will not deploy');
             params.shouldDeploy = false;
           }
 

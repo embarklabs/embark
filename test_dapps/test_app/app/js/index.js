@@ -159,7 +159,7 @@ $(document).ready(function() {
   $("#communication button.listenToChannel").click(function() {
     var channel = $("#communication .listen input.channel").val();
     $("#communication #subscribeList").append("<br> subscribed to " + channel + " now try sending a message");
-    EmbarkJS.Messages.listenTo({topic: [channel]}).then(function(message) {
+    EmbarkJS.Messages.listenTo({topic: [channel]}).subscribe(function({data: message}) {
       $("#communication #messagesList").append("<br> channel: " + channel + " message: " + message);
     });
     addToLog("#communication", "EmbarkJS.Messages.listenTo({topic: ['" + channel + "']}).then(function(message) {})");

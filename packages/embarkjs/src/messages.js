@@ -33,11 +33,11 @@ Messages.sendMessage = function (options) {
   return this.currentMessages.sendMessage(options);
 };
 
-Messages.listenTo = function (options, callback) {
+Messages.listenTo = function (options) {
   if (!this.currentMessages) {
     throw new Error('Messages provider not set; e.g EmbarkJS.Messages.setProvider("whisper")');
   }
-  return this.currentMessages.listenTo(options, callback);
+  return this.currentMessages.listenTo(options);
 };
 
 export default Messages;

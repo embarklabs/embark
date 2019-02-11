@@ -1,3 +1,8 @@
+/* global module require */
+
+const {fromEvent, merge, throwError} = require('rxjs');
+const {map, mergeMap} = require('rxjs/operators');
+
 function sendMessage(options, callback) {
   let topics, ttl, payload;
   topics = options.topic;
@@ -31,33 +36,30 @@ function sendMessage(options, callback) {
 
   if (options.pubKey) {
     message.pubKey = options.pubKey; // encrypt using a given pubKey
-  } else if(options.symKeyID) {
+  } else if (options.symKeyID) {
     message.symKeyID = options.symKeyID; // encrypts using given sym key ID
   } else {
     message.symKeyID = symKeyID; // encrypts using the sym key ID
   }
 
   if (topics === undefined && message.symKeyID && !message.pubKey) {
-    return callback("missing option: topic");
+    callback("missing option: topic");
+  } else {
+    post(message, callback);
   }
-
-  post(message, callback);
 }
 
-function listenTo(options, callback) {
+function listenTo(options) {
   let topics = options.topic;
-  const messageEvents = options.messageEvents;
-  const toHex = options.toHex;
   const toAscii = options.toAscii;
+  const toHex = options.toHex;
   const sig = options.sig;
-  const symKeyID = options.symKeyID;
   const subscribe = options.subscribe;
-
-  let promise = new messageEvents();
+  const symKeyID = options.symKeyID;
 
   let subOptions = {};
 
-  if(topics){
+  if (topics) {
     if (typeof topics === 'string') {
       topics = [toHex(topics).slice(0, 10)];
     } else {
@@ -76,26 +78,24 @@ function listenTo(options, callback) {
     subOptions.symKeyID = symKeyID;
   }
 
-  promise.filter = subscribe("messages", subOptions)
-    .on('data', function (result) {
-      var payload = JSON.parse(toAscii(result.payload));
-      var data;
-      data = {
-        topic: toAscii(result.topic),
-        data: payload,
-        sig: result.sig,
-        recipientPublicKey: result.recipientPublicKey,
-        //from: result.from,
-        time: result.timestamp
-      };
+  const emitter = subscribe('messages', subOptions);
 
-      if (callback) {
-        return callback(null, data);
-      }
-      promise.cb(payload, data, result);
-    });
+  const obsData = fromEvent(emitter, 'data').pipe(map(result => ({
+    data: JSON.parse(toAscii(result.payload)),
+    payload: result.payload,
+    recipientPublicKey: result.recipientPublicKey,
+    result,
+    sig: result.sig,
+    time: result.timestamp,
+    topic: toAscii(result.topic)
+  })));
 
-  return promise;
+  const obsErr = fromEvent(emitter, 'error').pipe(mergeMap(throwError));
+
+  const obsSub = merge(obsData, obsErr);
+  obsSub.shhSubscription = emitter;
+
+  return obsSub;
 }
 
 if (typeof module !== 'undefined' && module.exports) {

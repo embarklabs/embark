@@ -1,5 +1,9 @@
-/*global ethereum*/
+/* global ethereum */
+
 import {reduce} from './async';
+import nodeUtil from 'util';
+
+const {callbackify} = nodeUtil;
 
 let Blockchain = {
   list: [],
@@ -8,31 +12,46 @@ let Blockchain = {
 };
 let contracts = [];
 
-Blockchain.connect = function({dappConnection, dappAutoEnable = true, warnAboutMetamask, blockchainClient = ''}, cb) {
-  const _cb = () => {};
-  const p = new Promise((resolve, reject) => {
-    this.whenEnvIsLoaded(() => {
-      this.doFirst((done) => {
-        this.autoEnable = dappAutoEnable;
-        this.doConnect(dappConnection, {
-          warnAboutMetamask: warnAboutMetamask,
-          blockchainClient: blockchainClient
-        }, (err) => {
-          (cb || _cb)(err);
-          done(err);
-          return err ? reject(err) : resolve();
+Blockchain.connect = function(options, callback) {
+  const connect = ({
+    dappConnection,
+    dappAutoEnable = true,
+    warnAboutMetamask,
+    blockchainClient = ''
+  }) => {
+    return new Promise((resolve, reject) => {
+      this.whenEnvIsLoaded(() => {
+        this.doFirst((done) => {
+          this.autoEnable = dappAutoEnable;
+          this.doConnect(dappConnection, {
+            warnAboutMetamask: warnAboutMetamask,
+            blockchainClient: blockchainClient
+          }, async (err) => {
+            let _err = err;
+            try {
+              await done(_err);
+            } catch (e) {
+              _err = e;
+            } finally {
+              _err ? reject(_err) : resolve();
+            }
+          });
         });
       });
     });
-  }).catch(cb ? _cb : e => { throw e; });
-  return !cb ? p : cb;
+  };
+
+  if (callback) {
+    return callbackify(connect)(options, callback);
+  }
+  return connect(options);
 };
 
 Blockchain.doFirst = function(todo) {
   todo((err) => {
     this.done = true;
     this.err = err;
-    this.list.map((x) => x.apply(x, [self.err]));
+    return Promise.all(this.list.map((x) => x(this.err)));
   });
 };
 
@@ -54,8 +73,10 @@ Blockchain.setProvider = function(providerName, options) {
   let provider = this.Providers[providerName];
 
   if (!provider) {
-    throw new Error('Unknown blockchain provider. ' +
-      'Make sure to register it first using EmbarkJS.Blockchain.registerProvider(providerName, providerObject');
+    throw new Error([
+      'Unknown blockchain provider. Make sure to register it first using',
+      'EmbarkJS.Blockchain.registerProvider(providerName, providerObject)'
+    ].join(' '));
   }
 
   this.currentProviderName = providerName;
@@ -135,17 +156,29 @@ Blockchain.doConnect = function(connectionList, opts, doneCb) {
       } else {
         connectHttp(connectionString, next);
       }
-    }, function(_err, result) {
+    }, async function(_err, result) {
       if (!result.connected || result.error) {
         const connectionError = new BlockchainConnectionError(connectionErrs);
-        cb(connectionError);
-        return doneCb(connectionError);
+        let _connectionError = connectionError;
+        try {
+          await cb(_connectionError);
+        } catch (e) {
+          _connectionError = e;
+        } finally {
+          return doneCb(_connectionError);
+        }
       }
 
-      self.blockchainConnector.getAccounts((err, accounts) => {
+      self.blockchainConnector.getAccounts(async (err, accounts) => {
         if (err) {
-          cb(err);
-          return doneCb(err);
+          let _err = err;
+          try {
+            await cb(_err);
+          } catch (e) {
+            _err = e;
+          } finally {
+            return doneCb(_err);
+          }
         }
         const currentProv = self.blockchainConnector.getCurrentProvider();
         if (opts.warnAboutMetamask && currentProv && currentProv.isMetaMask) {
@@ -164,7 +197,7 @@ Blockchain.doConnect = function(connectionList, opts, doneCb) {
           self.blockchainConnector.setDefaultAccount(accounts[0]);
         }
 
-        cb();
+        await cb();
         doneCb();
       });
     });
@@ -194,17 +227,6 @@ Blockchain.execWhenReady = function(cb) {
   this.list.push(cb);
 };
 
-Blockchain.doFirst = function(todo) {
-  var self = this;
-  todo(function(err) {
-    self.done = true;
-    self.err = err;
-    if (self.list) {
-      self.list.map((x) => x.apply(x, [self.err, self.web3]));
-    }
-  });
-};
-
 let Contract = function(options) {
   var self = this;
   var ContractClass;
@@ -229,7 +251,7 @@ let Contract = function(options) {
 
   let originalMethods = Object.keys(ContractClass);
 
-  Blockchain.execWhenReady(function(_err, _web3) {
+  Blockchain.execWhenReady(function() {
     if (!ContractClass.currentProvider) {
       ContractClass.setProvider(self.blockchainConnector.getCurrentProvider());
     }

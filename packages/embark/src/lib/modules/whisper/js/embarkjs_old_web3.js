@@ -1,4 +1,7 @@
-/*global EmbarkJS, Web3, __MessageEvents */
+/* global EmbarkJS Web3 */
+
+const {bindNodeCallback} = require('rxjs');
+const {map} = require('rxjs/operators');
 
 // for the old version of whisper and web3.js
 let __embarkWhisperOld = {};
@@ -79,27 +82,16 @@ __embarkWhisperOld.listenTo = function (options) {
     topics: topics
   };
 
-  let promise = new __MessageEvents();
+  const obsFilter = bindNodeCallback(this.web3.shh.filter);
 
-  let filter = this.web3.shh.filter(filterOptions, function (err, result) {
-    var payload = JSON.parse(EmbarkJS.Utils.toAscii(result.payload));
-    var data;
-    if (err) {
-      promise.error(err);
-    } else {
-      data = {
-        topic: topics,
-        data: payload,
-        from: result.from,
-        time: (new Date(result.sent * 1000))
-      };
-      promise.cb(payload, data, result);
-    }
-  });
-
-  promise.filter = filter;
-
-  return promise;
+  return obsFilter(filterOptions).pipe(map(result => ({
+    data: JSON.parse(EmbarkJS.Utils.toAscii(result.payload)),
+    from: result.from,
+    payload: result.payload,
+    result,
+    time: (new Date(result.sent * 1000)),
+    topic: topics
+  })));
 };
 
 __embarkWhisperOld.getWhisperVersion = function (cb) {
