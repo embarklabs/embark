@@ -1,0 +1,25 @@
+{
+  "name": "web3connector",
+  "version": "1.0.0",
+  "description": "Web3.js Connector for EmbarkJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "embark/packages/Web3Connector"
+  },
+  "keywords": [
+    "embark",
+    "web3",
+    "node",
+    "ethereum",
+    "smart-contract"
+  ],
+  "dependencies": {
+    "web3": "1.0.0-beta.37"
+  },
+  "author": "Jonathan Rainville",
+  "license": "ISC"
+}

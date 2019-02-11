@@ -214,8 +214,8 @@ let Contract = function(options) {
   this.gas = options.gas;
   this.code = '0x' + options.code;
 
-  this.web3 = options.web3;
   this.blockchainConnector = Blockchain.blockchainConnector;
+  this.web3 = this.blockchainConnector.getInstance();
 
   ContractClass = this.blockchainConnector.newContract({abi: this.abi, address: this.address});
   contracts.push(ContractClass);
