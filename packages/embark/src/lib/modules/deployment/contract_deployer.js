@@ -211,8 +211,7 @@ class ContractDeployer {
     self.events.emit("deploy:contract:deployed", contract);
 
     self.events.request('code-generator:contract:custom', contract, (contractCode) => {
-      self.events.request('runcode:eval', contractCode, () => {}, true);
-      return callback();
+      self.events.request('runcode:eval', contractCode, callback);
     });
   }
 
@@ -344,7 +343,7 @@ class ContractDeployer {
               self.plugins.runActionsForEvent('deploy:contract:deployed', {contract: contract}, () => {
                 return next(null, receipt);
               });
-            }, true);
+            });
           });
         }, hash => {
           self.logFunction(contract)(__("deploying") + " " + contract.className.bold.cyan + " " + __("with").green + " " + contract.gas + " " + __("gas at the price of").green + " " + contract.gasPrice + " " + __("Wei, estimated cost:").green + " " + estimatedCost + " Wei".green + " (txHash: " + hash.bold.cyan + ")");

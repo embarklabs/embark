@@ -169,15 +169,14 @@ class Engine {
     this.registerModule('plugin_cmd', {embarkConfigFile: this.embarkConfig, embarkConfig: this.config.embarkConfig, packageFile: 'package.json'});
   }
 
-  console(options) {
+  console(_options) {
     this.registerModule('console', {
       events: this.events,
       plugins: this.plugins,
       version: this.version,
       ipc: this.ipc,
       logger: this.logger,
-      config: this.config,
-      forceRegister: options.forceRegister
+      config: this.config
     });
   }
 

@@ -92,7 +92,7 @@ export default class Suggestions {
         }
 
         return cb(this.searchSuggestions(cmd, suggestions));
-      }, false, true);
+      }, true);
     } catch (e) {
     }
 

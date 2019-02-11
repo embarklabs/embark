@@ -26,9 +26,8 @@ class Console {
   private config: any;
   private history: string[];
   private cmdHistoryFile: string;
-  private suggestions: Suggestions;
+  private suggestions?: Suggestions;
   private providerReady: boolean;
-  private forceRegister: boolean;
 
   constructor(embark: Embark, options: any) {
     this.embark = embark;
@@ -39,14 +38,22 @@ class Console {
     this.fs = embark.fs;
     this.ipc = options.ipc;
     this.config = options.config;
-    this.forceRegister = options.forceRegister;
     this.history = [];
     this.cmdHistoryFile = options.cmdHistoryFile || this.fs.dappPath(".embark", "cmd_history");
     this.providerReady = false;
     this.loadHistory();
 
     if (this.ipc.isServer()) {
-      this.ipc.on("console:executeCmd", this.executeCmd.bind(this));
+      this.ipc.on("console:executeCmd", (cmd: string, cb: any) => {
+        this.executeCmd(cmd, (err: string, result: any) => {
+          let error = null;
+          if (err) {
+            // reformat for IPC reply
+            error = { name: "Console error", message: err, stack: err };
+          }
+          cb(error, result);
+        });
+      });
       this.ipc.on("console:history:save", true, (cmd: string) => {
         this.saveHistory(cmd, true);
       });
@@ -59,6 +66,11 @@ class Console {
       }
       this.events.once("console:provider:done", cb);
     });
+    this.registerConsoleCommands();
+
+    if (this.isEmbarkConsole) {
+      return;
+    }
     this.registerEmbarkJs((err?: Error |  null) => {
       if (err) {
         return this.logger.error(err);
@@ -66,10 +78,13 @@ class Console {
       this.providerReady = true;
       this.events.emit("console:provider:done");
     });
-    this.registerConsoleCommands();
     this.registerApi();
 
     this.suggestions = new Suggestions(embark, options);
+  }
+
+  private get isEmbarkConsole() {
+    return this.ipc.connected && this.ipc.isClient();
   }
 
   private cmdHistorySize() {
@@ -165,14 +180,18 @@ class Console {
       return callback(null, output);
     }
 
-    try {
-      this.events.request("runcode:eval", cmd, callback);
-    } catch (e) {
-      if (this.ipc.connected && this.ipc.isClient()) {
-        return this.ipc.request("console:executeCmd", cmd, callback);
-      }
-      callback(e);
+    // if this is the embark console process, send the command to the process
+    // running all the needed services (ie the process running `embark run`)
+    if (this.isEmbarkConsole) {
+      return this.ipc.request("console:executeCmd", cmd, callback);
     }
+
+    this.events.request("runcode:eval", cmd, (err: Error, result: any) => {
+      if (err) {
+        return callback(err.message);
+      }
+      callback(null, result);
+    }, true);
   }
 
   private registerEmbarkJs(cb: Callback<null>) {
@@ -187,19 +206,19 @@ class Console {
           // TODO add docs link to how to install one
           this.logger.warn(__("If you did not install a blockchain connector, stop this process and install one"));
         }, 5000);
-        this.events.once("blockchain:connector:ready", () => {
+        this.events.request("blockchain:connector:ready", () => {
           clearTimeout(waitingForReady);
           next();
         });
       },
       (next: any) => {
+        if (this.isEmbarkConsole) {
+          return next();
+        }
         this.events.request("runcode:blockchain:connected", next);
       },
-      // for every other case (including when asked for force), get the embarkjs
-      // provider code and eval it in the VM (either main running VM or console VM
-      // in the secondary process)
       (next: any) => {
-        if (this.ipc.connected && !this.forceRegister) {
+        if (this.isEmbarkConsole) {
           return next();
         }
         const connectCode = `EmbarkJS.Blockchain.connectConsole((err) => {

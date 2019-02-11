@@ -192,8 +192,8 @@ class BlockchainConnector {
   }
 
   _emitWeb3Ready() {
-    this.isWeb3Ready = true;
     this.registerWeb3Object(() => {
+      this.isWeb3Ready = true;
       this.events.emit(WEB3_READY);
     });
     this.subscribeToPendingTransactions();
@@ -695,7 +695,7 @@ class BlockchainConnector {
   registerWeb3Object(cb = () => {}) {
     // doesn't feel quite right, should be a cmd or plugin method
     // can just be a command without a callback
-    this.events.emit("runcode:register", "web3", this.web3, false, cb);
+    this.events.emit("runcode:register", "web3", this.web3, cb);
   }
 
   subscribeToPendingTransactions() {
