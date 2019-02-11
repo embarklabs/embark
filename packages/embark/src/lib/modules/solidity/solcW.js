@@ -69,7 +69,7 @@ class SolcW {
       done();
     });
 
-    this.solcProcess.send({action: "init", options: {logger: self.logger, showSpinner: !self.useDashboard}});
+    this.solcProcess.send({action: "init", options: {showSpinner: !self.useDashboard}});
 
     if (this.ipc.isServer()) {
       this.ipc.on('compile', self.compile.bind(this));
