@@ -154,7 +154,6 @@ class Pipeline {
         self.events.request('placeholder:build', next);
       },
       (next) => self.buildContracts(next),
-      (next) => self.buildWeb3JS(next),
       function createImportList(next) {
         importsList["Embark/EmbarkJS"] = self.fs.dappPath(self.embarkConfig.generationDir, constants.dappConfig.embarkjs);
         importsList["Embark/web3"] = self.fs.dappPath(".embark", 'web3_instance.js');
@@ -368,21 +367,6 @@ class Pipeline {
             'contracts', contract.className + '.json'
           ), contract, {spaces: 2}, eachCb);
         }, () => next());
-      }
-    ], cb);
-  }
-
-  buildWeb3JS(cb) {
-    const self = this;
-    async.waterfall([
-      function makeDirectory(next) {
-        self.fs.mkdirp(self.fs.dappPath(".embark"), err => next(err));
-      },
-      function getWeb3Code(next) {
-        self.events.request('code-generator:web3js', next);
-      },
-      function writeFile(code, next) {
-        self.fs.writeFile(self.fs.dappPath(".embark", 'web3_instance.js'), code, next);
       }
     ], cb);
   }
