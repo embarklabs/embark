@@ -1,14 +1,10 @@
-const Web3 = require('web3');
-
+/*global Web3*/
 const web3Connector = {};
-// const _web3 = require('./web3_instance').default;
-// global.wtf = _web3;
 
 web3Connector.init = function(_config) {
   // Check if the global web3 object uses the old web3 (0.x)
   if (global.web3 && typeof global.web3.version !== 'string') {
     // If so, use a new instance using 1.0, but use its provider
-    // _web3.setProvider(global.web3.currentProvider);
     this.web3 = new Web3(global.web3.currentProvider);
   } else {
     this.web3 = global.web3 || new Web3();
@@ -29,7 +25,6 @@ web3Connector.getNewProvider = function (providerName, ...args) {
 };
 
 web3Connector.setProvider = function (provider) {
-  // _web3.setProvider(provider);
   return this.web3.setProvider(provider);
 };
 
@@ -60,12 +55,3 @@ web3Connector.toWei = function () {
 web3Connector.getNetworkId = function () {
   return this.web3.eth.net.getId();
 };
-
-module.exports = web3Connector;
-// if (typeof module !== 'undefined' && module.exports) {
-//   module.exports = web3Connector;
-//   return;
-// } else {
-//   export default web3Connector;
-// }
-// exports.default = web3Connector;

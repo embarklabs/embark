@@ -10,7 +10,6 @@ const Templates = {
   load_manager: require('./code_templates/load-manager.js.ejs'),
   define_when_env_loaded: require('./code_templates/define-when-env-loaded.js.ejs'),
   main_context: require('./code_templates/main-context.js.ejs'),
-  define_web3_simple: require('./code_templates/define-web3-simple.js.ejs'),
   do_when_loaded: require('./code_templates/do-when-loaded.js.ejs'),
   exec_when_env_loaded: require('./code_templates/exec-when-env-loaded.js.ejs')
 };
@@ -299,20 +298,7 @@ class CodeGenerator {
     let code = "";
 
     async.waterfall([
-      function getWeb3Location(next) {
-        self.events.request("version:get:web3", function(web3Version) {
-          if (web3Version === "1.0.0-beta") {
-            return next(null, require.resolve("web3", {paths: [self.fs.embarkPath("node_modules")]}));
-          }
-          self.events.request("version:getPackageLocation", "web3", web3Version, function(err, location) {
-            return next(null, self.fs.dappPath(location));
-          });
-        });
-      },
-      function getImports(web3Location, next) {
-        web3Location = web3Location.replace(/\\/g, '/'); // Import paths must always have forward slashes
-        code += `\nimport Web3 from '${web3Location}';\n`;
-        code += `\nglobal.Web3 = Web3;`;
+      function getImports(next) {
         code += "\nimport IpfsApi from 'ipfs-api';\n";
 
         next();
