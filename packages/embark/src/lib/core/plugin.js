@@ -1,5 +1,6 @@
 const utils = require('../utils/utils.js');
 const constants = require('../constants');
+const fs = require('./fs.js');
 
 // TODO: pass other params like blockchainConfig, contract files, etc..
 var Plugin = function(options) {
@@ -51,6 +52,9 @@ var Plugin = function(options) {
     this.acceptedContext = [this.acceptedContext];
   }
 };
+
+Plugin.prototype.dappPath = fs.dappPath;
+Plugin.prototype.embarkPath = fs.embarkPath;
 
 Plugin.prototype._log = function(type) {
   this._loggerObject[type](this.name + ':', ...[].slice.call(arguments, 1));
