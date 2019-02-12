@@ -530,3 +530,11 @@ export function updateDeploymentPipeline(value) {
     payload: value
   };
 }
+
+export const UPDATE_PREVIEW_URL = 'UPDATE_PREVIEW_URL';
+export function updatePreviewUrl(value) {
+  return {
+    type: UPDATE_PREVIEW_URL,
+    payload: value
+  };
+}

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Button, InputGroup, Input, InputGroupAddon} from 'reactstrap';
 import FontAwesome from 'react-fontawesome';
 
@@ -7,23 +8,18 @@ class Preview extends React.Component {
     super(props);
 
     this.state = {
-      previewUrl: `${window.location.protocol}//${window.location.host}/`
+      previewUrl: props.previewUrl
     };
   }
 
   handlePreviewUrlChange(ev) {
     this.setState({previewUrl: ev.target.value});
-  }
-
-  handlePreviewChange(ev) {
-    try {
-      let url = ev.target.contentWindow.location.toString();
-      this.setState({previewUrl: url});
-    } catch(e) {}
+    this.props.updatePreviewUrl(ev.target.value);
   }
 
   handlePreviewGo() {
     this.previewIframe.src = this.state.previewUrl;
+    this.props.updatePreviewUrl(this.state.previewUrl);
   }
 
   render() {
@@ -43,12 +39,17 @@ class Preview extends React.Component {
                 height="100%"
                 title="Preview"
                 ref={(iframe) => this.previewIframe = iframe}
-                onLoad={(e) => this.handlePreviewChange(e)} src={this.state.previewUrl}>
+                src={this.state.previewUrl}>
         </iframe>
       </div>
     );
   }
 }
+
+Preview.propTypes = {
+  previewUrl: PropTypes.string,
+  updatePreviewUrl: PropTypes.func,
+};
 
 export default Preview;
 

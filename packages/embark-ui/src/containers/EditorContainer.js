@@ -222,7 +222,7 @@ class EditorContainer extends React.Component {
 
           {this.renderTextEditor()}
 
-          {this.state.currentAsideTab.label && this.renderAside()}
+          {this.renderAside()}
         </Row>
       </React.Fragment>
     );

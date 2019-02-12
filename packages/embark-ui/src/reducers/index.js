@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux';
 import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE,
         FETCH_CREDENTIALS, UPDATE_BASE_ETHER, CHANGE_THEME, FETCH_THEME, EXPLORER_SEARCH, DEBUGGER_INFO,
-        SIGN_MESSAGE, VERIFY_MESSAGE, TOGGLE_BREAKPOINT,
+        SIGN_MESSAGE, VERIFY_MESSAGE, TOGGLE_BREAKPOINT, UPDATE_PREVIEW_URL,
         UPDATE_DEPLOYMENT_PIPELINE, WEB3_CONNECT, WEB3_DEPLOY, WEB3_ESTIMAGE_GAS, FETCH_EDITOR_TABS} from "../actions";
 import {EMBARK_PROCESS_NAME, DARK_THEME, DEPLOYMENT_PIPELINES, DEFAULT_HOST, ELEMENTS_LIMIT} from '../constants';
 
@@ -369,6 +369,13 @@ function editorTabs(state = [], action) {
   return state;
 }
 
+function previewUrl(state= `${window.location.protocol}//${window.location.host}/`, action) {
+  if (action.type === UPDATE_PREVIEW_URL) {
+    return action.payload;
+  }
+  return state;
+}
+
 const rootReducer = combineReducers({
   entities,
   loading,
@@ -385,7 +392,8 @@ const rootReducer = combineReducers({
   web3,
   debuggerInfo,
   theme,
-  editorTabs
+  editorTabs,
+  previewUrl
 });
 
 export default rootReducer;
