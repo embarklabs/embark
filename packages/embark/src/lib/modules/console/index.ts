@@ -181,14 +181,23 @@ class Console {
     }
 
     this.events.once("code-generator-ready", () => {
-      this.events.request("code-generator:embarkjs:provider-code", (providerCode: string) => {
-        const func = () => {};
-        this.events.request("runcode:eval", providerCode, func, true);
-        this.events.request("code-generator:embarkjs:init-provider-code", (initCode: string) => {
-          this.events.request("runcode:eval", initCode, () => {
-            this.events.emit("console:provider:done");
-            this.providerReady = true;
-          }, true);
+      const waitingForReady = setTimeout(() => {
+        this.logger.warn(__("Waiting for the blockchain connector to be ready..."));
+        // TODO add docs link to how to install one
+        this.logger.warn(__("If you did not install a blockchain connector, stop this process and install one"));
+      }, 5000);
+      this.events.request("blockchain:connector:ready", () => {
+        clearTimeout(waitingForReady);
+        this.events.request("code-generator:embarkjs:provider-code", (providerCode: string) => {
+          const func = () => {
+          };
+          this.events.request("runcode:eval", providerCode, func, true);
+          this.events.request("code-generator:embarkjs:init-provider-code", (initCode: string) => {
+            this.events.request("runcode:eval", initCode, () => {
+              this.events.emit("console:provider:done");
+              this.providerReady = true;
+            }, true);
+          });
         });
       });
     });
