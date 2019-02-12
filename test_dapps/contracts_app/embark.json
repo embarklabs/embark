@@ -1,5 +1,7 @@
 {
-  "contracts": ["contracts/**"],
+  "contracts": [
+    "contracts/**"
+  ],
   "app": {},
   "buildDir": "build/",
   "config": {
@@ -12,5 +14,8 @@
   "versions": {
     "web3": "1.0.0-beta",
     "solc": "0.4.24"
+  },
+  "plugins": {
+    "web3Connector": {}
   }
 }
