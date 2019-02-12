@@ -1,6 +1,6 @@
 {
   "name": "web3connector",
-  "version": "1.0.0",
+  "version": "4.0.0-beta.0",
   "description": "Web3.js Connector for EmbarkJS",
   "main": "index.js",
   "scripts": {
