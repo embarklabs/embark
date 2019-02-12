@@ -178,7 +178,7 @@ describe('embark.Config', function () {
       config.contractsFiles = [];
       config.contractsConfig.contracts = [
         {
-          file: 'https://github.com/embark-framework/embark/master/test_dapps/packages/test_app/app/contracts/simple_storage.sol'
+          file: 'https://github.com/embark-framework/embark/master/test_dapps/test_app/app/contracts/simple_storage.sol'
         },
         {
           file: 'github.com/status-im/contracts/contracts/identity/ERC725.sol'
@@ -190,9 +190,9 @@ describe('embark.Config', function () {
       const expected = [
         {
           "type": "http",
-          "externalUrl": "https://raw.githubusercontent.com/embark-framework/embark/master/test_dapps/packages/test_app/app/contracts/simple_storage.sol",
-          "path": ".embark/contracts/embark-framework/embark/master/test_dapps/packages/test_app/app/contracts/simple_storage.sol",
-          "originalPath": ".embark/contracts/embark-framework/embark/master/test_dapps/packages/test_app/app/contracts/simple_storage.sol",
+          "externalUrl": "https://raw.githubusercontent.com/embark-framework/embark/master/test_dapps/test_app/app/contracts/simple_storage.sol",
+          "path": ".embark/contracts/embark-framework/embark/master/test_dapps/test_app/app/contracts/simple_storage.sol",
+          "originalPath": ".embark/contracts/embark-framework/embark/master/test_dapps/test_app/app/contracts/simple_storage.sol",
           "pluginPath": '',
           "basedir": "",
           "importRemappings": [],
