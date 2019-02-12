@@ -24,7 +24,7 @@ describe('http contracts', () => {
   });
 
   it('should have downloaded the http import in SimpleStorageWithHttpImport', (done) => {
-    const contractImportPath = '.embark/contracts/embark-framework/embark/master/test_dapps/packages/contracts_app/contracts/ownable.sol';
+    const contractImportPath = '.embark/contracts/embark-framework/embark/master/test_dapps/contracts_app/contracts/ownable.sol';
     fs.access(contractImportPath, (err) => {
       if (err) {
         assert.fail(contractImportPath + ' was not downloaded');
