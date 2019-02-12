@@ -239,5 +239,10 @@ export function getDebuggerLine(state) {
 }
 
 export function getEditorTabs(state) {
-  return state.editorTabs
+  return state.editorTabs;
 }
+
+export function getPreviewUrl(state) {
+  return state.previewUrl;
+}
+
