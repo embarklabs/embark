@@ -16,6 +16,6 @@
     "solc": "0.4.24"
   },
   "plugins": {
-    "web3Connector": {}
+    "web3connector": {}
   }
 }
