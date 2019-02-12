@@ -44,5 +44,11 @@ module.exports = (embark) => {
 
       embark.addConsoleProviderInit('blockchain', code, shouldInit);
     });
+
+    embark.events.setCommandHandler('blockchain:connector:ready', (cb) => {
+      pathPromise.then((_web3Location) => {
+        cb();
+      });
+    });
   });
 };

@@ -34,15 +34,17 @@ class Test {
   init(callback) {
     this.gasLimit = constants.tests.gasLimit;
     this.events.request('deploy:setGasLimit', this.gasLimit);
-    if (this.options.node !== 'embark') {
-      this.showNodeHttpWarning();
-      return callback();
-    }
-    if (!this.ipc.connected) {
-      this.logger.error("Could not connect to Embark's IPC. Is embark running?");
-      if (!this.options.inProcess) process.exit(1);
-    }
-    return this.connectToIpcNode(callback);
+    this.events.request('blockchain:connector:ready', () => {
+      if (this.options.node !== 'embark') {
+        this.showNodeHttpWarning();
+        return callback();
+      }
+      if (!this.ipc.connected) {
+        this.logger.error("Could not connect to Embark's IPC. Is embark running?");
+        if (!this.options.inProcess) process.exit(1);
+      }
+      this.connectToIpcNode(callback);
+    });
   }
 
   connectToIpcNode(cb) {
