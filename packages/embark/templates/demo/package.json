@@ -12,5 +12,8 @@
     "react": "16.7.0",
     "react-bootstrap": "0.32.4",
     "react-dom": "16.7.0"
+  },
+  "dependencies": {
+    "web3connector": "4.0.0-beta.0"
   }
 }
