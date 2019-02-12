@@ -34,7 +34,13 @@ class Test {
   init(callback) {
     this.gasLimit = constants.tests.gasLimit;
     this.events.request('deploy:setGasLimit', this.gasLimit);
+    const waitingForReady = setTimeout(() => {
+      this.logger.warn('Waiting for the blockchain connector to be ready...');
+      // TODO add docs link to how to install one
+      this.logger.warn('If you did not install a blockchain connector, stop this process and install one');
+    }, 5000);
     this.events.request('blockchain:connector:ready', () => {
+      clearTimeout(waitingForReady);
       if (this.options.node !== 'embark') {
         this.showNodeHttpWarning();
         return callback();

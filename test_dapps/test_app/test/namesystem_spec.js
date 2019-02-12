@@ -1,4 +1,4 @@
-/*global describe, it, web3, config*/
+/*global describe, it, config*/
 const assert = require('assert');
 const MyToken = require('Embark/contracts/MyToken');
 const MyToken2 = require('Embark/contracts/MyToken2');
