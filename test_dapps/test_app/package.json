@@ -13,6 +13,9 @@
     "rimraf": "2.6.3",
     "zeppelin-solidity": "1.12.0"
   },
+  "dependencies": {
+    "web3connector": "4.0.0-beta.0"
+  },
   "name": "test_app",
   "private": true,
   "scripts": {
