@@ -6,7 +6,7 @@
   "name": "embark-service",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "reset": "npx rimraf node_modules"
   },
-  "version": "0.0.1"
+  "version": "4.0.0-beta.0"
 }

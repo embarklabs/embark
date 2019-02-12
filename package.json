@@ -28,20 +28,16 @@
   "scripts": {
     "build": "lerna run --stream build",
     "build:no-ui": "npm run build -- --ignore embark-ui",
-    "ci": "yarn install && npm-run-all cwtree ci:*",
-    "ci:packages": "npm-run-all ci_ cwtree",
-    "ci:test_dapps": "npm-run-all test_dapps:ci cwtree",
-    "ci_": "lerna run --stream ci",
+    "ci": "yarn install && npm-run-all cwtree ci_ cwtree",
+    "ci_": "lerna run --concurrency=1 --stream ci",
     "clean": "npx lerna run --parallel clean",
     "cwtree": "node scripts/check-working-tree",
     "globalize": "node scripts/globalize",
     "lint": "lerna run --parallel lint",
     "package": "lerna run --parallel package",
     "preqa": "yarn install && npm-run-all cwtree build:no-ui",
-    "qa": "npm-run-all cwtree reboot:full cwtree qa:*",
-    "qa:packages": "npm-run-all qa_ cwtree",
-    "qa:test_dapps": "npm-run-all test_dapps:qa cwtree",
-    "qa_": "lerna run --stream qa",
+    "qa": "npm-run-all cwtree reboot:full cwtree qa_ cwtree",
+    "qa_": "lerna run --concurrency=1 --stream qa",
     "reboot": "npm run reset && yarn install",
     "reboot:full": "npm run reset:full && yarn install",
     "release": "node scripts/release",
@@ -49,21 +45,21 @@
     "reset:full": "npx npm-run-all reset reset:top",
     "reset:top": "npx rimraf node_modules",
     "start": "lerna run --parallel start",
-    "test": "lerna run --stream test",
-    "test:full": "npm-run-all lint typecheck test test_dapps",
-    "test_dapps": "cd test_dapps && yarn install && npm run test",
-    "test_dapps:ci": "cd test_dapps && npm run ci",
-    "test_dapps:qa": "cd test_dapps && npm run qa",
+    "test": "lerna run --concurrency=1 --stream test",
+    "test:full": "npm-run-all lint typecheck test",
     "typecheck": "lerna run --parallel typecheck",
     "watch": "lerna run --parallel watch"
   },
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/*",
+      "test_dapps/*"
     ],
     "nohoist": [
       "embark/embark-test-contract-0",
-      "embark/embark-test-contract-1"
+      "embark/embark-test-contract-1",
+      "test_app/embark-service",
+      "test_app/zeppelin-solidity"
     ]
   }
 }

@@ -1,9 +1,0 @@
-{
-  "command": {
-    "add": {
-      "exact": true
-    }
-  },
-  "npmClient": "npm",
-  "version": "*"
-}

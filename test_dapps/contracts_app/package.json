@@ -1,0 +1,16 @@
+{
+  "devDependencies": {
+    "embark": "4.0.0-beta.0",
+    "rimraf": "2.6.3"
+  },
+  "name": "contracts_app",
+  "private": true,
+  "scripts": {
+    "ci": "npm run qa",
+    "clean": "./node_modules/.bin/embark reset || exit 0",
+    "qa": "npm run test",
+    "reset": "npm run clean && npx rimraf node_modules",
+    "test": "./node_modules/.bin/embark test"
+  },
+  "version": "4.0.0-beta.0"
+}
