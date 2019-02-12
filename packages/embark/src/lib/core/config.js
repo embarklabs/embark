@@ -69,6 +69,7 @@ var Config = function(options) {
   });
 };
 
+// TODO remove this at some point as it is now in plugin
 Config.prototype.dappPath = fs.dappPath;
 
 Config.prototype.loadConfigFiles = function(options) {
