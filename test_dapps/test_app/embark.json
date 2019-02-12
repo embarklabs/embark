@@ -20,7 +20,8 @@
     "ipfs-api": "17.2.7"
   },
   "plugins": {
-    "embark-service": {}
+    "embark-service": {},
+    "web3Connector": {}
   },
   "options": {
     "solc": {

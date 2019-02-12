@@ -156,7 +156,6 @@ class Pipeline {
       (next) => self.buildContracts(next),
       function createImportList(next) {
         importsList["Embark/EmbarkJS"] = self.fs.dappPath(self.embarkConfig.generationDir, constants.dappConfig.embarkjs);
-        importsList["Embark/web3"] = self.fs.dappPath(".embark", 'web3_instance.js');
         importsList["Embark/contracts"] = contractsDir;
 
         self.plugins.getPluginsProperty('imports', 'imports').forEach(importObject => {
