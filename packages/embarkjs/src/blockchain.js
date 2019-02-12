@@ -215,12 +215,11 @@ let Contract = function(options) {
   this.code = '0x' + options.code;
 
   this.blockchainConnector = Blockchain.blockchainConnector;
-  this.web3 = this.blockchainConnector.getInstance();
 
   ContractClass = this.blockchainConnector.newContract({abi: this.abi, address: this.address});
   contracts.push(ContractClass);
   ContractClass.options.data = this.code;
-  const from = this.from || self.blockchainConnector.getDefaultAccount() || this.web3.eth.defaultAccount;
+  const from = this.from || self.blockchainConnector.getDefaultAccount();
   if (from) {
     ContractClass.options.from = from;
   }
@@ -232,9 +231,9 @@ let Contract = function(options) {
 
   Blockchain.execWhenReady(function(_err, _web3) {
     if (!ContractClass.currentProvider) {
-      ContractClass.setProvider(self.blockchainConnector.getCurrentProvider() || self.web3.currentProvider);
+      ContractClass.setProvider(self.blockchainConnector.getCurrentProvider());
     }
-    ContractClass.options.from = self.blockchainConnector.getDefaultAccount() ||self.web3.eth.defaultAccount;
+    ContractClass.options.from = self.blockchainConnector.getDefaultAccount();
   });
 
   ContractClass._jsonInterface.forEach((abi) => {
@@ -288,7 +287,7 @@ Contract.prototype.deploy = function(args, _options) {
   contractParams = args || [];
 
   contractParams.push({
-    from: this.blockchainConnector.getDefaultAccount() || this.web3.eth.accounts[0],
+    from: this.blockchainConnector.getDefaultAccount(),
     data: this.code,
     gas: options.gas || 800000
   });

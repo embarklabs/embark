@@ -11,7 +11,8 @@
     "react-bootstrap": "0.32.4",
     "react-dom": "16.7.0",
     "rimraf": "2.6.3",
-    "zeppelin-solidity": "1.12.0"
+    "zeppelin-solidity": "1.12.0",
+    "web3Connector": "file:../../../packages/web3Connector"
   },
   "name": "test_app",
   "private": true,

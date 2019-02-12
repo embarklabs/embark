@@ -2,6 +2,7 @@ const async = require('async');
 
 const utils = require('../utils/utils');
 const IPC = require('./ipc');
+const fs = require('./fs');
 
 class Engine {
   constructor(options) {
@@ -30,6 +31,7 @@ class Engine {
 
     let options = _options || {};
     this.events = options.events || this.events || new Events();
+    this.registerCommands();
     this.logger = options.logger || new Logger({context: this.context, logLevel: options.logLevel || this.logLevel || 'debug', events: this.events, logFile: this.logFile});
     this.config = new Config({env: this.env, logger: this.logger, events: this.events, context: this.context, webServerConfig: this.webServerConfig, version: this.version});
     this.config.loadConfigFiles({embarkConfig: this.embarkConfig, interceptLogs: this.interceptLogs});
@@ -49,7 +51,21 @@ class Engine {
       this.ipc.serve();
       return callback();
     }
+
     callback();
+  }
+
+  registerCommands() {
+    this.events.setCommandHandler('embark:path', function () {
+      const cb = arguments[arguments.length - 1];
+      const pathParts = Array.from(arguments).splice(0, arguments.length - 1);
+      cb(fs.embarkPath(...pathParts));
+    });
+    this.events.setCommandHandler('dapp:path', function () {
+      const cb = arguments[arguments.length - 1];
+      const pathParts = Array.from(arguments).splice(0, arguments.length - 1);
+      cb(fs.dappPath(...pathParts));
+    });
   }
 
   registerModule(moduleName, options) {
