@@ -1,7 +1,8 @@
 {
   "devDependencies": {
     "embark": "4.0.0-beta.0",
-    "rimraf": "2.6.3"
+    "rimraf": "2.6.3",
+    "web3Connector": "file:../../../packages/web3Connector"
   },
   "name": "contracts_app",
   "private": true,

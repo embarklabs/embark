@@ -1,7 +1,6 @@
 {
   "default": {
     "versions": {
-      "web3": "1.0.0-beta.27",
       "solc": "0.4.24"
     },
     "deployment": {
