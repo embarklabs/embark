@@ -14,6 +14,7 @@
     "ipfs-api": "17.2.4"
   },
   "plugins": {
+    "web3connector": {}
   },
   "options": {
     "solc": {
