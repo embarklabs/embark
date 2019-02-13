@@ -68,6 +68,7 @@ class Console extends Component {
 
   logClassName(item) {
     return classnames('m-0', {
+      'text-success': item.logLevel === 'info',
       'text-info': item.logLevel === 'debug',
       'text-danger': item.logLevel === 'error',
       'text-warning': item.logLevel === 'warning'
@@ -95,7 +96,6 @@ class Console extends Component {
                       </div>
                     );
                   }
-
                   return (
                     <p key={i} className={this.logClassName(item)} dangerouslySetInnerHTML={{__html: (convert.toHtml(item.command || "") + convert.toHtml(item.msg))}}></p>
                   );
