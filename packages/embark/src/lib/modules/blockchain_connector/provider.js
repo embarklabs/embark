@@ -14,7 +14,13 @@ class Provider {
     this.web3Endpoint = options.web3Endpoint;
     this.logger = options.logger;
     this.isDev = options.isDev;
+    this.events = options.events;
     this.nonceCache = {};
+
+    this.events.setCommandHandler("blockchain:provider:contract:accounts:get", cb => {
+      const accounts = this.accounts.map(a => a.address);
+      cb(accounts);
+    });
   }
 
   getNonce(address, callback) {
@@ -123,7 +129,7 @@ class Provider {
               return cb(err);
             }
             if (self.accounts.length) {
-              result.result = self.addresses; // Send our addresses
+              result.result = self.blockchainAccounts.map(a => a.address);
             }
             cb(null, result);
           });

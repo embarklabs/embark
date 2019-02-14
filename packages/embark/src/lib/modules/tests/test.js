@@ -26,6 +26,10 @@ class Test {
     this.provider = null;
     this.accounts = [];
     this.embarkjs = {};
+
+    this.events.setCommandHandler("blockchain:provider:contract:accounts:get", cb => {
+      cb(this.accounts);
+    });
   }
 
   init(callback) {
@@ -321,7 +325,7 @@ class Test {
               }
               Object.setPrototypeOf(self.contracts[contract.className], vmContract || null);
               eachCb();
-            });            
+            });
           }, (err) => {
             next(err, accounts);
           });
@@ -366,7 +370,7 @@ class Test {
         newContract.options.gas = "${constants.tests.gasLimit}";
       }
       return newContract;`;
-    this.events.request("runcode:eval", codeToRun, cb, false, true); 
+    this.events.request("runcode:eval", codeToRun, cb, false, true);
   }
 
   require(path) {
@@ -384,7 +388,7 @@ class Test {
       this.contracts[contractName] = newContract;
       return newContract;
     }
-    
+
     // EmbarkJS require
     if (path.startsWith(embarkJSPrefix)) {
       return this.embarkjs;

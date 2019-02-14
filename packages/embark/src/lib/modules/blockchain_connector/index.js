@@ -165,7 +165,8 @@ class BlockchainConnector {
       logger: this.logger,
       isDev: this.isDev,
       type: type,
-      web3Endpoint: self.web3Endpoint
+      web3Endpoint: self.web3Endpoint,
+      events: this.events
     };
     this.provider = new Provider(providerOptions);
 
