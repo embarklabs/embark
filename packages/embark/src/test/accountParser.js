@@ -38,7 +38,7 @@ describe('embark.AccountParser', function () {
         privateKey: 'myKey'
       }, web3, testLogger);
 
-      assert.deepEqual(account, {key: '0xmyKey', hexBalance: null});
+      assert.deepEqual(account, {key: Buffer.from('myKey', 'hex'), hexBalance: null});
     });
 
     it('should return two accounts from the keys in the file', function () {
@@ -47,8 +47,8 @@ describe('embark.AccountParser', function () {
       }, web3, testLogger);
 
       assert.deepEqual(account, [
-        {key: '0xkey1', hexBalance: null},
-        {key: '0xkey2', hexBalance: null}
+        {key: Buffer.from('key1', 'hex'), hexBalance: null},
+        {key: Buffer.from('key2', 'hex'), hexBalance: null}
       ]);
     });
 

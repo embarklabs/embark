@@ -65,10 +65,12 @@ class AccountParser {
         logger.warn(`Private key ending with ${accountConfig.privateKey.substr(accountConfig.privateKey.length - 5)} is not a HEX string`);
         return null;
       }
+
+      const key = Buffer.from(accountConfig.privateKey.substr(2), 'hex');
       if (returnAddress) {
-        return ethereumjsWallet.fromPrivateKey(accountConfig.privateKey).getChecksumAddressString();
+        return ethereumjsWallet.fromPrivateKey(key).getChecksumAddressString();
       }
-      return Object.assign(web3.eth.accounts.privateKeyToAccount(accountConfig.privateKey), {hexBalance});
+      return Object.assign(web3.eth.accounts.privateKeyToAccount(key), {hexBalance});
     }
 
     if (accountConfig.privateKeyFile) {
@@ -103,6 +105,9 @@ class AccountParser {
           logger.warn(`Private key is not a HEX string in file ${accountConfig.privateKeyFile} at index ${index}`);
           return null;
         }
+
+        key = Buffer.from(key.substr(2), 'hex');
+
         if (returnAddress) {
           return ethereumjsWallet.fromPrivateKey(key).getChecksumAddressString();
         }
