@@ -54,7 +54,6 @@ export default class Suggestions {
 
   public getSuggestions(cmd: string, cb: (results: SuggestionsList) => any) {
     if (cmd === "") { return cb([]); }
-    cmd = cmd.toLowerCase();
     const suggestions: SuggestionsList = [];
 
     suggestions.push({value: "web3.eth", command_type: "web3 object", description: "module for interacting with the Ethereum network"});
@@ -76,7 +75,7 @@ export default class Suggestions {
     suggestions.push({value: "EmbarkJS", command_type: "javascript object", description: "EmbarkJS static functions for Storage, Messages, Names, etc."});
 
     if (cmd.indexOf(".") <= 0) {
-      return cb(this.searchSuggestions(cmd, suggestions));
+      return cb(this.searchSuggestions(cmd.toLowerCase(), suggestions));
     }
 
     try {
