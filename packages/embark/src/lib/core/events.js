@@ -1,4 +1,5 @@
 var EventEmitter = require('events');
+const cloneDeep = require('lodash.clonedeep');
 
 function warnIfLegacy(eventName) {
   const legacyEvents = [];
@@ -20,6 +21,14 @@ EventEmitter.prototype._maxListeners = 350;
 const _on         = EventEmitter.prototype.on;
 const _once       = EventEmitter.prototype.once;
 const _setHandler = EventEmitter.prototype.setHandler;
+const _removeAllListeners = EventEmitter.prototype.removeAllListeners;
+
+const toFire = [];
+
+EventEmitter.prototype.removeAllListeners = function(requestName) {
+  delete toFire[requestName];
+  return _removeAllListeners.call(this, requestName);
+};
 
 EventEmitter.prototype.on = function(requestName, cb) {
   log("listening to event: ", requestName);
@@ -45,7 +54,19 @@ EventEmitter.prototype.request = function() {
 
   log("requesting: ", requestName);
   warnIfLegacy(requestName);
-  return this.emit('request:' + requestName, ...other_args);
+  const listenerName = 'request:' + requestName;
+
+  // if we don't have a command handler set for this event yet,
+  // store it and fire it once a command handler is set
+  if (!this.listeners(listenerName).length) {
+    if(!toFire[listenerName]) {
+      toFire[listenerName] = [];
+    }
+    toFire[listenerName].push(other_args);
+    return;
+  }
+
+  return this.emit(listenerName, ...other_args);
 };
 
 EventEmitter.prototype.setCommandHandler = function(requestName, cb) {
@@ -53,14 +74,44 @@ EventEmitter.prototype.setCommandHandler = function(requestName, cb) {
   let listener = function(_cb) {
     cb.call(this, ...arguments);
   };
+  const listenerName = 'request:' + requestName;
+
   // unlike events, commands can only have 1 handler
-  this.removeAllListeners('request:' + requestName);
-  return this.on('request:' + requestName, listener);
+  _removeAllListeners.call(this, listenerName);
+
+  // if this event was requested prior to the command handler
+  // being set up, call the callback. Do not remove this listener
+  // so any 
+  const prematureListenerArgs = cloneDeep(toFire[listenerName]);
+  if (prematureListenerArgs) {
+    delete toFire[listenerName];
+    this.on(listenerName, listener);
+    prematureListenerArgs.forEach((prematureArgs) => {
+      cb.call(this, ...prematureArgs);
+    });
+    return;
+  }
+  return this.on(listenerName, listener);
 };
 
 EventEmitter.prototype.setCommandHandlerOnce = function(requestName, cb) {
   log("setting command handler for: ", requestName);
-  return this.once('request:' + requestName, function(_cb) {
+
+  const listenerName = 'request:' + requestName;
+
+  // if this event was requested prior to the command handler
+  // being set up, call the callback and delete the event
+  // so it is only run once
+  const prematureListenerArgs = cloneDeep(toFire[listenerName]);
+  if (prematureListenerArgs) {
+    delete toFire[listenerName];
+    prematureListenerArgs.forEach((prematureArgs) => {
+      cb.call(this, ...prematureArgs);
+    });
+    return;
+  }
+
+  return this.once(listenerName, function(_cb) {
     cb.call(this, ...arguments);
   });
 };
