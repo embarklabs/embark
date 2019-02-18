@@ -49,11 +49,11 @@ class Vyper {
     const compiled_object = {};
     async.each(contractFiles,
       function (file, fileCb) {
-        const className = path.basename(file.filename).split('.')[0];
+        const className = path.basename(file.path).split('.')[0];
         compiled_object[className] = {};
         async.parallel([
           function getByteCode(paraCb) {
-            self.compileVyperContract(file.filename, false, (err, byteCode) => {
+            self.compileVyperContract(file.path, false, (err, byteCode) => {
               if (err) {
                 return paraCb(err);
               }
@@ -64,7 +64,7 @@ class Vyper {
             });
           },
           function getABI(paraCb) {
-            self.compileVyperContract(file.filename, true, (err, ABIString) => {
+            self.compileVyperContract(file.path, true, (err, ABIString) => {
               if (err) {
                 return paraCb(err);
               }
