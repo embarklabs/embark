@@ -139,6 +139,7 @@ class Console {
   }
 
   private executeCmd(cmd: string, callback: any) {
+    this.logger.info("console>", cmd);
     if (!(cmd.split(" ")[0] === "history" || cmd === __("history"))) {
       this.saveHistory(cmd);
     }
