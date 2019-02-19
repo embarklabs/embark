@@ -119,10 +119,9 @@ class TemplateGenerator {
 
     if (installPackages) {
       console.log(__('Installing packages...').green);
-      utils.runCmd('npm install', null, (err) => {
+      utils.runCmd('npm install', {exitOnError: false}, (err) => {
         if (err) {
-          console.error(utils.errorMessage(err).red);
-          process.exit(1);
+          console.error(__('Could not install dependencies. Try running `npm install` inside the project directory.').red);
         }
         console.log(__('Init complete').green);
         console.log('\n' + __('App ready at ').green + templatePath);
