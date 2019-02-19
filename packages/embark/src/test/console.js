@@ -2,13 +2,15 @@
 let Console = require('../lib/modules/console/');
 let Plugins = require('../lib/core/plugins.js');
 let IPC = require('../lib/core/ipc.js');
+let Logger = require('../lib/core/logger.js');
 let assert = require('assert');
 let version = require('../../package.json').version;
 
 describe('embark.Console', function() {
   let ipc = new IPC({ipcRole: 'none'});
   let events = {once: () => {}, setCommandHandler: () => {}, emit: () => {}, on: () => {}, request: () => {}};
-  let plugins = new Plugins({plugins: {}, events: events});
+  let logger = new Logger({logLevel: 'error'});
+  let plugins = new Plugins({plugins: {}, events, logger});
   let embarkObject = {
     registerAPICall: () => {},
     events: events,
@@ -27,7 +29,7 @@ describe('embark.Console', function() {
       }
     }
   }
-  let console = new Console(embarkObject, {plugins, version, ipc, events});
+  let console = new Console(embarkObject, {plugins, version, ipc, events, logger});
 
   describe('#executeCmd', function() {
 
