@@ -1,6 +1,7 @@
 const async = require('async');
 const {exec, spawn} = require('child_process');
 const fs = require('../../core/fs');
+const path = require('path');
 const GethMiner = require('./miner');
 const semver = require('semver');
 const constants = require('../../constants');
@@ -73,7 +74,8 @@ class GethClient {
     }
 
     if (config.account && config.account.password) {
-      cmd.push(`--password=${config.account.password}`);
+      const resolvedPath = path.resolve(fs.dappPath(), config.account.password);
+      cmd.push(`--password=${resolvedPath}`);
     }
 
     if (Number.isInteger(config.verbosity) && config.verbosity >= 0 && config.verbosity <= 5) {
