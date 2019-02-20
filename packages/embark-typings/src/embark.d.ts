@@ -1,4 +1,5 @@
 import { Logger } from "./logger";
+import { Plugins } from "./plugins";
 
 export interface Events {
   on: any;
@@ -19,6 +20,7 @@ export interface Config {
       solc: string;
     }
   };
+  plugins: Plugins;
   reloadConfig(): void;
 }
 
