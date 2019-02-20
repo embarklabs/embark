@@ -71,7 +71,7 @@ class Profiler {
   registerConsoleCommand() {
     this.embark.registerConsoleCommand({
       description: "Outputs the function profile of a contract",
-      usage: "profile <contractName>",
+      usage: "profile [contractName]",
       matches: (cmd) => {
         const [cmdName] = cmd.split(' ');
         return cmdName === 'profile';
