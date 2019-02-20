@@ -8,8 +8,11 @@ require('colors');
 
 function restrictPath(receiver, binding, count, args) {
   const dapp = dappPath();
-  const embark = embarkPath();
+  let embark = embarkPath();
   const pkg = pkgPath();
+
+  // In the monorepo, enable doing FS functions on all of embark (needed to access embark/node_modules)
+  embark = embark.replace(path.normalize('embark/packages/'), '');
 
   const allowedRoots = [
     dapp,
@@ -64,6 +67,10 @@ function move(){
 
 function moveSync() {
   return restrictPath(fs.moveSync, fs.moveSync, 2, arguments);
+}
+
+function symlink() {
+  return restrictPath(fs.symlink, fs.symlink, 2, arguments);
 }
 
 function appendFileSync() {
@@ -234,6 +241,7 @@ module.exports = {
   removeSync,
   stat,
   statSync,
+  symlink,
   tmpDir,
   writeFile,
   writeFileSync,

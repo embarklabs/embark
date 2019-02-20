@@ -78,10 +78,27 @@ class LibraryManager {
     }
   }
 
+  downloadIfNeeded(packageName, cb) {
+    const wantedVersion = this.versions[packageName];
+    let installedVersion = require('../../../../package.json').dependencies[packageName];
+    if (!wantedVersion || wantedVersion === installedVersion) {
+      const nodePath = this.embark.fs.embarkPath('node_modules');
+      const packagePath = require.resolve(packageName, {paths: [nodePath]});
+      return cb(null, packagePath.replace(/\\/g, '/'));
+    }
+    // Download package
+    this.embark.events.request("version:getPackageLocation", packageName, wantedVersion, (err, location) => {
+      cb(err, this.embark.fs.dappPath(location).replace(/\\/g, '/'));
+    });
+  }
+
   listenToCommandsToGetLibrary() {
     let npm = new Npm({logger: this.embark.logger, useDashboard: this.useDashboard});
     this.embark.events.setCommandHandler('version:getPackageLocation', (libName, version, cb) => {
       npm.getPackageVersion(libName, version, cb);
+    });
+    this.embark.events.setCommandHandler('version:downloadIfNeeded', (libName, cb) => {
+      this.downloadIfNeeded(libName, cb);
     });
     this.embark.events.setCommandHandler('version:getPackagePath', (libName, version, cb) => {
       cb(null, Npm.getPackagePath(libName, version));

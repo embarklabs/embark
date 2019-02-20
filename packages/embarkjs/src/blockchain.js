@@ -1,9 +1,6 @@
 /* global ethereum */
 
 import {reduce} from './async';
-import nodeUtil from 'util';
-
-const {callbackify} = nodeUtil;
 
 let Blockchain = {
   list: [],
@@ -42,7 +39,10 @@ Blockchain.connect = function(options, callback) {
   };
 
   if (callback) {
-    return callbackify(connect)(options, callback);
+    connect(options).then((result) => {
+      callback(null, result);
+    }).catch(callback);
+    return;
   }
   return connect(options);
 };

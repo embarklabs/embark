@@ -1,6 +1,7 @@
 let async = require('async');
 const utils = require('../../utils/utils.js');
 const constants = require('../../constants');
+const path  = require('path');
 
 require('ejs');
 const Templates = {
@@ -33,11 +34,7 @@ class CodeGenerator {
     this.events = embark.events;
 
     this.listenToCommands();
-
-    const self = this;
-    this.events.setCommandHandler("code-generator:embarkjs:build", (cb) => {
-      self.buildEmbarkJS(cb);
-    });
+    this.events.emit('code-generator:ready');
   }
 
   listenToCommands() {
@@ -81,6 +78,14 @@ class CodeGenerator {
 
     this.events.setCommandHandler('code-generator:embarkjs:init-provider-code', (cb) => {
       cb(this.getInitProviderCode());
+    });
+
+    this.events.setCommandHandler('code-generator:symlink:generate', (...args) => {
+      this.generateSymlink(...args);
+    });
+
+    this.events.setCommandHandler("code-generator:embarkjs:build", (cb) => {
+      this.buildEmbarkJS(cb);
     });
   }
 
@@ -146,21 +151,21 @@ class CodeGenerator {
       warnIfMetamask: this.blockchainConfig.isDev,
       blockchainClient: this.blockchainConfig.ethereumClientName
     };
-    this.generateArtifact(this.dappConfigs.blockchain, constants.dappConfig.blockchain, constants.dappConfig.dir);
+    this.generateArtifact(this.dappConfigs.blockchain, constants.dappArtifacts.blockchain, constants.dappArtifacts.dir);
   }
 
   generateStorageConfig(storageConfig) {
     this.dappConfigs.storage = {
       dappConnection: storageConfig.dappConnection
     };
-    this.generateArtifact(this.dappConfigs.storage, constants.dappConfig.storage, constants.dappConfig.dir);
+    this.generateArtifact(this.dappConfigs.storage, constants.dappArtifacts.storage, constants.dappArtifacts.dir);
   }
 
   generateCommunicationConfig(communicationConfig) {
     this.dappConfigs.communication = {
       connection: communicationConfig.connection
     };
-    this.generateArtifact(this.dappConfigs.communication, constants.dappConfig.communication, constants.dappConfig.dir);
+    this.generateArtifact(this.dappConfigs.communication, constants.dappArtifacts.communication, constants.dappArtifacts.dir);
   }
 
   generateArtifact(artifactInput, fileName, dirName, cb = () => {}) {
@@ -197,6 +202,7 @@ class CodeGenerator {
     block += Templates.vanilla_contract({className: contract.className, abi: abi, contract: contract, gasLimit: gasLimit});
     return block;
   }
+
 
   generateCustomContractCode(contract) {
     const customContractGeneratorPlugin = this.plugins.getPluginsFor('customContractGeneration').splice(-1)[0];
@@ -290,16 +296,30 @@ class CodeGenerator {
 
   buildEmbarkJS(cb) {
     const self = this;
-    let embarkjsCode = "import EmbarkJS from 'embarkjs';";
-    embarkjsCode += "\nexport default EmbarkJS;";
-    embarkjsCode += "\nglobal.EmbarkJS = EmbarkJS";
-    let code = "";
+    let embarkjsCode = '';
+    let code = "/* eslint-disable */";
 
     async.waterfall([
-      function getImports(next) {
-        code += "\nimport IpfsApi from 'ipfs-api';\n";
-
-        next();
+      function getEmbarkJsLocation(next) {
+        self.events.request('version:downloadIfNeeded', 'embarkjs', (err, location) => {
+          if (err) {
+            this.logger.error(__('Error downloading EmbarkJS'));
+            return next(err);
+          }
+          next(null, location);
+        });
+      },
+      function generateSymlink(location, next) {
+        self.generateSymlink(location, 'embarkjs', (err, symlinkDest) => {
+          if (err) {
+            this.logger.error(__('Error creating a symlink to EmbarkJS'));
+            return next(err);
+          }
+          embarkjsCode += `\nconst EmbarkJS = require("${symlinkDest}").default;`;
+          embarkjsCode += "\nexport default EmbarkJS;";
+          embarkjsCode += "\nglobal.EmbarkJS = EmbarkJS";
+          next();
+        });
       },
       function getJSCode(next) {
         code += "\n" + embarkjsCode + "\n";
@@ -309,11 +329,12 @@ class CodeGenerator {
         code += self.generateStorageInitialization(true);
         code += self.generateNamesInitialization(true);
         code += self.getReloadPageCode();
+        code += '\n/* eslint-enable */';
 
         next();
       },
       function writeFile(next) {
-        self.generateArtifact(code, constants.dappConfig.embarkjs, '', next);
+        self.generateArtifact(code, constants.dappArtifacts.embarkjs, '', next);
       }
     ], function(_err, _result) {
       cb();
@@ -352,13 +373,34 @@ class CodeGenerator {
   }
 
   buildContractJS(contractName, contractJSON, cb) {
-    let contractCode = "import EmbarkJS from 'Embark/EmbarkJS';\n";
+    let contractCode = "import EmbarkJS from '../embarkjs';\n";
     contractCode += `let ${contractName}JSONConfig = ${JSON.stringify(contractJSON)};\n`;
     contractCode += `let ${contractName} = new EmbarkJS.Blockchain.Contract(${contractName}JSONConfig);\n`;
 
     contractCode += "export default " + contractName + ";\n";
 
-    this.generateArtifact(contractCode, contractName + '.js', constants.dappConfig.contractsJs, cb);
+    this.generateArtifact(contractCode, contractName + '.js', constants.dappArtifacts.contractsJs, cb);
+  }
+
+  generateSymlink(target, name, callback) {
+    const symlinkDir = this.fs.dappPath(this.embarkConfig.generationDir, constants.dappArtifacts.symlinkDir);
+    this.fs.mkdirp(symlinkDir, (err) => {
+      if (err) {
+        return callback(err);
+      }
+      const symlinkDest = utils.joinPath(symlinkDir, name).replace(/\\/g, '/');
+      this.fs.remove(symlinkDest, (err) => {
+        if (err) {
+          return callback(err);
+        }
+        this.fs.symlink(path.dirname(target), symlinkDest, 'junction', (err) => {
+          if (err) {
+            return callback(err);
+          }
+          callback(null, symlinkDest);
+        });
+      });
+    });
   }
 }
 
