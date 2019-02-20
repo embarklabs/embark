@@ -1,7 +1,5 @@
 /* global EmbarkJS Web3 namehash registerSubDomain require */
 
-const {callbackify} = require('util');
-
 const __embarkENS = {};
 
 // resolver interface
@@ -217,7 +215,10 @@ __embarkENS.resolve = function (name, callback) {
   };
 
   if (callback) {
-    return callbackify(resolve)(name, callback);
+    resolve(name).then((result) => {
+      callback(null, result);
+    }).catch(callback);
+    return;
   }
   return resolve(name);
 };
@@ -257,7 +258,10 @@ __embarkENS.lookup = function (address, callback) {
   };
 
   if (callback) {
-    return callbackify(lookup)(address, callback);
+    lookup(address).then((result) => {
+      callback(null, result);
+    }).catch(callback);
+    return;
   }
   return lookup(address);
 };

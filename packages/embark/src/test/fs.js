@@ -43,8 +43,7 @@ describe('fs', () => {
   const paths = [
     '/etc',
     '/home/testuser/src',
-    '/usr',
-    '../'
+    '/usr'
   ];
 
   for(let func in fs) {

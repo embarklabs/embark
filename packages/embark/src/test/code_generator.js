@@ -36,7 +36,8 @@ describe('embark.CodeGenerator', function() {
       },
       setCommandHandler: () => {
       },
-      on: () => {}
+      on: () => {},
+      emit: () => {}
     };
     let generator = new CodeGenerator({config: {blockchainConfig: {}}, events: TestEvents}, {});
 

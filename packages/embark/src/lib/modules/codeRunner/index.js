@@ -1,8 +1,6 @@
 const VM = require('./vm');
 const fs = require('../../core/fs');
 const EmbarkJS = require('embarkjs');
-const IpfsApi = require("ipfs-api");
-const Web3 = require('web3');
 
 class CodeRunner {
   constructor(embark, options) {
@@ -15,8 +13,6 @@ class CodeRunner {
     this.ipc = options.ipc;
     this.vm = new VM({
       sandbox: {
-        IpfsApi,
-        Web3,
         EmbarkJS
       },
       require: {
@@ -56,7 +52,7 @@ class CodeRunner {
     this.events.on("runcode:init-console-code:updated", (code, cb) => {
       this.evalCode(code, (err, _result) => {
         if(err) {
-          this.logger.error("Error running init console code: ", err);
+          this.logger.error("Error running init console code: ", err.message || err);
         }
         else if(code.includes("EmbarkJS.Blockchain.setProvider")) {
           this.events.emit('runcode:blockchain:connected');
@@ -69,7 +65,7 @@ class CodeRunner {
     this.events.on("runcode:embarkjs-code:updated", (code, cb) => {
       this.evalCode(code, (err, _result) => {
         if(err) {
-          this.logger.error("Error running embarkjs code: ", err);
+          this.logger.error("Error running embarkjs code: ", err.message || err);
         }
         cb();
       });
@@ -124,7 +120,7 @@ class CodeRunner {
       if (err) {
         return cb(err);
       }
-      
+
       cb(null, result);
     });
   }

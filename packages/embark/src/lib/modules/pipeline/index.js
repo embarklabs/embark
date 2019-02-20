@@ -25,7 +25,7 @@ class Pipeline {
     this.useDashboard = options.useDashboard;
 
     this.events.setCommandHandler('pipeline:build', (options, callback) => this.build(options, callback));
-    this.events.setCommandHandler('pipeline:build:contracts', callback => this.buildContracts(callback));
+    this.events.setCommandHandler('pipeline:build:contracts', callback => this.buildContracts([], callback));
     this.fs.removeSync(this.buildDir);
 
     let plugin = this.plugins.createPlugin('deployment', {});
@@ -139,10 +139,10 @@ class Pipeline {
     let self = this;
     const importsList = {};
     let placeholderPage;
-    const contractsDir = this.fs.dappPath(self.embarkConfig.generationDir, constants.dappConfig.contractsJs);
+    const contractsDir = this.fs.dappPath(self.embarkConfig.generationDir, constants.dappArtifacts.contractsJs);
 
     if (!self.assetFiles || !Object.keys(self.assetFiles).length) {
-      return self.buildContracts(callback);
+      return self.buildContracts([], callback);
     }
 
     async.waterfall([
@@ -153,9 +153,9 @@ class Pipeline {
         }
         self.events.request('placeholder:build', next);
       },
-      (next) => self.buildContracts(next),
+      (next) => self.buildContracts(importsList, next),
       function createImportList(next) {
-        importsList["Embark/EmbarkJS"] = self.fs.dappPath(self.embarkConfig.generationDir, constants.dappConfig.embarkjs);
+        importsList["Embark/EmbarkJS"] = self.fs.dappPath(self.embarkConfig.generationDir, constants.dappArtifacts.embarkjs);
         importsList["Embark/contracts"] = contractsDir;
 
         self.plugins.getPluginsProperty('imports', 'imports').forEach(importObject => {
@@ -163,37 +163,6 @@ class Pipeline {
           importsList[importName] = importLocation;
         });
         next();
-      },
-      function writeContracts(next) {
-        self.events.request('contracts:list', (_err, contracts) => {
-          self.fs.mkdirp(contractsDir, err => {
-            if (err) return next(err);
-
-            // Create a file index.js that requires all contract files
-            // Used to enable alternate import syntax:
-            // e.g. import {Token} from 'Embark/contracts'
-            // e.g. import * as Contracts from 'Embark/contracts'
-            let importsHelperFile = self.fs.createWriteStream(utils.joinPath(contractsDir, 'index.js'));
-            importsHelperFile.write('module.exports = {\n');
-
-            async.eachOf(contracts, (contract, idx, eachCb) => {
-              self.events.request('code-generator:contract', contract.className, (err, contractPath) => {
-                if (err) {
-                  return eachCb(err);
-                }
-                importsList["Embark/contracts/" + contract.className] = contractPath;
-
-                // add the contract to the exports list to support alternate import syntax
-                importsHelperFile.write(`"${contract.className}": require('./${contract.className}').default`);
-                if (idx < contracts.length - 1) importsHelperFile.write(',\n'); // add a comma if we have more contracts to add
-                eachCb();
-              });
-            }, () => {
-              importsHelperFile.write('\n}'); // close the module.exports = {}
-              importsHelperFile.close(next); // close the write stream
-            });
-          });
-        });
       },
       function shouldRunWebpack(next) {
         // assuming we got here because an asset was changed, let's check our webpack config
@@ -350,7 +319,7 @@ class Pipeline {
     ], callback);
   }
 
-  buildContracts(cb) {
+  buildContracts(importsList, cb) {
     const self = this;
     async.waterfall([
       function makeDirectory(next) {
@@ -365,7 +334,37 @@ class Pipeline {
             self.buildDir,
             'contracts', contract.className + '.json'
           ), contract, {spaces: 2}, eachCb);
-        }, () => next());
+        }, () => next(null, contracts));
+      },
+      function writeContractJS(contracts, next) {
+        const contractsDir = self.fs.dappPath(self.embarkConfig.generationDir, constants.dappArtifacts.contractsJs);
+        self.fs.mkdirp(contractsDir, err => {
+          if (err) return next(err);
+
+          // Create a file index.js that requires all contract files
+          // Used to enable alternate import syntax:
+          // e.g. import {Token} from 'Embark/contracts'
+          // e.g. import * as Contracts from 'Embark/contracts'
+          let importsHelperFile = self.fs.createWriteStream(utils.joinPath(contractsDir, 'index.js'));
+          importsHelperFile.write('module.exports = {\n');
+
+          async.eachOf(contracts, (contract, idx, eachCb) => {
+            self.events.request('code-generator:contract', contract.className, (err, contractPath) => {
+              if (err) {
+                return eachCb(err);
+              }
+              importsList["Embark/contracts/" + contract.className] = contractPath;
+
+              // add the contract to the exports list to support alternate import syntax
+              importsHelperFile.write(`"${contract.className}": require('./${contract.className}').default`);
+              if (idx < contracts.length - 1) importsHelperFile.write(',\n'); // add a comma if we have more contracts to add
+              eachCb();
+            });
+          }, () => {
+            importsHelperFile.write('\n}'); // close the module.exports = {}
+            importsHelperFile.close(next); // close the write stream
+          });
+        });
       }
     ], cb);
   }

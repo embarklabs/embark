@@ -139,6 +139,10 @@ Config.prototype._updateBlockchainCors = function(){
   let webServerConfig = this.webServerConfig;
   let corsParts = cloneDeep(this.corsParts);
 
+  if (blockchainConfig.isDev) {
+    corsParts.push('*');
+  }
+
   if(webServerConfig && webServerConfig.host) {
     corsParts.push(utils.buildUrlFromConfig(webServerConfig));
   }
@@ -161,6 +165,9 @@ Config.prototype._updateBlockchainCors = function(){
   }
   // Add cors for the proxy and whisper
   corsParts.push(constants.embarkResourceOrigin);
+
+  corsParts = Array.from(new Set(corsParts));
+  this.corsParts = corsParts;
 
   let cors = corsParts.join(',');
   if (blockchainConfig.rpcCorsDomain === 'auto') {

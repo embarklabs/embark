@@ -28,6 +28,17 @@ function getWeb3Location(embark) {
   });
 }
 
+function generateSymlink(embark, location) {
+  return new Promise((resolve, reject) => {
+    embark.events.request('code-generator:symlink:generate', location, 'web3', (err, symlinkDest) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(symlinkDest);
+    });
+  });
+}
+
 module.exports = async (embark) => {
   let blockchainConnectorReady = false;
   await whenRuncodeReady(embark);
@@ -52,26 +63,27 @@ module.exports = async (embark) => {
 
   web3Location = web3Location.replace(/\\/g, '/');
 
+  embark.events.emit('runcode:register', '__Web3', require(web3Location), async () => {
+    const symlinkLocation = await generateSymlink(embark, web3Location);
 
-  embark.events.emit('runcode:register', '__Web3', require(web3Location));
+    let code = `\nconst Web3 = global.__Web3 || require('${symlinkLocation}');`;
+    code += `\nglobal.Web3 = Web3;`;
 
-  let code = `\nconst Web3 = global.__Web3 || require('${web3Location}');`;
-  code += `\nglobal.Web3 = Web3;`;
+    const connectorCode = fs.readFileSync(path.join(__dirname, 'web3Connector.js'), 'utf8');
+    code += connectorCode;
 
-  const connectorCode = fs.readFileSync(path.join(__dirname, 'web3Connector.js'), 'utf8');
-  code += connectorCode;
+    code += "\nEmbarkJS.Blockchain.registerProvider('web3', web3Connector);";
 
-  code += "\nEmbarkJS.Blockchain.registerProvider('web3', web3Connector);";
+    code += "\nEmbarkJS.Blockchain.setProvider('web3', {});";
 
-  code += "\nEmbarkJS.Blockchain.setProvider('web3', {});";
+    embark.addCodeToEmbarkJS(code);
 
-  embark.addCodeToEmbarkJS(code);
+    code = "EmbarkJS.Blockchain.setProvider('web3', {web3});";
 
-  code = "EmbarkJS.Blockchain.setProvider('web3', {web3});";
+    const shouldInit = (_config) => {
+      return true;
+    };
 
-  const shouldInit = (_config) => {
-    return true;
-  };
-
-  embark.addConsoleProviderInit('blockchain', code, shouldInit);
+    embark.addConsoleProviderInit('blockchain', code, shouldInit);
+  });
 };

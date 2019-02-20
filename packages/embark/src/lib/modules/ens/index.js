@@ -294,7 +294,7 @@ class ENS {
   registerSubDomain(defaultAccount, subDomainName, reverseNode, address, secureSend, cb) {
     this.events.request("blockchain:get", (web3) => {
       ENSFunctions.registerSubDomain(web3, this.ensContract, this.registrarContract, this.resolverContract, defaultAccount,
-        subDomainName, this.registration.rootDomain, reverseNode, address, this.logger, secureSend, cb);
+        subDomainName, this.registration.rootDomain, reverseNode, address, this.logger, secureSend, cb, namehash);
     });
   }
 
@@ -320,7 +320,7 @@ class ENS {
       (req, res) => {
         async.waterfall([
           function (callback) {
-            ENSFunctions.resolveName(req.query.name, self.ensContract, createInternalResolverContract.bind(self), callback);
+            ENSFunctions.resolveName(req.query.name, self.ensContract, createInternalResolverContract.bind(self), callback, namehash);
           }
         ], function (error, address) {
           if (error) {
@@ -366,23 +366,29 @@ class ENS {
   }
 
   addENSToEmbarkJS() {
-    const self = this;
-
-    // get namehash, import it into file
-    self.events.request("version:get:eth-ens-namehash", function (EnsNamehashVersion) {
-      let currentEnsNamehashVersion = require('../../../../package.json').dependencies["eth-ens-namehash"];
-      if (EnsNamehashVersion !== currentEnsNamehashVersion) {
-        self.events.request("version:getPackageLocation", "eth-ens-namehash", EnsNamehashVersion, function (err, location) {
-          self.embark.registerImportFile("eth-ens-namehash", self.fs.dappPath(location));
-        });
+    this.events.request('version:downloadIfNeeded', 'eth-ens-namehash', (err, location) => {
+      if (err) {
+        this.logger.error(__('Error downloading NameHash'));
+        return this.logger.error(err.message || err);
       }
+
+      this.events.once('code-generator:ready', () => {
+        this.events.request('code-generator:symlink:generate', location, 'eth-ens-namehash', (err, symlinkDest) => {
+          if (err) {
+            this.logger.error(__('Error creating a symlink to eth-ens-namehash'));
+            return this.logger.error(err.message || err);
+          }
+          this.events.emit('runcode:register', 'namehash', require('eth-ens-namehash'), () => {
+            let code = `\nconst namehash = global.namehash || require('${symlinkDest}');`;
+            code += this.fs.readFileSync(utils.joinPath(__dirname, 'ENSFunctions.js')).toString();
+            code += "\n" + this.fs.readFileSync(utils.joinPath(__dirname, 'embarkjs.js')).toString();
+            code += "\nEmbarkJS.Names.registerProvider('ens', __embarkENS);";
+
+            this.embark.addCodeToEmbarkJS(code);
+          });
+        });
+      });
     });
-
-    let code = self.fs.readFileSync(utils.joinPath(__dirname, 'ENSFunctions.js')).toString();
-    code += "\n" + self.fs.readFileSync(utils.joinPath(__dirname, 'embarkjs.js')).toString();
-    code += "\nEmbarkJS.Names.registerProvider('ens', __embarkENS);";
-
-    this.embark.addCodeToEmbarkJS(code);
   }
 
   addSetProvider(config) {
