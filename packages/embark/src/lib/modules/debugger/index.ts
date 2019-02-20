@@ -250,7 +250,7 @@ class TransactionDebugger {
         const filename: string = this.txTracker[this.lastTx].contract.filename;
         startDebug(txHash, filename, callback);
       },
-      usage: "debug <txHash>",
+      usage: "debug [txHash]",
     });
 
     this.embark.registerConsoleCommand({

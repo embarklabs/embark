@@ -1,4 +1,5 @@
 import { Logger } from "./logger";
+import { Plugins } from "./plugins";
 
 export interface Events {
   on: any;
@@ -25,6 +26,7 @@ export interface Embark {
         solc: string;
       }
     };
+    plugins: Plugins;
     reloadConfig(): void;
   };
   registerActionForEvent(name: string, action: (callback: () => void) => void): void;
