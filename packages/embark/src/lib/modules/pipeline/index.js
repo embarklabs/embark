@@ -356,12 +356,11 @@ class Pipeline {
               importsList["Embark/contracts/" + contract.className] = contractPath;
 
               // add the contract to the exports list to support alternate import syntax
-              importsHelperFile.write(`"${contract.className}": require('./${contract.className}').default`);
-              if (idx < contracts.length - 1) importsHelperFile.write(',\n'); // add a comma if we have more contracts to add
+              importsHelperFile.write(`"${contract.className}": require('./${contract.className}').default,\n`);
               eachCb();
             });
           }, () => {
-            importsHelperFile.write('\n}'); // close the module.exports = {}
+            importsHelperFile.write('\n};'); // close the module.exports = {}
             importsHelperFile.close(next); // close the write stream
           });
         });

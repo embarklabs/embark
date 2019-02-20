@@ -1,27 +1,17 @@
-/*globals $, SimpleStorage, document*/
-
-import React, { Component } from 'react';
+/*global web3*/
+import React  from 'react';
 import EmbarkJS from 'Embark/EmbarkJS';
-import SimpleStorage from 'Embark/contracts/SimpleStorage';
-import Test from 'Embark/contracts/Test';
-//import Assert from 'Embark/contracts/Assert';
+import {SimpleStorage, Test, SimpleStorageTest} from '../../embarkArtifacts/contracts';
+import config from '../../embarkArtifacts/config/blockchain';
 
-import SimpleStorageTest from 'Embark/contracts/SimpleStorageTest';
-window.SimpleStorageTest = SimpleStorageTest
+window.SimpleStorageTest = SimpleStorageTest;
 
 import ReactDOM from 'react-dom';
 
-//import $ from './_vendor/jquery.min';
 import $ from 'jquery';
-//import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
-//import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
-
-//import 'react-bootstrap/dist/react-bootstrap.min.js';
-
-import { Navbar, Jumbotron, Button } from 'react-bootstrap';
 
 window.EmbarkJS = EmbarkJS;
 window.SimpleStorage = SimpleStorage;
@@ -44,6 +34,12 @@ var addToLog = function(id, txt) {
 // Blockchain example
 // ===========================
 $(document).ready(function() {
+  EmbarkJS.Blockchain.connect(config, (err) => {
+    if (err) {
+      console.error(err);
+    }
+  });
+
   console.log([1,2,3].map(v => v + 1));
 
   $("#blockchain button.set").click(function() {
@@ -144,7 +140,7 @@ $(document).ready(function() {
   $("#communication .error").hide();
   $("#communication .errorVersion").hide();
   if (EmbarkJS.Messages.providerName === 'whisper') {
-    EmbarkJS.Messages.getWhisperVersion(function(err, version) {
+    EmbarkJS.Messages.getWhisperVersion(function(err, _version) {
       if (err) {
         $("#communication .error").show();
         $("#communication-controls").hide();
