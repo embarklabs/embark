@@ -383,24 +383,48 @@ class CodeGenerator {
   }
 
   generateSymlink(target, name, callback) {
-    const symlinkDir = this.fs.dappPath(this.embarkConfig.generationDir, constants.dappArtifacts.symlinkDir);
-    this.fs.mkdirp(symlinkDir, (err) => {
-      if (err) {
-        return callback(err);
-      }
-      const symlinkDest = utils.joinPath(symlinkDir, name).replace(/\\/g, '/');
-      this.fs.remove(symlinkDest, (err) => {
-        if (err) {
-          return callback(err);
-        }
-        this.fs.symlink(path.dirname(target), symlinkDest, 'junction', (err) => {
+    async.waterfall([
+      // Make directory
+      next => {
+        const symlinkDir = this.fs.dappPath(this.embarkConfig.generationDir, constants.dappArtifacts.symlinkDir);
+        this.fs.mkdirp(symlinkDir, (err) => {
           if (err) {
-            return callback(err);
+            return next(err);
           }
-          callback(null, symlinkDest);
+          next(null, utils.joinPath(symlinkDir, name).replace(/\\/g, '/'));
         });
-      });
-    });
+      },
+      // Remove old symlink because they are not overwritable
+      (symlinkDest, next) => {
+        this.fs.remove(symlinkDest, (err) => {
+          if (err) {
+            return next(err);
+          }
+          next(null, symlinkDest);
+        });
+      },
+      // Make target a directory as files don't work on Windows
+      (symlinkDest, next) => {
+        this.fs.stat(target, (err, stats) => {
+          if (err) {
+            return next(err);
+          }
+          let finalTarget = target;
+          if (stats.isFile()) {
+            finalTarget = path.dirname(target);
+          }
+          next(null, symlinkDest, finalTarget);
+        });
+      },
+      (symlinkDest, finalTarget, next) => {
+        this.fs.symlink(finalTarget, symlinkDest, 'junction', (err) => {
+          if (err) {
+            return next(err);
+          }
+          next(null, symlinkDest);
+        });
+      }
+    ], callback);
   }
 }
 

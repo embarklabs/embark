@@ -1,13 +1,13 @@
 import { Component } from 'react';
-import SimpleStorage from 'Embark/contracts/SimpleStorage';
+import SimpleStorage from '../../embarkArtifacts/contracts/SimpleStorage';
 window.SimpleStorage = SimpleStorage;
 
 class App extends Component {
   action() {
-    console.log("calling...")
+    console.log("calling...");
     SimpleStorage.methods.get().call(function(err, value) {
       alert(value);
-    })
+    });
   }
 
   render() {
