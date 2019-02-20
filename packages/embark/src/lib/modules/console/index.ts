@@ -118,7 +118,7 @@ class Console {
         "swarm".cyan + " - " + __("instantiated swarm-api object configured to the current environment (available if swarm is enabled)"),
         "web3".cyan + " - " + __("instantiated web3.js object configured to the current environment"),
         "EmbarkJS".cyan + " - " + __("EmbarkJS static functions for Storage, Messages, Names, etc."),
-        "log <process> on/off".cyan + " - " + __("Activate or deactivate the logs of a sub-process. Options: blockchain, ipfs, webserver"),
+        "log [process] on/off".cyan + " - " + __("Activate or deactivate the logs of a sub-process. Options: blockchain, ipfs, webserver"),
       ];
       helpDescriptions.forEach((helpDescription) => {
         let matches = [] as string[];
@@ -139,7 +139,12 @@ class Console {
   }
 
   private executeCmd(cmd: string, callback: any) {
-    this.logger.info("console>", cmd);
+    // if this is the embark console process, send the command to the process
+    // running all the needed services (ie the process running `embark run`)
+    if (this.isEmbarkConsole) {
+      return this.ipc.request("console:executeCmd", cmd, callback);
+    }
+
     if (!(cmd.split(" ")[0] === "history" || cmd === __("history"))) {
       this.saveHistory(cmd);
     }
@@ -179,12 +184,6 @@ class Console {
     const output = this.processEmbarkCmd(cmd, helpDescriptions);
     if (output) {
       return callback(null, output);
-    }
-
-    // if this is the embark console process, send the command to the process
-    // running all the needed services (ie the process running `embark run`)
-    if (this.isEmbarkConsole) {
-      return this.ipc.request("console:executeCmd", cmd, callback);
     }
 
     this.events.request("runcode:eval", cmd, (err: Error, result: any) => {
@@ -243,7 +242,7 @@ class Console {
         const [_cmdName, length] = cmd.split(" ");
         this.getHistory(length, callback);
       },
-      usage: "history <optionalLength>",
+      usage: "history [optionalLength]",
     });
   }
 

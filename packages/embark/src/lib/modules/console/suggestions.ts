@@ -52,6 +52,16 @@ export default class Suggestions {
     });
   }
 
+  private formatMatches(matches: any): string {
+    if (Array.isArray(matches)) {
+      return matches.join(", ");
+    }
+    if (typeof matches === "function") {
+      return "";
+    }
+    return matches || "";
+  }
+
   public getSuggestions(cmd: string, cb: (results: SuggestionsList) => any) {
     if (cmd === "") { return cb([]); }
     const suggestions: SuggestionsList = [];
@@ -67,6 +77,10 @@ export default class Suggestions {
       suggestions.push({value: "profile " + contract.className, command_type: "embark command", description: "profile " + contract.className + " contract"});
     });
 
+    const plugins = this.embark.config.plugins.getPluginsProperty("console", "console");
+    for (const plugin of plugins) {
+      suggestions.push({value: plugin.usage || this.formatMatches(plugin.matches), command_type: "plugin command", description: plugin.description});
+    }
     suggestions.push({value: "help", command_type: "embark command", description: "displays quick list of some of the available embark commands"});
     suggestions.push({value: "versions", command_type: "embark command", description: "display versions in use for libraries and tools like web3 and solc"});
     suggestions.push({value: "ipfs", command_type: "javascript object", description: "instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)"});
@@ -81,7 +95,7 @@ export default class Suggestions {
     try {
       const toRemove: string = "." + cmd.split(".").reverse()[0];
       const cmdToSearch: string = cmd.replace((new RegExp(toRemove + "$")), "");
-      return this.events.request("runcode:eval", "Object.keys(" + cmdToSearch + ")", (err: any, result: any) => {
+      return this.events.request("runcode:eval", "Object.getOwnPropertyNames(" + cmdToSearch + ")", (err: any, result: any) => {
         try {
           if (Array.isArray(result)) {
             result.forEach((match: string) => {

@@ -13,7 +13,7 @@ class PluginCommand {
   registerCommand() {
     this.embark.registerConsoleCommand({
       description: "Installs a plugin in the Dapp. eg: plugin install embark-solc",
-      usage: "plugin install <package>",
+      usage: "plugin install [package]",
       matches: (cmd) => {
         const [cmdName] = cmd.split(' ');
         return cmdName === 'plugin';
