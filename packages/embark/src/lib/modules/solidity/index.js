@@ -162,7 +162,7 @@ class Solidity {
     let self = this;
     let input = {};
     let originalFilepath = {};
-    
+
     async.waterfall([
       function prepareInput(callback) {
         async.each(contractFiles,
@@ -170,12 +170,13 @@ class Solidity {
             let filename = file.path;
 
             for (let directory of self.embark.config.contractDirectories) {
+              directory = directory.replace(/\\/g, '/');
               let match = new RegExp("^" + directory);
               filename = filename.replace(match, '');
             }
 
             originalFilepath[filename] = file.path;
-            
+
             file.prepareForCompilation(options.isCoverage)
               .then(fileContent => {
                 input[file.path] = {content: fileContent.replace(/\r\n/g, '\n')};
