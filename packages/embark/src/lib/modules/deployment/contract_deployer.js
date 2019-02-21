@@ -113,26 +113,28 @@ class ContractDeployer {
       // TODO: can potentially go to a beforeDeploy plugin
       function getAccounts(next) {
         deploymentAccount = self.blockchain.defaultAccount();
-        self.events.request('blockchain:provider:contract:accounts:get', _accounts => {
-          accounts = _accounts;
+        self.events.request('blockchain:ready', () => {
+          self.events.request('blockchain:getAccounts', (err, _accounts) => {
+            accounts = _accounts;
 
-          // applying deployer account configuration, if any
-          if (typeof contract.fromIndex === 'number') {
-            deploymentAccount = accounts[contract.fromIndex];
-            if (deploymentAccount === undefined) {
-              return next(__("error deploying") + " " + contract.className + ": " + __("no account found at index") + " " + contract.fromIndex + __(" check the config"));
+            // applying deployer account configuration, if any
+            if (typeof contract.fromIndex === 'number') {
+              deploymentAccount = accounts[contract.fromIndex];
+              if (deploymentAccount === undefined) {
+                return next(__("error deploying") + " " + contract.className + ": " + __("no account found at index") + " " + contract.fromIndex + __(" check the config"));
+              }
             }
-          }
-          if (typeof contract.from === 'string' && typeof contract.fromIndex !== 'undefined') {
-            self.logger.warn(__('Both "from" and "fromIndex" are defined for contract') + ' "' + contract.className + '". ' + __('Using "from" as deployer account.'));
-          }
-          if (typeof contract.from === 'string') {
-            deploymentAccount = contract.from;
-          }
+            if (typeof contract.from === 'string' && typeof contract.fromIndex !== 'undefined') {
+              self.logger.warn(__('Both "from" and "fromIndex" are defined for contract') + ' "' + contract.className + '". ' + __('Using "from" as deployer account.'));
+            }
+            if (typeof contract.from === 'string') {
+              deploymentAccount = contract.from;
+            }
 
-          deploymentAccount = deploymentAccount || accounts[0];
-          contract.deploymentAccount = deploymentAccount;
-          next();
+            deploymentAccount = deploymentAccount || accounts[0];
+            contract.deploymentAccount = deploymentAccount;
+            next();
+          });
         });
       },
       function applyArgumentPlugins(next) {
