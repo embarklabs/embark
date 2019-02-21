@@ -1,6 +1,7 @@
 const VM = require('./vm');
 const fs = require('../../core/fs');
 const EmbarkJS = require('embarkjs');
+const Web3 = require('web3');
 
 class CodeRunner {
   constructor(embark, options) {
@@ -13,7 +14,8 @@ class CodeRunner {
     this.ipc = options.ipc;
     this.vm = new VM({
       sandbox: {
-        EmbarkJS
+        EmbarkJS,
+        Web3
       },
       require: {
         mock: {
