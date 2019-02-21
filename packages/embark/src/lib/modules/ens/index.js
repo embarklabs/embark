@@ -4,6 +4,7 @@ const async = require('async');
 const embarkJsUtils = require('embarkjs').Utils;
 const reverseAddrSuffix = '.addr.reverse';
 const ENSFunctions = require('./ENSFunctions');
+const secureSend = embarkJsUtils.secureSend;
 import {ZERO_ADDRESS} from '../../utils/addressUtils';
 import {ens} from '../../constants';
 import EmbarkJS from 'embarkjs';
@@ -275,7 +276,6 @@ class ENS {
   }
 
   safeRegisterSubDomain(subDomainName, address, defaultAccount, callback) {
-    const secureSend = embarkJsUtils.secureSend;
     this.ensResolve(`${subDomainName}.${this.registration.rootDomain}`, (error, currentAddress) => {
       if (currentAddress && currentAddress.toLowerCase() === address.toLowerCase()) {
         return callback();
@@ -408,106 +408,130 @@ class ENS {
     if (self.configured) {
       return cb();
     }
-    self.events.request('blockchain:networkId', (networkId) => {
-      if (ENS_CONTRACTS_CONFIG[networkId]) {
-        self.ensConfig = utils.recursiveMerge(self.ensConfig, ENS_CONTRACTS_CONFIG[networkId]);
-      }
 
-      async.waterfall([
-        function registry(next) {
-          self.events.request('deploy:contract', self.ensConfig.ENSRegistry, (err, _receipt) => {
-            return next(err);
-          });
-        },
-        function resolver(next) {
-          self.ensConfig.Resolver.args = [self.ensConfig.ENSRegistry.deployedAddress];
-          self.events.request('deploy:contract', self.ensConfig.Resolver, (err, _receipt) => {
-            return next(err);
-          });
-        },
-        function checkRootNode(next) {
-          if (!self.registration || !self.registration.rootDomain) {
-            return next(NO_REGISTRATION);
-          }
-          if (!self.isENSName(self.registration.rootDomain)) {
-
-            return next(__('Invalid domain name: {{name}}\nValid extensions are: {{extenstions}}',
-              {name: self.registration.rootDomain, extenstions: ENS_WHITELIST.join(', ')}));
+    async.waterfall([
+      function getNetworkId(next) {
+        self.events.request('blockchain:networkId', (networkId) => {
+          if (ENS_CONTRACTS_CONFIG[networkId]) {
+            self.ensConfig = utils.recursiveMerge(self.ensConfig, ENS_CONTRACTS_CONFIG[networkId]);
           }
           next();
-        },
-        function registrar(next) {
-          const registryAddress = self.ensConfig.ENSRegistry.deployedAddress;
+        });
+      },
+      function registry(next) {
+        self.events.request('deploy:contract', self.ensConfig.ENSRegistry, (err, _receipt) => {
+          return next(err);
+        });
+      },
+      function resolver(next) {
+        self.ensConfig.Resolver.args = [self.ensConfig.ENSRegistry.deployedAddress];
+        self.events.request('deploy:contract', self.ensConfig.Resolver, (err, _receipt) => {
+          return next(err);
+        });
+      },
+      function checkRootNode(next) {
+        if (!self.registration || !self.registration.rootDomain) {
+          return next(NO_REGISTRATION);
+        }
+        if (!self.isENSName(self.registration.rootDomain)) {
+
+          return next(__('Invalid domain name: {{name}}\nValid extensions are: {{extenstions}}',
+            {name: self.registration.rootDomain, extenstions: ENS_WHITELIST.join(', ')}));
+        }
+        next();
+      },
+      function registrar(next) {
+        const registryAddress = self.ensConfig.ENSRegistry.deployedAddress;
+        const rootNode = namehash.hash(self.registration.rootDomain);
+        const contract = self.ensConfig.FIFSRegistrar;
+        contract.args = [registryAddress, rootNode];
+
+        self.events.request('deploy:contract', contract, (err, _receipt) => {
+          return next(err);
+        });
+      },
+      function registerRoot(next) {
+        let config = {
+          registryAbi: self.ensConfig.ENSRegistry.abiDefinition,
+          registryAddress: self.ensConfig.ENSRegistry.deployedAddress,
+          registrarAbi: self.ensConfig.FIFSRegistrar.abiDefinition,
+          registrarAddress: self.ensConfig.FIFSRegistrar.deployedAddress,
+          resolverAbi: self.ensConfig.Resolver.abiDefinition,
+          resolverAddress: self.ensConfig.Resolver.deployedAddress
+        };
+        async.parallel([
+          function createRegistryContract(paraCb) {
+            self.events.request("blockchain:contract:create",
+              {abi: config.registryAbi, address: config.registryAddress},
+              (registry) => {
+                paraCb(null, registry);
+              });
+          },
+          function createRegistrarContract(paraCb) {
+            self.events.request("blockchain:contract:create",
+              {abi: config.registrarAbi, address: config.registrarAddress},
+              (registrar) => {
+                paraCb(null, registrar);
+              });
+          },
+          function createResolverContract(paraCb) {
+            self.events.request("blockchain:contract:create",
+              {abi: config.resolverAbi, address: config.resolverAddress},
+              (resolver) => {
+                paraCb(null, resolver);
+              });
+          },
+          function getWeb3(paraCb) {
+            self.events.request("blockchain:get",
+              (web3) => {
+                paraCb(null, web3);
+              });
+          }
+        ], async (err, result) => {
+          self.ensContract = result[0];
+          self.registrarContract = result[1];
+          self.resolverContract = result[2];
+          const web3 = result[3];
+
           const rootNode = namehash.hash(self.registration.rootDomain);
-          const contract = self.ensConfig.FIFSRegistrar;
-          contract.args = [registryAddress, rootNode];
+          var reverseNode = web3.utils.soliditySha3(web3.eth.defaultAccount.toLowerCase().substr(2) + reverseAddrSuffix);
+          const owner = await self.ensContract.methods.owner(rootNode).call();
 
-          self.events.request('deploy:contract', contract, (err, _receipt) => {
-            return next(err);
-          });
-        },
-        function registerRoot(next) {
-          let config = {
-            registryAbi: self.ensConfig.ENSRegistry.abiDefinition,
-            registryAddress: self.ensConfig.ENSRegistry.deployedAddress,
-            registrarAbi: self.ensConfig.FIFSRegistrar.abiDefinition,
-            registrarAddress: self.ensConfig.FIFSRegistrar.deployedAddress,
-            resolverAbi: self.ensConfig.Resolver.abiDefinition,
-            resolverAddress: self.ensConfig.Resolver.deployedAddress
-          };
-          async.parallel([
-            function createRegistryContract(paraCb) {
-              self.events.request("blockchain:contract:create",
-                {abi: config.registryAbi, address: config.registryAddress},
-                (registry) => {
-                  paraCb(null, registry);
-                });
-            },
-            function createRegistrarContract(paraCb) {
-              self.events.request("blockchain:contract:create",
-                {abi: config.registrarAbi, address: config.registrarAddress},
-                (registrar) => {
-                  paraCb(null, registrar);
-                });
-            },
-            function createResolverContract(paraCb) {
-              self.events.request("blockchain:contract:create",
-                {abi: config.resolverAbi, address: config.resolverAddress},
-                (resolver) => {
-                  paraCb(null, resolver);
-                });
-            },
-            function getWeb3(paraCb) {
-              self.events.request("blockchain:get",
-                (web3) => {
-                  paraCb(null, web3);
-                });
-            }
-          ], async (err, result) => {
-            self.ensContract = result[0];
-            self.registrarContract = result[1];
-            self.resolverContract = result[2];
-            const web3 = result[3];
+          if (owner === web3.eth.defaultAccount) {
+            return next();
+          }
 
-            const rootNode = namehash.hash(self.registration.rootDomain);
-            var reverseNode = web3.utils.soliditySha3(web3.eth.defaultAccount.toLowerCase().substr(2) + reverseAddrSuffix);
-            const owner = await self.ensContract.methods.owner(rootNode).call();
-
-            if (owner === web3.eth.defaultAccount) {
-              return next();
-            }
-
-            self.ensContract.methods.setOwner(rootNode, web3.eth.defaultAccount).send({from: web3.eth.defaultAccount, gas: ENS_GAS_PRICE}).then(() => {
-              return self.ensContract.methods.setResolver(rootNode, config.resolverAddress).send({from: web3.eth.defaultAccount, gas: ENS_GAS_PRICE});
-            }).then(() => {
-              return self.ensContract.methods.setResolver(reverseNode, config.resolverAddress).send({from: web3.eth.defaultAccount, gas: ENS_GAS_PRICE});
-            }).then(() => {
-              return self.resolverContract.methods.setAddr(rootNode, web3.eth.defaultAccount).send({from: web3.eth.defaultAccount, gas: ENS_GAS_PRICE});
-            }).then(() => {
-              return self.resolverContract.methods.setName(reverseNode, self.registration.rootDomain).send({from: web3.eth.defaultAccount, gas: ENS_GAS_PRICE});
-            }).then((_result) => {
-              next();
-            })
+          // Set defaultAccount as the owner of the Registry
+          secureSend(web3, self.ensContract.methods.setOwner(rootNode, web3.eth.defaultAccount), {
+            from: web3.eth.defaultAccount,
+            gas: ENS_GAS_PRICE
+          }, false).then(() => {
+            // Set Registry's resolver to the one deployed above
+            return secureSend(web3, self.ensContract.methods.setResolver(rootNode, config.resolverAddress), {
+              from: web3.eth.defaultAccount,
+              gas: ENS_GAS_PRICE
+            }, false);
+          }).then(() => {
+            // Set reverse node's resolver to the one above (needed for reverse resolve)
+            return secureSend(web3, self.ensContract.methods.setResolver(reverseNode, config.resolverAddress), {
+              from: web3.eth.defaultAccount,
+              gas: ENS_GAS_PRICE
+            }, false);
+          }).then(() => {
+            // Set node to the default account in the resolver (means that the ENS node now resolves to the account)
+            return secureSend(web3, self.resolverContract.methods.setAddr(rootNode, web3.eth.defaultAccount), {
+              from: web3.eth.defaultAccount,
+              gas: ENS_GAS_PRICE
+            }, false);
+          }).then(() => {
+            // Set name of the reverse node to the root domain
+            return secureSend(web3, self.resolverContract.methods.setName(reverseNode, self.registration.rootDomain), {
+              from: web3.eth.defaultAccount,
+              gas: ENS_GAS_PRICE
+            }, false);
+          }).then((_result) => {
+            next();
+          })
             .catch(err => {
               self.logger.error('Error while registering the root domain');
               if (err.message.indexOf('Transaction has been reverted by the EVM') > -1) {
@@ -515,18 +539,18 @@ class ENS {
               }
               next(err);
             });
-          });
-        }
-      ], (err) => {
-        self.configured = true;
-        if (err && err !== NO_REGISTRATION) {
-          self.logger.error('Error while deploying ENS contracts');
-          self.logger.error(err.message || err);
-          return cb(err);
-        }
-        self.registerAPI();
-        self.setProviderAndRegisterDomains(cb);
-      });
+        });
+      }
+    ], (err) => {
+      self.configured = true;
+      console.log('all done');
+      if (err && err !== NO_REGISTRATION) {
+        self.logger.error('Error while deploying ENS contracts');
+        self.logger.error(err.message || err);
+        return cb(err);
+      }
+      self.registerAPI();
+      self.setProviderAndRegisterDomains(cb);
     });
   }
 
