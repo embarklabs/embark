@@ -8,24 +8,26 @@ export interface Events {
   setCommandHandler(name: string, callback: (options: any, cb: () => void) => void): void;
 }
 
+export interface Config {
+  contractsFiles: any[];
+  embarkConfig: {
+    contracts: string[] | string;
+    config: {
+      contracts: string;
+    };
+    versions: {
+      solc: string;
+    }
+  };
+  reloadConfig(): void;
+}
+
 export interface Embark {
   events: Events;
   registerAPICall: any;
   registerConsoleCommand: any;
   logger: Logger;
   fs: any;
-  config: {
-    contractsFiles: any[];
-    embarkConfig: {
-      contracts: string[] | string;
-      config: {
-        contracts: string;
-      };
-      versions: {
-        solc: string;
-      }
-    };
-    reloadConfig(): void;
-  };
+  config: Config;
   registerActionForEvent(name: string, action: (callback: () => void) => void): void;
 }
