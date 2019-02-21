@@ -334,6 +334,9 @@ class ContractsManager {
             }
             try {
               self.contracts[className] = JSON.parse(artifactBuf.toString());
+              if (self.contracts[className].deployedAddress) {
+                self.contracts[className].address = self.contracts[className].deployedAddress;
+              }
               eachCb();
             } catch (e) {
               self.logger.error(__('Artifact file does not seem to be valid JSON (%s)', contract.artifact));
