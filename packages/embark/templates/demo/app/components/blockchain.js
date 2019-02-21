@@ -1,5 +1,5 @@
 import EmbarkJS from 'Embark/EmbarkJS';
-import SimpleStorage from 'Embark/contracts/SimpleStorage';
+import SimpleStorage from '../../embarkArtifacts/contracts/SimpleStorage';
 import React from 'react';
 import { Form, FormGroup, FormControl, HelpBlock, Button } from 'react-bootstrap';
 
