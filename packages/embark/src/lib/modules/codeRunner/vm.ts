@@ -31,7 +31,7 @@ class VM {
    * Currently, all of the allowed external requires appear in the EmbarkJS scripts. If
    * the requires change in any of the EmbarkJS scripts, they will need to be updated here.
    */
-  private options: NodeVMOptions = {
+  private _options: NodeVMOptions = {
     require: {
       builtin: ["path", "rxjs", "util"],
       external: [
@@ -54,9 +54,13 @@ class VM {
    * @param {Logger} logger Logger.
    */
   constructor(options: NodeVMOptions, private logger: Logger) {
-    this.options = recursiveMerge(this.options, options);
+    this._options = recursiveMerge(this._options, options);
 
     this.setupNodeVm(() => { });
+  }
+
+  public get options(): NodeVMOptions {
+    return this._options;
   }
 
   /**
@@ -128,7 +132,7 @@ class VM {
     }
 
     this.updateState(() => {
-      this.options.sandbox[varName] = code;
+      this._options.sandbox[varName] = code;
       this.setupNodeVm(cb);
     });
   }
@@ -137,10 +141,10 @@ class VM {
     if (!this.vm) { return cb(); }
 
     // update sandbox state from VM
-    each(Object.keys(this.options.sandbox), (sandboxVar: string, next: Callback<null>) => {
+    each(Object.keys(this._options.sandbox), (sandboxVar: string, next: Callback<null>) => {
       this.doEval(sandboxVar, false, (err?: Error | null, result?: any) => {
         if (!err) {
-          this.options.sandbox[sandboxVar] = result;
+          this._options.sandbox[sandboxVar] = result;
         }
         next(err);
       });
@@ -153,9 +157,9 @@ class VM {
    * by calling @function {registerVar}.
    */
   private setupNodeVm(cb: Callback<null>) {
-    this.vm = new NodeVM(this.options);
+    this.vm = new NodeVM(this._options);
     cb();
   }
 }
 
-module.exports = VM;
+export default VM;

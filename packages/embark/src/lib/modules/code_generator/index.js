@@ -17,6 +17,7 @@ const Templates = {
 
 class CodeGenerator {
   constructor(embark, options) {
+    this.ready = false;
     this.blockchainConfig = embark.config.blockchainConfig || {};
     this.embarkConfig = embark.config.embarkConfig;
     this.fs = embark.fs;
@@ -34,6 +35,7 @@ class CodeGenerator {
     this.events = embark.events;
 
     this.listenToCommands();
+    this.ready = true;
     this.events.emit('code-generator:ready');
   }
 
@@ -86,6 +88,13 @@ class CodeGenerator {
 
     this.events.setCommandHandler("code-generator:embarkjs:build", (cb) => {
       this.buildEmbarkJS(cb);
+    });
+
+    this.events.setCommandHandler('code-generator:ready', (cb) => {
+      if (this.ready) {
+        return cb();
+      }
+      this.events.once('code-generator:ready', cb);
     });
   }
 

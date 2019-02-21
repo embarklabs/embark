@@ -1,6 +1,6 @@
 /*globals describe, it*/
 const TestLogger = require('../lib/utils/test_logger');
-const VM = require('../lib/modules/codeRunner/vm');
+const VM = require('../lib/modules/codeRunner/vm').default;
 const {expect} = require('chai');
 
 describe('embark.vm', function () {

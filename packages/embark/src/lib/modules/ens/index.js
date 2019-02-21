@@ -372,7 +372,7 @@ class ENS {
         return this.logger.error(err.message || err);
       }
 
-      this.events.once('code-generator:ready', () => {
+      this.events.request('code-generator:ready', () => {
         this.events.request('code-generator:symlink:generate', location, 'eth-ens-namehash', (err, symlinkDest) => {
           if (err) {
             this.logger.error(__('Error creating a symlink to eth-ens-namehash'));
