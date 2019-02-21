@@ -72,37 +72,27 @@ Storage.isAvailable = function () {
 };
 
 // TODO: most of this logic should move to the provider implementations themselves
-Storage.setProviders = async function (dappConnOptions) {
+Storage.setProviders = function (dappConnOptions) {
   const self = this;
-  try {
-    await detectSeries(dappConnOptions, async (dappConn, callback) => {
-      if(dappConn === '$BZZ' || dappConn.provider === 'swarm'){
-        let options = dappConn;
-        if(dappConn === '$BZZ') options = {"useOnlyGivenProvider": true};
-        try{
-          await self.setProvider('swarm', options);
-          let isAvailable = await self.isAvailable();
+  detectSeries(dappConnOptions, (dappConn, callback) => {
+    let options = dappConn;
+    if (dappConn === '$BZZ') options = {"useOnlyGivenProvider": true};
+    try {
+      self.setProvider(dappConn === '$BZZ' ? dappConn : dappConn.provider, options).then(() => {
+        self.isAvailable().then((isAvailable) => {
           callback(null, isAvailable);
-        }catch(err){
-          callback(null, false); // catch errors for when bzz object not initialised but config has requested it to be used
-        }
-      }
-      else if(dappConn.provider === 'ipfs') {
-        // set the provider then check the connection, if true, use that provider, else, check next provider
-        try{
-          await self.setProvider('ipfs', dappConn);
-          let isAvailable =  await self.isAvailable();
-          callback(null, isAvailable);
-        } catch(err) {
-          callback(null, false); // catch but keep looping by not passing err to callback
-        }
-      }
-    }, function(err, result){
-      if(!result) console.error('Could not connect to a storage provider using any of the dappConnections in the storage config');
-    });
-  } catch (err) {
-    console.error('Failed to connect to a storage provider: ' + err.message);
-  }
+        }).catch(() => {
+          callback(null, false);
+        });
+      }).catch(() => {
+        callback(null, false); // catch errors for when bzz object not initialised but config has requested it to be used
+      });
+    } catch (err) {
+      callback(null, false);
+    }
+  }, function (err, result) {
+    if (!result) console.error('Could not connect to a storage provider using any of the dappConnections in the storage config');
+  });
 };
 
 export default Storage;
