@@ -543,7 +543,6 @@ class ENS {
       }
     ], (err) => {
       self.configured = true;
-      console.log('all done');
       if (err && err !== NO_REGISTRATION) {
         self.logger.error('Error while deploying ENS contracts');
         self.logger.error(err.message || err);
