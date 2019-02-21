@@ -22,12 +22,14 @@ class IPFS {
 
     if (this.isIpfsStorageEnabledInTheConfig()) {
       this.setServiceCheck();
-      this.addStorageProviderToEmbarkJS();
-      this.addObjectToConsole();
       this.registerUploadCommand();
 
       this.events.request("processes:register", "ipfs", (cb) => {
-        self.startProcess(cb);
+        self.startProcess(() => {
+          this.addStorageProviderToEmbarkJS();
+          this.addObjectToConsole();
+          cb();
+        });
       });
 
       this._checkService((err) => {
@@ -83,16 +85,20 @@ class IPFS {
     });
   }
 
-  _getNodeUrl() {
+  _getNodeUrlConfig() {
     if (this.storageConfig.upload.provider === 'ipfs') {
-      return utils.buildUrlFromConfig(this.storageConfig.upload) + '/api/v0/version';
+      return this.storageConfig.upload;
     }
 
     for (let connection of this.storageConfig.dappConnection) {
       if (connection.provider === 'ipfs') {
-        return utils.buildUrlFromConfig(connection) + '/api/v0/version';
+        return connection;
       }
     }
+  }
+
+  _getNodeUrl() {
+    return utils.buildUrlFromConfig(this._getNodeUrlConfig()) + '/api/v0/version';
   }
 
   _checkService(cb) {
@@ -106,7 +112,7 @@ class IPFS {
         this.logger.error(__('Error downloading IPFS API'));
         return this.logger.error(err.message || err);
       }
-      this.events.once('code-generator:ready', () => {
+      this.events.request('code-generator:ready', () => {
         this.events.request('code-generator:symlink:generate', location, 'ipfs-api', (err, symlinkDest) => {
           if (err) {
             this.logger.error(__('Error creating a symlink to IPFS API'));
@@ -119,6 +125,7 @@ class IPFS {
             code += "\nEmbarkJS.Storage.registerProvider('ipfs', __embarkIPFS);";
 
             this.embark.addCodeToEmbarkJS(code);
+            this.embark.addConsoleProviderInit("storage", code, (storageConfig) => storageConfig.enabled);
           });
         });
       });
@@ -126,7 +133,8 @@ class IPFS {
   }
 
   addObjectToConsole() {
-    let ipfs = IpfsApi(this.host, this.port);
+    const {host, port} = this._getNodeUrlConfig();
+    let ipfs = IpfsApi(host, port);
     this.events.emit("runcode:register", "ipfs", ipfs);
   }
 
