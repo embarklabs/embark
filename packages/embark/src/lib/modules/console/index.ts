@@ -61,7 +61,7 @@ class Console {
     this.events.setCommandHandler("console:executeCmd", this.executeCmd.bind(this));
     this.events.setCommandHandler("console:history", (cb: any) => this.getHistory(this.cmdHistorySize(), cb));
     this.events.setCommandHandler("console:provider:ready", (cb: any) => {
-      if (this.providerReady) {
+      if (this.providerReady || this.isEmbarkConsole) {
         return cb();
       }
       this.events.once("console:provider:done", cb);
