@@ -215,7 +215,7 @@ class Console {
         if (this.isEmbarkConsole) {
           return next();
         }
-        this.events.request("runcode:blockchain:connected", next);
+        this.events.request("runcode:blockchain:providerSet", next);
       },
       (next: any) => {
         if (this.isEmbarkConsole) {
