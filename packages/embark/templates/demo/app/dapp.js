@@ -7,7 +7,6 @@ import Blockchain from './components/blockchain';
 import Whisper from './components/whisper';
 import Storage from './components/storage';
 import ENS from './components/ens';
-import config from '../embarkArtifacts/config/blockchain';
 
 import './dapp.css';
 
@@ -28,7 +27,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    EmbarkJS.Blockchain.connect(config, (err) => {
+    EmbarkJS.onReady((err) => {
       this.setState({blockchainEnabled: true});
       if (err) {
         // If err is not null then it means something went wrong connecting to ethereum
