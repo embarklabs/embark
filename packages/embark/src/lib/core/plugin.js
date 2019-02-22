@@ -45,6 +45,7 @@ var Plugin = function(options) {
   this.currentContext = options.context;
   this.acceptedContext = options.pluginConfig.context || [constants.contexts.any];
   this.version = options.version;
+  this.constants = constants;
 
   if (!Array.isArray(this.currentContext)) {
     this.currentContext = [this.currentContext];
@@ -96,7 +97,9 @@ Plugin.prototype.loadPlugin = function() {
     this.setUpLogger();
   }
   if (utils.isEs6Module(this.pluginModule)) {
-    this.pluginModule = this.pluginModule.default;
+    if (this.pluginModule.default) {
+      this.pluginModule = this.pluginModule.default;
+    }
     return new this.pluginModule(this);
   }
   this.pluginModule.call(this, this);
