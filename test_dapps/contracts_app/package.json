@@ -4,7 +4,7 @@
     "rimraf": "2.6.3"
   },
   "dependencies": {
-    "web3connector": "4.0.0-beta.0"
+    "embarkjs-web3-connector": "4.0.0-beta.0"
   },
   "name": "contracts_app",
   "private": true,
