@@ -47,7 +47,7 @@ module.exports = {
     // - implicit will try to deploy all the contracts located inside the contracts directory
     //            or the directory configured for the location of the contracts. This is default one
     //            when not specified
-    // - explicit will only attempt to deploy the contracts that are explicity specified inside the
+    // - explicit will only attempt to deploy the contracts that are explicitly specified inside the
     //            contracts section.
     //strategy: 'implicit',
 
