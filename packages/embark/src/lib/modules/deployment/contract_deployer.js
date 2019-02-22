@@ -96,7 +96,9 @@ class ContractDeployer {
 
     async.waterfall([
       function checkContractBytesize(next) {
-        if(contract.code.length > MAX_CONTRACT_BYTECODE_LENGTH) {
+        const code = (contract.code.indexOf('0x') === 0) ? contract.code.substr(2) : contract.code;
+        const contractCodeLength = Buffer.from(code, 'hex').toString().length;
+        if(contractCodeLength > MAX_CONTRACT_BYTECODE_LENGTH) {
           return next(new Error(`Bytecode for ${contract.className} contract is too large. Not deploying.`));
         }
 
