@@ -12,11 +12,11 @@ export function prepare(config: any) {
     const args = config.contracts[contractName].args;
     const onDeploy = config.contracts[contractName].onDeploy;
 
-    if (gas && gas.match(unitRegex)) {
+    if (gas && gas.toString().match(unitRegex)) {
       config.contracts[contractName].gas = utils.getWeiBalanceFromString(gas, web3);
     }
 
-    if (gasPrice && gasPrice.match(unitRegex)) {
+    if (gasPrice && gasPrice.toString().match(unitRegex)) {
       config.contracts[contractName].gasPrice = utils.getWeiBalanceFromString(gasPrice, web3);
     }
 
