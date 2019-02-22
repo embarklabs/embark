@@ -2,6 +2,8 @@
     "config": {
       "homesteadBlock": 0,
       "byzantiumBlock": 0,
+      "eip155Block": 0,
+      "eip158Block": 0,
       "daoForkSupport": true
     },
     "nonce": "0x0000000000000042",
