@@ -458,6 +458,7 @@ class ContractsManager {
           contract.gasEstimates = parentContract.gasEstimates;
           contract.functionHashes = parentContract.functionHashes;
           contract.abiDefinition = parentContract.abiDefinition;
+          contract.linkReferences = parentContract.linkReferences;
 
           contract.gas = contract.gas || parentContract.gas;
           contract.gasPrice = contract.gasPrice || parentContract.gasPrice;
