@@ -15,7 +15,7 @@ export default class Api {
   private apiUrl!: string;
 
   constructor(private embark: Embark, private options: any) {
-    this.embark.events.emit("status", __("Starting API"));
+    this.embark.events.emit("status", __("Starting API & Cockpit UI"));
     findNextPort(DEFAULT_PORT).then((port) => {
       this.port = port;
       this.apiUrl = `http://${DEFAULT_HOSTNAME}:${this.port}`;
@@ -28,12 +28,12 @@ export default class Api {
       this.embark.events.request("processes:register", "api", {
         launchFn: (cb: (error: Error | null, message: string) => void) => {
           this.api.start()
-            .then(() => cb(null, __("API available at %s", this.apiUrl)))
+            .then(() => cb(null, __("Cockpit UI available at %s", this.apiUrl)))
             .catch((error: Error) => cb(error, ""));
         },
         stopFn: (cb: (error: Error | null, message: string) => void) => {
           this.api.stop()
-            .then(() => cb(null, __("API stopped")))
+            .then(() => cb(null, __("Cockpit UI stopped")))
             .catch((error: Error) => cb(error, ""));
         },
       });
@@ -52,14 +52,14 @@ export default class Api {
   private setServiceCheck() {
     this.embark.events.request("services:register", "api", (cb: (options: object) => any) => {
       utils.checkIsAvailable(this.apiUrl, (isAvailable: boolean) => {
-        const devServer = __("API") + " (" + this.apiUrl + ")";
+        const devServer = __("Cockpit UI") + " (" + this.apiUrl + ")";
         const serverStatus = (isAvailable ? "on" : "off");
         return cb({name: devServer, status: serverStatus});
       });
     });
 
     this.embark.events.on("check:wentOffline:api", () => {
-      this.embark.logger.info(__("API is offline"));
+      this.embark.logger.info(__("Cockpit UI is offline"));
     });
   }
 
