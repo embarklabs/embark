@@ -52,7 +52,7 @@ class Login extends React.Component {
                           onChange={(e) => this.handleChange(e)}
                           autoComplete="off"
                           value={this.state.token}/>
-                    <small className="form-text text-muted">Execute <code>embark run</code> in the command line to get
+                    <small className="form-text text-muted">Execute <code>embark run</code> in the command line, then type <code>token</code> in the embark console to get
                       your token.
                     </small>
                   </div>
