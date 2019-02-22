@@ -46,7 +46,7 @@ class EnsLookup extends Component {
         </CardHeader>
         <CardBody>
           <FormGroup>
-            <Input placeholder="Enter an address" onChange={e => this.handleChange(e)}/>
+            <Input placeholder="Enter an address (0x...)" onChange={e => this.handleChange(e)}/>
           </FormGroup>
           <Button color="primary" onClick={() => this.handleLookup()}>Lookup</Button>
           {this.state.showResult && this.showResult()}

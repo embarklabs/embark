@@ -46,7 +46,7 @@ class EnsResolve extends Component {
         </CardHeader>
         <CardBody>
           <FormGroup>
-            <Input placeholder="Enter a name" onChange={e => this.handleChange(e)}/>
+            <Input placeholder="Enter a name (e.g embark.eth)" onChange={e => this.handleChange(e)}/>
           </FormGroup>
           <Button color="primary" onClick={() => this.handleResolve()}>Resolve</Button>
           {this.state.showResult && this.showResult()}
