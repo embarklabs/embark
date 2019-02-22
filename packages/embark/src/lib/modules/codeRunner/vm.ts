@@ -127,7 +127,7 @@ class VM {
     if (code === eval || code === require) { return; }
 
     // handle ES6 modules
-    if (isEs6Module(code)) {
+    if (isEs6Module(code) && code.default) {
       code = code.default;
     }
 

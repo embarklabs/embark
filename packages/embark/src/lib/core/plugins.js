@@ -88,8 +88,12 @@ Plugins.prototype.loadInternalPlugin = function(pluginName, pluginConfig, isPack
 };
 
 Plugins.prototype.loadPlugin = function(pluginName, pluginConfig) {
-  var pluginPath = this.fs.dappPath('node_modules', pluginName);
-  var plugin = require(pluginPath);
+  let pluginPath = this.fs.dappPath('node_modules', pluginName);
+  let plugin = require(pluginPath);
+
+  if (plugin.default) {
+    plugin = plugin.default;
+  }
 
   var pluginWrapper = new Plugin({
     name: pluginName,

@@ -623,8 +623,12 @@ function toposort(graph) {
   return toposortGraph(graph);
 }
 
+function isConstructor(obj) {
+  return !!obj.prototype && !!obj.prototype.constructor.name;
+}
+
 function isEs6Module(module) {
-  return typeof module === 'object' && typeof module.default === 'function' && module.__esModule;
+  return (typeof module === 'function' && isConstructor(module)) || (typeof module === 'object' && typeof module.default === 'function' && module.__esModule);
 }
 
 function urlJoin(url, path) {
