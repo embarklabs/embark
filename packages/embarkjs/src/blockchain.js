@@ -30,7 +30,11 @@ Blockchain.connect = function(options, callback) {
             } catch (e) {
               _err = e;
             } finally {
-              _err ? reject(_err) : resolve();
+              if (_err) {
+                reject(_err);
+              } else {
+                resolve();
+              }
             }
           });
         });
@@ -159,65 +163,47 @@ Blockchain.doConnect = function(connectionList, opts, doneCb) {
 
   let connectionErrs = {};
 
-  this.doFirst(function(cb) {
-    reduce(connectionList, false, function(result, connectionString, next) {
-      if (result.connected) {
-        return next(null, result);
-      } else if(result) {
-        connectionErrs[result.connectionString] = result.error;
+  reduce(connectionList, false, function(result, connectionString, next) {
+    if (result.connected) {
+      return next(null, result);
+    } else if (result) {
+      connectionErrs[result.connectionString] = result.error;
+    }
+
+    if (connectionString === '$WEB3') {
+      connectWeb3(next);
+    } else if (connectionString.indexOf('ws://') >= 0) {
+      connectWebsocket(connectionString, next);
+    } else {
+      connectHttp(connectionString, next);
+    }
+  }, async function(_err, result) {
+    if (!result.connected || result.error) {
+      return doneCb(new BlockchainConnectionError(connectionErrs));
+    }
+
+    self.blockchainConnector.getAccounts(async (err, accounts) => {
+      if (err) {
+        return doneCb(err);
+      }
+      const currentProv = self.blockchainConnector.getCurrentProvider();
+      if (opts.warnAboutMetamask && currentProv && currentProv.isMetaMask) {
+        // if we are using metamask, ask embark to turn on dev_funds
+        // embark will only do this if geth is our client and we are in
+        // dev mode
+        if (opts.blockchainClient === 'geth') {
+          console.warn("%cNote: There is a known issue with Geth that may cause transactions to get stuck when using Metamask. Please log in to the cockpit (http://localhost:8000/embark?enableRegularTxs=true) to enable a workaround. Once logged in, the workaround will automatically be enabled.", "font-size: 2em");
+        }
+        if (opts.blockchainClient === 'parity') {
+          console.warn("%cNote: Parity blocks the connection from browser extensions like Metamask. To resolve this problem, go to https://embark.status.im/docs/blockchain_configuration.html#Using-Parity-and-Metamask", "font-size: 2em");
+        }
+        console.warn("%cNote: Embark has detected you are in the development environment and using Metamask, please make sure Metamask is connected to your local node", "font-size: 2em");
+      }
+      if (accounts) {
+        self.blockchainConnector.setDefaultAccount(accounts[0]);
       }
 
-      if (connectionString === '$WEB3') {
-        connectWeb3(next);
-      } else if (connectionString.indexOf('ws://') >= 0) {
-        connectWebsocket(connectionString, next);
-      } else {
-        connectHttp(connectionString, next);
-      }
-    }, async function(_err, result) {
-      if (!result.connected || result.error) {
-        const connectionError = new BlockchainConnectionError(connectionErrs);
-        let _connectionError = connectionError;
-        try {
-          await cb(_connectionError);
-        } catch (e) {
-          _connectionError = e;
-        } finally {
-          return doneCb(_connectionError);
-        }
-      }
-
-      self.blockchainConnector.getAccounts(async (err, accounts) => {
-        if (err) {
-          let _err = err;
-          try {
-            await cb(_err);
-          } catch (e) {
-            _err = e;
-          } finally {
-            return doneCb(_err);
-          }
-        }
-        const currentProv = self.blockchainConnector.getCurrentProvider();
-        if (opts.warnAboutMetamask && currentProv && currentProv.isMetaMask) {
-          // if we are using metamask, ask embark to turn on dev_funds
-          // embark will only do this if geth is our client and we are in
-          // dev mode
-          if(opts.blockchainClient === 'geth') {
-            console.warn("%cNote: There is a known issue with Geth that may cause transactions to get stuck when using Metamask. Please log in to the cockpit (http://localhost:8000/embark?enableRegularTxs=true) to enable a workaround. Once logged in, the workaround will automatically be enabled.", "font-size: 2em");
-          }
-          if(opts.blockchainClient === 'parity') {
-            console.warn("%cNote: Parity blocks the connection from browser extensions like Metamask. To resolve this problem, go to https://embark.status.im/docs/blockchain_configuration.html#Using-Parity-and-Metamask", "font-size: 2em");
-          }
-          console.warn("%cNote: Embark has detected you are in the development environment and using Metamask, please make sure Metamask is connected to your local node", "font-size: 2em");
-        }
-        if (accounts) {
-          self.blockchainConnector.setDefaultAccount(accounts[0]);
-        }
-
-        await cb();
-        doneCb();
-      });
+      doneCb();
     });
   });
 };
