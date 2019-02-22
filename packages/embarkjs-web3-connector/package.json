@@ -1,5 +1,5 @@
 {
-  "name": "web3connector",
+  "name": "embarkjs-web3-connector",
   "version": "4.0.0-beta.0",
   "description": "Web3.js Connector for EmbarkJS",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "embark/packages/Web3Connector"
+    "url": "embark/packages/embarkjs-web3-connector"
   },
   "keywords": [
     "embark",

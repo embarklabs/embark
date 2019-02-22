@@ -60,8 +60,8 @@
       "embark/embark-test-contract-1",
       "test_app/embark-service",
       "test_app/zeppelin-solidity",
-      "test_app/web3connector",
-      "contracts_app/web3connector"
+      "test_app/embarkjs-web3-connector",
+      "contracts_app/embarkjs-web3-connector"
     ]
   }
 }
