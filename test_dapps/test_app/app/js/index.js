@@ -2,7 +2,6 @@
 import React  from 'react';
 import EmbarkJS from 'Embark/EmbarkJS';
 import {SimpleStorage, Test, SimpleStorageTest} from '../../embarkArtifacts/contracts';
-import config from '../../embarkArtifacts/config/blockchain';
 
 window.SimpleStorageTest = SimpleStorageTest;
 
@@ -34,7 +33,7 @@ var addToLog = function(id, txt) {
 // Blockchain example
 // ===========================
 $(document).ready(function() {
-  EmbarkJS.Blockchain.connect(config, (err) => {
+  EmbarkJS.onReady((err) => {
     if (err) {
       console.error(err);
     }
