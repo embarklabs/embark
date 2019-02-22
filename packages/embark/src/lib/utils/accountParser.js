@@ -71,6 +71,8 @@ class AccountParser {
         return ethereumjsWallet.fromPrivateKey(key).getChecksumAddressString();
       }
       return Object.assign(web3.eth.accounts.privateKeyToAccount(key), {hexBalance});
+    } else if (Object.hasOwnProperty('privateKey')) {
+      logger.error(__('accounts error: privateKey field is specified but its value is undefined'));
     }
 
     if (accountConfig.privateKeyFile) {
@@ -113,6 +115,8 @@ class AccountParser {
         }
         return Object.assign(web3.eth.accounts.privateKeyToAccount(key), {hexBalance});
       });
+    } else if (Object.hasOwnProperty('privateKeyFile')) {
+      logger.error(__('accounts error: privateKeyFile field is specified but its value is undefined'));
     }
 
     if (accountConfig.mnemonic) {
@@ -132,7 +136,10 @@ class AccountParser {
         }
       }
       return accounts;
+    } else if (Object.hasOwnProperty('mnemonic')) {
+      logger.error(__('accounts error: mnemonic field is specified but its value is undefined'));
     }
+
     if (accountConfig.secretKey) {
       // Ignore simulator configs
       return null;
