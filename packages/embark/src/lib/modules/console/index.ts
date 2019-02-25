@@ -3,6 +3,7 @@ const env = require("../../core/env");
 const utils = require("../../utils/utils");
 const escapeHtml = require("../../utils/escapeHtml");
 import { Callback } from "embark";
+import constants from "../../constants.json";
 const stringify = require("json-stringify-safe");
 import { waterfall } from "async";
 import { Embark, Events } from "embark";
@@ -85,7 +86,7 @@ class Console {
   }
 
   private get isEmbarkConsole() {
-    return this.ipc.connected && this.ipc.isClient();
+    return this.ipc.connected && this.ipc.isClient() && this.embark.currentContext && this.embark.currentContext.includes(constants.contexts.console);
   }
 
   private cmdHistorySize() {
