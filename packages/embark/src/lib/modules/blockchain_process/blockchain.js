@@ -120,11 +120,15 @@ var Blockchain = function(userConfig, clientClass) {
  */
 Blockchain.prototype.initStandaloneProcess = function () {
   if (this.isStandalone) {
+    let logQueue = [];
+
     // on every log logged in logger (say that 3x fast), send the log
     // to the IPC serve listening (only if we're connected of course)
     this.logger.events.on('log', (logLevel, message) => {
       if (this.ipc.connected) {
         this.ipc.request('blockchain:log', {logLevel, message});
+      } else {
+        logQueue.push({logLevel, message});
       }
     });
 
@@ -135,10 +139,13 @@ Blockchain.prototype.initStandaloneProcess = function () {
     // `embark run` without restarting `embark blockchain`)
     setInterval(() => {
       if (!this.ipc.connected) {
-        this.ipc.connect(() => { 
+        this.ipc.connect(() => {
           if (this.ipc.connected) {
-            this.ipc.listenTo('regularTxs', (mode) => { 
-              if(mode === 'start') this.startRegularTxs(() => {}); 
+            logQueue.forEach(message => { this.ipc.request('blockchain:log', message); });
+            logQueue = [];
+
+            this.ipc.listenTo('regularTxs', (mode) => {
+              if(mode === 'start') this.startRegularTxs(() => {});
               else if (mode === 'stop') this.stopRegularTxs(() => {});
             });
           }

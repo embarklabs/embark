@@ -118,6 +118,7 @@ class IPC {
       cb = cb || (() => {});
       return cb();
     }
+
     if (cb) {
       this.once(action, cb);
     }
