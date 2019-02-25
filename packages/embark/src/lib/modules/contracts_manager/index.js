@@ -24,6 +24,10 @@ class ContractsManager {
       cb(self.compileError, self.listContracts());
     });
 
+    self.events.setCommandHandler('contracts:add', (contract) => {
+      this.contracts[contract.className] = contract;
+    });
+
     self.events.setCommandHandler('contracts:all', (cb) => {
       cb(self.compileError, self.contracts);
     });

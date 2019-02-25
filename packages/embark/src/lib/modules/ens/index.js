@@ -419,12 +419,14 @@ class ENS {
         });
       },
       function registry(next) {
+        self.events.request('contracts:add', self.ensConfig.ENSRegistry);
         self.events.request('deploy:contract', self.ensConfig.ENSRegistry, (err, _receipt) => {
           return next(err);
         });
       },
       function resolver(next) {
         self.ensConfig.Resolver.args = [self.ensConfig.ENSRegistry.deployedAddress];
+        self.events.request('contracts:add', self.ensConfig.Resolver);
         self.events.request('deploy:contract', self.ensConfig.Resolver, (err, _receipt) => {
           return next(err);
         });
@@ -446,6 +448,7 @@ class ENS {
         const contract = self.ensConfig.FIFSRegistrar;
         contract.args = [registryAddress, rootNode];
 
+        self.events.request('contracts:add', contract);
         self.events.request('deploy:contract', contract, (err, _receipt) => {
           return next(err);
         });
