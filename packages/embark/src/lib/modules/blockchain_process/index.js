@@ -110,7 +110,12 @@ class BlockchainModule {
 
     blockchainProcess.startBlockchainNode();
     self.events.once(constants.blockchain.blockchainReady, () => {
-      callback();
+      self.assertNodeConnection(true, (connected) => {
+        if (!connected) {
+          return callback(__('Blockchain process is ready, but still cannot connect to it. Check your host, port and protocol in your contracts config'));
+        }
+        callback();
+      });
     });
     self.events.once(constants.blockchain.blockchainExit, () => {
       callback();
