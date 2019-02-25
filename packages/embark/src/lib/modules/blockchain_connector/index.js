@@ -170,7 +170,10 @@ class BlockchainConnector {
     };
     this.provider = new Provider(providerOptions);
 
-    self.events.request("processes:launch", "blockchain", () => {
+    self.events.request("processes:launch", "blockchain", (err) => {
+      if (err) {
+        return self.logger.error(err);
+      }
       self.provider.startWeb3Provider(() => {
         this.getNetworkId()
           .then(id => {
