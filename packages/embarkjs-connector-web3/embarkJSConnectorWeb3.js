@@ -1,7 +1,7 @@
 /*global Web3*/
-const embarkJSWeb3Connector = {};
+const embarkJSConnectorWeb3 = {};
 
-embarkJSWeb3Connector.init = function(config) {
+embarkJSConnectorWeb3.init = function(config) {
   global.web3 = config.web3 || global.web3;
   // Check if the global web3 object uses the old web3 (0.x)
   if (global.web3 && typeof global.web3.version !== 'string') {
@@ -13,46 +13,46 @@ embarkJSWeb3Connector.init = function(config) {
   global.web3 = this.web3;
 };
 
-embarkJSWeb3Connector.getInstance = function () {
+embarkJSConnectorWeb3.getInstance = function () {
   return this.web3;
 };
 
-embarkJSWeb3Connector.getAccounts = function () {
+embarkJSConnectorWeb3.getAccounts = function () {
   return this.web3.eth.getAccounts(...arguments);
 };
 
-embarkJSWeb3Connector.getNewProvider = function (providerName, ...args) {
+embarkJSConnectorWeb3.getNewProvider = function (providerName, ...args) {
   return new Web3.providers[providerName](...args);
 };
 
-embarkJSWeb3Connector.setProvider = function (provider) {
+embarkJSConnectorWeb3.setProvider = function (provider) {
   return this.web3.setProvider(provider);
 };
 
-embarkJSWeb3Connector.getCurrentProvider = function () {
+embarkJSConnectorWeb3.getCurrentProvider = function () {
   return this.web3.currentProvider;
 };
 
-embarkJSWeb3Connector.getDefaultAccount = function () {
+embarkJSConnectorWeb3.getDefaultAccount = function () {
   return this.web3.eth.defaultAccount;
 };
 
-embarkJSWeb3Connector.setDefaultAccount = function (account) {
+embarkJSConnectorWeb3.setDefaultAccount = function (account) {
   this.web3.eth.defaultAccount = account;
 };
 
-embarkJSWeb3Connector.newContract = function (options) {
+embarkJSConnectorWeb3.newContract = function (options) {
   return new this.web3.eth.Contract(options.abi, options.address);
 };
 
-embarkJSWeb3Connector.send = function () {
+embarkJSConnectorWeb3.send = function () {
   return this.web3.eth.sendTransaction(...arguments);
 };
 
-embarkJSWeb3Connector.toWei = function () {
+embarkJSConnectorWeb3.toWei = function () {
   return this.web3.toWei(...arguments);
 };
 
-embarkJSWeb3Connector.getNetworkId = function () {
+embarkJSConnectorWeb3.getNetworkId = function () {
   return this.web3.eth.net.getId();
 };

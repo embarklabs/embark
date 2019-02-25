@@ -16,6 +16,6 @@
     "solc": "0.4.24"
   },
   "plugins": {
-    "embarkjs-web3-connector": {}
+    "embarkjs-connector-web3": {}
   }
 }
