@@ -35,10 +35,10 @@
     "build:node:async": "cross-env BABEL_ENV=node:async babel src/node --out-dir dist --root-mode upward --source-maps",
     "build:node:test": "cross-env BABEL_ENV=node:test babel test --out-dir build-test --root-mode upward --source-maps",
     "ci": "npm run qa",
-    "clean": "npx rimraf build-test dist embarkjs-*.tgz package",
+    "clean": "npm run reset",
     "package": "npm pack",
     "qa": "npm-run-all build test package",
-    "reset": "npm run clean && npx rimraf node_modules",
+    "reset": "npx rimraf build-test dist embarkjs-*.tgz package",
     "start": "npm run watch",
     "test": "mocha \"build-test/**/*.js\" --exit --no-timeouts --require source-map-support/register",
     "watch": "run-p \"build:** -- --verbose --watch\""

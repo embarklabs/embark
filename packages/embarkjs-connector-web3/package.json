@@ -1,15 +1,10 @@
 {
   "name": "embarkjs-connector-web3",
   "version": "4.0.0-beta.0",
+  "author": "Jonathan Rainville",
+  "contributors": [],
   "description": "Web3.js Connector for EmbarkJS",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "embark/packages/embarkjs-connector-web3"
-  },
+  "homepage": "https://embark.status.im/",
   "keywords": [
     "embark",
     "web3",
@@ -17,6 +12,17 @@
     "ethereum",
     "smart-contract"
   ],
-  "author": "Jonathan Rainville",
-  "license": "ISC"
+  "license": "MIT",
+  "repository": "github:embark-framework/embark",
+  "main": "index.js",
+  "scripts": {
+    "ci": "npm run qa",
+    "clean": "npm run reset",
+    "package": "npm pack",
+    "qa": "npm run package",
+    "reset": "npx rimraf embark-*.tgz package"
+  },
+  "devDependencies": {
+    "rimraf": "2.6.3"
+  }
 }

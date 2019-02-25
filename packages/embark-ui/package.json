@@ -20,11 +20,11 @@
     "build": "node scripts/build.js",
     "build-storybook": "build-storybook -s public",
     "ci": "npm-run-all lint package",
-    "clean": "npx rimraf build embark-*.tgz package",
+    "clean": "npm run reset",
     "lint": "eslint src/",
     "package": "npm pack",
     "qa": "npm-run-all lint build package",
-    "reset": "npm run clean && npx rimraf node_modules",
+    "reset": "npx rimraf build embark-*.tgz package",
     "start": "node scripts/start.js",
     "storybook": "start-storybook -p 9009 -s public",
     "test_": "node scripts/test.js"

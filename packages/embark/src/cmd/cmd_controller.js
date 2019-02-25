@@ -1,6 +1,7 @@
 let async = require('async');
 const constants = require('../lib/constants');
 const Logger = require('../lib/core/logger');
+const {reset: embarkReset} = require('embark-reset');
 
 require('colors');
 
@@ -406,15 +407,9 @@ class EmbarkController {
 
   }
 
-  reset() {
-    var fs = require('../lib/core/fs.js');
-    fs.removeSync('chains.json');
-    fs.removeSync('.embark/');
-    fs.removeSync('node_modules/.cache');
-    fs.removeSync('dist/');
-    fs.removeSync('embarkArtifacts/');
-    fs.removeSync('coverage/');
-    console.log(__("reset done!").green);
+  async reset() {
+    const doneMessage = __("reset done!").green;
+    await embarkReset({doneMessage});
   }
 
   ejectWebpack() {

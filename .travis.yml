@@ -32,4 +32,4 @@ before_install:
 install:
   - echo embark installation managed by package.json script 'ci'
 script:
-  - npm run ci
+  - npm run ci:full

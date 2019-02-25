@@ -1,8 +1,5 @@
 **/.embark
 **/chains.json
-**/config/production/password
 **/config/livenet/password
-**/coverage
-**/dist
+**/config/production/password
 **/embarkArtifacts
-**/node_modules

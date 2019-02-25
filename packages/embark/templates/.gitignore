@@ -1,8 +1,0 @@
-**/.embark
-**/config/production/password
-**/config/livenet/password
-**/coverage
-**/dist
-**/embarkArtifacts
-**/node_modules
-**/package-lock.json
