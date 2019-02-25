@@ -31,5 +31,6 @@ export interface Embark {
   logger: Logger;
   fs: any;
   config: Config;
+  currentContext: string[];
   registerActionForEvent(name: string, action: (callback: () => void) => void): void;
 }
