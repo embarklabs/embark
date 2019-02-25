@@ -1,6 +1,3 @@
-import {EMBARK_PROCESS_NAME} from '../constants';
-import {ansiToHtml} from '../utils/utils';
-
 export const REQUEST = 'REQUEST';
 export const SUCCESS = 'SUCCESS';
 export const FAILURE = 'FAILURE';

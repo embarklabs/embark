@@ -21,13 +21,12 @@ export function estimateGas({web3, contract, args}) {
 
 export function deploy({web3, contract, args}) {
   return new Promise((resolve, reject) => {
-    const cleanup = () => { promiEvent.removeAllListeners(); };
-    const promiEvent = new web3.eth.Contract(contract.abiDefinition)
+    new web3.eth.Contract(contract.abiDefinition)
       .deploy({data: `0x${contract.code}`, arguments: args})
       .send({from: web3.eth.defaultAccount})
       .on('error', reject)
-      .on('receipt', resolve)
-      .then(cleanup)
-      .catch(cleanup);
-  });
+      .once('receipt', resolve)
+      .catch(reject)
+      .then(() => {});
+    });
 }
