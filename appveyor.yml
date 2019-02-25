@@ -29,5 +29,5 @@ install:
   - yarn --version
   - echo embark installation managed by package.json script 'ci'
 test_script:
-  - npm run ci
+  - npm run ci:full
 build: off

@@ -3,10 +3,7 @@
     "haml": "0.4.3"
   },
   "main": "index.js",
-  "name": "embark-service",
+  "name": "embark-dapp-test-service",
   "private": true,
-  "scripts": {
-    "reset": "npx rimraf node_modules"
-  },
   "version": "4.0.0-beta.0"
 }

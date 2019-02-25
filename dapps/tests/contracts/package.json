@@ -1,0 +1,17 @@
+{
+  "devDependencies": {
+    "embark": "^4.0.0-beta.0",
+    "embark-reset": "^4.0.0-beta.0",
+    "embarkjs-connector-web3": "^4.0.0-beta.0"
+  },
+  "name": "embark-dapp-test-contracts",
+  "private": true,
+  "scripts": {
+    "ci": "npm run qa",
+    "clean": "npm run reset",
+    "qa": "npm run test",
+    "reset": "npx embark-reset",
+    "test": "npx embark test"
+  },
+  "version": "4.0.0-beta.0"
+}

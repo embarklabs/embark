@@ -1,0 +1,21 @@
+{
+  "name": "embark-reset",
+  "private": true,
+  "version": "4.0.0-beta.0",
+  "author": "Iuri Matias <iuri.matias@gmail.com>",
+  "contributors": [],
+  "description": "DApp reset utlity for embark",
+  "homepage": "https://embark.status.im/",
+  "license": "MIT",
+  "repository": "github:embark-framework/embark",
+  "bin": "./bin.js",
+  "main": "index.js",
+  "dependencies": {
+    "rimraf": "2.6.3"
+  },
+  "engines": {
+    "node": ">=8.12.0",
+    "npm": ">=6.4.1",
+    "yarn": ">=1.12.3"
+  }
+}

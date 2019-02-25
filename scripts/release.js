@@ -154,7 +154,7 @@ const runCommand = (cmd, inherit = true, display) => {
     );
 
     try {
-      runCommand(`npm run qa`);
+      runCommand(`npm run qa:full`);
       logSuccess(`All steps succeeded in the QA suite.`);
     } catch (e) {
       logError(`A step failed in the QA suite. Please check the error above.`);

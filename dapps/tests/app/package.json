@@ -2,28 +2,26 @@
   "devDependencies": {
     "@babel/code-frame": "7.0.0",
     "bootstrap": "3.4.0",
-    "embark": "4.0.0-beta.0",
-    "embark-service": "4.0.0-beta.0",
+    "embark": "^4.0.0-beta.0",
+    "embark-dapp-test-service": "^4.0.0-beta.0",
+    "embark-reset": "^4.0.0-beta.0",
+    "embarkjs-connector-web3": "^4.0.0-beta.0",
     "fs-extra": "7.0.1",
     "haml": "0.4.3",
     "jquery": "3.3.1",
     "react": "16.7.0",
     "react-bootstrap": "0.32.4",
     "react-dom": "16.7.0",
-    "rimraf": "2.6.3",
     "zeppelin-solidity": "1.12.0"
   },
-  "dependencies": {
-    "embarkjs-connector-web3": "4.0.0-beta.0"
-  },
-  "name": "test_app",
+  "name": "embark-dapp-test-app",
   "private": true,
   "scripts": {
     "ci": "npm run qa",
-    "clean": "./node_modules/.bin/embark reset || exit 0",
+    "clean": "npm run reset",
     "qa": "npm run test",
-    "reset": "npm run clean && npx rimraf node_modules",
-    "test": "./node_modules/.bin/embark test"
+    "reset": "npx embark-reset",
+    "test": "npx embark test"
   },
   "version": "4.0.0-beta.0"
 }

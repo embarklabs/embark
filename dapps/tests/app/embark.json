@@ -20,7 +20,7 @@
     "ipfs-api": "17.2.7"
   },
   "plugins": {
-    "embark-service": {},
+    "embark-dapp-test-service": {},
     "embarkjs-connector-web3": {}
   },
   "options": {
