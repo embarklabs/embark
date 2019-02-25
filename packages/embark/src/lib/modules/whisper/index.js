@@ -18,6 +18,7 @@ class Whisper {
     this.web3 = new Web3();
     this.embark = embark;
     this.web3Ready = false;
+    this.webSocketsChannels = {};
 
     if (embark.currentContext.includes('test') && options.node &&options.node === 'vm') {
       this.logger.info(__('Whisper disabled in the tests'));
