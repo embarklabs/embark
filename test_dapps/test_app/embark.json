@@ -21,7 +21,7 @@
   },
   "plugins": {
     "embark-service": {},
-    "embarkjs-web3-connector": {}
+    "embarkjs-connector-web3": {}
   },
   "options": {
     "solc": {

@@ -1,6 +1,6 @@
 const path = require('path');
 
-class EmbarkJSWeb3Connector {
+class EmbarkJSConnectorWeb3 {
   constructor(embark, _options) {
     this.embark = embark;
     this.events = embark.events;
@@ -40,10 +40,10 @@ class EmbarkJSWeb3Connector {
     let code = `\nconst Web3 = global.__Web3 || require('${symlinkLocation}');`;
     code += `\nglobal.Web3 = Web3;`;
 
-    const connectorCode = this.fs.readFileSync(path.join(__dirname, 'embarkJSWeb3Connector.js'), 'utf8');
+    const connectorCode = this.fs.readFileSync(path.join(__dirname, 'embarkJSConnectorWeb3.js'), 'utf8');
     code += connectorCode;
 
-    code += "\nEmbarkJS.Blockchain.registerProvider('web3', embarkJSWeb3Connector);";
+    code += "\nEmbarkJS.Blockchain.registerProvider('web3', embarkJSConnectorWeb3);";
     code += "\nEmbarkJS.Blockchain.setProvider('web3', {});";
 
     const configPath = this.fs.dappPath(this.config.embarkConfig.generationDir, this.constants.dappArtifacts.dir, this.constants.dappArtifacts.blockchain).replace(/\\/g, '/');
@@ -111,4 +111,4 @@ class EmbarkJSWeb3Connector {
   }
 }
 
-module.exports = EmbarkJSWeb3Connector;
+module.exports = EmbarkJSConnectorWeb3;

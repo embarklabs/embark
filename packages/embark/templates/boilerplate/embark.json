@@ -14,7 +14,7 @@
     "ipfs-api": "17.2.4"
   },
   "plugins": {
-    "embarkjs-web3-connector": {}
+    "embarkjs-connector-web3": {}
   },
   "options": {
     "solc": {
