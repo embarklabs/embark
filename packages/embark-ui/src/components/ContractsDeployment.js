@@ -54,8 +54,8 @@ const LayoutContract = ({contract, children, cardTitle}) => (
 
 LayoutContract.propTypes = {
   contract: PropTypes.object,
-  children: PropTypes.array,
-  cardTitle: PropTypes.object
+  children: PropTypes.any,
+  cardTitle: PropTypes.any
 };
 
 const DeploymentResult = ({deployment}) => {
