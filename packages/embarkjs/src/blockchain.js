@@ -192,7 +192,8 @@ Blockchain.doConnect = function(connectionList, opts, doneCb) {
         // embark will only do this if geth is our client and we are in
         // dev mode
         if (opts.blockchainClient === 'geth') {
-          console.warn("%cNote: There is a known issue with Geth that may cause transactions to get stuck when using Metamask. Please log in to the cockpit (http://localhost:8000/embark?enableRegularTxs=true) to enable a workaround. Once logged in, the workaround will automatically be enabled.", "font-size: 2em");
+          // TODO find a way to share the port number
+          console.warn("%cNote: There is a known issue with Geth that may cause transactions to get stuck when using Metamask. Please log in to the cockpit (http://localhost:55555/embark?enableRegularTxs=true) to enable a workaround. Once logged in, the workaround will automatically be enabled.", "font-size: 2em");
         }
         if (opts.blockchainClient === 'parity') {
           console.warn("%cNote: Parity blocks the connection from browser extensions like Metamask. To resolve this problem, go to https://embark.status.im/docs/blockchain_configuration.html#Using-Parity-and-Metamask", "font-size: 2em");
