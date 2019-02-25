@@ -218,11 +218,11 @@ class EmbarkController {
         engine.startService("libraryManager");
         engine.startService("codeRunner");
         engine.startService("pipeline");
+        engine.startService("codeGenerator");
         if (!options.onlyCompile) {
           engine.startService("web3");
           engine.startService("deployment", {onlyCompile: options.onlyCompile});
           engine.startService("storage");
-          engine.startService("codeGenerator");
         } else {
           engine.startService('compiler');
         }
@@ -295,7 +295,7 @@ class EmbarkController {
         engine.startService("codeGenerator");
         engine.startService("codeRunner");
         engine.startService("console");
-        
+
         if (isSecondaryProcess(engine)) {
           return callback();
         }
