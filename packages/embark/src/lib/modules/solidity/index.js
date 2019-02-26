@@ -1,5 +1,6 @@
 let async = require('../../utils/async_extend.js');
 let SolcW = require('./solcW.js');
+const path = require('path');
 
 class Solidity {
 
@@ -144,7 +145,7 @@ class Solidity {
             compiled_object[className].abiDefinition = contract.abi;
             compiled_object[className].userdoc = contract.userdoc;
             compiled_object[className].filename = filename;
-            compiled_object[className].originalFilename = originalFilepaths[filename];
+            compiled_object[className].originalFilename = originalFilepaths[path.basename(filename)];
           }
         }
 
