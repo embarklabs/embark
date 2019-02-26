@@ -19,8 +19,8 @@ function action(type, payload = {}) {
 export const AUTHENTICATE = createRequestTypes('AUTHENTICATE');
 export const authenticate = {
   request: (host, token) => action(AUTHENTICATE[REQUEST], {host, token}),
-  success: (result, payload) => { 
-    return action(AUTHENTICATE[SUCCESS], {host: payload.host, token: result.token}) 
+  success: (result, payload) => {
+    return action(AUTHENTICATE[SUCCESS], {host: payload.host, token: result.token})
   },
   failure: (error) => action(AUTHENTICATE[FAILURE], {error})
 };
@@ -121,17 +121,7 @@ export const COMMANDS = createRequestTypes('COMMANDS');
 export const commands = {
   post: (command) => action(COMMANDS[REQUEST], {command}),
   success: (command, payload) => {
-    return action(COMMANDS[SUCCESS], {
-      processLogs: [
-        {
-          timestamp: new Date().getTime(),
-          name: EMBARK_PROCESS_NAME,
-          msg: `${ansiToHtml(command.result || '')}`,
-          command: `console> ${payload.command}<br>`,
-			    result: command.result
-        }
-      ]
-    });
+    return action(COMMANDS[SUCCESS], {});
   },
   failure: (error) => action(COMMANDS[FAILURE], {error})
 };
