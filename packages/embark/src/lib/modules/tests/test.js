@@ -306,7 +306,6 @@ class Test {
       },
       function createContractObject(accounts, web3, next) {
         self.events.request('contracts:all', (err, contracts) => {
-
           async.each(contracts, (contract, eachCb) => {
             if (!self.contracts[contract.className]) {
               self.contracts[contract.className] = {};

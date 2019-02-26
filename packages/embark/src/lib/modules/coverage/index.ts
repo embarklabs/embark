@@ -3,6 +3,7 @@ import * as path from "path";
 import Web3Contract from "web3/eth/contract";
 
 import { Contract, Embark } from "embark";
+import { File } from "../../core/file";
 import { removePureView } from "../../utils/solidity/code";
 import { ContractEnhanced } from "./contractEnhanced";
 import { coverageContractsPath } from "./path";
@@ -12,14 +13,13 @@ export default class Coverage {
   private contracts: ContractEnhanced[];
   private deployedContracts: Contract[] = [];
   private web3Contracts: Web3Contract[] = [];
-  private contractsDir: string[] = [];
+  private originalContractFiles: File[] = [];
   private fs: any;
 
   constructor(private embark: Embark, options: any) {
     this.fs = embark.fs;
     this.fs.ensureDirSync(coverageContractsPath());
-    const contractsDirConfig = this.embark.config.embarkConfig.contracts;
-    this.contractsDir = Array.isArray(contractsDirConfig) ? contractsDirConfig : [contractsDirConfig];
+    this.originalContractFiles = embark.config.contractsFiles;
 
     this.contracts = this.getContracts();
 
@@ -36,12 +36,7 @@ export default class Coverage {
 
   private getContracts() {
     const solcVersion = this.embark.config.embarkConfig.versions.solc;
-    const filepaths = this.contractsDir.reduce((acc: string[], pattern: string) => (
-      acc.concat(globule.find(pattern, { prefixBase: false, srcBase: this.fs.dappPath() }))
-    ), []);
-
-    return filepaths.filter((filepath) => this.fs.statSync(filepath).isFile())
-                    .map((filepath) => new ContractEnhanced(filepath, solcVersion));
+    return this.originalContractFiles.map((file) => new ContractEnhanced(file.path, solcVersion));
   }
 
   private async prepareContracts() {
@@ -54,9 +49,9 @@ export default class Coverage {
   }
 
   private swapContracts() {
-    this.embark.config.embarkConfig.contracts = this.contractsDir.reduce((acc: string[], value: string) => (
-      acc.concat(path.join(coverageContractsPath(), value))
-    ), []);
+    this.embark.config.embarkConfig.contracts = this.originalContractFiles.map((file: File) => (
+      path.join(coverageContractsPath(), file.path)
+    ));
     this.embark.config.contractsFiles = [];
     this.embark.config.reloadConfig();
   }
@@ -77,7 +72,10 @@ export default class Coverage {
     const coveragePath = path.join(this.fs.dappPath(), ".embark", "coverage.json");
 
     const coverageReport = this.contracts.reduce((acc: {[name: string]: ICoverage}, contract) => {
-      acc[contract.filepath] = contract.coverage;
+      if (contract.source) {
+        acc[contract.filepath] = contract.coverage;
+      }
+
       return acc;
     }, {});
 
