@@ -11,6 +11,7 @@ class Monitor {
     this.color = options.color || "green";
     this.minimal = options.minimal || false;
     this.ipc = options.ipc;
+    this.logger = options.logger;
 
     this.screen = blessed.screen({
       smartCSR: true,
@@ -52,6 +53,7 @@ class Monitor {
     this.repl = new REPL({
       events: this.events,
       env: this.env,
+      logger: this.logger,
       inputStream: this.terminalReadableStream,
       outputStream: terminalWritableStream,
       logText: this.logText,
