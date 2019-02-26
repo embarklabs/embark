@@ -174,23 +174,39 @@ class BlockchainConnector {
       if (err) {
         return self.logger.error(err);
       }
-      self.provider.startWeb3Provider(() => {
-        this.getNetworkId()
-          .then(id => {
-            let networkId = self.config.blockchainConfig.networkId;
-            if (!networkId && constants.blockchain.networkIds[self.config.blockchainConfig.networkType]) {
-              networkId = constants.blockchain.networkIds[self.config.blockchainConfig.networkType];
-            }
-            if (networkId && id.toString() !== networkId.toString()) {
-              self.logger.warn(__('Connected to a blockchain node on network {{realId}} while your config specifies {{configId}}', {realId: id, configId: networkId}));
-              self.logger.warn(__('Make sure you started the right blockchain node'));
-            }
-          })
-          .catch(console.error);
-        self.provider.fundAccounts(() => {
-          self._emitWeb3Ready();
-          cb();
-        });
+      self.provider.startWeb3Provider(async () => {
+        try {
+          const blockNumber = await self.web3.eth.getBlockNumber();
+          await self.web3.eth.getBlock(blockNumber);
+          self.provider.fundAccounts(() => {
+            self._emitWeb3Ready();
+            cb();
+          });
+        } catch (e) {
+          const errorMessage = e.message || e;
+          if (errorMessage.indexOf('no suitable peers available') > 0) {
+            self.logger.warn(errorMessage);
+            self.logger.warn(__('Your node is probably not synchronized. Wait until your node is synchronized before deploying'));
+            process.exit(1);
+          }
+          self.logger.error(errorMessage);
+          cb(errorMessage);
+        }
+
+        try {
+          const id = await this.getNetworkId();
+          let networkId = self.config.blockchainConfig.networkId;
+          if (!networkId &&
+            constants.blockchain.networkIds[self.config.blockchainConfig.networkType]) {
+            networkId = constants.blockchain.networkIds[self.config.blockchainConfig.networkType];
+          }
+          if (networkId && id.toString() !== networkId.toString()) {
+            self.logger.warn(__('Connected to a blockchain node on network {{realId}} while your config specifies {{configId}}', {realId: id, configId: networkId}));
+            self.logger.warn(__('Make sure you started the right blockchain node'));
+          }
+        } catch (e) {
+          console.error(e);
+        }
       });
     });
   }

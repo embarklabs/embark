@@ -185,7 +185,10 @@ class ContractDeployer {
             return self.deployContract(contract, next);
           }
 
-          self.blockchain.getCode(trackedContract.address, function(_getCodeErr, codeInChain) {
+          self.blockchain.getCode(trackedContract.address, function(getCodeErr, codeInChain) {
+            if (getCodeErr) {
+              return next(getCodeErr);
+            }
             if (codeInChain.length > 3 || skipBytecodeCheck) { // it is "0x" or "0x0" for empty code, depending on web3 version
               self.contractAlreadyDeployed(contract, trackedContract, next);
             } else {
