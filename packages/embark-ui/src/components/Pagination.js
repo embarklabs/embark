@@ -13,9 +13,6 @@ const Pagination = ({currentPage, numberOfPages, changePage}) => {
   if (i < 1) {
     i = 1;
   }
-  if (max - i < NB_PAGES_MAX) {
-    max += NB_PAGES_MAX - max + 1;
-  }
   const pageNumbers = [];
   for (i; i <= max; i++) {
     pageNumbers.push(i);

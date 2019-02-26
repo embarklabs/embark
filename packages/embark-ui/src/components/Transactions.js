@@ -47,7 +47,7 @@ const Transactions = ({transactions, contracts, changePage, currentPage, numberO
               </Row>
             </div>
           ))}
-          <Pagination changePage={changePage} currentPage={currentPage} numberOfPages={numberOfPages}/>
+          {numberOfPages && <Pagination changePage={changePage} currentPage={currentPage} numberOfPages={numberOfPages}/>}
         </CardBody>
       </Card>
     </Col>
