@@ -52,7 +52,7 @@ class GasStation extends Component {
   getCurrentGas() {
     const formattedGas = this.getGasOracleFormatted();
     if (!formattedGas.length) {
-      return 'Too few blocks';
+      return -1;
     }
     return this.getGasOracleFormatted()[this.state.gasOracleSliderIndex].gasPrice / this.PRICE_UNIT_DIVIDER;
   }

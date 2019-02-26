@@ -20,7 +20,7 @@ class GasStationContainer extends Component {
 
   getCurrentGas() {
     if (!this.gasStation) {
-      return 'Unavailable';
+      return -1;
     }
     return this.gasStation.getCurrentGas();
   }
