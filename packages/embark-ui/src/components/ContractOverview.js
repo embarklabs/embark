@@ -63,7 +63,8 @@ class ContractFunction extends Component {
   autoSetGasPrice(e) {
     e.preventDefault();
     const newInputs = this.state.inputs;
-    newInputs.gasPrice = this.gasStation.getCurrentGas();
+    const currentPrice = this.gasStation.getCurrentGas();
+    newInputs.gasPrice = currentPrice >= 0 ? currentPrice : 'Estimate unavailable';
     this.setState({inputs: newInputs});
   }
 
