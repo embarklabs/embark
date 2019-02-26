@@ -18,7 +18,8 @@ class Provider {
     this.nonceCache = {};
 
     this.events.setCommandHandler("blockchain:provider:contract:accounts:get", cb => {
-      cb(this.accounts);
+      const accounts = this.accounts.map(a => a.address || a);
+      cb(accounts);
     });
   }
 
