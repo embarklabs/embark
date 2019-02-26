@@ -15,11 +15,11 @@ const Contracts = ({contracts, title = "Contracts"}) => (
         </CardHeader>
         <CardBody>
           {
-            contracts.map(contract => {
+            contracts.map((contract, key) => {
               const contractDisplay = formatContractForDisplay(contract);
 
               return (
-                <div className="explorer-row border-top" key={contract.address}>
+                <div className="explorer-row border-top" key={`contract-${key}`}>
                   <CardTitleIdenticon id={contract.className}>
                     <Link to={`/explorer/contracts/${contract.className}`}>{contract.className}</Link>
                   </CardTitleIdenticon>

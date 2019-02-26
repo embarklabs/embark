@@ -30,11 +30,7 @@ class GasStationContainer extends Component {
                         {...this.props} render={({lastBlock, gasOracleStats}) => (
       <GasStation gasOracleStats={gasOracleStats} lastBlock={lastBlock} ref={instance => { this.gasStation = instance; }}/>
     )} elseRender={() => {
-      let message = 'Currently not enough blocks mined to estimated';
-      if (Object.keys(this.props.gasOracleStats).length === 0) {
-        message = 'No blocks detected. If you are connected using an RPC connection, switch to WS to have access to new block events.'
-      }
-      return (<Alert color="danger">{message}</Alert>)
+      return (<Alert color="danger">No blocks detected. If you are connected using an RPC connection, switch to WS to have access to new block events. If you are in development, add new blocks by making transactions.</Alert>)
     }}/>;
 
   }

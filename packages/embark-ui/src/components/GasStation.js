@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
-import {Card, CardBody, CardHeader, CardTitle, Row, Col, Input, Badge} from 'reactstrap';
+import {Card, CardBody, CardHeader, CardTitle, Row, Col, Input, Badge, Alert} from 'reactstrap';
 import CopyButton from './CopyButton';
 
 const COLORS = {
@@ -29,7 +29,7 @@ class GasStation extends Component {
     if (!gasPrices.length) {
       return [];
     }
-    const formattedStats =  gasPrices.filter((gasPrice) => {
+    const formattedStats = gasPrices.filter((gasPrice) => {
       return this.props.gasOracleStats[gasPrice].nbTxs >= 10; // Only keep prices with enough transactions
     }).map(gasPrice => {
       totalWait += this.props.gasOracleStats[gasPrice].totalWait;
@@ -50,6 +50,10 @@ class GasStation extends Component {
   }
 
   getCurrentGas() {
+    const formattedGas = this.getGasOracleFormatted();
+    if (!formattedGas.length) {
+      return 'Too few blocks';
+    }
     return this.getGasOracleFormatted()[this.state.gasOracleSliderIndex].gasPrice / this.PRICE_UNIT_DIVIDER;
   }
 
@@ -91,7 +95,7 @@ class GasStation extends Component {
     const formattedGasOracleStats = this.getGasOracleFormatted();
     const currentGasStep = formattedGasOracleStats[this.state.gasOracleSliderIndex];
     if (!formattedGasOracleStats.length) {
-      return '';
+      return <Alert color="warning">Currently not enough blocks mined to estimate</Alert>;
     }
     return <Row>
       <Col>
