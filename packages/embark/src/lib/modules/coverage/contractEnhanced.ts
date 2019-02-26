@@ -27,13 +27,19 @@ export class ContractEnhanced {
   public coverageFilepath: string;
   public originalSource: string;
   public source: string;
-  private ast: parser.ASTNode;
+  private ast!: parser.ASTNode;
   private functionsBodyLocation: {[id: number]: Location} = {};
 
   constructor(public filepath: string, public solcVersion: string) {
     this.id = nextId();
-    this.source = fs.readFileSync(filepath, "utf-8");
-    this.originalSource = this.source;
+    try {
+      this.source = fs.readFileSync(filepath, "utf-8");
+      this.originalSource = this.source;
+      this.ast = parser.parse(this.source, {loc: true, range: true});
+    } catch (error) {
+      this.source = "";
+      this.originalSource = "";
+    }
 
     this.coverageFilepath = path.join(coverageContractsPath(), this.filepath);
 
@@ -48,10 +54,12 @@ export class ContractEnhanced {
       s: {},
       statementMap: {},
     };
-    this.ast = parser.parse(this.source, {loc: true, range: true});
   }
 
   public instrument() {
+    if (!this.ast) {
+      return;
+    }
     const instrumenter = new Instrumenter(this);
     const instrumentWalker = new InstrumentWalker(instrumenter);
     instrumentWalker.walk(this.ast);
