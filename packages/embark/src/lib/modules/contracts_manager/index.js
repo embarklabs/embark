@@ -212,6 +212,9 @@ class ContractsManager {
         this.events.on('contractsDeployed', () => {
           ws.send(JSON.stringify(this._contractsForApi()), () => undefined);
         });
+        this.events.on('contractsState', () => {
+          ws.send(JSON.stringify(this._contractsForApi()), () => undefined);
+        });
       }
     );
 
