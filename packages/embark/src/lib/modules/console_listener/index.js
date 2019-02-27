@@ -1,5 +1,6 @@
 const async = require('async');
 const utils = require('../../utils/utils.js');
+const {getAddressToContract, getTransactionParams} = require('../../utils/transactionUtils');
 
 class ConsoleListener {
   constructor(embark, options) {
@@ -27,7 +28,7 @@ class ConsoleListener {
       this.contractsDeployed = true;
 
       this._getContractsList((contractsList) => {
-        this._updateContractList(contractsList);
+        this.addressToContract = getAddressToContract(contractsList, this.addressToContract);
       });
     });
 
@@ -54,37 +55,6 @@ class ConsoleListener {
         return callback();
       }
       callback(contractsList);
-    });
-  }
-
-  _updateContractList(contractsList) {
-    if (!contractsList) return;
-    contractsList.forEach(contract => {
-      if (!contract.deployedAddress) return;
-
-      let address = contract.deployedAddress.toLowerCase();
-      if (!this.addressToContract[address]) {
-        let funcSignatures = {};
-        contract.abiDefinition
-          .filter(func => func.type === "function")
-          .map(func => {
-            const name = func.name +
-              '(' +
-              (func.inputs ? func.inputs.map(input => input.type).join(',') : '') +
-              ')';
-            funcSignatures[utils.sha3(name).substring(0, 10)] = {
-              name,
-              abi: func,
-              functionName: func.name
-            };
-          });
-
-        this.addressToContract[address] = {
-          name: contract.className,
-          functions: funcSignatures,
-          silent: contract.silent
-        };
-      }
     });
   }
 
@@ -121,26 +91,14 @@ class ConsoleListener {
     if (!contract) {
       this.logger.info(`Contract log for unknown contract: ${JSON.stringify(request)}`);
       return this._getContractsList((contractsList) => {
-        this._updateContractList(contractsList);
+        this.addressToContract = getAddressToContract(contractsList, this.addressToContract);
       });
     }
     const {name, silent} = contract;
     if (silent && !this.outputDone) {
       return;
     }
-
-    const func = contract.functions[data.substring(0, 10)];
-    const functionName = func.functionName;
-
-    const decodedParameters = utils.decodeParams(func.abi.inputs, data.substring(10));
-    let paramString = "";
-    if (func.abi.inputs) {
-      func.abi.inputs.forEach((input) => {
-        let quote = input.type.indexOf("int") === -1 ? '"' : '';
-        paramString += quote + decodedParameters[input.name] + quote + ", ";
-      });
-      paramString = paramString.substring(0, paramString.length - 2);
-    }
+    const {functionName, paramString} = getTransactionParams(contract, data);
 
     gasUsed = utils.hexToNumber(gasUsed);
     blockNumber = utils.hexToNumber(blockNumber);

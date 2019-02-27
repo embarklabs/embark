@@ -4,4 +4,5 @@ export interface Contract {
   abiDefinition: ABIDefinition[];
   deployedAddress: string;
   className: string;
+  silent?: boolean;
 }

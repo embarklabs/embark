@@ -3,6 +3,7 @@ const {expect} = require('chai');
 const sinon = require('sinon');
 const Events = require('../../lib/core/events');
 const Logger = require('../../lib/core/logger');
+const transactionUtils = require('../../lib/utils/transactionUtils');
 const ConsoleListener = require('../../lib/modules/console_listener');
 const IPC = require('../../lib/core/ipc.js');
 require('colors');
@@ -99,8 +100,8 @@ function resetTest() {
     events,
     logger,
     fs: {
-      existsSync: () => { return false },
-      dappPath: () => { return "ok" }
+      existsSync: () => { return false; },
+      dappPath: () => { return "ok"; }
     },
     config: {
       contractsConfig: {}
@@ -128,85 +129,9 @@ describe('Console Listener', function () {
     done();
   });
 
-  describe('#updateContractList', function () {
-    it('should not update contracts list', function (done) {
-      contractsList.deployedAddress = undefined;
-      consoleListener._updateContractList(contractsList);
-
-      expect(consoleListener.addressToContract.length).to.be.equal(0);
-      done();
-    });
-
-    it('should update contracts list', function (done) {
-      consoleListener._updateContractList(contractsList);
-
-      expect(consoleListener.addressToContract["0x12345"]).to.deep.equal({
-        name: "SimpleStorage",
-        functions: {
-          "0x2a1afcd9": {
-            "abi": {
-              "constant": true,
-              "inputs": [],
-              "name": "storedData",
-              "outputs": [
-                {
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "payable": false,
-              "stateMutability": "view",
-              "type": "function"
-            },
-            "functionName": "storedData",
-            "name": "storedData()"
-          },
-          "0x60fe47b1": {
-            "abi": {
-              "constant": false,
-              "inputs": [
-                {
-                  "name": "x",
-                  "type": "uint256"
-                }
-              ],
-              "name": "set",
-              "outputs": [],
-              "payable": false,
-              "stateMutability": "nonpayable",
-              "type": "function"
-            },
-            "functionName": "set",
-            "name": "set(uint256)"
-          },
-          "0x6d4ce63c": {
-            "abi": {
-              "constant": true,
-              "inputs": [],
-              "name": "get",
-              "outputs": [
-                {
-                  "name": "retVal",
-                  "type": "uint256"
-                }
-              ],
-              "payable": false,
-              "stateMutability": "view",
-              "type": "function"
-            },
-            "functionName": "get",
-            "name": "get()"
-          }
-        },
-        silent: true
-      });
-      done();
-    });
-  });
-
   describe('#listenForLogRequests', function () {
     it('should emit the correct contracts logs', function (done) {
-      consoleListener._updateContractList(contractsList);
+      transactionUtils.getAddressToContract(contractsList, consoleListener.addressToContract);
       consoleListener._onIpcLogRequest(ipcRequest);
 
       const expectedContractLog = {
@@ -249,7 +174,7 @@ describe('Console Listener', function () {
 
     it('should emit a log for a non-contract log', function (done) {
       ipcRequest.type = 'something-other-than-contract-log';
-      consoleListener._updateContractList(contractsList);
+      transactionUtils.getAddressToContract(contractsList, consoleListener.addressToContract);
       consoleListener._onIpcLogRequest(ipcRequest);
 
       expect(loggerInfos[0]).to.be.equal(JSON.stringify(ipcRequest));
