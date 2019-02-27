@@ -1,0 +1,59 @@
+{
+  "suggestions": [
+    {
+      "value": "web3.eth",
+      "command_type": "web3 object",
+      "description": "module for interacting with the Ethereum network"
+    },
+    {
+      "value": "web3.net",
+      "command_type": "web3 object",
+      "description": "module for interacting with network properties"
+    },
+    {
+      "value": "web3.shh",
+      "command_type": "web3 object",
+      "description": "module for interacting with the whisper protocol"
+    },
+    {
+      "value": "web3.bzz",
+      "command_type": "web3 object",
+      "description": "module for interacting with the swarm network"
+    },
+    {
+      "value": "web3.eth.getAccounts()",
+      "command_type": "web3 object",
+      "description": "get list of accounts"
+    },
+    {
+      "value": "help",
+      "command_type": "embark command",
+      "description": "displays quick list of some of the available embark commands"
+    },
+    {
+      "value": "versions",
+      "command_type": "embark command",
+      "description": "display versions in use for libraries and tools like web3 and solc"
+    },
+    {
+      "value": "ipfs",
+      "command_type": "javascript object",
+      "description": "instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)"
+    },
+    {
+      "value": "swarm",
+      "command_type": "javascript object",
+      "description": "instantiated swarm-api object configured to the current environment (available if swarm is enabled)"
+    },
+    {
+      "value": "web3",
+      "command_type": "javascript object",
+      "description": "instantiated web3.js object configured to the current environment"
+    },
+    {
+      "value": "EmbarkJS",
+      "command_type": "javascript object",
+      "description": "EmbarkJS static functions for Storage, Messages, Names, etc."
+    }
+  ]
+}

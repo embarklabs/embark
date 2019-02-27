@@ -18,6 +18,8 @@ export default class Suggestions {
   private embark: Embark;
   private events: Events;
   private contracts: ContractsManager;
+  private static readonly DEFAULT_SUGGESTIONS = require("./suggestions.json").suggestions;
+  private _suggestions: SuggestionsList = [];
 
   constructor(embark: Embark, options?: object) {
     this.embark = embark;
@@ -26,6 +28,30 @@ export default class Suggestions {
 
     this.registerApi();
     this.listenToEvents();
+  }
+
+  private get suggestions(): SuggestionsList {
+    if (this._suggestions.length) {
+      return this._suggestions;
+    }
+
+    this._suggestions = [...Suggestions.DEFAULT_SUGGESTIONS];
+
+    Object.values(this.contracts).forEach((contract: any) => {
+      this._suggestions.push({value: contract.className, command_type: "web3 object", description: "contract deployed at " + contract.deployedAddress});
+      this._suggestions.push({value: "profile " + contract.className, command_type: "embark command", description: "profile " + contract.className + " contract"});
+    });
+
+    const plugins = this.embark.config.plugins.getPluginsProperty("console", "console");
+    for (const plugin of plugins) {
+      this._suggestions.push({
+        command_type: "plugin command",
+        description: plugin.description,
+        value: (JSON.stringify(plugin.usage) || "").replace(/\"/g, "").trim() || this.formatMatches(plugin.matches),
+      });
+    }
+
+    return this._suggestions;
   }
 
   private registerApi() {
@@ -40,6 +66,9 @@ export default class Suggestions {
   private listenToEvents() {
     this.events.on("deploy:contract:deployed", (contract: any) => {
       this.contracts[contract.className] = contract;
+
+      // reset backing variable so contracts suggestions can be re-built for next request
+      this._suggestions = [];
     });
   }
 
@@ -64,29 +93,8 @@ export default class Suggestions {
 
   public getSuggestions(cmd: string, cb: (results: SuggestionsList) => any) {
     if (cmd === "") { return cb([]); }
-    const suggestions: SuggestionsList = [];
 
-    suggestions.push({value: "web3.eth", command_type: "web3 object", description: "module for interacting with the Ethereum network"});
-    suggestions.push({value: "web3.net", command_type: "web3 object", description: "module for interacting with network properties"});
-    suggestions.push({value: "web3.shh", command_type: "web3 object", description: "module for interacting with the whisper protocol"});
-    suggestions.push({value: "web3.bzz", command_type: "web3 object", description: "module for interacting with the swarm network"});
-    suggestions.push({value: "web3.eth.getAccounts()", command_type: "web3 object", description: "get list of accounts"});
-
-    Object.values(this.contracts).forEach((contract: any) => {
-      suggestions.push({value: contract.className, command_type: "web3 object", description: "contract deployed at " + contract.deployedAddress});
-      suggestions.push({value: "profile " + contract.className, command_type: "embark command", description: "profile " + contract.className + " contract"});
-    });
-
-    const plugins = this.embark.config.plugins.getPluginsProperty("console", "console");
-    for (const plugin of plugins) {
-      suggestions.push({value: plugin.usage || this.formatMatches(plugin.matches), command_type: "plugin command", description: plugin.description});
-    }
-    suggestions.push({value: "help", command_type: "embark command", description: "displays quick list of some of the available embark commands"});
-    suggestions.push({value: "versions", command_type: "embark command", description: "display versions in use for libraries and tools like web3 and solc"});
-    suggestions.push({value: "ipfs", command_type: "javascript object", description: "instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)"});
-    suggestions.push({value: "swarm", command_type: "javascript object", description: "instantiated swarm-api object configured to the current environment (available if swarm is enabled)"});
-    suggestions.push({value: "web3", command_type: "javascript object", description: "instantiated web3.js object configured to the current environment"});
-    suggestions.push({value: "EmbarkJS", command_type: "javascript object", description: "EmbarkJS static functions for Storage, Messages, Names, etc."});
+    const suggestions = this.suggestions;
 
     if (cmd.indexOf(".") <= 0) {
       return cb(this.searchSuggestions(cmd.toLowerCase(), suggestions));
@@ -95,7 +103,11 @@ export default class Suggestions {
     try {
       const toRemove: string = "." + cmd.split(".").reverse()[0];
       const cmdToSearch: string = cmd.replace((new RegExp(toRemove + "$")), "");
-      return this.events.request("runcode:eval", "Object.getOwnPropertyNames(" + cmdToSearch + ")", (err: any, result: any) => {
+
+      if (!cmdToSearch) {
+        return cb(this.searchSuggestions(cmd, suggestions));
+      }
+      return this.events.request("runcode:eval", `${cmdToSearch} && Object.getOwnPropertyNames(${cmdToSearch})`, (err: any, result: any) => {
         try {
           if (Array.isArray(result)) {
             result.forEach((match: string) => {
