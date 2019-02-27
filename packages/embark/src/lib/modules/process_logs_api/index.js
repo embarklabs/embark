@@ -1,4 +1,5 @@
 const LogHandler = require('../../utils/logHandler');
+const escapeHtml = require('../../utils/escapeHtml');
 
 class ProcessLogsApi {
   constructor({embark, processName, silent}) {
@@ -18,6 +19,9 @@ class ProcessLogsApi {
       apiRoute,
       (ws, _req) => {
         this.events.on('process-log-' + this.processName, function (log) {
+          log.msg = escapeHtml(log.msg);
+          log.msg_clear = escapeHtml(log.msg_clear);
+
           ws.send(JSON.stringify(log), () => {});
         });
       }
@@ -28,7 +32,10 @@ class ProcessLogsApi {
       (req, res) => {
         let limit = parseInt(req.query.limit, 10);
         if (!Number.isInteger(limit)) limit = 0;
-        const result = this.logHandler.logs.slice(limit * -1);
+        const result = this.logHandler.logs
+          .slice(limit * -1)
+          .map(msg => escapeHtml(msg));
+
         res.send(JSON.stringify(result));
       }
     );

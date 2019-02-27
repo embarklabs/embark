@@ -1,6 +1,7 @@
 require('colors');
 let fs = require('./fs.js');
 const date = require('date-and-time');
+const escapeHtml = require('../utils/escapeHtml');
 
 const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss:SSS';
 const LOG_REGEX = new RegExp(/\[(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d:\d\d\d)\] (?:\[(\w*)\]:?)?\s?\s?(.*)/gmi);
@@ -71,6 +72,7 @@ Logger.prototype.registerAPICall = function (plugins) {
     '/embark-api/logs',
     (ws, _req) => {
       self.events.on("log", function (logLevel, logMsg) {
+        logMsg = escapeHtml(logMsg);
         ws.send(JSON.stringify({msg: logMsg, msg_clear: logMsg.stripColors, logLevel: logLevel}), () => {});
       });
     }
