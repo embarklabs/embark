@@ -129,7 +129,7 @@ class Provider {
               return cb(err);
             }
             if (self.accounts.length) {
-              result.result = self.blockchainAccounts.map(a => a.address);
+              result.result = self.addresses;
             }
             cb(null, result);
           });
