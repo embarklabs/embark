@@ -194,6 +194,7 @@ class TestRunner {
             mocha.reporter(reporter, {
               events: self.events,
               gasDetails: options.gasDetails,
+              txDetails: options.txDetails,
               gasLimit
             });
 

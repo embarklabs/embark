@@ -22,10 +22,12 @@ class EmbarkApiSpec extends Base {
       };
     };
 
-    runner.on('start', () => { this.embark.events.request('tests:results:reset'); });
-    runner.on('pass', test => { this.embark.events.request('tests:results:report', formatTest(test)); });
-    runner.on('fail', test => { this.embark.events.request('tests:results:report', formatTest(test)); });
-    runner.on('suite', suite => { if(suite.title !== '') suiteStack.push(suite.title); });
+    runner.on('start', () => this.embark.events.request('tests:results:reset'));
+    runner.on('pass', test => this.embark.events.request('tests:results:report', formatTest(test)));
+    runner.on('fail', test => this.embark.events.request('tests:results:report', formatTest(test)));
+    runner.on('suite', suite => {
+      if (suite.title !== '') suiteStack.push(suite.title);
+    });
     runner.on('suite end', () => suiteStack.pop());
   }
 }
@@ -38,6 +40,7 @@ class EmbarkSpec extends Base {
     self.listenForGas = true;
     self.embarkEvents = options.reporterOptions.events;
     self.gasDetails = options.reporterOptions.gasDetails;
+    self.txDetails = options.reporterOptions.txDetails;
     self.gasLimit = options.reporterOptions.gasLimit;
     let indents = 0;
     let n = 0;
@@ -49,12 +52,14 @@ class EmbarkSpec extends Base {
     self.txLogs = [];
 
     function onContractReceipt(receipt) {
-      self.embarkEvents.request('contracts:contract', receipt.className, (contract) => {
-        if (contract) {
-          self.contracts.push(contract);
-          self.addressToContract = getAddressToContract(self.contracts, self.addressToContract);
-        }
-      });
+      if (self.txDetails) {
+        self.embarkEvents.request('contracts:contract', receipt.className, (contract) => {
+          if (contract) {
+            self.contracts.push(contract);
+            self.addressToContract = getAddressToContract(self.contracts, self.addressToContract);
+          }
+        });
+      }
 
       if (self.gasDetails) {
         const fmt = color('bright pass', ' ') +
@@ -68,12 +73,15 @@ class EmbarkSpec extends Base {
     }
 
     async function onBlockHeader(blockHeader) {
-      if(!self.listenForGas) {
+      if (!self.listenForGas) {
         return;
       }
       self.stats.totalGasCost += blockHeader.gasUsed;
       self.stats.test.gasUsed += blockHeader.gasUsed;
 
+      if (!self.txDetails) {
+        return;
+      }
       self.embarkEvents.request("blockchain:block:byNumber", blockHeader.number, (err, block) => {
         if (err) {
           return this.logger.error('Error getting block header', err.message || err);
@@ -110,11 +118,11 @@ class EmbarkSpec extends Base {
       return Array(indents).join('  ');
     }
 
-    runner.on('start', function () {
+    runner.on('start', function() {
       console.log();
     });
 
-    runner.on('suite', function (suite) {
+    runner.on('suite', function(suite) {
       ++indents;
       if (self.gasDetails) {
         console.log();
@@ -122,25 +130,25 @@ class EmbarkSpec extends Base {
       console.log(color('suite', '%s%s'), indent(), suite.title);
     });
 
-    runner.on('suite end', function () {
+    runner.on('suite end', function() {
       --indents;
       if (indents === 1) {
         console.log();
       }
     });
 
-    runner.on('pending', function (test) {
+    runner.on('pending', function(test) {
       const fmt = indent() + color('pending', '  - %s');
       console.log(fmt, test.title);
     });
 
 
-    runner.on('test', function () {
+    runner.on('test', function() {
       self.stats.test.gasUsed = 0;
       self.contracts = [];
     });
 
-    runner.on('pass', function (test) {
+    runner.on('pass', function(test) {
       let fmt =
         indent() +
         color('checkmark', '  ' + Base.symbols.ok) +
@@ -153,14 +161,14 @@ class EmbarkSpec extends Base {
       self.txLogs = [];
     });
 
-    runner.on('fail', function (test) {
+    runner.on('fail', function(test) {
       console.log(indent() + color('fail', '  %d) %s') + ' - ' + color(self.getGasColor(self.stats.test.gasUsed), '[%d gas]'),
         ++n, test.title, self.stats.test.gasUsed);
       self.txLogs.forEach(log => console.log(log));
       self.txLogs = [];
     });
 
-    runner.once('end', function () {
+    runner.once('end', function() {
       runner.removeAllListeners();
       self.embarkEvents.removeListener("deploy:contract:receipt", onContractReceipt);
       self.embarkEvents.removeListener("block:header", onBlockHeader);
