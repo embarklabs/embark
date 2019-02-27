@@ -1,6 +1,7 @@
 const Base = require('mocha/lib/reporters/base');
 const ms = require('mocha/lib/ms');
 const color = Base.color;
+const {getAddressToContract, getTransactionParams} = require('../../utils/transactionUtils');
 
 class EmbarkApiSpec extends Base {
   constructor(runner, options) {
@@ -43,28 +44,63 @@ class EmbarkSpec extends Base {
     self.stats.totalGasCost = 0;
     self.stats.test = {};
     self.stats.test.gasUsed = 0;
+    self.contracts = [];
+    self.addressToContract = {};
+    self.txLogs = [];
 
     function onContractReceipt(receipt) {
-      const fmt = color('bright pass', ' ') +
-        color('suite', ' %s') +
-        color('light', ' deployed for ') +
-        color(self.getGasColor(receipt.gasUsed), '%s') +
-        color('light', ' gas');
+      self.embarkEvents.request('contracts:contract', receipt.className, (contract) => {
+        if (contract) {
+          self.contracts.push(contract);
+          self.addressToContract = getAddressToContract(self.contracts, self.addressToContract);
+        }
+      });
 
-      console.log(fmt, receipt.className, receipt.gasUsed);
+      if (self.gasDetails) {
+        const fmt = color('bright pass', ' ') +
+          color('suite', ' %s') +
+          color('light', ' deployed for ') +
+          color(self.getGasColor(receipt.gasUsed), '%s') +
+          color('light', ' gas');
+
+        console.log(fmt, receipt.className, receipt.gasUsed);
+      }
     }
 
-    function onBlockHeader(blockHeader) {
+    async function onBlockHeader(blockHeader) {
       if(!self.listenForGas) {
         return;
       }
       self.stats.totalGasCost += blockHeader.gasUsed;
       self.stats.test.gasUsed += blockHeader.gasUsed;
+
+      self.embarkEvents.request("blockchain:block:byNumber", blockHeader.number, (err, block) => {
+        if (err) {
+          return this.logger.error('Error getting block header', err.message || err);
+        }
+        // Don't know why, but sometimes we receive nothing
+        if (!block || !block.transactions) {
+          return;
+        }
+        block.transactions.forEach(transaction => {
+          self.contracts.find(contract => {
+            if (!contract.silent && contract.deployedAddress && transaction.to && contract.deployedAddress.toLowerCase() === transaction.to.toLowerCase()) {
+              const c = self.addressToContract[contract.deployedAddress.toLowerCase()];
+              if (!c) {
+                return;
+              }
+              const {functionName, paramString} = getTransactionParams(c, transaction.input);
+
+              self.txLogs.push(`\t\t- ${contract.className}.${functionName}(${paramString}) [${transaction.gas} gas]`);
+              return true;
+            }
+            return false;
+          });
+        });
+      });
     }
 
-    if (self.gasDetails) {
-      self.embarkEvents.on("deploy:contract:receipt", onContractReceipt);
-    }
+    self.embarkEvents.on("deploy:contract:receipt", onContractReceipt);
     self.embarkEvents.on("block:header", onBlockHeader);
     self.embarkEvents.setCommandHandler("reporter:toggleGasListener", () => {
       self.listenForGas = !self.listenForGas;
@@ -101,6 +137,7 @@ class EmbarkSpec extends Base {
 
     runner.on('test', function () {
       self.stats.test.gasUsed = 0;
+      self.contracts = [];
     });
 
     runner.on('pass', function (test) {
@@ -112,11 +149,15 @@ class EmbarkSpec extends Base {
         ' - ' +
         color(self.getGasColor(self.stats.test.gasUsed), '[%d gas]');
       console.log(fmt, test.title, test.duration, self.stats.test.gasUsed);
+      self.txLogs.forEach(log => console.log(log));
+      self.txLogs = [];
     });
 
     runner.on('fail', function (test) {
       console.log(indent() + color('fail', '  %d) %s') + ' - ' + color(self.getGasColor(self.stats.test.gasUsed), '[%d gas]'),
         ++n, test.title, self.stats.test.gasUsed);
+      self.txLogs.forEach(log => console.log(log));
+      self.txLogs = [];
     });
 
     runner.once('end', function () {
