@@ -246,7 +246,11 @@ class Engine {
         // TODO: for now need to deploy on asset changes as well
         // because the contractsManager config is corrupted after a deploy
         if (fileType === 'contract' || fileType === 'config') {
-          self.events.request('deploy:contracts', () => {});
+          self.events.request('deploy:contracts', (err) => {
+            if (err) {
+              self.logger.error(err.message || err);
+            }
+          });
         }
       }, 50);
     });

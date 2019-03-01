@@ -163,12 +163,12 @@ Plugins.prototype.runActionsForEvent = function(eventName, args, cb) {
 
   async.reduce(actionPlugins, args, function(current_args, plugin, nextEach) {
     if (typeof (args) === 'function') {
-      plugin.call(plugin, (params) => {
-        nextEach(null, (params || current_args));
+      plugin.call(plugin, (...params) => {
+        nextEach(...params || current_args);
       });
     } else {
-      plugin.call(plugin, args, (params) => {
-        nextEach(null, (params || current_args));
+      plugin.call(plugin, args, (...params) => {
+        nextEach(...params || current_args);
       });
     }
   }, cb);

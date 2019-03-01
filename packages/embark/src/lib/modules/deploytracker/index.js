@@ -42,7 +42,7 @@ class DeployTracker {
 
     self.embark.registerActionForEvent("deploy:contract:shouldDeploy", (params, cb) => {
       if (!self.trackContracts) {
-        return cb(params);
+        return cb(null, params);
       }
 
       let contract = params.contract;
@@ -53,7 +53,7 @@ class DeployTracker {
       if (params.shouldDeploy && trackedContract) {
          params.shouldDeploy = true;
       }
-      cb(params);
+      cb(null, params);
     });
   }
 
@@ -63,7 +63,10 @@ class DeployTracker {
       this.currentChain = {contracts: []};
       return cb();
     }
-    this.events.request("blockchain:block:byNumber", 0, function(_err, block) {
+    this.events.request("blockchain:block:byNumber", 0, function(err, block) {
+      if (err) {
+        return cb(err);
+      }
       let chainId = block.hash;
 
       if (self.chainConfig[chainId] === undefined) {

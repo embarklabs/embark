@@ -189,14 +189,14 @@ class SpecialConfigs {
       let cmd = params.contract.deployIf;
       const contract = params.contract;
       if (!cmd) {
-        return cb(params);
+        return cb(null, params);
       }
 
       if (typeof cmd === 'function') {
         try {
           const dependencies = await this.getOnDeployLifecycleHookDependencies(contract);
           params.shouldDeploy = await contract.deployIf(dependencies);
-          cb(params);
+          cb(null, params);
         } catch (err) {
           return cb(new Error(`Error when registering deployIf hook for ${contract.name}: ${err.message}`));
         }
@@ -212,7 +212,7 @@ class SpecialConfigs {
             params.shouldDeploy = false;
           }
 
-          cb(params);
+          cb(null, params);
         });
       }
     });
