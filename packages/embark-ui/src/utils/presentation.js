@@ -1,4 +1,7 @@
 export function formatContractForDisplay(contract) {
+  if (contract.silent) {
+    return;
+  }
   let address = (contract.address || contract.deployedAddress);
   let state = 'Deployed';
   let stateColor = 'success';

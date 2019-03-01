@@ -17,6 +17,9 @@ const Contracts = ({contracts, title = "Contracts"}) => (
           {
             contracts.map((contract, key) => {
               const contractDisplay = formatContractForDisplay(contract);
+              if (!contractDisplay) {
+                return '';
+              }
 
               return (
                 <div className="explorer-row border-top" key={`contract-${key}`}>
@@ -31,7 +34,7 @@ const Contracts = ({contracts, title = "Contracts"}) => (
                     <Col>
                       <strong>State</strong>
                       <div className={contractDisplay.stateColor}>
-                        {formatContractForDisplay(contract).state}
+                        {contractDisplay.state}
                       </div>
                     </Col>
                   </Row>
