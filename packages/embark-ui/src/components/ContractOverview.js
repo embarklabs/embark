@@ -203,6 +203,9 @@ const filterContractFunctions = (contractFunctions, contractName, method) => {
 const ContractOverview = (props) => {
   const {contractProfile, contract} = props;
   const contractDisplay = formatContractForDisplay(contract);
+  if (!contractDisplay) {
+    return '';
+  }
 
   return (
     <div>

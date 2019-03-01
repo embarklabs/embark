@@ -17,6 +17,9 @@ const ContractsList = ({contracts}) => (
       {
         contracts.map((contract) => {
           const contractDisplay = formatContractForDisplay(contract);
+          if (!contractDisplay) {
+            return '';
+          }
           return (
             <tr key={contract.className} className={contractDisplay.stateColor}>
               <td><Link to={`/explorer/contracts/${contract.className}`}>{contract.className}</Link></td>
