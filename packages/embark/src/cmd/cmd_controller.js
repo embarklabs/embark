@@ -136,7 +136,7 @@ class EmbarkController {
           engine.config.reloadConfig();
           engine.events.request('deploy:contracts', function (err) {
             if (err) {
-              return;
+              return engine.logger.error(err.message || err);
             }
             engine.logger.info(__('Deployment Done'));
           });
@@ -251,7 +251,10 @@ class EmbarkController {
           callback(err, true);
         });
       }
-    ], function (_err, canExit) {
+    ], function (err, canExit) {
+      if(err) {
+        engine.logger.error(err.message || err);
+      }
       // TODO: this should be moved out and determined somewhere else
       if (canExit || !engine.config.contractsConfig.afterDeploy || !engine.config.contractsConfig.afterDeploy.length) {
         process.exit();
@@ -562,7 +565,7 @@ class EmbarkController {
           engine.config.reloadConfig();
           engine.events.request('deploy:contracts', function (err) {
             if (err) {
-              return;
+              return engine.logger.error(err.message || err);
             }
             engine.logger.info(__('Deployment Done'));
           });

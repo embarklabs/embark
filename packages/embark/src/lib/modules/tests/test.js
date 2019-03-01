@@ -295,8 +295,8 @@ class Test {
         });
       },
       function deploy(accounts, web3, next) {
-        self.events.request('deploy:contracts:test', () => {
-          next(null, accounts, web3);
+        self.events.request('deploy:contracts:test', (err) => {
+          next(err, accounts, web3);
         });
       },
       function waitForProvidersReady(accounts, web3, next) {
