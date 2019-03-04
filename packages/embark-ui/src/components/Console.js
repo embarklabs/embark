@@ -11,7 +11,7 @@ import Logs from "./Logs";
 import "./Console.css";
 import {EMBARK_PROCESS_NAME} from '../constants';
 
-const convert = new Convert();
+const convert = new Convert({newline: true, escapeXML: true});
 
 class Console extends Component {
   constructor(props) {
