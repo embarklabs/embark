@@ -26,7 +26,9 @@ class Swarm {
     if(this.isSwarmEnabledInTheConfig() && cantDetermineUrl){
       console.warn('\n===== Swarm module will not be loaded =====');
       console.warn(`Swarm is enabled in the config, however the config is not setup to provide a URL for swarm and therefore the Swarm module will not be loaded. Please either change the ${'config/storage > upload'.bold} setting to Swarm or add the Swarm config to the ${'config/storage > dappConnection'.bold} array. Please see ${'https://embark.status.im/docs/storage_configuration.html'.underline} for more information.\n`);
-    } else {
+      return;
+    }
+    if (!this.isSwarmEnabledInTheConfig()) {
       this.embark.registerConsoleCommand({
         matches: cmd => cmd === "swarm" || cmd.indexOf('swarm ') === 0,
         process: (_cmd, cb) => {
@@ -34,14 +36,12 @@ class Swarm {
           cb();
         }
       });
-
       return;
     }
 
     this.providerUrl = utils.buildUrl(this.storageConfig.upload.protocol, this.storageConfig.upload.host, this.storageConfig.upload.port);
 
     this.getUrl = this.storageConfig.upload.getUrl || this.providerUrl + '/bzz:/';
-
 
     this.swarm = new SwarmAPI({gateway: this.providerUrl});
 
@@ -163,8 +163,13 @@ class Swarm {
   }
 
   isSwarmEnabledInTheConfig() {
-    let {enabled, available_providers, dappConnection} = this.storageConfig;
-    return enabled && (available_providers.indexOf('swarm') > 0 || dappConnection.find(c => c.provider === 'swarm'));
+    let {enabled, available_providers, dappConnection, upload} = this.storageConfig;
+    return enabled && 
+            available_providers.includes('swarm') && 
+            (
+              dappConnection.some(c => c.provider === 'swarm') ||
+              upload.provider === "swarm"
+            );
   }
 
 }

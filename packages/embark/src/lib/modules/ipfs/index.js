@@ -195,8 +195,13 @@ class IPFS {
   }
 
   isIpfsStorageEnabledInTheConfig() {
-    let {enabled, available_providers, dappConnection} = this.storageConfig;
-    return enabled && (available_providers.indexOf('ipfs') > 0 || dappConnection.find(c => c.provider === 'ipfs'));
+    let {enabled, available_providers, dappConnection, upload} = this.storageConfig;
+    return enabled && 
+            available_providers.includes('ipfs') && 
+            (
+              dappConnection.some(c => c.provider === 'ipfs') || 
+              upload.provider === 'ipfs'
+            );
   }
 }
 
