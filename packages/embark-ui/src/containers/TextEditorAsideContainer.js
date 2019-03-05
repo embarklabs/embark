@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import Preview from '../components/Preview';
 import {getContractsByPath, getPreviewUrl} from "../reducers/selectors";
 import ContractDetail from '../components/ContractDetail';
-import ContractTransactionsContainer from './ContractTransactionsContainer';
+import ContractLogContainer from './ContractLogContainer';
 import ContractOverviewContainer from '../containers/ContractOverviewContainer';
 import ContractDebuggerContainer from '../containers/ContractDebuggerContainer';
 import { TextEditorToolbarTabs } from '../components/TextEditorToolbar';
@@ -25,11 +25,11 @@ class TextEditorAsideContainer extends Component {
             <ContractDetail key={index} contract={contract}/>
           </React.Fragment>
         );
-      case TextEditorToolbarTabs.Transactions.label:
+      case TextEditorToolbarTabs.Log.label:
         return (
           <React.Fragment>
-            <h2>{contract.className} - Transactions</h2>
-            <ContractTransactionsContainer key={index} contract={contract}/>
+            <h2>{contract.className} - Log</h2>
+            <ContractLogContainer key={index} contract={contract}/>
           </React.Fragment>
         );
       case TextEditorToolbarTabs.Interact.label:

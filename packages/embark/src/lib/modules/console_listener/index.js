@@ -65,7 +65,7 @@ class ConsoleListener {
         functionName: 'constructor',
         paramString: '',
         address: receipt.contractAddress,
-        status: receipt.status,
+        status: receipt.status ? '0x1' : '0x0',
         gasUsed: receipt.gasUsed,
         blockNumber: receipt.blockNumber,
         transactionHash: receipt.transactionHash
@@ -78,14 +78,13 @@ class ConsoleListener {
   }
 
   _onIpcLogRequest(request) {
-
     if (request.type !== 'contract-log') {
       return this.logger.info(JSON.stringify(request));
     }
 
     if (!this.contractsDeployed) return;
 
-    let {address, data, transactionHash, blockNumber, gasUsed, status} = request;
+    const {address, data} = request;
     const contract = this.addressToContract[address];
 
     if (!contract) {
@@ -94,16 +93,25 @@ class ConsoleListener {
         this.addressToContract = getAddressToContract(contractsList, this.addressToContract);
       });
     }
+
     const {name, silent} = contract;
     if (silent && !this.outputDone) {
       return;
     }
+
     const {functionName, paramString} = getTransactionParams(contract, data);
 
+    if (request.kind === 'call') {
+      const log = Object.assign({}, request, {name, functionName, paramString});
+      log.status = '0x1';
+      return this.events.emit('contracts:log', log);
+    }
+
+    let {transactionHash, blockNumber, gasUsed, status} = request;
     gasUsed = utils.hexToNumber(gasUsed);
     blockNumber = utils.hexToNumber(blockNumber);
-
     const log = Object.assign({}, request, {name, functionName, paramString, gasUsed, blockNumber});
+
     this.events.emit('contracts:log', log);
     this.logger.info(`Blockchain>`.underline + ` ${name}.${functionName}(${paramString})`.bold + ` | ${transactionHash} | gas:${gasUsed} | blk:${blockNumber} | status:${status}`);
     this.events.emit('blockchain:tx', {name: name, functionName: functionName, paramString: paramString, transactionHash: transactionHash, gasUsed: gasUsed, blockNumber: blockNumber, status: status});

@@ -23,7 +23,7 @@ import {formatContractForDisplay} from '../utils/presentation';
 import FontAwesome from 'react-fontawesome';
 import classnames from 'classnames';
 
-import "./ContractOverview.css";
+import "./ContractOverview.scss";
 
 class ContractFunction extends Component {
   constructor(props) {
@@ -45,7 +45,7 @@ class ContractFunction extends Component {
       return 'Deploy';
     }
 
-    return ContractFunction.isPureCall(method) ? 'Call' : 'Send';
+    return ContractFunction.isPureCall(method) ? 'call' : 'send';
   }
 
   inputsAsArray() {
@@ -70,7 +70,22 @@ class ContractFunction extends Component {
 
   handleCall(e) {
     e.preventDefault();
-    this.props.postContractFunction(this.props.contractName, this.props.method.name, this.inputsAsArray(), this.state.inputs.gasPrice * 1000000000);
+    this.props.postContractFunction(
+      this.props.contractName,
+      this.props.method.name,
+      this.inputsAsArray(),
+      this.state.inputs.gasPrice * 1000000000
+    );
+  }
+
+  handleKeyPress(e) {
+    if (e.key === 'Enter') {
+      if (this.callDisabled()) {
+        e.preventDefault();
+      } else {
+        this.handleCall(e);
+      }
+    }
   }
 
   callDisabled() {
@@ -95,38 +110,62 @@ class ContractFunction extends Component {
     });
   }
 
+  makeBadge(color, codeColor, text) {
+    const badgeDark = this.state.functionCollapse;
+    const _codeColor = badgeDark ? 'white' : codeColor;
+    return (
+      <Badge color={color} className={classnames({
+        'badge-dark': badgeDark,
+        'contract-function-badge': true,
+        'float-right': true,
+        'p-2': true
+      })}>
+        <code className={classnames({
+          [`code-${_codeColor}`]: true,
+        })}>
+          {text}
+        </code>
+      </Badge>
+    );
+  }
+
   render() {
+    if (ContractFunction.isEvent(this.props.method)) {
+      return <React.Fragment/>;
+    }
     return (
       <Card className="contract-function-container">
         <CardHeader
           className={classnames({
-            collapsable: !ContractFunction.isEvent(this.props.method),
             'border-bottom-0': !this.state.functionCollapse,
             'rounded': !this.state.functionCollapse
           })}
           onClick={() => this.toggleFunction()}>
           <CardTitle>
-            {ContractFunction.isPureCall(this.props.method) && Boolean(this.props.method.inputs.length) &&
-            <Badge color="warning" className="float-right p-2">call</Badge>
-            }
-            {ContractFunction.isPureCall(this.props.method) && !this.props.method.inputs.length &&
-            <Button color="warning" size="sm" className="float-right" onClick={(e) => this.handleCall(e)}>call</Button>
-            }
-            {ContractFunction.isEvent(this.props.method) &&
-            <Badge color="info" className="float-right p-2">event</Badge>
-            }
-            {this.props.method.name}({this.props.method.inputs.map(input => input.name).join(', ')})
+            <span className="contract-function-signature">
+              {`${this.props.method.name}` +
+               `(${this.props.method.inputs.map(i => i.name).join(', ')})`}
+            </span>
+            <div>
+              {(ContractFunction.isPureCall(this.props.method) &&
+                this.makeBadge('success', 'white', 'call')) ||
+               this.makeBadge('warning', 'black', 'send')}
+            </div>
           </CardTitle>
         </CardHeader>
-        {!ContractFunction.isEvent(this.props.method) &&
         <Collapse isOpen={this.state.functionCollapse} className="relative">
           <CardBody>
-            <Form method="post" inline>
+            <Form inline>
               {this.props.method.inputs.map(input => (
                 <FormGroup key={input.name}>
-                  <Label for={input.name} className="mr-2 font-weight-bold">{input.name}</Label>
-                  <Input name={input.name} id={input.name} placeholder={input.type}
-                         onChange={(e) => this.handleChange(e, input.name)}/>
+                  <Label for={input.name} className="mr-2 font-weight-bold contract-function-input">
+                    {input.name}
+                  </Label>
+                  <Input name={input.name}
+                         id={input.name}
+                         placeholder={input.type}
+                         onChange={(e) => this.handleChange(e, input.name)}
+                         onKeyPress={(e) => this.handleKeyPress(e)}/>
                 </FormGroup>
               ))}
             </Form>
@@ -140,12 +179,15 @@ class ContractFunction extends Component {
               </Row>
               <Row>
                 <Collapse isOpen={this.state.optionsCollapse} className="pl-3">
-                  <Form method="post" inline className="gas-price-form ">
+                  <Form inline className="gas-price-form">
                     <FormGroup key="gasPrice">
-                      <Label for="gasPrice" className="mr-2">Gas Price (in GWei)(optional)</Label>
-                      <Input name="gasPrice" id="gasPrice" placeholder="uint256"
+                      <Label for="gasPrice" className="mr-2">Gas Price (in GWei) (optional)</Label>
+                      <Input name="gasPrice"
+                             id="gasPrice"
+                             placeholder="uint256"
                              value={this.state.inputs.gasPrice || ''}
-                             onChange={(e) => this.handleChange(e, 'gasPrice')}/>
+                             onChange={(e) => this.handleChange(e, 'gasPrice')}
+                             onKeyPress={(e) => this.handleKeyPress(e)}/>
                       <Button onClick={(e) => this.autoSetGasPrice(e)}
                               title="Automatically set the gas price to what is currently in the estimator (default: safe low)">
                         Auto-set
@@ -165,24 +207,40 @@ class ContractFunction extends Component {
               </Row>
             </Col>
             }
-            <Button className="contract-function-button float-right" color="primary" disabled={this.callDisabled()}
-                    onClick={(e) => this.handleCall(e)}>
+            <Button
+              className={classnames({
+                'btn-sm': true,
+                'contract-function-button': true,
+                'contract-function-button-with-margin-top': this.state.gasPriceCollapse,
+                'float-right': true})}
+              color="primary"
+              disabled={this.callDisabled()}
+              onClick={(e) => this.handleCall(e)}>
               {this.buttonTitle()}
             </Button>
             <div className="clearfix"/>
           </CardBody>
           {this.props.contractFunctions && this.props.contractFunctions.length > 0 && <CardFooter>
             <ListGroup>
-              {this.props.contractFunctions.map(contractFunction => (
-                <ListGroupItem key={contractFunction.result}>
-                  {contractFunction.inputs.length > 0 && <p>Input(s): {contractFunction.inputs.join(', ')}</p>}
-                  <strong>Result: {JSON.stringify(contractFunction.result)}</strong>
+              {this.props.contractFunctions.map((contractFunction, idx) => (
+                <ListGroupItem key={idx}>
+                  {contractFunction.inputs.length > 0 &&
+                   <p>Input(s): &nbsp;
+                     <span className="contract-function-input-values">
+                       {contractFunction.inputs.join(', ')}
+                     </span>
+                   </p>}
+                  Result: &nbsp;
+                  <strong>
+                    <span className="contract-function-result">
+                      {JSON.stringify(contractFunction.result).slice(1, -1)}
+                    </span>
+                  </strong>
                 </ListGroupItem>
               ))}
             </ListGroup>
           </CardFooter>}
-        </Collapse>}
-
+        </Collapse>
       </Card>
     );
   }
@@ -217,7 +275,8 @@ const ContractOverview = (props) => {
         .filter((method) => {
           return props.onlyConstructor ? method.type === 'constructor' : method.type !== 'constructor';
         })
-        .map(method => <ContractFunction key={method.name} contractName={contract.className}
+        .map(method => <ContractFunction key={method.name}
+                                         contractName={contract.className}
                                          method={method}
                                          contractFunctions={filterContractFunctions(props.contractFunctions, contract.className, method.name)}
                                          postContractFunction={props.postContractFunction}/>)}
@@ -237,4 +296,3 @@ ContractOverview.defaultProps = {
 };
 
 export default ContractOverview;
-

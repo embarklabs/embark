@@ -261,4 +261,3 @@ export default withRouter(connect(
     fetchContracts: contractsAction.request
   },
 )(EditorContainer));
-

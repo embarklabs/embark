@@ -1,0 +1,67 @@
+.contract-function-badge {
+  cursor: default;
+
+  code {
+    font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    font-size: 13.1333px !important;
+    font-weight: 700 !important;
+  }
+
+  .code-black {
+    color: black !important;
+  }
+
+  .code-white {
+    color: white !important;
+  }
+}
+
+.contract-function-button {
+  font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  font-size: 13.1333px !important;
+  font-weight: 700 !important;
+}
+
+.contract-function-button-with-margin-top {
+  margin-top: 8px;
+}
+
+.contract-function-container {
+  .card-header.closed {
+    border-bottom: none;
+    border-radius: 0.25rem;
+  }
+
+  .card-title {
+    align-items: center;
+    display: flex;
+    margin-bottom: auto;
+  }
+
+  .card-title div {
+    margin-left: auto;
+  }
+
+  .gas-price-form {
+    #gasPrice {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    button {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border: 0;
+      box-shadow: none !important;
+    }
+  }
+}
+
+.contract-function-input {
+  font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  margin: 0 5px;
+}
+
+.contract-function-input-values, .contract-function-result, .contract-function-signature {
+  font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+}
