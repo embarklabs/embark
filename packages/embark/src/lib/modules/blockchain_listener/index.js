@@ -6,7 +6,7 @@ const PROCESS_NAME = 'blockchain';
  * BlockchainListener has two functions:
  * 1. Register API endpoints (HTTP GET and WS) to retrieve blockchain logs
  *    when in standalone mode (ie `embark blockchain`).
- * 2. Listen to log events from the IPC connection (to `embark blockchain`) 
+ * 2. Listen to log events from the IPC connection (to `embark blockchain`)
  *    and ensure they are processed through the LogHandler.
  */
 class BlockchainListener {
@@ -22,20 +22,20 @@ class BlockchainListener {
     this.events = embark.events;
     this.logger = embark.logger;
     this.ipc = ipc;
-    this.processLogsApi = new ProcessLogsApi({embark: this.embark, processName: PROCESS_NAME, silent: true});
 
-    if (this.ipc.isServer()) {
+    this.ipc.server.once('connect', () => {
+      this.processLogsApi = new ProcessLogsApi({embark: this.embark, processName: PROCESS_NAME, silent: true});
       this._listenToBlockchainLogs();
       this._listenToCommands();
       this._registerConsoleCommands();
       this._registerApiEndpoint();
-    }
+    });
   }
 
   /**
    * Listens to log events emitted by the standalone blockchain and ensures
    * they are processed through the LogHandler.
-   * 
+   *
    * @return {void}
    */
   _listenToBlockchainLogs() {
