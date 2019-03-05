@@ -21,7 +21,7 @@ export const TextEditorToolbarTabs = {
   Interact: { label: 'Interact', icon: 'bolt' },
   Details: { label: 'Details', icon: 'info-circle' },
   Debugger: { label: 'Debugger', icon: 'bug' },
-  Transactions: { label: 'Transactions', icon: 'list-alt' },
+  Log: { label: 'Log', icon: 'list-alt' },
   Browser: { label: 'Browser', icon: 'eye' }
 };
 

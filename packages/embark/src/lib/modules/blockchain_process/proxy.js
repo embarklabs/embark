@@ -66,6 +66,14 @@ class Proxy {
       if (Object.values(METHODS_TO_MODIFY).includes(req.method)) {
         this.toModifyPayloads[req.id] = req.method;
       }
+      if (req.method === constants.blockchain.call) {
+        this.commList[req.id] = {
+          kind: 'call',
+          type: 'contract-log',
+          address: req.params[0].to,
+          data: req.params[0].data
+        };
+      }
       if (req.method === constants.blockchain.transactionMethods.eth_sendTransaction) {
         this.commList[req.id] = {
           type: 'contract-log',
@@ -97,10 +105,16 @@ class Proxy {
     if (!res) return;
     try {
       if (this.commList[res.id]) {
-        this.commList[res.id].transactionHash = res.result;
-        this.transactions[res.result] = {
-          commListId: res.id
-        };
+        if (this.commList[res.id].kind === 'call') {
+          this.commList[res.id].result = res.result;
+          this.sendIpcMessage(this.commList[res.id]);
+          delete this.commList[res.id];
+        } else {
+          this.commList[res.id].transactionHash = res.result;
+          this.transactions[res.result] = {
+            commListId: res.id
+          };
+        }
       } else if (this.receipts[res.id] && res.result && res.result.blockNumber) {
         // TODO find out why commList[receipts[res.id]] is sometimes not defined
         if (!this.commList[this.receipts[res.id]]) {
@@ -109,17 +123,7 @@ class Proxy {
         this.commList[this.receipts[res.id]].blockNumber = res.result.blockNumber;
         this.commList[this.receipts[res.id]].gasUsed = res.result.gasUsed;
         this.commList[this.receipts[res.id]].status = res.result.status;
-
-        if (this.ipc.connected && !this.ipc.connecting) {
-          this.ipc.request('log', this.commList[this.receipts[res.id]]);
-        } else {
-          const message = this.commList[this.receipts[res.id]];
-          this.ipc.connecting = true;
-          this.ipc.connect(() => {
-            this.ipc.connecting = false;
-            this.ipc.request('log', message);
-          });
-        }
+        this.sendIpcMessage(this.commList[this.receipts[res.id]]);
         delete this.transactions[this.commList[this.receipts[res.id]].transactionHash];
         delete this.commList[this.receipts[res.id]];
         delete this.receipts[res.id];
@@ -128,6 +132,18 @@ class Proxy {
       console.error(
         `Proxy: Error tracking response message '${JSON.stringify(res)}'`
       );
+    }
+  }
+
+  sendIpcMessage(message) {
+    if (this.ipc.connected && !this.ipc.connecting) {
+      this.ipc.request('log', message);
+    } else {
+      this.ipc.connecting = true;
+      this.ipc.connect(() => {
+        this.ipc.connecting = false;
+        this.ipc.request('log', message);
+      });
     }
   }
 

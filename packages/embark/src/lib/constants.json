@@ -32,6 +32,7 @@
     "webpackDone": "webpackDone"
   },
   "blockchain": {
+    "call": "eth_call",
     "clients": {
       "geth": "geth",
       "parity": "parity"

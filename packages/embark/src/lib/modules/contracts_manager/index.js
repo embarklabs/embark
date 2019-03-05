@@ -61,6 +61,18 @@ class ContractsManager {
     });
 
     self.events.on("deploy:contract:deployed", (_contract) => {
+      const contract = self.contracts[_contract.className];
+      if (contract) {
+        if (!_contract.address && _contract.deployedAddress) {
+          _contract.address = _contract.deployedAddress;
+        }
+        if (!contract.address && _contract.address) {
+          contract.address = _contract.address;
+        }
+        if (!contract.deployedAddress && _contract.deployedAddress) {
+          contract.deployedAddress = _contract.deployedAddress;
+        }
+      }
       self.events.emit('contractsState', self.contractsState());
     });
 
@@ -140,24 +152,10 @@ class ContractsManager {
 
                 if(funcCall === 'call') {
                   contractLog.status = '0x1';
-                  self.events.emit('contracts:log', contractLog);
                   return res.send({result});
                 }
 
-                self.events.request("blockchain:get", web3 => {
-                  web3.eth.getTransaction(result, (err, tx) => {
-                    contractLog = Object.assign(contractLog, {
-                      data: tx.input,
-                      status: '0x1',
-                      gasUsed: tx.gas,
-                      blockNumber: tx.blockNumber,
-                      transactionHash: tx.hash
-                    });
-
-                    self.events.emit('contracts:log', contractLog);
-                    res.send({result});
-                  });
-                });
+                res.send({result});
               });
             } catch (e) {
               if (funcCall === 'call' && e.message === constants.blockchain.gasAllowanceError) {

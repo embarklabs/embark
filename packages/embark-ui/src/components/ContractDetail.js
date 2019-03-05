@@ -31,4 +31,3 @@ ContractDetail.propTypes = {
 };
 
 export default ContractDetail;
-
