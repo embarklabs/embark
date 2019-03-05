@@ -228,7 +228,7 @@ export function toggleBreakpoint(payload) {
   return post('/debugger/breakpoint', {params: payload, credentials: payload.credentials});
 }
 
-export function initRegularTxs(payload) {
+export function regularTxs(payload) {
   return get('/regular-txs', {params: payload, credentials: payload.credentials});
 }
 

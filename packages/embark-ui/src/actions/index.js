@@ -420,6 +420,13 @@ export const initRegularTxs = {
   failure: () => action(INIT_REGULAR_TXS[FAILURE])
 };
 
+export const STOP_REGULAR_TXS = createRequestTypes('STOP_REGULAR_TXS');
+export const stopRegularTxs = {
+  request: () => action(STOP_REGULAR_TXS[REQUEST], {mode: 'off'}),
+  success: () => action(STOP_REGULAR_TXS[SUCCESS]),
+  failure: () => action(STOP_REGULAR_TXS[FAILURE])
+};
+
 // Web Socket
 export const WATCH_NEW_PROCESS_LOGS = 'WATCH_NEW_PROCESS_LOGS';
 export const STOP_NEW_PROCESS_LOGS = 'STOP_NEW_PROCESS_LOGS';
