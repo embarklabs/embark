@@ -346,8 +346,7 @@ class EmbarkController {
         new REPL({
           events: engine.events,
           env: engine.env,
-          ipc: engine.ipc,
-          logger: engine.logger
+          ipc: engine.ipc
         }).start(callback);
       }
     ], function (err, _result) {

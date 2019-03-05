@@ -25,7 +25,7 @@ class Dashboard {
   start(done) {
     let monitor;
 
-    monitor = new Monitor({env: this.env, events: this.events, version: this.version, ipc: this.ipc, logger: this.logger});
+    monitor = new Monitor({env: this.env, events: this.events, version: this.version, ipc: this.ipc});
     this.logger.logFunction = monitor.logEntry;
     let plugin = this.plugins.createPlugin('dashboard', {});
     plugin.registerAPICall(
