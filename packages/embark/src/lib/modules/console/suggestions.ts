@@ -92,7 +92,10 @@ export default class Suggestions {
   }
 
   public getSuggestions(cmd: string, cb: (results: SuggestionsList) => any) {
+    // Don't bother returning suggestions for empty commands or for
+    // commands that already have `(` or `)` to avoid executing code
     if (cmd === "") { return cb([]); }
+    if (cmd.indexOf("(") !== -1 || cmd.indexOf(")") !== -1) { return cb([]); }
 
     const suggestions = this.suggestions;
 
