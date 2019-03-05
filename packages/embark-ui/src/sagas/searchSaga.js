@@ -47,9 +47,8 @@ export function *searchExplorer(entity, payload) {
   // Blocks
   yield fetchBlocks({limit: ELEMENTS_LIMIT});
   const blocks = yield select(getBlocks);
-  const intSearchValue = parseInt(searchValue, 10);
   result = blocks.find(block => {
-    return block.hash === searchValue || block.number === intSearchValue;
+    return block.hash === searchValue || block.number.toString() === searchValue;
   });
 
   if (result) {
