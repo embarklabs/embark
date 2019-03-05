@@ -17,6 +17,7 @@ import {
   listenToServices as listenToServicesAction,
   listenToContracts as listenToContractsAction,
   initRegularTxs as initRegularTxsAction,
+  stopRegularTxs as stopRegularTxsAction,
   changeTheme, fetchTheme
 } from '../actions';
 
@@ -71,7 +72,7 @@ class AppContainer extends Component {
       this.doAuthenticate();
     }
 
-    const enableRegularTxs = !!getQueryParam(this.props.location, ENABLE_REGULAR_TXS);
+    const enableRegularTxs = getQueryParam(this.props.location, ENABLE_REGULAR_TXS);
 
     if (getQueryToken(this.props.location) && 
         (!this.props.credentials.authenticating || 
@@ -85,8 +86,11 @@ class AppContainer extends Component {
       this.props.listenToServices();
       this.props.fetchPlugins();
       this.props.listenToContracts();
-      if (enableRegularTxs) {
+      if (enableRegularTxs === "true") {
         this.props.initRegularTxs();
+        this.props.history.replace(stripQueryParam(this.props.location, ENABLE_REGULAR_TXS));
+      } else if (enableRegularTxs === "false") {
+        this.props.stopRegularTxs();
         this.props.history.replace(stripQueryParam(this.props.location, ENABLE_REGULAR_TXS));
       }
     }
@@ -158,7 +162,8 @@ AppContainer.propTypes = {
   history: PropTypes.object,
   listenToServices: PropTypes.func,
   listenToContracts: PropTypes.func,
-  initRegularTxs: PropTypes.func
+  initRegularTxs: PropTypes.func,
+  stopRegularTxs: PropTypes.func
 };
 
 function mapStateToProps(state) {
@@ -184,6 +189,7 @@ export default withRouter(connect(
     changeTheme: changeTheme.request,
     fetchTheme: fetchTheme.request,
     listenToContracts: listenToContractsAction,
-    initRegularTxs: initRegularTxsAction.request
+    initRegularTxs: initRegularTxsAction.request,
+    stopRegularTxs: stopRegularTxsAction.request
   },
 )(AppContainer));

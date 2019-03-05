@@ -79,7 +79,8 @@ export const debugStepIntoForward = doRequest.bind(null, actions.debugStepIntoFo
 export const debugStepIntoBackward = doRequest.bind(null, actions.debugStepIntoBackward, api.debugStepIntoBackward);
 export const toggleBreakpoint = doRequest.bind(null, actions.toggleBreakpoint, api.toggleBreakpoint);
 export const authenticate = doRequest.bind(null, actions.authenticate, api.authenticate);
-export const initRegularTxs = doRequest.bind(null, actions.initRegularTxs, api.initRegularTxs);
+export const initRegularTxs = doRequest.bind(null, actions.initRegularTxs, api.regularTxs);
+export const stopRegularTxs = doRequest.bind(null, actions.stopRegularTxs, api.regularTxs);
 
 export const fetchCredentials = doRequest.bind(null, actions.fetchCredentials, storage.fetchCredentials);
 export const saveCredentials = doRequest.bind(null, actions.saveCredentials, storage.saveCredentials);
@@ -348,6 +349,10 @@ export function *watchInitRegularTxs() {
   yield takeEvery(actions.INIT_REGULAR_TXS[actions.REQUEST], initRegularTxs);
 }
 
+export function *watchStopRegularTxs() {
+  yield takeEvery(actions.STOP_REGULAR_TXS[actions.REQUEST], stopRegularTxs);
+}
+
 function createChannel(socket) {
   return eventChannel(emit => {
     socket.onmessage = ((message) => {
@@ -591,6 +596,7 @@ export default function *root() {
     fork(watchPostFileSuccess),
     fork(watchPostFolderSuccess),
     fork(watchListenContracts),
-    fork(watchInitRegularTxs)
+    fork(watchInitRegularTxs),
+    fork(watchStopRegularTxs)
   ]);
 }

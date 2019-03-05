@@ -13,7 +13,7 @@ Blockchain.connect = function(options, callback) {
   const connect = ({
     dappConnection,
     dappAutoEnable = true,
-    warnAboutMetamask,
+    warnIfMetamask,
     blockchainClient = ''
   }) => {
     return new Promise((resolve, reject) => {
@@ -21,8 +21,8 @@ Blockchain.connect = function(options, callback) {
         this.doFirst((done) => {
           this.autoEnable = dappAutoEnable;
           this.doConnect(dappConnection, {
-            warnAboutMetamask: warnAboutMetamask,
-            blockchainClient: blockchainClient
+            warnAboutMetamask: warnIfMetamask,
+            blockchainClient
           }, async (err) => {
             let _err = err;
             try {

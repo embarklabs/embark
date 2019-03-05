@@ -60,8 +60,16 @@ class BlockchainListener {
     this.embark.registerAPICall(
       'get',
       '/embark-api/regular-txs',
-      (req, _res) => {
-        this.events.request(`regularTxs:${req.query.mode === 'on' ? 'start' : 'stop'}`);
+      (req, res) => {
+        if(!req.query.mode || !['on', 'off'].includes(req.query.mode)) {
+          return res.status(400).send("Invalid parameter 'mode' provided. Must be one of: ['on', 'off']");
+        }
+        this.events.request(`regularTxs:${req.query.mode === 'on' ? 'start' : 'stop'}`, (err, result) => {
+          if(err) {
+            return res.send({ error: err.message });
+          }
+          res.send(result);
+        });
       }
     );
   }
