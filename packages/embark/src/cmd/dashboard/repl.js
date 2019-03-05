@@ -9,7 +9,6 @@ class REPL {
     this.outputStream = options.outputStream || process.stdout;
     this.logText = options.logText;
     this.ipc = options.ipc;
-    this.logger = options.logger;
   }
 
   addHistory(cmd) {
@@ -19,9 +18,9 @@ class REPL {
     }
   }
 
-  enhancedEval(cmd, _context, _filename, _callback) {
-    this.events.request('console:executeCmd', cmd.trim(), (err, message) => {
-      this.logger.info(message === undefined ? '' : message);
+  enhancedEval(cmd, context, filename, callback) {
+    this.events.request('console:executeCmd', cmd.trim(), function (err, message) {
+      callback(err, message === undefined ? '' : message); // This way, we don't print undefined
     });
   }
 
