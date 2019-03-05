@@ -6,7 +6,7 @@ const fs = require("../lib/core/fs");
 describe('embark.File', function () {
   describe('Read file contents', function () {
     it('should be able to download a file when type is "http"', async () => {
-      const file = new File({externalUrl: 'https://raw.githubusercontent.com/embark-framework/embark/master/test_dapps/test_app/app/contracts/simple_storage.sol', type: Types.http});
+      const file = new File({externalUrl: 'https://raw.githubusercontent.com/embark-framework/embark/master/dapps/tests/app/app/contracts/simple_storage.sol', type: Types.http});
       const content = await file.content;
 
       expect(content).to.be.ok; //eslint-disable-line
