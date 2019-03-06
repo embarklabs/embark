@@ -96,7 +96,6 @@ class Console {
   private registerApi() {
     const plugin = this.plugins.createPlugin("consoleApi", {});
     plugin.registerAPICall("post", "/embark-api/command", (req: any, res: any) => {
-      this.logger.info(`Cockpit> ${req.body.command}`.cyan);
       this.executeCmd(req.body.command, (err: any, result: any) => {
         if (err) {
           return res.send({ result: err.message || err });
@@ -104,10 +103,8 @@ class Console {
         let response = result;
         if (typeof result !== "string") {
           response = stringify(result, utils.jsonFunctionReplacer, 2);
-          this.logger.info(response);
         } else {
           // Avoid HTML injection in the Cockpit
-          this.logger.info(response);
           response = escapeHtml(response);
         }
         return res.send({ result: response });
