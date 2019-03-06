@@ -14,8 +14,6 @@ import {
   processes as processesAction,
   versions as versionsAction,
   plugins as pluginsAction,
-  listenToServices as listenToServicesAction,
-  listenToContracts as listenToContractsAction,
   initRegularTxs as initRegularTxsAction,
   stopRegularTxs as stopRegularTxsAction,
   changeTheme, fetchTheme
@@ -81,11 +79,8 @@ class AppContainer extends Component {
     }
 
     if (this.props.credentials.authenticated && !this.props.initialized) {
-      this.props.fetchProcesses();
-      this.props.fetchServices();
-      this.props.listenToServices();
       this.props.fetchPlugins();
-      this.props.listenToContracts();
+      this.props.fetchProcesses();
       if (enableRegularTxs === "true") {
         this.props.initRegularTxs();
         this.props.history.replace(stripQueryParam(this.props.location, ENABLE_REGULAR_TXS));
@@ -150,9 +145,7 @@ AppContainer.propTypes = {
   authenticate: PropTypes.func,
   logout: PropTypes.func,
   fetchCredentials: PropTypes.func,
-  initBlockHeader: PropTypes.func,
   fetchProcesses: PropTypes.func,
-  fetchServices: PropTypes.func,
   fetchPlugins: PropTypes.func,
   fetchVersions: PropTypes.func,
   location: PropTypes.object,
@@ -160,8 +153,6 @@ AppContainer.propTypes = {
   changeTheme: PropTypes.func,
   fetchTheme: PropTypes.func,
   history: PropTypes.object,
-  listenToServices: PropTypes.func,
-  listenToContracts: PropTypes.func,
   initRegularTxs: PropTypes.func,
   stopRegularTxs: PropTypes.func
 };
@@ -182,13 +173,10 @@ export default withRouter(connect(
     logout: logout.request,
     fetchCredentials: fetchCredentials.request,
     fetchProcesses: processesAction.request,
-    fetchServices: processesAction.request,
-    listenToServices: listenToServicesAction,
     fetchVersions: versionsAction.request,
     fetchPlugins: pluginsAction.request,
     changeTheme: changeTheme.request,
     fetchTheme: fetchTheme.request,
-    listenToContracts: listenToContractsAction,
     initRegularTxs: initRegularTxsAction.request,
     stopRegularTxs: stopRegularTxsAction.request
   },

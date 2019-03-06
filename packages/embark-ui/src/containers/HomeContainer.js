@@ -18,12 +18,12 @@ import {
 } from "../actions";
 
 import DataWrapper from "../components/DataWrapper";
-import Processes from '../components/Processes';
 import Console from '../components/Console';
 import {EMBARK_PROCESS_NAME, LOG_LIMIT} from '../constants';
-import ContractsList from '../components/ContractsList';
 import PageHead from '../components/PageHead';
+import ServicesContainer from './ServicesContainer';
 import {getContracts, getProcesses, getProcessLogs, getServices, getCommandSuggestions} from "../reducers/selectors";
+import ContractsContainer from "./ContractsContainer";
 
 class HomeContainer extends Component {
   constructor(props) {
@@ -53,9 +53,7 @@ class HomeContainer extends Component {
     return (
       <React.Fragment>
         <PageHead title="Dashboard" description="Overview of available services and logs. Interact with Embark using the console. Summary of deployed contracts." />
-        <DataWrapper shouldRender={this.props.services.length > 0 } {...this.props} render={({services}) => (
-          <Processes processes={services} />
-        )} />
+        <ServicesContainer />
 
         <DataWrapper shouldRender={this.props.processes.length > 0 } {...this.props} render={({processes, postCommand, postCommandSuggestions, processLogs, commandSuggestions}) => (
           <Card>
@@ -78,7 +76,7 @@ class HomeContainer extends Component {
             <CardBody>
               <CardTitle>Deployed Contracts</CardTitle>
               <div style={{marginBottom: '1.5rem', overflow: 'auto'}}>
-                <ContractsList contracts={contracts} />
+                <ContractsContainer contracts={contracts} mode="list" updatePageHeader={false} />
               </div>
             </CardBody>
           </Card>

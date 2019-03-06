@@ -18,7 +18,7 @@ const ContractsList = ({contracts}) => (
         contracts.map((contract) => {
           const contractDisplay = formatContractForDisplay(contract);
           if (!contractDisplay) {
-            return '';
+            return null;
           }
           return (
             <tr key={contract.className} className={contractDisplay.stateColor}>

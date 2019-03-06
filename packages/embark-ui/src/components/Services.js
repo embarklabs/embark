@@ -18,26 +18,26 @@ function iconClasses(state){
   });
 }
 
-const Process = ({process}) => (
+const Service = ({service}) => (
   <Col xs={12} sm={6} md={4} xl={3}>
-    <Widget02 header={process.name} mainText={process.description} icon={iconClasses(process.state)} color={colorClasses(process.state)} variant="1" />
+    <Widget02 header={service.name} mainText={service.description} icon={iconClasses(service.state)} color={colorClasses(service.state)} variant="1" />
   </Col>
 );
 
-Process.propTypes = {
-  process: PropTypes.object
+Service.propTypes = {
+  service: PropTypes.object
 };
 
-const Processes = ({processes}) => (
+const Services = ({services}) => (
   <Row>
-    {processes
+    {services
       .sort((a, b) => a.name < b.name ? 1 : 0)
-      .map((process) => <Process key={process.name} process={process} />)}
+      .map((service) => <Service key={service.name} service={service} />)}
   </Row>
 );
 
-Processes.propTypes = {
-  processes: PropTypes.arrayOf(PropTypes.object)
+Services.propTypes = {
+  services: PropTypes.arrayOf(PropTypes.object)
 };
 
-export default Processes;
+export default Services;

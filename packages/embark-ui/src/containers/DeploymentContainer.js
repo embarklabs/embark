@@ -9,6 +9,7 @@ import {
 
 import ContractsDeployment from '../components/ContractsDeployment';
 import DataWrapper from "../components/DataWrapper";
+import PageHead from '../components/PageHead';
 import {getContracts, getDeploymentPipeline, getWeb3, getWeb3GasEstimates, getWeb3Deployments} from "../reducers/selectors";
 
 class DeploymentContainer extends Component {
@@ -18,16 +19,19 @@ class DeploymentContainer extends Component {
 
   render() {
     return (
-      <DataWrapper shouldRender={this.props.contracts.length > 0} {...this.props} render={() => (
-        <ContractsDeployment contracts={this.props.contracts}
-                             deploymentPipeline={this.props.deploymentPipeline}
-                             web3={this.props.web3}
-                             web3Deploy={this.props.web3Deploy}
-                             web3EstimateGas={this.props.web3EstimateGas}
-                             web3Deployments={this.props.web3Deployments}
-                             web3GasEstimates={this.props.web3GasEstimates}
-                             updateDeploymentPipeline={this.props.updateDeploymentPipeline} />
-      )} />
+      <React.Fragment>
+        <PageHead title="Deployment" description="Deploy your contracts using Embark or a web3-enabled browser such as Mist or MetaMask." />
+        <DataWrapper shouldRender={this.props.contracts.length > 0} {...this.props} render={() => (
+          <ContractsDeployment contracts={this.props.contracts}
+                              deploymentPipeline={this.props.deploymentPipeline}
+                              web3={this.props.web3}
+                              web3Deploy={this.props.web3Deploy}
+                              web3EstimateGas={this.props.web3EstimateGas}
+                              web3Deployments={this.props.web3Deployments}
+                              web3GasEstimates={this.props.web3GasEstimates}
+                              updateDeploymentPipeline={this.props.updateDeploymentPipeline} />
+        )} />
+      </React.Fragment>
     );
   }
 }
