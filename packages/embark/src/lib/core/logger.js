@@ -17,7 +17,7 @@ class Logger {
       const args = Array.from(arguments);
       const color = args[args.length - 1];
       args.splice(args.length - 1, 1);
-      this._logFunction(...args.map(arg => {
+      this._logFunction(...args.filter(arg => arg !== undefined && arg !== null).map(arg => {
         if (color) {
           return typeof arg === 'object' ? util.inspect(arg, 2)[color] : arg[color];
         }
