@@ -447,11 +447,13 @@ export const WATCH_SERVICES = 'WATCH_SERVICES';
 export const WATCH_NEW_CONTRACT_LOGS = 'WATCH_NEW_CONTRACT_LOGS';
 export const WATCH_NEW_CONTRACT_EVENTS = 'WATCH_NEW_CONTRACT_EVENTS';
 export const WATCH_CONTRACTS = 'WATCH_CONTRACTS';
+export const STOP_CONTRACTS = 'STOP_CONTRACTS';
 export const INIT_BLOCK_HEADER = 'INIT_BLOCK_HEADER';
 export const STOP_BLOCK_HEADER = 'STOP_BLOCK_HEADER';
 export const WATCH_GAS_ORACLE = 'WATCH_GAS_ORACLE';
 export const STOP_GAS_ORACLE = 'STOP_GAS_ORACLE';
 export const STOP_DEBUGGER = 'STOP_DEBUGGER';
+export const STOP_SERVICES = 'STOP_SERVICES';
 
 export function listenToProcessLogs(processName) {
   return {
@@ -509,9 +511,21 @@ export function listenToContracts(){
   };
 }
 
+export function stopContracts(){
+  return {
+    type: STOP_CONTRACTS
+  };
+}
+
 export function stopGasOracle(){
   return {
     type: STOP_GAS_ORACLE
+  };
+}
+
+export function stopServices(){
+  return {
+    type: STOP_SERVICES
   };
 }
 
