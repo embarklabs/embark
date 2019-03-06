@@ -1,3 +1,6 @@
+import {EMBARK_PROCESS_NAME} from '../constants';
+import {ansiToHtml} from '../utils/utils';
+
 export const REQUEST = 'REQUEST';
 export const SUCCESS = 'SUCCESS';
 export const FAILURE = 'FAILURE';
@@ -118,7 +121,17 @@ export const COMMANDS = createRequestTypes('COMMANDS');
 export const commands = {
   post: (command) => action(COMMANDS[REQUEST], {command}),
   success: (command, payload) => {
-    return action(COMMANDS[SUCCESS], {});
+    return action(COMMANDS[SUCCESS], {
+      processLogs: [
+        {
+          timestamp: new Date().getTime(),
+          name: EMBARK_PROCESS_NAME,
+          msg: `${ansiToHtml(command.result || '')}`,
+          command: `console> ${payload.command}<br>`,
+          result: command.result
+        }
+      ]
+    });
   },
   failure: (error) => action(COMMANDS[FAILURE], {error})
 };
