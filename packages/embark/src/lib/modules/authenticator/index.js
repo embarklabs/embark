@@ -94,7 +94,7 @@ class Authenticator {
     this.events.setCommandHandler('authenticator:url:display', (firstOutput) => {
       if(!firstOutput) this.logger.info(__('Previous token has now been used.'));
       this.events.request('api:url', (apiUrl) => {
-        this.logger.info(__('Access the web backend with the following url: %s', (`${apiUrl}?token=${this.authToken}`.underline)));
+        this.logger.info(__('Enter the Cockpit with the following url: %s', (`${apiUrl}?token=${this.authToken}`.underline)));
       });
     });
 
