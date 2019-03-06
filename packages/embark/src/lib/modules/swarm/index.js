@@ -23,7 +23,7 @@ class Swarm {
 
     const cantDetermineUrl = this.storageConfig.upload.provider !== 'swarm' && !this.storageConfig.dappConnection.some(connection => connection.provider === 'swarm');
 
-    if(this.isSwarmEnabledInTheConfig() && cantDetermineUrl){
+    if (this.isSwarmEnabledInTheConfig() && cantDetermineUrl) {
       console.warn('\n===== Swarm module will not be loaded =====');
       console.warn(`Swarm is enabled in the config, however the config is not setup to provide a URL for swarm and therefore the Swarm module will not be loaded. Please either change the ${'config/storage > upload'.bold} setting to Swarm or add the Swarm config to the ${'config/storage > dappConnection'.bold} array. Please see ${'https://embark.status.im/docs/storage_configuration.html'.underline} for more information.\n`);
       return;
@@ -136,12 +136,12 @@ class Swarm {
   }
 
   listenToCommands() {
-    this.events.setCommandHandler('logs:swarm:enable',  (cb) => {
+    this.events.setCommandHandler('logs:swarm:enable', (cb) => {
       this.events.emit('logs:storage:enable');
       return cb(null, 'Enabling Swarm logs');
     });
 
-    this.events.setCommandHandler('logs:swarm:disable',  (cb) => {
+    this.events.setCommandHandler('logs:swarm:disable', (cb) => {
       this.events.emit('logs:storage:disable');
       return cb(null, 'Disabling Swarm logs');
     });
@@ -164,12 +164,12 @@ class Swarm {
 
   isSwarmEnabledInTheConfig() {
     let {enabled, available_providers, dappConnection, upload} = this.storageConfig;
-    return enabled && 
-            available_providers.includes('swarm') && 
-            (
-              dappConnection.some(c => c.provider === 'swarm') ||
-              upload.provider === "swarm"
-            );
+    return (enabled || this.embark.currentContext.includes(constants.contexts.upload)) &&
+      available_providers.includes('swarm') &&
+      (
+        dappConnection.some(c => c.provider === 'swarm') ||
+        upload.provider === "swarm"
+      );
   }
 
 }
