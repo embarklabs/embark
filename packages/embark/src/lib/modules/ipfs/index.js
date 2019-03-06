@@ -3,6 +3,7 @@ const utils = require('../../utils/utils.js');
 const IpfsApi = require('ipfs-api');
 // TODO: not great, breaks module isolation
 const StorageProcessesLauncher = require('../storage/storageProcessesLauncher');
+const constants = require('../../constants.json');
 
 class IPFS {
 
@@ -168,12 +169,12 @@ class IPFS {
   }
 
   listenToCommands() {
-    this.events.setCommandHandler('logs:ipfs:enable',  (cb) => {
+    this.events.setCommandHandler('logs:ipfs:enable', (cb) => {
       this.events.emit('logs:storage:enable');
       return cb(null, 'Enabling IPFS logs');
     });
 
-    this.events.setCommandHandler('logs:ipfs:disable',  (cb) => {
+    this.events.setCommandHandler('logs:ipfs:disable', (cb) => {
       this.events.emit('logs:storage:disable');
       return cb(null, 'Disabling IPFS logs');
     });
@@ -196,12 +197,14 @@ class IPFS {
 
   isIpfsStorageEnabledInTheConfig() {
     let {enabled, available_providers, dappConnection, upload} = this.storageConfig;
-    return enabled && 
-            available_providers.includes('ipfs') && 
-            (
-              dappConnection.some(c => c.provider === 'ipfs') || 
-              upload.provider === 'ipfs'
-            );
+    return (enabled || this.embark.currentContext.includes(constants.contexts.upload)) &&
+      (
+        available_providers.includes('ipfs') &&
+        (
+          dappConnection.some(c => c.provider === 'ipfs') ||
+          upload.provider === 'ipfs'
+        )
+      );
   }
 }
 
