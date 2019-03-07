@@ -144,7 +144,7 @@ class Header extends React.Component {
       </div>
     );
   }
-};
+}
 
 Header.propTypes = {
   style: PropTypes.object,
