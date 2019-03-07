@@ -211,7 +211,7 @@ class EditorContainer extends React.Component {
           <Col xs={12}>
             <TextEditorToolbarContainer toggleAsideTab={(newTab) => this.toggleAsideTab(newTab)}
                                         isContract={this.isContract()}
-                                        currentFile={this.props.currentFile}
+                                        currentFile={this.state.currentFile}
                                         activeTab={this.state.currentAsideTab}/>
           </Col>
 
