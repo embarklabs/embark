@@ -106,7 +106,7 @@ class Pipeline {
               name,
               dirname: dir,
               path: path.join(dir, name),
-              isHidden: name.indexOf('.') === 0,
+              isHidden: (name.indexOf('.') === 0 || name === "node_modules"),
               children: utils.fileTreeSort(walk(path.join(dir, name), filelist))
             };
           }
@@ -115,7 +115,7 @@ class Pipeline {
             isRoot,
             path: path.join(dir, name),
             dirname: dir,
-            isHidden: name.indexOf('.') === 0
+            isHidden: (name.indexOf('.') === 0 || name === "node_modules")
           };
         });
         const files = utils.fileTreeSort(walk(this.fs.dappPath()));
