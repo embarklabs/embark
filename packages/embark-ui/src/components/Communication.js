@@ -21,6 +21,7 @@ class Communication extends Component {
     this.state = {
       listenTo: '',
       channel: '',
+      channelIsValid: false,
       message: '',
       messageList: []
     };
@@ -30,6 +31,10 @@ class Communication extends Component {
     this.setState({
       [name]: e.target.value
     });
+
+    if(name === "channel") {
+      this.setState({channelIsValid: e.target.value.length >= 4});
+    }
   }
 
   sendMessage(e) {
@@ -109,7 +114,7 @@ class Communication extends Component {
                       id="message"
                       onChange={e => this.handleChange(e, 'message')}/>
               </FormGroup>
-              <Button color="primary" onClick={(e) => this.sendMessage(e)}>Send Message</Button>
+              <Button color="primary" disabled={!this.state.channelIsValid} onClick={(e) => this.sendMessage(e)}>Send Message</Button>
 
             </CardBody>
           </Card>
