@@ -2,6 +2,14 @@
 
 export async function addEditorTabs({file}) {
   const editorTabs = findOrCreateEditorTabs();
+
+  // Avoid files bigger than 1MB. Browsers limit heavily
+  // how much local storage we can actually use.
+  if(file.content.length > 1024 * 1024) {
+    alert('File is too big');
+    return {response: {data: editorTabs}};
+  }
+
   editorTabs.forEach(f => f.active = false);
   const alreadyAddedFile = editorTabs.find(f => f.name === file.name);
   if (alreadyAddedFile) {
