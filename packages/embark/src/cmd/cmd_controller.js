@@ -103,6 +103,7 @@ class EmbarkController {
       function initEngine(callback) {
         engine.init({}, () => {
           if (!options.useDashboard) {
+            engine.startService("embarkListener");
             engine.logger.info('========================'.bold.green);
             engine.logger.info((__('Welcome to Embark') + ' ' + engine.version).yellow.bold);
             engine.logger.info('========================'.bold.green);
@@ -118,7 +119,6 @@ class EmbarkController {
 
         engine.startService("processManager");
         engine.startService("coreProcess");
-        engine.startService("embarkListener");
         engine.startService("blockchainListener");
         engine.startService("serviceMonitor");
         engine.startService("libraryManager");
