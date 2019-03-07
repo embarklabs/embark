@@ -7,6 +7,12 @@ import {EMBARK_PROCESS_NAME, DARK_THEME, DEPLOYMENT_PIPELINES, DEFAULT_HOST, ELE
 
 const BN_FACTOR = 10000;
 const VOID_ADDRESS = '0x0000000000000000000000000000000000000000';
+// This is set so that the total number of logs allowed in the entities state is ELEMENTS_LIMIT
+// multipled by the number of services we are monitoring for logs. As it stands currently, we
+// are monitoring only "embark" and "blockchain" logs, hence we are allowing ELEMENTS_LIMIT * 2.
+// TODO: If we update the number of services to show process logs, we need to update this number
+// to reflect the new number of services.
+const PROCESS_LOGS_LIMIT = ELEMENTS_LIMIT * 2;
 
 const entitiesDefaultState = {
   accounts: [],
@@ -91,7 +97,7 @@ const filtrer = {
   },
   processLogs: function(processLog, index, self) {
     if (processLog.id !== undefined) {
-      return index === self.findIndex((p) => p.id === processLog.id) && index <= ELEMENTS_LIMIT;
+      return index === self.findIndex((p) => p.id === processLog.id && p.name === processLog.name) && index <= PROCESS_LOGS_LIMIT;
     }
     return true;
   },
