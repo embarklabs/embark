@@ -121,9 +121,14 @@ class ContractTransactions extends React.Component {
               <tbody>
                 {
                   this.dataToDisplay().map((log, index) => {
+                    let debugButton;
+                    if(log.transactionHash !== undefined) {
+                      debugButton = <DebugButton forceDebuggable transaction={{hash: log.transactionHash}}/>;
+                    }
+
                     return (
                       <tr key={'log-' + index}>
-                        <td><DebugButton forceDebuggable transaction={{hash: log.transactionHash}}/></td>
+                        <td>{debugButton}</td>
                         <td>{`${log.name}.${log.functionName}(${log.paramString})`}</td>
                         <td>{log.events.join(', ')}</td>
                         <td>{log.gasUsed}</td>
