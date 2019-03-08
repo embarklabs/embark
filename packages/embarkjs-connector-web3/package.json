@@ -13,7 +13,11 @@
     "smart-contract"
   ],
   "license": "MIT",
-  "repository": "github:embark-framework/embark",
+  "repository": {
+    "directory": "packages/embarkjs-connector-web3",
+    "type": "git",
+    "url": "https://github.com/embark-framework/embark.git"
+  },
   "main": "index.js",
   "scripts": {
     "ci": "npm run qa",

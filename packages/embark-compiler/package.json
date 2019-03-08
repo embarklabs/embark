@@ -15,7 +15,11 @@
     "solidity"
   ],
   "license": "MIT",
-  "repository": "github:embark-framework/embark",
+  "repository": {
+    "directory": "packages/embark-compiler",
+    "type": "git",
+    "url": "https://github.com/embark-framework/embark.git"
+  },
   "main": "./dist/index.js",
   "scripts": {
     "build": "cross-env BABEL_ENV=node babel src --extensions \".js,.ts\" --out-dir dist --root-mode upward --source-maps",
