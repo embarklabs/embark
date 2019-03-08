@@ -7,11 +7,14 @@ import {isDarkTheme} from '../utils/utils';
 
 class AddFileModal extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {modal: false, filename: ''};
   }
 
-  toggle() {
+  toggle(open) {
+    if (open !== undefined) {
+      return this.setState({modal: open});
+    }
     this.setState({modal: !this.state.modal});
   }
 
@@ -21,24 +24,24 @@ class AddFileModal extends React.Component {
 
   addFile() {
     this.props.saveFile({path: `${this.props.node.path}/${this.state.filename}`, content: ''});
-    this.toggle();
+    this.toggle(false);
   }
 
   render() {
     return (
       <Modal contentClassName={classNames({'dark-theme': isDarkTheme(this.props.theme)})}
              isOpen={this.state.modal}
-             toggle={() => this.toggle()}>
-        <ModalHeader toggle={() => this.toggle()}>Please give the file a name</ModalHeader>
+             toggle={(open) => this.toggle(open)}>
+        <ModalHeader toggle={() => this.toggle(false)}>Please give the file a name</ModalHeader>
         <ModalBody>
-          <Input autofocus="true" value={this.state.filename} onChange={e => this.handleChange(e)} />
+          <Input autoFocus={true} value={this.state.filename} onChange={e => this.handleChange(e)}/>
         </ModalBody>
         <ModalFooter>
           <Button color="primary" onClick={() => this.addFile()}>Add File</Button>{' '}
-          <Button color="secondary" onClick={() => this.toggle()}>Cancel</Button>
+          <Button color="secondary" onClick={() => this.toggle(false)}>Cancel</Button>
         </ModalFooter>
       </Modal>
-    )
+    );
   }
 }
 
