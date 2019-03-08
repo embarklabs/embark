@@ -306,7 +306,7 @@ class ContractsDeployment extends React.Component {
         <Col>
           <ContractsHeader deploymentPipeline={this.props.deploymentPipeline}
                            updateDeploymentPipeline={this.props.updateDeploymentPipeline}/>
-          {this.props.contracts.filter(contract => contract.code || contract.deploy)
+          {this.props.contracts.filter(contract => (contract.code || contract.deploy) && !contract.silent)
             .sort((a, b) => a.index - b.index).map((contract, index) => {
                 contract.deployIndex = index;
                 return (<Contract key={contract.deployIndex}
