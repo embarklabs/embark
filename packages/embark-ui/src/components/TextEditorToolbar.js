@@ -7,6 +7,10 @@ import FontAwesomeIcon from 'react-fontawesome';
 import AddFileModal from '../components/AddFileModal';
 import AddFolderModal from '../components/AddFolderModal';
 
+const StatusText = ({message, icon, spin = false}) => (
+  <span className="ml-2"><FontAwesomeIcon className="mr-1" name={icon} spin={spin}/>{message}</span>
+);
+
 export const TextEditorToolbarTabs = {
   Interact: { label: 'Interact', icon: 'bolt' },
   Details: { label: 'Details', icon: 'info-circle' },
@@ -18,8 +22,20 @@ export const TextEditorToolbarTabs = {
 class TextEditorToolbar extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      successMessage: ''
+    };
     this.addFileModal = React.createRef();
     this.addFolderModal = React.createRef();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.editorOperationStatus.success !== prevProps.editorOperationStatus.success) {
+      this.setState({successMessage: this.props.editorOperationStatus.success});
+      setTimeout(() => {
+        this.setState({successMessage: ''});
+      }, 3000);
+    }
   }
 
   isActiveTab(tab) {
@@ -64,6 +80,9 @@ class TextEditorToolbar extends Component {
             <FontAwesomeIcon className="mr-2" name="trash"/>
             Delete
           </Button>
+          {this.state.successMessage && <StatusText message={this.state.successMessage} icon="check"/>}
+          {this.props.editorOperationStatus.loading && <StatusText message="Processing..." icon="spinner" spin={true}/>}
+          {this.props.editorOperationStatus.error && <StatusText message={this.props.editorOperationStatus.error} icon="exclamation-triangle"/>}
         </li>
         <li className="breadcrumb-menu">
           <Nav className="btn-group">
@@ -87,7 +106,8 @@ TextEditorToolbar.propTypes = {
   remove: PropTypes.func,
   toggleShowHiddenFiles: PropTypes.func,
   toggleAsideTab: PropTypes.func,
-  activeTab: PropTypes.object
+  activeTab: PropTypes.object,
+  editorOperationStatus: PropTypes.object
 };
 
 export default TextEditorToolbar;

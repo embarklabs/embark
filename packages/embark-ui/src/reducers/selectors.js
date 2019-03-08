@@ -246,3 +246,7 @@ export function getPreviewUrl(state) {
   return state.previewUrl;
 }
 
+export function getEditorOperationStatus(state) {
+  return state.editorOperationStatus;
+}
+
