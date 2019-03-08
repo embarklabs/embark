@@ -32,7 +32,7 @@ class ContractFunction extends Component {
   }
 
   static isPureCall(method) {
-    return (method.mutability === 'view' || method.mutability === 'pure');
+    return (method.stateMutability === 'view' || method.stateMutability === 'pure');
   }
 
   static isEvent(method) {
@@ -70,7 +70,7 @@ class ContractFunction extends Component {
 
   handleCall(e) {
     e.preventDefault();
-    this.props.postContractFunction(this.props.contractProfile.name, this.props.method.name, this.inputsAsArray(), this.state.inputs.gasPrice * 1000000000);
+    this.props.postContractFunction(this.props.contractName, this.props.method.name, this.inputsAsArray(), this.state.inputs.gasPrice * 1000000000);
   }
 
   callDisabled() {
@@ -189,7 +189,7 @@ class ContractFunction extends Component {
 }
 
 ContractFunction.propTypes = {
-  contractProfile: PropTypes.object,
+  contractName: PropTypes.string,
   method: PropTypes.object,
   contractFunctions: PropTypes.arrayOf(PropTypes.object),
   postContractFunction: PropTypes.func
@@ -202,7 +202,7 @@ const filterContractFunctions = (contractFunctions, contractName, method) => {
 };
 
 const ContractOverview = (props) => {
-  const {contractProfile, contract} = props;
+  const {contract} = props;
   const contractDisplay = formatContractForDisplay(contract);
   if (!contractDisplay) {
     return '';
@@ -213,14 +213,13 @@ const ContractOverview = (props) => {
       {(contractDisplay.state === 'Deployed') && <div>Deployed at {contractDisplay.address}</div>}
       {(contractDisplay.state !== 'Deployed') && <div>{contractDisplay.address}</div>}
       <br/>
-      {contractProfile.methods
+      {contract.abiDefinition
         .filter((method) => {
           return props.onlyConstructor ? method.type === 'constructor' : method.type !== 'constructor';
         })
-        .map(method => <ContractFunction key={method.name}
+        .map(method => <ContractFunction key={method.name} contractName={contract.className}
                                          method={method}
-                                         contractFunctions={filterContractFunctions(props.contractFunctions, contractProfile.name, method.name)}
-                                         contractProfile={contractProfile}
+                                         contractFunctions={filterContractFunctions(props.contractFunctions, contract.className, method.name)}
                                          postContractFunction={props.postContractFunction}/>)}
     </div>
   );
@@ -229,7 +228,6 @@ const ContractOverview = (props) => {
 ContractOverview.propTypes = {
   contract: PropTypes.object,
   onlyConstructor: PropTypes.bool,
-  contractProfile: PropTypes.object,
   contractFunctions: PropTypes.arrayOf(PropTypes.object),
   postContractFunction: PropTypes.func
 };
