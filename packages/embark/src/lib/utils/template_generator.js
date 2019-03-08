@@ -162,6 +162,9 @@ class TemplateGenerator {
     const pkgJson = fs.readJSONSync('./package.json');
     if (!(/demo/).test(name)) {
       delete pkgJson.repository;
+      delete pkgJson.bugs;
+      pkgJson.description = '';
+      delete pkgJson.homepage;
       pkgJson.version = '0.0.1';
     }
     if (pkgJson.devDependencies) {
@@ -181,6 +184,9 @@ class TemplateGenerator {
     pkgJson.scripts.test = 'embark test';
     fs.writeFileSync('package.json', JSON.stringify(pkgJson, null, 2));
 
+    if (!(/demo/).test(name) && fs.existsSync('README.md')) {
+      fs.removeSync('README.md');
+    }
     if (fs.existsSync('dot.gitignore')) {
       fs.moveSync('dot.gitignore', '.gitignore', {overwrite: true});
     }

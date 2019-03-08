@@ -1,4 +1,5 @@
 {
+  "description": "Test plugin for integration testing purposes",
   "dependencies": {
     "haml": "0.4.3"
   },

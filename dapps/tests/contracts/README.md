@@ -1,10 +1,12 @@
-### Test App for integration testing purposes
+# `embark-dapp-test-contracts`
 
-#### In the top-level of the monorepo
+> Test DApp for integration testing purposes
+
+## In the top-level of the monorepo
 
 `yarn globalize` to make development embark available on the global PATH.
 
-#### In this directory
+## In this directory
 
 `embark run` to check if everything is behaving as expected.
 

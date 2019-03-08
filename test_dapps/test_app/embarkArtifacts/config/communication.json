@@ -1,0 +1,7 @@
+{
+  "connection": {
+    "host": "localhost",
+    "port": 8546,
+    "type": "ws"
+  }
+}

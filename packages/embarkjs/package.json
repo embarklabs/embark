@@ -4,7 +4,8 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "JavaScript library for easily interacting with web3 technologies",
-  "homepage": "https://embark.status.im/",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embarkjs#readme",
+  "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
     "dapps",
