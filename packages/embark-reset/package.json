@@ -7,7 +7,11 @@
   "description": "DApp reset utlity for embark",
   "homepage": "https://embark.status.im/",
   "license": "MIT",
-  "repository": "github:embark-framework/embark",
+  "repository": {
+    "directory": "packages/embark-reset",
+    "type": "git",
+    "url": "https://github.com/embark-framework/embark.git"
+  },
   "bin": "./bin.js",
   "main": "index.js",
   "dependencies": {

@@ -15,7 +15,11 @@
     "solidity"
   ],
   "license": "MIT",
-  "repository": "github:embark-framework/embark",
+  "repository": {
+    "directory": "packages/embark-ui",
+    "type": "git",
+    "url": "https://github.com/embark-framework/embark.git"
+  },
   "scripts": {
     "build": "node scripts/build.js",
     "build-storybook": "build-storybook -s public",

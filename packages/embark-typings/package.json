@@ -16,7 +16,11 @@
     "solidity"
   ],
   "license": "MIT",
-  "repository": "github:embark-framework/embark",
+  "repository": {
+    "directory": "packages/embark-typings",
+    "type": "git",
+    "url": "https://github.com/embark-framework/embark.git"
+  },
   "main": "",
   "types": "index",
   "scripts": {

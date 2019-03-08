@@ -15,7 +15,11 @@
     "solidity"
   ],
   "license": "MIT",
-  "repository": "github:embark-framework/embark",
+  "repository": {
+    "directory": "packages/embarkjs",
+    "type": "git",
+    "url": "https://github.com/embark-framework/embark.git"
+  },
   "main": "dist/node/index.js",
   "browser": {
     "./dist/node/index.js": "./dist/browser/index.js"
