@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import React from 'react';
 import {
-  InputGroup,
   Card,
   CardBody,
   CardHeader,
@@ -9,7 +8,6 @@ import {
   FormGroup,
   Input,
   Row,
-  InputGroupAddon,
   Label
 } from 'reactstrap';
 import CopyButton from './CopyButton';
@@ -62,12 +60,10 @@ class Converter extends React.Component {
                 this.state.etherConversions.map(unit => (
                   <FormGroup key={unit.key}>
                     <Label htmlFor={unit.name}>{unit.name}</Label>
-                    <InputGroup>
+                    <div className="position-relative">
                       <Input id={unit.name} placeholder={unit.name} value={unit.value} onChange={e => this.handleOnChange(e, unit.key)} />
-                      <InputGroupAddon addonType="append">
-                        <CopyButton text={unit.value} title="Copy value to clipboard" size={2}/>
-                      </InputGroupAddon>
-                    </InputGroup>
+                      <CopyButton text={unit.value} title="Copy value to clipboard" size={2}/>
+                    </div>
                   </FormGroup>
                 ))
               }
