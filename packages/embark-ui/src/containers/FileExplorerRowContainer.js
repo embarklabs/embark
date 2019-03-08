@@ -8,6 +8,7 @@ import {VelocityComponent} from 'velocity-react';
 import {removeFile as removeFileAction, saveFile as saveFileAction, saveFolder as saveFolderAction} from '../actions';
 import AddFileModal from '../components/AddFileModal';
 import AddFolderModal from '../components/AddFolderModal';
+import DeleteModal from '../components/DeleteModal';
 import { getTheme } from '../reducers/selectors';
 
 class FileExplorerRowContainer extends React.Component {
@@ -16,6 +17,7 @@ class FileExplorerRowContainer extends React.Component {
     this.state = {active: false};
     this.addFileModal = React.createRef();
     this.addFolderModal = React.createRef();
+    this.deleteModal = React.createRef();
   }
 
   activateNode() {
@@ -33,12 +35,12 @@ class FileExplorerRowContainer extends React.Component {
           <React.Fragment>
             <span id="add-file"
                   className="pointer"
-                  onClick={() => this.addFileModal.current.toggle()}>
+                  onClick={() => this.addFileModal.current.toggle(true)}>
               <FontAwesome name="plus" className="text-success mr-2" />
             </span>
             <span id="add-folder"
                   className="pointer"
-                  onClick={() => this.addFolderModal.current.toggle()}>
+                  onClick={() => this.addFolderModal.current.toggle(true)}>
               <FontAwesome name="folder-open" className="text-success mr-2" />
             </span>
             <UncontrolledTooltip placement="bottom" target="add-file">
@@ -53,12 +55,13 @@ class FileExplorerRowContainer extends React.Component {
         }
         <span id="delete"
               style={{cursor: "pointer"}}
-              onClick={() => this.props.removeFile(this.props.node)}>
+              onClick={() => this.deleteModal.current.toggle(true)}>
           <FontAwesome name="trash" className="text-danger" />
         </span>
         <UncontrolledTooltip placement="bottom" target="delete">
           Delete
         </UncontrolledTooltip>
+        <DeleteModal theme={this.props.theme} delete={() => this.props.removeFile(this.props.node)} ref={this.deleteModal} />
       </span>
     )
   }

@@ -7,11 +7,14 @@ import {isDarkTheme} from '../utils/utils';
 
 class AddFolderModal extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {modal: false, folder: ''};
   }
 
-  toggle() {
+  toggle(open) {
+    if (open !== undefined) {
+      return this.setState({modal: open});
+    }
     this.setState({modal: !this.state.modal});
   }
 
@@ -21,21 +24,21 @@ class AddFolderModal extends React.Component {
 
   addFolder() {
     this.props.saveFolder({path: `${this.props.node.path}/${this.state.folder}`});
-    this.toggle();
+    this.toggle(false);
   }
 
   render() {
     return (
       <Modal contentClassName={classNames({'dark-theme': isDarkTheme(this.props.theme)})}
              isOpen={this.state.modal}
-             toggle={() => this.toggle()}>
-        <ModalHeader toggle={() => this.toggle()}>Please give the folder a name</ModalHeader>
+             toggle={(open) => this.toggle(open)}>
+        <ModalHeader toggle={() => this.toggle(false)}>Please give the folder a name</ModalHeader>
         <ModalBody>
-          <Input autofocus="true" value={this.state.filename} onChange={e => this.handleChange(e)} />
+          <Input autoFocus={true} value={this.state.filename} onChange={e => this.handleChange(e)} />
         </ModalBody>
         <ModalFooter>
           <Button color="primary" onClick={() => this.addFolder()}>Add Folder</Button>{' '}
-          <Button color="secondary" onClick={() => this.toggle()}>Cancel</Button>
+          <Button color="secondary" onClick={() => this.toggle(false)}>Cancel</Button>
         </ModalFooter>
       </Modal>
     )
