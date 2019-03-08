@@ -165,7 +165,15 @@ class TestRunner {
         global.contract = function (describeName, callback) {
           return Mocha.describe(describeName, callback);
         };
-        next();
+        self.events.request('blockchain:get', (web3) => {
+          // Global web3 used in the tests, not in the vm.
+          // We need to make this available here so tests can use
+          // web3 in the test description (ie `describe` or `contract`).
+          // NOTE: global.web3 will get overwritten on next test deploy
+          // (triggered in config() function).
+          global.web3 = web3;
+          next();
+        });
       },
       function overrideRequire (next) {
         // Override require to enable `require('Embark/contracts/contractName');`
