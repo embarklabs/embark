@@ -2,7 +2,8 @@ import {combineReducers} from 'redux';
 import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE,
         FETCH_CREDENTIALS, UPDATE_BASE_ETHER, CHANGE_THEME, FETCH_THEME, EXPLORER_SEARCH, DEBUGGER_INFO,
         SIGN_MESSAGE, VERIFY_MESSAGE, TOGGLE_BREAKPOINT, UPDATE_PREVIEW_URL,
-        UPDATE_DEPLOYMENT_PIPELINE, WEB3_CONNECT, WEB3_DEPLOY, WEB3_ESTIMAGE_GAS, FETCH_EDITOR_TABS} from "../actions";
+        UPDATE_DEPLOYMENT_PIPELINE, WEB3_CONNECT, WEB3_DEPLOY, WEB3_ESTIMAGE_GAS, FETCH_EDITOR_TABS,
+        SAVE_FILE, SAVE_FOLDER, REMOVE_FILE} from "../actions";
 import {EMBARK_PROCESS_NAME, DARK_THEME, DEPLOYMENT_PIPELINES, DEFAULT_HOST, ELEMENTS_LIMIT} from '../constants';
 
 const BN_FACTOR = 10000;
@@ -376,6 +377,24 @@ function previewUrl(state= `${window.location.protocol}//${window.location.host}
   return state;
 }
 
+const editorOperations = [SAVE_FILE, SAVE_FOLDER, REMOVE_FILE];
+function editorOperationStatus(state = {error: '', success: '', loading: false}, action) {
+  // Success check
+  if (editorOperations.find(operation => operation[SUCCESS] === action.type)) {
+    return {error: '', success: 'Operation successful', loading: false};
+  }
+  // Error check
+  if (editorOperations.find(operation => operation[FAILURE] === action.type)) {
+    const message = action.error ? action.error.message || action.error : '';
+    return {error: 'Error during the process ' + message, success: '', loading: false};
+  }
+  // Loading check
+  if (editorOperations.find(operation => operation[REQUEST] === action.type)) {
+    return {error: '', success: '', loading: true};
+  }
+  return state;
+}
+
 const rootReducer = combineReducers({
   entities,
   loading,
@@ -393,7 +412,8 @@ const rootReducer = combineReducers({
   debuggerInfo,
   theme,
   editorTabs,
-  previewUrl
+  previewUrl,
+  editorOperationStatus
 });
 
 export default rootReducer;
