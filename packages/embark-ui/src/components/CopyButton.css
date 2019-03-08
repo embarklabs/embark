@@ -1,7 +1,7 @@
 #root .copy-to-clipboard {
   position: absolute;
-  right: 0;
-  top: 0;
+  right: 1px;
+  top: 0.5px;
   border-top-left-radius: 0;
   border-bottom-right-radius: 0;
   cursor: pointer;
