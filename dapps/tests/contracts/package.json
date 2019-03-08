@@ -1,4 +1,5 @@
 {
+  "description": "Test DApp for integration testing purposes",
   "devDependencies": {
     "embark": "^4.0.0-beta.0",
     "embark-reset": "^4.0.0-beta.0",

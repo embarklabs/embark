@@ -4,7 +4,8 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Embark is a framework that allows you to easily develop and deploy DApps",
-  "homepage": "https://embark.status.im/",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark#readme",
+  "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
     "dapps",

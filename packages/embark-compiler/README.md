@@ -1,8 +1,15 @@
-## Embark Compiler module
+# `embark-compiler`
 
-This module abstracts the compiler interface. It exposes a plugin api to register contract extensions and how to handle them. It accepts command requests to compile and returns the aggregated compilation result.
+> Embark compiler module
 
-### API
+Visit [embark.status.im](https://embark.status.im/) to get started with
+[Embark](https://github.com/embark-framework/embark).
+
+This module abstracts the compiler interface. It exposes a plugin api to
+register contract extensions and how to handle them. It accepts command
+requests to compile and returns the aggregated compilation result.
+
+## API
 
 **command: `compiler:contracts`**
 
@@ -41,7 +48,7 @@ embark.events.request("compiler:contracts", contractFiles, {}, (err, compiledObj
 
 ```
 
-### Plugins
+## Plugins
 
 This module enables the `registerCompiler` plugin API. see [documentation](https://embark.status.im/docs/plugin_reference.html#embark-registerCompiler-extension-callback-contractFiles-doneCallback)
 
@@ -54,7 +61,6 @@ arguments:
   * `contractFiles`: filenames matching the extension
   * `callback(error, compiledObject)`
 
-### Dependencies
+## Dependencies
 
 * async.eachObject
-

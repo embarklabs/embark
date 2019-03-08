@@ -1,7 +1,9 @@
 {
   "name": "embark-dapp-template-simple",
   "version": "4.0.0-beta.0",
-  "description": "",
+  "description": "Contracts-only DApp template for Embark",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/dapps/templates/simple#readme",
+  "bugs": "https://github.com/embark-framework/embark/issues",
   "files": [
     "contracts",
     "contracts.js",

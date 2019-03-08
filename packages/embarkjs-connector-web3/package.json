@@ -4,7 +4,8 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Web3.js Connector for EmbarkJS",
-  "homepage": "https://embark.status.im/",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embarkjs-connector-web3#readme",
+  "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "embark",
     "web3",

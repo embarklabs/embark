@@ -1,0 +1,78 @@
+{
+  "0x2288b08dab35c1b5a00cdcdacda800b2935cc01d5fa8f28ab31e68d8b60f6ac8": {
+    "contracts": {
+      "0x3043b04ad856d169c8f0b0509c0bc63192dc7edd92d6933c58708298a0e381be": {
+        "name": "ENSRegistry",
+        "address": "0x0774395587AAb8ccFC2E6964F333e7955bd27c3D"
+      },
+      "0x19e5f4df7b9e8e7528b7b03fedebef4be25ff0e0f6ccb1a2f53e20d031b23b7e": {
+        "name": "Resolver",
+        "address": "0xb9b263410fbC24EDc1F83e4b5b4Fe4af0412Ca6C"
+      },
+      "0xc5ec3e3e891e8f90132e3dca5833bc3d8a084cd7df05f2f5f00990414c7d3a86": {
+        "name": "FIFSRegistrar",
+        "address": "0x0462568b84451CE9F8a46826f13768359240F890"
+      },
+      "0x75704f0275c5f13dd702a407c9fe3c41dced3d87906beb9ef1f2bcc56e792db7": {
+        "name": "AlreadyDeployedToken",
+        "address": "0xece374063fe5cc7efbaca0a498477cada94e5ad6"
+      },
+      "0x18562ce34987cc469d7b4665456fef41487087286106e053cb4c8573a7b51bce": {
+        "name": "SimpleStorageWithHttpImport",
+        "address": "0x9755d892efCab7161b4144374a7793FC66D09Edb"
+      },
+      "0x5b1458851ee6947057448dc806e135f61a2e7e9f2a672e0127f3852cf4d18bf9": {
+        "name": "SimpleStorageTest",
+        "address": "0x3AF38647d845849259Af53005EF79E858A2Fd9C1"
+      },
+      "0xebf6bdbfcbbcfc4153e10195e078ae314cbcee7ea9f999bafabb75cebf7de5b6": {
+        "name": "MyToken2",
+        "address": "0x5A364263dc4a9a50486C1af36c41DE6587CF13e5"
+      },
+      "0x9fd5d7a1dfcfeeca8114e8796f3f80f4bedd1c2baf0cb8bd3d23ed27e8c4937e": {
+        "name": "SimpleStorage",
+        "address": "0x6C70B9DD83a3934D1a7308D9E56e52A386b68f51"
+      },
+      "0xd3a67cbdb116b16223fc2c7db7b216ee5259124157609ddc0d92d6ae37017fdb": {
+        "name": "MyToken",
+        "address": "0x29AF75f8Ba57AEb6a5CA58E273302DBa0074bA0E"
+      },
+      "0x9433d4ea0ccbb59dee8b86d356998ea95db82c777b684376370985d89747128d": {
+        "name": "ZAMyLib",
+        "address": "0x88007F6424abb34ce5Ceff9403227454f3385B5F"
+      },
+      "0x1e87da6d4df94ee1e64a4656034ed73323ee50c94907d79996cf5b620433dc22": {
+        "name": "SimpleStorageTest2",
+        "address": "0x16a9427FFB448FB27639b6a3Fe77866Ecb1FA4ED"
+      },
+      "0xb9ebc2cdee85ad7acfc01a006c4885e272030fd227425b5dca0bcc4888ca7a6f": {
+        "name": "ZAMyLib2",
+        "address": "0xED2eEe6F7ede991fA104fB235694F0fD3ad51F59"
+      },
+      "0xc46a9a85efd2efd118e2606eb5e7fe1d0241115f56ba14c5d33a479c83153ffd": {
+        "name": "Test",
+        "address": "0x49b71966a123d07E41df95CF8446032F1A4401da"
+      },
+      "0x1c84e96ba7f6dc02e17840ee4c4d5ebe78b9d96ac764aa5303011c274c77fb10": {
+        "name": "PluginStorage",
+        "address": "0x97084B04060db7996A241f5699C6D091927E78aA"
+      },
+      "0x2fe44ad30689f3eb9de7c50915e51d55b986abcc0e9e62374b5da4e04a615c11": {
+        "name": "ContractArgs",
+        "address": "0x3ea5e8894E7384DD32DFFCcccB8970108D2aC26E"
+      },
+      "0x49471cf26723c0c8710a86ee41398f8a29de47aa54f26540f656eef84e545542": {
+        "name": "AnotherStorage",
+        "address": "0x47E3d3Fd20519e809aF422476C95948ff72BA447"
+      },
+      "0x8885aba2715be8880e8f1c8ac66c1f6004e7c8d25cb1ec4c72120a0eaf1ad76e": {
+        "name": "Test2",
+        "address": "0xac9FFAf3FFCaA0d514f835d2ECEd5919B3729754"
+      },
+      "0x4d84db2a5e0779e933fa86c17fc9777f4e0b74ce7fe54549968015e254c88a60": {
+        "name": "SimpleStorageTest",
+        "address": "0x494748735312D87C54Ff36E9dc71f90fb800D7Df"
+      }
+    }
+  }
+}

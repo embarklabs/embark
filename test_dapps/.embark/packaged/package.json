@@ -1,0 +1,23 @@
+{
+  "name": "packaged",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "embark": "file:../../../packages/embark/embark-4.0.0-beta.0.tgz",
+    "embark-compiler": "file:../../../packages/embark-compiler/embark-compiler-4.0.0-beta.0.tgz",
+    "embark-core": "file:../../../packages/embark-core/embark-core-4.0.0-beta.0.tgz",
+    "embark-graph": "file:../../../packages/embark-graph/embark-graph-4.0.0-beta.0.tgz",
+    "embark-ui": "file:../../../packages/embark-ui/embark-ui-4.0.0-beta.0.tgz",
+    "embark-utils": "file:../../../packages/embark-utils/embark-utils-4.0.0-beta.0.tgz",
+    "embark-vyper": "file:../../../packages/embark-vyper/embark-vyper-4.0.0-beta.0.tgz",
+    "embarkjs": "file:../../../packages/embarkjs/embarkjs-4.0.0-beta.0.tgz"
+  },
+  "devDependencies": {},
+  "description": ""
+}

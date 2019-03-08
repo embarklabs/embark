@@ -3,8 +3,9 @@
   "version": "4.0.0-beta.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
-  "description": "DApp reset utlity for embark",
-  "homepage": "https://embark.status.im/",
+  "description": "DApp reset utlity for Embark",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-reset#readme",
+  "bugs": "https://github.com/embark-framework/embark/issues",
   "license": "MIT",
   "repository": {
     "directory": "packages/embark-reset",

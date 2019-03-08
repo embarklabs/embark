@@ -1,7 +1,9 @@
 {
   "name": "embark-dapp-template-boilerplate",
   "version": "4.0.0-beta.0",
-  "description": "",
+  "description": "Basic DApp template for Embark",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/dapps/templates/boilerplate#readme",
+  "bugs": "https://github.com/embark-framework/embark/issues",
   "files": [
     "app",
     "config/*.js",

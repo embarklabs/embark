@@ -1,4 +1,5 @@
 {
+  "description": "Test DApp for integration testing purposes",
   "devDependencies": {
     "@babel/code-frame": "7.0.0",
     "bootstrap": "3.4.0",
