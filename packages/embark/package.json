@@ -32,7 +32,7 @@
     "qa": "npm-run-all lint typecheck build test package",
     "reset": "npx rimraf .nyc_output coverage dist embark-*.tgz package",
     "start": "npm run watch",
-    "test": "node scripts/test.js",
+    "test": "nyc --reporter=html mocha \"dist/test/**/*.js\" --exit --no-timeouts --require ./scripts/test.js --require source-map-support/register",
     "typecheck": "tsc",
     "watch": "run-p watch:*",
     "watch:build": "npm run build -- --verbose --watch",
