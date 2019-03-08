@@ -11,6 +11,12 @@ const StatusText = ({message, icon, spin = false}) => (
   <span className="ml-2"><FontAwesomeIcon className="mr-1" name={icon} spin={spin}/>{message}</span>
 );
 
+StatusText.propTypes = {
+  message: PropTypes.string,
+  icon: PropTypes.string,
+  spin: PropTypes.bool
+};
+
 export const TextEditorToolbarTabs = {
   Interact: { label: 'Interact', icon: 'bolt' },
   Details: { label: 'Details', icon: 'info-circle' },
@@ -83,6 +89,7 @@ class TextEditorToolbar extends Component {
           {this.state.successMessage && <StatusText message={this.state.successMessage} icon="check"/>}
           {this.props.editorOperationStatus.loading && <StatusText message="Processing..." icon="spinner" spin={true}/>}
           {this.props.editorOperationStatus.error && <StatusText message={this.props.editorOperationStatus.error} icon="exclamation-triangle"/>}
+          <StatusText message="Error while processing Error message here" icon="exclamation-triangle"/>
         </li>
         <li className="breadcrumb-menu">
           <Nav className="btn-group">
