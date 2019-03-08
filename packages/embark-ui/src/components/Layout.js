@@ -41,9 +41,9 @@ import './Layout.css';
 const HEADER_NAV_ITEMS = [
   {name: "Dashboard", to: "/", icon: 'tachometer'},
   {name: "Deployment", to: "/deployment", icon: "arrow-up"},
-  {name: "Explorer", to: "/explorer/overview", icon: "compass"},
+  {name: "Explorer", to: "/explorer/overview", base: "explorer/", icon: "compass"},
   {name: "Editor", to: "/editor", icon: "codepen"},
-  {name: "Utils", to: "/utilities/converter", icon: "cog"}
+  {name: "Utils", to: "/utilities/converter", base: "utilities/", icon: "cog"}
 ];
 
 const SIDEBAR_NAV_ITEMS = {
@@ -125,6 +125,16 @@ class Layout extends React.Component {
     this.setState({searchError: false});
   }
 
+  isActive = (itemUrl, baseUrl, match, location) => {
+    if (itemUrl === location.pathname) {
+      return true;
+    }
+    if (!baseUrl) {
+      return false;
+    }
+    return location.pathname.indexOf(baseUrl) > -1;
+  };
+
   renderNav() {
     return (
       <React.Fragment>
@@ -132,8 +142,9 @@ class Layout extends React.Component {
           {HEADER_NAV_ITEMS.map((item) => {
             return (
               <NavItem className="px-3" key={item.to}>
-                <NavLink exact activeClassName="active" tag={RNavLink} to={item.to}>
-                  <FontAwesome className="mr-2" name={item.icon} />
+                <NavLink exact activeClassName="active" tag={RNavLink} to={item.to}
+                         isActive={this.isActive.bind(this, item.to, item.base)}>
+                  <FontAwesome className="mr-2" name={item.icon}/>
                   {item.name}
                 </NavLink>
               </NavItem>
