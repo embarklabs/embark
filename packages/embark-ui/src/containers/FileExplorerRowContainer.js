@@ -43,10 +43,10 @@ class FileExplorerRowContainer extends React.Component {
                   onClick={() => this.addFolderModal.current.toggle(true)}>
               <FontAwesome name="folder-open" className="text-success mr-2" />
             </span>
-            <UncontrolledTooltip placement="bottom" target="add-file">
+            <UncontrolledTooltip placement="bottom" target="add-file" delay={0}>
               Add File
             </UncontrolledTooltip>
-            <UncontrolledTooltip placement="bottom" target="add-folder">
+            <UncontrolledTooltip placement="bottom" target="add-folder" delay={0}>
               Add Folder
             </UncontrolledTooltip>
             <AddFileModal theme={this.props.theme} node={this.props.node} saveFile={this.props.saveFile} ref={this.addFileModal} />
@@ -58,7 +58,7 @@ class FileExplorerRowContainer extends React.Component {
               onClick={() => this.deleteModal.current.toggle(true)}>
           <FontAwesome name="trash" className="text-danger" />
         </span>
-        <UncontrolledTooltip placement="bottom" target="delete">
+        <UncontrolledTooltip placement="bottom" target="delete" delay={0}>
           Delete
         </UncontrolledTooltip>
         <DeleteModal theme={this.props.theme} delete={() => this.props.removeFile(this.props.node)} ref={this.deleteModal} />
