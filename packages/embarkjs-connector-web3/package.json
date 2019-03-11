@@ -1,7 +1,7 @@
 {
   "name": "embarkjs-connector-web3",
   "version": "4.0.0-beta.0",
-  "author": "Jonathan Rainville",
+  "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Web3.js Connector for EmbarkJS",
   "homepage": "https://embark.status.im/",
@@ -19,6 +19,9 @@
     "url": "https://github.com/embark-framework/embark.git"
   },
   "main": "index.js",
+  "files": [
+    "embarkJSConnectorWeb3.js"
+  ],
   "scripts": {
     "ci": "npm run qa",
     "clean": "npm run reset",

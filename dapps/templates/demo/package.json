@@ -4,7 +4,10 @@
   "description": "Demo DApp for embark",
   "files": [
     "app",
-    "config",
+    "config/*.js",
+    "config/development",
+    "config/privatenet",
+    "config/testnet",
     "contracts",
     "dot.gitignore",
     "dot.npmrc",
