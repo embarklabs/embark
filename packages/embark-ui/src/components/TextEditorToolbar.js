@@ -89,7 +89,6 @@ class TextEditorToolbar extends Component {
           {this.state.successMessage && <StatusText message={this.state.successMessage} icon="check"/>}
           {this.props.editorOperationStatus.loading && <StatusText message="Processing..." icon="spinner" spin={true}/>}
           {this.props.editorOperationStatus.error && <StatusText message={this.props.editorOperationStatus.error} icon="exclamation-triangle"/>}
-          <StatusText message="Error while processing Error message here" icon="exclamation-triangle"/>
         </li>
         <li className="breadcrumb-menu">
           <Nav className="btn-group">
