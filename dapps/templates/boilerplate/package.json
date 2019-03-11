@@ -4,7 +4,10 @@
   "description": "",
   "files": [
     "app",
-    "config",
+    "config/*.js",
+    "config/development",
+    "config/privatenet",
+    "config/testnet",
     "contracts",
     "dot.gitignore",
     "dot.npmrc",

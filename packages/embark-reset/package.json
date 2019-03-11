@@ -1,6 +1,5 @@
 {
   "name": "embark-reset",
-  "private": true,
   "version": "4.0.0-beta.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
@@ -14,6 +13,9 @@
   },
   "bin": "./bin.js",
   "main": "index.js",
+  "files": [
+    "bin.js"
+  ],
   "dependencies": {
     "rimraf": "2.6.3"
   },
