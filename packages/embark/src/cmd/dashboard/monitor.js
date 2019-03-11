@@ -1,6 +1,7 @@
 let blessed = require("neo-blessed");
 const REPL = require('./repl.js');
 const stream = require('stream');
+const util = require('util');
 
 class Monitor {
   constructor(_options) {
@@ -100,7 +101,15 @@ class Monitor {
   }
 
   logEntry() {
-    this.logText.log(...arguments);
+    const args = Array.from(arguments);
+    const color = args[args.length - 1];
+    args.splice(args.length - 1, 1);
+    this.logText.log(...args.filter(arg => arg !== undefined && arg !== null).map(arg => {
+      if (color) {
+        return typeof arg === 'object' ? util.inspect(arg, 2)[color] : arg[color];
+      }
+      return typeof arg === 'object' ? util.inspect(arg, 2) : arg;
+    }));
     this.screen.render();
   }
 
