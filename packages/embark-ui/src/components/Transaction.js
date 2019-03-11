@@ -8,8 +8,22 @@ import Description from './Description';
 import CardTitleIdenticon from './CardTitleIdenticon';
 import {utils} from 'web3';
 
+function linkTemplate(to, text) {
+  return <Link to={to}>{text}</Link>
+}
 
-const Transaction = ({transaction, contracts}) => (
+function getLink(contracts, accounts, address) {
+  if (accounts.find(account => account.address === address)) {
+    return linkTemplate(`/explorer/accounts/${address}`, address);
+  }
+  const contract = contracts.find(contract => contract.deployedAddress === address);
+  if (contract) {
+    return linkTemplate(`/explorer/contracts/${contract.className}`, address);
+  }
+  return address
+}
+
+const Transaction = ({transaction, contracts, accounts}) => (
   <Row>
     <Col>
       <Card>
@@ -23,9 +37,9 @@ const Transaction = ({transaction, contracts}) => (
         </CardHeader>
         <CardBody>
           <dl className="row">
-            <Description label="Block" value={<Link to={`/explorer/blocks/${transaction.blockNumber}`}>{transaction.blockNumber}</Link>} />
-            <Description label="From" value={transaction.from} />
-            <Description label="To" value={transaction.to} />
+            <Description label="Block" value={linkTemplate(`/explorer/blocks/${transaction.blockNumber}`, transaction.blockNumber)} />
+            <Description label="From" value={getLink(contracts, accounts, transaction.from)} />
+            <Description label="To" value={getLink(contracts, accounts, transaction.to)} />
             <Description label="Value" value={`${utils.fromWei(transaction.value)} Ether`}/>
             <Description label="Input" value={transaction.input} />
             <Description label="Gas" value={transaction.gas} />
@@ -40,6 +54,7 @@ const Transaction = ({transaction, contracts}) => (
 
 Transaction.propTypes = {
   contracts: PropTypes.arrayOf(PropTypes.object),
+  accounts: PropTypes.arrayOf(PropTypes.object),
   transaction: PropTypes.object
 };
 
