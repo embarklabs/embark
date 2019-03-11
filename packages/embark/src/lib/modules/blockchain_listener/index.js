@@ -26,10 +26,12 @@ class BlockchainListener {
     this.ipc.server.once('connect', () => {
       this.processLogsApi = new ProcessLogsApi({embark: this.embark, processName: PROCESS_NAME, silent: true});
       this._listenToBlockchainLogs();
+    });
+    if (this.ipc.isServer()) {
       this._listenToCommands();
       this._registerConsoleCommands();
       this._registerApiEndpoint();
-    });
+    }
   }
 
   /**
