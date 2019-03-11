@@ -60,9 +60,9 @@ class TransactionsContainer extends Component {
     }
     return (
       <React.Fragment>
-        <PageHead title="Transactions" enabled={this.props.overridePageHead} description="Summary view of all transactions occuring on the node configured for Embark" />
+        <PageHead title="Transactions" enabled={this.props.overridePageHead} description="Summary view of all transactions occurring on the node configured for Embark" />
         <DataWrapper shouldRender={this.currentTxs.length > 0} {...this.props} render={() => (
-          <Transactions transactions={this.currentTxs} 
+          <Transactions transactions={this.currentTxs}
                         contracts={this.props.contracts}
                         numberOfPages={this.getNumberOfPages()}
                         changePage={(newPage) => this.changePage(newPage)}
