@@ -108,7 +108,7 @@ class Console extends Component {
                 emptyLabel={false}
                 labelKey="value"
                 multiple={false}
-                maxResults={10}
+                maxResults={20}
                 isLoading={this.state.isLoading}
                 onInputChange={(text) => this.handleChange(text)}
                 onChange={(text) => {
