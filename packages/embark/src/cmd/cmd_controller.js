@@ -102,8 +102,8 @@ class EmbarkController {
     async.waterfall([
       function initEngine(callback) {
         engine.init({}, () => {
+          engine.startService("embarkListener");
           if (!options.useDashboard) {
-            engine.startService("embarkListener");
             engine.logger.info('========================'.bold.green);
             engine.logger.info((__('Welcome to Embark') + ' ' + engine.version).yellow.bold);
             engine.logger.info('========================'.bold.green);
