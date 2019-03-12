@@ -22,9 +22,7 @@ class ContractTransactions extends React.Component {
       return [];
     }
 
-    return this.props.contract.abiDefinition.filter(method => (
-      method.name !== CONSTRUCTOR && method.mutability !== VIEW && method.mutability !== PURE && method.constant !== true && method.type === FUNCTION
-    ));
+    return this.props.contract.abiDefinition.filter(method => method.mutability !== VIEW && method.mutability !== PURE && method.constant !== true && (method.type === FUNCTION || method.type === CONSTRUCTOR));
   }
 
   getEvents() {
@@ -67,8 +65,8 @@ class ContractTransactions extends React.Component {
               <FormGroup>
                 <Label htmlFor="functions">Functions</Label>
                 <Input type="select" name="functions" id="functions" onChange={(event) => this.updateState('method', event.target.value)} value={this.state.method}>
-                  <option value=""></option>
-                  {this.getMethods().map((method, index) => <option value={method.name} key={index}>{method.name}</option>)}
+                  <option value=""/>
+                  {this.getMethods().map((method, index) => <option value={method.name} key={index}>{method.type === CONSTRUCTOR ? CONSTRUCTOR : method.name}</option>)}
                 </Input>
               </FormGroup>
             </Col>
@@ -109,7 +107,7 @@ class ContractTransactions extends React.Component {
             <Table>
               <thead>
                 <tr>
-                  <th></th>
+                  <th/>
                   <th>Call</th>
                   <th>Events</th>
                   <th>Gas Used</th>
