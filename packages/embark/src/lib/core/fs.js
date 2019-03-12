@@ -144,6 +144,7 @@ function removeSync() {
 }
 
 function anchoredPath(anchor, ...args) {
+  args = args.map(path => path.replace(dappPath(), ""));
   return utils.joinPath(env.anchoredValue(anchor), ...args);
 }
 

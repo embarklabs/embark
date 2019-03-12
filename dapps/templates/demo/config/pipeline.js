@@ -9,7 +9,7 @@
 //   embark new --template flow
 
 module.exports = {
-  typescript: false
+  typescript: false,
   // Setting `typescript: true` in this config will disable Flow support in
   // Embark's default webpack config and enable TypeScript support: .ts and
   // .tsx sources will automatically be transpiled into JavaScript without any
@@ -20,4 +20,8 @@ module.exports = {
   //   https://github.com/embark-framework/embark-typescript-template
   // A new DApp can be created from that template with:
   //   embark new --template typescript
+  enabled: true 
+  // Setting `enabled: false` in this config will disable Embark's built-in Webpack
+  // pipeline. The developer will need to use a different frontend build tool, such as 
+  // `create-react-app` or Angular CLI to build their dapp
 };

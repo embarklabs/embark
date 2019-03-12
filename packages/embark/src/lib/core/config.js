@@ -533,7 +533,8 @@ Config.prototype.loadEmbarkConfigFile = function() {
 Config.prototype.loadPipelineConfigFile = function() {
 
   const defaultPipelineConfig = {
-    typescript: false
+    typescript: false,
+    enabled: true
   };
 
   let pipelineConfigPath = this._getFileOrObject(this.configDir, 'pipeline', 'pipeline');
@@ -558,6 +559,7 @@ Config.prototype.loadPipelineConfigFile = function() {
   }
 
   this.pipelineConfig = pipelineConfig;
+  this.events.emit('config:load:pipeline', this.pipelineConfig);
 };
 
 Config.prototype.loadAssetFiles = function () {
