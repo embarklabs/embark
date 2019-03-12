@@ -24,7 +24,15 @@ class Pipeline {
     this.isFirstBuild = true;
     this.useDashboard = options.useDashboard;
 
-    this.events.setCommandHandler('pipeline:build', (options, callback) => this.build(options, callback));
+    // track changes to the pipeline config in the filesystem
+    this.events.on('config:load:pipeline', (pipelineConfig) => {
+      this.pipelineConfig = pipelineConfig;
+    });
+
+    this.events.setCommandHandler('pipeline:build', (options, callback) => {
+      if(!this.pipelineConfig.enabled) return callback();
+      this.build(options, callback);
+    });
     this.events.setCommandHandler('pipeline:build:contracts', callback => this.buildContracts([], callback));
     this.fs.removeSync(this.buildDir);
 
