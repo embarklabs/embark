@@ -1,4 +1,5 @@
-let async = require('../utils/async_extend.js');
+const async = require('../utils/async_extend.js');
+const deepEqual = require('deep-equal');
 
 class ServicesMonitor {
   constructor(options) {
@@ -32,9 +33,12 @@ ServicesMonitor.prototype.initCheck = function (checkName) {
     if (check && check.status === 'on' && obj.status === 'off') {
       self.events.emit('check:wentOffline:' + checkName);
     }
-    self.checkState[checkName] = {name: obj.name, status: obj.status, serviceName: checkName};
     check.status = obj.status;
-    self.events.emit("servicesState", self.checkState);
+    const newState = {name: obj.name, status: obj.status, serviceName: checkName};
+    if (!deepEqual(newState, self.checkState[checkName])) {
+      self.checkState[checkName] = {name: obj.name, status: obj.status, serviceName: checkName};
+      self.events.emit("servicesState", self.checkState);
+    }
   });
 
   if (check.interval !== 0) {

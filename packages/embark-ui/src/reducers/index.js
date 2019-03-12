@@ -88,7 +88,7 @@ const sorter = {
   },
 };
 
-const filtrer = {
+const filters = {
   processes: function(process, index, self) {
     if (["embark", "blockchain"].indexOf(process.name) === -1) return false;
     return index === self.findIndex((t) => t.name === process.name);
@@ -151,8 +151,8 @@ function entities(state = entitiesDefaultState, action) {
     return {...state, files: action.files};
   }
   for (let name of Object.keys(state)) {
-    let filter = filtrer[name] || (() => true);
-    let sort = sorter[name] || (() => true);
+    let filter = filters[name] || (() => true);
+    let sort = sorter[name] || (() => 0);
     if (action[name] && action[name].length > 1) {
       return {...state, [name]: [...action[name], ...state[name]].sort(sort).filter(filter)};
     }
@@ -160,8 +160,8 @@ function entities(state = entitiesDefaultState, action) {
       let entity = action[name][0];
       let nested = Object.keys(state).reduce((acc, entityName) => {
         if (entity && entity[entityName] && entity[entityName].length > 0) {
-          let entityFilter = filtrer[entityName] || (() => true);
-          let entitySort = sorter[entityName] || (() => true);
+          let entityFilter = filters[entityName] || (() => true);
+          let entitySort = sorter[entityName] || (() => 0);
           acc[entityName] = [...entity[entityName], ...state[entityName]].sort(entitySort).filter(entityFilter);
         }
         return acc;
