@@ -62,7 +62,7 @@ class SwarmProcess extends ProcessWrapper {
     // Swarm logs appear in stderr somehow
     this.child.stderr.on('data', (data) => {
       data = data.toString();
-      if (!self.readyCalled && data.indexOf('Swarm http proxy started') > -1) {
+      if (!self.readyCalled && (data.includes('Swarm http proxy started') || data.includes('Swarm network started'))) {
         self.readyCalled = true;
         self.send({result: constants.storage.initiated});
       }

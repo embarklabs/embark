@@ -7,7 +7,9 @@ class Storage {
     if (!this.storageConfig.enabled) return;
 
     this.handleUploadCommand();
-    this.addSetProviders();
+    this.addSetProviders(() => {
+      this.embark.events.setCommandHandler("module:storage:initiated", (cb) => { cb(); });
+    });
   }
 
   handleUploadCommand() {
@@ -26,7 +28,7 @@ class Storage {
     });
   }
 
-  addSetProviders() {
+  addSetProviders(cb) {
     let code = `\nEmbarkJS.Storage.setProviders(${JSON.stringify(this.storageConfig.dappConnection || [])});`;
 
     let shouldInit = (storageConfig) => {
@@ -36,6 +38,7 @@ class Storage {
     this.embark.addProviderInit('storage', code, shouldInit);
     this.embark.events.request("runcode:storage:providerRegistered", () => {
       this.embark.addConsoleProviderInit('storage', code, shouldInit);
+      cb();
     });
   }
 

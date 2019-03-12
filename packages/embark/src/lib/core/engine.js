@@ -192,8 +192,10 @@ class Engine {
     this.registerModule('code_generator', {plugins: self.plugins, env: self.env});
 
     const generateCode = function (modifiedAssets) {
-      self.events.request("code-generator:embarkjs:build", () => {
-        self.events.emit('code-generator-ready', modifiedAssets);
+      self.events.request("module:storage:initiated", () => {
+        self.events.request("code-generator:embarkjs:build", () => {
+          self.events.emit('code-generator-ready', modifiedAssets);
+        });
       });
     };
     const cargo = async.cargo((tasks, callback) => {
@@ -271,9 +273,27 @@ class Engine {
   }
 
   storageService(_options) {
-    this.registerModule('storage', {plugins: this.plugins});
-    this.registerModule('ipfs');
-    this.registerModule('swarm');
+    async.parallel([
+      (next) => {
+        if (!this.config.storageConfig.available_providers.includes("ipfs")) {
+          return next();
+        }
+        this.registerModule('ipfs');
+        this.events.on("ipfs:process:started", next);
+      },
+      (next) => {
+        if (!this.config.storageConfig.available_providers.includes("swarm")) {
+          return next();
+        }
+        this.registerModule('swarm');
+        this.events.on("swarm:process:started", next);
+      }
+    ], (err) => {
+      if(err) {
+        console.error(__("Error starting storage process(es): %s", err));
+      }
+      this.registerModule('storage', {plugins: this.plugins});
+    });
   }
 
   web3Service(options) {

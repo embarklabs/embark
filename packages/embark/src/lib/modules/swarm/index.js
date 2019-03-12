@@ -46,21 +46,21 @@ class Swarm {
     this.swarm = new SwarmAPI({gateway: this.providerUrl});
 
     this.setServiceCheck();
-    this.addProviderToEmbarkJS();
-    this.addObjectToConsole();
     this.registerUploadCommand();
 
     // swarm needs geth to be running first
-    this.events.once(constants.blockchain.blockchainReady, () => {
-      this.swarm.isAvailable((err, isAvailable) => {
-        if (!err || isAvailable) {
-          this.logger.info("Swarm node found, using currently running node");
-          return;
-        }
-        this.logger.info("SWARM: Swarm node not found, attempting to start own node");
-        this.listenToCommands();
-        this.registerConsoleCommands();
-        return this.startProcess(() => {});
+    this.swarm.isAvailable((err, isAvailable) => {
+      if (!err || isAvailable) {
+        this.logger.info("Swarm node found, using currently running node");
+        return;
+      }
+      this.logger.info("SWARM: Swarm node not found, attempting to start own node");
+      this.listenToCommands();
+      this.registerConsoleCommands();
+      return this.startProcess(() => {
+        this.addProviderToEmbarkJS();
+        this.addObjectToConsole();
+        this.events.emit("swarm:process:started");
       });
     });
   }
