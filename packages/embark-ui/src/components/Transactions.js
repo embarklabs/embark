@@ -15,38 +15,51 @@ const Transactions = ({transactions, contracts, changePage, currentPage, numberO
           <h2>Transactions</h2>
         </CardHeader>
         <CardBody>
-          {transactions.map(transaction => (
-            <div className="explorer-row border-top" key={transaction.hash}>
-              <CardTitleIdenticon id={transaction.hash}>Transaction&nbsp;
-                <Link to={`/explorer/transactions/${transaction.hash}`}>
-                  {transaction.hash}
-                </Link>
-              </CardTitleIdenticon>
-              <Row>
-                <Col>
-                  <DebugButton transaction={transaction} contracts={contracts} />
-                </Col>
-              </Row>
-              <Row>
-                <Col md={6}>
-                  <strong>Block number</strong>
-                  <div>{transaction.blockNumber}</div>
-                </Col>
-                <Col md={6}>
-                  <strong>From</strong>
-                  <div>{transaction.from}</div>
-                </Col>
-                <Col md={6}>
-                  <strong>To</strong>
-                  <div>{transaction.to}</div>
-                </Col>
-                <Col md={6}>
-                  <strong>Type</strong>
-                  <div>{transaction.to ? "Contract Call" : "Contract Creation"}</div>
-                </Col>
-              </Row>
-            </div>
-          ))}
+          {transactions
+           .filter(transaction => {
+             const to = transaction.to;
+             if (!to) return true;
+             let contract = contracts && contracts.find(contract => {
+               const address = contract.address;
+               return address && to.toLowerCase() === address.toLowerCase();
+             });
+             if (contract && contract.silent) {
+               return false;
+             }
+             return true;
+           })
+           .map(transaction => (
+             <div className="explorer-row border-top" key={transaction.hash}>
+               <CardTitleIdenticon id={transaction.hash}>Transaction&nbsp;
+                 <Link to={`/explorer/transactions/${transaction.hash}`}>
+                   {transaction.hash}
+                 </Link>
+               </CardTitleIdenticon>
+               <Row>
+                 <Col>
+                   <DebugButton transaction={transaction} contracts={contracts} />
+                 </Col>
+               </Row>
+               <Row>
+                 <Col md={6}>
+                   <strong>Block number</strong>
+                   <div>{transaction.blockNumber}</div>
+                 </Col>
+                 <Col md={6}>
+                   <strong>From</strong>
+                   <div>{transaction.from}</div>
+                 </Col>
+                 <Col md={6}>
+                   <strong>To</strong>
+                   <div>{transaction.to}</div>
+                 </Col>
+                 <Col md={6}>
+                   <strong>Type</strong>
+                   <div>{transaction.to ? "Contract Call" : "Contract Creation"}</div>
+                 </Col>
+               </Row>
+             </div>
+           ))}
           {numberOfPages && <Pagination changePage={changePage} currentPage={currentPage} numberOfPages={numberOfPages}/>}
         </CardBody>
       </Card>
