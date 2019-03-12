@@ -8,7 +8,6 @@ const constants = require('../../constants.json');
 class IPFS {
 
   constructor(embark, options) {
-    const self = this;
     this.logger = embark.logger;
     this.events = embark.events;
     this.buildDir = options.buildDir;
@@ -26,9 +25,10 @@ class IPFS {
       this.registerUploadCommand();
 
       this.events.request("processes:register", "ipfs", (cb) => {
-        self.startProcess(() => {
+        this.startProcess(() => {
           this.addStorageProviderToEmbarkJS();
           this.addObjectToConsole();
+          this.events.emit("ipfs:process:started");
           cb();
         });
       });
@@ -37,7 +37,7 @@ class IPFS {
         if (!err) {
           return;
         }
-        self.logger.info("IPFS node not found, attempting to start own node");
+        this.logger.info("IPFS node not found, attempting to start own node");
         this.listenToCommands();
         this.registerConsoleCommands();
         this.events.request('processes:launch', 'ipfs');
