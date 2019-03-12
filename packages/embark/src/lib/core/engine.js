@@ -176,7 +176,8 @@ class Engine {
       version: this.version,
       ipc: this.ipc,
       logger: this.logger,
-      config: this.config
+      config: this.config,
+      useDashboard: this.useDashboard
     });
   }
 
