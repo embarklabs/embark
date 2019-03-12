@@ -563,6 +563,7 @@ Config.prototype.loadPipelineConfigFile = function() {
 };
 
 Config.prototype.loadAssetFiles = function () {
+  if(!this.embarkConfig.app) return;
   Object.keys(this.embarkConfig.app).forEach(targetFile => {
     this.assetFiles[targetFile] = this.loadFiles(this.embarkConfig.app[targetFile]);
   });
