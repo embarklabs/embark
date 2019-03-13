@@ -207,13 +207,26 @@ class ContractDeployer {
   }
 
   contractAlreadyDeployed(contract, trackedContract, callback) {
-    const self = this;
     this.logFunction(contract)(contract.className.bold.cyan + __(" already deployed at ").green + trackedContract.address.bold.cyan);
     contract.deployedAddress = trackedContract.address;
-    self.events.emit("deploy:contract:deployed", contract);
+    this.events.emit("deploy:contract:deployed", contract);
 
-    self.events.request('code-generator:contract:custom', contract, (contractCode) => {
-      self.events.request('runcode:eval', contractCode, callback);
+    this.registerContract(contract, callback);
+  }
+
+  registerContract(contract, callback) {
+    this.events.request('code-generator:contract:custom', contract, (contractCode) => {
+      this.events.request('runcode:eval', contractCode, (err) => {
+        if (err) {
+          return callback(err);
+        }
+        this.events.request('runcode:eval', contract.className, (err, result) => {
+          if (err) {
+            return callback(err);
+          }
+          this.events.emit("runcode:register", contract.className, result, callback);
+        });
+      });
     });
   }
 
@@ -339,12 +352,9 @@ class ContractDeployer {
           if(receipt) self.events.emit("deploy:contract:receipt", receipt);
           self.events.emit("deploy:contract:deployed", contract);
 
-
-          self.events.request('code-generator:contract:custom', contract, (contractCode) => {
-            self.events.request('runcode:eval', contractCode, () => {
-              self.plugins.runActionsForEvent('deploy:contract:deployed', {contract: contract}, () => {
-                return next(null, receipt);
-              });
+          self.registerContract(contract, () => {
+            self.plugins.runActionsForEvent('deploy:contract:deployed', {contract: contract}, () => {
+              return next(null, receipt);
             });
           });
         }, hash => {
