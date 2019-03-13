@@ -126,6 +126,14 @@ Logger.prototype.info = function () {
   this.writeToFile("[info]: ", ...arguments);
 };
 
+Logger.prototype.consoleOnly = function () {
+  if (!arguments.length || !(this.shouldLog('info'))) {
+    return;
+  }
+  this.logFunction(...Array.from(arguments), 'green');
+  this.writeToFile("[consoleOnly]: ", ...arguments);
+};
+
 Logger.prototype.debug = function () {
   if (!arguments.length || !(this.shouldLog('debug'))) {
     return;

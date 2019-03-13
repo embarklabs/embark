@@ -9,6 +9,7 @@ class Monitor {
     this.env = options.env;
     this.console = options.console;
     this.events = options.events;
+    this.logger = options.logger;
     this.color = options.color || "green";
     this.minimal = options.minimal || false;
     this.ipc = options.ipc;
@@ -56,7 +57,9 @@ class Monitor {
       inputStream: this.terminalReadableStream,
       outputStream: terminalWritableStream,
       logText: this.logText,
-      ipc: this.ipc
+      ipc: this.ipc,
+      useDashboard: true,
+      logger: this.logger
     }).start(() => {
       this.terminal.focus();
     });
