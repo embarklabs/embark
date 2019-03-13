@@ -30,7 +30,6 @@ class Console {
   private cmdHistoryFile: string;
   private suggestions?: Suggestions;
   private providerReady: boolean;
-  private useDashboard: boolean;
 
   constructor(embark: Embark, options: any) {
     this.embark = embark;
@@ -41,7 +40,6 @@ class Console {
     this.fs = embark.fs;
     this.ipc = options.ipc;
     this.config = options.config;
-    this.useDashboard = options.useDashboard;
     this.history = [];
     this.cmdHistoryFile = options.cmdHistoryFile || this.fs.dappPath(".embark", "cmd_history");
     this.providerReady = false;
@@ -153,9 +151,6 @@ class Console {
       return this.ipc.request("console:executeCmd", cmd, callback);
     }
 
-    if (this.useDashboard) {
-      this.logger.info("console > ".cyan + cmd.white);
-    }
     if (!(cmd.split(" ")[0] === "history" || cmd === __("history"))) {
       this.saveHistory(cmd);
     }

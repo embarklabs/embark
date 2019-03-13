@@ -9,6 +9,8 @@ class REPL {
     this.outputStream = options.outputStream || process.stdout;
     this.logText = options.logText;
     this.ipc = options.ipc;
+    this.logger = options.logger;
+    this.useDashboard = options.useDashboard;
   }
 
   addHistory(cmd) {
@@ -19,6 +21,9 @@ class REPL {
   }
 
   enhancedEval(cmd, context, filename, callback) {
+    if (this.useDashboard) {
+      this.logger.consoleOnly("console> ".cyan + cmd.white);
+    }
     this.events.request('console:executeCmd', cmd.trim(), function (err, message) {
       if (err) {
         // Do not return as the first param (error), because the dashboard doesn't print errors
