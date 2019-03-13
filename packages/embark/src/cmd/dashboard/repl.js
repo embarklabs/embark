@@ -20,7 +20,11 @@ class REPL {
 
   enhancedEval(cmd, context, filename, callback) {
     this.events.request('console:executeCmd', cmd.trim(), function (err, message) {
-      callback(err, message === undefined ? '' : message); // This way, we don't print undefined
+      if (err) {
+        // Do not return as the first param (error), because the dashboard doesn't print errors
+        return callback(null, err.red);
+      }
+      callback(null, message === undefined ? '' : message); // This way, we don't print undefined
     });
   }
 
