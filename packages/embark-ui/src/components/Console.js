@@ -20,10 +20,15 @@ class Console extends Component {
   }
 
   handleSubmit(event) {
+    const instance = this.typeahead.getInstance();
+    if(instance.state.selected.length === 0) {
+      return;
+    }
+
     event.preventDefault();
     this.props.postCommand(this.state.value);
     this.setState({value: ''});
-    this.typeahead.getInstance().clear();
+    instance.clear();
   }
 
   handleChange(value, cb) {
