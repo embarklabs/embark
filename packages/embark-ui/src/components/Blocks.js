@@ -14,6 +14,7 @@ const Blocks = ({blocks, changePage, currentPage, numberOfPages}) => (
           <h2>Blocks</h2>
         </CardHeader>
         <CardBody>
+          {!blocks.length && "No blocks to display"}
           {blocks.map(block => (
             <div className="explorer-row border-top" key={block.number}>
               <CardTitleIdenticon id={block.hash}>Block&nbsp;

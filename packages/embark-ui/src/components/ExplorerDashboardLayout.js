@@ -22,7 +22,7 @@ const ExplorerDashboardLayout = () => (
       </Row>
       <Row>
         <Col xl={6}>
-          <BlocksContainer overridePageHead={false} />
+          <BlocksContainer numBlocksToDisplay={5} overridePageHead={false} />
         </Col>
         <Col xl={6}>
           <TransactionsContainer overridePageHead={false} />
