@@ -20,29 +20,31 @@ class IPFS {
     this.webServerConfig = embark.config.webServerConfig;
     this.blockchainConfig = embark.config.blockchainConfig;
 
-    if (this.isIpfsStorageEnabledInTheConfig()) {
-      this.setServiceCheck();
-      this.registerUploadCommand();
-
-      this.events.request("processes:register", "ipfs", (cb) => {
-        this.startProcess(() => {
-          this.addStorageProviderToEmbarkJS();
-          this.addObjectToConsole();
-          this.events.emit("ipfs:process:started");
-          cb();
-        });
-      });
-
-      this._checkService((err) => {
-        if (!err) {
-          return;
-        }
-        this.logger.info("IPFS node not found, attempting to start own node");
-        this.listenToCommands();
-        this.registerConsoleCommands();
-        this.events.request('processes:launch', 'ipfs');
-      });
+    if (!this.isIpfsStorageEnabledInTheConfig()) {
+      return this.events.emit("ipfs:process:started", false);
     }
+
+    this.setServiceCheck();
+    this.registerUploadCommand();
+
+    this.events.request("processes:register", "ipfs", (cb) => {
+      this.startProcess(() => {
+        this.addStorageProviderToEmbarkJS();
+        this.addObjectToConsole();
+        this.events.emit("ipfs:process:started");
+        cb();
+      });
+    });
+
+    this._checkService((err) => {
+      if (!err) {
+        return;
+      }
+      this.logger.info("IPFS node not found, attempting to start own node");
+      this.listenToCommands();
+      this.registerConsoleCommands();
+      this.events.request('processes:launch', 'ipfs');
+    });
   }
 
   downloadIpfsApi(cb) {
