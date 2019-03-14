@@ -38,7 +38,7 @@ class Communication extends Component {
   }
 
   handleEnter(e, cb) {
-    if (e.which === 13) {
+    if (e.key === 'Enter') {
       e.preventDefault();
       cb(e);
     }
@@ -121,9 +121,9 @@ class Communication extends Component {
               <FormGroup label="Message">
                 <Label htmlFor="message">Message</Label>
                 <Input value={this.state.message}
-                      placeholder="Message" 
-                      id="message" 
-                      onChange={e => this.handleChange(e, 'message')} 
+                      placeholder="Message"
+                      id="message"
+                      onChange={e => this.handleChange(e, 'message')}
                       onKeyPress={e => this.handleEnter(e, this.sendMessage.bind(this))}/>
               </FormGroup>
               <Button color="primary" disabled={!this.state.channelIsValid} onClick={(e) => this.sendMessage(e)}>Send Message</Button>
