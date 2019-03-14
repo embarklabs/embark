@@ -47,7 +47,7 @@ export default class Suggestions {
       this._suggestions.push({
         command_type: "plugin command",
         description: plugin.description,
-        value: (JSON.stringify(plugin.usage) || "").replace(/\"/g, "").trim() || this.formatMatches(plugin.matches),
+        value: this.formatMatches((JSON.stringify(plugin.usage) || "").replace(/\"/g, "").trim()) || this.formatMatches(plugin.matches),
       });
     }
 
@@ -88,7 +88,10 @@ export default class Suggestions {
     if (typeof matches === "function") {
       return "";
     }
-    return matches || "";
+    if (!matches) {
+      return "";
+    }
+    return matches.split("/")[0];
   }
 
   public getSuggestions(cmd: string, cb: (results: SuggestionsList) => any) {
