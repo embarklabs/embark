@@ -15,6 +15,7 @@ const Transactions = ({transactions, contracts, changePage, currentPage, numberO
           <h2>Transactions</h2>
         </CardHeader>
         <CardBody>
+          {!transactions.length && "No transactions to display"}
           {transactions.map(transaction => (
             <div className="explorer-row border-top" key={transaction.hash}>
               <CardTitleIdenticon id={transaction.hash}>Transaction&nbsp;
@@ -47,7 +48,7 @@ const Transactions = ({transactions, contracts, changePage, currentPage, numberO
               </Row>
             </div>
           ))}
-          {numberOfPages && <Pagination changePage={changePage} currentPage={currentPage} numberOfPages={numberOfPages}/>}
+          {numberOfPages > 0 && <Pagination changePage={changePage} currentPage={currentPage} numberOfPages={numberOfPages}/>}
         </CardBody>
       </Card>
     </Col>

@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-
-import {transactions as transactionsAction, initBlockHeader, stopBlockHeader, contracts as contractsAction} from '../actions';
+import {blocksFull as blocksAction,
+        contracts as contractsAction,
+        initBlockHeader,
+        stopBlockHeader} from '../actions';
 import Transactions from '../components/Transactions';
 import DataWrapper from "../components/DataWrapper";
 import PageHead from "../components/PageHead";
-import {getTransactions, getContracts} from "../reducers/selectors";
+import {getBlocksFull, getContracts} from "../reducers/selectors";
 
 const MAX_TXS = 10; // TODO use same constant as API
 
@@ -14,13 +16,13 @@ class TransactionsContainer extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {currentPage: 0};
-    this.numberOfTxs = 0;
-    this.currentTxs = [];
+    this.numTxsToDisplay = this.props.numTxsToDisplay || MAX_TXS;
+    this.numBlocksToFetch = this.numTxsToDisplay;
+    this.state = {currentPage: 1};
   }
 
   componentDidMount() {
-    this.props.fetchTransactions();
+    this.props.fetchBlocksFull(null, this.numBlocksToFetch);
     this.props.fetchContracts();
     this.props.initBlockHeader();
   }
@@ -29,45 +31,79 @@ class TransactionsContainer extends Component {
     this.props.stopBlockHeader();
   }
 
+  get numberOfBlocks() {
+    const blocks = this.props.blocks;
+    return !blocks.length ? 0 : blocks[0].number + 1;
+  }
+
+  get estNumberOfTxs() {
+    const blocks = this.props.blocks;
+    const numBlocksInProps = blocks.length;
+    const numTxsInPropsBlocks = blocks.reduce((txCount, block) => (
+      txCount + block.transactions.length
+    ), 0);
+    const missingNumBlocks = this.numberOfBlocks - numBlocksInProps;
+    return missingNumBlocks + numTxsInPropsBlocks;
+  }
+
   getNumberOfPages() {
-    if (!this.numberOfTxs) {
-      let transactions = this.props.transactions;
-      if (transactions.length === 0) {
-        this.numberOfTxs = 0;
-      } else {
-        this.numberOfTxs = transactions[transactions.length - 1].blockNumber - 1;
-      }
-    }
-    return Math.ceil(this.numberOfTxs / MAX_TXS);
+    return Math.ceil(this.estNumberOfTxs / this.numTxsToDisplay);
   }
 
   changePage(newPage) {
     this.setState({currentPage: newPage});
-
-    this.props.fetchTransactions((newPage * MAX_TXS) + MAX_TXS);
+    this.props.fetchBlocksFull(
+      this.numberOfBlocks - 1 - (this.numBlocksToFetch * (newPage - 1)),
+      this.numBlocksToFetch
+    );
   }
 
   getCurrentTransactions() {
-    const currentPage = this.state.currentPage || this.getNumberOfPages();
-    return this.props.transactions.filter(tx => tx.blockNumber <= (currentPage * MAX_TXS) + MAX_TXS &&
-      tx.blockNumber > currentPage * MAX_TXS);
+    if (!this.props.blocks.length) return [];
+    let relativeBlock = this.numberOfBlocks - 1;
+    let offset = 0;
+    let txs = this.props.blocks.reduce((txs, block) => {
+      offset = relativeBlock - block.number;
+      if (offset <= 1) {
+        offset = 0;
+      }
+      relativeBlock = block.number;
+      const txsLength = txs.length;
+      block.transactions.forEach((tx, idx) => {
+        txs[txsLength + idx + offset] = tx;
+      });
+      return txs;
+    }, []);
+    const estNumberOfTxs = this.estNumberOfTxs;
+    return txs.filter((tx, idx) => {
+      const txNumber = estNumberOfTxs - idx;
+      const index = (
+        (estNumberOfTxs -
+         (this.numTxsToDisplay * (this.state.currentPage - 1))) -
+          txNumber + 1
+      );
+      return index <= this.numTxsToDisplay && index > 0;
+    });
   }
 
   render() {
     const newTxs = this.getCurrentTransactions();
-    if (newTxs.length) {
-      this.currentTxs = newTxs;
-    }
     return (
       <React.Fragment>
-        <PageHead title="Transactions" enabled={this.props.overridePageHead} description="Summary view of all transactions occurring on the node configured for Embark" />
-        <DataWrapper shouldRender={this.currentTxs.length > 0} {...this.props} render={() => (
-          <Transactions transactions={this.currentTxs}
-                        contracts={this.props.contracts}
-                        numberOfPages={this.getNumberOfPages()}
-                        changePage={(newPage) => this.changePage(newPage)}
-                        currentPage={this.state.currentPage || this.getNumberOfPages()} />
-        )} />
+        <PageHead
+          title="Transactions"
+          enabled={this.props.overridePageHead}
+          description="Summary view of all transactions occurring on the node configured for Embark" />
+        <DataWrapper
+          shouldRender={true}
+          {...this.props}
+          render={() => (
+            <Transactions transactions={newTxs}
+                          contracts={this.props.contracts}
+                          numberOfPages={this.getNumberOfPages()}
+                          changePage={(newPage) => this.changePage(newPage)}
+                          currentPage={this.state.currentPage} />
+          )} />
       </React.Fragment>
     );
   }
@@ -75,7 +111,7 @@ class TransactionsContainer extends Component {
 
 function mapStateToProps(state) {
   return {
-    transactions: getTransactions(state),
+    blocks: getBlocksFull(state),
     contracts: getContracts(state),
     error: state.errorMessage,
     loading: state.loading
@@ -83,9 +119,9 @@ function mapStateToProps(state) {
 }
 
 TransactionsContainer.propTypes = {
-  transactions: PropTypes.arrayOf(PropTypes.object),
+  blocks: PropTypes.arrayOf(PropTypes.object),
   contracts: PropTypes.arrayOf(PropTypes.object),
-  fetchTransactions: PropTypes.func,
+  fetchBlocksFull: PropTypes.func,
   fetchContracts: PropTypes.func,
   initBlockHeader: PropTypes.func,
   stopBlockHeader: PropTypes.func,
@@ -97,7 +133,7 @@ TransactionsContainer.propTypes = {
 export default connect(
   mapStateToProps,
   {
-    fetchTransactions: transactionsAction.request,
+    fetchBlocksFull: blocksAction.request,
     fetchContracts: contractsAction.request,
     initBlockHeader,
     stopBlockHeader

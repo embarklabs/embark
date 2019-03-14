@@ -38,7 +38,7 @@ const Blocks = ({blocks, changePage, currentPage, numberOfPages}) => (
               </Row>
             </div>
           ))}
-          <Pagination changePage={changePage} currentPage={currentPage} numberOfPages={numberOfPages}/>
+          {numberOfPages > 0 && <Pagination changePage={changePage} currentPage={currentPage} numberOfPages={numberOfPages}/>}
         </CardBody>
       </Card>
     </Col>

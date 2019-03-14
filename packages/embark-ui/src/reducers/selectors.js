@@ -44,6 +44,10 @@ export function getBlocks(state) {
   return state.entities.blocks;
 }
 
+export function getBlocksFull(state) {
+  return state.entities.blocksFull;
+}
+
 export function getLastBlock(state) {
   return state.entities.blocks[0];
 }

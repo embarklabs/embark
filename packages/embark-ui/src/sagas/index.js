@@ -47,6 +47,7 @@ export const fetchBlock = doRequest.bind(null, actions.block, api.fetchBlock);
 export const fetchTransaction = doRequest.bind(null, actions.transaction, api.fetchTransaction);
 export const fetchAccounts = doRequest.bind(null, actions.accounts, api.fetchAccounts);
 export const fetchBlocks = doRequest.bind(null, actions.blocks, api.fetchBlocks);
+export const fetchBlocksFull = doRequest.bind(null, actions.blocksFull, api.fetchBlocks);
 export const fetchTransactions = doRequest.bind(null, actions.transactions, api.fetchTransactions);
 export const fetchProcesses = doRequest.bind(null, actions.processes, api.fetchProcesses);
 export const fetchServices = doRequest.bind(null, actions.services, api.fetchServices);
@@ -118,6 +119,10 @@ export function *watchFetchBlock() {
 
 export function *watchFetchBlocks() {
   yield takeEvery(actions.BLOCKS[actions.REQUEST], fetchBlocks);
+}
+
+export function *watchFetchBlocksFull() {
+  yield takeEvery(actions.BLOCKS_FULL[actions.REQUEST], fetchBlocksFull);
 }
 
 export function *watchFetchAccount() {
@@ -389,6 +394,7 @@ export function *initBlockHeader() {
       return;
     }
     yield put({type: actions.BLOCKS[actions.REQUEST]});
+    yield put({type: actions.BLOCKS_FULL[actions.REQUEST], txObjects: true, txReceipts: true});
     yield put({type: actions.TRANSACTIONS[actions.REQUEST]});
   }
 }
@@ -568,6 +574,7 @@ export default function *root() {
     fork(watchFetchVersions),
     fork(watchFetchPlugins),
     fork(watchFetchBlocks),
+    fork(watchFetchBlocksFull),
     fork(watchFetchContracts),
     fork(watchFetchContractProfile),
     fork(watchPostContractFunction),

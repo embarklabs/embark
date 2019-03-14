@@ -82,6 +82,15 @@ export const blocks = {
   failure: (error) => action(BLOCKS[FAILURE], {error})
 };
 
+export const BLOCKS_FULL = createRequestTypes('BLOCKS_FULL');
+export const blocksFull = {
+  request: (from, limit) => {
+    return action(BLOCKS_FULL[REQUEST], {from, limit, txObjects: true, txReceipts: true});
+  },
+  success: (blocksFull) => action(BLOCKS_FULL[SUCCESS], {blocksFull}),
+  failure: (error) => action(BLOCKS_FULL[FAILURE], {error})
+};
+
 export const BLOCK = createRequestTypes('BLOCK');
 export const block = {
   request: (blockNumber) => action(BLOCK[REQUEST], {blockNumber}),

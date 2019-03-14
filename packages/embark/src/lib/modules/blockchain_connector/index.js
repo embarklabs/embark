@@ -387,9 +387,9 @@ class BlockchainConnector {
       'get',
       '/embark-api/blockchain/blocks',
       (req, res) => {
-        let from = parseInt(req.query.from, 10);
-        let limit = req.query.limit || 10;
-        self.getBlocks(from, limit, false, res.send.bind(res));
+        const from = parseInt(req.query.from, 10);
+        const limit = req.query.limit || 10;
+        self.getBlocks(from, limit, !!req.query.txObjects, !!req.query.txReceipts, res.send.bind(res));
       }
     );
 
@@ -565,7 +565,7 @@ class BlockchainConnector {
   }
 
   getTransactions(blockFrom, blockLimit, callback) {
-    this.getBlocks(blockFrom, blockLimit, true, (blocks) => {
+    this.getBlocks(blockFrom, blockLimit, true, true, (blocks) => {
       let transactions = blocks.reduce((acc, block) => {
         if (!block || !block.transactions) {
           return acc;
@@ -576,7 +576,7 @@ class BlockchainConnector {
     });
   }
 
-  getBlocks(from, limit, returnTransactionObjects, callback) {
+  getBlocks(from, limit, returnTransactionObjects, includeTransactionReceipts, callback) {
     let self = this;
     let blocks = [];
     async.waterfall([
@@ -597,12 +597,32 @@ class BlockchainConnector {
       function(next) {
         async.times(limit, function(n, eachCb) {
           self.web3.eth.getBlock(from - n, returnTransactionObjects, function(err, block) {
-            if (err && err.message) {
+            if (err) {
               // FIXME Returns an error because we are too low
               return eachCb();
             }
-            blocks.push(block);
-            eachCb();
+            if (!block) {
+              return eachCb();
+            }
+            if (!(returnTransactionObjects && includeTransactionReceipts) ||
+                !(block.transactions && block.transactions.length)) {
+              blocks.push(block);
+              return eachCb();
+            }
+            return Promise.all(block.transactions.map(tx => (
+              self.web3.eth.getTransactionReceipt(tx.hash)
+            )))
+              .then(receipts => {
+                block.transactions.forEach((tx, index) => {
+                  tx['receipt'] = receipts[index];
+                });
+                blocks.push(block);
+                eachCb();
+              })
+              .catch((err) => {
+                self.logger.error(err.message || err);
+                eachCb();
+              });
           });
         }, next);
       }
