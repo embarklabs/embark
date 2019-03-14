@@ -18,6 +18,7 @@ const PROCESS_LOGS_LIMIT = ELEMENTS_LIMIT * 2;
 const entitiesDefaultState = {
   accounts: [],
   blocks: [],
+  blocksFull: [],
   transactions: [],
   processes: [],
   services: [],
@@ -41,6 +42,9 @@ const entitiesDefaultState = {
 
 const sorter = {
   blocks: function(a, b) {
+    return b.number - a.number;
+  },
+  blocksFull: function(a, b) {
     return b.number - a.number;
   },
   transactions: function(a, b) {
@@ -114,6 +118,13 @@ const filters = {
     return index === self.findIndex((t) => t.address === account.address);
   },
   blocks: function(block, index, self) {
+    if (index > ELEMENTS_LIMIT) {
+      return false;
+    }
+
+    return index === self.findIndex((t) => t.number === block.number);
+  },
+  blocksFull: function(block, index, self) {
     if (index > ELEMENTS_LIMIT) {
       return false;
     }
