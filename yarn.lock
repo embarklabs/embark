@@ -16617,9 +16617,9 @@ remix-debug-debugtest@0.2.16:
     web3 "^0.20.6"
 
 remix-lib-debugtest@latest:
-  version "0.3.11"
-  resolved "https://registry.yarnpkg.com/remix-lib-debugtest/-/remix-lib-debugtest-0.3.11.tgz#151fc3ec6e6e9ffc929cf760011866f74bf94631"
-  integrity sha512-niyQZrDVxRZR6B1YSsXrw7dG41zpHqd6gngF6md+yzWooITYADwLRqb/ZHWxK9aFykK0xxA3PaZAUfcm9tynFg==
+  version "0.3.12"
+  resolved "https://registry.yarnpkg.com/remix-lib-debugtest/-/remix-lib-debugtest-0.3.12.tgz#cddb5ac031511428288458a45af48fc184bdebfb"
+  integrity sha512-j6JCZFyBj+3jdSKQ+761f+bdZ+kpFW/FkJrzEIGZx+YGauAco5rYN3YOloZ/uWs3gy8VO/kjfpb6XEFJOTKRJQ==
   dependencies:
     async "^2.1.2"
     ethereumjs-block "^1.6.0"

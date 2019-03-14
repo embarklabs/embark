@@ -248,7 +248,7 @@ class TransactionDebugger {
         }
         this.currentCmdTxHash = this.lastTx;
         const filename: string = this.txTracker[this.lastTx].contract.filename;
-        startDebug(txHash, filename, callback);
+        startDebug(this.lastTx, filename, callback);
       },
       usage: "debug [txHash]",
     });
