@@ -37,6 +37,13 @@ class Communication extends Component {
     }
   }
 
+  handleEnter(e, cb) {
+    if (e.which === 13) {
+      e.preventDefault();
+      cb(e);
+    }
+  }
+
   sendMessage(e) {
     e.preventDefault();
     this.props.sendMessage(this.state.channel, this.state.message);
@@ -58,7 +65,11 @@ class Communication extends Component {
             <CardBody>
               <FormGroup>
                 <Label htmlFor="listenTo">Whisper channel</Label>
-                <Input id="listenTo" placeholder="Channel" value={this.state.listenTo} onChange={e => this.handleChange(e, 'listenTo')} />
+                <Input id="listenTo"
+                  placeholder="Channel"
+                  value={this.state.listenTo}
+                  onChange={e => this.handleChange(e, 'listenTo')}
+                  onKeyPress={e => this.handleEnter(e, this.listenToChannel.bind(this))} />
               </FormGroup>
               <Button color="primary" onClick={(e) => this.listenToChannel(e)}>Start Listening</Button>
 
@@ -110,9 +121,10 @@ class Communication extends Component {
               <FormGroup label="Message">
                 <Label htmlFor="message">Message</Label>
                 <Input value={this.state.message}
-                      placeholder="Message"
-                      id="message"
-                      onChange={e => this.handleChange(e, 'message')}/>
+                      placeholder="Message" 
+                      id="message" 
+                      onChange={e => this.handleChange(e, 'message')} 
+                      onKeyPress={e => this.handleEnter(e, this.sendMessage.bind(this))}/>
               </FormGroup>
               <Button color="primary" disabled={!this.state.channelIsValid} onClick={(e) => this.sendMessage(e)}>Send Message</Button>
 
