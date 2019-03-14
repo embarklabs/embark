@@ -3,12 +3,24 @@ class Storage {
     this.embark = embark;
     this.storageConfig = embark.config.storageConfig;
     this.plugins = options.plugins;
+    this.ready = false;
 
-    if (!this.storageConfig.enabled) return;
+    this.embark.events.setCommandHandler("module:storage:onReady", (cb) => {
+      if (this.ready) {
+        return cb();
+      }
+      this.embark.events.once("module:storage:ready", cb);
+    });
+
+    if (!this.storageConfig.enabled) {
+      this.ready = true;
+      return;
+    }
 
     this.handleUploadCommand();
     this.addSetProviders(() => {
-      this.embark.events.setCommandHandler("module:storage:initiated", (cb) => { cb(); });
+      this.ready = true;
+      this.embark.events.emit("module:storage:ready");
     });
   }
 

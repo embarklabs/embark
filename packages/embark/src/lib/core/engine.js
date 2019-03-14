@@ -193,7 +193,7 @@ class Engine {
     this.registerModule('code_generator', {plugins: self.plugins, env: self.env});
 
     const generateCode = function (modifiedAssets) {
-      self.events.request("module:storage:initiated", () => {
+      self.events.request("module:storage:onReady", () => {
         self.events.request("code-generator:embarkjs:build", () => {
           self.events.emit('code-generator-ready', modifiedAssets);
         });
@@ -279,15 +279,15 @@ class Engine {
         if (!this.config.storageConfig.available_providers.includes("ipfs")) {
           return next();
         }
-        this.registerModule('ipfs');
         this.events.on("ipfs:process:started", next);
+        this.registerModule('ipfs');
       },
       (next) => {
         if (!this.config.storageConfig.available_providers.includes("swarm")) {
           return next();
         }
-        this.registerModule('swarm');
         this.events.on("swarm:process:started", next);
+        this.registerModule('swarm');
       }
     ], (err) => {
       if(err) {
