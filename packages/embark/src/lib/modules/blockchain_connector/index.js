@@ -1,11 +1,12 @@
 const Web3 = require('web3');
 const async = require('async');
 const Provider = require('./provider.js');
-const Transaction = require('ethereumjs-tx');
 const ethUtil = require('ethereumjs-util');
 const utils = require('../../utils/utils');
 const constants = require('../../constants');
 const embarkJsUtils = require('embarkjs').Utils;
+const {bigNumberify} = require('ethers/utils/bignumber');
+const RLP = require('ethers/utils/rlp');
 
 const WEB3_READY = 'blockchain:ready';
 
@@ -420,10 +421,12 @@ class BlockchainConnector {
       '/embark-api/blockchain/transactions/:hash',
       (req, res) => {
         self.getTransactionByHash(req.params.hash, (err, transaction) => {
-          if (err) {
-            self.logger.error(err);
-          }
-          res.send(transaction);
+          if (!err) return res.send(transaction);
+
+          self.getTransactionByRawTransactionHash(req.params.hash, (err, transaction) => {
+            if(err) return res.send({ error: "Could not find or decode transaction hash" });
+            res.send(transaction);
+          });
         });
       }
     );
@@ -645,20 +648,39 @@ class BlockchainConnector {
   }
 
   getTransactionByRawTransactionHash(hash, cb) {
-    const rawData = Buffer.from(ethUtil.stripHexPrefix(hash), 'hex');
-    const tx = new Transaction(rawData, 'hex');
+    let rawData, decoded;
+
+    try {
+      rawData = Buffer.from(ethUtil.stripHexPrefix(hash), 'hex');
+      decoded = RLP.decode(rawData);
+    } catch(e) {
+      return cb("could not decode transaction");
+    }
+
+    const [
+      nonce,
+      gasPrice,
+      gasLimit,
+      to,
+      value,
+      data,
+      v,
+      r,
+      s
+    ] = decoded;
+
     const transaction = {
-      from: `0x${tx.getSenderAddress().toString('hex').toLowerCase()}`,
-      gasPrice: tx.gasPrice.toString('utf8'),
-      input: `0x${tx.input.toString('hex').toLowerCase()}`,
-      nonce: tx.nonce.toString('utf8'),
-      v: `0x${tx.v.toString('hex').toLowerCase()}`,
-      r: `0x${tx.r.toString('hex').toLowerCase()}`,
-      s: `0x${tx.s.toString('hex').toLowerCase()}`,
-      value: tx.value.toString('utf8'),
-      to: `0x${tx.to.toString('hex').toLowerCase()}`,
-      hash
+      nonce: bigNumberify(nonce).toNumber(),
+      gasPrice: bigNumberify(gasPrice).toNumber(),
+      gasLimit: bigNumberify(gasLimit).toNumber(),
+      data: data,
+      v: `0x${v.toString('hex').toLowerCase()}`,
+      r: `0x${r.toString('hex').toLowerCase()}`,
+      s: `0x${s.toString('hex').toLowerCase()}`,
+      value: value.toString('utf8'),
+      to: `0x${to.toString('hex').toLowerCase()}`
     };
+
     cb(null, transaction);
   }
 

@@ -103,6 +103,13 @@ export const transaction = {
   failure: (error) => action(TRANSACTION[FAILURE], {error})
 };
 
+export const DECODED_TRANSACTION = createRequestTypes('DECODED_TRANSACTION');
+export const decodedTransaction = {
+  request: (hash) => action(DECODED_TRANSACTION[REQUEST], {hash}),
+  success: (transaction) => action(DECODED_TRANSACTION[SUCCESS], {transaction}),
+  failure: (error) => action(DECODED_TRANSACTION[FAILURE], {error})
+};
+
 export const PROCESSES = createRequestTypes('PROCESSES');
 export const processes = {
   request: () => action(PROCESSES[REQUEST]),

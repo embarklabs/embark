@@ -55,10 +55,10 @@ class TransactionDecoder extends React.Component {
               </InputGroup>
             </FormGroup>
           </Form>
-          {this.props.transactionHash && !this.props.transaction && <Alert color="danger">Couldn't decode transaction with raw hash {this.props.transactionHash}</Alert>}
+          {this.props.transactionHash && this.props.transaction && this.props.transaction.error && <Alert color="danger">Couldn't decode transaction with raw hash {this.props.transactionHash}</Alert>}
 
           <div className="mt-3">
-            {this.props.transaction && <ReactJson src={this.props.transaction} theme="monokai" sortKeys={true} collapsed={1} />}
+            {this.props.transaction && !this.props.transaction.error && <ReactJson src={this.props.transaction} theme="monokai" sortKeys={true} collapsed={1} />}
           </div>
         </CardBody>
       </Card>

@@ -6,8 +6,8 @@ import {withRouter} from 'react-router-dom';
 import TransactionDecoder from '../components/TransactionDecoder';
 import PageHead from '../components/PageHead';
 import { Row, Col } from 'reactstrap';
-import { transaction as transactionAction } from '../actions';
-import {getTransaction} from "../reducers/selectors";
+import { decodedTransaction as decodedTransactionAction } from '../actions';
+import {getDecodedTransaction} from "../reducers/selectors";
 
 const getQueryParams = (props) => {
   return qs.parse(props.location.search, {
@@ -19,7 +19,7 @@ class TransactionDecoderContainer extends Component {
   componentDidMount() {
     const { hash } = getQueryParams(this.props);
     if (hash) {
-      this.props.fetchTransaction(hash);
+      this.props.fetchDecodedTransaction(hash);
     }
   }
 
@@ -28,7 +28,7 @@ class TransactionDecoderContainer extends Component {
     const prevHash = getQueryParams(prevProps).hash;
 
     if (hash && hash !== prevHash) {
-      this.props.fetchTransaction(hash);
+      this.props.fetchDecodedTransaction(hash);
     }
   }
 
@@ -48,13 +48,13 @@ class TransactionDecoderContainer extends Component {
 }
 
 TransactionDecoderContainer.propTypes = {
-  fetchTransaction: PropTypes.func,
+  fetchDecodedTransaction: PropTypes.func,
   transaction: PropTypes.object
 };
 
-function mapStateToProps(state, props) {
+function mapStateToProps(state) {
   return {
-    transaction: getTransaction(state, getQueryParams(props).hash),
+    transaction: getDecodedTransaction(state),
     error: state.errorMessage,
     loading: state.loading
   };
@@ -62,6 +62,6 @@ function mapStateToProps(state, props) {
 export default withRouter(connect(
   mapStateToProps,
   {
-    fetchTransaction: transactionAction.request
+    fetchDecodedTransaction: decodedTransactionAction.request
   }
 )(TransactionDecoderContainer));
