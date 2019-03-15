@@ -771,11 +771,11 @@ class BlockchainConnector {
     this.contractsSubscriptions = [];
     this.events.request("contracts:list", (_err, contractsList) => {
       contractsList.forEach(contractObject => {
-        if (!contractObject.address){
+        if (!contractObject.deployedAddress){
           return;
         }
 
-        const contract = this.ContractObject({abi: contractObject.abiDefinition, address: contractObject.address});
+        const contract = this.ContractObject({abi: contractObject.abiDefinition, address: contractObject.deployedAddress});
         const eventEmitter = contract.events.allEvents();
         this.contractsSubscriptions.push(eventEmitter);
         eventEmitter.on('data', (data) => {
