@@ -17,9 +17,9 @@ class DebugButton extends React.Component {
        this.props.contracts &&
        this.props.contracts.find(contract => {
          const address = this.props.transaction.to || this.props.transaction.address;
-         return contract.address &&
+         return contract.deployedAddress &&
            address &&
-           (contract.address.toLowerCase() === address.toLowerCase());
+           (contract.deployedAddress.toLowerCase() === address.toLowerCase());
        }));
   }
 
