@@ -28,6 +28,10 @@ export function getTransaction(state, hash) {
   return state.entities.transactions.find((transaction) => transaction.hash === hash);
 }
 
+export function getDecodedTransaction(state) {
+  return state.decodedTransaction;
+}
+
 export function getTransactionsByAccount(state, address) {
   return state.entities.transactions.filter((transaction) => transaction.from === address);
 }
