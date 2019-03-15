@@ -15,19 +15,21 @@ const ContractsList = ({contracts}) => (
     </thead>
     <tbody>
       {
-        contracts.map((contract) => {
-          const contractDisplay = formatContractForDisplay(contract);
-          if (!contractDisplay) {
-            return null;
-          }
-          return (
-            <tr key={contract.className} className={contractDisplay.stateColor}>
-              <td><Link to={`/explorer/contracts/${contract.className}`}>{contract.className}</Link></td>
-              <td>{contractDisplay.address}</td>
-              <td>{contractDisplay.state}</td>
-            </tr>
-          );
-        })
+        contracts
+          .filter(contract => !contract.silent)
+          .map((contract) => {
+            const contractDisplay = formatContractForDisplay(contract);
+            if (!contractDisplay) {
+              return null;
+            }
+            return (
+              <tr key={contract.className} className={contractDisplay.stateColor}>
+                <td><Link to={`/explorer/contracts/${contract.className}`}>{contract.className}</Link></td>
+                <td>{contractDisplay.address}</td>
+                <td>{contractDisplay.state}</td>
+              </tr>
+            );
+          })
       }
     </tbody>
   </Table>
