@@ -3,7 +3,7 @@ import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE
         FETCH_CREDENTIALS, UPDATE_BASE_ETHER, CHANGE_THEME, FETCH_THEME, EXPLORER_SEARCH, DEBUGGER_INFO,
         SIGN_MESSAGE, VERIFY_MESSAGE, TOGGLE_BREAKPOINT, UPDATE_PREVIEW_URL,
         UPDATE_DEPLOYMENT_PIPELINE, WEB3_CONNECT, WEB3_DEPLOY, WEB3_ESTIMAGE_GAS, FETCH_EDITOR_TABS,
-        SAVE_FILE, SAVE_FOLDER, REMOVE_FILE} from "../actions";
+        SAVE_FILE, SAVE_FOLDER, REMOVE_FILE, DECODED_TRANSACTION} from "../actions";
 import {EMBARK_PROCESS_NAME, DARK_THEME, DEPLOYMENT_PIPELINES, DEFAULT_HOST, ELEMENTS_LIMIT} from '../constants';
 
 const BN_FACTOR = 10000;
@@ -376,6 +376,16 @@ function editorTabs(state = [], action) {
   return state;
 }
 
+function decodedTransaction(state = {}, action) {
+  if (action.type === DECODED_TRANSACTION[SUCCESS] && action.transaction) {
+    return action.transaction;
+  }
+  if (action.type === DECODED_TRANSACTION[FAILURE]) {
+    return action.error;
+  }
+  return state;
+}
+
 function previewUrl(state= `${window.location.protocol}//${window.location.host}/`, action) {
   if (action.type === UPDATE_PREVIEW_URL) {
     return action.payload;
@@ -419,7 +429,8 @@ const rootReducer = combineReducers({
   theme,
   editorTabs,
   previewUrl,
-  editorOperationStatus
+  editorOperationStatus,
+  decodedTransaction
 });
 
 export default rootReducer;

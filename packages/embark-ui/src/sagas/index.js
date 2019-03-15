@@ -81,6 +81,7 @@ export const toggleBreakpoint = doRequest.bind(null, actions.toggleBreakpoint, a
 export const authenticate = doRequest.bind(null, actions.authenticate, api.authenticate);
 export const initRegularTxs = doRequest.bind(null, actions.initRegularTxs, api.regularTxs);
 export const stopRegularTxs = doRequest.bind(null, actions.stopRegularTxs, api.regularTxs);
+export const decodeTransaction = doRequest.bind(null, actions.decodedTransaction, api.fetchTransaction);
 
 export const fetchCredentials = doRequest.bind(null, actions.fetchCredentials, storage.fetchCredentials);
 export const saveCredentials = doRequest.bind(null, actions.saveCredentials, storage.saveCredentials);
@@ -101,6 +102,10 @@ export const web3EstimateGas = doWeb3Request.bind(null, actions.web3EstimateGas,
 
 export function *watchFetchTransaction() {
   yield takeEvery(actions.TRANSACTION[actions.REQUEST], fetchTransaction);
+}
+
+export function *watchDecodeTransaction() {
+  yield takeEvery(actions.DECODED_TRANSACTION[actions.REQUEST], decodeTransaction);
 }
 
 export function *watchFetchTransactions() {
@@ -557,6 +562,7 @@ export default function *root() {
     fork(watchListenToContractEvents),
     fork(watchFetchBlock),
     fork(watchFetchTransactions),
+    fork(watchDecodeTransaction),
     fork(watchPostCommand),
     fork(watchPostCommandSuggestions),
     fork(watchFetchVersions),
