@@ -2,8 +2,10 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
-
-import {account as accountAction} from '../actions';
+import {account as accountAction,
+        initBlockHeader,
+        stopBlockHeader,
+        transactions as transactionsAction} from '../actions';
 import Account from '../components/Account';
 import DataWrapper from "../components/DataWrapper";
 import Transactions from '../components/Transactions';
@@ -13,6 +15,12 @@ import {getAccount, getTransactionsByAccount} from "../reducers/selectors";
 class AccountContainer extends Component {
   componentDidMount() {
     this.props.fetchAccount(this.props.match.params.address);
+    this.props.fetchTransactions();
+    this.props.initBlockHeader();
+  }
+
+  componentWillUnmount() {
+    this.props.stopBlockHeader();
   }
 
   render() {
@@ -50,6 +58,9 @@ AccountContainer.propTypes = {
 export default withRouter(connect(
   mapStateToProps,
   {
-    fetchAccount: accountAction.request
+    fetchAccount: accountAction.request,
+    fetchTransactions: transactionsAction.request,
+    initBlockHeader,
+    stopBlockHeader
   }
 )(AccountContainer));

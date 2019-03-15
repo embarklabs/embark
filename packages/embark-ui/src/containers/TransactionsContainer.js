@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import {blocksFull as blocksAction,
         contracts as contractsAction,
         initBlockHeader,
-        stopBlockHeader} from '../actions';
+        stopBlockHeader,
+        transactions as transactionsAction} from '../actions';
 import Transactions from '../components/Transactions';
 import DataWrapper from "../components/DataWrapper";
 import PageHead from "../components/PageHead";
@@ -24,6 +25,7 @@ class TransactionsContainer extends Component {
   componentDidMount() {
     this.props.fetchBlocksFull(null, this.numBlocksToFetch);
     this.props.fetchContracts();
+    this.props.fetchTransactions();
     this.props.initBlockHeader();
   }
 
@@ -56,6 +58,7 @@ class TransactionsContainer extends Component {
       this.numberOfBlocks - 1 - (this.numBlocksToFetch * (newPage - 1)),
       this.numBlocksToFetch
     );
+    this.props.fetchTransactions((newPage * MAX_TXS) + MAX_TXS);
   }
 
   getCurrentTransactions() {
@@ -135,6 +138,7 @@ export default connect(
   {
     fetchBlocksFull: blocksAction.request,
     fetchContracts: contractsAction.request,
+    fetchTransactions: transactionsAction.request,
     initBlockHeader,
     stopBlockHeader
   },
