@@ -15,32 +15,34 @@ const Contracts = ({contracts, title = "Contracts"}) => (
         </CardHeader>
         <CardBody>
           {
-            contracts.map((contract, key) => {
-              const contractDisplay = formatContractForDisplay(contract);
-              if (!contractDisplay) {
-                return '';
-              }
+            contracts
+              .filter(contract => !contract.silent)
+              .map((contract, key) => {
+                const contractDisplay = formatContractForDisplay(contract);
+                if (!contractDisplay) {
+                  return '';
+                }
 
-              return (
-                <div className="explorer-row border-top" key={`contract-${key}`}>
-                  <CardTitleIdenticon id={contract.className}>
-                    <Link to={`/explorer/contracts/${contract.className}`}>{contract.className}</Link>
-                  </CardTitleIdenticon>
-                  <Row>
-                    <Col>
-                      <strong>Address</strong>
-                      <div>{contract.address}</div>
-                    </Col>
-                    <Col>
-                      <strong>State</strong>
-                      <div className={contractDisplay.stateColor}>
-                        {contractDisplay.state}
-                      </div>
-                    </Col>
-                  </Row>
-                </div>
-              )
-            })
+                return (
+                  <div className="explorer-row border-top" key={`contract-${key}`}>
+                    <CardTitleIdenticon id={contract.className}>
+                      <Link to={`/explorer/contracts/${contract.className}`}>{contract.className}</Link>
+                    </CardTitleIdenticon>
+                    <Row>
+                      <Col>
+                        <strong>Address</strong>
+                        <div>{contract.address}</div>
+                      </Col>
+                      <Col>
+                        <strong>State</strong>
+                        <div className={contractDisplay.stateColor}>
+                          {contractDisplay.state}
+                        </div>
+                      </Col>
+                    </Row>
+                  </div>
+                )
+              })
           }
         </CardBody>
       </Card>

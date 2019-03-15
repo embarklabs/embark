@@ -29,7 +29,7 @@ class ContractsContainer extends Component {
         {this.props.updatePageHeader && <PageHead title="Contracts" description="Summary of all deployed contracts" />}
         <DataWrapper shouldRender={this.props.contracts.length > 0} {...this.props} render={({contracts}) => {
             if (this.props.mode === "list") return <ContractsList contracts={contracts} />;
-            if (this.props.mode === "detail") return <Contracts contracts={contracts} />; 
+            if (this.props.mode === "detail") return <Contracts contracts={contracts} />;
         }} />
       </React.Fragment>
     );
@@ -38,8 +38,8 @@ class ContractsContainer extends Component {
 
 function mapStateToProps(state) {
   return {
-    contracts: getContracts(state), 
-    error: state.errorMessage, 
+    contracts: getContracts(state),
+    error: state.errorMessage,
     loading: state.loading};
 }
 
