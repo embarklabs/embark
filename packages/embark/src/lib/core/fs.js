@@ -1,164 +1,90 @@
-const parseJson = require('parse-json');
+/* global module process require */
+
+const {DAPP_PATH,
+       DIAGRAM_PATH,
+       EMBARK_PATH,
+       PKG_PATH,
+       anchoredValue} = require('./env');
+const fs = require('fs-extra');
 const os = require('os');
-let path = require('path');
-let fs = require('fs-extra');
-let utils = require('../utils/utils.js');
-let env = require('./env.js');
+const parseJson = require('parse-json');
+const path = require('path');
+const utils = require('../utils/utils');
 require('colors');
 
-function restrictPath(receiver, binding, count, args) {
-  const dapp = dappPath();
-  let embark = embarkPath();
-  const pkg = pkgPath();
+function mkdirpSync(...args) { return fs.mkdirpSync(...args); }
 
-  // In the monorepo, enable doing FS functions on all of embark (needed to access embark/node_modules)
-  embark = embark.replace(path.normalize('embark/packages/'), '');
+function mkdirp(...args) { return fs.mkdirp(...args); }
 
-  const allowedRoots = [
-    dapp,
-    embark,
-    pkg,
-    os.tmpdir()
-  ];
+function readdir(...args) { return fs.readdir(...args); }
 
-  let allInsideRestricted = true;
+function stat(...args) { return fs.stat(...args); }
 
-  for(let i = 0; i < count; i++) {
-    let resolved = path.resolve(dapp, args[i]);
-    allInsideRestricted = allowedRoots.some(p => { return resolved.indexOf(p) === 0; });
-    if(!allInsideRestricted) break;
-  }
+function remove(...args) { return fs.remove(...args); }
 
-  if(allInsideRestricted) return receiver.apply(binding, args);
-  throw new Error('EPERM: Operation not permitted');
-}
+function copy(...args) { return fs.copy(...args); }
 
-function mkdirpSync() {
-  return restrictPath(fs.mkdirpSync, fs.mkdirpSync, 1, arguments);
-}
+function copySync(...args) { return fs.copySync(...args); }
 
-function mkdirp() {
-  return restrictPath(fs.mkdirp, fs.mkdirp, 1, arguments);
-}
+function move(...args) { return fs.move(...args); }
 
-function readdir() {
-  return restrictPath(fs.readdir, fs.readdir, 1, arguments);
-}
+function moveSync(...args) { return fs.moveSync(...args); }
 
-function stat() {
-  return restrictPath(fs.stat, fs.stat, 1, arguments);
-}
+function symlink(...args) { return fs.symlink(...args); }
 
-function remove() {
-  return restrictPath(fs.remove, fs.remove, 1, arguments);
-}
+function appendFileSync(...args) { return fs.appendFileSync(...args); }
 
-function copy() {
-  return restrictPath(fs.copy, fs.copy, 2, arguments);
-}
+function writeFile(...args) { return fs.writeFile(...args); }
 
-function copySync() {
-  return restrictPath(fs.copySync, fs.copySync, 2, arguments);
-}
+function writeFileSync(...args) { return fs.writeFileSync(...args); }
 
-function move(){
-  return restrictPath(fs.move, fs.move, 2, arguments);
-}
+function readFile(...args) { return fs.readFile(...args); }
 
-function moveSync() {
-  return restrictPath(fs.moveSync, fs.moveSync, 2, arguments);
-}
+function readFileSync(...args) { return fs.readFileSync(...args); }
 
-function symlink() {
-  return restrictPath(fs.symlink, fs.symlink, 2, arguments);
-}
+function readdirSync(...args) { return fs.readdirSync(...args); }
 
-function appendFileSync() {
-  return restrictPath(fs.appendFileSync, fs.writeFileSync, 1, arguments);
-}
+function statSync(...args) { return fs.statSync(...args); }
 
-function writeFile() {
-  return restrictPath(fs.writeFile, fs.writeFileSync, 1, arguments);
-}
-
-function writeFileSync() {
-  return restrictPath(fs.writeFileSync, fs.writeFileSync, 1, arguments);
-}
-
-function readFile() {
-  return restrictPath(fs.readFile, fs.readFile, 1, arguments);
-}
-
-function readFileSync() {
-  return restrictPath(fs.readFileSync, fs.readFileSync, 1, arguments);
-}
-
-function readdirSync() {
-  return restrictPath(fs.readdirSync, fs.readdirSync, 1, arguments);
-}
-
-function statSync() {
-  return restrictPath(fs.statSync, fs.statSync, 1, arguments);
-}
-
-function readJSONSync() {
-  let content = readFileSync.apply(readFileSync, arguments);
+function readJSONSync(...args) {
+  let json;
   try {
-    return parseJson(content);
-  } catch(e) {
-    console.error("error: ".red + arguments[0].green.underline + " " + e.message.green);
-    process.exit(0);
+    json = parseJson(readFileSync(...args));
+  } catch (e) {
+    console.error('error: '.red + args[0].green.underline + ' ' + e.message.green);
+    process.exit(1);
   }
+  return json;
 }
 
-function writeJSONSync() {
-  return restrictPath(fs.writeJSONSync, fs.writeJSONSync, 1, arguments);
-}
+function writeJSONSync(...args) { return fs.writeJSONSync(...args); }
 
-function outputJSONSync() {
-  return restrictPath(fs.outputJSONSync, fs.outputJSONSync, 1, arguments);
-}
+function outputJSONSync(...args) { return fs.outputJSONSync(...args); }
 
-function writeJson() {
-  return restrictPath(fs.writeJson, fs.writeJson, 1, arguments);
-}
+function writeJson(...args) { return fs.writeJson(...args); }
 
-function existsSync() {
-  return restrictPath(fs.existsSync, fs.existsSync, 1, arguments);
-}
+function existsSync(...args) { return fs.existsSync(...args); }
 
-function ensureFileSync() {
-  return restrictPath(fs.ensureFileSync, fs.ensureFileSync, 1, arguments);
-}
+function ensureFileSync(...args) { return fs.ensureFileSync(...args); }
 
-function ensureDirSync() {
-  return restrictPath(fs.ensureDirSync, fs.ensureDirSync, 1, arguments);
-}
+function ensureDirSync(...args) { return fs.ensureDirSync(...args); }
 
-function access() {
-  return restrictPath(fs.access, fs.access, 1, arguments);
-}
+function access(...args) { return fs.access(...args); }
 
-function removeSync() {
-  return restrictPath(fs.removeSync, fs.removeSync, 1, arguments);
-}
+function removeSync(...args) { return fs.removeSync(...args); }
 
 function anchoredPath(anchor, ...args) {
-  args = args.map(path => path.replace(dappPath(), ""));
-  return utils.joinPath(env.anchoredValue(anchor), ...args);
+  return utils.joinPath(
+    anchoredValue(anchor),
+    ...args.map(path => path.replace(dappPath(), ''))
+  );
 }
 
-function embarkPath() {
-  return anchoredPath(env.EMBARK_PATH, ...arguments);
-}
+function embarkPath(...args) { return anchoredPath(EMBARK_PATH, ...args); }
 
-function dappPath() {
-  return anchoredPath(env.DAPP_PATH, ...arguments);
-}
+function dappPath(...args) { return anchoredPath(DAPP_PATH, ...args); }
 
-function diagramPath() {
-  return anchoredPath(env.DIAGRAM_PATH, ...arguments);
-}
+function diagramPath(...args) { return anchoredPath(DIAGRAM_PATH, ...args); }
 
 function ipcPath(basename, usePipePathOnWindows = false) {
   if (!(basename && typeof basename === 'string')) {
@@ -173,26 +99,18 @@ function ipcPath(basename, usePipePathOnWindows = false) {
   );
 }
 
-function pkgPath() {
-  return anchoredPath(env.PKG_PATH, ...arguments);
-}
+function pkgPath(...args) { return anchoredPath(PKG_PATH, ...args); }
 
-function createWriteStream() {
-  return restrictPath(fs.createWriteStream, fs.createWriteStream, 1, arguments);
-}
+function createWriteStream(...args) { return fs.createWriteStream(...args); }
 
-function tmpDir() {
-  let os = require('os');
-  return utils.joinPath(os.tmpdir(), ...arguments);
-}
+function tmpDir(...args) { return utils.joinPath(os.tmpdir(), ...args); }
 
 function copyPreserve(sourceFilePath, targetFilePath) {
   const implementation = (sourceFilePath, targetFilePath) => {
-    const path = require('path');
     let ext = 1;
     let preserved = targetFilePath;
     while (fs.existsSync(preserved)) {
-      let extname = path.extname(targetFilePath);
+      const extname = path.extname(targetFilePath);
       preserved = utils.joinPath(
         path.dirname(targetFilePath),
         `${path.basename(targetFilePath, extname)}.${ext}${extname}`
@@ -205,12 +123,10 @@ function copyPreserve(sourceFilePath, targetFilePath) {
     fs.copySync(sourceFilePath, targetFilePath);
   };
 
-  return restrictPath(implementation, implementation, 2, [sourceFilePath, targetFilePath]);
+  return implementation(sourceFilePath, targetFilePath);
 }
 
-function outputFileSync(){
-  return restrictPath(fs.outputFileSync, fs.outputFile, 1, arguments);
-}
+function outputFileSync(...args) { return fs.outputFileSync(...args); }
 
 module.exports = {
   access,

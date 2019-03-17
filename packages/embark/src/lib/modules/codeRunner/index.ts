@@ -1,5 +1,5 @@
 import VM from "./vm";
-const fs = require("../../core/fs");
+const fs = require("./fs");
 import { Callback, Embark, Events, Logger } from "embark";
 import Web3 from "web3";
 const EmbarkJS = require("embarkjs");
@@ -22,23 +22,7 @@ class CodeRunner {
     this.vm = new VM({
       require: {
         mock: {
-          fs: {
-            access: fs.access,
-            dappPath: fs.dappPath,
-            diagramPath: fs.diagramPath,
-            embarkPath: fs.embarkPath,
-            existsSync: fs.existsSync,
-            ipcPath: fs.ipcPath,
-            pkgPath: fs.pkgPath,
-            readFile: fs.readFile,
-            readFileSync: fs.readFileSync,
-            readJSONSync: fs.readJSONSync,
-            readdir: fs.readdir,
-            readdirSync: fs.readdirSync,
-            stat: fs.stat,
-            statSync: fs.statSync,
-            tmpDir: fs.tmpDir,
-          },
+          fs,
         },
       },
       sandbox: {

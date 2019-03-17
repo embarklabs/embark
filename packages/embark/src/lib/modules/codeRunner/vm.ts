@@ -2,7 +2,7 @@ import { each } from "async";
 import { Callback, Logger } from "embark";
 import { NodeVM, NodeVMOptions } from "vm2";
 
-const fs = require("../../core/fs");
+const fs = require("./fs");
 const path = require("path");
 const { recursiveMerge, isEs6Module, compact } = require("../../utils/utils");
 
@@ -33,7 +33,7 @@ class VM {
    */
   private _options: NodeVMOptions = {
     require: {
-      builtin: ["path", "rxjs", "util"],
+      builtin: ["path", "util"],
       external: [
         "@babel/runtime-corejs2/helpers/interopRequireDefault",
         "@babel/runtime-corejs2/core-js/json/stringify",

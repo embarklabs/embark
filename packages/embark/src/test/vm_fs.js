@@ -3,14 +3,16 @@ const {assert} = require('chai');
 const os = require('os');
 const path = require('path');
 const underlyingFs = require('fs-extra');
-const fs = require('../lib/core/fs');
+const fs = require('../lib/modules/codeRunner/fs');
 
 describe('fs', () => {
   let fsMethods = {};
+  let oldConsoleError;
   let oldDappPath;
   let oldProcessExit;
 
   before(() => {
+    oldConsoleError = console.error;
     oldDappPath = process.env.DAPP_PATH;
     process.env.DAPP_PATH = fs.embarkPath();
     oldProcessExit = process.exit;
@@ -63,9 +65,12 @@ describe('fs', () => {
       it('should not throw exceptions on paths inside the temporary dir root', (done) => {
         assert.doesNotThrow(async () => {
           try {
+            if (func === 'readJSONSync') console.error = function() {};
             await fs[func](path.join(os.tmpdir(), 'foo'));
           } catch(e) {
             if(e.message.indexOf('EPERM') === 0) throw e;
+          } finally {
+            if (func === 'readJSONSync') console.error = oldConsoleError;
           }
         }, /EPERM: Operation not permitted/);
 
