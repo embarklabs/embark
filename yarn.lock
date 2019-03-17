@@ -2167,13 +2167,6 @@
     universal-user-agent "^2.0.0"
     url-template "^2.0.8"
 
-"@reactivex/rxjs@6.4.0":
-  version "6.4.0"
-  resolved "https://registry.yarnpkg.com/@reactivex/rxjs/-/rxjs-6.4.0.tgz#92a6813163beef132294a40e750f6054b7a74f0e"
-  integrity sha512-Mn9PgWHzGG30w50TnBX4EUrMAkg8TOl255JfTfU0SK/FUD/Nq/NzEximIOQV5NXdu29aYJkLVDZ+gVStprO18g==
-  dependencies:
-    tslib "^1.9.0"
-
 "@sinonjs/formatio@3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@sinonjs/formatio/-/formatio-3.0.0.tgz#9d282d81030a03a03fa0c5ce31fd8786a4da311a"
@@ -17012,6 +17005,13 @@ rustbn.js@~0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/rustbn.js/-/rustbn.js-0.2.0.tgz#8082cb886e707155fd1cb6f23bd591ab8d55d0ca"
   integrity sha512-4VlvkRUuCJvr2J6Y0ImW7NvTCriMi7ErOAqWk1y69vAdoNIzCF3yPmgeNzx+RQTLEDFq5sHfscn1MwHxP9hNfA==
+
+rxjs@6.4.0:
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.4.0.tgz#f3bb0fe7bda7fb69deac0c16f17b50b0b8790504"
+  integrity sha512-Z9Yfa11F6B9Sg/BK9MnqnQ+aQYicPLtilXBp2yUtDt2JRCE0h26d33EnfO3ZxoNxG0T92OUucP3Ct7cpfkdFfw==
+  dependencies:
+    tslib "^1.9.0"
 
 rxjs@^6.1.0:
   version "6.3.3"
