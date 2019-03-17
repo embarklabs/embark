@@ -112,7 +112,6 @@ export default class Server {
     }
 
     instance.app.use("/", ui);
-    instance.app.use("/*", ui);
 
     return instance;
   }
