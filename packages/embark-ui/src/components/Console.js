@@ -21,7 +21,8 @@ class Console extends Component {
 
   handleSubmit(event) {
     const instance = this.typeahead.getInstance();
-    if(instance.state.selected.length === 0) {
+    const activeItem = instance.state.activeItem || {};
+    if(activeItem.paginationOption) {
       return;
     }
 
