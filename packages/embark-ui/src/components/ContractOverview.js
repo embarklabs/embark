@@ -39,6 +39,10 @@ class ContractFunction extends Component {
     return !this.isPureCall(method) && (method.type === 'event');
   }
 
+  static isFallback(method) {
+    return method.type === 'fallback';
+  }
+
   buttonTitle() {
     const {method} = this.props;
     if (method.name === 'constructor') {
@@ -140,24 +144,31 @@ class ContractFunction extends Component {
             'border-bottom-0': !this.state.functionCollapse,
             'rounded': !this.state.functionCollapse
           })}
-          onClick={() => this.toggleFunction()}>
+          onClick={ContractFunction.isFallback(this.props.method)
+                   ? () => {}
+                   : () => this.toggleFunction()}>
           <CardTitle>
             <span className="contract-function-signature">
-              {`${this.props.method.name}` +
+              {ContractFunction.isFallback(this.props.method)
+               ? 'function()'
+               : `${this.props.method.name}` +
                `(${this.props.method.inputs.map(i => i.name).join(', ')})`}
             </span>
             <div>
-              {(ContractFunction.isPureCall(this.props.method) &&
-                this.makeBadge('success', 'white', 'call')) ||
-               this.makeBadge('warning', 'black', 'send')}
+              {ContractFunction.isFallback(this.props.method)
+               ? this.makeBadge('light', 'black', 'fallback')
+               : (ContractFunction.isPureCall(this.props.method) &&
+                   this.makeBadge('success', 'white', 'call')) ||
+                   this.makeBadge('warning', 'black', 'send')}
             </div>
           </CardTitle>
         </CardHeader>
-        <Collapse isOpen={this.state.functionCollapse} className="relative">
+        {!ContractFunction.isFallback(this.props.method) &&
+         <Collapse isOpen={this.state.functionCollapse} className="relative">
           <CardBody>
             <Form inline>
-              {this.props.method.inputs.map(input => (
-                <FormGroup key={input.name}>
+              {this.props.method.inputs.map((input, idx) => (
+                <FormGroup key={idx}>
                   <Label for={input.name} className="mr-2 font-weight-bold contract-function-input">
                     {input.name}
                   </Label>
@@ -240,7 +251,7 @@ class ContractFunction extends Component {
               ))}
             </ListGroup>
           </CardFooter>}
-        </Collapse>
+        </Collapse>}
       </Card>
     );
   }
@@ -275,7 +286,7 @@ const ContractOverview = (props) => {
         .filter((method) => {
           return props.onlyConstructor ? method.type === 'constructor' : method.type !== 'constructor';
         })
-        .map(method => <ContractFunction key={method.name}
+       .map((method, idx) => <ContractFunction key={idx}
                                          contractName={contract.className}
                                          method={method}
                                          contractFunctions={filterContractFunctions(props.contractFunctions, contract.className, method.name)}
