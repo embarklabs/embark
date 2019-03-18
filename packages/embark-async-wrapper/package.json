@@ -1,6 +1,6 @@
 {
   "name": "embark-async-wrapper",
-  "version": "4.0.0-beta.0",
+  "version": "4.0.0-beta.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Extensions to caolan/async used by Embark",
@@ -45,8 +45,8 @@
     "extends": "../../.eslintrc.json"
   },
   "dependencies": {
-    "async": "2.6.1",
-    "@babel/runtime-corejs2": "7.3.1"
+    "@babel/runtime-corejs2": "7.3.1",
+    "async": "2.6.1"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",

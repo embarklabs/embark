@@ -1,6 +1,6 @@
 {
   "name": "embark-graph",
-  "version": "4.0.0-beta.0",
+  "version": "4.0.0-beta.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Smart contract documentation generator for Embark DApps",
@@ -46,9 +46,9 @@
     "extends": "../../.eslintrc.json"
   },
   "dependencies": {
+    "@babel/runtime-corejs2": "7.3.1",
     "async": "2.6.1",
-    "viz.js": "1.8.2",
-    "@babel/runtime-corejs2": "7.3.1"
+    "viz.js": "1.8.2"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",

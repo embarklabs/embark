@@ -1,7 +1,7 @@
 {
   "name": "@types/embark",
   "private": true,
-  "version": "4.0.0-beta.0",
+  "version": "4.0.0-beta.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "TypeScript definitions for Embark",
