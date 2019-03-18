@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-beta.2](https://github.com/embark-framework/embark/compare/v4.0.0-beta.1...v4.0.0-beta.2) (2019-03-18)
+
+
+### Bug Fixes
+
+* typed commands in console ([9d34355](https://github.com/embark-framework/embark/commit/9d34355))
+* **embark-ui:** detect fallback functions in the contracts explorer ([832f16a](https://github.com/embark-framework/embark/commit/832f16a))
+
+
+
+
+
 # [4.0.0-beta.1](https://github.com/embark-framework/embark/compare/v4.0.0-beta.0...v4.0.0-beta.1) (2019-03-18)
 
 
