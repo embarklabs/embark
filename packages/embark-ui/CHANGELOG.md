@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0](https://github.com/embark-framework/embark/compare/v4.0.0-beta.2...v4.0.0) (2019-03-18)
+
+
+### Bug Fixes
+
+* **embark-ui:** don't show debug button for txs of silent contracts ([5161f54](https://github.com/embark-framework/embark/commit/5161f54))
+
+
+
+
+
 # [4.0.0-beta.2](https://github.com/embark-framework/embark/compare/v4.0.0-beta.1...v4.0.0-beta.2) (2019-03-18)
 
 

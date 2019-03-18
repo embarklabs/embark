@@ -1,6 +1,6 @@
 {
   "name": "embark-reset",
-  "version": "4.0.0-beta.1",
+  "version": "4.0.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "DApp reset utlity for Embark",

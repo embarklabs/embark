@@ -1,6 +1,6 @@
 {
   "name": "embarkjs-connector-web3",
-  "version": "4.0.0-beta.1",
+  "version": "4.0.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Web3.js Connector for EmbarkJS",
