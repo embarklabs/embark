@@ -153,14 +153,14 @@ class CodeGenerator {
     });
   }
 
-  generateContractConfig(contractConfig) {
+  generateContractConfig(contractConfig, callback) {
     this.dappConfigs.blockchain = {
       dappConnection: contractConfig.dappConnection,
       dappAutoEnable: contractConfig.dappAutoEnable,
       warnIfMetamask: this.blockchainConfig.isDev,
       blockchainClient: this.blockchainConfig.ethereumClientName
     };
-    this.generateArtifact(this.dappConfigs.blockchain, constants.dappArtifacts.blockchain, constants.dappArtifacts.dir);
+    this.generateArtifact(this.dappConfigs.blockchain, constants.dappArtifacts.blockchain, constants.dappArtifacts.dir, callback);
   }
 
   generateStorageConfig(storageConfig) {
@@ -309,6 +309,14 @@ class CodeGenerator {
     let code = "/* eslint-disable */";
 
     async.waterfall([
+      // TODO: here due to a race condition when running embark build
+      function generateConfig(next) {
+        self.events.request("config:contractsConfig", (contractsConfig) => {
+          self.generateContractConfig(contractsConfig, () => {
+            next()
+          })
+        })
+      },
       function getEmbarkJsLocation(next) {
         self.events.request('version:downloadIfNeeded', 'embarkjs', (err, location) => {
           if (err) {
