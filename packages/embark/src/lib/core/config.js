@@ -40,7 +40,6 @@ var Config = function(options) {
     this._updateBlockchainCors();
   });
 
-
   self.events.setCommandHandler("config:contractsConfig", (cb) => {
     cb(self.contractsConfig);
   });
