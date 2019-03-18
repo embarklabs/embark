@@ -313,9 +313,9 @@ class CodeGenerator {
       function generateConfig(next) {
         self.events.request("config:contractsConfig", (contractsConfig) => {
           self.generateContractConfig(contractsConfig, () => {
-            next()
-          })
-        })
+            next();
+          });
+        });
       },
       function getEmbarkJsLocation(next) {
         self.events.request('version:downloadIfNeeded', 'embarkjs', (err, location) => {
