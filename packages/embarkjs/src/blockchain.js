@@ -253,6 +253,9 @@ let Contract = function(options) {
   ContractClass.abi = ContractClass.options.abi;
   ContractClass.address = this.address;
   ContractClass.gas = this.gas;
+  ContractClass.bytecode = '0x' + options.code;
+  ContractClass.runtime_bytecode = '0x' + options.runtime_bytecode;
+  ContractClass.real_runtime_bytecode = '0x' + options.real_runtime_bytecode;
 
   let originalMethods = Object.keys(ContractClass);
 
