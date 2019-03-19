@@ -55,11 +55,11 @@ export function getAddressToContract(contractsList: Contract[], addressToContrac
 
 export function getTransactionParams(contract: AddressToContract, transactionInput: string): object {
   const func = contract.functions[transactionInput.substring(0, 10)];
-  const functionName = func.functionName;
+  const functionName = func ? func.functionName : "UNKNOWN";
 
-  const decodedParameters = utils.decodeParams(func.abi.inputs, transactionInput.substring(10));
   let paramString = "";
-  if (func.abi.inputs) {
+  if (func && func.abi && func.abi.inputs) {
+    const decodedParameters = utils.decodeParams(func.abi.inputs, transactionInput.substring(10));
     func.abi.inputs.forEach((input) => {
       const quote = input.type.indexOf("int") === -1 ? '"' : "";
       paramString += quote + decodedParameters[input.name] + quote + ", ";
