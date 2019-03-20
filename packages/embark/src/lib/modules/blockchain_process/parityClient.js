@@ -102,6 +102,10 @@ class ParityClient {
       }
     }
 
+    if(this.runAsArchival(config)) {
+      cmd.push("--pruning=archive");
+    }
+
     return cmd;
   }
 
@@ -125,6 +129,10 @@ class ParityClient {
       parsed = match[1].trim();
     }
     return parsed;
+  }
+
+  runAsArchival(config) {
+    return config.networkId === 1337 || config.archivalMode;
   }
 
   isSupportedVersion(parsedVersion) {

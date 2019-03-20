@@ -73,6 +73,10 @@ class GethClient {
       cmd.push("--syncmode=" + config.syncMode);
     }
 
+    if(this.runAsArchival(config)) {
+      cmd.push("--gcmode=archive");
+    }
+
     if (config.account && config.account.password) {
       const resolvedPath = path.resolve(fs.dappPath(), config.account.password);
       cmd.push(`--password=${resolvedPath}`);
@@ -133,6 +137,10 @@ class GethClient {
       cmd = "--networkid=" + config.networkId;
     }
     return cmd;
+  }
+
+  runAsArchival(config) {
+    return config.networkId === 1337 || config.archivalMode;
   }
 
   initGenesisCommmand() {
