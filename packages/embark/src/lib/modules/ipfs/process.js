@@ -1,10 +1,11 @@
 const child_process = require('child_process');
 const ProcessWrapper = require('../../core/processes/processWrapper');
 const constants = require('../../constants');
+const async = require('async');
 
 let ipfsProcess; // eslint-disable-line no-unused-vars
 
-const IPFS_DEFAULT_CONFIG_ERROR = "API.HTTPHeaders key has no attributes";
+const IPFS_DEFAULT_CONFIG_ERROR = ".HTTPHeaders key has no attributes";
 
 class IPFSProcess extends ProcessWrapper {
   constructor(options) {
@@ -53,7 +54,7 @@ class IPFSProcess extends ProcessWrapper {
       }
     });
 
-    childProcess.stdout.on('data', (data) => {
+    childProcess.stdout.on('data', async (data) => {
       data = data.toString();
 
       // ipfs init just run, and we have a successful result
@@ -65,31 +66,31 @@ class IPFSProcess extends ProcessWrapper {
         self.readyCalled = true;
 
         // check cors config before updating if needed
-        self.getCorsConfig((err, config) => {
-          if(err && err.indexOf(IPFS_DEFAULT_CONFIG_ERROR) === -1){
-            return console.error('Error getting IPFS CORS config: ', err);
+        async.parallel({
+          api: (next) => {
+            self.getApiCorsConfig(next);
+          },
+          gateway: (next) => {
+            self.getGatewayCorsConfig(next);
           }
-          let needsUpdate = false;
-          try {
-            let corsConfig = new Set(JSON.parse(config));
-            // test to ensure we have all cors needed
-            needsUpdate = !self.cors.every(address => corsConfig.has(address));
-          }
-          catch (_e) {
-            needsUpdate = true;
-          }
-          if(needsUpdate){
-            // update IPFS cors config
-            return self.updateCorsConfig(err => {
-              if(err){
-                console.error('IPFS CORS update error: ', err);
-              }
-              self.send({result: constants.storage.restart}, () => {
-                childProcess.kill();
+        }, (err, corsConfig) => {
+            // results is now equals to: {one: 1, two: 2}
+            if(err && err.indexOf(IPFS_DEFAULT_CONFIG_ERROR) === -1){
+              return console.error('Error getting IPFS CORS config: ', err);
+            }
+            
+            if(self.corsConfigNeedsUpdate(corsConfig)){
+              // update IPFS cors config
+              return self.updateCorsConfig(err => {
+                if(err){
+                  console.error('IPFS CORS update error: ', err);
+                }
+                self.send({result: constants.storage.restart}, () => {
+                  childProcess.kill();
+                });
               });
-            });
-          }
-          self.send({result: constants.storage.initiated});
+            }
+            self.send({result: constants.storage.initiated});
         });
       }
       console.log('IPFS: ' + data);
@@ -101,8 +102,33 @@ class IPFSProcess extends ProcessWrapper {
     });
   }
 
-  getCorsConfig(cb){
+  corsConfigNeedsUpdate(config) {
+    let needsUpdate = false;
+    try {
+      // test to ensure we have all cors needed
+      let corsConfig = new Set(JSON.parse(config.api).concat(JSON.parse(config.gateway)));
+      needsUpdate = !this.cors.every(address => corsConfig.has(address));
+    }
+    catch (_e) {
+      needsUpdate = true;
+    }
+    return needsUpdate;
+  }
+
+  getApiCorsConfig(cb){
     let ipfsCorsCmd = `${this.command} config API.HTTPHeaders.Access-Control-Allow-Origin`;
+
+    child_process.exec(ipfsCorsCmd, {silent: true}, (err, stdout, stderr) => {
+      if(err || stderr){
+        err = (err || stderr).toString();
+        return cb(err);
+      }
+      cb(null, stdout);
+    });
+  }
+
+  getGatewayCorsConfig(cb){
+    let ipfsCorsCmd = `${this.command} config Gateway.HTTPHeaders.Access-Control-Allow-Origin`;
 
     child_process.exec(ipfsCorsCmd, {silent: true}, (err, stdout, stderr) => {
       if(err || stderr){
@@ -117,22 +143,30 @@ class IPFSProcess extends ProcessWrapper {
     // update IPFS cors before spawning a daemon (muhaha)
     let ipfsCorsCmd = `${this.command} config --json API.HTTPHeaders.Access-Control-Allow-Origin "[\\"${this.cors.join('\\", \\"')}\\"]"`;
     console.trace(`Updating IPFS CORS using command: ${ipfsCorsCmd}`);
+    // update the API CORS
     child_process.exec(ipfsCorsCmd, {silent: true}, (err, _stdout, stderr) => {
       if(err || stderr){
         err = (err || stderr).toString();
         return cb(err);
       }
-      child_process.exec(this.command + ' config --json API.HTTPHeaders.Access-Control-Allow-Credentials "[\\"true\\"]"', {silent: true}, (err, _stdout, stderr) => {
+      // update the Gateway CORS as well
+      child_process.exec(ipfsCorsCmd.replace("API", "Gateway"), {silent: true}, (err, _stdout, stderr) => {
         if(err || stderr){
           err = (err || stderr).toString();
           return cb(err);
         }
-        child_process.exec(this.command + ' config --json API.HTTPHeaders.Access-Control-Allow-Methods "[\\"PUT\\", \\"POST\\", \\"GET\\"]"', {silent: true}, (err, stdout, stderr) => {
+        child_process.exec(this.command + ' config --json API.HTTPHeaders.Access-Control-Allow-Credentials "[\\"true\\"]"', {silent: true}, (err, _stdout, stderr) => {
           if(err || stderr){
             err = (err || stderr).toString();
             return cb(err);
           }
-          cb(null, stdout);
+          child_process.exec(this.command + ' config --json API.HTTPHeaders.Access-Control-Allow-Methods "[\\"PUT\\", \\"POST\\", \\"GET\\"]"', {silent: true}, (err, stdout, stderr) => {
+            if(err || stderr){
+              err = (err || stderr).toString();
+              return cb(err);
+            }
+            cb(null, stdout);
+          });
         });
       });
     });
