@@ -23,7 +23,7 @@ import './index.css';
 
 import AppContainer from './containers/AppContainer';
 import history from "./history";
-import registerServiceWorker from './registerServiceWorker';
+import {unregister as unRegisterServiceWorker} from './registerServiceWorker';
 import configureStore from './store/configureStore';
 
 const store = configureStore();
@@ -36,4 +36,4 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root')
 );
-registerServiceWorker();
+unRegisterServiceWorker();
