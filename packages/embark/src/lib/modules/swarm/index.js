@@ -26,7 +26,7 @@ class Swarm {
     if (this.isSwarmEnabledInTheConfig() && cantDetermineUrl) {
       console.warn('\n===== Swarm module will not be loaded =====');
       console.warn(`Swarm is enabled in the config, however the config is not setup to provide a URL for swarm and therefore the Swarm module will not be loaded. Please either change the ${'config/storage > upload'.bold} setting to Swarm or add the Swarm config to the ${'config/storage > dappConnection'.bold} array. Please see ${'https://embark.status.im/docs/storage_configuration.html'.underline} for more information.\n`);
-      return this.events.emit("swarm:process:started", false);
+      return this.events.emit("swarm:process:started", null, false);
     }
     if (!this.isSwarmEnabledInTheConfig()) {
       this.embark.registerConsoleCommand({
@@ -36,7 +36,7 @@ class Swarm {
           cb();
         }
       });
-      return this.events.emit("swarm:process:started", false);
+      return this.events.emit("swarm:process:started", null, false);
     }
 
     this.providerUrl = utils.buildUrl(this.storageConfig.upload.protocol, this.storageConfig.upload.host, this.storageConfig.upload.port);
@@ -47,21 +47,12 @@ class Swarm {
 
     this.setServiceCheck();
     this.registerUploadCommand();
-
-    // swarm needs geth to be running first
-    this.swarm.isAvailable((err, isAvailable) => {
-      if (!err || isAvailable) {
-        this.logger.info("Swarm node found, using currently running node");
-        return;
-      }
-      this.logger.info("SWARM: Swarm node not found, attempting to start own node");
-      this.listenToCommands();
-      this.registerConsoleCommands();
-      return this.startProcess(() => {
-        this.addProviderToEmbarkJS();
-        this.addObjectToConsole();
-        this.events.emit("swarm:process:started");
-      });
+    this.listenToCommands();
+    this.registerConsoleCommands();
+    this.startProcess((err, newProcessStarted) => {
+      this.addProviderToEmbarkJS();
+      this.addObjectToConsole();
+      this.events.emit("swarm:process:started", err, newProcessStarted);
     });
   }
 
@@ -106,18 +97,27 @@ class Swarm {
   }
 
   startProcess(callback) {
-    let self = this;
-    const storageProcessesLauncher = new StorageProcessesLauncher({
-      logger: self.logger,
-      events: self.events,
-      storageConfig: self.storageConfig,
-      webServerConfig: self.webServerConfig,
-      corsParts: self.embark.config.corsParts,
-      blockchainConfig: self.blockchainConfig,
-      embark: self.embark
+    this.swarm.isAvailable((err, isAvailable) => {
+      if (!err || isAvailable) {
+        this.logger.info("Swarm node found, using currently running node");
+        return callback(null, false);
+      }
+      this.logger.info("Swarm node not found, attempting to start own node");
+      let self = this;
+      const storageProcessesLauncher = new StorageProcessesLauncher({
+        logger: self.logger,
+        events: self.events,
+        storageConfig: self.storageConfig,
+        webServerConfig: self.webServerConfig,
+        corsParts: self.embark.config.corsParts,
+        blockchainConfig: self.blockchainConfig,
+        embark: self.embark
+      });
+      self.logger.trace(`Storage module: Launching swarm process...`);
+      return storageProcessesLauncher.launchProcess('swarm', (err) => {
+        callback(err, true);
+      });
     });
-    self.logger.trace(`Storage module: Launching swarm process...`);
-    return storageProcessesLauncher.launchProcess('swarm', callback);
   }
 
   registerUploadCommand() {

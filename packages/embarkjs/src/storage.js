@@ -66,7 +66,7 @@ Storage.setProvider = function (providerName, options) {
 
 Storage.isAvailable = function () {
   if (!this.currentStorage) {
-    return false;
+    return Promise.resolve(false);
   }
   return this.currentStorage.isAvailable();
 };
