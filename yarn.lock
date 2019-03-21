@@ -2716,12 +2716,13 @@
   resolved "https://registry.yarnpkg.com/@types/events/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
   integrity sha512-KEIlhXnIutzKwRbQkGWb/I4HFqBuUykAdHgDED6xqwXJfONCjF5VoE0cXEiurh3XauygxzeDzgtXUqvLkxFzzA==
 
-"@types/express-http-proxy@1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@types/express-http-proxy/-/express-http-proxy-1.5.0.tgz#0543348e5845c4c87f6e17a834f4962a75ea4579"
-  integrity sha512-gPo4mt1//QMitFvyw0AXrjtmp1xrGQtxLNJdRcXD4QkTv4RvEFXU01/8lYlFTsNr8AL/10QyRdrBeC9Ow9WuSA==
+"@types/express-http-proxy@1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@types/express-http-proxy/-/express-http-proxy-1.5.1.tgz#0184017b1cfc8ab2a4954d35f90c9b4cc3d7ffcc"
+  integrity sha512-9SOGqwVzbudT5nzF4TjKOu0cWE0HRaTVVivwxUxYMN/7mas6Wt/W5pz53dZIs7Y0fZBjAI3RTDDr+dXtXrv+hA==
   dependencies:
     "@types/express" "*"
+    "@types/express-serve-static-core" "*"
 
 "@types/express-serve-static-core@*":
   version "4.16.0"
@@ -8542,10 +8543,10 @@ expect@^23.6.0:
     jest-message-util "^23.4.0"
     jest-regex-util "^23.3.0"
 
-express-http-proxy@1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/express-http-proxy/-/express-http-proxy-1.5.0.tgz#27aca3898e2f0cb9aff2e1d00c93ec27014254a2"
-  integrity sha512-rYXjOj+ldSDZdmCxRDX/7o6Oxtz45sS9l4QTsvqm+ZFxqI5xTA4usMMP4FBrrKTpDPuQkI2YVda+0LvkJhPu7A==
+express-http-proxy@1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/express-http-proxy/-/express-http-proxy-1.5.1.tgz#cbf45695c759693c9c5f946117462d25b57e77a8"
+  integrity sha512-k1RdysZWZ8wdPnsLa4iyrrYyUFih/sYKkn6WfkU/q5A8eUdh3l+oXhrRuQmEYEsZmiexVvpiOCkogl03jYfcbg==
   dependencies:
     debug "^3.0.1"
     es6-promise "^4.1.1"
