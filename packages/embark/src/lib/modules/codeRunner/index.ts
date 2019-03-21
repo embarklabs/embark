@@ -40,9 +40,8 @@ class CodeRunner {
   private generateListener(provider: string, eventType: ProviderEventType) {
     const providerStateName = `${provider}:${eventType}`;
     const eventName = `runcode:${providerStateName}`;
-    this.providerStates[`${provider}:${eventType}`] = false;
     this.events.setCommandHandler(eventName, (cb) => {
-      if (this.providerStates[providerStateName]) {
+      if (this.providerStates[providerStateName] === true) {
         return cb();
       }
       this.events.once(eventName, cb);

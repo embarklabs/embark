@@ -21,29 +21,17 @@ class IPFS {
     this.blockchainConfig = embark.config.blockchainConfig;
 
     if (!this.isIpfsStorageEnabledInTheConfig()) {
-      return this.events.emit("ipfs:process:started", false);
+      return this.events.emit("ipfs:process:started", null, false);
     }
 
     this.setServiceCheck();
     this.registerUploadCommand();
-
-    this.events.request("processes:register", "ipfs", (cb) => {
-      this.startProcess(() => {
-        this.addStorageProviderToEmbarkJS();
-        this.addObjectToConsole();
-        this.events.emit("ipfs:process:started");
-        cb();
-      });
-    });
-
-    this._checkService((err) => {
-      if (!err) {
-        return;
-      }
-      this.logger.info("IPFS node not found, attempting to start own node");
-      this.listenToCommands();
-      this.registerConsoleCommands();
-      this.events.request('processes:launch', 'ipfs');
+    this.listenToCommands();
+    this.registerConsoleCommands();
+    this.startProcess((err, newProcessStarted) => {
+      this.addStorageProviderToEmbarkJS();
+      this.addObjectToConsole();
+      this.events.emit("ipfs:process:started", err, newProcessStarted);
     });
   }
 
@@ -142,18 +130,27 @@ class IPFS {
   }
 
   startProcess(callback) {
-    let self = this;
-    const storageProcessesLauncher = new StorageProcessesLauncher({
-      logger: self.logger,
-      events: self.events,
-      storageConfig: self.storageConfig,
-      webServerConfig: self.webServerConfig,
-      blockchainConfig: self.blockchainConfig,
-      corsParts: self.embark.config.corsParts,
-      embark: self.embark
+    this._checkService((err) => {
+      if (!err) {
+        this.logger.info("IPFS node found, using currently running node");
+        return callback(null, false);
+      }
+      this.logger.info("IPFS node not found, attempting to start own node");
+      let self = this;
+      const storageProcessesLauncher = new StorageProcessesLauncher({
+        logger: self.logger,
+        events: self.events,
+        storageConfig: self.storageConfig,
+        webServerConfig: self.webServerConfig,
+        blockchainConfig: self.blockchainConfig,
+        corsParts: self.embark.config.corsParts,
+        embark: self.embark
+      });
+      self.logger.trace(`Storage module: Launching ipfs process...`);
+      return storageProcessesLauncher.launchProcess('ipfs', (err) => {
+        callback(err, true);
+      });
     });
-    self.logger.trace(`Storage module: Launching ipfs process...`);
-    return storageProcessesLauncher.launchProcess('ipfs', callback);
   }
 
   registerUploadCommand() {
