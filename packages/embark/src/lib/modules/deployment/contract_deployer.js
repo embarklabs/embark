@@ -115,8 +115,8 @@ class ContractDeployer {
       // TODO: can potentially go to a beforeDeploy plugin
       function getAccounts(next) {
         deploymentAccount = self.blockchain.defaultAccount();
-        self.events.request('blockchain:provider:contract:accounts:get', _accounts => {
-          accounts = _accounts;
+        self.events.request('blockchain:provider:contract:accounts:get', (_err, blockchainAccounts) => {
+          accounts = blockchainAccounts;
 
           // applying deployer account configuration, if any
           if (typeof contract.fromIndex === 'number') {

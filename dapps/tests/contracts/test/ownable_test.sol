@@ -1,5 +1,5 @@
 pragma solidity ^0.4.7;
-import "./../ownable.sol";
+import "../contracts/ownable.sol";
 
 contract OwnableTests {
   Ownable own;

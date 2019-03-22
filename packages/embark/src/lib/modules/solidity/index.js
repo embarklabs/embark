@@ -183,8 +183,9 @@ class Solidity {
               .then(fileContent => {
                 input[file.path] = {content: fileContent.replace(/\r\n/g, '\n')};
                 fileCb();
-              }).catch((_e) => {
+              }).catch((e) => {
                 self.logger.error(__('Error while loading the content of ') + filename);
+                self.logger.debug(e);
                 fileCb();
               });
           },

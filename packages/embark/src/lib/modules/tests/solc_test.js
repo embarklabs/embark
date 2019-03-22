@@ -47,9 +47,9 @@ class SolcTest extends Test {
       function determineContractsToDeploy(next) {
         self.events.request("contracts:list", (err, contracts) => {
           let contractsToDeploy = contracts.filter((contract) => {
-            return contract.filename && contract.filename.indexOf('_test.sol') >= 0;
+            return contract.originalFilename && contract.originalFilename.indexOf('_test.sol') >= 0;
           });
-          let assertLib = contracts.filter((contract) => contract.filename === 'remix_tests.sol')[0];
+          let assertLib = contracts.filter((contract) => contract.originalFilename === 'remix_tests.sol')[0];
           next(null, [assertLib].concat(contractsToDeploy));
         });
       },
@@ -89,8 +89,8 @@ class SolcTest extends Test {
           const contractsToTest = [];
 
           Object.keys(contracts).forEach((contract) => {
-            if (contracts[contract].filename &&
-              contracts[contract].filename.replace(/\\/g, '/') === forwardSlashFile) {
+            if (contracts[contract].originalFilename &&
+              contracts[contract].originalFilename.replace(/\\/g, '/') === forwardSlashFile) {
               contractsToTest.push(contracts[contract]);
             }
           });
@@ -120,7 +120,7 @@ class SolcTest extends Test {
                 methodIdentifiers: contract.functionHashes 
               }
             };
-            this.getEmbarkJSContract(contract, (err, embarkjsContract) => {
+            self.getEmbarkJSContract(contract, (err, embarkjsContract) => {
               if(err) {
                 return _callback(err);
               }

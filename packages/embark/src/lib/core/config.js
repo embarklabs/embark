@@ -61,6 +61,16 @@ var Config = function(options) {
     self.contractsFiles.push(new File({path: filename, originalPath: filename, type: Types.custom, resolver}));
   });
 
+  self.events.setCommandHandler("config:contractsFiles:reset", (cb) => {
+    self.contractsFiles.forEach((file) => {
+      if(file.path.includes(".embark")) {
+        fs.removeSync(file.path);
+      }
+      self.contractsFiles = self.contractsFiles.filter((contractFile) => contractFile.path !== file.path);
+    });
+    cb();
+  });
+
   self.events.on('file-remove', (fileType, removedPath) => {
     if(fileType !== 'contract') return;
     const normalizedPath = path.normalize(removedPath);
