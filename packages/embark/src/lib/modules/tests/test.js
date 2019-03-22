@@ -28,7 +28,7 @@ class Test {
     this.embarkjs = {};
 
     this.events.setCommandHandler("blockchain:provider:contract:accounts:get", cb => {
-      cb(this.accounts);
+      this.events.request("blockchain:getAccounts", cb);
     });
   }
 
