@@ -1,269 +1,208 @@
-import axios from "axios";
-import keccak from "keccakjs";
+import EmbarkAPI from 'embark-api-client';
 
-function hash(cnonce, token, type, path, params = {}) {
-  let hash = new keccak();
-  hash.update(cnonce.toString());
-  hash.update(token);
-  hash.update(type.toUpperCase());
-  hash.update(`/embark-api${path}`);
-  return hash.digest('hex');
-}
-
-function request(type, path, params = {}) {
-  const cnonce = Date.now() + Math.random();
-
-  // Extract credentials out of the params and delete so the token doesn't get sent
-  // as cleartext.
-  let credentials = params.credentials;
-  delete params.credentials;
-
-  let requestHash = hash(cnonce, credentials.token, type, path, params);
-
-  const endpoint = `http://${credentials.host}/embark-api${path}`;
-  const req = {
-    method: type,
-    url: endpoint,
-    headers: {
-      'X-Embark-Request-Hash': requestHash,
-      'X-Embark-Cnonce': cnonce
-    },
-    ...(type === 'post' ? { data: params } : {}),
-    ...(['get', 'delete'].includes(type) ? { params: params.params } : {})
-  }
-
-  return axios(req)
-    .then((response) => {
-      return (response.data && response.data.error) ? {error: response.data.error} : {response, error: null};
-    }).catch((error) => {
-      return {response: null, error: error.message || 'Something bad happened'};
-    });
-}
-
-function get() {
-  return request('get', ...arguments);
-}
-
-function post() {
-  return request('post', ...arguments);
-}
-
-function destroy() {
-  return request('delete', ...arguments);
-}
-
-function websocket(credentials, path) {
-  const cnonce = Date.now() + Math.random();
-  const requestHash = hash(cnonce, credentials.token, 'ws', '/', {});
-
-  return new WebSocket(`ws://${credentials.host}/embark-api${path}`, [`${cnonce}|${requestHash}`]);
-}
+const embarkAPI = new EmbarkAPI()
 
 export function postCommand() {
-  return post('/command', ...arguments);
+  return embarkAPI.postCommand(...arguments)
 }
 
 export function postCommandSuggestions() {
-  return post('/suggestions', ...arguments);
+  return embarkAPI.postCommandSuggestions(...arguments);
 }
 
 export function fetchAccounts() {
-  return get('/blockchain/accounts', ...arguments);
+  return embarkAPI.fetchAccounts(...arguments);
 }
 
 export function fetchAccount(payload) {
-  return get(`/blockchain/accounts/${payload.address}`, ...arguments);
+  return embarkAPI.fetchAccount(payload, ...arguments);
 }
 
 export function fetchBlocks(payload) {
-  return get('/blockchain/blocks', {params: payload, credentials: payload.credentials});
+  return embarkAPI.fetchBlocks(payload);
 }
 
 export function fetchBlock(payload) {
-  return get(`/blockchain/blocks/${payload.blockNumber}`, ...arguments);
+  return embarkAPI.fetchBlock(payload, ...arguments);
 }
 
 export function fetchTransactions(payload) {
-  return get('/blockchain/transactions', {params: payload, credentials: payload.credentials});
+  return embarkAPI.fetchTransactions(payload);
 }
 
 export function fetchTransaction(payload) {
-  return get(`/blockchain/transactions/${payload.hash}`, ...arguments);
+  return embarkAPI.fetchTransaction(payload, ...arguments);
 }
 
 export function fetchProcesses() {
-  return get('/processes', ...arguments);
+  return embarkAPI.fetchProcesses(...arguments);
 }
 
 export function fetchServices() {
-  return get('/services', ...arguments);
+  return embarkAPI.fetchServices(...arguments);
 }
 
 export function fetchProcessLogs(payload) {
-  return get(`/process-logs/${payload.processName}`, {params: payload, credentials: payload.credentials});
+  return embarkAPI.fetchProcessLogs(payload);
 }
 
 export function fetchContractLogs() {
-  return get(`/contracts/logs`, ...arguments);
+  return embarkAPI.fetchContractLogs(...arguments);
 }
 
 export function fetchContractEvents() {
-  return get(`/blockchain/contracts/events`, ...arguments);
+  return embarkAPI.fetchContractEvents(...arguments);
 }
 
 export function fetchContracts() {
-  return get('/contracts', ...arguments);
+  return embarkAPI.fetchContracts(...arguments);
 }
 
 export function fetchContract(payload) {
-  return get(`/contract/${payload.contractName}`, ...arguments);
+  return embarkAPI.fetchContract(payload, ...arguments);
 }
 
 export function postContractFunction(payload) {
-  return post(`/contract/${payload.contractName}/function`, ...arguments);
+  return embarkAPI.postContractFunction(payload, ...arguments);
 }
 
 export function postContractDeploy(payload) {
-  return post(`/contract/${payload.contractName}/deploy`, ...arguments);
+  return embarkAPI.postContractDeploy(payload, ...arguments);
 }
 
 export function postContractCompile() {
-  return post('/contract/compile', ...arguments);
+  return embarkAPI.postContractCompile(...arguments);
 }
 
 export function fetchVersions() {
-  return get('/versions', ...arguments);
+  return embarkAPI.fetchVersions(...arguments);
 }
 
 export function fetchPlugins() {
-  return get('/plugins', ...arguments);
+  return embarkAPI.fetchPlugins(...arguments);
 }
 
 export function sendMessage(payload) {
-  return post(`/communication/sendMessage`, Object.assign({}, payload.body, {credentials: payload.credentials}));
+  return embarkAPI.sendMessage(payload);
 }
 
 export function fetchContractProfile(payload) {
-  return get(`/profiler/${payload.contractName}`, ...arguments);
+  return embarkAPI.fetchContractProfile(payload, ...arguments);
 }
 
 export function fetchEnsRecord(payload) {
-  const _payload = {params: payload, credentials: payload.credentials};
-  if (payload.name) {
-    return get('/ens/resolve', _payload);
-  }
-
-  return get('/ens/lookup', _payload);
+  return embarkAPI.fetchEnsRecord(payload);
 }
 
 export function postEnsRecord() {
-  return post('/ens/register', ...arguments);
+  return embarkAPI.postEnsRecord(...arguments);
 }
 
 export function getEthGasAPI() {
-  return get('/blockchain/gas/oracle', ...arguments);
+  return embarkAPI.getEthGasAPI(...arguments);
 }
 
 export function fetchFiles() {
-  return get('/files', ...arguments);
+  return embarkAPI.fetchFiles(...arguments);
 }
 
 export function fetchFile(payload) {
-  return get('/file', {params: payload, credentials: payload.credentials});
+  return embarkAPI.fetchFile(payload);
 }
 
 export function postFile() {
-  return post('/files', ...arguments);
+  return embarkAPI.postFile(...arguments);
 }
 
 export function postFolder() {
-  return post('/folders', ...arguments);
+  return embarkAPI.postFolder(...arguments);
 }
 
 export function deleteFile(payload) {
-  return destroy('/file', {params: payload, credentials: payload.credentials});
+  return embarkAPI.deleteFile(payload);
 }
 
 export function authenticate(payload) {
-  return post('/authenticate', {...payload, credentials: payload});
+  return embarkAPI.authenticate(payload);
 }
 
 export function signMessage(payload) {
-  return post('/messages/sign', ...arguments);
+  return embarkAPI.signMessage(payload, ...arguments);
 }
 
 export function verifyMessage(payload) {
-  return post('/messages/verify', ...arguments);
+  return embarkAPI.verifyMessage(payload, ...arguments);
 }
 
 export function startDebug(payload) {
-  return post('/debugger/start', {params: payload, credentials: payload.credentials});
+  return embarkAPI.startDebug(payload);
 }
 
 export function debugJumpBack(payload) {
-  return post('/debugger/jumpBack', {params: payload, credentials: payload.credentials});
+  return embarkAPI.debugJumpBack(payload);
 }
 
 export function debugJumpForward(payload) {
-  return post('/debugger/jumpForward', {params: payload, credentials: payload.credentials});
+  return embarkAPI.debugJumpForward(payload);
 }
 
 export function debugStepOverForward(payload) {
-  return post('/debugger/stepOverForward', {params: payload, credentials: payload.credentials});
+  return embarkAPI.debugStepOverForward(payload);
 }
 
 export function debugStepOverBackward(payload) {
-  return post('/debugger/stepOverBackward', {params: payload, credentials: payload.credentials});
+  return embarkAPI.debugStepOverBackward(payload);
 }
 
 export function debugStepIntoForward(payload) {
-  return post('/debugger/stepIntoForward', {params: payload, credentials: payload.credentials});
+  return embarkAPI.debugStepIntoForward(payload);
 }
 
 export function debugStepIntoBackward(payload) {
-  return post('/debugger/stepIntoBackward', {params: payload, credentials: payload.credentials});
+  return embarkAPI.debugStepIntoBackward(payload);
 }
 
 export function toggleBreakpoint(payload) {
-  return post('/debugger/breakpoint', {params: payload, credentials: payload.credentials});
+  return embarkAPI.toggleBreakpoint(payload);
 }
 
 export function regularTxs(payload) {
-  return get('/regular-txs', {params: payload, credentials: payload.credentials});
+  return embarkAPI.regularTxs(payload);
 }
 
 export function listenToDebugger(credentials) {
-  return websocket(credentials, '/debugger');
+  return embarkAPI.listenToDebugger(credentials, '/debugger');
 }
 
 export function listenToChannel(credentials, channel) {
-  return websocket(credentials, `/communication/listenTo/${channel}`);
+  return embarkAPI.listenToChannel(credentials, `/communication/listenTo/${channel}`);
 }
 
 export function webSocketProcess(credentials, processName) {
-  return websocket(credentials, `/process-logs/${processName}`);
+  return embarkAPI.webSocketProcess(credentials, `/process-logs/${processName}`);
 }
 
 export function webSocketServices(credentials) {
-  return websocket(credentials, `/services`);
+  return embarkAPI.webSocketServices(credentials, `/services`);
 }
 
 export function webSocketContractLogs(credentials) {
-  return websocket(credentials, `/contracts/logs`);
+  return embarkAPI.webSocketContractLogs(credentials, `/contracts/logs`);
 }
 
 export function webSocketContracts(credentials) {
-  return websocket(credentials, `/contracts`);
+  return embarkAPI.webSocketContracts(credentials, `/contracts`);
 }
 
 export function webSocketContractEvents(credentials) {
-  return websocket(credentials, `/blockchain/contracts/event`);
+  return embarkAPI.webSocketContractEvents(credentials, `/blockchain/contracts/event`);
 }
 
 export function webSocketBlockHeader(credentials) {
-  return websocket(credentials, `/blockchain/blockHeader`);
+  return embarkAPI.webSocketBlockHeader(credentials, `/blockchain/blockHeader`);
 }
 
 export function websocketGasOracle(credentials) {
-  return websocket(credentials, `/blockchain/gas/oracle`);
+  return embarkAPI.websocketGasOracle(credentials, `/blockchain/gas/oracle`);
 }
+
