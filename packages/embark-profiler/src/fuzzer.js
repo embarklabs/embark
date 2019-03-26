@@ -1,5 +1,8 @@
 const utils = require('web3-utils');
-const u = require('../../utils/utils.js');
+
+function sample(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
 
 // generates random inputs based on the inputs of an ABI
 class ContractFuzzer {
@@ -64,7 +67,7 @@ class ContractFuzzer {
   }
 
   generateRandomBool() {
-    return u.sample([true, false]);
+    return sample([true, false]);
   }
 
   generateArrayOfType(length, type) {

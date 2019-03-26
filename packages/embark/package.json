@@ -90,6 +90,7 @@
     "embark-reset": "^4.0.0",
     "embark-ui": "^4.0.0",
     "embark-vyper": "^4.0.0",
+    "embark-profiler": "^4.0.0",
     "embarkjs": "^4.0.0",
     "eth-ens-namehash": "2.0.8",
     "ethereumjs-tx": "1.3.7",
