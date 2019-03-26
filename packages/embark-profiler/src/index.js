@@ -2,11 +2,10 @@ const asciiTable = require('ascii-table');
 const GasEstimator = require('./gasEstimator.js');
 
 class Profiler {
-  constructor(embark, options) {
+  constructor(embark, _options) {
     this.embark = embark;
     this.logger = embark.logger;
     this.events = embark.events;
-    this.plugins = options.plugins;
     this.gasEstimator = new GasEstimator(embark);
 
     this.registerConsoleCommand();
