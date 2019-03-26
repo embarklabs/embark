@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React from 'react';
-import logo from '../images/logo-new.svg';
+import logo from '../images/logo-brand-new.png';
 import './Login.css';
 import PageHead from '../components/PageHead';
 
