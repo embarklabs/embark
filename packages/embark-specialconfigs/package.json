@@ -1,6 +1,6 @@
 {
   "name": "embark-specialconfigs",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Adds various configs to embark's contract.js config file",

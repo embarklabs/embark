@@ -1,6 +1,6 @@
 {
   "name": "embark",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Embark is a framework that allows you to easily develop and deploy DApps",
@@ -89,7 +89,7 @@
     "embark-compiler": "^4.0.0",
     "embark-whisper": "^4.0.0",
     "embark-reset": "^4.0.0",
-    "embark-ui": "^4.0.0",
+    "embark-ui": "^4.0.1",
     "embark-vyper": "^4.0.0",
     "embark-profiler": "^4.0.0",
     "embark-specialconfigs": "^4.0.0",

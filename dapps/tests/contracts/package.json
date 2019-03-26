@@ -1,7 +1,7 @@
 {
   "description": "Test DApp for integration testing purposes",
   "devDependencies": {
-    "embark": "^4.0.0",
+    "embark": "^4.0.1",
     "embark-reset": "^4.0.0",
     "embarkjs-connector-web3": "^4.0.0"
   },
@@ -14,5 +14,5 @@
     "reset": "npx embark-reset",
     "test": "npx embark test"
   },
-  "version": "4.0.0"
+  "version": "4.0.1"
 }
