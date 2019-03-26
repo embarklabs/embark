@@ -84,7 +84,7 @@ class TestRunner {
         }
 
         global.embark.events.emit('tests:finished', function() {
-          runCmd(`${self.fs.embarkPath('node_modules/.bin/istanbul')} report --root .embark --format html`,
+          runCmd(`${self.fs.embarkPath('node_modules/.bin/istanbul')} report --root .embark --format html --format lcov`,
             {silent: false, exitOnError: false}, (err) => {
               if (err) {
                 return next(err);
