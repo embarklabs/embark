@@ -24,7 +24,7 @@ const Blocks = ({blocks, changePage, currentPage, numberOfPages}) => (
               </CardTitleIdenticon>
               <Row>
                 <Col>
-                  <strong>Mined On</strong>
+                  <strong>Mined on:</strong>
                   <div>{new Date(block.timestamp * 1000).toLocaleString()}</div>
                 </Col>
                 <Col>

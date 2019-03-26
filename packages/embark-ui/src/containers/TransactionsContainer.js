@@ -74,6 +74,7 @@ class TransactionsContainer extends Component {
       const txsLength = txs.length;
       block.transactions.forEach((tx, idx) => {
         txs[txsLength + idx + offset] = tx;
+        txs[txsLength + idx + offset].timestamp = block.timestamp;
       });
       return txs;
     }, []);
