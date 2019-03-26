@@ -35,7 +35,7 @@ import {searchResult} from "../reducers/selectors";
 
 import SearchBar from './SearchBar';
 
-import logo from '../images/logo-new.svg';
+import logo from '../images/logo-brand-new.png';
 import './Layout.css';
 
 const HEADER_NAV_ITEMS = [
