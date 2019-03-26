@@ -1,6 +1,6 @@
 {
   "name": "embark-webserver",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Webserver for Embark",
