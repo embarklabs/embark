@@ -2,6 +2,7 @@ const http = require('follow-redirects').http;
 const https = require('follow-redirects').https;
 
 const {canonicalHost, defaultCorsHost, defaultHost, dockerHostSwap, isDocker} = require('./host');
+const {findNextPort} = require('./network');
 
 function checkIsAvailable(url, callback) {
   const protocol = url.split(':')[0];
@@ -24,7 +25,8 @@ const Utils = {
   defaultHost,
   dockerHostSwap,
   isDocker,
-  checkIsAvailable
+  checkIsAvailable,
+  findNextPort
 };
 
 module.exports = Utils;
