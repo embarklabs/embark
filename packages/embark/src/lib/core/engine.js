@@ -312,7 +312,7 @@ class Engine {
       wait: options.wait
     });
 
-    this.registerModule('whisper', options);
+    this.registerModulePackage('embark-whisper');
   }
 
   libraryManagerService(_options) {

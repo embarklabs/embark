@@ -4,9 +4,10 @@ import {joinPath, canonicalHost, defaultHost} from 'embark-utils';
 let Web3 = require('web3');
 const {parallel} = require('async');
 const {sendMessage, listenTo} = require('./js/communicationFunctions');
-const constants = require('../../constants');
 const {fromEvent} = require('rxjs');
 const {map, takeUntil} = require('rxjs/operators');
+
+const EMBARK_RESOURCE_ORIGIN = "http://embark";
 
 class Whisper {
   constructor(embark, options) {
@@ -60,7 +61,7 @@ class Whisper {
     // Moreover, Parity reject origins that are not urls so if you try to connect with Origin: "embark" it gives the followin error:
     // << Blocked connection to WebSockets server from untrusted origin: Some("embark") >>
     // The best choice is to use void origin, BUT Geth rejects void origin, so to keep both clients happy we can use http://embark
-    this.web3.setProvider(new Web3.providers.WebsocketProvider(web3Endpoint, {headers: {Origin: constants.embarkResourceOrigin}}));
+    this.web3.setProvider(new Web3.providers.WebsocketProvider(web3Endpoint, {headers: {Origin: EMBARK_RESOURCE_ORIGIN}}));
   }
 
   waitForWeb3Ready(cb) {
@@ -148,7 +149,7 @@ class Whisper {
     const code = `\nEmbarkJS.Messages.setProvider('whisper', ${JSON.stringify(config)});`;
     this.embark.addProviderInit('communication', code, shouldInit);
 
-    const consoleConfig = Object.assign({}, config, {providerOptions: {headers: {Origin: constants.embarkResourceOrigin}}});
+    const consoleConfig = Object.assign({}, config, {providerOptions: {headers: {Origin: EMBARK_RESOURCE_ORIGIN}}});
     const consoleCode = `\nEmbarkJS.Messages.setProvider('whisper', ${JSON.stringify(consoleConfig)});`;
     this.embark.addConsoleProviderInit('communication', consoleCode, shouldInit);
   }
