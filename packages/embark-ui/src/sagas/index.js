@@ -4,7 +4,7 @@ import * as storage from '../services/storage';
 import * as web3Service from '../services/web3';
 import {eventChannel} from 'redux-saga';
 import {all, call, fork, put, takeLatest, takeEvery, take, select, race} from 'redux-saga/effects';
-import {getCredentials, getWeb3} from '../reducers/selectors';
+import {getCredentials, getWeb3, getContracts} from '../reducers/selectors';
 import { DEPLOYMENT_PIPELINES } from '../constants';
 import {searchExplorer} from './searchSaga';
 
@@ -20,6 +20,9 @@ function *doRequest(entity, serviceFn, payload) {
 
 function *doWeb3Request(entity, serviceFn, payload) {
   payload.web3 = yield select(getWeb3);
+  if(payload.type === actions.WEB3_DEPLOY[actions.SUCCESS]) {
+    payload.contract.deployedAddress = payload.receipt.contractAddress;
+  }
   try {
     const result = yield call(serviceFn, payload);
     yield put(entity.success(result, payload));
@@ -37,6 +40,14 @@ function *web3Connect(action) {
     yield put(actions.web3Connect.success(web3));
   } catch(error) {
     yield put(actions.web3Connect.failure(error));
+  }
+}
+
+function *web3ContractsDeployed(action) {
+  const contracts = yield select(getContracts);
+  let i = 0;
+  while(i < contracts.length) {
+    yield put(actions.web3IsDeployed.request(contracts[i++]));
   }
 }
 
@@ -99,6 +110,7 @@ export const explorerSearch = searchExplorer.bind(null, actions.explorerSearch);
 
 export const web3Deploy = doWeb3Request.bind(null, actions.web3Deploy, web3Service.deploy);
 export const web3EstimateGas = doWeb3Request.bind(null, actions.web3EstimateGas, web3Service.estimateGas);
+export const web3IsDeployed = doWeb3Request.bind(null, actions.web3IsDeployed, web3Service.isDeployed);
 
 
 export function *watchFetchTransaction() {
@@ -325,14 +337,23 @@ export function *watchVerifyMessage() {
 
 export function *watchWeb3Deploy() {
   yield takeEvery(actions.WEB3_DEPLOY[actions.REQUEST], web3Deploy);
+  yield takeEvery(actions.WEB3_DEPLOY[actions.SUCCESS], web3IsDeployed);
 }
 
 export function *watchWeb3EstimateGas() {
   yield takeEvery(actions.WEB3_ESTIMAGE_GAS[actions.REQUEST], web3EstimateGas);
 }
 
+export function *watchWeb3IsDeployed() {
+  yield takeEvery(actions.WEB3_IS_DEPLOYED[actions.REQUEST], web3IsDeployed);
+}
+
 export function *watchUpdateDeploymentPipeline() {
   yield takeEvery(actions.UPDATE_DEPLOYMENT_PIPELINE, web3Connect);
+}
+
+export function *watchWeb3Connect() {
+  yield takeEvery(actions.WEB3_CONNECT[actions.SUCCESS], web3ContractsDeployed);
 }
 
 export function *watchFetchEditorTabs() {
@@ -615,7 +636,9 @@ export default function *root() {
     fork(watchVerifyMessage),
     fork(watchWeb3EstimateGas),
     fork(watchWeb3Deploy),
+    fork(watchWeb3IsDeployed),
     fork(watchUpdateDeploymentPipeline),
+    fork(watchWeb3Connect),
     fork(watchListenDebugger),
     fork(watchFetchEditorTabs),
     fork(watchAddEditorTabs),
