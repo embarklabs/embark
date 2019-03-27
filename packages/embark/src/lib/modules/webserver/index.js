@@ -1,7 +1,6 @@
 import {findNextPort} from "../../utils/network";
 
-var utils = require('../../utils/utils.js');
-import {joinPath, canonicalHost} from 'embark-utils';
+import {joinPath, canonicalHost, checkIsAvailable} from 'embark-utils';
 var Server = require('./server.js');
 const opn = require('opn');
 
@@ -87,7 +86,7 @@ class WebServer {
 
     this.events.request("services:register", 'Webserver', function (cb) {
       let url = self.protocol + '://' + canonicalHost(self.host) + ':' + self.port;
-      utils.checkIsAvailable(url, function (available) {
+      checkIsAvailable(url, function (available) {
         let devServer = __('Webserver') + ' (' + url + ')';
         let serverStatus = (available ? 'on' : 'off');
         return cb({name: devServer, status: serverStatus});

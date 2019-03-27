@@ -25,17 +25,6 @@ function recursiveMerge(target, source) {
   return merge.recursive(target, source);
 }
 
-function checkIsAvailable(url, callback) {
-  const protocol = url.split(':')[0];
-  const httpObj = (protocol === 'https') ? https : http;
-
-  httpObj.get(url, function (_res) {
-    callback(true);
-  }).on('error', function (_res) {
-    callback(false);
-  });
-}
-
 function httpGetRequest(httpObj, url, callback) {
   httpObj.get(url, function (res) {
     let body = '';
@@ -643,7 +632,6 @@ module.exports = {
   filesMatchingPattern,
   fileMatchesPattern,
   recursiveMerge,
-  checkIsAvailable,
   httpGet,
   httpsGet,
   httpGetJson,
