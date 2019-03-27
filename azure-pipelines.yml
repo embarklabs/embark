@@ -1,0 +1,40 @@
+strategy:
+  matrix:
+    Node 8 / macOS:
+      nodeVersion: '8.x'
+      imageName: 'macos-10.13'
+      IPFS_URL: 'https://dist.ipfs.io/go-ipfs/v0.4.19/go-ipfs_v0.4.19_darwin-amd64.tar.gz'
+    Node 8 / Linux:
+      nodeVersion: '8.x'
+      imageName: 'ubuntu-16.04'
+      IPFS_URL: 'https://dist.ipfs.io/go-ipfs/v0.4.19/go-ipfs_v0.4.19_linux-amd64.tar.gz'
+    Node 10 / macOS:
+      nodeVersion: '10.x'
+      imageName: 'macos-10.13'
+      IPFS_URL: 'https://dist.ipfs.io/go-ipfs/v0.4.19/go-ipfs_v0.4.19_darwin-amd64.tar.gz'
+    Node 10 / Linux:
+      nodeVersion: '10.x'
+      imageName: 'ubuntu-16.04'
+      IPFS_URL: 'https://dist.ipfs.io/go-ipfs/v0.4.19/go-ipfs_v0.4.19_linux-amd64.tar.gz'
+
+pool:
+  vmImage: $(imageName)
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: $(nodeVersion)
+  displayName: 'Install Node.js'
+- script: |
+    pushd /tmp
+    curl -L "$IPFS_URL" -o ipfs.tar.gz
+    tar -xvzf ipfs.tar.gz
+    export PATH=$(pwd)/go-ipfs:$PATH
+    popd
+
+    ipfs init
+
+    echo "##vso[task.setvariable variable=PATH]$PATH"
+  displayName: 'Install IPFS'
+- script: npm run ci:full
+  displayName: Tests
