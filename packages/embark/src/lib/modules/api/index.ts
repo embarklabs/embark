@@ -3,8 +3,7 @@ import {__} from "i18n";
 import {findNextPort} from "../../utils/network";
 import Server from "./server";
 
-const utils = require("../../utils/utils.js");
-import {dockerHostSwap} from "embark-utils";
+import {dockerHostSwap, checkIsAvailable} from "embark-utils";
 
 const DEFAULT_PORT = 55555;
 const DEFAULT_HOSTNAME = "localhost";
@@ -51,7 +50,7 @@ export default class Api {
 
   private setServiceCheck() {
     this.embark.events.request("services:register", "api", (cb: (options: object) => any) => {
-      utils.checkIsAvailable(this.apiUrl, (isAvailable: boolean) => {
+      checkIsAvailable(this.apiUrl, (isAvailable: boolean) => {
         const devServer = __("Cockpit UI") + " (" + this.apiUrl + ")";
         const serverStatus = (isAvailable ? "on" : "off");
         return cb({name: devServer, status: serverStatus});
