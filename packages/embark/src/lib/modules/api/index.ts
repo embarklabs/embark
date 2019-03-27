@@ -1,10 +1,10 @@
 import {Embark} from "embark";
 import {__} from "i18n";
-import {dockerHostSwap} from "../../utils/host.js";
 import {findNextPort} from "../../utils/network";
 import Server from "./server";
 
 const utils = require("../../utils/utils.js");
+import {dockerHostSwap} from "embark-utils";
 
 const DEFAULT_PORT = 55555;
 const DEFAULT_HOSTNAME = "localhost";
