@@ -1,4 +1,4 @@
-let utils = require('../../utils/utils.js');
+import {joinPath} from 'embark-utils';
 let currentSolcVersion = require('../../../../package.json').dependencies.solc;
 const ProcessLauncher = require('../../core/processes/processLauncher.js');
 const uuid = require('uuid/v1');
@@ -42,7 +42,7 @@ class SolcW {
     }
     this.solcProcess = new ProcessLauncher({
       embark: self.embark,
-      modulePath: utils.joinPath(__dirname, 'solcP.js'),
+      modulePath: joinPath(__dirname, 'solcP.js'),
       logger: self.logger,
       events: self.events,
       providerUrl: self.providerUrl,

@@ -2,6 +2,7 @@ const findUp = require('find-up');
 const fs = require('../core/fs.js');
 const hostedGitInfo = require('hosted-git-info');
 const utils = require('./utils.js');
+import {joinPath} from 'embark-utils';
 const semver = require('semver');
 const {promisify} = require('util');
 const {execSync} = require('child_process');
@@ -46,7 +47,7 @@ class TemplateGenerator {
   }
 
   async downloadAndGenerate(uri, destinationFolder, name) {
-    const fspath = utils.joinPath(destinationFolder, name);
+    const fspath = joinPath(destinationFolder, name);
     this.checkPathExists(fspath);
     let ext;
     try {
@@ -87,7 +88,7 @@ class TemplateGenerator {
         map: file => {
           let fixed_path = file.path.split('/');
           fixed_path.shift(); // remove first directory
-          file.path = utils.joinPath(...fixed_path);
+          file.path = joinPath(...fixed_path);
           return file;
         }
       },
@@ -96,7 +97,7 @@ class TemplateGenerator {
   }
 
   generate(destinationFolder, name) {
-    const fspath = utils.joinPath(destinationFolder, name);
+    const fspath = joinPath(destinationFolder, name);
     this.checkPathExists(fspath);
 
     console.log(__('Initializing Embark template...').green);
@@ -104,7 +105,7 @@ class TemplateGenerator {
     const templatePkg = `embark-dapp-template-${this.templateName}`;
     let templateSpecifier;
     if (this.monorepoRootPath) {
-      templateSpecifier = utils.joinPath(
+      templateSpecifier = joinPath(
         this.monorepoRootPath, 'dapps/templates', this.templateName
       );
     } else {
@@ -113,12 +114,12 @@ class TemplateGenerator {
     }
 
     const tmpDir = require('fs-extra').mkdtempSync(
-      utils.joinPath(require('os').tmpdir(), `${this.templateName}-`)
+      joinPath(require('os').tmpdir(), `${this.templateName}-`)
     );
 
     execSync(`npm pack ${templateSpecifier}`, {cwd: tmpDir, stdio: 'ignore'});
     const packed = utils.filesMatchingPattern(
-      [utils.joinPath(tmpDir, '*.tgz')]
+      [joinPath(tmpDir, '*.tgz')]
     )[0];
 
     this.extract(packed, fspath, () => {
@@ -266,13 +267,13 @@ class TemplateGenerator {
       url,
       browse: decodeURIComponent(hgi.browse()),
       url_fallback,
-      filePath_fallback: fallback && utils.joinPath(".embark/templates/", folder_fallback, "archive.zip"),
+      filePath_fallback: fallback && joinPath(".embark/templates/", folder_fallback, "archive.zip"),
       browse_fallback: fallback && decodeURIComponent(hgi_fallback.browse()),
       embarkVersion
     };
     if (hgi.committish) {
       folder = `${hgi.user}/${hgi.project}/${hgi.committish}`;
-      returnObject.filePath = utils.joinPath(".embark/templates/", folder, "archive.zip");
+      returnObject.filePath = joinPath(".embark/templates/", folder, "archive.zip");
       return returnObject;
     }
     return new Promise((resolve, reject) => {
@@ -287,7 +288,7 @@ class TemplateGenerator {
         }
         folder = `${hgi.user}/${hgi.project}/${body.default_branch}`;
         returnObject.url = returnObject.url.replace('/master', '/' + body.default_branch);
-        returnObject.filePath = utils.joinPath(".embark/templates/", folder, "archive.zip");
+        returnObject.filePath = joinPath(".embark/templates/", folder, "archive.zip");
         resolve(returnObject);
       });
     });

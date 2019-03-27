@@ -1,5 +1,6 @@
 const shellJs = require('shelljs');
 const utils = require('../../utils/utils');
+import {joinPath} from 'embark-utils';
 const ProcessLauncher = require('../../core/processes/processLauncher');
 const constants = require('../../constants');
 const {canonicalHost} = require('../../utils/host');
@@ -95,7 +96,7 @@ class StorageProcessesLauncher {
     if (self.processes[storageName]) {
       return callback(__('Storage process already started'));
     }
-    const filePath = utils.joinPath(__dirname, `../${storageName}/process.js`);
+    const filePath = joinPath(__dirname, `../${storageName}/process.js`);
     this.embark.fs.access(filePath, (err) => {
       if (err) {
         return callback(__('No process file for this storage type (%s) exists. Please start the process locally.', storageName));

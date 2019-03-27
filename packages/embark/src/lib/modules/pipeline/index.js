@@ -1,6 +1,7 @@
 const path = require('path');
 const async = require('async');
 const utils = require('../../utils/utils.js');
+import {joinPath} from 'embark-utils';
 const ProcessLauncher = require('../../core/processes/processLauncher');
 const constants = require('../../constants');
 const WebpackConfigReader = require('../pipeline/webpackConfigReader');
@@ -197,7 +198,7 @@ class Pipeline {
         let strAssets = '';
         if (!self.useDashboard) {
           assets.forEach(key => {
-            strAssets += ('\n  ' + (utils.joinPath(self.buildDir, key)).bold.dim);
+            strAssets += ('\n  ' + (joinPath(self.buildDir, key)).bold.dim);
           });
         }
         const timer = new LongRunningProcessTimer(
@@ -218,7 +219,7 @@ class Pipeline {
         const webpackProcess = new ProcessLauncher({
           embark: self.embark,
           plugins: self.plugins,
-          modulePath: utils.joinPath(__dirname, 'webpackProcess.js'),
+          modulePath: joinPath(__dirname, 'webpackProcess.js'),
           logger: self.logger,
           events: self.events,
           exitCallback: code => {
@@ -261,7 +262,7 @@ class Pipeline {
             const isDir = targetFile.slice(-1) === '/' || targetFile.slice(-1) === '\\' || targetFile.indexOf('.') === -1;
             // if it's not a directory
             if (!isDir) {
-              self.logger.info('Pipeline: '.cyan + __("writing file") + " " + (utils.joinPath(self.buildDir, targetFile)).bold.dim);
+              self.logger.info('Pipeline: '.cyan + __("writing file") + " " + (joinPath(self.buildDir, targetFile)).bold.dim);
             }
             async.map(
               files,
@@ -276,8 +277,8 @@ class Pipeline {
                   self.logger.error('Pipeline: '.cyan + __('errors found while generating') + ' ' + targetFile);
                 }
                 let dir = targetFile.split('/').slice(0, -1).join('/');
-                self.logger.trace(`${'Pipeline:'.cyan} creating dir ` + utils.joinPath(self.buildDir, dir));
-                self.fs.mkdirpSync(utils.joinPath(self.buildDir, dir));
+                self.logger.trace(`${'Pipeline:'.cyan} creating dir ` + joinPath(self.buildDir, dir));
+                self.fs.mkdirpSync(joinPath(self.buildDir, dir));
 
                 // if it's a directory
                 if (isDir) {
@@ -289,9 +290,9 @@ class Pipeline {
 
                   async.each(contentFiles, function (file, eachCb) {
                     let filename = file.path.replace(file.basedir + '/', '');
-                    self.logger.info(`${'Pipeline:'.cyan} writing file ` + (utils.joinPath(self.buildDir, targetDir, filename)).bold.dim);
+                    self.logger.info(`${'Pipeline:'.cyan} writing file ` + (joinPath(self.buildDir, targetDir, filename)).bold.dim);
 
-                    self.fs.copy(file.path, utils.joinPath(self.buildDir, targetDir, filename), {overwrite: true}, eachCb);
+                    self.fs.copy(file.path, joinPath(self.buildDir, targetDir, filename), {overwrite: true}, eachCb);
                   }, cb);
                   return;
                 }
@@ -307,7 +308,7 @@ class Pipeline {
                   targetFile = targetFile.replace('index', 'index-temp');
                   placeholderPage = targetFile;
                 }
-                self.fs.writeFile(utils.joinPath(self.buildDir, targetFile), content, cb);
+                self.fs.writeFile(joinPath(self.buildDir, targetFile), content, cb);
               }
             );
           },
@@ -315,8 +316,8 @@ class Pipeline {
         );
       },
       function removePlaceholderPage(next) {
-        let placeholderFile = utils.joinPath(self.buildDir, placeholderPage);
-        self.fs.access(utils.joinPath(self.buildDir, placeholderPage), (err) => {
+        let placeholderFile = joinPath(self.buildDir, placeholderPage);
+        self.fs.access(joinPath(self.buildDir, placeholderPage), (err) => {
           if (err) return next(); // index-temp doesn't exist, do nothing
 
           // rename index-temp.htm/l to index.htm/l, effectively replacing our placeholder page
@@ -353,7 +354,7 @@ class Pipeline {
           // Used to enable alternate import syntax:
           // e.g. import {Token} from 'Embark/contracts'
           // e.g. import * as Contracts from 'Embark/contracts'
-          let importsHelperFile = self.fs.createWriteStream(utils.joinPath(contractsDir, 'index.js'));
+          let importsHelperFile = self.fs.createWriteStream(joinPath(contractsDir, 'index.js'));
           importsHelperFile.write('module.exports = {\n');
 
           async.eachOf(contracts, (contract, idx, eachCb) => {

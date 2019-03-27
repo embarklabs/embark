@@ -5,11 +5,6 @@ const {canonicalHost} = require('./host');
 
 const balanceRegex = /([0-9]+) ?([a-zA-Z]*)/;
 
-function joinPath() {
-  const path = require('path');
-  return path.join.apply(path.join, arguments);
-}
-
 function dirname() {
   const path = require('path');
   return path.dirname.apply(path.dirname, arguments);
@@ -644,7 +639,6 @@ function urlJoin(url, path) {
 }
 
 module.exports = {
-  joinPath,
   dirname,
   filesMatchingPattern,
   fileMatchesPattern,

@@ -1,6 +1,6 @@
 /* global __ __dirname module require setTimeout */
 
-let utils = require('../../utils/utils.js');
+import {joinPath} from 'embark-utils';
 let Web3 = require('web3');
 const {parallel} = require('async');
 const {sendMessage, listenTo} = require('./js/communicationFunctions');
@@ -123,11 +123,11 @@ class Whisper {
       let code = "";
       if (web3Version[0] === "0") {
         self.isOldWeb3 = true;
-        code += "\n" + self.fs.readFileSync(utils.joinPath(__dirname, 'js', 'embarkjs_old_web3.js')).toString();
+        code += "\n" + self.fs.readFileSync(joinPath(__dirname, 'js', 'embarkjs_old_web3.js')).toString();
         code += "\nEmbarkJS.Messages.registerProvider('whisper', __embarkWhisperOld);";
       } else {
-        code += "\n" + self.fs.readFileSync(utils.joinPath(__dirname, 'js', 'communicationFunctions.js')).toString();
-        code += "\n" + self.fs.readFileSync(utils.joinPath(__dirname, 'js', 'embarkjs.js')).toString();
+        code += "\n" + self.fs.readFileSync(joinPath(__dirname, 'js', 'communicationFunctions.js')).toString();
+        code += "\n" + self.fs.readFileSync(joinPath(__dirname, 'js', 'embarkjs.js')).toString();
         code += "\nEmbarkJS.Messages.registerProvider('whisper', __embarkWhisperNewWeb3);";
       }
       self.embark.addCodeToEmbarkJS(code);
