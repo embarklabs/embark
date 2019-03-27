@@ -1,9 +1,8 @@
 import {Embark} from "embark";
+import {checkIsAvailable, dockerHostSwap, findNextPort} from "embark-utils";
 import {__} from "i18n";
-import {findNextPort} from "../../utils/network";
-import Server from "./server";
 
-import {dockerHostSwap, checkIsAvailable} from "embark-utils";
+import Server from "./server";
 
 const DEFAULT_PORT = 55555;
 const DEFAULT_HOSTNAME = "localhost";
@@ -15,7 +14,7 @@ export default class Api {
 
   constructor(private embark: Embark, private options: any) {
     this.embark.events.emit("status", __("Starting API & Cockpit UI"));
-    findNextPort(DEFAULT_PORT).then((port) => {
+    findNextPort(DEFAULT_PORT).then((port: any) => {
       this.port = port;
       this.apiUrl = `http://${DEFAULT_HOSTNAME}:${this.port}`;
 
