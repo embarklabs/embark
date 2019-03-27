@@ -237,6 +237,10 @@ export function getWeb3Deployments(state) {
   return state.web3.deployments;
 }
 
+export function getWeb3ContractsDeployed(state) {
+  return state.web3.contractsDeployed;
+}
+
 export function getDebuggerInfo(state) {
   return state.debuggerInfo;
 }

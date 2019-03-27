@@ -10,7 +10,14 @@ import {
 import ContractsDeployment from '../components/ContractsDeployment';
 import DataWrapper from "../components/DataWrapper";
 import PageHead from '../components/PageHead';
-import {getContracts, getDeploymentPipeline, getWeb3, getWeb3GasEstimates, getWeb3Deployments} from "../reducers/selectors";
+import {
+  getContracts,
+  getDeploymentPipeline,
+  getWeb3,
+  getWeb3GasEstimates,
+  getWeb3Deployments,
+  getWeb3ContractsDeployed
+} from "../reducers/selectors";
 
 class DeploymentContainer extends Component {
   componentDidMount() {
@@ -29,6 +36,7 @@ class DeploymentContainer extends Component {
                               web3EstimateGas={this.props.web3EstimateGas}
                               web3Deployments={this.props.web3Deployments}
                               web3GasEstimates={this.props.web3GasEstimates}
+                              web3ContractsDeployed={this.props.web3ContractsDeployed}
                               updateDeploymentPipeline={this.props.updateDeploymentPipeline} />
         )} />
       </React.Fragment>
@@ -43,6 +51,7 @@ function mapStateToProps(state) {
     web3: getWeb3(state),
     web3Deployments: getWeb3Deployments(state),
     web3GasEstimates: getWeb3GasEstimates(state),
+    web3ContractsDeployed: getWeb3ContractsDeployed(state),
     error: state.errorMessage,
     loading: state.loading
   };
@@ -60,7 +69,7 @@ DeploymentContainer.propTypes = {
   web3Deploy: PropTypes.func,
   web3Deployments: PropTypes.object,
   web3EstimateGas: PropTypes.func,
-  web3GasEstimates: PropTypes.object,
+  web3GasEstimates: PropTypes.object
 };
 
 export default connect(

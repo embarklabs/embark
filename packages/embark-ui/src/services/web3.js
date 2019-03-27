@@ -30,3 +30,18 @@ export function deploy({web3, contract, args}) {
       .then(() => {});
     });
 }
+
+export function isDeployed({web3, contract}) {
+  if(!contract.deployedAddress) return Promise.resolve(false);
+  return new Promise((resolve, reject) => {
+    web3.eth.getCode(contract.deployedAddress, (err, byteCode) => {
+      if(err) return reject(err);
+      const deployedAddress = contract.deployedAddress.replace("0x", "").toLowerCase();
+      resolve(
+        byteCode === `0x${contract.runtimeBytecode}` || // case when contract has been deployed or redeployed
+        byteCode === `0x73${deployedAddress}${contract.runtimeBytecode.replace("730000000000000000000000000000000000000000", "")}` || // case when library deployed already
+        byteCode === `0x${contract.runtimeBytecode.replace("0000000000000000000000000000000000000000", deployedAddress)}` // case when library has been redeployed
+      );
+    });
+  });
+}

@@ -360,6 +360,13 @@ export const web3EstimateGas = {
   failure: (error, payload) => action(WEB3_ESTIMAGE_GAS[FAILURE], {web3Error: error, contract: payload.contract})
 };
 
+export const WEB3_IS_DEPLOYED = createRequestTypes('WEB3_IS_DEPLOYED');
+export const web3IsDeployed = {
+  request: (contract, args) => action(WEB3_IS_DEPLOYED[REQUEST], {contract, args}),
+  success: (isDeployed, payload) => action(WEB3_IS_DEPLOYED[SUCCESS], {contract: payload.contract, isDeployed}),
+  failure: (error, payload) => action(WEB3_IS_DEPLOYED[FAILURE], {web3Error: error, contract: payload.contract})
+};
+
 export const START_DEBUG = createRequestTypes('START_DEBUG');
 export const startDebug = {
   request: (txHash) => action(START_DEBUG[REQUEST], {txHash}),

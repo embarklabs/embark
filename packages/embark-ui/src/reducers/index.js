@@ -3,7 +3,7 @@ import {REQUEST, SUCCESS, FAILURE, CONTRACT_COMPILE, FILES, LOGOUT, AUTHENTICATE
         FETCH_CREDENTIALS, UPDATE_BASE_ETHER, CHANGE_THEME, FETCH_THEME, EXPLORER_SEARCH, DEBUGGER_INFO,
         SIGN_MESSAGE, VERIFY_MESSAGE, TOGGLE_BREAKPOINT, UPDATE_PREVIEW_URL,
         UPDATE_DEPLOYMENT_PIPELINE, WEB3_CONNECT, WEB3_DEPLOY, WEB3_ESTIMAGE_GAS, FETCH_EDITOR_TABS,
-        SAVE_FILE, SAVE_FOLDER, REMOVE_FILE, DECODED_TRANSACTION} from "../actions";
+        SAVE_FILE, SAVE_FOLDER, REMOVE_FILE, DECODED_TRANSACTION, WEB3_IS_DEPLOYED} from "../actions";
 import {EMBARK_PROCESS_NAME, DARK_THEME, DEPLOYMENT_PIPELINES, DEFAULT_HOST, ELEMENTS_LIMIT} from '../constants';
 
 const BN_FACTOR = 10000;
@@ -353,7 +353,7 @@ function breakpoints(state = {}, action) {
   return state;
 }
 
-function web3(state = {deployments: {}, gasEstimates: {}}, action) {
+function web3(state = {deployments: {}, gasEstimates: {}, contractsDeployed: {}}, action) {
   if (action.type === WEB3_CONNECT[SUCCESS]) {
     return {...state, instance: action.web3};
   } else if (action.type === WEB3_DEPLOY[REQUEST]) {
@@ -368,6 +368,12 @@ function web3(state = {deployments: {}, gasEstimates: {}}, action) {
     return {...state, gasEstimates: {...state['gasEstimates'], [action.contract.className]: {gas: action.gas, running: false, error: null}}};
   } else if (action.type === WEB3_ESTIMAGE_GAS[FAILURE]){
     return {...state, gasEstimates: {...state['gasEstimates'], [action.contract.className]: {error: action.web3Error, running: false}}};
+  } else if (action.type === WEB3_IS_DEPLOYED[REQUEST]) {
+    return {...state, contractsDeployed: {...state['contractsDeployed'], [action.contract.className]: {running: true, error: null}}};
+  } else if (action.type === WEB3_IS_DEPLOYED[SUCCESS]){
+    return {...state, contractsDeployed: {...state['contractsDeployed'], [action.contract.className]: {isDeployed: action.isDeployed, running: false, error: null}}};
+  } else if (action.type === WEB3_IS_DEPLOYED[FAILURE]){
+    return {...state, contractsDeployed: {...state['contractsDeployed'], [action.contract.className]: {error: action.web3Error, running: false}}};
   }
 
   return state

@@ -18,6 +18,7 @@ import classNames from 'classnames';
 import {DEPLOYMENT_PIPELINES} from '../constants';
 import Description from './Description';
 import ContractOverviewContainer from '../containers/ContractOverviewContainer';
+import FontAwesome from 'react-fontawesome';
 
 const orderClassName = (address) => {
   return classNames('mr-4', {
@@ -38,12 +39,14 @@ const NoWeb3 = () => (
   </Row>
 );
 
-const LayoutContract = ({contract, children, cardTitle}) => (
+const LayoutContract = ({contract, children, title = contract.className, isLoading = false, isDeployed = false, deployedTitleSuffix, notDeployedTitleSuffix}) => (
   <Card>
     <CardHeader>
       <CardTitle>
         <span className={orderClassName(contract.address)}>{contract.deployIndex + 1}</span>
-        {cardTitle}
+        {title}&nbsp;
+        {isLoading && <FontAwesome name="spinner" spin />}
+        {!isLoading && <span>{(isDeployed && deployedTitleSuffix) || notDeployedTitleSuffix}</span>}
       </CardTitle>
     </CardHeader>
     <CardBody>
@@ -55,7 +58,11 @@ const LayoutContract = ({contract, children, cardTitle}) => (
 LayoutContract.propTypes = {
   contract: PropTypes.object,
   children: PropTypes.any,
-  cardTitle: PropTypes.any
+  isLoading: PropTypes.bool,
+  isDeployed: PropTypes.bool,
+  title: PropTypes.any,
+  deployedTitleSuffix: PropTypes.string,
+  notDeployedTitleSuffix: PropTypes.string
 };
 
 const DeploymentResult = ({deployment}) => {
@@ -127,13 +134,29 @@ class Web3Contract extends React.Component {
     return this.inputsAsArray().length !== constructor.inputs.length;
   }
 
+  isDeployed() {
+    const contractInStore = this.props.web3ContractsDeployed[this.props.contract.className];
+    return contractInStore && contractInStore.isDeployed;
+  }
+  isCheckingIfDeployed() {
+    const contractInStore = this.props.web3ContractsDeployed[this.props.contract.className];
+    return contractInStore && contractInStore.running;
+  }
+
   render() {
     const abiConstructor = findConstructor(this.props.contract.abiDefinition);
     const argumentsRequired = abiConstructor && abiConstructor.inputs.length > 0;
+    const isDeployed = this.isDeployed();
+    const isCheckingIfDeployed = this.isCheckingIfDeployed();
     return (
-      <LayoutContract contract={this.props.contract} cardTitle={this.props.contract.className}>
+      <LayoutContract contract={this.props.contract} 
+                      isLoading={isCheckingIfDeployed}
+                      isDeployed={isDeployed}
+                      deployedTitleSuffix={`deployed at ${this.props.contract.deployedAddress}`}
+                      notDeployedTitleSuffix={`not deployed`}>
         <Row>
           <Col md={6}>
+            {isDeployed && <p><strong>Contract deployed</strong></p>}
             {argumentsRequired &&
             <React.Fragment>
               <h5>Arguments:</h5>
@@ -178,16 +201,16 @@ Web3Contract.propTypes = {
   web3EstimateGas: PropTypes.func,
   web3Deploy: PropTypes.func,
   gasEstimate: PropTypes.object,
-  deployment: PropTypes.object
+  deployment: PropTypes.object,
+  web3ContractsDeployed: PropTypes.object
 };
 
 const EmbarkContract = ({contract, toggleContractOverview}) => (
-  <LayoutContract contract={contract} cardTitle={
-    <React.Fragment>
-      <a href='#toggleContract' onClick={() => toggleContractOverview(contract)}>{contract.className}</a>&nbsp;
-      <span>{(contract.address && `deployed at ${contract.address}`) || 'not deployed'}</span>
-    </React.Fragment>
-  }>
+  <LayoutContract contract={contract} 
+                  isDeployed={!!contract.address}
+                  deployedTitleSuffix={`deployed at ${contract.address}`}
+                  notDeployedTitleSuffix={'not deployed'}
+                  title={<a href='#toggleContract' onClick={() => toggleContractOverview(contract)}>{contract.className}</a>}>
     {contract.address && <p><strong>Arguments:</strong> {JSON.stringify(contract.args)}</p>}
     {contract.transactionHash &&
     <React.Fragment>
@@ -251,7 +274,7 @@ ContractsHeader.propTypes = {
   updateDeploymentPipeline: PropTypes.func
 };
 
-const Contract = ({web3, contract, deploymentPipeline, web3Deploy, web3EstimateGas, web3Deployments, web3GasEstimates, toggleContractOverview}) => {
+const Contract = ({web3, contract, deploymentPipeline, web3Deploy, web3EstimateGas, web3Deployments, web3GasEstimates, web3ContractsDeployed, toggleContractOverview}) => {
   const deployment = web3Deployments[contract.className];
   const gasEstimate = web3GasEstimates[contract.className];
   switch (deploymentPipeline) {
@@ -263,7 +286,8 @@ const Contract = ({web3, contract, deploymentPipeline, web3Deploy, web3EstimateG
                            gasEstimate={gasEstimate}
                            contract={contract}
                            web3Deploy={web3Deploy}
-                           web3EstimateGas={web3EstimateGas}/>;
+                           web3EstimateGas={web3EstimateGas}
+                           web3ContractsDeployed={web3ContractsDeployed}/>;
     default:
       return <React.Fragment/>;
   }
@@ -280,7 +304,8 @@ Contract.propTypes = {
   web3Deploy: PropTypes.func,
   web3Deployments: PropTypes.object,
   web3EstimateGas: PropTypes.func,
-  web3GasEstimates: PropTypes.object
+  web3GasEstimates: PropTypes.object,
+  web3ContractsDeployed: PropTypes.object
 };
 
 class ContractsDeployment extends React.Component {
@@ -343,7 +368,8 @@ ContractsDeployment.propTypes = {
   web3GasEstimates: PropTypes.object,
   web3: PropTypes.object,
   web3Deploy: PropTypes.func,
-  web3EstimateGas: PropTypes.func
+  web3EstimateGas: PropTypes.func,
+  web3ContractsDeployed: PropTypes.object
 };
 
 export default ContractsDeployment;
