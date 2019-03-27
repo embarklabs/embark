@@ -1,7 +1,7 @@
 let http = require('follow-redirects').http;
 let https = require('follow-redirects').https;
 let toposortGraph = require('./toposort.js');
-const {canonicalHost} = require('./host');
+import {canonicalHost} from 'embark-utils';
 
 const balanceRegex = /([0-9]+) ?([a-zA-Z]*)/;
 

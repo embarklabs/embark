@@ -1,9 +1,8 @@
 const shellJs = require('shelljs');
 const utils = require('../../utils/utils');
-import {joinPath} from 'embark-utils';
+import {joinPath, canonicalHost} from 'embark-utils';
 const ProcessLauncher = require('../../core/processes/processLauncher');
 const constants = require('../../constants');
-const {canonicalHost} = require('../../utils/host');
 const cloneDeep = require('lodash.clonedeep');
 
 let References = {

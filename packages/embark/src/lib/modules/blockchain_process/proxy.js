@@ -2,7 +2,7 @@
 
 require('./httpProxyOverride');
 const Asm = require('stream-json/Assembler');
-const {canonicalHost} = require('../../utils/host');
+import {canonicalHost} from 'embark-utils';
 const constants = require('../../constants.json');
 const {Duplex} = require('stream');
 const http = require('http');
