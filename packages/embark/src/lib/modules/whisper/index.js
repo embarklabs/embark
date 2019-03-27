@@ -1,11 +1,10 @@
 /* global __ __dirname module require setTimeout */
 
-import {joinPath} from 'embark-utils';
+import {joinPath, canonicalHost, defaultHost} from 'embark-utils';
 let Web3 = require('web3');
 const {parallel} = require('async');
 const {sendMessage, listenTo} = require('./js/communicationFunctions');
 const constants = require('../../constants');
-const {canonicalHost, defaultHost} = require('../../utils/host');
 const {fromEvent} = require('rxjs');
 const {map, takeUntil} = require('rxjs/operators');
 

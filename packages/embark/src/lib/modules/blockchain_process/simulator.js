@@ -4,7 +4,7 @@ let shelljs = require('shelljs');
 let Proxy = require('./proxy');
 const Ipc = require('../../core/ipc');
 const constants = require('../../constants.json');
-const {defaultHost, dockerHostSwap} = require('../../utils/host');
+import {defaultHost, dockerHostSwap} from 'embark-utils';
 const fs = require('../../core/fs.js');
 
 class Simulator {

@@ -10,7 +10,7 @@ const DevFunds = require('./dev_funds.js');
 const Proxy = require('./proxy');
 const Ipc = require('../../core/ipc');
 
-const {defaultHost, dockerHostSwap} = require('../../utils/host');
+import {defaultHost, dockerHostSwap} from 'embark-utils';
 const Logger = require('../../core/logger');
 
 // time between IPC connection attempts (in ms)

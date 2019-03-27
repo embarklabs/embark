@@ -5,7 +5,7 @@ const path = require('path');
 const deepEqual = require('deep-equal');
 const web3 = require('web3');
 const constants = require('../constants');
-const {canonicalHost, defaultHost} = require('../utils/host');
+import {canonicalHost, defaultHost} from 'embark-utils';
 const cloneDeep = require('lodash.clonedeep');
 import { replaceZeroAddressShorthand } from '../utils/addressUtils';
 import { unitRegex } from "../utils/regexConstants";

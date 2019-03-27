@@ -1,8 +1,7 @@
 import {findNextPort} from "../../utils/network";
 
-var {canonicalHost} = require('../../utils/host.js');
 var utils = require('../../utils/utils.js');
-import {joinPath} from 'embark-utils';
+import {joinPath, canonicalHost} from 'embark-utils';
 var Server = require('./server.js');
 const opn = require('opn');
 
