@@ -2,7 +2,7 @@
 
 const {delimiter} = require('path');
 const findUp = require('find-up');
-const {joinPath} = require('../utils/utils.js');
+import {joinPath} from 'embark-utils';
 
 function anchoredValue(anchor, value) {
   if (!arguments.length) {

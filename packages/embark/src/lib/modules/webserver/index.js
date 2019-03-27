@@ -2,6 +2,7 @@ import {findNextPort} from "../../utils/network";
 
 var {canonicalHost} = require('../../utils/host.js');
 var utils = require('../../utils/utils.js');
+import {joinPath} from 'embark-utils';
 var Server = require('./server.js');
 const opn = require('opn');
 
@@ -151,7 +152,7 @@ class WebServer {
   buildPlaceholderPage(cb) {
     let html = Templates.embark_building_placeholder({buildingMsg: __('Embark is building, please wait...')});
     this.fs.mkdirpSync(this.buildDir); // create buildDir if it does not exist
-    this.fs.writeFile(utils.joinPath(this.buildDir, 'index.html'), html, cb);
+    this.fs.writeFile(joinPath(this.buildDir, 'index.html'), html, cb);
   }
 
   openBrowser(cb) {

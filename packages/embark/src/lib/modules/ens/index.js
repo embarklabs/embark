@@ -1,3 +1,4 @@
+import {joinPath} from 'embark-utils';
 const utils = require('../../utils/utils.js');
 const namehash = require('eth-ens-namehash');
 const async = require('async');
@@ -380,8 +381,8 @@ class ENS {
           }
           this.events.emit('runcode:register', 'namehash', require('eth-ens-namehash'), () => {
             let code = `\nconst namehash = global.namehash || require('${symlinkDest}');`;
-            code += this.fs.readFileSync(utils.joinPath(__dirname, 'ENSFunctions.js')).toString();
-            code += "\n" + this.fs.readFileSync(utils.joinPath(__dirname, 'embarkjs.js')).toString();
+            code += this.fs.readFileSync(joinPath(__dirname, 'ENSFunctions.js')).toString();
+            code += "\n" + this.fs.readFileSync(joinPath(__dirname, 'embarkjs.js')).toString();
             code += "\nEmbarkJS.Names.registerProvider('ens', __embarkENS);";
 
             this.embark.addCodeToEmbarkJS(code);

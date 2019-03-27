@@ -1,4 +1,5 @@
 const utils = require('../utils/utils.js');
+import {joinPath} from 'embark-utils';
 const constants = require('../constants');
 const fs = require('./fs.js');
 const deepEqual = require('deep-equal');
@@ -117,7 +118,7 @@ Plugin.prototype.pathToFile = function(filename) {
   if (!this.pluginPath) {
     throw new Error('pluginPath not defined for plugin: ' + this.name);
   }
-  return utils.joinPath(this.pluginPath, filename);
+  return joinPath(this.pluginPath, filename);
 };
 
 // TODO: add deploy provider

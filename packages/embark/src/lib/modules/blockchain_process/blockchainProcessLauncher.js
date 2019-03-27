@@ -1,5 +1,5 @@
 const ProcessLauncher = require('../../core/processes/processLauncher');
-const utils = require('../../utils/utils.js');
+import {joinPath} from 'embark-utils';
 const constants = require('../../constants');
 
 class BlockchainProcessLauncher {
@@ -24,7 +24,7 @@ class BlockchainProcessLauncher {
 
     this.blockchainProcess = new ProcessLauncher({
       name: 'blockchain',
-      modulePath: utils.joinPath(__dirname, './blockchainProcess.js'),
+      modulePath: joinPath(__dirname, './blockchainProcess.js'),
       logger: this.logger,
       events: this.events,
       embark: this.embark,
@@ -63,7 +63,7 @@ class BlockchainProcessLauncher {
     this.events.on('logs:ethereum:disable', () => {
       this.blockchainProcess.silent = true;
     });
-    
+
     this.events.on('regularTxs:start', () => {
       this.blockchainProcess.send({action: constants.blockchain.startRegularTxs});
     });

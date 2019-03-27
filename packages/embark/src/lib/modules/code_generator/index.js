@@ -1,5 +1,5 @@
 let async = require('async');
-const utils = require('../../utils/utils.js');
+import {joinPath} from 'embark-utils';
 const constants = require('../../constants');
 const path  = require('path');
 
@@ -178,8 +178,8 @@ class CodeGenerator {
   }
 
   generateArtifact(artifactInput, fileName, dirName, cb = () => {}) {
-    const dir = utils.joinPath(this.embarkConfig.generationDir, dirName);
-    const filePath = utils.joinPath(dir, fileName);
+    const dir = joinPath(this.embarkConfig.generationDir, dirName);
+    const filePath = joinPath(dir, fileName);
     if (typeof artifactInput !== 'string') {
       artifactInput = JSON.stringify(artifactInput, null, 2);
     }
@@ -408,7 +408,7 @@ class CodeGenerator {
           if (err) {
             return next(err);
           }
-          next(null, utils.joinPath(symlinkDir, name).replace(/\\/g, '/'));
+          next(null, joinPath(symlinkDir, name).replace(/\\/g, '/'));
         });
       },
       // Remove old symlink because they are not overwritable

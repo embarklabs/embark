@@ -10,6 +10,7 @@ const os = require('os');
 const parseJson = require('parse-json');
 const path = require('path');
 const utils = require('../../utils/utils');
+import {joinPath} from 'embark-utils';
 require('colors');
 
 function restrictPath(receiver, binding, count, args) {
@@ -102,7 +103,7 @@ function access(...args) { return restrictPath(fs.access, fs, 1, args); }
 function removeSync(...args) { return restrictPath(fs.removeSync, fs, 1, args); }
 
 function anchoredPath(anchor, ...args) {
-  return utils.joinPath(
+  return joinPath(
     anchoredValue(anchor),
     ...args.map(path => path.replace(dappPath(), ''))
   );
@@ -121,7 +122,7 @@ function ipcPath(basename, usePipePathOnWindows = false) {
   if (process.platform === 'win32' && usePipePathOnWindows) {
     return `\\\\.\\pipe\\${basename}`;
   }
-  return utils.joinPath(
+  return joinPath(
     tmpDir(`embark-${utils.sha512(dappPath()).slice(0, 8)}`),
     basename
   );
@@ -131,7 +132,7 @@ function pkgPath(...args) { return anchoredPath(PKG_PATH, ...args); }
 
 function createWriteStream(...args) { return restrictPath(fs.createWriteStream, fs, 1, args); }
 
-function tmpDir(...args) { return utils.joinPath(os.tmpdir(), ...args); }
+function tmpDir(...args) { return joinPath(os.tmpdir(), ...args); }
 
 function copyPreserve(sourceFilePath, targetFilePath) {
   const implementation = (sourceFilePath, targetFilePath) => {
@@ -139,7 +140,7 @@ function copyPreserve(sourceFilePath, targetFilePath) {
     let preserved = targetFilePath;
     while (fs.existsSync(preserved)) {
       const extname = path.extname(targetFilePath);
-      preserved = utils.joinPath(
+      preserved = joinPath(
         path.dirname(targetFilePath),
         `${path.basename(targetFilePath, extname)}.${ext}${extname}`
       );
