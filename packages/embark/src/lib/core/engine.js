@@ -269,7 +269,7 @@ class Engine {
   }
 
   webServerService() {
-    this.registerModule('webserver');
+    this.registerModulePackage('embark-webserver');
   }
 
   storageService(_options) {

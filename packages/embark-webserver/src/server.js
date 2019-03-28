@@ -3,7 +3,6 @@ let serveStatic = require('serve-static');
 import {canonicalHost, defaultHost, dockerHostSwap} from 'embark-utils';
 const expressWebSocket = require('express-ws');
 const express = require('express');
-const fs = require('../../core/fs');
 const https = require('https');
 let path = require('path');
 
@@ -17,6 +16,7 @@ class Server {
     this.hostname = dockerHostSwap(options.host) || defaultHost;
     this.isFirstStart = true;
     this.opened = false;
+    this.fs = options.fs;
     this.openBrowser = options.openBrowser;
     this.logging = false;
     this.enableCatchAll = options.enableCatchAll;
@@ -49,8 +49,8 @@ class Server {
       return callback(null, message);
     }
 
-    const coverage = serveStatic(fs.dappPath('coverage/__root__/'), {'index': ['index.html', 'index.htm']});
-    const coverageStyle = serveStatic(fs.dappPath('coverage/'));
+    const coverage = serveStatic(this.fs.dappPath('coverage/__root__/'), {'index': ['index.html', 'index.htm']});
+    const coverageStyle = serveStatic(this.fs.dappPath('coverage/'));
     const main = serveStatic(this.buildDir, {'index': ['index.html', 'index.htm']});
 
     this.app = express();
@@ -71,7 +71,7 @@ class Server {
     this.app.use('/coverage', coverage);
     this.app.use(coverageStyle);
 
-    this.app.use(express.static(path.join(fs.dappPath(this.dist)), {'index': ['index.html', 'index.htm']}));
+    this.app.use(express.static(path.join(this.fs.dappPath(this.dist)), {'index': ['index.html', 'index.htm']}));
 
     this.app.ws('/', () => {});
     const wss = expressWs.getWss('/');
@@ -91,7 +91,7 @@ class Server {
     if (this.enableCatchAll === true) {
       this.app.get('/*', function(req, res) {
         self.logger.trace('webserver> GET ' + req.path);
-        res.sendFile(path.join(fs.dappPath(self.dist, 'index.html')));
+        res.sendFile(path.join(self.fs.dappPath(self.dist, 'index.html')));
       });
     }
 
