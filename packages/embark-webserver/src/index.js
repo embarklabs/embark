@@ -38,6 +38,7 @@ class WebServer {
       events: this.events,
       host: this.host,
       port: this.port,
+      fs: this.fs,
       openBrowser: this.webServerConfig.openBrowser,
       protocol: this.webServerConfig.protocol,
       certOptions : this.webServerConfig.certOptions
