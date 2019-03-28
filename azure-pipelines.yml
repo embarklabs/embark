@@ -1,40 +1,100 @@
+variables:
+  ipfsVersion: '0.4.19'
+  node8: '^8.12.0'
+  node10: '^10.0.0'
+  pythonVersion: '2.7.x'
+  yarnVersion: '1.12.3'
+
 strategy:
   matrix:
-    Node 8 / macOS:
-      nodeVersion: '8.x'
-      imageName: 'macos-10.13'
-      IPFS_URL: 'https://dist.ipfs.io/go-ipfs/v0.4.19/go-ipfs_v0.4.19_darwin-amd64.tar.gz'
     Node 8 / Linux:
-      nodeVersion: '8.x'
+      nodeVersion: $(node8)
       imageName: 'ubuntu-16.04'
-      IPFS_URL: 'https://dist.ipfs.io/go-ipfs/v0.4.19/go-ipfs_v0.4.19_linux-amd64.tar.gz'
-    Node 10 / macOS:
-      nodeVersion: '10.x'
+    Node 8 / macOS:
+      nodeVersion: $(node8)
       imageName: 'macos-10.13'
-      IPFS_URL: 'https://dist.ipfs.io/go-ipfs/v0.4.19/go-ipfs_v0.4.19_darwin-amd64.tar.gz'
+    Node 8 / Windows:
+      nodeVersion: $(node8)
+      imageName: 'vs2017-win2016'
     Node 10 / Linux:
-      nodeVersion: '10.x'
+      nodeVersion: $(node10)
       imageName: 'ubuntu-16.04'
-      IPFS_URL: 'https://dist.ipfs.io/go-ipfs/v0.4.19/go-ipfs_v0.4.19_linux-amd64.tar.gz'
+    Node 10 / macOS:
+      nodeVersion: $(node10)
+      imageName: 'macos-10.13'
+    Node 10 / Windows:
+      nodeVersion: $(node10)
+      imageName: 'vs2017-win2016'
 
 pool:
   vmImage: $(imageName)
 
 steps:
 - task: NodeTool@0
+  displayName: 'Install Node.js'
   inputs:
     versionSpec: $(nodeVersion)
-  displayName: 'Install Node.js'
-- script: |
-    pushd /tmp
-    curl -L "$IPFS_URL" -o ipfs.tar.gz
-    tar -xvzf ipfs.tar.gz
-    export PATH=$(pwd)/go-ipfs:$PATH
-    popd
 
-    ipfs init
+- task: UsepythonVersion@0
+  displayName: 'Install Python'
+  inputs:
+    architecture: x64
+    versionSpec: $(pythonVersion)
 
-    echo "##vso[task.setvariable variable=PATH]$PATH"
+- bash: |
+    mkdir -p ../Downloads
+    cd ../Downloads
+    ARCHIVE_EXT="tar.gz"
+    if [[ "$AGENT_OS" = "Linux" ]]; then
+      OS="linux"
+    fi
+    if [[ "$AGENT_OS" = "Darwin" ]]; then
+      OS="darwin"
+    fi
+    if [[ "$AGENT_OS" = "Windows_NT" ]]; then
+      OS="windows"
+      ARCHIVE_EXT="zip"
+    fi
+    URL="https://dist.ipfs.io/go-ipfs/v${IPFSVERSION}/go-ipfs_v${IPFSVERSION}_${OS}-amd64.${ARCHIVE_EXT}"
+    curl -L -o "go-ipfs.${ARCHIVE_EXT}" "$URL"
+    if [[ "$AGENT_OS" = "Windows_NT" ]]; then
+      unzip go-ipfs.zip
+    else
+      tar xzvf go-ipfs.tar.gz
+    fi
   displayName: 'Install IPFS'
-- script: npm run ci:full
-  displayName: Tests
+
+- bash: |
+    export PATH="$(cd ../Downloads && pwd)/go-ipfs:${PATH}"
+    ipfs version
+    ipfs init
+  displayName: 'Initialize IPFS'
+
+- bash: |
+    curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version "$YARNVERSION"
+    export PATH="${HOME}/.yarn/bin:${HOME}/.config/yarn/global/node_modules/.bin:${PATH}"
+    yarn --version
+    mkdir -p ../Downloads/Yarn
+  displayName: 'Install Yarn'
+
+- bash: |
+    pushd "$PWD" &>/dev/null
+    cd ../Downloads
+    export PATH="${PWD}/go-ipfs:${PATH}"
+    export PATH="${HOME}/.yarn/bin:${HOME}/.config/yarn/global/node_modules/.bin:${PATH}"
+    yarn config set cache-folder "${PWD}/Yarn" &>/dev/null
+    popd &>/dev/null
+    npm run ci:full
+  condition: ne( variables['Agent.OS'], 'Windows_NT' )
+  displayName: 'Test (*nix)'
+
+- powershell: |
+    pushd
+    cd ..\Downloads
+    $env:PATH="$($PWD.Path)\go-ipfs;$($env:PATH)"
+    $env:PATH="$($env:USERPROFILE)\.yarn\bin;$($env:USERPROFILE)\.config\yarn\global\node_modules\.bin;$($env:PATH)"
+    yarn config set cache-folder "$($PWD.Path)\Yarn" | out-null
+    popd
+    npm run ci:full
+  condition: eq( variables['Agent.OS'], 'Windows_NT' )
+  displayName: 'Test (Windows)'
