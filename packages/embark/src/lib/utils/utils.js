@@ -365,11 +365,6 @@ function sha512(arg) {
   return hash.update(arg).digest('hex');
 }
 
-function soliditySha3(arg) {
-  const Web3 = require('web3');
-  return Web3.utils.soliditySha3(arg);
-}
-
 function normalizeInput(input) {
   if(typeof input === 'string') return input;
   let args = Object.values(input);
@@ -635,7 +630,6 @@ module.exports = {
   toChecksumAddress,
   sha3,
   sha512,
-  soliditySha3,
   normalizeInput,
   buildUrl,
   buildUrlFromConfig,

@@ -33,6 +33,11 @@ function hashTo32ByteHexString(hash) {
   return '0x' + multihash.toHexString(digest);
 }
 
+function soliditySha3(arg) {
+  const Web3 = require('web3');
+  return Web3.utils.soliditySha3(arg);
+}
+
 const Utils = {
   joinPath: function() {
     const path = require('path');
@@ -46,7 +51,8 @@ const Utils = {
   checkIsAvailable,
   findNextPort,
   hashTo32ByteHexString,
-  isHex
+  isHex,
+  soliditySha3
 };
 
 module.exports = Utils;
