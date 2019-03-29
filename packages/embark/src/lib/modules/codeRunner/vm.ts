@@ -41,6 +41,7 @@ class VM {
         "@babel/runtime-corejs2/core-js/object/assign",
         "eth-ens-namehash",
         "swarm-api",
+        "embarkjs-whisper",
         "rxjs",
         "rxjs/operators",
       ],
