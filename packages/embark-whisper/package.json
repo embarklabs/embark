@@ -49,6 +49,7 @@
     "@babel/runtime-corejs2": "7.3.1",
     "async": "2.6.1",
     "embark-utils": "^4.0.0",
+    "embarkjs-whisper": "^4.0.0",
     "rxjs": "6.4.0"
   },
   "devDependencies": {

@@ -98,9 +98,7 @@ function listenTo(options) {
   return obsSub;
 }
 
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    sendMessage,
-    listenTo
-  };
-}
+export default {
+  sendMessage,
+  listenTo
+};

@@ -1,7 +1,12 @@
 /* global EmbarkJS Web3 listenTo sendMessage */
+let Web3 = require('web3');
+const {sendMessage, listenTo} = require('./communicationFunctions').default;
 
 // for the whisper v5 and web3.js 1.0
 let __embarkWhisperNewWeb3 = {};
+
+__embarkWhisperNewWeb3.real_sendMessage = sendMessage;
+__embarkWhisperNewWeb3.real_listenTo = listenTo;
 
 __embarkWhisperNewWeb3.setProvider = function(options) {
   const self = this;
@@ -49,7 +54,7 @@ __embarkWhisperNewWeb3.sendMessage = function(options) {
     data
   });
 
-  sendMessage(options, (err) => {
+  this.real_sendMessage(options, (err) => {
     if (err) {
       throw new Error(err);
     }
@@ -64,7 +69,7 @@ __embarkWhisperNewWeb3.listenTo = function (options) {
     subscribe: this.web3.shh.subscribe,
     symKeyID: options.symKeyID || this.symKeyID
   });
-  return listenTo(options);
+  return this.real_listenTo(options);
 };
 
 __embarkWhisperNewWeb3.getWhisperVersion = function(cb) {
@@ -107,3 +112,5 @@ __embarkWhisperNewWeb3.isAvailable = function() {
     }
   });
 };
+
+export default __embarkWhisperNewWeb3;
