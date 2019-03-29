@@ -6,10 +6,9 @@ const reverseAddrSuffix = '.addr.reverse';
 const ENSFunctions = require('./ENSFunctions');
 const secureSend = embarkJsUtils.secureSend;
 import {ZERO_ADDRESS} from '../../utils/addressUtils';
-import {ens} from '../../constants';
 import EmbarkJS from 'embarkjs';
 
-const ENS_WHITELIST = ens.whitelist;
+const ENS_WHITELIST = ["eth", "xyz"];
 const NOT_REGISTERED_ERROR = 'Name not yet registered';
 
 const MAINNET_ID = '1';
