@@ -22,7 +22,7 @@ import {OPERATIONS} from '../constants';
 import { TextEditorToolbarTabs } from '../components/TextEditorToolbar';
 import PageHead from '../components/PageHead';
 
-import './EditorContainer.css';
+import './EditorContainer.scss';
 
 class EditorContainer extends React.Component {
   constructor(props) {
@@ -207,19 +207,20 @@ class EditorContainer extends React.Component {
       <React.Fragment>
         <PageHead title="Editor" description="Create, read, edit, and delete your dApp's files. Interact and debug your dApp's contracts. Live preview your dApp when changes are saved." />
         <Row noGutters
-            className={classnames('h-100', 'editor--grid', {'aside-opened': this.state.currentAsideTab.label})}>
+            className={classnames('editor--grid', 'editor--toolbar', {'aside-opened': this.state.currentAsideTab.label})}>
           <Col xs={12}>
             <TextEditorToolbarContainer toggleAsideTab={(newTab) => this.toggleAsideTab(newTab)}
                                         isContract={this.isContract()}
                                         currentFile={this.state.currentFile}
                                         activeTab={this.state.currentAsideTab}/>
           </Col>
-
+        </Row>
+        <Row noGutters
+             className={classnames('h-100', 'editor--grid', {'aside-opened': this.state.currentAsideTab.label})}>
           <Col className="border-right">
             <FileExplorerContainer showHiddenFiles={this.state.showHiddenFiles}
                                   toggleShowHiddenFiles={() => this.toggleShowHiddenFiles()}/>
           </Col>
-
           {this.renderTextEditor()}
 
           {this.renderAside()}

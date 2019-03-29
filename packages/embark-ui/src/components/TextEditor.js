@@ -3,6 +3,8 @@ import * as monaco from 'monaco-editor';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from 'react-fontawesome';
 import classNames from 'classnames';
+import {SortableContainer, SortableElement} from 'react-sortable-hoc';
+import arrayMove from 'array-move';
 
 import {DARK_THEME, LIGHT_THEME} from '../constants';
 
@@ -25,10 +27,43 @@ const initMonaco = (value, theme) => {
   });
 };
 
+const Tab = SortableElement(({file, onTabClick, onTabClose, theme}) => {
+  return (
+    <li key={file.name} className={classNames("tab", "p-2", "pl-3", "pr-3", "list-inline-item", "mr-0", "border-right", "border-bottom", 
+    {
+      'border-light': LIGHT_THEME === theme,
+      'border-dark': DARK_THEME === theme
+    },
+    {
+      'active': file.active
+    })}>
+      <a
+        href="#switch-file"
+        onClick={(e) => onTabClick(e, file)}
+        className="mr-3 text-muted d-inline-block align-middle"
+      >
+        {file.name}
+      </a>
+      <FontAwesomeIcon style={{cursor: 'pointer'}} onClick={() => onTabClose(file)} className="px-0 align-middle" name="close"/>
+    </li>
+  );
+});
+
+const Tabs = SortableContainer(({files, onTabClick, onTabClose, theme}) => {
+  return (
+    <ul className="list-inline m-0 p-0">
+      {files && files.map((file, index) => (
+        <Tab key={file.name} index={index} file={file} onTabClick={onTabClick} onTabClose={onTabClose} theme={theme} />
+      ))}
+    </ul>
+  );
+});
+
 class TextEditor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {decorations: []};
+    this.tabsContainerRef = React.createRef();
   }
   componentDidMount() {
     initMonaco();
@@ -142,36 +177,33 @@ class TextEditor extends React.Component {
     this.handleResize();
   }
 
-  addEditorTabs(e, file) {
-    e.preventDefault(); this.props.addEditorTabs(file);
+  addEditorTabs = (e, file) => {
+    e.preventDefault(); 
+    this.props.addEditorTabs(file);
   }
 
-  renderTabs() {
-    return (
-      <ul className="list-inline m-0 p-0">
-        {this.props.editorTabs.map(file => (
-          <li key={file.name} className={classNames("p-2", "list-inline-item", "mr-0", "border-right", {
-            'bg-white': file.active && LIGHT_THEME === this.props.theme,
-            'bg-black': file.active && DARK_THEME === this.props.theme
-          })}>
-            <a
-              href="#switch-tab"
-              onClick={(e) => this.addEditorTabs(e, file)}
-              className="p-2 text-muted"
-            >
-              {file.name}
-            </a>
-            <FontAwesomeIcon style={{cursor: 'pointer'}} onClick={() => this.props.removeEditorTabs(file)} className="px-1" name="close"/>
-          </li>
-        ))}
-      </ul>
-    );
+  onSortEnd = ({oldIndex, newIndex}) => {
+    const editorTabs = arrayMove(this.props.editorTabs, oldIndex, newIndex);
+    this.props.updateEditorTabs(editorTabs);
   }
 
   render() {
     return (
-      <div className="h-100 d-flex flex-column">
-        {this.renderTabs()}
+      <div className="h-100 d-flex flex-column tabs-container" ref={this.tabsContainerRef}>
+        <Tabs
+          axis="xy"
+          lockToContainerEdges={true}
+          lockOffset={0}
+          disableAutoScroll={true}
+          helperClass={"dragging"}
+          helperContainer={this.tabsContainerRef.current}
+          files={this.props.editorTabs}
+          theme={this.props.theme}
+          onTabClick={this.addEditorTabs}
+          onTabClose={this.props.removeEditorTabs}
+          onSortEnd={this.onSortEnd}
+          distance={3}
+          />
         <div style={{height: '100%'}} id={EDITOR_ID}/>
       </div>
     );
@@ -187,7 +219,8 @@ TextEditor.propTypes = {
   editorTabs: PropTypes.array,
   removeEditorTabs: PropTypes.func,
   addEditorTabs: PropTypes.func,
-  theme: PropTypes.string
+  theme: PropTypes.string,
+  updateEditorTabs: PropTypes.func
 };
 
 export default TextEditor;

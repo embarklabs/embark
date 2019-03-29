@@ -6,7 +6,8 @@ import {
   addEditorTabs as addEditorTabsAction,
   fetchEditorTabs as fetchEditorTabsAction,
   removeEditorTabs as removeEditorTabsAction,
-  toggleBreakpoint
+  toggleBreakpoint,
+  updateEditorTabs as updateEditorTabsAction
 } from '../actions';
 
 import {getBreakpointsByFilename, getDebuggerLine, getEditorTabs, getTheme} from '../reducers/selectors';
@@ -25,6 +26,7 @@ class TextEditorContainer extends React.Component {
                   editorTabs={this.props.editorTabs}
                   removeEditorTabs={this.props.removeEditorTabs}
                   addEditorTabs={this.props.addEditorTabs}
+                  updateEditorTabs={this.props.updateEditorTabs}
                   debuggerLine={this.props.debuggerLine}
                   onFileContentChange={this.props.onFileContentChange}
                   theme={this.props.theme}
@@ -52,6 +54,7 @@ TextEditorContainer.propTypes = {
   fetchEditorTabs: PropTypes.func,
   removeEditorTabs: PropTypes.func,
   addEditorTabs: PropTypes.func,
+  updateEditorTabs: PropTypes.func,
   debuggerLine: PropTypes.number,
   editorTabs: PropTypes.array,
   theme: PropTypes.string
@@ -63,7 +66,8 @@ export default connect(
     toggleBreakpoint: toggleBreakpoint.request,
     fetchEditorTabs: fetchEditorTabsAction.request,
     removeEditorTabs: removeEditorTabsAction.request,
-    addEditorTabs: addEditorTabsAction.request
+    addEditorTabs: addEditorTabsAction.request,
+    updateEditorTabs: updateEditorTabsAction.request
   },
   null,
   { withRef: true }
