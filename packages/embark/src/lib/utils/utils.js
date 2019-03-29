@@ -320,24 +320,6 @@ function hexToNumber(hex) {
   return Web3.utils.hexToNumber(hex);
 }
 
-function isHex(hex) {
-  const Web3 = require('web3');
-  return Web3.utils.isHex(hex);
-}
-
-function hashTo32ByteHexString(hash) {
-  if (isHex(hash)) {
-    if (!hash.startsWith('0x')) {
-      hash = '0x' + hash;
-    }
-    return hash;
-  }
-  const multihash = require('multihashes');
-  let buf = multihash.fromB58String(hash);
-  let digest = multihash.decode(buf).digest;
-  return '0x' + multihash.toHexString(digest);
-}
-
 function isValidDomain(v) {
   // from: https://github.com/miguelmota/is-valid-domain
   if (typeof v !== 'string') return false;
@@ -638,8 +620,6 @@ module.exports = {
   httpsGetJson,
   getJson,
   hexToNumber,
-  isHex,
-  hashTo32ByteHexString,
   isValidDomain,
   pingEndpoint,
   decodeParams,

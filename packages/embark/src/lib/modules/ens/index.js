@@ -1,4 +1,4 @@
-import {joinPath} from 'embark-utils';
+import {joinPath, hashTo32ByteHexString} from 'embark-utils';
 const utils = require('../../utils/utils.js');
 const namehash = require('eth-ens-namehash');
 const async = require('async');
@@ -184,7 +184,7 @@ class ENS {
     let hashedName = namehash.hash(name);
     let contentHash;
     try {
-      contentHash = utils.hashTo32ByteHexString(storageHash);
+      contentHash = hashTo32ByteHexString(storageHash);
     } catch (e) {
       return cb(__('Invalid IPFS hash'));
     }

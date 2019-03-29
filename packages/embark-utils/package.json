@@ -46,7 +46,8 @@
   },
   "dependencies": {
     "@babel/runtime-corejs2": "7.3.1",
-    "follow-redirects": "1.5.7"
+    "follow-redirects": "1.5.7",
+    "multihashes": "0.4.14"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
