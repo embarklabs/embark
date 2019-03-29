@@ -15,6 +15,24 @@ function checkIsAvailable(url, callback) {
   });
 }
 
+function isHex(hex) {
+  const Web3 = require('web3');
+  return Web3.utils.isHex(hex);
+}
+
+function hashTo32ByteHexString(hash) {
+  if (isHex(hash)) {
+    if (!hash.startsWith('0x')) {
+      hash = '0x' + hash;
+    }
+    return hash;
+  }
+  const multihash = require('multihashes');
+  let buf = multihash.fromB58String(hash);
+  let digest = multihash.decode(buf).digest;
+  return '0x' + multihash.toHexString(digest);
+}
+
 const Utils = {
   joinPath: function() {
     const path = require('path');
@@ -26,7 +44,9 @@ const Utils = {
   dockerHostSwap,
   isDocker,
   checkIsAvailable,
-  findNextPort
+  findNextPort,
+  hashTo32ByteHexString,
+  isHex
 };
 
 module.exports = Utils;
