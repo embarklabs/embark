@@ -20,11 +20,6 @@ function fileMatchesPattern(patterns, intendedPath) {
   return globule.isMatch(patterns, intendedPath);
 }
 
-function recursiveMerge(target, source) {
-  const merge = require('merge');
-  return merge.recursive(target, source);
-}
-
 function httpGetRequest(httpObj, url, callback) {
   httpObj.get(url, function (res) {
     let body = '';
@@ -608,7 +603,6 @@ module.exports = {
   dirname,
   filesMatchingPattern,
   fileMatchesPattern,
-  recursiveMerge,
   httpGet,
   httpsGet,
   httpGetJson,
