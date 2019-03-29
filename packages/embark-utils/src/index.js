@@ -4,6 +4,8 @@ const https = require('follow-redirects').https;
 const {canonicalHost, defaultCorsHost, defaultHost, dockerHostSwap, isDocker} = require('./host');
 const {findNextPort} = require('./network');
 
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+
 function checkIsAvailable(url, callback) {
   const protocol = url.split(':')[0];
   const httpObj = (protocol === 'https') ? https : http;
@@ -58,7 +60,8 @@ const Utils = {
   hashTo32ByteHexString,
   isHex,
   soliditySha3,
-  recursiveMerge
+  recursiveMerge,
+  ZERO_ADDRESS
 };
 
 module.exports = Utils;

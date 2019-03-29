@@ -1,11 +1,10 @@
-import {joinPath, hashTo32ByteHexString, soliditySha3, recursiveMerge} from 'embark-utils';
+import {joinPath, hashTo32ByteHexString, soliditySha3, recursiveMerge, ZERO_ADDRESS} from 'embark-utils';
 const namehash = require('eth-ens-namehash');
 const async = require('async');
 const embarkJsUtils = require('embarkjs').Utils;
 const reverseAddrSuffix = '.addr.reverse';
 const ENSFunctions = require('./ENSFunctions');
 const secureSend = embarkJsUtils.secureSend;
-import {ZERO_ADDRESS} from '../../utils/addressUtils';
 import EmbarkJS from 'embarkjs';
 
 const ENS_WHITELIST = ["eth", "xyz"];
