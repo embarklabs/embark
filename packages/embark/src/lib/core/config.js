@@ -5,7 +5,7 @@ const path = require('path');
 const deepEqual = require('deep-equal');
 const web3 = require('web3');
 const constants = require('../constants');
-import {canonicalHost, defaultHost} from 'embark-utils';
+import {canonicalHost, defaultHost, recursiveMerge} from 'embark-utils';
 const cloneDeep = require('lodash.clonedeep');
 import { replaceZeroAddressShorthand } from '../utils/addressUtils';
 import { unitRegex } from "../utils/regexConstants";
@@ -219,10 +219,10 @@ Config.prototype._mergeConfig = function(configFilePath, defaultConfig, env, ena
   } else {
     config = fs.readJSONSync(configFilePath + '.json');
   }
-  let configObject = utils.recursiveMerge(defaultConfig, config);
+  let configObject = recursiveMerge(defaultConfig, config);
 
   if (env) {
-    return utils.recursiveMerge(configObject['default'] || {}, configObject[env]);
+    return recursiveMerge(configObject['default'] || {}, configObject[env]);
   }
   return configObject;
 };
@@ -315,7 +315,7 @@ Config.prototype.loadContractsConfigFile = function() {
     "web3": "1.0.0-beta",
     "solc": "0.5.0"
   };
-  var versions = utils.recursiveMerge(defaultVersions, this.embarkConfig.versions || {});
+  var versions = recursiveMerge(defaultVersions, this.embarkConfig.versions || {});
 
   var configObject = {
     "default": {
@@ -337,7 +337,7 @@ Config.prototype.loadContractsConfigFile = function() {
 
   var contractsConfigs = this.plugins.getPluginsProperty('contractsConfig', 'contractsConfigs');
   contractsConfigs.forEach(function(pluginConfig) {
-    configObject = utils.recursiveMerge(configObject, pluginConfig);
+    configObject = recursiveMerge(configObject, pluginConfig);
   });
 
   let configFilePath = this._getFileOrObject(this.configDir, 'contracts', 'contracts');
@@ -413,7 +413,7 @@ Config.prototype.loadExternalContractsFiles = function() {
 };
 
 Config.prototype.loadStorageConfigFile = function() {
-  var versions = utils.recursiveMerge({"ipfs-api": "17.2.4"}, this.embarkConfig.versions || {});
+  var versions = recursiveMerge({"ipfs-api": "17.2.4"}, this.embarkConfig.versions || {});
 
   var configObject = {
     "default": {
@@ -505,7 +505,7 @@ Config.prototype.loadWebServerConfigFile = function() {
   }
   if (this.webServerConfig) {
     // cli flags to `embark run` should override configFile and defaults (configObject)
-    this.webServerConfig = utils.recursiveMerge(webServerConfig, this.webServerConfig);
+    this.webServerConfig = recursiveMerge(webServerConfig, this.webServerConfig);
   } else {
     this.webServerConfig = webServerConfig;
   }
@@ -524,7 +524,7 @@ Config.prototype.loadEmbarkConfigFile = function() {
     "generationDir": "embarkArtifacts"
   };
 
-  this.embarkConfig = utils.recursiveMerge(configObject, this.embarkConfig);
+  this.embarkConfig = recursiveMerge(configObject, this.embarkConfig);
 
   const contracts = this.embarkConfig.contracts;
   // determine contract 'root' directories
@@ -561,8 +561,8 @@ Config.prototype.loadPipelineConfigFile = function() {
 
   if (pipelineConfigPath && fs.existsSync(pipelineConfigPath)) {
     delete require.cache[pipelineConfigPath];
-    pipelineConfig = utils.recursiveMerge(
-      utils.recursiveMerge(true, pipelineConfig),
+    pipelineConfig = recursiveMerge(
+      recursiveMerge(true, pipelineConfig),
       require(pipelineConfigPath)
     );
   }

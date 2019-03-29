@@ -1,4 +1,5 @@
 import { red } from "colors";
+import { recursiveMerge } from "embark-utils";
 import { performance, PerformanceObserver } from "perf_hooks";
 import prettyMs from "pretty-ms";
 
@@ -43,7 +44,7 @@ export default class LongRunningProcessTimer {
     private options: LongRunningProcessTimerOptions = LongRunningProcessTimer.DEFAULT_OPTIONS,
 
   ) {
-    this.options = utils.recursiveMerge(LongRunningProcessTimer.DEFAULT_OPTIONS, this.options);
+    this.options = recursiveMerge(LongRunningProcessTimer.DEFAULT_OPTIONS, this.options);
 
     // define mark and measurement names
     this.startMark = "downloadStart" + this.packageName + this.version;
