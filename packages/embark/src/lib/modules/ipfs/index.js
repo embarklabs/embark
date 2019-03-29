@@ -1,6 +1,5 @@
 const UploadIPFS = require('./upload.js');
 const utils = require('../../utils/utils.js');
-import {joinPath} from 'embark-utils';
 const IpfsApi = require('ipfs-api');
 // TODO: not great, breaks module isolation
 const StorageProcessesLauncher = require('../storage/storageProcessesLauncher');
@@ -105,16 +104,16 @@ class IPFS {
         return this.logger.error(err.message || err);
       }
       this.events.request('code-generator:ready', () => {
-        this.events.request('code-generator:symlink:generate', location, 'ipfs-api', (err, symlinkDest) => {
+        this.events.request('code-generator:symlink:generate', location, 'ipfs-api', (err, _symlinkDest) => {
           if (err) {
             this.logger.error(__('Error creating a symlink to IPFS API'));
             return this.logger.error(err.message || err);
           }
 
           this.events.emit('runcode:register', 'IpfsApi', require('ipfs-api'), () => {
-            let code = `\nconst IpfsApi = global.IpfsApi || require('${symlinkDest}');`;
-            code += "\n" + this.fs.readFileSync(joinPath(__dirname, 'embarkjs.js')).toString();
-            code += "\nEmbarkJS.Storage.registerProvider('ipfs', __embarkIPFS);";
+            let code = "";
+            code += "\nconst __embarkIPFS = require('embarkjs-ipfs')";
+            code += "\nEmbarkJS.Storage.registerProvider('ipfs', __embarkIPFS.default || __embarkIPFS);";
 
             this.embark.addCodeToEmbarkJS(code);
             this.embark.addConsoleProviderInit("storage", code, (storageConfig) => storageConfig.enabled);

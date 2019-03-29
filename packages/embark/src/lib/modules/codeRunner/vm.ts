@@ -42,6 +42,8 @@ class VM {
         "eth-ens-namehash",
         "swarm-api",
         "embarkjs-whisper",
+        "ipfs-api",
+        "embarkjs-ipfs",
         "rxjs",
         "rxjs/operators",
       ],

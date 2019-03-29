@@ -1,4 +1,4 @@
-/*global IpfsApi*/
+const IpfsApi = require('ipfs-api');
 
 const __embarkIPFS = {};
 
@@ -146,3 +146,5 @@ __embarkIPFS.register = function(addr, callback) {
       callback(addr + " could not be registered");
     });
 };
+
+export default __embarkIPFS;
