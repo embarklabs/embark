@@ -1,4 +1,4 @@
-import {joinPath, hashTo32ByteHexString} from 'embark-utils';
+import {joinPath, hashTo32ByteHexString, soliditySha3} from 'embark-utils';
 const utils = require('../../utils/utils.js');
 const namehash = require('eth-ens-namehash');
 const async = require('async');
@@ -287,7 +287,7 @@ class ENS {
         return callback(error);
       }
 
-      const reverseNode = utils.soliditySha3(address.toLowerCase().substr(2) + reverseAddrSuffix);
+      const reverseNode = soliditySha3(address.toLowerCase().substr(2) + reverseAddrSuffix);
       this.registerSubDomain(defaultAccount, subDomainName, reverseNode, address, secureSend, callback);
     });
   }
@@ -338,7 +338,7 @@ class ENS {
       (req, res) => {
         async.waterfall([
           function (callback) {
-            ENSFunctions.lookupAddress(req.query.address, self.ensContract, utils, createInternalResolverContract.bind(self), callback);
+            ENSFunctions.lookupAddress(req.query.address, self.ensContract, soliditySha3, createInternalResolverContract.bind(self), callback);
           }
         ], function (error, name) {
           if (error) {
@@ -498,7 +498,7 @@ class ENS {
           const web3 = result[3];
 
           const rootNode = namehash.hash(self.registration.rootDomain);
-          var reverseNode = web3.utils.soliditySha3(web3.eth.defaultAccount.toLowerCase().substr(2) + reverseAddrSuffix);
+          var reverseNode = soliditySha3(web3.eth.defaultAccount.toLowerCase().substr(2) + reverseAddrSuffix);
           const owner = await self.ensContract.methods.owner(rootNode).call();
 
           if (owner === web3.eth.defaultAccount) {
