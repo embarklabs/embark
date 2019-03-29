@@ -38,6 +38,11 @@ function soliditySha3(arg) {
   return Web3.utils.soliditySha3(arg);
 }
 
+function recursiveMerge(target, source) {
+  const merge = require('merge');
+  return merge.recursive(target, source);
+}
+
 const Utils = {
   joinPath: function() {
     const path = require('path');
@@ -52,7 +57,8 @@ const Utils = {
   findNextPort,
   hashTo32ByteHexString,
   isHex,
-  soliditySha3
+  soliditySha3,
+  recursiveMerge
 };
 
 module.exports = Utils;

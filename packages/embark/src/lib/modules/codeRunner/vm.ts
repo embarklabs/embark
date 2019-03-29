@@ -2,9 +2,11 @@ import { each } from "async";
 import { Callback, Logger } from "embark";
 import { NodeVM, NodeVMOptions } from "vm2";
 
+import { recursiveMerge } from "embark-utils";
+
 const fs = require("./fs");
 const path = require("path");
-const { recursiveMerge, isEs6Module, compact } = require("../../utils/utils");
+const { isEs6Module, compact } = require("../../utils/utils");
 
 const WEB3_INVALID_RESPONSE_ERROR: string = "Invalid JSON RPC response";
 
