@@ -1,6 +1,5 @@
 const UploadSwarm = require('./upload.js');
 const utils = require('../../utils/utils.js');
-import {joinPath} from 'embark-utils';
 const SwarmAPI = require('swarm-api');
 // TODO: not great, breaks module isolation
 const StorageProcessesLauncher = require('../storage/storageProcessesLauncher');
@@ -91,8 +90,8 @@ class Swarm {
 
   addProviderToEmbarkJS() {
     let code = "";
-    code += "\n" + this.fs.readFileSync(joinPath(__dirname, 'embarkjs.js')).toString();
-    code += "\nEmbarkJS.Storage.registerProvider('swarm', __embarkSwarm);";
+    code += "\nconst __embarkSwarm = require('embarkjs-swarm')";
+    code += "\nEmbarkJS.Storage.registerProvider('swarm', __embarkSwarm.default || __embarkSwarm);";
 
     this.embark.addCodeToEmbarkJS(code);
   }

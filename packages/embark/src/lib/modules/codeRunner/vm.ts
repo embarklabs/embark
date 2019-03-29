@@ -44,6 +44,7 @@ class VM {
         "embarkjs-whisper",
         "ipfs-api",
         "embarkjs-ipfs",
+        "embarkjs-swarm",
         "rxjs",
         "rxjs/operators",
       ],
