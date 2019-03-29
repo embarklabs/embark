@@ -449,6 +449,13 @@ export const removeEditorTabs = {
   failure: () => action(REMOVE_EDITOR_TABS[FAILURE])
 };
 
+export const UPDATE_EDITOR_TABS = createRequestTypes('UPDATE_EDITOR_TABS');
+export const updateEditorTabs = {
+  request: (editorTabs) => action(UPDATE_EDITOR_TABS[REQUEST], {editorTabs}),
+  success: () => action(UPDATE_EDITOR_TABS[SUCCESS]),
+  failure: () => action(UPDATE_EDITOR_TABS[FAILURE])
+};
+
 export const INIT_REGULAR_TXS = createRequestTypes('INIT_REGULAR_TXS');
 export const initRegularTxs = {
   request: () => action(INIT_REGULAR_TXS[REQUEST], {mode: 'on'}),

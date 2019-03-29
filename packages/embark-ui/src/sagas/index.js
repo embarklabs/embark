@@ -105,6 +105,7 @@ export const verifyMessage = doRequest.bind(null, actions.verifyMessage, api.ver
 export const fetchEditorTabs = doRequest.bind(null, actions.fetchEditorTabs, storage.fetchEditorTabs);
 export const addEditorTabs = doRequest.bind(null, actions.addEditorTabs, storage.addEditorTabs);
 export const removeEditorTabs = doRequest.bind(null, actions.removeEditorTabs, storage.removeEditorTabs);
+export const updateEditorTabs = doRequest.bind(null, actions.updateEditorTabs, storage.updateEditorTabs);
 
 export const explorerSearch = searchExplorer.bind(null, actions.explorerSearch);
 
@@ -366,6 +367,11 @@ export function *watchAddEditorTabs() {
 
 export function *watchRemoveEditorTabs() {
   yield takeEvery(actions.REMOVE_EDITOR_TABS[actions.REQUEST], removeEditorTabs);
+}
+
+export function *watchUpdateEditorTabs() {
+  yield takeEvery(actions.UPDATE_EDITOR_TABS[actions.REQUEST], updateEditorTabs);
+  yield takeEvery(actions.UPDATE_EDITOR_TABS[actions.SUCCESS], fetchEditorTabs);
 }
 
 export function *watchAddEditorTabsSuccess() {
@@ -643,6 +649,7 @@ export default function *root() {
     fork(watchFetchEditorTabs),
     fork(watchAddEditorTabs),
     fork(watchRemoveEditorTabs),
+    fork(watchUpdateEditorTabs),
     fork(watchAddEditorTabsSuccess),
     fork(watchRemoveEditorTabsSuccess),
     fork(watchPostFileSuccess),

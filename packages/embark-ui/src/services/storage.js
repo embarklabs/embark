@@ -1,4 +1,8 @@
 /* global localStorage */
+export async function updateEditorTabs({editorTabs}) {
+  localStorage.setItem('editorTabs', JSON.stringify(editorTabs));
+  return {response: {data: JSON.parse(localStorage.getItem('editorTabs'))}};
+}
 
 export async function addEditorTabs({file}) {
   const editorTabs = findOrCreateEditorTabs();
@@ -30,7 +34,7 @@ export async function fetchEditorTabs() {
 export async function removeEditorTabs({file}) {
   const editorTabs = findOrCreateEditorTabs();
   const filtered = editorTabs.filter(value => value.name !== file.name);
-  if (file.active && filtered.length) {
+  if (filtered.length && (file.active || !filtered.some((tab) => tab.active))) {
     filtered[0].active = true;
   }
   localStorage.setItem('editorTabs', JSON.stringify(filtered));

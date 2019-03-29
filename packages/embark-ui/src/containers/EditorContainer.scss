@@ -1,0 +1,118 @@
+@import "../scss/variables/colors";
+
+.editor--grid {
+  margin-left: -30px !important;
+  margin-right: -30px !important;
+}
+
+.editor--toolbar {
+  margin-top: -1.5rem !important;
+}
+
+.hidden-toggle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  height: 40px;
+}
+
+.text-editor__debuggerLine {
+  opacity: 0.4;
+  background-color: #20a8d8;
+}
+
+.text-editor-container {
+  overflow: hidden;
+}
+
+.editor-aside {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .editor-aside {
+    position: relative;
+  }
+}
+
+.resizer-handle {
+  width: 15px !important;
+}
+
+.resize-handle-horizontal {
+  height: 15px !important;
+}
+
+.tabs-container {
+  ul {
+    background-color: $gray-100;
+  }
+
+  .tab {
+    background-color: $gray-200; /*#d2d2d2;*/
+    border-bottom-color: transparent !important;
+    margin-bottom: 1px;
+
+    /* disable text highlighting while dragging */
+    a {
+      -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+      -khtml-user-select: none; /* Konqueror HTML */
+      -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* Internet Explorer/Edge */
+      user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+    }
+
+    a:hover {
+      text-decoration: none;
+    }
+
+    &:hover {
+      background-color: $gray-300;/*#b6b6b6;*/
+    }
+
+    &.active {
+      background-color: $gray-500; /*#949494;*/
+      border-bottom-color: $blue /* #3e2df4 */ !important;
+
+      a {
+        color: $white !important;
+      }
+    }
+
+    &.dragging .fa-close {
+      width: 10px;
+    }
+
+    &.border-right:not(:last-child) {
+      border-right: 1px solid $gray-100 /*#e4e5e6*/ !important;
+    }
+  }
+
+  .dark-theme & {
+    ul {
+      background-color: $gray-900; /*#212429;*/
+    }
+
+    .tab {
+      background-color: $gray-800;/*#2d3239;*/
+
+      &.active {
+        background-color: lighten($gray-base, 2%); /*#1c1c1c;*/
+        border-bottom-color: $green /*#05a720*/ !important;
+      }
+
+      &.border-right:not(:last-child) {
+        border-right: 1px solid $gray-900 /*#212328*/ !important;
+      }
+    }
+  }
+}
