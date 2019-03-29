@@ -117,3 +117,5 @@ __embarkSwarm.resolve = function (_name, callback) {
 __embarkSwarm.register = function (_addr, callback) {
   callback(NotAvailable);
 };
+
+export default __embarkSwarm;

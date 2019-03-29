@@ -97,6 +97,7 @@
     "embark-webserver": "^4.0.0",
     "embarkjs": "^4.0.0",
     "embarkjs-ipfs": "^4.0.0",
+    "embarkjs-swarm": "^4.0.0",
     "eth-ens-namehash": "2.0.8",
     "ethereumjs-tx": "1.3.7",
     "ethereumjs-util": "6.0.0",
