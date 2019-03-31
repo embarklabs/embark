@@ -1,6 +1,6 @@
 let async = require('async');
 const cloneDeep = require('clone-deep');
-
+const path = require('path');
 const utils = require('../../utils/utils.js');
 const constants = require('../../constants');
 
@@ -260,7 +260,6 @@ class ContractsManager {
 
   build(done, _useContractFiles = true, resetContracts = true) {
     let self = this;
-    self.contracts = {};
 
     if(resetContracts) self.contracts = {};
     async.waterfall([
@@ -287,7 +286,7 @@ class ContractsManager {
           self.contractsFiles &&
           self.contractsFiles.every(contractFile =>
             Object.values(self.compiledContracts).find(contract =>
-              contract.originalFilename === contractFile.filename
+              contract.originalFilename === path.normalize(contractFile.originalPath)
             )
           );
         callback(null, allContractsCompiled);
