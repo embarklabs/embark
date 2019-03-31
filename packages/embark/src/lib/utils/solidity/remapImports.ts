@@ -36,8 +36,7 @@ const prepareInitialFile = async (file: File) => {
     return await file.content;
   }
 
-  let to = file.path.includes(fs.dappPath(".embark")) ? file.path : fs.dappPath(".embark", file.path);
-  to = path.normalize(to);
+  const to = file.path.includes(fs.dappPath(".embark")) ? path.normalize(file.path) : fs.dappPath(".embark", file.path);
   if (file.type === Types.dappFile || file.type === Types.custom) {
     if (file.resolver) {
       fs.mkdirpSync(path.dirname(to));
@@ -69,11 +68,12 @@ const buildNewFile = (file: File, importPath: string) => {
     return new File({ externalUrl: importPath, type: Types.http });
   }
 
+  importPath = path.normalize(importPath);
+
   // imported from node_modules, ie import "@aragon/os/contracts/acl/ACL.sol"
-  if (isNodeModule(importPath)) {
+  if (isUnresolvedNodeModule(importPath)) {
     from = resolve(importPath);
     to = importPath.includes(fs.dappPath(".embark")) ? importPath : fs.dappPath(".embark", "node_modules", importPath);
-    to = path.normalize(to);
     if (from !== to) {
       fs.copySync(from, to);
     }
@@ -82,19 +82,29 @@ const buildNewFile = (file: File, importPath: string) => {
 
   // started with node_modules then further imports local paths in it's own repo/directory
   if (isEmbarkNodeModule(file.path)) {
-    from = path.join(path.dirname(file.path.replace(".embark", ".")), importPath);
-    to = path.normalize(path.join(path.dirname(file.path), importPath));
-    fs.copySync(from, to);
+    if (path.isAbsolute(importPath)) {
+      from = path.normalize(importPath.replace(".embark", "."));
+      to = importPath;
+    } else {
+      from = path.join(path.dirname(file.path.replace(".embark", ".")), importPath);
+      to = path.join(path.dirname(file.path), importPath);
+      fs.copySync(from, to);
+    }
     return new File({ path: to, type: Types.dappFile, originalPath: from });
   }
 
   // local import, ie import "../path/to/contract" or "./path/to/contract"
-  from = path.join(path.dirname(file.path.replace(".embark", ".")), importPath);
-  if (importPath === "remix_tests.sol") {
-    to = path.normalize(fs.dappPath(".embark", "remix_tests.sol"));
+  if (path.isAbsolute(importPath)) {
+    from = path.normalize(importPath.replace(".embark", "."));
+    to = importPath;
   } else {
-    to = path.normalize(path.join(path.dirname(file.path), importPath));
-    fs.copySync(from, to);
+    from = path.join(path.dirname(file.path.replace(".embark", ".")), importPath);
+    if (importPath === "remix_tests.sol") {
+      to = fs.dappPath(".embark", "remix_tests.sol");
+    } else {
+      to = path.join(path.dirname(file.path), importPath);
+      fs.copySync(from, to);
+    }
   }
   return new File({ path: to, type: Types.dappFile, originalPath: from });
 };
@@ -131,8 +141,11 @@ const isEmbarkNodeModule = (input: string) => {
   return path.normalize(input).includes(path.normalize(".embark/node_modules"));
 };
 
-const isNodeModule = (input: string) => {
-  return !(input.startsWith(".") || input.startsWith("..")) && resolve(input);
+const isUnresolvedNodeModule = (input: string) => {
+  if (path.isAbsolute(input)) {
+    return false;
+  }
+  return !(input.startsWith(".") || input.startsWith("..")) && !!resolve(input);
 };
 
 const isHttp = (input: string) => {
