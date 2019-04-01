@@ -134,6 +134,13 @@ class TransactionDebugger {
       });
     });
 
+    this.embark.registerAPICall("post", "/embark-api/debugger/stop", (req: any, res: any) => {
+      this.apiDebugger.unload();
+      this.apiDebugger.events.emit("stop");
+      this.apiDebugger = false;
+      res.send({ok: true});
+    });
+
     this.embark.registerAPICall("post", "/embark-api/debugger/JumpBack", (req: any, res: any) => {
       this.apiDebugger.stepJumpNextBreakpoint();
       res.send({ok: true});
@@ -172,6 +179,8 @@ class TransactionDebugger {
 
     this.embark.registerAPICall("ws", "/embark-api/debugger", (ws: any, req: any) => {
       if (!this.apiDebugger) { return; }
+
+      this.apiDebugger.events.on("stop", () => { ws.close(1000); });
 
       this.apiDebugger.events.on("source", (lineColumnPos: any, rawLocation: any) => {
         this.debuggerData.sources = {lineColumnPos, rawLocation};

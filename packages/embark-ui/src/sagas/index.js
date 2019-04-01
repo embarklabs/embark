@@ -83,6 +83,7 @@ export const postFolder = doRequest.bind(null, actions.saveFolder, api.postFolde
 export const deleteFile = doRequest.bind(null, actions.removeFile, api.deleteFile);
 export const fetchEthGas = doRequest.bind(null, actions.gasOracle, api.getEthGasAPI);
 export const startDebug = doRequest.bind(null, actions.startDebug, api.startDebug);
+export const stopDebug = doRequest.bind(null, actions.stopDebug, api.stopDebug);
 export const debugJumpBack = doRequest.bind(null, actions.debugJumpBack, api.debugJumpBack);
 export const debugJumpForward = doRequest.bind(null, actions.debugJumpForward, api.debugJumpForward);
 export const debugStepOverForward = doRequest.bind(null, actions.debugStepOverForward, api.debugStepOverForward);
@@ -266,6 +267,10 @@ export function *watchFetchEthGas() {
 
 export function *watchStartDebug() {
   yield takeEvery(actions.START_DEBUG[actions.REQUEST], startDebug);
+}
+
+export function *watchStopDebug() {
+  yield takeEvery(actions.STOP_DEBUG[actions.REQUEST], stopDebug);
 }
 
 export function *watchDebugJumpBack() {
@@ -624,6 +629,7 @@ export default function *root() {
     fork(watchFetchCredentials),
     fork(watchFetchEthGas),
     fork(watchStartDebug),
+    fork(watchStopDebug),
     fork(watchDebugJumpBack),
     fork(watchDebugJumpForward),
     fork(watchDebugStepOverForward),

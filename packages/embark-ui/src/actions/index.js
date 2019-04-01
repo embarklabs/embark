@@ -374,6 +374,13 @@ export const startDebug = {
   failure: (error) => action(START_DEBUG[FAILURE], {error})
 };
 
+export const STOP_DEBUG = createRequestTypes('STOP_DEBUG');
+export const stopDebug = {
+  request: () => action(STOP_DEBUG[REQUEST]),
+  success: () => action(STOP_DEBUG[SUCCESS]),
+  failure: (error) => action(STOP_DEBUG[FAILURE], {error})
+};
+
 export const DEBUG_JUMP_BACK = createRequestTypes('DEBUG_JUMP_BACK');
 export const debugJumpBack = {
   request: () => action(DEBUG_JUMP_BACK[REQUEST], {}),
