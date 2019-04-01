@@ -3,7 +3,6 @@
 [![npm](https://img.shields.io/npm/dm/embark.svg)](https://npmjs.com/package/embark)
 [![Gitter](https://img.shields.io/gitter/room/embark-framework/Lobby.svg)](https://gitter.im/embark-framework/Lobby)
 [![Build Status](https://dev.azure.com/embark-framework/Embark/_apis/build/status/embark-framework.embark?branchName=master)](https://dev.azure.com/embark-framework/Embark/_build/latest?definitionId=1&branchName=master)
-[![Build status](https://ci.appveyor.com/api/projects/status/nnq38x2hi3q11o44/branch/master?svg=true)](https://ci.appveyor.com/project/iurimatias/embark/branch/master)
 ![Open PRs](https://img.shields.io/github/issues-pr-raw/embark-framework/embark.svg)
 ![Closed PRs](https://img.shields.io/github/issues-pr-closed-raw/embark-framework/embark.svg)
 ![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/y/embark-framework/embark.svg)
