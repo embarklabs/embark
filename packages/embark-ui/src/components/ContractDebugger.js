@@ -8,6 +8,7 @@ import {
 } from "reactstrap";
 import ReactJson from 'react-json-view';
 import DebugButton from './DebugButton';
+import {withRouter} from "react-router-dom";
 
 class ContractDebugger extends Component {
   constructor(props) {
@@ -50,6 +51,11 @@ class ContractDebugger extends Component {
     this.props.debugStepIntoBackward();
   }
 
+  stopDebug(_e) {
+    this.props.stopDebug();
+    this.props.history.push('/editor');
+  }
+
   canGoPrevious() {
     const { possibleSteps } = this.props.debuggerInfo;
     return possibleSteps && possibleSteps.canGoPrevious;
@@ -79,6 +85,7 @@ class ContractDebugger extends Component {
             <Button color="light" className={"btn-square debugButton stepOverForward" + (this.canGoNext() ? '' : ' disabled')} alt="step over" onClick={(e) => this.debugStepOverForward(e)}></Button>
             <Button color="light" className="btn-square debugButton stepIntoForward" alt="step into" onClick={(e) => this.debugStepIntoForward(e)}></Button>
             <Button color="light" className="btn-square debugButton stepIntoBack" alt="step out" onClick={(e) => this.debugStepIntoBackward(e)}></Button>
+            <Button color="light" className="btn-square debugButton stop" alt="stop" onClick={(e) => this.stopDebug(e)}></Button>
           </Col>
         </Row>
         <Row>
@@ -97,14 +104,16 @@ class ContractDebugger extends Component {
 ContractDebugger.propTypes = {
   debuggerTransactionHash: PropTypes.string,
   startDebug: PropTypes.func,
+  stopDebug: PropTypes.func,
   debugJumpBack: PropTypes.func,
   debugJumpForward: PropTypes.func,
   debugStepOverForward: PropTypes.func,
   debugStepOverBackward: PropTypes.func,
   debugStepIntoForward: PropTypes.func,
   debugStepIntoBackward: PropTypes.func,
-  debuggerInfo: PropTypes.object
+  debuggerInfo: PropTypes.object,
+  history: PropTypes.object
 };
 
-export default ContractDebugger;
+export default withRouter(ContractDebugger);
 

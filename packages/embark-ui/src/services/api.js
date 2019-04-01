@@ -138,6 +138,10 @@ export function startDebug(payload) {
   return embarkAPI.startDebug(payload);
 }
 
+export function stopDebug(payload) {
+  return embarkAPI.stopDebug(payload);
+}
+
 export function debugJumpBack(payload) {
   return embarkAPI.debugJumpBack(payload);
 }

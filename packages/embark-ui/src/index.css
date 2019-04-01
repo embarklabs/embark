@@ -74,6 +74,11 @@
   background-image: url(images/icons.png);
 }
 
+.stop {
+  background-position: -196px 48px;
+  background-image: url(images/icons.png);
+}
+
 .no-underline {
   text-decoration: none;
 }

@@ -208,6 +208,10 @@ class EmbarkAPI {
     return post('/debugger/start', {params: payload, credentials: payload.credentials});
   }
 
+  stopDebug(payload) {
+    return post('/debugger/stop', {params: payload, credentials: payload.credentials});
+  }
+
   debugJumpBack(payload) {
     return post('/debugger/jumpBack', {params: payload, credentials: payload.credentials});
   }
