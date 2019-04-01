@@ -420,6 +420,7 @@ export function *initBlockHeader() {
       channel.close();
       return;
     }
+    yield put({type: actions.ACCOUNTS[actions.REQUEST]});
     yield put({type: actions.BLOCKS[actions.REQUEST]});
     yield put({type: actions.BLOCKS_FULL[actions.REQUEST], txObjects: true, txReceipts: true});
     yield put({type: actions.TRANSACTIONS[actions.REQUEST]});

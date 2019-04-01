@@ -17,7 +17,7 @@ const ExplorerDashboardLayout = () => (
     <div className="explorer-overview">
       <Row>
         <Col>
-          <AccountsContainer overridePageHead={false} />
+          <AccountsContainer numAccountsToDisplay={2} overridePageHead={false} />
         </Col>
       </Row>
       <Row>

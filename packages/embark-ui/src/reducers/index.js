@@ -41,6 +41,9 @@ const entitiesDefaultState = {
 };
 
 const sorter = {
+  accounts: function(a, b) {
+    return a.index - b.index;
+  },
   blocks: function(a, b) {
     return b.number - a.number;
   },
