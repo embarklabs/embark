@@ -31,7 +31,9 @@ class Pipeline {
     });
 
     this.events.setCommandHandler('pipeline:build', (options, callback) => {
-      if(!this.pipelineConfig.enabled) return callback();
+      if(!this.pipelineConfig.enabled) {
+        return this.buildContracts([], callback);
+      }
       this.build(options, callback);
     });
     this.events.setCommandHandler('pipeline:build:contracts', callback => this.buildContracts([], callback));
