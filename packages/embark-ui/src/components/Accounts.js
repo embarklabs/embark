@@ -6,6 +6,23 @@ import Pagination from './Pagination';
 
 import CardTitleIdenticon from './CardTitleIdenticon';
 
+function displayTruncatedBalance (balance) {
+  const maxDisplayLength = 20;
+  if (balance.toString().length <= maxDisplayLength) {
+    return balance;
+  }
+  const [whole, fraction] = balance.toString().split('.');
+  if (whole.length >= maxDisplayLength) {
+    balance = '9'.repeat(maxDisplayLength - 1) + '+';
+  } else if (whole.length >= maxDisplayLength - 2) {
+    balance = whole + '+';
+  } else {
+    balance = whole + '.' +
+      fraction.slice(0, maxDisplayLength - (whole.length + 2)) + '+';
+  }
+  return balance;
+}
+
 const Accounts = ({accounts, changePage, currentPage, numberOfPages}) => (
   <Row>
     <Col>
@@ -23,7 +40,7 @@ const Accounts = ({accounts, changePage, currentPage, numberOfPages}) => (
               <Row>
                 <Col>
                   <strong>Balance</strong>
-                  <div>{account.balance} Ether</div>
+                  <div>{displayTruncatedBalance(account.balance)} Ether</div>
                 </Col>
                 <Col>
                   <strong>Tx Count</strong>
