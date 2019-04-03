@@ -75,7 +75,7 @@ class TransactionDebugger {
       if (err) { return cb([]); }
       for (const variable of Object.keys(globals || {})) {
         const value: any = globals[variable];
-        if (line.indexOf(variable) >= 0) {
+        if (line && line.indexOf(variable) >= 0) {
           foundVars.push({name: variable, value});
         }
       }
@@ -83,7 +83,7 @@ class TransactionDebugger {
       for (const variable of Object.keys(knownVars.locals || {})) {
         const value: any = knownVars.locals[variable];
         const variableName: string = variable.split(" ")[0];
-        if (line.indexOf(variableName) >= 0) {
+        if (line && line.indexOf(variableName) >= 0) {
           foundVars.push({name: variable, value});
         }
       }
@@ -91,7 +91,7 @@ class TransactionDebugger {
       for (const variable of Object.keys(knownVars.contract || {})) {
         const value: any = knownVars.contract[variable];
         const variableName: string = variable.split(" ")[0];
-        if (line.indexOf(variableName) >= 0) {
+        if (line && line.indexOf(variableName) >= 0) {
           foundVars.push({name: variable, value});
         }
       }
