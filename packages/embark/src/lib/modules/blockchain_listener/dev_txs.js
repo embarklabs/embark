@@ -42,7 +42,7 @@ class DevTxs {
 
   sendTx(cb) {
     // Send TXs only in dev networks
-    if (this.networkId !== 1337 && this.networkId !== 17) {
+    if (this.networkId !== constants.blockchain.networkIds.development && this.networkId !== constants.blockchain.networkIds.development_parity) {
       return;
     }
     this.web3.eth.sendTransaction({value: "0", to: this.web3.eth.defaultAccount, from: this.web3.eth.defaultAccount}).then(cb);
@@ -52,7 +52,7 @@ class DevTxs {
     const self = this;
     self.web3.eth.net.getId().then((networkId) => {
       self.networkId = networkId;
-      if (self.networkId !== 1337) {
+      if (self.networkId !== constants.blockchain.networkIds.development && this.networkId !== constants.blockchain.networkIds.development_parity) {
         return;
       }
       this.regularTxsInt = setInterval(function() { self.sendTx(() => {}); }, 1500);
