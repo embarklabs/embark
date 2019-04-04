@@ -50,6 +50,14 @@ const sorter = {
   blocksFull: function(a, b) {
     return b.number - a.number;
   },
+  contracts: function (a, b) {
+    const aName = a.className || '';
+    const bName = b.className || '';
+    if (!(aName || bName)) return 0;
+    if (!aName) return 1;
+    if (!bName) return -1;
+    return aName < bName ? -1 : aName > bName ? 1 : 0
+  },
   transactions: function(a, b) {
     return ((BN_FACTOR * b.blockNumber) + b.transactionIndex) - ((BN_FACTOR * a.blockNumber) + a.transactionIndex);
   },
