@@ -17,6 +17,7 @@ const Transaction = require('ethereumjs-tx');
 const ethUtil = require('ethereumjs-util');
 
 const METHODS_TO_MODIFY = {accounts: 'eth_accounts'};
+const REQUEST_TIMEOUT = 5000;
 
 const modifyPayload = (toModifyPayloads, body, accounts) => {
   switch (toModifyPayloads[body.id]) {
@@ -58,9 +59,10 @@ class Proxy {
     this.receipts = {};
     this.transactions = {};
     this.toModifyPayloads = {};
+    this.timeouts = {};
   }
 
-  trackRequest(req) {
+  trackRequest({ws, data: req }) {
     if (!req) return;
     try {
       if (Object.values(METHODS_TO_MODIFY).includes(req.method)) {
@@ -94,6 +96,30 @@ class Proxy {
           this.receipts[req.id] = this.transactions[req.params[0]].commListId;
         }
       }
+      // track the response to see if it responded to
+      const timeout = {
+        txSent: false
+      };
+      timeout.timeoutId = setInterval(() => {
+        
+        if(timeout.txSent) {
+          const message = `[${ws?"WS":"HTTP"} Request ID ${req.id}]: Original tx still not sent, considering it abandoned.`;
+          this.consoleLog(`====================================================================\n${message}\n====================================================================`);
+          this.logToFile(message);
+
+          // clear original interval
+          // do not delete the timeout in case the response comes far in the future
+          clearInterval(timeout.timeoutId);
+        }
+        else{
+          const message = `[${ws?"WS":"HTTP"} Request ID ${req.id}]: No response received after ${REQUEST_TIMEOUT/1000}s. Sending another tx to "push" it through...\nRequest ID ${req.id} details: ${JSON.stringify(req)}`;
+          this.consoleLog(`===================================================================\n${message}\n===================================================================`);
+          this.logToFile(message);
+          this.sendDevTx();
+          timeout.txSent = true;
+        }
+      }, REQUEST_TIMEOUT);
+      this.timeouts[req.id] = timeout;
     } catch (e) {
       console.error(
         `Proxy: Error tracking request message '${JSON.stringify(req)}'`,
@@ -107,7 +133,7 @@ class Proxy {
       if (this.commList[res.id]) {
         if (this.commList[res.id].kind === 'call') {
           this.commList[res.id].result = res.result;
-          this.sendIpcMessage(this.commList[res.id]);
+          this.contractLog(this.commList[res.id]);
           delete this.commList[res.id];
         } else {
           this.commList[res.id].transactionHash = res.result;
@@ -123,10 +149,25 @@ class Proxy {
         this.commList[this.receipts[res.id]].blockNumber = res.result.blockNumber;
         this.commList[this.receipts[res.id]].gasUsed = res.result.gasUsed;
         this.commList[this.receipts[res.id]].status = res.result.status;
-        this.sendIpcMessage(this.commList[this.receipts[res.id]]);
+        this.contractLog(this.commList[this.receipts[res.id]]);
         delete this.transactions[this.commList[this.receipts[res.id]].transactionHash];
         delete this.commList[this.receipts[res.id]];
         delete this.receipts[res.id];
+      }
+      // clear any tracked requests
+      const timeout = this.timeouts[res.id];
+      if(timeout) {
+        // if a dev tx had already been sent in an attempt to "push" this tx through,
+        // record that information.
+        if(timeout.txSent) {
+          const message = `✔ [Request ID ${res.id}]: Request successfully pushed through!\n` +
+          `Response details: ${JSON.stringify(res)}`;
+          this.consoleLog(`====================================================================\n${message}\n====================================================================`);
+          this.logToFile(message);
+        }
+        // clear the interval and delete the timeout to effectively stop tracking it
+        clearInterval(timeout.timeoutId);
+        delete this.timeouts[res.id];
       }
     } catch (e) {
       console.error(
@@ -135,16 +176,32 @@ class Proxy {
     }
   }
 
-  sendIpcMessage(message) {
+  sendIpcMessage(type, message) {
     if (this.ipc.connected && !this.ipc.connecting) {
-      this.ipc.request('log', message);
+      this.ipc.request(type, message);
     } else {
       this.ipc.connecting = true;
       this.ipc.connect(() => {
         this.ipc.connecting = false;
-        this.ipc.request('log', message);
+        this.ipc.request(type, message);
       });
     }
+  }
+
+  contractLog(message) {
+    this.sendIpcMessage('log', message);
+  }
+
+  consoleLog(message) {
+    this.sendIpcMessage('blockchain:proxy:log', message);
+  }
+
+  logToFile(message) {
+    this.sendIpcMessage('blockchain:proxy:logtofile', message);
+  }
+
+  sendDevTx() {
+    this.sendIpcMessage('blockchain:devtxs:sendtx');
   }
 
   async serve(host, port, ws, origin, accounts, certOptions={}) {
@@ -225,7 +282,7 @@ class Proxy {
         Asm.connectTo(
           pump(req, jsonParser())
         ).on('done', ({current: object}) => {
-          this.trackRequest(object);
+          this.trackRequest({ ws: false, data: object});
         });
       }
 
@@ -241,11 +298,11 @@ class Proxy {
 
       proxy.on('open', (_proxySocket) => { /* messages FROM the target */ });
 
-      proxy.on('proxyReqWs', (_proxyReq, _req, socket) => {
+      proxy.on('proxyReqWs', (_proxyReq, req, socket) => {
         // messages TO the target
         pump(socket, new WsParser(0, false)).on('frame', ({data: buffer}) => {
           const object = parseJsonMaybe(buffer.toString());
-          this.trackRequest(object);
+          this.trackRequest({ ws: true, data: object });
         });
       });
     }
