@@ -46,7 +46,9 @@
       "livenet": 1,
       "testnet": 3,
       "ropsten": 3,
-      "rinkeby": 4
+      "rinkeby": 4,
+      "development": 1337,
+      "development_parity": 17
     },
     "gasAllowanceError": "Returned error: gas required exceeds allowance or always failing transaction",
     "gasAllowanceErrorMessage": "Failing call, this could be because of invalid inputs or function guards that may have been triggered, or an unknown error.",
@@ -91,5 +93,8 @@
     "embarkjs": "embarkjs.js",
     "contractsJs": "contracts",
     "symlinkDir": "modules"
+  },
+  "environments": {
+    "development": "development"
   }
 }

@@ -135,7 +135,8 @@ DeploymentContainer.propTypes = {
   web3Deploy: PropTypes.func,
   web3Deployments: PropTypes.object,
   web3EstimateGas: PropTypes.func,
-  web3GasEstimates: PropTypes.object
+  web3GasEstimates: PropTypes.object,
+  web3ContractsDeployed: PropTypes.object
 };
 
 export default connect(

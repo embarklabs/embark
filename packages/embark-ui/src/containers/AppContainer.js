@@ -6,7 +6,7 @@ import routes from '../routes';
 import Login from '../components/Login';
 import Layout from "../components/Layout";
 import {DEFAULT_HOST} from '../constants';
-import {getQueryToken, stripQueryToken, getQueryParam, stripQueryParam} from '../utils/utils';
+import {getQueryToken, stripQueryToken} from '../utils/utils';
 import {Helmet} from "react-helmet";
 
 import {

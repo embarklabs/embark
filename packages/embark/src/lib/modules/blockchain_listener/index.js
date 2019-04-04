@@ -1,5 +1,7 @@
-const ProcessLogsApi = require('../../modules/process_logs_api');
+const async = require('async');
 const DevTxs = require('./dev_txs');
+const ProcessLogsApi = require('../../modules/process_logs_api');
+const constants = require('../../constants.json');
 
 const PROCESS_NAME = 'blockchain';
 
@@ -23,8 +25,25 @@ class BlockchainListener {
     this.events = embark.events;
     this.logger = embark.logger;
     this.ipc = ipc;
-    this.isDev = this.embark.config.env === "development";
+    this.isDev = this.embark.config.env === constants.environments.development;
     this.devTxs = null;
+    this.fs = this.embark.fs;
+    this.proxyLogFile = this.fs.dappPath(".embark", "proxyLogs.json");
+
+    this.writeProxyLogFile = async.cargo((tasks, callback) => {
+      const data = this._readProxyLogs();
+
+      tasks.forEach(task => {
+        data[new Date().getTime()] = task;
+      });
+
+      this.fs.writeJson(this.proxyLogFile, data, err => {
+        if (err) {
+          console.error(err);
+        }
+        callback();
+      });
+    });
 
     this.ipc.server.once('connect', () => {
       this.processLogsApi = new ProcessLogsApi({embark: this.embark, processName: PROCESS_NAME, silent: true});
@@ -39,6 +58,7 @@ class BlockchainListener {
       });
 
       this._registerConsoleCommands();
+      this._listenToIpcCommands();
     }
   }
 
@@ -52,6 +72,20 @@ class BlockchainListener {
     this.ipc.on('blockchain:log', ({logLevel, message}) => {
       this.processLogsApi.logHandler.handleLog({logLevel, message});
     });
+  }
+
+  _listenToIpcCommands() {
+    this.ipc.on('blockchain:proxy:log', (log) => {
+      this.logger.trace(log);
+    });
+    this.ipc.on('blockchain:proxy:logtofile', (log) => {
+      this._saveProxyLog(log);
+    });
+
+    this.ipc.on('blockchain:devtxs:sendtx', () => {
+      this._sendTx(() => {});
+    });
+
   }
 
   _registerConsoleCommands() {
@@ -113,6 +147,19 @@ class BlockchainListener {
       return this.devTxs.sendTx(cb);
     }
     this.events.once('blockchain:devtxs:ready', () => { this.devTxs.sendTx(cb); });
+  }
+
+  _saveProxyLog(log) {
+    this.writeProxyLogFile.push(log);
+  }
+
+  _readProxyLogs() {
+    this.fs.ensureFileSync(this.proxyLogFile);
+    try {
+      return JSON.parse(this.fs.readFileSync(this.proxyLogFile));
+    } catch (_error) {
+      return {};
+    }
   }
 }
 
