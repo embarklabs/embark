@@ -236,10 +236,6 @@ class EmbarkAPI {
     return post('/debugger/breakpoint', {params: payload, credentials: payload.credentials});
   }
 
-  regularTxs(payload) {
-    return get('/regular-txs', {params: payload, credentials: payload.credentials});
-  }
-
   listenToDebugger(credentials) {
     return websocket(credentials, '/debugger');
   }

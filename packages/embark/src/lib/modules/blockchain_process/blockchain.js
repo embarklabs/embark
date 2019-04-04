@@ -6,7 +6,6 @@ const constants = require('../../constants.json');
 const utils = require('../../utils/utils.js');
 const GethClient = require('./gethClient.js');
 const ParityClient = require('./parityClient.js');
-const DevFunds = require('./dev_funds.js');
 const Proxy = require('./proxy');
 const Ipc = require('../../core/ipc');
 
@@ -143,11 +142,6 @@ Blockchain.prototype.initStandaloneProcess = function () {
           if (this.ipc.connected) {
             logQueue.forEach(message => { this.ipc.request('blockchain:log', message); });
             logQueue = [];
-
-            this.ipc.listenTo('regularTxs', (mode) => {
-              if(mode === 'start') this.startRegularTxs(() => {});
-              else if (mode === 'stop') this.stopRegularTxs(() => {});
-            });
           }
         });
       }
@@ -290,51 +284,7 @@ Blockchain.prototype.run = function () {
   });
 };
 
-Blockchain.prototype.fundAccounts = function(cb) {
-  if(this.isDev && this.devFunds){
-    this.devFunds.fundAccounts((err) => {
-      cb(err);
-    });
-  }
-};
-
-Blockchain.prototype.startRegularTxs = function(cb) {
-  if (this.client.needKeepAlive() && this.devFunds){
-    return this.devFunds.startRegularTxs(() => {
-      this.logger.info('Regular transactions have been enabled.');
-      cb();
-    });
-  }
-  cb();
-};
-
-Blockchain.prototype.stopRegularTxs = function(cb) {
-  if (this.client.needKeepAlive() && this.devFunds){
-    return this.devFunds.stopRegularTxs(() => {
-      this.logger.info('Regular transactions have been disabled.');
-      cb();
-    });
-  }
-  cb();
-};
-
 Blockchain.prototype.readyCallback = function () {
-  if (this.isDev) {
-    if(!this.devFunds) {
-      DevFunds.new({blockchainConfig: this.config}).then(devFunds => {
-        this.devFunds = devFunds;
-        this.fundAccounts((err) => {
-          if (err) this.logger.error('Error funding accounts', err);
-        });
-      });
-    }
-    else {
-      this.fundAccounts((err) => {
-        if (err) this.logger.error('Error funding accounts', err);
-      });
-    }
-  }
-
   if (this.onReadyCallback) {
     this.onReadyCallback();
   }

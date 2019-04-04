@@ -64,14 +64,6 @@ class BlockchainProcessLauncher {
       this.blockchainProcess.silent = true;
     });
 
-    this.events.on('regularTxs:start', () => {
-      this.blockchainProcess.send({action: constants.blockchain.startRegularTxs});
-    });
-
-    this.events.on('regularTxs:stop', () => {
-      this.blockchainProcess.send({action: constants.blockchain.stopRegularTxs});
-    });
-
     this.events.on('exit', () => {
       this.blockchainProcess.send('exit');
     });
