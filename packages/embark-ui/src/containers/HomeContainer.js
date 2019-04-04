@@ -76,7 +76,7 @@ class HomeContainer extends Component {
             <CardBody>
               <CardTitle>Deployed Contracts</CardTitle>
               <div style={{marginBottom: '1.5rem', overflow: 'auto'}}>
-                <ContractsContainer contracts={contracts} mode="list" updatePageHeader={false} />
+                <ContractsContainer contracts={contracts} mode="list" numContractsToDisplay={5} updatePageHeader={false} />
               </div>
             </CardBody>
           </Card>

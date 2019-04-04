@@ -1,19 +1,18 @@
-import PropTypes from "prop-types";
 import React from 'react';
 import FontAwesomeIcon from 'react-fontawesome';
-import {
-  Row,
-  Col,
-  FormGroup,
-  Input,
-  Label,
-  UncontrolledTooltip,
-  Button,
-  Card,
-  CardHeader,
-  CardTitle,
-  CardBody
-} from 'reactstrap';
+import {Row,
+        Col,
+        FormGroup,
+        Input,
+        Label,
+        UncontrolledTooltip,
+        Button,
+        Card,
+        CardHeader,
+        CardTitle,
+        CardBody} from 'reactstrap';
+import PropTypes from "prop-types";
+import Pagination from './Pagination';
 import classNames from 'classnames';
 import {DEPLOYMENT_PIPELINES} from '../constants';
 import Description from './Description';
@@ -326,39 +325,49 @@ class ContractsDeployment extends React.Component {
   }
 
   render() {
+    const props = this.props;
+    const {changePage, currentPage, numberOfPages} = props;
     return (
-      <Row>
-        <Col>
-          <ContractsHeader deploymentPipeline={this.props.deploymentPipeline}
-                           updateDeploymentPipeline={this.props.updateDeploymentPipeline}/>
-          {this.props.contracts.filter(contract => (contract.code || contract.deploy) && !contract.silent)
-            .sort((a, b) => a.index - b.index).map((contract, index) => {
+      <React.Fragment>
+        <Row>
+          <Col>
+            <ContractsHeader
+              deploymentPipeline={props.deploymentPipeline}
+              updateDeploymentPipeline={props.updateDeploymentPipeline} />
+            {!props.contracts.length && "No contracts to display"}
+            {props.contracts
+              .map((contract, index) => {
                 contract.deployIndex = index;
-                return (<Contract key={contract.deployIndex}
-                                  contract={contract}
-                                  toggleContractOverview={(contract) => this.toggleContractOverview(contract)}
-                                  {...this.props} />);
-              }
-            )}
-        </Col>
-        {this.isContractOverviewOpen() &&
-          <Col xs={6} md={3}>
-            <Card>
-              <CardBody>
-                <h2>{this.state.currentContractOverview.className} - Overview</h2>
-                <ContractOverviewContainer contract={this.state.currentContractOverview} />
-              </CardBody>
-            </Card>
+                return (
+                  <Contract key={contract.deployIndex}
+                            contract={contract}
+                            toggleContractOverview={(contract) => this.toggleContractOverview(contract)}
+                            {...props} />
+                );
+              })}
           </Col>
-        }
-    </Row>
+          {this.isContractOverviewOpen() &&
+            <Col xs={6} md={3}>
+              <Card>
+                <CardBody>
+                  <h2>{this.state.currentContractOverview.className} - Overview</h2>
+                  <ContractOverviewContainer contract={this.state.currentContractOverview} />
+                </CardBody>
+              </Card>
+            </Col>
+          }
+        </Row>
+        {numberOfPages > 1 && <Pagination changePage={changePage} currentPage={currentPage} numberOfPages={numberOfPages}/>}
+      </React.Fragment>
     )
   }
 }
 
-
 ContractsDeployment.propTypes = {
   contracts: PropTypes.array,
+  changePage: PropTypes.func,
+  currentPage: PropTypes.number,
+  numberOfPages: PropTypes.number,
   deploymentPipeline: PropTypes.oneOfType([
     PropTypes.object,
     PropTypes.string
@@ -373,4 +382,3 @@ ContractsDeployment.propTypes = {
 };
 
 export default ContractsDeployment;
-
