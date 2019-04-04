@@ -1,4 +1,5 @@
 const ProcessLogsApi = require('../../modules/process_logs_api');
+const DevTxs = require('./dev_txs');
 
 const PROCESS_NAME = 'blockchain';
 
@@ -22,15 +23,22 @@ class BlockchainListener {
     this.events = embark.events;
     this.logger = embark.logger;
     this.ipc = ipc;
+    this.isDev = this.embark.config.env === "development";
+    this.devTxs = null;
 
     this.ipc.server.once('connect', () => {
       this.processLogsApi = new ProcessLogsApi({embark: this.embark, processName: PROCESS_NAME, silent: true});
       this._listenToBlockchainLogs();
     });
-    if (this.ipc.isServer()) {
-      this._listenToCommands();
+    if (this.ipc.isServer() && this.isDev) {
+      this.events.request('blockchain:ready', () => {
+        DevTxs.new({blockchainConfig: this.embark.config.blockchainConfig}).then(devTxs => {
+          this.devTxs = devTxs;
+          this.events.emit('blockchain:devtxs:ready');
+        });
+      });
+
       this._registerConsoleCommands();
-      this._registerApiEndpoint();
     }
   }
 
@@ -48,47 +56,63 @@ class BlockchainListener {
 
   _registerConsoleCommands() {
     this.embark.registerConsoleCommand({
-      description: 'Toggles regular transactions used to prevent transactions from getting stuck when using Geth and Metamask',
-      matches: ['regularTxs on', 'regularTxs off'],
-      usage: "regularTxs on/off",
+      description: __('Toggles regular transactions used to prevent transactions from getting stuck when using Geth and Metamask'),
+      matches: ['devtxs on', 'devtxs off', 'regularTxs on', 'regularTxs off'],
+      usage: "devtxs on/off",
       process: (cmd, callback) => {
-        const eventCmd = `regularTxs:${cmd.trim().endsWith('on') ? 'start' : 'stop'}`;
-        this.events.request(eventCmd, callback);
-      }
-    });
-  }
-
-  _registerApiEndpoint() {
-    this.embark.registerAPICall(
-      'get',
-      '/embark-api/regular-txs',
-      (req, res) => {
-        if(!req.query.mode || !['on', 'off'].includes(req.query.mode)) {
-          return res.status(400).send("Invalid parameter 'mode' provided. Must be one of: ['on', 'off']");
+        if (cmd.startsWith('regularTxs')) {
+          this.logger.info(__("Deprecation notice: The command 'regularTxs on/off' is now deprecated in favor of 'devtxs on/off' and will be removed in future versions."));
         }
-        this.events.request(`regularTxs:${req.query.mode === 'on' ? 'start' : 'stop'}`, (err, result) => {
-          if(err) {
-            return res.send({ error: err.message });
-          }
-          res.send(result);
+        const enable = cmd.trim().endsWith('on');
+        this.logger.info(`${enable ? 'Enabling' :  'Disabling'} regular transactions...`);
+        if(enable) {
+          return this._startRegularTxs(() => {
+            const message = __('Regular transactions have been enabled');
+            this.logger.info(message);
+            callback(null, message);
+          });
+        }
+        this._stopRegularTxs(() => {
+          const message = __('Regular transactions have been disabled');
+          this.logger.info(message);
+          callback(null, message);
         });
       }
-    );
+    });
+
+    this.embark.registerConsoleCommand({
+      description: __('Sends a transaction from default --dev account (generally used if txs are getting stuck in geth in development)'),
+      matches: ['senddevtx'],
+      process: (cmd, callback) => {
+        this.logger.info(__('Sending a tx from the dev account...'));
+        return this._sendTx((receipt) => {
+          const message = __('Transaction sent. Receipt:') + `\n${JSON.stringify(receipt)}`;
+          this.logger.debug(message);
+          callback(null, message);
+        });
+      }
+    });
   }
 
-  _listenToCommands() {
+  _startRegularTxs(cb) {
+    if(this.devTxs) {
+      return this.devTxs.startRegularTxs(cb);
+    }
+    this.events.once('blockchain:devtxs:ready', () => { this.devTxs.startRegularTxs(cb); });
+  }
 
-    this.events.setCommandHandler('regularTxs:start', (cb) => {
-      this.events.emit('regularTxs:start');
-      this.ipc.broadcast('regularTxs', 'start');
-      return cb(null, 'Enabling regular transactions');
-    });
+  _stopRegularTxs(cb) {
+    if(this.devTxs) {
+      return this.devTxs.stopRegularTxs(cb);
+    }
+    this.events.once('blockchain:devtxs:ready', () => { this.devTxs.stopRegularTxs(cb); });
+  }
 
-    this.events.setCommandHandler('regularTxs:stop', (cb) => {
-      this.events.emit('regularTxs:stop');
-      this.ipc.broadcast('regularTxs', 'stop');
-      return cb(null, 'Disabling regular transactions');
-    });
+  _sendTx(cb) {
+    if(this.devTxs) {
+      return this.devTxs.sendTx(cb);
+    }
+    this.events.once('blockchain:devtxs:ready', () => { this.devTxs.sendTx(cb); });
   }
 }
 

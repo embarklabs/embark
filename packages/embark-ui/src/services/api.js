@@ -170,10 +170,6 @@ export function toggleBreakpoint(payload) {
   return embarkAPI.toggleBreakpoint(payload);
 }
 
-export function regularTxs(payload) {
-  return embarkAPI.regularTxs(payload);
-}
-
 export function listenToDebugger(credentials) {
   return embarkAPI.listenToDebugger(credentials, '/debugger');
 }
