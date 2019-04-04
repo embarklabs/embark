@@ -14,8 +14,6 @@ import {
   processes as processesAction,
   versions as versionsAction,
   plugins as pluginsAction,
-  initRegularTxs as initRegularTxsAction,
-  stopRegularTxs as stopRegularTxsAction,
   changeTheme, fetchTheme
 } from '../actions';
 
@@ -24,8 +22,6 @@ import {LIGHT_THEME, DARK_THEME, PAGE_TITLE_PREFIX} from '../constants';
 import {
   getCredentials, getAuthenticationError, getProcesses, getTheme
 } from '../reducers/selectors';
-
-const ENABLE_REGULAR_TXS = 'enableRegularTxs';
 
 class AppContainer extends Component {
   componentDidMount() {
@@ -70,8 +66,6 @@ class AppContainer extends Component {
       this.doAuthenticate();
     }
 
-    const enableRegularTxs = getQueryParam(this.props.location, ENABLE_REGULAR_TXS);
-
     if (getQueryToken(this.props.location) && 
         (!this.props.credentials.authenticating || 
          this.props.credentials.authenticated)) {
@@ -81,13 +75,6 @@ class AppContainer extends Component {
     if (this.props.credentials.authenticated && !this.props.initialized) {
       this.props.fetchPlugins();
       this.props.fetchProcesses();
-      if (enableRegularTxs === "true") {
-        this.props.initRegularTxs();
-        this.props.history.replace(stripQueryParam(this.props.location, ENABLE_REGULAR_TXS));
-      } else if (enableRegularTxs === "false") {
-        this.props.stopRegularTxs();
-        this.props.history.replace(stripQueryParam(this.props.location, ENABLE_REGULAR_TXS));
-      }
     }
   }
 
@@ -152,9 +139,7 @@ AppContainer.propTypes = {
   theme: PropTypes.string,
   changeTheme: PropTypes.func,
   fetchTheme: PropTypes.func,
-  history: PropTypes.object,
-  initRegularTxs: PropTypes.func,
-  stopRegularTxs: PropTypes.func
+  history: PropTypes.object
 };
 
 function mapStateToProps(state) {
@@ -176,8 +161,6 @@ export default withRouter(connect(
     fetchVersions: versionsAction.request,
     fetchPlugins: pluginsAction.request,
     changeTheme: changeTheme.request,
-    fetchTheme: fetchTheme.request,
-    initRegularTxs: initRegularTxsAction.request,
-    stopRegularTxs: stopRegularTxsAction.request
+    fetchTheme: fetchTheme.request
   },
 )(AppContainer));
