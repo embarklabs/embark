@@ -240,7 +240,10 @@ class SpecialConfigs {
         if (err) {
           reject(err);
         }
-        this.events.request('blockchain:get', web3 => resolve(this.assembleLifecycleHookDependencies(contractInstances, web3)));
+        this.events.request('blockchain:get', web3 => {
+          const logger = this.createLoggerWithPrefix(`${contractConfig.className} > onDeploy >`);
+          resolve(this.assembleLifecycleHookDependencies(contractInstances, web3, logger));
+        });
       });
     });
   }
@@ -259,18 +262,40 @@ class SpecialConfigs {
           if (err) {
             reject(err);
           }
-          this.events.request('blockchain:get', web3 => resolve(this.assembleLifecycleHookDependencies(contractInstances, web3)));
+          this.events.request('blockchain:get', web3 => {
+            const logger = this.createLoggerWithPrefix('afterDeploy >');
+            resolve(this.assembleLifecycleHookDependencies(contractInstances, web3, logger));
+          });
         });
       });
     });
   }
 
-  assembleLifecycleHookDependencies(contractInstances, web3) {
+  assembleLifecycleHookDependencies(contractInstances, web3, logger) {
     return contractInstances.reduce((dependencies, contractInstance) => {
       dependencies.contracts[contractInstance.className] = contractInstance.instance;
       return dependencies;
-    }, { contracts: {}, web3 });
+    }, { contracts: {}, web3, logger });
   }
+
+  createLoggerWithPrefix(prefix) {
+    const logger = {
+      log: createLogWithPrefixFn(this.logger, 'log', prefix),
+      warn: createLogWithPrefixFn(this.logger, 'warn', prefix),
+      error: createLogWithPrefixFn(this.logger, 'error', prefix),
+      info: createLogWithPrefixFn(this.logger, 'info', prefix),
+      dir: createLogWithPrefixFn(this.logger, 'dir', prefix),
+      debug: createLogWithPrefixFn(this.logger, 'debug', prefix)
+    };
+    return logger;
+  }
+}
+
+function createLogWithPrefixFn(logger, method, prefix) {
+  return function () {
+    const args = Array.from(arguments).map(arg => `${prefix} ${arg}`);
+    args.forEach(arg => logger[method](arg));
+  };
 }
 
 module.exports = SpecialConfigs;
