@@ -13,7 +13,9 @@ class SpecialConfigs {
     this.embark = embark;
     this.config = embark.config;
 
+    this.registerBeforeAllDeployAction();
     this.registerAfterDeployAction();
+    this.registerBeforeDeployAction();
     this.registerOnDeployAction();
     this.registerDeployIfAction();
   }
@@ -91,6 +93,21 @@ class SpecialConfigs {
     return replaceWithAddresses(cmd);
   }
 
+  registerBeforeAllDeployAction() {
+    this.embark.registerActionForEvent('deploy:beforeAll', async (cb) => {
+      const beforeDeployFn = this.config.contractsConfig.beforeDeploy;
+      if (!beforeDeployFn || typeof beforeDeployFn !== 'function') {
+        return cb();
+      }
+      try {
+        await beforeDeployFn();
+        cb();
+      } catch (err) {
+        cb(new Error(`Error running beforeDeploy hook: ${err.message}`));
+      }
+    });
+  }
+
   registerAfterDeployAction() {
     this.embark.registerActionForEvent("contracts:deploy:afterAll", async (cb) => {
       if (typeof this.config.contractsConfig.afterDeploy === 'function') {
@@ -136,6 +153,23 @@ class SpecialConfigs {
         eachCb(err);
       });
     }, callback);
+  }
+
+  registerBeforeDeployAction() {
+    this.embark.registerActionForEvent('deploy:contract:beforeDeploy', async (params, cb) => {
+      const contract = params.contract;
+      const beforeDeployFn = params.contract.beforeDeploy;
+      if (!beforeDeployFn || typeof beforeDeployFn !== 'function') {
+        return cb();
+      }
+      try {
+        const dependencies = await this.getOnDeployLifecycleHookDependencies(contract);
+        await beforeDeployFn(dependencies);
+        cb();
+      } catch (e) {
+        cb(new Error(`Error running beforeDeploy hook for ${contract.className}: ${e.message || e}`));
+      }
+    });
   }
 
   registerOnDeployAction() {
