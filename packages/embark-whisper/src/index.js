@@ -91,7 +91,7 @@ class Whisper {
       // so we must do all by our own
       self.web3._requestManager.send({method: 'web3_clientVersion', params: []}, (err, clientVersion) => {
         if (err) return cb(err);
-        if (clientVersion.indexOf("Parity-Ethereum//v2") === 0) {
+        if (clientVersion && clientVersion.indexOf("Parity-Ethereum//v2") === 0) {
           // This is Parity
           return self.web3.shh.getInfo(function(err) {
             if (err) {

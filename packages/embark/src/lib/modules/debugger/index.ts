@@ -142,11 +142,11 @@ class TransactionDebugger {
     });
 
     this.embark.registerAPICall("post", "/embark-api/debugger/JumpBack", (req: any, res: any) => {
-      this.apiDebugger.stepJumpNextBreakpoint();
+      this.apiDebugger.stepJumpPreviousBreakpoint();
       res.send({ok: true});
     });
     this.embark.registerAPICall("post", "/embark-api/debugger/JumpForward", (req: any, res: any) => {
-      this.apiDebugger.stepJumpPreviousBreakpoint();
+      this.apiDebugger.stepJumpNextBreakpoint();
       res.send({ok: true});
     });
     this.embark.registerAPICall("post", "/embark-api/debugger/StepOverForward", (req: any, res: any) => {

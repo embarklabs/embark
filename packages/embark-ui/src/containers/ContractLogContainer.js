@@ -1,7 +1,13 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {contractEvents as contractEventsAction, contractLogs as contractLogsAction, listenToContractLogs, listenToContractEvents} from '../actions';
+import {
+  contractEvents as contractEventsAction, 
+  contractLogs as contractLogsAction, 
+  listenToContractLogs, 
+  listenToContractEvents,
+  contracts as contractsAction
+} from '../actions';
 
 import ContractLog from '../components/ContractLog';
 import DataWrapper from "../components/DataWrapper";
@@ -9,6 +15,8 @@ import {getContractLogsByContract, getContractEventsByContract} from "../reducer
 
 class ContractLogContainer extends Component {
   componentDidMount() {
+    this.props.fetchContracts();
+
     if (this.props.contractLogs.length === 0) {
       this.props.listenToContractLogs();
       this.props.fetchContractLogs();
@@ -46,7 +54,8 @@ ContractLogContainer.propTypes = {
   listenToContractLogs: PropTypes.func,
   fetchContractEvents: PropTypes.func,
   listenToContractEvents: PropTypes.func,
-  match: PropTypes.object
+  match: PropTypes.object,
+  fetchContracts: PropTypes.func
 };
 
 export default connect(
@@ -55,6 +64,7 @@ export default connect(
     fetchContractLogs: contractLogsAction.request,
     listenToContractLogs: listenToContractLogs,
     fetchContractEvents: contractEventsAction.request,
-    listenToContractEvents: listenToContractEvents
+    listenToContractEvents: listenToContractEvents,
+    fetchContracts: contractsAction.request
   }
 )(ContractLogContainer);

@@ -79,7 +79,7 @@ __embarkWhisperNewWeb3.getWhisperVersion = function(cb) {
   const self = this;
   self.web3._requestManager.send({method: 'web3_clientVersion', params: []}, (err, clientVersion) => {
     if (err) return cb(err);
-    if (clientVersion.indexOf("Parity-Ethereum//v2") === 0) {
+    if (clientVersion && clientVersion.indexOf("Parity-Ethereum//v2") === 0) {
       // This is Parity
       self.web3.shh.getInfo(function(err) {
         if (err) {
