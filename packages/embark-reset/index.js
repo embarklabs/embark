@@ -18,11 +18,15 @@ exports.paths = new Set([
 ]);
 
 exports.reset = async ({
-  doneMessage = green('reset done!'),
+  doneMessage = green('Done!'),
   removePaths = exports.paths
 } = {}) => {
+  const completePaths = [...removePaths].map(relative => join(dappPath, relative));
+
+  console.log(green('Removing the following files:\n'));
+  completePaths.forEach(path => console.log(`${path}`));
   await Promise.all(
-    [...removePaths].map(relative => rimraf(join(dappPath, relative)))
+    completePaths.map(path => rimraf(path))
   );
-  console.log(doneMessage);
+  console.log(`\n${doneMessage}`);
 };
