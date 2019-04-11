@@ -1,6 +1,6 @@
 {
   "name": "embark",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Embark is a framework that allows you to easily develop and deploy DApps",
@@ -90,7 +90,7 @@
     "embark-reset": "^4.0.0",
     "embark-ui": "^4.0.1",
     "embark-vyper": "^4.0.0",
-    "embarkjs": "^4.0.0",
+    "embarkjs": "^4.0.2",
     "eth-ens-namehash": "2.0.8",
     "ethereumjs-tx": "1.3.7",
     "ethereumjs-util": "6.0.0",
