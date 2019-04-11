@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.2](https://github.com/embark-framework/embark/compare/v4.0.1...v4.0.2) (2019-04-11)
+
+
+### Bug Fixes
+
+* **@embark/contracts_manager:** compare correct property ([06dcbd0](https://github.com/embark-framework/embark/commit/06dcbd0))
+* **@embark/solidity:** handle absolute paths correctly ([3cee7cf](https://github.com/embark-framework/embark/commit/3cee7cf))
+* **@embark/storage:** Fix hang when IPFS/Swarm started externally ([c5b11ae](https://github.com/embark-framework/embark/commit/c5b11ae))
+* **pipeline:** build contracts even when pipeline is disabled ([88c9a60](https://github.com/embark-framework/embark/commit/88c9a60))
+
+
+
+
+
 ## [4.0.1](https://github.com/embark-framework/embark/compare/v4.0.0...v4.0.1) (2019-03-26)
 
 
