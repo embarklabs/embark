@@ -354,7 +354,9 @@ class Cmd {
         embark.initConfig('development', {
           embarkConfig: 'embark.json', interceptLogs: false
         });
-        embark.reset();
+        embark.reset({
+          embarkConfig: 'embark.json'
+        });
       });
   }
 
