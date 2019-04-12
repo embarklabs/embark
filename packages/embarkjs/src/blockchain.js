@@ -128,7 +128,7 @@ Blockchain.doConnect = function(connectionList, opts, doneCb) {
   const connectWeb3 = async (next) => {
     const connectionString = 'web3://';
 
-    if (window.ethereum) {
+    if (typeof window !== 'undefined' && window.ethereum) {
       try {
         if (Blockchain.autoEnable) {
           await ethereum.enable();
@@ -212,7 +212,7 @@ Blockchain.doConnect = function(connectionList, opts, doneCb) {
 };
 
 Blockchain.enableEthereum = function() {
-  if (window.ethereum) {
+  if (typeof window !== 'undefined' && window.ethereum) {
     return ethereum.enable().then((accounts) => {
       this.blockchainConnector.setProvider(ethereum);
       this.blockchainConnector.setDefaultAccount(accounts[0]);

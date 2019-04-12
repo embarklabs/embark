@@ -1,5 +1,6 @@
 let async = require('async');
 import {joinPath} from 'embark-utils';
+import { transform } from "@babel/core";
 const constants = require('../../constants');
 const path  = require('path');
 
@@ -153,14 +154,16 @@ class CodeGenerator {
     });
   }
 
-  generateContractConfig(contractConfig, callback) {
+  generateContractConfig(contractConfig, callback = () => {}) {
     this.dappConfigs.blockchain = {
       dappConnection: contractConfig.dappConnection,
       dappAutoEnable: contractConfig.dappAutoEnable,
       warnIfMetamask: this.blockchainConfig.isDev,
       blockchainClient: this.blockchainConfig.ethereumClientName
     };
-    this.generateArtifact(this.dappConfigs.blockchain, constants.dappArtifacts.blockchain, constants.dappArtifacts.dir, callback);
+    this.generateArtifact(this.dappConfigs.blockchain, constants.dappArtifacts.blockchain, constants.dappArtifacts.dir, (err, path, _updated) => {
+      callback(err, path);
+    });
   }
 
   generateStorageConfig(storageConfig) {
@@ -192,15 +195,17 @@ class CodeGenerator {
       },
       (needsUpdate, next) => {
         if (!needsUpdate) {
-          return next();
+          return next(null, false);
         }
-        this.fs.writeFile(filePath, artifactInput, next);
+        this.fs.writeFile(filePath, artifactInput, (err) => {
+          next(err, true);
+        });
       }
-    ], (err) => {
+    ], (err, updated) => {
       if (err) {
         this.logger.error(err.message || err);
       }
-      cb(err, filePath);
+      cb(err, filePath, updated);
     });
   }
 
@@ -332,9 +337,8 @@ class CodeGenerator {
             this.logger.error(__('Error creating a symlink to EmbarkJS'));
             return next(err);
           }
-          embarkjsCode += `\nconst EmbarkJS = require("${symlinkDest}").default;`;
-          embarkjsCode += "\nexport default EmbarkJS;";
-          embarkjsCode += "\nglobal.EmbarkJS = EmbarkJS";
+          embarkjsCode += `\nconst EmbarkJS = require("${symlinkDest}").default || require("${symlinkDest}");`;
+          embarkjsCode += "\nglobal.EmbarkJS = EmbarkJS;";
           next();
         });
       },
@@ -346,12 +350,38 @@ class CodeGenerator {
         code += self.generateStorageInitialization(true);
         code += self.generateNamesInitialization(true);
         code += self.getReloadPageCode();
+        code += "\nexport default EmbarkJS;";
+        code += "\nif (typeof module !== 'undefined' && module.exports) {" +
+          "\n\tmodule.exports = EmbarkJS;" +
+          "\n}";
         code += '\n/* eslint-enable */';
 
         next();
       },
       function writeFile(next) {
         self.generateArtifact(code, constants.dappArtifacts.embarkjs, '', next);
+      },
+      function transformCode(artifactPath, updated, next) {
+        if (!updated) {
+          return next();
+        }
+        transform(code, {
+          cwd: self.fs.embarkPath(),
+          "presets": [
+            [
+              "@babel/preset-env", {
+              "targets": {
+                "node": "8.11.3"
+              }
+            }
+            ]
+          ]
+        }, (err, result) => {
+          if (err) {
+            return next(err);
+          }
+          self.generateArtifact(result.code, constants.dappArtifacts.embarkjsnode, '', next);
+        });
       }
     ], function(_err, _result) {
       cb();
@@ -359,7 +389,7 @@ class CodeGenerator {
   }
 
   getReloadPageCode() {
-    return this.env === 'development' ? this.fs.readFileSync(require('path').join(__dirname,'/code/reload-on-change.js'), 'utf8') : '';
+    return this.env === 'development' ? this.fs.readFileSync(require('path').join(__dirname, '/code/reload-on-change.js'), 'utf8') : '';
   }
 
   getEmbarkJsProviderCode() {
@@ -396,7 +426,9 @@ class CodeGenerator {
 
     contractCode += "export default " + contractName + ";\n";
 
-    this.generateArtifact(contractCode, contractName + '.js', constants.dappArtifacts.contractsJs, cb);
+    this.generateArtifact(contractCode, contractName + '.js', constants.dappArtifacts.contractsJs, (err, path, _updated) => {
+      cb(err, path);
+    });
   }
 
   generateSymlink(target, name, callback) {

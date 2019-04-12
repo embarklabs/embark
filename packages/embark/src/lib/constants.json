@@ -91,6 +91,7 @@
     "storage": "storage.json",
     "communication": "communication.json",
     "embarkjs": "embarkjs.js",
+    "embarkjsnode": "embarkjs.node.js",
     "contractsJs": "contracts",
     "symlinkDir": "modules"
   },
