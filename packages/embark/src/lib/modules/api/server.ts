@@ -2,7 +2,6 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import {Embark, Plugins} from "embark";
 import express, {NextFunction, Request, Response} from "express";
-import proxy from "express-http-proxy";
 import expressWs from "express-ws";
 import findUp from "find-up";
 import helmet from "helmet";
@@ -87,15 +86,12 @@ export default class Server {
     });
   }
 
-  private makePage(reloadSeconds: number, body: string) {
+  private makePage(body: string) {
     return (`
       <!doctype html>
       <html lang="en">
         <head>
           <meta charset="utf-8" />
-          ${this.isInsideMonorepo ? `
-            <meta http-equiv="refresh" content="${reloadSeconds}">
-          ` : ""}
           <title>Embark API Server</title>
           <style type="text/css">
             code {
@@ -112,47 +108,78 @@ export default class Server {
         </head>
         <body>
           ${body}
-          ${this.isInsideMonorepo ? `
-            <p>this page will automatically reload
-              in <span id="timer">${reloadSeconds}</span> seconds</p>
-            <script>
-              let timeLeft = ${reloadSeconds};
-              const span = document.querySelector("#timer");
-              setInterval(() => {
-                if (timeLeft >= 1) { timeLeft -= 1; }
-                span.innerText = \`\${timeLeft}\`;
-              }, 1000);
-            </script>
-          ` : ""}
         </body>
       </html>
     `.trim().split("\n").map((str) => str.trim()).filter((str) => str).join("\n"));
   }
 
   private makePage404(reloadSeconds: number, envReport: string, inside: string, notice: string) {
-    return this.makePage(reloadSeconds, `
+    return this.makePage(`
       ${envReport}
       <p>missing build for package <code>embark-ui</code> ${inside}</p>
       ${notice}
+      ${this.isInsideMonorepo ? `
+        <p>this page will automatically reload
+          in <span id="timer">${reloadSeconds}</span> seconds</p>
+        <script>
+          let timeLeft = ${reloadSeconds};
+          const span = document.querySelector("#timer");
+          const timer = window.setInterval(() => {
+            if (timeLeft >= 1) {
+              timeLeft -= 1;
+              span.innerText = \`\${timeLeft}\`;
+            }
+            if (!timeLeft) {
+              window.clearInterval(timer);
+              window.location.reload(true);
+            }
+          }, 1000);
+        </script>
+      ` : ""}
     `);
   }
 
-  private makePageEConnError(reloadSeconds: number, waitingFor: string) {
-    return this.makePage(reloadSeconds, `
-      <p><code>lib/modules/api/server</code> inside the monorepo at
-        <code>${path.join(this.monorepoRootDir, "packages/embark")}</code> is
-        waiting for the Create React App development server of package
-        <code>embark-ui</code> to ${waitingFor} at
-        <code>localhost:55555</code></p>
-      ${waitingFor === "become available" ? `
-        <p>please run either:</p>
-        <p><code>cd ${this.monorepoRootDir} && yarn start</code><br />
-          or<br />
-          <code>cd ${path.join(this.monorepoRootDir, "packages/embark-ui")}
-            && yarn start</code></p>
+  private makePage503(redirectSeconds: number) {
+    return this.makePage(`
+      <p><code>lib/modules/api/server</code> is inside the monorepo at
+        <code>${path.join(this.monorepoRootDir, "packages/embark")}</code></p>
+      <p>to access <code>embark-ui</code> in development use port
+        <code>3000</code></p>
+      <p>if you haven't already, please run either:</p>
+      <p><code>cd ${this.monorepoRootDir} && yarn start</code><br />
+        or<br />
+        <code>cd ${path.join(this.monorepoRootDir, "packages/embark-ui")} &&
+          yarn start</code></p>
         <p>to instead use a static build from the monorepo, restart embark with:
           <code>EMBARK_UI_STATIC=t embark run</code></p>
-      ` : ""}
+      <p>this page will automatically redirect to <a id="redirect" href=""></a>
+        in <span id="timer">${redirectSeconds}</span> seconds</p>
+      <script>
+        window.embarkApiRedirect = window.location.href.replace(
+          \`http://\${window.location.hostname}:55555\`,
+          \`http://\${window.location.hostname}:3000\`
+        );
+        document.querySelector("#redirect").href = window.embarkApiRedirect;
+        let displayLink = window.embarkApiRedirect.slice(7);
+        if (displayLink.endsWith(\`\${window.location.hostname}:3000/\`)) {
+          displayLink = displayLink.slice(0, -1);
+        }
+        document.querySelector("#redirect").innerText = displayLink;
+      </script>
+      <script>
+        let timeLeft = ${redirectSeconds};
+        const span = document.querySelector("#timer");
+        const timer = window.setInterval(() => {
+          if (timeLeft >= 1) {
+            timeLeft -= 1;
+            span.innerText = \`\${timeLeft}\`;
+          }
+          if (!timeLeft) {
+            window.clearInterval(timer);
+            window.location.href = window.embarkApiRedirect;
+          }
+        }, 1000);
+      </script>
     `);
   }
 
@@ -195,7 +222,7 @@ export default class Server {
     if (!this.isInsideMonorepo || process.env.EMBARK_UI_STATIC) {
       if (existsSync(path.join(this.embarkUiBuildDir, "index.html"))) {
         instance.app.use("/", express.static(this.embarkUiBuildDir));
-        instance.app.get("/*", (_req, res) => {
+        instance.app.get(/^\/(?!embark-api).*$/, (_req, res) => {
           res.sendFile(path.join(this.embarkUiBuildDir, "index.html"));
         });
       } else {
@@ -204,7 +231,9 @@ export default class Server {
           in <code>${path.dirname(this.embarkUiBuildDir)}</code>
         `;
         let notice = `
-          <p>this distribution of <code>embark-ui</code> appears to be broken</p>
+          <p>this distribution of <code>embark-ui</code> appears to be broken,
+            please <a href="https://github.com/embark-framework/embark/issues">
+              file an issue</a></p>
         `;
         if (this.isInsideMonorepo) {
           envReport = `
@@ -223,40 +252,24 @@ export default class Server {
                 && yarn build</code></p>
             <p>restart <code>embark run</code> after building
               <code>embark-ui</code></p>
-            <p>to instead use a live development build from the monorepo, unset
-              the environment variable <code>EMBARK_UI_STATIC</code> and restart
-              embark</p>
+            <p>to instead use a live development build from the monorepo: unset
+              the environment variable <code>EMBARK_UI_STATIC</code>, restart
+              embark, and visit
+              <a href="http://localhost:3000">http://localhost:3000</a></p>
           `;
         }
-        const page404 = this.makePage404(3, envReport, inside, notice);
+        const page404 = this.makePage404(10, envReport, inside, notice);
         const missingBuildHandler = (_req: Request, res: Response) => {
           res.status(404).send(page404);
         };
-        instance.app.get("/", missingBuildHandler);
-        instance.app.get("/*", missingBuildHandler);
+        instance.app.get(/^\/(?!embark-api).*$/, missingBuildHandler);
       }
     } else {
-      const page503 = this.makePageEConnError(3, "become available");
-      const page504 = this.makePageEConnError(3, "become responsive");
-      instance.app.use("/", proxy("http://localhost:3000", {
-        // @ts-ignore
-        proxyErrorHandler: (err, res, next) => {
-          switch (err && err.code) {
-            case "ECONNREFUSED": {
-              return res.status(503).send(page503);
-            }
-            case "ECONNRESET": {
-              if (err.message === "socket hang up") {
-                return res.status(504).send(page504);
-              }
-            }
-            default: {
-              next(err);
-            }
-          }
-        },
-        timeout: 1000,
-      }));
+      const page503 = this.makePage503(10);
+      const unavailableBuildHandler = (_req: Request, res: Response) => {
+        res.status(503).send(page503);
+      };
+      instance.app.get(/^\/(?!embark-api).*$/, unavailableBuildHandler);
     }
 
     return instance;
