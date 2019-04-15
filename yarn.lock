@@ -2723,14 +2723,6 @@
   resolved "https://registry.yarnpkg.com/@types/events/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
   integrity sha512-KEIlhXnIutzKwRbQkGWb/I4HFqBuUykAdHgDED6xqwXJfONCjF5VoE0cXEiurh3XauygxzeDzgtXUqvLkxFzzA==
 
-"@types/express-http-proxy@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@types/express-http-proxy/-/express-http-proxy-1.5.1.tgz#0184017b1cfc8ab2a4954d35f90c9b4cc3d7ffcc"
-  integrity sha512-9SOGqwVzbudT5nzF4TjKOu0cWE0HRaTVVivwxUxYMN/7mas6Wt/W5pz53dZIs7Y0fZBjAI3RTDDr+dXtXrv+hA==
-  dependencies:
-    "@types/express" "*"
-    "@types/express-serve-static-core" "*"
-
 "@types/express-serve-static-core@*":
   version "4.16.0"
   resolved "https://registry.yarnpkg.com/@types/express-serve-static-core/-/express-serve-static-core-4.16.0.tgz#fdfe777594ddc1fe8eb8eccce52e261b496e43e7"
