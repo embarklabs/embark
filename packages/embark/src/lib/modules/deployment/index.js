@@ -61,7 +61,7 @@ class DeployManager {
               next();
             });
           },
-          function () {
+          function (next) {
             const contractDeploys = {};
             const errors = [];
             contracts.forEach(contract => {
@@ -97,17 +97,20 @@ class DeployManager {
                 _err = __("Error deploying contracts. Please fix errors to continue.");
                 self.logger.error(_err);
                 self.events.emit("outputError", __("Error deploying contracts, please check console"));
-                return done(_err);
+                return next(_err);
               }
               if (contracts.length === 0) {
                 self.logger.info(__("no contracts found"));
-                return done();
+                return next();
               }
               self.logger.info(__("finished deploying contracts"));
-              done(err);
+              next(err);
             });
           }
-        ]);
+        ], (err) => {
+          self.logger.error(err);
+          done(err);
+        });
       });
     });
   }

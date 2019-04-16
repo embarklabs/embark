@@ -353,8 +353,11 @@ class ContractDeployer {
           self.events.emit("deploy:contract:deployed", contract);
 
           self.registerContract(contract, () => {
-            self.plugins.runActionsForEvent('deploy:contract:deployed', {contract: contract}, () => {
-              return next(null, receipt);
+            self.plugins.runActionsForEvent('deploy:contract:deployed', {contract: contract}, (err) => {
+              if (err) {
+                return next(err);
+              }
+              next(null, receipt);
             });
           });
         }, hash => {
