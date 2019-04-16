@@ -100,7 +100,8 @@ class SpecialConfigs {
         return cb();
       }
       try {
-        await beforeDeployFn();
+        const logger = this.createLoggerWithPrefix('beforeDeploy >');
+        await beforeDeployFn({ logger });
         cb();
       } catch (err) {
         cb(new Error(`Error running beforeDeploy hook: ${err.message}`));
@@ -163,7 +164,10 @@ class SpecialConfigs {
         return cb();
       }
       try {
-        const dependencies = await this.getOnDeployLifecycleHookDependencies(contract);
+        const dependencies = await this.getOnDeployLifecycleHookDependencies({
+          contractConfig: contract,
+          logPrefix: `${contract.className} > beforeDeploy >`
+        });
         await beforeDeployFn(dependencies);
         cb();
       } catch (e) {
@@ -186,7 +190,10 @@ class SpecialConfigs {
 
       if (typeof contract.onDeploy === 'function') {
         try {
-          const dependencies = await this.getOnDeployLifecycleHookDependencies(contract);
+          const dependencies = await this.getOnDeployLifecycleHookDependencies({
+            contractConfig: contract,
+            logPrefix: `${contract.className} > onDeploy >`
+          });
           await contract.onDeploy(dependencies);
           cb();
         } catch (err) {
@@ -228,7 +235,10 @@ class SpecialConfigs {
 
       if (typeof cmd === 'function') {
         try {
-          const dependencies = await this.getOnDeployLifecycleHookDependencies(contract);
+          const dependencies = await this.getOnDeployLifecycleHookDependencies({
+            contractConfig: contract,
+            logPrefix: `${contract.className} > deployIf >`
+          });
           params.shouldDeploy = await contract.deployIf(dependencies);
           cb(null, params);
         } catch (err) {
@@ -252,7 +262,8 @@ class SpecialConfigs {
     });
   }
 
-  getOnDeployLifecycleHookDependencies(contractConfig) {
+  getOnDeployLifecycleHookDependencies(options) {
+    let contractConfig = options.contractConfig;
     let dependencyNames = contractConfig.deps || [];
     dependencyNames.push(contractConfig.className);
     dependencyNames = [...new Set(dependencyNames)];
@@ -275,7 +286,7 @@ class SpecialConfigs {
           reject(err);
         }
         this.events.request('blockchain:get', web3 => {
-          const logger = this.createLoggerWithPrefix(`${contractConfig.className} > onDeploy >`);
+          const logger = this.createLoggerWithPrefix(options.logPrefix);
           resolve(this.assembleLifecycleHookDependencies(contractInstances, web3, logger));
         });
       });
