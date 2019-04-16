@@ -179,7 +179,7 @@ export function listenToChannel(credentials, channel) {
 }
 
 export function webSocketProcess(credentials, processName) {
-  return embarkAPI.webSocketProcess(credentials, `/process-logs/${processName}`);
+  return embarkAPI.webSocketProcess(credentials, processName);
 }
 
 export function webSocketServices(credentials) {
@@ -205,4 +205,3 @@ export function webSocketBlockHeader(credentials) {
 export function websocketGasOracle(credentials) {
   return embarkAPI.websocketGasOracle(credentials, `/blockchain/gas/oracle`);
 }
-
