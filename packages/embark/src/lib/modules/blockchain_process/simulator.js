@@ -29,7 +29,8 @@ class Simulator {
     cmds.push("-l " + (options.gasLimit || this.blockchainConfig.targetGasLimit || 8000000));
 
     // adding mnemonic only if it is defined in the blockchainConfig or options
-    const mnemonicAccount = this.blockchainConfig.accounts ? this.blockchainConfig.accounts.find(acc => acc.mnemonic) : {};
+    let mnemonicAccount = this.blockchainConfig.accounts ? this.blockchainConfig.accounts.find(acc => acc.mnemonic) : {};
+    mnemonicAccount = mnemonicAccount || {};
     const simulatorMnemonic = mnemonicAccount.mnemonic || options.simulatorMnemonic;
 
     if (simulatorMnemonic) {
