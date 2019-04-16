@@ -57,7 +57,7 @@ class SolcProcess extends ProcessWrapper {
       let output = func(JSON.stringify(jsonObj), this.findImports.bind(this));
       cb(null, output);
     } catch (err) {
-      cb(err.message);
+      cb(err.message || err);
     }
   }
 

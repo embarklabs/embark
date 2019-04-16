@@ -129,14 +129,21 @@ class Solidity {
 
         for (let contractFile in json) {
           for (let contractName in json[contractFile]) {
+            let className = contractName;
+            let realContractFile = contractFile;
+            // This is for solc 0.4.18 which outputs weirdly
+            if (className.indexOf(':') > -1) {
+              const nameParts = className.split(':');
+              realContractFile += nameParts[0];
+              className = nameParts[nameParts.length - 1];
+            }
             let contract = json[contractFile][contractName];
 
-            const className = contractName;
-            let filename = contractFile;
+            let filename = realContractFile;
 
             compiled_object[className] = {};
             compiled_object[className].code = contract.evm.bytecode.object;
-            compiled_object[className].linkReferences = contract.evm.bytecode.linkReferences;
+            compiled_object[className].linkReferences = self.getLinkReferences(contract.evm.bytecode.linkReferences);
             compiled_object[className].runtimeBytecode = contract.evm.deployedBytecode.object;
             compiled_object[className].realRuntimeBytecode = contract.evm.deployedBytecode.object.slice(0, -68);
             compiled_object[className].swarmHash = contract.evm.deployedBytecode.object.slice(-68).slice(0, 64);
@@ -155,6 +162,26 @@ class Solidity {
     ], function (err, result) {
       cb(err, result);
     });
+  }
+
+  getLinkReferences(linkReferences) {
+    const finalReferences = {};
+    for (let contractFile in linkReferences) {
+      for (let contractName in linkReferences[contractFile]) {
+        let className = contractName;
+        let realContractFile = contractFile;
+        if (className.indexOf(':') > -1) {
+          const nameParts = className.split(':');
+          realContractFile += nameParts[0];
+          className = nameParts[nameParts.length - 1];
+        }
+        if (!finalReferences[realContractFile]) {
+          finalReferences[realContractFile] = {};
+        }
+        finalReferences[realContractFile][className] = linkReferences[contractFile][contractName];
+      }
+    }
+    return finalReferences;
   }
 
   compile_solidity(contractFiles, options, cb) {
