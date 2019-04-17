@@ -108,7 +108,9 @@ class DeployManager {
             });
           }
         ], (err) => {
-          self.logger.error(err);
+          if (err) {
+            self.logger.error(err);
+          }
           done(err);
         });
       });
