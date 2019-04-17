@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.0](https://github.com/embark-framework/embark/compare/v4.0.0...v4.1.0-beta.0) (2019-04-17)
+
+
+### Bug Fixes
+
+* **@cockpit/deployment:** Check if contracts deployed when connected to metamask ([c233163](https://github.com/embark-framework/embark/commit/c233163))
+* **@cockpit/services:** send only process names to embark-api-client ([eb9de68](https://github.com/embark-framework/embark/commit/eb9de68))
+
+
+### Features
+
+* **@cockpit:** implement pagination for contracts ([d71352b](https://github.com/embark-framework/embark/commit/d71352b))
+* **@cockpit/editor:** Make tabs draggable ([f27cde9](https://github.com/embark-framework/embark/commit/f27cde9))
+* **@cockpit/explorer:** display truncated account balances ([6b2dc95](https://github.com/embark-framework/embark/commit/6b2dc95))
+* **@cockpit/explorer:** implement pagination for accounts explorer ([745edaf](https://github.com/embark-framework/embark/commit/745edaf))
+* **@embark/proxy:** Add dev tx to proxy when request fails to get response ([36be50e](https://github.com/embark-framework/embark/commit/36be50e))
+
+
+
+
+
 ## [4.0.1](https://github.com/embark-framework/embark/compare/v4.0.0...v4.0.x) (2019-03-26)
 
 **Note:** Version bump only for package embark-ui

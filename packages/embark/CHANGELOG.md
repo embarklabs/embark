@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.0](https://github.com/embark-framework/embark/compare/v4.0.0...v4.1.0-beta.0) (2019-04-17)
+
+
+### Bug Fixes
+
+* **@embark/contracts_manager:** compare correct property ([9e4204a](https://github.com/embark-framework/embark/commit/9e4204a))
+* **@embark/debugger:** Add error handling for missing line ([5a502b3](https://github.com/embark-framework/embark/commit/5a502b3))
+* **@embark/deployment:** ensure error messages emitted are logged ([72fc80d](https://github.com/embark-framework/embark/commit/72fc80d))
+* **@embark/ipfs:** Fix IPFS gateway CORS for embark-status plugin ([e4d1e4e](https://github.com/embark-framework/embark/commit/e4d1e4e))
+* run geth and parity in archival mode for dev nodes ([542809c](https://github.com/embark-framework/embark/commit/542809c))
+* **@embark/pipeline:** Support embarkjs-whisper with external pipeline ([447f6f8](https://github.com/embark-framework/embark/commit/447f6f8))
+* **@embark/solidity:** handle absolute paths correctly ([4b1e126](https://github.com/embark-framework/embark/commit/4b1e126))
+* **@embark/storage:** Fix hang when IPFS/Swarm started externally ([eca456f](https://github.com/embark-framework/embark/commit/eca456f))
+* **@embark/tests:** Fix contracts app hanging ([12cbb7b](https://github.com/embark-framework/embark/commit/12cbb7b))
+* **@embark/utils:** Fix proxy crash with unknown function ([431d366](https://github.com/embark-framework/embark/commit/431d366))
+* **embark/compiler:** fix errors and bugs with solc 0.4.18 ([bfebb3c](https://github.com/embark-framework/embark/commit/bfebb3c))
+* **embark/simulator:** fix account object empty when no mnemonic ([a4f68cb](https://github.com/embark-framework/embark/commit/a4f68cb))
+* **pipeline:** build contracts even when pipeline is disabled ([75af5c4](https://github.com/embark-framework/embark/commit/75af5c4))
+
+
+### Features
+
+* **@embark/embark-reset:** allow users to specify files to be removed in reset ([b8357b7](https://github.com/embark-framework/embark/commit/b8357b7))
+* **@embark/generator:** transpile embarkjs.js to be used by node ([ae88cc6](https://github.com/embark-framework/embark/commit/ae88cc6))
+* **@embark/proxy:** Add dev tx to proxy when request fails to get response ([36be50e](https://github.com/embark-framework/embark/commit/36be50e))
+
+
+
+
+
 ## [4.0.2](https://github.com/embark-framework/embark/compare/v4.0.1...v4.0.2) (2019-04-11)
 
 

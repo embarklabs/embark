@@ -1,6 +1,6 @@
 {
   "name": "embark-profiler",
-  "version": "4.0.1",
+  "version": "4.1.0-beta.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Smart contract profiler for Embark DApps",

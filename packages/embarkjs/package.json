@@ -1,6 +1,6 @@
 {
   "name": "embarkjs",
-  "version": "4.0.2",
+  "version": "4.1.0-beta.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "JavaScript library for easily interacting with web3 technologies",
