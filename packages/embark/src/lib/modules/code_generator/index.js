@@ -338,6 +338,7 @@ class CodeGenerator {
             return next(err);
           }
           embarkjsCode += `\nconst EmbarkJS = require("${symlinkDest}").default || require("${symlinkDest}");`;
+          embarkjsCode += `\nEmbarkJS.environment = '${self.env}';`;
           embarkjsCode += "\nglobal.EmbarkJS = EmbarkJS;";
           next();
         });
