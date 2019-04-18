@@ -1,0 +1,102 @@
+.c-box {
+  overflow: hidden;
+  padding: get-spacing-stretch-inset(l);
+  position: relative;
+  @include border();
+  border-radius: 0;
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: 100%;
+
+  @include breakpoint(l) {
+    padding: get-spacing-stretch-inset(xl);
+    background-size: 1228px 340px;
+  }
+
+  &:focus {
+    text-decoration: none;
+  }
+
+  &__title {
+    margin-top: get-spacing-stack(m);
+  }
+
+  &__subtitle {
+    margin-top: get-spacing-stack(xs);
+  }
+  &__footer {
+    margin-top: get-spacing-stack(m);
+  }
+  &__body {
+    position: relative;
+    z-index: get-index(boxBody);
+  }
+  &__overlay {
+    height: 100%;
+    left: 0;
+    opacity: .6;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: get-index(boxOverlay);
+    border-radius: $border-radius;
+    background: get-color(unique, black);
+  }
+  &__offset {
+    position: absolute;
+    right: get-spacing-inset(m);
+    top: get-spacing-inset(m);
+  }
+
+  .c-box--universe & {
+    color: #fff;
+
+    .u-link-uniform {
+      color: #fff !important;
+    }
+  }
+}
+
+.c-box--edgy {
+  border-radius: 0;
+}
+.c-box--cover {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border: 0;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: get-color(unique, white);
+}
+
+.c-box--spot {
+  background-color: #007e7f;
+  background-image: linear-gradient(62deg, #003e65 0%, #51b988 100%);
+  color: get-color(unique, white);
+}
+
+.c-box--whisper {
+  background-color: get-color-layout(ghost);
+  color: get-color-layout(ghostGradation);
+}
+
+.c-box--dark {
+  background-color: get-color-layout(dark);
+  color: get-color-layout(darkGradation);
+}
+
+.c-box--universe {
+  background-color: get-color-layout(universe);
+  color: get-color-layout(universeGradation);
+}
+
+.c-box--visible {
+  overflow: visible;
+}
+
+.c-box--unframed {
+  padding: 0;
+  border: none;
+}

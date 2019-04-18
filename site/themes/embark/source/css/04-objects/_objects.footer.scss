@@ -1,0 +1,38 @@
+.c-footer {
+  padding: get-spacing-inset(m);
+  background-image: url(../../assets/images/rocket-start.svg);
+  background-position: bottom right;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-color: get-color-layout(dark);
+
+  @include breakpoint(l) {
+    padding: get-spacing-inset(l);
+  }
+
+  &__top {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+
+    @include breakpoint(m) {
+      flex-direction: row;
+    }
+
+    &__title {
+      margin-bottom: get-spacing-stack(m);
+      margin-right: get-spacing-inline(l);
+
+      @include breakpoint(m) {
+        margin-bottom: 0;
+      }
+    }
+  }
+  &__body {
+    margin-top: get-spacing-stack(xl);
+  }
+
+  &__bottom {
+    margin-top: get-spacing-stack(xl);
+  }
+}

@@ -1,0 +1,16 @@
+.o-list-inline {
+  @include list-reset();
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-left: - get-spacing-inline(l);
+  margin-top: - get-spacing-stack(s);
+
+  &__item {
+    display: inline-block;
+    margin-left: get-spacing-inline(l);
+    margin-top: get-spacing-stack(s);
+    vertical-align: middle;
+  }
+}

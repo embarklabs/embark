@@ -1,0 +1,57 @@
+input,
+textarea,
+select {
+  display: block;
+  margin: 0;
+  padding: get-spacing-stretch-inset(m);
+  width: 100%;
+  border: $border-width solid $border-color;
+  border-radius: $border-radius;
+  background-color: $form-input-background-color;
+  color: $font-base-color;
+  font-family: $font-base-family;
+  font-size: $font-base-size;
+  line-height: 1;
+
+  &:hover {}
+
+  &:focus {
+    outline: transparent;
+    border-color: $border-color-focus;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    color: $form-input-disabled-color;
+  }
+}
+
+input[type="color"] {
+  padding: 0;
+}
+
+input[type="search"] {
+  padding: get-spacing-squish(l);
+  -webkit-appearance: none;
+  border-radius: $border-rounded-radius;
+}
+
+textarea {
+  resize: none;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+legend {
+  font-weight: $form-legend-weight;
+}
+
+label {
+  color: $form-label-color;
+  font-weight: $form-label-weight;
+  text-transform: uppercase;
+}

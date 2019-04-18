@@ -1,0 +1,80 @@
+.o-guided-content {
+  @include breakpoint(l) {
+    max-width: $layout-container-width;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+  }
+  @include breakpoint(xxl) {
+    max-width: $layout-container-xxl-width;
+  }
+
+  &__wrapper {
+    @include breakpoint(l) {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+
+  &__guide {
+    left: 0;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    width: 300px;
+    z-index: get-index(guide);
+    transform: translateX(-100%);
+    transition: transform .3s;
+
+    @include breakpoint(l) {
+      height: auto;
+      flex-basis: 300px;
+      flex-grow: 0;
+      margin-right: get-spacing-inset(l);
+      padding-right: get-spacing-inset(l);
+      position: static;
+      width: 300px;
+      border-right: $border-width solid $border-color;
+      transform: none;
+    }
+
+    &.is-active {
+      transform: translateX(0);
+    }
+  }
+  &__content {
+    margin-top: get-spacing-stack(m);
+
+    @include breakpoint(l) {
+      margin-top: 0;
+      width: calc(100% - 350px);
+    }
+    @include breakpoint(xxl) {
+      width: calc(100% - 560px);
+    }
+
+    h2, h3, p, ul {
+      margin-top: get-spacing-stack(m);
+    }
+
+    a {
+      font-weight: bold;
+    }
+  }
+  &__addition {
+    display: none;
+
+    @include breakpoint(xxl) {
+      font-size: 0.9em;
+      bottom: 0;
+      display: block;
+      flex-basis: 220px;
+      flex-grow: 0;
+      left: 100%;
+      padding: get-spacing-inset(m);
+      width: 220px;
+    }
+  }
+}
+

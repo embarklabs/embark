@@ -1,0 +1,62 @@
+/// Title
+/// @group headings
+.c-title {
+  font-size: get-font-size(xxl);
+  line-height: 1;
+
+  @include breakpoint(l) {
+    font-size: get-font-size(xxxl);
+  }
+}
+
+/// Category Title
+/// @group headings
+.c-category-title {
+  font-size: get-font-size(s);
+  font-weight: $font-bold-weight;
+  text-transform: uppercase;
+}
+
+/// Section Title
+/// @group headings
+.c-section-title {
+  font-size: get-font-size(xl);
+  line-height: 1;
+
+  @include breakpoint(l) {
+    font-size: get-font-size(xxl);
+  }
+}
+
+/// Subtitle
+/// @group headings
+.c-subtitle {
+  font-size: get-font-size(s);
+
+  @include breakpoint(l) {
+    font-size: get-font-size(m);
+  }
+}
+
+.c-title-level-2 {
+  font-size: get-font-size(l);
+  font-weight: $font-bold-weight;
+}
+
+.c-title-level-3 {
+  font-size: get-font-size(m);
+  font-weight: $font-bold-weight;
+}
+
+/// Body Title
+/// @group headings
+.c-body-title {
+  font-size: $font-base-size;
+  font-weight: $font-bold-weight;
+}
+
+/// Meta
+/// @group meta
+.c-meta {
+  font-size: $font-meta-size;
+}

@@ -1,0 +1,10 @@
+// Layout Color
+// @group Colors
+$color-layout: (
+  ghost: get-color(unique, white),
+  ghostGradation: get-color(gray),
+  dark: get-color-brand(primary),
+  darkGradation: get-color(blue, lighter),
+  universe: get-color(gray, darkest),
+  universeGradation: get-color(gray),
+) !default;

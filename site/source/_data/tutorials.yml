@@ -1,0 +1,20 @@
+- name: How to create a Token Factory with Ethereum — Part 1
+  description: Create and Deploy a Token with Ethereum
+  link: /tutorials/token_factory_1.html
+  tags:
+    - token
+    - ethereum
+- name: How to create a Token Factory with Ethereum — Part 2
+  description: Create a DApp that can deploy Tokens on the fly
+  link: /tutorials/token_factory_2.html
+  tags:
+    - token
+    - ethereum
+    - client-side-deployment
+- name: How to deploy to a testnet with Infura
+  description: Deploy and interact with your Dapp on a testnet with the use of Infura
+  link: /tutorials/infura_guide.html
+  tags:
+    - ethereum
+    - deployment
+    - testnet

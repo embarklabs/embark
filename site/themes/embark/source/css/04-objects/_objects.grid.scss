@@ -1,0 +1,125 @@
+.o-container {
+  max-width: $layout-container-width;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.o-container-medium {
+  max-width: $layout-container-medium-width;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.o-center {
+  justify-content: center;
+  text-align: center;
+}
+
+.o-container-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.o-flex {
+  @include list-reset();
+  display: flex;
+  flex-direction: row;
+
+  &__item {
+    margin-left: get-spacing-inline(m);
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}
+
+.o-flex-center {
+  align-items: center;
+}
+
+.o-flex-space-between {
+  justify-content: space-between;
+}
+
+.o-row {
+  margin-top: get-stack-spacing(m);
+}
+
+[class*="o-grid__column-"] {
+  margin-top: $layout-gutter-width;
+  margin-left: $layout-gutter-width;
+}
+
+.o-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-left: - $layout-gutter-width;
+  margin-top: -$layout-gutter-width;
+
+  &__column {
+    &--1-1 {
+      width: calc(100% - #{$layout-gutter-width});
+    }
+
+    &--1-4 {
+      width: calc(25% - #{$layout-gutter-width});
+    }
+    &--1-5 {
+      width: calc(20% - #{$layout-gutter-width});
+    }
+    &--1-2 {
+      width: calc(50% - #{$layout-gutter-width});
+    }
+    &--3-4 {
+      width: calc(75% - #{$layout-gutter-width});
+    }
+    &--1-3 {
+      width: calc(33.333% - #{$layout-gutter-width});
+    }
+    &--2-3 {
+      width: calc(66.666% - #{$layout-gutter-width});
+    }
+  }
+  &__column--medium-1-2 {
+    @include breakpoint(m) {
+      width: calc(50% - #{$layout-gutter-width});
+    }
+  }
+  &__column--medium-1-3 {
+    @include breakpoint(l) {
+      width: calc(33.33% - #{$layout-gutter-width});
+    }
+  }
+  &__column--medium-2-3 {
+    @include breakpoint(m) {
+      width: calc(66.666% - #{$layout-gutter-width});
+    }
+  }
+  &__column--large-1-2 {
+    @include breakpoint(l) {
+      width: calc(50% - #{$layout-gutter-width});
+    }
+  }
+  &__column--large-1-3 {
+    @include breakpoint(l) {
+      width: calc(33.33% - #{$layout-gutter-width});
+    }
+  }
+  &__column--large-2-3 {
+    @include breakpoint(l) {
+      width: calc(66.666% - #{$layout-gutter-width});
+    }
+  }
+  &__column--large-1-4 {
+    @include breakpoint(l) {
+      width: calc(25% - #{$layout-gutter-width});
+    }
+  }
+  &__column--large-1-5 {
+    @include breakpoint(l) {
+      width: calc(20% - #{$layout-gutter-width});
+    }
+  }
+}

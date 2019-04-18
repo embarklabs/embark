@@ -1,0 +1,35 @@
+.c-notification {
+  padding: get-spacing-inset(m);
+  border: $border-width solid $border-color;
+  border-radius: $border-radius;
+
+  p {
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  a {
+    border-bottom: $border-width solid $font-base-color;
+    color: $font-base-color;
+
+    &:hover {
+      border-bottom: 0;
+    }
+  }
+}
+
+.c-notification--danger {
+  border-color: get-color-semantic(danger);
+  background: get-color-semantic(dangerGradation);
+}
+
+.c-notification--success {
+  border-color: get-color-semantic(success);
+  background: get-color-semantic(successGradation);
+}
+
+.c-notification--info {
+  border-color: get-color-semantic(info);
+  background: get-color-semantic(infoGradation);
+}

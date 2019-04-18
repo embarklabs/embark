@@ -1,0 +1,69 @@
+.c-header {
+  padding: get-spacing-inset(m) get-spacing-inset(m) get-spacing-inset(l);
+  position: relative;
+  background-color: get-color-layout(dark);
+  color: get-color-layout(darkGradation);
+
+  @include breakpoint(l) {
+    padding: get-spacing-inset(l) get-spacing-inset(l) get-spacing-inset(xxl);
+  }
+
+  &__content {
+    position: relative;
+    z-index: get-index(headerContent);
+  }
+  &__background {
+    height: 100%;
+    left: 0;
+    opacity: .3;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background-image: url(../../assets/images/EMBARK_HEADER_ALT_OPTIMIZED.jpg);
+    background-position: center right;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    @include breakpoint(m) {
+      opacity: 1;
+    }
+  }
+
+  input {
+    border-color: get-color(blue, light);
+    background-color: rgba(get-color(blue, light), .85);
+    color: get-color(unique, white);
+
+    @include placeholder() {
+      color: get-color(unique, white);
+    }
+  }
+
+  &__top {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  &__body {
+    margin-top: get-spacing-stack(l);
+    max-width: 600px;
+
+    @include breakpoint(l) {
+      margin-top: get-spacing-stack(xl);
+    }
+  }
+  .c-title,
+  .c-subtitle {
+    text-shadow: 0 0 25px rgba(0,0,0,.6);
+  }
+}
+
+.c-header--compact {
+  padding-bottom: 50px;
+
+  .c-header__background {
+    opacity: .4;
+  }
+}

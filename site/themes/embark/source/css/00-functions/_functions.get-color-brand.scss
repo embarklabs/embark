@@ -1,0 +1,12 @@
+/// Brand Color
+/// Get the color of your brand
+/// @group Colors
+/// @param {string} $key
+@function get-color-brand($key) {
+  @if map-has-key($color-brand, $key) {
+    @return map-get($color-brand, $key);
+  }
+
+  @warn "The key #{$key} is not in the map ’$color-brand’";
+  @return null;
+}

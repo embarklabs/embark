@@ -1,0 +1,30 @@
+// Config
+
+// Utility
+.u-link {
+  color: $link-color !important;
+
+  &:hover,
+  &:focus {
+    color: $link-hover-color !important;
+  }
+}
+
+.u-link-uniform {
+  color: $font-base-color !important;
+
+  &:hover,
+  &:focus,
+  &.is-active {
+    color: $link-hover-color !important;
+  }
+}
+
+.u-link-ghost {
+  color: $link-ghost-color !important;
+
+  &:hover,
+  &:focus {
+    color: $link-ghost-hover-color !important;
+  }
+}

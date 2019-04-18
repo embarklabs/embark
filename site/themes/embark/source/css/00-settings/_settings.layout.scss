@@ -1,0 +1,29 @@
+// Breakpoints
+$layout-breakpoints: (
+  s: 480px,
+  m: 600px,
+  l: 767px,
+  xl: 1023px,
+  xxl: 1160px
+) !default;
+
+// Mobile First true or false?
+$mobile-first: true !default;
+
+// Layout Container Width
+$layout-container-width: 980px !default;
+
+// Layout Container Medium Width
+$layout-container-medium-width: 700px !default;
+
+// Layout Container XXL Width
+$layout-container-xxl-width: 1160px !default;
+
+// Space between items in layout like columns
+$layout-gutter-width: get-spacing-inline(l) !default;
+
+// Prevent-Space around the browser window
+$layout-prevent-spacing: get-spacing-inset(m) !default;
+
+// Define the number of columns which you want to have
+$layout-columns: 12 !default;

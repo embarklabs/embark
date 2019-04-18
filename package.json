@@ -36,6 +36,7 @@
     "clean:full": "npx npm-run-all clean clean:top",
     "clean:top": "npx rimraf node_modules",
     "cwtree": "node scripts/check-working-tree",
+    "deploy:site": "node site/deploy-site",
     "globalize": "node scripts/globalize",
     "lint": "lerna run --parallel lint",
     "package": "lerna run --parallel package",

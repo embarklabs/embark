@@ -1,0 +1,29 @@
+.o-list-bare {
+  @include list-reset();
+  margin-top: get-spacing-stack(s);
+
+  .o-list-bare__child {
+    @include list-reset();
+    margin-top: get-spacing-stack(m);
+    .o-list-bare__item {
+      margin-left: 1em;
+      line-height: 1.3;
+    }
+  }
+
+  &__item {
+    margin-top: get-spacing-stack(m);
+    line-height: 1.3;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
+
+
+.o-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

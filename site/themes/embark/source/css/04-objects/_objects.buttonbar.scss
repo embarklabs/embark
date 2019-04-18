@@ -1,0 +1,22 @@
+// Config
+
+// Object
+.o-buttonbar {
+  display: flex;
+  flex-direction: column;
+  margin-top: get-spacing-stack(m);
+
+  @include breakpoint(m) {
+    flex-direction: row;
+    margin-left: - get-spacing-inline(l);
+  }
+
+  &__item {
+    margin-top: get-spacing-stack(s);
+
+    @include breakpoint(m) {
+      margin-left: get-spacing-inline(l);
+      margin-top: 0;
+    }
+  }
+}

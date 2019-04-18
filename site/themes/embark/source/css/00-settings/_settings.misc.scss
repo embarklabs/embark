@@ -1,0 +1,18 @@
+// Shadow
+$shadow-color: get-color(unique, black) !default;
+$shadow-size: 0 0 20px !default;
+$shadow-opacity: .5 !default;
+
+// Overlay
+$overlay-color: get-color(unique, black) !default;
+$overlay-opacity: .7 !default;
+
+// Misc
+$border-color: get-color(gray, lighter) !default;
+$border-color-focus: get-brand(primary) !default;
+$border-width: 1px !default;
+$border-radius: 5px !default;
+$border-rounded-radius: 150px !default;
+
+// Page
+$page-background-color: get-color(unique, white) !default;

@@ -1,0 +1,15 @@
+.o-overlap {
+  margin-bottom: 30%;
+
+  @include breakpoint(xl) {
+    margin-bottom: 400px;
+  }
+
+  &__image {
+    margin-bottom: -30%;
+
+    @include breakpoint(xl) {
+      margin-bottom: -400px;
+    }
+  }
+}

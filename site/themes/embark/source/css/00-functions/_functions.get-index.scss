@@ -1,0 +1,11 @@
+/// Index
+/// Get the index of an element
+/// @param {string} $key
+@function get-index($key) {
+  @if map-has-key($indecies, $key) {
+    @return map-get($indecies, $key);
+  }
+
+  @warn "The key #{$key} is not in the map ’$indecies’";
+  @return null;
+}

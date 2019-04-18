@@ -1,0 +1,23 @@
+// Config
+
+// Object
+.o-head-up {
+  position: relative;
+
+  &__item {
+    position: absolute;
+  }
+  &__item--top-left {
+    left: get-spacing-inset(s);
+    top: get-spacing-inset(s);
+  }
+  &__item--top-right {
+    right: get-spacing-inset(s);
+    top: get-spacing-inset(s);
+  }
+  &__item--middle-right {
+    right: get-spacing-inset(s);
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}

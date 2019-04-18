@@ -1,0 +1,31 @@
+.o-distance {
+  margin-top: get-spacing-stack(l);
+
+  @include breakpoint(l) {
+    margin-top: get-spacing-stack(xl);
+  }
+}
+
+.o-distance-s {
+  margin-top: get-spacing-stack(s);
+}
+
+.o-distance-m {
+  margin-top: get-spacing-stack(m);
+}
+
+.o-distance-l {
+  margin-top: get-spacing-stack(l);
+}
+
+.o-distance-xl {
+  margin-top: get-spacing-stack(xl);
+}
+
+.o-distance-xxl {
+  margin-top: get-spacing-stack(xl);
+
+  @include breakpoint(l) {
+    margin-top: get-spacing-stack(xxl);
+  }
+}

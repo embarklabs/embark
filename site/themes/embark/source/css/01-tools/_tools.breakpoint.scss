@@ -1,0 +1,11 @@
+/// Breakpoint
+/// Using this for breakpoints
+/// @group Layout
+/// @param {string} $name
+@mixin breakpoint($name) {
+  $value: map-get($layout-breakpoints, $name);
+
+  @media screen and (min-width: $value) {
+    @content;
+  }
+}

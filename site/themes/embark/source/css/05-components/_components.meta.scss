@@ -1,0 +1,14 @@
+.c-meta {
+  font-size: 1.5rem;
+  position: relative;
+
+  a {
+    font-weight: normal;
+    color: get-color-brand(primary);
+
+    .c-icon {
+      vertical-align: middle;
+    }
+
+  }
+}

@@ -1,0 +1,31 @@
+.o-media {
+  display: flex;
+  flex-direction: column;
+
+  @include breakpoint(xl) {
+    flex-direction: row;
+  }
+  &__asset {
+    margin-top: -175px;
+    order: 1;
+
+    @include breakpoint(xl) {
+      bottom: -200px;
+      margin-top: 0;
+      order: initial;
+      position: absolute;
+      right: 0;
+      width: 70%;
+      transform: translateX(25%);
+    }
+  }
+  &__body {
+    order: 2;
+
+    @include breakpoint(xl) {
+      order: initial;
+      padding-right: $layout-gutter-width;
+      width: 50%;
+    }
+  }
+}

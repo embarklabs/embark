@@ -1,0 +1,8 @@
+/// Color
+/// Get a color from the global palette
+/// @group Colors
+/// @param {string} $scheme - Take the color which you need
+/// @param {string} $tone [base] - Use a different tone from the color
+@function get-color($scheme, $tone: base) {
+  @return map-get(map-get($color-palette, $scheme), $tone);
+}

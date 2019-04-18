@@ -1,0 +1,1 @@
+<pre class="highlight {% if lang %}{{lang}}{% endif %}">{% if copyBtn %}<button class="c-button c-button--squared" data-clipboard-target="#code-{{id}}"><svg class="c-icon c-icon--xs"><use xlink:href="../assets/icons/symbols.svg#icon-copy-paste"></use></svg></button>{% endif %}<code id="code-{{id}}">{{content}}</code></pre>

@@ -1,0 +1,12 @@
+/// Spacing Inset
+/// Get the inset spacing of the map
+/// @group Spacing
+/// @param {string} $key
+@function get-spacing-inset($key) {
+  @if map-has-key($spacingInset, $key) {
+    @return map-get($spacingInset, $key);
+  }
+
+  @warn "The key #{$key} is not in the map ’$spacingInset’";
+  @return null;
+}

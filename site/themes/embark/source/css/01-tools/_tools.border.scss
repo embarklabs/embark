@@ -1,0 +1,6 @@
+@mixin border($color: $border-color) {
+  @if variable-exists(border-radius) {
+    border-radius: $border-radius;
+  }
+  border: $border-width solid $color;
+}

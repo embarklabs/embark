@@ -1,0 +1,77 @@
+- name: embark-bamboo
+  description: Plugin to add Bamboo support to embark
+  link: https://www.npmjs.com/package/embark-bamboo
+  thumbnail: bamboo.png
+  tags:
+    - language
+    - smart-contracts
+- name: embark-solc
+  description: Uses the command line Solidity Compiler for light-speed compile times
+  link: https://www.npmjs.com/package/embark-solc
+  thumbnail: solidity.png
+  tags:
+    - solidity
+    - language
+    - smart-contracts
+- name: embark-solium
+  description: The official Solium Plugin for the Embark Framework
+  link: https://www.npmjs.com/package/embark-solium
+  thumbnail: solium.png
+  tags:
+    - linter
+    - solidity
+    - solium
+- name: embark-etherscan-verifier
+  description: Plugin for Embark to flatten and verify contracts on Etherscan
+  link: https://www.npmjs.com/package/embark-etherscan-verifier
+  tags:
+    - solidity
+    - etherscan
+    - smart-contracts
+- name: embark-status
+  description: Status plugin to interact with embark
+  link: https://www.npmjs.com/package/embark-status-plugin
+  thumbnail: status.png
+  tags:
+    - status
+    - mobile
+- name: embark-remix
+  description: Plugin to start Remix and Remix directly with Embark
+  link: https://www.npmjs.com/package/embark-remix
+  thumbnail: remix.png
+  tags:
+    - remix
+    - debugger
+- name: embark-slither
+  description: Plugin to analyse solidity source with Slither
+  link: https://www.npmjs.com/package/embark-slither
+  tags:
+    - solidity
+- name: embark-snark
+  description: Plugin to compile circom circuits and generate Solidity proof
+  link: https://www.npmjs.com/package/embark-snark
+  tags:
+    - snark
+- name: embark-fortune
+  description: Displays a fortune message after every build
+  link: https://www.npmjs.com/package/embark-fortune
+  thumbnail: fortune.jpg
+  tags:
+    - fun
+- name: embark-pug
+  description: Embark plugin to support pug / jade templates
+  link: https://www.npmjs.com/package/embark-pug
+  legacy: true
+  thumbnail: pug.png
+  tags:
+    - pug
+    - jade
+    - templates
+- name: embark-haml
+  description: Embark plugin to support haml templates
+  link: https://www.npmjs.com/package/embark-haml
+  legacy: true
+  thumbnail: haml.png
+  tags:
+    - haml
+    - templates
