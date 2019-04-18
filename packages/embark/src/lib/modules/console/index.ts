@@ -107,7 +107,11 @@ class Console {
           // Avoid HTML injection in the Cockpit
           response = escapeHtml(response);
         }
-        return res.send({ result: response });
+        const jsonResponse = {result: response};
+        if (res.headersSent) {
+          return res.end(jsonResponse);
+        }
+        return res.send(jsonResponse);
       });
     });
   }

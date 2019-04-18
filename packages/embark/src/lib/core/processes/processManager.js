@@ -1,5 +1,5 @@
 const ProcessState = {
-  Unstarted: 'unstarted',
+  Stopped: 'stopped',
   Starting: 'starting',
   Running: 'running',
   Stopping: 'stopping'
@@ -12,51 +12,50 @@ class ProcessManager {
     this.plugins = options.plugins;
     this.processes = {};
     this.servicesState = {};
+    this.plugin = this.plugins.createPlugin('processManager', {});
 
     this.events.on("servicesState", (servicesState) => {
       this.servicesState = servicesState;
     });
 
-    this._registerAsPlugin();
+    this._registerApiCalls();
     this._registerEvents();
   }
 
-  _registerAsPlugin() {
-    const self = this;
-    self.plugin = this.plugins.createPlugin('processManager', {});
+  _registerApiCalls() {
 
-    self.plugin.registerAPICall(
+    this.plugin.registerAPICall(
       'get',
       '/embark-api/services',
       (req, res) => {
-        res.send(this._sevicesForApi(this.servicesState));
+        res.send(this._servicesForApi(this.servicesState));
       }
     );
 
-    self.plugin.registerAPICall(
+    this.plugin.registerAPICall(
       'ws',
       '/embark-api/services',
       (ws, _res) => {
         this.events.on('servicesState', (servicesState) => {
-          ws.send(JSON.stringify(this._sevicesForApi(servicesState)), () => undefined);
+          ws.send(JSON.stringify(this._servicesForApi(servicesState)), () => undefined);
         });
       }
     );
 
-    self.plugin.registerAPICall(
+    this.plugin.registerAPICall(
       'get',
       '/embark-api/processes',
       (req, res) => {
         const formatter = (acc, processName) => {
-          acc.push({state: self.processes[processName].state, name: processName});
+          acc.push({state: this.processes[processName].state, name: processName});
           return acc;
         };
-        res.send(Object.keys(self.processes).reduce(formatter, []));
+        res.send(Object.keys(this.processes).reduce(formatter, []));
       }
     );
   }
 
-  _sevicesForApi(servicesState) {
+  _servicesForApi(servicesState) {
     let processList = [];
     for (let serviceName in servicesState) {
       let service = servicesState[serviceName];
@@ -78,19 +77,44 @@ class ProcessManager {
 
       this.processes[name] = {
         name: name,
-        state: ProcessState.Unstarted,
+        state: ProcessState.Stopped,
         cb: launchFn || cb,
         stopFn: stopFn || function noop () {}
       };
+
+      this.plugin.registerConsoleCommand({
+        description: __(`Starts/stops the ${name} process`),
+        matches: [`service ${name} on`, `service ${name} off`],
+        usage: `service ${name} on/off`,
+        process: (cmd, callback) => {
+          const enable = cmd.trim().endsWith('on');
+          this.logger.info(`${enable ? 'Starting' :  'Stopping'} the ${name} process...`);
+          if(enable) {
+            return this.events.request("processes:launch", name, (err) => {
+              if (err) this.logger.info(err); // writes to embark's console
+              const process = self.processes[name];
+              if(process && process.afterLaunchFn) {
+                process.afterLaunchFn.call(process.afterLaunchFn, err);
+              }
+              callback(err, `${name} process started.`); // passes a message back to cockpit console
+            });
+          }
+          this.events.request("processes:stop", name, (err) => {
+            if (err) this.logger.info(err); // writes to embark's console
+            callback(err, `${name} process stopped.`); // passes a message back to cockpit console
+          });
+        }
+      });
     });
 
     self.events.setCommandHandler('processes:launch', (name, cb) => {
       cb = cb || function noop() {};
       let process = self.processes[name];
-      if (process.state !== ProcessState.Unstarted) {
-        return cb();
+      if (process.state !== ProcessState.Stopped) {
+        return cb(__(`The ${name} process is already ${process.state.toLowerCase()}.`));
       }
       process.state = ProcessState.Starting;
+      if(!process.afterLaunchFn) process.afterLaunchFn = cb;
       process.cb.apply(process.cb, [
         (...args) => {
           process.state = ProcessState.Running;
@@ -103,12 +127,12 @@ class ProcessManager {
       let process = self.processes[name];
       cb = cb || function noop() {};
       if (process.state !== ProcessState.Running) {
-        return cb();
+        return cb(__(`The ${name} process is already ${process.state.toLowerCase()}.`));
       }
       process.state = ProcessState.Stopping;
       process.stopFn.apply(process.stopFn, [
         (...args) => {
-          process.state = ProcessState.Unstarted;
+          process.state = ProcessState.Stopped;
           cb.apply(cb, args);
         }
       ]);
