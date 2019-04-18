@@ -1,0 +1,12 @@
+/// Font size
+/// Get the size of a font
+/// @group Font
+/// @param {string} $key
+@function get-font-size($key) {
+  @if map-has-key($fontSize, $key) {
+    @return map-get($fontSize, $key);
+  }
+
+  @warn "The key #{$key} is not in the map ’$fontSize’";
+  @return null;
+}

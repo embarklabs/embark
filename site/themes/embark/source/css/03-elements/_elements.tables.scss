@@ -1,0 +1,24 @@
+table {
+  width: 100%;
+  table-layout: fixed;
+  border: $border-width solid $border-color;
+  border-collapse: collapse;
+  word-wrap: break-word;
+  margin-top: get-spacing-stack(m);
+}
+
+th,
+td {
+  padding: get-spacing-inset(s);
+  border-left: $border-width solid $border-color;
+  border-top: $border-width solid $border-color;
+
+  &:first-child {
+    border-left: 0;
+  }
+}
+
+thead td,
+thead th {
+  border-top: 0;
+}

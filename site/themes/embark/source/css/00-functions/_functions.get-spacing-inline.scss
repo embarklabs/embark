@@ -1,0 +1,12 @@
+/// Spacing Inline
+/// Get the Inline spacing of the map
+/// @group Spacing
+/// @param {string} $key
+@function get-spacing-inline($key) {
+  @if map-has-key($spacingInline, $key) {
+    @return map-get($spacingInline, $key);
+  }
+
+  @warn "The key #{$key} is not in the map ’$spacingInline’";
+  @return null;
+}

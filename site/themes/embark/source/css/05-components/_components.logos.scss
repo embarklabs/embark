@@ -1,0 +1,15 @@
+.c-logo {
+  display: block;
+  height: 50px;
+  width: 136px;
+  background: url(../../assets/images/logo.svg) no-repeat;
+  background-size: 100%;
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+
+  &--negative {
+    background-image: url(../../assets/images/logo-negative.svg);
+  }
+} 
+

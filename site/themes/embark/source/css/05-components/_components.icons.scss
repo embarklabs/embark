@@ -1,0 +1,38 @@
+// Config
+$icon-size-width: 24px !default;
+
+// Component
+.c-icon {
+  display: inline-block;
+  fill: currentColor;
+  height: $icon-size-width;
+  stroke-width: 0;
+  stroke: currentColor;
+  vertical-align: baseline;
+  width: $icon-size-width;
+}
+
+.c-icon--xs {
+  height: 16px;
+  width: 16px;
+}
+
+.c-icon--s {
+  height: 24px;
+  width: 24px;
+}
+
+.c-icon--m {
+  height: 32px;
+  width: 32px;
+}
+
+.c-icon--l {
+  height: 48px;
+  width: 48px;
+}
+
+.c-icon--xl {
+  height: 64px;
+  width: 64px;
+}

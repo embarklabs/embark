@@ -1,0 +1,10 @@
+// Link
+$link-color: get-color-brand(secondary) !default;
+
+$link-hover-color: get-color-brand(secondaryGradation) !default;
+
+$link-visited-color: get-color(gray) !default;
+
+$link-ghost-color: get-color(unique, white) !default;
+
+$link-ghost-hover-color: get-color(blue, lighter) !default;

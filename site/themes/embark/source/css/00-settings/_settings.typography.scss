@@ -1,0 +1,41 @@
+/// Map with different sizes
+$fontSize: (
+  xs: 1.5rem,
+  s: 1.8rem,
+  m: 2.4rem,
+  l: 3rem,
+  xl: 3.6rem,
+  xxl: 4.8rem,
+  xxxl: 5.8rem
+) !default;
+
+// Font Base
+$font-base-family: Roboto, sans-serif;
+$font-base-color: get-color(gray, darkest);
+$font-base-size: 18px;
+$font-base-weight: 400;
+$font-base-line-height: 1.45;
+
+// Font Weight
+$font-light-weight: 200;
+$font-bold-weight: 700;
+
+// Font Meta
+$font-meta-size: get-font-size(s);
+$font-meta-color: get-color(gray);
+
+// Font Body
+$font-body-size: get-font-size(m);
+
+// Font Title
+$font-title-size: get-font-size(xl);
+
+// Font Subtitle
+$font-subtitle-size: get-font-size(l);
+$font-subtitle-color: get-color(gray);
+
+// Font H1-H6
+$font-level-1-size: get-font-size(l);
+$font-level-2-size: get-font-size(m);
+$font-level-3-size: get-font-size(m);
+$font-level-4-size: get-font-size(s);

@@ -1,0 +1,23 @@
+// Config
+
+// Utility
+.u-text-normal {
+  color: $font-base-color !important;
+  text-decoration: none;
+}
+
+.u-text-death {
+  color: get-color(gray) !important;
+}
+
+.u-text-light {
+  color: get-color(blue, light) !important;
+}
+
+.u-text-ghost {
+  color: get-color(unique, white) !important;
+}
+
+.u-text-danger {
+  color: get-color-semantic(danger) !important;
+}

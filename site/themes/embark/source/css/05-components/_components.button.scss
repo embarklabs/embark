@@ -1,0 +1,133 @@
+// Config
+$button-border-color: transparent !default;
+$button-background-color: get-color-brand(secondary) !default;
+$button-font-color: get-color(unique, white) !default;
+
+$button-hover-border-color: get-color-brand(secondary) !default;
+$button-hover-background-color: transparent !default;
+$button-hover-font-color: get-color-brand(secondary) !default;
+
+$button-ghost-border-color: get-color(unique, white) !default;
+$button-ghost-background-color: get-color(unique, white) !default;
+$button-ghost-font-color: get-color-brand(secondary) !default;
+
+$button-quite-border-color: get-color(blue, light) !default;
+$button-quite-background-color: get-color(blue, light) !default;
+$button-quite-font-color: get-color(unique, white) !default;
+
+$button-quite-hover-border-color: get-color-brand(primaryGradation) !default;
+$button-quite-hover-background-color: transparent !default;
+$button-quite-hover-font-color: get-color-brand(primaryGradation) !default;
+
+$button-plain-border-color: transparent !default;
+$button-plain-background-color: transparent !default;
+$button-plain-font-color: get-color-brand(secondary) !default;
+
+// Component
+/// @group Buttons
+.c-button {
+  cursor: pointer;
+  display: inline-block;
+  padding: get-spacing-squish(l);
+  vertical-align: top;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  @include border($button-border-color);
+  border-radius: $border-radius;
+  background: $button-background-color;
+  color: $button-font-color;
+  font-size: 1.8rem;
+  font-weight: bold;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+
+  &:hover {
+    border-color: $button-hover-border-color;
+    background-color: $button-hover-background-color;
+    color: $button-hover-font-color;
+  }
+
+  &:focus {
+    text-decoration: none;
+  }
+}
+
+/// Quite Button
+/// @group Buttons
+.c-button--quite {
+  border-color: $button-quite-border-color;
+  background-color: $button-quite-background-color;
+  color: $button-quite-font-color;
+
+  &:hover {
+    border-color: $button-quite-hover-border-color;
+    background-color: $button-quite-hover-background-color;
+    color: $button-quite-hover-font-color;
+  }
+}
+
+/// Destructive Button
+/// @group Buttons
+.c-button--destructive {
+  border-color: get-color-semantic(danger);
+  background-color: get-color-semantic(danger);
+  color: get-color(unique, white);
+
+  &:hover {
+    border-color: get-color-semantic(danger);
+    background-color: transparent;
+    color: get-color-semantic(danger);
+  }
+}
+
+/// Ghost Button
+/// @group Buttons
+.c-button--ghost {
+  border-color: $button-ghost-border-color;
+  background-color: $button-ghost-background-color;
+  color: $button-ghost-font-color;
+}
+
+/// Plain Button
+/// @group Buttons
+.c-button--plain {
+  border-color: $button-plain-border-color;
+  background-color: $button-plain-background-color;
+  color: $button-plain-font-color;
+}
+
+/// Minion Button
+/// @group Buttons
+.c-button--minion {
+  padding: get-spacing-squish(m);
+  font-size: 1.8rem;
+}
+
+/// Stateless Button
+/// @group Buttons
+.c-button--stateless {
+  cursor: default;
+  background-color: get-color(blue, light);
+  font-weight: normal;
+  text-transform: initial;
+
+  &:hover {
+    border-color: get-color(blue, light);
+    background-color: get-color(blue, light);
+    color: get-color(unique, white);
+  }
+}
+
+/// Squared Button
+/// @group Buttons
+.c-button--squared {
+  padding: get-spacing-inset(s);
+  line-height: 0;
+
+  .c-icon {
+    display: block;
+    line-height: 0;
+  }
+}

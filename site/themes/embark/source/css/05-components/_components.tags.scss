@@ -1,0 +1,19 @@
+.c-tag {
+  align-items: center;
+  display: inline-flex;
+  flex-direction: row;
+  padding: get-spacing-inset(s);
+  border-radius: $border-radius;
+  color: get-color(unique, white);
+  font-size: get-font-size(xs);
+  font-weight: bold;
+  line-height: .8;
+
+  &__value {
+    margin-left: get-spacing-inline(s);
+  }
+}
+
+.c-tag--light {
+  background-color: get-color(blue, light);
+}

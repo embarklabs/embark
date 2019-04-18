@@ -1,0 +1,23 @@
+html {
+  box-sizing: border-box;
+  background-color: $page-background-color;
+  font-size: 10px;
+  font-weight: normal;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  padding: get-spacing-inline(m);
+  color: $font-base-color;
+  font-family: $font-base-family;
+  font-size: $font-base-size;
+  font-weight: $font-base-weight;
+  line-height: $font-base-line-height;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+    
+  @include breakpoint(l) {
+    padding: 0;
+  }
+}

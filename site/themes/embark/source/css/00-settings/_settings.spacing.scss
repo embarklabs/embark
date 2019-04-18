@@ -1,0 +1,48 @@
+/// @author Tim Hartmann
+
+// Liked frame photos with space inset
+$spacingInset: (
+  xs: 4px,
+  s: 8px,
+  m: 16px,
+  l: 32px,
+  xl: 64px,
+  xxl: 128px
+) !default;
+
+// Horizontal Spacing of like containers, sections
+$spacingStack: (
+  xs: 4px,
+  s: 8px,
+  m: 16px,
+  l: 32px,
+  xl: 64px,
+  xxl: 128px
+) !default;
+
+// Textareas, Inputs,Form Elements
+$spacingStretchInset: (
+  s: 8px 4px,
+  m: 12px 8px,
+  l: 24px 20px,
+  xl: 48px 40px
+) !default;
+
+// Buttons, Cell containers like data-table and list items
+$spacingSquish: (
+  s: 4px 8px,
+  m: 8px 16px,
+  l: 16px 32px,
+  xl: 32px 64px
+) !default;
+
+// Like flow like text from left to right
+$spacingInline: (
+  xxs: 2px,
+  xs: 4px,
+  s: 8px,
+  m: 16px,
+  l: 32px,
+  xl: 64px,
+  xxl: 128px
+) !default;

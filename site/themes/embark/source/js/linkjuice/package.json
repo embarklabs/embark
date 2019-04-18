@@ -1,0 +1,21 @@
+{
+  "name": "linkjuice",
+  "version": "1.0.1",
+  "description": "Automatically wraps and creates anchor links for <h1-h6> headings",
+  "author": "@toddmotto",
+  "license": "MIT",
+  "homepage": "https://github.com/toddmotto/linkjuice",
+  "devDependencies": {
+    "babel-plugin-transform-es2015-modules-umd": "^6.8.0",
+    "babel-preset-es2015": "^6.9.0",
+    "gulp": "~3.9.0",
+    "gulp-babel": "^6.1.2",
+    "gulp-clean": "^0.2.4",
+    "gulp-header": "^1.0.2",
+    "gulp-jshint": "^1.6.1",
+    "gulp-plumber": "~0.6.2",
+    "gulp-rename": "~1.1.0",
+    "gulp-uglify": "~0.3.0",
+    "jshint-stylish": "^0.2.0"
+  }
+}

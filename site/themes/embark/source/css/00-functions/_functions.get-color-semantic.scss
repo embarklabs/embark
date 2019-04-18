@@ -1,0 +1,12 @@
+/// Semantic Color
+/// Get the color of your semantic
+/// @group Colors
+/// @param {string} $key
+@function get-color-semantic($key) {
+  @if map-has-key($color-semantic, $key) {
+    @return map-get($color-semantic, $key);
+  }
+
+  @warn "The key #{$key} is not in the map ’$color-semantic’";
+  @return null;
+}

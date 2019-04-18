@@ -1,0 +1,31 @@
+.u-hidden {
+  display: none;
+}
+
+.u-hidden-until-medium {
+  display: none;
+
+  @include breakpoint(m) {
+    display: inherit;
+  }
+}
+
+.u-hidden-until-large {
+  display: none;
+
+  @include breakpoint(l) {
+    display: inherit;
+  }
+}
+
+.u-hidden-medium-up {
+  @include breakpoint(m) {
+    display: none;
+  }
+}
+
+.u-hidden-large-up {
+  @include breakpoint(l) {
+    display: none;
+  }
+}

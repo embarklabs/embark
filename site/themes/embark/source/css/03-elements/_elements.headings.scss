@@ -1,0 +1,40 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-weight: $font-bold-weight;
+  line-height: $font-base-line-height;
+}
+
+h1 {
+  font-size: $font-level-1-size;
+
+  @include breakpoint(l) {
+    font-size: get-font-size(xxl);
+  }
+}
+
+h2 {
+  font-size: $font-level-2-size;
+
+  @include breakpoint(l) {
+    font-size: get-font-size(xl);
+  }
+}
+
+h3 {
+  font-size: $font-level-3-size;
+
+  @include breakpoint(l) {
+    font-size: get-font-size(l);
+  }
+}
+
+h4,
+h5,
+h6 {
+  font-size: $font-level-4-size;
+}

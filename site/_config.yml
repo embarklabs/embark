@@ -1,0 +1,42 @@
+title: Embark
+subtitle: "The all-in-one developer platform for building and deploying decentralized applications."
+description: "Embark is a simple & powerful framework for decentralized applications"
+author: Embark
+language: en
+timezone: UTC
+
+url: https://embark.status.im
+root: /
+permalink: news/:year/:month/:day/:title/
+code_dir: downloads/code
+new_post_name: :year-:month-:day-:title.md # File name of new posts
+post_asset_folder: true
+per_page: 0
+
+theme: embark
+deploy:
+  type: git
+  repo: git@github.com:hexojs/hexojs.github.io.git
+
+highlight:
+  enable: true
+  line_number: false
+
+disqus_shortname: hexojs
+google_analytics: UA-79146816-4
+fb_admins: 100000247608790
+algolia:
+  en:
+    apiKey: 439d8dc2add18007a2f31be4a9c0ed70
+    indexName: embark
+twitter: EmbarkProject
+github: embark-framework/embark
+autoprefixer:
+  enable: true
+  browsers:
+    - 'last 2 versions'
+node_sass:
+  outputStyle: nested
+  precision: 5
+  sourceComments: false
+

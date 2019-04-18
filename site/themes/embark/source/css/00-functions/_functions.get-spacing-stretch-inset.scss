@@ -1,0 +1,12 @@
+/// Spacing Stretch
+/// Get the Stretch spacing of the map
+/// @group Spacing
+/// @param {string} $key
+@function get-spacing-stretch-inset($key) {
+  @if map-has-key($spacingStretchInset, $key) {
+    @return map-get($spacingStretchInset, $key);
+  }
+
+  @warn "The key #{$key} is not in the map ’$spacingStretchInset’";
+  @return null;
+}

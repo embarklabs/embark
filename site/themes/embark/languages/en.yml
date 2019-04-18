@@ -1,0 +1,120 @@
+menu:
+  docs: Docs
+  api: API
+  news: News
+  plugins: Plugins
+  themes: Themes
+  search: Search
+  chat: Chat
+  blog: Blog
+  tutorials: Tutorials
+
+index:
+  get_started: Get started
+
+page:
+  contents: Contents
+  back_to_top: Back to Top
+  improve: Improve this doc
+  prev: Prev
+  next: Next
+  last_updated: "Last updated: %s"
+
+sidebar:
+  docs:
+    getting_started: Getting Started
+    overview: Overview
+    installation: Installation
+    faq: FAQ
+    creating_project: Creating apps
+    structure: App structure
+    running_apps: Running apps
+    dashboard: Using the dashboard
+    using_the_console: Using the console
+    what_is_dapp: What is a DApp
+    quick_start: Quick Start
+    tutorials_&_guides: Tutorials & Guides
+    basic_usage: Basic Usage
+    smart_contracts: Smart Contract Development
+    storage: Storage (IPFS/Swarm)
+    messages: Messages (Whisper)
+    testing: Testing
+    configuration: Configuration
+    pipeline_and_webpack: Building & Compiling
+    distributing: Distributing your DApp
+    deploying: Deploying to IPFS/Swarm
+    plugins: Plugins
+    installing_a_plugin: Installing plugins
+    creating_a_plugin: Creating plugins
+    plugin_reference: Plugin APIs
+    advanced_topis: Advanced Topics
+    webpack: Webpack
+    reference: Reference
+    console_commands: Console Commands
+    embark_commands: CLI Commands
+    web3js: Web3.js
+    solidity: Solidity
+    vyper: Vyper
+    bamboo: Bamboo
+    commands: Commands
+    migration: Migration
+    writing: Writing
+    front_matter: Front-matter
+    tag_plugins: Tag Plugins
+    asset_folders: Asset Folders
+    data_files: Data Files
+    server: Server
+    generating: Generating
+    deployment: Deployment
+    customization: Customization
+    permalinks: Permalinks
+    themes: Themes
+    templates: Templates
+    variables: Variables
+    helpers: Helpers
+    internationalization: Internationalization (i18n)
+    miscellaneous: Miscellaneous
+    migrating_from_3: Migrating from Embark 3.x
+    troubleshooting: Troubleshooting
+    contributing: Contributing
+    contracts_configuration: Configuration
+    contracts_javascript: Smart Contracts in JavaScript
+    contracts_deployment: Accounts & Deployment
+    contracts_imports: Special Imports
+    contracts_testing: Testing
+    blockchain_node: Blockchain Client
+    blockchain_configuration: Configuration
+    blockchain_basic_configuration: Basic Configuration
+    blockchain_accounts_configuration: Managing Accounts
+    storage_configuration: Configuration
+    storage_javascript: Storage APIs in JavaScript
+    storage_troubleshooting: Troubleshooting
+    storage_deployment: Deploying apps
+    messages_configuration: Configuration
+    messages_javascript: Messages in JavaScript
+    messages_troubleshooting: Troubleshooting
+    general_usage: General Usage
+    environments: Environments
+    javascript_usage: Using EmbarkJS
+    naming: Naming Systems (ENS)
+    naming_configuration: Configuration
+    naming_javascript: Naming Systems in JavaScript
+    embarkjs: EmbarkJS
+    installing_embarkjs: Configuration
+    smart_contract_objects: Smart Contract Objects
+    using_storages: Storage (IPFS/Swarm)
+    sending_and_receiving_messages: Messages (Whisper)
+    working_with_name_systems: Name System (ENS)
+    setting_up_storages: Setting up Storages
+    uploading_data: Uploading data
+    configuring_whisper: Messages with Whisper
+    working_with_ens: Working with ENS
+    cockpit: Cockpit Guides
+    cockpit_introduction: Introduction
+    cockpit_dashboard: Using the Dashboard
+    cockpit_deployment: Deployment
+    cockpit_explorer: Explorer View
+    cockpit_editor: Code Editor
+    cockpit_utils: Utils 
+    cockpit_debugger: Using the Debugger
+

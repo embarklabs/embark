@@ -1,0 +1,72 @@
+docs:
+  getting_started:
+    overview: overview.html
+    installation: installation.html
+    faq: faq.html
+
+  general_usage:
+    creating_project: create_project.html
+    structure: structure.html
+    running_apps: running_apps.html
+    dashboard: dashboard.html
+    using_the_console: using_the_console.html
+    environments: environments.html
+    configuration: configuration.html
+    pipeline_and_webpack: pipeline_and_webpack.html
+    # setting_up_storages: foo.html
+    # uploading_data: foo.html
+    # configuring_whisper: foo.html
+    # working_with_ens: foo.html
+    javascript_usage: javascript_usage.html
+
+  smart_contracts:
+    contracts_configuration: contracts_configuration.html
+    contracts_deployment: contracts_deployment.html
+    contracts_imports: contracts_imports.html
+    contracts_testing: contracts_testing.html
+    contracts_javascript: contracts_javascript.html
+
+  blockchain_node:
+    blockchain_configuration: blockchain_configuration.html
+    blockchain_accounts_configuration: blockchain_accounts_configuration.html
+
+  storage:
+    storage_configuration: storage_configuration.html
+    storage_deployment: storage_deployment.html
+    storage_javascript: storage_javascript.html
+
+  messages:
+    messages_configuration: messages_configuration.html
+    messages_javascript: messages_javascript.html
+
+  naming:
+    naming_configuration: naming_configuration.html
+    naming_javascript: naming_javascript.html
+
+  # embarkjs:
+    # installing_embarkjs: installing_embarkjs.html
+    # smart_contract_objects: smart_contract_objects.html
+    # using_storages: using_storages.html
+    # sending_and_receiving_messages: sending_and_receiving_messages.html
+    # working_with_name_systems: working_with_name_systems.html
+  plugins:
+    installing_a_plugin: installing_plugins.html
+    creating_a_plugin: creating_plugins.html
+    plugin_reference: plugin_reference.html
+  #advanced_topis:
+    #adwebpack: webpack.html
+  cockpit:
+    cockpit_introduction: cockpit_introduction.html
+    cockpit_dashboard: cockpit_dashboard.html
+    cockpit_deployment: cockpit_deployment.html
+    cockpit_explorer: cockpit_explorer.html
+    cockpit_editor: cockpit_editor.html
+    cockpit_debugger: cockpit_debugger.html
+    #cockpit_utils: cockpit_utils.html
+  reference:
+    # console_commands: console_commands.html
+    embark_commands: embark_commands.html
+  miscellaneous:
+    migrating_from_3: migrating_from_3.x.html
+    troubleshooting: troubleshooting.html
+    contributing: contributing.html

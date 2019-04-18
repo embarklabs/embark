@@ -1,0 +1,5 @@
+// Column
+// @group Layout
+@mixin column($column, $max-columns: 12) {
+  flex: 0 0 (100%/$max-columns)*$column;
+}

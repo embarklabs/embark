@@ -1,0 +1,8 @@
+// Brand Colors
+// @group Colors
+$color-brand: (
+  primary: get-color(blue),
+  primaryGradation: get-color(blue, lighter),
+  secondary: get-color(orange),
+  secondaryGradation: get-color(orange, light)
+) !default;

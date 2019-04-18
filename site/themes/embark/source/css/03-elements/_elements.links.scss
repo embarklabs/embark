@@ -1,0 +1,13 @@
+a {
+  cursor: pointer;
+  color: $link-color;
+  text-decoration: none;
+
+  &:hover {
+    color: $link-hover-color;
+  }
+
+  &:focus {
+    text-decoration: underline;
+  }
+}

@@ -1,0 +1,14 @@
+.o-heading {
+  max-width: 600px;
+  margin: 0 auto;
+
+  &__title {}
+
+  &__subtitle {
+    margin-top: get-spacing-stack(s);
+  }
+
+  &__footer {
+    margin-top: get-spacing-stack(m);
+  }
+}

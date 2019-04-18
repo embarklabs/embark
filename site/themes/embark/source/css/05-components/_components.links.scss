@@ -1,0 +1,29 @@
+.c-link {
+  position: relative;
+  font-weight: $font-bold-weight;
+
+  &:before {
+    content: '';
+    height: 2px;
+    margin-top: 2px;
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    background: get-color-brand(secondary);
+  }
+
+  &:hover,
+  &:focus {
+    &:before {
+      display: none;
+    }
+  }
+}
+
+.c-link--ghost {
+  color: get-color(unique, white);
+
+  &:before {
+    background-color: get-color(unique, white);
+  }
+}
