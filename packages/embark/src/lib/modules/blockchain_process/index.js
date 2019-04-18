@@ -15,24 +15,27 @@ class BlockchainModule {
     this.isDev = options.isDev;
     this.ipc = options.ipc;
     this.client = options.client;
+    this.blockchainProcess =  null;
 
     this.registerBlockchainProcess();
   }
 
   registerBlockchainProcess() {
-    const self = this;
-    this.events.request('processes:register', 'blockchain', (cb) => {
-      self.assertNodeConnection(true, (connected) => {
-        if (connected) return cb();
-        self.startBlockchainNode(cb);
-        this.listenToCommands();
-        this.registerConsoleCommands();
-      });
+    this.events.request('processes:register', 'blockchain', {
+      launchFn: (cb) => {
+        this.assertNodeConnection(true, (connected) => {
+          if (connected) return cb();
+          this.startBlockchainNode(cb);
+          this.listenToCommands();
+          this.registerConsoleCommands();
+        });
+      },
+      stopFn: (cb) => { this.stopBlockchainNode(cb); }
     });
 
     if (!this.ipc.isServer()) return;
-    self.ipc.on('blockchain:node', (_message, cb) => {
-      cb(null, utils.buildUrlFromConfig(self.contractsConfig.deployment));
+    this.ipc.on('blockchain:node', (_message, cb) => {
+      cb(null, utils.buildUrlFromConfig(this.contractsConfig.deployment));
     });
   }
 
@@ -97,7 +100,7 @@ class BlockchainModule {
   startBlockchainNode(callback) {
     const self = this;
 
-    let blockchainProcess = new BlockchainProcessLauncher({
+    this.blockchainProcess = new BlockchainProcessLauncher({
       events: self.events,
       logger: self.logger,
       normalizeInput: utils.normalizeInput,
@@ -108,17 +111,38 @@ class BlockchainModule {
       embark: this.embark
     });
 
-    blockchainProcess.startBlockchainNode();
-    self.events.once(constants.blockchain.blockchainReady, () => {
-      self.assertNodeConnection(true, (connected) => {
+    this.blockchainProcess.startBlockchainNode();
+    this.events.once(constants.blockchain.blockchainReady, () => {
+      this.assertNodeConnection(true, (connected) => {
         if (!connected) {
           return callback(__('Blockchain process is ready, but still cannot connect to it. Check your host, port and protocol in your contracts config'));
         }
+        this.events.removeListener(constants.blockchain.blockchainExit, callback);
         callback();
       });
     });
-    self.events.once(constants.blockchain.blockchainExit, () => {
-      callback();
+    this.events.once(constants.blockchain.blockchainExit, callback);
+  }
+
+  stopBlockchainNode(cb) {
+    const message = __(`The blockchain process has been stopped. It can be restarted by running ${"service blockchain on".bold} in the Embark console.`);
+    if (this.ipc.isServer()) {
+      if(!this.ipc.connected) {
+        this.ipc.connect(() => {
+          this.ipc.broadcast('process:blockchain:stop');
+          this.logger.info(message);
+        });
+      }
+      else this.ipc.broadcast('process:blockchain:stop');
+    }
+
+    if(!this.blockchainProcess) {
+      return cb();
+    }
+    
+    this.blockchainProcess.stopBlockchainNode(() => {
+      this.logger.info(message);
+      cb();
     });
   }
 

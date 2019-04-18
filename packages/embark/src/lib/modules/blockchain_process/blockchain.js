@@ -142,6 +142,10 @@ Blockchain.prototype.initStandaloneProcess = function () {
           if (this.ipc.connected) {
             logQueue.forEach(message => { this.ipc.request('blockchain:log', message); });
             logQueue = [];
+            this.ipc.client.on('process:blockchain:stop', () => {
+              this.kill();
+              process.exit(0);
+            });
           }
         });
       }

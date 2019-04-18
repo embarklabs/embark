@@ -242,14 +242,7 @@ class BlockchainConnector {
     this.events.on('check:wentOffline:Ethereum', () => {
       this.logger.warn('Ethereum went offline: stopping web3 provider...');
       this.provider.stop();
-
-      // once the node goes back online, we can restart the provider
-      this.events.once('check:backOnline:Ethereum', () => {
-        this.logger.warn('Ethereum back online: starting web3 provider...');
-        this.provider.startWeb3Provider(() => {
-          this.logger.warn('web3 provider restarted after ethereum node came back online');
-        });
-      });
+      this.isWeb3Ready = false;
     });
 
     this.events.on('blockchain:contracts:event', this._saveEvent.bind(this));
@@ -786,7 +779,12 @@ class BlockchainConnector {
 
   subscribeToContractEvents(callback) {
     this.contractsSubscriptions.forEach((eventEmitter) => {
-      eventEmitter.unsubscribe();
+      const reqMgr = eventEmitter.options.requestManager;
+      // attempting an eth_unsubscribe when not connected throws an
+      // "connection not open on send()" error
+      if(reqMgr && reqMgr.provider && reqMgr.provider.connected) {
+        eventEmitter.unsubscribe();
+      }
     });
     this.contractsSubscriptions = [];
     this.events.request("contracts:list", (_err, contractsList) => {
