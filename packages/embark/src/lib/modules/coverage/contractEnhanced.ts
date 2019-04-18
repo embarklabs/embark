@@ -32,13 +32,17 @@ export class ContractEnhanced {
 
   constructor(public filepath: string, public solcVersion: string) {
     this.id = nextId();
+
+    // silence compiler warnings.
+    this.source = this.originalSource = "";
+
     try {
       this.source = fs.readFileSync(filepath, "utf-8");
       this.originalSource = this.source;
       this.ast = parser.parse(this.source, {loc: true, range: true});
     } catch (error) {
-      this.source = "";
-      this.originalSource = "";
+      const {line, column, message} = error.errors[0];
+      console.warn(`Error on ${this.filepath}:${line}:${column}: "${message}". Could not setup for coverage.`);
     }
 
     this.coverageFilepath = path.join(coverageContractsPath(), this.filepath);
