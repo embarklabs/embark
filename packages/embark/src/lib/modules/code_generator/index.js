@@ -355,7 +355,7 @@ class CodeGenerator {
         code += "\nif (typeof module !== 'undefined' && module.exports) {" +
           "\n\tmodule.exports = EmbarkJS;" +
           "\n}";
-        code += '\n/* eslint-enable */';
+        code += '\n/* eslint-enable */\n';
 
         next();
       },
