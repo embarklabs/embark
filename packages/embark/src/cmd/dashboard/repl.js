@@ -43,8 +43,49 @@ class REPL {
     return inspectedOutput;
   }
 
+  complete(partial, cb) {
+    // no function calls
+    if (partial.indexOf('(') !== -1) {
+      return cb(null, [[], partial]);
+    }
+
+    const lastDot = partial.lastIndexOf('.');
+    let context = partial.substr(0, lastDot);
+    let hint = partial.substr(lastDot + 1);
+
+    if (lastDot === -1) {
+      context = 'this';
+      hint = partial;
+    }
+
+    this.events.request('console:executeCmd', context, (err, result)  => {
+      if (err !== null) {
+        cb(err, [[], partial]);
+      }
+
+      let props = Object
+        .getOwnPropertyNames(result)
+        .sort();
+
+      if (hint !== "") {
+        props = props.filter(prop => { return prop.indexOf(hint) === 0; });
+      }
+
+      if (lastDot !== -1) {
+        props = props.map(prop => { return `${context}.${prop}`; });
+      }
+
+      if (props.length > 1) {
+        console.log(props.join(', '));
+      }
+
+      cb(null, [props, partial]);
+    });
+  }
+
   start(done) {
     this.replServer = repl.start({
+      completer: this.complete.bind(this),
       prompt: "Embark (".cyan + this.env.green + ") > ".cyan,
       useGlobal: true,
       eval: this.enhancedEval.bind(this),
