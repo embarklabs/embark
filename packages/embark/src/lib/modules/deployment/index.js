@@ -73,9 +73,10 @@ class DeployManager {
                 self.events.request('deploy:contract', contract, (err) => {
                   if (err) {
                     contract.error = err.message || err;
-                    self.logger.error(`[${contract.className}]: ${err.message || err}`);
                     if (contract.error === constants.blockchain.gasAllowanceError) {
-                      self.logger.error(constants.blockchain.gasAllowanceErrorMessage);
+                      self.logger.error(`[${contract.className}]: ${constants.blockchain.gasAllowanceErrorMessage}`);
+                    } else {
+                      self.logger.error(`[${contract.className}]: ${err.message || err}`);
                     }
                     errors.push(err);
                   }
