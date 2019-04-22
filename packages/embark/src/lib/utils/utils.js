@@ -568,7 +568,11 @@ function jsonFunctionReplacer(_key, value) {
 
 function getWindowSize() {
   const windowSize = require('window-size');
-  return windowSize.get();
+  if (windowSize) {
+    return windowSize.get();
+  }
+
+  return {width: 240, height: 75};
 }
 
 function toposort(graph) {
