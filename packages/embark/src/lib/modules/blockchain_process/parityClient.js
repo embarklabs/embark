@@ -15,7 +15,21 @@ const DEFAULTS = {
   "DEV_WS_API": ["web3", "eth", "pubsub", "net", "parity", "private", "parity_pubsub", "traces", "rpc", "shh", "shh_pubsub", "personal"],
   "TARGET_GAS_LIMIT": 8000000,
   "DEV_ACCOUNT": "0x00a329c0648769a73afac7f9381e08fb43dbea72",
-  "DEV_WALLET": {"id": "d9460e00-6895-8f58-f40c-bb57aebe6c00", "version": 3, "crypto": {"cipher": "aes-128-ctr", "cipherparams": {"iv": "74245f453143f9d06a095c6e6e309d5d"}, "ciphertext": "2fa611c4aa66452ef81bd1bd288f9d1ed14edf61aa68fc518093f97c791cf719", "kdf": "pbkdf2", "kdfparams": {"c": 10240, "dklen": 32, "prf": "hmac-sha256", "salt": "73b74e437a1144eb9a775e196f450a23ab415ce2c17083c225ddbb725f279b98"}, "mac": "f5882ae121e4597bd133136bf15dcbcc1bb2417a25ad205041a50c59def812a8"}, "address": "00a329c0648769a73afac7f9381e08fb43dbea72", "name": "Development Account", "meta": "{\"description\":\"Never use this account outside of development chain!\",\"passwordHint\":\"Password is empty string\"}"}
+  "DEV_WALLET": {
+    "id": "d9460e00-6895-8f58-f40c-bb57aebe6c00",
+    "version": 3,
+    "crypto": {
+      "cipher": "aes-128-ctr",
+      "cipherparams": {"iv": "74245f453143f9d06a095c6e6e309d5d"},
+      "ciphertext": "2fa611c4aa66452ef81bd1bd288f9d1ed14edf61aa68fc518093f97c791cf719",
+      "kdf": "pbkdf2",
+      "kdfparams": {"c": 10240, "dklen": 32, "prf": "hmac-sha256", "salt": "73b74e437a1144eb9a775e196f450a23ab415ce2c17083c225ddbb725f279b98"},
+      "mac": "f5882ae121e4597bd133136bf15dcbcc1bb2417a25ad205041a50c59def812a8"
+    },
+    "address": "00a329c0648769a73afac7f9381e08fb43dbea72",
+    "name": "Development Account",
+    "meta": "{\"description\":\"Never use this account outside of development chain!\",\"passwordHint\":\"Password is empty string\"}"
+  }
 };
 
 const safePush = function(set, value) {
@@ -221,13 +235,16 @@ class ParityClient {
       cmd.push("--ws-port=" + config.wsPort);
       cmd.push("--ws-interface=" + (config.wsHost === 'localhost' ? 'local' : config.wsHost));
       if (config.wsOrigins) {
-        if (config.wsOrigins === '*') {
+        const origins = config.wsOrigins.split(',');
+        if (origins.includes('*') || origins.includes("all")) {
           console.warn('==================================');
           console.warn(__('wsOrigins set to "all"'));
           console.warn(__('make sure you know what you are doing'));
           console.warn('==================================');
+          cmd.push("--ws-origins=all");
+        } else {
+          cmd.push("--ws-origins=" + config.wsOrigins);
         }
-        cmd.push("--ws-origins=" + (config.wsOrigins === '*' ? 'all' : config.wsOrigins));
       } else {
         console.warn('==================================');
         console.warn(__('warning: wsOrigins is not set'));
