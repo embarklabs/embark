@@ -1,6 +1,6 @@
 const async = require('async');
 const DevTxs = require('./dev_txs');
-const ProcessLogsApi = require('../../modules/process_logs_api');
+const ProcessLogsApi = require('embark-process-logs-api');
 const constants = require('../../constants.json');
 
 const PROCESS_NAME = 'blockchain';

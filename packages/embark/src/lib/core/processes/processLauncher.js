@@ -1,7 +1,7 @@
 const child_process = require('child_process');
 const constants = require('../../constants');
 const path = require('path');
-const ProcessLogsApi = require('../../modules/process_logs_api');
+const ProcessLogsApi = require('embark-process-logs-api');
 
 let processCount = 1;
 class ProcessLauncher {
