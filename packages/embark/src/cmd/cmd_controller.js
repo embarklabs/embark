@@ -304,7 +304,9 @@ class EmbarkController {
         if (isSecondaryProcess(engine)) {
           return callback();
         }
+        engine.startService("embarkListener");
         engine.startService("processManager");
+        engine.startService("coreProcess");
         engine.startService("serviceMonitor");
         engine.startService("libraryManager");
         engine.startService("pipeline");
@@ -416,7 +418,9 @@ class EmbarkController {
     let defaultPaths = [...defaultResetPaths];
 
     defaultPaths.push(embarkConfig.buildDir);
-    embarkConfig.generationDir && defaultPaths.push(embarkConfig.generationDir);
+    if (embarkConfig.generationDir) {
+      defaultPaths.push(embarkConfig.generationDir);
+    }
 
     if (embarkConfig.options && embarkConfig.options.reset) {
       if (embarkConfig.options.reset.defaults) {
@@ -428,7 +432,11 @@ class EmbarkController {
     } else {
       removePaths = defaultPaths;
     }
-    removePaths = [...new Set(removePaths.map(path => path.charAt(path.length - 1) === '/' ? path.substr(0, path.length - 1) : path))];
+    removePaths = [
+      ...new Set(removePaths.map(path => {
+        return path.charAt(path.length - 1) === '/' ? path.substr(0, path.length - 1) : path;
+      }))
+    ];
     await embarkReset({removePaths});
   }
 
