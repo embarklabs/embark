@@ -91,6 +91,7 @@
     "embark-reset": "^4.1.0-beta.0",
     "embark-specialconfigs": "^4.1.0-beta.0",
     "embark-ui": "^4.1.0-beta.0",
+    "embark-transaction-tracker": "^4.1.0-beta.0",
     "embark-utils": "^4.1.0-beta.0",
     "embark-vyper": "^4.0.0",
     "embark-webserver": "^4.1.0-beta.0",

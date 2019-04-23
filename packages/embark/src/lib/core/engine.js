@@ -231,7 +231,7 @@ class Engine {
     this.registerModule('ens');
     this.registerModule('console_listener', {ipc: self.ipc});
     this.registerModule('deployment', {plugins: this.plugins, onlyCompile: options.onlyCompile});
-    this.registerModule('transactionTracker');
+    this.registerModulePackage('embark-transaction-tracker');
     this.registerModule('debugger');
 
     this.events.on('file-event', function ({fileType, path}) {
