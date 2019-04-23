@@ -1,4 +1,4 @@
-const ProcessLogsApi = require('../process_logs_api');
+const ProcessLogsApi = require('embark-process-logs-api');
 
 const EMBARK_PROCESS_NAME = 'embark';
 
@@ -25,7 +25,7 @@ class EmbarkListener {
   /**
    * Listens to log events emitted by the Embark application and ensures
    * they are processed through the LogHandler.
-   * 
+   *
    * @return {void}
    */
   _listenToEmbarkLogs() {
