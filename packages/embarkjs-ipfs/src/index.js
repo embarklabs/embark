@@ -1,4 +1,4 @@
-const IpfsApi = require('ipfs-api');
+const IPFS = require('ipfs-http-client');
 
 const __embarkIPFS = {};
 
@@ -10,7 +10,7 @@ __embarkIPFS.setProvider = function (options) {
     try {
       if (!options) {
         self._config = options;
-        self._ipfsConnection = IpfsApi('localhost', '5001');
+        self._ipfsConnection = IPFS('localhost', '5001');
         self._getUrl = "http://localhost:8080/ipfs/";
       } else {
         const ipfsOptions = {host: options.host || options.server, protocol: 'http'};
@@ -20,7 +20,7 @@ __embarkIPFS.setProvider = function (options) {
         if (options.port && options.port !== 'false') {
           ipfsOptions.port = options.port;
         }
-        self._ipfsConnection = IpfsApi(ipfsOptions);
+        self._ipfsConnection = IPFS(ipfsOptions);
         self._getUrl = options.getUrl || "http://localhost:8080/ipfs/";
       }
       resolve(self);

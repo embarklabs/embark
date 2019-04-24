@@ -413,7 +413,7 @@ Config.prototype.loadExternalContractsFiles = function() {
 };
 
 Config.prototype.loadStorageConfigFile = function() {
-  var versions = recursiveMerge({"ipfs-api": "17.2.4"}, this.embarkConfig.versions || {});
+  var versions = recursiveMerge({"ipfs-http-client": "30.1.3"}, this.embarkConfig.versions || {});
 
   var configObject = {
     "default": {

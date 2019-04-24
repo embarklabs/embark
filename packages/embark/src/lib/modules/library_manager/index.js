@@ -22,11 +22,11 @@ class LibraryManager {
 
     let solcVersionInConfig = this.contractsConfig.versions.solc;
     let web3VersionInConfig = this.contractsConfig.versions["web3"];
-    let ipfsApiVersion = this.storageConfig.versions["ipfs-api"];
+    let ipfsClientVersion = this.storageConfig.versions["ipfs-http-client"];
 
     this.versions['solc'] = solcVersionInConfig;
     this.versions['web3'] = web3VersionInConfig;
-    this.versions['ipfs-api'] = ipfsApiVersion;
+    this.versions['ipfs-http-client'] = ipfsClientVersion;
 
     Object.keys(this.versions).forEach(versionKey => {
       const newVersion = this.versions[versionKey].trim();
