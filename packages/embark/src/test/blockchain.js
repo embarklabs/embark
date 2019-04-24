@@ -3,7 +3,7 @@ const Blockchain = require('../lib/modules/blockchain_process/blockchain.js');
 const constants = require('../lib/constants.json');
 import {defaultHost} from 'embark-utils';
 const path = require('path');
-const fs = require('../lib/core/fs.js');
+const fs = require('embark-fs');
 
 const assert = require('assert');
 

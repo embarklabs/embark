@@ -1,7 +1,7 @@
 /*globals describe, it*/
 const {File, Types} = require("../lib/core/file");
 const {expect} = require("chai");
-const fs = require("../lib/core/fs");
+const fs = require("embark-fs");
 
 describe('embark.File', function () {
   describe('Read file contents', function () {

@@ -1,4 +1,4 @@
-const fs = require('../../core/fs.js');
+const fs = require('embark-fs');
 const PluginManager = require('live-plugin-manager-git-fix').PluginManager;
 require('colors');
 import LongRunningProcessTimer from '../../utils/longRunningProcessTimer.js';

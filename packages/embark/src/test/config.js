@@ -4,7 +4,7 @@ const Plugins = require('../lib/core/plugins.js');
 const assert = require('assert');
 const TestLogger = require('../lib/utils/test_logger');
 const Events = require('../lib/core/events');
-const fs = require('../lib/core/fs');
+const fs = require('embark-fs');
 
 describe('embark.Config', function () {
   let config = new Config({

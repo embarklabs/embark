@@ -3,7 +3,7 @@ import { Logger } from "embark";
 import {__} from "i18n";
 import { schema } from "./schema";
 
-const fs = require("../../core/fs");
+const fs = require("embark-fs");
 
 const ajv = new Ajv();
 const scaffoldingSchema = ajv.compile(schema);

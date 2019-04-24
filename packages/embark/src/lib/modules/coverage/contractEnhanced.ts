@@ -10,7 +10,7 @@ import { coverageContractsPath } from "./path";
 import { BranchType, Coverage } from "./types";
 
 const File = require("../../core/file");
-const fs = require("../../core/fs");
+const fs = require("embark-fs");
 
 const STATEMENT_EVENT = "__StatementCoverage";
 const POINT_FACTOR = 1000000000;

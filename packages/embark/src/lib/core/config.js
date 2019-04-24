@@ -1,4 +1,4 @@
-const fs = require('./fs.js');
+const fs = require('embark-fs');
 const Plugins = require('./plugins.js');
 const utils = require('../utils/utils.js');
 const path = require('path');

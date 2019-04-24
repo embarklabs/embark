@@ -1,5 +1,5 @@
 const {errorMessage} = require('../../utils/utils');
-const fs = require('../../core/fs');
+const fs = require('embark-fs');
 
 class WebpackConfigReader {
   constructor(options) {

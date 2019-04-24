@@ -5,7 +5,7 @@ let Proxy = require('./proxy');
 const Ipc = require('../../core/ipc');
 const constants = require('../../constants.json');
 import {defaultHost, dockerHostSwap} from 'embark-utils';
-const fs = require('../../core/fs.js');
+const fs = require('embark-fs');
 
 class Simulator {
   constructor(options) {

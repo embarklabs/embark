@@ -1,7 +1,7 @@
 const utils = require('../utils/utils.js');
 import {joinPath} from 'embark-utils';
 const constants = require('../constants');
-const fs = require('./fs.js');
+const fs = require('embark-fs');
 const deepEqual = require('deep-equal');
 
 // TODO: pass other params like blockchainConfig, contract files, etc..

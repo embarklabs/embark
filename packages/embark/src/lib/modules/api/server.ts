@@ -10,7 +10,9 @@ import {__} from "i18n";
 import * as path from "path";
 import * as ws from "ws";
 // @ts-ignore
-import {embarkPath, existsSync} from "../../core/fs";
+/* tslint:disable */
+import {embarkPath, existsSync} from "embark-fs";
+/* tslint:enable */
 
 type Method = "get" | "post" | "ws" | "delete";
 

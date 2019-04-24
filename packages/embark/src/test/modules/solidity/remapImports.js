@@ -3,7 +3,7 @@ const {File, Types} = require("../../../lib/core/file");
 const path = require("path");
 const remapImports = require("../../../lib/utils/solidity/remapImports");
 const {expect} = require("chai");
-const fs = require("../../../lib/core/fs");
+const fs = require("embark-fs");
 const fsNode = require("fs");
 
 let file, content;

@@ -1,16 +1,16 @@
 /* global module process require */
 
-const {DAPP_PATH,
+import {anchoredValue,
+       DAPP_PATH,
        DIAGRAM_PATH,
        EMBARK_PATH,
-       PKG_PATH,
-       anchoredValue} = require('embark-env');
-const fs = require('fs-extra');
-const os = require('os');
-const parseJson = require('parse-json');
-const path = require('path');
-import {joinPath, sha512} from 'embark-utils';
-require('colors');
+       PKG_PATH} from "embark-env";
+const fs = require("fs-extra");
+const os = require("os");
+const parseJson = require("parse-json");
+const path = require("path");
+import {joinPath, sha512} from "embark-utils";
+require("colors");
 
 function mkdirpSync(...args) { return fs.mkdirpSync(...args); }
 
@@ -51,7 +51,7 @@ function readJSONSync(...args) {
   try {
     json = parseJson(readFileSync(...args));
   } catch (e) {
-    console.error('error: '.red + args[0].green.underline + ' ' + e.message.green);
+    console.error("error: ".red + args[0].green.underline + " " + e.message.green);
     process.exit(1);
   }
   return json;
@@ -76,7 +76,7 @@ function removeSync(...args) { return fs.removeSync(...args); }
 function anchoredPath(anchor, ...args) {
   return joinPath(
     anchoredValue(anchor),
-    ...args.map(path => path.replace(dappPath(), ''))
+    ...args.map((p) => p.replace(dappPath(), "")),
   );
 }
 
@@ -87,15 +87,15 @@ function dappPath(...args) { return anchoredPath(DAPP_PATH, ...args); }
 function diagramPath(...args) { return anchoredPath(DIAGRAM_PATH, ...args); }
 
 function ipcPath(basename, usePipePathOnWindows = false) {
-  if (!(basename && typeof basename === 'string')) {
-    throw new TypeError('first argument must be a non-empty string');
+  if (!(basename && typeof basename === "string")) {
+    throw new TypeError("first argument must be a non-empty string");
   }
-  if (process.platform === 'win32' && usePipePathOnWindows) {
+  if (process.platform === "win32" && usePipePathOnWindows) {
     return `\\\\.\\pipe\\${basename}`;
   }
   return joinPath(
     tmpDir(`embark-${sha512(dappPath()).slice(0, 8)}`),
-    basename
+    basename,
   );
 }
 
@@ -106,24 +106,24 @@ function createWriteStream(...args) { return fs.createWriteStream(...args); }
 function tmpDir(...args) { return joinPath(os.tmpdir(), ...args); }
 
 function copyPreserve(sourceFilePath, targetFilePath) {
-  const implementation = (sourceFilePath, targetFilePath) => {
+  const implementation = (_sourceFilePath, _targetFilePath) => {
     let ext = 1;
     let preserved = targetFilePath;
     while (fs.existsSync(preserved)) {
       const extname = path.extname(targetFilePath);
       preserved = joinPath(
         path.dirname(targetFilePath),
-        `${path.basename(targetFilePath, extname)}.${ext}${extname}`
+        `${path.basename(targetFilePath, extname)}.${ext}${extname}`,
       );
       ext++;
     }
     if (preserved !== targetFilePath) {
       fs.copySync(targetFilePath, preserved);
     }
-    fs.copySync(sourceFilePath, targetFilePath);
+    fs.copySync(_sourceFilePath, targetFilePath);
   };
 
-  return implementation(sourceFilePath, targetFilePath);
+  return implementation(sourceFilePath, _targetFilePath);
 }
 
 function outputFileSync(...args) { return fs.outputFileSync(...args); }
@@ -138,9 +138,9 @@ module.exports = {
   dappPath,
   diagramPath,
   embarkPath,
-  existsSync,
-  ensureFileSync,
   ensureDirSync,
+  ensureFileSync,
+  existsSync,
   ipcPath,
   mkdirp,
   mkdirpSync,
@@ -163,5 +163,5 @@ module.exports = {
   writeFile,
   writeFileSync,
   writeJSONSync,
-  writeJson
+  writeJson,
 };

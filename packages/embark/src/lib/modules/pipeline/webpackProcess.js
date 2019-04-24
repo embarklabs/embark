@@ -1,5 +1,5 @@
 const constants = require('../../constants');
-const fs = require('../../core/fs');
+const fs = require('embark-fs');
 const ProcessWrapper = require('../../core/processes/processWrapper');
 const webpack = require('webpack');
 const writeFile = require('util').promisify(require('fs').writeFile);

@@ -2,7 +2,7 @@ let async = require('async');
 const constants = require('../lib/constants');
 const Logger = require('../lib/core/logger');
 const {reset: embarkReset, paths: defaultResetPaths} = require('embark-reset');
-const fs = require('../lib/core/fs.js');
+const fs = require('embark-fs');
 
 require('colors');
 

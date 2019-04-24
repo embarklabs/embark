@@ -1,5 +1,5 @@
 const findUp = require('find-up');
-const fs = require('../core/fs.js');
+const fs = require('embark-fs');
 const hostedGitInfo = require('hosted-git-info');
 const utils = require('./utils.js');
 import {joinPath} from 'embark-utils';

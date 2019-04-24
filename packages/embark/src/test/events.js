@@ -2,7 +2,7 @@
 const {File, Types} = require("../lib/core/file");
 const Assert = require("assert");
 const {expect} = require("chai");
-const fs = require("../lib/core/fs");
+const fs = require("embark-fs");
 const Events = require("../lib/core/events");
 
 let events;

@@ -1,7 +1,7 @@
 const async = require('async');
 const {spawn, exec} = require('child_process');
 const path = require('path');
-const fs = require('../../core/fs.js');
+const fs = require('embark-fs');
 const constants = require('../../constants.json');
 const utils = require('../../utils/utils.js');
 const GethClient = require('./gethClient.js');

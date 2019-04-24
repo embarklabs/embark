@@ -2,7 +2,7 @@ import {__} from "i18n";
 import * as path from "path";
 import { ImportRemapping, prepareForCompilation } from "../utils/solidity/remapImports";
 
-const fs = require("./fs.js");
+const fs = require("embark-fs");
 const utils = require("../utils/utils");
 
 export enum Types {

@@ -1,7 +1,7 @@
 const child_process = require('child_process');
 const ProcessWrapper = require('../../core/processes/processWrapper');
 const constants = require('../../constants');
-const fs = require('../../core/fs');
+const fs = require('embark-fs');
 
 let swarmProcess;
 

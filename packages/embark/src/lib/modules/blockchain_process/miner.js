@@ -1,5 +1,5 @@
 const async = require('async');
-const fs = require('../../core/fs');
+const fs = require('embark-fs');
 const NetcatClient = require('netcat/client');
 
 //Constants
