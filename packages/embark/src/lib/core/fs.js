@@ -9,8 +9,7 @@ const fs = require('fs-extra');
 const os = require('os');
 const parseJson = require('parse-json');
 const path = require('path');
-const utils = require('../utils/utils');
-import {joinPath} from 'embark-utils';
+import {joinPath, sha512} from 'embark-utils';
 require('colors');
 
 function mkdirpSync(...args) { return fs.mkdirpSync(...args); }
@@ -95,7 +94,7 @@ function ipcPath(basename, usePipePathOnWindows = false) {
     return `\\\\.\\pipe\\${basename}`;
   }
   return joinPath(
-    tmpDir(`embark-${utils.sha512(dappPath()).slice(0, 8)}`),
+    tmpDir(`embark-${sha512(dappPath()).slice(0, 8)}`),
     basename
   );
 }
