@@ -43,6 +43,15 @@ function recursiveMerge(target, source) {
   return merge.recursive(target, source);
 }
 
+function sha512(arg) {
+  if (typeof arg !== 'string') {
+    throw new TypeError('argument must be a string');
+  }
+  const crypto = require('crypto');
+  const hash = crypto.createHash('sha512');
+  return hash.update(arg).digest('hex');
+}
+
 const Utils = {
   joinPath: function() {
     const path = require('path');
@@ -58,7 +67,8 @@ const Utils = {
   hashTo32ByteHexString,
   isHex,
   soliditySha3,
-  recursiveMerge
+  recursiveMerge,
+  sha512
 };
 
 module.exports = Utils;

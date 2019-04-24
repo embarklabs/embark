@@ -351,15 +351,6 @@ function sha3(arg) {
   return Web3.utils.sha3(arg);
 }
 
-function sha512(arg) {
-  if (typeof arg !== 'string') {
-    throw new TypeError('argument must be a string');
-  }
-  const crypto = require('crypto');
-  const hash = crypto.createHash('sha512');
-  return hash.update(arg).digest('hex');
-}
-
 function normalizeInput(input) {
   if(typeof input === 'string') return input;
   let args = Object.values(input);
@@ -627,7 +618,6 @@ module.exports = {
   getExternalContractUrl,
   toChecksumAddress,
   sha3,
-  sha512,
   normalizeInput,
   buildUrl,
   buildUrlFromConfig,
