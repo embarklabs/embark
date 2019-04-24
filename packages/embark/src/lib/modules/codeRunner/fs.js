@@ -1,10 +1,10 @@
 /* global module process require */
 
-const {DAPP_PATH,
+import {DAPP_PATH,
        DIAGRAM_PATH,
        EMBARK_PATH,
        PKG_PATH,
-       anchoredValue} = require('../../core/env');
+       anchoredValue} from 'embark-env';
 const fs = require('fs-extra');
 const os = require('os');
 const parseJson = require('parse-json');
