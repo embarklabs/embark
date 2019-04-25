@@ -1,7 +1,7 @@
 let http = require('follow-redirects').http;
 let https = require('follow-redirects').https;
 let toposortGraph = require('./toposort.js');
-import {canonicalHost} from 'embark-utils';
+import {canonicalHost, normalizeInput} from 'embark-utils';
 
 const balanceRegex = /([0-9]+) ?([a-zA-Z]*)/;
 
@@ -349,32 +349,6 @@ function toChecksumAddress(address) {
 function sha3(arg) {
   const Web3 = require('web3');
   return Web3.utils.sha3(arg);
-}
-
-function normalizeInput(input) {
-  if(typeof input === 'string') return input;
-  let args = Object.values(input);
-  if (args.length === 0) {
-    return "";
-  }
-  if (args.length === 1) {
-    if (Array.isArray(args[0])) {
-      return args[0].join(',');
-    }
-    return args[0] || "";
-  }
-  return ('[' + args.map((x) => {
-    if (x === null) {
-      return "null";
-    }
-    if (x === undefined) {
-      return "undefined";
-    }
-    if (Array.isArray(x)) {
-      return x.join(',');
-    }
-    return x;
-  }).toString() + ']');
 }
 
 /**

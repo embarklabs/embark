@@ -1,9 +1,8 @@
-
-const utils = require('./utils');
+const normalizeInput = require('./log-utils').normalizeInput;
 
 // define max number of logs to keep in memory for this process
 // to prevent runaway memory leak
-const MAX_LOGS = require('../constants').logs.maxLogLength;
+const MAX_LOGS = 1500; // TODO use constants when it's put in a package or something
 
 /**
  * Serves as a central point of log handling.
@@ -91,9 +90,9 @@ class LogHandler {
         return;
       }
       if (this.logger[msg.type]) {
-        return this.logger[msg.type](utils.normalizeInput(message));
+        return this.logger[msg.type](normalizeInput(message));
       }
-      this.logger.debug(utils.normalizeInput(message));
+      this.logger.debug(normalizeInput(message));
     });
   }
 }
