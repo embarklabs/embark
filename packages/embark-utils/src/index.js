@@ -3,6 +3,7 @@ const https = require('follow-redirects').https;
 
 const {canonicalHost, defaultCorsHost, defaultHost, dockerHostSwap, isDocker} = require('./host');
 const {findNextPort} = require('./network');
+const logUtils = require('./log-utils');
 
 function checkIsAvailable(url, callback) {
   const protocol = url.split(':')[0];
@@ -69,7 +70,9 @@ const Utils = {
   soliditySha3,
   recursiveMerge,
   sha512,
-  escapeHtml: require('./escapeHtml')
+  escapeHtml: logUtils.escapeHtml,
+  normalizeInput: logUtils.normalizeInput,
+  LogHandler: require('./logHandler')
 };
 
 module.exports = Utils;

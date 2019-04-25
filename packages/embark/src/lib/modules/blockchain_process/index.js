@@ -1,5 +1,6 @@
 const async = require('async');
 const utils = require('../../utils/utils.js');
+const {normalizeInput} = require('embark-utils');
 const constants = require('../../constants');
 const BlockchainProcessLauncher = require('./blockchainProcessLauncher');
 
@@ -103,7 +104,7 @@ class BlockchainModule {
     this.blockchainProcess = new BlockchainProcessLauncher({
       events: self.events,
       logger: self.logger,
-      normalizeInput: utils.normalizeInput,
+      normalizeInput,
       blockchainConfig: self.blockchainConfig,
       locale: self.locale,
       client: self.client,
