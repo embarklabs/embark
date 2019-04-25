@@ -68,7 +68,8 @@ const Utils = {
   isHex,
   soliditySha3,
   recursiveMerge,
-  sha512
+  sha512,
+  escapeHtml: require('./escapeHtml')
 };
 
 module.exports = Utils;

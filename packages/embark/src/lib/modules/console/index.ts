@@ -1,7 +1,7 @@
 /*globals __*/
 const env = require("../../core/env");
 const utils = require("../../utils/utils");
-const escapeHtml = require("../../utils/escapeHtml");
+const {escapeHtml} = require("embark-utils");
 import { Callback } from "embark";
 import constants from "../../constants.json";
 const stringify = require("json-stringify-safe");
