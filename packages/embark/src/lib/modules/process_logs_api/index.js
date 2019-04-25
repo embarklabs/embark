@@ -1,5 +1,5 @@
 const LogHandler = require('../../utils/logHandler');
-const escapeHtml = require('../../utils/escapeHtml');
+const {escapeHtml} = require('embark-utils');
 
 class ProcessLogsApi {
   constructor({embark, processName, silent}) {
