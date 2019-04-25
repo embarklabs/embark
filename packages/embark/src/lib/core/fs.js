@@ -4,7 +4,7 @@ const {DAPP_PATH,
        DIAGRAM_PATH,
        EMBARK_PATH,
        PKG_PATH,
-       anchoredValue} = require('embark-env');
+       anchoredValue} = require('./env');
 const fs = require('fs-extra');
 const os = require('os');
 const parseJson = require('parse-json');

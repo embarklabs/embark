@@ -1,5 +1,5 @@
 /*globals __*/
-const env = require("embark-env");
+const env = require("../../core/env");
 const utils = require("../../utils/utils");
 const escapeHtml = require("../../utils/escapeHtml");
 import { Callback } from "embark";

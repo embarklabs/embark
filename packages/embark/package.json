@@ -87,7 +87,6 @@
     "deep-equal": "1.0.1",
     "ejs": "2.6.1",
     "embark-compiler": "^4.0.0",
-    "embark-env": "^4.1.0-beta.0",
     "embark-profiler": "^4.1.0-beta.0",
     "embark-reset": "^4.1.0-beta.0",
     "embark-specialconfigs": "^4.1.0-beta.0",
