@@ -137,7 +137,7 @@ class Engine {
   }
 
   scaffoldingService(_options) {
-    this.registerModule('scaffolding',  {plugins: this.plugins});
+    this.registerModulePackage('embark-scaffolding',  {plugins: this.plugins});
   }
 
   pipelineService(_options) {
