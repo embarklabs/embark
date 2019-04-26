@@ -1,0 +1,65 @@
+{
+  "name": "embark-scaffolding",
+  "version": "4.1.0-beta.0",
+  "author": "Iuri Matias <iuri.matias@gmail.com>",
+  "contributors": [],
+  "description": "Provides scaffolding utilities",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-scaffolding#readme",
+  "bugs": "https://github.com/embark-framework/embark/issues",
+  "keywords": [
+    "blockchain",
+    "dapps",
+    "ethereum",
+    "ipfs",
+    "serverless",
+    "solc",
+    "solidity"
+  ],
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "repository": {
+    "directory": "packages/embark-scaffolding",
+    "type": "git",
+    "url": "https://github.com/embark-framework/embark.git"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "cross-env BABEL_ENV=node babel src --extensions \".js,.ts\" --out-dir dist --root-mode upward --source-maps --copy-files",
+    "ci": "npm run qa",
+    "clean": "npm run reset",
+    "copy:templates": "cp -rf src/**/*.hbs dist/",
+    "lint": "npm-run-all lint:*",
+    "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
+    "package": "npm pack",
+    "// qa": "npm-run-all lint typecheck build package",
+    "qa": "npm-run-all lint build package",
+    "reset": "npx rimraf dist embark-*.tgz package",
+    "start": "npm run watch",
+    "// typecheck": "tsc",
+    "watch": "run-p watch:*",
+    "watch:build": "npm run build -- --verbose --watch",
+    "// watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs2": "7.3.1",
+    "embark-utils": "^4.1.0-beta.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.2.3",
+    "@babel/core": "7.2.2",
+    "cross-env": "5.2.0",
+    "eslint": "5.7.0",
+    "npm-run-all": "4.1.5",
+    "rimraf": "2.6.3",
+    "tslint": "5.11.0",
+    "typescript": "3.3.1"
+  },
+  "engines": {
+    "node": ">=8.12.0",
+    "npm": ">=6.4.1",
+    "yarn": ">=1.12.3"
+  }
+}
+

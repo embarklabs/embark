@@ -7,7 +7,7 @@ import { Builder } from "../../builder";
 import { CommandOptions } from "../../commandOptions";
 import { SmartContractsRecipe } from "../../smartContractsRecipe";
 
-const utils = require("../../../../utils/utils");
+const utils = require("embark-utils");
 require("../../handlebarHelpers");
 
 interface ABIDefinitionDecorated extends ABIDefinition {

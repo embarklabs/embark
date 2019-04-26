@@ -2,8 +2,7 @@ import Ajv from "ajv";
 import { Logger } from "embark";
 import {__} from "i18n";
 import { schema } from "./schema";
-
-const fs = require("../../core/fs");
+const fs = require("fs");
 
 const ajv = new Ajv();
 const scaffoldingSchema = ajv.compile(schema);
