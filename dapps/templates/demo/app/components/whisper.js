@@ -52,7 +52,7 @@ class Whisper extends React.Component {
         this.setState({messageList});
       },
       error => {
-        messageList.push(<span className="alert-danger">Error: {error}</span>);
+        messageList.push(<span className="alert-danger">Error: {error.message || "Unknown Error"}</span>);
         this.setState({messageList});
       }
     );
