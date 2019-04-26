@@ -1,4 +1,4 @@
-const utils = require('./../../utils/utils.js');
+const { runCmd } = require('embark-utils');
 const async = require('async');
 
 class PluginCommand {
@@ -41,7 +41,7 @@ class PluginCommand {
     self.embark.logger.info(__('Installing npm package %s...', npmPackage));
     async.waterfall([
       function npmInstallAsync(cb) {
-        utils.runCmd(npmInstall.join(' '), {silent: false, exitOnError: false}, (err) => {
+        runCmd(npmInstall.join(' '), {silent: false, exitOnError: false}, (err) => {
           if (err) {
             return cb(err);
           }
