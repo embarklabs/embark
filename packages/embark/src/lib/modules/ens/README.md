@@ -99,4 +99,3 @@ response:
   * ZERO_ADDRESS
   * hashTo32ByteHexString
   * joinPath
-  * recursiveMerge

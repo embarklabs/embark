@@ -38,11 +38,6 @@ function soliditySha3(arg) {
   return Web3.utils.soliditySha3(arg);
 }
 
-function recursiveMerge(target, source) {
-  const merge = require('merge');
-  return merge.recursive(target, source);
-}
-
 function sha512(arg) {
   if (typeof arg !== 'string') {
     throw new TypeError('argument must be a string');
@@ -67,7 +62,6 @@ const Utils = {
   hashTo32ByteHexString,
   isHex,
   soliditySha3,
-  recursiveMerge,
   sha512
 };
 

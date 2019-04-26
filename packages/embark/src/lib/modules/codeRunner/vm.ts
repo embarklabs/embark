@@ -2,8 +2,6 @@ import { each } from "async";
 import { Callback, Logger } from "embark";
 import { NodeVM, NodeVMOptions } from "vm2";
 
-import { recursiveMerge } from "embark-utils";
-
 const fs = require("./fs");
 const path = require("path");
 const { isEs6Module, compact } = require("../../utils/utils");
@@ -60,7 +58,7 @@ class VM {
    * @param {Logger} logger Logger.
    */
   constructor(options: NodeVMOptions, private logger: Logger) {
-    this._options = recursiveMerge(this._options, options);
+    this._options = {...this._options, ...options};
 
     this.setupNodeVm(() => { });
   }

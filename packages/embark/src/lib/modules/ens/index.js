@@ -1,4 +1,4 @@
-import {joinPath, hashTo32ByteHexString, soliditySha3, recursiveMerge} from 'embark-utils';
+import {joinPath, hashTo32ByteHexString, soliditySha3} from 'embark-utils';
 const namehash = require('eth-ens-namehash');
 const async = require('async');
 const embarkJsUtils = require('embarkjs').Utils;
@@ -413,7 +413,7 @@ class ENS {
       function getNetworkId(next) {
         self.events.request('blockchain:networkId', (networkId) => {
           if (ENS_CONTRACTS_CONFIG[networkId]) {
-            self.ensConfig = recursiveMerge(self.ensConfig, ENS_CONTRACTS_CONFIG[networkId]);
+            self.ensConfig = {...self.ensConfig, ...ENS_CONTRACTS_CONFIG[networkId]};
           }
           next();
         });
