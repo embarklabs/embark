@@ -129,39 +129,6 @@ function pingEndpoint(host, port, type, protocol, origin, callback) {
   }
 }
 
-function runCmd(cmd, options, callback) {
-  const shelljs = require('shelljs');
-  options = Object.assign({silent: true, exitOnError: true, async: true}, options || {});
-  const outputToConsole = !options.silent;
-  options.silent = true;
-  let result = shelljs.exec(cmd, options, function (code, stdout) {
-    if(code !== 0) {
-      if (options.exitOnError) {
-        return exit();
-      }
-      if(typeof callback === 'function') {
-        callback(`shell returned code ${code}`);
-      }
-    } else {
-      if(typeof callback === 'function') {
-        return callback(null, stdout);
-      }
-    }
-  });
-
-  result.stdout.on('data', function(data) {
-    if(outputToConsole) {
-      console.log(data);
-    }
-  });
-
-  result.stderr.on('data', function(data) {
-    if (outputToConsole) {
-      console.log(data);
-    }
-  });
-}
-
 function cd(folder) {
   const shelljs = require('shelljs');
   shelljs.cd(folder);
@@ -170,10 +137,6 @@ function cd(folder) {
 function sed(file, pattern, replace) {
   const shelljs = require('shelljs');
   shelljs.sed('-i', pattern, replace, file);
-}
-
-function exit(code) {
-  process.exit(code);
 }
 
 function downloadFile(url, dest, cb) {
@@ -581,10 +544,8 @@ module.exports = {
   isValidDomain,
   pingEndpoint,
   decodeParams,
-  runCmd,
   cd,
   sed,
-  exit,
   downloadFile,
   extractTar,
   extractZip,

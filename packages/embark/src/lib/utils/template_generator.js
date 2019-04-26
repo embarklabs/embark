@@ -2,7 +2,7 @@ const findUp = require('find-up');
 const fs = require('../core/fs.js');
 const hostedGitInfo = require('hosted-git-info');
 const utils = require('./utils.js');
-import {joinPath} from 'embark-utils';
+import {joinPath, runCmd} from 'embark-utils';
 const semver = require('semver');
 const {promisify} = require('util');
 const {execSync} = require('child_process');
@@ -224,7 +224,7 @@ class TemplateGenerator {
         }
       }
 
-      utils.runCmd('npm install', {exitOnError: false}, (err) => {
+      runCmd('npm install', {exitOnError: false}, (err) => {
         if (err) {
           console.error(__('Could not install dependencies. Try running `npm install` inside the project directory.').red);
         }

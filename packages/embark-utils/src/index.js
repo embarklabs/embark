@@ -1,5 +1,6 @@
 const http = require('follow-redirects').http;
 const https = require('follow-redirects').https;
+const shelljs = require('shelljs');
 
 const {canonicalHost, defaultCorsHost, defaultHost, dockerHostSwap, isDocker} = require('./host');
 const {findNextPort} = require('./network');
@@ -53,6 +54,43 @@ function sha512(arg) {
   return hash.update(arg).digest('hex');
 }
 
+function exit(code) {
+  process.exit(code);
+}
+
+function runCmd(cmd, options, callback) {
+  options = Object.assign({silent: true, exitOnError: true, async: true}, options || {});
+  const outputToConsole = !options.silent;
+  options.silent = true;
+  let result = shelljs.exec(cmd, options, function (code, stdout) {
+    if(code !== 0) {
+      if (options.exitOnError) {
+        return exit();
+      }
+      if(typeof callback === 'function') {
+        callback(`shell returned code ${code}`);
+      }
+    } else {
+      if(typeof callback === 'function') {
+        return callback(null, stdout);
+      }
+    }
+  });
+
+  result.stdout.on('data', function(data) {
+    if(outputToConsole) {
+      console.log(data);
+    }
+  });
+
+  result.stderr.on('data', function(data) {
+    if (outputToConsole) {
+      console.log(data);
+    }
+  });
+}
+
+
 const Utils = {
   joinPath: function() {
     const path = require('path');
@@ -62,6 +100,7 @@ const Utils = {
   defaultCorsHost,
   defaultHost,
   dockerHostSwap,
+  exit,
   isDocker,
   checkIsAvailable,
   findNextPort,
@@ -70,6 +109,7 @@ const Utils = {
   soliditySha3,
   recursiveMerge,
   sha512,
+  runCmd,
   escapeHtml: logUtils.escapeHtml,
   normalizeInput: logUtils.normalizeInput,
   LogHandler: require('./logHandler')

@@ -1,7 +1,7 @@
 /*globals __*/
 const env = require("../../core/env");
 const utils = require("../../utils/utils");
-const {escapeHtml} = require("embark-utils");
+const {escapeHtml, exit} = require("embark-utils");
 import { Callback } from "embark";
 import constants from "../../constants.json";
 const stringify = require("json-stringify-safe");
@@ -143,7 +143,7 @@ class Console {
         __("The web3 object and the interfaces for the deployed contracts and their methods are also available"));
       return helpText.join("\n");
     } else if (["quit", "exit", "sair", "sortir", __("quit")].indexOf(cmd) >= 0) {
-      utils.exit();
+      exit();
     }
     return false;
   }
