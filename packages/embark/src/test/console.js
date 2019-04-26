@@ -2,7 +2,7 @@
 let Console = require('../lib/modules/console/');
 let Plugins = require('../lib/core/plugins.js');
 let IPC = require('../lib/core/ipc.js');
-let Logger = require('../lib/core/logger.js');
+let Logger = require('embark-logger');
 let assert = require('assert');
 let version = require('../../package.json').version;
 

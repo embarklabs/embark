@@ -1,4 +1,5 @@
 let version = require('../../package.json').version;
+const Logger = require('embark-logger');
 
 class Embark {
 
@@ -9,7 +10,6 @@ class Embark {
 
   initConfig(env, options) {
     let Events = require('./core/events.js');
-    let Logger = require('./core/logger.js');
     let Config = require('./core/config.js');
 
     this.events = new Events();

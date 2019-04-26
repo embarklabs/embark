@@ -2,6 +2,7 @@ const async = require('async');
 
 const utils = require('../utils/utils');
 const IPC = require('./ipc');
+const Logger = require('embark-logger');
 
 class Engine {
   constructor(options) {
@@ -25,7 +26,6 @@ class Engine {
   init(_options, callback) {
     callback = callback || function() {};
     const Events = require('./events.js');
-    const Logger = require('./logger.js');
     const Config = require('./config.js');
 
     let options = _options || {};

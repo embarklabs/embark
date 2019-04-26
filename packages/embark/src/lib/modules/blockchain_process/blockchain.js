@@ -10,7 +10,7 @@ const Proxy = require('./proxy');
 const Ipc = require('../../core/ipc');
 
 import {defaultHost, dockerHostSwap} from 'embark-utils';
-const Logger = require('../../core/logger');
+const Logger = require('embark-logger');
 
 // time between IPC connection attempts (in ms)
 const IPC_CONNECT_INTERVAL = 2000;
