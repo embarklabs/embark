@@ -402,10 +402,6 @@ function groupBy(array, key) {
   }, {});
 }
 
-function last(array) {
-  return array[array.length - 1];
-}
-
 function interceptLogs(consoleContext, logger) {
   let context = {};
   context.console = consoleContext;
@@ -541,7 +537,6 @@ module.exports = {
   getHexBalanceFromString,
   compact,
   groupBy,
-  last,
   interceptLogs,
   errorMessage,
   timer,
