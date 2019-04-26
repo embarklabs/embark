@@ -94,6 +94,7 @@
     "embark-transaction-tracker": "^4.1.0-beta.0",
     "embark-utils": "^4.1.0-beta.0",
     "embark-vyper": "^4.0.0",
+    "embark-watcher": "^4.1.0-beta.0",
     "embark-webserver": "^4.1.0-beta.0",
     "embark-whisper": "^4.1.0-beta.0",
     "embarkjs": "^4.1.0-beta.0",
