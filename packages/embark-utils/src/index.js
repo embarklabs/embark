@@ -8,6 +8,8 @@ const {findNextPort} = require('./network');
 const logUtils = require('./log-utils');
 const toposortGraph = require('./toposort');
 
+import { last } from './collections';
+
 function checkIsAvailable(url, callback) {
   const protocol = url.split(':')[0];
   const httpObj = (protocol === 'https') ? https : http;
@@ -125,6 +127,7 @@ const Utils = {
   findNextPort,
   hashTo32ByteHexString,
   isHex,
+  last,
   soliditySha3,
   recursiveMerge,
   sha512,
