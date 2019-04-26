@@ -1,7 +1,8 @@
 let async = require('async');
 //require("../utils/debug_util.js")(__filename, async);
 let utils = require('../../utils/utils.js');
-import { ZERO_ADDRESS } from '../../utils/addressUtils';
+import {AddressUtils} from 'embark-utils';
+const {ZERO_ADDRESS} = AddressUtils;
 
 // Check out definition 97 of the yellow paper: https://ethereum.github.io/yellowpaper/paper.pdf
 const MAX_CONTRACT_BYTECODE_LENGTH = 24576;

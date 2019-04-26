@@ -1,14 +1,13 @@
-import {joinPath, hashTo32ByteHexString, soliditySha3, recursiveMerge} from 'embark-utils';
+import {joinPath, hashTo32ByteHexString, soliditySha3, recursiveMerge, AddressUtils} from 'embark-utils';
 const namehash = require('eth-ens-namehash');
 const async = require('async');
-const embarkJsUtils = require('embarkjs').Utils;
 const reverseAddrSuffix = '.addr.reverse';
 const ENSFunctions = require('./ENSFunctions');
-const secureSend = embarkJsUtils.secureSend;
-import {ZERO_ADDRESS} from '../../utils/addressUtils';
 import {ens} from '../../constants';
-import EmbarkJS from 'embarkjs';
+import EmbarkJS, {Utils as embarkJsUtils} from 'embarkjs';
+const secureSend = embarkJsUtils.secureSend;
 
+const {ZERO_ADDRESS} = AddressUtils;
 const ENS_WHITELIST = ens.whitelist;
 const NOT_REGISTERED_ERROR = 'Name not yet registered';
 

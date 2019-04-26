@@ -112,7 +112,8 @@ const Utils = {
   runCmd,
   escapeHtml: logUtils.escapeHtml,
   normalizeInput: logUtils.normalizeInput,
-  LogHandler: require('./logHandler')
+  LogHandler: require('./logHandler'),
+  AddressUtils: require('./addressUtils')
 };
 
 module.exports = Utils;
