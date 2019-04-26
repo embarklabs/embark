@@ -1,6 +1,7 @@
-import { extendZeroAddressShorthand, replaceZeroAddressShorthand } from "./addressUtils";
+import AddressUtils from 'embark-utils';
 import { unitRegex } from "./regexConstants";
 
+const { extendZeroAddressShorthand, replaceZeroAddressShorthand } = AddressUtils;
 const web3 = require("web3");
 const utils = require("./utils.js");
 
