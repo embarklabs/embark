@@ -1,5 +1,5 @@
 require('colors');
-let fs = require('./fs.js');
+const fs = require('fs');
 const date = require('date-and-time');
 const { escapeHtml } = require('embark-utils');
 const util = require('util');

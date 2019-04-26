@@ -1,6 +1,6 @@
 let async = require('async');
 const constants = require('../lib/constants');
-const Logger = require('../lib/core/logger');
+const Logger = require('embark-logger');
 const {reset: embarkReset, paths: defaultResetPaths} = require('embark-reset');
 const fs = require('../lib/core/fs.js');
 
@@ -21,7 +21,6 @@ class EmbarkController {
 
   initConfig(env, options) {
     let Events = require('../lib/core/events.js');
-    let Logger = require('../lib/core/logger.js');
     let Config = require('../lib/core/config.js');
 
     this.events = new Events();
