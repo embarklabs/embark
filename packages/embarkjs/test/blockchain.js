@@ -1,15 +1,15 @@
 /* global before describe it require */
 
-const {startRPCMockServer, TestProvider} = require('./test');
+const {startRPCMockServer, TestProvider} = require('./helpers/blockchain');
 const {assert} = require('chai');
-const Blockchain = require('../dist/blockchain');
+const {Blockchain} = require('..');
 const {promisify} = require('util');
 
 describe('Blockchain', () => {
   describe('#connect', () => {
     before(() => {
-      Blockchain.default.registerProvider('web3', TestProvider);
-      Blockchain.default.setProvider('web3', {});
+      Blockchain.registerProvider('web3', TestProvider);
+      Blockchain.setProvider('web3', {});
     });
 
     const scenarios = [
@@ -48,7 +48,7 @@ describe('Blockchain', () => {
         // test Blockchain.connect() using callback
         let {servers, dappConnection} = await makeServers();
         await new Promise((resolve, reject) => {
-          Blockchain.default.connect({dappConnection}, err => {
+          Blockchain.connect({dappConnection}, err => {
             try {
               assert(scenario.error ? err : !err);
               servers.forEach((server, idx) => {
@@ -64,7 +64,7 @@ describe('Blockchain', () => {
         // test Blockchain.connect() without callback
         ({servers, dappConnection} = await makeServers());
         try {
-          await Blockchain.default.connect({dappConnection});
+          await Blockchain.connect({dappConnection});
         } catch (e) {
           if (!scenario.error) throw e;
         }

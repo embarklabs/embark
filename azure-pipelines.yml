@@ -85,6 +85,7 @@ steps:
     yarn config set cache-folder "${PWD}/Yarn" &>/dev/null
     popd &>/dev/null
     npm run ci:full
+    npm run coveralls
   condition: ne( variables['Agent.OS'], 'Windows_NT' )
   displayName: 'Test (*nix)'
 
@@ -96,5 +97,6 @@ steps:
     yarn config set cache-folder "$($PWD.Path)\Yarn" | out-null
     popd
     npm run ci:full
+    npm run coveralls
   condition: eq( variables['Agent.OS'], 'Windows_NT' )
   displayName: 'Test (Windows)'
