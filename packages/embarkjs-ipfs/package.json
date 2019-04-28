@@ -46,7 +46,7 @@
     "qa": "npm-run-all build package",
     "reset": "npx rimraf build-test dist embarkjs-*.tgz package",
     "start": "npm run watch",
-    "test": "mocha \"build-test/**/*.js\" --exit --no-timeouts --require source-map-support/register",
+    "// test": "mocha \"build-test/**/*.js\" --exit --no-timeouts --require source-map-support/register",
     "watch": "run-p \"build:** -- --verbose --watch\""
   },
   "dependencies": {
