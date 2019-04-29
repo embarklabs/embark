@@ -8,7 +8,7 @@ const {findNextPort} = require('./network');
 const logUtils = require('./log-utils');
 const toposortGraph = require('./toposort');
 
-import { last } from './collections';
+import { last, recursiveMerge } from './collections';
 
 function checkIsAvailable(url, callback) {
   const protocol = url.split(':')[0];
@@ -42,11 +42,6 @@ function hashTo32ByteHexString(hash) {
 function soliditySha3(arg) {
   const Web3 = require('web3');
   return Web3.utils.soliditySha3(arg);
-}
-
-function recursiveMerge(target, source) {
-  const merge = require('merge');
-  return merge.recursive(target, source);
 }
 
 function sha512(arg) {

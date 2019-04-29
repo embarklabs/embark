@@ -1,9 +1,8 @@
 import { red } from "colors";
-import { recursiveMerge } from "embark-utils";
+import { Logger } from "embark";
 import { performance, PerformanceObserver } from "perf_hooks";
 import prettyMs from "pretty-ms";
-
-import { Logger } from "embark";
+import { last, recursiveMerge } from "./collections";
 
 const ora = require("ora");
 
@@ -62,7 +61,7 @@ export default class LongRunningProcessTimer {
         let strDuration;
 
         // find any download ongoing measurements we"ve made
-        entry = last(items.getEntries().filter((thisEntry) => thisEntry.name === this.downloadOngoing));
+        entry = last(items.getEntries().filter((thisEntry: any) => thisEntry.name === this.downloadOngoing));
         if (entry) {
           // ongoing performance mark
           // TODO: add i18n
@@ -72,7 +71,7 @@ export default class LongRunningProcessTimer {
           }
         } else {
           // otherwise, find our download complete measurement
-          entry = last(items.getEntries().filter((thisEntry) => thisEntry.name === this.downloadComplete));
+          entry = last(items.getEntries().filter((thisEntry: any) => thisEntry.name === this.downloadComplete));
           if (entry) {
             // TODO: add i18n
             strDuration = this.processFinishedMsg.replace("{{packageName}}", this.packageName).replace("{{version}}", this.version).replace("{{duration}}", prettyMs(entry.duration));
