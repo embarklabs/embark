@@ -1,14 +1,21 @@
 import {joinPath, hashTo32ByteHexString, soliditySha3, recursiveMerge, AddressUtils} from 'embark-utils';
 const namehash = require('eth-ens-namehash');
 const async = require('async');
-const reverseAddrSuffix = '.addr.reverse';
 const ENSFunctions = require('./ENSFunctions');
-import {ens} from '../../constants';
+// import {ens} from '../../constants'; TODO uncomment when we move constants
 import EmbarkJS, {Utils as embarkJsUtils} from 'embarkjs';
+const ensConfig = require('./ensContractConfigs');
 const secureSend = embarkJsUtils.secureSend;
 
+const ensConstants = {
+  "whitelist": [
+    "eth",
+    "xyz"
+  ]
+};
+const reverseAddrSuffix = '.addr.reverse';
 const {ZERO_ADDRESS} = AddressUtils;
-const ENS_WHITELIST = ens.whitelist;
+const ENS_WHITELIST = ensConstants.whitelist;
 const NOT_REGISTERED_ERROR = 'Name not yet registered';
 
 const MAINNET_ID = '1';
@@ -66,7 +73,7 @@ class ENS {
     this.enabled = false;
     this.registration = this.namesConfig.register || {};
     this.embark = embark;
-    this.ensConfig = require('./ensContractConfigs');
+    this.ensConfig = ensConfig;
     this.configured = false;
 
     this.events.setCommandHandler("ens:resolve", this.ensResolve.bind(this));
