@@ -1,4 +1,4 @@
-let async = require('async');
+const async = require('async');
 const cloneDeep = require('clone-deep');
 const constants = require('embark-core/constants');
 const path = require('path');

@@ -216,7 +216,7 @@ class Engine {
     this.registerModulePackage('embark-compiler', {plugins: this.plugins, isCoverage: options.isCoverage});
     this.registerModule('solidity', {ipc: this.ipc, useDashboard: this.useDashboard});
     this.registerModulePackage('embark-vyper');
-    this.registerModule('contracts_manager', {plugins: this.plugins, compileOnceOnly: options.compileOnceOnly});
+    this.registerModulePackage('embark-contracts-manager', {plugins: this.plugins, compileOnceOnly: options.compileOnceOnly});
   }
 
   deploymentService(options) {
