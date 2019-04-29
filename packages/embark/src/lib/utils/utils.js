@@ -476,11 +476,6 @@ function fileTreeSort(nodes){
   return folders.concat(files);
 }
 
-function copyToClipboard(text) {
-  const clipboardy = require('clipboardy');
-  clipboardy.writeSync(text);
-}
-
 function fuzzySearch(text, list, filter) {
   const fuzzy = require('fuzzy');
   return fuzzy.filter(text, list, {extract: (filter || function () {})});
@@ -566,7 +561,6 @@ module.exports = {
   errorMessage,
   timer,
   fileTreeSort,
-  copyToClipboard,
   fuzzySearch,
   jsonFunctionReplacer,
   getWindowSize,

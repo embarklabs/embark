@@ -46,6 +46,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs2": "7.3.1",
+    "clipboardy": "1.2.3",
     "follow-redirects": "1.5.7",
     "merge": "1.2.1",
     "multihashes": "0.4.14",

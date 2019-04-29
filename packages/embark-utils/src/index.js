@@ -1,6 +1,7 @@
 const http = require('follow-redirects').http;
 const https = require('follow-redirects').https;
 const shelljs = require('shelljs');
+const clipboardy = require('clipboardy');
 
 const {canonicalHost, defaultCorsHost, defaultHost, dockerHostSwap, isDocker} = require('./host');
 const {findNextPort} = require('./network');
@@ -90,6 +91,10 @@ function runCmd(cmd, options, callback) {
   });
 }
 
+function copyToClipboard(text) {
+  clipboardy.writeSync(text);
+}
+
 
 const Utils = {
   joinPath: function() {
@@ -97,6 +102,7 @@ const Utils = {
     return path.join.apply(path.join, arguments);
   },
   canonicalHost,
+  copyToClipboard,
   defaultCorsHost,
   defaultHost,
   dockerHostSwap,
