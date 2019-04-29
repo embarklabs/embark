@@ -1,8 +1,8 @@
 let async = require('async');
 const cloneDeep = require('clone-deep');
-const path = require('path');
-const utils = require('../../utils/utils.js');
 const constants = require('embark-core/constants');
+const path = require('path');
+const {proposeAlternative, toposort} = require('embark-utils');
 
 // TODO: create a contract object
 
@@ -423,7 +423,7 @@ class ContractsManager {
               className: className,
               parentContractName: parentContractName
             }));
-            let suggestion = utils.proposeAlternative(parentContractName, dictionary, [className, parentContractName]);
+            let suggestion = proposeAlternative(parentContractName, dictionary, [className, parentContractName]);
             if (suggestion) {
               self.logger.warn(__('did you mean "%s"?', suggestion));
             }
@@ -467,7 +467,7 @@ class ContractsManager {
 
           if (contract.code === undefined && !contract.abiDefinition) {
             self.logger.error(__("%s has no code associated", className));
-            let suggestion = utils.proposeAlternative(className, dictionary, [className]);
+            let suggestion = proposeAlternative(className, dictionary, [className]);
             if (suggestion) {
               self.logger.warn(__('did you mean "%s"?', suggestion));
             }
@@ -614,7 +614,7 @@ class ContractsManager {
     let orderedDependencies;
 
     try {
-      orderedDependencies = utils.toposort(converted_dependencies.filter((x) => x[0] !== x[1])).reverse();
+      orderedDependencies = toposort(converted_dependencies.filter((x) => x[0] !== x[1])).reverse();
     } catch (e) {
       this.logger.error((__("Error: ") + e.message).red);
       this.logger.error(__("there are two or more contracts that depend on each other in a cyclic manner").bold.red);

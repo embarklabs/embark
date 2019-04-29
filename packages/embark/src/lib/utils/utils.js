@@ -1,6 +1,5 @@
 let http = require('follow-redirects').http;
 let https = require('follow-redirects').https;
-let toposortGraph = require('./toposort.js');
 import {canonicalHost, normalizeInput} from 'embark-utils';
 
 const balanceRegex = /([0-9]+) ?([a-zA-Z]*)/;
@@ -176,15 +175,6 @@ function extractZip(filename, packageDirectory, opts, cb) {
   decompress(filename, packageDirectory, opts).then((_files) => {
     cb();
   });
-}
-
-function proposeAlternative(word, _dictionary, _exceptions) {
-  const propose = require('propose');
-  let exceptions = _exceptions || [];
-  let dictionary = _dictionary.filter((entry) => {
-    return exceptions.indexOf(entry) < 0;
-  });
-  return propose(word, dictionary, {threshold: 0.3});
 }
 
 function getExternalContractUrl(file,providerUrl) {
@@ -498,10 +488,6 @@ function getWindowSize() {
   return {width: 240, height: 75};
 }
 
-function toposort(graph) {
-  return toposortGraph(graph);
-}
-
 function isConstructor(obj) {
   return !!obj.prototype && !!obj.prototype.constructor.name;
 }
@@ -544,7 +530,6 @@ module.exports = {
   downloadFile,
   extractTar,
   extractZip,
-  proposeAlternative,
   getExternalContractUrl,
   toChecksumAddress,
   sha3,
@@ -564,7 +549,6 @@ module.exports = {
   fuzzySearch,
   jsonFunctionReplacer,
   getWindowSize,
-  toposort,
   isEs6Module,
   urlJoin
 };
