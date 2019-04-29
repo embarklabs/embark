@@ -1,7 +1,7 @@
 /*global describe, it, require*/
 import { File, Types } from "../lib/core/file";
 
-let ContractsManager = require('../lib/modules/contracts_manager/index.js');
+let ContractsManager = require('embark-contracts-manager');
 let Compiler = require('embark-compiler');
 let Logger = require('embark-logger');
 let TestLogger = require('../lib/utils/test_logger');
