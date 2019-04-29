@@ -10,6 +10,13 @@ const toposortGraph = require('./toposort');
 
 import { last, recursiveMerge } from './collections';
 
+function timer(ms) {
+  const then = Date.now();
+  return new Promise(resolve => (
+    setTimeout(() => resolve(Date.now() - then), ms)
+  ));
+}
+
 function checkIsAvailable(url, callback) {
   const protocol = url.split(':')[0];
   const httpObj = (protocol === 'https') ? https : http;
@@ -106,6 +113,16 @@ function toposort(graph) {
   return toposortGraph(graph);
 }
 
+function deconstructUrl(endpoint) {
+  const matches = endpoint.match(/(ws|https?):\/\/([a-zA-Z0-9_.-]*):?([0-9]*)?/);
+  return {
+    protocol: matches[1],
+    host: matches[2],
+    port: matches[3],
+    type: matches[1] === 'ws' ? 'ws' : 'rpc'
+  };
+}
+
 const Utils = {
   joinPath: function() {
     const path = require('path');
@@ -113,6 +130,7 @@ const Utils = {
   },
   canonicalHost,
   copyToClipboard,
+  deconstructUrl,
   defaultCorsHost,
   defaultHost,
   dockerHostSwap,
@@ -126,6 +144,7 @@ const Utils = {
   soliditySha3,
   recursiveMerge,
   sha512,
+  timer,
   runCmd,
   escapeHtml: logUtils.escapeHtml,
   normalizeInput: logUtils.normalizeInput,

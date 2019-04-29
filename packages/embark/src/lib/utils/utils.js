@@ -342,16 +342,6 @@ function buildUrlFromConfig(configObj) {
   return this.buildUrl(configObj.protocol, canonicalHost(configObj.host), configObj.port, configObj.type);
 }
 
-function deconstructUrl(endpoint) {
-  const matches = endpoint.match(/(ws|https?):\/\/([a-zA-Z0-9_.-]*):?([0-9]*)?/);
-  return {
-    protocol: matches[1],
-    host: matches[2],
-    port: matches[3],
-    type: matches[1] === 'ws' ? 'ws' : 'rpc'
-  };
-}
-
 function getWeiBalanceFromString(balanceString, web3){
   if(!web3){
     throw new Error(__('[utils.getWeiBalanceFromString]: Missing parameter \'web3\''));
@@ -434,13 +424,6 @@ function errorMessage(e) {
     return e.message;
   }
   return e;
-}
-
-function timer(ms) {
-  const then = Date.now();
-  return new Promise(resolve => (
-    setTimeout(() => resolve(Date.now() - then), ms)
-  ));
 }
 
 function isFolder(node) {
@@ -532,14 +515,12 @@ module.exports = {
   normalizeInput,
   buildUrl,
   buildUrlFromConfig,
-  deconstructUrl,
   getWeiBalanceFromString,
   getHexBalanceFromString,
   compact,
   groupBy,
   interceptLogs,
   errorMessage,
-  timer,
   fileTreeSort,
   fuzzySearch,
   jsonFunctionReplacer,
