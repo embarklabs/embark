@@ -5,10 +5,9 @@ const path = require('path');
 const deepEqual = require('deep-equal');
 const web3 = require('web3');
 const constants = require('embark-core/constants');
-import {canonicalHost, defaultHost, recursiveMerge, AddressUtils} from 'embark-utils';
+import {canonicalHost, defaultHost, recursiveMerge, AddressUtils, unitRegex} from 'embark-utils';
 const cloneDeep = require('lodash.clonedeep');
 const { replaceZeroAddressShorthand } = AddressUtils;
-import { unitRegex } from "../utils/regexConstants";
 import * as utilsContractsConfig from "../utils/contractsConfig";
 import { File, Types } from "./file";
 
