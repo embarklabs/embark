@@ -1,8 +1,7 @@
 const async = require('async');
 const Mocha = require('mocha');
 const path = require('path');
-const {timer} = require('../../utils/utils');
-const { runCmd } = require('embark-utils');
+const { runCmd, timer } = require('embark-utils');
 const assert = require('assert');
 const Test = require('./test');
 const {EmbarkSpec, EmbarkApiSpec} = require('./reporter');

@@ -1,8 +1,8 @@
 import * as utilsContractsConfig from "../../utils/contractsConfig";
+import { deconstructUrl } from 'embark-utils';
 
 const async = require('async');
 const AccountParser = require('../../utils/accountParser');
-const utils = require('../../utils/utils');
 const constants = require('embark-core/constants');
 const web3Utils = require('web3-utils');
 
@@ -80,7 +80,7 @@ class Test {
     } else if (this.simOptions.host || (this.options.node && this.options.node !== 'vm')) {
       let options = this.simOptions;
       if (this.options.node && this.options.node !== 'vm') {
-        options = utils.deconstructUrl(this.options.node);
+        options = deconstructUrl(this.options.node);
       }
 
       if (!options.protocol) {

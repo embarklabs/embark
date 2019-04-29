@@ -2,7 +2,7 @@
 
 require('./httpProxyOverride');
 const Asm = require('stream-json/Assembler');
-import {canonicalHost} from 'embark-utils';
+import {canonicalHost, timer} from 'embark-utils';
 const constants = require('embark-core/constants');
 const {Duplex} = require('stream');
 const http = require('http');
@@ -218,7 +218,7 @@ class Proxy {
             if (!err || (Date.now() - start > 10000)) {
               resolve();
             } else {
-              utils.timer(250).then(waitOnTarget).then(resolve);
+              timer(250).then(waitOnTarget).then(resolve);
             }
           }
         );
