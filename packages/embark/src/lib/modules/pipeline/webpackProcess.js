@@ -1,4 +1,4 @@
-const constants = require('../../constants');
+const constants = require('embark-core/constants');
 const fs = require('../../core/fs');
 const ProcessWrapper = require('../../core/processes/processWrapper');
 const webpack = require('webpack');

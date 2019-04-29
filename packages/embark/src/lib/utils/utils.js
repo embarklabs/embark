@@ -188,7 +188,7 @@ function proposeAlternative(word, _dictionary, _exceptions) {
 }
 
 function getExternalContractUrl(file,providerUrl) {
-  const constants = require('../constants');
+  const constants = require('embark-core/constants');
   let url;
   const RAW_URL = 'https://raw.githubusercontent.com/';
   const DEFAULT_SWARM_GATEWAY = 'https://swarm-gateways.net/';

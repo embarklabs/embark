@@ -1,6 +1,6 @@
 /*globals describe, it*/
 const Blockchain = require('../lib/modules/blockchain_process/blockchain.js');
-const constants = require('../lib/constants.json');
+const constants = require('embark-core/constants');
 import {defaultHost} from 'embark-utils';
 const path = require('path');
 const fs = require('../lib/core/fs.js');

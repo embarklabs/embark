@@ -1,5 +1,5 @@
 let async = require('async');
-const constants = require('../lib/constants');
+const constants = require('embark-core/constants');
 const Logger = require('embark-logger');
 const {reset: embarkReset, paths: defaultResetPaths} = require('embark-reset');
 const fs = require('../lib/core/fs.js');

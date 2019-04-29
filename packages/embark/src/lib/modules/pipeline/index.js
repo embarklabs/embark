@@ -3,7 +3,7 @@ const async = require('async');
 const utils = require('../../utils/utils.js');
 import {joinPath} from 'embark-utils';
 const ProcessLauncher = require('../../core/processes/processLauncher');
-const constants = require('../../constants');
+const constants = require('embark-core/constants');
 const WebpackConfigReader = require('../pipeline/webpackConfigReader');
 import LongRunningProcessTimer from '../../utils/longRunningProcessTimer';
 

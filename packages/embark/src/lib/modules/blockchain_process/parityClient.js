@@ -3,7 +3,7 @@ const fs = require('../../core/fs.js');
 const path = require('path');
 const os = require('os');
 const semver = require('semver');
-const constants = require('../../constants');
+const constants = require('embark-core/constants');
 
 const DEFAULTS = {
   "BIN": "parity",

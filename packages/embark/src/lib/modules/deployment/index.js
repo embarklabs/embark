@@ -2,7 +2,7 @@ let async = require('async');
 
 const ContractDeployer = require('./contract_deployer.js');
 const cloneDeep = require('clone-deep');
-const constants = require('../../constants');
+const constants = require('embark-core/constants');
 
 class DeployManager {
   constructor(embark, options) {

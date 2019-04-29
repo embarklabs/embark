@@ -1,5 +1,5 @@
 const child_process = require('child_process');
-const constants = require('../../constants');
+const constants = require('embark-core/constants');
 const path = require('path');
 const ProcessLogsApi = require('embark-process-logs-api');
 
