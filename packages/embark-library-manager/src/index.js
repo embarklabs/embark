@@ -80,7 +80,7 @@ class LibraryManager {
 
   downloadIfNeeded(packageName, cb) {
     const wantedVersion = this.versions[packageName];
-    let installedVersion = require('../../../../package.json').dependencies[packageName];
+    let installedVersion = this.embark.config.package.dependencies[packageName];
     if (!wantedVersion || wantedVersion === installedVersion) {
       const nodePath = this.embark.fs.embarkPath('node_modules');
       const packagePath = require.resolve(packageName, {paths: [nodePath]});

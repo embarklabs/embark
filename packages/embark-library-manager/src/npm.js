@@ -1,7 +1,7 @@
-const fs = require('../../core/fs.js');
+const fs = require('fs');
 const PluginManager = require('live-plugin-manager-git-fix').PluginManager;
 require('colors');
-import LongRunningProcessTimer from '../../utils/longRunningProcessTimer.js';
+import LongRunningProcessTimer from 'embark-utils';
 
 class Npm {
 
@@ -38,7 +38,7 @@ class Npm {
       this._installing[packageName + version] = [callback];
 
       const timer = new LongRunningProcessTimer(
-        this._logger, 
+        this._logger,
         packageName,
         version,
         'Downloading and installing {{packageName}} {{version}}...',

@@ -316,7 +316,7 @@ class Engine {
   }
 
   libraryManagerService(_options) {
-    this.registerModule('library_manager', {useDashboard: this.useDashboard});
+    this.registerModulePackage('embark-library-manager', {useDashboard: this.useDashboard});
   }
 
   codeCoverageService(_options) {

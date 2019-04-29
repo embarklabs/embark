@@ -13,6 +13,7 @@ import * as utilsContractsConfig from "../utils/contractsConfig";
 import { File, Types } from "./file";
 
 const DEFAULT_CONFIG_PATH = 'config/';
+const PACKAGE = require('../../../package.json');
 
 var Config = function(options) {
   const self = this;
@@ -28,6 +29,7 @@ var Config = function(options) {
   this.chainsFile = options.chainsFile || './chains.json';
   this.plugins = options.plugins;
   this.logger = options.logger;
+  this.package = PACKAGE;
   this.events = options.events;
   this.embarkConfig = {};
   this.context = options.context || [constants.contexts.any];
@@ -95,7 +97,16 @@ Config.prototype.loadConfigFiles = function(options) {
   this.embarkConfig = fs.readJSONSync(options.embarkConfig);
   this.embarkConfig.plugins = this.embarkConfig.plugins || {};
 
-  this.plugins = new Plugins({plugins: this.embarkConfig.plugins, logger: this.logger, interceptLogs: interceptLogs, events: this.events, config: this, context: this.context, env: this.env, version: this.version});
+  this.plugins = new Plugins({
+    plugins: this.embarkConfig.plugins,
+    logger: this.logger,
+    interceptLogs: interceptLogs,
+    events: this.events,
+    config: this,
+    context: this.context,
+    env: this.env,
+    version: this.version
+  });
   this.plugins.loadPlugins();
 
   this.loadEmbarkConfigFile();
