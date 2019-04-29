@@ -166,7 +166,7 @@ class Engine {
   }
 
   pluginCommandService() {
-    this.registerModule('plugin_cmd', {embarkConfigFile: this.embarkConfig, embarkConfig: this.config.embarkConfig, packageFile: 'package.json'});
+    this.registerModulePackage('embark-plugin-cmd', {embarkConfigFile: this.embarkConfig, embarkConfig: this.config.embarkConfig, packageFile: 'package.json'});
   }
 
   console(_options) {
