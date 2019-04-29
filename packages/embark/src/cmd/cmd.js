@@ -406,13 +406,13 @@ class Cmd {
         let suggestion;
 
         if (cmd === 'compile') {
-          // we bypass `utils.proposeAlternative()` here as `build` isn't
+          // we bypass `proposeAlternative()` here as `build` isn't
           // similar enough
           suggestion = 'build --contracts';
         } else {
-          let utils = require('../lib/utils/utils.js');
+          const {proposeAlternative} = require('embark-utils');
           let dictionary = ['new', 'demo', 'build', 'run', 'blockchain', 'simulator', 'test', 'upload', 'version', 'console', 'eject-webpack', 'graph', 'help', 'reset'];
-          suggestion = utils.proposeAlternative(cmd, dictionary);
+          suggestion = proposeAlternative(cmd, dictionary);
         }
         if (suggestion) {
           console.log((__('did you mean') + ' "%s"?').green, suggestion);

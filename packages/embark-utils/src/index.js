@@ -6,6 +6,7 @@ const clipboardy = require('clipboardy');
 const {canonicalHost, defaultCorsHost, defaultHost, dockerHostSwap, isDocker} = require('./host');
 const {findNextPort} = require('./network');
 const logUtils = require('./log-utils');
+const toposortGraph = require('./toposort');
 
 function checkIsAvailable(url, callback) {
   const protocol = url.split(':')[0];
@@ -95,6 +96,18 @@ function copyToClipboard(text) {
   clipboardy.writeSync(text);
 }
 
+function proposeAlternative(word, _dictionary, _exceptions) {
+  const propose = require('propose');
+  let exceptions = _exceptions || [];
+  let dictionary = _dictionary.filter((entry) => {
+    return exceptions.indexOf(entry) < 0;
+  });
+  return propose(word, dictionary, {threshold: 0.3});
+}
+
+function toposort(graph) {
+  return toposortGraph(graph);
+}
 
 const Utils = {
   joinPath: function() {
@@ -119,7 +132,9 @@ const Utils = {
   escapeHtml: logUtils.escapeHtml,
   normalizeInput: logUtils.normalizeInput,
   LogHandler: require('./logHandler'),
-  AddressUtils: require('./addressUtils')
+  AddressUtils: require('./addressUtils'),
+  proposeAlternative,
+  toposort
 };
 
 module.exports = Utils;
