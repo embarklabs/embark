@@ -100,6 +100,7 @@
     "embark-ens": "^4.1.0-beta.0",
     "embark-library-manager": "^4.1.0-beta.0",
     "embark-logger": "^4.1.0-beta.0",
+    "embark-plugin-cmd": "^4.1.0-beta.0",
     "embark-process-logs-api": "^4.1.0-beta.0",
     "embark-profiler": "^4.1.0-beta.0",
     "embark-reset": "^4.1.0-beta.0",
