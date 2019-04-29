@@ -197,7 +197,7 @@ class SpecialConfigs {
           await contract.onDeploy(dependencies);
           cb();
         } catch (err) {
-          return cb(new Error(`Error when registering onDeploy hook for ${contract.name}: ${err.message}`));
+          return cb(new Error(`Error when registering onDeploy hook for ${contract.className}: ${err.message}`));
         }
       } else {
         let onDeployCmds = contract.onDeploy;
@@ -242,7 +242,7 @@ class SpecialConfigs {
           params.shouldDeploy = await contract.deployIf(dependencies);
           cb(null, params);
         } catch (err) {
-          return cb(new Error(`Error when registering deployIf hook for ${contract.name}: ${err.message}`));
+          return cb(new Error(`Error when registering deployIf hook for ${contract.className}: ${err.message}`));
         }
       } else {
 
