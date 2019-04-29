@@ -1,5 +1,4 @@
-import { AddressUtils } from "embark-utils";
-import { unitRegex } from "./regexConstants";
+import { AddressUtils, unitRegex } from "embark-utils";
 
 const { extendZeroAddressShorthand, replaceZeroAddressShorthand } = AddressUtils;
 const web3 = require("web3");

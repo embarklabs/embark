@@ -7,6 +7,7 @@ const {canonicalHost, defaultCorsHost, defaultHost, dockerHostSwap, isDocker} = 
 const {findNextPort} = require('./network');
 const logUtils = require('./log-utils');
 const toposortGraph = require('./toposort');
+import { unitRegex } from './constants';
 
 import { last, recursiveMerge } from './collections';
 
@@ -145,6 +146,7 @@ const Utils = {
   recursiveMerge,
   sha512,
   timer,
+  unitRegex,
   runCmd,
   escapeHtml: logUtils.escapeHtml,
   normalizeInput: logUtils.normalizeInput,
