@@ -90,17 +90,18 @@ class ProcessManager {
           const enable = cmd.trim().endsWith('on');
           this.logger.info(`${enable ? 'Starting' :  'Stopping'} the ${name} process...`);
           if(enable) {
-            return this.events.request("processes:launch", name, (err) => {
-              if (err) this.logger.info(err); // writes to embark's console
+            return this.events.request("processes:launch", name, (...args) => {
+              const err = args[0];
+              if (err) return this.logger.error(err); // writes to embark's console
               const process = self.processes[name];
               if(process && process.afterLaunchFn) {
-                process.afterLaunchFn.call(process.afterLaunchFn, err);
+                process.afterLaunchFn.apply(process.afterLaunchFn, args);
               }
               callback(err, `${name} process started.`); // passes a message back to cockpit console
             });
           }
           this.events.request("processes:stop", name, (err) => {
-            if (err) this.logger.info(err); // writes to embark's console
+            if (err) return this.logger.error(err); // writes to embark's console
             callback(err, `${name} process stopped.`); // passes a message back to cockpit console
           });
         }

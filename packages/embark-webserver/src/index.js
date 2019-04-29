@@ -24,6 +24,7 @@ class WebServer {
     this.port = parseInt(this.webServerConfig.port, 10);
     this.enableCatchAll = this.webServerConfig.enableCatchAll === true;
     this.enableCatchAll = false; // FIXME when true, some Requests end up failing (eg: process-logs)
+    this.isServiceRegistered = false;
 
     this.events.request('processes:register', 'webserver', {
       launchFn: (cb) => { this.server.start(cb); },
@@ -46,7 +47,10 @@ class WebServer {
 
     this.listenToCommands();
     this.registerConsoleCommands();
+    this.init();
+  }
 
+  init() {
     this.events.on('webserver:config:change', () => {
       this.embark.config.webServerConfig = null;
       this.embark.config.loadWebServerConfigFile();
@@ -78,48 +82,70 @@ class WebServer {
         this.setServiceCheck();
       });
     });
-  }
-
-  setServiceCheck() {
-    const self = this;
-
-    this.events.request("services:register", 'Webserver', function (cb) {
-      let url = self.protocol + '://' + canonicalHost(self.host) + ':' + self.port;
-      checkIsAvailable(url, function (available) {
-        let devServer = __('Webserver') + ' (' + url + ')';
-        let serverStatus = (available ? 'on' : 'off');
-        return cb({name: devServer, status: serverStatus});
-      });
-    });
 
     this.events.on('check:wentOffline:Webserver', () => {
       this.logger.info(__("Webserver is offline"));
     });
+    this.events.on('check:backOnline:Webserver', () => {
+      this.logger.info(__("Webserver is online"));
+    });
+  }
+
+  setServiceCheck() {
+    if (!this.isServiceRegistered) {
+      this.isServiceRegistered = true;
+      this.events.request("services:register", 'Webserver', (cb) => {
+        let url = this.protocol + '://' + canonicalHost(this.host) + ':' + this.port;
+        checkIsAvailable(url, function (available) {
+          let devServer = __('Webserver') + ' (' + url + ')';
+          let serverStatus = (available ? 'on' : 'off');
+          return cb({name: devServer, status: serverStatus});
+        });
+      });
+    }
   }
 
   listenToCommands() {
     this.events.setCommandHandler('placeholder:build', (cb) => this.buildPlaceholderPage(cb));
     this.events.setCommandHandler('browser:open', (cb) => this.openBrowser(cb));
-    this.events.setCommandHandler('webserver:start', (cb) => this.events.request('processes:launch', 'webserver', cb));
-    this.events.setCommandHandler('webserver:stop',  (cb) => this.events.request('processes:stop', 'webserver', cb));
+    // TODO: remove this in v5
+    this.events.setCommandHandler('webserver:start', (cb) => {
+      this.logger.warn(__("The event 'webserver:start' has been deprecated and will be removed in future versions."));
+      this.events.request('processes:launch', 'webserver', cb);
+    });
+    // TODO: remove this in v5
+    this.events.setCommandHandler('webserver:stop',  (cb) => {
+      this.logger.warn(__("The event 'webserver:stop' has been deprecated and will be removed in future versions."));
+      this.events.request('processes:stop', 'webserver', cb);
+    });
     this.events.setCommandHandler('logs:webserver:enable',  (cb) => this.server.enableLogging(cb));
     this.events.setCommandHandler('logs:webserver:disable',  (cb) => this.server.disableLogging(cb));
   }
 
+  // TODO: remove this in v5
   registerConsoleCommands() {
     this.embark.registerConsoleCommand({
       usage: "webserver start/stop",
       description: __("Start or stop the websever"),
       matches: ['webserver start'],
       process: (cmd, callback) => {
-        this.events.request('webserver:start', callback);
+        const message = __("The command 'webserver:start' has been deprecated in favor of 'service webserver on' and will be removed in future versions.");
+        this.logger.warn(message); // logs to Embark's console
+        this.events.request('processes:launch', 'webserver', (_err, msg) => {
+          callback(_err || msg); // logs to Cockpit's console
+        });
       }
     });
 
+    // TODO: remove this in v5
     this.embark.registerConsoleCommand({
       matches: ['webserver stop'],
       process: (cmd, callback) => {
-        this.events.request('webserver:stop', callback);
+        const message = __("The command 'webserver:stop' has been deprecated in favor of 'service webserver off' and will be removed in future versions.");
+        this.logger.warn(message); // logs to Embark's console
+        this.events.request('processes:stop', 'webserver', (_err, msg) => {
+          callback(_err || msg); // logs to Cockpit's console
+        });
       }
     });
 
