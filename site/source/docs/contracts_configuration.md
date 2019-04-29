@@ -282,7 +282,7 @@ contracts: {
 
 ## Deployment tracking
 
-Embark's Smart Contract deployment mechanism prevents the deployment of Smart Contracts that have already been deployed. This turns out to be a powerful feature as you don't have to worry about keeping track of it. The way this works is that, by default, Embark creates a file `./embark/chains.json` in which it stores the name and address of the deployed Smart Contracts. That information is then mapped to the hash of the block in which the Smart Contract have been deployed:
+Embark's Smart Contract deployment mechanism prevents the deployment of Smart Contracts that have already been deployed. This turns out to be a powerful feature as you don't have to worry about keeping track of it. The way this works is that, by default, Embark creates a file `./.embark/chains.json` in which it stores the name and address of the deployed Smart Contracts. That information is then mapped to the hash of the block in which the Smart Contract have been deployed:
 
 ```
 {
@@ -346,11 +346,7 @@ In addition to enabling and disabling tracking, it's also possible to tell Embar
 
 ```
 ...
-contracts: {
-  ERC20: {
-    track: 'path/to/some/file'
-  }
-}
+tracking: 'path/to/some/file'
 ...
 ```
 
