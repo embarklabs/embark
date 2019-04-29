@@ -5,7 +5,7 @@ const {
 const sinon = require('sinon');
 let IPC = require('../lib/core/ipc.js');
 let Proxy = require('../lib/modules/blockchain_process/proxy');
-const constants = require('../lib/constants');
+const constants = require('embark-core/constants');
 
 describe('embark.Proxy', function () {
   let ipc, proxy, ipcRequests;

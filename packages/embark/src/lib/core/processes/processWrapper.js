@@ -2,7 +2,7 @@ process.on('uncaughtException', function(e) {
   process.send({error: e.stack});
 });
 
-const constants = require('../../constants');
+const constants = require('embark-core/constants');
 const Events = require('./eventsWrapper');
 
 class ProcessWrapper {

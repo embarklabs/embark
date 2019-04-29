@@ -3,7 +3,7 @@ const utils = require('../../utils/utils.js');
 const SwarmAPI = require('swarm-api');
 // TODO: not great, breaks module isolation
 const StorageProcessesLauncher = require('../storage/storageProcessesLauncher');
-const constants = require('../../constants.json');
+const constants = require('embark-core/constants');
 require('colors');
 
 class Swarm {

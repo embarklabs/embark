@@ -1,7 +1,7 @@
 const async = require('async');
 const utils = require('../../utils/utils.js');
 const {normalizeInput} = require('embark-utils');
-const constants = require('../../constants');
+const constants = require('embark-core/constants');
 const BlockchainProcessLauncher = require('./blockchainProcessLauncher');
 
 class BlockchainModule {
@@ -140,7 +140,7 @@ class BlockchainModule {
     if(!this.blockchainProcess) {
       return cb();
     }
-    
+
     this.blockchainProcess.stopBlockchainNode(() => {
       this.logger.info(message);
       cb();

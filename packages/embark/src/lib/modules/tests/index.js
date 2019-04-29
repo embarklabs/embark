@@ -7,7 +7,7 @@ const assert = require('assert');
 const Test = require('./test');
 const {EmbarkSpec, EmbarkApiSpec} = require('./reporter');
 const SolcTest = require('./solc_test');
-const constants = require('../../constants');
+const constants = require('embark-core/constants');
 
 class TestRunner {
   constructor(embark, options) {

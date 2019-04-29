@@ -3,7 +3,7 @@ import * as utilsContractsConfig from "../../utils/contractsConfig";
 const async = require('async');
 const AccountParser = require('../../utils/accountParser');
 const utils = require('../../utils/utils');
-const constants = require('../../constants');
+const constants = require('embark-core/constants');
 const web3Utils = require('web3-utils');
 
 const BALANCE_10_ETHER_IN_HEX = '0x8AC7230489E80000';

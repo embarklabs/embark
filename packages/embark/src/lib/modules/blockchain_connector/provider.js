@@ -1,7 +1,7 @@
 const async = require('async');
 const AccountParser = require('../../utils/accountParser');
 const fundAccount = require('./fundAccount');
-const constants = require('../../constants');
+const constants = require('embark-core/constants');
 const Transaction = require('ethereumjs-tx');
 const ethUtil = require('ethereumjs-util');
 

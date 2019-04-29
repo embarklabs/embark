@@ -1,7 +1,7 @@
 /*global describe, it*/
 const Utils = require('../lib/utils/utils');
 const assert = require('assert');
-const constants = require('../lib/constants');
+const constants = require('embark-core/constants');
 
 describe('embark.utils', function () {
   describe('#getExternalContractUrl', function () {

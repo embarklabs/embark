@@ -2,20 +2,14 @@ import {joinPath, hashTo32ByteHexString, soliditySha3, recursiveMerge, AddressUt
 const namehash = require('eth-ens-namehash');
 const async = require('async');
 const ENSFunctions = require('./ENSFunctions');
-// import {ens} from '../../constants'; TODO uncomment when we move constants
+import {ens} from 'embark-core/constants.json';
 import EmbarkJS, {Utils as embarkJsUtils} from 'embarkjs';
 const ensConfig = require('./ensContractConfigs');
 const secureSend = embarkJsUtils.secureSend;
 
-const ensConstants = {
-  "whitelist": [
-    "eth",
-    "xyz"
-  ]
-};
 const reverseAddrSuffix = '.addr.reverse';
 const {ZERO_ADDRESS} = AddressUtils;
-const ENS_WHITELIST = ensConstants.whitelist;
+const ENS_WHITELIST = ens.whitelist;
 const NOT_REGISTERED_ERROR = 'Name not yet registered';
 
 const MAINNET_ID = '1';

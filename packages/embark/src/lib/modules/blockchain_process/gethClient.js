@@ -4,7 +4,7 @@ const fs = require('../../core/fs');
 const path = require('path');
 const GethMiner = require('./miner');
 const semver = require('semver');
-const constants = require('../../constants');
+const constants = require('embark-core/constants');
 
 const DEFAULTS = {
   "BIN": "geth",

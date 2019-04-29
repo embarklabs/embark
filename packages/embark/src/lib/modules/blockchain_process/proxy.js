@@ -3,7 +3,7 @@
 require('./httpProxyOverride');
 const Asm = require('stream-json/Assembler');
 import {canonicalHost} from 'embark-utils';
-const constants = require('../../constants.json');
+const constants = require('embark-core/constants');
 const {Duplex} = require('stream');
 const http = require('http');
 const httpProxy = require('http-proxy');
@@ -101,7 +101,7 @@ class Proxy {
         txSent: false
       };
       timeout.timeoutId = setInterval(() => {
-        
+
         if(timeout.txSent) {
           const message = `[${ws?"WS":"HTTP"} Request ID ${req.id}]: Original tx still not sent, considering it abandoned.`;
           this.consoleLog(`====================================================================\n${message}\n====================================================================`);

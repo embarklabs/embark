@@ -1,7 +1,7 @@
 const ProcessWrapper = require('../../core/processes/processWrapper');
 const BlockchainClient = require('./blockchain');
 const i18n = require('../../core/i18n/i18n.js');
-const constants = require('../../constants');
+const constants = require('embark-core/constants');
 
 let blockchainProcess;
 

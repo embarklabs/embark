@@ -1,6 +1,6 @@
 const child_process = require('child_process');
 const ProcessWrapper = require('../../core/processes/processWrapper');
-const constants = require('../../constants');
+const constants = require('embark-core/constants');
 const async = require('async');
 
 let ipfsProcess; // eslint-disable-line no-unused-vars
@@ -47,7 +47,7 @@ class IPFSProcess extends ProcessWrapper {
       data = data.toString();
       console.log(`IPFS error: ${data}`);
       // `ipfs daemon called`, but `ipfs init` had not been run yet
-      if(!self.initCalled && data.indexOf('no IPFS repo found') > -1) { 
+      if(!self.initCalled && data.indexOf('no IPFS repo found') > -1) {
         self.initCalled = true;
         let ipfsInitChild = child_process.spawn(this.command, ['init']);
         self._bindChildEvents(ipfsInitChild);
@@ -59,7 +59,7 @@ class IPFSProcess extends ProcessWrapper {
 
       // ipfs init just run, and we have a successful result
       // re-run `ipfs daemon`
-      if(self.initCalled && !self.readyCalled && data.indexOf('peer identity:') > -1) { 
+      if(self.initCalled && !self.readyCalled && data.indexOf('peer identity:') > -1) {
         self.startIPFSDaemon();
       }
       else if (!self.readyCalled && data.indexOf('Daemon is ready') > -1) {
@@ -78,7 +78,7 @@ class IPFSProcess extends ProcessWrapper {
             if(err && err.indexOf(IPFS_DEFAULT_CONFIG_ERROR) === -1){
               return console.error('Error getting IPFS CORS config: ', err);
             }
-            
+
             if(self.corsConfigNeedsUpdate(corsConfig)){
               // update IPFS cors config
               return self.updateCorsConfig(err => {
@@ -174,7 +174,7 @@ class IPFSProcess extends ProcessWrapper {
 
   startIPFSDaemon() {
     const self = this;
-    
+
     // spawn the daemon (muhaha)
     this.child = child_process.spawn(this.command, ['daemon']);
 

@@ -2,7 +2,7 @@ const shellJs = require('shelljs');
 const utils = require('../../utils/utils');
 import {joinPath, canonicalHost} from 'embark-utils';
 const ProcessLauncher = require('../../core/processes/processLauncher');
-const constants = require('../../constants');
+const constants = require('embark-core/constants');
 const cloneDeep = require('lodash.clonedeep');
 
 let References = {

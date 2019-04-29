@@ -1,6 +1,6 @@
 const utils = require('../utils/utils.js');
 import {joinPath} from 'embark-utils';
-const constants = require('../constants');
+const constants = require('embark-core/constants');
 const fs = require('./fs.js');
 const deepEqual = require('deep-equal');
 

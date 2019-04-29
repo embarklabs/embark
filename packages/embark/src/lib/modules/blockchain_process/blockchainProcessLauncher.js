@@ -1,6 +1,6 @@
 const ProcessLauncher = require('../../core/processes/processLauncher');
 import {joinPath} from 'embark-utils';
-const constants = require('../../constants');
+const constants = require('embark-core/constants');
 
 class BlockchainProcessLauncher {
 

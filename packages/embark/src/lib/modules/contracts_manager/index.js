@@ -2,7 +2,7 @@ let async = require('async');
 const cloneDeep = require('clone-deep');
 const path = require('path');
 const utils = require('../../utils/utils.js');
-const constants = require('../../constants');
+const constants = require('embark-core/constants');
 
 // TODO: create a contract object
 

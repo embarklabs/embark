@@ -1,7 +1,7 @@
 let async = require('async');
 import {joinPath} from 'embark-utils';
 import { transform } from "@babel/core";
-const constants = require('../../constants');
+const constants = require('embark-core/constants');
 const path  = require('path');
 
 require('ejs');

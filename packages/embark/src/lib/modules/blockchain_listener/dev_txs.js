@@ -1,6 +1,6 @@
 const Web3 = require('web3');
 const {buildUrl} = require('../../utils/utils.js');
-const constants = require('../../constants');
+const constants = require('embark-core/constants');
 
 class DevTxs {
   constructor(options) {
