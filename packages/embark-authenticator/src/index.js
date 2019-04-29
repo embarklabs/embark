@@ -1,5 +1,5 @@
 const uuid = require('uuid/v4');
-const utils = require("../../utils/utils.js");
+const {copyToClipboard} = require("embark-utils");
 const keccak = require('keccakjs');
 
 const ERROR_OBJ = {error: __('Wrong authentication token. Get your token from the Embark console by typing `token`')};
@@ -80,7 +80,7 @@ class Authenticator {
       matches: ["token"],
       description: __("Copies and prints the token for the cockpit"),
       process: (cmd, callback) => {
-        utils.copyToClipboard(this.authToken);
+        copyToClipboard(this.authToken);
         callback(null, __('Token copied to clipboard: %s', this.authToken));
       }
     });
