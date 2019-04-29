@@ -1,4 +1,4 @@
-import AddressUtils from 'embark-utils';
+import { AddressUtils } from "embark-utils";
 import { unitRegex } from "./regexConstants";
 
 const { extendZeroAddressShorthand, replaceZeroAddressShorthand } = AddressUtils;

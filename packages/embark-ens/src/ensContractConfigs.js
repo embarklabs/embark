@@ -1,4 +1,4 @@
-{
+module.exports = {
   "ENSRegistry": {
     "deploy": true,
     "silent": true,
@@ -736,4 +736,4 @@
     "type": "file",
     "_gasLimit": false
   }
-}
+};

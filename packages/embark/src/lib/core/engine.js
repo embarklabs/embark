@@ -228,7 +228,7 @@ class Engine {
     this.registerModulePackage('embark-profiler');
     this.registerModule('deploytracker', {trackContracts: options.trackContracts});
     this.registerModulePackage('embark-specialconfigs');
-    this.registerModule('ens');
+    this.registerModulePackage('embark-ens');
     this.registerModule('console_listener', {ipc: self.ipc});
     this.registerModule('deployment', {plugins: this.plugins, onlyCompile: options.onlyCompile});
     this.registerModulePackage('embark-transaction-tracker');
