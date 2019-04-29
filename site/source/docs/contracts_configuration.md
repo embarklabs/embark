@@ -426,7 +426,7 @@ contracts: {
   SimpleStorage: {
     args: [100],
     onDeploy: async (dependencies) => {
-      await dependencies.contracts.SimpleStorage.methods.set(150).send({from: dependencies.web3.web3.eth.defaultAccount});
+      await dependencies.contracts.SimpleStorage.methods.set(150).send({from: dependencies.web3.eth.defaultAccount});
     }
   }
 }
