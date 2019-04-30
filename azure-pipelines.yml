@@ -85,6 +85,14 @@ steps:
     yarn config set cache-folder "${PWD}/Yarn" &>/dev/null
     popd &>/dev/null
     npm run ci:full
+    if [[ "$AGENT_OS" = "Linux" ]]; then
+      OS="Linux"
+    fi
+    if [[ "$AGENT_OS" = "Darwin" ]]; then
+      OS="macOS"
+    fi
+    export COVERALLS_GIT_BRANCH=$(node scripts/coveralls-branch-name)
+    export COVERALLS_SERVICE_NAME="Azure Pipelines (${OS})"
     npm run coveralls
   condition: ne( variables['Agent.OS'], 'Windows_NT' )
   displayName: 'Test (*nix)'
@@ -97,6 +105,8 @@ steps:
     yarn config set cache-folder "$($PWD.Path)\Yarn" | out-null
     popd
     npm run ci:full
+    $env:COVERALLS_GIT_BRANCH=node scripts/coveralls-branch-name
+    $env:COVERALLS_SERVICE_NAME="Azure Pipelines (Windows)"
     npm run coveralls
   condition: eq( variables['Agent.OS'], 'Windows_NT' )
   displayName: 'Test (Windows)'
