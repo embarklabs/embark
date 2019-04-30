@@ -7,9 +7,10 @@ const {canonicalHost, defaultCorsHost, defaultHost, dockerHostSwap, isDocker} = 
 const {findNextPort} = require('./network');
 const logUtils = require('./log-utils');
 const toposortGraph = require('./toposort');
-import { unitRegex, balanceRegex } from './constants';
+import { unitRegex } from './constants';
 import * as AddressUtils from './addressUtils';
 const web3 = require("web3");
+import { getWeiBalanceFromString, getHexBalanceFromString } from './web3Utils';
 
 const { extendZeroAddressShorthand, replaceZeroAddressShorthand } = AddressUtils;
 
@@ -126,45 +127,6 @@ function deconstructUrl(endpoint) {
     port: matches[3],
     type: matches[1] === 'ws' ? 'ws' : 'rpc'
   };
-}
-
-function getHexBalanceFromString(balanceString, web3) {
-  if(!web3){
-    throw new Error(__('[getHexBalanceFromString]: Missing parameter \'web3\''));
-  }
-  if (!balanceString) {
-    return 0xFFFFFFFFFFFFFFFFFF;
-  }
-  if (web3.utils.isHexStrict(balanceString)) {
-    return balanceString;
-  }
-  const match = balanceString.match(balanceRegex);
-  if (!match) {
-    throw new Error(__('Unrecognized balance string "%s"', balanceString));
-  }
-  if (!match[2]) {
-    return web3.utils.toHex(match[1]);
-  }
-
-  return web3.utils.toHex(web3.utils.toWei(match[1], match[2]));
-}
-
-function getWeiBalanceFromString(balanceString, web3){
-  if(!web3){
-    throw new Error(__('[getWeiBalanceFromString]: Missing parameter \'web3\''));
-  }
-  if (!balanceString) {
-    return 0;
-  }
-  const match = balanceString.match(balanceRegex);
-  if (!match) {
-    throw new Error(__('Unrecognized balance string "%s"', balanceString));
-  }
-  if (!match[2]) {
-    return web3.utils.toHex(match[1]);
-  }
-
-  return web3.utils.toWei(match[1], match[2]);
 }
 
 function prepareContractsConfig(config) {
