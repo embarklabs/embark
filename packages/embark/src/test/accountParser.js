@@ -1,11 +1,11 @@
 /*global __dirname, describe, it, before, after, require*/
 const assert = require('assert');
 const sinon = require('sinon');
-const AccountParser = require('../lib/utils/accountParser');
 let TestLogger = require('../lib/utils/test_logger');
 const Web3 = require('web3');
 const i18n = require('../lib/core/i18n/i18n');
-import { getWeiBalanceFromString, getHexBalanceFromString } from 'embark-utils';
+const fs = require('../lib/core/fs');
+import { getWeiBalanceFromString, getHexBalanceFromString, AccountParser } from 'embark-utils';
 i18n.setOrDetectLocale('en');
 
 describe('embark.AccountParser', function () {
@@ -36,7 +36,7 @@ describe('embark.AccountParser', function () {
     it('should return one account with the key', function () {
       const account = AccountParser.getAccount({
         privateKey: 'myKey'
-      }, web3, testLogger);
+      }, web3, fs.dappPath(), testLogger);
 
       assert.deepEqual(account, {key: Buffer.from('myKey', 'hex'), hexBalance: null});
     });
@@ -44,7 +44,7 @@ describe('embark.AccountParser', function () {
     it('should return two accounts from the keys in the file', function () {
       const account = AccountParser.getAccount({
         privateKeyFile: 'keyFiles/twoKeys'
-      }, web3, testLogger);
+      }, web3, fs.dappPath(), testLogger);
 
       assert.deepEqual(account, [
         {key: Buffer.from('key1', 'hex'), hexBalance: null},
@@ -55,7 +55,7 @@ describe('embark.AccountParser', function () {
     it('should return one account from the mnemonic', function () {
       const account = AccountParser.getAccount({
         mnemonic: 'example exile argue silk regular smile grass bomb merge arm assist farm'
-      }, web3, testLogger);
+      }, web3, fs.dappPath(), testLogger);
 
       assert.deepEqual(account,
         [{key: "0xf942d5d524ec07158df4354402bfba8d928c99d0ab34d0799a6158d56156d986", hexBalance: null}]);
@@ -65,7 +65,7 @@ describe('embark.AccountParser', function () {
       const account = AccountParser.getAccount({
         mnemonic: 'example exile argue silk regular smile grass bomb merge arm assist farm',
         numAddresses: 2
-      }, web3, testLogger);
+      }, web3, fs.dappPath(), testLogger);
 
       assert.deepEqual(account,
         [
@@ -77,7 +77,7 @@ describe('embark.AccountParser', function () {
     it('should return nothing with bad config', function () {
       const account = AccountParser.getAccount({
         badConfig: 'not working'
-      }, web3, testLogger);
+      }, web3, fs.dappPath(), testLogger);
 
       assert.strictEqual(account, null);
     });
@@ -86,7 +86,7 @@ describe('embark.AccountParser', function () {
       const accounts = AccountParser.getAccount({
         mnemonic: 'example exile argue silk regular smile grass bomb merge arm assist farm',
         numAddresses: 2
-      }, false, testLogger);
+      }, false, fs.dappPath(), testLogger);
 
       assert.deepEqual(accounts,
         [
@@ -96,7 +96,7 @@ describe('embark.AccountParser', function () {
     });
 
     it('should return nodeAccounts', function() {
-      const accounts = AccountParser.getAccount({nodeAccounts: true}, web3, testLogger, [
+      const accounts = AccountParser.getAccount({nodeAccounts: true}, web3, fs.dappPath(), testLogger, [
         "0xb8d851486d1c953e31a44374aca11151d49b8bb3",
         "0xf6d5c6d500cac10ee7e6efb5c1b479cfb789950a"
       ]);

@@ -1,7 +1,6 @@
-import { deconstructUrl, prepareContractsConfig } from 'embark-utils';
+import { deconstructUrl, prepareContractsConfig, AccountParser } from 'embark-utils';
 
 const async = require('async');
-const AccountParser = require('../../utils/accountParser');
 const constants = require('embark-core/constants');
 const web3Utils = require('web3-utils');
 

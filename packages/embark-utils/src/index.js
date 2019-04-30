@@ -11,6 +11,7 @@ import { unitRegex } from './constants';
 import * as AddressUtils from './addressUtils';
 const web3 = require("web3");
 import { getWeiBalanceFromString, getHexBalanceFromString } from './web3Utils';
+import AccountParser from './accountParser';
 
 const { extendZeroAddressShorthand, replaceZeroAddressShorthand } = AddressUtils;
 
@@ -199,7 +200,8 @@ const Utils = {
   LogHandler: require('./logHandler'),
   proposeAlternative,
   toposort,
-  AddressUtils
+  AddressUtils,
+  AccountParser
 };
 
 module.exports = Utils;
