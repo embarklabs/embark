@@ -1,8 +1,8 @@
 import { deconstructUrl, prepareContractsConfig, AccountParser } from 'embark-utils';
 
 const async = require('async');
-const constants = require('embark-core/constants');
 const web3Utils = require('web3-utils');
+import { GAS_LIMIT } from './constants';
 
 const BALANCE_10_ETHER_IN_HEX = '0x8AC7230489E80000';
 
@@ -24,6 +24,7 @@ class Test {
     this.provider = null;
     this.accounts = [];
     this.embarkjs = {};
+    this.dappPath = options.dappPath;
 
     this.events.setCommandHandler("blockchain:provider:contract:accounts:get", cb => {
       this.events.request("blockchain:getAccounts", cb);
@@ -36,7 +37,7 @@ class Test {
         this.events.request('runcode:ready', next);
       },
       (next) => {
-        this.gasLimit = constants.tests.gasLimit;
+        this.gasLimit = GAS_LIMIT;
         this.events.request('deploy:setGasLimit', this.gasLimit);
         if (this.options.node !== 'embark') {
           this.showNodeHttpWarning();
@@ -153,7 +154,7 @@ class Test {
 
     this.events.request("blockchain:get", (web3) => {
       if (accounts) {
-        self.simOptions.accounts = AccountParser.parseAccountsConfig(accounts, web3);
+        self.simOptions.accounts = AccountParser.parseAccountsConfig(accounts, web3, this.dappPath);
       } else {
         self.simOptions.accounts = null;
       }
@@ -353,7 +354,7 @@ class Test {
         abi: ${JSON.stringify(contract.abiDefinition)},
         address: "${contract.deployedAddress || ""}" || undefined,
         from: "${contract.deploymentAccount || ""}" || web3.eth.defaultAccount,
-        gas: "${constants.tests.gasLimit}",
+        gas: "${GAS_LIMIT}",
         web3: web3
       });
 
@@ -364,7 +365,7 @@ class Test {
         if (newContract.options.data && !newContract.options.data.startsWith('0x')) {
           newContract.options.data = '0x' + newContract.options.data;
         }
-        newContract.options.gas = "${constants.tests.gasLimit}";
+        newContract.options.gas = "${GAS_LIMIT}";
       }
       return newContract;`;
     this.events.request("runcode:eval", codeToRun, cb, false, true);

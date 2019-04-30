@@ -6,7 +6,7 @@ const assert = require('assert');
 const Test = require('./test');
 const {EmbarkSpec, EmbarkApiSpec} = require('./reporter');
 const SolcTest = require('./solc_test');
-const constants = require('embark-core/constants');
+import { COVERAGE_GAS_LIMIT, GAS_LIMIT } from './constants';
 
 class TestRunner {
   constructor(embark, options) {
@@ -156,7 +156,7 @@ class TestRunner {
   runJSTests(files, options, cb) {
     const self = this;
     const test = new Test({loglevel: options.loglevel, node: options.node, events: self.events, logger: self.logger,
-      config: self.embark.config, ipc: self.ipc, coverage: options.coverage, inProcess: options.inProcess});
+      config: self.embark.config, ipc: self.ipc, coverage: options.coverage, inProcess: options.inProcess, dappPath: this.embark.fs.dappPath()});
     async.waterfall([
       function setupGlobalNamespace(next) {
         global.embark = test;
@@ -207,7 +207,7 @@ class TestRunner {
         let fns = files.map((file) => {
           return (cb) => {
             const mocha = new Mocha();
-            const gasLimit = options.coverage ? constants.tests.coverageGasLimit : constants.tests.gasLimit;
+            const gasLimit = options.coverage ? COVERAGE_GAS_LIMIT : GAS_LIMIT;
             const reporter = options.inProcess ? EmbarkApiSpec : EmbarkSpec;
             mocha.reporter(reporter, {
               events: self.events,
