@@ -3,7 +3,7 @@ const {expect} = require('chai');
 const sinon = require('sinon');
 const Events = require('../../lib/core/events');
 const Logger = require('embark-logger');
-const transactionUtils = require('../../lib/utils/transactionUtils');
+import { getAddressToContract } from 'embark-utils';
 const ConsoleListener = require('../../lib/modules/console_listener');
 const IPC = require('../../lib/core/ipc.js');
 require('colors');
@@ -131,7 +131,7 @@ describe('Console Listener', function () {
 
   describe('#listenForLogRequests', function () {
     it('should emit the correct contracts logs', function (done) {
-      transactionUtils.getAddressToContract(contractsList, consoleListener.addressToContract);
+      getAddressToContract(contractsList, consoleListener.addressToContract);
       consoleListener._onIpcLogRequest(ipcRequest);
 
       const expectedContractLog = {
@@ -174,7 +174,7 @@ describe('Console Listener', function () {
 
     it('should emit a log for a non-contract log', function (done) {
       ipcRequest.type = 'something-other-than-contract-log';
-      transactionUtils.getAddressToContract(contractsList, consoleListener.addressToContract);
+      getAddressToContract(contractsList, consoleListener.addressToContract);
       consoleListener._onIpcLogRequest(ipcRequest);
 
       expect(loggerInfos[0]).to.be.equal(JSON.stringify(ipcRequest));
