@@ -1,17 +1,18 @@
 const bip39 = require("bip39");
 const hdkey = require('ethereumjs-wallet/hdkey');
 const ethereumjsWallet = require('ethereumjs-wallet');
-const fs = require('../core/fs');
-import {getHexBalanceFromString} from 'embark-utils';
+const fs = require('fs');
+import {getHexBalanceFromString} from './web3Utils';
+const {utils} = require('web3');
 
 const path = require('path');
 
 class AccountParser {
-  static parseAccountsConfig(accountsConfig, web3, logger, nodeAccounts) {
+  static parseAccountsConfig(accountsConfig, web3, dappPath, logger, nodeAccounts) {
     let accounts = [];
     if (accountsConfig && accountsConfig.length) {
       accountsConfig.forEach(accountConfig => {
-        let account = AccountParser.getAccount(accountConfig, web3, logger, nodeAccounts);
+        let account = AccountParser.getAccount(accountConfig, web3, dappPath, logger, nodeAccounts);
         if (!account) {
           return;
         }
@@ -26,8 +27,7 @@ class AccountParser {
   }
 
   /*eslint complexity: ["error", 30]*/
-  static getAccount(accountConfig, web3, logger = console, nodeAccounts) {
-    const {utils} = require('web3');
+  static getAccount(accountConfig, web3, dappPath, logger = console, nodeAccounts) {
     const returnAddress = web3 === false;
     let hexBalance = null;
     if (accountConfig.balance && web3) {
@@ -76,7 +76,7 @@ class AccountParser {
     }
 
     if (accountConfig.privateKeyFile) {
-      let privateKeyFile = path.resolve(fs.dappPath(), accountConfig.privateKeyFile);
+      let privateKeyFile = path.resolve(dappPath, accountConfig.privateKeyFile);
       let fileContent = fs.readFileSync(privateKeyFile).toString();
       if (accountConfig.password) {
         try {

@@ -9,7 +9,7 @@ const ParityClient = require('./parityClient.js');
 const Proxy = require('./proxy');
 const Ipc = require('../../core/ipc');
 
-import {defaultHost, dockerHostSwap} from 'embark-utils';
+import {defaultHost, dockerHostSwap, AccountParser} from 'embark-utils';
 const Logger = require('embark-logger');
 
 // time between IPC connection attempts (in ms)
@@ -161,10 +161,9 @@ Blockchain.prototype.initProxy = function () {
 };
 
 Blockchain.prototype.setupProxy = async function () {
-  const AccountParser = require('../../utils/accountParser');
   if (!this.proxyIpc) this.proxyIpc = new Ipc({ipcRole: 'client'});
 
-  const addresses = AccountParser.parseAccountsConfig(this.userConfig.accounts, false, this.logger);
+  const addresses = AccountParser.parseAccountsConfig(this.userConfig.accounts, false, fs.dappPath(), this.logger);
 
   let wsProxy;
   if (this.config.wsRPC) {
