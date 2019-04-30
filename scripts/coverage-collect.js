@@ -7,7 +7,7 @@ const rimraf = require('util').promisify(require('rimraf'));
 
 const collector = path.join(__dirname, './coverage-collector.js');
 const destination = path.join(__dirname, '../.nyc_output');
-const cmd = `npx lerna exec --parallel 'node "${collector}" "${destination}"'`;
+const cmd = `npx lerna exec --parallel node "${collector}" "${destination}"`;
 
 (async () => {
   await fs.mkdirp(destination);
