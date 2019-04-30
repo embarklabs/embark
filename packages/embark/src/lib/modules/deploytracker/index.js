@@ -1,4 +1,4 @@
-let utils = require('../../utils/utils.js');
+import { sha3 } from 'embark-utils';
 
 class DeployTracker {
 
@@ -87,7 +87,7 @@ class DeployTracker {
 
   trackContract(contractName, code, args, address) {
     if (!this.currentChain) return false;
-    this.currentChain.contracts[utils.sha3(code + contractName + args.join(','))] = {
+    this.currentChain.contracts[sha3(code + contractName + args.join(','))] = {
       name: contractName,
       address: address
     };
@@ -95,7 +95,7 @@ class DeployTracker {
 
   getContract(contractName, code, args) {
     if (!this.currentChain) return false;
-    let contract = this.currentChain.contracts[utils.sha3(code + contractName + args.join(','))];
+    let contract = this.currentChain.contracts[sha3(code + contractName + args.join(','))];
     if (contract && contract.address === undefined) {
       return false;
     }
