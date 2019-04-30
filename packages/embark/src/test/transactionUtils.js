@@ -1,6 +1,6 @@
 /*globals describe, it, beforeEach*/
 const {expect} = require('chai');
-const transactionUtils = require('../lib/utils/transactionUtils');
+import { getAddressToContract, getTransactionParams } from 'embark-utils';
 require('colors');
 
 let contractsList;
@@ -78,20 +78,20 @@ describe('Transaction Utils', () => {
   describe('#getAddressToContract', () => {
     it('should not update contracts list when no contracts', () => {
       contractsList = [];
-      const result = transactionUtils.getAddressToContract(contractsList, {});
+      const result = getAddressToContract(contractsList, {});
 
       expect(result).to.deep.equal({});
     });
 
     it('should not update contracts list when not deployed', () => {
       contractsList[0].deployedAddress = undefined;
-      const result = transactionUtils.getAddressToContract(contractsList, {});
+      const result = getAddressToContract(contractsList, {});
 
       expect(result).to.deep.equal({});
     });
 
     it('should update contracts list', () => {
-      const result = transactionUtils.getAddressToContract(contractsList, {});
+      const result = getAddressToContract(contractsList, {});
 
       expect(result).to.deep.equal({
         "0x12345": {
@@ -160,8 +160,8 @@ describe('Transaction Utils', () => {
 
   describe('#getTransactionParams', () => {
     it('should return the param string and function name', () => {
-      const result = transactionUtils.getAddressToContract(contractsList, {});
-      const {functionName, paramString} = transactionUtils.getTransactionParams(result['0x12345'], '0x60fe47b100000000000000000000000099db99c77ad807f89829f5bda99527438f64a798');
+      const result = getAddressToContract(contractsList, {});
+      const {functionName, paramString} = getTransactionParams(result['0x12345'], '0x60fe47b100000000000000000000000099db99c77ad807f89829f5bda99527438f64a798');
       expect(functionName).to.equal('set');
       expect(paramString).to.equal('878372847193751743539905734564138820017777321880');
 

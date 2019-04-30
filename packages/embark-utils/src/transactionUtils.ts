@@ -1,18 +1,18 @@
 import { Contract } from "embark";
-import { decodeParams, sha3 } from "embark-utils";
 import { ABIDefinition } from "web3/eth/abi";
+import { decodeParams, sha3 } from "./web3Utils";
 
-export interface AddressToContract {
+interface AddressToContract {
   name: string;
   functions: { [functionName: string]: FunctionSignature; };
   silent?: boolean;
 }
 
-export interface AddressToContractArray {
+interface AddressToContractArray {
   [address: string]: AddressToContract;
 }
 
-export interface FunctionSignature {
+interface FunctionSignature {
   abi: ABIDefinition;
   functionName?: string;
   name: string;

@@ -16,6 +16,7 @@ import {
   decodeParams,
   sha3
 } from './web3Utils';
+import { getAddressToContract, getTransactionParams } from './transactionUtils';
 import AccountParser from './accountParser';
 
 const { extendZeroAddressShorthand, replaceZeroAddressShorthand } = AddressUtils;
@@ -186,6 +187,8 @@ const Utils = {
   decodeParams,
   dockerHostSwap,
   exit,
+  getAddressToContract,
+  getTransactionParams,
   isDocker,
   checkIsAvailable,
   findNextPort,

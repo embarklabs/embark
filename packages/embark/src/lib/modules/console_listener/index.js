@@ -1,6 +1,6 @@
 const async = require('async');
 const utils = require('../../utils/utils.js');
-const {getAddressToContract, getTransactionParams} = require('../../utils/transactionUtils');
+import { getAddressToContract, getTransactionParams } from 'embark-utils';
 
 class ConsoleListener {
   constructor(embark, options) {
