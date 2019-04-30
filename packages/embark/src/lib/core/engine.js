@@ -265,7 +265,7 @@ class Engine {
 
   cockpitService() {
     this.registerModulePackage('embark-authenticator', {singleUseAuthToken: this.singleUseAuthToken});
-    this.registerModule('api', {plugins: this.plugins});
+    this.registerModulePackage('embark-api', {plugins: this.plugins});
   }
 
   webServerService() {

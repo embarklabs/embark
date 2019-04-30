@@ -92,6 +92,7 @@
     "deep-equal": "1.0.1",
     "ejs": "2.6.1",
     "embark-authenticator": "^4.1.0-beta.0",
+    "embark-api": "^4.1.0-beta.0",
     "embark-compiler": "^4.0.0",
     "embark-contracts-manager": "^4.1.0-beta.0",
     "embark-core": "^4.1.0-beta.0",

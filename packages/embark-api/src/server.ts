@@ -9,8 +9,6 @@ import * as http from "http";
 import {__} from "i18n";
 import * as path from "path";
 import * as ws from "ws";
-// @ts-ignore
-import {embarkPath, existsSync} from "../../core/fs";
 
 type Method = "get" | "post" | "ws" | "delete";
 
@@ -23,16 +21,14 @@ interface CallDescription {
 export default class Server {
   private _isInsideMonorepo: boolean | null = null;
   private _monorepoRootDir: string = "";
-  private embarkUiBuildDir: string = (
-    findUp.sync("node_modules/embark-ui/build", {cwd: embarkPath()}) ||
-    embarkPath("node_modules/embark-ui/build")
-  );
+  private embarkUiBuildDir: string = "";
   private expressInstance: expressWs.Instance;
   private isLogging: boolean = false;
   private server?: http.Server;
 
   constructor(private embark: Embark, private port: number, private hostname: string, private plugins: Plugins) {
     this.expressInstance = this.initApp();
+    this.embarkUiBuildDir = (findUp.sync("node_modules/embark-ui/build", {cwd: embark.fs.embarkPath()}) || embark.fs.embarkPath("node_modules/embark-ui/build"));
   }
 
   public enableLogging() {
@@ -45,16 +41,16 @@ export default class Server {
 
   private get isInsideMonorepo() {
     if (this._isInsideMonorepo === null) {
-      this._isInsideMonorepo = existsSync(embarkPath("../../packages/embark")) &&
-        existsSync(embarkPath("../../lerna.json")) &&
-        path.resolve(embarkPath("../../packages/embark")) === embarkPath();
+      this._isInsideMonorepo = this.embark.fs.existsSync(this.embark.fs.embarkPath("../../packages/embark")) &&
+        this.embark.fs.existsSync(this.embark.fs.embarkPath("../../lerna.json")) &&
+        path.resolve(this.embark.fs.embarkPath("../../packages/embark")) === this.embark.fs.embarkPath();
     }
     return this._isInsideMonorepo;
   }
 
   private get monorepoRootDir() {
     if (!this._monorepoRootDir && this.isInsideMonorepo) {
-      this._monorepoRootDir = path.resolve(embarkPath("../.."));
+      this._monorepoRootDir = path.resolve(this.embark.fs.embarkPath("../.."));
     }
     return this._monorepoRootDir;
   }
@@ -220,7 +216,7 @@ export default class Server {
     this.embark.events.on("plugins:register:api", (callDescription: CallDescription) => this.registerCallDescription(instance, callDescription));
 
     if (!this.isInsideMonorepo || process.env.EMBARK_UI_STATIC) {
-      if (existsSync(path.join(this.embarkUiBuildDir, "index.html"))) {
+      if (this.embark.fs.existsSync(path.join(this.embarkUiBuildDir, "index.html"))) {
         instance.app.use("/", express.static(this.embarkUiBuildDir));
         instance.app.get(/^\/(?!embark-api).*$/, (_req, res) => {
           res.sendFile(path.join(this.embarkUiBuildDir, "index.html"));
