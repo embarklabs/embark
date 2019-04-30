@@ -5,10 +5,17 @@ const path = require('path');
 const deepEqual = require('deep-equal');
 const web3 = require('web3');
 const constants = require('embark-core/constants');
-import {canonicalHost, defaultHost, recursiveMerge, AddressUtils, unitRegex} from 'embark-utils';
+import {
+  canonicalHost,
+  defaultHost,
+  recursiveMerge,
+  AddressUtils,
+  unitRegex,
+  getWeiBalanceFromString,
+  prepareContractsConfig
+} from 'embark-utils';
 const cloneDeep = require('lodash.clonedeep');
 const { replaceZeroAddressShorthand } = AddressUtils;
-import * as utilsContractsConfig from "../utils/contractsConfig";
 import { File, Types } from "./file";
 
 const DEFAULT_CONFIG_PATH = 'config/';
@@ -264,17 +271,17 @@ Config.prototype.loadBlockchainConfigFile = function() {
   }
 
   if (this.blockchainConfig.targetGasLimit && this.blockchainConfig.targetGasLimit.toString().match(unitRegex)) {
-    this.blockchainConfig.targetGasLimit = utils.getWeiBalanceFromString(this.blockchainConfig.targetGasLimit, web3);
+    this.blockchainConfig.targetGasLimit = getWeiBalanceFromString(this.blockchainConfig.targetGasLimit, web3);
   }
 
   if (this.blockchainConfig.gasPrice && this.blockchainConfig.gasPrice.toString().match(unitRegex)) {
-    this.blockchainConfig.gasPrice = utils.getWeiBalanceFromString(this.blockchainConfig.gasPrice, web3);
+    this.blockchainConfig.gasPrice = getWeiBalanceFromString(this.blockchainConfig.gasPrice, web3);
   }
 
   if (this.blockchainConfig.accounts) {
     this.blockchainConfig.accounts.forEach(acc => {
       if (acc.balance && acc.balance.toString().match(unitRegex)) {
-        acc.balance = utils.getWeiBalanceFromString(acc.balance, web3);
+        acc.balance = getWeiBalanceFromString(acc.balance, web3);
       }
     });
   }
@@ -353,17 +360,17 @@ Config.prototype.loadContractsConfigFile = function() {
   let configFilePath = this._getFileOrObject(this.configDir, 'contracts', 'contracts');
   let newContractsConfig = this._mergeConfig(configFilePath, configObject, this.env);
   if (newContractsConfig.gas.match(unitRegex)) {
-    newContractsConfig.gas = utils.getWeiBalanceFromString(newContractsConfig.gas, web3);
+    newContractsConfig.gas = getWeiBalanceFromString(newContractsConfig.gas, web3);
   }
   if (newContractsConfig.deployment && 'accounts' in newContractsConfig.deployment) {
     newContractsConfig.deployment.accounts.forEach((account) => {
       if (account.balance && account.balance.match(unitRegex)) {
-        account.balance = utils.getWeiBalanceFromString(account.balance, web3);
+        account.balance = getWeiBalanceFromString(account.balance, web3);
       }
     });
   }
 
-  newContractsConfig = utilsContractsConfig.prepare(newContractsConfig);
+  newContractsConfig = prepareContractsConfig(newContractsConfig);
 
   const afterDeploy = newContractsConfig.afterDeploy;
 

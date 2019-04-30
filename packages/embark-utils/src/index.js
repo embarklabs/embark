@@ -7,7 +7,11 @@ const {canonicalHost, defaultCorsHost, defaultHost, dockerHostSwap, isDocker} = 
 const {findNextPort} = require('./network');
 const logUtils = require('./log-utils');
 const toposortGraph = require('./toposort');
-import { unitRegex } from './constants';
+import { unitRegex, balanceRegex } from './constants';
+import * as AddressUtils from './addressUtils';
+const web3 = require("web3");
+
+const { extendZeroAddressShorthand, replaceZeroAddressShorthand } = AddressUtils;
 
 import { last, recursiveMerge } from './collections';
 
@@ -124,6 +128,62 @@ function deconstructUrl(endpoint) {
   };
 }
 
+function getWeiBalanceFromString(balanceString, web3){
+  if(!web3){
+    throw new Error(__('[getWeiBalanceFromString]: Missing parameter \'web3\''));
+  }
+  if (!balanceString) {
+    return 0;
+  }
+  const match = balanceString.match(balanceRegex);
+  if (!match) {
+    throw new Error(__('Unrecognized balance string "%s"', balanceString));
+  }
+  if (!match[2]) {
+    return web3.utils.toHex(match[1]);
+  }
+
+  return web3.utils.toWei(match[1], match[2]);
+}
+
+function prepareContractsConfig(config) {
+  Object.keys(config.contracts).forEach((contractName) => {
+    const gas = config.contracts[contractName].gas;
+    const gasPrice = config.contracts[contractName].gasPrice;
+    const address = config.contracts[contractName].address;
+    const args = config.contracts[contractName].args;
+    const onDeploy = config.contracts[contractName].onDeploy;
+
+    if (gas && gas.toString().match(unitRegex)) {
+      config.contracts[contractName].gas = getWeiBalanceFromString(gas, web3);
+    }
+
+    if (gasPrice && gasPrice.toString().match(unitRegex)) {
+      config.contracts[contractName].gasPrice = getWeiBalanceFromString(gasPrice, web3);
+    }
+
+    if (address) {
+      config.contracts[contractName].address = extendZeroAddressShorthand(address);
+    }
+
+    if (args && args.length) {
+      config.contracts[contractName].args = args.map((val) => {
+        if (typeof val === "string") {
+          return extendZeroAddressShorthand(val);
+        }
+        return val;
+      });
+    }
+
+    if (Array.isArray(onDeploy)) {
+      config.contracts[contractName].onDeploy = onDeploy.map(replaceZeroAddressShorthand);
+    }
+  });
+
+  return config;
+}
+
+
 const Utils = {
   joinPath: function() {
     const path = require('path');
@@ -144,6 +204,8 @@ const Utils = {
   last,
   soliditySha3,
   recursiveMerge,
+  prepareContractsConfig,
+  getWeiBalanceFromString,
   sha512,
   timer,
   unitRegex,
@@ -151,9 +213,9 @@ const Utils = {
   escapeHtml: logUtils.escapeHtml,
   normalizeInput: logUtils.normalizeInput,
   LogHandler: require('./logHandler'),
-  AddressUtils: require('./addressUtils'),
   proposeAlternative,
-  toposort
+  toposort,
+  AddressUtils
 };
 
 module.exports = Utils;

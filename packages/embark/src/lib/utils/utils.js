@@ -342,27 +342,9 @@ function buildUrlFromConfig(configObj) {
   return this.buildUrl(configObj.protocol, canonicalHost(configObj.host), configObj.port, configObj.type);
 }
 
-function getWeiBalanceFromString(balanceString, web3){
-  if(!web3){
-    throw new Error(__('[utils.getWeiBalanceFromString]: Missing parameter \'web3\''));
-  }
-  if (!balanceString) {
-    return 0;
-  }
-  const match = balanceString.match(balanceRegex);
-  if (!match) {
-    throw new Error(__('Unrecognized balance string "%s"', balanceString));
-  }
-  if (!match[2]) {
-    return web3.utils.toHex(match[1]);
-  }
-
-  return web3.utils.toWei(match[1], match[2]);
-}
-
 function getHexBalanceFromString(balanceString, web3) {
   if(!web3){
-    throw new Error(__('[utils.getWeiBalanceFromString]: Missing parameter \'web3\''));
+    throw new Error(__('[utils.getHexBalanceFromString]: Missing parameter \'web3\''));
   }
   if (!balanceString) {
     return 0xFFFFFFFFFFFFFFFFFF;
@@ -515,7 +497,6 @@ module.exports = {
   normalizeInput,
   buildUrl,
   buildUrlFromConfig,
-  getWeiBalanceFromString,
   getHexBalanceFromString,
   compact,
   groupBy,

@@ -6,6 +6,7 @@ const AccountParser = require('../lib/utils/accountParser');
 let TestLogger = require('../lib/utils/test_logger');
 const Web3 = require('web3');
 const i18n = require('../lib/core/i18n/i18n');
+import { getWeiBalanceFromString } from 'embark-utils';
 i18n.setOrDetectLocale('en');
 
 describe('embark.AccountParser', function () {
@@ -157,14 +158,14 @@ describe('embark.AccountParser', function () {
   });
   describe('getWeiBalance', () => {
     it('should convert to hex with large ether values', () => {
-      const weiBalance = utils.getWeiBalanceFromString('100000 ether', Web3);
+      const weiBalance = getWeiBalanceFromString('100000 ether', Web3);
 
       assert.strictEqual(weiBalance, '100000000000000000000000');
     });
 
     it('should fail when string is not good', () => {
       try {
-        utils.getWeiBalanceFromString('nogood', Web3);
+        getWeiBalanceFromString('nogood', Web3);
         assert.fail('Should have failed at getWeiBalance');
       } catch (e) {
         // Ok
