@@ -287,19 +287,9 @@ function isValidDomain(v) {
   return isValid;
 }
 
-function decodeParams(typesArray, hexString) {
-  var Web3EthAbi = require('web3-eth-abi');
-  return Web3EthAbi.decodeParameters(typesArray, hexString);
-}
-
 function toChecksumAddress(address) {
   const Web3 = require('web3');
   return Web3.utils.toChecksumAddress(address);
-}
-
-function sha3(arg) {
-  const Web3 = require('web3');
-  return Web3.utils.sha3(arg);
 }
 
 /**
@@ -462,7 +452,6 @@ module.exports = {
   hexToNumber,
   isValidDomain,
   pingEndpoint,
-  decodeParams,
   cd,
   sed,
   downloadFile,
@@ -470,7 +459,6 @@ module.exports = {
   extractZip,
   getExternalContractUrl,
   toChecksumAddress,
-  sha3,
   normalizeInput,
   buildUrl,
   buildUrlFromConfig,

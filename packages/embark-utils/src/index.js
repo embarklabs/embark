@@ -10,7 +10,12 @@ const toposortGraph = require('./toposort');
 import { unitRegex } from './constants';
 import * as AddressUtils from './addressUtils';
 const web3 = require("web3");
-import { getWeiBalanceFromString, getHexBalanceFromString } from './web3Utils';
+import {
+  getWeiBalanceFromString,
+  getHexBalanceFromString,
+  decodeParams,
+  sha3
+} from './web3Utils';
 import AccountParser from './accountParser';
 
 const { extendZeroAddressShorthand, replaceZeroAddressShorthand } = AddressUtils;
@@ -178,6 +183,7 @@ const Utils = {
   deconstructUrl,
   defaultCorsHost,
   defaultHost,
+  decodeParams,
   dockerHostSwap,
   exit,
   isDocker,
@@ -192,6 +198,7 @@ const Utils = {
   getWeiBalanceFromString,
   getHexBalanceFromString,
   sha512,
+  sha3,
   timer,
   unitRegex,
   runCmd,

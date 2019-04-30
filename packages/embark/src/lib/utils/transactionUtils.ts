@@ -1,7 +1,6 @@
-import {Contract} from "embark";
-import {ABIDefinition} from "web3/eth/abi";
-
-const utils = require("./utils");
+import { Contract } from "embark";
+import { decodeParams, sha3 } from "embark-utils";
+import { ABIDefinition } from "web3/eth/abi";
 
 export interface AddressToContract {
   name: string;
@@ -37,7 +36,7 @@ export function getAddressToContract(contractsList: Contract[], addressToContrac
       .filter((func: ABIDefinition) => func.type === "function")
       .map((func: ABIDefinition) => {
         const name = `${func.name}(${func.inputs ? func.inputs.map((input) => input.type).join(",") : ""})`;
-        funcSignatures[utils.sha3(name).substring(0, 10)] = {
+        funcSignatures[sha3(name).substring(0, 10)] = {
           abi: func,
           functionName: func.name,
           name,
@@ -59,7 +58,7 @@ export function getTransactionParams(contract: AddressToContract, transactionInp
 
   let paramString = "";
   if (func && func.abi && func.abi.inputs) {
-    const decodedParameters = utils.decodeParams(func.abi.inputs, transactionInput.substring(10));
+    const decodedParameters = decodeParams(func.abi.inputs, transactionInput.substring(10));
     func.abi.inputs.forEach((input) => {
       const quote = input.type.indexOf("int") === -1 ? '"' : "";
       paramString += quote + decodedParameters[input.name] + quote + ", ";
