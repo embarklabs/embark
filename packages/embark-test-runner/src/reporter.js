@@ -1,7 +1,7 @@
 const Base = require('mocha/lib/reporters/base');
 const ms = require('mocha/lib/ms');
 const color = Base.color;
-import {getAddressToContract, getTransactionParams} from 'embark-utils';
+import { getAddressToContract, getTransactionParams } from 'embark-utils';
 
 class EmbarkApiSpec extends Base {
   constructor(runner, options) {

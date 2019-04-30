@@ -1,0 +1,2 @@
+export const COVERAGE_GAS_LIMIT = 4503599627370495;
+export const GAS_LIMIT = 6000000;

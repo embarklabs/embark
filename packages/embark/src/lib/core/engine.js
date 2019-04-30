@@ -324,7 +324,7 @@ class Engine {
   }
 
   testRunnerService(options) {
-    this.registerModule('tests', Object.assign(options, {ipc: this.ipc}));
+    this.registerModulePackage('embark-test-runner', Object.assign(options, {ipc: this.ipc}));
   }
 
 }
