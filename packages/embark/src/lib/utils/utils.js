@@ -2,8 +2,6 @@ let http = require('follow-redirects').http;
 let https = require('follow-redirects').https;
 import {canonicalHost, normalizeInput} from 'embark-utils';
 
-const balanceRegex = /([0-9]+) ?([a-zA-Z]*)/;
-
 function dirname() {
   const path = require('path');
   return path.dirname.apply(path.dirname, arguments);
@@ -342,27 +340,6 @@ function buildUrlFromConfig(configObj) {
   return this.buildUrl(configObj.protocol, canonicalHost(configObj.host), configObj.port, configObj.type);
 }
 
-function getHexBalanceFromString(balanceString, web3) {
-  if(!web3){
-    throw new Error(__('[utils.getHexBalanceFromString]: Missing parameter \'web3\''));
-  }
-  if (!balanceString) {
-    return 0xFFFFFFFFFFFFFFFFFF;
-  }
-  if (web3.utils.isHexStrict(balanceString)) {
-    return balanceString;
-  }
-  const match = balanceString.match(balanceRegex);
-  if (!match) {
-    throw new Error(__('Unrecognized balance string "%s"', balanceString));
-  }
-  if (!match[2]) {
-    return web3.utils.toHex(match[1]);
-  }
-
-  return web3.utils.toHex(web3.utils.toWei(match[1], match[2]));
-}
-
 function compact(array) {
   return array.filter(n => n);
 }
@@ -497,7 +474,6 @@ module.exports = {
   normalizeInput,
   buildUrl,
   buildUrlFromConfig,
-  getHexBalanceFromString,
   compact,
   groupBy,
   interceptLogs,

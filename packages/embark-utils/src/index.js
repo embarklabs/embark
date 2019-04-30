@@ -128,6 +128,27 @@ function deconstructUrl(endpoint) {
   };
 }
 
+function getHexBalanceFromString(balanceString, web3) {
+  if(!web3){
+    throw new Error(__('[getHexBalanceFromString]: Missing parameter \'web3\''));
+  }
+  if (!balanceString) {
+    return 0xFFFFFFFFFFFFFFFFFF;
+  }
+  if (web3.utils.isHexStrict(balanceString)) {
+    return balanceString;
+  }
+  const match = balanceString.match(balanceRegex);
+  if (!match) {
+    throw new Error(__('Unrecognized balance string "%s"', balanceString));
+  }
+  if (!match[2]) {
+    return web3.utils.toHex(match[1]);
+  }
+
+  return web3.utils.toHex(web3.utils.toWei(match[1], match[2]));
+}
+
 function getWeiBalanceFromString(balanceString, web3){
   if(!web3){
     throw new Error(__('[getWeiBalanceFromString]: Missing parameter \'web3\''));
@@ -206,6 +227,7 @@ const Utils = {
   recursiveMerge,
   prepareContractsConfig,
   getWeiBalanceFromString,
+  getHexBalanceFromString,
   sha512,
   timer,
   unitRegex,

@@ -1,12 +1,11 @@
 /*global __dirname, describe, it, before, after, require*/
 const assert = require('assert');
 const sinon = require('sinon');
-const utils = require('../lib/utils/utils');
 const AccountParser = require('../lib/utils/accountParser');
 let TestLogger = require('../lib/utils/test_logger');
 const Web3 = require('web3');
 const i18n = require('../lib/core/i18n/i18n');
-import { getWeiBalanceFromString } from 'embark-utils';
+import { getWeiBalanceFromString, getHexBalanceFromString } from 'embark-utils';
 i18n.setOrDetectLocale('en');
 
 describe('embark.AccountParser', function () {
@@ -112,44 +111,44 @@ describe('embark.AccountParser', function () {
 
   describe('getHexBalance', () => {
     it('should return default if no balance', () => {
-      const hexBalance = utils.getHexBalanceFromString(null, Web3);
+      const hexBalance = getHexBalanceFromString(null, Web3);
 
       assert.strictEqual(hexBalance, 0xFFFFFFFFFFFFFFFFFF);
     });
 
     it('should return the balance string if already hexadecimal', () => {
-      const hexBalance = utils.getHexBalanceFromString('0xFFF', Web3);
+      const hexBalance = getHexBalanceFromString('0xFFF', Web3);
 
       assert.strictEqual(hexBalance, '0xFFF');
     });
 
     it('should convert to hex when decimal', () => {
-      const hexBalance = utils.getHexBalanceFromString('500', Web3);
+      const hexBalance = getHexBalanceFromString('500', Web3);
 
       assert.strictEqual(hexBalance, '0x1f4');
     });
 
     it('should convert to hex with eth string', () => {
-      const hexBalance = utils.getHexBalanceFromString('4ether', Web3);
+      const hexBalance = getHexBalanceFromString('4ether', Web3);
 
       assert.strictEqual(hexBalance, '0x3782dace9d900000');
     });
 
     it('should convert to hex with eth string with space', () => {
-      const hexBalance = utils.getHexBalanceFromString('673 shannon', Web3);
+      const hexBalance = getHexBalanceFromString('673 shannon', Web3);
 
       assert.strictEqual(hexBalance, '0x9cb1ed0a00');
     });
 
     it('should convert to hex with large ether values', () => {
-      const hexBalance = utils.getHexBalanceFromString('100000 ether', Web3);
+      const hexBalance = getHexBalanceFromString('100000 ether', Web3);
 
       assert.strictEqual(hexBalance, '0x152d02c7e14af6800000');
     });
 
     it('should fail when string is not good', () => {
       try {
-        utils.getHexBalanceFromString('nogood', Web3);
+        getHexBalanceFromString('nogood', Web3);
         assert.fail('Should have failed at getHexBalance');
       } catch (e) {
         // Ok
