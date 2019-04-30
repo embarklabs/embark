@@ -1,5 +1,4 @@
-import * as utilsContractsConfig from "../../utils/contractsConfig";
-import { deconstructUrl } from 'embark-utils';
+import { deconstructUrl, prepareContractsConfig } from 'embark-utils';
 
 const async = require('async');
 const AccountParser = require('../../utils/accountParser');
@@ -261,7 +260,7 @@ class Test {
     const self = this;
     async.waterfall([
       function setConfig(next) {
-        utilsContractsConfig.prepare(config);
+        prepareContractsConfig(config);
         self.events.request('config:contractsConfig:set',
           {contracts: config.contracts, versions: self.versions_default}, next);
       },
