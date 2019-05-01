@@ -9,6 +9,7 @@ import expressWs from "express-ws";
 import findUp from "find-up";
 import helmet from "helmet";
 import * as http from "http";
+import * as net from "net";
 import * as path from "path";
 import * as ws from "ws";
 
@@ -27,6 +28,8 @@ export default class Server {
   private expressInstance: expressWs.Instance;
   private isLogging: boolean = false;
   private server?: http.Server;
+
+  private openSockets = new Set<net.Socket>();
 
   constructor(private embark: Embark, private port: number, private hostname: string, private plugins: Plugins) {
     this.expressInstance = this.initApp();
@@ -67,6 +70,15 @@ export default class Server {
       this.server = this.expressInstance.app.listen(this.port, this.hostname, () => {
         resolve();
       });
+
+      // keep track of our open websockets so we can destroy them
+      // if the api server is shutdown
+      this.server.on("connection", (socket) => {
+        this.openSockets.add(socket);
+        socket.on("close", () => {
+          this.openSockets.delete(socket);
+        });
+      });
     });
   }
 
@@ -76,6 +88,9 @@ export default class Server {
         const message = __("API is not running");
         return reject(new Error(message));
       }
+
+      // close any open sockets
+      this.openSockets.forEach((socket) => socket.destroy());
 
       this.server.close(() => {
         this.server = undefined;
@@ -198,17 +213,17 @@ export default class Server {
     instance.app.use(cors());
 
     instance.app.use(bodyParser.json());
-    instance.app.use(bodyParser.urlencoded({extended: true}));
+    instance.app.use(bodyParser.urlencoded({ extended: true }));
 
     instance.app.ws("/logs", (websocket: ws, _req: Request) => {
       this.embark.events.on("log", (level: string, message: string) => {
-        websocket.send(JSON.stringify({msg: message, msg_clear: message.stripColors, logLevel: level}), () => {});
+        websocket.send(JSON.stringify({ msg: message, msg_clear: message.stripColors, logLevel: level }), () => { });
       });
     });
 
     if (this.plugins) {
       instance.app.get("/embark-api/plugins", (_req, res: Response) => {
-        res.send(JSON.stringify(this.plugins.plugins.map((plugin) => ({name: plugin.name}))));
+        res.send(JSON.stringify(this.plugins.plugins.map((plugin) => ({ name: plugin.name }))));
       });
 
       const callDescriptions: CallDescription[] = this.plugins.getPluginsProperty("apiCalls", "apiCalls");
