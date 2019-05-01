@@ -9,7 +9,6 @@ import {
 } from 'reactstrap';
 
 import {
-  contracts as contractsAction,
   commands as commandsAction,
   commandSuggestions as commandSuggestionsAction,
   listenToProcessLogs,
@@ -22,7 +21,7 @@ import Console from '../components/Console';
 import {EMBARK_PROCESS_NAME, LOG_LIMIT} from '../constants';
 import PageHead from '../components/PageHead';
 import ServicesContainer from './ServicesContainer';
-import {getContracts, getProcesses, getProcessLogs, getServices, getCommandSuggestions} from "../reducers/selectors";
+import {getProcesses, getProcessLogs, getServices, getCommandSuggestions} from "../reducers/selectors";
 import ContractsContainer from "./ContractsContainer";
 
 class HomeContainer extends Component {
@@ -45,7 +44,6 @@ class HomeContainer extends Component {
     this.props.fetchProcessLogs(processName, LOG_LIMIT);
     this.props.listenToProcessLogs(processName);
 
-    this.props.fetchContracts();
     this.setState({activeProcess: processName});
   }
 
@@ -71,17 +69,14 @@ class HomeContainer extends Component {
           </Card>
         )} />
 
-        <DataWrapper shouldRender={this.props.contracts.length > 0} {...this.props} render={({contracts}) => (
-          <Card>
-            <CardBody>
-              <CardTitle>Deployed Contracts</CardTitle>
-              <div style={{marginBottom: '1.5rem', overflow: 'auto'}}>
-                <ContractsContainer contracts={contracts} mode="list" numContractsToDisplay={5} updatePageHeader={false} />
-              </div>
-            </CardBody>
-          </Card>
-        )} />
-
+        <Card>
+          <CardBody>
+            <CardTitle>Deployed Contracts</CardTitle>
+            <div style={{marginBottom: '1.5rem', overflow: 'auto'}}>
+              <ContractsContainer mode="list" numContractsToDisplay={5} updatePageHeader={false} />
+            </div>
+          </CardBody>
+        </Card>
 
       </React.Fragment>
     );
@@ -97,16 +92,13 @@ HomeContainer.propTypes = {
   stopProcessLogs: PropTypes.func,
   fetchProcessLogs: PropTypes.func,
   listenToProcessLogs: PropTypes.func,
-  fetchContracts: PropTypes.func,
-  services: PropTypes.array,
-  contracts: PropTypes.array
+  services: PropTypes.array
 };
 
 function mapStateToProps(state) {
   return {
     processes: getProcesses(state),
     services: getServices(state),
-    contracts: getContracts(state),
     error: state.errorMessage,
     processLogs: getProcessLogs(state),
     commandSuggestions: getCommandSuggestions(state),
@@ -120,7 +112,6 @@ export default connect(
     postCommand: commandsAction.post,
     postCommandSuggestions: commandSuggestionsAction.post,
     fetchProcessLogs: processLogsAction.request,
-    fetchContracts: contractsAction.request,
     listenToProcessLogs,
     stopProcessLogs
   }

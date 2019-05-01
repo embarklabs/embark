@@ -31,11 +31,15 @@ class ServicesContainer extends Component {
 ServicesContainer.propTypes = {
   fetchServices: PropTypes.func,
   listenToServices: PropTypes.func,
+  error: PropTypes.string,
+  loading: PropTypes.bool
 };
 
 function mapStateToProps(state, _props) {
   return {
-    services: getServices(state)
+    services: getServices(state),
+    error: state.errorMessage,
+    loading: state.loading
   };
 }
 

@@ -8,6 +8,8 @@ import Contracts from '../components/Contracts';
 import ContractsList from '../components/ContractsList';
 import {getContracts} from "../reducers/selectors";
 import PageHead from "../components/PageHead";
+import Loading from '../components/Loading';
+import Error from '../components/Error';
 
 const MAX_CONTRACTS = 10;
 
@@ -78,16 +80,25 @@ class ContractsContainer extends Component {
   }
 
   render() {
+    const {error, loading, mode, updatePageHeader} = this.props;
+    if (error) {
+      return <Error error={error} />;
+    }
+
+    if (loading) {
+      return <Loading />;
+    }
+
     this.resetNums();
     let ContractsComp;
-    if (this.props.mode === "detail") {
+    if (mode === "detail") {
       ContractsComp = Contracts
-    } else if (this.props.mode === "list") {
+    } else if (mode === "list") {
       ContractsComp = ContractsList
     }
     return (
       <React.Fragment>
-        {this.props.updatePageHeader &&
+        {updatePageHeader &&
           <PageHead title="Contracts"
             description="Summary of all deployed contracts" />}
         <ContractsComp contracts={this.currentContracts}
@@ -115,7 +126,9 @@ ContractsContainer.propTypes = {
   stopContracts: PropTypes.func,
   fiddleContracts: PropTypes.array,
   mode: PropTypes.string,
-  updatePageHeader: PropTypes.bool
+  updatePageHeader: PropTypes.bool,
+  error: PropTypes.string,
+  loading: PropTypes.bool
 };
 
 ContractsContainer.defaultProps = {
