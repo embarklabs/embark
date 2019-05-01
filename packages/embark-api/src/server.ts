@@ -1,4 +1,5 @@
 import bodyParser from "body-parser";
+import "colors";
 import cors from "cors";
 import {Embark, Plugins} from "embark";
 import express, {NextFunction, Request, Response} from "express";
