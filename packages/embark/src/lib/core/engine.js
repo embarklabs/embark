@@ -170,7 +170,7 @@ class Engine {
   }
 
   console(_options) {
-    this.registerModule('console', {
+    this.registerModulePackage('embark-console', {
       events: this.events,
       plugins: this.plugins,
       version: this.version,

@@ -1,14 +1,11 @@
-/*globals __*/
-import "colors";
-const env = require("../../core/env");
-const utils = require("../../utils/utils");
-const {escapeHtml, exit} = require("embark-utils");
-import { Callback } from "embark";
-import constants from "embark-core/constants.json";
-const stringify = require("json-stringify-safe");
 import { waterfall } from "async";
-import { Embark, Events } from "embark";
-import {__} from "i18n";
+import chalk from "chalk";
+import { Callback, Embark, Events } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import constants from "embark-core/constants.json";
+import { escapeHtml, exit, jsonFunctionReplacer } from "embark-utils";
+import { __ } from "i18n";
+import stringify from "json-stringify-safe";
+import { dirname } from "path";
 import Suggestions from "./suggestions";
 
 type MatchFunction = (cmd: string) => boolean;
@@ -91,7 +88,7 @@ class Console {
   }
 
   private cmdHistorySize() {
-    return env.anchoredValue(env.CMD_HISTORY_SIZE);
+    return parseInt(process.env.CMD_HISTORY_SIZE || constants.console.commandHistorySize, 10);
   }
 
   private registerApi() {
@@ -103,7 +100,7 @@ class Console {
         }
         let response = result;
         if (typeof result !== "string") {
-          response = stringify(result, utils.jsonFunctionReplacer, 2);
+          response = stringify(result, jsonFunctionReplacer, 2);
         } else {
           // Avoid HTML injection in the Cockpit
           response = escapeHtml(response);
@@ -125,21 +122,21 @@ class Console {
         __("possible commands are:"),
         // TODO: only if the blockchain is actually active!
         // will need to pass te current embark state here
-        "ipfs".cyan + " - " + __("instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)"),
-        "swarm".cyan + " - " + __("instantiated swarm-api object configured to the current environment (available if swarm is enabled)"),
-        "web3".cyan + " - " + __("instantiated web3.js object configured to the current environment"),
-        "EmbarkJS".cyan + " - " + __("EmbarkJS static functions for Storage, Messages, Names, etc."),
-        "log [process] on/off".cyan + " - " + __("Activate or deactivate the logs of a sub-process. Options: blockchain, ipfs, webserver"),
+        chalk.cyan("ipfs") + " - " + __("instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)"),
+        chalk.cyan("swarm") + " - " + __("instantiated swarm-api object configured to the current environment (available if swarm is enabled)"),
+        chalk.cyan("web3") + " - " + __("instantiated web3.js object configured to the current environment"),
+        chalk.cyan("EmbarkJS") + " - " + __("EmbarkJS static functions for Storage, Messages, Names, etc."),
+        chalk.cyan("log [process] on/off") + " - " + __("Activate or deactivate the logs of a sub-process. Options: blockchain, ipfs, webserver"),
       ];
       helpDescriptions.forEach((helpDescription) => {
         let matches = [] as string[];
         if (Array.isArray(helpDescription.matches)) {
           matches = helpDescription.matches as string[];
         }
-        helpText.push(`${(helpDescription.usage || matches.join("/")).cyan} - ${helpDescription.description}`);
+        helpText.push(`${chalk.cyan(helpDescription.usage || matches.join("/"))} - ${helpDescription.description}`);
       });
       // Add end commands
-      helpText.push("quit".cyan + " - " + __("to immediatly exit (alias: exit)"),
+      helpText.push(chalk.cyan("quit") + " - " + __("to immediatly exit (alias: exit)"),
         "",
         __("The web3 object and the interfaces for the deployed contracts and their methods are also available"));
       return helpText.join("\n");
@@ -297,7 +294,7 @@ class Console {
       this.ipc.client.emit("console:history:save", cmd);
     }
 
-    if (this.fs.existsSync(utils.dirname(this.cmdHistoryFile))) {
+    if (this.fs.existsSync(dirname(this.cmdHistoryFile))) {
       this.fs.writeFileSync(
         this.cmdHistoryFile,
         history

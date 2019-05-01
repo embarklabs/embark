@@ -1,5 +1,8 @@
 {
   "httpContractsDirectory": ".embark/contracts/",
+  "console": {
+    "commandHistorySize": "20"
+  },
   "contexts": {
     "simulator": "simulator",
     "blockchain": "blockchain",

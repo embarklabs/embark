@@ -1,6 +1,6 @@
-const fuzzySearch = require("../../utils/utils").fuzzySearch;
-
-import { Embark, Events } from "embark";
+import { Embark, Events } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { fuzzySearch } from "embark-utils";
+import { suggestions as defaultSuggestions } from "../../suggestions.json";
 
 interface ContractsManager {
   [key: string]: any;
@@ -18,7 +18,7 @@ export default class Suggestions {
   private embark: Embark;
   private events: Events;
   private contracts: ContractsManager;
-  private static readonly DEFAULT_SUGGESTIONS = require("./suggestions.json").suggestions;
+  private static readonly DEFAULT_SUGGESTIONS = defaultSuggestions;
   private _suggestions: SuggestionsList = [];
 
   constructor(embark: Embark, options?: object) {

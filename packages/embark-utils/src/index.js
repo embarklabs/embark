@@ -165,12 +165,26 @@ function prepareContractsConfig(config) {
   return config;
 }
 
+function jsonFunctionReplacer(_key, value) {
+  if (typeof value === 'function') {
+    return value.toString();
+  }
+
+  return value;
+}
+
+function fuzzySearch(text, list, filter) {
+  const fuzzy = require('fuzzy');
+  return fuzzy.filter(text, list, {extract: (filter || function () {})});
+}
 
 const Utils = {
   joinPath: function() {
     const path = require('path');
     return path.join.apply(path.join, arguments);
   },
+  jsonFunctionReplacer,
+  fuzzySearch,
   canonicalHost,
   copyToClipboard,
   deconstructUrl,
