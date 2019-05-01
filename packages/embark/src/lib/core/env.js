@@ -34,10 +34,6 @@ const DAPP_PATH = 'DAPP_PATH';
 const DEFAULT_DAPP_PATH = anchoredValue(PWD);
 anchoredValue(DAPP_PATH, DEFAULT_DAPP_PATH);
 
-const CMD_HISTORY_SIZE = 'CMD_HISTORY_SIZE';
-const DEFAULT_CMD_HISTORY_SIZE = 20;
-anchoredValue(CMD_HISTORY_SIZE, DEFAULT_CMD_HISTORY_SIZE);
-
 const DIAGRAM_PATH = 'DIAGRAM_PATH';
 const DEFAULT_DIAGRAM_PATH = joinPath(anchoredValue(DAPP_PATH), 'diagram.svg');
 anchoredValue(DIAGRAM_PATH, DEFAULT_DIAGRAM_PATH);
@@ -74,7 +70,6 @@ module.exports = {
   anchoredValue,
   PWD,
   DAPP_PATH,
-  CMD_HISTORY_SIZE,
   DIAGRAM_PATH,
   EMBARK_PATH,
   PKG_PATH
