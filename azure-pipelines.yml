@@ -31,11 +31,13 @@ pool:
 
 steps:
 - task: NodeTool@0
+  condition: succeeded()
   displayName: 'Install Node.js'
   inputs:
     versionSpec: $(nodeVersion)
 
 - task: UsepythonVersion@0
+  condition: succeeded()
   displayName: 'Install Python'
   inputs:
     architecture: x64
@@ -62,12 +64,14 @@ steps:
     else
       tar xzvf go-ipfs.tar.gz
     fi
+  condition: succeeded()
   displayName: 'Install IPFS'
 
 - bash: |
     export PATH="$(cd ../Downloads && pwd)/go-ipfs:${PATH}"
     ipfs version
     ipfs init
+  condition: succeeded()
   displayName: 'Initialize IPFS'
 
 - bash: |
@@ -75,6 +79,7 @@ steps:
     export PATH="${HOME}/.yarn/bin:${HOME}/.config/yarn/global/node_modules/.bin:${PATH}"
     yarn --version
     mkdir -p ../Downloads/Yarn
+  condition: succeeded()
   displayName: 'Install Yarn'
 
 - bash: |
@@ -85,16 +90,7 @@ steps:
     yarn config set cache-folder "${PWD}/Yarn" &>/dev/null
     popd &>/dev/null
     npm run ci:full
-    if [[ "$AGENT_OS" = "Linux" ]]; then
-      OS="Linux"
-    fi
-    if [[ "$AGENT_OS" = "Darwin" ]]; then
-      OS="macOS"
-    fi
-    export COVERALLS_GIT_BRANCH=$(node scripts/coveralls-branch-name)
-    export COVERALLS_SERVICE_NAME="Azure Pipelines (${OS})"
-    npm run coveralls
-  condition: ne( variables['Agent.OS'], 'Windows_NT' )
+  condition: and( succeeded(), ne( variables['Agent.OS'], 'Windows_NT' ) )
   displayName: 'Test (*nix)'
 
 - powershell: |
@@ -105,8 +101,25 @@ steps:
     yarn config set cache-folder "$($PWD.Path)\Yarn" | out-null
     popd
     npm run ci:full
-    $env:COVERALLS_GIT_BRANCH=node scripts/coveralls-branch-name
-    $env:COVERALLS_SERVICE_NAME="Azure Pipelines (Windows)"
-    npm run coveralls
-  condition: eq( variables['Agent.OS'], 'Windows_NT' )
+  condition: and( succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ) )
   displayName: 'Test (Windows)'
+
+- bash: |
+    if [[ "$AGENT_OS" = "Linux" ]]; then
+      OS="Linux"
+    fi
+    if [[ "$AGENT_OS" = "Darwin" ]]; then
+      OS="macOS"
+    fi
+    if [[ "$AGENT_OS" = "Windows_NT" ]]; then
+      OS="Windows"
+    fi
+    export CI_PULL_REQUEST=$(node scripts/coveralls-pr-id)
+    if [[ -z "$CI_PULL_REQUEST" ]]; then
+      unset CI_PULL_REQUEST
+    fi
+    export COVERALLS_GIT_BRANCH=$(node scripts/coveralls-branch-name)
+    export COVERALLS_SERVICE_NAME="Azure Pipelines (${OS})"
+    npm run coveralls
+  condition: succeeded()
+  displayName: 'Coveralls'
