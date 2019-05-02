@@ -1,7 +1,7 @@
 import bodyParser from "body-parser";
 import "colors";
 import cors from "cors";
-import {Embark, Plugins} from "embark";
+import {Embark, Plugins} /* supplied by @types/embark in packages/embark-typings */ from "embark";
 import express, {NextFunction, Request, Response} from "express";
 import expressWs from "express-ws";
 import findUp from "find-up";

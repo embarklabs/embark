@@ -1,5 +1,5 @@
 import { each } from "async";
-import { Callback, Logger } from "embark";
+import { Callback, Logger } /* supplied by @types/embark in packages/embark-typings */ from "embark";
 import { NodeVM, NodeVMOptions } from "vm2";
 
 import { recursiveMerge } from "embark-utils";
