@@ -9,12 +9,13 @@ const logUtils = require('./log-utils');
 const toposortGraph = require('./toposort');
 import { unitRegex } from './constants';
 import * as AddressUtils from './addressUtils';
-const web3 = require("web3");
 import {
   getWeiBalanceFromString,
   getHexBalanceFromString,
   decodeParams,
-  sha3
+  sha3,
+  isHex,
+  soliditySha3
 } from './web3Utils';
 import { getAddressToContract, getTransactionParams } from './transactionUtils';
 import AccountParser from './accountParser';
@@ -41,11 +42,6 @@ function checkIsAvailable(url, callback) {
   });
 }
 
-function isHex(hex) {
-  const Web3 = require('web3');
-  return Web3.utils.isHex(hex);
-}
-
 function hashTo32ByteHexString(hash) {
   if (isHex(hash)) {
     if (!hash.startsWith('0x')) {
@@ -57,11 +53,6 @@ function hashTo32ByteHexString(hash) {
   let buf = multihash.fromB58String(hash);
   let digest = multihash.decode(buf).digest;
   return '0x' + multihash.toHexString(digest);
-}
-
-function soliditySha3(arg) {
-  const Web3 = require('web3');
-  return Web3.utils.soliditySha3(arg);
 }
 
 function sha512(arg) {
@@ -145,11 +136,11 @@ function prepareContractsConfig(config) {
     const onDeploy = config.contracts[contractName].onDeploy;
 
     if (gas && gas.toString().match(unitRegex)) {
-      config.contracts[contractName].gas = getWeiBalanceFromString(gas, web3);
+      config.contracts[contractName].gas = getWeiBalanceFromString(gas);
     }
 
     if (gasPrice && gasPrice.toString().match(unitRegex)) {
-      config.contracts[contractName].gasPrice = getWeiBalanceFromString(gasPrice, web3);
+      config.contracts[contractName].gasPrice = getWeiBalanceFromString(gasPrice);
     }
 
     if (address) {
