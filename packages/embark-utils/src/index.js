@@ -15,7 +15,8 @@ import {
   decodeParams,
   sha3,
   isHex,
-  soliditySha3
+  soliditySha3,
+  toChecksumAddress
 } from './web3Utils';
 import { getAddressToContract, getTransactionParams } from './transactionUtils';
 import LongRunningProcessTimer from './longRunningProcessTimer';
@@ -216,6 +217,7 @@ const Utils = {
   LogHandler: require('./logHandler'),
   LongRunningProcessTimer,
   proposeAlternative,
+  toChecksumAddress,
   toposort,
   AddressUtils,
   AccountParser
