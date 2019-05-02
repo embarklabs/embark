@@ -1,5 +1,5 @@
 /*globals describe, it*/
-let CodeGenerator = require('../lib/modules/code_generator');
+let CodeGenerator = require('embark-code-generator');
 let assert = require('assert');
 
 function replaceCRLF(string) {
