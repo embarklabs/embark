@@ -75,3 +75,11 @@
   tags:
     - haml
     - templates
+- name: embark-mythx
+  description: Adds console commands to run MythX security analyses from the Embark console
+  link: https://www.npmjs.com/package/embark-mythx
+  thumbnail: mythx.png
+  tags:
+    - mythx
+    - smart-contracts
+
