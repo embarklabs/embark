@@ -51,3 +51,7 @@ export function isHex(hex: string) {
 export function soliditySha3(arg: any) {
   return web3.utils.soliditySha3(arg);
 }
+
+export function toChecksumAddress(address: any) {
+  return web3.utils.toChecksumAddress(address);
+}

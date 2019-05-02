@@ -287,11 +287,6 @@ function isValidDomain(v) {
   return isValid;
 }
 
-function toChecksumAddress(address) {
-  const Web3 = require('web3');
-  return Web3.utils.toChecksumAddress(address);
-}
-
 /**
  * Builds a URL
  *
@@ -445,7 +440,6 @@ module.exports = {
   extractTar,
   extractZip,
   getExternalContractUrl,
-  toChecksumAddress,
   normalizeInput,
   buildUrl,
   buildUrlFromConfig,
