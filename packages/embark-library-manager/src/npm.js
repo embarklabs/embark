@@ -1,7 +1,7 @@
 const fs = require('fs');
 const PluginManager = require('live-plugin-manager-git-fix').PluginManager;
 require('colors');
-import LongRunningProcessTimer from 'embark-utils';
+import { LongRunningProcessTimer } from 'embark-utils';
 
 class Npm {
 

@@ -2,7 +2,7 @@ const fs = require('fs-extra');
 const semver = require('semver');
 const ProcessWrapper = require('../../core/processes/processWrapper');
 const PluginManager = require('live-plugin-manager-git-fix').PluginManager;
-import LongRunningProcessTimer from 'embark-utils';
+import { LongRunningProcessTimer } from 'embark-utils';
 
 class SolcProcess extends ProcessWrapper {
 

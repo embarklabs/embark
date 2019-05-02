@@ -18,6 +18,7 @@ import {
   soliditySha3
 } from './web3Utils';
 import { getAddressToContract, getTransactionParams } from './transactionUtils';
+import LongRunningProcessTimer from './longRunningProcessTimer';
 import AccountParser from './accountParser';
 
 const { extendZeroAddressShorthand, replaceZeroAddressShorthand } = AddressUtils;
@@ -199,6 +200,7 @@ const Utils = {
   escapeHtml: logUtils.escapeHtml,
   normalizeInput: logUtils.normalizeInput,
   LogHandler: require('./logHandler'),
+  LongRunningProcessTimer,
   proposeAlternative,
   toposort,
   AddressUtils,
