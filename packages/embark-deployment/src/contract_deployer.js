@@ -1,7 +1,5 @@
-let async = require('async');
-//require("../utils/debug_util.js")(__filename, async);
-let utils = require('../../utils/utils.js');
-import {AddressUtils} from 'embark-utils';
+const async = require('async');
+import {AddressUtils, toChecksumAddress} from 'embark-utils';
 const {ZERO_ADDRESS} = AddressUtils;
 
 // Check out definition 97 of the yellow paper: https://ethereum.github.io/yellowpaper/paper.pdf
@@ -156,7 +154,7 @@ class ContractDeployer {
         let skipBytecodeCheck = false;
         if (contract.address !== undefined) {
           try {
-            utils.toChecksumAddress(contract.address);
+            toChecksumAddress(contract.address);
           } catch(e) {
             self.logger.error(__("error deploying %s", contract.className));
             self.logger.error(e.message);
