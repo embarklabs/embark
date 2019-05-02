@@ -230,7 +230,7 @@
     "rimraf": "2.6.3",
     "sinon": "4.5.0",
     "tslint": "5.11.0",
-    "typescript": "3.3.1"
+    "typescript": "3.4.5"
   },
   "engines": {
     "node": ">=8.12.0",
