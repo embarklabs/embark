@@ -69,6 +69,24 @@ EventEmitter.prototype.request = function() {
   return this.emit(listenerName, ...other_args);
 };
 
+EventEmitter.prototype.get = function() {
+  let requestName = arguments[0];
+  let other_args = [].slice.call(arguments, 1);
+
+  log("get: ", requestName);
+  warnIfLegacy(requestName);
+  const listenerName = 'get:' + requestName;
+
+  let promise = new Promise((resolve, reject) => {
+    return this.emit(listenerName, ...other_args, (err, res) => {
+      if (err) return reject(err);
+      return resolve(res);
+    })
+  });
+
+  return promise;
+};
+
 EventEmitter.prototype.setCommandHandler = function(requestName, cb) {
   log("setting command handler for: " + requestName);
   let listener = function(_cb) {
