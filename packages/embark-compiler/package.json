@@ -26,7 +26,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "cross-env BABEL_ENV=node babel src --extensions \".js,.ts\" --out-dir dist --root-mode upward --source-maps",
+    "build": "cross-env BABEL_ENV=node babel src --extensions \".ts\" --out-dir dist --root-mode upward --source-maps",
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
