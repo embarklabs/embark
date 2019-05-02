@@ -184,6 +184,7 @@ class IPFSProcess extends ProcessWrapper {
   kill() {
     if (this.child) {
       this.child.kill();
+      ipfsProcess.send({result: constants.storage.exit});
     }
   }
 }

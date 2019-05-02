@@ -21,6 +21,7 @@ class StorageProcessesLauncher {
     this.processes = {};
     this.corsParts = options.corsParts || [];
     this.restartCalled = false;
+    this.manualExit = false;
 
     this.cors = this.buildCors();
 
@@ -81,6 +82,10 @@ class StorageProcessesLauncher {
   }
 
   processExited(storageName, code) {
+    if (this.manualExit) {
+      this.manualExit = false;
+      return;
+    }
     if(this.restartCalled){
       this.restartCalled = false;
       return this.launchProcess(storageName, () => {});
@@ -156,6 +161,12 @@ class StorageProcessesLauncher {
         delete this.processes[storageName];
       });
 
+      self.processes[storageName].on('result', constants.storage.exit, (_msg) => {
+        self.processes[storageName].kill();
+        delete this.processes[storageName];
+        this.events.emit(constants.storage.exit);
+      });
+
       self.events.on('logs:swarm:enable', () => {
         self.processes[storageName].silent = false;
       });
@@ -165,6 +176,13 @@ class StorageProcessesLauncher {
       });
 
     });
+  }
+  stopProcess(storageName, cb) {
+    if(this.processes[storageName]) {
+      this.manualExit = true;
+      this.events.once(constants.storage.exit, cb);
+      this.processes[storageName].send('exit');
+    }
   }
 }
 

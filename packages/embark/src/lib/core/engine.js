@@ -278,14 +278,14 @@ class Engine {
         if (!this.config.storageConfig.available_providers.includes("ipfs")) {
           return next();
         }
-        this.events.on("ipfs:process:started", next);
+        this.events.once("ipfs:process:started", next);
         this.registerModule('ipfs');
       },
       (next) => {
         if (!this.config.storageConfig.available_providers.includes("swarm")) {
           return next();
         }
-        this.events.on("swarm:process:started", next);
+        this.events.once("swarm:process:started", next);
         this.registerModule('swarm');
       }
     ], (err) => {
