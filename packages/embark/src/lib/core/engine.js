@@ -230,7 +230,7 @@ class Engine {
     this.registerModulePackage('embark-specialconfigs');
     this.registerModulePackage('embark-ens');
     this.registerModule('console_listener', {ipc: self.ipc});
-    this.registerModule('deployment', {plugins: this.plugins, onlyCompile: options.onlyCompile});
+    this.registerModulePackage('embark-deployment', {plugins: this.plugins, onlyCompile: options.onlyCompile});
     this.registerModulePackage('embark-transaction-tracker');
     this.registerModule('debugger');
 
