@@ -64,7 +64,8 @@
   "storage": {
     "init": "init",
     "initiated": "initiated",
-    "restart": "restart"
+    "restart": "restart",
+    "exit": "storageExit"
   },
   "codeGenerator": {
     "gasLimit": 6000000

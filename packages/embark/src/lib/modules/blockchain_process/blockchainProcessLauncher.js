@@ -71,7 +71,7 @@ class BlockchainProcessLauncher {
 
   stopBlockchainNode(cb) {
     if(this.blockchainProcess) {
-      this.events.on(constants.blockchain.blockchainExit, cb);
+      this.events.once(constants.blockchain.blockchainExit, cb);
       this.blockchainProcess.exitCallback = () => {}; // don't show error message as the process was killed on purpose
       this.blockchainProcess.send('exit');
     }

@@ -2,7 +2,8 @@ const ProcessState = {
   Stopped: 'stopped',
   Starting: 'starting',
   Running: 'running',
-  Stopping: 'stopping'
+  Stopping: 'stopping',
+  Errored: 'errored'
 };
 
 class ProcessManager {
@@ -111,14 +112,17 @@ class ProcessManager {
     self.events.setCommandHandler('processes:launch', (name, cb) => {
       cb = cb || function noop() {};
       let process = self.processes[name];
-      if (process.state !== ProcessState.Stopped) {
+      if (![ProcessState.Stopped, ProcessState.Errored].includes(process.state)) {
         return cb(__(`The ${name} process is already ${process.state.toLowerCase()}.`));
       }
       process.state = ProcessState.Starting;
       if(!process.afterLaunchFn) process.afterLaunchFn = cb;
       process.cb.apply(process.cb, [
         (...args) => {
-          process.state = ProcessState.Running;
+          if(args[0]) {
+            process.state = ProcessState.Errored;
+          }
+          else process.state = ProcessState.Running;
           cb.apply(cb, args);
         }
       ]);
@@ -127,13 +131,16 @@ class ProcessManager {
     self.events.setCommandHandler('processes:stop', (name, cb) => {
       let process = self.processes[name];
       cb = cb || function noop() {};
-      if (process.state !== ProcessState.Running) {
+      if (![ProcessState.Running, ProcessState.Errored].includes(process.state)) {
         return cb(__(`The ${name} process is already ${process.state.toLowerCase()}.`));
       }
       process.state = ProcessState.Stopping;
       process.stopFn.apply(process.stopFn, [
         (...args) => {
-          process.state = ProcessState.Stopped;
+          if(args[0]) {
+            process.state = ProcessState.Errored;
+          }
+          else process.state = ProcessState.Stopped;
           cb.apply(cb, args);
         }
       ]);
