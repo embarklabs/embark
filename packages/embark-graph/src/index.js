@@ -8,14 +8,15 @@ class GraphGenerator {
     this.events = embark.events;
     this.contracts = [];
 
-    this.events.setCommandHandler("graph:create", function(options, cb) {
-      self.generate(options);
+    this.events.setCommandHandler("graph:create", async function(options, cb) {
+      await self.generate(options);
+      console.dir("generate done")
       cb();
     });
   }
 
   /*eslint complexity: ["error", 21]*/
-  generate(options) {
+  async generate(options) {
     const self = this;
     let id = 0;
     let contractString = "";
@@ -24,8 +25,15 @@ class GraphGenerator {
     let contractInheritance = {};
     let contractsDependencies = {};
 
+    console.dir("-- getContractList");
+    self.contracts = await self.events.get('contracts:list');
+    console.dir("-- getContractList done");
+
     async.waterfall([
       function getContractList(next) {
+        // self.contracts = await self.events.get('contracts:list');
+        // console.dir("getContractList done");
+        // next();
         self.events.request('contracts:list', (err, contracts) => {
           self.contracts = contracts;
           next();

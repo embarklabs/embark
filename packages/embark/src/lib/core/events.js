@@ -70,18 +70,31 @@ EventEmitter.prototype.request = function() {
 };
 
 EventEmitter.prototype.get = function() {
+  let self = this;
   let requestName = arguments[0];
   let other_args = [].slice.call(arguments, 1);
 
   log("get: ", requestName);
   warnIfLegacy(requestName);
-  const listenerName = 'get:' + requestName;
+  const listenerName = 'request:' + requestName;
 
-  let promise = new Promise((resolve, reject) => {
-    return this.emit(listenerName, ...other_args, (err, res) => {
-      if (err) return reject(err);
+  let promise = new Promise(function(resolve, reject) {
+    let cb = (err, res) => {
+      console.dir("got response!")
+      console.dir("err")
+      console.dir("res")
+      console.dir(res)
+      if (err)  {
+        console.dir("rejecting")
+        console.dir(err)
+        return reject(err);
+      }
+      console.dir("resolving")
+      console.dir(res)
       return resolve(res);
-    })
+    }
+    other_args.push(cb);
+    return self.emit(listenerName, ...other_args)
   });
 
   return promise;
