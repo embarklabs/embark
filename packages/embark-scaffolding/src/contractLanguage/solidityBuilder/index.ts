@@ -1,4 +1,4 @@
-import { Embark } from "embark";
+import { Embark } /* supplied by @types/embark in packages/embark-typings */ from "embark";
 import Handlebars from "handlebars";
 import {__} from "i18n";
 import * as path from "path";

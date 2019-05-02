@@ -1,4 +1,4 @@
-import { Contract } from "embark";
+import { Contract } /* supplied by @types/embark in packages/embark-typings */ from "embark";
 import { ABIDefinition } from "web3/eth/abi";
 import { decodeParams, sha3 } from "./web3Utils";
 

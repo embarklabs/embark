@@ -1,6 +1,6 @@
 import VM from "./vm";
 const fs = require("./fs");
-import { Callback, Embark, Events, Logger } from "embark";
+import { Callback, Embark, Events, Logger } /* supplied by @types/embark in packages/embark-typings */ from "embark";
 import Web3 from "web3";
 const EmbarkJS = require("embarkjs");
 
