@@ -1,6 +1,6 @@
-let async = require('async');
 import {joinPath} from 'embark-utils';
 import { transform } from "@babel/core";
+const async = require('async');
 const constants = require('embark-core/constants');
 const path  = require('path');
 
@@ -390,7 +390,7 @@ class CodeGenerator {
   }
 
   getReloadPageCode() {
-    return this.env === 'development' ? this.fs.readFileSync(require('path').join(__dirname, '/code/reload-on-change.js'), 'utf8') : '';
+    return this.env === 'development' ? this.fs.readFileSync(path.join(__dirname, '/code/reload-on-change.js'), 'utf8') : '';
   }
 
   getEmbarkJsProviderCode() {

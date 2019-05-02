@@ -189,7 +189,7 @@ class Engine {
   codeGeneratorService(_options) {
     let self = this;
 
-    this.registerModule('code_generator', {plugins: self.plugins, env: self.env});
+    this.registerModulePackage('embark-code-generator', {plugins: self.plugins, env: self.env});
 
     const generateCode = function (modifiedAssets) {
       self.events.request("module:storage:onReady", () => {
