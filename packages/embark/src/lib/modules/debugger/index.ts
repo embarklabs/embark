@@ -1,3 +1,4 @@
+import "colors";
 import {__} from "i18n";
 import DebuggerManager from "./debugger_manager";
 

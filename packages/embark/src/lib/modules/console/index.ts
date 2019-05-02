@@ -1,4 +1,5 @@
 /*globals __*/
+import "colors";
 const env = require("../../core/env");
 const utils = require("../../utils/utils");
 const {escapeHtml, exit} = require("embark-utils");
