@@ -1,4 +1,3 @@
-/*global web3 */
 let __embarkSwarm = {_swarmConnection: undefined};
 let SwarmAPI = require('swarm-api');
 if (SwarmAPI.default) {
@@ -14,11 +13,15 @@ __embarkSwarm.setProvider = function (options) {
   this._connectError = new Error(`Cannot connect to Swarm node on ${this._connectUrl}`);
 
   return new Promise((resolve, reject) => {
+    if(!options.web3) {
+      reject(__("A web3 object must be passed in to __embarkSwarm.setProvider"));
+    }
+    const {web3, useOnlyGivenProvider} = options;
     try {
-      if (!web3.bzz.currentProvider && !options.useOnlyGivenProvider) {
+      if (!web3.bzz.currentProvider && !useOnlyGivenProvider) {
         this._swarmConnection = new SwarmAPI({gateway: this._connectUrl});
       }
-      else if (options.useOnlyGivenProvider && web3.bzz.givenProvider !== null) {
+      else if (useOnlyGivenProvider && web3.bzz.givenProvider !== null) {
         this._swarmConnection = new SwarmAPI({gateway: web3.bzz.givenProvider});
       }
       resolve(this);
