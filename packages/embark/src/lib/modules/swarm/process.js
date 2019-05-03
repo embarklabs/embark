@@ -78,6 +78,7 @@ class SwarmProcess extends ProcessWrapper {
   kill() {
     if (this.child) {
       this.child.kill();
+      swarmProcess.send({result: constants.storage.exit});
     }
   }
 }

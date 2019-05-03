@@ -72,11 +72,12 @@ Storage.isAvailable = function () {
 };
 
 // TODO: most of this logic should move to the provider implementations themselves
-Storage.setProviders = function (dappConnOptions) {
+Storage.setProviders = function (dappConnOptions, addlOpts) {
   const self = this;
   detectSeries(dappConnOptions, (dappConn, callback) => {
     let options = dappConn;
     if (dappConn === '$BZZ') options = {"useOnlyGivenProvider": true};
+    options = {...options, ...addlOpts};
     try {
       self.setProvider(dappConn === '$BZZ' ? dappConn : dappConn.provider, options).then(() => {
         self.isAvailable().then((isAvailable) => {

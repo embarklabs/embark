@@ -17,6 +17,11 @@ class Swarm {
     this.port = this.storageConfig.port;
     this.embark = embark;
     this.fs = embark.fs;
+    this.isServiceRegistered = false;
+    this.addedToEmbarkJs = false;
+    this.addedToConsole = false;
+    this.storageProcessesLauncher = null;
+    this.usingRunningNode = false;
 
     this.webServerConfig = embark.config.webServerConfig;
     this.blockchainConfig = embark.config.blockchainConfig;
@@ -49,18 +54,44 @@ class Swarm {
     this.registerUploadCommand();
     this.listenToCommands();
     this.registerConsoleCommands();
-    this.startProcess((err, newProcessStarted) => {
-      this.addProviderToEmbarkJS();
-      this.addObjectToConsole();
-      this.events.emit("swarm:process:started", err, newProcessStarted);
+    this.events.request("processes:register", "swarm", {
+      launchFn: (cb) => {
+        if(this.usingRunningNode) {
+          return cb(__("Swarm process is running in a separate process and cannot be started by Embark."));
+        }
+        this.startProcess((err, newProcessStarted) => {
+          this.addProviderToEmbarkJS();
+          this.addObjectToConsole();
+          this.events.emit("swarm:process:started", err, newProcessStarted);
+          cb();
+        });
+      },
+      stopFn: (cb) => {
+        if(this.usingRunningNode) {
+          return cb(__("Swarm process is running in a separate process and cannot be stopped by Embark."));
+        }
+        this.stopProcess(cb);
+      }
+    });
+    this.events.request("processes:launch", "swarm", (err, msg) => {
+      if (err) {
+        return this.logger.error(err);
+      }
+      if (msg) {
+        this.logger.info(msg);
+      }
     });
   }
 
   addObjectToConsole() {
+    if (this.addedToConsole) return;
+    this.addedToConsole = true;
     this.events.emit("runcode:register", "swarm", this.swarm);
   }
 
   setServiceCheck() {
+    if (this.isServiceRegistered) return;
+    this.isServiceRegistered = true;
     let self = this;
 
     this.events.on('check:backOnline:Swarm', function () {
@@ -89,6 +120,8 @@ class Swarm {
   }
 
   addProviderToEmbarkJS() {
+    if(this.addedToEmbarkJs) return;
+    this.addedToEmbarkJs = true;
     let code = "";
     code += "\nconst __embarkSwarm = require('embarkjs-swarm')";
     code += "\nEmbarkJS.Storage.registerProvider('swarm', __embarkSwarm.default || __embarkSwarm);";
@@ -99,25 +132,33 @@ class Swarm {
   startProcess(callback) {
     this.swarm.isAvailable((err, isAvailable) => {
       if (!err || isAvailable) {
+        this.usingRunningNode = true;
         this.logger.info("Swarm node found, using currently running node");
         return callback(null, false);
       }
       this.logger.info("Swarm node not found, attempting to start own node");
       let self = this;
-      const storageProcessesLauncher = new StorageProcessesLauncher({
-        logger: self.logger,
-        events: self.events,
-        storageConfig: self.storageConfig,
-        webServerConfig: self.webServerConfig,
-        corsParts: self.embark.config.corsParts,
-        blockchainConfig: self.blockchainConfig,
-        embark: self.embark
-      });
+      if(this.storageProcessesLauncher === null) {
+        this.storageProcessesLauncher = new StorageProcessesLauncher({
+          logger: self.logger,
+          events: self.events,
+          storageConfig: self.storageConfig,
+          webServerConfig: self.webServerConfig,
+          corsParts: self.embark.config.corsParts,
+          blockchainConfig: self.blockchainConfig,
+          embark: self.embark
+        });
+      }
       self.logger.trace(`Storage module: Launching swarm process...`);
-      return storageProcessesLauncher.launchProcess('swarm', (err) => {
+      return this.storageProcessesLauncher.launchProcess('swarm', (err) => {
         callback(err, true);
       });
     });
+  }
+
+  stopProcess(cb) {
+    if(!this.storageProcessesLauncher) return cb();
+    this.storageProcessesLauncher.stopProcess("swarm", cb);
   }
 
   registerUploadCommand() {

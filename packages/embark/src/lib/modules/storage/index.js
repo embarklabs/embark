@@ -41,7 +41,7 @@ class Storage {
   }
 
   addSetProviders(cb) {
-    let code = `\nEmbarkJS.Storage.setProviders(${JSON.stringify(this.storageConfig.dappConnection || [])});`;
+    let code = `\nEmbarkJS.Storage.setProviders(${JSON.stringify(this.storageConfig.dappConnection || [])}, {web3});`;
 
     let shouldInit = (storageConfig) => {
       return storageConfig.enabled;
