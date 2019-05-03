@@ -229,7 +229,7 @@
     "rejected-or-not": "1.0.1",
     "rimraf": "2.6.3",
     "sinon": "4.5.0",
-    "tslint": "5.11.0",
+    "tslint": "5.16.0",
     "typescript": "3.4.5"
   },
   "engines": {
