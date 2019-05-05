@@ -16,7 +16,8 @@
     "solidity"
   ],
   "files": [
-    "dist/lib"
+    "dist/lib",
+    "suggestions.json"
   ],
   "license": "MIT",
   "repository": {
