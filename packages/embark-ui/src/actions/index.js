@@ -100,7 +100,7 @@ export const block = {
 
 export const TRANSACTIONS = createRequestTypes('TRANSACTIONS');
 export const transactions = {
-  request: (blockFrom) => action(TRANSACTIONS[REQUEST], {blockFrom}),
+  request: (blockFrom, blockLimit) => action(TRANSACTIONS[REQUEST], {blockFrom, blockLimit}),
   success: (transactions) => action(TRANSACTIONS[SUCCESS], {transactions}),
   failure: (error) => action(TRANSACTIONS[FAILURE], {error})
 };
