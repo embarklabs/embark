@@ -5,7 +5,6 @@ import {blocks as blocksAction,
         initBlockHeader,
         stopBlockHeader} from '../actions';
 import Blocks from '../components/Blocks';
-import DataWrapper from "../components/DataWrapper";
 import PageHead from "../components/PageHead";
 import {getBlocks} from "../reducers/selectors";
 
@@ -16,6 +15,7 @@ class BlocksContainer extends Component {
     super(props);
 
     this.numBlocksToDisplay = this.props.numBlocksToDisplay || MAX_BLOCKS;
+    this.resetNums();
     this.state = {currentPage: 1};
   }
 
@@ -29,50 +29,62 @@ class BlocksContainer extends Component {
   }
 
   get numberOfBlocks() {
-    const blocks = this.props.blocks;
-    return !blocks.length ? 0 : blocks[0].number + 1;
+    if (this._numberOfBlocks === null) {
+      const blocks = this.props.blocks;
+      this._numberOfBlocks = !blocks.length ? 0 : blocks[0].number + 1;
+    }
+    return this._numberOfBlocks;
   }
 
-  getNumberOfPages() {
-    return Math.ceil(this.numberOfBlocks / this.numBlocksToDisplay);
+  get numberOfPages() {
+    if (this._numberOfPages === null) {
+      this._numberOfPages = Math.ceil(
+        this.numberOfBlocks / this.numBlocksToDisplay
+      );
+    }
+    return this._numberOfPages;
+  }
+
+  resetNums() {
+    this._numberOfBlocks = null;
+    this._numberOfPages = null;
   }
 
   changePage(newPage) {
-    this.setState({currentPage: newPage});
+    if (newPage <= 0) {
+      newPage = 1;
+    } else if (newPage > this.numberOfPages) {
+      newPage = this.numberOfPages;
+    }
+    this.setState({ currentPage: newPage });
     this.props.fetchBlocks(
-      this.numberOfBlocks - 1 - (this.numBlocksToDisplay * (newPage - 1))
+      this.numberOfBlocks - 1 - this.numBlocksToDisplay * (newPage - 1)
     );
   }
 
-  getCurrentBlocks() {
-    return this.props.blocks
-      .filter(block => {
-        const index = (
-          (this.numberOfBlocks -
-           (this.numBlocksToDisplay * (this.state.currentPage - 1))) -
-            block.number
-        );
-        return index <= this.numBlocksToDisplay && index > 0;
-      });
+  get currentBlocks() {
+    return this.props.blocks.filter(block => {
+      const index =
+        this.numberOfBlocks -
+        this.numBlocksToDisplay * (this.state.currentPage - 1) -
+        block.number;
+      return index <= this.numBlocksToDisplay && index > 0;
+    });
   }
 
   render() {
-    const newBlocks = this.getCurrentBlocks();
+    this.resetNums();
     return (
       <React.Fragment>
         <PageHead
           title="Blocks"
           enabled={this.props.overridePageHead}
           description="Summary of the most recent blocks" />
-        <DataWrapper
-          shouldRender={true}
-          {...this.props}
-          render={() => (
-            <Blocks blocks={newBlocks}
-                    numberOfPages={this.getNumberOfPages()}
-                    changePage={(newPage) => this.changePage(newPage)}
-                    currentPage={this.state.currentPage} />
-          )} />
+        <Blocks
+          blocks={this.currentBlocks}
+          changePage={newPage => this.changePage(newPage)}
+          currentPage={this.state.currentPage}
+          numberOfPages={this.numberOfPages} />
       </React.Fragment>
     );
   }
@@ -103,5 +115,5 @@ export default connect(
     fetchBlocks: blocksAction.request,
     initBlockHeader,
     stopBlockHeader
-  },
+  }
 )(BlocksContainer);
