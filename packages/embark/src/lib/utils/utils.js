@@ -282,10 +282,6 @@ function isValidDomain(v) {
   return isValid;
 }
 
-function compact(array) {
-  return array.filter(n => n);
-}
-
 function groupBy(array, key) {
   return array.reduce(function (rv, x) {
     (rv[x[key]] = rv[x[key]] || []).push(x);
@@ -397,7 +393,6 @@ module.exports = {
   extractZip,
   getExternalContractUrl,
   normalizeInput,
-  compact,
   groupBy,
   interceptLogs,
   errorMessage,
