@@ -4,7 +4,7 @@ import { File, Types } from "../../../lib/core/file";
 const assert = require('assert');
 
 // TODO: need to rethink i18n and how that is required in each module
-require('../../../lib/core/i18n/i18n');
+require('embark-i18n');
 
 const Compiler = require('embark-compiler');
 const Plugins = require('../../../lib/core/plugins.js');

@@ -1,6 +1,6 @@
+import * as i18n from 'embark-i18n';
 const program = require('commander');
 const EmbarkController = require('./cmd_controller.js');
-const i18n = require('../lib/core/i18n/i18n.js');
 const fs = require('../lib/core/fs.js');
 
 let embark = new EmbarkController();
