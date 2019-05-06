@@ -23,6 +23,7 @@ export class ProcessManager {
 
     this._registerApiCalls();
     this._registerEvents();
+    this.events.once("deploy:beforeAll", this._registerCommands.bind(this));
   }
 
   _registerApiCalls() {
@@ -67,6 +68,48 @@ export class ProcessManager {
     return processList;
   }
 
+  _registerCommands() {
+    // do not allow whisper service to be started/stopped as it requires a restart of embark
+    const availableProcesses = Object.keys(this.processes).filter((name) => !["whisper", "embark"].includes(name.toLowerCase()));
+    this.plugin.registerConsoleCommand({
+      description: __(`Starts/stops the process. Options: ${availableProcesses.join(", ")}`),
+      matches: (cmd) => {
+        return availableProcesses.some((name) => {
+          name = name.toLowerCase();
+          return [`service ${name} on`, `service ${name} off`].includes(cmd.toLowerCase());
+        });
+      },
+      usage: `service [process] on/off`,
+      process: (cmd, callback) => {
+        const enable = cmd.trim().endsWith('on');
+        const matches = cmd.match(/^service[\s](.*)[\s](?:on|off)$/) || [];
+        const name = matches[1];
+        this.logger.info(`${enable ? 'Starting' :  'Stopping'} the ${name} process...`);
+        if(enable) {
+          return this.events.request("processes:launch", name, (...args) => {
+            const err = args[0];
+            if (err) {
+              this.logger.error(err); // writes to embark's console
+              return callback(err); // passes message back to cockpit
+            }
+            const process = this.processes[name];
+            if (process && process.afterLaunchFn) {
+              process.afterLaunchFn.apply(process.afterLaunchFn, args);
+            }
+            callback(err, `${name} process started.`); // passes a message back to cockpit console
+          });
+        }
+        this.events.request("processes:stop", name, (err) => {
+          if (err) {
+            this.logger.error(err); // writes to embark's console
+            callback(err); // passes message back to cockpit
+          }
+          callback(err, `${name} process stopped.`); // passes a message back to cockpit console
+        });
+      }
+    });
+  }
+
   _registerEvents() {
     const self = this;
     self.events.setCommandHandler('processes:register', (name, cb) => {
@@ -84,31 +127,6 @@ export class ProcessManager {
         cb: launchFn || cb,
         stopFn: stopFn || function noop () {}
       };
-
-      this.plugin.registerConsoleCommand({
-        description: __(`Starts/stops the ${name} process`),
-        matches: [`service ${name} on`, `service ${name} off`],
-        usage: `service ${name} on/off`,
-        process: (cmd, callback) => {
-          const enable = cmd.trim().endsWith('on');
-          this.logger.info(`${enable ? 'Starting' :  'Stopping'} the ${name} process...`);
-          if(enable) {
-            return this.events.request("processes:launch", name, (...args) => {
-              const err = args[0];
-              if (err) return this.logger.error(err); // writes to embark's console
-              const process = self.processes[name];
-              if(process && process.afterLaunchFn) {
-                process.afterLaunchFn.apply(process.afterLaunchFn, args);
-              }
-              callback(err, `${name} process started.`); // passes a message back to cockpit console
-            });
-          }
-          this.events.request("processes:stop", name, (err) => {
-            if (err) return this.logger.error(err); // writes to embark's console
-            callback(err, `${name} process stopped.`); // passes a message back to cockpit console
-          });
-        }
-      });
     });
 
     self.events.setCommandHandler('processes:launch', (name, cb) => {
