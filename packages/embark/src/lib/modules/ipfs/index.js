@@ -4,6 +4,7 @@ const IpfsApi = require('ipfs-api');
 // TODO: not great, breaks module isolation
 const StorageProcessesLauncher = require('../storage/storageProcessesLauncher');
 const constants = require('embark-core/constants');
+import { buildUrlFromConfig } from 'embark-utils';
 
 class IPFS {
 
@@ -118,7 +119,7 @@ class IPFS {
   }
 
   _getNodeUrl() {
-    return utils.buildUrlFromConfig(this._getNodeUrlConfig()) + '/api/v0/version';
+    return buildUrlFromConfig(this._getNodeUrlConfig()) + '/api/v0/version';
   }
 
   _checkService(cb) {

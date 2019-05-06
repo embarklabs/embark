@@ -1,10 +1,10 @@
 const UploadSwarm = require('./upload.js');
-const utils = require('../../utils/utils.js');
 const SwarmAPI = require('swarm-api');
 // TODO: not great, breaks module isolation
 const StorageProcessesLauncher = require('../storage/storageProcessesLauncher');
 const constants = require('embark-core/constants');
 require('colors');
+import { buildUrl } from 'embark-utils';
 
 class Swarm {
 
@@ -39,7 +39,7 @@ class Swarm {
       return this.events.emit("swarm:process:started", null, false);
     }
 
-    this.providerUrl = utils.buildUrl(this.storageConfig.upload.protocol, this.storageConfig.upload.host, this.storageConfig.upload.port);
+    this.providerUrl = buildUrl(this.storageConfig.upload.protocol, this.storageConfig.upload.host, this.storageConfig.upload.port);
 
     this.getUrl = this.storageConfig.upload.getUrl || this.providerUrl + '/bzz:/';
 

@@ -2,11 +2,11 @@ const Web3 = require('web3');
 const async = require('async');
 const Provider = require('./provider.js');
 const ethUtil = require('ethereumjs-util');
-const utils = require('../../utils/utils');
 const constants = require('embark-core/constants');
 const embarkJsUtils = require('embarkjs').Utils;
 const {bigNumberify} = require('ethers/utils/bignumber');
 const RLP = require('ethers/utils/rlp');
+import { buildUrl } from 'embark-utils';
 
 const WEB3_READY = 'blockchain:ready';
 
@@ -157,7 +157,7 @@ class BlockchainConnector {
 
     protocol = (type === "rpc") ? protocol : 'ws';
 
-    this.web3Endpoint = utils.buildUrl(protocol, host, port);
+    this.web3Endpoint = buildUrl(protocol, host, port);
 
     const providerOptions = {
       web3: this.web3,
