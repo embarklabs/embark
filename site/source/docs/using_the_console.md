@@ -36,9 +36,26 @@ Embark (development) > help<ENTER>
 
 This is a good time to read a bit through the available commands and familiarize yourself with them.
 
-## Enabling and disabling process logs
+## Enabling and disabling processes
 
-There are several processes and services that Embark spins up to do its work (e.g. `geth` for blockchain process, `ipfs` as storage daemon etc). Those are the same processes that are listed as "Available Services" in the dashboard.
+There are several processes and services that Embark spins up to do its work (e.g. `geth` for blockchain process, `ipfs` as storage daemon, etc). Those are the same processes that are listed as "Available Services" in the dashboard.
+
+These processes can be enabled and disabled using the `service` command.
+
+Simply specify the process and turn it `on` or `off`:
+
+```
+Embark (development) > service ipfs off
+```
+
+The "Available Services" in the dashboard as well as Cockpit's dashboard will reflect the status of the processes as they are enabled and disabled.
+
+NOTE: There are two processes that cannot be started and stopped via console commands:
+1. **Embark** - The Embark process cannot stop and start itself.
+2. **Whisper** - Whisper cannot be started and stopped via a command because the blockchain process CLI parameters need to be modified and the blockchain process itself would need to be restarted. To disable Whisper, set `enabled: false` in the communications config, then restart Embark. To enable Whisper, set `enabled: true` in the communications config, then restart Embark.
+
+
+## Enabling and disabling process logs
 
 By default, Embark will log output from all processes into the console. Since this can get quite verbose sometimes, we can disable logging for certain processes using the `log` command.
 
