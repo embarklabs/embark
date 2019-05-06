@@ -101,6 +101,7 @@
     "embark-core": "^4.1.0-beta.0",
     "embark-deployment": "^4.1.0-beta.0",
     "embark-ens": "^4.1.0-beta.0",
+    "embark-i18n": "^4.1.0-beta.0",
     "embark-library-manager": "^4.1.0-beta.0",
     "embark-logger": "^4.1.0-beta.0",
     "embark-plugin-cmd": "^4.1.0-beta.0",
