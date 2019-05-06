@@ -103,7 +103,7 @@ class Engine {
   }
 
   embarkListenerService(_options){
-    this.registerModule('embark_listener');
+    this.registerModulePackage('embark-listener');
   }
 
   blockchainListenerService(_options){
