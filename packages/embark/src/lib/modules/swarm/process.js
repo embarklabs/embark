@@ -1,5 +1,5 @@
+import { ProcessWrapper } from 'embark-core';
 const child_process = require('child_process');
-const ProcessWrapper = require('../../core/processes/processWrapper');
 const constants = require('embark-core/constants');
 const fs = require('../../core/fs');
 

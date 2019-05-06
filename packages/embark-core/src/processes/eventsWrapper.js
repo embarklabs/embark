@@ -1,7 +1,7 @@
 const uuid = require('uuid/v1');
-const constants = require('embark-core/constants');
+const constants = require('../../constants');
 
-class Events {
+export class Events {
 
   /**
    * Constructs an event wrapper for processes.
@@ -51,5 +51,3 @@ class Events {
     this.sendEvent(constants.process.events.request, ...arguments);
   }
 }
-
-module.exports = Events;

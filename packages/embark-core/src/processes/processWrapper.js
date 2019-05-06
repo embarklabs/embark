@@ -1,11 +1,12 @@
+import { Events } from './eventsWrapper';
+const constants = require('../../constants');
+
 process.on('uncaughtException', function(e) {
   process.send({error: e.stack});
 });
 
-const constants = require('embark-core/constants');
-const Events = require('./eventsWrapper');
 
-class ProcessWrapper {
+export class ProcessWrapper {
 
   /**
    * Class from which process extend. Should not be instantiated alone.
@@ -86,5 +87,3 @@ class ProcessWrapper {
 process.on('exit', () => {
   process.exit(0);
 });
-
-module.exports = ProcessWrapper;

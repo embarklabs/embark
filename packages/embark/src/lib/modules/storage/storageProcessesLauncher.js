@@ -1,6 +1,6 @@
 const shellJs = require('shelljs');
 import {joinPath, canonicalHost, buildUrlFromConfig} from 'embark-utils';
-const ProcessLauncher = require('../../core/processes/processLauncher');
+import { ProcessLauncher } from 'embark-core';
 const constants = require('embark-core/constants');
 const cloneDeep = require('lodash.clonedeep');
 

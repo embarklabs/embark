@@ -1,6 +1,6 @@
+import { ProcessWrapper } from 'embark-core';
 const constants = require('embark-core/constants');
 const fs = require('../../core/fs');
-const ProcessWrapper = require('../../core/processes/processWrapper');
 const webpack = require('webpack');
 const writeFile = require('util').promisify(require('fs').writeFile);
 const {errorMessage} = require('../../utils/utils');

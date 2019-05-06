@@ -2,7 +2,7 @@ const path = require('path');
 const async = require('async');
 const utils = require('../../utils/utils.js');
 import {joinPath, LongRunningProcessTimer} from 'embark-utils';
-const ProcessLauncher = require('../../core/processes/processLauncher');
+import { ProcessLauncher } from 'embark-core';
 const constants = require('embark-core/constants');
 const WebpackConfigReader = require('../pipeline/webpackConfigReader');
 

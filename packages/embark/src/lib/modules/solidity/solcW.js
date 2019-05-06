@@ -1,6 +1,6 @@
+import { ProcessLauncher } from 'embark-core';
 import {joinPath} from 'embark-utils';
 let currentSolcVersion = require('../../../../package.json').dependencies.solc;
-const ProcessLauncher = require('../../core/processes/processLauncher.js');
 const uuid = require('uuid/v1');
 
 class SolcW {
