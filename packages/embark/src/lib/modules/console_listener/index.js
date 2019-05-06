@@ -1,6 +1,5 @@
 const async = require('async');
-const utils = require('../../utils/utils.js');
-import { getAddressToContract, getTransactionParams } from 'embark-utils';
+import { getAddressToContract, getTransactionParams, hexToNumber } from 'embark-utils';
 
 class ConsoleListener {
   constructor(embark, options) {
@@ -108,8 +107,8 @@ class ConsoleListener {
     }
 
     let {transactionHash, blockNumber, gasUsed, status} = request;
-    gasUsed = utils.hexToNumber(gasUsed);
-    blockNumber = utils.hexToNumber(blockNumber);
+    gasUsed = hexToNumber(gasUsed);
+    blockNumber = hexToNumber(blockNumber);
     const log = Object.assign({}, request, {name, functionName, paramString, gasUsed, blockNumber});
 
     this.events.emit('contracts:log', log);

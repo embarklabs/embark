@@ -261,11 +261,6 @@ function getExternalContractUrl(file,providerUrl) {
   };
 }
 
-function hexToNumber(hex) {
-  const Web3 = require('web3');
-  return Web3.utils.hexToNumber(hex);
-}
-
 function isValidDomain(v) {
   // from: https://github.com/miguelmota/is-valid-domain
   if (typeof v !== 'string') return false;
@@ -431,7 +426,6 @@ module.exports = {
   httpGetJson,
   httpsGetJson,
   getJson,
-  hexToNumber,
   isValidDomain,
   pingEndpoint,
   cd,
