@@ -55,3 +55,7 @@ export function soliditySha3(arg: any) {
 export function toChecksumAddress(address: any) {
   return web3.utils.toChecksumAddress(address);
 }
+
+export function hexToNumber(hex: string) {
+  return web3.utils.hexToNumber(hex);
+}

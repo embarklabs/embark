@@ -12,6 +12,7 @@ import * as AddressUtils from './addressUtils';
 import {
   getWeiBalanceFromString,
   getHexBalanceFromString,
+  hexToNumber,
   decodeParams,
   sha3,
   isHex,
@@ -200,6 +201,7 @@ const Utils = {
   checkIsAvailable,
   findNextPort,
   hashTo32ByteHexString,
+  hexToNumber,
   isHex,
   last,
   soliditySha3,
