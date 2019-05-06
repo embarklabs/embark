@@ -180,7 +180,48 @@ function fuzzySearch(text, list, filter) {
   return fuzzy.filter(text, list, {extract: (filter || function () {})});
 }
 
+/**
+ * Builds a URL
+ *
+ * @param {string} protocol
+ *  The URL protocol, defaults to http.
+ * @param {string} host
+ *  The URL host, required.
+ * @param {string} port
+ *  The URL port, default to empty string.
+ * @param {string} [type]
+ *  Type of connection
+ * @returns {string} the constructued URL, with defaults
+ */
+function buildUrl(protocol, host, port, type) {
+  if (!host) throw new Error('utils.buildUrl: parameter \'host\' is required');
+  if (port) port = ':' + port;
+  else port = '';
+  if (!protocol) {
+    protocol = type === 'ws' ? 'ws' : 'http';
+  }
+  return `${protocol}://${host}${port}`;
+}
+
+/**
+ * Builds a URL
+ *
+ * @param {object} configObj Object containing protocol, host, and port to be used to construct the url.
+ *      * protocol      {String}    (optional) The URL protocol, defaults to http.
+ *      * host          {String}    (required) The URL host.
+ *      * port          {String}    (optional) The URL port, default to empty string.
+ * @returns {string} the constructued URL, with defaults
+ */
+function buildUrlFromConfig(configObj) {
+  if (!configObj) throw new Error('[utils.buildUrlFromConfig]: config object must cannot be null');
+  if (!configObj.host) throw new Error('[utils.buildUrlFromConfig]: object must contain a \'host\' property');
+  return buildUrl(configObj.protocol, canonicalHost(configObj.host), configObj.port, configObj.type);
+}
+
+
 const Utils = {
+  buildUrl,
+  buildUrlFromConfig,
   joinPath: function() {
     const path = require('path');
     return path.join.apply(path.join, arguments);

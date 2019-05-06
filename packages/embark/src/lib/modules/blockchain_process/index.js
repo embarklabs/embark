@@ -1,6 +1,6 @@
 const async = require('async');
 const utils = require('../../utils/utils.js');
-const {normalizeInput} = require('embark-utils');
+const {normalizeInput, buildUrlFromConfig} = require('embark-utils');
 const constants = require('embark-core/constants');
 const BlockchainProcessLauncher = require('./blockchainProcessLauncher');
 
@@ -36,7 +36,7 @@ class BlockchainModule {
 
     if (!this.ipc.isServer()) return;
     this.ipc.on('blockchain:node', (_message, cb) => {
-      cb(null, utils.buildUrlFromConfig(this.contractsConfig.deployment));
+      cb(null, buildUrlFromConfig(this.contractsConfig.deployment));
     });
   }
 

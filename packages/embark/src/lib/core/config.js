@@ -6,6 +6,7 @@ const deepEqual = require('deep-equal');
 const web3 = require('web3');
 const constants = require('embark-core/constants');
 import {
+  buildUrlFromConfig,
   canonicalHost,
   defaultHost,
   recursiveMerge,
@@ -170,7 +171,7 @@ Config.prototype._updateBlockchainCors = function(){
   }
 
   if(webServerConfig && webServerConfig.host) {
-    corsParts.push(utils.buildUrlFromConfig(webServerConfig));
+    corsParts.push(buildUrlFromConfig(webServerConfig));
   }
   if(storageConfig && storageConfig.enabled) {
     // if getUrl is specified in the config, that needs to be included in cors
@@ -186,7 +187,7 @@ Config.prototype._updateBlockchainCors = function(){
     }
     // use our modified getUrl or in case it wasn't specified, use a built url
     else{
-      corsParts.push(utils.buildUrlFromConfig(storageConfig.upload));
+      corsParts.push(buildUrlFromConfig(storageConfig.upload));
     }
   }
   // Add cors for the proxy and whisper

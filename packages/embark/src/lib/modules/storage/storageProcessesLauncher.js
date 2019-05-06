@@ -1,6 +1,5 @@
 const shellJs = require('shelljs');
-const utils = require('../../utils/utils');
-import {joinPath, canonicalHost} from 'embark-utils';
+import {joinPath, canonicalHost, buildUrlFromConfig} from 'embark-utils';
 const ProcessLauncher = require('../../core/processes/processLauncher');
 const constants = require('embark-core/constants');
 const cloneDeep = require('lodash.clonedeep');
@@ -38,7 +37,7 @@ class StorageProcessesLauncher {
     // add our webserver CORS
     if(this.webServerConfig.enabled){
       if (this.webServerConfig && this.webServerConfig.host) {
-        corsParts.push(utils.buildUrlFromConfig(this.webServerConfig));
+        corsParts.push(buildUrlFromConfig(this.webServerConfig));
       }
       else corsParts.push('http://localhost:8000');
     }
@@ -61,7 +60,7 @@ class StorageProcessesLauncher {
           }
           // in case getUrl wasn't specified, use a built url
           else{
-            corsParts.push(utils.buildUrlFromConfig(dappConn));
+            corsParts.push(buildUrlFromConfig(dappConn));
           }
         }
       });

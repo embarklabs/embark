@@ -1,6 +1,6 @@
 let http = require('follow-redirects').http;
 let https = require('follow-redirects').https;
-import {canonicalHost, normalizeInput} from 'embark-utils';
+import {normalizeInput} from 'embark-utils';
 
 function dirname() {
   const path = require('path');
@@ -282,44 +282,6 @@ function isValidDomain(v) {
   return isValid;
 }
 
-/**
- * Builds a URL
- *
- * @param {string} protocol
- *  The URL protocol, defaults to http.
- * @param {string} host
- *  The URL host, required.
- * @param {string} port
- *  The URL port, default to empty string.
- * @param {string} [type]
- *  Type of connection
- * @returns {string} the constructued URL, with defaults
- */
-function buildUrl(protocol, host, port, type) {
-  if (!host) throw new Error('utils.buildUrl: parameter \'host\' is required');
-  if (port) port = ':' + port;
-  else port = '';
-  if (!protocol) {
-    protocol = type === 'ws' ? 'ws' : 'http';
-  }
-  return `${protocol}://${host}${port}`;
-}
-
-/**
- * Builds a URL
- *
- * @param {object} configObj Object containing protocol, host, and port to be used to construct the url.
- *      * protocol      {String}    (optional) The URL protocol, defaults to http.
- *      * host          {String}    (required) The URL host.
- *      * port          {String}    (optional) The URL port, default to empty string.
- * @returns {string} the constructued URL, with defaults
- */
-function buildUrlFromConfig(configObj) {
-  if (!configObj) throw new Error('[utils.buildUrlFromConfig]: config object must cannot be null');
-  if (!configObj.host) throw new Error('[utils.buildUrlFromConfig]: object must contain a \'host\' property');
-  return this.buildUrl(configObj.protocol, canonicalHost(configObj.host), configObj.port, configObj.type);
-}
-
 function compact(array) {
   return array.filter(n => n);
 }
@@ -435,8 +397,6 @@ module.exports = {
   extractZip,
   getExternalContractUrl,
   normalizeInput,
-  buildUrl,
-  buildUrlFromConfig,
   compact,
   groupBy,
   interceptLogs,
