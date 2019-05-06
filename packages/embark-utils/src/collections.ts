@@ -7,3 +7,7 @@ export function last(array: any) {
 export function recursiveMerge(target: any, source: any) {
   return merge.recursive(target, source);
 }
+
+export function compact(array: any) {
+  return array.filter((n: any) => n);
+}

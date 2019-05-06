@@ -3,13 +3,12 @@ const {spawn, exec} = require('child_process');
 const path = require('path');
 const fs = require('../../core/fs.js');
 const constants = require('embark-core/constants');
-const utils = require('../../utils/utils.js');
 const GethClient = require('./gethClient.js');
 const ParityClient = require('./parityClient.js');
 const Proxy = require('./proxy');
 import { IPC } from 'embark-core';
 
-import {defaultHost, dockerHostSwap, AccountParser} from 'embark-utils';
+import { compact, defaultHost, dockerHostSwap, AccountParser} from 'embark-utils';
 const Logger = require('embark-logger');
 
 // time between IPC connection attempts (in ms)
@@ -231,7 +230,7 @@ Blockchain.prototype.run = function () {
       self.logger.error(err.message);
       return;
     }
-    args = utils.compact(args);
+    args = compact(args);
 
     let full_cmd = cmd + " " + args.join(' ');
     self.logger.info(__("running: %s", full_cmd.underline).green);
