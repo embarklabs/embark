@@ -24,7 +24,7 @@ import AccountParser from './accountParser';
 
 const { extendZeroAddressShorthand, replaceZeroAddressShorthand } = AddressUtils;
 
-import { last, recursiveMerge } from './collections';
+import { compact, last, recursiveMerge } from './collections';
 
 function timer(ms) {
   const then = Date.now();
@@ -228,6 +228,7 @@ const Utils = {
   jsonFunctionReplacer,
   fuzzySearch,
   canonicalHost,
+  compact,
   copyToClipboard,
   deconstructUrl,
   defaultCorsHost,
