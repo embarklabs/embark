@@ -1,3 +1,4 @@
+import { ProcessManager } from 'embark-core';
 const async = require('async');
 
 const utils = require('../utils/utils');
@@ -124,7 +125,6 @@ class Engine {
   }
 
   processManagerService(_options) {
-    const ProcessManager = require('./processes/processManager.js');
     this.processManager = new ProcessManager({
       events: this.events,
       logger: this.logger,

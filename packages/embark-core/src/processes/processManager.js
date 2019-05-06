@@ -6,7 +6,7 @@ const ProcessState = {
   Errored: 'errored'
 };
 
-class ProcessManager {
+export class ProcessManager {
   constructor(options) {
     this.logger = options.logger;
     this.events = options.events;
@@ -147,5 +147,3 @@ class ProcessManager {
     });
   }
 }
-
-module.exports = ProcessManager;

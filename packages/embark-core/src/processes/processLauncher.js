@@ -1,10 +1,10 @@
 const child_process = require('child_process');
-const constants = require('embark-core/constants');
+const constants = require('../../constants');
 const path = require('path');
 const ProcessLogsApi = require('embark-process-logs-api');
 
 let processCount = 1;
-class ProcessLauncher {
+export class ProcessLauncher {
 
   /**
    * Constructor of ProcessLauncher. Forks the module and sets up the message handling
@@ -222,5 +222,3 @@ class ProcessLauncher {
     this.process.kill(...arguments);
   }
 }
-
-module.exports = ProcessLauncher;

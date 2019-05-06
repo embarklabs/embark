@@ -1,4 +1,4 @@
-const ProcessLauncher = require('../../core/processes/processLauncher');
+import { ProcessLauncher } from 'embark-core';
 import {joinPath} from 'embark-utils';
 const constants = require('embark-core/constants');
 
