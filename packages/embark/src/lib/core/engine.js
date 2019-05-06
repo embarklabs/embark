@@ -226,7 +226,7 @@ class Engine {
     this.registerModulePackage('embark-solidity', {ipc: self.ipc, useDashboard: this.useDashboard});
     this.registerModulePackage('embark-vyper');
     this.registerModulePackage('embark-profiler');
-    this.registerModule('deploytracker', {trackContracts: options.trackContracts});
+    this.registerModulePackage('embark-deploy-tracker', {trackContracts: options.trackContracts});
     this.registerModulePackage('embark-specialconfigs');
     this.registerModulePackage('embark-ens');
     this.registerModulePackage('embark-console-listener', {ipc: self.ipc});

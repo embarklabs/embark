@@ -1,0 +1,71 @@
+{
+  "name": "embark-deploy-tracker",
+  "version": "4.1.0-beta.0",
+  "author": "Iuri Matias <iuri.matias@gmail.com>",
+  "contributors": [],
+  "description": "Console component for Embark",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-console#readme",
+  "bugs": "https://github.com/embark-framework/embark/issues",
+  "keywords": [
+    "blockchain",
+    "dapps",
+    "ethereum",
+    "ipfs",
+    "serverless",
+    "solc",
+    "solidity"
+  ],
+  "files": [
+    "dist/"
+  ],
+  "license": "MIT",
+  "repository": {
+    "directory": "packages/embark-console",
+    "type": "git",
+    "url": "https://github.com/embark-framework/embark.git"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "cross-env BABEL_ENV=node babel src --extensions \".js\" --out-dir dist --root-mode upward --source-maps",
+    "ci": "npm run qa",
+    "clean": "npm run reset",
+    "lint": "npm-run-all lint:*",
+    "lint:js": "eslint src/",
+    "// lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
+    "package": "npm pack",
+    "// qa": "npm-run-all lint typecheck build package",
+    "qa": "npm-run-all lint build package",
+    "reset": "npx rimraf dist embark-*.tgz package",
+    "start": "npm run watch",
+    "// test": "nyc --reporter=html --reporter=json mocha \"dist/test/**/*.js\" --exit --no-timeouts --require source-map-support/register",
+    "// typecheck": "tsc",
+    "watch": "run-p watch:*",
+    "watch:build": "npm run build -- --verbose --watch",
+    "watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
+  },
+  "eslintConfig": {
+    "extends": "../../.eslintrc.json"
+  },
+  "dependencies": {
+    "embark-utils": "^4.1.0-beta.0"
+  },
+  "devDependencies": {
+    "eslint": "5.7.0",
+    "mocha": "5.2.0",
+    "npm-run-all": "4.1.5",
+    "nyc": "13.1.0",
+    "rimraf": "2.6.3"
+  },
+  "engines": {
+    "node": ">=8.12.0",
+    "npm": ">=6.4.1",
+    "yarn": ">=1.12.3"
+  },
+  "nyc": {
+    "exclude": [
+      "**/node_modules/**",
+      "coverage/**",
+      "dist/test/**"
+    ]
+  }
+}
