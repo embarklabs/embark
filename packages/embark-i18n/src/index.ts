@@ -20,7 +20,7 @@ enum SupportedLanguage {
 const DEFAULT_LANGUAGE = SupportedLanguage.En;
 
 i18n.configure({
-  directory: path.join(__dirname, "../../../../", "locales"),
+  directory: path.join(__dirname, "../", "locales"),
   locales: Object.values(SupportedLanguage),
   register: global,
   syncFiles: false,
