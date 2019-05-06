@@ -4,7 +4,7 @@ const sinon = require('sinon');
 const Events = require('../../lib/core/events');
 const Logger = require('embark-logger');
 import { getAddressToContract } from 'embark-utils';
-const ConsoleListener = require('../../lib/modules/console_listener');
+const ConsoleListener = require('embark-console-listener');
 const IPC = require('../../lib/core/ipc.js');
 require('colors');
 
