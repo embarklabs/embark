@@ -1,19 +1,19 @@
 /* global module process require */
 
-const fs = require('./fs');
 const ipc = require('node-ipc');
 const {parse, stringify} = require('flatted/cjs');
-const utils = require('../utils/utils');
+const path = require('path');
 
 const EMBARK = 'embark';
 
-class IPC {
+export class IPC {
   constructor(options) {
     this.logger = options.logger;
-    this.socketPath = options.socketPath || fs.ipcPath('embark.ipc');
+    this.socketPath = options.socketPath || options.fs.ipcPath('embark.ipc');
     this.ipcRole = options.ipcRole;
     ipc.config.silent = true;
     this.connected = false;
+    this.fs = options.fs;
   }
 
   get client() {
@@ -55,7 +55,7 @@ class IPC {
   }
 
   serve() {
-    fs.mkdirpSync(utils.dirname(this.socketPath));
+    this.fs.mkdirpSync(path.dirname(this.socketPath));
     ipc.serve(this.socketPath, () => {});
     this.server.start();
 
@@ -134,5 +134,3 @@ class IPC {
   }
 
 }
-
-module.exports = IPC;
