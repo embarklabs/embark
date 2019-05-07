@@ -7,6 +7,7 @@ NOTES
 TODO
 coverage
 dist
+!site/themes/embark/source/js/linkjuice/dist
 embark*.tgz
 lerna-debug.log
 node_modules
