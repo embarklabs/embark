@@ -256,6 +256,9 @@ class TransactionDebugger {
           });
           return;
         }
+        if (this.lastTx === "") {
+          return callback(undefined, __("No transaction to debug"));
+        }
         this.currentCmdTxHash = this.lastTx;
         const filename: string = this.txTracker[this.lastTx].contract.filename;
         startDebug(this.lastTx, filename, callback);

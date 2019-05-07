@@ -232,7 +232,7 @@ class Engine {
     this.registerModulePackage('embark-console-listener', {ipc: self.ipc});
     this.registerModulePackage('embark-deployment', {plugins: this.plugins, onlyCompile: options.onlyCompile});
     this.registerModulePackage('embark-transaction-tracker');
-    this.registerModule('debugger');
+    this.registerModulePackage('embark-debugger');
 
     this.events.on('file-event', function ({fileType, path}) {
       clearTimeout(self.fileTimeout);
