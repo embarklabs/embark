@@ -69,7 +69,7 @@ This applies to synchronous as well as asynchronous APIs, which is very common w
 In both the dashboard's console and the standalone console, you can use `await` for `Promise`-based calls:
 
 ```
-Embark (development) > await SimpleStorage.method.get().call()<ENTER>
+Embark (development) > await SimpleStorage.methods.get().call()<ENTER>
 ```
 
 This works with other objects as well. The following example outputs available accounts emitted by the `web3` object:
