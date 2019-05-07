@@ -1,5 +1,5 @@
 import * as i18n from 'embark-i18n';
-const ProcessWrapper = require('../../core/processes/processWrapper');
+import { ProcessWrapper } from 'embark-core';
 const BlockchainClient = require('./blockchain');
 const constants = require('embark-core/constants');
 
