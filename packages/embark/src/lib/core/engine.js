@@ -1,8 +1,8 @@
-import { ProcessManager } from 'embark-core';
+import { ProcessManager, IPC } from 'embark-core';
+const fs = require('./fs');
 const async = require('async');
 
 const utils = require('../utils/utils');
-const IPC = require('./ipc');
 const Logger = require('embark-logger');
 
 class Engine {
@@ -41,7 +41,7 @@ class Engine {
       utils.interceptLogs(console, this.logger);
     }
 
-    this.ipc = new IPC({logger: this.logger, ipcRole: this.ipcRole});
+    this.ipc = new IPC({logger: this.logger, ipcRole: this.ipcRole, fs});
     if (this.ipc.isClient()) {
       return this.ipc.connect((_err) => {
         callback();

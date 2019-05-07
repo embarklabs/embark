@@ -2,7 +2,7 @@ const path = require('path');
 const pkgUp = require('pkg-up');
 let shelljs = require('shelljs');
 let Proxy = require('./proxy');
-const Ipc = require('../../core/ipc');
+import { IPC } from 'embark-core';
 const constants = require('embark-core/constants');
 import {defaultHost, dockerHostSwap} from 'embark-utils';
 const fs = require('../../core/fs.js');
@@ -86,7 +86,7 @@ class Simulator {
     shelljs.exec(`node ${program} ${cmds.join(' ')}`, {async : true});
 
     if(useProxy){
-      let ipcObject = new Ipc({ipcRole: 'client'});
+      let ipcObject = new IPC({ipcRole: 'client', fs});
       if (this.blockchainConfig.wsRPC) {
         return new Proxy(ipcObject).serve(host, port, true, this.blockchainConfig.wsOrigins, []);
       }

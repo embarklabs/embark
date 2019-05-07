@@ -1,16 +1,17 @@
 /*global describe, it, require*/
 import { File, Types } from "../../../lib/core/file.js";
-
+const fs = require('../../../lib/core/fs');
+import { IPC } from 'embark-core';
 let SolidityCompiler = require('../../../lib/modules/solidity');
 let TestLogger = require('../../../lib/utils/test_logger');
-let Ipc = require('../../../lib/core/ipc.js');
 
 let readFile = function(file) {
   return new File({filename: file, type: Types.dappFile, path: file});
 };
 
-let ipcObject = new Ipc({
-  ipcRole: 'none'
+let ipcObject = new IPC({
+  ipcRole: 'none',
+  fs
 });
 
 let generateApiObject = function() {

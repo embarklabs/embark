@@ -3,7 +3,8 @@ const {
   expect
 } = require('chai');
 const sinon = require('sinon');
-let IPC = require('../lib/core/ipc.js');
+import { IPC } from 'embark-core';
+let fs = require('../lib/core/fs');
 let Proxy = require('../lib/modules/blockchain_process/proxy');
 const constants = require('embark-core/constants');
 
@@ -11,7 +12,8 @@ describe('embark.Proxy', function () {
   let ipc, proxy, ipcRequests;
   before(function () {
     ipc = new IPC({
-      ipcRole: 'none'
+      ipcRole: 'none',
+      fs: fs
     });
     ipcRequests = [];
 

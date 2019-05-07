@@ -4,9 +4,10 @@ import { File, Types } from "../lib/core/file";
 let ContractsManager = require('embark-contracts-manager');
 let Compiler = require('embark-compiler');
 let Logger = require('embark-logger');
+import { IPC } from 'embark-core';
 let TestLogger = require('../lib/utils/test_logger');
 let Events = require('../lib/core/events');
-let Ipc = require('../lib/core/ipc.js');
+const fs = require('../lib/core/fs');
 let assert = require('assert');
 
 //let SolidityCompiler = require('../lib/modules/solidity');
@@ -42,8 +43,9 @@ describe('embark.Contracts', function() {
         }
       }
     });
-    let ipcObject = new Ipc({
-      ipcRole: 'none'
+    let ipcObject = new IPC({
+      ipcRole: 'none',
+      fs
     });
     plugins.loadInternalPlugin('solidity', {ipc: ipcObject});
 
@@ -181,8 +183,9 @@ describe('embark.Contracts', function() {
         }
       }
     });
-    let ipcObject = new Ipc({
-      ipcRole: 'none'
+    let ipcObject = new IPC({
+      ipcRole: 'none',
+      fs
     });
     plugins.loadInternalPlugin('solidity', {ipc: ipcObject});
 
