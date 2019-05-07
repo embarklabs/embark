@@ -7,7 +7,7 @@ const utils = require('../../utils/utils.js');
 const GethClient = require('./gethClient.js');
 const ParityClient = require('./parityClient.js');
 const Proxy = require('./proxy');
-const Ipc = require('../../core/ipc');
+import { IPC } from 'embark-core';
 
 import {defaultHost, dockerHostSwap, AccountParser} from 'embark-utils';
 const Logger = require('embark-logger');
@@ -131,7 +131,7 @@ Blockchain.prototype.initStandaloneProcess = function () {
       }
     });
 
-    this.ipc = new Ipc({ipcRole: 'client'});
+    this.ipc = new IPC({ipcRole: 'client', fs});
 
     // Wait for an IPC server to start (ie `embark run`) by polling `.connect()`.
     // Do not kill this interval as the IPC server may restart (ie restart
@@ -161,7 +161,7 @@ Blockchain.prototype.initProxy = function () {
 };
 
 Blockchain.prototype.setupProxy = async function () {
-  if (!this.proxyIpc) this.proxyIpc = new Ipc({ipcRole: 'client'});
+  if (!this.proxyIpc) this.proxyIpc = new IPC({ipcRole: 'client', fs});
 
   const addresses = AccountParser.parseAccountsConfig(this.userConfig.accounts, false, fs.dappPath(), this.logger);
 

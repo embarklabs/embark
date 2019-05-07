@@ -47,7 +47,9 @@
     "extends": "../../.eslintrc.json"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "7.3.1"
+    "@babel/runtime-corejs2": "7.3.1",
+    "flatted": "0.2.3",
+    "node-ipc": "9.1.1"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",

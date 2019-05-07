@@ -1,11 +1,12 @@
 /*globals describe, it, beforeEach*/
 const {expect} = require('chai');
 const sinon = require('sinon');
+const fs = require('../../lib/core/fs');
 const Events = require('../../lib/core/events');
 const Logger = require('embark-logger');
 import { getAddressToContract } from 'embark-utils';
 const ConsoleListener = require('embark-console-listener');
-const IPC = require('../../lib/core/ipc.js');
+import { IPC } from 'embark-core';
 require('colors');
 
 let events,
@@ -95,7 +96,7 @@ function resetTest() {
 
   events = new Events();
   logger = new Logger(events);
-  ipc = new IPC({ipcRole: 'none'});
+  ipc = new IPC({ipcRole: 'none', fs});
   embark = {
     events,
     logger,
