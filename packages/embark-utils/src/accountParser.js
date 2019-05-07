@@ -67,11 +67,11 @@ class AccountParser {
         return null;
       }
 
-      const key = Buffer.from(accountConfig.privateKey.substr(2), 'hex');
       if (returnAddress) {
+        const key = Buffer.from(accountConfig.privateKey.substr(2), 'hex');
         return ethereumjsWallet.fromPrivateKey(key).getChecksumAddressString();
       }
-      return Object.assign(web3.eth.accounts.privateKeyToAccount(key), {hexBalance});
+      return Object.assign(web3.eth.accounts.privateKeyToAccount(accountConfig.privateKey), {hexBalance});
     } else if (Object.hasOwnProperty('privateKey')) {
       logger.error(__('accounts error: privateKey field is specified but its value is undefined'));
     }
@@ -109,9 +109,8 @@ class AccountParser {
           return null;
         }
 
-        key = Buffer.from(key.substr(2), 'hex');
-
         if (returnAddress) {
+          key = Buffer.from(key.substr(2), 'hex');
           return ethereumjsWallet.fromPrivateKey(key).getChecksumAddressString();
         }
         return Object.assign(web3.eth.accounts.privateKeyToAccount(key), {hexBalance});
