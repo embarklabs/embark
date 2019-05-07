@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 const Web3 = require('web3');
 const async = require('async');
 const Provider = require('./provider.js');

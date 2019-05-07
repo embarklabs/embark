@@ -1,4 +1,5 @@
 const utils = require('../utils/utils.js');
+import { __ } from 'embark-i18n';
 import {joinPath} from 'embark-utils';
 const constants = require('embark-core/constants');
 const fs = require('./fs.js');

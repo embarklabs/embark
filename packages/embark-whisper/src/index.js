@@ -1,5 +1,6 @@
-/* global __ __dirname module require setTimeout */
+/* global __dirname module require setTimeout */
 
+import { __ } from 'embark-i18n';
 import {canonicalHost, defaultHost} from 'embark-utils';
 let Web3 = require('web3');
 const {parallel} = require('async');

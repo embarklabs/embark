@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 const UploadSwarm = require('./upload.js');
 const SwarmAPI = require('swarm-api');
 // TODO: not great, breaks module isolation

@@ -1,6 +1,7 @@
 const path = require('path');
 const async = require('async');
 const utils = require('../../utils/utils.js');
+import { __ } from 'embark-i18n';
 import {joinPath, LongRunningProcessTimer} from 'embark-utils';
 import { ProcessLauncher } from 'embark-core';
 const constants = require('embark-core/constants');

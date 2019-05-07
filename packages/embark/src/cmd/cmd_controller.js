@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 let async = require('async');
 const constants = require('embark-core/constants');
 const Logger = require('embark-logger');

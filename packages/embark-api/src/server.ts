@@ -2,12 +2,12 @@ import bodyParser from "body-parser";
 import "colors";
 import cors from "cors";
 import {Embark, Plugins} /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { __ } from "embark-i18n";
 import express, {NextFunction, Request, Response} from "express";
 import expressWs from "express-ws";
 import findUp from "find-up";
 import helmet from "helmet";
 import * as http from "http";
-import {__} from "i18n";
 import * as path from "path";
 import * as ws from "ws";
 

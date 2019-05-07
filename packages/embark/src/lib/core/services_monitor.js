@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 const async = require('../utils/async_extend.js');
 const deepEqual = require('deep-equal');
 

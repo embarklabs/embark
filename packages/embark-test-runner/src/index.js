@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 const async = require('async');
 const Mocha = require('mocha');
 const path = require('path');

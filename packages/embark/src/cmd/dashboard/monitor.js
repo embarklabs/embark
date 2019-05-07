@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 let blessed = require("neo-blessed");
 const REPL = require('./repl.js');
 const stream = require('stream');

@@ -1,4 +1,4 @@
-import { __ } from 'i18n';
+import { __ } from 'embark-i18n';
 const bip39 = require("bip39");
 const hdkey = require('ethereumjs-wallet/hdkey');
 const ethereumjsWallet = require('ethereumjs-wallet');

@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 const async = require('async');
 const {exec, spawn} = require('child_process');
 const fs = require('../../core/fs');

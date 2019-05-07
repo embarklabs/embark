@@ -5,6 +5,7 @@ const path = require('path');
 const deepEqual = require('deep-equal');
 const web3 = require('web3');
 const constants = require('embark-core/constants');
+import { __ } from 'embark-i18n';
 import {
   buildUrlFromConfig,
   canonicalHost,

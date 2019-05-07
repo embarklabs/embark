@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 import { ProcessManager, IPC } from 'embark-core';
 const fs = require('./fs');
 const async = require('async');

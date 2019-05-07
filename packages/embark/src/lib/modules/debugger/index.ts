@@ -1,5 +1,5 @@
 import "colors";
-import {__} from "i18n";
+import { __ } from "embark-i18n";
 import DebuggerManager from "./debugger_manager";
 
 const NO_DEBUG_SESSION = __("No debug session active. Activate one with `debug`");

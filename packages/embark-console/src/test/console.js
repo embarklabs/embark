@@ -3,12 +3,6 @@ import Console from '../lib';
 import Logger from 'embark-logger';
 import assert from 'assert';
 import { version }  from '../../package.json';
-import * as i18n from "i18n";
-
-i18n.configure({
-  directory: undefined,
-  locales: []
-});
 
 describe('embark.Console', function() {
   let logger = new Logger({logLevel: 'error'});

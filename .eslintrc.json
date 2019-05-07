@@ -7,9 +7,6 @@
   "extends": [
     "eslint:recommended"
   ],
-  "globals": {
-    "__": true
-  },
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true

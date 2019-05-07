@@ -1,4 +1,4 @@
-import * as i18n from 'embark-i18n';
+import { __, setOrDetectLocale } from 'embark-i18n';
 const program = require('commander');
 const EmbarkController = require('./cmd_controller.js');
 const fs = require('../lib/core/fs.js');
@@ -54,7 +54,7 @@ class Cmd {
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('--template <name/url>', __('download a template using a known name or a git host URL'))
       .action(function(name, options) {
-        i18n.setOrDetectLocale(options.locale);
+        setOrDetectLocale(options.locale);
 
         const contractsOnly = options.simple || options.contractsOnly;
 
@@ -94,7 +94,7 @@ class Cmd {
       .option('--template <name/url>', __('download a demo template using a known name or a git host URL'))
       .description(__('create a working dapp with a SimpleStorage contract'))
       .action(function(options) {
-        i18n.setOrDetectLocale(options.locale);
+        setOrDetectLocale(options.locale);
         if(options.template) {
           const hostedGitInfo = require('hosted-git-info');
           const hgi = hostedGitInfo.fromUrl(options.template);
@@ -118,7 +118,7 @@ class Cmd {
       .option('--pipeline [pipeline]', __('webpack config to use (default: production)'))
       .description(__('deploy and build dapp at ') + 'dist/ (default: development)')
       .action(function(env, _options) {
-        i18n.setOrDetectLocale(_options.locale);
+        setOrDetectLocale(_options.locale);
         _options.env = env || 'development';
         _options.logFile = _options.logfile; // fix casing
         _options.logLevel = _options.loglevel; // fix casing
@@ -145,7 +145,7 @@ class Cmd {
       .option('--no-single-use-auth-token', __('disable the single use of token in cockpit'))
       .description(__('run dapp (default: %s)', 'development'))
       .action(function(env, options) {
-        i18n.setOrDetectLocale(options.locale);
+        setOrDetectLocale(options.locale);
         embark.run({
           env: env || 'development',
           serverPort: options.port,
@@ -174,7 +174,7 @@ class Cmd {
       .option('--no-single-use-auth-token', __('disable the single use of token in cockpit'))
       .description(__('Start the Embark console'))
       .action(function(env, options) {
-        i18n.setOrDetectLocale(options.locale);
+        setOrDetectLocale(options.locale);
         embark.console({
           env: env || 'development',
           client: options.client,
@@ -194,7 +194,7 @@ class Cmd {
       .option('--locale [locale]', __('language to use (default: en)'))
       .description(__('run blockchain server (default: %s)', 'development'))
       .action(function(env, options) {
-        i18n.setOrDetectLocale(options.locale);
+        setOrDetectLocale(options.locale);
         embark.initConfig(env || 'development', {
           embarkConfig: 'embark.json',
           interceptLogs: false
@@ -216,7 +216,7 @@ class Cmd {
       .option('--locale [locale]', __('language to use (default: en)'))
 
       .action(function(env, options) {
-        i18n.setOrDetectLocale(options.locale);
+        setOrDetectLocale(options.locale);
         embark.initConfig(env || 'development', {
           embarkConfig: 'embark.json',
           interceptLogs: false
@@ -261,7 +261,7 @@ class Cmd {
           options.outputHelp();
           process.exit(1);
         }
-        i18n.setOrDetectLocale(options.locale);
+        setOrDetectLocale(options.locale);
         embark.runTests({
           file,
           solc: options.solc,
@@ -286,7 +286,7 @@ class Cmd {
       .option('--pipeline [pipeline]', __('webpack config to use (default: production)'))
       .description(__('Upload your dapp to a decentralized storage') + '.')
       .action(function(env, _options) {
-        i18n.setOrDetectLocale(_options.locale);
+        setOrDetectLocale(_options.locale);
         if (env === "ipfs" || env === "swarm") {
           console.warn(("did you mean " + "embark upload".bold + " ?").underline);
           console.warn("In embark 3.1 forwards, the correct command is embark upload <environment> and the provider is configured in config/storage.js");
@@ -310,7 +310,7 @@ class Cmd {
       .option('--output [svgfile]', __('filepath to output SVG graph to (default: %s)', fs.diagramPath()))
       .description(__('generates documentation based on the smart contracts configured'))
       .action(function(env, options) {
-        i18n.setOrDetectLocale(options.locale);
+        setOrDetectLocale(options.locale);
         embark.graph({
           env: env || 'development',
           logFile: options.logfile,
@@ -330,7 +330,7 @@ class Cmd {
       .option('--overwrite', 'Overwrite existing files. (default: false)')
       .description(__('Generates a contract and a function tester for you\nExample: ContractName field1:uint field2:address --contract-language solidity --framework react'))
       .action(function(contractOrFile, fields, options) {
-        i18n.setOrDetectLocale(options.locale);
+        setOrDetectLocale(options.locale);
         options.env = 'development';
         options.logFile = options.logfile; // fix casing
         options.logLevel = options.loglevel; // fix casing
@@ -350,7 +350,7 @@ class Cmd {
       .option('--locale [locale]', __('language to use (default: en)'))
       .description(__('resets embarks state on this dapp including clearing cache'))
       .action(function(options) {
-        i18n.setOrDetectLocale(options.locale);
+        setOrDetectLocale(options.locale);
         embark.initConfig('development', {
           embarkConfig: 'embark.json', interceptLogs: false
         });

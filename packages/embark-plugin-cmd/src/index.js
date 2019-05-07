@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 const { runCmd } = require('embark-utils');
 const async = require('async');
 

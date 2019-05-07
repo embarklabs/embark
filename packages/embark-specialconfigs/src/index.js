@@ -1,5 +1,6 @@
-/* global __ module require */
+/* global module require */
 
+import { __ } from 'embark-i18n';
 const stringReplaceAsync = require('string-replace-async');
 const async = require('async');
 const {callbackify} = require('util');
