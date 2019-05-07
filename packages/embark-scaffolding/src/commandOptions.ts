@@ -1,6 +1,6 @@
 import Ajv from "ajv";
 import { Logger } /* supplied by @types/embark in packages/embark-typings */ from "embark";
-import {__} from "i18n";
+import { __ } from "embark-i18n";
 
 export enum Framework {
   React = "react",

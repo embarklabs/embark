@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 var Npm = require('./npm.js');
 
 class LibraryManager {

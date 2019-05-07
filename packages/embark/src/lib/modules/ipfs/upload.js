@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 require('colors');
 let async = require('async');
 let shelljs = require('shelljs');

@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 import {joinPath} from 'embark-utils';
 import { transform } from "@babel/core";
 const async = require('async');

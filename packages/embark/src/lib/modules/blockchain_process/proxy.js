@@ -1,7 +1,8 @@
-/* global Buffer __ exports require */
+/* global Buffer exports require */
 
 require('./httpProxyOverride');
 const Asm = require('stream-json/Assembler');
+import { __ } from 'embark-i18n';
 import {canonicalHost, timer} from 'embark-utils';
 const constants = require('embark-core/constants');
 const {Duplex} = require('stream');

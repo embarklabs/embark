@@ -6,7 +6,10 @@ export interface Events {
   request: any;
   emit: any;
   once: any;
-  setCommandHandler(name: string, callback: (options: any, cb: () => void) => void): void;
+  setCommandHandler(
+    name: string,
+    callback: (options: any, cb: () => void) => void,
+  ): void;
 }
 
 export interface Config {
@@ -18,7 +21,7 @@ export interface Config {
     };
     versions: {
       solc: string;
-    }
+    };
   };
   plugins: Plugins;
   reloadConfig(): void;
@@ -32,5 +35,8 @@ export interface Embark {
   fs: any;
   config: Config;
   currentContext: string[];
-  registerActionForEvent(name: string, action: (callback: () => void) => void): void;
+  registerActionForEvent(
+    name: string,
+    action: (callback: () => void) => void,
+  ): void;
 }

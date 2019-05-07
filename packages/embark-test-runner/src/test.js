@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 import { deconstructUrl, prepareContractsConfig, AccountParser } from 'embark-utils';
 
 const async = require('async');

@@ -51,6 +51,7 @@
     "async": "2.6.1",
     "ejs": "2.6.1",
     "embark-core": "^4.1.0-beta.0",
+    "embark-i18n": "^4.1.0-beta.0",
     "embark-utils": "^4.1.0-beta.0"
   },
   "devDependencies": {

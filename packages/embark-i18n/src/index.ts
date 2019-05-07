@@ -19,10 +19,12 @@ enum SupportedLanguage {
 
 const DEFAULT_LANGUAGE = SupportedLanguage.En;
 
+const i18nEmbark = { __: null };
+
 i18n.configure({
   directory: path.join(__dirname, "../", "locales"),
   locales: Object.values(SupportedLanguage),
-  register: global,
+  register: i18nEmbark,
   syncFiles: false,
   updateFiles: false,
 });
@@ -46,3 +48,5 @@ export const setOrDetectLocale = (locale: Maybe<string>) => {
 };
 
 i18n.setLocale(DEFAULT_LANGUAGE);
+
+export const __ = i18nEmbark.__;

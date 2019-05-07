@@ -1,6 +1,6 @@
 import {Embark} /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { __ } from "embark-i18n";
 import {checkIsAvailable, dockerHostSwap, findNextPort} from "embark-utils";
-import {__} from "i18n";
 
 import Server from "./server";
 

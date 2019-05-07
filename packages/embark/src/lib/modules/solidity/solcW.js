@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 import { ProcessLauncher } from 'embark-core';
 import {joinPath} from 'embark-utils';
 let currentSolcVersion = require('../../../../package.json').dependencies.solc;

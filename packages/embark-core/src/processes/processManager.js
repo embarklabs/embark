@@ -1,3 +1,5 @@
+import { __ } from 'embark-i18n';
+
 const ProcessState = {
   Stopped: 'stopped',
   Starting: 'starting',

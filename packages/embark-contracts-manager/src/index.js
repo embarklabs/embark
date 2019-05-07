@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 const async = require('async');
 const cloneDeep = require('clone-deep');
 const constants = require('embark-core/constants');

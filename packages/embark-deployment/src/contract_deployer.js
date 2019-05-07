@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 const async = require('async');
 import {AddressUtils, toChecksumAddress} from 'embark-utils';
 const {ZERO_ADDRESS} = AddressUtils;

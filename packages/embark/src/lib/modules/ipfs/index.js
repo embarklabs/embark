@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 const UploadIPFS = require('./upload.js');
 const utils = require('../../utils/utils.js');
 const IpfsApi = require('ipfs-api');

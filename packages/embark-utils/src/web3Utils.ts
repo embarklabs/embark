@@ -1,4 +1,4 @@
-import { __ } from "i18n";
+import { __ } from "embark-i18n";
 import { balanceRegex } from "./constants";
 const Web3EthAbi = require("web3-eth-abi");
 const web3 = require("web3");

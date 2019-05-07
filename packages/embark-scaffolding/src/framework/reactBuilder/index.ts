@@ -1,6 +1,6 @@
 import { Contract, Embark } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { __ } from "embark-i18n";
 import Handlebars from "handlebars";
-import {__} from "i18n";
 import * as path from "path";
 import { ABIDefinition } from "web3/eth/abi";
 import { Builder } from "../../builder";

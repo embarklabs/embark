@@ -1,6 +1,7 @@
 let async = require('../../utils/async_extend.js');
 let SolcW = require('./solcW.js');
 const path = require('path');
+import { __ } from 'embark-i18n';
 
 class Solidity {
 

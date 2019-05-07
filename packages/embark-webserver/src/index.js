@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 import {joinPath, canonicalHost, checkIsAvailable, findNextPort} from 'embark-utils';
 var Server = require('./server.js');
 const opn = require('opn');

@@ -5,6 +5,7 @@
     "bootstrap": "3.4.0",
     "embark": "^4.1.0-beta.0",
     "embark-dapp-test-service": "^4.0.0",
+    "embark-i18n": "^4.1.0-beta.0",
     "embark-reset": "^4.1.0-beta.0",
     "embarkjs-connector-web3": "^4.0.0",
     "fs-extra": "7.0.1",

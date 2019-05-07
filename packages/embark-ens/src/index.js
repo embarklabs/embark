@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 import {joinPath, hashTo32ByteHexString, soliditySha3, recursiveMerge, AddressUtils} from 'embark-utils';
 const namehash = require('eth-ens-namehash');
 const async = require('async');

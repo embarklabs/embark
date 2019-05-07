@@ -1,4 +1,5 @@
 /*global embark, config, it, web3*/
+const {__} = require('embark-i18n');
 const assert = require('assert');
 
 let gasUsedForDeploy = 0;
@@ -64,4 +65,3 @@ describe("Account balance", function () {
     assert.ok(totalBalanceWeiBN.gte(shouldBeWeiBN), "Total balance (account balance + deployment costs) should be greater than or equal to 100K ether");
   });
 });
-

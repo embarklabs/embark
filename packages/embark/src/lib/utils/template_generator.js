@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 const findUp = require('find-up');
 const fs = require('../core/fs.js');
 const hostedGitInfo = require('hosted-git-info');

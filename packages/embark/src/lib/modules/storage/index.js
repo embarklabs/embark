@@ -1,3 +1,5 @@
+import { __ } from 'embark-i18n';
+
 class Storage {
   constructor(embark, options){
     this.embark = embark;

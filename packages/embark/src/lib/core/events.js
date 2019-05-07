@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 var EventEmitter = require('events');
 const cloneDeep = require('lodash.clonedeep');
 

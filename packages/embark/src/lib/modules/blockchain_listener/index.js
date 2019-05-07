@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 const async = require('async');
 const DevTxs = require('./dev_txs');
 const ProcessLogsApi = require('embark-process-logs-api');
