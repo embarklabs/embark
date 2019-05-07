@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 const async = require('async');
 const utils = require('../../utils/utils.js');
 const {normalizeInput, buildUrlFromConfig} = require('embark-utils');

@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 import { sha3 } from 'embark-utils';
 
 class DeployTracker {

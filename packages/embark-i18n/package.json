@@ -16,7 +16,8 @@
     "solidity"
   ],
   "files": [
-    "dist"
+    "dist",
+    "locales"
   ],
   "license": "MIT",
   "repository": {
@@ -26,14 +27,13 @@
   },
   "main": "./dist/index.js",
   "scripts": {
-    "build": "cross-env BABEL_ENV=node babel src --extensions \".js,.ts\" --out-dir dist --root-mode upward --source-maps",
+    "build": "cross-env BABEL_ENV=node babel src --extensions \".ts\" --out-dir dist --root-mode upward --source-maps",
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
     "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
     "package": "npm pack",
-    "// qa": "npm-run-all lint typecheck build package",
-    "qa": "npm-run-all lint build package",
+    "qa": "npm-run-all lint typecheck build package",
     "reset": "npx rimraf dist embark-*.tgz package",
     "start": "npm run watch",
     "typecheck": "tsc",
@@ -50,8 +50,8 @@
   "devDependencies": {
     "@babel/cli": "7.2.3",
     "@babel/core": "7.2.2",
+    "@types/i18n": "0.8.3",
     "cross-env": "5.2.0",
-    "eslint": "5.7.0",
     "npm-run-all": "4.1.5",
     "rimraf": "2.6.3",
     "tslint": "5.16.0",

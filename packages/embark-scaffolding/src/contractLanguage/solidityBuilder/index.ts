@@ -1,6 +1,6 @@
 import { Embark } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { __ } from "embark-i18n";
 import Handlebars from "handlebars";
-import {__} from "i18n";
 import * as path from "path";
 import { Builder } from "../../builder";
 import { CommandOptions } from "../../commandOptions";

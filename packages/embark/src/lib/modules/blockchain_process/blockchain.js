@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 const async = require('async');
 const {spawn, exec} = require('child_process');
 const path = require('path');

@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 const async = require('async');
 const ContractDeployer = require('./contract_deployer.js');
 const cloneDeep = require('clone-deep');

@@ -1,4 +1,5 @@
 const uuid = require('uuid/v4');
+import { __ } from 'embark-i18n';
 const {copyToClipboard} = require("embark-utils");
 const keccak = require('keccakjs');
 

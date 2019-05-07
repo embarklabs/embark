@@ -1,5 +1,6 @@
 const async = require('async');
 let serveStatic = require('serve-static');
+import { __ } from 'embark-i18n';
 import {canonicalHost, defaultHost, dockerHostSwap} from 'embark-utils';
 const expressWebSocket = require('express-ws');
 const express = require('express');

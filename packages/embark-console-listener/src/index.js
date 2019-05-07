@@ -1,4 +1,5 @@
 const async = require('async');
+import { __ } from 'embark-i18n';
 import { getAddressToContract, getTransactionParams, hexToNumber } from 'embark-utils';
 
 class ConsoleListener {

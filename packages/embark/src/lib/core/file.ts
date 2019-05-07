@@ -1,4 +1,4 @@
-import {__} from "i18n";
+import { __ } from "embark-i18n";
 import * as path from "path";
 import { ImportRemapping, prepareForCompilation } from "../utils/solidity/remapImports";
 

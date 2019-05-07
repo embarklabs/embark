@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 import { ProcessLauncher } from 'embark-core';
 import {joinPath} from 'embark-utils';
 const constants = require('embark-core/constants');

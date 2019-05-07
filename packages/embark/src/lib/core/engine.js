@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 import { ProcessManager } from 'embark-core';
 const async = require('async');
 

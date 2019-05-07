@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 const shellJs = require('shelljs');
 import {joinPath, canonicalHost, buildUrlFromConfig} from 'embark-utils';
 import { ProcessLauncher } from 'embark-core';
