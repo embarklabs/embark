@@ -16,3 +16,10 @@ If you still have problems and are on Windows, try the following:
 
 Issues typically occur if NodeJS and/or Embark are installed using `sudo`, avoid using it possible. There are [several options](https://docs.npmjs.com/getting-started/fixing-npm-permissions) to fix this. We recommend installing node using [NVM](https://github.com/creationix/nvm/blob/master/README.md)
 
+## Assuming Contract to be an interface
+
+This warning happens when Embark can't deploy one of your contracts because the compiler did not return a bytecode.
+
+Here are some of the reasons:
+- If it inherits from an interface, it must have all the functions implemented
+- The contract's constructor must be `public`
