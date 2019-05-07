@@ -167,7 +167,8 @@ class BlockchainConnector {
       isDev: this.isDev,
       type: type,
       web3Endpoint: self.web3Endpoint,
-      events: this.events
+      events: this.events,
+      fs: this.fs
     };
     this.provider = new Provider(providerOptions);
 
