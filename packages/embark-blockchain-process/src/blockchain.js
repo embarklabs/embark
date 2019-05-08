@@ -2,11 +2,10 @@ import { __ } from 'embark-i18n';
 const async = require('async');
 const {spawn, exec} = require('child_process');
 const path = require('path');
-const fs = require('../../core/fs.js');
 const constants = require('embark-core/constants');
 const GethClient = require('./gethClient.js');
 const ParityClient = require('./parityClient.js');
-const Proxy = require('./proxy');
+import { Proxy } from './proxy';
 import { IPC } from 'embark-core';
 
 import { compact, defaultHost, dockerHostSwap, AccountParser} from 'embark-utils';
@@ -16,7 +15,7 @@ const Logger = require('embark-logger');
 const IPC_CONNECT_INTERVAL = 2000;
 
 /*eslint complexity: ["error", 50]*/
-var Blockchain = function(userConfig, clientClass) {
+var Blockchain = function(userConfig, clientClass, fs) {
   this.userConfig = userConfig;
   this.env = userConfig.env || 'development';
   this.isDev = userConfig.isDev;
@@ -27,6 +26,7 @@ var Blockchain = function(userConfig, clientClass) {
   this.proxyIpc = null;
   this.isStandalone = userConfig.isStandalone;
   this.certOptions = userConfig.certOptions;
+  this.fs = fs;
 
 
   let defaultWsApi = clientClass.DEFAULTS.WS_API;
@@ -81,9 +81,9 @@ var Blockchain = function(userConfig, clientClass) {
     if (this.env === 'development') {
       this.isDev = true;
     } else {
-      this.config.genesisBlock = fs.embarkPath("templates/boilerplate/config/privatenet/genesis.json");
+      this.config.genesisBlock = this.fs.embarkPath("templates/boilerplate/config/privatenet/genesis.json");
     }
-    this.config.datadir = fs.dappPath(".embark/development/datadir");
+    this.config.datadir = this.fs.dappPath(".embark/development/datadir");
     this.config.wsOrigins = this.config.wsOrigins || "http://localhost:8000";
     this.config.rpcCorsDomain = this.config.rpcCorsDomain || "http://localhost:8000";
     this.config.targetGasLimit = 8000000;
@@ -104,7 +104,7 @@ var Blockchain = function(userConfig, clientClass) {
     process.exit(1);
   }
   this.initProxy();
-  this.client = new clientClass({config: this.config, env: this.env, isDev: this.isDev});
+  this.client = new clientClass({config: this.config, env: this.env, isDev: this.isDev, fs: this.fs});
 
   this.initStandaloneProcess();
 };
@@ -131,7 +131,7 @@ Blockchain.prototype.initStandaloneProcess = function () {
       }
     });
 
-    this.ipc = new IPC({ipcRole: 'client', fs});
+    this.ipc = new IPC({ipcRole: 'client', fs: this.fs});
 
     // Wait for an IPC server to start (ie `embark run`) by polling `.connect()`.
     // Do not kill this interval as the IPC server may restart (ie restart
@@ -161,9 +161,9 @@ Blockchain.prototype.initProxy = function () {
 };
 
 Blockchain.prototype.setupProxy = async function () {
-  if (!this.proxyIpc) this.proxyIpc = new IPC({ipcRole: 'client', fs});
+  if (!this.proxyIpc) this.proxyIpc = new IPC({ipcRole: 'client', fs: this.fs});
 
-  const addresses = AccountParser.parseAccountsConfig(this.userConfig.accounts, false, fs.dappPath(), this.logger);
+  const addresses = AccountParser.parseAccountsConfig(this.userConfig.accounts, false, this.fs.dappPath(), this.logger);
 
   let wsProxy;
   if (this.config.wsRPC) {
@@ -304,7 +304,7 @@ Blockchain.prototype.kill = function () {
 };
 
 Blockchain.prototype.checkPathLength = function () {
-  let dappPath = fs.dappPath('');
+  let dappPath = this.fs.dappPath('');
   if (dappPath.length > 66) {
     // this.logger.error is captured and sent to the console output regardless of silent setting
     this.logger.error("===============================================================================".yellow);
@@ -403,7 +403,7 @@ Blockchain.prototype.initChainAndGetAddress = function (callback) {
 
   async.waterfall([
     function makeDir(next) {
-      fs.mkdirp(self.datadir, (err, _result) => {
+      this.fs.mkdirp(self.datadir, (err, _result) => {
         next(err);
       });
     },
@@ -450,14 +450,14 @@ Blockchain.prototype.initChainAndGetAddress = function (callback) {
   });
 };
 
-var BlockchainClient = function(userConfig, clientName, env, certOptions, onReadyCallback, onExitCallback, logger, _events, isStandalone) {
-  if ((userConfig === {} || JSON.stringify(userConfig) === '{"enabled":true}') && env !== 'development') {
-    logger.info("===> " + __("warning: running default config on a non-development environment"));
+export function BlockchainClient(userConfig, options) {
+  if ((userConfig === {} || JSON.stringify(userConfig) === '{"enabled":true}') && options.env !== 'development') {
+    options.logger.info("===> " + __("warning: running default config on a non-development environment"));
   }
   // if client is not set in preferences, default is geth
   if (!userConfig.ethereumClientName) userConfig.ethereumClientName = constants.blockchain.clients.geth;
   // if clientName is set, it overrides preferences
-  if (clientName) userConfig.ethereumClientName = clientName;
+  if (options.clientName) userConfig.ethereumClientName = options.clientName;
   // Choose correct client instance based on clientName
   let clientClass;
   switch (userConfig.ethereumClientName) {
@@ -473,13 +473,11 @@ var BlockchainClient = function(userConfig, clientName, env, certOptions, onRead
       process.exit(1);
   }
   userConfig.isDev = (userConfig.isDev || userConfig.default);
-  userConfig.env = env;
-  userConfig.onReadyCallback = onReadyCallback;
-  userConfig.onExitCallback = onExitCallback;
-  userConfig.logger = logger;
-  userConfig.certOptions = certOptions;
-  userConfig.isStandalone = isStandalone;
-  return new Blockchain(userConfig, clientClass);
-};
-
-module.exports = BlockchainClient;
+  userConfig.env = options.env;
+  userConfig.onReadyCallback = options.onReadyCallback;
+  userConfig.onExitCallback = options.onExitCallback;
+  userConfig.logger = options.logger;
+  userConfig.certOptions = options.certOptions;
+  userConfig.isStandalone = options.isStandalone;
+  return new Blockchain(userConfig, clientClass, options.fs);
+}

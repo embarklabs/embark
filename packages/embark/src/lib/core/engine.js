@@ -298,7 +298,7 @@ class Engine {
   }
 
   web3Service(options) {
-    this.registerModule('blockchain_process', {
+    this.registerModulePackage('embark-blockchain-process', {
       client: this.client,
       locale: this.locale,
       isDev: this.isDev,

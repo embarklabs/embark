@@ -1,18 +1,18 @@
 const path = require('path');
 const pkgUp = require('pkg-up');
 let shelljs = require('shelljs');
-let Proxy = require('./proxy');
+import { Proxy } from './proxy';
 import { IPC } from 'embark-core';
 const constants = require('embark-core/constants');
-import {defaultHost, dockerHostSwap} from 'embark-utils';
-const fs = require('../../core/fs.js');
+import { defaultHost, dockerHostSwap } from 'embark-utils';
 const { AccountParser } = require('embark-utils');
 
-class Simulator {
+export class Simulator {
   constructor(options) {
     this.blockchainConfig = options.blockchainConfig;
     this.contractsConfig = options.contractsConfig;
     this.logger = options.logger;
+    this.fs = options.fs;
   }
 
   /*eslint complexity: ["error", 25]*/
@@ -44,7 +44,7 @@ class Simulator {
     let simulatorAccounts = this.blockchainConfig.simulatorAccounts || options.simulatorAccounts;
     if (simulatorAccounts && simulatorAccounts.length > 0) {
       let web3 = new (require('web3'))();
-      let parsedAccounts = AccountParser.parseAccountsConfig(simulatorAccounts, web3, fs.dappPath(), this.logger);
+      let parsedAccounts = AccountParser.parseAccountsConfig(simulatorAccounts, web3, this.fs.dappPath(), this.logger);
       parsedAccounts.forEach((account) => {
         let cmd = '--account="' + account.privateKey + ','+account.hexBalance + '"';
         cmds.push(cmd);
@@ -68,7 +68,7 @@ class Simulator {
   }
 
   runCommand(cmds, useProxy, host, port) {
-    const ganache_main = require.resolve('ganache-cli', {paths: [fs.embarkPath('node_modules')]});
+    const ganache_main = require.resolve('ganache-cli', {paths: [this.fs.embarkPath('node_modules')]});
     const ganache_json = pkgUp.sync(path.dirname(ganache_main));
     const ganache_root = path.dirname(ganache_json);
     const ganache_bin = require(ganache_json).bin;
@@ -86,7 +86,7 @@ class Simulator {
     shelljs.exec(`node ${program} ${cmds.join(' ')}`, {async : true});
 
     if(useProxy){
-      let ipcObject = new IPC({ipcRole: 'client', fs});
+      let ipcObject = new IPC({ipcRole: 'client', fs: this.fs});
       if (this.blockchainConfig.wsRPC) {
         return new Proxy(ipcObject).serve(host, port, true, this.blockchainConfig.wsOrigins, []);
       }
@@ -95,5 +95,3 @@ class Simulator {
     }
   }
 }
-
-module.exports = Simulator;

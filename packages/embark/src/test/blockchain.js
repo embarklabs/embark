@@ -1,5 +1,5 @@
 /*globals describe, it*/
-const Blockchain = require('../lib/modules/blockchain_process/blockchain.js');
+import { BlockchainClient } from 'embark-blockchain-process';
 const constants = require('embark-core/constants');
 import {defaultHost} from 'embark-utils';
 const path = require('path');
@@ -13,7 +13,7 @@ describe('embark.Blockchain', function() {
 
     describe('with empty config', function() {
       it('should have a default config', function(done) {
-        const blockchain = new Blockchain({});
+        const blockchain = new BlockchainClient({}, { fs });
         const expectedConfig = {
           networkType: 'custom',
           genesisBlock: false,
@@ -93,7 +93,7 @@ describe('embark.Blockchain', function() {
             }
           ]
         };
-        let blockchain = new Blockchain(config);
+        let blockchain = new BlockchainClient(config, { fs });
 
         let expectedConfig = {
           networkType: 'livenet',

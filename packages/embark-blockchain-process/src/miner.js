@@ -1,5 +1,4 @@
 const async = require('async');
-const fs = require('../../core/fs');
 const NetcatClient = require('netcat/client');
 
 //Constants
@@ -20,6 +19,7 @@ class GethMiner {
     // In the meantime, just set an empty config object
     this.config = {};
     this.datadir = options.datadir;
+    this.fs = options.fs;
     self.interval = null;
     self.callback = null;
     self.started = null;
@@ -44,7 +44,7 @@ class GethMiner {
       }
     }
 
-    const ipcPath = fs.ipcPath('geth.ipc', true);
+    const ipcPath = this.fs.ipcPath('geth.ipc', true);
 
     this.client = new NetcatClient();
     this.client.unixSocket(ipcPath)

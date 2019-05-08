@@ -1,11 +1,15 @@
 import { __ } from 'embark-i18n';
 const async = require('async');
-const utils = require('../../utils/utils.js');
-const {normalizeInput, buildUrlFromConfig} = require('embark-utils');
+const { normalizeInput, buildUrlFromConfig } = require('embark-utils');
 const constants = require('embark-core/constants');
-const BlockchainProcessLauncher = require('./blockchainProcessLauncher');
+import { BlockchainProcessLauncher } from './blockchainProcessLauncher';
+import { pingEndpoint } from './utils';
 
-class BlockchainModule {
+export { BlockchainClient } from './blockchain';
+export { Simulator } from './simulator';
+export { Proxy } from './proxy';
+
+export default class BlockchainModule {
 
   constructor(embark, options) {
     this.logger = embark.logger;
@@ -84,12 +88,12 @@ class BlockchainModule {
           next();
         });
       },
-      function pingEndpoint(next) {
+      function _pingEndpoint(next) {
         if (!self.contractsConfig || !self.contractsConfig.deployment || !self.contractsConfig.deployment.host) {
           return next();
         }
         const {host, port, type, protocol} = self.contractsConfig.deployment;
-        utils.pingEndpoint(host, port, type, protocol, self.blockchainConfig.wsOrigins.split(',')[0], next);
+        pingEndpoint(host, port, type, protocol, self.blockchainConfig.wsOrigins.split(',')[0], next);
       }
     ], function(err) {
       if (err === true || err === undefined) {
@@ -147,7 +151,5 @@ class BlockchainModule {
       cb();
     });
   }
-
 }
 
-module.exports = BlockchainModule;
