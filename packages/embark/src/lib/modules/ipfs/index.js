@@ -3,7 +3,7 @@ const UploadIPFS = require('./upload.js');
 const utils = require('../../utils/utils.js');
 const IpfsApi = require('ipfs-api');
 // TODO: not great, breaks module isolation
-const StorageProcessesLauncher = require('../storage/storageProcessesLauncher');
+const StorageProcessesLauncher = require('./storageProcessesLauncher');
 const constants = require('embark-core/constants');
 import { buildUrlFromConfig, dappPath, embarkPath } from 'embark-utils';
 import * as path from 'path';
@@ -64,6 +64,9 @@ class IPFS {
         this.logger.info(msg);
       }
     });
+
+    this.addSetProviders();
+    this.handleUploadCommand();
   }
 
   downloadIpfsApi(cb) {
@@ -254,6 +257,41 @@ class IPFS {
         )
       );
   }
+
+  addSetProviders(cb) {
+    let code = `\nEmbarkJS.Storage.setProviders(${JSON.stringify(this.storageConfig.dappConnection || [])}, {web3});`;
+
+    let shouldInit = (storageConfig) => {
+      return storageConfig.enabled;
+    };
+
+    this.embark.addProviderInit('storage', code, shouldInit);
+    // this.embark.events.request("runcode:storage:providerRegistered", () => {
+    //   this.embark.addConsoleProviderInit('storage', code, shouldInit);
+    //   this.embark.events.request("runcode:storage:providerSet", () => {
+    //     cb();
+    //   });
+    // });
+  }
+
+  handleUploadCommand() {
+    //if (this.storageConfig.upload.provider !== 'ipfs') {
+    //  return;
+    //}
+    this.embark.events.setCommandHandler('storage:upload', (cb) => {
+      let platform = this.storageConfig.upload.provider;
+
+      let uploadCmds = this.plugins.getPluginsProperty('uploadCmds', 'uploadCmds');
+      for (let uploadCmd of uploadCmds) {
+        if (uploadCmd.cmd === platform) {
+          return uploadCmd.cb.call(uploadCmd.cb, cb);
+        }
+      }
+
+      cb({message: __('platform "{{platform}}" is specified as the upload provider, however no plugins have registered an upload command for "{{platform}}".', {platform: platform})});
+    });
+  }
+
 }
 
 module.exports = IPFS;
