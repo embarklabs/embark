@@ -108,7 +108,7 @@ class Engine {
   }
 
   blockchainListenerService(_options){
-    this.registerModule('blockchain_listener', {
+    this.registerModulePackage('embark-blockchain-listener', {
       ipc: this.ipc
     });
   }

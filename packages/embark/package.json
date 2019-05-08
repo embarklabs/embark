@@ -93,6 +93,7 @@
     "ejs": "2.6.1",
     "embark-authenticator": "^4.1.0-beta.0",
     "embark-api": "^4.1.0-beta.0",
+    "embark-blockchain-listener": "^4.1.0-beta.0",
     "embark-code-generator": "^4.1.0-beta.0",
     "embark-compiler": "^4.0.0",
     "embark-console": "^4.1.0-beta.0",
