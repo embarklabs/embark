@@ -31,7 +31,7 @@ export class ProcessWrapper {
     function error() {
       if (self.retries > 2) {
           self.kill();
-          process.exit();
+          process.exit(1);
       }
       self.retries++;
     }

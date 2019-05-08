@@ -259,7 +259,7 @@ class EmbarkController {
       }
       // TODO: this should be moved out and determined somewhere else
       if (canExit || !engine.config.contractsConfig.afterDeploy || !engine.config.contractsConfig.afterDeploy.length) {
-        process.exit();
+        process.exit(err ? 1 : 0);
       }
       engine.logger.info(__('Waiting for after deploy to finish...'));
       engine.logger.info(__('You can exit with CTRL+C when after deploy completes'));
@@ -406,7 +406,7 @@ class EmbarkController {
           engine.logger.info(__("Done. %s generated", options.output).underline);
         });
       }
-      process.exit();
+      process.exit(err ? 1 : 0);
     });
 
   }
@@ -519,7 +519,7 @@ class EmbarkController {
       }
       engine.logger.info(__("finished generating the UI").underline);
       engine.logger.info(__("To see the result, execute {{cmd}} and go to /{{contract}}.html", {cmd: 'embark run'.underline, contract: options.contract}));
-      process.exit();
+      process.exit(0);
     });
   }
 
@@ -610,7 +610,7 @@ class EmbarkController {
       if (err) {
         if (err.message) {
           engine.logger.error(err.message);
-          return engine.logger.debug(err.stack);
+          engine.logger.debug(err.stack);
         }
         engine.logger.error(err);
       } else {
@@ -618,7 +618,7 @@ class EmbarkController {
       }
 
       // needed due to child processes
-      process.exit();
+      process.exit(err ? 1 : 0);
     });
   }
 

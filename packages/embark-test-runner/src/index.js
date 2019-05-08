@@ -167,7 +167,7 @@ class TestRunner {
         let deprecatedWarning = function () {
           self.logger.error(__('%s are not supported anymore', 'EmbarkSpec & deployAll').red);
           self.logger.error(__('You can learn about the new revamped tests here: %s', 'https://embark.status.im/docs/testing.html'.underline));
-          if(!options.inProcess) process.exit();
+          if(!options.inProcess) process.exit(1);
         };
 
         global.deployAll = deprecatedWarning;
