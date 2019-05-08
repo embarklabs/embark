@@ -13,7 +13,6 @@ describe('embark.AccountParser', function () {
     let web3;
     let testLogger;
     let isHexStrictStub;
-
     before(() => {
       testLogger = new TestLogger({});
       web3 = {
@@ -26,7 +25,6 @@ describe('embark.AccountParser', function () {
         }
       };
       isHexStrictStub = sinon.stub(Web3.utils, 'isHexStrict').returns(true);
-      // Web3.utils.isHexStrict = sinon.stub().returns(true);
     });
 
     after(() => {
@@ -38,18 +36,21 @@ describe('embark.AccountParser', function () {
         privateKey: 'myKey'
       }, web3, fs.dappPath(), testLogger);
 
-      assert.deepEqual(account, {key: Buffer.from('myKey', 'hex'), hexBalance: null});
+      assert.deepEqual(account, {key: '0xmyKey', hexBalance: null});
     });
 
     it('should return two accounts from the keys in the file', function () {
+      const sameFs = require('fs');
+      const readFileSyncStub = sinon.stub(sameFs, 'readFileSync').returns('key1;key2');
       const account = AccountParser.getAccount({
         privateKeyFile: 'keyFiles/twoKeys'
       }, web3, fs.dappPath(), testLogger);
 
       assert.deepEqual(account, [
-        {key: Buffer.from('key1', 'hex'), hexBalance: null},
-        {key: Buffer.from('key2', 'hex'), hexBalance: null}
+        {key:'0xkey1', hexBalance: null},
+        {key: '0xkey2', hexBalance: null}
       ]);
+      readFileSyncStub.restore();
     });
 
     it('should return one account from the mnemonic', function () {
