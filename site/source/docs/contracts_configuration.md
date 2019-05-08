@@ -137,14 +137,9 @@ There are two possible strategy options:
 - **explicit** - Setting this option to `explicit` tells Embark to deploy the Smart Contracts specified in the `contracts` configuration without their dependencies. This can be combined with [disabling deployment](#Disabling-deployment) of individual Smart Contracts for fine control.
 
 ```
+strategy: 'explicit' // 'implicit' is the default
 contracts: {
-  strategy: 'explicit' // 'implicit' is the default
-  SimpleStorage: {
-    deploy: false
-  },
-  AnotherStorage: {
-    ...
-  }
+  ...
 }
 ```
 
