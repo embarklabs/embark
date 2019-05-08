@@ -216,6 +216,7 @@ class Test {
         console.info('Compiling contracts'.cyan);
         self.events.request("contracts:build", false, (err) => {
           self.firstDeployment = false;
+          console.info('Compilation done\n'.cyan);
           next(err);
         });
       },

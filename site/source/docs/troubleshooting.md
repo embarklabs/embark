@@ -18,7 +18,7 @@ Issues typically occur if NodeJS and/or Embark are installed using `sudo`, avoid
 
 ## Assuming Contract to be an interface
 
-This warning happens when Embark can't deploy one of your contracts because the compiler did not return a bytecode.
+This warning happens when Embark can't deploy one of your Smart Contracts because the compiler did not return a bytecode.
 
 Here are some of the reasons:
 - If it inherits from an interface, it must have all the functions implemented

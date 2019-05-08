@@ -14,6 +14,7 @@ class ContractsManager {
     this.events = embark.events;
     this.fs = embark.fs;
     this.plugins = options.plugins;
+    this.currentContext = embark.currentContext || [];
 
     this.contracts = {};
     this.contractDependencies = {};
@@ -376,7 +377,11 @@ class ContractsManager {
       },
       function setDeployIntention(callback) {
         let className, contract;
-        let showInterfaceMessage = false;
+        let showInterfaceMessageTrace = false;
+        let showInterfaceMessageWarn = false;
+        const isTest = self.currentContext.includes(constants.contexts.test);
+        const contractsInConfig = Object.keys(self.contractsConfig.contracts);
+
         for (className in self.contracts) {
           contract = self.contracts[className];
           contract.deploy = (contract.deploy === undefined) || contract.deploy;
@@ -390,17 +395,20 @@ class ContractsManager {
 
           if (contract.code === "") {
             const message = __("assuming %s to be an interface", className);
-            showInterfaceMessage = true;
-            if (contract.silent) {
+            if (contract.silent || (isTest && !contractsInConfig.includes(className))) {
+              showInterfaceMessageTrace = true;
               self.logger.trace(message);
             } else {
-              self.logger.info(message);
+              showInterfaceMessageWarn = true;
+              self.logger.warn(message);
             }
             contract.deploy = false;
           }
         }
-        if (showInterfaceMessage) {
-          self.logger.warn(__('To get more details on interface contracts, go here: %s', 'https://embark.status.im/docs/troubleshooting.html#Assuming-Contract-to-be-an-interface'.underline));
+        if (showInterfaceMessageTrace || showInterfaceMessageWarn) {
+          let logFunction = showInterfaceMessageWarn ? self.logger.warn : self.logger.trace;
+          logFunction.call(self.logger, __('To get more details on interface Smart contracts, go here: %s', 'https://embark.status.im/docs/troubleshooting.html#Assuming-Contract-to-be-an-interface'.underline));
+
         }
         callback();
       },
