@@ -112,7 +112,7 @@ class REPL {
     });
 
     this.replServer.on("exit", () => {
-      process.exit();
+      process.exit(0);
     });
 
     done();
