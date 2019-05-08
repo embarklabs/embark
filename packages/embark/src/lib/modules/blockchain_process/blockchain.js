@@ -470,7 +470,7 @@ var BlockchainClient = function(userConfig, clientName, env, certOptions, onRead
       break;
     default:
       console.error(__('Unknown client "%s". Please use one of the following: %s', userConfig.ethereumClientName, Object.keys(constants.blockchain.clients).join(', ')));
-      process.exit();
+      process.exit(1);
   }
   userConfig.isDev = (userConfig.isDev || userConfig.default);
   userConfig.env = env;

@@ -621,7 +621,6 @@ class ContractsManager {
       this.logger.error(__("there are two or more contracts that depend on each other in a cyclic manner").bold.red);
       this.logger.error(__("Embark couldn't determine which one to deploy first").red);
       throw new Error("CyclicDependencyError");
-      //process.exit(0);
     }
 
     return contractList.sort(function (a, b) {
