@@ -108,6 +108,11 @@ Plugin.prototype.loadPlugin = function() {
 };
 
 Plugin.prototype.loadInternalPlugin = function() {
+  if (utils.isEs6Module(this.pluginModule)) {
+    if (this.pluginModule.default) {
+      this.pluginModule = this.pluginModule.default;
+    }
+  }
   new this.pluginModule(this, this.pluginConfig); /*eslint no-new: "off"*/
 };
 

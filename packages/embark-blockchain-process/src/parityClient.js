@@ -1,6 +1,5 @@
 import { __ } from 'embark-i18n';
 const async = require('async');
-const fs = require('../../core/fs.js');
 const path = require('path');
 const os = require('os');
 const semver = require('semver');
@@ -53,6 +52,7 @@ class ParityClient {
     this.prettyName = "Parity-Ethereum (https://github.com/paritytech/parity-ethereum)";
     this.bin = this.config.ethereumClientBin || DEFAULTS.BIN;
     this.versSupported = DEFAULTS.VERSIONS_SUPPORTED;
+    this.fs = options.fs;
   }
 
   isReady(data) {
@@ -262,7 +262,7 @@ class ParityClient {
     const keysDataDir = datadir + '/keys/DevelopmentChain';
     async.waterfall([
       function makeDir(next) {
-        fs.mkdirp(keysDataDir, (err, _result) => {
+        this.fs.mkdirp(keysDataDir, (err, _result) => {
           next(err);
         });
       },
@@ -270,7 +270,7 @@ class ParityClient {
         self.createDevAccount(keysDataDir, next);
       },
       function mkDevPasswordDir(next) {
-        fs.mkdirp(path.dirname(self.config.account.devPassword), (err, _result) => {
+        this.fs.mkdirp(path.dirname(self.config.account.devPassword), (err, _result) => {
           next(err);
         });
       },
@@ -278,12 +278,12 @@ class ParityClient {
         if (!self.config.account.password) {
           return next(null, os.EOL + 'dev_password');
         }
-        fs.readFile(fs.dappPath(self.config.account.password), {encoding: 'utf8'}, (err, content) => {
+        this.fs.readFile(this.fs.dappPath(self.config.account.password), {encoding: 'utf8'}, (err, content) => {
           next(err, os.EOL + content);
         });
       },
       function updatePasswordFile(passwordList, next) {
-        fs.writeFile(self.config.account.devPassword, passwordList, next);
+        this.fs.writeFile(self.config.account.devPassword, passwordList, next);
       }
     ], (err) => {
       callback(err);
@@ -292,7 +292,7 @@ class ParityClient {
 
   createDevAccount(keysDataDir, cb) {
     const devAccountWallet = keysDataDir + '/dev.wallet';
-    fs.writeFile(devAccountWallet, JSON.stringify(DEFAULTS.DEV_WALLET), function(err) {
+    this.fs.writeFile(devAccountWallet, JSON.stringify(DEFAULTS.DEV_WALLET), function(err) {
       if (err) {
         return cb(err);
       }

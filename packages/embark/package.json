@@ -92,6 +92,7 @@
     "deep-equal": "1.0.1",
     "ejs": "2.6.1",
     "embark-authenticator": "^4.1.0-beta.0",
+    "embark-blockchain-process": "^4.1.0-beta.0",
     "embark-api": "^4.1.0-beta.0",
     "embark-blockchain-listener": "^4.1.0-beta.0",
     "embark-code-generator": "^4.1.0-beta.0",

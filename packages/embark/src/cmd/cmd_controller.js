@@ -1,3 +1,4 @@
+import { BlockchainClient, Simulator } from 'embark-blockchain-process';
 import { __ } from 'embark-i18n';
 let async = require('async');
 const constants = require('embark-core/constants');
@@ -34,17 +35,24 @@ class EmbarkController {
 
   blockchain(env, client) {
     this.context = [constants.contexts.blockchain];
-    return require('../lib/modules/blockchain_process/blockchain.js')(this.config.blockchainConfig, client, env,
-      this.config.webServerConfig.certOptions, null, null, this.logger, this.events, true).run();
+    return BlockchainClient(this.config.blockchainConfig, {
+      clientName: client,
+      env,
+      certOptions: this.config.webServerConfig.certOptions,
+      logger: this.logger,
+      events: this.events,
+      isStandalone: true,
+      fs
+    }).run();
   }
 
   simulator(options) {
     this.context = options.context || [constants.contexts.simulator, constants.contexts.blockchain];
-    let Simulator = require('../lib/modules/blockchain_process/simulator.js');
     let simulator = new Simulator({
       blockchainConfig: this.config.blockchainConfig,
       contractsConfig: this.config.contractsConfig,
-      logger: this.logger
+      logger: this.logger,
+      fs
     });
     simulator.run(options);
   }
