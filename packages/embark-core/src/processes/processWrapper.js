@@ -1,11 +1,6 @@
 import { Events } from './eventsWrapper';
 const constants = require('../../constants');
 
-process.on('uncaughtException', function(e) {
-  process.send({error: e.stack});
-});
-
-
 export class ProcessWrapper {
 
   /**
@@ -16,6 +11,9 @@ export class ProcessWrapper {
    * @param {Options}     options    pingParent: true by default
    */
   constructor(options = {}) {
+    process.on('uncaughtException', function(e) {
+      process.send({error: e.stack});
+    });
     this.options = Object.assign({pingParent: true}, options);
     this.interceptLogs();
     this.events = new Events();
@@ -83,7 +81,3 @@ export class ProcessWrapper {
     console.log('Process killed');
   }
 }
-
-process.on('exit', () => {
-  process.exit(0);
-});
