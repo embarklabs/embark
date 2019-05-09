@@ -3,7 +3,8 @@
   "app": {
     "js/dapp.js": ["app/dapp.js"],
     "index.html": "app/index.html",
-    "images/": ["app/images/**"]
+    "images/": ["app/images/**"],
+    "css/bootstrap.min.css": "node_modules/bootstrap/dist/css/bootstrap.min.css"
   },
   "buildDir": "dist/",
   "config": "config/",
