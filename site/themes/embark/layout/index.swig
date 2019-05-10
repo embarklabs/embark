@@ -15,7 +15,7 @@
     {{
       partial('partial/heading', {
         title: '<span class="u-text-light">More than a </span>framework.',
-        referal: 'Embark is a platform with tools to make developing decentralize applications a breeze.',
+        referal: 'Embark is a platform with tools to make developing decentralise applications a breeze.',
         link: {
           text: 'Join the Community',
           href: '/community'
@@ -53,7 +53,7 @@
           partial('partial/whisperbox', {
             className: 'o-grid__column--1-1 o-grid__column--large-1-3',
             title: 'End to End DApp Development',
-            text: 'Go beyond Smart Contracts if you want to. Embark offers great integrations with decentralized services such as IPFS and Whisper.',
+            text: 'Go beyond Smart Contracts if you want to. Embark offers great integrations with decentralised services such as IPFS and Whisper.',
             icon: 'pie-line-graph',
             link: {
               text: 'Learn more',
@@ -123,7 +123,7 @@
             Mission control with <span class="u-text-ghost">Cockpit.</span>
           </h2>
           <p class="o-heading__subtitle c-subtitle u-text-ghost">
-            A web interface for building, debugging and deploying decentralized applications.
+            A web interface for building, debugging and deploying decentralised applications.
           </p>
           <p class="o-heading__footer">
             <!-- <a href="#" class="c-button c-button--ghost" title="Get Started">Get Started</a>-->
