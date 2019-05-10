@@ -10,7 +10,6 @@ let Events = require('../lib/core/events');
 const fs = require('../lib/core/fs');
 let assert = require('assert');
 
-//let SolidityCompiler = require('../lib/modules/solidity');
 let Plugins = require('../lib/core/plugins.js');
 
 let readFile = function(file) {
@@ -40,6 +39,9 @@ describe('embark.Contracts', function() {
               "optimize-runs": 200
             }
           }
+        },
+        package: {
+          dependencies: { solc: currentSolcVersion }
         }
       }
     });
@@ -47,7 +49,7 @@ describe('embark.Contracts', function() {
       ipcRole: 'none',
       fs
     });
-    plugins.loadInternalPlugin('solidity', {ipc: ipcObject});
+    plugins.loadInternalPlugin('embark-solidity', {ipc: ipcObject}, true);
 
     let events = new Events();
     let embarkObject = {
@@ -180,6 +182,9 @@ describe('embark.Contracts', function() {
               "optimize-runs": 200
             }
           }
+        },
+        package: {
+          dependencies: { solc: currentSolcVersion }
         }
       }
     });
@@ -187,7 +192,7 @@ describe('embark.Contracts', function() {
       ipcRole: 'none',
       fs
     });
-    plugins.loadInternalPlugin('solidity', {ipc: ipcObject});
+    plugins.loadInternalPlugin('embark-solidity', {ipc: ipcObject}, true);
 
     let events = new Events();
     let compiler = new Compiler({events: events, logger: plugins.logger}, {plugins: plugins});

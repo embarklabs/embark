@@ -2,7 +2,7 @@
 import { File, Types } from "../../../lib/core/file.js";
 const fs = require('../../../lib/core/fs');
 import { IPC } from 'embark-core';
-let SolidityCompiler = require('../../../lib/modules/solidity');
+let SolidityCompiler = require('embark-solidity');
 let TestLogger = require('../../../lib/utils/test_logger');
 
 let readFile = function(file) {
@@ -30,6 +30,11 @@ let generateApiObject = function() {
     logger: new TestLogger({}),
     events: TestEvents,
     config: {
+      package: {
+        dependencies: {
+          solc: solcVersion
+        }
+      },
       contractDirectories: ['app/contracts/'],
       embarkConfig: {
         options: {
