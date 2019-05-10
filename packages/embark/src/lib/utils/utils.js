@@ -256,34 +256,6 @@ function interceptLogs(consoleContext, logger) {
   };
 }
 
-function errorMessage(e) {
-  if (typeof e === 'string') {
-    return e;
-  } else if (e && e.message) {
-    return e.message;
-  }
-  return e;
-}
-
-function isFolder(node) {
-  return node.children && node.children.length;
-}
-
-function isNotFolder(node){
-  return !isFolder(node);
-}
-
-function byName(a, b) {
-  return a.name.localeCompare(b.name);
-}
-
-function fileTreeSort(nodes){
-  const folders = nodes.filter(isFolder).sort(byName);
-  const files = nodes.filter(isNotFolder).sort(byName);
-
-  return folders.concat(files);
-}
-
 function getWindowSize() {
   const windowSize = require('window-size');
   if (windowSize) {
@@ -336,8 +308,6 @@ module.exports = {
   normalizeInput,
   groupBy,
   interceptLogs,
-  errorMessage,
-  fileTreeSort,
   getWindowSize,
   isEs6Module,
   urlJoin

@@ -4,7 +4,7 @@ const findUp = require('find-up');
 const fs = require('../core/fs.js');
 const hostedGitInfo = require('hosted-git-info');
 const utils = require('./utils.js');
-import {joinPath, runCmd} from 'embark-utils';
+import { joinPath, runCmd, errorMessage } from 'embark-utils';
 const semver = require('semver');
 const {promisify} = require('util');
 const {execSync} = require('child_process');
@@ -37,7 +37,7 @@ class TemplateGenerator {
     try {
       await promisify(utils.downloadFile)(url, tmpFilePath);
     } catch (e) {
-      console.error(utils.errorMessage(e).red);
+      console.error(errorMessage(e).red);
       throw e;
     }
   }
@@ -55,7 +55,7 @@ class TemplateGenerator {
     try {
       ext = await this.getExternalProject(uri);
     } catch (e) {
-      console.error(utils.errorMessage(e).red);
+      console.error(errorMessage(e).red);
       process.exit(1);
     }
     let {url, filePath, browse} = ext;

@@ -1,8 +1,8 @@
 import { dappPath, ProcessWrapper } from 'embark-core';
+import { errorMessage } from 'embark-utils';
 const constants = require('embark-core/constants');
 const webpack = require('webpack');
 const writeFile = require('util').promisify(require('fs').writeFile);
-const {errorMessage} = require('../../utils/utils');
 const WebpackConfigReader = require('./webpackConfigReader');
 
 let webpackProcess;
