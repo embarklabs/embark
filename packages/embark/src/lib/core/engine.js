@@ -305,7 +305,7 @@ class Engine {
       ipc: this.ipc
     });
 
-    this.registerModule('blockchain_connector', {
+    this.registerModulePackage('embark-blockchain-connector', {
       isDev: this.isDev,
       locale: this.locale,
       plugins: this.plugins,
