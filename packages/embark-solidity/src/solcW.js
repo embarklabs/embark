@@ -1,7 +1,6 @@
 import { __ } from 'embark-i18n';
 import { ProcessLauncher } from 'embark-core';
 import {joinPath} from 'embark-utils';
-let currentSolcVersion = require('../../../../package.json').dependencies.solc;
 const uuid = require('uuid/v1');
 
 class SolcW {
@@ -52,7 +51,7 @@ class SolcW {
 
     this.solcProcess.once("result", "initiated", () => {
       this.events.request("version:get:solc", function(solcVersion) {
-        if (solcVersion === currentSolcVersion) {
+        if (solcVersion === self.embark.config.package.dependencies.solc) {
           return self.solcProcess.send({action: 'loadCompiler', requirePath: 'solc'});
         }
         self.events.request("version:getPackagePath", "solc", solcVersion, function(err, path) {

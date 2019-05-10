@@ -215,7 +215,7 @@ class Engine {
 
   setupCompilerAndContractsManagerService(options) {
     this.registerModulePackage('embark-compiler', {plugins: this.plugins, isCoverage: options.isCoverage});
-    this.registerModule('solidity', {ipc: this.ipc, useDashboard: this.useDashboard});
+    this.registerModulePackage('embark-solidity', {ipc: this.ipc, useDashboard: this.useDashboard});
     this.registerModulePackage('embark-vyper');
     this.registerModulePackage('embark-contracts-manager', {plugins: this.plugins, compileOnceOnly: options.compileOnceOnly});
   }
@@ -224,7 +224,7 @@ class Engine {
     let self = this;
 
     this.setupCompilerAndContractsManagerService(options);
-    this.registerModule('solidity', {ipc: self.ipc, useDashboard: this.useDashboard});
+    this.registerModulePackage('embark-solidity', {ipc: self.ipc, useDashboard: this.useDashboard});
     this.registerModulePackage('embark-vyper');
     this.registerModulePackage('embark-profiler');
     this.registerModule('deploytracker', {trackContracts: options.trackContracts});

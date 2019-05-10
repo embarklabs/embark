@@ -1,4 +1,4 @@
-let async = require('../../utils/async_extend.js');
+let async = require('async');
 let SolcW = require('./solcW.js');
 const path = require('path');
 import { __ } from 'embark-i18n';
