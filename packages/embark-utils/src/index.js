@@ -109,6 +109,25 @@ function copyToClipboard(text) {
   clipboardy.writeSync(text);
 }
 
+function byName(a, b) {
+  return a.name.localeCompare(b.name);
+}
+
+function isFolder(node) {
+  return node.children && node.children.length;
+}
+
+function isNotFolder(node){
+  return !isFolder(node);
+}
+
+function fileTreeSort(nodes){
+  const folders = nodes.filter(isFolder).sort(byName);
+  const files = nodes.filter(isNotFolder).sort(byName);
+
+  return folders.concat(files);
+}
+
 function proposeAlternative(word, _dictionary, _exceptions) {
   const propose = require('propose');
   let exceptions = _exceptions || [];
@@ -226,6 +245,15 @@ function joinPath() {
 
 function tmpDir(...args) { return joinPath(os.tmpdir(), ...args); }
 
+function errorMessage(e) {
+  if (typeof e === 'string') {
+    return e;
+  } else if (e && e.message) {
+    return e.message;
+  }
+  return e;
+}
+
 const Utils = {
   buildUrl,
   buildUrlFromConfig,
@@ -242,11 +270,13 @@ const Utils = {
   decodeParams,
   dockerHostSwap,
   exit,
+  errorMessage,
   getAddressToContract,
   getTransactionParams,
   isDocker,
   checkIsAvailable,
   findNextPort,
+  fileTreeSort,
   hashTo32ByteHexString,
   hexToNumber,
   isHex,

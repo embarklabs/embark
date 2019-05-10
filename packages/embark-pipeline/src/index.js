@@ -1,11 +1,10 @@
 const path = require('path');
 const async = require('async');
-const utils = require('../../utils/utils.js');
 import { __ } from 'embark-i18n';
-import {joinPath, LongRunningProcessTimer} from 'embark-utils';
+import { joinPath, LongRunningProcessTimer, fileTreeSort } from 'embark-utils';
 import { dappPath, ProcessLauncher } from 'embark-core';
 const constants = require('embark-core/constants');
-const WebpackConfigReader = require('../pipeline/webpackConfigReader');
+const WebpackConfigReader = require('./webpackConfigReader');
 
 class Pipeline {
   constructor(embark, options) {
@@ -118,7 +117,7 @@ class Pipeline {
               dirname: dir,
               path: path.join(dir, name),
               isHidden: (name.indexOf('.') === 0 || name === "node_modules"),
-              children: utils.fileTreeSort(walk(path.join(dir, name), filelist))
+              children: fileTreeSort(walk(path.join(dir, name), filelist))
             };
           }
           return {
@@ -129,7 +128,7 @@ class Pipeline {
             isHidden: (name.indexOf('.') === 0 || name === "node_modules")
           };
         });
-        const files = utils.fileTreeSort(walk(dappPath()));
+        const files = fileTreeSort(walk(dappPath()));
         res.send(files);
       }
     );
@@ -237,7 +236,8 @@ class Pipeline {
           action: constants.pipeline.init,
           options: {
             webpackConfigName: self.webpackConfigName,
-            pipelineConfig: self.pipelineConfig
+            pipelineConfig: self.pipelineConfig,
+            fs: self.embark.fs
           }
         });
         webpackProcess.send({action: constants.pipeline.build, assets: self.assetFiles, importsList});

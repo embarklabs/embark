@@ -1,6 +1,7 @@
 import { BlockchainClient, Simulator } from 'embark-blockchain-process';
 import { dappPath, embarkPath } from 'embark-core';
 import { __ } from 'embark-i18n';
+import findUp from 'find-up';
 let async = require('async');
 const constants = require('embark-core/constants');
 const Logger = require('embark-logger');
@@ -450,13 +451,13 @@ class EmbarkController {
   }
 
   ejectWebpack() {
-    var embarkConfig = embarkPath('dist/lib/modules/pipeline/webpack.config.js');
-    var dappConfig = dappPath('webpack.config.js');
+    const embarkConfig = (findUp.sync('node_modules/embark-pipeline/dist/webpack.config.js', {cwd: embarkPath()}) || embarkPath("node_modules/embark-pipeline/dist/webpack.config.js"));
+    const dappConfig = dappPath('webpack.config.js');
     fs.copyPreserve(embarkConfig, dappConfig);
     console.log(__('webpack config ejected to:').dim.yellow);
     console.log(`${dappConfig}`.green);
-    var embarkOverrides = embarkPath('dist/lib/modules/pipeline/babel-loader-overrides.js');
-    var dappOverrides = dappPath('babel-loader-overrides.js');
+    const embarkOverrides = (findUp.sync('node_modules/embark-pipeline/dist/babel-loader-overrides.js', {cwd: embarkPath()}) || embarkPath("node_modules/embark-pipeline/dist/babel-loader-overrides.js"));
+    const dappOverrides = dappPath('babel-loader-overrides.js');
     fs.copyPreserve(embarkOverrides, dappOverrides);
     console.log(__('webpack overrides ejected to:').dim.yellow);
     console.log(`${dappOverrides}`.green);
