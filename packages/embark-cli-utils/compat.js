@@ -4,7 +4,7 @@ require("colors");
 var semver = require("semver");
 
 function defaultRange() {
-  return require("./package.json").runtime.engines.node;
+  return getPkgJson("./package.json").runtime.engines.node;
 }
 
 function getPkgJson(pkgJsonPath) {
@@ -37,13 +37,12 @@ function enforceRuntimeNodeVersion(pkgJsonPath) {
     if (!semver.satisfies(procVer, range)) {
       var pkgName = pkgNameCyan(pkgJson);
       var message = [
-        pkgNameCyan(pkgJson),
         "node version ",
         procVer.red,
         " is not supported, version ",
         range.green,
         " is required",
-        pkgName && " by " + pkgName
+        pkgName && " by " + pkgNameCyan(pkgJson).trim()
       ].join("");
       exitWithError(null, message);
     }
@@ -86,6 +85,9 @@ module.exports = {
   defaultRange: defaultRange,
   enforceRuntimeNodeVersion: enforceRuntimeNodeVersion,
   exitWithError: exitWithError,
+  getPkgJson: getPkgJson,
+  getNodeVerRange: getNodeVerRange,
   log: log,
-  logError: logError
+  logError: logError,
+  pkgNameCyan: pkgNameCyan
 };
