@@ -134,7 +134,7 @@
     "flatted": "0.2.3",
     "follow-redirects": "1.5.7",
     "fs-extra": "7.0.1",
-    "ganache-cli": "6.2.3",
+    "ganache-cli": "6.4.3",
     "glob": "7.1.3",
     "globule": "1.2.1",
     "handlebars": "4.0.13",
