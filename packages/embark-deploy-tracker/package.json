@@ -47,7 +47,8 @@
     "extends": "../../.eslintrc.json"
   },
   "dependencies": {
-    "embark-utils": "^4.1.0-beta.0"
+    "embark-utils": "^4.1.0-beta.0",
+    "fs-extra": "7.0.1"
   },
   "devDependencies": {
     "eslint": "5.7.0",

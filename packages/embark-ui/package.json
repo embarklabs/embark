@@ -124,6 +124,7 @@
     "style-loader": "0.23.0",
     "terser-webpack-plugin": "1.1.0",
     "url-loader": "1.1.1",
+    "uuid": "3.3.2",
     "velocity-react": "^1.4.1",
     "web3": "1.0.0-beta.37",
     "webpack": "4.19.1",

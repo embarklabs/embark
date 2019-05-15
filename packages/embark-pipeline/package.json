@@ -52,6 +52,7 @@
     "embark-i18n": "^4.1.0-beta.0",
     "embark-utils": "^4.1.0-beta.0",
     "find-up": "2.1.0",
+    "fs-extra": "7.0.1",
     "webpack": "4.29.3"
   },
   "devDependencies": {
