@@ -1,4 +1,5 @@
 import { Contract, Embark } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { dappPath } from "embark-core";
 import { __ } from "embark-i18n";
 import Handlebars from "handlebars";
 import * as path from "path";
@@ -45,7 +46,7 @@ export class ReactBuilder implements Builder {
   }
 
   private updateEmbarkJson(contractName: string, files: string[]) {
-    const embarkJsonPath = path.join(this.embark.fs.dappPath(), "embark.json");
+    const embarkJsonPath = path.join(dappPath(), "embark.json");
     const embarkJson = this.embark.fs.readJSONSync(embarkJsonPath);
     embarkJson.app[`js/${contractName}.js`] = `app/${contractName}.js`;
     embarkJson.app[`${contractName}.html`] = `app/${contractName}.html`;
@@ -128,8 +129,8 @@ export class ReactBuilder implements Builder {
   }
 
   private saveFiles(contractName: string, indexCode: string, dappCode: string) {
-    const indexFilePath = path.join(this.embark.fs.dappPath(), "app", `${contractName}.html`);
-    const dappFilePath = path.join(this.embark.fs.dappPath(), "app", `${contractName}.js`);
+    const indexFilePath = path.join(dappPath(), "app", `${contractName}.html`);
+    const dappFilePath = path.join(dappPath(), "app", `${contractName}.js`);
 
     if (!this.options.overwrite && (this.embark.fs.existsSync(indexFilePath) || this.embark.fs.existsSync(dappFilePath))) {
       return [];

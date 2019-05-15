@@ -1,6 +1,8 @@
 const async = require('async');
 const NetcatClient = require('netcat/client');
 
+import { ipcPath } from 'embark-core';
+
 //Constants
 const minerStart = 'miner_start';
 const minerStop = 'miner_stop';
@@ -19,7 +21,6 @@ class GethMiner {
     // In the meantime, just set an empty config object
     this.config = {};
     this.datadir = options.datadir;
-    this.fs = options.fs;
     self.interval = null;
     self.callback = null;
     self.started = null;
@@ -44,10 +45,8 @@ class GethMiner {
       }
     }
 
-    const ipcPath = this.fs.ipcPath('geth.ipc', true);
-
     this.client = new NetcatClient();
-    this.client.unixSocket(ipcPath)
+    this.client.unixSocket(ipcPath('geth.ipc', true))
       .enc('utf8')
       .connect()
       .on('data', (response) => {

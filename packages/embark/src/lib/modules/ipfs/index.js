@@ -1,3 +1,4 @@
+import { dappPath, embarkPath } from 'embark-core';
 import { __ } from 'embark-i18n';
 const UploadIPFS = require('./upload.js');
 const utils = require('../../utils/utils.js');
@@ -68,12 +69,12 @@ class IPFS {
     this.events.request("version:get:ipfs-api", (ipfsApiVersion) => {
       let currentIpfsApiVersion = require('../../../../package.json').dependencies["ipfs-api"];
       if (ipfsApiVersion === currentIpfsApiVersion) {
-        const nodePath = this.fs.embarkPath('node_modules');
+        const nodePath = embarkPath('node_modules');
         const ipfsPath = require.resolve("ipfs-api", {paths: [nodePath]});
         return cb(null, ipfsPath);
       }
       this.events.request("version:getPackageLocation", "ipfs-api", ipfsApiVersion, (err, location) => {
-        cb(err, this.fs.dappPath(location));
+        cb(err, dappPath(location));
       });
     });
   }

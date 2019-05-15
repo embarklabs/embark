@@ -1,4 +1,5 @@
 /*global after, before, describe, it, require, process*/
+const { embarkPath } = require('embark-core');
 const {assert} = require('chai');
 const os = require('os');
 const path = require('path');
@@ -14,7 +15,7 @@ describe('fs', () => {
   before(() => {
     oldConsoleError = console.error;
     oldDappPath = process.env.DAPP_PATH;
-    process.env.DAPP_PATH = fs.embarkPath();
+    process.env.DAPP_PATH = embarkPath();
     oldProcessExit = process.exit;
     process.exit = function() {};
 

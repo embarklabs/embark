@@ -1,5 +1,6 @@
+import { dappPath, embarkPath } from 'embark-core';
 const {errorMessage} = require('../../utils/utils');
-const fs = require('../../core/fs');
+const fs = require('fs-extra');
 
 class WebpackConfigReader {
   constructor(options) {
@@ -7,8 +8,8 @@ class WebpackConfigReader {
   }
 
   async readConfig(callback){
-    const dappConfigPath = fs.dappPath('webpack.config.js');
-    const defaultConfigPath = fs.embarkPath('dist/lib/modules/pipeline', 'webpack.config.js');
+    const dappConfigPath = dappPath('webpack.config.js');
+    const defaultConfigPath = embarkPath('dist/lib/modules/pipeline', 'webpack.config.js');
 
     let config, configPath;
     try {

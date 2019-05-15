@@ -3,7 +3,7 @@ const async = require('async');
 const utils = require('../../utils/utils.js');
 import { __ } from 'embark-i18n';
 import {joinPath, LongRunningProcessTimer} from 'embark-utils';
-import { ProcessLauncher } from 'embark-core';
+import { dappPath, ProcessLauncher } from 'embark-core';
 const constants = require('embark-core/constants');
 const WebpackConfigReader = require('../pipeline/webpackConfigReader');
 
@@ -107,7 +107,7 @@ class Pipeline {
       'get',
       '/embark-api/files',
       (req, res) => {
-        const rootPath = this.fs.dappPath();
+        const rootPath = dappPath();
 
         const walk = (dir, filelist = []) => this.fs.readdirSync(dir).map(name => {
           let isRoot = rootPath === dir;
@@ -129,7 +129,7 @@ class Pipeline {
             isHidden: (name.indexOf('.') === 0 || name === "node_modules")
           };
         });
-        const files = utils.fileTreeSort(walk(this.fs.dappPath()));
+        const files = utils.fileTreeSort(walk(dappPath()));
         res.send(files);
       }
     );
@@ -141,7 +141,7 @@ class Pipeline {
     if (options.ensureExists && !this.fs.existsSync(pathToCheck)) {
       throw error;
     }
-    if (!dir.startsWith(this.fs.dappPath())) {
+    if (!dir.startsWith(dappPath())) {
       throw error;
     }
   }
@@ -150,7 +150,7 @@ class Pipeline {
     let self = this;
     const importsList = {};
     let placeholderPage;
-    const contractsDir = this.fs.dappPath(self.embarkConfig.generationDir, constants.dappArtifacts.contractsJs);
+    const contractsDir = dappPath(self.embarkConfig.generationDir, constants.dappArtifacts.contractsJs);
 
     if (!self.assetFiles || !Object.keys(self.assetFiles).length) {
       return self.buildContracts([], callback);
@@ -166,7 +166,7 @@ class Pipeline {
       },
       (next) => self.buildContracts(importsList, next),
       function createImportList(next) {
-        importsList["Embark/EmbarkJS"] = self.fs.dappPath(self.embarkConfig.generationDir, constants.dappArtifacts.embarkjs);
+        importsList["Embark/EmbarkJS"] = dappPath(self.embarkConfig.generationDir, constants.dappArtifacts.embarkjs);
         importsList["Embark/contracts"] = contractsDir;
 
         self.plugins.getPluginsProperty('imports', 'imports').forEach(importObject => {
@@ -334,21 +334,21 @@ class Pipeline {
     const self = this;
     async.waterfall([
       function makeDirectory(next) {
-        self.fs.mkdirp(self.fs.dappPath(self.buildDir, 'contracts'), err => next(err));
+        self.fs.mkdirp(dappPath(self.buildDir, 'contracts'), err => next(err));
       },
       function getContracts(next) {
         self.events.request('contracts:list', next);
       },
       function writeContractsJSON(contracts, next) {
         async.each(contracts, (contract, eachCb) => {
-          self.fs.writeJson(self.fs.dappPath(
+          self.fs.writeJson(dappPath(
             self.buildDir,
             'contracts', contract.className + '.json'
           ), contract, {spaces: 2}, eachCb);
         }, () => next(null, contracts));
       },
       function writeContractJS(contracts, next) {
-        const contractsDir = self.fs.dappPath(self.embarkConfig.generationDir, constants.dappArtifacts.contractsJs);
+        const contractsDir = dappPath(self.embarkConfig.generationDir, constants.dappArtifacts.contractsJs);
         self.fs.mkdirp(contractsDir, err => {
           if (err) return next(err);
 
@@ -364,7 +364,7 @@ class Pipeline {
               if (err) {
                 return eachCb(err);
               }
-              importsList["Embark/contracts/" + contract.className] = self.fs.dappPath(contractPath);
+              importsList["Embark/contracts/" + contract.className] = dappPath(contractPath);
 
               // add the contract to the exports list to support alternate import syntax
               importsHelperFile.write(`"${contract.className}": require('./${contract.className}').default,\n`);

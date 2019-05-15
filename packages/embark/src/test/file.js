@@ -1,4 +1,5 @@
 /*globals describe, it*/
+const { dappPath } = require('embark-core');
 const {File, Types} = require("../lib/core/file");
 const {expect} = require("chai");
 const fs = require("../lib/core/fs");
@@ -13,15 +14,15 @@ describe('embark.File', function () {
     });
 
     it('should be able to read a file when type is "dappFile"', async () => {
-      const file = new File({path: fs.dappPath('contracts/recursive_test_0.sol'), type: Types.dappFile});
+      const file = new File({path: dappPath('contracts/recursive_test_0.sol'), type: Types.dappFile});
       const content = await file.content;
 
-      const contentFromFileSystem = fs.readFileSync(fs.dappPath("contracts/recursive_test_0.sol")).toString();
+      const contentFromFileSystem = fs.readFileSync(dappPath("contracts/recursive_test_0.sol")).toString();
       expect(content).to.equal(contentFromFileSystem);
     });
 
     it('should be able to execute a resolver when type is "custom"', async () => {
-      const file = new File({path: fs.dappPath('contracts/recursive_test_0.sol'), type: Types.custom, resolver: (callback) => {
+      const file = new File({path: dappPath('contracts/recursive_test_0.sol'), type: Types.custom, resolver: (callback) => {
         callback("test");
       }});
       expect(await file.content).to.equal("test");
@@ -31,7 +32,7 @@ describe('embark.File', function () {
       const file = new File({path: 'test/contracts/recursive_test_0.sol', type: Types.embarkInternal});
       const content = await file.content;
 
-      const contentFromFileSystem = fs.readFileSync(fs.dappPath("contracts/recursive_test_0.sol")).toString();
+      const contentFromFileSystem = fs.readFileSync(dappPath("contracts/recursive_test_0.sol")).toString();
       expect(content).to.equal(contentFromFileSystem);
     });
 

@@ -55,4 +55,3 @@ export function pingEndpoint(host, port, type, protocol, origin, callback) {
     handleRequest(req, "abort", "response");
   }
 }
-

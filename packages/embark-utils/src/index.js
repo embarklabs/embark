@@ -1,3 +1,5 @@
+const path = require('path');
+const os = require('os');
 const http = require('follow-redirects').http;
 const https = require('follow-redirects').https;
 const shelljs = require('shelljs');
@@ -218,14 +220,17 @@ function buildUrlFromConfig(configObj) {
   return buildUrl(configObj.protocol, canonicalHost(configObj.host), configObj.port, configObj.type);
 }
 
+function joinPath() {
+  return path.join.apply(path.join, arguments);
+}
+
+function tmpDir(...args) { return joinPath(os.tmpdir(), ...args); }
 
 const Utils = {
   buildUrl,
   buildUrlFromConfig,
-  joinPath: function() {
-    const path = require('path');
-    return path.join.apply(path.join, arguments);
-  },
+  joinPath,
+  tmpDir,
   jsonFunctionReplacer,
   fuzzySearch,
   canonicalHost,

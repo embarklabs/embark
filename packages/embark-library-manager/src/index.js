@@ -1,3 +1,4 @@
+import { dappPath, embarkPath } from 'embark-core';
 import { __ } from 'embark-i18n';
 var Npm = require('./npm.js');
 
@@ -83,13 +84,13 @@ class LibraryManager {
     const wantedVersion = this.versions[packageName];
     let installedVersion = this.embark.config.package.dependencies[packageName];
     if (!wantedVersion || wantedVersion === installedVersion) {
-      const nodePath = this.embark.fs.embarkPath('node_modules');
+      const nodePath = embarkPath('node_modules');
       const packagePath = require.resolve(packageName, {paths: [nodePath]});
       return cb(null, packagePath.replace(/\\/g, '/'));
     }
     // Download package
     this.embark.events.request("version:getPackageLocation", packageName, wantedVersion, (err, location) => {
-      cb(err, this.embark.fs.dappPath(location).replace(/\\/g, '/'));
+      cb(err, dappPath(location).replace(/\\/g, '/'));
     });
   }
 

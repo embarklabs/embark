@@ -1,4 +1,5 @@
 import { __ } from 'embark-i18n';
+const fs = require('fs-extra');
 const async = require('async');
 const {spawn, exec} = require('child_process');
 const path = require('path');
@@ -6,7 +7,7 @@ const constants = require('embark-core/constants');
 const GethClient = require('./gethClient.js');
 const ParityClient = require('./parityClient.js');
 import { Proxy } from './proxy';
-import { IPC } from 'embark-core';
+import { IPC, dappPath, embarkPath } from 'embark-core';
 
 import { compact, defaultHost, dockerHostSwap, AccountParser} from 'embark-utils';
 const Logger = require('embark-logger');
@@ -15,7 +16,7 @@ const Logger = require('embark-logger');
 const IPC_CONNECT_INTERVAL = 2000;
 
 /*eslint complexity: ["error", 50]*/
-var Blockchain = function(userConfig, clientClass, fs) {
+var Blockchain = function(userConfig, clientClass) {
   this.userConfig = userConfig;
   this.env = userConfig.env || 'development';
   this.isDev = userConfig.isDev;
@@ -26,7 +27,6 @@ var Blockchain = function(userConfig, clientClass, fs) {
   this.proxyIpc = null;
   this.isStandalone = userConfig.isStandalone;
   this.certOptions = userConfig.certOptions;
-  this.fs = fs;
 
 
   let defaultWsApi = clientClass.DEFAULTS.WS_API;
@@ -81,9 +81,9 @@ var Blockchain = function(userConfig, clientClass, fs) {
     if (this.env === 'development') {
       this.isDev = true;
     } else {
-      this.config.genesisBlock = this.fs.embarkPath("templates/boilerplate/config/privatenet/genesis.json");
+      this.config.genesisBlock = embarkPath("templates/boilerplate/config/privatenet/genesis.json");
     }
-    this.config.datadir = this.fs.dappPath(".embark/development/datadir");
+    this.config.datadir = dappPath(".embark/development/datadir");
     this.config.wsOrigins = this.config.wsOrigins || "http://localhost:8000";
     this.config.rpcCorsDomain = this.config.rpcCorsDomain || "http://localhost:8000";
     this.config.targetGasLimit = 8000000;
@@ -104,7 +104,7 @@ var Blockchain = function(userConfig, clientClass, fs) {
     process.exit(1);
   }
   this.initProxy();
-  this.client = new clientClass({config: this.config, env: this.env, isDev: this.isDev, fs: this.fs});
+  this.client = new clientClass({config: this.config, env: this.env, isDev: this.isDev});
 
   this.initStandaloneProcess();
 };
@@ -131,7 +131,7 @@ Blockchain.prototype.initStandaloneProcess = function () {
       }
     });
 
-    this.ipc = new IPC({ipcRole: 'client', fs: this.fs});
+    this.ipc = new IPC({ipcRole: 'client'});
 
     // Wait for an IPC server to start (ie `embark run`) by polling `.connect()`.
     // Do not kill this interval as the IPC server may restart (ie restart
@@ -161,9 +161,9 @@ Blockchain.prototype.initProxy = function () {
 };
 
 Blockchain.prototype.setupProxy = async function () {
-  if (!this.proxyIpc) this.proxyIpc = new IPC({ipcRole: 'client', fs: this.fs});
+  if (!this.proxyIpc) this.proxyIpc = new IPC({ipcRole: 'client'});
 
-  const addresses = AccountParser.parseAccountsConfig(this.userConfig.accounts, false, this.fs.dappPath(), this.logger);
+  const addresses = AccountParser.parseAccountsConfig(this.userConfig.accounts, false, dappPath(), this.logger);
 
   let wsProxy;
   if (this.config.wsRPC) {
@@ -304,11 +304,11 @@ Blockchain.prototype.kill = function () {
 };
 
 Blockchain.prototype.checkPathLength = function () {
-  let dappPath = this.fs.dappPath('');
-  if (dappPath.length > 66) {
+  let _dappPath = dappPath('');
+  if (_dappPath.length > 66) {
     // this.logger.error is captured and sent to the console output regardless of silent setting
     this.logger.error("===============================================================================".yellow);
-    this.logger.error("===========> ".yellow + __('WARNING! ÐApp path length is too long: ').yellow + dappPath.yellow);
+    this.logger.error("===========> ".yellow + __('WARNING! ÐApp path length is too long: ').yellow + _dappPath.yellow);
     this.logger.error("===========> ".yellow + __('This is known to cause issues with starting geth, please consider reducing your ÐApp path\'s length to 66 characters or less.').yellow);
     this.logger.error("===============================================================================".yellow);
   }
@@ -403,7 +403,7 @@ Blockchain.prototype.initChainAndGetAddress = function (callback) {
 
   async.waterfall([
     function makeDir(next) {
-      this.fs.mkdirp(self.datadir, (err, _result) => {
+      fs.mkdirp(self.datadir, (err, _result) => {
         next(err);
       });
     },
@@ -479,5 +479,5 @@ export function BlockchainClient(userConfig, options) {
   userConfig.logger = options.logger;
   userConfig.certOptions = options.certOptions;
   userConfig.isStandalone = options.isStandalone;
-  return new Blockchain(userConfig, clientClass, options.fs);
+  return new Blockchain(userConfig, clientClass);
 }

@@ -1,3 +1,3 @@
 export interface Builder {
-  build(): Promise<string[]>;
+  build(): Promise<Array<(string| undefined)>>;
 }

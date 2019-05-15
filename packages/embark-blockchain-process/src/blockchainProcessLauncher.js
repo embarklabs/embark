@@ -28,9 +28,9 @@ export class BlockchainProcessLauncher {
       modulePath: joinPath(__dirname, './blockchainProcess.js'),
       logger: this.logger,
       events: this.events,
-      embark: this.embark,
       silent: this.logger.logLevel !== 'trace',
-      exitCallback: this.processEnded.bind(this)
+      exitCallback: this.processEnded.bind(this),
+      embark: this.embark
     });
     this.blockchainProcess.send({
       action: constants.blockchain.init, options: {

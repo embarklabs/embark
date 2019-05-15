@@ -1,3 +1,4 @@
+import { dappPath } from 'embark-core';
 import { __ } from 'embark-i18n';
 const async = require('async');
 const DevTxs = require('./dev_txs');
@@ -29,7 +30,7 @@ class BlockchainListener {
     this.isDev = this.embark.config.env === constants.environments.development;
     this.devTxs = null;
     this.fs = this.embark.fs;
-    this.proxyLogFile = this.fs.dappPath(".embark", "proxyLogs.json");
+    this.proxyLogFile = dappPath(".embark", "proxyLogs.json");
 
     this.writeProxyLogFile = async.cargo((tasks, callback) => {
       const data = this._readProxyLogs();

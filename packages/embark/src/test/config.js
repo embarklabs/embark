@@ -1,4 +1,5 @@
 /*globals describe, it*/
+const { dappPath } = require('embark-core');
 const Config = require('../lib/core/config.js');
 const Plugins = require('../lib/core/plugins.js');
 const assert = require('assert');
@@ -192,7 +193,7 @@ describe('embark.Config', function () {
         {
           "type": "http",
           "externalUrl": "https://raw.githubusercontent.com/embark-framework/embark/master/dapps/templates/demo/contracts/simple_storage.sol",
-          "path": fs.dappPath(".embark/contracts/embark-framework/embark/master/dapps/templates/demo/contracts/simple_storage.sol"),
+          "path": dappPath(".embark/contracts/embark-framework/embark/master/dapps/templates/demo/contracts/simple_storage.sol"),
           "originalPath": ".embark/contracts/embark-framework/embark/master/dapps/templates/demo/contracts/simple_storage.sol",
           "pluginPath": '',
           "basedir": "",
@@ -204,7 +205,7 @@ describe('embark.Config', function () {
         {
           "type": "http",
           "externalUrl": "https://raw.githubusercontent.com/status-im/contracts/master/contracts/identity/ERC725.sol",
-          "path": fs.dappPath(".embark/contracts/status-im/contracts/master/contracts/identity/ERC725.sol"),
+          "path": dappPath(".embark/contracts/status-im/contracts/master/contracts/identity/ERC725.sol"),
           "originalPath": ".embark/contracts/status-im/contracts/master/contracts/identity/ERC725.sol",
           "pluginPath": '',
           "basedir": "",
@@ -215,7 +216,7 @@ describe('embark.Config', function () {
         },
         {
           "externalUrl": "https://swarm-gateways.net/bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63",
-          "path": fs.dappPath(".embark/contracts/bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63"),
+          "path": dappPath(".embark/contracts/bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63"),
           "originalPath": ".embark/contracts/bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63",
           "type": "http",
           "pluginPath": '',

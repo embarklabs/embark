@@ -1,3 +1,4 @@
+import { dappPath } from 'embark-core';
 import { __ } from 'embark-i18n';
 const async = require('async');
 const { AccountParser } = require('embark-utils');
@@ -16,7 +17,6 @@ class Provider {
     this.logger = options.logger;
     this.isDev = options.isDev;
     this.events = options.events;
-    this.fs = options.fs;
     this.nonceCache = {};
 
     this.events.setCommandHandler("blockchain:provider:contract:accounts:get", cb => {
@@ -72,11 +72,11 @@ class Provider {
         self.logger.warn('Error while getting the node\'s accounts.', err.message || err);
       }
 
-      self.blockchainAccounts = AccountParser.parseAccountsConfig(self.blockchainConfig.accounts, self.web3, this.fs.dappPath(), self.logger, accounts);
+      self.blockchainAccounts = AccountParser.parseAccountsConfig(self.blockchainConfig.accounts, self.web3, dappPath(), self.logger, accounts);
 
       accounts = accounts.concat(self.blockchainAccounts);
 
-      self.accounts = AccountParser.parseAccountsConfig(self.accountsConfig, self.web3, this.fs.dappPath(), self.logger, accounts);
+      self.accounts = AccountParser.parseAccountsConfig(self.accountsConfig, self.web3, dappPath(), self.logger, accounts);
 
       if (!self.accounts.length) {
         self.accounts = accounts;

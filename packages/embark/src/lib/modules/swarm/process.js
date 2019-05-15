@@ -1,7 +1,6 @@
-import { ProcessWrapper } from 'embark-core';
+import { dappPath, ProcessWrapper } from 'embark-core';
 const child_process = require('child_process');
 const constants = require('embark-core/constants');
-const fs = require('../../core/fs');
 
 let swarmProcess;
 
@@ -22,7 +21,7 @@ class SwarmProcess extends ProcessWrapper {
     // use our storage config address/password if we have it
     if (this.storageConfig.account && this.storageConfig.account.address && this.storageConfig.account.password) {
       bzzaccount = this.storageConfig.account.address;
-      password = fs.dappPath(this.storageConfig.account.password);
+      password = dappPath(this.storageConfig.account.password);
     }
     // default to our blockchain config account, or our default account
     else if (this.blockchainConfig.account &&
@@ -33,14 +32,14 @@ class SwarmProcess extends ProcessWrapper {
       // config/blockchain.js > account > address or the first address returned from web3.eth.getAccounts
       // (usually the default account)
       bzzaccount = this.blockchainConfig.account.address || this.defaultAccount;
-      password = fs.dappPath(this.blockchainConfig.account.password);
+      password = dappPath(this.blockchainConfig.account.password);
       console.trace(`Swarm account/password falling back to the blockchain account ${this.blockchainConfig.account.address || this.defaultAccount}. The account is either specified in config/blockchain.js > account > address or is the first address returned from web3.eth.getAccounts. The password is specified in config/blockchain.js > account > address.`);
     }
     else {
       return 'Account address and password are needed in the storage config to start the Swarm process';
     }
 
-    const datadir = this.blockchainConfig.datadir || fs.dappPath(`.embark/development/datadir`);
+    const datadir = this.blockchainConfig.datadir || dappPath(`.embark/development/datadir`);
     const args = [
       '--datadir', datadir,
       '--bzzaccount', bzzaccount,

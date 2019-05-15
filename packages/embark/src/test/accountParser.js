@@ -1,4 +1,5 @@
 /*global __dirname, describe, it, before, after, require*/
+import { dappPath } from 'embark-core';
 import * as i18n from 'embark-i18n';
 const assert = require('assert');
 const sinon = require('sinon');
@@ -34,7 +35,7 @@ describe('embark.AccountParser', function () {
     it('should return one account with the key', function () {
       const account = AccountParser.getAccount({
         privateKey: 'myKey'
-      }, web3, fs.dappPath(), testLogger);
+      }, web3, dappPath(), testLogger);
 
       assert.deepEqual(account, {key: '0xmyKey', hexBalance: null});
     });
@@ -44,7 +45,7 @@ describe('embark.AccountParser', function () {
       const readFileSyncStub = sinon.stub(sameFs, 'readFileSync').returns('key1;key2');
       const account = AccountParser.getAccount({
         privateKeyFile: 'keyFiles/twoKeys'
-      }, web3, fs.dappPath(), testLogger);
+      }, web3, dappPath(), testLogger);
 
       assert.deepEqual(account, [
         {key:'0xkey1', hexBalance: null},
@@ -56,7 +57,7 @@ describe('embark.AccountParser', function () {
     it('should return one account from the mnemonic', function () {
       const account = AccountParser.getAccount({
         mnemonic: 'example exile argue silk regular smile grass bomb merge arm assist farm'
-      }, web3, fs.dappPath(), testLogger);
+      }, web3, dappPath(), testLogger);
 
       assert.deepEqual(account,
         [{key: "0xf942d5d524ec07158df4354402bfba8d928c99d0ab34d0799a6158d56156d986", hexBalance: null}]);
@@ -66,7 +67,7 @@ describe('embark.AccountParser', function () {
       const account = AccountParser.getAccount({
         mnemonic: 'example exile argue silk regular smile grass bomb merge arm assist farm',
         numAddresses: 2
-      }, web3, fs.dappPath(), testLogger);
+      }, web3, dappPath(), testLogger);
 
       assert.deepEqual(account,
         [
@@ -78,7 +79,7 @@ describe('embark.AccountParser', function () {
     it('should return nothing with bad config', function () {
       const account = AccountParser.getAccount({
         badConfig: 'not working'
-      }, web3, fs.dappPath(), testLogger);
+      }, web3, dappPath(), testLogger);
 
       assert.strictEqual(account, null);
     });
@@ -87,7 +88,7 @@ describe('embark.AccountParser', function () {
       const accounts = AccountParser.getAccount({
         mnemonic: 'example exile argue silk regular smile grass bomb merge arm assist farm',
         numAddresses: 2
-      }, false, fs.dappPath(), testLogger);
+      }, false, dappPath(), testLogger);
 
       assert.deepEqual(accounts,
         [
@@ -97,7 +98,7 @@ describe('embark.AccountParser', function () {
     });
 
     it('should return nodeAccounts', function() {
-      const accounts = AccountParser.getAccount({nodeAccounts: true}, web3, fs.dappPath(), testLogger, [
+      const accounts = AccountParser.getAccount({nodeAccounts: true}, web3, dappPath(), testLogger, [
         "0xb8d851486d1c953e31a44374aca11151d49b8bb3",
         "0xf6d5c6d500cac10ee7e6efb5c1b479cfb789950a"
       ]);

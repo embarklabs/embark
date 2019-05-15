@@ -1,6 +1,5 @@
-import { ProcessWrapper } from 'embark-core';
+import { dappPath, ProcessWrapper } from 'embark-core';
 const constants = require('embark-core/constants');
-const fs = require('../../core/fs');
 const webpack = require('webpack');
 const writeFile = require('util').promisify(require('fs').writeFile);
 const {errorMessage} = require('../../utils/utils');
@@ -26,15 +25,15 @@ class WebpackProcess extends ProcessWrapper {
   async webpackRun(assets, importsList, callback) {
     try {
       await writeFile(
-        fs.dappPath('.embark/embark-aliases.json'),
+        dappPath('.embark/embark-aliases.json'),
         JSON.stringify(importsList)
       );
       await writeFile(
-        fs.dappPath('.embark/embark-assets.json'),
+        dappPath('.embark/embark-assets.json'),
         JSON.stringify(assets)
       );
       await writeFile(
-        fs.dappPath('.embark/embark-pipeline.json'),
+        dappPath('.embark/embark-pipeline.json'),
         JSON.stringify(this.pipelineConfig)
       );
     } catch (e) {
@@ -67,12 +66,12 @@ class WebpackProcess extends ProcessWrapper {
     try {
       this._log('info', 'Pipeline: '.cyan + 'writing file ' + ('.embark/stats.report').bold.dim);
       await writeFile(
-        fs.dappPath('.embark/stats.report'),
+        dappPath('.embark/stats.report'),
         stats.toString(config.stats)
       );
       this._log('info', 'Pipeline: '.cyan + 'writing file ' + ('.embark/stats.json').bold.dim);
       await writeFile(
-        fs.dappPath('.embark/stats.json'),
+        dappPath('.embark/stats.json'),
         JSON.stringify(stats.toJson(config.stats))
       );
       if (stats.hasErrors()) {

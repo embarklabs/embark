@@ -1,3 +1,4 @@
+import { dappPath, embarkPath } from "embark-core";
 import { __ } from "embark-i18n";
 import * as path from "path";
 import { ImportRemapping, prepareForCompilation } from "../utils/solidity/remapImports";
@@ -35,14 +36,14 @@ export class File {
     this.originalPath = options.originalPath || "";
 
     if (this.type === Types.custom && this.pluginPath) {
-      this.path = path.join(this.pluginPath, options.path).replace(fs.dappPath(), "");
+      this.path = path.join(this.pluginPath, options.path).replace(dappPath(), "");
       if (this.path.startsWith("/")) {
         this.path = this.path.substring(1);
       }
     } else if (this.type === Types.http) {
       const external = utils.getExternalContractUrl(options.externalUrl, this.providerUrl);
       this.externalUrl = external.url;
-      this.path = path.normalize(fs.dappPath(external.filePath));
+      this.path = path.normalize(dappPath(external.filePath));
     } else {
       this.path = path.normalize(options.path);
     }
@@ -59,7 +60,7 @@ export class File {
     return new Promise<string>((resolve) => {
       switch (this.type) {
         case Types.embarkInternal: {
-          const content = fs.readFileSync(fs.embarkPath(path.join("dist", this.path)), "utf-8");
+          const content = fs.readFileSync(embarkPath(path.join("dist", this.path)), "utf-8");
           return resolve(content);
         }
 

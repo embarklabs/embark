@@ -1,3 +1,4 @@
+import { dappPath } from 'embark-core';
 const async = require('async');
 let serveStatic = require('serve-static');
 import { __ } from 'embark-i18n';
@@ -50,8 +51,8 @@ class Server {
       return callback(null, message);
     }
 
-    const coverage = serveStatic(this.fs.dappPath('coverage/__root__/'), {'index': ['index.html', 'index.htm']});
-    const coverageStyle = serveStatic(this.fs.dappPath('coverage/'));
+    const coverage = serveStatic(dappPath('coverage/__root__/'), {'index': ['index.html', 'index.htm']});
+    const coverageStyle = serveStatic(dappPath('coverage/'));
     const main = serveStatic(this.buildDir, {'index': ['index.html', 'index.htm']});
 
     this.app = express();
@@ -72,7 +73,7 @@ class Server {
     this.app.use('/coverage', coverage);
     this.app.use(coverageStyle);
 
-    this.app.use(express.static(path.join(this.fs.dappPath(this.dist)), {'index': ['index.html', 'index.htm']}));
+    this.app.use(express.static(path.join(dappPath(this.dist)), {'index': ['index.html', 'index.htm']}));
 
     this.app.ws('/', () => {});
     const wss = expressWs.getWss('/');
@@ -92,7 +93,7 @@ class Server {
     if (this.enableCatchAll === true) {
       this.app.get('/*', function(req, res) {
         self.logger.trace('webserver> GET ' + req.path);
-        res.sendFile(path.join(self.fs.dappPath(self.dist, 'index.html')));
+        res.sendFile(path.join(dappPath(self.dist, 'index.html')));
       });
     }
 

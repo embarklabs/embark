@@ -1,3 +1,4 @@
+import { dappPath, embarkPath } from 'embark-core';
 import { __ } from 'embark-i18n';
 const async = require('async');
 const Mocha = require('mocha');
@@ -85,18 +86,18 @@ class TestRunner {
         }
 
         global.embark.events.emit('tests:finished', function() {
-          runCmd(`${self.fs.embarkPath('node_modules/.bin/istanbul')} report --root .embark --format html --format lcov`,
+          runCmd(`${embarkPath('node_modules/.bin/istanbul')} report --root .embark --format html --format lcov`,
             {silent: false, exitOnError: false}, (err) => {
               if (err) {
                 return next(err);
               }
-              console.info(`Coverage report created. You can find it here: ${self.fs.dappPath('coverage/index.html')}\n`);
+              console.info(`Coverage report created. You can find it here: ${dappPath('coverage/index.html')}\n`);
               const opn = require('opn');
               const _next = () => { next(null, results); };
               if (options.noBrowser) {
                 return next(null, results);
               }
-              opn(self.fs.dappPath('coverage/index.html'), {wait: false})
+              opn(dappPath('coverage/index.html'), {wait: false})
                 .then(() => timer(1000))
                 .then(_next, _next);
             });
@@ -157,7 +158,7 @@ class TestRunner {
   runJSTests(files, options, cb) {
     const self = this;
     const test = new Test({loglevel: options.loglevel, node: options.node, events: self.events, logger: self.logger,
-      config: self.embark.config, ipc: self.ipc, coverage: options.coverage, inProcess: options.inProcess, dappPath: this.embark.fs.dappPath()});
+      config: self.embark.config, ipc: self.ipc, coverage: options.coverage, inProcess: options.inProcess, dappPath: dappPath()});
     async.waterfall([
       function setupGlobalNamespace(next) {
         global.embark = test;

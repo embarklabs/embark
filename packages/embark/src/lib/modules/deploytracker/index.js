@@ -1,5 +1,7 @@
+import { dappPath } from 'embark-core';
 import { __ } from 'embark-i18n';
 import { sha3 } from 'embark-utils';
+import * as fs from 'fs-extra';
 
 class DeployTracker {
 
@@ -7,7 +9,6 @@ class DeployTracker {
     this.logger = embark.logger;
     this.events = embark.events;
     this.embark = embark;
-    this.fs = embark.fs;
     this.trackContracts = (options.trackContracts !== false);
 
     // TODO: unclear where it comes from
@@ -21,13 +22,13 @@ class DeployTracker {
   loadChainTrackerFile() {
     if (this.chainFile === false) return;
     if (this.chainFile === undefined) this.chainFile = ".embark/chains.json";
-    this.chainFile = this.fs.dappPath(this.chainFile);
-    if (!this.fs.existsSync(this.chainFile)) {
+    this.chainFile = dappPath(this.chainFile);
+    if (!fs.existsSync(this.chainFile)) {
       this.logger.info(this.chainFile + ' ' + __('file not found, creating it...'));
-      this.fs.outputJSONSync(this.chainFile, {});
+      fs.outputJSONSync(this.chainFile, {});
     }
 
-    this.chainConfig = this.fs.readJSONSync(this.chainFile);
+    this.chainConfig = fs.readJSONSync(this.chainFile);
   }
 
   registerEvents() {
@@ -109,7 +110,7 @@ class DeployTracker {
     if (this.chainConfig === false) {
       return;
     }
-    this.fs.writeJSONSync(this.chainFile, this.chainConfig, {spaces: 2});
+    fs.writeJSONSync(this.chainFile, this.chainConfig, {spaces: 2});
   }
 
 }

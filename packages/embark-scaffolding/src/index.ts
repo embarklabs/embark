@@ -7,7 +7,7 @@ import { SmartContractsRecipe } from "./smartContractsRecipe";
 export default class Scaffolding {
 
   constructor(private embark: Embark, private options: any) {
-    this.embark.events.setCommandHandler("scaffolding:generate:contract", (cmdLineOptions: any,  cb: (files: string[]) => void) => {
+    this.embark.events.setCommandHandler("scaffolding:generate:contract", (cmdLineOptions: any,  cb: (files: Array<(string|undefined)>) => void) => {
       this.generateContract(cmdLineOptions).then(cb);
     });
 

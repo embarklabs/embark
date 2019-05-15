@@ -1,3 +1,4 @@
+import { dappPath, embarkPath } from 'embark-core';
 const async = require('async');
 var Plugin = require('./plugin.js');
 var fs = require('../core/fs.js');
@@ -60,7 +61,7 @@ Plugins.prototype.loadInternalPlugin = function(pluginName, pluginConfig, isPack
     pluginPath = pluginName;
     plugin = require(pluginName);
   } else {
-    pluginPath = this.fs.embarkPath('dist/lib/modules/' + pluginName);
+    pluginPath = embarkPath('dist/lib/modules/' + pluginName);
     plugin = require(pluginPath);
   }
 
@@ -88,7 +89,7 @@ Plugins.prototype.loadInternalPlugin = function(pluginName, pluginConfig, isPack
 };
 
 Plugins.prototype.loadPlugin = function(pluginName, pluginConfig) {
-  let pluginPath = this.fs.dappPath('node_modules', pluginName);
+  let pluginPath = dappPath('node_modules', pluginName);
   let plugin = require(pluginPath);
 
   if (plugin.default) {

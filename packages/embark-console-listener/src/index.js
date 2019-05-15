@@ -1,4 +1,5 @@
 const async = require('async');
+import { dappPath } from 'embark-core';
 import { __ } from 'embark-i18n';
 import { getAddressToContract, getTransactionParams, hexToNumber } from 'embark-utils';
 
@@ -13,7 +14,7 @@ class ConsoleListener {
     this.contractsConfig = embark.config.contractsConfig;
     this.contractsDeployed = false;
     this.outputDone = false;
-    this.logFile = this.fs.dappPath(".embark", "contractLogs.json");
+    this.logFile = dappPath(".embark", "contractLogs.json");
 
     if (this.ipc.ipcRole === 'server') {
       this._listenForLogRequests();

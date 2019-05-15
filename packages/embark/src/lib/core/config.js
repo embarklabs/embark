@@ -5,6 +5,7 @@ const path = require('path');
 const deepEqual = require('deep-equal');
 const web3 = require('web3');
 const constants = require('embark-core/constants');
+import { dappPath } from 'embark-core';
 import { __ } from 'embark-i18n';
 import {
   buildUrlFromConfig,
@@ -89,7 +90,7 @@ var Config = function(options) {
 };
 
 // TODO remove this at some point as it is now in plugin
-Config.prototype.dappPath = fs.dappPath;
+Config.prototype.dappPath = dappPath;
 
 Config.prototype.loadConfigFiles = function(options) {
   var interceptLogs = options.interceptLogs;
@@ -248,9 +249,9 @@ Config.prototype._mergeConfig = function(configFilePath, defaultConfig, env, ena
 
 Config.prototype._getFileOrObject = function(object, filePath, property) {
   if (typeof object === 'object') {
-    return object[property] ? fs.dappPath(object[property]) : object[property];
+    return object[property] ? dappPath(object[property]) : object[property];
   }
-  return fs.dappPath(object, filePath);
+  return dappPath(object, filePath);
 };
 
 Config.prototype.loadBlockchainConfigFile = function() {
@@ -573,7 +574,7 @@ Config.prototype.loadPipelineConfigFile = function() {
   if (pipelineConfigPath !== undefined) {
     // At this point, `pipelineConfigPath` could be either `config/pipeline` or a filepath including its extension.
     // We need to make sure that we always have an extension.
-    pipelineConfigPath = `${fs.dappPath(pipelineConfigPath)}${path.extname(pipelineConfigPath) === '.js' ? '' : '.js'}`;
+    pipelineConfigPath = `${dappPath(pipelineConfigPath)}${path.extname(pipelineConfigPath) === '.js' ? '' : '.js'}`;
   }
 
   let pipelineConfig = defaultPipelineConfig;
