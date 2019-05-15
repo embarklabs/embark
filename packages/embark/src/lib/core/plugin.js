@@ -1,8 +1,9 @@
 const utils = require('../utils/utils.js');
+import { dappPath, embarkPath } from 'embark-core';
 import { __ } from 'embark-i18n';
 import {joinPath} from 'embark-utils';
 const constants = require('embark-core/constants');
-const fs = require('./fs.js');
+const fs = require('fs-extra');
 const deepEqual = require('deep-equal');
 
 // TODO: pass other params like blockchainConfig, contract files, etc..
@@ -33,6 +34,7 @@ var Plugin = function(options) {
   this.embarkjs_code = [];
   this.embarkjs_init_code = {};
   this.embarkjs_init_console_code = {};
+  this.fs = fs;
   this.afterContractsDeployActions = [];
   this.onDeployActions = [];
   this.eventActions = {};
@@ -41,7 +43,6 @@ var Plugin = function(options) {
   this.events = options.events;
   this.config = options.config;
   this.plugins = options.plugins;
-  this.fs = options.fs;
   this.env = options.env;
   this.loaded = false;
   this.currentContext = options.context;
@@ -57,8 +58,8 @@ var Plugin = function(options) {
   }
 };
 
-Plugin.prototype.dappPath = fs.dappPath;
-Plugin.prototype.embarkPath = fs.embarkPath;
+Plugin.prototype.dappPath = dappPath;
+Plugin.prototype.embarkPath = embarkPath;
 
 Plugin.prototype._log = function(type) {
   this._loggerObject[type](this.name + ':', ...[].slice.call(arguments, 1));
@@ -117,7 +118,7 @@ Plugin.prototype.loadInternalPlugin = function() {
 };
 
 Plugin.prototype.loadPluginFile = function(filename) {
-  return this.fs.readFileSync(this.pathToFile(filename)).toString();
+  return fs.readFileSync(this.pathToFile(filename)).toString();
 };
 
 Plugin.prototype.pathToFile = function(filename) {

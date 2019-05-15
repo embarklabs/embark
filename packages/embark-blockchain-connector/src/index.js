@@ -1,3 +1,4 @@
+import { dappPath } from 'embark-core';
 import { __ } from 'embark-i18n';
 const Web3 = require('web3');
 const async = require('async');
@@ -30,7 +31,7 @@ class BlockchainConnector {
     this.contractsSubscriptions = [];
     this.contractsEvents = [];
     this.fs = embark.fs;
-    this.logFile = this.fs.dappPath(".embark", "contractEvents.json");
+    this.logFile = dappPath(".embark", "contractEvents.json");
 
     this.writeLogFile = async.cargo((tasks, callback) => {
       const data = this._readEvents();

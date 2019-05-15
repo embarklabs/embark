@@ -1,4 +1,5 @@
 import { __ } from 'embark-i18n';
+import { dappPath, ipcPath } from 'embark-core';
 const async = require('async');
 const {exec, spawn} = require('child_process');
 const path = require('path');
@@ -34,7 +35,6 @@ class GethClient {
     this.versSupported = DEFAULTS.VERSIONS_SUPPORTED;
     this.httpReady = false;
     this.wsReady = !this.config.wsRPC;
-    this.fs = options.fs;
   }
 
   isReady(data) {
@@ -79,7 +79,7 @@ class GethClient {
     }
 
     if (config.account && config.account.password) {
-      const resolvedPath = path.resolve(this.fs.dappPath(), config.account.password);
+      const resolvedPath = path.resolve(dappPath(), config.account.password);
       cmd.push(`--password=${resolvedPath}`);
     }
 
@@ -87,13 +87,13 @@ class GethClient {
       cmd.push("--verbosity=" + config.verbosity);
     }
 
-    cmd.push(`--ipcpath=${this.fs.ipcPath('geth.ipc', true)}`);
+    cmd.push(`--ipcpath=${ipcPath('geth.ipc', true)}`);
 
     return cmd;
   }
 
   getMiner() {
-    return new GethMiner({datadir: this.config.datadir, fs: this.fs});
+    return new GethMiner({datadir: this.config.datadir});
   }
 
   getBinaryPath() {

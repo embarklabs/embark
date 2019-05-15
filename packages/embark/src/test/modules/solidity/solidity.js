@@ -11,7 +11,6 @@ let readFile = function(file) {
 
 let ipcObject = new IPC({
   ipcRole: 'none',
-  fs
 });
 
 let generateApiObject = function() {

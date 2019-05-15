@@ -1,5 +1,6 @@
 /*globals describe, it*/
 import { BlockchainClient } from 'embark-blockchain-process';
+import { dappPath } from 'embark-core';
 const constants = require('embark-core/constants');
 import {defaultHost} from 'embark-utils';
 const path = require('path');
@@ -19,7 +20,7 @@ describe('embark.Blockchain', function() {
           genesisBlock: false,
           ethereumClientName: 'geth',
           ethereumClientBin: 'geth',
-          datadir: fs.dappPath(".embark/development/datadir"),
+          datadir: dappPath(".embark/development/datadir"),
           mineWhenNeeded: false,
           rpcHost: defaultHost,
           rpcPort: 8545,

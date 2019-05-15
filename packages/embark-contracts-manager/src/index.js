@@ -1,3 +1,4 @@
+import { dappPath } from 'embark-core';
 import { __ } from 'embark-i18n';
 const async = require('async');
 const cloneDeep = require('clone-deep');
@@ -321,7 +322,7 @@ class ContractsManager {
             return eachCb();
           }
 
-          self.fs.readFile(self.fs.dappPath(contract.artifact), (err, artifactBuf) => {
+          self.fs.readFile(dappPath(contract.artifact), (err, artifactBuf) => {
             if (err) {
               self.logger.error(__('Error while reading the artifact for "{{className}}" at {{path}}', {className, path: contract.artifact}));
               return eachCb(err);
@@ -359,7 +360,7 @@ class ContractsManager {
           contract.abiDefinition = compiledContract.abiDefinition;
           contract.filename = compiledContract.filename;
           contract.originalFilename = compiledContract.originalFilename || ("contracts/" + contract.filename);
-          contract.path = self.fs.dappPath(contract.originalFilename);
+          contract.path = dappPath(contract.originalFilename);
 
           contract.gas = (contractConfig && contractConfig.gas) || self.contractsConfig.gas || 'auto';
 

@@ -1,3 +1,4 @@
+import { dappPath } from 'embark-core';
 import { __ } from 'embark-i18n';
 let chokidar = require('chokidar');
 let path = require('path');
@@ -164,14 +165,14 @@ class Watcher {
 
   watchPipelineConfig(embarkConfig, callback) {
     let filesToWatch = [
-      this.fs.dappPath('', DAPP_WEBPACK_CONFIG_FILE),
-      this.fs.dappPath('', DAPP_BABEL_LOADER_OVERRIDES_CONFIG_FILE)
+      dappPath('', DAPP_WEBPACK_CONFIG_FILE),
+      dappPath('', DAPP_BABEL_LOADER_OVERRIDES_CONFIG_FILE)
     ];
 
     if (typeof embarkConfig.config === 'object' && embarkConfig.config.pipeline) {
       filesToWatch.push(embarkConfig.config.pipeline);
     } else if (typeof embarkConfig.config === 'string') {
-      filesToWatch.push(this.fs.dappPath(embarkConfig.config, DAPP_PIPELINE_CONFIG_FILE));
+      filesToWatch.push(dappPath(embarkConfig.config, DAPP_PIPELINE_CONFIG_FILE));
     }
 
     this.watchFiles(filesToWatch, (eventName, path) => {

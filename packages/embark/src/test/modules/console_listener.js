@@ -96,7 +96,7 @@ function resetTest() {
 
   events = new Events();
   logger = new Logger(events);
-  ipc = new IPC({ipcRole: 'none', fs});
+  ipc = new IPC({ipcRole: 'none'});
   embark = {
     events,
     logger,

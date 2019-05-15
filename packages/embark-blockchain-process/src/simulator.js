@@ -2,7 +2,7 @@ const path = require('path');
 const pkgUp = require('pkg-up');
 let shelljs = require('shelljs');
 import { Proxy } from './proxy';
-import { IPC } from 'embark-core';
+import { IPC, embarkPath, dappPath } from 'embark-core';
 const constants = require('embark-core/constants');
 import { defaultHost, dockerHostSwap } from 'embark-utils';
 const { AccountParser } = require('embark-utils');
@@ -12,7 +12,6 @@ export class Simulator {
     this.blockchainConfig = options.blockchainConfig;
     this.contractsConfig = options.contractsConfig;
     this.logger = options.logger;
-    this.fs = options.fs;
   }
 
   /*eslint complexity: ["error", 25]*/
@@ -44,7 +43,7 @@ export class Simulator {
     let simulatorAccounts = this.blockchainConfig.simulatorAccounts || options.simulatorAccounts;
     if (simulatorAccounts && simulatorAccounts.length > 0) {
       let web3 = new (require('web3'))();
-      let parsedAccounts = AccountParser.parseAccountsConfig(simulatorAccounts, web3, this.fs.dappPath(), this.logger);
+      let parsedAccounts = AccountParser.parseAccountsConfig(simulatorAccounts, web3, dappPath(), this.logger);
       parsedAccounts.forEach((account) => {
         let cmd = '--account="' + account.privateKey + ','+account.hexBalance + '"';
         cmds.push(cmd);
@@ -68,7 +67,7 @@ export class Simulator {
   }
 
   runCommand(cmds, useProxy, host, port) {
-    const ganache_main = require.resolve('ganache-cli', {paths: [this.fs.embarkPath('node_modules')]});
+    const ganache_main = require.resolve('ganache-cli', {paths: [embarkPath('node_modules')]});
     const ganache_json = pkgUp.sync(path.dirname(ganache_main));
     const ganache_root = path.dirname(ganache_json);
     const ganache_bin = require(ganache_json).bin;
@@ -86,7 +85,7 @@ export class Simulator {
     shelljs.exec(`node ${program} ${cmds.join(' ')}`, {async : true});
 
     if(useProxy){
-      let ipcObject = new IPC({ipcRole: 'client', fs: this.fs});
+      let ipcObject = new IPC({ipcRole: 'client'});
       if (this.blockchainConfig.wsRPC) {
         return new Proxy(ipcObject).serve(host, port, true, this.blockchainConfig.wsOrigins, []);
       }

@@ -46,8 +46,7 @@ describe('embark.Contracts', function() {
       }
     });
     let ipcObject = new IPC({
-      ipcRole: 'none',
-      fs
+      ipcRole: 'none'
     });
     plugins.loadInternalPlugin('embark-solidity', {ipc: ipcObject}, true);
 
@@ -189,8 +188,7 @@ describe('embark.Contracts', function() {
       }
     });
     let ipcObject = new IPC({
-      ipcRole: 'none',
-      fs
+      ipcRole: 'none'
     });
     plugins.loadInternalPlugin('embark-solidity', {ipc: ipcObject}, true);
 

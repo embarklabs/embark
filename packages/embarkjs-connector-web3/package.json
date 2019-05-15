@@ -30,6 +30,9 @@
     "qa": "npm run package",
     "reset": "npx rimraf embark-*.tgz package"
   },
+  "dependencies": {
+    "embark-core": "^4.1.0-beta.0"
+  },
   "devDependencies": {
     "rimraf": "2.6.3"
   }

@@ -2,6 +2,7 @@ import bodyParser from "body-parser";
 import "colors";
 import cors from "cors";
 import {Embark, Plugins} /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { embarkPath } from "embark-core";
 import { __ } from "embark-i18n";
 import express, {NextFunction, Request, Response} from "express";
 import expressWs from "express-ws";
@@ -29,7 +30,7 @@ export default class Server {
 
   constructor(private embark: Embark, private port: number, private hostname: string, private plugins: Plugins) {
     this.expressInstance = this.initApp();
-    this.embarkUiBuildDir = (findUp.sync("node_modules/embark-ui/build", {cwd: embark.fs.embarkPath()}) || embark.fs.embarkPath("node_modules/embark-ui/build"));
+    this.embarkUiBuildDir = (findUp.sync("node_modules/embark-ui/build", {cwd: embarkPath()}) || embarkPath("node_modules/embark-ui/build"));
   }
 
   public enableLogging() {
@@ -42,16 +43,16 @@ export default class Server {
 
   private get isInsideMonorepo() {
     if (this._isInsideMonorepo === null) {
-      this._isInsideMonorepo = this.embark.fs.existsSync(this.embark.fs.embarkPath("../../packages/embark")) &&
-        this.embark.fs.existsSync(this.embark.fs.embarkPath("../../lerna.json")) &&
-        path.resolve(this.embark.fs.embarkPath("../../packages/embark")) === this.embark.fs.embarkPath();
+      this._isInsideMonorepo = this.embark.fs.existsSync(embarkPath("../../packages/embark")) &&
+        this.embark.fs.existsSync(embarkPath("../../lerna.json")) &&
+        path.resolve(embarkPath("../../packages/embark")) === embarkPath();
     }
     return this._isInsideMonorepo;
   }
 
   private get monorepoRootDir() {
     if (!this._monorepoRootDir && this.isInsideMonorepo) {
-      this._monorepoRootDir = path.resolve(this.embark.fs.embarkPath("../.."));
+      this._monorepoRootDir = path.resolve(embarkPath("../.."));
     }
     return this._monorepoRootDir;
   }

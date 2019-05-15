@@ -1,3 +1,4 @@
+import { dappPath } from "embark-core";
 import * as globule from "globule";
 import * as path from "path";
 import Web3Contract from "web3/eth/contract";
@@ -68,8 +69,8 @@ export default class Coverage {
   }
 
   private writeCoverageReport(cb: () => void) {
-    this.fs.ensureDirSync(path.join(this.fs.dappPath(), ".embark"));
-    const coveragePath = path.join(this.fs.dappPath(), ".embark", "coverage.json");
+    this.fs.ensureDirSync(path.join(dappPath(), ".embark"));
+    const coveragePath = path.join(dappPath(), ".embark", "coverage.json");
 
     const coverageReport = this.contracts.reduce((acc: {[name: string]: ICoverage}, contract) => {
       if (contract.source) {

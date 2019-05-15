@@ -1,3 +1,4 @@
+import { dappPath, embarkPath } from "embark-core";
 import * as path from "path";
 import { File, Types } from "../../core/file";
 import { removePureView, replacePureView } from "./code";
@@ -36,13 +37,13 @@ const prepareInitialFile = async (file: File) => {
     return await file.content;
   }
 
-  const to = file.path.includes(fs.dappPath(".embark")) ? path.normalize(file.path) : fs.dappPath(".embark", file.path);
+  const to = file.path.includes(dappPath(".embark")) ? path.normalize(file.path) : dappPath(".embark", file.path);
   if (file.type === Types.dappFile || file.type === Types.custom) {
     if (file.resolver) {
       fs.mkdirpSync(path.dirname(to));
       fs.writeFileSync(to, await file.content);
     } else {
-      const from = file.path.includes(fs.dappPath()) ? file.path : fs.dappPath(file.path);
+      const from = file.path.includes(dappPath()) ? file.path : dappPath(file.path);
       if (from !== to) {
         fs.copySync(from, to);
       }
@@ -73,7 +74,7 @@ const buildNewFile = (file: File, importPath: string) => {
   // imported from node_modules, ie import "@aragon/os/contracts/acl/ACL.sol"
   if (isUnresolvedNodeModule(importPath)) {
     from = resolve(importPath);
-    to = importPath.includes(fs.dappPath(".embark")) ? importPath : fs.dappPath(".embark", "node_modules", importPath);
+    to = importPath.includes(dappPath(".embark")) ? importPath : dappPath(".embark", "node_modules", importPath);
     if (from !== to) {
       fs.copySync(from, to);
     }
@@ -100,7 +101,7 @@ const buildNewFile = (file: File, importPath: string) => {
   } else {
     from = path.join(path.dirname(file.path.replace(".embark", ".")), importPath);
     if (importPath === "remix_tests.sol") {
-      to = fs.dappPath(".embark", "remix_tests.sol");
+      to = dappPath(".embark", "remix_tests.sol");
     } else {
       to = path.join(path.dirname(file.path), importPath);
       fs.copySync(from, to);
@@ -177,7 +178,7 @@ const addRemappingsToFile = (file: File, remapImports: RemapImport[]) => {
 
 const resolve = (input: string) => {
   try {
-    return require.resolve(input, { paths: [fs.dappPath("node_modules"), fs.embarkPath("node_modules")] });
+    return require.resolve(input, { paths: [dappPath("node_modules"), embarkPath("node_modules")] });
   } catch (e) {
     return "";
   }
@@ -201,6 +202,6 @@ export const prepareForCompilation = async (file: File, isCoverage = false) => {
     return content;
   }
 
-  removePureView(fs.dappPath(".embark"));
+  removePureView(dappPath(".embark"));
   return replacePureView(content);
 };

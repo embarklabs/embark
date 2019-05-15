@@ -1,5 +1,5 @@
 import { __ } from 'embark-i18n';
-import { ProcessLauncher } from 'embark-core';
+import { dappPath, ProcessLauncher } from 'embark-core';
 import {joinPath} from 'embark-utils';
 const uuid = require('uuid/v1');
 
@@ -58,7 +58,7 @@ class SolcW {
           if (err) {
             return done(err);
           }
-          let requirePath = self.embark.fs.dappPath(path);
+          let requirePath = dappPath(path);
           self.solcProcess.send({action: 'installAndLoadCompiler', solcVersion: solcVersion, packagePath: requirePath});
         });
       });

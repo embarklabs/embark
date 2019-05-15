@@ -1,4 +1,5 @@
 import { Embark } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { dappPath } from "embark-core";
 import { __ } from "embark-i18n";
 import Handlebars from "handlebars";
 import * as path from "path";
@@ -48,7 +49,7 @@ export class SolidityBuilder implements Builder {
     const filename = `${contractName}.sol`;
     const contractDirs = this.embark.config.embarkConfig.contracts;
     const contractDir = Array.isArray(contractDirs) ? contractDirs[0] : contractDirs;
-    const filePath = this.embark.fs.dappPath(contractDir.replace(/\*/g, ""), filename);
+    const filePath = dappPath(contractDir.replace(/\*/g, ""), filename);
     if (!this.options.overwrite && this.embark.fs.existsSync(filePath)) {
       this.embark.logger.error(__(`The contract ${contractName} already exists, skipping.`));
       return;

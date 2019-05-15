@@ -1,3 +1,4 @@
+const { dappPath, embarkPath } = require('embark-core');
 const path = require('path');
 
 class EmbarkJSConnectorWeb3 {
@@ -46,7 +47,7 @@ class EmbarkJSConnectorWeb3 {
     code += "\nEmbarkJS.Blockchain.registerProvider('web3', embarkJSConnectorWeb3);";
     code += "\nEmbarkJS.Blockchain.setProvider('web3', {});";
 
-    const configPath = this.fs.dappPath(this.config.embarkConfig.generationDir, this.constants.dappArtifacts.dir, this.constants.dappArtifacts.blockchain).replace(/\\/g, '/');
+    const configPath = dappPath(this.config.embarkConfig.generationDir, this.constants.dappArtifacts.dir, this.constants.dappArtifacts.blockchain).replace(/\\/g, '/');
 
     code += `\nif (!global.__Web3) {`; // Only connect when in the Dapp
     code += `\n  const web3ConnectionConfig = require('${configPath}');`;
@@ -76,7 +77,7 @@ class EmbarkJSConnectorWeb3 {
     return new Promise((resolve, reject) => {
       this.events.request("version:get:web3", (web3Version) => {
         if (web3Version === "1.0.0-beta") {
-          const nodePath = this.fs.embarkPath('node_modules');
+          const nodePath = embarkPath('node_modules');
           const web3Path = require.resolve("web3", {paths: [nodePath]});
           return resolve(web3Path);
         }
@@ -84,7 +85,7 @@ class EmbarkJSConnectorWeb3 {
           if (err) {
             return reject(err);
           }
-          const locationPath = this.fs.embarkPath(location);
+          const locationPath = embarkPath(location);
           resolve(locationPath);
         });
       });

@@ -1,5 +1,7 @@
 import { __ } from 'embark-i18n';
-import {joinPath} from 'embark-utils';
+import { dappPath, embarkPath } from 'embark-core';
+import { joinPath } from 'embark-utils';
+import * as fs from 'fs-extra';
 import { transform } from "@babel/core";
 const async = require('async');
 const constants = require('embark-core/constants');
@@ -22,7 +24,6 @@ class CodeGenerator {
     this.ready = false;
     this.blockchainConfig = embark.config.blockchainConfig || {};
     this.embarkConfig = embark.config.embarkConfig;
-    this.fs = embark.fs;
     this.dappConfigs = {};
     this.logger = embark.logger;
     this.rpcHost = this.blockchainConfig.rpcHost || '';
@@ -147,7 +148,7 @@ class CodeGenerator {
   }
 
   checkIfNeedsUpdate(file, newOutput, callback) {
-    this.fs.readFile(file, (err, content) => {
+    fs.readFile(file, (err, content) => {
       if (err) {
         return callback(null, true);
       }
@@ -189,7 +190,7 @@ class CodeGenerator {
     }
     async.waterfall([
       (next) => {
-        this.fs.mkdirp(dir, next);
+        fs.mkdirp(dir, next);
       },
       (_dir, next) => {
         this.checkIfNeedsUpdate(filePath, artifactInput, next);
@@ -198,7 +199,7 @@ class CodeGenerator {
         if (!needsUpdate) {
           return next(null, false);
         }
-        this.fs.writeFile(filePath, artifactInput, (err) => {
+        fs.writeFile(filePath, artifactInput, (err) => {
           next(err, true);
         });
       }
@@ -368,7 +369,7 @@ class CodeGenerator {
           return next();
         }
         transform(code, {
-          cwd: self.fs.embarkPath(),
+          cwd: embarkPath(),
           "presets": [
             [
               "@babel/preset-env", {
@@ -391,7 +392,7 @@ class CodeGenerator {
   }
 
   getReloadPageCode() {
-    return this.env === 'development' ? this.fs.readFileSync(path.join(__dirname, '/code/reload-on-change.js'), 'utf8') : '';
+    return this.env === 'development' ? fs.readFileSync(path.join(__dirname, '/code/reload-on-change.js'), 'utf8') : '';
   }
 
   getEmbarkJsProviderCode() {
@@ -437,8 +438,8 @@ class CodeGenerator {
     async.waterfall([
       // Make directory
       next => {
-        const symlinkDir = this.fs.dappPath(this.embarkConfig.generationDir, constants.dappArtifacts.symlinkDir);
-        this.fs.mkdirp(symlinkDir, (err) => {
+        const symlinkDir = dappPath(this.embarkConfig.generationDir, constants.dappArtifacts.symlinkDir);
+        fs.mkdirp(symlinkDir, (err) => {
           if (err) {
             return next(err);
           }
@@ -447,7 +448,7 @@ class CodeGenerator {
       },
       // Remove old symlink because they are not overwritable
       (symlinkDest, next) => {
-        this.fs.remove(symlinkDest, (err) => {
+        fs.remove(symlinkDest, (err) => {
           if (err) {
             return next(err);
           }
@@ -456,7 +457,7 @@ class CodeGenerator {
       },
       // Make target a directory as files don't work on Windows
       (symlinkDest, next) => {
-        this.fs.stat(target, (err, stats) => {
+        fs.stat(target, (err, stats) => {
           if (err) {
             return next(err);
           }
@@ -468,7 +469,7 @@ class CodeGenerator {
         });
       },
       (symlinkDest, finalTarget, next) => {
-        this.fs.symlink(finalTarget, symlinkDest, 'junction', (err) => {
+        fs.symlink(finalTarget, symlinkDest, 'junction', (err) => {
           if (err) {
             return next(err);
           }

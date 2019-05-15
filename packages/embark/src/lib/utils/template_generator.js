@@ -1,3 +1,4 @@
+import { embarkPath } from 'embark-core';
 import { __ } from 'embark-i18n';
 const findUp = require('find-up');
 const fs = require('../core/fs.js');
@@ -110,7 +111,7 @@ class TemplateGenerator {
         this.monorepoRootPath, 'dapps/templates', this.templateName
       );
     } else {
-      const version = fs.readJSONSync(fs.embarkPath('package.json')).version;
+      const version = fs.readJSONSync(embarkPath('package.json')).version;
       templateSpecifier = `${templatePkg}@^${version}`;
     }
 
@@ -145,10 +146,10 @@ class TemplateGenerator {
     if (this._monorepoRootPath === undefined) {
       let monorepoRootPath = null;
       const maybeMonorepoRootPath = fs.existsSync(
-        fs.embarkPath('../../packages/embark')
+        embarkPath('../../packages/embark')
       );
       if (maybeMonorepoRootPath) {
-        const lernaJsonPath = findUp.sync('lerna.json', {cwd: fs.embarkPath()});
+        const lernaJsonPath = findUp.sync('lerna.json', {cwd: embarkPath()});
         if (lernaJsonPath) {
           monorepoRootPath = utils.dirname(lernaJsonPath);
         }
