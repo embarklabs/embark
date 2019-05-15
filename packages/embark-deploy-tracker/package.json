@@ -41,7 +41,7 @@
     "// typecheck": "tsc",
     "watch": "run-p watch:*",
     "watch:build": "npm run build -- --verbose --watch",
-    "watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
+    "// watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
   },
   "eslintConfig": {
     "extends": "../../.eslintrc.json"
