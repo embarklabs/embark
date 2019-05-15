@@ -32,8 +32,8 @@ export default class Server {
   private openSockets = new Set<net.Socket>();
 
   constructor(private embark: Embark, private port: number, private hostname: string, private plugins: Plugins) {
-    this.expressInstance = this.initApp();
     this.embarkUiBuildDir = (findUp.sync("node_modules/embark-ui/build", {cwd: embarkPath()}) || embarkPath("node_modules/embark-ui/build"));
+    this.expressInstance = this.initApp();
   }
 
   public enableLogging() {
