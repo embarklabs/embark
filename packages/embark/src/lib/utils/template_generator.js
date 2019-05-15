@@ -226,9 +226,11 @@ class TemplateGenerator {
         }
       }
 
-      runCmd('npm install', {exitOnError: false}, (err) => {
+      const installCmd = this.monorepoRootPath ? 'yarn install' : 'npm install';
+
+      runCmd(installCmd, {exitOnError: false}, (err) => {
         if (err) {
-          console.error(__('Could not install dependencies. Try running `npm install` inside the project directory.').red);
+          console.error(__(`Could not install dependencies. Try running \`${installCmd}\` inside the project directory.`).red);
         }
         console.log(__('Init complete').green);
         console.log('\n' + __('App ready at ').green + templatePath);
