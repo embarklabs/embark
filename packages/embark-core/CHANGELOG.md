@@ -1,0 +1,17 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# [4.1.0-beta.1](https://github.com/embark-framework/embark/compare/v4.1.0-beta.0...v4.1.0-beta.1) (2019-05-15)
+
+
+### Bug Fixes
+
+* **@embark/core:** move process.on inside ProcessWrapper's constructor ([fd09488](https://github.com/embark-framework/embark/commit/fd09488))
+
+
+### Features
+
+* **@embark/storage:** Add command `service ipfs on/off` ([1e4e6e4](https://github.com/embark-framework/embark/commit/1e4e6e4))
+* **@embark/whisper:** Remove support for `service whisper on/off` ([fc01daf](https://github.com/embark-framework/embark/commit/fc01daf))

@@ -1,6 +1,6 @@
 {
   "name": "embark-ui",
-  "version": "4.1.0-beta.0",
+  "version": "4.1.0-beta.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Web frontend for interactive DApp development with Embark",
@@ -67,7 +67,7 @@
     "date-fns": "1.30.1",
     "dotenv": "6.0.0",
     "dotenv-expand": "4.2.0",
-    "embark-api-client": "^4.1.0-beta.0",
+    "embark-api-client": "^4.1.0-beta.1",
     "eslint": "5.6.0",
     "eslint-config-react-app": "3.0.5",
     "eslint-loader": "2.1.1",

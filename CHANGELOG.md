@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.1](https://github.com/embark-framework/embark/compare/v4.1.0-beta.0...v4.1.0-beta.1) (2019-05-15)
+
+
+### Bug Fixes
+
+* **@embark-utils/accountParser:** fix privateKey accounts ([fc02405](https://github.com/embark-framework/embark/commit/fc02405))
+* **@embark/api:** import colors pkg so type string has .stripColors ([fbfe376](https://github.com/embark-framework/embark/commit/fbfe376))
+* **@embark/api:** setup the embark-ui build dir before the express instance ([c4d647c](https://github.com/embark-framework/embark/commit/c4d647c))
+* **@embark/api:** specify colors package as a dependency ([ae8ec69](https://github.com/embark-framework/embark/commit/ae8ec69))
+* **@embark/blockchain_process:** use correct import for ProcessWrapper ([9acf256](https://github.com/embark-framework/embark/commit/9acf256))
+* **@embark/console:** fix cockpit console if using console command ([d5c3a9c](https://github.com/embark-framework/embark/commit/d5c3a9c))
+* **@embark/core:** move process.on inside ProcessWrapper's constructor ([fd09488](https://github.com/embark-framework/embark/commit/fd09488))
+* **@embark/demo:** link css from dependency ([438e917](https://github.com/embark-framework/embark/commit/438e917))
+* **@embark/demo:** render whisper error messages not error objects ([925ed06](https://github.com/embark-framework/embark/commit/925ed06))
+* **@embark/deployment:** only log error when error exists ([bf0f439](https://github.com/embark-framework/embark/commit/bf0f439))
+* **@embark/library-manager:** specify colors package as a dependency ([2d22819](https://github.com/embark-framework/embark/commit/2d22819))
+* **@embark/plugin-cmd:** revise package.json in light of [#1573](https://github.com/embark-framework/embark/issues/1573), [#1574](https://github.com/embark-framework/embark/issues/1574), [#1575](https://github.com/embark-framework/embark/issues/1575), [#1576](https://github.com/embark-framework/embark/issues/1576) ([c30f742](https://github.com/embark-framework/embark/commit/c30f742))
+* **@embark/site:** fix strategy not put in the right section ([8781585](https://github.com/embark-framework/embark/commit/8781585))
+* **@embark/specialconfig:** fix undefined contract name in onDeploy ([7eb85f0](https://github.com/embark-framework/embark/commit/7eb85f0))
+* **@embark/utils:** expose longRunningProcessTimer properly ([244e2e2](https://github.com/embark-framework/embark/commit/244e2e2))
+* **embark-site:** error in tracking section ([c7c923d](https://github.com/embark-framework/embark/commit/c7c923d))
+* **embark-site:** remove double web3 typo ([b9c12dd](https://github.com/embark-framework/embark/commit/b9c12dd))
+* improve wording on contract constructor failing ([ea7ae22](https://github.com/embark-framework/embark/commit/ea7ae22))
+* **embark/generator:** add back environment to EmbarkJS ([1ae0ab6](https://github.com/embark-framework/embark/commit/1ae0ab6))
+* **embark/generator:** add empty line to embarkjs ([6b16f66](https://github.com/embark-framework/embark/commit/6b16f66))
+* **test:** fix accountParser test in regards to privateKey fix ([a22d8fc](https://github.com/embark-framework/embark/commit/a22d8fc))
+* add missing linkjuice built ([b5db685](https://github.com/embark-framework/embark/commit/b5db685))
+* dashboard auto complete ([c51ec50](https://github.com/embark-framework/embark/commit/c51ec50))
+* make coverage more forgiving ([0f4e554](https://github.com/embark-framework/embark/commit/0f4e554))
+* parity origins ([a75fa79](https://github.com/embark-framework/embark/commit/a75fa79))
+* update solidity-parser-antlr to allow the use of the payable keyword in contracts ([7401966](https://github.com/embark-framework/embark/commit/7401966))
+
+
+### Features
+
+* **@embar/contracts-manager:** add message for interface contracts ([334d3bc](https://github.com/embark-framework/embark/commit/334d3bc))
+* **@embark-site:** add troubleshooting guide on interface contracts ([1f02e49](https://github.com/embark-framework/embark/commit/1f02e49))
+* **@embark/api:** Add command `service api on/off` ([634feb5](https://github.com/embark-framework/embark/commit/634feb5))
+* **@embark/blockchain:** Restart Ethereum via command ([7a76516](https://github.com/embark-framework/embark/commit/7a76516))
+* **@embark/storage:** Add command `service ipfs on/off` ([1e4e6e4](https://github.com/embark-framework/embark/commit/1e4e6e4))
+* **@embark/storage:** Add command `service swarm on/off` ([3dcc339](https://github.com/embark-framework/embark/commit/3dcc339))
+* **@embark/test-runner:** show interface contract message in tests ([f9d7a3f](https://github.com/embark-framework/embark/commit/f9d7a3f))
+* **@embark/webserver:** Add support for `service webserver on/off` ([0c394fe](https://github.com/embark-framework/embark/commit/0c394fe))
+* **@embark/whisper:** Remove support for `service whisper on/off` ([fc01daf](https://github.com/embark-framework/embark/commit/fc01daf))
+
+
+
+
+
 # [4.1.0-beta.0](https://github.com/embark-framework/embark/compare/v4.0.0...v4.1.0-beta.0) (2019-04-17)
 
 

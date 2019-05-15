@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.1](https://github.com/embark-framework/embark/compare/v4.1.0-beta.0...v4.1.0-beta.1) (2019-05-15)
+
+
+### Bug Fixes
+
+* **@embark-utils/accountParser:** fix privateKey accounts ([fc02405](https://github.com/embark-framework/embark/commit/fc02405))
+* **@embark/blockchain_process:** use correct import for ProcessWrapper ([9acf256](https://github.com/embark-framework/embark/commit/9acf256))
+* **@embark/console:** fix cockpit console if using console command ([d5c3a9c](https://github.com/embark-framework/embark/commit/d5c3a9c))
+* **@embark/deployment:** only log error when error exists ([bf0f439](https://github.com/embark-framework/embark/commit/bf0f439))
+* **@embark/utils:** expose longRunningProcessTimer properly ([244e2e2](https://github.com/embark-framework/embark/commit/244e2e2))
+* dashboard auto complete ([c51ec50](https://github.com/embark-framework/embark/commit/c51ec50))
+* **embark/generator:** add back environment to EmbarkJS ([1ae0ab6](https://github.com/embark-framework/embark/commit/1ae0ab6))
+* **embark/generator:** add empty line to embarkjs ([6b16f66](https://github.com/embark-framework/embark/commit/6b16f66))
+* **test:** fix accountParser test in regards to privateKey fix ([a22d8fc](https://github.com/embark-framework/embark/commit/a22d8fc))
+* improve wording on contract constructor failing ([ea7ae22](https://github.com/embark-framework/embark/commit/ea7ae22))
+* make coverage more forgiving ([0f4e554](https://github.com/embark-framework/embark/commit/0f4e554))
+* parity origins ([a75fa79](https://github.com/embark-framework/embark/commit/a75fa79))
+* update solidity-parser-antlr to allow the use of the payable keyword in contracts ([7401966](https://github.com/embark-framework/embark/commit/7401966))
+
+
+### Features
+
+* **@embark/blockchain:** Restart Ethereum via command ([7a76516](https://github.com/embark-framework/embark/commit/7a76516))
+* **@embark/storage:** Add command `service ipfs on/off` ([1e4e6e4](https://github.com/embark-framework/embark/commit/1e4e6e4))
+* **@embark/storage:** Add command `service swarm on/off` ([3dcc339](https://github.com/embark-framework/embark/commit/3dcc339))
+* **@embark/webserver:** Add support for `service webserver on/off` ([0c394fe](https://github.com/embark-framework/embark/commit/0c394fe))
+
+
+
+
+
 # [4.1.0-beta.0](https://github.com/embark-framework/embark/compare/v4.0.0...v4.1.0-beta.0) (2019-04-17)
 
 

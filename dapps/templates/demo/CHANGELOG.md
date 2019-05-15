@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.1](https://github.com/embark-framework/embark/compare/v4.1.0-beta.0...v4.1.0-beta.1) (2019-05-15)
+
+
+### Bug Fixes
+
+* **@embark/demo:** link css from dependency ([438e917](https://github.com/embark-framework/embark/commit/438e917))
+* **@embark/demo:** render whisper error messages not error objects ([925ed06](https://github.com/embark-framework/embark/commit/925ed06))
+
+
+
+
+
 # [4.1.0-beta.0](https://github.com/embark-framework/embark/compare/v4.0.0...v4.1.0-beta.0) (2019-04-17)
 
 **Note:** Version bump only for package embark-dapp-template-demo

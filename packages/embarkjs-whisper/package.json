@@ -1,6 +1,6 @@
 {
   "name": "embarkjs-whisper",
-  "version": "4.1.0-beta.0",
+  "version": "4.1.0-beta.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Whisper plugin for embarkjs",
