@@ -30,7 +30,7 @@
     "// package": "npm pack",
     "// qa": "npm-run-all lint build test package",
     "// reset": "npx npm-run-all reset:*",
-    "// reset:src": "npx rimraf dist create-embark-*.tgz package",
+    "// reset:src": "npx rimraf coverage dist create-embark-*.tgz package",
     "// reset:base": "npx rimraf build-base",
     "// reset:demo": "npx rimraf build-demo",
     "// start": "npm run watch",
