@@ -1,3 +1,4 @@
+import 'colors';
 import { ProcessWrapper } from 'embark-core';
 import { dappPath, errorMessage } from 'embark-utils';
 const constants = require('embark-core/constants');
