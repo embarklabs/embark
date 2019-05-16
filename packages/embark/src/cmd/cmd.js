@@ -2,6 +2,8 @@ import { __, setOrDetectLocale } from 'embark-i18n';
 const program = require('commander');
 const EmbarkController = require('./cmd_controller.js');
 const fs = require('../lib/core/fs.js');
+// const {spec: initSpec} = require('embark-init/cli');
+const { spec: resetSpec } = require('embark-reset/cli');
 
 let embark = new EmbarkController();
 
@@ -19,6 +21,7 @@ class Cmd {
     this.blockchain();
     this.simulator();
     this.test();
+    this.init();
     this.reset();
     this.ejectWebpack();
     this.graph();
@@ -344,8 +347,27 @@ class Cmd {
       });
   }
 
+  init() {
+    // initSpec(program.command('init'));
+
+    /* program
+      .command('init [creator]')
+      .option('--locale [locale]', __('language to use (default: en)'))
+      .description(__('initializes a project for use with embark'))
+      .action(function(options) {
+        i18n.setOrDetectLocale(options.locale);
+        embark.initConfig('development', {
+          embarkConfig: 'embark.json',
+          interceptLogs: false
+        });
+        embark.init();
+      }); */
+  }
+
   reset() {
-    program
+    resetSpec(program.command('reset'));
+
+    /* program
       .command('reset')
       .option('--locale [locale]', __('language to use (default: en)'))
       .description(__('resets embarks state on this dapp including clearing cache'))
@@ -354,10 +376,8 @@ class Cmd {
         embark.initConfig('development', {
           embarkConfig: 'embark.json', interceptLogs: false
         });
-        embark.reset({
-          embarkConfig: 'embark.json'
-        });
-      });
+        embark.reset();
+      }); */
   }
 
   ejectWebpack() {

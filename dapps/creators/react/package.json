@@ -1,0 +1,78 @@
+{
+  "name": "create-embark-react-dapp",
+  "version": "4.1.0-beta.1",
+  "author": "Iuri Matias <iuri.matias@gmail.com>",
+  "contributors": [],
+  "description": "DApp template and demo for Embark that use create-react-app as a frontend build tool",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/dapps/templates/create-embark-react-dapp#readme",
+  "bugs": "https://github.com/embark-framework/embark/issues",
+  "license": "MIT",
+  "repository": {
+    "directory": "dapps/templates/create-embark-react-dapp",
+    "type": "git",
+    "url": "https://github.com/embark-framework/embark.git"
+  },
+  "bin": "./bin.js",
+  "main": "dist/index.js",
+  "files": [
+    "bin.js",
+    "dist",
+    "template"
+  ],
+  "scripts": {
+    "// build": "npm-run-all build:*",
+    "// build:src": "cross-env BABEL_ENV=node babel src --out-dir dist --root-mode upward --source-maps",
+    "// build:base": "npm run reset:base && npx . embark-react-dapp build-base",
+    "// build:demo": "npm run reset:demo && npx . embark-react-demo --demo build-demo",
+    "// ci": "npm run qa",
+    "// clean": "npm run reset",
+    "// lint": "eslint bin.js scripts/ src/ template/",
+    "// package": "npm pack",
+    "// qa": "npm-run-all lint build test package",
+    "// reset": "npx npm-run-all reset:*",
+    "// reset:src": "npx rimraf dist create-embark-*.tgz package",
+    "// reset:base": "npx rimraf build-base",
+    "// reset:demo": "npx rimraf build-demo",
+    "// start": "npm run watch",
+    "// test:base": "cd build-base && node ../node_modules/.bin/embark test",
+    "// test:demo": "cd build-demo && node ../node_modules/.bin/embark test",
+    "// watch": "run-p watch:*",
+    "// watch:build": "npm run build:src -- --verbose --watch",
+    "// watch:template": "node scripts/watch"
+  },
+  "eslintConfig": {
+    "extends": "../../../.eslintrc.json"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs2": "7.3.1",
+    "commander": "2.19.0",
+    "embark-cli-utils": "^4.1.0-beta.1",
+    "embark-init": "^4.1.0-beta.1",
+    "npm-package-arg": "6.1.0",
+    "fs-extra": "7.0.1",
+    "semver": "5.6.0",
+    "source-map-support": "0.5.9"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.2.3",
+    "@babel/core": "7.2.2",
+    "cross-env": "5.2.0",
+    "embark": "^4.1.0-beta.1",
+    "eslint": "5.7.0",
+    "npm-run-all": "4.1.5",
+    "rimraf": "2.6.3"
+  },
+  "engines": {
+    "node": ">=8.12.0",
+    "npm": ">=6.4.1",
+    "yarn": ">=1.12.3"
+  },
+  "runtime": {
+    "dependencies": {
+      "create-react-app": "^2.1.8"
+    },
+    "engines": {
+      "node": ">=8.11.3"
+    }
+  }
+}

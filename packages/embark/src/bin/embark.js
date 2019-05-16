@@ -978,6 +978,7 @@ function exitWithError(code) {
 
 function initCwd() {
   var initCwd = process.env.INIT_CWD || process.cwd();
+  if (!process.env.INIT_CWD) process.env.INIT_CWD = initCwd;
   // allow for env override
   initCwd = process.env.DAPP_PATH || initCwd;
   return initCwd;

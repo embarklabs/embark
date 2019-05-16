@@ -12,13 +12,30 @@
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },
-  "bin": "./bin.js",
+  "bin": "./bin/embark-reset.js",
   "main": "index.js",
   "files": [
-    "bin.js"
+    "bin",
+    "cli.js",
+    "options.js"
   ],
+  "scripts": {
+    "lint": "eslint bin.js cli.js index.js options.js",
+    "package": "npm pack"
+  },
+  "eslintConfig": {
+    "extends": "../../.eslintrc.json"
+  },
   "dependencies": {
-    "rimraf": "2.6.3"
+    "commander": "2.20.0",
+    "embark-cli-utils": "^4.1.0-beta.1",
+    "embark-i18n": "^4.1.0-beta.1",
+    "find-up": "2.1.0",
+    "lodash.at": "4.6.0",
+    "lodash.isequal": "4.5.0",
+    "lodash.merge": "4.6.1",
+    "rimraf": "2.6.3",
+    "subdir": "0.0.3"
   },
   "engines": {
     "node": ">=8.12.0",

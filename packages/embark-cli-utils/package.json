@@ -1,0 +1,64 @@
+{
+  "name": "embark-cli-utils",
+  "version": "4.1.0-beta.1",
+  "author": "Iuri Matias <iuri.matias@gmail.com>",
+  "contributors": [],
+  "description": "Utlities for Embark cli modules",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-cli-utils#readme",
+  "bugs": "https://github.com/embark-framework/embark/issues",
+  "license": "MIT",
+  "repository": {
+    "directory": "packages/embark-cli-utils",
+    "type": "git",
+    "url": "https://github.com/embark-framework/embark.git"
+  },
+  "main": "index.js",
+  "files": [
+    "compat.js"
+  ],
+  "scripts": {
+    "ci": "npm run qa",
+    "clean": "npm run reset",
+    "lint": "eslint compat.js index.js test/",
+    "package": "npm pack",
+    "qa": "npm-run-all lint test package",
+    "reset": "npx rimraf coverage embark-*.tgz package",
+    "test": "jest"
+  },
+  "eslintConfig": {
+    "extends": [
+      "../../.eslintrc.json",
+      "plugin:jest/recommended",
+      "plugin:jest/style"
+    ]
+  },
+  "jest": {
+    "collectCoverage": true,
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/test/**/*.[jt]s?(x)"
+    ]
+  },
+  "dependencies": {
+    "colors": "1.3.2",
+    "semver": "5.6.0"
+  },
+  "devDependencies": {
+    "@types/jest": "24.0.11",
+    "eslint": "5.16.0",
+    "eslint-plugin-jest": "22.5.1",
+    "jest": "24.7.1",
+    "npm-run-all": "4.1.5",
+    "rimraf": "2.6.3"
+  },
+  "engines": {
+    "node": ">=8.12.0",
+    "npm": ">=6.4.1",
+    "yarn": ">=1.12.3"
+  },
+  "runtime": {
+    "engines": {
+      "node": ">=8.11.3"
+    }
+  }
+}

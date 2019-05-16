@@ -1,0 +1,14 @@
+// const { defaultRange, enforceRuntimeNodeVersion } = require("../compat");
+
+// TODO
+// get rid of this test and don't export defaultRange
+// export and test getRange instead
+// describe("defaultRange", () => {
+//   test("returns the node range from embark-cli-utils own package.json", () => {
+//     expect(defaultRange()).toBe(
+//       require("../package.json").runtime.engines.node
+//     );
+//   });
+// });
+
+// describe("enforceRuntimeNodeVersion", () => {});
