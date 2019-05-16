@@ -7,9 +7,9 @@ const constants = require('embark-core/constants');
 const GethClient = require('./gethClient.js');
 const ParityClient = require('./parityClient.js');
 import { Proxy } from './proxy';
-import { IPC, dappPath, embarkPath } from 'embark-core';
+import { IPC } from 'embark-core';
 
-import { compact, defaultHost, dockerHostSwap, AccountParser} from 'embark-utils';
+import { compact, dappPath, defaultHost, dockerHostSwap, embarkPath, AccountParser} from 'embark-utils';
 const Logger = require('embark-logger');
 
 // time between IPC connection attempts (in ms)

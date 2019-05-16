@@ -1,4 +1,5 @@
-import { dappPath, ProcessWrapper } from 'embark-core';
+import { ProcessWrapper } from 'embark-core';
+import { dappPath } from 'embark-utils';
 const child_process = require('child_process');
 const constants = require('embark-core/constants');
 

@@ -1,5 +1,5 @@
 /*globals describe, it, before*/
-const { dappPath } = require('embark-core');
+const { dappPath } = require('embark-utils');
 const {File, Types} = require("../../../lib/core/file");
 const path = require("path");
 const remapImports = require("../../../lib/utils/solidity/remapImports");

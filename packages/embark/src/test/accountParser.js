@@ -1,12 +1,11 @@
 /*global __dirname, describe, it, before, after, require*/
-import { dappPath } from 'embark-core';
 import * as i18n from 'embark-i18n';
 const assert = require('assert');
 const sinon = require('sinon');
 let TestLogger = require('../lib/utils/test_logger');
 const Web3 = require('web3');
 const fs = require('../lib/core/fs');
-import { getWeiBalanceFromString, getHexBalanceFromString, AccountParser } from 'embark-utils';
+import { dappPath, getWeiBalanceFromString, getHexBalanceFromString, AccountParser } from 'embark-utils';
 i18n.setOrDetectLocale('en');
 
 describe('embark.AccountParser', function () {

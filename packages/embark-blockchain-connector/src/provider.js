@@ -1,7 +1,6 @@
-import { dappPath } from 'embark-core';
 import { __ } from 'embark-i18n';
 const async = require('async');
-const { AccountParser } = require('embark-utils');
+const { AccountParser, dappPath } = require('embark-utils');
 const fundAccount = require('./fundAccount');
 const constants = require('embark-core/constants');
 const Transaction = require('ethereumjs-tx');

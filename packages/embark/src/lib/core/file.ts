@@ -1,5 +1,5 @@
-import { dappPath, embarkPath } from "embark-core";
 import { __ } from "embark-i18n";
+import { dappPath, embarkPath } from "embark-utils";
 import * as path from "path";
 import { ImportRemapping, prepareForCompilation } from "../utils/solidity/remapImports";
 

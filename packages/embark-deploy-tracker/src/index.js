@@ -1,6 +1,5 @@
-import { dappPath } from 'embark-core';
 import { __ } from 'embark-i18n';
-import { sha3 } from 'embark-utils';
+import { dappPath, sha3 } from 'embark-utils';
 import * as fs from 'fs-extra';
 
 class DeployTracker {

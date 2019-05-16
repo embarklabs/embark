@@ -4,7 +4,7 @@ const ipc = require('node-ipc');
 const {parse, stringify} = require('flatted/cjs');
 const path = require('path');
 const fs = require('fs-extra');
-import { ipcPath } from './utils';
+import { ipcPath } from 'embark-utils';
 
 const EMBARK = 'embark';
 

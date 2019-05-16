@@ -1,5 +1,5 @@
 import { __ } from 'embark-i18n';
-import { dappPath, ipcPath } from 'embark-core';
+import { dappPath, ipcPath } from 'embark-utils';
 const async = require('async');
 const {exec, spawn} = require('child_process');
 const path = require('path');

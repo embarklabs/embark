@@ -2,10 +2,9 @@ const path = require('path');
 const pkgUp = require('pkg-up');
 let shelljs = require('shelljs');
 import { Proxy } from './proxy';
-import { IPC, embarkPath, dappPath } from 'embark-core';
+import { IPC } from 'embark-core';
 const constants = require('embark-core/constants');
-import { defaultHost, dockerHostSwap } from 'embark-utils';
-const { AccountParser } = require('embark-utils');
+import { AccountParser, dappPath, defaultHost, dockerHostSwap, embarkPath } from 'embark-utils';
 
 export class Simulator {
   constructor(options) {

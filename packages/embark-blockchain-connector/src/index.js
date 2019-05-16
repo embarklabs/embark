@@ -1,4 +1,3 @@
-import { dappPath } from 'embark-core';
 import { __ } from 'embark-i18n';
 const Web3 = require('web3');
 const async = require('async');
@@ -8,7 +7,7 @@ const constants = require('embark-core/constants');
 const embarkJsUtils = require('embarkjs').Utils;
 const {bigNumberify} = require('ethers/utils/bignumber');
 const RLP = require('ethers/utils/rlp');
-import { buildUrl } from 'embark-utils';
+import { buildUrl, dappPath } from 'embark-utils';
 
 const WEB3_READY = 'blockchain:ready';
 

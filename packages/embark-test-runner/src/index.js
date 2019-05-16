@@ -1,9 +1,8 @@
-import { dappPath, embarkPath } from 'embark-core';
 import { __ } from 'embark-i18n';
 const async = require('async');
 const Mocha = require('mocha');
 const path = require('path');
-const { runCmd, timer } = require('embark-utils');
+const { dappPath, embarkPath, runCmd, timer } = require('embark-utils');
 const assert = require('assert');
 const Test = require('./test');
 const {EmbarkSpec, EmbarkApiSpec} = require('./reporter');

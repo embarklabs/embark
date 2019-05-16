@@ -1,6 +1,5 @@
 import { __ } from 'embark-i18n';
-import { dappPath, embarkPath } from 'embark-core';
-import { joinPath } from 'embark-utils';
+import { dappPath, embarkPath, joinPath } from 'embark-utils';
 import * as fs from 'fs-extra';
 import { transform } from "@babel/core";
 const async = require('async');

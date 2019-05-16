@@ -1,6 +1,6 @@
 import { __ } from 'embark-i18n';
-import { dappPath, ProcessLauncher } from 'embark-core';
-import {joinPath} from 'embark-utils';
+import { ProcessLauncher } from 'embark-core';
+import { dappPath, joinPath } from 'embark-utils';
 const uuid = require('uuid/v1');
 
 class SolcW {

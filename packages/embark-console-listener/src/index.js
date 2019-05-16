@@ -1,7 +1,6 @@
 const async = require('async');
-import { dappPath } from 'embark-core';
 import { __ } from 'embark-i18n';
-import { getAddressToContract, getTransactionParams, hexToNumber } from 'embark-utils';
+import { dappPath, getAddressToContract, getTransactionParams, hexToNumber } from 'embark-utils';
 
 class ConsoleListener {
   constructor(embark, options) {

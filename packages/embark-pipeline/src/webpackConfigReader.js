@@ -1,5 +1,4 @@
-import { dappPath } from 'embark-core';
-import { errorMessage } from 'embark-utils';
+import { dappPath, errorMessage } from 'embark-utils';
 const fs = require('fs-extra');
 import * as path from 'path';
 

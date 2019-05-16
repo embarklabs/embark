@@ -1,10 +1,9 @@
-import { embarkPath } from 'embark-core';
 import { __ } from 'embark-i18n';
 const findUp = require('find-up');
 const fs = require('../core/fs.js');
 const hostedGitInfo = require('hosted-git-info');
 const utils = require('./utils.js');
-import { joinPath, runCmd, errorMessage } from 'embark-utils';
+import { embarkPath, joinPath, runCmd, errorMessage } from 'embark-utils';
 const semver = require('semver');
 const {promisify} = require('util');
 const {execSync} = require('child_process');

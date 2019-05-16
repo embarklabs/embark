@@ -1,5 +1,5 @@
 import { __ } from 'embark-i18n';
-import { dappPath } from 'embark-core';
+import { dappPath } from 'embark-utils';
 import * as fs from 'fs-extra';
 const async = require('async');
 const path = require('path');

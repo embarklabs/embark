@@ -1,6 +1,6 @@
 import { BlockchainClient, Simulator } from 'embark-blockchain-process';
-import { dappPath, embarkPath } from 'embark-core';
 import { __ } from 'embark-i18n';
+import { dappPath, embarkPath } from 'embark-utils';
 import findUp from 'find-up';
 let async = require('async');
 const constants = require('embark-core/constants');

@@ -1,8 +1,8 @@
 const path = require('path');
 const async = require('async');
 import { __ } from 'embark-i18n';
-import { joinPath, LongRunningProcessTimer, fileTreeSort } from 'embark-utils';
-import { dappPath, ProcessLauncher } from 'embark-core';
+import { dappPath, joinPath, LongRunningProcessTimer, fileTreeSort } from 'embark-utils';
+import { ProcessLauncher } from 'embark-core';
 const constants = require('embark-core/constants');
 const WebpackConfigReader = require('./webpackConfigReader');
 

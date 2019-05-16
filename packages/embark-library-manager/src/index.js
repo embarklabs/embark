@@ -1,5 +1,5 @@
-import { dappPath, embarkPath } from 'embark-core';
 import { __ } from 'embark-i18n';
+import { dappPath, embarkPath } from 'embark-utils';
 var Npm = require('./npm.js');
 
 class LibraryManager {

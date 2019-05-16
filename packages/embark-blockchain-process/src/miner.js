@@ -1,7 +1,7 @@
 const async = require('async');
 const NetcatClient = require('netcat/client');
 
-import { ipcPath } from 'embark-core';
+import { ipcPath } from 'embark-utils';
 
 //Constants
 const minerStart = 'miner_start';
