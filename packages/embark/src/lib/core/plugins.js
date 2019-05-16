@@ -1,4 +1,4 @@
-import { dappPath, embarkPath } from 'embark-core';
+import { dappPath, embarkPath } from 'embark-utils';
 const async = require('async');
 var Plugin = require('./plugin.js');
 var fs = require('../core/fs.js');

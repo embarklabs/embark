@@ -1,8 +1,7 @@
 /*globals describe, it*/
 import { BlockchainClient } from 'embark-blockchain-process';
-import { dappPath } from 'embark-core';
 const constants = require('embark-core/constants');
-import {defaultHost} from 'embark-utils';
+import { dappPath, defaultHost} from 'embark-utils';
 const path = require('path');
 const fs = require('../lib/core/fs.js');
 

@@ -1,5 +1,5 @@
 /*globals describe, it*/
-const { dappPath } = require('embark-core');
+const { dappPath } = require('embark-utils');
 const Config = require('../lib/core/config.js');
 const Plugins = require('../lib/core/plugins.js');
 const assert = require('assert');

@@ -1,5 +1,5 @@
 /*globals describe, it*/
-const { dappPath } = require('embark-core');
+const { dappPath } = require('embark-utils');
 const {File, Types} = require("../lib/core/file");
 const {expect} = require("chai");
 const fs = require("../lib/core/fs");

@@ -1,4 +1,4 @@
-import { dappPath } from "embark-core";
+import { dappPath } from "embark-utils";
 import * as globule from "globule";
 import * as path from "path";
 import Web3Contract from "web3/eth/contract";

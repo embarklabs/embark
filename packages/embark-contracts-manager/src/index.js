@@ -1,10 +1,9 @@
-import { dappPath } from 'embark-core';
 import { __ } from 'embark-i18n';
 const async = require('async');
 const cloneDeep = require('clone-deep');
 const constants = require('embark-core/constants');
 const path = require('path');
-const {proposeAlternative, toposort} = require('embark-utils');
+const { dappPath, proposeAlternative, toposort } = require('embark-utils');
 
 // TODO: create a contract object
 

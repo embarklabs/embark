@@ -1,4 +1,3 @@
-import { dappPath, embarkPath } from 'embark-core';
 import { __ } from 'embark-i18n';
 const UploadIPFS = require('./upload.js');
 const utils = require('../../utils/utils.js');
@@ -6,7 +5,7 @@ const IpfsApi = require('ipfs-api');
 // TODO: not great, breaks module isolation
 const StorageProcessesLauncher = require('../storage/storageProcessesLauncher');
 const constants = require('embark-core/constants');
-import { buildUrlFromConfig } from 'embark-utils';
+import { buildUrlFromConfig, dappPath, embarkPath } from 'embark-utils';
 
 class IPFS {
 

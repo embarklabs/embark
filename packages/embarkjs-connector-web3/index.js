@@ -1,4 +1,4 @@
-const { dappPath, embarkPath } = require('embark-core');
+const { dappPath, embarkPath } = require('embark-utils');
 const path = require('path');
 
 class EmbarkJSConnectorWeb3 {

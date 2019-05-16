@@ -1,4 +1,4 @@
-import { dappPath, embarkPath } from "embark-core";
+import { dappPath, embarkPath } from "embark-utils";
 import * as path from "path";
 import { File, Types } from "../../core/file";
 import { removePureView, replacePureView } from "./code";

@@ -1,5 +1,5 @@
 /*global after, before, describe, it, require, process*/
-const { embarkPath } = require('embark-core');
+const { embarkPath } = require('embark-utils');
 const {assert} = require('chai');
 const os = require('os');
 const path = require('path');

@@ -1,5 +1,5 @@
-import { dappPath, ProcessWrapper } from 'embark-core';
-import { errorMessage } from 'embark-utils';
+import { ProcessWrapper } from 'embark-core';
+import { dappPath, errorMessage } from 'embark-utils';
 const constants = require('embark-core/constants');
 const webpack = require('webpack');
 const writeFile = require('util').promisify(require('fs').writeFile);

@@ -1,5 +1,5 @@
-import { dappPath } from 'embark-core';
 import { __ } from 'embark-i18n';
+import { dappPath } from 'embark-utils';
 let chokidar = require('chokidar');
 let path = require('path');
 
