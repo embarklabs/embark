@@ -43,7 +43,7 @@
     "clean": "npm run reset",
     "package": "npm pack",
     "qa": "npm-run-all build test package",
-    "reset": "npx rimraf build-test dist embarkjs-*.tgz package",
+    "reset": "npx rimraf .nyc_output build-test coverage dist embarkjs-*.tgz package",
     "start": "npm run watch",
     "test": "nyc --reporter=html --reporter=json mocha \"build-test/**/*.js\" --exit --no-timeouts --require source-map-support/register",
     "watch": "run-p \"build:** -- --verbose --watch\""

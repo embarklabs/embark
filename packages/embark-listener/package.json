@@ -35,7 +35,7 @@
     "package": "npm pack",
     "// qa": "npm-run-all lint typecheck build package",
     "qa": "npm-run-all lint build package",
-    "reset": "npx rimraf dist embark-*.tgz package",
+    "reset": "npx rimraf .nyc_output coverage dist embark-*.tgz package",
     "start": "npm run watch",
     "// test": "nyc --reporter=html --reporter=json mocha \"dist/test/**/*.js\" --exit --no-timeouts --require source-map-support/register",
     "// typecheck": "tsc",
