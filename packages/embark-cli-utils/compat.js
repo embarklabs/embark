@@ -1,13 +1,13 @@
 /* this script is written to be runnable with node >=0.10.0 */
 
-require("colors");
 var semver = require("semver");
 
-function defaultRange() {
-  return getPkgJson("./package.json").runtime.engines.node;
-}
+var constants = require("./constants");
+var encountered = constants.encountered;
+var errorLogger = constants.errorLogger;
+var errorMark = constants.errorMark;
 
-function getPkgJson(pkgJsonPath) {
+exports.getPkgJson = function(pkgJsonPath) {
   var pkgJson;
   try {
     if (pkgJsonPath) pkgJson = require(pkgJsonPath);
@@ -16,51 +16,24 @@ function getPkgJson(pkgJsonPath) {
     // eslint-disable-next-line no-unsafe-finally
     return pkgJson;
   }
-}
+};
 
-function getNodeVerRange(pkgJson) {
+exports.defaultRange = function() {
+  return exports.getPkgJson("./package.json").runtime.engines.node;
+};
+
+exports.getNodeVerRange = function(pkgJson) {
   var range;
   try {
     range = pkgJson.runtime.engines.node;
   } finally {
-    if (!range) range = defaultRange();
+    if (!range) range = exports.defaultRange();
     // eslint-disable-next-line no-unsafe-finally
     return range;
   }
-}
+};
 
-function enforceRuntimeNodeVersion(pkgJsonPath) {
-  var pkgJson = getPkgJson(pkgJsonPath);
-  try {
-    var procVer = semver.clean(process.version);
-    var range = getNodeVerRange(pkgJson);
-    if (!semver.satisfies(procVer, range)) {
-      var pkgName = pkgNameCyan(pkgJson);
-      var message = [
-        "node version ",
-        procVer.red,
-        " is not supported, version ",
-        range.green,
-        " is required",
-        pkgName && " by " + pkgNameCyan(pkgJson).trim()
-      ].join("");
-      exitWithError(null, message);
-    }
-  } catch (e) {
-    exitWithError(pkgJson, null, e);
-  }
-}
-
-function exitWithError(pkgJson, message, err, silent) {
-  var encountered = "encountered an error";
-  if (pkgJson) logError(pkgNameCyan(pkgJson) + encountered);
-  if (message) logError(message);
-  if (err) console.error(err);
-  if (!(pkgJson || message || err) && !silent) logError(encountered);
-  process.exit(1);
-}
-
-function log(mark, strings, which) {
+exports.log = function(mark, strings, which) {
   var _which = which || "log";
   console[_which](
     mark,
@@ -70,24 +43,45 @@ function log(mark, strings, which) {
       })
       .join(" ")
   );
-}
+};
 
-function logError() {
+exports.logError = function() {
   var strings = Array.prototype.slice.call(arguments);
-  log("✘".red, strings, "error");
-}
+  exports.log(errorMark, strings, errorLogger);
+};
 
-function pkgNameCyan(pkgJson) {
-  return pkgJson.name ? pkgJson.name.cyan + " " : "";
-}
+exports.pkgNameCyan = function(pkgJson) {
+  return pkgJson.name ? pkgJson.name.cyan : "";
+};
 
-module.exports = {
-  defaultRange: defaultRange,
-  enforceRuntimeNodeVersion: enforceRuntimeNodeVersion,
-  exitWithError: exitWithError,
-  getPkgJson: getPkgJson,
-  getNodeVerRange: getNodeVerRange,
-  log: log,
-  logError: logError,
-  pkgNameCyan: pkgNameCyan
+exports.exitWithError = function(pkgJson, message, err, silent) {
+  if (pkgJson) {
+    exports.logError(exports.pkgNameCyan(pkgJson) + " " + encountered);
+  }
+  if (message) exports.logError(message);
+  if (err) console.error(err);
+  if (!(pkgJson || message || err) && !silent) exports.logError(encountered);
+  process.exit(1);
+};
+
+exports.enforceRuntimeNodeVersion = function(pkgJsonPath) {
+  var pkgJson = exports.getPkgJson(pkgJsonPath);
+  try {
+    var procVer = semver.clean(process.version);
+    var range = exports.getNodeVerRange(pkgJson);
+    if (!semver.satisfies(procVer, range)) {
+      var pkgName = exports.pkgNameCyan(pkgJson);
+      var message = [
+        "node version ",
+        procVer.red,
+        " is not supported, version ",
+        range.green,
+        " is required",
+        pkgName && " by " + exports.pkgNameCyan(pkgJson)
+      ].join("");
+      exports.exitWithError(null, message);
+    }
+  } catch (e) {
+    exports.exitWithError(pkgJson, null, e);
+  }
 };

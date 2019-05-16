@@ -5,29 +5,31 @@ const {
   logError
 } = require("./compat");
 
-function exitWithSuccess(message) {
-  if (message) logSuccess(message);
+const {
+  logLogger,
+  warnLogger,
+  infoMark,
+  successMark,
+  warnMark
+} = require("./constants");
+
+exports.enforceRuntimeNodeVersion = enforceRuntimeNodeVersion;
+exports.exitWithError = exitWithError;
+exports.logError = logError;
+
+exports.logInfo = function(...strings) {
+  log(infoMark, strings, logLogger);
+};
+
+exports.logSuccess = function(...strings) {
+  log(successMark, strings, logLogger);
+};
+
+exports.logWarn = function(...strings) {
+  log(warnMark, strings, warnLogger);
+};
+
+exports.exitWithSuccess = function(message) {
+  if (message) exports.logSuccess(message);
   process.exit(0);
-}
-
-function logInfo(...strings) {
-  log("ℹ".blue, strings, "log");
-}
-
-function logSuccess(...strings) {
-  log("✔".green, strings, "log");
-}
-
-function logWarn(...strings) {
-  log("‼︎".yellow, strings, "warn");
-}
-
-module.exports = {
-  enforceRuntimeNodeVersion,
-  exitWithError,
-  exitWithSuccess,
-  logError,
-  logInfo,
-  logSuccess,
-  logWarn
 };

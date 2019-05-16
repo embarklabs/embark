@@ -1,94 +1,108 @@
-require("colors");
-const { exitWithSuccess, logInfo, logSuccess, logWarn } = require("..");
+const compat = require("../compat");
+jest.mock("../compat");
+const { log } = compat;
+
+const index = require("..");
+const { logInfo, logSuccess, logWarn, exitWithSuccess } = index;
+
+const {
+  infoMark,
+  logLogger,
+  successMark,
+  warnMark,
+  warnLogger
+} = require("../constants");
 
 beforeAll(() => {
-  jest.spyOn(global.console, "log").mockImplementation(() => {});
-  jest.spyOn(global.console, "warn").mockImplementation(() => {});
   jest.spyOn(global.process, "exit").mockImplementation(() => {});
 });
 
 beforeEach(() => {
-  console.log.mockClear();
-  console.warn.mockClear();
+  compat.log.mockClear();
   process.exit.mockClear();
 });
 
 afterAll(() => {
-  console.log.mockRestore();
-  console.warn.mockRestore();
+  jest.unmock("../compat");
   process.exit.mockRestore();
 });
 
-const greenCheck = "✔".green;
 const message = "test";
 const message2 = "test2";
-const comboMsg = `${message} ${message2}`;
+
+describe("logInfo", () => {
+  test("should log zero or more strings", () => {
+    logInfo();
+    expect(log).toHaveBeenCalledWith(infoMark, [], logLogger);
+
+    logInfo(message);
+    expect(log).toHaveBeenLastCalledWith(infoMark, [message], logLogger);
+
+    logInfo(message, message2);
+    expect(log).toHaveBeenLastCalledWith(
+      infoMark,
+      [message, message2],
+      logLogger
+    );
+  });
+});
+
+describe("logSuccess", () => {
+  test("should log zero or more strings", () => {
+    logSuccess();
+    expect(log).toHaveBeenCalledWith(successMark, [], logLogger);
+
+    logSuccess(message);
+    expect(log).toHaveBeenLastCalledWith(successMark, [message], logLogger);
+
+    logSuccess(message, message2);
+    expect(log).toHaveBeenLastCalledWith(
+      successMark,
+      [message, message2],
+      logLogger
+    );
+  });
+});
+
+describe("logWarn", () => {
+  test("should log zero or more strings", () => {
+    logWarn();
+    expect(log).toHaveBeenCalledWith(warnMark, [], warnLogger);
+
+    logWarn(message);
+    expect(log).toHaveBeenLastCalledWith(warnMark, [message], warnLogger);
+
+    logWarn(message, message2);
+    expect(log).toHaveBeenLastCalledWith(
+      warnMark,
+      [message, message2],
+      warnLogger
+    );
+  });
+});
 
 describe("exitWithSuccess", () => {
+  beforeAll(() => {
+    jest.spyOn(index, "logSuccess").mockImplementation(() => {});
+  });
+
+  beforeEach(() => {
+    index.logSuccess.mockClear();
+  });
+
+  afterAll(() => {
+    index.logSuccess.mockRestore();
+  });
+
   test("should log a message and exit without error", () => {
     exitWithSuccess(message);
-    expect(console.log).toHaveBeenCalledWith(greenCheck, message);
+    expect(index.logSuccess).toHaveBeenCalledWith(message);
     expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   test("shouldn't log a message when none is supplied", () => {
     exitWithSuccess();
-    expect(console.log).not.toHaveBeenCalledWith(greenCheck, message);
+    expect(index.logSuccess).not.toHaveBeenCalledWith(message);
     expect(process.exit).toHaveBeenCalledWith(0);
-  });
-});
-
-describe("logInfo", () => {
-  test("should log one or more strings prepended with a blue 'ℹ'", () => {
-    const blueI = "ℹ".blue;
-
-    logInfo(message);
-    expect(console.log).toHaveBeenCalledWith(blueI, message);
-
-    console.log.mockClear();
-
-    logInfo(message, message2);
-    expect(console.log).toHaveBeenCalledWith(blueI, comboMsg);
-
-    console.log.mockClear();
-
-    logInfo();
-    expect(console.log).toHaveBeenCalledWith(blueI, "");
-  });
-});
-
-describe("logSuccess", () => {
-  test("should log one or more strings prepended with a green '✔'", () => {
-    logSuccess(message);
-    expect(console.log).toHaveBeenCalledWith(greenCheck, message);
-
-    console.log.mockClear();
-
-    logSuccess(message, message2);
-    expect(console.log).toHaveBeenCalledWith(greenCheck, comboMsg);
-
-    console.log.mockClear();
-
-    logSuccess();
-    expect(console.log).toHaveBeenCalledWith(greenCheck, "");
-  });
-});
-
-describe("logWarn", () => {
-  test("should log one or more strings prepended with a yellow '‼︎'", () => {
-    const yellowBang = "‼︎".yellow;
-
-    logWarn(message);
-    expect(console.warn).toHaveBeenCalledWith(yellowBang, message);
-
-    console.warn.mockClear();
-
-    logWarn(message, message2);
-    expect(console.warn).toHaveBeenCalledWith(yellowBang, comboMsg);
-
-    console.warn.mockClear();
-
-    logWarn();
-    expect(console.warn).toHaveBeenCalledWith(yellowBang, "");
   });
 });
