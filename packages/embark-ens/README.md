@@ -95,7 +95,6 @@ response:
 * embarkjs.utils
   * secureSend
 * embark utils
-  * soliditySha3
   * ZERO_ADDRESS
   * hashTo32ByteHexString
   * joinPath

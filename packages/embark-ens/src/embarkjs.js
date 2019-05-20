@@ -235,7 +235,7 @@ __embarkENS.lookup = function (address, callback) {
       address = address.slice(2);
     }
 
-    let node = Web3.utils.soliditySha3(address.toLowerCase() + reverseAddrSuffix);
+    let node = namehash.hash(address.toLowerCase() + reverseAddrSuffix);
 
     try {
       const resolverAddress = await this.ens.methods.resolver(node).call();
@@ -292,7 +292,7 @@ __embarkENS.registerSubDomain = function (name, address, callback) {
     EmbarkJS.Blockchain.blockchainConnector.getDefaultAccount(),
     name,
     this.registration.rootDomain,
-    Web3.utils.soliditySha3(address.toLowerCase().substr(2) + reverseAddrSuffix),
+    namehash.hash(address.toLowerCase().substr(2) + reverseAddrSuffix),
     address,
     console,
     EmbarkJS.Utils.secureSend,
