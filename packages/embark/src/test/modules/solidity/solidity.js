@@ -1,7 +1,7 @@
 /*global describe, it, require*/
-import { File, Types } from "../../../lib/core/file.js";
 const fs = require('../../../lib/core/fs');
 import { IPC } from 'embark-core';
+import { File, Types } from 'embark-utils';
 let SolidityCompiler = require('embark-solidity');
 let TestLogger = require('../../../lib/utils/test_logger');
 

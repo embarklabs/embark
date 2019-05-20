@@ -3,7 +3,7 @@ const findUp = require('find-up');
 const fs = require('../core/fs.js');
 const hostedGitInfo = require('hosted-git-info');
 const utils = require('./utils.js');
-import { embarkPath, joinPath, runCmd, errorMessage } from 'embark-utils';
+import { embarkPath, downloadFile, joinPath, runCmd, errorMessage } from 'embark-utils';
 const semver = require('semver');
 const {promisify} = require('util');
 const {execSync} = require('child_process');
@@ -34,7 +34,7 @@ class TemplateGenerator {
     console.log(__('Downloading template...').green);
     fs.mkdirpSync(utils.dirname(tmpFilePath));
     try {
-      await promisify(utils.downloadFile)(url, tmpFilePath);
+      await promisify(downloadFile)(url, tmpFilePath);
     } catch (e) {
       console.error(errorMessage(e).red);
       throw e;

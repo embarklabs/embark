@@ -1,7 +1,6 @@
+import * as fs from "fs-extra";
 import * as globule from "globule";
 import * as path from "path";
-
-const fs = require("../../core/fs");
 
 export const removePureView = (dir: string) => {
   globule.find(path.join(dir, "**/*.sol")).forEach((filepath) => {

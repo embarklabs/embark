@@ -1,5 +1,5 @@
 /*global describe, it, require*/
-import { File, Types } from "../../../lib/core/file";
+import { File, Types } from "embark-utils";
 
 const assert = require('assert');
 

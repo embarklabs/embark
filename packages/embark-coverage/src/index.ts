@@ -1,11 +1,9 @@
-import { dappPath } from "embark-utils";
+import { dappPath, File, removePureView } from "embark-utils";
 import * as globule from "globule";
 import * as path from "path";
 import Web3Contract from "web3/eth/contract";
 
 import { Contract, Embark } from "embark";
-import { File } from "../../core/file";
-import { removePureView } from "../../utils/solidity/code";
 import { ContractEnhanced } from "./contractEnhanced";
 import { coverageContractsPath } from "./path";
 import { Coverage as ICoverage } from "./types";

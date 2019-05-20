@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "esModuleInterop": true,
-    "isolatedModules": true,
     "lib": ["ES2017"],
     "module": "CommonJS",
     "noEmit": true,

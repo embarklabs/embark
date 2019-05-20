@@ -1,3 +1,5 @@
+import { File } from "embark-utils";
+import * as fs from "fs-extra";
 import * as path from "path";
 import parser, { LineColumn, Location } from "solidity-parser-antlr";
 import { EventLog } from "web3/types";
@@ -8,9 +10,6 @@ import { Instrumenter } from "./instrumenter";
 import { InstrumentWalker } from "./instrumentWalker";
 import { coverageContractsPath } from "./path";
 import { BranchType, Coverage } from "./types";
-
-const File = require("../../core/file");
-const fs = require("../../core/fs");
 
 const STATEMENT_EVENT = "__StatementCoverage";
 const POINT_FACTOR = 1000000000;

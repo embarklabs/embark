@@ -1,12 +1,10 @@
-const path = require('path');
-const os = require('os');
 const http = require('follow-redirects').http;
 const https = require('follow-redirects').https;
 const shelljs = require('shelljs');
 const clipboardy = require('clipboardy');
 
 const {canonicalHost, defaultCorsHost, defaultHost, dockerHostSwap, isDocker} = require('./host');
-const {findNextPort} = require('./network');
+const { findNextPort, downloadFile } = require('./network');
 const logUtils = require('./log-utils');
 const toposortGraph = require('./toposort');
 import { unitRegex } from './constants';
@@ -17,6 +15,7 @@ import {
   hexToNumber,
   decodeParams,
   sha3,
+  sha512,
   isHex,
   soliditySha3,
   toChecksumAddress
@@ -24,10 +23,14 @@ import {
 import { getAddressToContract, getTransactionParams } from './transactionUtils';
 import LongRunningProcessTimer from './longRunningProcessTimer';
 import AccountParser from './accountParser';
+import { dappPath, embarkPath, ipcPath, joinPath, tmpDir, urlJoin } from './pathUtils';
 
 const { extendZeroAddressShorthand, replaceZeroAddressShorthand } = AddressUtils;
 
-import { compact, last, recursiveMerge } from './collections';
+import { compact, last, recursiveMerge, groupBy } from './collections';
+import { prepareForCompilation } from './solidity/remapImports';
+import { removePureView } from './solidity/code';
+import { File, getExternalContractUrl, Types } from './file';
 
 function timer(ms) {
   const then = Date.now();
@@ -58,15 +61,6 @@ function hashTo32ByteHexString(hash) {
   let buf = multihash.fromB58String(hash);
   let digest = multihash.decode(buf).digest;
   return '0x' + multihash.toHexString(digest);
-}
-
-function sha512(arg) {
-  if (typeof arg !== 'string') {
-    throw new TypeError('argument must be a string');
-  }
-  const crypto = require('crypto');
-  const hash = crypto.createHash('sha512');
-  return hash.update(arg).digest('hex');
 }
 
 function exit(code) {
@@ -239,12 +233,6 @@ function buildUrlFromConfig(configObj) {
   return buildUrl(configObj.protocol, canonicalHost(configObj.host), configObj.port, configObj.type);
 }
 
-function joinPath() {
-  return path.join.apply(path.join, arguments);
-}
-
-function tmpDir(...args) { return joinPath(os.tmpdir(), ...args); }
-
 function errorMessage(e) {
   if (typeof e === 'string') {
     return e;
@@ -252,32 +240,6 @@ function errorMessage(e) {
     return e.message;
   }
   return e;
-}
-
-function dappPath(...names) {
-  const DAPP_PATH = process.env.DAPP_PATH || process.cwd();
-  return path.join(DAPP_PATH, ...names);
-}
-
-function ipcPath(basename, usePipePathOnWindows = false) {
-  if (!(basename && typeof basename === 'string')) {
-    throw new TypeError('first argument must be a non-empty string');
-  }
-  if (process.platform === 'win32' && usePipePathOnWindows) {
-    return `\\\\.\\pipe\\${basename}`;
-  }
-  return joinPath(
-    tmpDir(`embark-${sha512(dappPath()).slice(0, 8)}`),
-    basename
-  );
-}
-
-function embarkPath(...names) {
-  const EMBARK_PATH = process.env.EMBARK_PATH;
-  if (!EMBARK_PATH) {
-    throw new Error('environment variable EMBARK_PATH was not set');
-  }
-  return path.join(EMBARK_PATH, ...names);
 }
 
 
@@ -288,6 +250,7 @@ const Utils = {
   tmpDir,
   ipcPath,
   dappPath,
+  downloadFile,
   embarkPath,
   jsonFunctionReplacer,
   fuzzySearch,
@@ -305,6 +268,7 @@ const Utils = {
   getTransactionParams,
   isDocker,
   checkIsAvailable,
+  File,
   findNextPort,
   fileTreeSort,
   hashTo32ByteHexString,
@@ -316,15 +280,21 @@ const Utils = {
   prepareContractsConfig,
   getWeiBalanceFromString,
   getHexBalanceFromString,
+  getExternalContractUrl,
+  groupBy,
   sha512,
   sha3,
   timer,
+  Types,
   unitRegex,
+  urlJoin,
+  removePureView,
   runCmd,
   escapeHtml: logUtils.escapeHtml,
   normalizeInput: logUtils.normalizeInput,
   LogHandler: require('./logHandler'),
   LongRunningProcessTimer,
+  prepareForCompilation,
   proposeAlternative,
   toChecksumAddress,
   toposort,
