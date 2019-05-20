@@ -48,12 +48,13 @@ function registerSubDomain(web3, ens, registrar, resolver, defaultAccount, subdo
     });
 }
 
-function lookupAddress(address, ens, soliditySha3, createResolverContract, callback) {
+function lookupAddress(address, ens, _namehash, createResolverContract, callback) {
+  _namehash = _namehash || namehash;
   if (address.startsWith("0x")) {
     address = address.slice(2);
   }
 
-  let node = soliditySha3(address.toLowerCase() + reverseAddressSuffix);
+  let node = _namehash.hash(address.toLowerCase() + reverseAddressSuffix);
 
   function cb(err, name) {
     if (err === NoDecodeStringErr || err === NoDecodeAddrErr) {
