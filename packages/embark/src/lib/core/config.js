@@ -11,15 +11,17 @@ import {
   canonicalHost,
   dappPath,
   defaultHost,
+  File,
+  Types,
   recursiveMerge,
   AddressUtils,
   unitRegex,
   getWeiBalanceFromString,
-  prepareContractsConfig
+  prepareContractsConfig,
+  getExternalContractUrl
 } from 'embark-utils';
 const cloneDeep = require('lodash.clonedeep');
 const { replaceZeroAddressShorthand } = AddressUtils;
-import { File, Types } from "./file";
 
 const DEFAULT_CONFIG_PATH = 'config/';
 const PACKAGE = require('../../../package.json');
@@ -404,7 +406,7 @@ Config.prototype.loadExternalContractsFiles = function() {
     let externalContractFile = null;
 
     if (contract.file.startsWith('http') || contract.file.startsWith('git') || contract.file.startsWith('ipfs') || contract.file.startsWith('bzz')) {
-      const fileObj = utils.getExternalContractUrl(contract.file, this.providerUrl);
+      const fileObj = getExternalContractUrl(contract.file, this.providerUrl);
       if (!fileObj) {
         return this.logger.error(__("HTTP contract file not found") + ": " + contract.file);
       }

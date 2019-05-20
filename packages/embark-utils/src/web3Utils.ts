@@ -44,6 +44,15 @@ export function sha3(arg: any) {
   return web3.utils.sha3(arg);
 }
 
+export function sha512(arg: string) {
+  if (typeof arg !== "string") {
+    throw new TypeError("argument must be a string");
+  }
+  const crypto = require("crypto");
+  const hash = crypto.createHash("sha512");
+  return hash.update(arg).digest("hex");
+}
+
 export function isHex(hex: string) {
   return web3.utils.isHex(hex);
 }

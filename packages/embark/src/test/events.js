@@ -1,5 +1,5 @@
 /*globals describe, it, before, beforeEach*/
-const {File, Types} = require("../lib/core/file");
+import { File, Types } from 'embark-utils';
 const Assert = require("assert");
 const {expect} = require("chai");
 const fs = require("../lib/core/fs");

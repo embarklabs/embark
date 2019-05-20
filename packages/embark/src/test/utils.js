@@ -1,12 +1,13 @@
 /*global describe, it*/
 const Utils = require('../lib/utils/utils');
+import { getExternalContractUrl } from 'embark-utils';
 const assert = require('assert');
 const constants = require('embark-core/constants');
 
 describe('embark.utils', function () {
   describe('#getExternalContractUrl', function () {
     it('should get the right url for a https://github file', function () {
-      const fileObj = Utils.getExternalContractUrl(
+      const fileObj = getExternalContractUrl(
         'https://github.com/embark-framework/embark/blob/master/dapps/templates/demo/contracts/simple_storage.sol'
       );
       assert.deepEqual(fileObj,
@@ -17,14 +18,14 @@ describe('embark.utils', function () {
     });
 
     it('should fail for a malformed https://github file', function () {
-      const fileObj = Utils.getExternalContractUrl(
+      const fileObj = getExternalContractUrl(
         'https://github/embark-framework/embark/blob/master/dapps/templates/demo/contracts/simple_storage.sol'
       );
       assert.strictEqual(fileObj, null);
     });
 
     it('should get the right url for a git:// file with no branch #', function () {
-      const fileObj = Utils.getExternalContractUrl(
+      const fileObj = getExternalContractUrl(
         'git://github.com/status-im/contracts/contracts/identity/ERC725.sol'
       );
       assert.deepEqual(fileObj,
@@ -35,7 +36,7 @@ describe('embark.utils', function () {
     });
 
     it('should get the right url for a git:// file with a branch #', function () {
-      const fileObj = Utils.getExternalContractUrl(
+      const fileObj = getExternalContractUrl(
         'git://github.com/status-im/contracts/contracts/identity/ERC725.sol#myBranch'
       );
       assert.deepEqual(fileObj,
@@ -46,14 +47,14 @@ describe('embark.utils', function () {
     });
 
     it('should fail when the git:// file is malformed', function () {
-      const fileObj = Utils.getExternalContractUrl(
+      const fileObj = getExternalContractUrl(
         'git://github.com/identity/ERC725.sol#myBranch'
       );
       assert.strictEqual(fileObj, null);
     });
 
     it('should get the right url with a github.com file without branch #', function () {
-      const fileObj = Utils.getExternalContractUrl(
+      const fileObj = getExternalContractUrl(
         'github.com/status-im/contracts/contracts/identity/ERC725.sol'
       );
       assert.deepEqual(fileObj,
@@ -64,7 +65,7 @@ describe('embark.utils', function () {
     });
 
     it('should get the right url with a github.com file with branch #', function () {
-      const fileObj = Utils.getExternalContractUrl(
+      const fileObj = getExternalContractUrl(
         'github.com/status-im/contracts/contracts/identity/ERC725.sol#theBranch'
       );
       assert.deepEqual(fileObj,
@@ -75,14 +76,14 @@ describe('embark.utils', function () {
     });
 
     it('should fail with a malformed github.com url', function () {
-      const fileObj = Utils.getExternalContractUrl(
+      const fileObj = getExternalContractUrl(
         'github/status-im/contracts/contracts/identity/ERC725.sol#theBranch'
       );
       assert.strictEqual(fileObj, null);
     });
 
     it('should succeed with a generic http url', function () {
-      const fileObj = Utils.getExternalContractUrl(
+      const fileObj = getExternalContractUrl(
         'http://myurl.com/myFile.sol'
       );
       assert.deepEqual(fileObj, {
@@ -93,7 +94,7 @@ describe('embark.utils', function () {
 
     it('should get the correct default url for a correct bzz:/ swarm file', function () {
       const swarmFile = 'bzz:/someensdomain.eth/ERC725.sol';
-      const fileObj = Utils.getExternalContractUrl(
+      const fileObj = getExternalContractUrl(
         swarmFile
       );
       assert.deepEqual(fileObj, {
@@ -104,7 +105,7 @@ describe('embark.utils', function () {
 
     it('should get the correct url for a correct bzz:/ swarm file when a http swarm gateway is explicitly provided', function () {
       const swarmFile = 'bzz:/someensdomain.eth/ERC725.sol';
-      const fileObj = Utils.getExternalContractUrl(
+      const fileObj = getExternalContractUrl(
         swarmFile,
         'http://localhost:8500'
       );
@@ -116,7 +117,7 @@ describe('embark.utils', function () {
 
     it('should get the correct url for a correct bzz:/ swarm file when a https swarm gateway is provided', function () {
       const swarmFile = 'bzz:/1ffe993abc835f480f688d07ad75ad1dbdbd1ddb368a08b7ed4d3e400771dd63';
-      const fileObj = Utils.getExternalContractUrl(
+      const fileObj = getExternalContractUrl(
         swarmFile,
         'https://swarm-gateways.net'
       );

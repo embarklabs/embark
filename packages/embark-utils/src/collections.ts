@@ -11,3 +11,10 @@ export function recursiveMerge(target: any, source: any) {
 export function compact(array: any) {
   return array.filter((n: any) => n);
 }
+
+export function groupBy(array: any, key: any) {
+  return array.reduce((rv: any, x: any) => {
+    (rv[x[key]] = rv[x[key]] || []).push(x);
+    return rv;
+  }, {});
+}

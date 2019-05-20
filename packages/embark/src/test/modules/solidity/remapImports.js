@@ -1,8 +1,6 @@
 /*globals describe, it, before*/
-const { dappPath } = require('embark-utils');
-const {File, Types} = require("../../../lib/core/file");
+const { dappPath, File, Types, prepareForCompilation } = require('embark-utils');
 const path = require("path");
-const remapImports = require("../../../lib/utils/solidity/remapImports");
 const {expect} = require("chai");
 const fs = require("../../../lib/core/fs");
 const fsNode = require("fs");
@@ -13,7 +11,7 @@ describe('embark.RemapImports', function () {
   describe('Import remappings from local file', function () {
     before('do the remappings', async () => {
       file = new File({path: 'contracts/recursive_test_0.sol', type: Types.dappFile});
-      content = await remapImports.prepareForCompilation(file);
+      content = await prepareForCompilation(file);
     });
 
     it("should find and add remappings for all recursive imports", (done) => {
@@ -64,7 +62,7 @@ describe('embark.RemapImports', function () {
   describe('Import remappings from external URL', function () {
     before('do the external HTTP contract remappings', async () => {
       file = new File({externalUrl: 'https://github.com/embark-framework/embark/master/packages/embark/src/test/contracts/recursive_test_0.sol', type: Types.http});
-      content = await remapImports.prepareForCompilation(file);
+      content = await prepareForCompilation(file);
     });
 
     it("should find and add remappings for all recursive imports", (done) => {

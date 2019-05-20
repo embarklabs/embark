@@ -1,10 +1,9 @@
-import { dappPath, embarkPath } from "embark-utils";
+import * as fs from "fs-extra";
 import * as path from "path";
-import { File, Types } from "../../core/file";
+import { groupBy } from "../collections";
+import { File, Types } from "../file";
+import { dappPath, embarkPath, urlJoin } from "../pathUtils";
 import { removePureView, replacePureView } from "./code";
-
-const { urlJoin, groupBy } = require("../../utils/utils");
-const fs = require("../../core/fs");
 
 const FIND_IMPORTS_REGEX = /^import[\s]*(['"])(.*)\1;/gm;
 const FIND_FILE_REGEX = /import[\s]*(['"])(.*)\1;/;

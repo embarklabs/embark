@@ -320,7 +320,7 @@ class Engine {
   }
 
   codeCoverageService(_options) {
-    this.registerModule('coverage');
+    this.registerModulePackage('embark-coverage');
   }
 
   testRunnerService(options) {
