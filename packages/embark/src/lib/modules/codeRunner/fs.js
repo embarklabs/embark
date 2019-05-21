@@ -1,15 +1,9 @@
 /* global module process require */
-
-const {DAPP_PATH,
-       DIAGRAM_PATH,
-       EMBARK_PATH,
-       PKG_PATH,
-       anchoredValue} = require('../../core/env');
 const fs = require('fs-extra');
 const os = require('os');
 const parseJson = require('parse-json');
 const path = require('path');
-import {joinPath, sha512} from 'embark-utils';
+import { dappPath, embarkPath, joinPath, pkgPath } from 'embark-utils';
 require('colors');
 
 function restrictPath(receiver, binding, count, args) {
@@ -101,37 +95,7 @@ function access(...args) { return restrictPath(fs.access, fs, 1, args); }
 
 function removeSync(...args) { return restrictPath(fs.removeSync, fs, 1, args); }
 
-function anchoredPath(anchor, ...args) {
-  return joinPath(
-    anchoredValue(anchor),
-    ...args.map(path => path.replace(dappPath(), ''))
-  );
-}
-
-function embarkPath(...args) { return anchoredPath(EMBARK_PATH, ...args); }
-
-function dappPath(...args) { return anchoredPath(DAPP_PATH, ...args); }
-
-function diagramPath(...args) { return anchoredPath(DIAGRAM_PATH, ...args); }
-
-function ipcPath(basename, usePipePathOnWindows = false) {
-  if (!(basename && typeof basename === 'string')) {
-    throw new TypeError('first argument must be a non-empty string');
-  }
-  if (process.platform === 'win32' && usePipePathOnWindows) {
-    return `\\\\.\\pipe\\${basename}`;
-  }
-  return joinPath(
-    tmpDir(`embark-${sha512(dappPath()).slice(0, 8)}`),
-    basename
-  );
-}
-
-function pkgPath(...args) { return anchoredPath(PKG_PATH, ...args); }
-
 function createWriteStream(...args) { return restrictPath(fs.createWriteStream, fs, 1, args); }
-
-function tmpDir(...args) { return joinPath(os.tmpdir(), ...args); }
 
 function copyPreserve(sourceFilePath, targetFilePath) {
   const implementation = (sourceFilePath, targetFilePath) => {
@@ -163,20 +127,15 @@ module.exports = {
   copyPreserve,
   copySync,
   createWriteStream,
-  dappPath,
-  diagramPath,
-  embarkPath,
   existsSync,
   ensureFileSync,
   ensureDirSync,
-  ipcPath,
   mkdirp,
   mkdirpSync,
   move,
   moveSync,
   outputFileSync,
   outputJSONSync,
-  pkgPath,
   readFile,
   readFileSync,
   readJSONSync,
@@ -187,7 +146,6 @@ module.exports = {
   stat,
   statSync,
   symlink,
-  tmpDir,
   writeFile,
   writeFileSync,
   writeJSONSync,

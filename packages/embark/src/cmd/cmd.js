@@ -1,4 +1,5 @@
 import { __, setOrDetectLocale } from 'embark-i18n';
+import { diagramPath } from 'embark-utils';
 const program = require('commander');
 const EmbarkController = require('./cmd_controller.js');
 const fs = require('../lib/core/fs.js');
@@ -307,7 +308,7 @@ class Cmd {
       .option('--skip-functions', __('Graph will not include functions'))
       .option('--skip-events', __('Graph will not include events'))
       .option('--locale [locale]', __('language to use (default: en)'))
-      .option('--output [svgfile]', __('filepath to output SVG graph to (default: %s)', fs.diagramPath()))
+      .option('--output [svgfile]', __('filepath to output SVG graph to (default: %s)', diagramPath()))
       .description(__('generates documentation based on the smart contracts configured'))
       .action(function(env, options) {
         setOrDetectLocale(options.locale);
@@ -317,7 +318,7 @@ class Cmd {
           skipUndeployed: options.skipUndeployed,
           skipFunctions: options.skipFunctions,
           skipEvents: options.skipEvents,
-          output: options.output || fs.diagramPath()
+          output: options.output || diagramPath()
         });
       });
   }

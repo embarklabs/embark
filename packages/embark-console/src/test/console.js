@@ -1,8 +1,11 @@
 /*globals describe, it*/
 import Console from '../lib';
 import Logger from 'embark-logger';
+import { joinPath, setUpEnv } from 'embark-utils';
 import assert from 'assert';
 import { version }  from '../../package.json';
+
+setUpEnv(joinPath(__dirname, '../../../embark'));
 
 describe('embark.Console', function() {
   let logger = new Logger({logLevel: 'error'});

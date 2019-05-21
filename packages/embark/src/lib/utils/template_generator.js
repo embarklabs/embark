@@ -3,7 +3,14 @@ const findUp = require('find-up');
 const fs = require('../core/fs.js');
 const hostedGitInfo = require('hosted-git-info');
 const utils = require('./utils.js');
-import { embarkPath, downloadFile, joinPath, runCmd, errorMessage } from 'embark-utils';
+import {
+  embarkPath,
+  downloadFile,
+  joinPath,
+  runCmd,
+  tmpDir as tmpDirUtil,
+  errorMessage
+} from 'embark-utils';
 const semver = require('semver');
 const {promisify} = require('util');
 const {execSync} = require('child_process');
@@ -58,7 +65,7 @@ class TemplateGenerator {
       process.exit(1);
     }
     let {url, filePath, browse} = ext;
-    let tmpFilePath = fs.tmpDir(filePath);
+    let tmpFilePath = tmpDirUtil(filePath);
     try {
       try {
         await this.download(url, tmpFilePath, browse);
@@ -67,7 +74,7 @@ class TemplateGenerator {
         if (url_fallback) {
           console.log(__('Retrying with the default branch...').yellow);
           console.log((__(`It may not be compatible with your Embark version`) + ` ${embarkVersion}`).yellow);
-          tmpFilePath = fs.tmpDir(filePath_fallback);
+          tmpFilePath = tmpDirUtil(filePath_fallback);
           await this.download(url_fallback, tmpFilePath, browse_fallback);
         } else {
           throw new Error();

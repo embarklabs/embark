@@ -2,15 +2,51 @@ import * as path from 'path';
 import * as os from 'os';
 import { sha512 } from './web3Utils';
 
+export const PWD = 'PWD';
+export const DAPP_PATH = 'DAPP_PATH';
+export const DIAGRAM_PATH = 'DIAGRAM_PATH';
+export const EMBARK_PATH = 'EMBARK_PATH';
+export const PKG_PATH = 'PKG_PATH';
+export const NODE_PATH = 'NODE_PATH';
+
+export function anchoredValue(anchor, value) {
+  if (!arguments.length) {
+    throw new TypeError(`anchor name '${anchor}' was not specified`);
+  }
+  if (arguments.length > 2) {
+    throw new TypeError(`accepts at most 2 arguments`);
+  }
+  if (typeof anchor !== 'string') {
+    throw new TypeError(`anchor name '${anchor}' was not a string`);
+  }
+  let _anchor = process.env[anchor];
+  if (arguments.length < 2 && !_anchor) {
+    throw new Error(`process.env.${anchor} was not set`);
+  }
+  // don't override an existing value, e.g. if already set by bin/embark
+  if (!_anchor) {
+    _anchor = value;
+    process.env[anchor] = _anchor;
+  }
+  return _anchor;
+}
+
+export function anchoredPath(anchor, ...args) {
+  return joinPath(
+    anchoredValue(anchor),
+    ...args.map(path => path.replace(dappPath(), ''))
+  );
+}
+
 export function joinPath() {
   return path.join.apply(path.join, arguments);
 }
 
 export function tmpDir(...args) { return joinPath(os.tmpdir(), ...args); }
-
-export function dappPath(...names) {
-  return path.join(process.env.DAPP_PATH || process.cwd(), ...names);
-}
+export function diagramPath(...args) { return anchoredPath(DIAGRAM_PATH, ...args); }
+export function pkgPath(...args) { return anchoredPath(PKG_PATH, ...args); }
+export function dappPath(...args) { return anchoredPath(DAPP_PATH, ...args); }
+export function embarkPath(...args) { return anchoredPath(EMBARK_PATH, ...args); }
 
 export function ipcPath(basename, usePipePathOnWindows = false) {
   if (!(basename && typeof basename === 'string')) {
@@ -23,14 +59,6 @@ export function ipcPath(basename, usePipePathOnWindows = false) {
     tmpDir(`embark-${sha512(dappPath()).slice(0, 8)}`),
     basename
   );
-}
-
-export function embarkPath(...names) {
-  const EMBARK_PATH = process.env.EMBARK_PATH;
-  if (!EMBARK_PATH) {
-    throw new Error('environment variable EMBARK_PATH was not set');
-  }
-  return path.join(EMBARK_PATH, ...names);
 }
 
 export function urlJoin(url, path) {
