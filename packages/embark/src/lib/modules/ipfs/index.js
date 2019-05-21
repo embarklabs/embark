@@ -6,6 +6,7 @@ const IpfsApi = require('ipfs-api');
 const StorageProcessesLauncher = require('../storage/storageProcessesLauncher');
 const constants = require('embark-core/constants');
 import { buildUrlFromConfig, dappPath, embarkPath } from 'embark-utils';
+import * as path from 'path';
 
 class IPFS {
 
@@ -23,6 +24,7 @@ class IPFS {
     this.addedToConsole = false;
     this.storageProcessesLauncher = null;
     this.usingRunningNode = false;
+    this.modulesPath = dappPath(embark.config.embarkConfig.generationDir, constants.dappArtifacts.symlinkDir);
 
     this.webServerConfig = embark.config.webServerConfig;
     this.blockchainConfig = embark.config.blockchainConfig;
@@ -144,9 +146,13 @@ class IPFS {
           }
 
           this.events.emit('runcode:register', 'IpfsApi', require('ipfs-api'), () => {
-            let code = "";
-            code += "\nconst __embarkIPFS = require('embarkjs-ipfs')";
-            code += "\nEmbarkJS.Storage.registerProvider('ipfs', __embarkIPFS.default || __embarkIPFS);";
+            let linkedModulePath = path.join(this.modulesPath, 'embarkjs-ipfs');
+            if (process.platform === 'win32') linkedModulePath = linkedModulePath.replace(/\\/g, '\\\\');
+
+            const code = `
+              const __embarkIPFS = EmbarkJS.isNode ? require('${linkedModulePath}') : require('embarkjs-ipfs');
+              EmbarkJS.Storage.registerProvider('ipfs', __embarkIPFS.default || __embarkIPFS);
+            `;
 
             this.embark.addCodeToEmbarkJS(code);
             this.embark.addConsoleProviderInit("storage", code, (storageConfig) => storageConfig.enabled);

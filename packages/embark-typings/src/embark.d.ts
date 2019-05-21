@@ -22,6 +22,7 @@ export interface Config {
     versions: {
       solc: string;
     };
+    generationDir: string;
   };
   plugins: Plugins;
   reloadConfig(): void;

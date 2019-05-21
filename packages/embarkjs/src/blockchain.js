@@ -195,7 +195,8 @@ Blockchain.doConnect = function(connectionList, opts, doneCb) {
           // TODO find a way to share the port number
           console.warn("%cNote: There is a known issue with Geth (when in `--dev` mode) that may cause transactions to get stuck. To enable a workaround, start an Embark console (run command `embark console` in your terminal) or open the dashboard in Cockpit (http://localhost:55555), then type in the console command `devtxs on`. To disable the workaround, type `devtxs off` in the console.", "font-size: 2em");
         }
-        if ((currentProv && currentProv.isMetaMask) || (window.ethereum && window.ethereum.isMetaMask)) {
+        if ((currentProv && currentProv.isMetaMask) ||
+          (typeof window !== 'undefined' && window.ethereum && window.ethereum.isMetaMask)) {
           console.warn("%cNote: Embark has detected you are in the development environment and using Metamask, please make sure Metamask is connected to your local node", "font-size: 2em");
           if(opts.blockchainClient === 'parity') {
             console.warn("%cNote: Parity blocks the connection from browser extensions like Metamask. To resolve this problem, go to https://embark.status.im/docs/blockchain_configuration.html#Using-Parity-and-Metamask", "font-size: 2em");
