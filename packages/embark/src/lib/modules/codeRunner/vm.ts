@@ -2,9 +2,8 @@ import { each } from "async";
 import { Callback, Logger } /* supplied by @types/embark in packages/embark-typings */ from "embark";
 import { NodeVM, NodeVMOptions } from "vm2";
 
-import { compact, recursiveMerge } from "embark-utils";
+import { compact, dappPath, recursiveMerge } from "embark-utils";
 
-const fs = require("./fs");
 const path = require("path");
 const { isEs6Module } = require("../../utils/utils");
 
@@ -51,7 +50,7 @@ class VM {
         "rxjs/operators",
       ],
     },
-    sandbox: { __dirname: fs.dappPath() },
+    sandbox: { __dirname: dappPath() },
   };
 
   /**

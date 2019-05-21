@@ -1,7 +1,9 @@
 /*globals describe, it*/
-const { dappPath, File, Types } = require('embark-utils');
-const {expect} = require("chai");
-const fs = require("../lib/core/fs");
+const { dappPath, File, joinPath, setUpEnv, Types } = require('embark-utils');
+const { expect } = require("chai");
+const fs = require("fs-extra");
+
+setUpEnv(joinPath(__dirname, '../../'));
 
 describe('embark.File', function () {
   describe('Read file contents', function () {
