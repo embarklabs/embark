@@ -97,6 +97,7 @@
     "embark-blockchain-listener": "^4.1.0-beta.1",
     "embark-blockchain-process": "^4.1.0-beta.1",
     "embark-code-generator": "^4.1.0-beta.1",
+    "embark-code-runner": "^4.1.0-beta.1",
     "embark-compiler": "^4.1.0-beta.1",
     "embark-console": "^4.1.0-beta.1",
     "embark-console-listener": "^4.1.0-beta.1",

@@ -1,10 +1,10 @@
 /*global after, before, describe, it, require, process*/
+import { fs } from 'embark-code-runner';
 const { embarkPath } = require('embark-utils');
 const {assert} = require('chai');
 const os = require('os');
 const path = require('path');
 const underlyingFs = require('fs-extra');
-const fs = require('../lib/modules/codeRunner/fs');
 
 describe('fs', () => {
   let fsMethods = {};
@@ -36,6 +36,7 @@ describe('fs', () => {
 
   const helperFunctions = [
     'dappPath',
+    'default', // not a helper function but a property on `fs` due to how it's exported
     'diagramPath',
     'embarkPath',
     'ipcPath',

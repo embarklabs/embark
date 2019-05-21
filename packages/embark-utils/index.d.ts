@@ -16,6 +16,7 @@ declare module "embark-utils" {
   function embarkPath(...names: string[]): string;
   function exit(code?: any): void;
   function findNextPort(port: number): Promise<number>;
+  function isEs6Module(module: any): boolean;
   function jsonFunctionReplacer(key: any, value: any): any;
   function fuzzySearch(text: string, list: any, filter: any): any;
   function getExternalContractUrl(file: string, provideUrl: string): string;
