@@ -154,14 +154,6 @@ function getWindowSize() {
   return {width: 240, height: 75};
 }
 
-function isConstructor(obj) {
-  return !!obj.prototype && !!obj.prototype.constructor.name;
-}
-
-function isEs6Module(module) {
-  return (typeof module === 'function' && isConstructor(module)) || (typeof module === 'object' && typeof module.default === 'function' && module.__esModule);
-}
-
 module.exports = {
   dirname,
   filesMatchingPattern,
@@ -178,6 +170,5 @@ module.exports = {
   extractZip,
   normalizeInput,
   interceptLogs,
-  getWindowSize,
-  isEs6Module
+  getWindowSize
 };

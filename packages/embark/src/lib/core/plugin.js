@@ -1,6 +1,6 @@
 const utils = require('../utils/utils.js');
 import { __ } from 'embark-i18n';
-import { dappPath, embarkPath, joinPath } from 'embark-utils';
+import { dappPath, embarkPath, isEs6Module, joinPath } from 'embark-utils';
 const constants = require('embark-core/constants');
 const fs = require('fs-extra');
 const deepEqual = require('deep-equal');
@@ -98,7 +98,7 @@ Plugin.prototype.loadPlugin = function() {
   if (this.shouldInterceptLogs) {
     this.setUpLogger();
   }
-  if (utils.isEs6Module(this.pluginModule)) {
+  if (isEs6Module(this.pluginModule)) {
     if (this.pluginModule.default) {
       this.pluginModule = this.pluginModule.default;
     }
@@ -108,7 +108,7 @@ Plugin.prototype.loadPlugin = function() {
 };
 
 Plugin.prototype.loadInternalPlugin = function() {
-  if (utils.isEs6Module(this.pluginModule)) {
+  if (isEs6Module(this.pluginModule)) {
     if (this.pluginModule.default) {
       this.pluginModule = this.pluginModule.default;
     }

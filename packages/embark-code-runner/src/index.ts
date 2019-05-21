@@ -1,7 +1,11 @@
+import * as fs from "./fs";
 import VM from "./vm";
-const fs = require("./fs");
+
+export { fs, VM };
+
 import { Callback, Embark, Events, Logger } /* supplied by @types/embark in packages/embark-typings */ from "embark";
 import Web3 from "web3";
+
 const EmbarkJS = require("embarkjs");
 
 export enum ProviderEventType {
@@ -9,7 +13,7 @@ export enum ProviderEventType {
   ProviderSet = "providerSet",
 }
 
-class CodeRunner {
+export default class CodeRunner {
   private ready: boolean = false;
   private blockchainConnected: boolean = false;
   private logger: Logger;
@@ -158,5 +162,3 @@ private resetEmbarkJS(cb: Callback<null>) {
     });
   }
 }
-
-module.exports = CodeRunner;

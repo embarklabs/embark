@@ -1,11 +1,8 @@
 import { each } from "async";
 import { Callback, Logger } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { compact, dappPath, isEs6Module, recursiveMerge } from "embark-utils";
+import * as path from "path";
 import { NodeVM, NodeVMOptions } from "vm2";
-
-import { compact, dappPath, recursiveMerge } from "embark-utils";
-
-const path = require("path");
-const { isEs6Module } = require("../../utils/utils");
 
 const WEB3_INVALID_RESPONSE_ERROR: string = "Invalid JSON RPC response";
 

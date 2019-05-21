@@ -259,6 +259,13 @@ function errorMessage(e) {
   return e;
 }
 
+function isConstructor(obj) {
+  return !!obj.prototype && !!obj.prototype.constructor.name;
+}
+
+function isEs6Module(module) {
+  return (typeof module === 'function' && isConstructor(module)) || (typeof module === 'object' && typeof module.default === 'function' && module.__esModule);
+}
 
 const Utils = {
   anchoredValue,
@@ -286,6 +293,7 @@ const Utils = {
   getAddressToContract,
   getTransactionParams,
   isDocker,
+  isEs6Module,
   checkIsAvailable,
   File,
   findNextPort,

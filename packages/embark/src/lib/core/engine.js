@@ -181,7 +181,7 @@ class Engine {
   }
 
   codeRunnerService(_options) {
-    this.registerModule('codeRunner', {
+    this.registerModulePackage('embark-code-runner', {
       ipc: this.ipc
     });
   }
