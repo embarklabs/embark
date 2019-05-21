@@ -313,6 +313,7 @@ class CodeGenerator {
     const self = this;
     let embarkjsCode = '';
     let code = "/* eslint-disable */";
+    const deps = ['ipfs', 'swarm', 'whisper'];
 
     async.waterfall([
       // TODO: here due to a race condition when running embark build
@@ -326,7 +327,7 @@ class CodeGenerator {
       function getEmbarkJsLocation(next) {
         self.events.request('version:downloadIfNeeded', 'embarkjs', (err, location) => {
           if (err) {
-            this.logger.error(__('Error downloading EmbarkJS'));
+            self.logger.error(__('Error downloading EmbarkJS'));
             return next(err);
           }
           next(null, location);
@@ -335,7 +336,7 @@ class CodeGenerator {
       function generateSymlink(location, next) {
         self.generateSymlink(location, 'embarkjs', (err, symlinkDest) => {
           if (err) {
-            this.logger.error(__('Error creating a symlink to EmbarkJS'));
+            self.logger.error(__('Error creating a symlink to EmbarkJS'));
             return next(err);
           }
           embarkjsCode += `\nconst EmbarkJS = require("${symlinkDest}").default || require("${symlinkDest}");`;
@@ -344,6 +345,24 @@ class CodeGenerator {
           next();
         });
       },
+      ...deps.map((dep) => {
+        return function(next) {
+          self.events.request('version:downloadIfNeeded', `embarkjs-${dep}`, (err, location) => {
+            if (err) {
+              self.logger.error(__(`Error downloading embarkjs-${dep}`));
+              return next(err);
+            }
+
+            self.generateSymlink(location, `embarkjs-${dep}`, (err, _symlinkDest) => {
+              if (err) {
+                self.logger.error(__(`Error creating a symlink to embarkjs-${dep}`));
+                return next(err);
+              }
+              return next();
+            });
+          });
+        };
+      }),
       function getJSCode(next) {
         code += "\n" + embarkjsCode + "\n";
 
@@ -372,10 +391,10 @@ class CodeGenerator {
           "presets": [
             [
               "@babel/preset-env", {
-              "targets": {
-                "node": "8.11.3"
+                "targets": {
+                  "node": "8.11.3"
+                }
               }
-            }
             ]
           ]
         }, (err, result) => {
@@ -422,11 +441,24 @@ class CodeGenerator {
   }
 
   buildContractJS(contractName, contractJSON, cb) {
-    let contractCode = "import EmbarkJS from '../embarkjs';\n";
-    contractCode += `let ${contractName}JSONConfig = ${JSON.stringify(contractJSON)};\n`;
-    contractCode += `let ${contractName} = new EmbarkJS.Blockchain.Contract(${contractName}JSONConfig);\n`;
+    const contractCode = `
+      "use strict";
 
-    contractCode += "export default " + contractName + ";\n";
+      const isNode = (typeof process !== 'undefined' && process.versions && process.versions.node);
+      const lib = isNode ? '../embarkjs.node' : '../embarkjs';
+
+      const EmbarkJSNode = isNode && require('../embarkjs.node');
+      let EmbarkJSBrowser;
+      try {
+        EmbarkJSBrowser = require('../embarkjs').default;
+      } catch(e) {};
+
+      const EmbarkJS = isNode ? EmbarkJSNode : EmbarkJSBrowser;
+
+      let ${contractName}JSONConfig = ${JSON.stringify(contractJSON)};
+      let ${contractName} = new EmbarkJS.Blockchain.Contract(${contractName}JSONConfig);
+      module.exports = ${contractName};
+    `.trim().replace(/^[\t\s]+/gm, '');
 
     this.generateArtifact(contractCode, contractName + '.js', constants.dappArtifacts.contractsJs, (err, path, _updated) => {
       cb(err, path);

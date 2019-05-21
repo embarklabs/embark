@@ -10,6 +10,9 @@ var EmbarkJS = {
   },
   enableEthereum: function () {
     return Blockchain.enableEthereum();
+  },
+  get isNode() {
+    return typeof process !== 'undefined' && process.versions && process.versions.node;
   }
 };
 
