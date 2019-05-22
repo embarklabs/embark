@@ -171,11 +171,11 @@ export function toggleBreakpoint(payload) {
 }
 
 export function listenToDebugger(credentials) {
-  return embarkAPI.listenToDebugger(credentials, '/debugger');
+  return embarkAPI.listenToDebugger(credentials);
 }
 
 export function listenToChannel(credentials, channel) {
-  return embarkAPI.listenToChannel(credentials, `/communication/listenTo/${channel}`);
+  return embarkAPI.listenToChannel(credentials, channel);
 }
 
 export function webSocketProcess(credentials, processName) {
@@ -183,25 +183,25 @@ export function webSocketProcess(credentials, processName) {
 }
 
 export function webSocketServices(credentials) {
-  return embarkAPI.webSocketServices(credentials, `/services`);
+  return embarkAPI.webSocketServices(credentials);
 }
 
 export function webSocketContractLogs(credentials) {
-  return embarkAPI.webSocketContractLogs(credentials, `/contracts/logs`);
+  return embarkAPI.webSocketContractLogs(credentials);
 }
 
 export function webSocketContracts(credentials) {
-  return embarkAPI.webSocketContracts(credentials, `/contracts`);
+  return embarkAPI.webSocketContracts(credentials);
 }
 
 export function webSocketContractEvents(credentials) {
-  return embarkAPI.webSocketContractEvents(credentials, `/blockchain/contracts/event`);
+  return embarkAPI.webSocketContractEvents(credentials);
 }
 
 export function webSocketBlockHeader(credentials) {
-  return embarkAPI.webSocketBlockHeader(credentials, `/blockchain/blockHeader`);
+  return embarkAPI.webSocketBlockHeader(credentials);
 }
 
 export function websocketGasOracle(credentials) {
-  return embarkAPI.websocketGasOracle(credentials, `/blockchain/gas/oracle`);
+  return embarkAPI.websocketGasOracle(credentials);
 }
