@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.2](https://github.com/embark-framework/embark/compare/v4.1.0-beta.1...v4.1.0-beta.2) (2019-05-22)
+
+
+### Bug Fixes
+
+* **@cockpit/utils:** properly detect if ENS is enabled ([7a0609b](https://github.com/embark-framework/embark/commit/7a0609b))
+* **@cockpit/whisper:** ensure message subscription call is working ([2c6c948](https://github.com/embark-framework/embark/commit/2c6c948))
+* **@embark/ens:** use namehash for resolver ([4d079de](https://github.com/embark-framework/embark/commit/4d079de))
+* **@embark/pipeline:** ensure color methods for logs are available ([8ca6419](https://github.com/embark-framework/embark/commit/8ca6419))
+* **@embark/utils:** add find-up and globule to dependencies ([0253c90](https://github.com/embark-framework/embark/commit/0253c90))
+
+
+### Features
+
+* **@embark/utils:** introduce setUpEnv() function ([038928f](https://github.com/embark-framework/embark/commit/038928f))
+
+
+
+
+
 # [4.1.0-beta.1](https://github.com/embark-framework/embark/compare/v4.1.0-beta.0...v4.1.0-beta.1) (2019-05-15)
 
 

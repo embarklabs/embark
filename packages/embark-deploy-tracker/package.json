@@ -1,6 +1,6 @@
 {
   "name": "embark-deploy-tracker",
-  "version": "4.1.0-beta.1",
+  "version": "4.1.0-beta.2",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Console component for Embark",
@@ -47,7 +47,7 @@
     "extends": "../../.eslintrc.json"
   },
   "dependencies": {
-    "embark-utils": "^4.1.0-beta.1",
+    "embark-utils": "^4.1.0-beta.2",
     "fs-extra": "7.0.1"
   },
   "devDependencies": {

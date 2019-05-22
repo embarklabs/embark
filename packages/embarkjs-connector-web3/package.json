@@ -1,6 +1,6 @@
 {
   "name": "embarkjs-connector-web3",
-  "version": "4.1.0-beta.1",
+  "version": "4.1.0-beta.2",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Web3.js Connector for EmbarkJS",
@@ -31,7 +31,7 @@
     "reset": "npx rimraf embark-*.tgz package"
   },
   "dependencies": {
-    "embark-utils": "^4.1.0-beta.1"
+    "embark-utils": "^4.1.0-beta.2"
   },
   "devDependencies": {
     "rimraf": "2.6.3"

@@ -1,6 +1,6 @@
 {
   "name": "embark-console",
-  "version": "4.1.0-beta.1",
+  "version": "4.1.0-beta.2",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Console component for Embark",
@@ -50,9 +50,9 @@
     "@babel/runtime-corejs2": "7.3.1",
     "async": "2.6.1",
     "chalk": "2.4.2",
-    "embark-core": "^4.1.0-beta.1",
+    "embark-core": "^4.1.0-beta.2",
     "embark-i18n": "^4.1.0-beta.1",
-    "embark-utils": "^4.1.0-beta.1",
+    "embark-utils": "^4.1.0-beta.2",
     "json-stringify-safe": "5.0.1"
   },
   "devDependencies": {
@@ -60,7 +60,7 @@
     "@babel/core": "7.2.2",
     "@types/json-stringify-safe": "5.0.0",
     "cross-env": "5.2.0",
-    "embark-logger": "^4.1.0-beta.1",
+    "embark-logger": "^4.1.0-beta.2",
     "eslint": "5.7.0",
     "mocha": "5.2.0",
     "npm-run-all": "4.1.5",
