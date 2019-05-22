@@ -170,7 +170,7 @@ export function getEnsErrors(state) {
 }
 
 export function isEnsEnabled(state) {
-  return Boolean(state.entities.plugins.find((plugin) => plugin.name === 'ens'));
+  return Boolean(state.entities.plugins.find((plugin) => plugin.name === 'embark-ens'));
 }
 
 export function getFiles(state) {
