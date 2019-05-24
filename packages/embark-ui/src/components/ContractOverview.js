@@ -133,6 +133,17 @@ class ContractFunction extends Component {
     );
   }
 
+  formatResult(result) {
+    result = JSON.stringify(result);
+    if (result.startsWith('"')) {
+      result = result.slice(1);
+    }
+    if (result.endsWith('"')) {
+      result = result.slice(0, -1);
+    }
+    return result;
+  }
+
   render() {
     if (ContractFunction.isEvent(this.props.method)) {
       return <React.Fragment/>;
@@ -244,7 +255,7 @@ class ContractFunction extends Component {
                   Result: &nbsp;
                   <strong>
                     <span className="contract-function-result">
-                      {JSON.stringify(contractFunction.result).slice(1, -1)}
+                      {this.formatResult(contractFunction.result)}
                     </span>
                   </strong>
                 </ListGroupItem>
