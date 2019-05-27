@@ -57,6 +57,11 @@ class Cmd {
       .action(function(name, options) {
         setOrDetectLocale(options.locale);
 
+        if (options.contractsOnly && options.template) {
+          console.error('invalid: --contracts-only and --template options cannot be used together'.red);
+          process.exit(1);
+        }
+
         const contractsOnly = options.simple || options.contractsOnly;
 
         if (name === undefined) {
@@ -80,6 +85,7 @@ class Cmd {
             }
           });
         }
+
         if (contractsOnly) {
           embark.generateTemplate('simple', './', name);
         } else {
