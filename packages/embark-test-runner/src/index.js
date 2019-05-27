@@ -240,8 +240,8 @@ class TestRunner {
       }
       let failures = runs.reduce((acc, val) => acc + val, 0);
       self.events.request('config:contractsFiles:reset', () => {
-        global.config({}, (err) => {
-          cb(err, {failures});
+        self.events.request('config:contractsConfig:set', { contracts: {}}, () => {
+          cb(null, {failures});
         });
       });
     });
