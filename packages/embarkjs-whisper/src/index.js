@@ -47,7 +47,7 @@ __embarkWhisperNewWeb3.sendMessage = function(options) {
   }
   Object.assign(options, {
     sig: this.sig,
-    fromAscii: EmbarkJS.Utils.fromAscii,
+    fromAscii: this.web3.utils.fromAscii,
     toHex: this.web3.utils.toHex,
     symKeyID: options.symKeyID || this.symKeyID,
     post: this.web3.shh.post,
@@ -63,7 +63,7 @@ __embarkWhisperNewWeb3.sendMessage = function(options) {
 
 __embarkWhisperNewWeb3.listenTo = function (options) {
   Object.assign(options, {
-    toAscii: EmbarkJS.Utils.toAscii,
+    toAscii: this.web3.utils.toAscii,
     toHex: this.web3.utils.toHex,
     sig: this.sig,
     subscribe: this.web3.shh.subscribe,
