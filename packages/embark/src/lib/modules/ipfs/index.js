@@ -1,7 +1,7 @@
 import { __ } from 'embark-i18n';
 const UploadIPFS = require('./upload.js');
 const utils = require('../../utils/utils.js');
-const IpfsApi = require('ipfs-api');
+const IPFSHTTPClient = require('ipfs-http-client');
 // TODO: not great, breaks module isolation
 const StorageProcessesLauncher = require('../storage/storageProcessesLauncher');
 const constants = require('embark-core/constants');
@@ -64,15 +64,15 @@ class IPFS {
     });
   }
 
-  downloadIpfsApi(cb) {
-    this.events.request("version:get:ipfs-api", (ipfsApiVersion) => {
-      let currentIpfsApiVersion = require('../../../../package.json').dependencies["ipfs-api"];
-      if (ipfsApiVersion === currentIpfsApiVersion) {
+  downloadIPFSHTTPClient(cb) {
+    this.events.request("version:get:ipfs-http-client", (ipfsApiVersion) => {
+      let currentIPFSHTTPClientVersion = require('../../../../package.json').dependencies["ipfs-http-client"];
+      if (ipfsApiVersion === currentIPFSHTTPClientVersion) {
         const nodePath = embarkPath('node_modules');
-        const ipfsPath = require.resolve("ipfs-api", {paths: [nodePath]});
+        const ipfsPath = require.resolve("ipfs-http-client", {paths: [nodePath]});
         return cb(null, ipfsPath);
       }
-      this.events.request("version:getPackageLocation", "ipfs-api", ipfsApiVersion, (err, location) => {
+      this.events.request("version:getPackageLocation", "ipfs-http-client", ipfsApiVersion, (err, location) => {
         cb(err, dappPath(location));
       });
     });
@@ -131,19 +131,19 @@ class IPFS {
   addStorageProviderToEmbarkJS() {
     if(this.addedToEmbarkJs) return;
     this.addedToEmbarkJs = true;
-    this.events.request('version:downloadIfNeeded', 'ipfs-api', (err, location) => {
+    this.events.request('version:downloadIfNeeded', 'ipfs-http-client', (err, location) => {
       if (err) {
         this.logger.error(__('Error downloading IPFS API'));
         return this.logger.error(err.message || err);
       }
       this.events.request('code-generator:ready', () => {
-        this.events.request('code-generator:symlink:generate', location, 'ipfs-api', (err, _symlinkDest) => {
+        this.events.request('code-generator:symlink:generate', location, 'ipfs-http-client', (err, _symlinkDest) => {
           if (err) {
             this.logger.error(__('Error creating a symlink to IPFS API'));
             return this.logger.error(err.message || err);
           }
 
-          this.events.emit('runcode:register', 'IpfsApi', require('ipfs-api'), () => {
+          this.events.emit('runcode:register', 'IPFSHTTPClient', require('ipfs-http-client'), () => {
             let code = "";
             code += "\nconst __embarkIPFS = require('embarkjs-ipfs')";
             code += "\nEmbarkJS.Storage.registerProvider('ipfs', __embarkIPFS.default || __embarkIPFS);";
@@ -161,7 +161,7 @@ class IPFS {
     this.addedToConsole = true;
 
     const {host, port} = this._getNodeUrlConfig();
-    let ipfs = IpfsApi(host, port);
+    let ipfs = IPFSHTTPClient(host, port);
     this.events.emit("runcode:register", "ipfs", ipfs);
   }
 

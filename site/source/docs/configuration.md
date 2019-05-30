@@ -24,7 +24,7 @@ Every application [created with Embark](create_project.html) comes with an `emba
   "versions": {
     "web3": "1.0.0-beta",
     "solc": "0.4.25",
-    "ipfs-api": "17.2.4"
+    "ipfs-http-client": "32.0.1"
   },
   "plugins": {
   },

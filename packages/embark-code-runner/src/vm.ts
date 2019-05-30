@@ -40,7 +40,7 @@ class VM {
         "eth-ens-namehash",
         "swarm-api",
         "embarkjs-whisper",
-        "ipfs-api",
+        "ipfs-http-client",
         "embarkjs-ipfs",
         "embarkjs-swarm",
         "rxjs",

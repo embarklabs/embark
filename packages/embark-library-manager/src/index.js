@@ -2,10 +2,15 @@ import { __ } from 'embark-i18n';
 import { dappPath, embarkPath } from 'embark-utils';
 var Npm = require('./npm.js');
 
+const DEPRECATIONS = {
+  'ipfs-api': 'ipfs-http-client'
+};
+
 class LibraryManager {
 
   constructor(embark, {useDashboard}) {
     this.embark = embark;
+    this.logger = embark.logger;
     this.config = embark.config;
     this.contractsConfig = this.config.contractsConfig;
     this.storageConfig = this.config.storageConfig;
@@ -24,11 +29,11 @@ class LibraryManager {
 
     let solcVersionInConfig = this.contractsConfig.versions.solc;
     let web3VersionInConfig = this.contractsConfig.versions["web3"];
-    let ipfsApiVersion = this.storageConfig.versions["ipfs-api"];
+    let ipfsHttpClientVersion = this.storageConfig.versions["ipfs-http-client"];
 
     this.versions['solc'] = solcVersionInConfig;
     this.versions['web3'] = web3VersionInConfig;
-    this.versions['ipfs-api'] = ipfsApiVersion;
+    this.versions['ipfs-http-client'] = ipfsHttpClientVersion;
 
     Object.keys(this.versions).forEach(versionKey => {
       const newVersion = this.versions[versionKey].trim();
@@ -78,6 +83,14 @@ class LibraryManager {
         cb(lib);
       });
     }
+
+    for(let oldLib in DEPRECATIONS) {
+      let replacement = DEPRECATIONS[oldLib];
+      this.embark.events.setCommandHandler('version:get:' + oldLib, (cb) => {
+        self.logger.warn(`${oldLib} has been deprecated in favor of ${replacement}. This will be used instead.`);
+        self.embark.events.request(`version:get:${replacement}`, cb);
+      });
+    }
   }
 
   downloadIfNeeded(packageName, cb) {
@@ -95,14 +108,27 @@ class LibraryManager {
   }
 
   listenToCommandsToGetLibrary() {
+    const self = this;
     let npm = new Npm({logger: this.embark.logger, useDashboard: this.useDashboard});
     this.embark.events.setCommandHandler('version:getPackageLocation', (libName, version, cb) => {
+      if(DEPRECATIONS[libName]) {
+        self.logger.warn(`${libName} has been deprecated in favor of ${DEPRECATIONS[libName]}. This will be used instead.`);
+        libName = DEPRECATIONS[libName];
+      }
       npm.getPackageVersion(libName, version, cb);
     });
     this.embark.events.setCommandHandler('version:downloadIfNeeded', (libName, cb) => {
+      if(DEPRECATIONS[libName]) {
+        self.logger.warn(`${libName} has been deprecated in favor of ${DEPRECATIONS[libName]}. This will be used instead.`);
+        libName = DEPRECATIONS[libName];
+      }
       this.downloadIfNeeded(libName, cb);
     });
     this.embark.events.setCommandHandler('version:getPackagePath', (libName, version, cb) => {
+      if(DEPRECATIONS[libName]) {
+        self.logger.warn(`${libName} has been deprecated in favor of ${DEPRECATIONS[libName]}. This will be used instead.`);
+        libName = DEPRECATIONS[libName];
+      }
       cb(null, Npm.getPackagePath(libName, version));
     });
   }

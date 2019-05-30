@@ -1,4 +1,4 @@
-const IpfsApi = require('ipfs-api');
+const IPFSHTTPClient = require('ipfs-http-client');
 
 const __embarkIPFS = {};
 
@@ -10,7 +10,7 @@ __embarkIPFS.setProvider = function (options) {
     try {
       if (!options) {
         self._config = options;
-        self._ipfsConnection = IpfsApi('localhost', '5001');
+        self._ipfsConnection = IPFSHTTPClient('localhost', '5001');
         self._getUrl = "http://localhost:8080/ipfs/";
       } else {
         const ipfsOptions = {host: options.host || options.server, protocol: 'http'};
@@ -20,7 +20,7 @@ __embarkIPFS.setProvider = function (options) {
         if (options.port && options.port !== 'false') {
           ipfsOptions.port = options.port;
         }
-        self._ipfsConnection = IpfsApi(ipfsOptions);
+        self._ipfsConnection = IPFSHTTPClient(ipfsOptions);
         self._getUrl = options.getUrl || "http://localhost:8080/ipfs/";
       }
       resolve(self);
@@ -54,7 +54,7 @@ __embarkIPFS.saveText = function (text) {
     if (!self._ipfsConnection) {
       return reject(new Error(NoConnectionError));
     }
-    self._ipfsConnection.add(self._ipfsConnection.Buffer.from(text), function (err, result) {
+    self._ipfsConnection.add(IPFSHTTPClient.Buffer.from(text), function (err, result) {
       if (err) {
         return reject(err);
       }
@@ -96,7 +96,7 @@ __embarkIPFS.uploadFile = function (inputSelector) {
     }
     const reader = new FileReader();
     reader.onloadend = function () {
-      const buffer = self._ipfsConnection.Buffer.from(reader.result);
+      const buffer = IPFSHTTPClient.Buffer.from(reader.result);
       self._ipfsConnection.add(buffer, function (err, result) {
         if (err) {
           return reject(err);
