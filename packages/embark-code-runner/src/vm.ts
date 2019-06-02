@@ -38,6 +38,7 @@ class VM {
         "@babel/runtime-corejs2/core-js/promise",
         "@babel/runtime-corejs2/helpers/interopRequireDefault",
         "embark-utils",
+        "embarkjs-ens",
         "embarkjs-ipfs",
         "embarkjs-swarm",
         "embarkjs-whisper",

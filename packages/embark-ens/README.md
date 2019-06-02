@@ -95,7 +95,6 @@ response:
 * embarkjs.utils
   * secureSend
 * embark utils
-  * ZERO_ADDRESS
+  * AddressUtils
   * hashTo32ByteHexString
-  * joinPath
   * recursiveMerge

@@ -1,10 +1,13 @@
 import { __ } from 'embark-i18n';
-import {joinPath, hashTo32ByteHexString, recursiveMerge, AddressUtils} from 'embark-utils';
+import {AddressUtils, dappPath, hashTo32ByteHexString, recursiveMerge} from 'embark-utils';
 const namehash = require('eth-ens-namehash');
 const async = require('async');
-const ENSFunctions = require('./ENSFunctions');
-import {ens} from 'embark-core/constants.json';
+import {dappArtifacts, ens} from 'embark-core/constants.json';
 import EmbarkJS, {Utils as embarkJsUtils} from 'embarkjs';
+import ensJS from 'embarkjs-ens';
+const ENSFunctions = ensJS.ENSFunctions;
+import * as path from 'path';
+
 const ensConfig = require('./ensContractConfigs');
 const secureSend = embarkJsUtils.secureSend;
 
@@ -70,6 +73,7 @@ class ENS {
     this.embark = embark;
     this.ensConfig = ensConfig;
     this.configured = false;
+    this.modulesPath = dappPath(embark.config.embarkConfig.generationDir, dappArtifacts.symlinkDir);
 
     this.events.setCommandHandler("ens:resolve", this.ensResolve.bind(this));
     this.events.setCommandHandler("ens:isENSName", this.isENSName.bind(this));
@@ -374,16 +378,19 @@ class ENS {
       }
 
       this.events.request('code-generator:ready', () => {
-        this.events.request('code-generator:symlink:generate', location, 'eth-ens-namehash', (err, symlinkDest) => {
+        this.events.request('code-generator:symlink:generate', location, 'eth-ens-namehash', (err) => {
           if (err) {
             this.logger.error(__('Error creating a symlink to eth-ens-namehash'));
             return this.logger.error(err.message || err);
           }
           this.events.emit('runcode:register', 'namehash', require('eth-ens-namehash'), () => {
-            let code = `\nconst namehash = global.namehash || require('${symlinkDest}');`;
-            code += this.fs.readFileSync(joinPath(__dirname, 'ENSFunctions.js')).toString();
-            code += "\n" + this.fs.readFileSync(joinPath(__dirname, 'embarkjs.js')).toString();
-            code += "\nEmbarkJS.Names.registerProvider('ens', __embarkENS);";
+            let linkedModulePath = path.join(this.modulesPath, 'embarkjs-ens');
+            if (process.platform === 'win32') linkedModulePath = linkedModulePath.replace(/\\/g, '\\\\');
+
+            const code = `
+              const __embarkENS = require('${linkedModulePath}');
+              EmbarkJS.Names.registerProvider('ens', __embarkENS.default || __embarkENS);
+            `;
 
             this.embark.addCodeToEmbarkJS(code);
           });

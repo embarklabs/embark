@@ -1,4 +1,6 @@
-/*global namehash*/
+/* global require */
+const namehash = require('eth-ens-namehash');
+
 // Price of ENS registration contract functions
 const ENS_GAS_PRICE = 700000;
 
@@ -101,10 +103,8 @@ function resolveName(name, ens, createResolverContract, callback, _namehash) {
   });
 }
 
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    registerSubDomain,
-    resolveName,
-    lookupAddress
-  };
-}
+export default {
+  registerSubDomain,
+  resolveName,
+  lookupAddress
+};
