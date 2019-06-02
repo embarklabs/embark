@@ -53,6 +53,7 @@
     "embark-i18n": "^4.1.0-beta.1",
     "embark-utils": "^4.1.0-beta.2",
     "embarkjs": "^4.1.0-beta.2",
+    "embarkjs-ens": "^4.1.0-beta.2",
     "eth-ens-namehash": "2.0.8"
   },
   "devDependencies": {
