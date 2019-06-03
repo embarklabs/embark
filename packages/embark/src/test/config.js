@@ -5,7 +5,6 @@ const Plugins = require('../lib/core/plugins.js');
 const assert = require('assert');
 const TestLogger = require('../lib/utils/test_logger');
 const Events = require('../lib/core/events');
-const fs = require('../lib/core/fs');
 
 describe('embark.Config', function () {
   let config = new Config({
@@ -21,23 +20,33 @@ describe('embark.Config', function () {
       config.loadBlockchainConfigFile();
       let expectedConfig = {
         "enabled": true,
-        "ethereumClientName": "geth",
-        "networkType": "custom",
-        "genesisBlock": "config/development/genesis.json",
-        "datadir": ".embark/development/datadir",
-        "isDev": false,
-        "mineWhenNeeded": true,
-        "nodiscover": true,
+        "client": "geth",
         "proxy": true,
+        "datadir": ".embark/myenv/datadir",
         "rpcHost": "localhost",
         "rpcPort": 8545,
-        "rpcCorsDomain": "http://localhost:8000",
-        "wsOrigins": "auto",
-        "accounts": [
-          {
-            "password": "config/development/password"
-          }
-        ]
+        "rpcCorsDomain": {
+          "auto": true,
+          "additionalCors": []
+        },
+        "wsRPC": true,
+        "wsOrigins": {
+          "auto": true,
+          "additionalCors": []
+        },
+        "wsHost": "localhost",
+        "wsPort": 8546,
+        "networkType": "custom",
+        "isDev": false,
+        "mineWhenNeeded": false,
+        "nodiscover": true,
+        "maxpeers": 0,
+        "targetGasLimit": 8000000,
+        "simulatorBlocktime": 0,
+        "clientMode": {
+          "miningMode": "auto"
+        },
+        "endpoint": "ws://localhost:8546"
       };
 
       assert.deepEqual(config.blockchainConfig, expectedConfig);
@@ -46,26 +55,41 @@ describe('embark.Config', function () {
     it('should convert Ether units', function () {
       let expectedConfig = {
         "enabled": true,
-        "ethereumClientName": "geth",
-        "networkType": "custom",
-        "genesisBlock": "config/development/genesis.json",
-        "datadir": ".embark/development/datadir",
-        "isDev": false,
-        "targetGasLimit": "300000",
-        "gasPrice": "8000000",
-        "mineWhenNeeded": true,
-        "nodiscover": true,
+        "client": "geth",
         "proxy": true,
+        "datadir": ".embark/unitenv/datadir",
         "rpcHost": "localhost",
         "rpcPort": 8545,
-        "rpcCorsDomain": "http://localhost:8000",
-        "wsOrigins": "auto",
+        "rpcCorsDomain": {
+          "auto": true,
+          "additionalCors": []
+        },
+        "wsRPC": true,
+        "wsOrigins": {
+          "auto": true,
+          "additionalCors": []
+        },
+        "wsHost": "localhost",
+        "wsPort": 8546,
+        "networkType": "custom",
+        "isDev": false,
+        "mineWhenNeeded": false,
+        "nodiscover": true,
+        "maxpeers": 0,
+        "targetGasLimit": 8000000,
+        "simulatorBlocktime": 0,
+        "clientMode": {
+          "miningMode": "auto",
+          "gasPrice": "8 Mwei",
+          "targetGasLimit": "300 Kwei"
+        },
         "accounts": [
           {
             "password": "config/development/password",
             "balance": "3000000000000000000"
           }
-        ]
+        ],
+        "endpoint": "ws://localhost:8546"
       };
 
       let config = new Config({
@@ -83,26 +107,41 @@ describe('embark.Config', function () {
     it('should accept unitless gas values', function () {
       let expectedConfig = {
         "enabled": true,
-        "ethereumClientName": "geth",
-        "networkType": "custom",
-        "genesisBlock": "config/development/genesis.json",
-        "datadir": ".embark/development/datadir",
-        "isDev": false,
-        "targetGasLimit": "20000000",
-        "gasPrice": "8000000",
-        "mineWhenNeeded": true,
-        "nodiscover": true,
+        "client": "geth",
         "proxy": true,
+        "datadir": ".embark/unitlessenv/datadir",
         "rpcHost": "localhost",
         "rpcPort": 8545,
-        "rpcCorsDomain": "http://localhost:8000",
-        "wsOrigins": "auto",
+        "rpcCorsDomain": {
+          "auto": true,
+          "additionalCors": []
+        },
+        "wsRPC": true,
+        "wsOrigins": {
+          "auto": true,
+          "additionalCors": []
+        },
+        "wsHost": "localhost",
+        "wsPort": 8546,
+        "networkType": "custom",
+        "isDev": false,
+        "mineWhenNeeded": false,
+        "nodiscover": true,
+        "maxpeers": 0,
+        "targetGasLimit": 8000000,
+        "simulatorBlocktime": 0,
+        "clientMode": {
+          "miningMode": "auto",
+          "gasPrice": "8000000",
+          "targetGasLimit": "20000000"
+        },
         "accounts": [
           {
             "password": "config/development/password",
             "balance": "3000000000000000000"
           }
-        ]
+        ],
+        "endpoint": "ws://localhost:8546"
       };
 
       let config = new Config({
@@ -123,7 +162,6 @@ describe('embark.Config', function () {
       config.loadContractsConfigFile();
       let expectedConfig = {
         versions: {'web3': '1.0.0-beta', solc: '0.5.0'},
-        deployment: {host: 'localhost', port: 8545, type: 'rpc', "accounts": [{"mnemonic": "12 word mnemonic", "balance": "5000000000"}]},
         dappConnection: ['$WEB3', 'localhost:8545'],
         dappAutoEnable: true,
         "gas": "400000",
@@ -146,7 +184,6 @@ describe('embark.Config', function () {
     it('should replace occourences of `0x0` with full zero addresses', () => {
       let expectedConfig = {
         versions: {'web3': '1.0.0-beta', solc: '0.5.0'},
-        deployment: {host: 'localhost', port: 8545, type: 'rpc'},
         dappConnection: ['$WEB3', 'localhost:8545'],
         dappAutoEnable: true,
         "gas": "auto",

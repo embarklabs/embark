@@ -160,7 +160,7 @@ class CodeGenerator {
       dappConnection: contractConfig.dappConnection,
       dappAutoEnable: contractConfig.dappAutoEnable,
       warnIfMetamask: this.blockchainConfig.isDev,
-      blockchainClient: this.blockchainConfig.ethereumClientName
+      blockchainClient: this.blockchainConfig.client
     };
     this.generateArtifact(this.dappConfigs.blockchain, constants.dappArtifacts.blockchain, constants.dappArtifacts.dir, (err, path, _updated) => {
       callback(err, path);

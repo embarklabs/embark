@@ -9,43 +9,45 @@ const SomeContract = require('Embark/contracts/SomeContract');
 
 config({
   contracts: {
-    ZAMyLib: {},
-    SimpleStorage: {
-      args: [100]
-    },
-    AnotherStorage: {
-      args: ["$SimpleStorage"]
-    },
-    Token: {
-      deploy: false,
-      args: [1000]
-    },
-    MyToken: {
-      instanceOf: "Token"
-    },
-    MyToken2: {
-      instanceOf: "Token",
-      args: [2000]
-    },
-    AlreadyDeployedToken: {
-      address: "0xCAFECAFECAFECAFECAFECAFECAFECAFECAFECAFE",
-      instanceOf: "Token"
-    },
-    Test: {
-      onDeploy: ["Test.methods.changeAddress('$MyToken').send()", "Test.methods.changeENS('embark.eth').send()"]
-    },
-    ContractArgs: {
-      args: {
-        initialValue: 123,
-        _addresses: ["$MyToken2", "$SimpleStorage"]
+    deploy: {
+      ZAMyLib: {},
+      SimpleStorage: {
+        args: [100]
+      },
+      AnotherStorage: {
+        args: ["$SimpleStorage"]
+      },
+      Token: {
+        deploy: false,
+        args: [1000]
+      },
+      MyToken: {
+        instanceOf: "Token"
+      },
+      MyToken2: {
+        instanceOf: "Token",
+        args: [2000]
+      },
+      AlreadyDeployedToken: {
+        address: "0xCAFECAFECAFECAFECAFECAFECAFECAFECAFECAFE",
+        instanceOf: "Token"
+      },
+      Test: {
+        onDeploy: ["Test.methods.changeAddress('$MyToken').send()", "Test.methods.changeENS('embark.eth').send()"]
+      },
+      ContractArgs: {
+        args: {
+          initialValue: 123,
+          _addresses: ["$MyToken2", "$SimpleStorage"]
+        }
+      },
+      SomeContract: {
+        deployIf: "await MyToken.methods.isAvailable().call()",
+        args: [
+          ["$MyToken2", "$SimpleStorage"],
+          100
+        ]
       }
-    },
-    SomeContract: {
-      deployIf: "await MyToken.methods.isAvailable().call()",
-      args: [
-        ["$MyToken2", "$SimpleStorage"],
-        100
-      ]
     }
   }
 });

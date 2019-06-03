@@ -153,16 +153,20 @@ function toposort(graph) {
 }
 
 function deconstructUrl(endpoint) {
-  const matches = endpoint.match(/(ws|https?):\/\/([a-zA-Z0-9_.-]*):?([0-9]*)?/);
+  const matches = endpoint.match(/(wss?|https?):\/\/([a-zA-Z0-9_.-]*):?([0-9]*)?/);
   return {
     protocol: matches[1],
     host: matches[2],
     port: matches[3],
-    type: matches[1] === 'ws' ? 'ws' : 'rpc'
+    type: matches[1] === 'ws' || matches[1] === 'wss' ? 'ws' : 'rpc'
   };
 }
 
 function prepareContractsConfig(config) {
+  if (config.deploy) {
+    config.contracts = config.deploy;
+    delete config.deploy;
+  }
   Object.keys(config.contracts).forEach((contractName) => {
     const gas = config.contracts[contractName].gas;
     const gasPrice = config.contracts[contractName].gasPrice;

@@ -34,8 +34,8 @@ var Blockchain = function(userConfig, clientClass) {
 
   this.config = {
     silent: this.userConfig.silent,
-    ethereumClientName: this.userConfig.ethereumClientName,
-    ethereumClientBin: this.userConfig.ethereumClientBin || this.userConfig.ethereumClientName,
+    client: this.userConfig.client,
+    ethereumClientBin: this.userConfig.ethereumClientBin || this.userConfig.client,
     networkType: this.userConfig.networkType || clientClass.DEFAULTS.NETWORK_TYPE,
     networkId: this.userConfig.networkId || clientClass.DEFAULTS.NETWORK_ID,
     genesisBlock: this.userConfig.genesisBlock || false,
@@ -77,7 +77,7 @@ var Blockchain = function(userConfig, clientClass) {
     }
   }
 
-  if (this.userConfig === {} || this.userConfig.default || JSON.stringify(this.userConfig) === '{"ethereumClientName":"geth"}') {
+  if (this.userConfig === {} || this.userConfig.default || JSON.stringify(this.userConfig) === '{"client":"geth"}') {
     if (this.env === 'development') {
       this.isDev = true;
     } else {
@@ -455,12 +455,12 @@ export function BlockchainClient(userConfig, options) {
     options.logger.info("===> " + __("warning: running default config on a non-development environment"));
   }
   // if client is not set in preferences, default is geth
-  if (!userConfig.ethereumClientName) userConfig.ethereumClientName = constants.blockchain.clients.geth;
+  if (!userConfig.client) userConfig.client = constants.blockchain.clients.geth;
   // if clientName is set, it overrides preferences
-  if (options.clientName) userConfig.ethereumClientName = options.clientName;
+  if (options.clientName) userConfig.client = options.clientName;
   // Choose correct client instance based on clientName
   let clientClass;
-  switch (userConfig.ethereumClientName) {
+  switch (userConfig.client) {
     case constants.blockchain.clients.geth:
       clientClass = GethClient;
       break;
@@ -469,7 +469,7 @@ export function BlockchainClient(userConfig, options) {
       clientClass = ParityClient;
       break;
     default:
-      console.error(__('Unknown client "%s". Please use one of the following: %s', userConfig.ethereumClientName, Object.keys(constants.blockchain.clients).join(', ')));
+      console.error(__('Unknown client "%s". Please use one of the following: %s', userConfig.client, Object.keys(constants.blockchain.clients).join(', ')));
       process.exit(1);
   }
   userConfig.isDev = (userConfig.isDev || userConfig.default);

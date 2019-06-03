@@ -10,7 +10,13 @@ module.exports = {
   development: {
     clientConfig: {
       miningMode: 'dev' // Mode in which the node mines. Options: dev, auto, always, off
-    }
+    },
+    "accounts": [
+      {
+        "mnemonic": "example exile argue silk regular smile grass bomb merge arm assist farm",
+        "balance": "5 ether"
+      }
+    ]
   },
 
   privatenet: {

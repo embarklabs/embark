@@ -7,7 +7,7 @@ let gasPrice = 1;
 let accounts;
 
 config({
-  deployment: {
+  blockchain: {
     accounts: [
       // you can configure custom accounts with a custom balance
       // see https://embark.status.im/docs/contracts_testing.html#Configuring-accounts
@@ -18,22 +18,24 @@ config({
     ]
   },
   contracts: {
-    "Token": {
-      deploy: false,
-      args: [1000]
-    },
-    "MyToken2": {
-      instanceOf: "Token",
-      args: [2000]
-    },
-    "SomeContract": {
-      "args": [
-        ["$MyToken2", "$accounts[0]"],
-        100
-      ]
-    },
-    "SimpleStorage": {
-      args: [100]
+    deploy: {
+      "Token": {
+        deploy: false,
+        args: [1000]
+      },
+      "MyToken2": {
+        instanceOf: "Token",
+        args: [2000]
+      },
+      "SomeContract": {
+        "args": [
+          ["$MyToken2", "$accounts[0]"],
+          100
+        ]
+      },
+      "SimpleStorage": {
+        args: [100]
+      }
     }
   }
 }, (_err, web3_accounts) => {
