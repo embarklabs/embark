@@ -316,7 +316,14 @@ class ContractDeployer {
         next();
       },
       function estimateCorrectGas(next) {
-        if (contract.gas === 'auto' || !contract.gas) {
+        if (contract._skipGasEstimations) {
+          // This is Ganache's gas limit. We subtract 1 so we don't reach the limit.
+          //
+          // We do this because Ganache's gas estimates are wrong (contract creation
+          // has a base cost of 53k, not 21k, so it sometimes results in out of gas
+          // errors.)
+          contract.gas = 6721975 - 1;
+        } else if (contract.gas === 'auto' || !contract.gas) {
           return self.blockchain.estimateDeployContractGas(deployObject, (err, gasValue) => {
             if (err) {
               return next(err);
