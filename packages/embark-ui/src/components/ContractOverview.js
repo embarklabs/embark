@@ -28,11 +28,21 @@ import "./ContractOverview.scss";
 class ContractFunction extends Component {
   constructor(props) {
     super(props);
-    this.state = {inputs: {}, optionsCollapse: false, functionCollapse: false, gasPriceCollapse: false};
+    this.state = {
+      inputs: {},
+      optionsCollapse: false,
+      functionCollapse: false,
+      gasPriceCollapse: false,
+      value: 0
+    };
   }
 
   static isPureCall(method) {
     return (method.stateMutability === 'view' || method.stateMutability === 'pure');
+  }
+
+  static isPayable(method) {
+    return method.payable;
   }
 
   static isEvent(method) {
@@ -59,9 +69,13 @@ class ContractFunction extends Component {
   }
 
   handleChange(e, name) {
-    const newInputs = this.state.inputs;
-    newInputs[name] = e.target.value;
-    this.setState({inputs: newInputs});
+    if (name === `${this.props.method.name}-value`) {
+      this.setState({ value: e.target.value });
+    } else {
+      const newInputs = this.state.inputs;
+      newInputs[name] = e.target.value;
+      this.setState({inputs: newInputs});
+    }
   }
 
   autoSetGasPrice(e) {
@@ -78,7 +92,8 @@ class ContractFunction extends Component {
       this.props.contractName,
       this.props.method.name,
       this.inputsAsArray(),
-      this.state.inputs.gasPrice * 1000000000
+      this.state.inputs.gasPrice * 1000000000,
+      this.state.value
     );
   }
 
@@ -171,12 +186,25 @@ class ContractFunction extends Component {
                : (ContractFunction.isPureCall(this.props.method) &&
                    this.makeBadge('success', 'white', 'call')) ||
                    this.makeBadge('warning', 'black', 'send')}
+              {ContractFunction.isPayable(this.props.method) &&
+                this.makeBadge('light', 'black', 'payable')
+              }
             </div>
           </CardTitle>
         </CardHeader>
         {!ContractFunction.isFallback(this.props.method) &&
          <Collapse isOpen={this.state.functionCollapse} className="relative">
           <CardBody>
+            {ContractFunction.isPayable(this.props.method) &&
+              <Form inline>
+                <Label for={this.props.method.name + '-value'} className="mr-2 font-weight-bold contract-function-input">ETH</Label>
+                <Input name={this.props.method.name}
+                       id={this.props.method.name + '-value'}
+                       onChange={(e) => this.handleChange(e, this.props.method.name + '-value')}
+                       onKeyPress={(e) => this.handleKeyPress(e)}
+                       />
+              </Form>
+            }
             <Form inline>
               {this.props.method.inputs.map((input, idx) => (
                 <FormGroup key={idx}>

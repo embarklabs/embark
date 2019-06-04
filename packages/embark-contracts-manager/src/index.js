@@ -107,6 +107,9 @@ class ContractsManager {
           contract: (callback) => {
             self.events.request('contracts:contract', req.body.contractName, (contract) => callback(null, contract));
           },
+          web3: (callback) => {
+            self.events.request("blockchain:get", web3 => callback(null, web3));
+          },
           account: (callback) => {
             self.events.request("blockchain:defaultAccount:get", (account) => callback(null, account));
           }
@@ -114,14 +117,20 @@ class ContractsManager {
           if (error) {
             return res.send({error: error.message});
           }
-          const {account, contract} = result;
+          const {account, contract, web3} = result;
           const abi = contract.abiDefinition.find(definition => definition.name === req.body.method);
           const funcCall = (abi.constant === true || abi.stateMutability === 'view' || abi.stateMutability === 'pure') ? 'call' : 'send';
 
           self.events.request("blockchain:contract:create", {abi: contract.abiDefinition, address: contract.deployedAddress}, async (contractObj) => {
             try {
-              const gas = await contractObj.methods[req.body.method].apply(this, req.body.inputs).estimateGas();
-              contractObj.methods[req.body.method].apply(this, req.body.inputs)[funcCall]({from: account, gasPrice: req.body.gasPrice, gas: Math.floor(gas)}, (error, result) => {
+              const value = req.body.value !== undefined ? web3.utils.toWei(req.body.value, 'ether') : 0
+              const gas = await contractObj.methods[req.body.method].apply(this, req.body.inputs).estimateGas({ value });
+              contractObj.methods[req.body.method].apply(this, req.body.inputs)[funcCall]({
+                from: account,
+                gasPrice: req.body.gasPrice,
+                gas: Math.floor(gas),
+                value
+              }, (error, result) => {
                 const paramString = abi.inputs.map((input, idx) => {
                   const quote = input.type.indexOf("int") === -1 ? '"' : '';
                   return quote + req.body.inputs[idx] + quote;
