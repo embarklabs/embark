@@ -130,7 +130,7 @@ class Swarm {
     if (process.platform === 'win32') linkedModulePath = linkedModulePath.replace(/\\/g, '\\\\');
 
     const code = `
-      const __embarkSwarm = EmbarkJS.isNode ? require('${linkedModulePath}') : require('embarkjs-swarm');
+      const __embarkSwarm = require('${linkedModulePath}');
       EmbarkJS.Storage.registerProvider('swarm', __embarkSwarm.default || __embarkSwarm);
     `;
 
