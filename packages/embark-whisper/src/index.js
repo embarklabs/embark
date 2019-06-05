@@ -130,7 +130,7 @@ class Whisper {
     if (process.platform === 'win32') linkedModulePath = linkedModulePath.replace(/\\/g, '\\\\');
 
     const code = `
-      const __embarkWhisperNewWeb3 = EmbarkJS.isNode ? require('${linkedModulePath}') : require('embarkjs-whisper');
+      const __embarkWhisperNewWeb3 = require('${linkedModulePath}');
       EmbarkJS.Messages.registerProvider('whisper', __embarkWhisperNewWeb3.default || __embarkWhisperNewWeb3);
     `;
 

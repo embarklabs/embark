@@ -150,7 +150,7 @@ class IPFS {
             if (process.platform === 'win32') linkedModulePath = linkedModulePath.replace(/\\/g, '\\\\');
 
             const code = `
-              const __embarkIPFS = EmbarkJS.isNode ? require('${linkedModulePath}') : require('embarkjs-ipfs');
+              const __embarkIPFS = require('${linkedModulePath}');
               EmbarkJS.Storage.registerProvider('ipfs', __embarkIPFS.default || __embarkIPFS);
             `;
 
