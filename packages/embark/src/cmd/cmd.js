@@ -205,6 +205,9 @@ class Cmd {
           embarkConfig: 'embark.json',
           interceptLogs: false
         });
+        if (embark.config.blockchainConfig.endpoint && !embark.config.blockchainConfig.isAutoEndpoint) {
+          embark.logger.warn(__('You are starting the blockchain node, but have an `endpoint` specified. `embark run` is probably what you wanted to run'));
+        }
         embark.blockchain(env || 'development', options.client);
       });
   }
