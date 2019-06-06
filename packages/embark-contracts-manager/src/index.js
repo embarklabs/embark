@@ -123,7 +123,7 @@ class ContractsManager {
 
           self.events.request("blockchain:contract:create", {abi: contract.abiDefinition, address: contract.deployedAddress}, async (contractObj) => {
             try {
-              const value = req.body.value !== undefined ? web3.utils.toWei(req.body.value, 'ether') : 0
+              const value = req.body.value !== undefined ? web3.utils.toWei(req.body.value, 'ether') : 0;
               const gas = await contractObj.methods[req.body.method].apply(this, req.body.inputs).estimateGas({ value });
               contractObj.methods[req.body.method].apply(this, req.body.inputs)[funcCall]({
                 from: account,
