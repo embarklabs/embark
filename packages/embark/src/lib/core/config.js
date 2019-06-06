@@ -28,6 +28,9 @@ import {getBlockchainDefaults, getContractDefaults} from './configDefaults';
 const DEFAULT_CONFIG_PATH = 'config/';
 const PACKAGE = require('../../../package.json');
 
+// TODO add URL here when post or page is publicated
+const embark5ChangesUrl = 'https://...';
+
 var Config = function(options) {
   const self = this;
   this.env = options.env || 'default';
@@ -308,6 +311,12 @@ Config.prototype.loadBlockchainConfigFile = function() {
   }
 
   this.blockchainConfig = this._doMergeConfig(userConfig, blockchainDefaults, this.env);
+
+  if (this.blockchainConfig.ethereumClientName || this.blockchainConfig.isDev || this.blockchainConfig.mineWhenNeeded) {
+    this.logger.error(__('The blockchain config has changed quite a bit in Embark 5\nPlease visit %s to know what has to be changed', embark5ChangesUrl.underline));
+    process.exit(1);
+  }
+
   if (!configFilePath) {
     this.blockchainConfig.default = true;
   }
@@ -339,6 +348,7 @@ Config.prototype.loadBlockchainConfigFile = function() {
       type: 'rpc'
     };
     this.blockchainConfig.endpoint = buildUrlFromConfig(urlConfig);
+    this.blockchainConfig.isAutoEndpoint = true;
   }
 
   if (
@@ -392,6 +402,14 @@ Config.prototype.loadContractsConfigFile = function() {
 
   let configFilePath = this._getFileOrObject(this.configDir, 'contracts', 'contracts');
   let newContractsConfig = this._mergeConfig(configFilePath, configObject, this.env);
+  if (newContractsConfig.contracts) {
+    this.logger.error(__('`contracts` has been renamed `deploy` in contracts config\nFor more information: %s', embark5ChangesUrl.underline));
+    process.exit(1);
+  }
+  if (newContractsConfig.deployment) {
+    this.logger.error(__('`deployment` has been removed from contracts config and is now part of blockchain config\nFor more information: %s', embark5ChangesUrl.underline));
+    process.exit(1);
+  }
   if (newContractsConfig.gas.match(unitRegex)) {
     newContractsConfig.gas = getWeiBalanceFromString(newContractsConfig.gas, web3);
   }
