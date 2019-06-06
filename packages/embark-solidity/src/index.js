@@ -26,7 +26,7 @@ class Solidity {
         if (typeof req.body.code !== 'string') {
           return res.send({error: 'Body parameter \'code\' must be a string'});
         }
-        const input = {[req.body.name]: {content: req.body.code.replace(/\r\n/g, '\n')}};
+        const input = {[req.body.name.replace(/\\/g, '/')]: {content: req.body.code.replace(/\r\n/g, '\n')}};
         this.compile_solidity_code(input, {}, true, {}, (errors, result) => {
           const responseData = {errors: errors, result: result};
           this.logger.trace(`POST response /embark-api/contract/compile:\n ${JSON.stringify(responseData)}`);
@@ -209,7 +209,7 @@ class Solidity {
 
             file.prepareForCompilation(options.isCoverage)
               .then(fileContent => {
-                input[file.path] = {content: fileContent.replace(/\r\n/g, '\n')};
+                input[file.path.replace(/\\/g, '/')] = {content: fileContent.replace(/\r\n/g, '\n')};
                 fileCb();
               }).catch((e) => {
                 self.logger.error(__('Error while loading the content of ') + filename);
