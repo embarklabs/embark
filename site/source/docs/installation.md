@@ -22,10 +22,9 @@ We recommend installing Node using the [Node Version Manager](https://github.com
 
 Once that is done, we can install and select a specific Node version or use the `--lts` option to get the latest version with long term support like this:
 
-```
-$ nvm install --lts
+<pre class="highlight"><code>$ nvm install --lts
 $ nvm use --lts
-```
+</code></pre>
 {% endnotification %}
 
 ### IPFS (Optional)
@@ -91,4 +90,4 @@ At the time of writing this guide, the output looked like this:
 4.0.0
 ```
 
-Awesome! We're all set up. If you're brand new to Embark, now would be a good time to take our [Quickstart](/docs/quick_start.html) in which you'll build your first application! 
+Awesome! We're all set up. If you're brand new to Embark, now would be a good time to take our [Quickstart](/docs/quick_start.html) in which you'll build your first application!
