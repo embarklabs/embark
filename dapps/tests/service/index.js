@@ -11,7 +11,7 @@ module.exports = function (embark) {
 
   embark.registerContractConfiguration({
     "default": {
-      "contracts": {
+      "deploy": {
         "PluginStorage": {
           "args": ["$SimpleStorage"]
         }
