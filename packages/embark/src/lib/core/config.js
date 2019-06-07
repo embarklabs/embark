@@ -32,11 +32,12 @@ const PACKAGE = require('../../../package.json');
 const embark5ChangesUrl = 'https://...';
 
 var Config = function(options) {
-  const self = this;
   this.env = options.env || 'default';
   this.blockchainConfig = {};
   this.contractsConfig  = {};
   this.pipelineConfig   = {};
+  this.namesystemConfig = {};
+  this.communicationConfig = {};
   this.webServerConfig  = options.webServerConfig;
   this.chainTracker     = {};
   this.assetFiles = {};
@@ -53,51 +54,65 @@ var Config = function(options) {
   this.shownNoAccountConfigMsg = false; // flag to ensure "no account config" message is only displayed once to the user
   this.corsParts = [];
   this.providerUrl = null;
+
+  this.registerEvents();
+};
+
+Config.prototype.setConfig = function(configName, newConfig, recursive, cb) {
+  if (typeof recursive === 'function') {
+    cb = recursive;
+    recursive = false;
+  }
+  if (recursive) {
+    this[configName] = recursiveMerge(this[configName], newConfig);
+  } else {
+    this[configName] = newConfig;
+  }
+  cb();
+};
+
+Config.prototype.registerEvents = function() {
   this.events.setCommandHandler("config:cors:add", (url) => {
     this.corsParts.push(url);
     this._updateBlockchainCors();
   });
 
-  self.events.setCommandHandler("config:contractsConfig", (cb) => {
-    cb(self.contractsConfig);
+  this.events.setCommandHandler("config:contractsConfig", (cb) => {
+    cb(this.contractsConfig);
   });
 
-  self.events.setCommandHandler("config:contractsConfig:set", (config, cb) => {
-    self.contractsConfig = config;
-    cb();
-  });
+  this.events.setCommandHandler("config:contractsConfig:set", this.setConfig.bind(this, 'contractsConfig'));
+  this.events.setCommandHandler("config:blockchainConfig:set", this.setConfig.bind(this, 'blockchainConfig'));
+  this.events.setCommandHandler("config:storageConfig:set", this.setConfig.bind(this, 'storageConfig'));
+  this.events.setCommandHandler("config:namesystemConfig:set", this.setConfig.bind(this, 'namesystemConfig'));
+  this.events.setCommandHandler("config:communicationConfig:set", this.setConfig.bind(this, 'communicationConfig'));
 
-  self.events.setCommandHandler("config:blockchainConfig:set", (config, cb) => {
-    self.blockchainConfig = config;
-    cb();
-  });
-
-  self.events.setCommandHandler("config:contractsFiles", (cb) => {
-    cb(self.contractsFiles);
+  this.events.setCommandHandler("config:contractsFiles", (cb) => {
+    cb(this.contractsFiles);
   });
 
   // TODO: refactor this so reading the file can be done with a normal resolver or something that takes advantage of the plugin api
-  self.events.setCommandHandler("config:contractsFiles:add", (filename, resolver) => {
+  this.events.setCommandHandler("config:contractsFiles:add", (filename, resolver) => {
     resolver = resolver || function(callback) {
       callback(fs.readFileSync(filename).toString());
     };
-    self.contractsFiles.push(new File({path: filename, originalPath: filename, type: Types.custom, resolver}));
+    this.contractsFiles.push(new File({path: filename, originalPath: filename, type: Types.custom, resolver}));
   });
 
-  self.events.setCommandHandler("config:contractsFiles:reset", (cb) => {
-    self.contractsFiles.forEach((file) => {
+  this.events.setCommandHandler("config:contractsFiles:reset", (cb) => {
+    this.contractsFiles.forEach((file) => {
       if(file.path.includes(".embark")) {
         fs.removeSync(file.path);
       }
-      self.contractsFiles = self.contractsFiles.filter((contractFile) => contractFile.path !== file.path);
+      this.contractsFiles = this.contractsFiles.filter((contractFile) => contractFile.path !== file.path);
     });
     cb();
   });
 
-  self.events.on('file-remove', (fileType, removedPath) => {
+  this.events.on('file-remove', (fileType, removedPath) => {
     if(fileType !== 'contract') return;
     const normalizedPath = path.normalize(removedPath);
-    self.contractsFiles = self.contractsFiles.filter(file => path.normalize(file.path) !== normalizedPath);
+    this.contractsFiles = this.contractsFiles.filter(file => path.normalize(file.path) !== normalizedPath);
   });
 };
 
