@@ -1,5 +1,5 @@
 import { __ } from 'embark-i18n';
-import { dappPath } from 'embark-utils';
+import { dappPath, toForwardSlashes, normalizePath } from 'embark-utils';
 let chokidar = require('chokidar');
 let path = require('path');
 
@@ -76,9 +76,9 @@ class Watcher {
       // so embark reacts to changes made in imported js files
       // chokidar glob patterns only work with front-slashes
       if (!Array.isArray(files)) {
-        fileGlob = path.join(path.dirname(files), '**', '*.*').replace(/\\/g, '/');
+        fileGlob = toForwardSlashes(path.join(path.dirname(files), '**', '*.*'));
       } else if (files.length === 1) {
-        fileGlob = path.join(path.dirname(files[0]), '**', '*.*').replace(/\\/g, '/');
+        fileGlob = toForwardSlashes(path.join(path.dirname(files[0]), '**', '*.*'));
       }
 
       filesToWatch.push(fileGlob);
@@ -122,7 +122,7 @@ class Watcher {
       }
       webserverConfig = embarkConfig.config.webserver;
     } else {
-      let contractsFolder = embarkConfig.config.replace(/\\/g, '/');
+      let contractsFolder = normalizePath(embarkConfig.config, true);
       if (contractsFolder.charAt(contractsFolder.length - 1) !== '/') {
         contractsFolder += '/';
       }
@@ -145,7 +145,7 @@ class Watcher {
     if (typeof embarkConfig.config === 'object' || embarkConfig.config.contracts) {
       contractConfig = embarkConfig.config.contracts;
     } else {
-      let contractsFolder = embarkConfig.config.replace(/\\/g, '/');
+      let contractsFolder = normalizePath(embarkConfig.config, true);
       if (contractsFolder.charAt(contractsFolder.length - 1) !== '/') {
         contractsFolder += '/';
       }

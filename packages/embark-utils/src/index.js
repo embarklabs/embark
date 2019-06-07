@@ -38,7 +38,9 @@ import {
   DIAGRAM_PATH,
   EMBARK_PATH,
   PKG_PATH,
-  NODE_PATH
+  NODE_PATH,
+  normalizePath,
+  toForwardSlashes
 } from './pathUtils';
 import { setUpEnv } from './env';
 
@@ -277,6 +279,8 @@ const Utils = {
   dappPath,
   downloadFile,
   embarkPath,
+  normalizePath,
+  toForwardSlashes,
   jsonFunctionReplacer,
   fuzzySearch,
   canonicalHost,

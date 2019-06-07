@@ -2,6 +2,7 @@ let async = require('async');
 let SolcW = require('./solcW.js');
 const path = require('path');
 import { __ } from 'embark-i18n';
+import {normalizePath} from 'embark-utils';
 
 class Solidity {
 
@@ -26,7 +27,7 @@ class Solidity {
         if (typeof req.body.code !== 'string') {
           return res.send({error: 'Body parameter \'code\' must be a string'});
         }
-        const input = {[req.body.name.replace(/\\/g, '/')]: {content: req.body.code.replace(/\r\n/g, '\n')}};
+        const input = {[normalizePath(req.body.name, true)]: {content: req.body.code.replace(/\r\n/g, '\n')}};
         this.compile_solidity_code(input, {}, true, {}, (errors, result) => {
           const responseData = {errors: errors, result: result};
           this.logger.trace(`POST response /embark-api/contract/compile:\n ${JSON.stringify(responseData)}`);
@@ -200,7 +201,7 @@ class Solidity {
             let filename = file.path;
 
             for (let directory of self.embark.config.contractDirectories) {
-              directory = directory.replace(/\\/g, '/');
+              directory = normalizePath(directory, true);
               let match = new RegExp("^" + directory);
               filename = filename.replace(match, '');
             }
@@ -209,7 +210,7 @@ class Solidity {
 
             file.prepareForCompilation(options.isCoverage)
               .then(fileContent => {
-                input[file.path.replace(/\\/g, '/')] = {content: fileContent.replace(/\r\n/g, '\n')};
+                input[normalizePath(file.path, true)] = {content: fileContent.replace(/\r\n/g, '\n')};
                 fileCb();
               }).catch((e) => {
                 self.logger.error(__('Error while loading the content of ') + filename);

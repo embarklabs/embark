@@ -1,4 +1,4 @@
-const { dappPath, embarkPath } = require('embark-utils');
+const { dappPath, embarkPath, normalizePath, toForwardSlashes } = require('embark-utils');
 const path = require('path');
 
 class EmbarkJSConnectorWeb3 {
@@ -32,7 +32,7 @@ class EmbarkJSConnectorWeb3 {
     });
 
     let web3Location = await web3LocationPromise;
-    web3Location = web3Location.replace(/\\/g, '/');
+    web3Location = normalizePath(web3Location, true);
 
     await this.registerVar('__Web3', require(web3Location));
 
@@ -47,7 +47,7 @@ class EmbarkJSConnectorWeb3 {
     code += "\nEmbarkJS.Blockchain.registerProvider('web3', embarkJSConnectorWeb3);";
     code += "\nEmbarkJS.Blockchain.setProvider('web3', {});";
 
-    const configPath = dappPath(this.config.embarkConfig.generationDir, this.constants.dappArtifacts.dir, this.constants.dappArtifacts.blockchain).replace(/\\/g, '/');
+    const configPath = toForwardSlashes(dappPath(this.config.embarkConfig.generationDir, this.constants.dappArtifacts.dir, this.constants.dappArtifacts.blockchain));
 
     code += `\nif (!global.__Web3) {`; // Only connect when in the Dapp
     code += `\n  const web3ConnectionConfig = require('${configPath}');`;
