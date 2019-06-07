@@ -1,9 +1,7 @@
-{
+module.exports = {
   "default": {
     "enabled": true,
-    "available_providers": [
-      "ens"
-    ],
+    "available_providers": ["ens"],
     "provider": "ens",
     "register": {
       "rootDomain": "embark.eth",
@@ -13,5 +11,8 @@
         "MyToken2": "$MyToken2"
       }
     }
+  },
+  test: {
+    enabled: true
   }
-}
+};

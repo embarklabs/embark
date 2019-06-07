@@ -243,7 +243,7 @@ class Cmd {
   test() {
     program
       .command('test [file]')
-      .option('-e, --env <env>', __('configuration environment to use (default: development)'))
+      .option('-e, --env <env>', __('configuration environment to use (default: test)'))
       .option('-n , --node <node>', __('node for running the tests ["vm", "embark", <endpoint>] (default: vm)\n') +
               '                       vm - ' + __('start and use an Ethereum simulator (ganache)') + '\n' +
               '                       embark - ' + __('use the node of a running embark process') + '\n' +
@@ -279,7 +279,7 @@ class Cmd {
           txDetails: options.txDetails,
           node: options.node,
           coverage: options.coverage,
-          env: options.env || 'development'
+          env: options.env || 'test'
         });
       });
   }

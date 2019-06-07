@@ -66,7 +66,7 @@ Typically this call is used in combination with `embark.addContractFile`
 module.exports = function(embark) {
   embark.registerContractConfiguration({
     "default": {
-      "contracts": {
+      "deploy": {
         "DGDToken": {
           "args": [
             100
@@ -75,7 +75,7 @@ module.exports = function(embark) {
       }
     },
     "livenet": {
-      "contracts": {
+      "deploy": {
         "DGDToken": {
           "address": "0xe0b7927c4af23765cb51314a0e0521a9645f0e2a"
         }
