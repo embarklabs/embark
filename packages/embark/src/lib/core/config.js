@@ -251,7 +251,11 @@ Config.prototype._doMergeConfig = function(config, defaultConfig, env) {
   let configObject = recursiveMerge(defaultConfig, config);
 
   if (env) {
-    return recursiveMerge(configObject['default'] || {}, configObject[env]);
+    if (env === 'test' && !configObject[env]) {
+      // Disabled all configs in tests as they are opt in
+      return Object.assign({}, defaultConfig.default, {enabled: false});
+    }
+    return recursiveMerge(configObject.default || {}, configObject[env]);
   } else if (env !== false) {
     this.logger.warn(__("No environment called %s found. Using defaults.", env));
   }
@@ -279,6 +283,10 @@ Config.prototype.loadBlockchainConfigFile = function() {
   const envConfig = userConfig[this.env];
 
   if (envConfig) {
+    if (envConfig.ethereumClientName || envConfig.hasOwnProperty('isDev') || envConfig.hasOwnProperty('mineWhenNeeded')) {
+      this.logger.error(__('The blockchain config has changed quite a bit in Embark 5\nPlease visit %s to know what has to be changed', embark5ChangesUrl.underline));
+      process.exit(1);
+    }
     if (envConfig.clientConfig) {
       Object.assign(envConfig, envConfig.clientConfig);
       delete envConfig.clientConfig;
@@ -311,11 +319,6 @@ Config.prototype.loadBlockchainConfigFile = function() {
   }
 
   this.blockchainConfig = this._doMergeConfig(userConfig, blockchainDefaults, this.env);
-
-  if (this.blockchainConfig.ethereumClientName || this.blockchainConfig.isDev || this.blockchainConfig.mineWhenNeeded) {
-    this.logger.error(__('The blockchain config has changed quite a bit in Embark 5\nPlease visit %s to know what has to be changed', embark5ChangesUrl.underline));
-    process.exit(1);
-  }
 
   if (!configFilePath) {
     this.blockchainConfig.default = true;
