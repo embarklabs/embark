@@ -76,3 +76,15 @@ export function urlJoin(url, path) {
 
   return urlChunks.join('/');
 }
+
+export function toForwardSlashes(content) {
+  return content.replace(/\\/g, '/');
+}
+
+export function normalizePath(content, useForwardSlashes = true) {
+  content = path.normalize(content);
+  if (useForwardSlashes && path.sep !== '/') {
+    content = toForwardSlashes(content);
+  }
+  return content;
+}

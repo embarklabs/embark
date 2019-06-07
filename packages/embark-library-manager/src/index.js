@@ -1,5 +1,5 @@
 import { __ } from 'embark-i18n';
-import { dappPath, embarkPath } from 'embark-utils';
+import { dappPath, embarkPath, normalizePath, toForwardSlashes } from 'embark-utils';
 var Npm = require('./npm.js');
 
 class LibraryManager {
@@ -86,11 +86,11 @@ class LibraryManager {
     if (!wantedVersion || wantedVersion === installedVersion) {
       const nodePath = embarkPath('node_modules');
       const packagePath = require.resolve(packageName, {paths: [nodePath]});
-      return cb(null, packagePath.replace(/\\/g, '/'));
+      return cb(null, normalizePath(packagePath, true));
     }
     // Download package
     this.embark.events.request("version:getPackageLocation", packageName, wantedVersion, (err, location) => {
-      cb(err, dappPath(location).replace(/\\/g, '/'));
+      cb(err, toForwardSlashes(dappPath(location)));
     });
   }
 

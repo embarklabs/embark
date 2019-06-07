@@ -4,6 +4,7 @@ const fs = require('fs-extra');
 const remixTests = require('remix-tests');
 const Base = require('mocha/lib/reporters/base');
 const color = Base.color;
+import {normalizePath} from "embark-utils";
 
 class SolcTest extends Test {
   constructor(options) {
@@ -78,7 +79,7 @@ class SolcTest extends Test {
   runTests(file, cb) {
     const self = this;
     console.info('Running tests'.cyan);
-    const forwardSlashFile = file.replace(/\\/g, '/');
+    const forwardSlashFile = normalizePath(file, true);
 
     async.waterfall([
       function getContracts(next) {
@@ -90,7 +91,7 @@ class SolcTest extends Test {
 
           Object.keys(contracts).forEach((contract) => {
             if (contracts[contract].originalFilename &&
-              contracts[contract].originalFilename.replace(/\\/g, '/') === forwardSlashFile) {
+              normalizePath(contracts[contract].originalFilename, true) === forwardSlashFile) {
               contractsToTest.push(contracts[contract]);
             }
           });
@@ -114,10 +115,10 @@ class SolcTest extends Test {
           let fn = (_callback) => {
             // TODO: web3 is not injected into the function. Issue has been raised on remixTests.
             // To fix once web3 has been made injectable.
-            const contractDetails = { 
-              userdoc: (contract.userdoc || { methods: [] }), 
-              evm: { 
-                methodIdentifiers: contract.functionHashes 
+            const contractDetails = {
+              userdoc: (contract.userdoc || { methods: [] }),
+              evm: {
+                methodIdentifiers: contract.functionHashes
               }
             };
             self.getEmbarkJSContract(contract, (err, embarkjsContract) => {
@@ -129,7 +130,7 @@ class SolcTest extends Test {
             });
           };
           fns.push(fn);
-        
+
         });
         async.series(fns, next);
       }

@@ -1,5 +1,5 @@
 import { __ } from 'embark-i18n';
-import { dappPath, embarkPath, joinPath } from 'embark-utils';
+import { dappPath, embarkPath, joinPath, toForwardSlashes } from 'embark-utils';
 import * as fs from 'fs-extra';
 import { transform } from "@babel/core";
 const async = require('async');
@@ -474,7 +474,7 @@ class CodeGenerator {
           if (err) {
             return next(err);
           }
-          next(null, joinPath(symlinkDir, name).replace(/\\/g, '/'));
+          next(null, toForwardSlashes(joinPath(symlinkDir, name)));
         });
       },
       // Remove old symlink because they are not overwritable
