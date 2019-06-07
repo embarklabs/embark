@@ -72,6 +72,22 @@ export class ContractEnhanced {
   }
 
   public save() {
+    // Right before saving, we do another parser pass to make sure that we're not sending bad
+    // solidity code into the sunset.
+    //
+    // Because of the way the augmentation works, ie. we sprinkle events between each line of
+    // code to register that it was reached, there are cases (ie. an `if` statament without `{}`)
+    // where it breaks.
+    //
+    // It sucks that we have to throw away those files, but it beats the alternative of badly
+    // exiting and not being able to get any coverage at all. Because it still sucks:
+    // TODO(andremedeiros): do this right.
+    try {
+      parser.parse(this.source, {});
+    } catch (error) {
+      this.source = this.originalSource;
+    }
+
     fs.ensureFileSync(this.coverageFilepath);
     fs.writeFileSync(this.coverageFilepath, this.source);
   }
