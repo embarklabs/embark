@@ -1,6 +1,6 @@
 {
   "name": "embark-code-generator",
-  "version": "4.1.0-beta.2",
+  "version": "4.1.0-beta.3",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Embark code generator",
@@ -50,9 +50,9 @@
     "@babel/runtime-corejs2": "7.3.1",
     "async": "2.6.1",
     "ejs": "2.6.1",
-    "embark-core": "^4.1.0-beta.2",
-    "embark-i18n": "^4.1.0-beta.1",
-    "embark-utils": "^4.1.0-beta.2",
+    "embark-core": "^4.1.0-beta.3",
+    "embark-i18n": "^4.1.0-beta.3",
+    "embark-utils": "^4.1.0-beta.3",
     "fs-extra": "7.0.1"
   },
   "devDependencies": {

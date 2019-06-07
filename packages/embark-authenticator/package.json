@@ -1,6 +1,6 @@
 {
   "name": "embark-authenticator",
-  "version": "4.1.0-beta.2",
+  "version": "4.1.0-beta.3",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Authenticator module for Embark's Cockpit",
@@ -47,8 +47,8 @@
   },
   "dependencies": {
     "@babel/runtime-corejs2": "7.3.1",
-    "embark-i18n": "^4.1.0-beta.1",
-    "embark-utils": "^4.1.0-beta.2",
+    "embark-i18n": "^4.1.0-beta.3",
+    "embark-utils": "^4.1.0-beta.3",
     "keccakjs": "0.2.3",
     "uuid": "3.3.2"
   },

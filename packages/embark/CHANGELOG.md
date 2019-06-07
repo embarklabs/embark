@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.3](https://github.com/embark-framework/embark/compare/v4.1.0-beta.2...v4.1.0-beta.3) (2019-06-07)
+
+
+### Bug Fixes
+
+* packages/embark/package.json to reduce vulnerabilities ([9029bfe](https://github.com/embark-framework/embark/commit/9029bfe))
+* **@embarkjs:** unconditionally require symlinked embarkjs-* modules ([b45b2e2](https://github.com/embark-framework/embark/commit/b45b2e2))
+
+
+### Features
+
+* **@embark/cli:** exit with error if --template and --contracts-only are both used with 'new' cmd ([d477adc](https://github.com/embark-framework/embark/commit/d477adc))
+
+
+
+
+
 # [4.1.0-beta.2](https://github.com/embark-framework/embark/compare/v4.1.0-beta.1...v4.1.0-beta.2) (2019-05-22)
 
 

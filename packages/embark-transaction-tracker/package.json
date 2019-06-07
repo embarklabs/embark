@@ -1,6 +1,6 @@
 {
   "name": "embark-transaction-tracker",
-  "version": "4.1.0-beta.1",
+  "version": "4.1.0-beta.3",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Transaction tracker for Embark's cockpit",

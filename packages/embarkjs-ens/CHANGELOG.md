@@ -5,12 +5,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [4.1.0-beta.3](https://github.com/embark-framework/embark/compare/v4.1.0-beta.2...v4.1.0-beta.3) (2019-06-07)
 
-**Note:** Version bump only for package embark-transaction-tracker
-
-
-
-
-
-# [4.1.0-beta.1](https://github.com/embark-framework/embark/compare/v4.1.0-beta.0...v4.1.0-beta.1) (2019-05-15)
-
-**Note:** Version bump only for package embark-transaction-tracker
+**Note:** Version bump only for package embarkjs-ens

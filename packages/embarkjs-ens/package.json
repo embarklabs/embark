@@ -1,6 +1,6 @@
 {
   "name": "embarkjs-ens",
-  "version": "4.1.0-beta.2",
+  "version": "4.1.0-beta.3",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Ens plugin for embarkjs",
@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs2": "7.3.1",
-    "embarkjs": "^4.1.0-beta.2",
+    "embarkjs": "^4.1.0-beta.3",
     "eth-ens-namehash": "2.0.8",
     "web3": "1.0.0-beta.37"
   },

@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.3](https://github.com/embark-framework/embark/compare/v4.1.0-beta.2...v4.1.0-beta.3) (2019-06-07)
+
+
+### Bug Fixes
+
+* **@cockpit/explorer:** slice contract function result string only if starts/ends with double-quote ([ac76a40](https://github.com/embark-framework/embark/commit/ac76a40)), closes [#1636](https://github.com/embark-framework/embark/issues/1636)
+* **@embark/swarm:** update url-scheme to bzz-raw ([6d844d7](https://github.com/embark-framework/embark/commit/6d844d7))
+* **@embark/test-runner:** don't try to deploy and register ENS domains after JS tests have run ([e5fc12e](https://github.com/embark-framework/embark/commit/e5fc12e))
+* gas estimates in test ([#1650](https://github.com/embark-framework/embark/issues/1650)) ([312c631](https://github.com/embark-framework/embark/commit/312c631))
+* packages/embark/package.json to reduce vulnerabilities ([9029bfe](https://github.com/embark-framework/embark/commit/9029bfe))
+* **@embarkjs:** unconditionally require symlinked embarkjs-* modules ([b45b2e2](https://github.com/embark-framework/embark/commit/b45b2e2))
+* **@embarkjs/whisper:** don't rely on global EmbarkJS in whisper APIs ([f2903e7](https://github.com/embark-framework/embark/commit/f2903e7)), closes [/github.com/embark-framework/embark/blob/ac76a40a6156603fa436f1fe173835cff5fb0c3d/packages/embarkjs-whisper/src/index.js#L43-L62](https://github.com//github.com/embark-framework/embark/blob/ac76a40a6156603fa436f1fe173835cff5fb0c3d/packages/embarkjs-whisper/src/index.js/issues/L43-L62) [/github.com/embark-framework/embark/blob/ac76a40a6156603fa436f1fe173835cff5fb0c3d/packages/embarkjs-whisper/src/index.js#L64-L73](https://github.com//github.com/embark-framework/embark/blob/ac76a40a6156603fa436f1fe173835cff5fb0c3d/packages/embarkjs-whisper/src/index.js/issues/L64-L73) [/github.com/embark-framework/embark/blob/ac76a40a6156603fa436f1fe173835cff5fb0c3d/packages/embark-code-runner/src/index.ts#L33](https://github.com//github.com/embark-framework/embark/blob/ac76a40a6156603fa436f1fe173835cff5fb0c3d/packages/embark-code-runner/src/index.ts/issues/L33)
+
+
+### Features
+
+* **@cockpit/explorer:** enable users to send ether through payable methods ([#1649](https://github.com/embark-framework/embark/issues/1649)) ([d10c0b7](https://github.com/embark-framework/embark/commit/d10c0b7))
+* **@embark/cli:** exit with error if --template and --contracts-only are both used with 'new' cmd ([d477adc](https://github.com/embark-framework/embark/commit/d477adc))
+
+
+
+
+
 # [4.1.0-beta.2](https://github.com/embark-framework/embark/compare/v4.1.0-beta.1...v4.1.0-beta.2) (2019-05-22)
 
 
