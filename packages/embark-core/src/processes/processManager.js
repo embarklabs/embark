@@ -150,6 +150,10 @@ export class ProcessManager {
 
     self.events.setCommandHandler('processes:stop', (name, cb) => {
       let process = self.processes[name];
+      if (!process) {
+        // Process was never started
+        return cb();
+      }
       cb = cb || function noop() {};
       if (![ProcessState.Running, ProcessState.Errored].includes(process.state)) {
         return cb(__(`The ${name} process is already ${process.state.toLowerCase()}.`));

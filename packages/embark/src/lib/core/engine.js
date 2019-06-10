@@ -273,19 +273,14 @@ class Engine {
   }
 
   storageService(_options) {
+    // Register both modules as they are responsible for making sure if they need to start or not
     async.parallel([
-      (next) => {
-        if (!this.config.storageConfig.available_providers.includes("ipfs")) {
-          return next();
-        }
-        this.events.once("ipfs:process:started", next);
+      (paraCb) => {
+        this.events.once("ipfs:process:started", paraCb);
         this.registerModule('ipfs');
       },
-      (next) => {
-        if (!this.config.storageConfig.available_providers.includes("swarm")) {
-          return next();
-        }
-        this.events.once("swarm:process:started", next);
+      (paraCb) => {
+        this.events.once("swarm:process:started", paraCb);
         this.registerModule('swarm');
       }
     ], (err) => {
@@ -293,7 +288,22 @@ class Engine {
         console.error(__("Error starting storage process(es): %s", err));
       }
       this.registerModule('storage', {plugins: this.plugins});
+
+      this.events.setCommandHandler("module:storage:reset", (cb) => {
+        async.parallel([
+          (paraCb) => {
+            this.events.request("module:ipfs:reset", paraCb);
+          },
+          (paraCb) => {
+            this.events.request("module:swarm:reset", paraCb);
+          },
+          (paraCb) => {
+            this.events.request("module:storageJS:reset", paraCb);
+          }
+        ], cb);
+      });
     });
+
   }
 
   web3Service(options) {

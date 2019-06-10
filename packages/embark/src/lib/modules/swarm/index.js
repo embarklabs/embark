@@ -14,9 +14,9 @@ class Swarm {
     this.logger = embark.logger;
     this.events = embark.events;
     this.buildDir = embark.config.buildDir;
-    this.storageConfig = embark.config.storageConfig;
-    this.host = this.storageConfig.host;
-    this.port = this.storageConfig.port;
+    this.config = embark.config;
+    this.host = this.config.storageConfig.host;
+    this.port = this.config.storageConfig.port;
     this.embark = embark;
     this.fs = embark.fs;
     this.isServiceRegistered = false;
@@ -25,16 +25,32 @@ class Swarm {
     this.storageProcessesLauncher = null;
     this.usingRunningNode = false;
     this.modulesPath = dappPath(embark.config.embarkConfig.generationDir, constants.dappArtifacts.symlinkDir);
+    this.registered = false;
 
     this.webServerConfig = embark.config.webServerConfig;
     this.blockchainConfig = embark.config.blockchainConfig;
 
-    const cantDetermineUrl = this.storageConfig.upload.provider !== 'swarm' && !this.storageConfig.dappConnection.some(connection => connection.provider === 'swarm');
+
+    this.embark.events.setCommandHandler("module:swarm:reset", (cb) => {
+      this.events.request("processes:stop", "swarm", (err) => {
+        if (err) {
+          this.logger.error(__('Error stopping Swarm process'), err);
+        }
+        this.init(cb);
+      });
+    });
+
+    this.init();
+  }
+
+  init(callback = () => {}) {
+    const cantDetermineUrl = this.config.storageConfig.upload.provider !== 'swarm' && !this.config.storageConfig.dappConnection.some(connection => connection.provider === 'swarm');
 
     if (this.isSwarmEnabledInTheConfig() && cantDetermineUrl) {
       console.warn('\n===== Swarm module will not be loaded =====');
       console.warn(`Swarm is enabled in the config, however the config is not setup to provide a URL for swarm and therefore the Swarm module will not be loaded. Please either change the ${'config/storage > upload'.bold} setting to Swarm or add the Swarm config to the ${'config/storage > dappConnection'.bold} array. Please see ${'https://embark.status.im/docs/storage_configuration.html'.underline} for more information.\n`);
-      return this.events.emit("swarm:process:started", null, false);
+      this.events.emit("swarm:process:started", null, false);
+      return callback();
     }
     if (!this.isSwarmEnabledInTheConfig()) {
       this.embark.registerConsoleCommand({
@@ -44,45 +60,52 @@ class Swarm {
           cb();
         }
       });
-      return this.events.emit("swarm:process:started", null, false);
+      this.events.emit("swarm:process:started", null, false);
+      return callback();
     }
 
-    this.providerUrl = buildUrl(this.storageConfig.upload.protocol, this.storageConfig.upload.host, this.storageConfig.upload.port);
+    this.providerUrl = buildUrl(this.config.storageConfig.upload.protocol, this.config.storageConfig.upload.host, this.config.storageConfig.upload.port);
 
-    this.getUrl = this.storageConfig.upload.getUrl || this.providerUrl + '/bzz:/';
+    this.getUrl = this.config.storageConfig.upload.getUrl || this.providerUrl + '/bzz:/';
 
     this.swarm = new SwarmAPI({gateway: this.providerUrl});
 
-    this.setServiceCheck();
-    this.registerUploadCommand();
-    this.listenToCommands();
-    this.registerConsoleCommands();
-    this.events.request("processes:register", "swarm", {
-      launchFn: (cb) => {
-        if(this.usingRunningNode) {
-          return cb(__("Swarm process is running in a separate process and cannot be started by Embark."));
+    if (!this.registered) {
+      this.registered = true;
+      this.setServiceCheck();
+      this.registerUploadCommand();
+      this.listenToCommands();
+      this.registerConsoleCommands();
+      this.events.request("processes:register", "swarm", {
+        launchFn: (cb) => {
+          if(this.usingRunningNode) {
+            return cb(__("Swarm process is running in a separate process and cannot be started by Embark."));
+          }
+          this.startProcess((err, newProcessStarted) => {
+            this.addProviderToEmbarkJS();
+            this.addObjectToConsole();
+            this.events.emit("swarm:process:started", err, newProcessStarted);
+            cb();
+          });
+        },
+        stopFn: (cb) => {
+          if(this.usingRunningNode) {
+            return cb(__("Swarm process is running in a separate process and cannot be stopped by Embark."));
+          }
+          this.stopProcess(cb);
         }
-        this.startProcess((err, newProcessStarted) => {
-          this.addProviderToEmbarkJS();
-          this.addObjectToConsole();
-          this.events.emit("swarm:process:started", err, newProcessStarted);
-          cb();
-        });
-      },
-      stopFn: (cb) => {
-        if(this.usingRunningNode) {
-          return cb(__("Swarm process is running in a separate process and cannot be stopped by Embark."));
-        }
-        this.stopProcess(cb);
-      }
-    });
+      });
+    }
+
     this.events.request("processes:launch", "swarm", (err, msg) => {
       if (err) {
-        return this.logger.error(err);
+        this.logger.error(err);
+        return callback(err);
       }
       if (msg) {
         this.logger.info(msg);
       }
+      callback();
     });
   }
 
@@ -150,7 +173,7 @@ class Swarm {
         this.storageProcessesLauncher = new StorageProcessesLauncher({
           logger: self.logger,
           events: self.events,
-          storageConfig: self.storageConfig,
+          storageConfig: self.config.storageConfig,
           webServerConfig: self.webServerConfig,
           corsParts: self.embark.config.corsParts,
           blockchainConfig: self.blockchainConfig,
@@ -174,7 +197,7 @@ class Swarm {
     this.embark.registerUploadCommand('swarm', (cb) => {
       let upload_swarm = new UploadSwarm({
         buildDir: self.buildDir || 'dist/',
-        storageConfig: self.storageConfig,
+        storageConfig: self.config.storageConfig,
         providerUrl: self.providerUrl,
         swarm: self.swarm,
         env: self.embark.env
@@ -212,7 +235,7 @@ class Swarm {
   }
 
   isSwarmEnabledInTheConfig() {
-    let {enabled, available_providers, dappConnection, upload} = this.storageConfig;
+    let {enabled, available_providers, dappConnection, upload} = this.config.storageConfig;
     return (enabled || this.embark.currentContext.includes(constants.contexts.upload)) &&
       available_providers.includes('swarm') &&
       (

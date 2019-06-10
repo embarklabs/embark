@@ -15,7 +15,7 @@ class IPFS {
     this.events = embark.events;
     this.buildDir = options.buildDir;
     this.embarkConfig = embark.config.embarkConfig;
-    this.storageConfig = embark.config.storageConfig;
+    this.config = embark.config;
     this.namesystemConfig = embark.config.namesystemConfig;
     this.embark = embark;
     this.fs = embark.fs;
@@ -25,44 +25,64 @@ class IPFS {
     this.storageProcessesLauncher = null;
     this.usingRunningNode = false;
     this.modulesPath = dappPath(embark.config.embarkConfig.generationDir, constants.dappArtifacts.symlinkDir);
+    this.registered = false;
 
     this.webServerConfig = embark.config.webServerConfig;
     this.blockchainConfig = embark.config.blockchainConfig;
 
+    this.embark.events.setCommandHandler("module:ipfs:reset", (cb) => {
+      this.events.request("processes:stop", "ipfs", (err) => {
+        if (err) {
+          this.logger.error(__('Error stopping IPFS process'), err);
+        }
+        this.init(cb);
+      });
+    });
+
+    this.init();
+  }
+
+  init(callback = () => {}) {
     if (!this.isIpfsStorageEnabledInTheConfig()) {
-      return this.events.emit("ipfs:process:started", null, false);
+      this.events.emit("ipfs:process:started", null, false);
+      return callback();
+    }
+    if (!this.registered) {
+      this.registered = true;
+      this.setServiceCheck();
+      this.registerUploadCommand();
+      this.listenToCommands();
+      this.registerConsoleCommands();
+      this.events.request("processes:register", "ipfs", {
+        launchFn: (cb) => {
+          if(this.usingRunningNode) {
+            return cb(__("IPFS process is running in a separate process and cannot be started by Embark."));
+          }
+          this.startProcess((err, newProcessStarted) => {
+            this.addStorageProviderToEmbarkJS();
+            this.addObjectToConsole();
+            this.events.emit("ipfs:process:started", err, newProcessStarted);
+            cb();
+          });
+        },
+        stopFn: (cb) => {
+          if(this.usingRunningNode) {
+            return cb(__("IPFS process is running in a separate process and cannot be stopped by Embark."));
+          }
+          this.stopProcess(cb);
+        }
+      });
     }
 
-    this.setServiceCheck();
-    this.registerUploadCommand();
-    this.listenToCommands();
-    this.registerConsoleCommands();
-    this.events.request("processes:register", "ipfs", {
-      launchFn: (cb) => {
-        if(this.usingRunningNode) {
-          return cb(__("IPFS process is running in a separate process and cannot be started by Embark."));
-        }
-        this.startProcess((err, newProcessStarted) => {
-          this.addStorageProviderToEmbarkJS();
-          this.addObjectToConsole();
-          this.events.emit("ipfs:process:started", err, newProcessStarted);
-          cb();
-        });
-      },
-      stopFn: (cb) => {
-        if(this.usingRunningNode) {
-          return cb(__("IPFS process is running in a separate process and cannot be stopped by Embark."));
-        }
-        this.stopProcess(cb);
-      }
-    });
     this.events.request("processes:launch", "ipfs", (err, msg) => {
       if (err) {
-        return this.logger.error(err);
+        this.logger.error(err);
+        return callback(err);
       }
       if (msg) {
         this.logger.info(msg);
       }
+      callback();
     });
   }
 
@@ -110,11 +130,11 @@ class IPFS {
   }
 
   _getNodeUrlConfig() {
-    if (this.storageConfig.upload.provider === 'ipfs') {
-      return this.storageConfig.upload;
+    if (this.config.storageConfig.upload.provider === 'ipfs') {
+      return this.config.storageConfig.upload;
     }
 
-    for (let connection of this.storageConfig.dappConnection) {
+    for (let connection of this.config.storageConfig.dappConnection) {
       if (connection.provider === 'ipfs') {
         return connection;
       }
@@ -184,7 +204,7 @@ class IPFS {
         this.storageProcessesLauncher = new StorageProcessesLauncher({
           logger: self.logger,
           events: self.events,
-          storageConfig: self.storageConfig,
+          storageConfig: self.config.storageConfig,
           webServerConfig: self.webServerConfig,
           blockchainConfig: self.blockchainConfig,
           corsParts: self.embark.config.corsParts,
@@ -207,8 +227,8 @@ class IPFS {
     this.embark.registerUploadCommand('ipfs', (cb) => {
       let upload_ipfs = new UploadIPFS({
         buildDir: self.buildDir || 'dist/',
-        storageConfig: self.storageConfig,
-        configIpfsBin: self.storageConfig.ipfs_bin || "ipfs",
+        storageConfig: self.config.storageConfig,
+        configIpfsBin: self.config.storageConfig.ipfs_bin || "ipfs",
         env: this.embark.env
       });
 
@@ -244,7 +264,7 @@ class IPFS {
   }
 
   isIpfsStorageEnabledInTheConfig() {
-    let {enabled, available_providers, dappConnection, upload} = this.storageConfig;
+    let {enabled, available_providers, dappConnection, upload} = this.config.storageConfig;
     return (enabled || this.embark.currentContext.includes(constants.contexts.upload)) &&
       (
         available_providers.includes('ipfs') &&

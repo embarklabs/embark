@@ -58,16 +58,8 @@ var Config = function(options) {
   this.registerEvents();
 };
 
-Config.prototype.setConfig = function(configName, newConfig, recursive, cb) {
-  if (typeof recursive === 'function') {
-    cb = recursive;
-    recursive = false;
-  }
-  if (recursive) {
-    this[configName] = recursiveMerge(this[configName], newConfig);
-  } else {
-    this[configName] = newConfig;
-  }
+Config.prototype.setConfig = function(configName, newConfig, cb) {
+  this[configName] = newConfig;
   cb();
 };
 
