@@ -5,6 +5,9 @@ const SimpleStorage = require('Embark/contracts/SimpleStorage');
 let accounts;
 
 config({
+  namesystem: {
+    enabled: true
+  },
   contracts: {
     deploy: {
       "SimpleStorage": {
