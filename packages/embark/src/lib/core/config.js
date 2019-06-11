@@ -264,12 +264,12 @@ Config.prototype._doMergeConfig = function(config, defaultConfig, env) {
     }
     return recursiveMerge(configObject.default || {}, configObject[env]);
   } else if (env !== false) {
-    this.logger.warn(__("No environment called %s found. Using defaults.", env));
+    this.logger.info(__("No environment called %s found. Using defaults.", env));
   }
   return configObject;
 };
 
-Config.prototype._mergeConfig = function(configFilePath, defaultConfig, env, enabledByDefault) {
+Config.prototype._loadAndMergeConfig = function(configFilePath, defaultConfig, env, enabledByDefault) {
   const config = this._loadConfigFile(configFilePath, defaultConfig, enabledByDefault);
   return this._doMergeConfig(config, defaultConfig, env, enabledByDefault);
 };
@@ -411,7 +411,7 @@ Config.prototype.loadContractsConfigFile = function() {
   });
 
   let configFilePath = this._getFileOrObject(this.configDir, 'contracts', 'contracts');
-  let newContractsConfig = this._mergeConfig(configFilePath, configObject, this.env);
+  let newContractsConfig = this._loadAndMergeConfig(configFilePath, configObject, this.env);
   if (newContractsConfig.contracts) {
     this.logger.error(__('`contracts` has been renamed `deploy` in contracts config\nFor more information: %s', embark5ChangesUrl.underline));
     process.exit(1);
@@ -505,7 +505,7 @@ Config.prototype.loadStorageConfigFile = function() {
 
   let configFilePath = this._getFileOrObject(this.configDir, 'storage', 'storage');
 
-  this.storageConfig = this._mergeConfig(configFilePath, configObject, this.env);
+  this.storageConfig = this._loadAndMergeConfig(configFilePath, configObject, this.env);
   this.events.emit('config:load:storage', this.storageConfig);
 };
 
@@ -519,7 +519,7 @@ Config.prototype.loadNameSystemConfigFile = function() {
 
   let configFilePath = this._getFileOrObject(this.configDir, 'namesystem', 'namesystem');
 
-  this.namesystemConfig = this._mergeConfig(configFilePath, configObject, this.env);
+  this.namesystemConfig = this._loadAndMergeConfig(configFilePath, configObject, this.env);
 };
 
 Config.prototype.loadCommunicationConfigFile = function() {
@@ -538,7 +538,7 @@ Config.prototype.loadCommunicationConfigFile = function() {
 
   let configFilePath = this._getFileOrObject(this.configDir, 'communication', 'communication');
 
-  this.communicationConfig = this._mergeConfig(configFilePath, configObject, this.env);
+  this.communicationConfig = this._loadAndMergeConfig(configFilePath, configObject, this.env);
   this.events.emit('config:load:communication', this.communicationConfig);
 };
 
@@ -554,7 +554,7 @@ Config.prototype.loadWebServerConfigFile = function() {
 
   let configFilePath = this._getFileOrObject(this.configDir, 'webserver', 'webserver');
 
-  let webServerConfig = this._mergeConfig(configFilePath, configObject, false);
+  let webServerConfig = this._loadAndMergeConfig(configFilePath, configObject, false);
 
   if (webServerConfig.https){
     try {

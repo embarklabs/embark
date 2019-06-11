@@ -39,9 +39,11 @@ module.exports = {
 
   privateparitynet: {
     client: "parity",
-    genesisBlock: "config/privatenet/genesis-parity.json",
-    datadir: ".embark/privatenet/datadir",
-    miningMode: 'off'
+    clientConfig: {
+      genesisBlock: "config/privatenet/genesis-parity.json",
+      datadir: ".embark/privatenet/datadir",
+      miningMode: 'off'
+    }
   },
 
   externalnode: {
@@ -56,7 +58,7 @@ module.exports = {
   },
 
   testnet: {
-    networkType: "testnet", // Can be: testnet, rinkeby, livenet or custom, in which case, it will use the specified networkId
+    networkType: "testnet", // Can be: testnet(ropsten), rinkeby, livenet or custom, in which case, it will use the specified networkId
     syncMode: "light",
     accounts: [
       {
