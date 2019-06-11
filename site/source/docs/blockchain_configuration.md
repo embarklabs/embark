@@ -46,7 +46,7 @@ Option | Type: `default` | Value
 `client` | string: `geth` |  Client to use for the Ethereum node. Currently supported: `geth` and `parity`
 `miningMode` | string: `dev` |  The mining mode to use for the node.<br/>`dev`: This is a special mode where the node uses a development account as defaultAccount. This account is already funded and transactions are faster.<br/>`auto`: Uses a mining script to mine only when needed.<br/>`always`: Miner is always on.<br/>`off`: Turns off the miner
 `endpoint` | string |  Endpoint to connect to. Works for external endpoints (like Infura) and local ones too (only for nodes started by `embark run`)
-`accounts` | array |  Accounts array for the node and to deploy. When no account is given, defaults to one node account. For more details, go [here](http://localhost:4000/docs/blockchain_accounts_configuration.html)
+`accounts` | array |  Accounts array for the node and to deploy. When no account is given, defaults to one node account. For more details, go [here](/docs/blockchain_accounts_configuration.html)
 
 ## Advanced parameters
 

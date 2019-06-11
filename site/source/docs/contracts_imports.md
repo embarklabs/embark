@@ -10,7 +10,7 @@ The following features are currently only supported for Smart Contracts written 
 
 ## Importing files
 
-If using Solidity it's possible to import other Smart Contract files inside a source file from the application's folders that are not explicitly defined in the `contracts` property of `embark.json`.
+If using Solidity it's possible to import other Smart Contract files inside a source file from the application's folders that are not explicitly defined in the `deploy` property of `embark.json`.
 
 ```
 import "another_folder/another_test.sol";
