@@ -16,6 +16,7 @@ class WebServer {
     this.fs = embark.fs;
     this.buildDir = embark.config.buildDir;
     this.webServerConfig = embark.config.webServerConfig;
+
     if (!this.webServerConfig.enabled) {
       return;
     }

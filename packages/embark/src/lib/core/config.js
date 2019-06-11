@@ -532,6 +532,10 @@ Config.prototype.loadWebServerConfigFile = function() {
     this.webServerConfig = webServerConfig;
   }
 
+  if (!this.pipelineConfig.enabled) {
+    this.webServerConfig.enabled = false;
+  }
+
   this.events.emit('config:load:webserver', this.webServerConfig);
 };
 
