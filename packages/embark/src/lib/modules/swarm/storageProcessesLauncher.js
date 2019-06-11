@@ -13,6 +13,7 @@ let References = {
 class StorageProcessesLauncher {
   constructor(options) {
     this.logger = options.logger;
+    this.logger.info("=== StorageProcessesLauncher")
     this.events = options.events;
     this.storageConfig = options.storageConfig;
     this.webServerConfig = options.webServerConfig;
@@ -100,6 +101,8 @@ class StorageProcessesLauncher {
       return callback(__('Storage process already started'));
     }
     const filePath = joinPath(__dirname, `../${storageName}/process.js`);
+    console.dir("==== filePath")
+    console.dir(filePath)
     this.embark.fs.access(filePath, (err) => {
       if (err) {
         return callback(__('No process file for this storage type (%s) exists. Please start the process locally.', storageName));
@@ -144,6 +147,8 @@ class StorageProcessesLauncher {
 
 
       self.processes[storageName].on('result', constants.storage.initiated, (msg) => {
+        console.dir("got result from process")
+        console.dir(msg)
         if (msg.error) {
           self.processes[storageName].disconnect();
           delete self.processes[storageName];
@@ -154,6 +159,8 @@ class StorageProcessesLauncher {
       });
 
       self.processes[storageName].on('result', constants.storage.restart, (_msg) => {
+        console.dir("got result from process")
+        console.dir(_msg)
         self.restartCalled = true;
         self.logger.info(__(`Restarting ${storageName} process...`).cyan);
         self.processes[storageName].kill();
@@ -161,6 +168,8 @@ class StorageProcessesLauncher {
       });
 
       self.processes[storageName].on('result', constants.storage.exit, (_msg) => {
+        console.dir("got result from process")
+        console.dir(_msg)
         self.processes[storageName].kill();
         delete this.processes[storageName];
         this.events.emit(constants.storage.exit);
