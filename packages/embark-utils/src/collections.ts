@@ -4,8 +4,8 @@ export function last(array: any) {
   return array[array.length - 1];
 }
 
-export function recursiveMerge() {
-  return merge.recursive(...arguments);
+export function recursiveMerge(...args: any[]) {
+  return merge.recursive(...args);
 }
 
 export function compact(array: any) {
