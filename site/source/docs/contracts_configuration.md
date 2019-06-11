@@ -15,7 +15,7 @@ module.exports = {
   ...
   development: {
     ...
-    contracts: {
+    deploy: {
       SimpleStorage: {
         ...
       }
@@ -34,7 +34,7 @@ Often, Smart Contracts need to be initialized with certain values right after th
 ```
 ...
 development: {
-  contracts: {
+  deploy: {
     SimpleStorage: {
       args: [100]
     }
@@ -48,7 +48,7 @@ The following configuration configures the `SimpleStorage`'s `initialValue` para
 ```
 ...
 development: {
-  contracts: {
+  deploy: {
     SimpleStorage: {
       args: {
         initialValue: 100
@@ -67,7 +67,7 @@ Both, `gas` and `gasPrice` can be configured for each Smart Contract. If we don'
 ...
 development: {
   gas: 'auto',
-  contracts: {
+  deploy: {
     SimpleStorage: {
       args: [100],
       gas: 800000,
@@ -93,7 +93,7 @@ All we have to do is specifying the name of the Smart Contract we're interested 
 
 ```
 ...
-contracts: {
+deploy: {
   SimpleStorage: {
     args: [100, '$OtherContract']
   },
@@ -111,14 +111,14 @@ We can prevent Embark from deploying any of our Smart Contracts by using the `de
 ```
 ...
 development:
-  contracts: {
+  deploy: {
     SimpleStorage: {
       args: [100]
     }
   }
 },
 production: {
-  contracts: {
+  deploy: {
     SimpleStorage: {
       deploy: false
     }
@@ -138,7 +138,7 @@ There are two possible strategy options:
 
 ```
 strategy: 'explicit' // 'implicit' is the default
-contracts: {
+deploy: {
   ...
 }
 ```
@@ -152,7 +152,7 @@ This can then be combined with [disabling the deployment](#Disabling-deployment)
 
 ```
 ...
-contracts: {
+deploy: {
   Currency: {
     deploy: false,
   },
@@ -178,12 +178,28 @@ The following example configures `UserStorage` to be a Smart Contract instance t
 
 ```
 ...
-contracts: {
+deploy: {
   UserStorage: {
     address: '0x123456'
   }
 }
 ...
+```
+
+## Using accounts in arguments
+
+Accounts can be used as arguments using Embark's built-in interpolation syntax, similar to referring to Smart Contract instances.
+
+```
+module.exports = {
+  development: {
+    deploy: {
+      MyContractThatNeedsAccountAddresses: {
+        args: ['$accounts[0]', '$accounts[4]']
+      }
+    }
+  }
+}
 ```
 
 ## Configuring source files
@@ -194,7 +210,7 @@ By default Embark will look for Smart Contracts inside the folder that's configu
 
 ```
 ...
-contracts: {
+deploy: {
   SimpleStorage: {
     file: './some_folder/simple_storage.sol',
     args: [100]
@@ -207,7 +223,7 @@ If Embark doesn't find the file in the specified path, it'll expect it to be a p
 
 ```
 ...
-contracts: {
+deploy: {
   ERC20: {
     file: 'openzeppelin-solidity/contracts/token/ERC20/ERC20.sol'
   }
@@ -219,7 +235,7 @@ Embark even supports reading the source from `https`, `git`, `ipfs` and `bzz` UR
 
 ```
 ...
-contracts: {
+deploy: {
   ERC725: {
     file: 'git://github.com/status/contracts/contracts/identity/ERC725.sol#develop'
   },
@@ -243,7 +259,7 @@ The following example configures `SimpleStorage` to be already deployed somewher
 
 ```
 ...
-contracts: {
+deploy: {
   SimpleStorage: {
     address: '0x0bFb07f9144729EEF54A9057Af0Fcf87aC7Cbba9',
     abiDefinition: [...]
@@ -267,7 +283,7 @@ That way, you don't need to have the contract on disk or even deploy it, if the 
 Here is how you can do it:
 
 <pre><code class="javascript">...
-contracts: {
+deploy: {
   SimpleStorage: {
     artifact: './path/to/SimpleStorage.json'
   }
@@ -327,7 +343,7 @@ The following example ensures `ERC20` won't be tracked and therefore redeployed 
 
 ```
 ...
-contracts: {
+deploy: {
   ERC20: {
     track: false
   }
@@ -359,7 +375,7 @@ We can specify a condition that decides whether a contract should be deployed by
 
 ```
 ...
-contracts: {
+deploy: {
   ERC20: {
     deployIf: async (dependencies) => {
       return await dependencies.contracts.Manager.methods.isUpdateApproved().call();
@@ -399,7 +415,7 @@ SimpleStorage: {
 Wheras this configuration here runs the hook before all Smart Contracts are being deployed:
 
 ```
-contracts: {
+deploy: {
   SimpleStorage: { ... }
   beforeDeploy: async () => {
     console.log('Before all deploy');
@@ -413,7 +429,7 @@ We can specify the `onDeploy` hook to execute code, right after a contract has b
 
 ```
 ...
-contracts: {
+deploy: {
   SimpleStorage: {
     args: [100],
     onDeploy: async (dependencies) => {
@@ -445,7 +461,7 @@ If we want to execute code once all of our Smart Contracts have been deployed, E
 
 ```
 ...
-contracts: {
+deploy: {
   SimpleStorage: {
     args: [100]
   },
@@ -496,7 +512,7 @@ SmartContractName > onDeploy > [YOUR MESSAGE]
 The `logger` is injected as part of the `dependencies` object, so we can use it like this:
 
 ```
-contracts: {
+deploy: {
   SimpleStorage: {
     onDeploy: async (dependencies) => {
       dependencies.logger.info('Hello from onDeploy!');
@@ -519,7 +535,7 @@ Let's take the simple Smart Contract configuration from the [configuring gas and
 
 ```
 ...
-contracts: {
+deploy: {
   SimpleStorage: {
     args: [100],
     gas: 800000,
@@ -533,7 +549,7 @@ This can as well be written as:
 
 ```
 ...
-contracts: {
+deploy: {
   SimpleStorage: {
     args: [100],
     gas: '800 Kwei',

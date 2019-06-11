@@ -28,7 +28,7 @@ module.exports = {
       "http://localhost:8545"
     ],
     gas: "auto",
-    contracts: {
+    deploy: {
       SimpleStorage: {
         args: [100]
       }
@@ -49,7 +49,7 @@ As mentioned earlier, the `default` environment can be easily extended and overw
 module.exports = {
   ...
   custom: {
-    contracts: {
+    deploy: {
       SimpleStorage: {
         args: [200]
       }
