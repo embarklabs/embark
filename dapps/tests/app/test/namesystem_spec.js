@@ -6,6 +6,7 @@ const EmbarkJS = require('Embark/EmbarkJS');
 
 config({
   namesystem: {
+    enabled: true,
     "register": {
       "rootDomain": "embark.eth",
       "subdomains": {

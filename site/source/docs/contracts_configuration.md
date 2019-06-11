@@ -8,7 +8,7 @@ As many decentralized applications are powered by Smart Contracts, configuring a
 
 Unless specified differently in our application's `embark.json`, Smart Contracts are configured either in the `config/contracts.js` file, or, if we're dealing with a [Smart Contract only app](create_project.html#Creating-%E2%80%9Ccontracts-only%E2%80%9D-apps), the `./contracts.js` file in the root of our project.
 
-A Smart Contract configuration is placed in an environment's `contracts` property, with the name of the Smart Contract being the identifier. The following code creates a configuration for the `SimpleStorage` contract in the `development` environment:
+A Smart Contract configuration is placed in an environment's `deploy` property, with the name of the Smart Contract being the identifier. The following code creates a configuration for the `SimpleStorage` contract in the `development` environment:
 
 ```
 module.exports = {
@@ -133,8 +133,8 @@ In order to give users full control over which Smart Contracts should be deploye
 
 There are two possible strategy options: 
 
-- **implicit** - This is the default. Using the `implicit` strategy, Embark tries to deploy all Smart Contracts configured in the `contracts` configuration, including its (3rd-party) dependencies.
-- **explicit** - Setting this option to `explicit` tells Embark to deploy the Smart Contracts specified in the `contracts` configuration without their dependencies. This can be combined with [disabling deployment](#Disabling-deployment) of individual Smart Contracts for fine control.
+- **implicit** - This is the default. Using the `implicit` strategy, Embark tries to deploy all Smart Contracts configured in the `deploy` configuration, including its (3rd-party) dependencies.
+- **explicit** - Setting this option to `explicit` tells Embark to deploy the Smart Contracts specified in the `deploy` configuration without their dependencies. This can be combined with [disabling deployment](#Disabling-deployment) of individual Smart Contracts for fine control.
 
 ```
 strategy: 'explicit' // 'implicit' is the default

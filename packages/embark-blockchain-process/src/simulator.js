@@ -4,7 +4,7 @@ let shelljs = require('shelljs');
 import { Proxy } from './proxy';
 import { IPC } from 'embark-core';
 const constants = require('embark-core/constants');
-import { AccountParser, dappPath, defaultHost, dockerHostSwap, embarkPath } from 'embark-utils';
+import { AccountParser, dappPath, defaultHost, dockerHostSwap, embarkPath, deconstructUrl } from 'embark-utils';
 
 export class Simulator {
   constructor(options) {
@@ -18,10 +18,9 @@ export class Simulator {
     let cmds = [];
 
     let useProxy = this.blockchainConfig.proxy || false;
-    let host = (dockerHostSwap(options.host || this.blockchainConfig.rpcHost) || defaultHost);
-    // TODO change this
-    const configPort = this.contractsConfig.deployment.type === 'rpc' ? this.blockchainConfig.rpcPort : this.blockchainConfig.wsPort;
-    let port = (options.port || configPort || 8545);
+    let {host, port} = deconstructUrl(this.blockchainConfig.endpoint);
+    host = (dockerHostSwap(options.host || host) || defaultHost);
+    port = (options.port || port || 8545);
     port = parseInt(port, 10) + (useProxy ? constants.blockchain.servicePortOnProxy : 0);
 
     cmds.push("-p " + port);

@@ -211,7 +211,25 @@ class Test {
       };
     }
     if (!options.contracts) {
-      options.contracts = {};
+      options.contracts = {deploy: {}};
+    } else if (!options.contracts.deploy) {
+      // Check if it is the old syntax
+      let isOldSyntax = false;
+      Object.values(options.contracts).find(value => {
+        if (typeof value === 'string' || typeof value === 'number') {
+          isOldSyntax = true;
+          return true;
+        }
+        if (value.args) {
+          isOldSyntax = true;
+          return true;
+        }
+      });
+      if (isOldSyntax) {
+        this.logger.error(__('The contract configuration for tests has changed. Please use the following structure: `contracts: {deploy: MyContract: {}}}`\nFor more details: %s',
+          'https://embark.status.im/docs/contracts_testing.html#Configuring-Smart-Contracts-for-tests'.underline));
+        process.exit(1);
+      }
     }
     self.ready = false;
 
@@ -305,8 +323,7 @@ class Test {
       function setConfig(next) {
         contractConfig = prepareContractsConfig(contractConfig);
         self.events.request('config:contractsConfig:set',
-          // TODO find out what versions_default is where it went
-          {contracts: contractConfig.contracts, versions: self.versions_default}, next);
+          {contracts: contractConfig.contracts}, next);
       },
       function getAccounts(next) {
         self.events.request('blockchain:getAccounts', (err, accounts) => {
