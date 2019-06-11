@@ -267,10 +267,13 @@ class ENS {
         const address = this.config.namesystemConfig.register.subdomains[subDomainName];
         const directivesRegExp = new RegExp(/\$(\w+\[?\d?\]?)/g);
 
-
         const directives = directivesRegExp.exec(address);
         if (directives && directives.length) {
           this.embark.registerActionForEvent("contracts:deploy:afterAll", async (deployActionCb) => {
+            if (!this.config.namesystemConfig.enabled) {
+              // ENS was disabled
+              return deployActionCb();
+            }
             this.events.request("blockchain:defaultAccount:get", (currentDefaultAccount) => {
               if(defaultAccount !== currentDefaultAccount) {
                 this.logger.trace(`Skipping registration of subdomain "${directives[1]}" as this action was registered for a previous configuration`);

@@ -1,4 +1,4 @@
-/*global contract, config, it, assert*/
+/*global contract, config, it, assert, web3*/
 const SimpleStorage = require('Embark/contracts/SimpleStorage');
 
 let accounts;
@@ -12,12 +12,14 @@ config({
   //  ]
   //},
   contracts: {
-    "SimpleStorage": {
-      args: [100]
+    deploy: {
+      "SimpleStorage": {
+        args: [100]
+      }
     }
   }
 }, (_err, web3_accounts) => {
-  accounts = web3_accounts
+  accounts = web3_accounts;
 });
 
 contract("SimpleStorage", function () {
