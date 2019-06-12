@@ -313,7 +313,7 @@ class CodeGenerator {
     const self = this;
     let embarkjsCode = '';
     let code = "/* eslint-disable */";
-    const deps = ['ens', 'ipfs', 'swarm', 'whisper'];
+    const deps = ['web3', 'ens', 'ipfs', 'swarm', 'whisper'];
 
     async.waterfall([
       // TODO: here due to a race condition when running embark build

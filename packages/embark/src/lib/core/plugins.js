@@ -17,11 +17,20 @@ var Plugins = function(options) {
   this.version = options.version;
 };
 
+Plugins.deprecated = {
+  'embarkjs-connector-web3': '4.1.0'
+};
+
 Plugins.prototype.loadPlugins = function() {
-  for (let pluginName in this.pluginList) {
-    let pluginConfig = this.pluginList[pluginName];
+  Object.entries(Plugins.deprecated).forEach(([pluginName, embarkVersion]) => {
+    if (this.pluginList[pluginName]) {
+      delete this.pluginList[pluginName];
+      this.logger.warn(`${pluginName} plugin was not loaded because it has been deprecated as of embark v${embarkVersion}, please remove it from this project's embark.json and package.json`);
+    }
+  });
+  Object.entries(this.pluginList).forEach(([pluginName, pluginConfig]) => {
     this.loadPlugin(pluginName, pluginConfig);
-  }
+  });
 };
 
 Plugins.prototype.listPlugins = function() {
