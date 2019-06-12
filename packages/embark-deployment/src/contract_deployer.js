@@ -96,6 +96,10 @@ class ContractDeployer {
 
     async.waterfall([
       function checkContractBytesize(next) {
+        if (!contract.code) {
+          return next();
+        }
+
         const code = (contract.code.indexOf('0x') === 0) ? contract.code.substr(2) : contract.code;
         const contractCodeLength = Buffer.from(code, 'hex').toString().length;
         if(contractCodeLength > MAX_CONTRACT_BYTECODE_LENGTH) {
