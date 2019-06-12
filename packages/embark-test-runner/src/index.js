@@ -146,7 +146,10 @@ class TestRunner {
             if (err) {
               return cb(errorMessage);
             }
-            cb(null, arr.reduce((a,b) => a.concat(b), []));
+            cb(null, arr.reduce((a,b) => {
+              b = b.filter(f => self.fs.readFileSync(f).length > 0)
+              return a.concat(b);
+            }, []));
           });
         });
       }
