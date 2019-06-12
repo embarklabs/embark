@@ -128,13 +128,13 @@ class EmbarkController {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
 
+        engine.startService("web3");
         engine.startService("processManager");
         engine.startService("coreProcess");
         engine.startService("blockchainListener");
         engine.startService("serviceMonitor");
         engine.startService("libraryManager");
         engine.startService("codeRunner");
-        engine.startService("web3");
         engine.startService("pipeline");
         engine.startService("deployment");
         engine.startService("storage");
@@ -229,13 +229,13 @@ class EmbarkController {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
 
+        if (!options.onlyCompile) engine.startService("web3");
         engine.startService("processManager");
         engine.startService("libraryManager");
         engine.startService("codeRunner");
         engine.startService("pipeline");
         engine.startService("codeGenerator");
         if (!options.onlyCompile) {
-          engine.startService("web3");
           engine.startService("deployment", {onlyCompile: options.onlyCompile});
           engine.startService("storage");
         } else {
@@ -514,10 +514,10 @@ class EmbarkController {
         if (pluginList.length > 0) {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
+        engine.startService("web3");
         engine.startService("processManager");
         engine.startService("libraryManager");
         engine.startService("codeRunner");
-        engine.startService("web3");
         engine.startService("deployment", {onlyCompile: true});
 
         callback();
@@ -581,11 +581,11 @@ class EmbarkController {
       },
       function startServices(callback) {
 
+        engine.startService("web3");
         engine.startService("processManager");
         engine.startService("serviceMonitor");
         engine.startService("libraryManager");
         engine.startService("codeRunner");
-        engine.startService("web3");
         engine.startService("pipeline");
         engine.startService("deployment");
         engine.startService("storage");
@@ -670,10 +670,10 @@ class EmbarkController {
         engine.init({}, callback);
       },
       function startServices(callback) {
+        engine.startService("web3", {wait: true, node: options.node});
         engine.startService("processManager");
         engine.startService("libraryManager");
         engine.startService("codeRunner");
-        engine.startService("web3", {wait: true, node: options.node});
         engine.startService("deployment", {
           trackContracts: false,
           compileOnceOnly: true,

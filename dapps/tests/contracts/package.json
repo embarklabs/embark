@@ -2,8 +2,7 @@
   "description": "Test DApp for integration testing purposes",
   "devDependencies": {
     "embark": "^4.1.0-beta.3",
-    "embark-reset": "^4.1.0-beta.3",
-    "embarkjs-connector-web3": "^4.1.0-beta.3"
+    "embark-reset": "^4.1.0-beta.3"
   },
   "name": "embark-dapp-test-contracts",
   "private": true,

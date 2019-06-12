@@ -79,14 +79,9 @@
     "nohoist": [
       "embark/embark-test-contract-0",
       "embark/embark-test-contract-1",
-      "embark-dapp-template-boilerplate/embarkjs-connector-web3",
       "embark-dapp-template-demo/bootstrap",
-      "embark-dapp-template-demo/embarkjs-connector-web3",
-      "embark-dapp-template-simple/embarkjs-connector-web3",
       "embark-dapp-test-app/embark-dapp-test-service",
-      "embark-dapp-test-app/embarkjs-connector-web3",
-      "embark-dapp-test-app/zeppelin-solidity",
-      "embark-dapp-test-contracts/embarkjs-connector-web3"
+      "embark-dapp-test-app/zeppelin-solidity"
     ]
   }
 }
