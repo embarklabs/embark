@@ -312,6 +312,7 @@ class Engine {
       wait: options.wait
     });
 
+    this.registerModulePackage('embark-web3');
     this.registerModulePackage('embark-whisper');
   }
 
