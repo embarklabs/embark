@@ -297,8 +297,7 @@ class Test {
       function setConfig(next) {
         contractConfig = prepareContractsConfig(contractConfig);
         self.events.request('config:contractsConfig:set',
-          // TODO find out what versions_default is where it went
-          {contracts: contractConfig.contracts, versions: self.versions_default}, next);
+          {contracts: contractConfig.contracts}, next);
       },
       function getAccounts(next) {
         self.events.request('blockchain:getAccounts', (err, accounts) => {

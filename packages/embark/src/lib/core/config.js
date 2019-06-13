@@ -28,7 +28,7 @@ import {getBlockchainDefaults, getContractDefaults} from './configDefaults';
 const DEFAULT_CONFIG_PATH = 'config/';
 const PACKAGE = require('../../../package.json');
 
-// TODO add URL here when post or page is publicated
+// TODO add URL here when post or page is published
 const embark5ChangesUrl = 'https://...';
 
 var Config = function(options) {

@@ -74,7 +74,7 @@ $ embark test --gasDetails
 
 ## Test environment
 
-When running tests, the default [environment}(http://localhost:4000/docs/environments.html) is `test`. You can obviously change this using the `--env` flag.
+When running tests, the default [environment}(/docs/environments.html) is `test`. You can obviously change this using the `--env` flag.
 
 The special thing with the `test` environment is that if you do not have a `test` section in your module configuration, that module with be disabled (`enabled: false`). This is done to speed up the test as if you don't need a module, it is disabled.
 
@@ -187,7 +187,7 @@ config({
 
 ## Configuring modules
 
-You can configure the different Embark modules directly in your test file. The available modules are: [storage](/docs/storage_configuration.html), [namesystem](http://localhost:4000/docs/naming_configuration.html) and [communication](/docs/messages_configuration.html).
+You can configure the different Embark modules directly in your test file. The available modules are: [storage](/docs/storage_configuration.html), [namesystem](/docs/naming_configuration.html) and [communication](/docs/messages_configuration.html).
 
 All configuration options for the respective modules are available. Also, the configurations you put inside the `config` function are merged inside the ones that are in the configuration file (meaning that you don't have to put all the provider options if they are already in the default configs).
 
