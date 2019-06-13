@@ -197,7 +197,6 @@ class Test {
       options.contracts = {};
     }
     self.ready = false;
-    console.log('NOT READY!!!!');
 
     async.waterfall([
       function checkDeploymentOpts(next) {
@@ -232,7 +231,6 @@ class Test {
             return next(err);
           }
           self.ready = true;
-          console.log('DONE!!! READY')
           self.error = false;
           next(null, accounts);
         });
