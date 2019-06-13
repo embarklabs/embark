@@ -27,7 +27,12 @@ config({
 });
 
 contract("AnotherStorage", function() {
+  const defaultAccount = accounts[0];
   this.timeout(0);
+
+  it("should have got the default account in the describe", function () {
+    assert.strictEqual(defaultAccount, accounts[0]);
+  });
 
   it("should have account with balance", async function() {
     let balance = await web3.eth.getBalance(accounts[0]);

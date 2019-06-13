@@ -250,8 +250,8 @@ class Test {
         // TODO Do not exit in case of not a normal run (eg after a change)
         if (!self.options.inProcess) process.exit(1);
       }
-      self.events.emit('tests:ready');
       callback(null, accounts);
+      self.events.emit('tests:ready');
     });
   }
 

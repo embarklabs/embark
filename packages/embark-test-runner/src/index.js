@@ -208,6 +208,7 @@ class TestRunner {
         let fns = files.map((file) => {
           return (cb) => {
             const mocha = new Mocha();
+            mocha.delay();
             const gasLimit = options.coverage ? COVERAGE_GAS_LIMIT : GAS_LIMIT;
             const reporter = options.inProcess ? EmbarkApiSpec : EmbarkSpec;
             mocha.reporter(reporter, {
@@ -219,17 +220,35 @@ class TestRunner {
 
             mocha.addFile(file);
             mocha.suite.timeout(0);
-            mocha.suite.beforeAll('Wait for deploy', (done) => {
+
+            function describeWithWait(describeName, callback) {
               if (global.embark.needConfig) {
                 global.config({});
               }
-              global.embark.onReady(done);
+              global.embark.onReady(() => {
+                // Next tick makes sure to not have a hang when tests don't use `config()`
+                // I think this is needed because Mocha expects global.run() to be called ina further event loop
+                process.nextTick(() => {
+                  self.ogMochaDescribe(describeName, callback);
+                  global.run(); // This tells mocha that it can run the test (used in conjunction with `delay()`
+                });
+              });
+            }
+
+            mocha.suite.on('pre-require', function() {
+              // We do this to make such our globals don't get overriden by Mocha
+              global.describe = describeWithWait;
+              global.contract = describeWithWait;
             });
+            // This populates Mocha to have describe(), etc.
+            mocha.suite.emit('pre-require', global, file, mocha);
+
             mocha.run(function (fails) {
               mocha.suite.removeAllListeners();
               // Mocha prints the error already
               cb(null, fails);
             });
+            self.ogMochaDescribe = Mocha.describe;
           };
         });
         async.series(fns, next);
