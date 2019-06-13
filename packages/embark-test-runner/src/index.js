@@ -221,30 +221,20 @@ class TestRunner {
             mocha.addFile(file);
             mocha.suite.timeout(0);
 
-            // mocha.suite.beforeAll('Wait for deploy', (done) => {
-            //   if (global.embark.needConfig) {
-            //     global.config({});
-            //   }
-            //   global.embark.onReady(() => {
-            //     done();
-            //     global.run();
-            //   });
-            // });
-
             function describeWithWait(describeName, callback) {
-              console.log('WAIT')
               if (global.embark.needConfig) {
                 global.config({});
               }
               global.embark.onReady(() => {
-                self.ogMochaDescribe(describeName, callback);
-                console.log('RUN!!');
-                global.run();
+                // Next tick makes sure to not have a hang when tests don't use `config()`
+                process.nextTick(() => {
+                  self.ogMochaDescribe(describeName, callback);
+                  global.run();
+                });
               });
             }
 
             mocha.suite.on('pre-require', function() {
-              console.log('SET!!');
               // We do this to make such our globals don't get overriden by Mocha
               global.describe = describeWithWait;
               global.contract = describeWithWait;

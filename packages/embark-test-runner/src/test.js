@@ -112,10 +112,7 @@ class Test {
   onReady(callback) {
     const self = this;
     if (this.ready) {
-      return setTimeout(() => {
-        callback();
-      },0);
-      // return callback();
+      return callback();
     }
     if (this.error) {
       return callback(this.error);
