@@ -208,6 +208,7 @@ class TestRunner {
         let fns = files.map((file) => {
           return (cb) => {
             const mocha = new Mocha();
+            mocha.delay();
             const gasLimit = options.coverage ? COVERAGE_GAS_LIMIT : GAS_LIMIT;
             const reporter = options.inProcess ? EmbarkApiSpec : EmbarkSpec;
             mocha.reporter(reporter, {
@@ -219,17 +220,44 @@ class TestRunner {
 
             mocha.addFile(file);
             mocha.suite.timeout(0);
-            mocha.suite.beforeAll('Wait for deploy', (done) => {
+
+            // mocha.suite.beforeAll('Wait for deploy', (done) => {
+            //   if (global.embark.needConfig) {
+            //     global.config({});
+            //   }
+            //   global.embark.onReady(() => {
+            //     done();
+            //     global.run();
+            //   });
+            // });
+
+            function describeWithWait(describeName, callback) {
+              console.log('WAIT')
               if (global.embark.needConfig) {
                 global.config({});
               }
-              global.embark.onReady(done);
+              global.embark.onReady(() => {
+                self.ogMochaDescribe(describeName, callback);
+                console.log('RUN!!');
+                global.run();
+              });
+            }
+
+            mocha.suite.on('pre-require', function() {
+              console.log('SET!!');
+              // We do this to make such our globals don't get overriden by Mocha
+              global.describe = describeWithWait;
+              global.contract = describeWithWait;
             });
+            // This populates Mocha to have describe(), etc.
+            mocha.suite.emit('pre-require', global, file, mocha);
+
             mocha.run(function (fails) {
               mocha.suite.removeAllListeners();
               // Mocha prints the error already
               cb(null, fails);
             });
+            self.ogMochaDescribe = Mocha.describe;
           };
         });
         async.series(fns, next);

@@ -112,7 +112,10 @@ class Test {
   onReady(callback) {
     const self = this;
     if (this.ready) {
-      return callback();
+      return setTimeout(() => {
+        callback();
+      },0);
+      // return callback();
     }
     if (this.error) {
       return callback(this.error);
@@ -197,6 +200,7 @@ class Test {
       options.contracts = {};
     }
     self.ready = false;
+    console.log('NOT READY!!!!');
 
     async.waterfall([
       function checkDeploymentOpts(next) {
@@ -231,6 +235,7 @@ class Test {
             return next(err);
           }
           self.ready = true;
+          console.log('DONE!!! READY')
           self.error = false;
           next(null, accounts);
         });
@@ -240,8 +245,8 @@ class Test {
         // TODO Do not exit in case of not a normal run (eg after a change)
         if (!self.options.inProcess) process.exit(1);
       }
-      self.events.emit('tests:ready');
       callback(null, accounts);
+      self.events.emit('tests:ready');
     });
   }
 
