@@ -225,11 +225,11 @@ class TestRunner {
               if (global.embark.needConfig) {
                 global.config({});
               }
-              global.embark.onReady(() => {
+              global.embark.onReady((_err, accounts) => {
                 // Next tick makes sure to not have a hang when tests don't use `config()`
                 // I think this is needed because Mocha expects global.run() to be called ina further event loop
                 process.nextTick(() => {
-                  self.ogMochaDescribe(describeName, callback);
+                  self.ogMochaDescribe(describeName, callback.bind(mocha, accounts));
                   global.run(); // This tells mocha that it can run the test (used in conjunction with `delay()`
                 });
               });

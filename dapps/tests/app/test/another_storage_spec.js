@@ -26,12 +26,16 @@ config({
   accounts = theAccounts;
 });
 
-contract("AnotherStorage", function() {
+contract("AnotherStorage", function(accountsAgain) {
   const defaultAccount = accounts[0];
   this.timeout(0);
 
   it("should have got the default account in the describe", function () {
     assert.strictEqual(defaultAccount, accounts[0]);
+  });
+
+  it("should have the accounts in the describe callback too", function () {
+    assert.deepStrictEqual(accountsAgain, accounts);
   });
 
   it("should have account with balance", async function() {

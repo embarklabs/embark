@@ -26,6 +26,7 @@ class Test {
     this.accounts = [];
     this.embarkjs = {};
     this.dappPath = options.dappPath;
+    this.accounts = [];
 
     this.events.setCommandHandler("blockchain:provider:contract:accounts:get", cb => {
       this.events.request("blockchain:getAccounts", cb);
@@ -112,7 +113,7 @@ class Test {
   onReady(callback) {
     const self = this;
     if (this.ready) {
-      return callback();
+      return callback(null, this.accounts);
     }
     if (this.error) {
       return callback(this.error);
@@ -125,9 +126,9 @@ class Test {
       callback(err);
     };
 
-    readyCallback = () => {
+    readyCallback = (accounts) => {
       self.events.removeListener('tests:deployError', errorCallback);
-      callback();
+      callback(null, accounts);
     };
 
     this.events.once('tests:ready', readyCallback);
@@ -240,8 +241,9 @@ class Test {
         // TODO Do not exit in case of not a normal run (eg after a change)
         if (!self.options.inProcess) process.exit(1);
       }
+      self.accounts = accounts;
       callback(null, accounts);
-      self.events.emit('tests:ready');
+      self.events.emit('tests:ready', accounts);
     });
   }
 
