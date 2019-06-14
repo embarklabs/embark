@@ -279,7 +279,7 @@ class Engine {
           return next();
         }
         this.events.once("ipfs:process:started", next);
-        this.registerModule('ipfs');
+        this.registerModulePackage('embark-ipfs');
       },
       (next) => {
         if (!this.config.storageConfig.available_providers.includes("swarm")) {

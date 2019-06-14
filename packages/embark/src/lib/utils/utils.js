@@ -1,5 +1,3 @@
-let http = require('follow-redirects').http;
-let https = require('follow-redirects').https;
 import {normalizeInput} from 'embark-utils';
 
 function dirname() {
@@ -15,57 +13,6 @@ function filesMatchingPattern(files) {
 function fileMatchesPattern(patterns, intendedPath) {
   const globule = require('globule');
   return globule.isMatch(patterns, intendedPath);
-}
-
-function httpGetRequest(httpObj, url, callback) {
-  httpObj.get(url, function (res) {
-    let body = '';
-    res.on('data', function (d) {
-      body += d;
-    });
-    res.on('end', function () {
-      callback(null, body);
-    });
-  }).on('error', function (err) {
-    callback(err);
-  });
-}
-
-function httpGet(url, callback) {
-  httpGetRequest(http, url, callback);
-}
-
-function httpsGet(url, callback) {
-  httpGetRequest(https, url, callback);
-}
-
-function httpGetJson(url, callback) {
-  httpGetRequest(http, url, function (err, body) {
-    try {
-      let parsed = body && JSON.parse(body);
-      return callback(err, parsed);
-    } catch (e) {
-      return callback(e);
-    }
-  });
-}
-
-function httpsGetJson(url, callback) {
-  httpGetRequest(https, url, function (err, body) {
-    try {
-      let parsed = JSON.parse(body);
-      return callback(err, parsed);
-    } catch (e) {
-      return callback(e);
-    }
-  });
-}
-
-function getJson(url, cb) {
-  if (url.indexOf('https') === 0) {
-    return httpsGetJson(url, cb);
-  }
-  httpGetJson(url, cb);
 }
 
 function cd(folder) {
@@ -158,11 +105,6 @@ module.exports = {
   dirname,
   filesMatchingPattern,
   fileMatchesPattern,
-  httpGet,
-  httpsGet,
-  httpGetJson,
-  httpsGetJson,
-  getJson,
   isValidDomain,
   cd,
   sed,

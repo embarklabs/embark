@@ -269,6 +269,57 @@ function isEs6Module(module) {
   return (typeof module === 'function' && isConstructor(module)) || (typeof module === 'object' && typeof module.default === 'function' && module.__esModule);
 }
 
+function httpGetRequest(httpObj, url, callback) {
+  httpObj.get(url, function (res) {
+    let body = '';
+    res.on('data', function (d) {
+      body += d;
+    });
+    res.on('end', function () {
+      callback(null, body);
+    });
+  }).on('error', function (err) {
+    callback(err);
+  });
+}
+
+function httpGet(url, callback) {
+  httpGetRequest(http, url, callback);
+}
+
+function httpsGet(url, callback) {
+  httpGetRequest(https, url, callback);
+}
+
+function httpGetJson(url, callback) {
+  httpGetRequest(http, url, function (err, body) {
+    try {
+      let parsed = body && JSON.parse(body);
+      return callback(err, parsed);
+    } catch (e) {
+      return callback(e);
+    }
+  });
+}
+
+function httpsGetJson(url, callback) {
+  httpGetRequest(https, url, function (err, body) {
+    try {
+      let parsed = JSON.parse(body);
+      return callback(err, parsed);
+    } catch (e) {
+      return callback(e);
+    }
+  });
+}
+
+function getJson(url, cb) {
+  if (url.indexOf('https') === 0) {
+    return httpsGetJson(url, cb);
+  }
+  httpGetJson(url, cb);
+}
+
 const Utils = {
   anchoredValue,
   buildUrl,
@@ -296,6 +347,11 @@ const Utils = {
   errorMessage,
   getAddressToContract,
   getTransactionParams,
+  httpGet,
+  httpsGet,
+  httpGetJson,
+  httpsGetJson,
+  getJson,
   isDocker,
   isEs6Module,
   checkIsAvailable,

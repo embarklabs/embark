@@ -1,11 +1,10 @@
 import { __ } from 'embark-i18n';
 const UploadIPFS = require('./upload.js');
-const utils = require('../../utils/utils.js');
 const IpfsApi = require('ipfs-api');
 // TODO: not great, breaks module isolation
 const StorageProcessesLauncher = require('./storageProcessesLauncher');
 const constants = require('embark-core/constants');
-import { buildUrlFromConfig, dappPath, embarkPath } from 'embark-utils';
+import { buildUrlFromConfig, dappPath, embarkPath, getJson } from 'embark-utils';
 import * as path from 'path';
 
 class IPFS {
@@ -130,7 +129,7 @@ class IPFS {
 
   _checkService(cb) {
     let url = this._getNodeUrl();
-    utils.getJson(url, cb);
+    getJson(url, cb);
   }
 
   addStorageProviderToEmbarkJS() {

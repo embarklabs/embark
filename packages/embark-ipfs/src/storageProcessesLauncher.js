@@ -99,15 +99,14 @@ class StorageProcessesLauncher {
     if (self.processes[storageName]) {
       return callback(__('Storage process already started'));
     }
-    const filePath = joinPath(__dirname, `../${storageName}/process.js`);
+    // TODO: had to be adapted but this is far from ideal
+    const filePath = joinPath(__dirname, `../dist/process.js`);
     this.embark.fs.access(filePath, (err) => {
       if (err) {
         return callback(__('No process file for this storage type (%s) exists. Please start the process locally.', storageName));
       }
 
-      let cmd = (storageName === 'swarm' ? (self.storageConfig.swarmPath || 'swarm') : 'ipfs');
-
-      const program = shellJs.which(cmd);
+      const program = shellJs.which('ipfs');
       if (!program) {
         self.logger.warn(__('{{storageName}} is not installed or your configuration is not right', { storageName }).yellow);
         self.logger.info(__('You can install and get more information here: ').yellow + References[storageName].underline);
