@@ -199,6 +199,16 @@ class Test {
     self.ready = false;
 
     async.waterfall([
+      function cleanContracts(next) {
+        Object.keys(self.contracts).forEach(contractName => {
+          if (self.contracts[contractName]._requestManager) {
+            // Remove all data listeners from the contract provider as a listener for `data` is added for each new contract
+            // Removing directly as contract.removeSubscriptions throws errors and doesn't really unsubscribe
+            self.contracts[contractName]._requestManager.provider.removeAllListeners('data');
+          }
+        });
+        next();
+      },
       function checkDeploymentOpts(next) {
         self.checkDeploymentOptions(options, next);
       },
