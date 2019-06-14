@@ -286,7 +286,7 @@ class Engine {
           return next();
         }
         this.events.once("swarm:process:started", next);
-        this.registerModule('swarm');
+        this.registerModulePackage('embark-swarm');
       }
     ], (err) => {
       if(err) {

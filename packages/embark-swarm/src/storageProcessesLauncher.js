@@ -100,9 +100,7 @@ class StorageProcessesLauncher {
     if (self.processes[storageName]) {
       return callback(__('Storage process already started'));
     }
-    const filePath = joinPath(__dirname, `../${storageName}/process.js`);
-    console.dir("==== filePath")
-    console.dir(filePath)
+    const filePath = joinPath(__dirname, `../dist/process.js`);
     this.embark.fs.access(filePath, (err) => {
       if (err) {
         return callback(__('No process file for this storage type (%s) exists. Please start the process locally.', storageName));
