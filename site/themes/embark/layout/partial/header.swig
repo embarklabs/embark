@@ -13,26 +13,26 @@
         <div class="c-navigation__body">
           <ul class="c-navigation__list">
             <li class="c-navigation__item">
-              <a href="{{ url_for('docs/quick_start.html') }}" class="c-navigation__anchor {% if is_quickstart() %}is-active{% endif %}" title="Quick Start">Quick Start</a>
+              <a href="{{ url_for('docs/quick_start.html') }}" class="c-navigation__anchor {% if is_quickstart() %}is-active{% endif %}" title="{{__('navigation.quick_start')}}">{{__('navigation.quick_start')}}</a>
             </li>
             <li class="c-navigation__item">
-              <a href="/docs" class="c-navigation__anchor {% if is_current('/docs') && !is_quickstart() %}is-active{% endif %}" title="Learn">Learn</a>
+              <a href="/docs" class="c-navigation__anchor {% if is_current('/docs') && !is_quickstart() %}is-active{% endif %}" title="{{__('navigation.learn')}}">{{__('navigation.learn')}}</a>
             </li>
             <li class="c-navigation__item">
-              <a href="/plugins" class="c-navigation__anchor {% if is_current('/plugins') %}is-active{% endif %}" title="Plugins">Plugins</a>
+              <a href="/plugins" class="c-navigation__anchor {% if is_current('/plugins') %}is-active{% endif %}" title="{{__('navigation.plugins')}}">{{__('navigation.plugins')}}</a>
             </li>
             <li class="c-navigation__item">
-              <a href="/community" class="c-navigation__anchor {% if is_current('/community') %}is-active{% endif %}" title="Community">Community</a>
+              <a href="/community" class="c-navigation__anchor {% if is_current('/community') %}is-active{% endif %}" title="{{__('navigation.community')}}">{{__('navigation.community')}}</a>
             </li>
             <li class="c-navigation__item">
-              <a href="/news" class="c-navigation__anchor {% if is_current('/news') %}is-active{% endif %}" title="Blog">Blog</a>
+              <a href="/news" class="c-navigation__anchor {% if is_current('/news') %}is-active{% endif %}" title="{{__('navigation.blog')}}">{{__('navigation.blog')}}</a>
             </li>
           </ul>
         </div>
       </nav>
       <div class="o-flex o-flex-center">
         <form action="" class="o-flex__item u-hidden-until-large">
-          <input type="search" placeholder="Search" id="search-input">
+          <input type="search" placeholder="{{__('navigation.search')}}" id="search-input">
         </form>
         <div class="o-flex__item">
           <ul class="o-flex o-flex-center">

@@ -1,7 +1,7 @@
-title: Join the growing community
-tagline: Get support, give support and help building Embark.
+title: community_page.header.title
+tagline: community_page.header.tagline
 link:
-  text: Join the conversation
+  text: community_page.header.link
   href: https://gitter.im/embark-framework/Lobby
 layout: community
 ---

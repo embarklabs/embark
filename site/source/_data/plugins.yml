@@ -1,12 +1,12 @@
 - name: embark-bamboo
-  description: Plugin to add Bamboo support to embark
+  description: plugins_page.plugins.bamboo.desc
   link: https://www.npmjs.com/package/embark-bamboo
   thumbnail: bamboo.png
   tags:
     - language
     - smart-contracts
 - name: embark-solc
-  description: Uses the command line Solidity Compiler for light-speed compile times
+  description: plugins_page.plugins.solc.desc
   link: https://www.npmjs.com/package/embark-solc
   thumbnail: solidity.png
   tags:
@@ -14,7 +14,7 @@
     - language
     - smart-contracts
 - name: embark-solium
-  description: The official Solium Plugin for the Embark Framework
+  description: plugins_page.plugins.solium.desc
   link: https://www.npmjs.com/package/embark-solium
   thumbnail: solium.png
   tags:
@@ -22,44 +22,44 @@
     - solidity
     - solium
 - name: embark-etherscan-verifier
-  description: Plugin for Embark to flatten and verify contracts on Etherscan
+  description: plugins_page.plugins.verifier.desc
   link: https://www.npmjs.com/package/embark-etherscan-verifier
   tags:
     - solidity
     - etherscan
     - smart-contracts
 - name: embark-status
-  description: Status plugin to interact with embark
+  description: plugins_page.plugins.status.desc
   link: https://www.npmjs.com/package/embark-status-plugin
   thumbnail: status.png
   tags:
     - status
     - mobile
 - name: embark-remix
-  description: Plugin to start Remix and Remix directly with Embark
+  description: plugins_page.plugins.remix.desc
   link: https://www.npmjs.com/package/embark-remix
   thumbnail: remix.png
   tags:
     - remix
     - debugger
 - name: embark-slither
-  description: Plugin to analyse solidity source with Slither
+  description: plugins_page.plugins.slither.desc
   link: https://www.npmjs.com/package/embark-slither
   tags:
     - solidity
 - name: embark-snark
-  description: Plugin to compile circom circuits and generate Solidity proof
+  description: plugins_page.plugins.snark.desc
   link: https://www.npmjs.com/package/embark-snark
   tags:
     - snark
 - name: embark-fortune
-  description: Displays a fortune message after every build
+  description: plugins_page.plugins.fortune.desc
   link: https://www.npmjs.com/package/embark-fortune
   thumbnail: fortune.jpg
   tags:
     - fun
 - name: embark-pug
-  description: Embark plugin to support pug / jade templates
+  description: plugins_page.plugins.pug.desc
   link: https://www.npmjs.com/package/embark-pug
   legacy: true
   thumbnail: pug.png
@@ -68,7 +68,7 @@
     - jade
     - templates
 - name: embark-haml
-  description: Embark plugin to support haml templates
+  description: plugins_page.plugins.haml.desc
   link: https://www.npmjs.com/package/embark-haml
   legacy: true
   thumbnail: haml.png
@@ -76,7 +76,7 @@
     - haml
     - templates
 - name: embark-mythx
-  description: Adds console commands to run MythX security analyses from the Embark console
+  description: plugins_page.plugins.mythx.desc
   link: https://www.npmjs.com/package/embark-mythx
   thumbnail: mythx.png
   tags:

@@ -13,11 +13,11 @@
 {% else %}
   {{
     partial('partial/header', {
-      title: 'All posts',
+      title: __('archives.header.title'),
       tagline: '&nbsp;',
       compact: true,
       link: {
-        text: '&larr; Back to blog',
+        text: __('archives.header.link'),
         href: '/news'
       },
     })
@@ -36,7 +36,7 @@
           text: post.summary,
           dateInfo: post.date,
           link: {
-            text: 'Read more',
+            text: __('archives.article_box.read_more_link'),
             href: url_for(post.path)
           }
         })
@@ -44,7 +44,7 @@
     {% endfor %}
   </section>
   <div class="o-container o-distance o-center">
-    <a href="/news" class="c-button" title="Back to blog">&larr; Back to blog</a>
+    <a href="/news" class="c-button" title="{{__('archives.back_to_blog_link.title')}}">{{__('archives.back_to_blog_link.label')}}</a>
   </div>
 </main>
 

@@ -1,9 +1,9 @@
 {{
   partial('partial/header', {
-    title: page.title,
-    tagline: page.tagline,
+    title: __('start_page.header.title'),
+    tagline: __('start_page.header.tagline'),
     link: {
-      text: page.link.text,
+      text: __('start_page.header.link'),
       href: page.link.href
     },
     showGitHubStars: page.showGitHubStars,
@@ -14,10 +14,10 @@
   <section class="o-container o-distance">
     {{
       partial('partial/heading', {
-        title: '<span class="u-text-light">More than a </span>framework.',
-        referal: 'Embark is a platform with tools to make developing decentralise applications a breeze.',
+        title: __('start_page.intro_section.heading.title'),
+        referal: __('start_page.intro_section.heading.referal'),
         link: {
-          text: 'Join the Community',
+          text: __('start_page.intro_section.heading.link'),
           href: '/community'
         },
         className: 'o-center'
@@ -28,11 +28,11 @@
         {{
           partial('partial/whisperbox', {
             className: 'o-grid__column--1-1 o-grid__column--large-1-3',
-            title: 'Smart Contract Management',
-            text: 'Build, test and deploy your Smart Contracts without the hassle. Embark takes care of the ground work, watches for changes, and redeploy your application when needed.',
+            title: __('start_page.intro_section.box_1.title'),
+            text: __('start_page.intro_section.box_1.text'),
             icon: 'pen-write-paper',
             link: {
-              text: 'Learn more',
+              text: __('start_page.intro_section.box_1.link'),
               href: '/docs/contracts_configuration.html'
             }
           })
@@ -40,11 +40,11 @@
         {{
           partial('partial/whisperbox', {
             className: 'o-grid__column--1-1 o-grid__column--large-1-3',
-            title: 'Easy to use Debugger and Testing',
-            text: "Testing shouldn't be an after thought. Embark makes debugging and testing a first class citizen of your development experience.",
+            title: __('start_page.intro_section.box_2.title'),
+            text: __('start_page.intro_section.box_2.text'),
             icon: 'search-bar',
             link: {
-              text: 'Learn more',
+              text: __('start_page.intro_section.box_2.link'),
               href: '/docs/contracts_testing.html'
             }
           })
@@ -52,11 +52,11 @@
         {{
           partial('partial/whisperbox', {
             className: 'o-grid__column--1-1 o-grid__column--large-1-3',
-            title: 'End to End DApp Development',
-            text: 'Go beyond Smart Contracts if you want to. Embark offers great integrations with decentralised services such as IPFS and Whisper.',
+            title: __('start_page.intro_section.box_3.title'),
+            text: __('start_page.intro_section.box_3.text'),
             icon: 'pie-line-graph',
             link: {
-              text: 'Learn more',
+              text: __('start_page.intro_section.box_3.link'),
               href: '/docs/javascript_usage.html'
             }
           })
@@ -69,16 +69,16 @@
       <div class="o-container">
         <div class="o-media">
           <div class="o-media__body">
-            <h2 class="c-section-title u-text-ghost">Powerful CLI</h2>
-            <p class="c-subtitle o-box__subtitle u-text-light">Embark's command line interface comes with a rich dashboard so <strong>you</strong> are in control.</p>
+            <h2 class="c-section-title u-text-ghost">{{__('start_page.cli_section.heading.title')}}</h2>
+            <p class="c-subtitle o-box__subtitle u-text-light">{{__('start_page.cli_section.heading.referal')}}</p>
             <div class="o-distance-l">
               <ul class="c-checklist">
-                {{ partial('partial/checklist_item', { icon: 'icon-check', text: 'Service Monitoring', style: 'u-text-light' }) }}
-                {{ partial('partial/checklist_item', { icon: 'icon-check', text: 'Interactive REPL', style: 'u-text-light' }) }}
-                {{ partial('partial/checklist_item', { icon: 'icon-check', text: 'Real-time Deployment', style: 'u-text-light' }) }}
+                {{ partial('partial/checklist_item', { icon: 'icon-check', text: __('start_page.cli_section.checklist.item_1'), style: 'u-text-light' }) }}
+                {{ partial('partial/checklist_item', { icon: 'icon-check', text: __('start_page.cli_section.checklist.item_2'), style: 'u-text-light' }) }}
+                {{ partial('partial/checklist_item', { icon: 'icon-check', text: __('start_page.cli_section.checklist.item_3'), style: 'u-text-light' }) }}
               </ul>
             </div>
-            <a href="/docs/create_project.html" title="Creating apps using the CLI" class="c-button o-distance-l">Get started</a>
+            <a href="/docs/create_project.html" title="{{__('start_page.cli_section.link.title')}}" class="c-button o-distance-l">{{__('start_page.cli_section.link.label')}}</a>
           </div>
           <div class="o-media__asset">
             <img src="{{url_for('assets/images/cli-tool.png')}}" alt="">
@@ -95,21 +95,21 @@
       <div class="o-grid__column--1-1 o-grid__column--medium-1-2">
         {{
           partial('partial/heading', {
-            title: '<span class="u-text-light">Modular by </span>Design',
-            referal: 'Pick and choose what features, plugins and tools you want to integrate with. Embark is built with modularity in mind.'
+            title: __('start_page.modular_section.heading.title'),
+            referal: __('start_page.modular_section.heading.referal')
           })
         }}
         <div class="o-distance-l">
           <ul class="c-checklist">
-            {{ partial('partial/checklist_item', { icon: 'icon-check', text: 'Smart Contract only or fully fledged DApps' }) }}
-            {{ partial('partial/checklist_item', { icon: 'icon-check', text: 'Integrate with existing tools' }) }}
-            {{ partial('partial/checklist_item', { icon: 'icon-check', text: 'Extend it to your needs' }) }}
+            {{ partial('partial/checklist_item', { icon: 'icon-check', text: __('start_page.modular_section.checklist.item_1') }) }}
+            {{ partial('partial/checklist_item', { icon: 'icon-check', text: __('start_page.modular_section.checklist.item_2') }) }}
+            {{ partial('partial/checklist_item', { icon: 'icon-check', text: __('start_page.modular_section.checklist.item_3') }) }}
           </ul>
         </div>
         <div class="o-distance-l">
           <div class="o-buttonbar">
-            <a href="/plugins" title="Plugins" class="c-button o-buttonbar__item">See plugins</a>
-            <a href="/docs/creating_plugins.html" title="Creating Plugins" class="c-button c-button--ghost o-buttonbar__item">Create your own</a>
+            <a href="/plugins" title="{{__('start_page.modular_section.link_1.title')}}" class="c-button o-buttonbar__item">{{__('start_page.modular_section.link_1.label')}}</a>
+            <a href="/docs/creating_plugins.html" title="{{__('start_page.modular_section.link_2.title')}}" class="c-button c-button--ghost o-buttonbar__item">{{__('start_page.modular_section.link_2.label')}}</a>
           </div>
         </div>
       </div>
@@ -119,12 +119,8 @@
     <div class="c-box c-box--universe c-box--visible o-overlap" style="background-image: url({{url_for('../../assets/images/dots.png')}})">
       <div class="o-container">
         <div class="o-heading o-center">
-          <h2 class="o-heading__title c-section-title">
-            Mission control with <span class="u-text-ghost">Cockpit.</span>
-          </h2>
-          <p class="o-heading__subtitle c-subtitle u-text-ghost">
-            A web interface for building, debugging and deploying decentralised applications.
-          </p>
+          <h2 class="o-heading__title c-section-title">{{__('start_page.cockpit_section.heading.title')}}</h2>
+          <p class="o-heading__subtitle c-subtitle u-text-ghost">{{__('start_page.cockpit_section.heading.referal')}}</p>
           <p class="o-heading__footer">
             <!-- <a href="#" class="c-button c-button--ghost" title="Get Started">Get Started</a>-->
           </p>
@@ -132,24 +128,24 @@
         <div class="o-distance-xl">
           <div class="o-grid">
             <div class="o-grid__column--1-1 o-grid__column--medium-1-2 o-grid__column--large-1-4">
-              <h3 class="c-title-level-3 u-text-ghost">Web UI Dashboard</h3>
-              <p>Gives an overview of all processes controlled by Embark. It also comes with an interactive console and predictive commands.</p>
-              <a href="/docs/cockpit_dashboard.html" title="Cockpit Dashboard">Learn more &rarr;</a>
+              <h3 class="c-title-level-3 u-text-ghost">{{__('start_page.cockpit_section.box_1.title')}}</h3>
+              <p>{{__('start_page.cockpit_section.box_1.text')}}</p>
+              <a href="/docs/cockpit_dashboard.html" title="{{__('start_page.cockpit_section.box_1.link.title')}}">{{__('start_page.cockpit_section.box_1.link.label')}}</a>
             </div>
             <div class="o-grid__column--1-1 o-grid__column--medium-1-2 o-grid__column--large-1-4">
-              <h3 class="c-title-level-3 u-text-ghost">Explorer</h3>
-              <p>Cockpit's explorer lets you easily review any transactions, Smart Contracts and accounts.</p>
-              <a href="/docs/cockpit_explorer.html" title="Cockpit Explorer">Learn more &rarr;</a>
+              <h3 class="c-title-level-3 u-text-ghost">{{__('start_page.cockpit_section.box_2.title')}}</h3>
+              <p>{{__('start_page.cockpit_section.box_2.text')}}</p>
+              <a href="/docs/cockpit_explorer.html" title="{{__('start_page.cockpit_section.box_2.link.title')}}">{{__('start_page.cockpit_section.box_2.link.label')}}</a>
             </div>
             <div class="o-grid__column--1-1 o-grid__column--medium-1-2 o-grid__column--large-1-4">
-              <h3 class="c-title-level-3 u-text-ghost">Deployment</h3>
-              <p>With Cockpit, you can iteratively and selectively deploy your Smart Contracts, removing any headaches when it comes to complex applications.</p>
-              <a href="/docs/cockpit_deployment.html" title="Cockpit Deployment">Learn more &rarr;</a>
+              <h3 class="c-title-level-3 u-text-ghost">{{__('start_page.cockpit_section.box_3.title')}}</h3>
+              <p>{{__('start_page.cockpit_section.box_3.text')}}</p>
+              <a href="/docs/cockpit_deployment.html" title="{{__('start_page.cockpit_section.box_3.link.title')}}">{{__('start_page.cockpit_section.box_3.link.label')}}</a>
             </div>
             <div class="o-grid__column--1-1 o-grid__column--medium-1-2 o-grid__column--large-1-4">
-              <h3 class="c-title-level-3 u-text-ghost">Code Editor</h3>
-              <p>Edit your source files from right within Cockpit for quick and easy updates.</p>
-              <a href="/docs/cockpit_editor.html" title="Cockpit Editor">Learn more &rarr;</a>
+              <h3 class="c-title-level-3 u-text-ghost">{{__('start_page.cockpit_section.box_4.title')}}</h3>
+              <p>{{__('start_page.cockpit_section.box_4.text')}}</p>
+              <a href="/docs/cockpit_editor.html" title="{{__('start_page.cockpit_section.box_4.link.title')}}">{{__('start_page.cockpit_section.box_4.link.label')}}</a>
             </div>
           </div>
         </div>
@@ -163,10 +159,10 @@
     <div class="c-box c-box--unframed" style="background-image: url({{url_for('assets/images/bg-hexagons.png')}})">
       {{
         partial('partial/heading', {
-          title: '<span class="u-text-light">For developers</span>, by developers',
-          referal: 'Embark is a fully open source effort. Get involved and be part of the journey.',
+          title: __('start_page.outro_section.heading.title'),
+          referal: __('start_page.outro_section.heading.referal'),
           link: {
-            text: 'Join the Community',
+            text: __('start_page.outro_section.heading.link'),
             href: '/community'
           },
           className: 'o-center'
@@ -177,18 +173,18 @@
   <section>
     <div class="o-container-medium o-distance o-center">
       <div class="c-box c-box--spot">
-          <h3><span >Sign up for updates</span></h3>
+          <h3><span>{{__('start_page.newsletter_section.heading.title')}}</span></h3>
           <div id="mc_embed_signup" class="o-distance-l">
             <form action="https://status.us20.list-manage.com/subscribe/post?u=774518184e8661075f1b012f5&amp;id=4189213bb9" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
               <div class="o-buttonbar">
                 <input type="email" value="" name="EMAIL" class="required email o-buttonbar__item" id="mce-EMAIL" placeholder="Enter your email address">
-                <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="c-button o-buttonbar__item">
+                <input type="submit" value="{{__('start_page.newsletter_section.button.label')}}" name="subscribe" id="mc-embedded-subscribe" class="c-button o-buttonbar__item">
                 <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
                 <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_774518184e8661075f1b012f5_4189213bb9" tabindex="-1" value=""></div>
               </div>
             </form>
           </div>
-          <p class="o-distance-m">Sign up to our newsletter and get updates about Embark and our development progress first!</p>
+          <p class="o-distance-m">{{__('start_page.newsletter_section.heading.text')}}</p>
       </div>
     </div>
   </section>

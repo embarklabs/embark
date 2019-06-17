@@ -1,5 +1,4 @@
-title: Embark into the Ether.
-tagline: The all-in-one developer platform for building and deploying decentralized applications.
+title: start_page.header.title
 link:
   text: Get Started
   href: /docs
