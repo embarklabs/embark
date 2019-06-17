@@ -6,25 +6,25 @@
         <div class="c-navigation__header">
           <a href="{{ url_for_lang('') }}" title="Embark" class="c-logo">Embark</a>
           <button class="c-navigation__close u-text-light" title="Close menu">
-            <svg class="c-icon c-icon--xs"><use xlink:href="{{url_for('../assets/icons/symbols.svg#icon-close') }}"></use></svg>
+            <svg class="c-icon c-icon--xs"><use xlink:href="{{url_for('../assets/icons/symbols.svg#icon-close')}}"></use></svg>
           </button>
         </div>
         <div class="c-navigation__body">
           <ul class="c-navigation__list">
             <li class="c-navigation__item">
-              <a href="/docs/quick_start.html" class="c-navigation__anchor {% if is_quickstart() %}is-active{% endif %}" title="Quickstart">Quickstart</a>
+              <a href="{{ url_for('docs/quick_start.html') }}" class="c-navigation__anchor {% if is_quickstart() %}is-active{% endif %}" title="{{__('navigation.quick_start')}}">{{__('navigation.quick_start')}}</a>
             </li>
             <li class="c-navigation__item">
-              <a href="/docs" class="c-navigation__anchor {% if is_current('/docs') && !is_quickstart() %}is-active{% endif %}" title="Learn">Learn</a>
+              <a href="/docs" class="c-navigation__anchor {% if is_current('/docs') && !is_quickstart() %}is-active{% endif %}" title="{{__('navigation.learn')}}">{{__('navigation.learn')}}</a>
             </li>
             <li class="c-navigation__item">
-              <a href="/plugins" class="c-navigation__anchor {% if is_current('/plugins') %}is-active{% endif %}" title="Plugins">Plugins</a>
+              <a href="/plugins" class="c-navigation__anchor {% if is_current('/plugins') %}is-active{% endif %}" title="{{__('navigation.plugins')}}">{{__('navigation.plugins')}}</a>
             </li>
             <li class="c-navigation__item">
-              <a href="/community" class="c-navigation__anchor {% if is_current('/community') %}is-active{% endif %}" title="Community">Community</a>
+              <a href="/community" class="c-navigation__anchor {% if is_current('/community') %}is-active{% endif %}" title="{{__('navigation.community')}}">{{__('navigation.community')}}</a>
             </li>
             <li class="c-navigation__item">
-              <a href="/news" class="c-navigation__anchor {% if is_current('/news') %}is-active{% endif %}" title="Blog">Blog</a>
+              <a href="/news" class="c-navigation__anchor {% if is_current('/news') %}is-active{% endif %}" title="{{__('navigation.blog')}}">{{__('navigation.blog')}}</a>
             </li>
           </ul>
         </div>

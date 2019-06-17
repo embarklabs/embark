@@ -1,9 +1,9 @@
 {{
   partial('partial/header', {
-    title: 'Building with Embark',
-    tagline: 'Learn how <strong class="u-text-ghost">you</strong> can use Embark to build your apps.',
+    title: __(page.title),
+    tagline: __('docs_landing_page.header.tagline'),
     link: {
-      text: 'Quickstart &rarr;',
+      text: __('docs_landing_page.header.link'),
       href: '/docs/quick_start.html'
     }
   })
@@ -12,8 +12,8 @@
   <section class="o-container o-distance">
     {{
       partial('partial/heading', {
-        title: '<span class="u-text-light">Start</span> here.',
-        referal: "There's many ways to work with Embark. Here's a few good places to start.",
+        title: __('docs_landing_page.intro_section.heading.title'),
+        referal: __('docs_landing_page.intro_section.heading.referal'),
         className: 'o-center'
       })
     }}
@@ -23,11 +23,11 @@
           partial('partial/spotbox', {
             className: 'o-grid__column--1-1 o-grid__column--large-2-3',
             titleClassName: 'c-title-level-2',
-            title: 'Documentation',
-            text: 'Go straight to the docs and explore what Embark has to offer!',
+            title: __('docs_landing_page.intro_section.box_1.title'),
+            text: __('docs_landing_page.intro_section.box_1.text'),
             icon: 'list-to-do',
             link: {
-              text: 'Learn more',
+              text: __('docs_landing_page.intro_section.box_1.link'),
               href: '/docs/overview.html'
             }
           })
@@ -35,12 +35,12 @@
         {{
           partial('partial/spotbox', {
             className: 'o-grid__column--1-1 o-grid__column--large-1-3',
-            title: 'Using the CLI',
+            title: __('docs_landing_page.intro_section.box_2.title'),
             titleClassName: 'c-title-level-3',
-            text: "Learn how to use Embark's command line interface to develop your apps.",
+            text: __('docs_landing_page.intro_section.box_2.text'),
             icon: 'browser-gauge',
             link: {
-              text: 'Learn more',
+              text: __('docs_landing_page.intro_section.box_2.link'),
               href: '/docs/create_project.html'
             }
           })
@@ -52,11 +52,11 @@
         {{
           partial('partial/whisperbox', {
             className: 'o-grid__column--1-1 o-grid__column--large-1-2',
-            title: 'Smart Contract Development',
-            text: 'Embark provides a lot of flexibility when it comes to configuring, compiling and deploying your Smart Contracts.',
+            title: __('docs_landing_page.intro_section.box_3.title'),
+            text: __('docs_landing_page.intro_section.box_3.text'),
             icon: 'pen-write-paper',
             link: {
-              text: 'Learn more',
+              text: __('docs_landing_page.intro_section.box_3.link'),
               href: '/docs/contracts_configuration.html'
             }
           })
@@ -76,11 +76,11 @@
         {{
           partial('partial/whisperbox', {
             className: 'o-grid__column--1-1 o-grid__column--large-1-2',
-            title: 'Create a plugin',
-            text: 'Extend Embark to your needs! Learn how to build a plugin that integrates your favourite tools with Embark.',
+            title: __('docs_landing_page.intro_section.box_4.title'),
+            text: __('docs_landing_page.intro_section.box_4.text'),
             icon: 'module',
             link: {
-              text: 'Learn more',
+              text: __('docs_landing_page.intro_section.box_4.link'),
               href: '/docs/creating_plugins.html'
             }
           })
@@ -88,7 +88,7 @@
       </div>
     </div>
     <div class="o-distance o-center">
-      <a href="/docs/overview.html" title="Docs Overview" class="c-button">Take me to the docs &rarr;</a>
+      <a href="/docs/overview.html" title="{{__('docs_landing_page.intro_section.link.title')}}" class="c-button">{{__('docs_landing_page.intro_section.link.label')}}</a>
     </div>
   </section>
 </main>

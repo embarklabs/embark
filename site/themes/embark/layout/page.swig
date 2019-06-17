@@ -1,7 +1,7 @@
 {{
   partial('partial/header', {
-    title: page.title,
-    tagline: page.tagline,
+    title: __(page.title),
+    tagline: __(page.tagline),
     compact: true
   })
 }}

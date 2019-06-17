@@ -1,6 +1,6 @@
 layout: plugins
-tagline: 'Extend Embark to your needs.'
-title: Plugins
+tagline: plugins_page.header.tagline
+title: plugins_page.header.title
 data: plugins
-intro: "Plugins extend Embark and provide integration with other tools and technologies."
+intro: plugins_page.intro_section.heading.referal
 ---

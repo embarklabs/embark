@@ -1,7 +1,7 @@
 {{
   partial('partial/header', {
-    title: page.title,
-    tagline: page.tagline,
+    title: __(page.title),
+    tagline: __(page.tagline),
     compact: true
   })
 }}
@@ -10,11 +10,11 @@
   <section class="o-container o-distance">
     {{
       partial('partial/heading', {
-        referal: 'Plugins extend Embark and provide integration with other tools and technologies.',
+        referal: __('plugins_page.intro_section.heading.referal'),
         className: 'o-center',
         link: {
           href: '/docs/creating_plugins.html',
-          text: 'Build your own!'
+          text: __('plugins_page.intro_section.heading.link')
         }
       })
     }}
@@ -23,13 +23,13 @@
   <section class="o-container o-distance">
     <div class="o-grid">
       {% for plugin in site.data[page.data] %}
-        {{ 
+        {{
           partial('partial/whisperbox', {
             className: 'o-grid__column--1-1 o-grid__column--large-1-3',
             title: plugin.name,
-            text: plugin.description,
+            text: __(plugin.description),
             link: {
-              text: 'Learn more',
+              text: __('plugins_page.learn_more_link'),
               href: plugin.link
             }
           })

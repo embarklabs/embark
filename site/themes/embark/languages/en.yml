@@ -1,16 +1,277 @@
-menu:
-  docs: Docs
-  api: API
-  news: News
+navigation:
+  quick_start: Quick Start
+  learn: Learn
   plugins: Plugins
-  themes: Themes
-  search: Search
-  chat: Chat
+  community: Community
   blog: Blog
-  tutorials: Tutorials
+  search: Search
 
-index:
-  get_started: Get started
+start_page:
+  header:
+    title: Embark into the Ether.
+    tagline: The all-in-one developer platform for building and deploying decentralized applications.
+    link: Get Started
+
+  intro_section:
+    heading:
+      title: <span class="u-text-light">More than a </span>framework.
+      referal: Embark is a platform that enables easy development and deployment of decentralized applications.
+      link: Join the Community
+    box_1:
+      title: Smart Contract Management
+      text: Build, test, and deploy your Smart Contracts without the hassle. Embark takes care of the ground work, watches for changes, and redeploys your application when needed.
+      link: Learn more
+    box_2:
+      title: Easy to use Debugger and Testing
+      text: Testing shouldn't be an afterthought. Embark makes debugging and testing first-class citizens of your development workflow.
+      link: Learn more
+    box_3:
+      title: End to End DApp Development
+      text: Go beyond Smart Contracts if you want to. Embark offers great integrations with decentralised services such as IPFS and Whisper.
+      link: Learn more
+
+  cli_section:
+    heading:
+      title: Powerful CLI
+      referal: Embark's command line interface comes with a rich dashboard so <strong>you</strong> are in control.
+    checklist:
+      item_1: Service Monitoring
+      item_2: Interactive REPL
+      item_3: Real-time Deployment
+    link:
+      label: Get Started
+      title: Creating apps using the CLI
+
+  modular_section:
+    heading:
+      title: <span class="u-text-light">Modular by </span>Design
+      referal: Pick and choose what features, plugins and tools you want to integrate with. Embark is built with modularity in mind.
+    checklist:
+      item_1: Smart Contract only or full-fledged DApps
+      item_2: Integrate with existing tools
+      item_3: Extend it to your needs
+    link_1:
+      title: Plugins
+      label: See plugins
+    link_2:
+      title: Creating Plugins
+      label: Create your own
+
+  cockpit_section:
+    heading:
+      title: Mission control with <span class="u-text-ghost">Cockpit.</span>
+      referal: A web interface for building, debugging and deploying decentralised applications.
+
+    box_1:
+      title: Web UI Dashboard
+      text: Gives an overview of all processes controlled by Embark. It also comes with an interactive console and predictive commands.
+      link:
+        label: Learn more &rarr;
+        title: Cockpit Dashboard
+
+    box_2:
+      title: Explorer
+      text: Cockpit's explorer lets you easily review any transactions, Smart Contracts, and accounts.
+      link:
+        label: Learn more &rarr;
+        title: Cockpit Explorer
+
+    box_3:
+      title: Deployment
+      text: With Cockpit you can iteratively and selectively deploy your Smart Contracts, removing headaches associated with complex applications.
+      link:
+        label: Learn more &rarr;
+        title: Cockpit Deployment
+
+    box_4:
+      title: Code Editor
+      text: Edit your source files from right within Cockpit for quick and easy updates.
+      link:
+        title: Cockpit Editor
+        label: Learn more &rarr;
+
+  outro_section:
+    heading:
+      title: <span class="u-text-light">For developers</span>, by developers
+      referal: Embark is a fully open source effort. Get involved and be part of the journey.
+      link: Join the Community
+
+  newsletter_section:
+    heading:
+      title: Sign up for updates
+      text: Sign up for our newsletter and get updates about Embark and our development progress first!
+    button:
+      label: Subscribe
+
+community_page:
+  header:
+    title: Join the growing community
+    tagline: Get support, give support, and help build Embark.
+    link: Join the conversation
+
+  spotbox:
+    title: Checkout the GitHub Repos
+    text: Look for issues with specifics tags you may be interested in.
+    link: View repositories
+
+  contribute_section:
+    heading:
+      title: <span class="u-text-light">How to</span> contribute
+      referal: There are a number of ways to contribute and get involved, from submitting a pull request to growing the community.
+
+  not_just_code_section:
+    heading:
+      title: It's not just <span class='u-text-light'>code</span>
+      referal: We believe that contributions go far beyond working on our code base. Help out with writing docs, creating a tutorial, or simply talk to us on our channels.
+      link: Join us in Gitter
+
+    box_1:
+      title: Help improve the docs
+      text: You don't have to code to contribute, we're happy about any improvements to our documentation.
+
+    box_2:
+      title: Create a tutorial
+      text: Record a video of a simple tutorial and share it with the community.
+
+    box_3:
+      title: Help answer questions
+      text: Help out newcomers with questions in our Gitter channel or Stack Overflow.
+
+    box_4:
+      title: Create a plugin
+      text: Embark integrates well with other tools. Build a plugin to get support for your tool of choice.
+
+    box_5:
+      title: Report a bug
+      text: If you find a bug, let us know and we'll work on fixing it.
+
+    box_6:
+      title: Work on new features
+      text: Collaborate with peers on new features you want to see in Embark.
+
+  team_section:
+    heading:
+      title: Meet the <span class="u-text-ghost">team</span>.
+
+    job_team_lead: Creator and Team Lead
+    job_engineer: Software Engineer
+
+plugins_page:
+  header:
+    title: Plugins
+    tagline: Extend Embark to your needs.
+
+  intro_section:
+    heading:
+      referal: Plugins extend Embark and provide integration with other tools and technologies.
+      link: Build your own!
+
+  learn_more_link: Learn More
+
+  plugins:
+    bamboo:
+      desc: Plugin to add Bamboo support to Embark
+    solc:
+      desc: Uses the command line Solidity Compiler for light-speed compile times
+    solium:
+      desc: The official Solium Plugin for the Embark Framework
+    verifier:
+      desc: Plugin for Embark to flatten and verify contracts on Etherscan
+    status:
+      desc: Status plugin to interact with Embark
+    remix:
+      desc: Plugin to start Remix directly with Embark
+    slither:
+      desc: Plugin to analyse solidity source code with Slither
+    snark:
+      desc: Plugin to compile circom circuits and generate a Solidity proof
+    fortune:
+      desc: Displays a fortune message after every build
+    pug:
+      desc: Embark plugin to support pug / jade templates
+    haml:
+      desc: Embark plugin to support haml templates
+    mythx:
+      desc: Adds console commands to run MythX security analysis from the Embark console
+
+docs_landing_page:
+  header:
+    title: Building with Embark
+    tagline: Learn how <strong class="u-text-ghost">you</strong> can use Embark to build your apps.
+    link: Quickstart &rarr;
+
+  intro_section:
+    heading:
+      title: <span class="u-text-light">Start</span> here.
+      referal: There are many ways to work with Embark. Here are a few good places to start.
+
+    box_1:
+      title: Documentation
+      text: Go straight to the docs and explore what Embark has to offer!
+      link: Learn more
+
+    box_2:
+      title: Using the CLI
+      text: Learn how to use Embark's command line interface to develop your apps.
+      link: Learn more
+
+    box_3:
+      title: Smart Contract Development
+      text: Embark provides a lot of flexibility when it comes to configuring, compiling, and deploying your Smart Contracts.
+      link: Learn more
+
+    box_4:
+      title: Create a plugin
+      text: Extend Embark to your needs! Learn how to build a plugin that integrates your favourite tools with Embark.
+      link: Learn more
+
+    link:
+      label: Take me to the docs &rarr;
+      title: Docs Overview
+
+blog:
+  header:
+    title: Blog
+    tagline: News and updates by the Embark team
+
+  view_all_link: View All
+
+archives:
+  header:
+    title: All posts
+    link: &larr; Back to blog
+
+  article_box:
+    read_more_link: Read more
+
+  back_to_blog_link:
+    label: &larr; Back to blog
+    title: Back to blog
+
+footer:
+  text: Embark is part of the Status Network
+  section_resources:
+    title: Resources
+    quick_start: Quick Start
+    documentation: Documentation
+    blog: Blog
+    faq: FAQ
+    troubleshooting: Troubleshooting
+  section_help:
+    issues: Report issues
+    coc: Code of Conduct
+  section_community:
+    contribute: Contribute
+    team: Team
+  privacy_policy: Privacy Policy
+
+paginator:
+  prev:
+    label: &larr; Previous
+    title: Previous article
+  next:
+    label: Next &rarr;
+    title: Next article
 
 page:
   contents: Contents
@@ -115,6 +376,6 @@ sidebar:
     cockpit_deployment: Deployment
     cockpit_explorer: Explorer View
     cockpit_editor: Code Editor
-    cockpit_utils: Utils 
+    cockpit_utils: Utils
     cockpit_debugger: Using the Debugger
 

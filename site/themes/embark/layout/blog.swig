@@ -1,7 +1,7 @@
 {{
   partial('partial/header', {
-    title: 'Blog',
-    tagline: 'News and updates by the Embark team',
+    title: __(page.title),
+    tagline: __(page.tagline),
     compact: true
   })
 }}
@@ -92,7 +92,7 @@
     </div>
   </section>
   <div class="o-container o-distance o-center">
-    <a href="/archives" class="c-button" title="View all">View all</a>
+    <a href="/archives" class="c-button" title="{{__('blog.view_all_link')}}">{{__('blog.view_all_link')}}</a>
   </div>
 </main>
 

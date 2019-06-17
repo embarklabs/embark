@@ -1,9 +1,9 @@
 {{
   partial('partial/header', {
-    title: 'Join the community',
-    tagline: page.tagline,
+    title: __(page.title),
+    tagline: __(page.tagline),
     link: {
-      text: page.link.text,
+      text: __(page.link.text),
       href: page.link.href
     },
     showGitHubStars: false,
@@ -14,8 +14,8 @@
   <section class="o-container o-distance">
     {{
       partial('partial/heading', {
-        title: '<span class="u-text-light">How to</span> contribute',
-        referal: 'There are a number of ways to contribute and getting involved, from submitting a pull request to growing the community.',
+        title: __('community_page.contribute_section.heading.title'),
+        referal: __('community_page.contribute_section.heading.referal'),
         className: 'o-center'
       })
     }}
@@ -24,11 +24,11 @@
         <div class="o-grid__column--1-1 o-grid__column--medium-1-2">
           {{
             partial('partial/spotbox', {
-              title: 'Checkout the GitHub Repos',
-              text: 'Look for issues with specifics tags you may be interested in.',
+              title: __('community_page.spotbox.title'),
+              text: __('community_page.spotbox.text'),
               icon: 'app-window-search-text',
               link: {
-                text: 'See the Repo',
+                text: __('community_page.spotbox.link'),
                 href: 'https://github.com/embark-framework/embark'
               }
             })
@@ -44,10 +44,10 @@
         <div class="o-grid__column--1-1 o-grid__column--large-2-3">
           {{
             partial('partial/heading', {
-              title: "It's not just <span class='u-text-light'>code</span>",
-              referal: 'We believe that contributions go far beyond working on our code base. Help out with writing docs, creating a tutorial or simply talk to us on our channels.',
+              title: __('community_page.not_just_code_section.heading.title'),
+              referal: __('community_page.not_just_code_section.heading.referal'),
               link: {
-                text: 'Join us in Gitter',
+                text: __('community_page.not_just_code_section.heading.link'),
                 href: 'https://gitter.im/embark-framework/Lobby',
                 class: 'c-button'
               }
@@ -60,48 +60,48 @@
           {{
             partial('partial/whisperbox', {
               className: 'o-grid__column--1-1 o-grid__column--medium-1-2 o-grid__column--large-1-3',
-              title: 'Help improving the docs',
-              text: "You don't have to code to contribute, we're happy about any improvements to our documentation.",
+              title: __('community_page.not_just_code_section.box_1.title'),
+              text: __('community_page.not_just_code_section.box_1.text'),
               icon: 'search-bar'
             })
           }}
           {{
             partial('partial/whisperbox', {
               className: 'o-grid__column--1-1 o-grid__column--medium-1-2 o-grid__column--large-1-3',
-              title: 'Create a tutorial',
-              text: 'Record a video of a simple tutorial and share it with the community.',
+              title: __('community_page.not_just_code_section.box_2.title'),
+              text: __('community_page.not_just_code_section.box_2.text'),
               icon: 'paginate-filter-video-alternate'
             })
           }}
           {{
             partial('partial/whisperbox', {
               className: 'o-grid__column--1-1 o-grid__column--medium-1-2 o-grid__column--large-1-3',
-              title: 'Help answer questions',
-              text: 'Help out newcomers with questions in our Gitter channel or Stack Overflow.',
+              title: __('community_page.not_just_code_section.box_3.title'),
+              text: __('community_page.not_just_code_section.box_3.text'),
               icon: 'notes-paper-text'
             })
           }}
           {{
             partial('partial/whisperbox', {
               className: 'o-grid__column--1-1 o-grid__column--medium-1-2 o-grid__column--large-1-3',
-              title: 'Create a plugin',
-              text: 'Embark integrates well with other tools. Build a plugin to get support for your tool of choice.',
+              title: __('community_page.not_just_code_section.box_4.title'),
+              text: __('community_page.not_just_code_section.box_4.text'),
               icon: 'module'
             })
           }}
             {{
               partial('partial/whisperbox', {
                 className: 'o-grid__column--1-1 o-grid__column--medium-1-2 o-grid__column--large-1-3',
-                title: 'Report a bug',
-                text: 'If you find a bug, let us know and we work on fixing it.',
+                title: __('community_page.not_just_code_section.box_5.title'),
+                text: __('community_page.not_just_code_section.box_5.text'),
                 icon: 'computer-bug-search',
               })
             }}
             {{
               partial('partial/whisperbox', {
                 className: 'o-grid__column--1-1 o-grid__column--medium-1-2 o-grid__column--large-1-3',
-                title: 'Work on new features',
-                text: 'Collaborate with peers on new features you want to see landing.',
+                title: __('community_page.not_just_code_section.box_6.title'),
+                text: __('community_page.not_just_code_section.box_6.text'),
                 icon: 'tag-new-circle',
               })
             }}
@@ -117,7 +117,7 @@
       <div class="o-container">
         {{
           partial('partial/heading', {
-            title: 'Meet the <span class="u-text-ghost">team</span>.',
+            title: __('community_page.team_section.heading.title'),
             className: 'o-center'
           })
         }}
@@ -128,7 +128,7 @@
                 partial('partial/contributor-box', {
                   img: 'https://pbs.twimg.com/profile_images/928272512181563392/iDJdvy2k_400x400.jpg',
                   name: 'Iuri Matias',
-                  job: 'Creator and Team Lead',
+                  job: __('community_page.team_section.job_team_lead'),
                   github: 'Iurimatias',
                   twitter: 'iurimatias'
                 })
@@ -139,7 +139,7 @@
                 partial('partial/contributor-box', {
                   img: 'https://pbs.twimg.com/profile_images/993873866878570496/-aE4byjj_400x400.jpg',
                   name: 'Jonathan Rainville',
-                  job: 'Software Engineer',
+                  job: __('community_page.team_section.job_engineer'),
                   github: 'jrainville',
                   twitter: 'shyolghul'
                 })
@@ -150,7 +150,7 @@
                 partial('partial/contributor-box', {
                   img: 'https://avatars1.githubusercontent.com/u/5089238?s=460&v=4',
                   name: 'Eric Mastro',
-                  job: 'Software Engineer',
+                  job: __('community_page.team_section.job_engineer'),
                   github: 'emizzle',
                   twitter: 'ericmastro'
                 })
@@ -161,7 +161,7 @@
                 partial('partial/contributor-box', {
                   img: 'https://pbs.twimg.com/profile_images/965722487735701504/m58KNgWN_400x400.jpg',
                   name: 'Andre Medeiros',
-                  job: 'Software Engineer',
+                  job: __('community_page.team_section.job_engineer'),
                   github: 'andremedeiros',
                   twitter: 'superdealloc'
                 })
@@ -172,7 +172,7 @@
                 partial('partial/contributor-box', {
                   img: 'https://pbs.twimg.com/profile_images/257742900/13168239_400x400.jpg',
                   name: 'Anthony Laibe',
-                  job: 'Software Engineer',
+                  job: __('community_page.team_section.job_engineer'),
                   github: 'alaibe',
                   twitter: 'a_laibe'
                 })
@@ -183,7 +183,7 @@
                 partial('partial/contributor-box', {
                   img: 'https://avatars3.githubusercontent.com/u/194260?s=460&v=4',
                   name: 'Michael Bradley',
-                  job: 'Software Engineer',
+                  job: __('community_page.team_section.job_engineer'),
                   github: 'michaelsbradleyjr'
                 })
               }}
@@ -193,7 +193,7 @@
                 partial('partial/contributor-box', {
                   img: 'https://pbs.twimg.com/profile_images/1063160577973866496/aM313uHG_400x400.jpg',
                   name: 'Richard Ramos',
-                  job: 'Software Engineer',
+                  job: __('community_page.team_section.job_engineer'),
                   github: 'rramos',
                   twitter: 'richardramos_me'
                 })
@@ -204,7 +204,7 @@
                 partial('partial/contributor-box', {
                   img: 'https://pbs.twimg.com/profile_images/993785060733194241/p3oAIMDP_400x400.jpg',
                   name: 'Pascal Precht',
-                  job: 'Software Engineer',
+                  job: __('community_page.team_section.job_engineer'),
                   github: 'PascalPrecht',
                   twitter: 'PascalPrecht'
                 })
