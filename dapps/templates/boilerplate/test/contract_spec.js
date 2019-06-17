@@ -1,4 +1,4 @@
-// /*global contract, config, it, assert*/
+/*global contract, it*/
 /*
 const SimpleStorage = require('Embark/contracts/SimpleStorage');
 
@@ -19,10 +19,9 @@ config({
   }
 }, (_err, web3_accounts) => {
   accounts = web3_accounts
-});
+});*/
 
-contract("SimpleStorage", function () {
-  this.timeout(0);
+contract.skip("SimpleStorage", function () {
 
   it("should set constructor value", async function () {
     let result = await SimpleStorage.methods.storedData().call();
@@ -39,5 +38,4 @@ contract("SimpleStorage", function () {
     let balance = await web3.eth.getBalance(accounts[0]);
     assert.ok(parseInt(balance, 10) > 0);
   });
-}
-*/
+});
