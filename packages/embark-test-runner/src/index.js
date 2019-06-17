@@ -2,6 +2,7 @@ import { __ } from 'embark-i18n';
 const async = require('async');
 const Mocha = require('mocha');
 const path = require('path');
+import fs from 'fs';
 const { dappPath, embarkPath, runCmd, timer } = require('embark-utils');
 const assert = require('assert');
 const Test = require('./test');
@@ -205,46 +206,59 @@ class TestRunner {
         });
       },
       function executeForAllFiles(files, next) {
+        const mocha = new Mocha();
+        mocha.delay();
+        const gasLimit = options.coverage ? COVERAGE_GAS_LIMIT : GAS_LIMIT;
+        const reporter = options.inProcess ? EmbarkApiSpec : EmbarkSpec;
+        mocha.reporter(reporter, {
+          events: self.events,
+          gasDetails: options.gasDetails,
+          txDetails: options.txDetails,
+          gasLimit
+        });
+        mocha.suite.timeout(0);
+
+        function describeWithWait(describeName, callback) {
+          if (global.embark.needConfig) {
+            global.config({});
+          }
+          global.embark.onReady((_err, accounts) => {
+            self.ogMochaDescribe(describeName, callback.bind(mocha, accounts));
+            global.run(); // This tells mocha that it can run the test (used in conjunction with `delay()`
+          });
+        }
+        mocha.suite.on('pre-require', function() {
+          // We do this to make such our globals don't get overriden by Mocha
+          global.describe = describeWithWait;
+          global.contract = describeWithWait;
+        });
+
         let fns = files.map((file) => {
           return (cb) => {
-            const mocha = new Mocha();
-            mocha.delay();
-            const gasLimit = options.coverage ? COVERAGE_GAS_LIMIT : GAS_LIMIT;
-            const reporter = options.inProcess ? EmbarkApiSpec : EmbarkSpec;
-            mocha.reporter(reporter, {
-              events: self.events,
-              gasDetails: options.gasDetails,
-              txDetails: options.txDetails,
-              gasLimit
-            });
 
-            mocha.addFile(file);
-            mocha.suite.timeout(0);
-
-            function describeWithWait(describeName, callback) {
-              if (global.embark.needConfig) {
-                global.config({});
+            fs.readFile(file, (err, data) => {
+              if (err) {
+                self.logger.error(__('Error reading file %s', file));
+                self.logger.error(err);
+                cb(null, 1);
               }
-              global.embark.onReady((_err, accounts) => {
-                self.ogMochaDescribe(describeName, callback.bind(mocha, accounts));
-                global.run(); // This tells mocha that it can run the test (used in conjunction with `delay()`
+
+              if (data.search(/contract\(|describe\(/) === -1) {
+                return cb(null, 0);
+              }
+
+              mocha.addFile(file);
+
+              // This populates Mocha to have describe(), etc.
+              mocha.suite.emit('pre-require', global, file, mocha);
+
+              mocha.run(function (fails) {
+                mocha.suite.removeAllListeners();
+                // Mocha prints the error already
+                cb(null, fails);
               });
-            }
-
-            mocha.suite.on('pre-require', function() {
-              // We do this to make such our globals don't get overriden by Mocha
-              global.describe = describeWithWait;
-              global.contract = describeWithWait;
+              self.ogMochaDescribe = Mocha.describe;
             });
-            // This populates Mocha to have describe(), etc.
-            mocha.suite.emit('pre-require', global, file, mocha);
-
-            mocha.run(function (fails) {
-              mocha.suite.removeAllListeners();
-              // Mocha prints the error already
-              cb(null, fails);
-            });
-            self.ogMochaDescribe = Mocha.describe;
           };
         });
         async.series(fns, next);
