@@ -161,7 +161,17 @@ config({
 });
 ```
 
-Notice that we're introducing a global `accounts` variable so we can mutate its state once the accounts are loaded. This is necessary to make the emitted accounts available in any of our spec blocks.
+You can also grab the accounts from the callback of the `contract()` function (`describe` alias):
+
+```
+contract('SomeContract', (accounts) => {
+  const myAccounts = accounts[0];
+
+  it('should do something', async () => {
+    ...
+  });
+});
+```
 
 ## Connecting to a different node
 
