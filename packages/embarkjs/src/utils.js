@@ -1,6 +1,12 @@
 /* global Web3 clearInterval setInterval */
 
 let Utils = {
+  hexPrefix: function(str) {
+    if (str === undefined) return;
+    if (str.match(/^0x/)) return str;
+
+    return `0x${str}`;
+  },
   fromAscii: function(str) {
     var _web3 = new Web3();
     return _web3.utils ? _web3.utils.fromAscii(str) : _web3.fromAscii(str);

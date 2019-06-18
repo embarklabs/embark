@@ -5,12 +5,9 @@ const {Utils} = require('Embark/EmbarkJS');
 contract("SimpleStorage Deploy", function () {
   let simpleStorageInstance;
   before(function(done) {
-    Utils.secureSend(web3, SimpleStorage.deploy({arguments: [150]}), {}, true, function(err, receipt) {
-      if(err) {
-        return done(err);
-      }
-      simpleStorageInstance = SimpleStorage;
-      simpleStorageInstance.options.address = receipt.contractAddress;
+    SimpleStorage.deploy([150]);
+    SimpleStorage.deployed().then(instance => {
+      simpleStorageInstance = instance;
       done();
     });
   });

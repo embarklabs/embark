@@ -365,6 +365,7 @@ class Test {
       const newContract = new EmbarkJS.Blockchain.Contract({
         abi: ${JSON.stringify(contract.abiDefinition)},
         address: "${contract.deployedAddress || ""}" || undefined,
+        code: "${contract.code}",
         from: "${contract.deploymentAccount || ""}" || web3.eth.defaultAccount,
         gas: "${GAS_LIMIT}",
         web3: web3
