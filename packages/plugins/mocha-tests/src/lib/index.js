@@ -131,6 +131,7 @@ class MochaTestRunner {
                 compiledContracts[contract.className] = {};
               }
               instance.options.from = accounts[0];
+              instance.options.code = contract.code;
               instance.options.gas = GAS_LIMIT;
               Object.setPrototypeOf(compiledContracts[contract.className], instance);
             }

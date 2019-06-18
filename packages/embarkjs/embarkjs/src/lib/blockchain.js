@@ -1,6 +1,7 @@
 /* global ethereum */
 
-import {reduce} from './async';
+import { reduce } from './async';
+import utils from './utils';
 
 let Blockchain = {
   Contract: Contract,
@@ -244,7 +245,7 @@ function Contract(options) {
   this.abi = options.abi || options.abiDefinition;
   this.address = options.address || options.deployedAddress;
   this.gas = options.gas;
-  this.code = '0x' + options.code;
+  this.code = utils.hexPrefix(options.code);
 
   this.blockchainConnector = Blockchain.blockchainConnector;
 
@@ -311,40 +312,50 @@ function Contract(options) {
     }
   });
 
+  // Assign helpers too
+  for(const method of ["deploy", "new", "at", "send", "deployed"]) {
+    // Make sure we don't override original methods here.
+    if (originalMethods.includes(method)) {
+      console.log(method + " is a reserved word and will not be aliased as a helper");
+      continue;
+    }
+
+    ContractClass[method] = Contract.prototype[method].bind(this);
+  }
+
+  this.contractClass = ContractClass;
+
   return ContractClass;
 }
 
-Contract.prototype.deploy = function(args, _options) {
-  var self = this;
-  var contractParams;
-  var options = _options || {};
+Contract.prototype.deploy = function(args, _options, _txOptions) {
+  const self = this;
+  const options = Object.assign({
+    arguments: args || [],
+    data: this.code
+  }, _options);
 
-  contractParams = args || [];
-
-  contractParams.push({
+  const txOptions = Object.assign({
     from: this.blockchainConnector.getDefaultAccount(),
-    data: this.code,
-    gas: options.gas || 800000
+    gas: this.gas
+  }, _txOptions);
+
+  const contract = this.blockchainConnector.newContract({abi: this.abi});
+
+  this._deployPromise = new Promise((resolve, reject) => {
+    contract.deploy.apply(contract, [options]).send(txOptions).then(instance => {
+      resolve(new Contract({
+        abi: self.abi,
+        code: self.code,
+        address: instance.options.address
+      }));
+
+      // Delete the deploy promise as we don't need to track it anymore.
+      delete self._deployPromise;
+    }).catch(reject);
   });
 
-
-  const contractObject = this.blockchainConnector.newContract({abi: this.abi});
-
-  return new Promise(function (resolve, reject) {
-    contractParams.push(function(err, transaction) {
-      if (err) {
-        reject(err);
-      } else if (transaction.address !== undefined) {
-        resolve(new Contract({
-          abi: self.abi,
-          code: self.code,
-          address: transaction.address
-        }));
-      }
-    });
-
-    contractObject["new"].apply(contractObject, contractParams);
-  });
+  return this._deployPromise;
 };
 
 Contract.prototype.new = Contract.prototype.deploy;
@@ -368,6 +379,15 @@ Contract.prototype.send = function(value, unit, _options) {
 
   return this.blockchainConnector.send(options);
 };
+
+Contract.prototype.deployed = function() {
+  // This API exists just for compatibility reasons, so it works with tools that
+  // don't have their Smart Contracts deployed initially a the time of importing
+  // them, like Embark does.
+  return Promise.resolve(this);
+};
+
+Blockchain.Contract = Contract;
 
 class BlockchainConnectionError extends Error {
   constructor(connectionErrors) {
