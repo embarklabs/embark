@@ -2,7 +2,7 @@
 
 let Utils = {
   hexPrefix: function(str) {
-    if (str === undefined) return;
+    if (!(str && str.match)) return;
     if (str.match(/^0x/)) return str;
 
     return `0x${str}`;
