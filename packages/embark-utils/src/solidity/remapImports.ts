@@ -3,7 +3,6 @@ import * as path from "path";
 import { groupBy } from "../collections";
 import { File, Types } from "../file";
 import { dappPath, embarkPath, urlJoin } from "../pathUtils";
-import { removePureView, replacePureView } from "./code";
 
 const FIND_IMPORTS_REGEX = /^import[\s]*(['"])(.*)\1;/gm;
 const FIND_FILE_REGEX = /import[\s]*(['"])(.*)\1;/;
@@ -197,10 +196,5 @@ export const prepareForCompilation = async (file: File, isCoverage = false) => {
     content = await file.content;
   }
 
-  if (!isCoverage) {
-    return content;
-  }
-
-  removePureView(dappPath(".embark"));
-  return replacePureView(content);
+  return content;
 };

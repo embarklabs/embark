@@ -214,6 +214,7 @@ class Solidity {
                 fileCb();
               }).catch((e) => {
                 self.logger.error(__('Error while loading the content of ') + filename);
+                self.logger.error(JSON.stringify(e));
                 self.logger.debug(e);
                 fileCb();
               });
