@@ -12,6 +12,7 @@ class Whisper extends React.Component {
       channel: '',
       message: '',
       subscribedChannels: [],
+      channelIsValid: false,
       messageList: [],
       logs: []
     };
@@ -19,6 +20,7 @@ class Whisper extends React.Component {
 
   handleChange (e, name) {
     this.state[name] = e.target.value;
+    this.state.channelIsValid = e.target.value.length >= 4;
     this.setState(this.state);
   }
 
@@ -40,7 +42,7 @@ class Whisper extends React.Component {
     e.preventDefault();
 
     const subscribedChannels = this.state.subscribedChannels;
-    subscribedChannels.push(<span>Subscribed to <b>{this.state.listenTo}</b>. Now try sending a message</span>);
+    subscribedChannels.push(this.state.listenTo);
     this.setState({
       subscribedChannels
     });
@@ -83,9 +85,12 @@ class Whisper extends React.Component {
               defaultValue={this.state.listenTo}
               placeholder="channel"
               onChange={e => this.handleChange(e, 'listenTo')}/>
-            <Button bsStyle="primary" onClick={(e) => this.listenToChannel(e)}>Start Listening</Button>
+            <Button disabled={!this.state.channelIsValid} bsStyle="primary" onClick={(e) => this.listenToChannel(e)}>Start Listening</Button>
+            {!this.state.channelIsValid && <p><span className="alert-danger">Channel has to be at least 4 characters long</span></p>}
             <div id="subscribeList">
-              {this.state.subscribedChannels.map((item, i) => <p key={i}>{item}</p>)}
+              {this.state.subscribedChannels.map((item, i) => {
+                return <p key={i}><span>Subscribed to <b>{item}</b>. Now try sending a message</span></p>
+              })}
             </div>
             <p>messages received:</p>
             <div id="messagesList">
