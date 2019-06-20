@@ -48,7 +48,6 @@ const { extendZeroAddressShorthand, replaceZeroAddressShorthand } = AddressUtils
 
 import { compact, last, recursiveMerge, groupBy } from './collections';
 import { prepareForCompilation } from './solidity/remapImports';
-import { removePureView } from './solidity/code';
 import { File, getExternalContractUrl, Types } from './file';
 
 function timer(ms) {
@@ -320,7 +319,6 @@ const Utils = {
   Types,
   unitRegex,
   urlJoin,
-  removePureView,
   runCmd,
   escapeHtml: logUtils.escapeHtml,
   normalizeInput: logUtils.normalizeInput,

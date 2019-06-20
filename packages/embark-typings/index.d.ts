@@ -1,5 +1,5 @@
+import "./src/prettier-plugin-solidity";
 import "./src/remix-debug-debugtest";
-import "./src/solidity-parser-antlr";
 
 export * from "./src/callbacks";
 export * from "./src/contract";

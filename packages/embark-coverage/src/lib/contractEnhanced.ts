@@ -1,7 +1,7 @@
 import { File } from "embark-utils";
 import * as fs from "fs-extra";
 import * as path from "path";
-import parser, { LineColumn, Location } from "solidity-parser-antlr";
+import parser, { LineColumn, Location, SourceUnit } from "solidity-parser-antlr";
 import { EventLog } from "web3/types";
 
 import { decrypt } from "./eventId";
@@ -9,6 +9,7 @@ import { Injector } from "./injector";
 import { Instrumenter } from "./instrumenter";
 import { InstrumentWalker } from "./instrumentWalker";
 import { coverageContractsPath } from "./path";
+import { Printer } from "./printer";
 import { BranchType, Coverage } from "./types";
 
 const STATEMENT_EVENT = "__StatementCoverage";
@@ -26,7 +27,7 @@ export class ContractEnhanced {
   public coverageFilepath: string;
   public originalSource: string;
   public source: string;
-  private ast!: parser.ASTNode;
+  private ast!: SourceUnit;
   private functionsBodyLocation: {[id: number]: Location} = {};
 
   constructor(public filepath: string, public solcVersion: string) {
@@ -38,7 +39,7 @@ export class ContractEnhanced {
     try {
       this.source = fs.readFileSync(filepath, "utf-8");
       this.originalSource = this.source;
-      this.ast = parser.parse(this.source, {loc: true, range: true});
+      this.ast = parser.parse(this.source, {loc: true, range: true}) as SourceUnit;
     } catch (error) {
       const {line, column, message} = error.errors[0];
       console.warn(`Error on ${this.filepath}:${line}:${column}: "${message}". Could not setup for coverage.`);
@@ -67,13 +68,26 @@ export class ContractEnhanced {
     const instrumentWalker = new InstrumentWalker(instrumenter);
     instrumentWalker.walk(this.ast);
 
-    const injector = new Injector(this);
+    const injector = new Injector(this, this.solcVersion);
     instrumenter.getInjectionPoints().forEach(injector.process.bind(injector));
   }
 
   public save() {
     fs.ensureFileSync(this.coverageFilepath);
-    fs.writeFileSync(this.coverageFilepath, this.source);
+
+    if (!this.ast) {
+      return fs.writeFileSync(this.coverageFilepath, this.source);
+    }
+
+    try {
+      const printer = new Printer(this.ast);
+      this.source = printer.print();
+    } catch (err) {
+      // Something might have happened with the printer. Write the original source.
+      console.warn(`Error with coverage printer for ${this.filepath}. Please submit an issue with this code.`);
+    } finally {
+      fs.writeFileSync(this.coverageFilepath, this.source);
+    }
   }
 
   public updateCoverage(events: EventLog[]) {

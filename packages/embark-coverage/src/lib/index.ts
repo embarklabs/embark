@@ -1,4 +1,4 @@
-import { dappPath, File, removePureView } from "embark-utils";
+import { dappPath, File } from "embark-utils";
 import * as globule from "globule";
 import * as path from "path";
 import Web3Contract from "web3/eth/contract";
@@ -44,7 +44,6 @@ export default class Coverage {
       contract.save();
     });
     await Promise.all(promises);
-    removePureView(coverageContractsPath());
   }
 
   private swapContracts() {

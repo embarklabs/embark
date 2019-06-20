@@ -1,12 +1,14 @@
-import { Location } from "solidity-parser-antlr";
+import { ASTNode, Block, EmitStatement, ExpressionStatement, Location } from "solidity-parser-antlr";
 
 export type InjectionPointType = "statement" | "contractDefinition";
 export type BranchType = "if" | "switch";
+export type CoverageEmitNodeType = EmitStatement | ExpressionStatement;
 
 export interface InjectionPoint {
   type: InjectionPointType;
   id: number;
-  location: Location;
+  node: ASTNode;
+  parent: Block | undefined;
 }
 
 export interface Coverage {
