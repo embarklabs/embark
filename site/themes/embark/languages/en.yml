@@ -45,7 +45,7 @@ start_page:
   modular_section:
     heading:
       title: <span class="u-text-light">Modular by </span>Design
-      referal: Pick and choose what features, plugins and tools you want to integrate with. Embark is built with modularity in mind.
+      referal: Pick and choose which features, plugins and tools you want to integrate with. Embark is built with modularity in mind.
     checklist:
       item_1: Smart Contract only or full-fledged DApps
       item_2: Integrate with existing tools
