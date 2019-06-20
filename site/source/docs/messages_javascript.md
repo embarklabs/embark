@@ -21,10 +21,12 @@ We can subscribe to channels using the `listenTo()` method by specifying a list 
 ```
 EmbarkJS.Messages.listenTo({
   topic: ['topic1', 'topic2']
-}).then(message {
+}).subscribe(message {
   console.log('received: ' + message);
 });
 ```
+
+`listenTo()` returns an Observable that we can subscribe to. Observables work great if multiple values can be emitted over time, which is exactly the case for messages being emitted with Whisper. In other words, this is a long-living Observable, so it's important to unsubscribe from it once we're no longer interested in the data. Otherwise we'll introduce memory leaks.
 
 ## Sending messages
 
@@ -48,6 +50,8 @@ EmbarkJS.Messages.sendMessage({
   data: { msg: 'hello world' }
 });
 ```
+
+Notice that a topic/channel name has to be at least 4 characters long. Whisper will otherwise emit an error on the subscription.
 
 {% notification info 'On topic arrays:' %}
 Array of topics are considered an AND. In Whisper you can use another array for OR combinations of several topics e.g `["topic1", ["topic2", "topic3"]]` => `topic1 AND (topic2 OR topic 3)`.
