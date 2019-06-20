@@ -191,17 +191,20 @@ class Engine {
 
     this.registerModulePackage('embark-code-generator', {plugins: self.plugins, env: self.env});
 
-    const generateCode = function (modifiedAssets) {
-      self.events.request("module:storage:onReady", () => {
-        self.events.request("code-generator:embarkjs:build", () => {
-          self.events.emit('code-generator-ready', modifiedAssets);
-        });
+    const generateCode = function (modifiedAssets, cb) {
+      self.events.request("code-generator:embarkjs:build", () => {
+        self.events.emit('code-generator-ready', modifiedAssets);
+        cb();
       });
     };
     const cargo = async.cargo((tasks, callback) => {
       const modifiedAssets = tasks.map(task => task.modifiedAsset).filter(asset => asset); // filter null elements
-      generateCode(modifiedAssets);
-      self.events.once('outputDone', callback);
+      generateCode(modifiedAssets, () => {
+        if (this.context.includes('test')) {
+          return callback();
+        }
+        self.events.once('outputDone', callback);
+      });
     });
     const addToCargo = function (modifiedAsset) {
       cargo.push({modifiedAsset});
@@ -297,6 +300,8 @@ class Engine {
   }
 
   web3Service(options) {
+    this.registerModulePackage('embark-web3');
+
     this.registerModulePackage('embark-blockchain-process', {
       client: this.client,
       locale: this.locale,
@@ -312,7 +317,6 @@ class Engine {
       wait: options.wait
     });
 
-    this.registerModulePackage('embark-web3');
     this.registerModulePackage('embark-whisper');
   }
 

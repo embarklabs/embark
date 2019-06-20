@@ -20,7 +20,6 @@ class Swarm {
     this.embark = embark;
     this.fs = embark.fs;
     this.isServiceRegistered = false;
-    this.addedToEmbarkJs = false;
     this.addedToConsole = false;
     this.storageProcessesLauncher = null;
     this.usingRunningNode = false;
@@ -63,7 +62,6 @@ class Swarm {
           return cb(__("Swarm process is running in a separate process and cannot be started by Embark."));
         }
         this.startProcess((err, newProcessStarted) => {
-          this.addProviderToEmbarkJS();
           this.addObjectToConsole();
           this.events.emit("swarm:process:started", err, newProcessStarted);
           cb();
@@ -84,6 +82,10 @@ class Swarm {
         this.logger.info(msg);
       }
     });
+
+    // TODO: it will have the issue of waiting for the ipfs to start when the code is generator
+    // TODO: could be solved by having a list of services to wait on before attempting to execute code in the console
+    this.addProviderToEmbarkJS();
   }
 
   addObjectToConsole() {
@@ -123,18 +125,27 @@ class Swarm {
   }
 
   addProviderToEmbarkJS() {
-    if(this.addedToEmbarkJs) return;
-    this.addedToEmbarkJs = true;
-
     let linkedModulePath = path.join(this.modulesPath, 'embarkjs-swarm');
     if (process.platform === 'win32') linkedModulePath = linkedModulePath.replace(/\\/g, '\\\\');
 
-    const code = `
-      const __embarkSwarm = require('${linkedModulePath}');
-      EmbarkJS.Storage.registerProvider('swarm', __embarkSwarm.default || __embarkSwarm);
-    `;
+    this.events.request('version:downloadIfNeeded', 'embarkjs-swarm', (err, location) => {
+      if (err) {
+        this.logger.error(__('Error downloading embarkjs-swarm'));
+        throw err;
+      }
 
-    this.embark.addCodeToEmbarkJS(code);
+      const code = `
+        const __embarkSwarm = require('${linkedModulePath}');
+        EmbarkJS.Storage.registerProvider('swarm', __embarkSwarm.default || __embarkSwarm);
+      `;
+
+      this.embark.addProviderInit("storage", code, () => { return true; });
+      this.embark.addConsoleProviderInit("storage", code, () => { return true; });
+
+      this.embark.addGeneratedCode((cb) => {
+        return cb(null, code, 'embarkjs-swarm', location);
+      });
+    });
   }
 
   startProcess(callback) {

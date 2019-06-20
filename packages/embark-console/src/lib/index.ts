@@ -27,7 +27,6 @@ class Console {
   private history: string[];
   private cmdHistoryFile: string;
   private suggestions?: Suggestions;
-  private providerReady: boolean;
 
   constructor(embark: Embark, options: any) {
     this.embark = embark;
@@ -40,7 +39,6 @@ class Console {
     this.config = options.config;
     this.history = [];
     this.cmdHistoryFile = options.cmdHistoryFile || dappPath(".embark", "cmd_history");
-    this.providerReady = false;
     this.loadHistory();
 
     if (this.ipc.isServer()) {
@@ -60,24 +58,11 @@ class Console {
     }
     this.events.setCommandHandler("console:executeCmd", this.executeCmd.bind(this));
     this.events.setCommandHandler("console:history", (cb: any) => this.getHistory(this.cmdHistorySize(), cb));
-    this.events.setCommandHandler("console:provider:ready", (cb: any) => {
-      if (this.providerReady || this.isEmbarkConsole) {
-        return cb();
-      }
-      this.events.once("console:provider:done", cb);
-    });
     this.registerConsoleCommands();
 
     if (this.isEmbarkConsole) {
       return;
     }
-    this.registerEmbarkJs((err?: Error |  null) => {
-      if (err) {
-        return this.logger.error(err);
-      }
-      this.providerReady = true;
-      this.events.emit("console:provider:done");
-    });
     this.registerApi();
 
     this.suggestions = new Suggestions(embark, options);
@@ -200,43 +185,6 @@ class Console {
       }
       callback(null, result);
     }, true);
-  }
-
-  private registerEmbarkJs(cb: Callback<null>) {
-    waterfall([
-      // wait for the VM to be setup
-      (next: any) => {
-        this.events.request("runcode:ready", next);
-      },
-      (next: any) => {
-        const waitingForReady = setTimeout(() => {
-          this.logger.warn(__("Waiting for the blockchain connector to be ready..."));
-          // TODO add docs link to how to install one
-          this.logger.warn(__("If you did not install a blockchain connector, stop this process and install one"));
-        }, 5000);
-        this.events.request("blockchain:connector:ready", () => {
-          clearTimeout(waitingForReady);
-          next();
-        });
-      },
-      (next: any) => {
-        if (this.isEmbarkConsole) {
-          return next();
-        }
-        this.events.request("runcode:blockchain:providerSet", next);
-      },
-      (next: any) => {
-        if (this.isEmbarkConsole) {
-          return next();
-        }
-        const connectCode = `EmbarkJS.Blockchain.connectConsole((err) => {
-          if(err) throw new Error("[VM]: Error connecting to blockchain. " + err);
-        });`;
-        this.events.request("runcode:eval", connectCode, (err: Error, _result: any) => {
-          cb(err);
-        });
-      },
-    ], cb);
   }
 
   private registerConsoleCommands() {
