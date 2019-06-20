@@ -50,13 +50,16 @@ class Whisper {
             }
           }
           this.setServiceCheck();
-          this.addWhisperToEmbarkJS();
           this.addSetProvider();
           this.registerAPICalls();
           cb();
         });
       });
     });
+
+    // TODO: it will have the issue of waiting for the ipfs to start when the code is generator
+    // TODO: could be solved by having a list of services to wait on before attempting to execute code in the console
+    this.addWhisperToEmbarkJS();
 
     this.events.request('processes:launch', 'whisper');
   }
@@ -117,7 +120,6 @@ class Whisper {
   }
 
   addWhisperToEmbarkJS() {
-    const self = this;
     // TODO: make this a shouldAdd condition
     if (this.communicationConfig === {}) {
       return;
@@ -129,12 +131,23 @@ class Whisper {
     let linkedModulePath = path.join(this.modulesPath, 'embarkjs-whisper');
     if (process.platform === 'win32') linkedModulePath = linkedModulePath.replace(/\\/g, '\\\\');
 
-    const code = `
-      const __embarkWhisperNewWeb3 = require('${linkedModulePath}');
-      EmbarkJS.Messages.registerProvider('whisper', __embarkWhisperNewWeb3.default || __embarkWhisperNewWeb3);
-    `;
+    this.events.request('version:downloadIfNeeded', 'embarkjs-whisper', (err, location) => {
+      if (err) {
+        this.logger.error(__('Error downloading embarkjs-whisper'));
+        throw err;
+      }
 
-    self.embark.addCodeToEmbarkJS(code);
+      const code = `
+        const __embarkWhisperNewWeb3 = require('${linkedModulePath}');
+        EmbarkJS.Messages.registerProvider('whisper', __embarkWhisperNewWeb3.default || __embarkWhisperNewWeb3);
+      `;
+
+      this.embark.addProviderInit("communication", code, () => { return true; });
+      this.embark.addConsoleProviderInit("communication", code, () => { return true; });
+      this.embark.addGeneratedCode((cb) => {
+        return cb(null, code, `embarkjs-whisper`, location);
+      });
+    });
   }
 
   addSetProvider() {
@@ -149,6 +162,12 @@ class Whisper {
       port: connection.port || '8546',
       type: connection.type || 'ws'
     };
+
+    // TODO: fix storage to also use addProviderInit
+    // execute code called addProviderInit WHEN contracts have been deployed etc..
+    // TODO: diff between addConsoleProviderInit and addProviderInit
+    // or maybe best way is todo everything in the module
+
     const code = `\nEmbarkJS.Messages.setProvider('whisper', ${JSON.stringify(config)});`;
     this.embark.addProviderInit('communication', code, shouldInit);
 

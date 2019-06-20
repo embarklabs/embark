@@ -80,6 +80,10 @@ class CodeGenerator {
       cb(this.getEmbarkJsProviderCode());
     });
 
+    this.events.setCommandHandler('code-generator:embarkjs:set-provider-code', (cb) => {
+      cb(this.getSetProviderCode());
+    });
+
     this.events.setCommandHandler('code-generator:embarkjs:init-provider-code', (cb) => {
       cb(this.getInitProviderCode());
     });
@@ -98,6 +102,14 @@ class CodeGenerator {
       }
       this.events.once('code-generator:ready', cb);
     });
+  }
+
+  getSetProviderCode() {
+    let code = "\n";
+    code += this.generateCommunicationInitialization(true);
+    code += this.generateStorageInitialization(true);
+    code += this.generateNamesInitialization(true);
+    return code;
   }
 
   generateContracts(contractsList, useEmbarkJS, isDeployment, useLoader) {
@@ -313,7 +325,6 @@ class CodeGenerator {
     const self = this;
     let embarkjsCode = '';
     let code = "/* eslint-disable */";
-    const deps = ['web3', 'ens', 'ipfs', 'swarm', 'whisper'];
 
     async.waterfall([
       // TODO: here due to a race condition when running embark build
@@ -342,30 +353,36 @@ class CodeGenerator {
           embarkjsCode += `\nconst EmbarkJS = require("${symlinkDest}").default || require("${symlinkDest}");`;
           embarkjsCode += `\nEmbarkJS.environment = '${self.env}';`;
           embarkjsCode += "\nglobal.EmbarkJS = EmbarkJS;";
+          code += "\n" + embarkjsCode + "\n";
           next();
         });
       },
-      ...deps.map((dep) => {
-        return function(next) {
-          self.events.request('version:downloadIfNeeded', `embarkjs-${dep}`, (err, location) => {
-            if (err) {
-              self.logger.error(__(`Error downloading embarkjs-${dep}`));
-              return next(err);
-            }
-
-            self.generateSymlink(location, `embarkjs-${dep}`, (err, _symlinkDest) => {
-              if (err) {
-                self.logger.error(__(`Error creating a symlink to embarkjs-${dep}`));
-                return next(err);
-              }
-              return next();
-            });
-          });
-        };
-      }),
+      function addCodeFromDependencies(next) {
+        async.eachSeries(
+          self.plugins.getPluginsFor('generatedCode'),
+          (plugin, callback) => {
+            async.eachSeries(
+              plugin.generated_code,
+              (codeCall, callback) => {
+                codeCall((err, generatedCode, packageName, location) => {
+                  if (err) return callback(err);
+                  self.generateSymlink(location, packageName, (err, _symlinkDest) => {
+                    if (err) {
+                      self.logger.error(__(`Error creating a symlink to ${packageName}`));
+                      return callback(err);
+                    }
+                    code += generatedCode;
+                    callback();
+                  });
+                });
+              },
+              (err) => { callback(err); }
+            );
+          },
+          (err) => { next(err); }
+        );
+      },
       function getJSCode(next) {
-        code += "\n" + embarkjsCode + "\n";
-
         code += self.getEmbarkJsProviderCode();
         code += self.generateCommunicationInitialization(true);
         code += self.generateStorageInitialization(true);

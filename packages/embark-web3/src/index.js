@@ -1,5 +1,6 @@
 /* global __dirname module process require */
 
+const { __ } = require('embark-i18n');
 const { dappPath, embarkPath, normalizePath, toForwardSlashes } = require('embark-utils');
 const constants = require('embark-core/constants');
 const path = require('path');
@@ -18,7 +19,6 @@ class EmbarkWeb3 {
 
   async addWeb3ToEmbarkJS() {
     let blockchainConnectorReady = false;
-    await this.whenRuncodeReady();
 
     const web3LocationPromise = this.getWeb3Location();
 
@@ -61,22 +61,24 @@ class EmbarkWeb3 {
     code += `\n  const web3ConnectionConfig = require('${configPath}');`;
     code += `\n  EmbarkJS.Blockchain.connect(web3ConnectionConfig, (err) => {if (err) { console.error(err); } });`;
     code += `\n}`;
+    this.events.request('version:downloadIfNeeded', 'embarkjs-web3', (err, location) => {
+      if (err) {
+        this.logger.error(__('Error downloading embarkjs-web3'));
+        throw err;
+      }
 
-    this.embark.addCodeToEmbarkJS(code);
+      this.embark.addProviderInit("blockchain", code, () => { return true; });
 
-    code = "EmbarkJS.Blockchain.setProvider('web3', {web3});";
+      // Make sure that we use our web3 for the console and the tests
+      code += `if (typeof web3 === 'undefined') {
+        throw new Error('Global web3 is not present');
+      }
+      EmbarkJS.Blockchain.setProvider('web3', {web3});`;
 
-    const shouldInit = (_config) => {
-      return true;
-    };
+      this.embark.addConsoleProviderInit("blockchain", code, () => { return true; });
 
-    this.embark.addConsoleProviderInit('blockchain', code, shouldInit);
-  }
-
-  whenRuncodeReady() {
-    return new Promise((resolve) => {
-      this.events.on('runcode:ready', () => {
-        resolve();
+      this.embark.addGeneratedCode((cb) => {
+        return cb(null, code, 'embarkjs-web3', location);
       });
     });
   }

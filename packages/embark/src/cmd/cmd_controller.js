@@ -165,9 +165,7 @@ class EmbarkController {
         }
         engine.startService("fileWatcher");
 
-        engine.events.request('code-generator:embarkjs:build', () => {
-          callback();
-        });
+        callback();
       },
       function startDashboard(callback) {
         if (!options.useDashboard) {
@@ -242,9 +240,7 @@ class EmbarkController {
           engine.startService('compiler');
         }
 
-        engine.events.request('code-generator:embarkjs:build', () => {
-          callback();
-        });
+        callback();
       },
       function buildOrBuildAndDeploy(callback) {
         if (options.onlyCompile) {
@@ -329,18 +325,10 @@ class EmbarkController {
         engine.startService("cockpit");
         engine.startService("pluginCommand");
 
-        engine.events.request('code-generator:embarkjs:build', () => {
-          engine.events.request('blockchain:ready', callback);
-        });
+        engine.events.request('blockchain:ready', callback);
       },
       function ipcConnect(callback) {
-        // Do specific work in case we are connected to a socket:
-        //  - Setup Web3
-        //  - Apply history
-        if(isSecondaryProcess(engine)) {
-          return callback();
-        }
-        engine.events.request("console:provider:ready", callback);
+        return callback();
       },
       function deploy(callback) {
         // Skip if we are connected to a websocket, the server will do it
@@ -413,9 +401,7 @@ class EmbarkController {
         engine.startService("codeGenerator");
         engine.startService("graph");
 
-        engine.events.request('code-generator:embarkjs:build', () => {
-          engine.events.request('contracts:build', {}, callback);
-        });
+        engine.events.request('contracts:build', {}, callback);
       }
     ], (err) => {
       if (err) {
@@ -591,9 +577,7 @@ class EmbarkController {
         engine.startService("storage");
         engine.startService("codeGenerator");
 
-        engine.events.request('code-generator:embarkjs:build', () => {
-          callback();
-        });
+        callback();
       },
       function listLoadedPlugin(callback) {
         let pluginList = engine.plugins.listPlugins();
@@ -688,9 +672,7 @@ class EmbarkController {
         }
         engine.startService("testRunner");
 
-        engine.events.request('code-generator:embarkjs:build', () => {
-          callback();
-        });
+        callback();
       },
       function runTests(callback) {
         engine.events.request('tests:run', options, callback);

@@ -20,7 +20,6 @@ class IPFS {
     this.embark = embark;
     this.fs = embark.fs;
     this.isServiceRegistered = false;
-    this.addedToEmbarkJs = false;
     this.addedToConsole = false;
     this.storageProcessesLauncher = null;
     this.usingRunningNode = false;
@@ -43,7 +42,6 @@ class IPFS {
           return cb(__("IPFS process is running in a separate process and cannot be started by Embark."));
         }
         this.startProcess((err, newProcessStarted) => {
-          this.addStorageProviderToEmbarkJS();
           this.addObjectToConsole();
           this.events.emit("ipfs:process:started", err, newProcessStarted);
           cb();
@@ -64,6 +62,10 @@ class IPFS {
         this.logger.info(msg);
       }
     });
+
+    // TODO: it will have the issue of waiting for the ipfs to start when the code is generator
+    // TODO: could be solved by having a list of services to wait on before attempting to execute code in the console
+    this.addStorageProviderToEmbarkJS();
   }
 
   downloadIpfsApi(cb) {
@@ -131,8 +133,6 @@ class IPFS {
   }
 
   addStorageProviderToEmbarkJS() {
-    if(this.addedToEmbarkJs) return;
-    this.addedToEmbarkJs = true;
     this.events.request('version:downloadIfNeeded', 'ipfs-api', (err, location) => {
       if (err) {
         this.logger.error(__('Error downloading IPFS API'));
@@ -146,17 +146,28 @@ class IPFS {
           }
 
           this.events.emit('runcode:register', 'IpfsApi', require('ipfs-api'), () => {
-            let linkedModulePath = path.join(this.modulesPath, 'embarkjs-ipfs');
-            if (process.platform === 'win32') linkedModulePath = linkedModulePath.replace(/\\/g, '\\\\');
 
-            const code = `
-              const __embarkIPFS = require('${linkedModulePath}');
-              EmbarkJS.Storage.registerProvider('ipfs', __embarkIPFS.default || __embarkIPFS);
-            `;
-
-            this.embark.addCodeToEmbarkJS(code);
-            this.embark.addConsoleProviderInit("storage", code, (storageConfig) => storageConfig.enabled);
           });
+        });
+      });
+
+      let linkedModulePath = path.join(this.modulesPath, 'embarkjs-ipfs');
+      if (process.platform === 'win32') linkedModulePath = linkedModulePath.replace(/\\/g, '\\\\');
+
+      const code = `
+        const __embarkIPFS = require('${linkedModulePath}');
+        EmbarkJS.Storage.registerProvider('ipfs', __embarkIPFS.default || __embarkIPFS);
+      `;
+
+      this.events.request('version:downloadIfNeeded', 'embarkjs-ipfs', (err, location) => {
+        if (err) {
+          this.logger.error(__('Error downloading embarkjs-ipfs'));
+          throw err;
+        }
+        this.embark.addProviderInit("storage", code, () => { return true; });
+        this.embark.addConsoleProviderInit("storage", code, () => { return true; });
+        this.embark.addGeneratedCode((cb) => {
+          return cb(null, code, `embarkjs-ipfs`, location);
         });
       });
     });

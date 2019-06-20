@@ -384,16 +384,29 @@ class ENS {
             return this.logger.error(err.message || err);
           }
           this.events.emit('runcode:register', 'namehash', require('eth-ens-namehash'), () => {
-            let linkedModulePath = path.join(this.modulesPath, 'embarkjs-ens');
-            if (process.platform === 'win32') linkedModulePath = linkedModulePath.replace(/\\/g, '\\\\');
-
-            const code = `
-              const __embarkENS = require('${linkedModulePath}');
-              EmbarkJS.Names.registerProvider('ens', __embarkENS.default || __embarkENS);
-            `;
-
-            this.embark.addCodeToEmbarkJS(code);
           });
+        });
+      });
+
+      let linkedModulePath = path.join(this.modulesPath, 'embarkjs-ens');
+      if (process.platform === 'win32') linkedModulePath = linkedModulePath.replace(/\\/g, '\\\\');
+
+      const code = `
+        const __embarkENS = require('${linkedModulePath}');
+        EmbarkJS.Names.registerProvider('ens', __embarkENS.default || __embarkENS);
+      `;
+
+      this.events.request('version:downloadIfNeeded', 'embarkjs-ens', (err, location) => {
+        if (err) {
+          this.logger.error(__('Error downloading embarkjs-ens'));
+          throw err;
+        }
+
+        this.embark.addProviderInit("names", code, () => { return true; });
+        this.embark.addConsoleProviderInit("names", code, () => { return true; });
+
+        this.embark.addGeneratedCode((cb) => {
+          return cb(null, code, `embarkjs-ens`, location);
         });
       });
     });
@@ -406,6 +419,7 @@ class ENS {
       return (namesConfig.provider === 'ens' && namesConfig.enabled === true);
     };
 
+    // TODO This stacks the setProviders making it so that we call it multiple times
     this.embark.addProviderInit('names', code, shouldInit);
     this.embark.addConsoleProviderInit('names', code, shouldInit);
   }

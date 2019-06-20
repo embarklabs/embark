@@ -153,40 +153,39 @@ __embarkENS.registryAddresses = {
   "4": "0xe7410170f87102DF0055eB195163A03B7F2Bff4A"
 };
 
-__embarkENS.setProvider = function (config) {
+__embarkENS.setProvider = function(config) {
   const self = this;
   const ERROR_MESSAGE = 'ENS is not available in this chain';
   self.registration = config.registration;
   self.env = config.env;
-  EmbarkJS.onReady(() => {
-    EmbarkJS.Blockchain.blockchainConnector.getNetworkId()
-      .then((id) => {
-        const registryAddress = self.registryAddresses[id] || config.registryAddress;
-        self._isAvailable = true;
-        self.ens = new EmbarkJS.Blockchain.Contract({
-          abi: config.registryAbi,
-          address: registryAddress,
-          web3: EmbarkJS.Blockchain.blockchainConnector.getInstance()
-        });
-        self.registrar = new EmbarkJS.Blockchain.Contract({
-          abi: config.registrarAbi,
-          address: config.registrarAddress,
-          web3: EmbarkJS.Blockchain.blockchainConnector.getInstance()
-        });
-        self.resolver = new EmbarkJS.Blockchain.Contract({
-          abi: config.resolverAbi,
-          address: config.resolverAddress,
-          web3: EmbarkJS.Blockchain.blockchainConnector.getInstance()
-        });
-      })
-      .catch(err => {
-        if (err.message.indexOf('Provider not set or invalid') > -1) {
-          console.warn(ERROR_MESSAGE);
-          return;
-        }
-        console.error(err);
+  // FIXME EmbarkJS.onReady odesn't work. Possibility of a race condition
+  EmbarkJS.Blockchain.blockchainConnector.getNetworkId()
+    .then((id) => {
+      const registryAddress = self.registryAddresses[id] || config.registryAddress;
+      self._isAvailable = true;
+      self.ens = new EmbarkJS.Blockchain.Contract({
+        abi: config.registryAbi,
+        address: registryAddress,
+        web3: EmbarkJS.Blockchain.blockchainConnector.getInstance()
       });
-  });
+      self.registrar = new EmbarkJS.Blockchain.Contract({
+        abi: config.registrarAbi,
+        address: config.registrarAddress,
+        web3: EmbarkJS.Blockchain.blockchainConnector.getInstance()
+      });
+      self.resolver = new EmbarkJS.Blockchain.Contract({
+        abi: config.resolverAbi,
+        address: config.resolverAddress,
+        web3: EmbarkJS.Blockchain.blockchainConnector.getInstance()
+      });
+    })
+    .catch(err => {
+      if (err.message.indexOf('Provider not set or invalid') > -1) {
+        console.warn(ERROR_MESSAGE);
+        return;
+      }
+      console.error(err);
+    });
 };
 
 __embarkENS.resolve = function (name, callback) {

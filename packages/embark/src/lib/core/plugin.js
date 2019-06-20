@@ -31,6 +31,7 @@ var Plugin = function(options) {
   this.apiCalls = [];
   this.imports = [];
   this.embarkjs_code = [];
+  this.generated_code = [];
   this.embarkjs_init_code = {};
   this.embarkjs_init_console_code = {};
   this.fs = fs;
@@ -229,12 +230,15 @@ Plugin.prototype.registerUploadCommand = function(cmd, cb) {
 
 Plugin.prototype.addCodeToEmbarkJS = function(code) {
   this.addPluginType('embarkjsCode');
+  // TODO: what is this/why
   if (!this.embarkjs_code.some((existingCode) => deepEqual(existingCode, code))) {
     this.embarkjs_code.push(code);
-    this.events.request('blockchain:ready', () => {
-      this.events.emit('runcode:embarkjs-code:updated', code, () => {});
-    });
   }
+};
+
+Plugin.prototype.addGeneratedCode = function(codeCb) {
+  this.addPluginType('generatedCode');
+  this.generated_code.push(codeCb);
 };
 
 Plugin.prototype.addProviderInit = function(providerType, code, initCondition) {
@@ -249,9 +253,6 @@ Plugin.prototype.addConsoleProviderInit = function(providerType, code, initCondi
   const toAdd = [code, initCondition];
   if (!this.embarkjs_init_console_code[providerType].some((initConsoleCode) => deepEqual(initConsoleCode, toAdd))) {
     this.embarkjs_init_console_code[providerType].push(toAdd);
-    this.events.request('blockchain:ready', () => {
-      this.events.emit('runcode:init-console-code:updated', code, () => {});
-    });
   }
 };
 

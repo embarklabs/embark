@@ -36,9 +36,6 @@ class Test {
   init(callback) {
     async.waterfall([
       (next) => {
-        this.events.request('runcode:ready', next);
-      },
-      (next) => {
         this.gasLimit = GAS_LIMIT;
         this.events.request('deploy:setGasLimit', this.gasLimit);
         if (this.options.node !== 'embark') {
@@ -181,7 +178,9 @@ class Test {
         }
         self.firstRunConfig = false;
         self.events.request("blockchain:ready", () => {
-          self.events.request("runcode:embarkjs:reset", callback);
+          self.events.request("code-generator:embarkjs:build", () => {
+            self.events.request("runcode:embarkjs:reset", callback);
+          });
         });
       });
     });
@@ -314,11 +313,6 @@ class Test {
       function deploy(accounts, web3, next) {
         self.events.request('deploy:contracts:test', (err) => {
           next(err, accounts, web3);
-        });
-      },
-      function waitForProvidersReady(accounts, web3, next) {
-        self.events.request('console:provider:ready', () => {
-          next(null, accounts, web3);
         });
       },
       function createContractObject(accounts, web3, next) {

@@ -107,6 +107,7 @@
     "embark-deploy-tracker": "^4.1.0-beta.3",
     "embark-deployment": "^4.1.0-beta.3",
     "embark-ens": "^4.1.0-beta.3",
+    "embark-graph": "^4.1.0-beta.3",
     "embark-i18n": "^4.1.0-beta.3",
     "embark-library-manager": "^4.1.0-beta.3",
     "embark-listener": "^4.1.0-beta.3",

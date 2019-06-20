@@ -183,6 +183,7 @@ class TemplateGenerator {
       delete pkgJson.devDependencies['rimraf'];
     }
     delete pkgJson.files;
+    delete pkgJson.gitHead;
     pkgJson.name = name;
     if (!pkgJson.scripts) pkgJson.scripts = {};
     delete pkgJson.scripts.ci;
