@@ -6,6 +6,8 @@ hexo.extend.helper.register('docs_paginator', function() {
   const sidebar = this.site.data.sidebar[type];
   const path = pathFn.basename(this.path);
   const prefix = 'sidebar.' + type + '.';
+  const __ = hexo.theme.i18n.__(this.page.lang || this.page.language);
+
   let list = {};
 
   for (var i in sidebar) {
@@ -19,6 +21,7 @@ hexo.extend.helper.register('docs_paginator', function() {
 
   return nunjucks.render(pathFn.join(hexo.theme_dir, 'layout/partial/paginator.swig'), {
     prev: index < keys.length -1 ? { path: 'docs/'+keys[index+1] } : null,
-    next: index > 0 ? { path: 'docs/'+keys[index-1] } : null
+    next: index > 0 ? { path: 'docs/'+keys[index-1] } : null,
+    __
   });
 });
