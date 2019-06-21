@@ -267,10 +267,10 @@ footer:
 
 paginator:
   prev:
-    label: &larr; Previous
+    label: Previous
     title: Previous article
   next:
-    label: Next &rarr;
+    label: Next
     title: Next article
 
 page:
