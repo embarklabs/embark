@@ -26,15 +26,9 @@ The following code imports EmbarkJS:
 import EmbarkJS from './embarkArtifacts/embarkjs';
 ```
 
-## Connecting to a Blockchain node
-
-EmbarkJS offers different APIs for various decentralized services. Some of them can be used right away, others require Embark to do some initial work first. For example, in order to use any [methods of Smart Contract instances](/docs/contracts_javascript.html), it's important that EmbarkJS is actually connected to a blockchain node.
-
-This can be done using the `EmbarkJS.Blockchain.connect()` API. This method takes a configuration object which specifies what node to connect to, and receives a callback that will be called once Embark has connected successfully.
-
 ### Installing a blockchain connector
 
-Before the `EmbarkJS.Blockchain.connect()` API can be used, we need to install a blockchain connector plugin. This is required because Embark doesn't have a strong opinion about which connector library we should use. Some people like to use `web3.js`, others prefer libraries like `ethers.js`. Once we know which library to use, we'll have to install a dedicated connector plugin. The Embark project maintains a blockchain connector for the `web3.js` library called `embarkjs-connector-web3`.
+Before the Embark can connect to the blockchain, we need to install a blockchain connector plugin. This is required because Embark doesn't have a strong opinion about which connector library we should use. Some people like to use `web3.js`, others prefer libraries like `ethers.js`. Once we know which library to use, we'll have to install a dedicated connector plugin. The Embark project maintains a blockchain connector for the `web3.js` library called `embarkjs-connector-web3`.
 
 There are a few different ways to install the plugin. We can either use `yarn` or `npm` like this:
 
@@ -66,59 +60,21 @@ Once installed, all we have to do is adding the plugin to our project's [embark.
 
 This will tell Embark to load the plugin on startup and register all necessary providers needed to connect to a blockchain. For more information about installing and creating plugins and other custom blockchain connectors, head over to our [Plugins guide](/docs/installing_plugins.html).
 
-### Blockchain configuration data
+## Waiting for EmbarkJS to be ready
 
-As mentioned earlier, `EmbarkJS.Blockchain.connect()` takes a configuration object that describes how to connect to a blockchain node. If we're familiar with what configuration data is needed, and if we want more fine-grain control over how EmbarkJS is connecting to a node, we can provide this data manually. Otherwise, Embark generates an artifact for the needed configuration as well, so we can just import that and use it accordingly.
-
-The configuration data can be found in `embarkArtifacts/config/blockchain.json` and looks something like this:
+EmbarkJS also includes a `onReady` function. This is very useful to ensure that your Dapp only starts interacting with contracts when the proper connection to web3 has been made and ready to use.
 
 ```
-{
-  "dappConnection": [
-    "$WEB3",
-    "ws://localhost:8546",
-    "http://localhost:8545"
-  ],
-  "dappAutoEnable": true,
-  "warnIfMetamask": true,
-  "blockchainClient": "geth"
-}
-```
+import EmbarkJS from 'Embark/EmbarkJS';
+import SimpleStorage from 'Embark/contracts/SimpleStorage';
 
-These configuration values may or may not make a lot of sense at the moment, but here's a quick run down on what they are:
-
-- **dappConnection**: Copied from the Smart Contracts configuration. This is the list of connections Embark will try to connect to in order.
-- **dappAutoEnable**: Copied from the Smart Contracts  configuration. This tells EmbarkJS to either automatically connect to Metamask (or Mist) or wait for the app to call an API
-- **warnIfMetamask**: Is `true` when `isDev` is true in the blockchain configuration. Will warn users in the console if Metamask is detected, to make sure Metamask is connected correctly to the local node.
-- **blockchainClient**: Copied from the blockchain configuration. This tells EmbarkJS which blockchain client it is connecting to and it will warn about different problematic behaviours one could experience.
-
-### Using `Blockchain.connect()` 
-
-Connecting to a Blockchain node is really just a matter of calling `Blockchain.connect()` with the configuration data and ideally a callback in which we're doing the rest of our application's work.
-
-```
-import config from './embarkArtifacts/config/blockchain';
-
-EmbarkJS.Blockchain.connect(config, error => {
+EmbarkJS.onReady((error) => {
   if (error) {
-    ...
+    console.error('Error while connecting to web3', error);
+    return;
   }
-  ...
+  SimpleStorage.methods.set(100).send();
 });
-```
-
-We can also use `Blockchain.connect()` using a Promise-based API:
-
-```
-EmbarkJS.Blockchain.connect(config).then(() => {
-  ...
-});
-```
-
-Which, of course works great with `async/await`:
-
-```
-await EmbarkJS.Blockchain.connect(config);
 ```
 
 ## Requesting account access
