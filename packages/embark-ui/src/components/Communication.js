@@ -22,6 +22,7 @@ class Communication extends Component {
       listenTo: '',
       channel: '',
       channelIsValid: false,
+      listenToChannelIsValid: false,
       message: '',
       messageList: []
     };
@@ -32,8 +33,10 @@ class Communication extends Component {
       [name]: e.target.value
     });
 
-    if(name === "channel") {
-      this.setState({channelIsValid: e.target.value.length >= 4});
+    if (name === "channel") {
+      this.setState({channelIsValid: this.isChannelValid(e.target.value)});
+    } else if (name === "listenTo") {
+      this.setState({listenToChannelIsValid: this.isChannelValid(e.target.value)});
     }
   }
 
@@ -71,7 +74,7 @@ class Communication extends Component {
                   onChange={e => this.handleChange(e, 'listenTo')}
                   onKeyPress={e => this.handleEnter(e, this.listenToChannel.bind(this))} />
               </FormGroup>
-              <Button color="primary" onClick={(e) => this.listenToChannel(e)}>Start Listening</Button>
+              <Button disabled={!this.state.listenToChannelIsValid} color="primary" onClick={(e) => this.listenToChannel(e)}>Start Listening</Button>
 
               {this.props.subscriptions && this.props.subscriptions.length > 0 &&
               <React.Fragment>
@@ -133,6 +136,10 @@ class Communication extends Component {
         </Col>
       </Row>
     );
+  }
+
+  isChannelValid(channelName) {
+    return channelName.length >= 4;
   }
 }
 
