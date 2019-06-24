@@ -22,6 +22,9 @@ class Provider {
       const accounts = this.accounts.map(a => a.address || a);
       cb(null, accounts);
     });
+    this.events.setCommandHandler("blockchain:provider:contract:accounts:getAll", (cb) => {
+      cb(null, this.accounts);
+    });
   }
 
   getNonce(address, callback) {
