@@ -58,7 +58,9 @@
     "transactionMethods": {
       "eth_sendTransaction": "eth_sendTransaction",
       "eth_sendRawTransaction": "eth_sendRawTransaction",
-      "eth_getTransactionReceipt": "eth_getTransactionReceipt"
+      "eth_getTransactionReceipt": "eth_getTransactionReceipt",
+      "eth_signTypedData_v3": "eth_signTypedData_v3",
+      "eth_signTypedData": "eth_signTypedData"
     }
   },
   "storage": {

@@ -5,6 +5,7 @@ const fundAccount = require('./fundAccount');
 const constants = require('embark-core/constants');
 const Transaction = require('ethereumjs-tx');
 const ethUtil = require('ethereumjs-util');
+const { transaction, sign } = require('@omisego/omg-js-util');
 
 class Provider {
   constructor(options) {
@@ -139,6 +140,22 @@ class Provider {
           });
         } else if (payload.method === constants.blockchain.transactionMethods.eth_sendRawTransaction) {
           return self.runTransaction.push({payload}, cb);
+        } else if (payload.method === constants.blockchain.transactionMethods.eth_signTypedData_v3 || payload.method === constants.blockchain.transactionMethods.eth_signTypedData) {
+          const [fromAddr, typedData] = payload.params;
+          const walletAcct = self.web3.eth.accounts.wallet[fromAddr];
+          if (!(walletAcct && walletAcct.privateKey)) {
+            return cb(`Could not sign transaction because Embark does not have a private key associated with '${fromAddr}'. Please ensure you have configured your account(s) to use a mnemonic, privateKey, or privateKeyFile.`);
+          }
+          const toSign = transaction.getToSignHash(JSON.parse(typedData));
+          const signature = sign(toSign, [walletAcct.privateKey]);
+          return realSend(payload, function(err, result) {
+            if (err) {
+              return cb(err);
+            }
+            result.error = null; // remove the error "The method eth_signTypedData_v3 does not exist/is not available"
+            result.result = signature;
+            cb(null, result);
+          });
         }
 
         realSend(payload, cb);
