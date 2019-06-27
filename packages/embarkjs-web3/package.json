@@ -1,6 +1,6 @@
 {
   "name": "embarkjs-web3",
-  "version": "4.1.0-beta.3",
+  "version": "4.1.0-beta.4",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "embarkjs plugin to interact with web3",

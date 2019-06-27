@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.4](https://github.com/embark-framework/embark/compare/v4.1.0-beta.3...v4.1.0-beta.4) (2019-06-27)
+
+
+### Bug Fixes
+
+* **@dapps/demo:** don't allow subscription to whisper channels with less than 4 chars ([322397f](https://github.com/embark-framework/embark/commit/322397f)), closes [#1666](https://github.com/embark-framework/embark/issues/1666)
+* **@dapps/templates/demo:** ensure whisper channel state is set correctly ([1b6987e](https://github.com/embark-framework/embark/commit/1b6987e))
+
+
+
+
+
 # [4.1.0-beta.3](https://github.com/embark-framework/embark/compare/v4.1.0-beta.2...v4.1.0-beta.3) (2019-06-07)
 
 **Note:** Version bump only for package embark-dapp-template-demo

@@ -1,6 +1,6 @@
 {
   "name": "embarkjs-ens",
-  "version": "4.1.0-beta.3",
+  "version": "4.1.0-beta.4",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Ens plugin for embarkjs",

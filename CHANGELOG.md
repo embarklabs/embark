@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.4](https://github.com/embark-framework/embark/compare/v4.1.0-beta.3...v4.1.0-beta.4) (2019-06-27)
+
+
+### Bug Fixes
+
+* **@cockpit/utils:** Ensure whisper channels are at least 4 characters long ([610d8f1](https://github.com/embark-framework/embark/commit/610d8f1))
+* **@dapps/demo:** don't allow subscription to whisper channels with less than 4 chars ([322397f](https://github.com/embark-framework/embark/commit/322397f)), closes [#1666](https://github.com/embark-framework/embark/issues/1666)
+* **@dapps/templates/demo:** ensure whisper channel state is set correctly ([1b6987e](https://github.com/embark-framework/embark/commit/1b6987e))
+* **@embark/config:** disable webserver if pipeline is disabled ([24b5339](https://github.com/embark-framework/embark/commit/24b5339))
+* **@embark/coverage:** function types and single statement ifs ([2ce9ca6](https://github.com/embark-framework/embark/commit/2ce9ca6))
+* **@embark/dapps:** old link updated to the latest documentation at website ([09d7428](https://github.com/embark-framework/embark/commit/09d7428))
+* **@embark/deploy-tracker:** fix getting the block 0 with sim --fork ([f6d7a54](https://github.com/embark-framework/embark/commit/f6d7a54))
+* **@embark/deployment:** don't break when using abiDefinitions ([9e5c9c7](https://github.com/embark-framework/embark/commit/9e5c9c7))
+* **@embark/solidity:** fix recursive error on Windows ([1edd68f](https://github.com/embark-framework/embark/commit/1edd68f))
+* **@embark/solidity:** show a better error message in debug ([198a5dc](https://github.com/embark-framework/embark/commit/198a5dc))
+* **@embark/test-runenr:** fix event listener overflow ([e288483](https://github.com/embark-framework/embark/commit/e288483))
+* alleviate races re: embarkjs by introducing Plugin#addGeneratedCode and related refactors ([fc4faa8](https://github.com/embark-framework/embark/commit/fc4faa8))
+* **@embark/test-runner:** only run tests on files with describe ([9646673](https://github.com/embark-framework/embark/commit/9646673))
+* **docs:** ensure paginator helper has `__()` local ([ebe61f4](https://github.com/embark-framework/embark/commit/ebe61f4))
+* **templates:** fix templates because tests don't like empty files ([908aa3b](https://github.com/embark-framework/embark/commit/908aa3b))
+
+
+### Features
+
+* **@embark/blockchain-connector:** Add command to get full account info ([71cb161](https://github.com/embark-framework/embark/commit/71cb161))
+* **@embark/site:** add section on getting account from describe ([5044403](https://github.com/embark-framework/embark/commit/5044403))
+* **@embark/test-runner:** return accounts in the describe callback ([332229f](https://github.com/embark-framework/embark/commit/332229f))
+* **@embark/test-runner:** wait for deploy before enterning describe ([8c16541](https://github.com/embark-framework/embark/commit/8c16541))
+
+
+
+
+
 # [4.1.0-beta.3](https://github.com/embark-framework/embark/compare/v4.1.0-beta.2...v4.1.0-beta.3) (2019-06-07)
 
 
