@@ -58,26 +58,37 @@ class DeployTracker {
     });
   }
 
-  setCurrentChain(cb) {
+  setCurrentChain(callback) {
     const self = this;
     if (this.chainConfig === false) {
       this.currentChain = {contracts: []};
-      return cb();
+      return callback();
     }
-    this.events.request("blockchain:block:byNumber", 0, function(err, block) {
+
+    function getBlock(blockNum, cb) {
+      self.events.request("blockchain:block:byNumber", blockNum, (err, block) => {
+        if (err) {
+          return cb(err);
+        }
+        let chainId = block.hash;
+
+        if (self.chainConfig[chainId] === undefined) {
+          self.chainConfig[chainId] = {contracts: {}};
+        }
+
+        self.currentChain = self.chainConfig[chainId];
+
+        self.currentChain.name = self.env;
+        cb();
+      });
+    }
+
+    getBlock(0, (err) => {
       if (err) {
-        return cb(err);
+        // Retry with block 1 (Block 0 fails with Ganache-cli using the --fork option)
+        return getBlock(1, callback);
       }
-      let chainId = block.hash;
-
-      if (self.chainConfig[chainId] === undefined) {
-        self.chainConfig[chainId] = {contracts: {}};
-      }
-
-      self.currentChain = self.chainConfig[chainId];
-
-      self.currentChain.name = self.env;
-      cb();
+      callback();
     });
   }
 
