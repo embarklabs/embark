@@ -49,15 +49,18 @@ class Solidity {
         return callback(output.errors);
       }
 
+      let isError = false;
       if (output.errors) {
         for (let i = 0; i < output.errors.length; i++) {
-          if (output.errors[i].type === 'Warning') {
-            self.logger.warn(output.errors[i].formattedMessage);
-          }
           if (output.errors[i].type === 'Error' || output.errors[i].severity === 'error') {
-            return callback(new Error("Solidity errors: " + output.errors[i].formattedMessage).message);
+            isError = true;
           }
+          self.logger.warn(output.errors[i].formattedMessage);
+          self.logger.debug(output.errors[i].message); // Print more error information in debug
         }
+      }
+      if (isError) {
+        return callback(__("You have solidity errors. Fix them before moving on."));
       }
 
       self.events.emit('contracts:compiled:solc', output);

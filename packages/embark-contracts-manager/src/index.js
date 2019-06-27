@@ -581,7 +581,7 @@ class ContractsManager {
         self.compileError = true;
         self.events.emit("status", __("Compile/Build error"));
         self.events.emit("outputError", __("Error building Dapp, please check console"));
-        self.logger.error(__("Error Compiling/Building contracts: ") + err);
+        self.logger.error(__("Error Compiling/Building contracts"));
       } else {
         self.compileError = false;
       }
