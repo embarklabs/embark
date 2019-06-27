@@ -26,40 +26,6 @@ The following code imports EmbarkJS:
 import EmbarkJS from './embarkArtifacts/embarkjs';
 ```
 
-### Installing a blockchain connector
-
-Before the Embark can connect to the blockchain, we need to install a blockchain connector plugin. This is required because Embark doesn't have a strong opinion about which connector library we should use. Some people like to use `web3.js`, others prefer libraries like `ethers.js`. Once we know which library to use, we'll have to install a dedicated connector plugin. The Embark project maintains a blockchain connector for the `web3.js` library called `embarkjs-connector-web3`.
-
-There are a few different ways to install the plugin. We can either use `yarn` or `npm` like this:
-
-```
-$ npm install --save embarkjs-connector-web3
-```
-
-And
-
-```
-$ yarn add embarkjs-connector-web3
-```
-
-Another option is to use Embark's very own `plugin` command that can be run from its [Interactive Console](/docs/using_the_console.html):
-
-```
-$ Embark (development) > plugin install embarkjs-connector-web3<ENTER>
-```
-
-Once installed, all we have to do is adding the plugin to our project's [embark.json](/docs/configuration.html):
-
-```
-...
-"plugins": {
-  "embarkjs-connector-web3": {}
-}
-...
-```
-
-This will tell Embark to load the plugin on startup and register all necessary providers needed to connect to a blockchain. For more information about installing and creating plugins and other custom blockchain connectors, head over to our [Plugins guide](/docs/installing_plugins.html).
-
 ## Waiting for EmbarkJS to be ready
 
 EmbarkJS also includes a `onReady` function. This is very useful to ensure that your Dapp only starts interacting with contracts when the proper connection to web3 has been made and ready to use.
