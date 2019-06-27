@@ -13,6 +13,7 @@ class Whisper extends React.Component {
       message: '',
       subscribedChannels: [],
       channelIsValid: false,
+      listenToChannelIsValid: false,
       messageList: [],
       logs: []
     };
@@ -20,7 +21,11 @@ class Whisper extends React.Component {
 
   handleChange (e, name) {
     this.state[name] = e.target.value;
-    this.state.channelIsValid = e.target.value.length >= 4;
+    if (name === 'listenTo') {
+      this.state.listenToChannelIsValid = this.isChannelValid(e.target.value);
+    } else if (name === "channel") {
+      this.state.channelIsValid = this.isChannelValid(e.target.value);
+    }
     this.setState(this.state);
   }
 
@@ -67,6 +72,10 @@ class Whisper extends React.Component {
     this.setState({logs: this.state.logs});
   }
 
+  isChannelValid(name) {
+    return name.length >= 4;
+  }
+
   render () {
     return (
       <React.Fragment>
@@ -85,8 +94,8 @@ class Whisper extends React.Component {
               defaultValue={this.state.listenTo}
               placeholder="channel"
               onChange={e => this.handleChange(e, 'listenTo')}/>
-            <Button disabled={!this.state.channelIsValid} bsStyle="primary" onClick={(e) => this.listenToChannel(e)}>Start Listening</Button>
-            {!this.state.channelIsValid && <p><span className="alert-danger">Channel has to be at least 4 characters long</span></p>}
+            <Button disabled={!this.state.listenToChannelIsValid} bsStyle="primary" onClick={(e) => this.listenToChannel(e)}>Start Listening</Button>
+            {!this.state.listenToChannelIsValid && <p><span className="alert-danger">Channel has to be at least 4 characters long</span></p>}
             <div id="subscribeList">
               {this.state.subscribedChannels.map((item, i) => {
                 return <p key={i}><span>Subscribed to <b>{item}</b>. Now try sending a message</span></p>
@@ -112,7 +121,7 @@ class Whisper extends React.Component {
               defaultValue={this.state.message}
               placeholder="message"
               onChange={e => this.handleChange(e, 'message')}/>
-            <Button bsStyle="primary" onClick={(e) => this.sendMessage(e)}>Send Message</Button>
+            <Button bsStyle="primary" disabled={!this.state.channelIsValid} onClick={(e) => this.sendMessage(e)}>Send Message</Button>
           </FormGroup>
         </Form>
 
