@@ -115,6 +115,8 @@ We know that these steps are a bit too much, so we are working on a new command 
 
 ## New Web3 plugin
 
+*(2019/06/27)* **NOTE**: *the following instructions are* ***not*** *applicable to Embark `4.1.x` and newer, but should still be followed for `4.0.x` or `<=4.1.0-beta.3`.*
+
 Starting with Embark 4 beta.1, Embark no longer supplies the Dapp with `Web3.js` by default. Don't run. We did that so that we can now have the possibility of supporting more than just `Web3.js`, such as EthersJS, and more. You can even roll your own.
 
 To continue using `Web3.js` inside the Embark 4 Dapp, execute the following command in the Embark console: `plugin install embarkjs-connector-web3`.

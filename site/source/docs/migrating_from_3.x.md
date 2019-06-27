@@ -71,34 +71,6 @@ Remove the following import from your application:
 import web3 from 'Embark/web3';
 ```
 
-### Installing a blockchain connector
-
-As discussed in our guide on [using EmbarkJS](/docs/javascript_usage.html#Installing-a-blockchain-connector), EmbarkJS no longer has an opinion about which library to use to connect to a blockchain. You can use any library of your choice, whether it's `web3` or `ethers.js` or anything else.
-
-All you have to do is installing the library and a dedicated connector plugin. The Embark project already comes with a connector plugin for `web3` and can be installed using either yarn or npm, or Embark's very own `plugin install` command:
-
-```
-$ npm install embarkjs-connector-web3
-```
-Or
-```
-$ yarn add embarkjs-connector-web3
-```
-Or
-```
-Embark (development) > plugin install embarkjs-web3-connector<ENTER>
-```
-
-Once installed we need to tell Embark to load the plugin. This is done by adding it to the `embark.json` plugins section:
-
-```
-...
-"plugins": {
-  "embarkjs-connector-web3": {}
-}
-...
-```
-
 ### Updating blockchain configurations
 
 Embark 4 adds some new blockchain account configurations. To try to keep things as simple as possible, these additions are really similar to the ones in the Smart Contract configuration. For more information, please read the [Accounts Blockchain configuration guide](/docs/blockchain_accounts_configuration.html) in our docs.
