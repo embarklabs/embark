@@ -36,7 +36,6 @@ class DeployManager {
     this.events.setCommandHandler('deploy:contracts:test', (cb) => {
       self.fatalErrors = true;
       self.deployOnlyOnConfig = true;
-      self.skipGasEstimations = true;
       self.deployContracts(cb);
     });
   }
@@ -71,7 +70,6 @@ class DeployManager {
                   callback = result;
                 }
                 contract._gasLimit = self.gasLimit;
-                contract._skipGasEstimations = self.skipGasEstimations;
                 self.events.request('deploy:contract', contract, (err) => {
                   if (err) {
                     contract.error = err.message || err;
