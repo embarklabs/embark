@@ -5,6 +5,7 @@ const {ZERO_ADDRESS} = AddressUtils;
 
 // Check out definition 97 of the yellow paper: https://ethereum.github.io/yellowpaper/paper.pdf
 const MAX_CONTRACT_BYTECODE_LENGTH = 24576;
+const GANACHE_CLIENT_VERSION_NAME = "EthereumJS TestRPC";
 
 class ContractDeployer {
   constructor(options) {
@@ -320,24 +321,26 @@ class ContractDeployer {
         next();
       },
       function estimateCorrectGas(next) {
-        if (contract._skipGasEstimations) {
-          // This is Ganache's gas limit. We subtract 1 so we don't reach the limit.
-          //
-          // We do this because Ganache's gas estimates are wrong (contract creation
-          // has a base cost of 53k, not 21k, so it sometimes results in out of gas
-          // errors.)
-          contract.gas = 6721975 - 1;
-        } else if (contract.gas === 'auto' || !contract.gas) {
-          return self.blockchain.estimateDeployContractGas(deployObject, (err, gasValue) => {
-            if (err) {
-              return next(err);
-            }
-            let increase_per = 1 + (Math.random() / 10.0);
-            contract.gas = Math.floor(gasValue * increase_per);
-            next();
-          });
-        }
-        next();
+        self.blockchain.getClientVersion((err, version) => {
+          if (version.split('/')[0] === GANACHE_CLIENT_VERSION_NAME) {
+            // This is Ganache's gas limit. We subtract 1 so we don't reach the limit.
+            //
+            // We do this because Ganache's gas estimates are wrong (contract creation
+            // has a base cost of 53k, not 21k, so it sometimes results in out of gas
+            // errors.)
+            contract.gas = 6721975 - 1;
+          } else if (contract.gas === 'auto' || !contract.gas) {
+            return self.blockchain.estimateDeployContractGas(deployObject, (err, gasValue) => {
+              if (err) {
+                return next(err);
+              }
+              let increase_per = 1 + (Math.random() / 10.0);
+              contract.gas = Math.floor(gasValue * increase_per);
+              next();
+            });
+          }
+          next();
+        });
       },
       function deployTheContract(next) {
         let estimatedCost = contract.gas * contract.gasPrice;
