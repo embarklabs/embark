@@ -80,7 +80,7 @@ class SignAndVerify extends React.Component {
             <CardBody>
               <FormGroup>
                 <Label for="messageToVerify">Message</Label>
-                <Input type="textarea" name="messageToVerify" placeholder="Enter signature" id="messageToVerify" value={this.state.messageToVerify} onChange={e => this.handleSignatureChange(e)}/>
+                <Input type="textarea" name="messageToVerify" placeholder="Enter signed message" id="messageToVerify" value={this.state.messageToVerify} onChange={e => this.handleSignatureChange(e)}/>
               </FormGroup>
               <Button type="button"
                       color="primary"
