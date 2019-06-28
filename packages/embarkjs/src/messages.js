@@ -21,7 +21,7 @@ Messages.setProvider = function (providerName, options) {
 
 Messages.isAvailable = function () {
   if (!this.currentMessages) {
-    return false;
+    return Promise.resolve(false);
   }
   return this.currentMessages.isAvailable();
 };

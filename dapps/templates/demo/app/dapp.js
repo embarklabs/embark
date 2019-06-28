@@ -35,11 +35,8 @@ class App extends React.Component {
         return this.setState({error: err.message || err});
       }
 
-      EmbarkJS.Messages.Providers.whisper.getWhisperVersion((err, _version) => {
-        if (err) {
-          return console.log(err);
-        }
-        this.setState({whisperEnabled: true});
+      EmbarkJS.Messages.isAvailable().then(result => {
+        this.setState({whisperEnabled: result});
       });
 
       EmbarkJS.Storage.isAvailable().then((result) => {
