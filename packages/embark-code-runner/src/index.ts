@@ -23,6 +23,8 @@ export default class CodeRunner {
   constructor(embark: Embark, _options: any) {
     this.logger = embark.logger;
     this.events = embark.events;
+
+    EmbarkJS.environment = embark.env;
     this.vm = new VM({
       require: {
         mock: {
