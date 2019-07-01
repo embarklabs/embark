@@ -29,6 +29,7 @@ export interface Config {
 }
 
 export interface Embark {
+  env: string;
   events: Events;
   registerAPICall: any;
   registerConsoleCommand: any;
