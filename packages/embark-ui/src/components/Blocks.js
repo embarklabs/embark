@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import {Row, Col, Card, CardHeader, CardBody} from 'reactstrap';
 import PropTypes from 'prop-types';
 import Pagination from './Pagination';
+import {formatTimestampForDisplay} from '../utils/presentation';
 
 import CardTitleIdenticon from './CardTitleIdenticon';
 
@@ -25,7 +26,7 @@ const Blocks = ({blocks, changePage, currentPage, numberOfPages}) => (
               <Row>
                 <Col>
                   <strong>Mined on:</strong>
-                  <div>{new Date(block.timestamp * 1000).toLocaleString()}</div>
+                  <div>{formatTimestampForDisplay(block.timestamp)}</div>
                 </Col>
                 <Col>
                   <strong>Gas Used</strong>

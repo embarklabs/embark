@@ -610,6 +610,7 @@ class BlockchainConnector {
               .then(receipts => {
                 block.transactions.forEach((tx, index) => {
                   tx['receipt'] = receipts[index];
+                  tx['timestamp'] = block.timestamp;
                 });
                 blocks.push(block);
                 eachCb();
@@ -655,7 +656,15 @@ class BlockchainConnector {
   }
 
   getBlock(blockNumber, cb) {
-    this.web3.eth.getBlock(blockNumber, true, cb);
+    this.web3.eth.getBlock(blockNumber, true, (err, block) => {
+      if (err) return cb(err);
+      if (block.transactions && block.transactions.length) {
+        block.transactions.forEach(tx => {
+          tx.timestamp = block.timestamp;
+        });
+      }
+      cb(null, block);
+    });
   }
 
   getTransactionByHash(hash, cb) {

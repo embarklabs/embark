@@ -2,8 +2,7 @@ import React from 'react';
 import {Link} from "react-router-dom";
 import {Row, Col, Card, CardHeader, CardBody} from 'reactstrap';
 import PropTypes from 'prop-types';
-import isToday from 'date-fns/is_today';
-import distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
+import {formatTimestampForDisplay} from '../utils/presentation';
 
 import DebugButton from './DebugButton';
 import CardTitleIdenticon from './CardTitleIdenticon';
@@ -50,12 +49,7 @@ const Transactions = ({transactions, contracts, changePage, currentPage, numberO
                 </Col>
                 <Col md={6}>
                   <strong>Mined on:</strong>
-                  <div>
-                    {isToday(new Date(transaction.timestamp * 1000)) ?
-                      distanceInWordsToNow(new Date(transaction.timestamp * 1000), {addSuffix: true}) :
-                      new Date(transaction.timestamp * 1000).toLocaleString()
-                    }
-                  </div>
+                  <div>{formatTimestampForDisplay(transaction.timestamp)}</div>
                 </Col>
               </Row>
             </div>
