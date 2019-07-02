@@ -15,6 +15,7 @@ export interface Events {
 export interface Config {
   contractsFiles: any[];
   embarkConfig: {
+    app: any;
     contracts: string[] | string;
     config: {
       contracts: string;

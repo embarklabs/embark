@@ -13,6 +13,7 @@ class Watcher {
   constructor(embark) {
     this.logger = embark.logger;
     this.events = embark.events;
+    this.embarkConfig = embark.config.embarkConfig;
     this.fs = embark.fs;
     this.fileWatchers = [];
 
@@ -22,29 +23,24 @@ class Watcher {
   }
 
   start() {
-    let self = this;
-    // TODO: should come from the config object instead of reading the file
-    // directly
-    let embarkConfig = this.fs.readJSONSync("embark.json");
-
-    this.watchAssets(embarkConfig, function () {
-      self.logger.trace('ready to watch asset changes');
+    this.watchAssets(this.embarkConfig, () => {
+      this.logger.trace('ready to watch asset changes');
     });
 
-    this.watchContracts(embarkConfig, function () {
-      self.logger.trace('ready to watch contract changes');
+    this.watchContracts(this.embarkConfig, () => {
+      this.logger.trace('ready to watch contract changes');
     });
 
-    this.watchContractConfig(embarkConfig, function () {
-      self.logger.trace('ready to watch contract config changes');
+    this.watchContractConfig(this.embarkConfig, () => {
+      this.logger.trace('ready to watch contract config changes');
     });
 
-    this.watchPipelineConfig(embarkConfig, function () {
-      self.logger.trace('ready to watch pipeline config changes');
+    this.watchPipelineConfig(this.embarkConfig, () => {
+      this.logger.trace('ready to watch pipeline config changes');
     });
 
-    this.watchWebserverConfig(embarkConfig, function () {
-      self.logger.trace('ready to watch webserver config changes');
+    this.watchWebserverConfig(this.embarkConfig, () => {
+      this.logger.trace('ready to watch webserver config changes');
     });
 
     this.logger.info(__("ready to watch file changes"));

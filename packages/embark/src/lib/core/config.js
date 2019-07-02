@@ -100,6 +100,7 @@ Config.prototype.loadConfigFiles = function(options) {
     interceptLogs = true;
   }
 
+  options.embarkConfig = options.embarkConfig || 'embark.json';
   if (!fs.existsSync(options.embarkConfig)){
     this.logger.error(__('Cannot find file %s Please ensure you are running this command inside the Dapp folder', options.embarkConfig));
     process.exit(1);

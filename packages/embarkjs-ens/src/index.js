@@ -158,7 +158,7 @@ __embarkENS.setProvider = function(config) {
   const ERROR_MESSAGE = 'ENS is not available in this chain';
   self.registration = config.registration;
   self.env = config.env;
-  // FIXME EmbarkJS.onReady odesn't work. Possibility of a race condition
+  // FIXME EmbarkJS.onReady doesn't work. Possibility of a race condition
   EmbarkJS.Blockchain.blockchainConnector.getNetworkId()
     .then((id) => {
       const registryAddress = self.registryAddresses[id] || config.registryAddress;

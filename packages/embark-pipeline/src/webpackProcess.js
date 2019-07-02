@@ -12,6 +12,7 @@ class WebpackProcess extends ProcessWrapper {
   constructor(options) {
     super(options);
     this.webpackConfigName = options.webpackConfigName;
+    this.embarkConfig = options.embarkConfig;
     this.pipelineConfig = options.pipelineConfig;
   }
 
@@ -41,7 +42,7 @@ class WebpackProcess extends ProcessWrapper {
       return callback(errorMessage(e));
     }
 
-    const configReader = new WebpackConfigReader({webpackConfigName: this.webpackConfigName});
+    const configReader = new WebpackConfigReader({webpackConfigName: this.webpackConfigName, embarkConfig: this.embarkConfig});
     configReader.readConfig((err, config) => {
       if (err) {
         return callback(err);

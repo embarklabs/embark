@@ -5,6 +5,8 @@ import * as path from 'path';
 class WebpackConfigReader {
   constructor(options) {
     this.webpackConfigName = options.webpackConfigName;
+
+    process.env.EMBARK_BUILD_DIR = options.embarkConfig.buildDir;
   }
 
   async readConfig(callback){

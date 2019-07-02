@@ -99,7 +99,7 @@ class EmbarkController {
       client: options.client,
       locale: options.locale,
       version: this.version,
-      embarkConfig: options.embarkConfig || 'embark.json',
+      embarkConfig: options.configFile,
       logFile: options.logFile,
       logLevel: options.logLevel,
       context: self.context,
@@ -204,7 +204,7 @@ class EmbarkController {
       client: options.client,
       locale: options.locale,
       version: this.version,
-      embarkConfig: 'embark.json',
+      embarkConfig: options.configFile,
       interceptLogs: false,
       logFile: options.logFile,
       logLevel: options.logLevel,
@@ -215,7 +215,6 @@ class EmbarkController {
       context: this.context,
       webpackConfigName: options.webpackConfigName
     });
-
 
     async.waterfall([
       function initEngine(callback) {
@@ -286,7 +285,7 @@ class EmbarkController {
       client: options.client,
       locale: options.locale,
       version: this.version,
-      embarkConfig: options.embarkConfig || 'embark.json',
+      embarkConfig: options.configFile,
       logFile: options.logFile,
       logLevel: options.logLevel,
       context: this.context,
@@ -378,7 +377,7 @@ class EmbarkController {
     const engine = new Engine({
       env: options.env,
       version: this.version,
-      embarkConfig: options.embarkConfig || 'embark.json',
+      embarkConfig: options.configFile,
       logFile: options.logFile,
       context: this.context
     });
@@ -469,7 +468,7 @@ class EmbarkController {
       client: options.client,
       locale: options.locale,
       version: this.version,
-      embarkConfig: 'embark.json',
+      embarkConfig: options.configFile,
       interceptLogs: false,
       logFile: options.logFile,
       logLevel: options.logLevel,
@@ -539,7 +538,7 @@ class EmbarkController {
       client: options.client,
       locale: options.locale,
       version: this.version,
-      embarkConfig: 'embark.json',
+      embarkConfig: options.configFile,
       interceptLogs: false,
       logFile: options.logFile,
       logLevel: options.logLevel,
@@ -639,7 +638,7 @@ class EmbarkController {
       client: options.client,
       locale: options.locale,
       version: this.version,
-      embarkConfig: options.embarkConfig || 'embark.json',
+      embarkConfig: options.configFile,
       logFile: options.logFile,
       logLevel: options.logLevel || Logger.logLevels.warn,
       context: this.context,

@@ -280,10 +280,22 @@ function findEmbarkJson() {
   // package.json's dir) and the package.json is in a dir above the top-level
   // DApp dir; so start at INIT_CWD if that has been set (by npm, presumably)
   // See: https://docs.npmjs.com/cli/run-script
-  var startDir = initCwd();
+  const startDir = initCwd();
+  let embarkJsonFile = 'embark.json';
+  process.argv.find((arg, index) => {
+    if (arg === '--config') {
+      embarkJsonFile = process.argv[index + 1];
+      return true;
+    }
+    if (arg.indexOf('--config=') > -1) {
+      embarkJsonFile = arg.replace('--config=', '');
+      return true;
+    }
+    return false;
+  });
   return (new EmbarkJson(
-    findUp.sync('embark.json', {cwd: startDir}) ||
-      path.join(startDir, 'embark.json'),
+    findUp.sync(embarkJsonFile, {cwd: startDir}) ||
+      path.join(startDir, embarkJsonFile),
     process.argv[2]
   )).handle();
 }

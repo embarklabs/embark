@@ -2,7 +2,6 @@ import { __, setOrDetectLocale } from 'embark-i18n';
 import { diagramPath } from 'embark-utils';
 const program = require('commander');
 const EmbarkController = require('./cmd_controller.js');
-const fs = require('../lib/core/fs.js');
 
 let embark = new EmbarkController();
 
@@ -120,18 +119,20 @@ class Cmd {
       .option('--contracts', 'only compile contracts into Embark wrappers')
       .option('--logfile [logfile]', __('filename to output logs (default: none)'))
       .option('-c, --client [client]', __('Use a specific ethereum client [%s] (default: %s)', 'geth, parity', 'geth'))
+      .option('--config [file]', __('Use a different config file than `embark.json` (the file the same configurations however)'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'debug')
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('--pipeline [pipeline]', __('webpack config to use (default: production)'))
       .description(__('deploy and build dapp at ') + 'dist/ (default: development)')
-      .action(function(env, _options) {
-        setOrDetectLocale(_options.locale);
-        _options.env = env || 'development';
-        _options.logFile = _options.logfile; // fix casing
-        _options.logLevel = _options.loglevel; // fix casing
-        _options.onlyCompile = _options.contracts;
-        _options.webpackConfigName = _options.pipeline || 'production';
-        embark.build(_options);
+      .action(function(env, options) {
+        setOrDetectLocale(options.locale);
+        options.env = env || 'development';
+        options.logFile = options.logfile; // fix casing
+        options.logLevel = options.loglevel; // fix casing
+        options.onlyCompile = options.contracts;
+        options.webpackConfigName = options.pipeline || 'production';
+        options.configFile = options.config;
+        embark.build(options);
       });
   }
 
@@ -140,6 +141,7 @@ class Cmd {
       .command('run [environment]')
       .option('-p, --port [port]', __('port to run the dev webserver (default: %s)', '8000'))
       .option('-c, --client [client]', __('Use a specific ethereum client [%s] (default: %s)', 'geth, parity', 'geth'))
+      .option('--config [file]', __('Use a different config file than `embark.json` (the file the same configurations however)'))
       .option('-b, --host [host]', __('host to run the dev webserver (default: %s)', 'localhost'))
       .option('--noserver', __('disable the development webserver'))
       .option('--nodashboard', __('simple mode, disables the dashboard'))
@@ -159,6 +161,7 @@ class Cmd {
           serverHost: options.host,
           client: options.client,
           locale: options.locale,
+          configFile: options.config,
           runWebserver: !options.noserver ? null : false,
           useDashboard: !options.nodashboard,
           logFile: options.logfile,
@@ -174,6 +177,7 @@ class Cmd {
     program
       .command('console [environment]')
       .option('-c, --client [client]', __('Use a specific ethereum client [%s] (default: %s)', 'geth, parity', 'geth'))
+      .option('--config [file]', __('Use a different config file than `embark.json` (the file the same configurations however)'))
       .option('--logfile [logfile]', __('filename to output logs (default: %s)', 'none'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'debug')
       .option('--locale [locale]', __('language to use (default: en)'))
@@ -186,6 +190,7 @@ class Cmd {
           env: env || 'development',
           client: options.client,
           locale: options.locale,
+          configFile: options.config,
           logFile: options.logfile,
           logLevel: options.loglevel,
           singleUseAuthToken: options.singleUseAuthToken,
@@ -197,13 +202,14 @@ class Cmd {
   blockchain() {
     program
       .command('blockchain [environment]')
+      .option('--config [file]', __('Use a different config file than `embark.json` (the file the same configurations however)'))
       .option('-c, --client [client]', __('Use a specific ethereum client [%s] (default: %s)', 'geth, parity', 'geth'))
       .option('--locale [locale]', __('language to use (default: en)'))
       .description(__('run blockchain server (default: %s)', 'development'))
       .action(function(env, options) {
         setOrDetectLocale(options.locale);
         embark.initConfig(env || 'development', {
-          embarkConfig: 'embark.json',
+          embarkConfig: options.config,
           interceptLogs: false
         });
         embark.blockchain(env || 'development', options.client);
@@ -215,6 +221,7 @@ class Cmd {
       .command('simulator [environment]')
       .description(__('run a fast ethereum rpc simulator'))
       .option('--testrpc', __('use ganache-cli (former "testrpc") as the rpc simulator [%s]', 'default'))
+      .option('--config [file]', __('Use a different config file than `embark.json` (the file the same configurations however)'))
       .option('-p, --port [port]', __('port to run the rpc simulator (default: %s)', '8545'))
       .option('--host [host]', __('host to run the rpc simulator (default: %s)', 'localhost'))
       .option('-a, --accounts [numAccounts]', __('number of accounts (default: %s)', '10'))
@@ -225,12 +232,13 @@ class Cmd {
       .action(function(env, options) {
         setOrDetectLocale(options.locale);
         embark.initConfig(env || 'development', {
-          embarkConfig: 'embark.json',
+          embarkConfig: options.config,
           interceptLogs: false
         });
         embark.simulator({
           port: options.port,
           host: options.host,
+          configFile: options.config,
           numAccounts: options.numAccounts,
           defaultBalance: options.balance,
           gasLimit: options.gasLimit
@@ -242,6 +250,7 @@ class Cmd {
     program
       .command('test [file]')
       .option('-e, --env <env>', __('configuration environment to use (default: development)'))
+      .option('--config [file]', __('Use a different config file than `embark.json` (the file the same configurations however)'))
       .option('-n , --node <node>', __('node for running the tests ["vm", "embark", <endpoint>] (default: vm)\n') +
               '                       vm - ' + __('start and use an Ethereum simulator (ganache)') + '\n' +
               '                       embark - ' + __('use the node of a running embark process') + '\n' +
@@ -274,6 +283,7 @@ class Cmd {
           solc: options.solc,
           logLevel: options.loglevel,
           gasDetails: options.gasDetails,
+          configFile: options.config,
           txDetails: options.txDetails,
           node: options.node,
           coverage: options.coverage,
@@ -287,23 +297,25 @@ class Cmd {
       .command('upload [environment]')
       //.option('--ens [ensDomain]', __('ENS domain to associate to'))
       .option('--logfile [logfile]', __('filename to output logs (default: %s)', 'none'))
+      .option('--config [file]', __('Use a different config file than `embark.json` (the file the same configurations however)'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'debug')
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('-c, --client [client]', __('Use a specific ethereum client [%s] (default: %s)', 'geth, parity', 'geth'))
       .option('--pipeline [pipeline]', __('webpack config to use (default: production)'))
       .description(__('Upload your dapp to a decentralized storage') + '.')
-      .action(function(env, _options) {
-        setOrDetectLocale(_options.locale);
+      .action(function(env, options) {
+        setOrDetectLocale(options.locale);
         if (env === "ipfs" || env === "swarm") {
           console.warn(("did you mean " + "embark upload".bold + " ?").underline);
           console.warn("In embark 3.1 forwards, the correct command is embark upload <environment> and the provider is configured in config/storage.js");
         }
-        _options.env = env || 'development';
-        _options.ensDomain = _options.ens;
-        _options.logFile = _options.logfile; // fix casing
-        _options.logLevel = _options.loglevel; // fix casing
-        _options.webpackConfigName = _options.pipeline || 'production';
-        embark.upload(_options);
+        options.env = env || 'development';
+        options.ensDomain = options.ens;
+        options.logFile = options.logfile; // fix casing
+        options.logLevel = options.loglevel; // fix casing
+        options.webpackConfigName = options.pipeline || 'production';
+        options.configFile = options.config;
+        embark.upload(options);
       });
   }
 
@@ -311,6 +323,7 @@ class Cmd {
     program
       .command('graph [environment]')
       .option('--skip-undeployed', __('Graph will not include undeployed contracts'))
+      .option('--config [file]', __('Use a different config file than `embark.json` (the file the same configurations however)'))
       .option('--skip-functions', __('Graph will not include functions'))
       .option('--skip-events', __('Graph will not include events'))
       .option('--locale [locale]', __('language to use (default: en)'))
@@ -321,6 +334,7 @@ class Cmd {
         embark.graph({
           env: env || 'development',
           logFile: options.logfile,
+          configFile: options.config,
           skipUndeployed: options.skipUndeployed,
           skipFunctions: options.skipFunctions,
           skipEvents: options.skipEvents,
@@ -333,6 +347,7 @@ class Cmd {
     program
       .command('scaffold [contractOrFile] [fields...]')
       .option('--framework <framework>', 'UI framework to use. (default: react)')
+      .option('--config [file]', __('Use a different config file than `embark.json` (the file the same configurations however)'))
       .option('--contract-language <language>', 'Language used for the smart contract generation (default: solidity)')
       .option('--overwrite', 'Overwrite existing files. (default: false)')
       .description(__('Generates a contract and a function tester for you\nExample: ContractName field1:uint field2:address --contract-language solidity --framework react'))
@@ -346,6 +361,7 @@ class Cmd {
         options.webpackConfigName = options.pipeline || 'development';
         options.contractOrFile = contractOrFile;
         options.fields = fields;
+        options.configFile = options.config;
 
         embark.scaffold(options);
       });
@@ -355,14 +371,16 @@ class Cmd {
     program
       .command('reset')
       .option('--locale [locale]', __('language to use (default: en)'))
+      .option('--config [file]', __('Use a different config file than `embark.json` (the file the same configurations however)'))
       .description(__('resets embarks state on this dapp including clearing cache'))
       .action(function(options) {
         setOrDetectLocale(options.locale);
         embark.initConfig('development', {
-          embarkConfig: 'embark.json', interceptLogs: false
+          embarkConfig: options.config,
+          interceptLogs: false
         });
         embark.reset({
-          embarkConfig: 'embark.json'
+          embarkConfig: options.config
         });
       });
   }
@@ -371,10 +389,11 @@ class Cmd {
     program
       .command('eject-build-config')
       .alias('eject-webpack')
+      .option('--config [file]', __('Use a different config file than `embark.json` (the file the same configurations however)'))
       .description(__('copy the default build config into your dapp for customization'))
-      .action(function() {
+      .action(function(options) {
         embark.initConfig('development', {
-          embarkConfig: 'embark.json',
+          embarkConfig: options.config,
           interceptLogs: false
         });
         embark.ejectWebpack();
