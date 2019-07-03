@@ -46,7 +46,9 @@
     "reset": "npx rimraf .nyc_output build-test coverage dist embarkjs-*.tgz package",
     "start": "npm run watch",
     "test": "nyc --reporter=html --reporter=json mocha \"build-test/**/*.js\" --exit --no-timeouts --require source-map-support/register",
-    "watch": "run-p \"build:** -- --verbose --watch\""
+    "watch": "run-p \"build:** -- --verbose --watch\"",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "nyc": {
     "exclude": [
@@ -58,7 +60,8 @@
   "dependencies": {
     "@babel/runtime-corejs2": "7.3.1",
     "async": "2.6.1",
-    "async-es": "2.6.1"
+    "async-es": "2.6.1",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
@@ -78,5 +81,6 @@
     "node": ">=8.12.0 <12.0.0",
     "npm": ">=6.4.1",
     "yarn": ">=1.12.3"
-  }
+  },
+  "snyk": true
 }
