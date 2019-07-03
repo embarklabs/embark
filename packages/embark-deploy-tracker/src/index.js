@@ -37,8 +37,16 @@ class DeployTracker {
     this.embark.registerActionForEvent("deploy:beforeAll", this.setCurrentChain.bind(this));
 
     this.events.on("deploy:contract:deployed", (contract) => {
-      self.trackContract(contract.className, contract.realRuntimeBytecode, contract.realArgs, contract.deployedAddress);
-      self.save();
+      // TODO(pascal): when the `address` field in the contract configuration
+      // was a function (addressHandler), `contract.realArgs` will be undefined.
+      // Ideally we introduce an event that explicitly triggers tracking as
+      // opposed to implicitly via `deploy:contract:deployed` event.
+      //
+      // For more info see: https://github.com/embark-framework/embark/pull/1695#discussion_r302488701
+      if (contract.realArgs !== undefined) {
+        self.trackContract(contract.className, contract.realRuntimeBytecode, contract.realArgs, contract.deployedAddress);
+        self.save();
+      }
     });
 
     self.embark.registerActionForEvent("deploy:contract:shouldDeploy", (params, cb) => {

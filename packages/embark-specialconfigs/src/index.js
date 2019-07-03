@@ -19,6 +19,7 @@ class SpecialConfigs {
     this.registerBeforeDeployAction();
     this.registerOnDeployAction();
     this.registerDeployIfAction();
+    this.registerAddressHandlerAction();
   }
 
   replaceWithENSAddress(cmd, callback) {
@@ -173,6 +174,22 @@ class SpecialConfigs {
         cb();
       } catch (e) {
         cb(new Error(`Error running beforeDeploy hook for ${contract.className}: ${e.message || e}`));
+      }
+    });
+  }
+
+  registerAddressHandlerAction() {
+    this.embark.registerActionForEvent('contract:address:handler', async (params, cb) => {
+      const contract = params.contract;
+      try {
+        const dependencies = await this.getOnDeployLifecycleHookDependencies({
+          contractConfig: contract,
+          logPrefix: `${contract.className} > addressHandler >`
+        });
+        const address = await contract.addressHandler(dependencies);
+        cb(null, address);
+      } catch (err) {
+        return cb(new Error(`Error running addressHandler for ${contract.className}: ${err.message}`));
       }
     });
   }

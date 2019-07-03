@@ -69,6 +69,19 @@ class DeployManager {
                 if (typeof result === 'function') {
                   callback = result;
                 }
+                if (contract.addressHandler) {
+                  return self.plugins.runActionsForEvent('contract:address:handler', {contract}, (err, address) => {
+                    if (err) {
+                      errors.push(err);
+                    } else {
+                      contract.address = address;
+                      contract.deployedAddress = address;
+                      self.logger.info(__('{{contractName}} already deployed at {{address}}', {contractName: contract.className.bold.cyan, address: contract.address.bold.cyan}));
+                      self.events.emit("deploy:contract:deployed", contract);
+                    }
+                    callback();
+                  });
+                }
                 contract._gasLimit = self.gasLimit;
                 self.events.request('deploy:contract', contract, (err) => {
                   if (err) {

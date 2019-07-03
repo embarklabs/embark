@@ -376,7 +376,10 @@ class ContractsManager {
           contract.type = 'file';
           contract.className = className;
 
-          if (contract.address) {
+          if (contract.address && typeof contract.address === 'function') {
+            contract.addressHandler = contract.address;
+            delete contract.address;
+          } else if (contract.address && typeof contract.address === 'string') {
             contract.deployedAddress = contract.address;
           }
 
