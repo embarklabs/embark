@@ -6,6 +6,7 @@ import { __ } from "embark-i18n";
 import { dappPath, escapeHtml, exit, jsonFunctionReplacer } from "embark-utils";
 import stringify from "json-stringify-safe";
 import { dirname } from "path";
+import util from "util";
 import Suggestions from "./suggestions";
 
 type MatchFunction = (cmd: string) => boolean;
@@ -49,7 +50,7 @@ class Console {
             // reformat for IPC reply
             error = { name: "Console error", message: err, stack: err };
           }
-          cb(error, result);
+          cb(error, util.inspect(result));
         });
       });
       this.ipc.on("console:history:save", true, (cmd: string) => {
