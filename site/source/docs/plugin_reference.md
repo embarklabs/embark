@@ -164,31 +164,36 @@ example:
 
 ## .registerContractsGeneration(callback(options))
 
-By default Embark will use EmbarkJS to declare contracts in the dapp. You can override and use your own client side library.
+By default Embark will use EmbarkJS to declare contracts in the Dapp. You can override that and use your own client side library.
 
 Available options:
   * contracts - Hash of objects containing all the deployed contracts. (key: contractName, value: contract object)
-  * abiDefinition
-  * code
-  * deployedAddress
-  * gasEstimates
-  * gas
-  * gasPrice
-  * runtimeByteCode
+    * abiDefinition
+    * code
+    * deployedAddress
+    * gasEstimates
+    * gas
+    * gasPrice
+    * runtimeByteCode
 
 Returns `string`
 
-```
-embark.registerContractsGeneration(function (options) {
-  const contractGenerations = [];
-  Object.keys(options.contracts).map(className => {
-    const contract = options.contracts[className];
-    const abi = JSON.stringify(contract.abiDefinition);
+ The generated string will be used to create the contract objects in the Embark console and will be generated in `embarkArtifacts` so that the Dapp can use them.
 
-    contractGenerations.push(`${className} = web3.eth.contract('${abi}').at('${contract.deployedAddress}')`);
+```
+module.exports = (embark) => {
+  embark.registerContractsGeneration((options) => {
+    const contractGenerations = [];
+    Object.keys(options.contracts).map(className => {
+      const contract = options.contracts[className];
+      const abi = JSON.stringify(contract.abiDefinition);
+
+      contractGenerations.push(`${className} = new web3.eth.Contract(${abi}, '${contract.deployedAddress}');
+      module.exports = ${className};`);
+    });
+    return contractGenerations.join('\n');
   });
-  return contractGenerations.join('\n');
-});
+};
 ```
 
 ## .registerConsoleCommand(options)
