@@ -325,6 +325,9 @@ const ContractOverview = (props) => {
         .filter((method) => {
           return props.onlyConstructor ? method.type === 'constructor' : method.type !== 'constructor';
         })
+        .sort((a, b) => {
+          return (a.name < b.name) ? -1 : 1;
+        })
        .map((method, idx) => <ContractFunction key={idx}
                                          contractName={contract.className}
                                          method={method}

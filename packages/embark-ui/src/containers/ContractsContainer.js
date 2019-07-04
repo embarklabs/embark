@@ -73,9 +73,12 @@ class ContractsContainer extends Component {
         };
         const index = (
           (arrIndex + 1 - offset) -
-            (this.numContractsToDisplay * (this.state.currentPage - 1))
+          (this.numContractsToDisplay * (this.state.currentPage - 1))
         );
         return index <= this.numContractsToDisplay && index > 0;
+      })
+      .sort((a, b) => {
+        return (a.className < b.className) ? -1 : 1;
       });
   }
 
