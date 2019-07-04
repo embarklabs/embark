@@ -56,7 +56,7 @@ class CodeGenerator {
 
     this.events.setCommandHandler('code-generator:contract', (contractName, cb) => {
       this.events.request('contracts:contract', contractName, (contract) => {
-        this.buildContractJS(contractName, this.generateContractJSON(contract, contract), cb);
+        this.buildContractJS(contract, cb);
       });
     });
 
@@ -457,7 +457,23 @@ class CodeGenerator {
     }, "");
   }
 
-  buildContractJS(contractName, contractJSON, cb) {
+  buildContractJS(contract, cb) {
+    const contractName = contract.className;
+
+    if (this.plugins) {
+      const contractsPlugins = this.plugins.getPluginsFor('contractGeneration');
+      if (contractsPlugins.length > 0) {
+        let result = '';
+        contractsPlugins.forEach(function (plugin) {
+          result += plugin.generateContracts({contracts: {[contractName]: contract}});
+        });
+        return this.generateArtifact(result, contractName + '.js', constants.dappArtifacts.contractsJs, (err, path, _updated) => {
+          cb(err, path);
+        });
+      }
+    }
+
+    const contractJSON = this.generateContractJSON(contractName, contract);
     const contractCode = `
       "use strict";
 
