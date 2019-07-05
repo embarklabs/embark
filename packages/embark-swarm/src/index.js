@@ -1,8 +1,7 @@
 import { __ } from 'embark-i18n';
 const UploadSwarm = require('./upload.js');
 const SwarmAPI = require('swarm-api');
-// TODO: not great, breaks module isolation
-const StorageProcessesLauncher = require('../storage/storageProcessesLauncher');
+const StorageProcessesLauncher = require('embark-storage/processes');
 const constants = require('embark-core/constants');
 require('colors');
 import { dappPath, buildUrl } from 'embark-utils';

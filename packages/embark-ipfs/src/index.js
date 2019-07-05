@@ -1,11 +1,9 @@
 import { __ } from 'embark-i18n';
 const UploadIPFS = require('./upload.js');
-const utils = require('../../utils/utils.js');
 const IpfsApi = require('ipfs-api');
-// TODO: not great, breaks module isolation
-const StorageProcessesLauncher = require('../storage/storageProcessesLauncher');
+const StorageProcessesLauncher = require('embark-storage/processes');
 const constants = require('embark-core/constants');
-import { buildUrlFromConfig, dappPath, embarkPath } from 'embark-utils';
+import { buildUrlFromConfig, dappPath, embarkPath, getJson } from 'embark-utils';
 import * as path from 'path';
 
 class IPFS {
@@ -70,7 +68,7 @@ class IPFS {
 
   downloadIpfsApi(cb) {
     this.events.request("version:get:ipfs-api", (ipfsApiVersion) => {
-      let currentIpfsApiVersion = require('../../../../package.json').dependencies["ipfs-api"];
+      let currentIpfsApiVersion = require('../package.json').dependencies["ipfs-api"];
       if (ipfsApiVersion === currentIpfsApiVersion) {
         const nodePath = embarkPath('node_modules');
         const ipfsPath = require.resolve("ipfs-api", {paths: [nodePath]});
@@ -129,7 +127,7 @@ class IPFS {
 
   _checkService(cb) {
     let url = this._getNodeUrl();
-    utils.getJson(url, cb);
+    getJson(url, cb);
   }
 
   addStorageProviderToEmbarkJS() {

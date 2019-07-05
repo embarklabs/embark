@@ -118,12 +118,6 @@ class Engine {
     });
   }
 
-  processApiService(_options){
-    this.registerModule('process_api', {
-      logger: this.logger
-    });
-  }
-
   processManagerService(_options) {
     this.processManager = new ProcessManager({
       events: this.events,
@@ -282,20 +276,20 @@ class Engine {
           return next();
         }
         this.events.once("ipfs:process:started", next);
-        this.registerModule('ipfs');
+        this.registerModulePackage('embark-ipfs');
       },
       (next) => {
         if (!this.config.storageConfig.available_providers.includes("swarm")) {
           return next();
         }
         this.events.once("swarm:process:started", next);
-        this.registerModule('swarm');
+        this.registerModulePackage('embark-swarm');
       }
     ], (err) => {
       if(err) {
         console.error(__("Error starting storage process(es): %s", err));
       }
-      this.registerModule('storage', {plugins: this.plugins});
+      this.registerModulePackage('embark-storage', {plugins: this.plugins});
     });
   }
 

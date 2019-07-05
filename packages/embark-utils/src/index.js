@@ -4,7 +4,7 @@ const shelljs = require('shelljs');
 const clipboardy = require('clipboardy');
 
 const {canonicalHost, defaultCorsHost, defaultHost, dockerHostSwap, isDocker} = require('./host');
-const { findNextPort, downloadFile } = require('./network');
+const {downloadFile, findNextPort, getJson, httpGet, httpsGet, httpGetJson, httpsGetJson} = require('./network');
 const logUtils = require('./log-utils');
 const toposortGraph = require('./toposort');
 import { unitRegex } from './constants';
@@ -311,7 +311,12 @@ const Utils = {
   getWeiBalanceFromString,
   getHexBalanceFromString,
   getExternalContractUrl,
+  getJson,
   groupBy,
+  httpGet,
+  httpsGet,
+  httpGetJson,
+  httpsGetJson,
   setUpEnv,
   sha512,
   sha3,
