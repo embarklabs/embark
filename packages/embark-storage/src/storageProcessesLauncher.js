@@ -99,83 +99,84 @@ class StorageProcessesLauncher {
     if (self.processes[storageName]) {
       return callback(__('Storage process already started'));
     }
-    const filePath = require.resolve(`embark-${storageName}/process`, {paths: [embarkPath('node_modules')]});
-    this.embark.fs.access(filePath, (err) => {
-      if (err) {
-        return callback(__('No process file for this storage type (%s) exists. Please start the process locally.', storageName));
-      }
 
-      let cmd = (storageName === 'swarm' ? (self.storageConfig.swarmPath || 'swarm') : 'ipfs');
+    let filePath;
+    try {
+      filePath = require.resolve(`embark-${storageName}/process`, {paths: [embarkPath('node_modules')]});
+    } catch (e) {
+      return callback(__('No process file for this storage type (%s) exists. Please start the process locally.', storageName));
+    }
 
-      const program = shellJs.which(cmd);
-      if (!program) {
-        self.logger.warn(__('{{storageName}} is not installed or your configuration is not right', {storageName}).yellow);
-        self.logger.info(__('You can install and get more information here: ').yellow + References[storageName].underline);
-        return callback(__('%s not installed', storageName));
-      }
+    let cmd = (storageName === 'swarm' ? (self.storageConfig.swarmPath || 'swarm') : 'ipfs');
 
-      self.logger.info(__(`Starting %s process`, storageName).cyan);
-      self.processes[storageName] = new ProcessLauncher({
-        modulePath: filePath,
-        name: storageName,
-        logger: self.logger,
-        events: self.events,
-        embark: self.embark,
-        silent: self.logger.logLevel !== 'trace',
-        exitCallback: self.processExited.bind(this, storageName)
-      });
-      this.events.request("blockchain:object", (blockchain) => {
-        blockchain.onReady(() => {
-          blockchain.determineDefaultAccount((err, defaultAccount) => {
-            if (err) {
-              return callback(err);
+    const program = shellJs.which(cmd);
+    if (!program) {
+      self.logger.warn(__('{{storageName}} is not installed or your configuration is not right', {storageName}).yellow);
+      self.logger.info(__('You can install and get more information here: ').yellow + References[storageName].underline);
+      return callback(__('%s not installed', storageName));
+    }
+
+    self.logger.info(__(`Starting %s process`, storageName).cyan);
+    self.processes[storageName] = new ProcessLauncher({
+      modulePath: filePath,
+      name: storageName,
+      logger: self.logger,
+      events: self.events,
+      embark: self.embark,
+      silent: self.logger.logLevel !== 'trace',
+      exitCallback: self.processExited.bind(this, storageName)
+    });
+    this.events.request("blockchain:object", (blockchain) => {
+      blockchain.onReady(() => {
+        blockchain.determineDefaultAccount((err, defaultAccount) => {
+          if (err) {
+            return callback(err);
+          }
+          self.processes[storageName].send({
+            action: constants.storage.init, options: {
+              storageConfig: self.storageConfig,
+              blockchainConfig: self.blockchainConfig,
+              cors: self.buildCors(),
+              defaultAccount: defaultAccount
             }
-            self.processes[storageName].send({
-              action: constants.storage.init, options: {
-                storageConfig: self.storageConfig,
-                blockchainConfig: self.blockchainConfig,
-                cors: self.buildCors(),
-                defaultAccount: defaultAccount
-              }
-            });
           });
         });
       });
+    });
 
 
-      self.processes[storageName].on('result', constants.storage.initiated, (msg) => {
-        if (msg.error) {
-          self.processes[storageName].disconnect();
-          delete self.processes[storageName];
-          return callback(msg.error);
-        }
-        self.logger.info(__(`${storageName} process started`).cyan);
-        callback();
-      });
+    self.processes[storageName].on('result', constants.storage.initiated, (msg) => {
+      if (msg.error) {
+        self.processes[storageName].disconnect();
+        delete self.processes[storageName];
+        return callback(msg.error);
+      }
+      self.logger.info(__(`${storageName} process started`).cyan);
+      callback();
+    });
 
-      self.processes[storageName].on('result', constants.storage.restart, (_msg) => {
-        self.restartCalled = true;
-        self.logger.info(__(`Restarting ${storageName} process...`).cyan);
-        self.processes[storageName].kill();
-        delete this.processes[storageName];
-      });
+    self.processes[storageName].on('result', constants.storage.restart, (_msg) => {
+      self.restartCalled = true;
+      self.logger.info(__(`Restarting ${storageName} process...`).cyan);
+      self.processes[storageName].kill();
+      delete this.processes[storageName];
+    });
 
-      self.processes[storageName].on('result', constants.storage.exit, (_msg) => {
-        self.processes[storageName].kill();
-        delete this.processes[storageName];
-        this.events.emit(constants.storage.exit);
-      });
+    self.processes[storageName].on('result', constants.storage.exit, (_msg) => {
+      self.processes[storageName].kill();
+      delete this.processes[storageName];
+      this.events.emit(constants.storage.exit);
+    });
 
-      self.events.on('logs:swarm:enable', () => {
-        self.processes[storageName].silent = false;
-      });
+    self.events.on('logs:swarm:enable', () => {
+      self.processes[storageName].silent = false;
+    });
 
-      self.events.on('logs:swarm:disable', () => {
-        self.processes[storageName].silent = true;
-      });
-
+    self.events.on('logs:swarm:disable', () => {
+      self.processes[storageName].silent = true;
     });
   }
+
   stopProcess(storageName, cb) {
     if(this.processes[storageName]) {
       this.manualExit = true;
