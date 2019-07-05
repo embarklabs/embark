@@ -1,6 +1,6 @@
 import { __ } from 'embark-i18n';
 const shellJs = require('shelljs');
-import {joinPath, canonicalHost, buildUrlFromConfig} from 'embark-utils';
+import {canonicalHost, buildUrlFromConfig, embarkPath} from 'embark-utils';
 import { ProcessLauncher } from 'embark-core';
 const constants = require('embark-core/constants');
 const cloneDeep = require('lodash.clonedeep');
@@ -32,8 +32,7 @@ class StorageProcessesLauncher {
     });
   }
 
-  buildCors()
-  {
+  buildCors() {
     let corsParts = cloneDeep(this.corsParts);
     // add our webserver CORS
     if(this.webServerConfig.enabled){
@@ -100,7 +99,7 @@ class StorageProcessesLauncher {
     if (self.processes[storageName]) {
       return callback(__('Storage process already started'));
     }
-    const filePath = joinPath(__dirname, `../${storageName}/process.js`);
+    const filePath = require.resolve(`embark-${storageName}/process`, {paths: [embarkPath('node_modules')]});
     this.embark.fs.access(filePath, (err) => {
       if (err) {
         return callback(__('No process file for this storage type (%s) exists. Please start the process locally.', storageName));

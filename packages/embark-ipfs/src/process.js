@@ -3,7 +3,7 @@ const child_process = require('child_process');
 const constants = require('embark-core/constants');
 const async = require('async');
 
-let ipfsProcess; // eslint-disable-line no-unused-vars
+let ipfsProcess;
 
 const IPFS_DEFAULT_CONFIG_ERROR = ".HTTPHeaders key has no attributes";
 
