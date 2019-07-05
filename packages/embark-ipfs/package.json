@@ -58,7 +58,7 @@
     "embarkjs": "^4.1.0-beta.3",
     "embarkjs-ipfs": "^4.1.0-beta.3",
     "ipfs-api": "17.2.4",
-    "shelljs": "0.5.3"
+    "shelljs": "0.8.3"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
