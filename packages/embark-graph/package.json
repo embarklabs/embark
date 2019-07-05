@@ -40,7 +40,9 @@
     "// typecheck": "tsc",
     "watch": "run-p watch:*",
     "watch:build": "npm run build -- --verbose --watch",
-    "// watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
+    "// watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "eslintConfig": {
     "extends": "../../.eslintrc.json"
@@ -48,7 +50,8 @@
   "dependencies": {
     "@babel/runtime-corejs2": "7.3.1",
     "async": "2.6.1",
-    "viz.js": "1.8.2"
+    "viz.js": "1.8.2",
+    "snyk": "^1.192.0"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
@@ -64,5 +67,6 @@
     "node": ">=8.12.0 <12.0.0",
     "npm": ">=6.4.1",
     "yarn": ">=1.12.3"
-  }
+  },
+  "snyk": true
 }
