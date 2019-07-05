@@ -60,7 +60,7 @@
     "multihashes": "0.4.14",
     "ora": "2.1.0",
     "pretty-ms": "4.0.0",
-    "shelljs": "0.5.3",
+    "shelljs": "0.8.3",
     "web3": "1.0.0-beta.37",
     "web3-eth": "1.0.0-beta.37",
     "web3-eth-abi": "1.0.0-beta.37"
