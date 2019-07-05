@@ -17,7 +17,8 @@
   ],
   "files": [
     "constants.json",
-    "dist"
+    "dist",
+    "process.js"
   ],
   "license": "MIT",
   "repository": {
@@ -31,7 +32,7 @@
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
-    "lint:js": "eslint src/",
+    "lint:js": "eslint process.js src/",
     "// lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
     "package": "npm pack",
     "// qa": "npm-run-all lint typecheck build package",

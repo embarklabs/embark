@@ -113,7 +113,7 @@ class Engine {
   }
 
   coreProcessService(_options){
-    this.registerModule('core_process', {
+    this.registerModulePackage('embark-core/process', {
       events: this.events
     });
   }
