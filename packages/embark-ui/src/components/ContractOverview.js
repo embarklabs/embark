@@ -37,7 +37,7 @@ class ContractFunction extends Component {
       optionsCollapse: false,
       functionCollapse: false,
       gasPriceCollapse: false,
-      value: -1,
+      value: 0,
       unitConvertError: null,
       unitConvertDirty: false
     };
