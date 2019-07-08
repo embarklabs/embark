@@ -1,7 +1,10 @@
 import Convert from 'ansi-to-html';
 import qs from 'qs';
 
-import {DARK_THEME} from '../constants';
+import {DARK_THEME, BALANCE_REGEX} from '../constants';
+
+import {toWei} from 'web3-utils';
+import BigNumber from 'bignumber.js';
 
 export function last(array) {
   return array && array.length ? array[array.length - 1] : undefined;
@@ -49,3 +52,19 @@ export function stripQueryParam(location, param) {
 }
 
 export const isDarkTheme = (theme) => theme === DARK_THEME;
+
+export function getWeiBalanceFromString(balanceString: string) {
+  if (!balanceString) {
+    return 0;
+  }
+  const match = balanceString.match(BALANCE_REGEX);
+  if (!match) {
+    throw new Error(`Unrecognized balance string "${balanceString}"`);
+  }
+  // if no units passed in, assume we are dealing with wei
+  if (!match[2]) {
+    return new BigNumber(match[1]).toString(10);
+  }
+
+  return toWei(match[1], match[2]);
+}

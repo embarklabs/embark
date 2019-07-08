@@ -13,3 +13,7 @@ export const OPERATIONS = {
   LESS: -1
 };
 export const PAGE_TITLE_PREFIX = "Embark Cockpit";
+export const BALANCE_REGEX = /([0-9]+(?:\.[0-9]+)?)(?: ?([a-zA-Z]*))?/;
+export const ETHER_UNITS = [
+  "noether", "wei", "kwei", "Kwei", "babbage", "femtoether", "mwei", "Mwei", "lovelace", "picoether", "gwei", "Gwei", "shannon", "nanoether", "nano", "szabo", "microether", "micro", "finney", "milliether", "milli", "ether", "kether", "grand", "mether", "gether", "tether"
+];
