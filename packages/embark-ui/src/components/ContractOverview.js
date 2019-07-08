@@ -15,13 +15,17 @@ import {
   CardTitle,
   CardFooter,
   Collapse,
+  FormFeedback,
   ListGroup,
-  ListGroupItem
+  ListGroupItem,
+  UncontrolledTooltip
 } from "reactstrap";
 import GasStationContainer from "../containers/GasStationContainer";
 import {formatContractForDisplay} from '../utils/presentation';
 import FontAwesome from 'react-fontawesome';
 import classnames from 'classnames';
+import {getWeiBalanceFromString} from '../utils/utils';
+import {ETHER_UNITS} from '../constants';
 
 import "./ContractOverview.scss";
 
@@ -33,7 +37,9 @@ class ContractFunction extends Component {
       optionsCollapse: false,
       functionCollapse: false,
       gasPriceCollapse: false,
-      value: 0
+      value: -1,
+      unitConvertError: null,
+      unitConvertDirty: false
     };
   }
 
@@ -70,7 +76,15 @@ class ContractFunction extends Component {
 
   handleChange(e, name) {
     if (name === `${this.props.method.name}-value`) {
-      this.setState({ value: e.target.value });
+      this.setState({ unitConvertDirty: true });
+      try {
+        const weiBalance = getWeiBalanceFromString(e.target.value);
+        this.setState({ value: weiBalance, unitConvertError: null });
+      }
+      catch (e) {
+        this.setState({ unitConvertError: e.message });
+      }
+      
     } else {
       const newInputs = this.state.inputs;
       newInputs[name] = e.target.value;
@@ -108,7 +122,7 @@ class ContractFunction extends Component {
   }
 
   callDisabled() {
-    return this.inputsAsArray().length !== this.props.method.inputs.length;
+    return (this.inputsAsArray().length !== this.props.method.inputs.length) || this.state.unitConvertError;
   }
 
   toggleOptions() {
@@ -196,13 +210,22 @@ class ContractFunction extends Component {
          <Collapse isOpen={this.state.functionCollapse} className="relative">
           <CardBody>
             {ContractFunction.isPayable(this.props.method) &&
-              <Form inline>
-                <Label for={this.props.method.name + '-value'} className="mr-2 font-weight-bold contract-function-input">ETH</Label>
+              <Form inline className="mb-1">
+                <Label for={this.props.method.name + '-value'} className="mr-2 font-weight-bold contract-function-input">Transaction value</Label>
                 <Input name={this.props.method.name}
                        id={this.props.method.name + '-value'}
                        onChange={(e) => this.handleChange(e, this.props.method.name + '-value')}
                        onKeyPress={(e) => this.handleKeyPress(e)}
+                       invalid={this.state.unitConvertError && this.state.unitConvertDirty ? true : null}
+                       valid={!this.state.unitConvertError && this.state.unitConvertDirty ? true : null}
                        />
+                {<FormFeedback valid={this.state.unitConvertError && this.state.unitConvertDirty ? null : true} tooltip>{this.state.unitConvertError ? this.state.unitConvertError : this.state.value} wei</FormFeedback>}
+                <Button close id="PopoverFocus" className="ml-2" type="button">
+                  <FontAwesome name="question-circle"/>
+                </Button>
+                <UncontrolledTooltip trigger="focus" placement="bottom" target="PopoverFocus">
+                  Enter a number followed by an ether unit, ie <code>0.5 ether</code> or <code>16 szabo</code>.<br/><br/>If a number is entered without a unit (ie <code>21000</code>), then <code>wei</code> is assumed.<br/><br/>Valid units include {ETHER_UNITS.map((unit, idx) => <React.Fragment><code>{unit}</code><span>{idx !== ETHER_UNITS.length - 1 ? ", " : ""}</span></React.Fragment>)}
+                </UncontrolledTooltip>
               </Form>
             }
             <Form inline>

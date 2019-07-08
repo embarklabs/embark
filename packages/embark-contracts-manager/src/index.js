@@ -117,14 +117,13 @@ class ContractsManager {
           if (error) {
             return res.send({error: error.message});
           }
-          const {account, contract, web3} = result;
+          const {account, contract} = result;
           const abi = contract.abiDefinition.find(definition => definition.name === req.body.method);
           const funcCall = (abi.constant === true || abi.stateMutability === 'view' || abi.stateMutability === 'pure') ? 'call' : 'send';
 
           self.events.request("blockchain:contract:create", {abi: contract.abiDefinition, address: contract.deployedAddress}, async (contractObj) => {
             try {
               let value = typeof req.body.value === "number" ? req.body.value.toString() : req.body.value;
-              value = web3.utils.toWei(value, 'ether');
               const gas = await contractObj.methods[req.body.method].apply(this, req.body.inputs).estimateGas({ value });
               contractObj.methods[req.body.method].apply(this, req.body.inputs)[funcCall]({
                 from: account,
