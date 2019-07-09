@@ -55,7 +55,14 @@ class EmbarkSpec extends Base {
       if (self.txDetails) {
         self.embarkEvents.request('contracts:contract', receipt.className, (contract) => {
           if (contract) {
-            self.contracts.push(contract);
+            let index = self.contracts.findIndex(c => c.className === contract.className);
+            // It's possible to deploy the same contract multiple times per test, so we need
+            // to make sure we replace the existing one with the new one.
+            if (index > -1) {
+              self.contracts[index] = contract;
+            } else {
+              self.contracts.push(contract);
+            }
             self.addressToContract = getAddressToContract(self.contracts, self.addressToContract);
           }
         });
@@ -145,7 +152,6 @@ class EmbarkSpec extends Base {
 
     runner.on('test', function() {
       self.stats.test.gasUsed = 0;
-      self.contracts = [];
     });
 
     runner.on('pass', function(test) {
