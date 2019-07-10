@@ -1,4 +1,5 @@
 import { __ } from 'embark-i18n';
+import * as async from 'async';
 
 class Storage {
   constructor(embark, options){
@@ -50,11 +51,31 @@ class Storage {
     };
 
     this.embark.addProviderInit('storage', code, shouldInit);
-    this.embark.events.request("runcode:storage:providerRegistered", () => {
+
+    async.parallel([
+      (next) => {
+        if (!this.storageConfig.available_providers.includes('ipfs')) {
+          return next();
+        }
+        this.embark.events.once('ipfs:process:started', next);
+      },
+      (next) => {
+        if (!this.storageConfig.available_providers.includes('swarm')) {
+          return next();
+        }
+        this.embark.events.once('swarm:process:started', next);
+      }
+    ], (err) => {
+      if (err) {
+        console.error(__('Error starting storage process(es): %s', err));
+      }
+
       this.embark.addConsoleProviderInit('storage', code, shouldInit);
-      this.embark.events.request("runcode:storage:providerSet", () => {
-        cb();
-      });
+      // TODO: fix me, this is an ugly workaround for race conditions
+      // in the case where the storage process is too slow when starting up we
+      // execute ourselves the setProviders because the console provider init
+      // was already executed
+      this.embark.events.request('runcode:eval', `if (Object.keys(EmbarkJS.Storage.Providers).length) { ${code} }`, cb, true);
     });
   }
 

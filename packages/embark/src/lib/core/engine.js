@@ -1,4 +1,3 @@
-import { __ } from 'embark-i18n';
 import { ProcessManager, IPC } from 'embark-core';
 const async = require('async');
 
@@ -270,27 +269,13 @@ class Engine {
   }
 
   storageService(_options) {
-    async.parallel([
-      (next) => {
-        if (!this.config.storageConfig.available_providers.includes("ipfs")) {
-          return next();
-        }
-        this.events.once("ipfs:process:started", next);
-        this.registerModulePackage('embark-ipfs');
-      },
-      (next) => {
-        if (!this.config.storageConfig.available_providers.includes("swarm")) {
-          return next();
-        }
-        this.events.once("swarm:process:started", next);
-        this.registerModulePackage('embark-swarm');
-      }
-    ], (err) => {
-      if(err) {
-        console.error(__("Error starting storage process(es): %s", err));
-      }
-      this.registerModulePackage('embark-storage', {plugins: this.plugins});
-    });
+    if (this.config.storageConfig.available_providers.includes("ipfs")) {
+      this.registerModulePackage('embark-ipfs');
+    }
+    if (this.config.storageConfig.available_providers.includes("swarm")) {
+      this.registerModulePackage('embark-swarm');
+    }
+    this.registerModulePackage('embark-storage', {plugins: this.plugins});
   }
 
   web3Service(options) {
