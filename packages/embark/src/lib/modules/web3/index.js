@@ -1,4 +1,5 @@
 require('ejs');
+
 const Templates = {
   vanilla_contract: require('./vanilla-contract.js.ejs')
 };

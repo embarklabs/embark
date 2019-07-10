@@ -146,13 +146,21 @@ class Engine {
       webpackConfigName: this.webpackConfigName,
       useDashboard: this.useDashboard
     });
-    this.events.on('code-generator-ready', function (modifiedAssets) {
-      self.events.request('code', function (abi, contractsJSON) {
-        self.events.request('pipeline:build', {abi, contractsJSON, modifiedAssets}, () => {
-          self.events.emit('outputDone');
-        });
+    // this.events.on('code-generator-ready', function (modifiedAssets) {
+    //   self.events.request('code', function (abi, contractsJSON) {
+    //     self.events.request('pipeline:build', {abi, contractsJSON, modifiedAssets}, () => {
+    //       self.events.emit('outputDone');
+    //     });
+    //   });
+    // });
+
+    // TODO: move this to cmd_controller and define all such behaviour there
+    this.events.on('contracts:deploy:afterAll', () => {
+      self.events.request('pipeline:generateAll', () => {
+        console.dir("outputDone")
+        self.events.emit('outputDone');
       });
-    });
+    })
   }
 
   serviceMonitor() {

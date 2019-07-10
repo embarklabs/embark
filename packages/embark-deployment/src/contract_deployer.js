@@ -219,25 +219,7 @@ class ContractDeployer {
     this.plugins.runActionsForEvent('deploy:contract:deployed', {contract: contract}, (err) => {
       callback(err);
     });
-    // this.registerContract(contract, callback);
   }
-
-  // TODO: should be done in a module as part of the event registration
-  // registerContract(contract, callback) {
-  //   this.events.request('code-generator:contract:custom', contract, (contractCode) => {
-  //     this.events.request('runcode:eval', contractCode, (err) => {
-  //       if (err) {
-  //         return callback(err);
-  //       }
-  //       this.events.request('runcode:eval', contract.className, (err, result) => {
-  //         if (err) {
-  //           return callback(err);
-  //         }
-  //         this.events.emit("runcode:register", contract.className, result, callback);
-  //       });
-  //     });
-  //   });
-  // }
 
   logFunction(contract) {
     return contract.silent ? this.logger.trace.bind(this.logger) : this.logger.info.bind(this.logger);

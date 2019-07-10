@@ -104,7 +104,7 @@ class DeployManager {
             console.dir("== async.auto");
             console.dir(Object.keys(contractDeploys));
             console.dir(contractDeploys);
-            async.auto(contractDeploys, 1, function(_err, _results) {
+            async.auto(contractDeploys, function(_err, _results) {
               if (_err) {
                 console.dir("error deploying contracts")
                 console.dir(_err)
