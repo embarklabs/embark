@@ -48,17 +48,44 @@ class Pipeline {
 
     this.api = new PipelineAPI(embark, options);
     this.api.registerAPIs();
+
+    this.files = {}
+
+    this.events.setCommandHandler('pipeline:register', (params) => {
+      this.files[dappPath(...params.path, params.file)] = params;
+    });
   }
 
   generateAll(cb) {
     console.dir("generating all files");
-    // TODO:
-    // placeholder: not actually needed?? it seems to be done on the server
-    // * create placeholder
-    // * check registered code and generate files
-    // * remove placeholder
-    // * placeholder can be a plugin as well or different module
+
+    // TODO: make this async
+    for (let fileParams of Object.values(this.files)) {
+      if (fileParams.format === 'json') {
+        this.writeJSONFile(fileParams)
+      } else {
+        // TODO: other/js
+      }
+    }
+
     cb();
+  }
+
+  writeJSONFile(params) {
+    const self = this;
+    const dir = dappPath(...params.path);
+    const filename = dappPath(...params.path, params.file);
+    const content = params.content;
+
+    async.waterfall([
+      function makeDirectory(next) {
+        self.fs.mkdirp(dir, err => next(err));
+      },
+      function writeContractsJSON(next) {
+        self.fs.writeJson(filename, content, { spaces: 2 }, () => { next() });
+      }
+    ], () => {
+    });
   }
 
   build({modifiedAssets}, callback) {
@@ -72,6 +99,7 @@ class Pipeline {
     }
 
     async.waterfall([
+      // TODO: doesn't seem to be actually used (it's done on the webserver itself)
       function createPlaceholderPage(next) {
         if (self.isFirstBuild) {
           self.isFirstBuild = false;
