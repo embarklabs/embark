@@ -14,6 +14,13 @@ interface Suggestion {
 
 type SuggestionsList = Suggestion[];
 
+// =============================================
+// =============================================
+// TODO: this should be moved to its own module
+// it's a plugin not a core module
+// =============================================
+// =============================================
+
 export default class Suggestions {
   private embark: Embark;
   private events: Events;

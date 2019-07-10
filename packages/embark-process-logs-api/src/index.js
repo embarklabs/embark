@@ -1,5 +1,7 @@
 const {escapeHtml, LogHandler} = require('embark-utils');
 
+// TODO: looks unnecessary, should be moved to a common module together with embark-listener
+
 class ProcessLogsApi {
   constructor({embark, processName, silent}) {
     this.embark = embark;

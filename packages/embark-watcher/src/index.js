@@ -21,6 +21,7 @@ class Watcher {
     this.events.setCommandHandler('watcher:restart', () => this.restart());
   }
 
+  // TODO: it needs to be more agnostic, the files to watch should be registered through the plugin api
   start() {
     let self = this;
     // TODO: should come from the config object instead of reading the file

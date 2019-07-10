@@ -135,17 +135,27 @@ class Engine {
 
   pipelineService(_options) {
     const self = this;
-    this.registerModulePackage('embark-pipeline', {
+    this.registerModulePackage('embark-pipeline', { plugins: this.plugins });
+    this.registerModule('basic-pipeline', {
+      plugins: this.plugins,
       webpackConfigName: this.webpackConfigName,
       useDashboard: this.useDashboard
     });
-    this.events.on('code-generator-ready', function (modifiedAssets) {
-      self.events.request('code', function (abi, contractsJSON) {
-        self.events.request('pipeline:build', {abi, contractsJSON, modifiedAssets}, () => {
-          self.events.emit('outputDone');
-        });
+    // this.events.on('code-generator-ready', function (modifiedAssets) {
+    //   self.events.request('code', function (abi, contractsJSON) {
+    //     self.events.request('pipeline:build', {abi, contractsJSON, modifiedAssets}, () => {
+    //       self.events.emit('outputDone');
+    //     });
+    //   });
+    // });
+
+    // TODO: move this to cmd_controller and define all such behaviour there
+    this.events.on('contracts:deploy:afterAll', () => {
+      self.events.request('pipeline:generateAll', () => {
+        console.dir("outputDone")
+        self.events.emit('outputDone');
       });
-    });
+    })
   }
 
   serviceMonitor() {
@@ -180,32 +190,30 @@ class Engine {
   }
 
   codeGeneratorService(_options) {
-    let self = this;
-
-    this.registerModulePackage('embark-code-generator', {plugins: self.plugins, env: self.env});
-
-    const generateCode = function (modifiedAssets, cb) {
-      self.events.request("code-generator:embarkjs:build", () => {
-        self.events.emit('code-generator-ready', modifiedAssets);
-        cb();
-      });
-    };
-    const cargo = async.cargo((tasks, callback) => {
-      const modifiedAssets = tasks.map(task => task.modifiedAsset).filter(asset => asset); // filter null elements
-      generateCode(modifiedAssets, () => {
-        if (this.context.includes('test')) {
-          return callback();
-        }
-        self.events.once('outputDone', callback);
-      });
-    });
-    const addToCargo = function (modifiedAsset) {
-      cargo.push({modifiedAsset});
-    };
-
-    this.events.on('contractsDeployed', addToCargo);
-    this.events.on('blockchainDisabled', addToCargo);
-    this.events.on('asset-changed', addToCargo);
+    return;
+    // let self = this;
+//
+    // this.registerModulePackage('embark-code-generator', {plugins: self.plugins, env: self.env});
+//
+    // const generateCode = function (modifiedAssets) {
+      // // self.events.request("module:storage:onReady", () => {
+        // self.events.request("code-generator:embarkjs:build", () => {
+          // self.events.emit('code-generator-ready', modifiedAssets);
+        // });
+      // // });
+    // };
+    // const cargo = async.cargo((tasks, callback) => {
+      // const modifiedAssets = tasks.map(task => task.modifiedAsset).filter(asset => asset); // filter null elements
+      // generateCode(modifiedAssets);
+      // self.events.once('outputDone', callback);
+    // });
+    // const addToCargo = function (modifiedAsset) {
+      // cargo.push({modifiedAsset});
+    // };
+//
+    // this.events.on('contractsDeployed', addToCargo);
+    // this.events.on('blockchainDisabled', addToCargo);
+    // this.events.on('asset-changed', addToCargo);
   }
 
   setupCompilerAndContractsManagerService(options) {
@@ -269,23 +277,23 @@ class Engine {
   }
 
   storageService(_options) {
-    this.registerModulePackage('embark-ipfs');
-    this.registerModulePackage('embark-swarm');
-    this.registerModulePackage('embark-storage', {plugins: this.plugins});
+    // this.registerModulePackage('embark-ipfs');
+    // this.registerModulePackage('embark-swarm');
+    // this.registerModulePackage('embark-storage', {plugins: this.plugins});
 
-    this.events.setCommandHandler("module:storage:reset", (cb) => {
-      async.parallel([
-        (paraCb) => {
-          this.events.request("module:ipfs:reset", paraCb);
-        },
-        (paraCb) => {
-          this.events.request("module:swarm:reset", paraCb);
-        },
-        (paraCb) => {
-          this.events.request("module:storageJS:reset", paraCb);
-        }
-      ], cb);
-    });
+    // this.events.setCommandHandler("module:storage:reset", (cb) => {
+    //   async.parallel([
+    //     (paraCb) => {
+    //       this.events.request("module:ipfs:reset", paraCb);
+    //     },
+    //     (paraCb) => {
+    //       this.events.request("module:swarm:reset", paraCb);
+    //     },
+    //     (paraCb) => {
+    //       this.events.request("module:storageJS:reset", paraCb);
+    //     }
+    //   ], cb);
+    // });
   }
 
   web3Service(options) {
@@ -307,6 +315,7 @@ class Engine {
     });
 
     this.registerModulePackage('embark-whisper');
+    this.registerModule('web3', { plugins: this.plugins });
   }
 
   libraryManagerService(_options) {

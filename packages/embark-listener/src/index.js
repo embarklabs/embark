@@ -2,6 +2,8 @@ const ProcessLogsApi = require('embark-process-logs-api');
 
 const EMBARK_PROCESS_NAME = 'embark';
 
+// TODO: looks unnecessary, should be moved to a common module together with embark-process-logs-api
+
 /**
  * EmbarkListener has two functions:
  * 1. Register API endpoints (HTTP GET and WS) to retrieve embark logs.

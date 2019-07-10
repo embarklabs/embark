@@ -69,9 +69,10 @@ class SolcTest extends Test {
         async.series(fns, next);
       },
       function resetEmbarkJs(file, next) {
-        self.events.request("runcode:embarkjs:reset", (err) => {
-          next(err, file);
-        });
+        // self.events.request("runcode:embarkjs:reset", (err) => {
+          // next(err, file);
+        // });
+        next(err, file);
       }
     ], cb);
   }

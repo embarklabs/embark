@@ -20,21 +20,28 @@ class EmbarkWeb3 {
   async addWeb3ToEmbarkJS() {
     let blockchainConnectorReady = false;
 
-    const web3LocationPromise = this.getWeb3Location();
+    code += "\nEmbarkJS.Blockchain.registerProvider('web3', embarkJSConnectorWeb3);";
+    // code += "\nEmbarkJS.Blockchain.setProvider('web3', {});";
 
-    this.events.setCommandHandler('blockchain:connector:ready', (cb) => {
-      if (blockchainConnectorReady) {
-        return cb();
+    code += "\nEmbarkJS.Blockchain.setProvider('web3', {web3});";
+
+    this.events.request('runcode:eval', code, (err) => {
+      if (err) {
+        return cb(err);
       }
-      this.events.once("blockchain:connector:ready", () => {
-        cb();
-      });
     });
+  }
 
-    web3LocationPromise.then((_web3Location) => {
-      blockchainConnectorReady = true;
-      this.events.emit('blockchain:connector:ready');
-    });
+  registerWeb3Help() {
+    this.events.request('console:register:helpCmd', {
+      cmdName: "web3",
+      cmdHelp: __("instantiated web3.js object configured to the current environment")
+    }, () => { })
+  }
+
+  // ===============
+  // ===============
+  // ===============
 
     let web3Location = await web3LocationPromise;
     web3Location = normalizePath(web3Location, true);

@@ -150,6 +150,12 @@ class ENS {
 
   registerEvents() {
     this.embark.registerActionForEvent("deploy:beforeAll", this.configureContractsAndRegister.bind(this));
+    if (this.eventsRegistered) {
+      return;
+    }
+    this.eventsRegistered = true;
+    // TODO: re-add
+    // this.embark.registerActionForEvent("deploy:beforeAll", this.configureContractsAndRegister.bind(this));
     this.events.on('blockchain:reseted', this.reset.bind(this));
     this.events.setCommandHandler("storage:ens:associate", this.associateStorageToEns.bind(this));
     this.events.setCommandHandler("ens:config", this.getEnsConfig.bind(this));

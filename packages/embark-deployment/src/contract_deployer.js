@@ -85,6 +85,7 @@ class ContractDeployer {
   }
 
   checkAndDeployContract(contract, params, callback, returnObject) {
+    console.dir("= checkAndDeployContract: " + contract.className);
     let self = this;
     contract.error = false;
     let accounts = [];
@@ -176,6 +177,7 @@ class ContractDeployer {
           return self.deployContract(contract, next, returnObject);
         }
 
+        console.dir("== emitAndRunActionsForEvent / should Deploy");
         self.plugins.emitAndRunActionsForEvent('deploy:contract:shouldDeploy', {contract: contract, shouldDeploy: true}, function(_err, params) {
           let trackedContract = params.contract;
           if (!params.shouldDeploy) {
@@ -202,7 +204,9 @@ class ContractDeployer {
           });
         });
       }
-    ], callback);
+    ], (err,results) => {
+      callback(err, results);
+    });
   }
 
   willNotDeployContract(contract, trackedContract, callback) {
@@ -212,26 +216,13 @@ class ContractDeployer {
   }
 
   contractAlreadyDeployed(contract, trackedContract, callback) {
+    console.dir("--> contractAlreadyDeployed")
     this.logFunction(contract)(contract.className.bold.cyan + __(" already deployed at ").green + trackedContract.address.bold.cyan);
     contract.deployedAddress = trackedContract.address;
     this.events.emit("deploy:contract:deployed", contract);
 
-    this.registerContract(contract, callback);
-  }
-
-  registerContract(contract, callback) {
-    this.events.request('code-generator:contract:custom', contract, (contractCode) => {
-      this.events.request('runcode:eval', contractCode, (err) => {
-        if (err) {
-          return callback(err);
-        }
-        this.events.request('runcode:eval', contract.className, (err, result) => {
-          if (err) {
-            return callback(err);
-          }
-          this.events.emit("runcode:register", contract.className, result, callback);
-        });
-      });
+    this.plugins.runActionsForEvent('deploy:contract:deployed', {contract: contract}, (err) => {
+      callback(err);
     });
   }
 
@@ -240,11 +231,13 @@ class ContractDeployer {
   }
 
   deployContract(contract, callback, returnObject) {
+    console.dir("deployContract")
     let self = this;
     let deployObject;
 
     async.waterfall([
       function doLinking(next) {
+        console.dir("= doLinking")
 
         if (!contract.linkReferences || !Object.keys(contract.linkReferences).length) {
           return next();
@@ -288,11 +281,13 @@ class ContractDeployer {
         });
       },
       function applyBeforeDeploy(next) {
+        console.dir("= applyBeforeDeploy")
         self.plugins.emitAndRunActionsForEvent('deploy:contract:beforeDeploy', {contract: contract}, (_params) => {
           next();
         });
       },
       function getGasPriceForNetwork(next) {
+        console.dir("= getGasPriceForNetwork")
         self.events.request("blockchain:gasPrice", (err, gasPrice) => {
           if (err) {
             return next(new Error(__("could not get the gas price")));
@@ -302,6 +297,7 @@ class ContractDeployer {
         });
       },
       function createDeployObject(next) {
+        console.dir("= createDeployObject")
         let contractCode   = contract.code;
         let contractObject = self.blockchain.ContractObject({abi: contract.abiDefinition});
         let contractParams = (contract.realArgs || contract.args).slice();
@@ -343,6 +339,7 @@ class ContractDeployer {
         });
       },
       function deployTheContract(next) {
+        console.dir("= deployTheContract " + contract.className)
         let estimatedCost = contract.gas * contract.gasPrice;
 
         self.blockchain.deployContractFromObject(deployObject, {
@@ -350,6 +347,9 @@ class ContractDeployer {
           gas: contract.gas,
           gasPrice: contract.gasPrice
         }, function(error, receipt) {
+          console.dir("--> contract deployed")
+          console.dir(error)
+          console.dir(receipt)
           if (error) {
             contract.error = error.message;
             self.events.emit("deploy:contract:error", contract);
@@ -366,19 +366,25 @@ class ContractDeployer {
           if(receipt) self.events.emit("deploy:contract:receipt", receipt);
           self.events.emit("deploy:contract:deployed", contract);
 
-          self.registerContract(contract, () => {
+          // console.dir("__registerContract")
+          // self.registerContract(contract, () => {
+            console.dir("__runActionsForEvent deploy:contract:deployed")
             self.plugins.runActionsForEvent('deploy:contract:deployed', {contract: contract}, (err) => {
+              console.dir("result __runActionsForEvent deploy:contract:deployed")
               if (err) {
+                console.dir(err)
                 return next(err);
               }
               next(null, receipt);
-            });
           });
         }, hash => {
           self.logFunction(contract)(__("deploying") + " " + contract.className.bold.cyan + " " + __("with").green + " " + contract.gas + " " + __("gas at the price of").green + " " + contract.gasPrice + " " + __("Wei, estimated cost:").green + " " + estimatedCost + " Wei".green + " (txHash: " + hash.bold.cyan + ")");
         });
       }
-    ], callback);
+    ], (__err, __results) => {
+      console.dir("--- deployed Contract")
+      callback(__err, __results)
+    });
   }
 
 }
