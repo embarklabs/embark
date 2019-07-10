@@ -1,6 +1,6 @@
 {
   "name": "embark-listener",
-  "version": "4.1.0-beta.4",
+  "version": "4.1.0-beta.5",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Log listening for Embark",
@@ -47,7 +47,7 @@
     "extends": "../../.eslintrc.json"
   },
   "dependencies": {
-    "embark-process-logs-api": "^4.1.0-beta.4"
+    "embark-process-logs-api": "^4.1.0-beta.5"
   },
   "devDependencies": {
     "eslint": "5.7.0",

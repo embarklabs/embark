@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.5](https://github.com/embark-framework/embark/compare/v4.1.0-beta.4...v4.1.0-beta.5) (2019-07-10)
+
+
+### Bug Fixes
+
+* **@embark/test-runner:** make `--tx-details` option work again ([2531fc1](https://github.com/embark-framework/embark/commit/2531fc1)), closes [/github.com/embark-framework/embark/commit/87d92b6091#diff-92b4f79a0473160fe700440b1ced5204R140](https://github.com//github.com/embark-framework/embark/commit/87d92b6091/issues/diff-92b4f79a0473160fe700440b1ced5204R140)
+
+
+
+
+
 # [4.1.0-beta.4](https://github.com/embark-framework/embark/compare/v4.1.0-beta.3...v4.1.0-beta.4) (2019-06-27)
 
 

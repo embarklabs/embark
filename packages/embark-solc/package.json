@@ -1,6 +1,6 @@
 {
   "name": "embark-solc",
-  "version": "4.1.0-beta.4",
+  "version": "4.1.0-beta.5",
   "author": "Richard Ramos",
   "contributors": [],
   "description": "Solc plugin for Embark (uses command line)",

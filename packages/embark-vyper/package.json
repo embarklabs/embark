@@ -1,6 +1,6 @@
 {
   "name": "embark-vyper",
-  "version": "4.1.0-beta.3",
+  "version": "4.1.0-beta.5",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Embark wrapper for the Vyper compiler",

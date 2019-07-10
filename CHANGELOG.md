@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.5](https://github.com/embark-framework/embark/compare/v4.1.0-beta.4...v4.1.0-beta.5) (2019-07-10)
+
+
+### Bug Fixes
+
+* **@cockpit:** don't send invalid value to Smart Contract methods ([3f77272](https://github.com/embark-framework/embark/commit/3f77272))
+* **@cockpit/debugger:** check if `debuggingContract` is undefined ([3590197](https://github.com/embark-framework/embark/commit/3590197))
+* **@cockpit/explorers:** consistently display "Mined on" timestamps ([52d54f0](https://github.com/embark-framework/embark/commit/52d54f0))
+* **@embark/code-generator:** use plugins for contract generation ([c87d7da](https://github.com/embark-framework/embark/commit/c87d7da))
+* **@embark/code-runner:** restore EmbarkJS.environment property in the cli dashboard ([7d27125](https://github.com/embark-framework/embark/commit/7d27125))
+* **@embark/contracts-manager:** ensure ETH values sent through APIs are converted to string ([70ff3c1](https://github.com/embark-framework/embark/commit/70ff3c1))
+* **@embark/deployment:** don't over estimate gas when running tests against non-simulator nodes ([d76a82a](https://github.com/embark-framework/embark/commit/d76a82a)), closes [/github.com/trufflesuite/ganache-core/blob/8ad1ab29deccbbb4018f6961d0eb7ec984ad8fcb/lib/utils/gasEstimation.js#L33-L39](https://github.com//github.com/trufflesuite/ganache-core/blob/8ad1ab29deccbbb4018f6961d0eb7ec984ad8fcb/lib/utils/gasEstimation.js/issues/L33-L39)
+* **@embark/embarkjs-whisper:** Messages.isAvailable() should always return a promise ([93ca3ad](https://github.com/embark-framework/embark/commit/93ca3ad))
+* **@embark/ipc:** fix functions not being printed in console ([421c340](https://github.com/embark-framework/embark/commit/421c340))
+* **@embark/site:** update contractGeneration plugin api ([ad796bc](https://github.com/embark-framework/embark/commit/ad796bc))
+* **@embark/storage:** revise timing for process:started and code eval to avoid race conditions ([5828ae6](https://github.com/embark-framework/embark/commit/5828ae6))
+* **@embark/test-runner:** make `--tx-details` option work again ([2531fc1](https://github.com/embark-framework/embark/commit/2531fc1)), closes [/github.com/embark-framework/embark/commit/87d92b6091#diff-92b4f79a0473160fe700440b1ced5204R140](https://github.com//github.com/embark-framework/embark/commit/87d92b6091/issues/diff-92b4f79a0473160fe700440b1ced5204R140)
+
+
+### Features
+
+* **@cockpit:** Pass tx value as wei and add validation ([536a402](https://github.com/embark-framework/embark/commit/536a402))
+* **@embark/solc:** add embark-solc to monorepo ([1e59b58](https://github.com/embark-framework/embark/commit/1e59b58))
+* **@embark/ui:** sort contracts and functions alphabetically ([0e9a4a1](https://github.com/embark-framework/embark/commit/0e9a4a1))
+
+
+
+
+
 # [4.1.0-beta.4](https://github.com/embark-framework/embark/compare/v4.1.0-beta.3...v4.1.0-beta.4) (2019-06-27)
 
 

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.5](https://github.com/embark-framework/embark/compare/v4.1.0-beta.4...v4.1.0-beta.5) (2019-07-10)
+
+
+### Bug Fixes
+
+* **@cockpit:** don't send invalid value to Smart Contract methods ([3f77272](https://github.com/embark-framework/embark/commit/3f77272))
+* **@cockpit/debugger:** check if `debuggingContract` is undefined ([3590197](https://github.com/embark-framework/embark/commit/3590197))
+* **@cockpit/explorers:** consistently display "Mined on" timestamps ([52d54f0](https://github.com/embark-framework/embark/commit/52d54f0))
+
+
+### Features
+
+* **@cockpit:** Pass tx value as wei and add validation ([536a402](https://github.com/embark-framework/embark/commit/536a402))
+* **@embark/ui:** sort contracts and functions alphabetically ([0e9a4a1](https://github.com/embark-framework/embark/commit/0e9a4a1))
+
+
+
+
+
 # [4.1.0-beta.4](https://github.com/embark-framework/embark/compare/v4.1.0-beta.3...v4.1.0-beta.4) (2019-06-27)
 
 
