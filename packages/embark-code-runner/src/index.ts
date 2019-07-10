@@ -8,10 +8,7 @@ import Web3 from "web3";
 
 const EmbarkJS = require("embarkjs");
 
-export enum ProviderEventType {
-  ProviderRegistered = "providerRegistered",
-  ProviderSet = "providerSet",
-}
+import { ProviderEventType } from "embark-core";
 
 export default class CodeRunner {
   private ready: boolean = false;
@@ -52,8 +49,47 @@ export default class CodeRunner {
     });
   }
 
+  private fireEmbarkJSEvents(code: string) {
+    const regexRegister = /EmbarkJS\.(.*)\.registerProvider/gm;
+    const regexSet = /EmbarkJS\.(.*)\.setProvider/gm;
+    let matches = regexRegister.exec(code);
+    if (matches) {
+      let [, provider] = matches;
+      provider = provider.toLowerCase();
+      this.providerStates[`${provider}:${ProviderEventType.ProviderRegistered}`] = true;
+      this.events.emit(`runcode:${provider}:${ProviderEventType.ProviderRegistered}`);
+    }
+    matches = regexSet.exec(code);
+    if (matches) {
+      let [, provider] = matches;
+      provider = provider.toLowerCase();
+      this.providerStates[`${provider}:${ProviderEventType.ProviderSet}`] = true;
+      this.events.emit(`runcode:${provider}:${ProviderEventType.ProviderSet}`);
+    }
+  }
+
   private registerEvents() {
     this.events.on("runcode:register", this.registerVar.bind(this));
+
+    this.events.on("runcode:init-console-code:updated", (code: string, cb: Callback<null>) => {
+      this.evalCode(code, (err, _result) => {
+        if (err) {
+          this.logger.error("Error running init console code: ", err.message || err);
+        }
+        this.fireEmbarkJSEvents(code);
+        cb();
+      });
+    });
+
+    this.events.on("runcode:embarkjs-code:updated", (code: string, cb: Callback<any>) => {
+      this.evalCode(code, (err, _result) => {
+        if (err) {
+          this.logger.error("Error running embarkjs code: ", err.message || err);
+        }
+        this.fireEmbarkJSEvents(code);
+        cb();
+      });
+    });
   }
 
   private registerCommands() {

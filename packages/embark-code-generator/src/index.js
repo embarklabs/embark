@@ -2,6 +2,7 @@ import { __ } from 'embark-i18n';
 import { dappPath, embarkPath, joinPath, toForwardSlashes } from 'embark-utils';
 import * as fs from 'fs-extra';
 import { transform } from "@babel/core";
+import { ProviderEventType } from "embark-core";
 const async = require('async');
 const constants = require('embark-core/constants');
 const path  = require('path');
@@ -381,6 +382,24 @@ class CodeGenerator {
           },
           (err) => { next(err); }
         );
+      },
+      // TODO: Figure out a way to not hardcode the properties hanging off EmbarkJS, 
+      // for example to consider custom EmbarkJS plugins. 
+      // Or get rid of this entirely as part of a larger refactor
+      function waitForModules(next) {
+        const modules = ["blockchain", "storage", "messages", "names"];
+        const moduleReadyFuncs = [].concat(...modules.map((module) => {
+          return [
+            (callback) => { self.events.request(`runcode:${module}:${ProviderEventType.ProviderRegistered}`, callback); },
+            (callback) => { self.events.request(`runcode:${module}:${ProviderEventType.ProviderSet}`, callback); }
+          ];
+        }));
+        async.parallel(moduleReadyFuncs, (err, _results) => {
+          if (err) {
+            return next(__(`Error waiting for modules to initialize: ${(err && err.message) || err}`));
+          }
+          next();
+        });
       },
       function getJSCode(next) {
         code += self.getEmbarkJsProviderCode();
