@@ -41,20 +41,14 @@ function request(type, path, params = {}) {
 }
 
 function get() {
-  console.dir("== get");
-  console.dir(...arguments);
   return request('get', ...arguments);
 }
 
 function post() {
-  console.dir("== post");
-  console.dir(...arguments);
   return request('post', ...arguments);
 }
 
 function destroy() {
-  console.dir("== destroy");
-  console.dir(...arguments);
   return request('delete', ...arguments);
 }
 
