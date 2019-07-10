@@ -96,11 +96,7 @@ export default class CodeRunner {
           console.dir(err);
           return;
         }
-        this.events.request("code-generator:embarkjs:set-provider-code", (providerCode: string) => {
-          this.evalCode(providerCode, (errInitProvider, _result) => {
-            if (cb) { cb(errInitProvider); }
-          }, false);
-        });
+        if (cb) { cb(); }
       }, false);
     });
   }

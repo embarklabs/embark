@@ -1,4 +1,5 @@
 import {detectSeries} from './async';
+require('colors');
 
 const Storage = {};
 
@@ -92,7 +93,7 @@ Storage.setProviders = function (dappConnOptions, addlOpts) {
       callback(null, false);
     }
   }, function (err, result) {
-    if (!result) console.error('Could not connect to a storage provider using any of the dappConnections in the storage config');
+    if (!result) console.log('Could not connect to a storage provider using any of the dappConnections in the storage config'.red);
   });
 };
 
