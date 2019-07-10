@@ -231,9 +231,6 @@ Plugin.prototype.addCodeToEmbarkJS = function(code) {
   this.addPluginType('embarkjsCode');
   if (!this.embarkjs_code.some((existingCode) => deepEqual(existingCode, code))) {
     this.embarkjs_code.push(code);
-    this.events.request('blockchain:ready', () => {
-      this.events.emit('runcode:embarkjs-code:updated', code, () => {});
-    });
   }
 };
 
@@ -249,9 +246,6 @@ Plugin.prototype.addConsoleProviderInit = function(providerType, code, initCondi
   const toAdd = [code, initCondition];
   if (!this.embarkjs_init_console_code[providerType].some((initConsoleCode) => deepEqual(initConsoleCode, toAdd))) {
     this.embarkjs_init_console_code[providerType].push(toAdd);
-    this.events.request('blockchain:ready', () => {
-      this.events.emit('runcode:init-console-code:updated', code, () => {});
-    });
   }
 };
 

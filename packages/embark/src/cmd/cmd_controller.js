@@ -165,9 +165,10 @@ class EmbarkController {
         }
         engine.startService("fileWatcher");
 
-        engine.events.request('code-generator:embarkjs:build', () => {
-          callback();
-        });
+        // engine.events.request('code-generator:embarkjs:build', () => {
+          // callback();
+        // });
+        callback();
       },
       function startDashboard(callback) {
         if (!options.useDashboard) {

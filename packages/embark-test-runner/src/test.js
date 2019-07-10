@@ -167,7 +167,8 @@ class Test {
       }
       this.firstRunConfig = false;
       this.events.request("blockchain:ready", () => {
-        this.events.request("runcode:embarkjs:reset", callback);
+        // this.events.request("runcode:embarkjs:reset", callback);
+        callback();
       });
     });
   }

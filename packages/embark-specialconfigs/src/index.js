@@ -14,11 +14,11 @@ class SpecialConfigs {
     this.embark = embark;
     this.config = embark.config;
 
-    this.registerBeforeAllDeployAction();
-    this.registerAfterDeployAction();
-    this.registerBeforeDeployAction();
-    this.registerOnDeployAction();
-    this.registerDeployIfAction();
+    // this.registerBeforeAllDeployAction();
+    // this.registerAfterDeployAction();
+    // this.registerBeforeDeployAction();
+    // this.registerOnDeployAction();
+    // this.registerDeployIfAction();
   }
 
   replaceWithENSAddress(cmd, callback) {

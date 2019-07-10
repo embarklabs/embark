@@ -152,6 +152,7 @@ Plugins.prototype.getPluginsProperty = function(pluginType, property, sub_proper
   return matchingProperties.reduce((a,b) => { return a.concat(b); }) || [];
 };
 
+// TODO: because this is potentially hanging, we should issue a trace warning if the event does not exists
 Plugins.prototype.runActionsForEvent = function(eventName, args, cb) {
   if (typeof (args) === 'function') {
     cb = args;

@@ -23,7 +23,8 @@ export class ProcessManager {
 
     this._registerApiCalls();
     this._registerEvents();
-    this.events.once("deploy:beforeAll", this._registerCommands.bind(this));
+    // TODO: removed because Process Manager shouldn't care or have knoweldge about deployment
+    // this.events.once("deploy:beforeAll", this._registerCommands.bind(this));
   }
 
   _registerApiCalls() {

@@ -68,9 +68,10 @@ class SolcTest extends Test {
         async.series(fns, next);
       },
       function resetEmbarkJs(file, next) {
-        self.events.request("runcode:embarkjs:reset", (err) => {
-          next(err, file);
-        });
+        // self.events.request("runcode:embarkjs:reset", (err) => {
+          // next(err, file);
+        // });
+        next(err, file);
       }
     ], cb);
   }
@@ -114,10 +115,10 @@ class SolcTest extends Test {
           let fn = (_callback) => {
             // TODO: web3 is not injected into the function. Issue has been raised on remixTests.
             // To fix once web3 has been made injectable.
-            const contractDetails = { 
-              userdoc: (contract.userdoc || { methods: [] }), 
-              evm: { 
-                methodIdentifiers: contract.functionHashes 
+            const contractDetails = {
+              userdoc: (contract.userdoc || { methods: [] }),
+              evm: {
+                methodIdentifiers: contract.functionHashes
               }
             };
             self.getEmbarkJSContract(contract, (err, embarkjsContract) => {
@@ -129,7 +130,7 @@ class SolcTest extends Test {
             });
           };
           fns.push(fn);
-        
+
         });
         async.series(fns, next);
       }

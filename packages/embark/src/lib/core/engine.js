@@ -187,29 +187,30 @@ class Engine {
   }
 
   codeGeneratorService(_options) {
-    let self = this;
-
-    this.registerModulePackage('embark-code-generator', {plugins: self.plugins, env: self.env});
-
-    const generateCode = function (modifiedAssets) {
-      self.events.request("module:storage:onReady", () => {
-        self.events.request("code-generator:embarkjs:build", () => {
-          self.events.emit('code-generator-ready', modifiedAssets);
-        });
-      });
-    };
-    const cargo = async.cargo((tasks, callback) => {
-      const modifiedAssets = tasks.map(task => task.modifiedAsset).filter(asset => asset); // filter null elements
-      generateCode(modifiedAssets);
-      self.events.once('outputDone', callback);
-    });
-    const addToCargo = function (modifiedAsset) {
-      cargo.push({modifiedAsset});
-    };
-
-    this.events.on('contractsDeployed', addToCargo);
-    this.events.on('blockchainDisabled', addToCargo);
-    this.events.on('asset-changed', addToCargo);
+    return;
+    // let self = this;
+//
+    // this.registerModulePackage('embark-code-generator', {plugins: self.plugins, env: self.env});
+//
+    // const generateCode = function (modifiedAssets) {
+      // // self.events.request("module:storage:onReady", () => {
+        // self.events.request("code-generator:embarkjs:build", () => {
+          // self.events.emit('code-generator-ready', modifiedAssets);
+        // });
+      // // });
+    // };
+    // const cargo = async.cargo((tasks, callback) => {
+      // const modifiedAssets = tasks.map(task => task.modifiedAsset).filter(asset => asset); // filter null elements
+      // generateCode(modifiedAssets);
+      // self.events.once('outputDone', callback);
+    // });
+    // const addToCargo = function (modifiedAsset) {
+      // cargo.push({modifiedAsset});
+    // };
+//
+    // this.events.on('contractsDeployed', addToCargo);
+    // this.events.on('blockchainDisabled', addToCargo);
+    // this.events.on('asset-changed', addToCargo);
   }
 
   setupCompilerAndContractsManagerService(options) {
@@ -273,37 +274,37 @@ class Engine {
   }
 
   storageService(_options) {
+    return;
     // Register both modules as they are responsible for making sure if they need to start or not
-    async.parallel([
-      (paraCb) => {
-        this.events.once("ipfs:process:started", paraCb);
-        this.registerModule('ipfs');
-      },
-      (paraCb) => {
-        this.events.once("swarm:process:started", paraCb);
-        this.registerModule('swarm');
-      }
-    ], (err) => {
-      if(err) {
-        console.error(__("Error starting storage process(es): %s", err));
-      }
-      this.registerModule('storage', {plugins: this.plugins});
-
-      this.events.setCommandHandler("module:storage:reset", (cb) => {
-        async.parallel([
-          (paraCb) => {
-            this.events.request("module:ipfs:reset", paraCb);
-          },
-          (paraCb) => {
-            this.events.request("module:swarm:reset", paraCb);
-          },
-          (paraCb) => {
-            this.events.request("module:storageJS:reset", paraCb);
-          }
-        ], cb);
-      });
-    });
-
+    // async.parallel([
+      // (paraCb) => {
+        // this.events.once("ipfs:process:started", paraCb);
+        // this.registerModule('ipfs');
+      // },
+      // (paraCb) => {
+        // this.events.once("swarm:process:started", paraCb);
+        // this.registerModule('swarm');
+      // }
+    // ], (err) => {
+      // if(err) {
+        // console.error(__("Error starting storage process(es): %s", err));
+      // }
+      // this.registerModule('storage', {plugins: this.plugins});
+//
+      // this.events.setCommandHandler("module:storage:reset", (cb) => {
+        // async.parallel([
+          // (paraCb) => {
+            // this.events.request("module:ipfs:reset", paraCb);
+          // },
+          // (paraCb) => {
+            // this.events.request("module:swarm:reset", paraCb);
+          // },
+          // (paraCb) => {
+            // this.events.request("module:storageJS:reset", paraCb);
+          // }
+        // ], cb);
+      // });
+    // });
   }
 
   web3Service(options) {
@@ -322,7 +323,8 @@ class Engine {
       wait: options.wait
     });
 
-    this.registerModulePackage('embark-whisper');
+    // this.registerModulePackage('embark-whisper');
+    this.registerModule('web3', { plugins: this.plugins });
   }
 
   libraryManagerService(_options) {

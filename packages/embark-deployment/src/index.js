@@ -54,9 +54,12 @@ class DeployManager {
           function (next) {
             self.logger.info(__('Executing pre-deploy actions...'));
             self.plugins.emitAndRunActionsForEvent("deploy:beforeAll", (err) => {
-              if (err) {
-                return next(err);
-              }
+              // console.dir("== err")
+              // console.dir(err)
+              // TODO: err is a function for some reason
+              // if (err) {
+                // return next(err);
+              // }
               self.logger.info(__('Pre-deploy actions done. Deploying contracts'));
               next();
             });
@@ -64,6 +67,8 @@ class DeployManager {
           function (next) {
             const contractDeploys = {};
             const errors = [];
+            console.dir("=== contracts")
+            console.dir(contracts.map((x) => x.className))
             contracts.forEach(contract => {
               function deploy(result, callback) {
                 if (typeof result === 'function') {
@@ -71,7 +76,10 @@ class DeployManager {
                 }
                 contract._gasLimit = self.gasLimit;
                 self.events.request('deploy:contract', contract, (err) => {
+                  console.dir("contract deployed " + contract.className)
                   if (err) {
+                    console.dir("== err deploying contract");
+                    console.dir(err);
                     contract.error = err.message || err;
                     if (contract.error === constants.blockchain.gasAllowanceError) {
                       self.logger.error(`[${contract.className}]: ${constants.blockchain.gasAllowanceErrorMessage}`);
@@ -93,7 +101,14 @@ class DeployManager {
               contractDeploys[className].push(deploy);
             });
 
-            async.auto(contractDeploys, function(_err, _results) {
+            console.dir("== async.auto");
+            console.dir(Object.keys(contractDeploys));
+            console.dir(contractDeploys);
+            async.auto(contractDeploys, 1, function(_err, _results) {
+              if (_err) {
+                console.dir("error deploying contracts")
+                console.dir(_err)
+              }
               if (errors.length) {
                 _err = __("Error deploying contracts. Please fix errors to continue.");
                 self.logger.error(_err);
@@ -109,6 +124,7 @@ class DeployManager {
             });
           }
         ], (err) => {
+          console.dir("==== finished deploying")
           if (err) {
             self.logger.error(err);
           }

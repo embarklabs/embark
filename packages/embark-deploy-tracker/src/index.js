@@ -34,7 +34,8 @@ class DeployTracker {
     if (this.chainFile === false) return;
     const self = this;
 
-    this.embark.registerActionForEvent("deploy:beforeAll", this.setCurrentChain.bind(this));
+    // TODO: re-add
+    // this.embark.registerActionForEvent("deploy:beforeAll", this.setCurrentChain.bind(this));
 
     this.events.on("deploy:contract:deployed", (contract) => {
       self.trackContract(contract.className, contract.realRuntimeBytecode, contract.realArgs, contract.deployedAddress);

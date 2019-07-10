@@ -55,6 +55,9 @@ EventEmitter.prototype.request = function() {
 
   log("requesting: ", requestName);
   warnIfLegacy(requestName);
+  if (this._events && !this._events['request:' + requestName]) {
+    console.log("made request without listener: " + requestName)
+  }
   const listenerName = 'request:' + requestName;
 
   // if we don't have a command handler set for this event yet,

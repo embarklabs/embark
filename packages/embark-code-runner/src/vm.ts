@@ -38,6 +38,7 @@ class VM {
         "@babel/runtime-corejs2/core-js/promise",
         "@babel/runtime-corejs2/helpers/interopRequireDefault",
         "embark-utils",
+        // TODO: ideally this shouldnt' be needed/here or should be configurable by the modules themselves somehow
         "embarkjs-ipfs",
         "embarkjs-swarm",
         "embarkjs-whisper",

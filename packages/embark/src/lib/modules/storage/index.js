@@ -58,14 +58,9 @@ class Storage {
     };
 
     this.embark.addProviderInit('storage', code, shouldInit);
-    this.embark.events.request("runcode:storage:providerRegistered", () => {
-      this.embark.addConsoleProviderInit('storage', code, shouldInit);
-      this.embark.events.request("runcode:storage:providerSet", () => {
-        this.ready = true;
-        this.embark.events.emit("module:storage:ready");
-        cb();
-      });
-    });
+    this.embark.addConsoleProviderInit('storage', code, shouldInit);
+    this.embark.events.emit("module:storage:ready");
+    cb();
   }
 
 }
