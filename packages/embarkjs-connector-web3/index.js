@@ -1,6 +1,8 @@
 const { dappPath, embarkPath } = require('embark-utils');
 const path = require('path');
 
+// TODO: embarkjs artifacts etc.. will need to be moved here
+
 class EmbarkJSConnectorWeb3 {
   constructor(embark, _options) {
     this.embark = embark;
@@ -8,31 +10,35 @@ class EmbarkJSConnectorWeb3 {
     this.fs = embark.fs;
     this.config = embark.config;
     this.constants = embark.constants;
-    this.registerProvider();
+
+    // this.registerProvider();
+    // TODO: will need to be changed to an action but that requires changes in the blockchain launch process
+    this.events.on("blockchain:ready", this.executeEmbarkJSBlockchain.bind(this));
   }
 
-  async registerProvider() {
-    let blockchainConnectorReady = false;
-    await this.whenRuncodeReady();
+  async executeEmbarkJSBlockchain() {
+    let code = "";
+    const connectorCode = this.fs.readFileSync(path.join(__dirname, 'embarkJSConnectorWeb3.js'), 'utf8');
+    code += connectorCode;
 
-    const web3LocationPromise = this.getWeb3Location();
+    code += "\nEmbarkJS.Blockchain.registerProvider('web3', embarkJSConnectorWeb3);";
+    // code += "\nEmbarkJS.Blockchain.setProvider('web3', {});";
 
-    this.events.setCommandHandler('blockchain:connector:ready', (cb) => {
-      if (blockchainConnectorReady) {
-        return cb();
+    code += "\nEmbarkJS.Blockchain.setProvider('web3', {web3});";
+
+    this.events.request('runcode:eval', code, (err) => {
+      if (err) {
+        return cb(err);
       }
-      this.events.once("blockchain:connector:ready", () => {
-        cb();
-      });
     });
+  }
 
-    web3LocationPromise.then((_web3Location) => {
-      blockchainConnectorReady = true;
-      this.events.emit('blockchain:connector:ready');
-    });
+  // ===============
+  // ===============
+  // ===============
 
-    let web3Location = await web3LocationPromise;
-    web3Location = web3Location.replace(/\\/g, '/');
+  async registerProvider() {
+    let web3Location = (await this.getWeb3Location()).replace(/\\/g, '/');
 
     await this.registerVar('__Web3', require(web3Location));
 
@@ -63,14 +69,6 @@ class EmbarkJSConnectorWeb3 {
     };
 
     this.embark.addConsoleProviderInit('blockchain', code, shouldInit);
-  }
-
-  whenRuncodeReady() {
-    return new Promise((resolve) => {
-      this.events.on('runcode:ready', () => {
-        resolve();
-      });
-    });
   }
 
   getWeb3Location() {

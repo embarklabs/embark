@@ -51,24 +51,6 @@ Blockchain.connect = function(options, callback) {
   return connect(options);
 };
 
-Blockchain.connectConsole = function(doneCb) {
-  this.doFirst((cb) => {
-    this.blockchainConnector.getAccounts(async (err, accounts) => {
-      if (accounts) {
-        this.blockchainConnector.setDefaultAccount(accounts[0]);
-      }
-      let _err = err;
-      try {
-        await cb(_err);
-      } catch (e) {
-        _err = e;
-      } finally {
-        doneCb(_err);
-      }
-    });
-  });
-};
-
 Blockchain.doFirst = function(todo) {
   todo((err) => {
     this.done = true;
