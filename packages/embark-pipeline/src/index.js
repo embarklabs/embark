@@ -341,6 +341,14 @@ class Pipeline {
       },
       function writeContractsJSON(contracts, next) {
         async.each(contracts, (contract, eachCb) => {
+          if (self.embark.config.contractsConfig.minimalContractSize) {
+            contract = Object.assign({}, contract);
+            delete contract.code;
+            delete contract.runtimeBytecode;
+            delete contract.realRuntimeBytecode;
+            delete contract.gasEstimates;
+            delete contract.swarmHash;
+          }
           self.fs.writeJson(dappPath(
             self.buildDir,
             'contracts', contract.className + '.json'
