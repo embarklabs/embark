@@ -7,6 +7,7 @@ import {getHexBalanceFromString} from './web3Utils';
 const {utils} = require('web3');
 
 const path = require('path');
+const ERROR_ACCOUNT = 'ERROR_ACCOUNT';
 
 class AccountParser {
   static parseAccountsConfig(accountsConfig, web3, dappPath, logger, nodeAccounts) {
@@ -14,6 +15,9 @@ class AccountParser {
     if (accountsConfig && accountsConfig.length) {
       accountsConfig.forEach(accountConfig => {
         let account = AccountParser.getAccount(accountConfig, web3, dappPath, logger, nodeAccounts);
+        if (account === ERROR_ACCOUNT) {
+          process.exit(1);
+        }
         if (!account) {
           return;
         }
@@ -63,8 +67,8 @@ class AccountParser {
         accountConfig.privateKey = '0x' + accountConfig.privateKey;
       }
       if (!utils.isHexStrict(accountConfig.privateKey)) {
-        logger.warn(`Private key ending with ${accountConfig.privateKey.substr(accountConfig.privateKey.length - 5)} is not a HEX string`);
-        return null;
+        logger.error(`Private key ending with ${accountConfig.privateKey.substr(accountConfig.privateKey.length - 5)} is not a HEX string`);
+        return ERROR_ACCOUNT;
       }
 
       if (returnAddress) {
@@ -84,7 +88,7 @@ class AccountParser {
           fileContent = JSON.parse(fileContent);
           if (!ethereumjsWallet['fromV' + fileContent.version]) {
             logger.error(`Key file ${accountConfig.privateKeyFile} is not a valid keystore file`);
-            return null;
+            return ERROR_ACCOUNT;
           }
           const wallet = ethereumjsWallet['fromV' + fileContent.version](fileContent, accountConfig.password);
 
@@ -95,7 +99,7 @@ class AccountParser {
         } catch (e) {
           logger.error('Private key file is not a keystore JSON file but a password was provided');
           logger.error(e.message || e);
-          return null;
+          return ERROR_ACCOUNT;
         }
       }
 
@@ -105,8 +109,8 @@ class AccountParser {
           key = '0x' + key;
         }
         if (!utils.isHexStrict(key)) {
-          logger.warn(`Private key is not a HEX string in file ${accountConfig.privateKeyFile} at index ${index}`);
-          return null;
+          logger.error(`Private key is not a HEX string in file ${accountConfig.privateKeyFile} at index ${index}`);
+          return ERROR_ACCOUNT;
         }
 
         if (returnAddress) {
@@ -144,9 +148,9 @@ class AccountParser {
       // Ignore simulator configs
       return null;
     }
-    logger.warn(__('Unsupported account configuration: %s' ,JSON.stringify(accountConfig)));
-    logger.warn(__('Check the docs at %s', 'https://embark.status.im/docs/contracts_deployment.html#Using-accounts-in-a-wallet'.underline));
-    return null;
+    logger.error(__('Unsupported account configuration: %s' ,JSON.stringify(accountConfig)));
+    logger.error(__('Check the docs at %s', 'https://embark.status.im/docs/contracts_deployment.html#Using-accounts-in-a-wallet'.underline));
+    return ERROR_ACCOUNT;
   }
 }
 
