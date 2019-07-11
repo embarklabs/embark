@@ -356,8 +356,14 @@ class Pipeline {
           // Used to enable alternate import syntax:
           // e.g. import {Token} from 'Embark/contracts'
           // e.g. import * as Contracts from 'Embark/contracts'
-          let importsHelperFile = self.fs.createWriteStream(joinPath(contractsDir, 'index.js'));
-          importsHelperFile.write('module.exports = {\n');
+          let importHelperFileCode = 'module.exports = {\n';
+          Object.values(contracts).forEach(contract => {
+            importHelperFileCode += `"${contract.className}": require('./${contract.className}').default,\n`;
+          });
+          importHelperFileCode += '};';
+          self.fs.writeFile(joinPath(contractsDir, 'index.js'), importHelperFileCode, (err) => {
+            if (err) self.logger.error(__('Error writing contract index file: %s', err.message));
+          });
 
           async.eachOf(contracts, (contract, idx, eachCb) => {
             self.events.request('code-generator:contract', contract.className, (err, contractPath) => {
@@ -366,14 +372,9 @@ class Pipeline {
               }
               importsList["Embark/contracts/" + contract.className] = dappPath(contractPath);
 
-              // add the contract to the exports list to support alternate import syntax
-              importsHelperFile.write(`"${contract.className}": require('./${contract.className}').default,\n`);
               eachCb();
             });
-          }, () => {
-            importsHelperFile.write('\n};'); // close the module.exports = {}
-            importsHelperFile.close(next); // close the write stream
-          });
+          }, next);
         });
       }
     ], cb);
