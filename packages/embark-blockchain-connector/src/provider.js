@@ -74,11 +74,15 @@ class Provider {
         self.logger.warn('Error while getting the node\'s accounts.', err.message || err);
       }
 
-      self.blockchainAccounts = AccountParser.parseAccountsConfig(self.blockchainConfig.accounts, self.web3, dappPath(), self.logger, accounts);
+      try {
+        self.blockchainAccounts = AccountParser.parseAccountsConfig(self.blockchainConfig.accounts, self.web3, dappPath(), self.logger, accounts);
 
-      accounts = accounts.concat(self.blockchainAccounts);
+        accounts = accounts.concat(self.blockchainAccounts);
 
-      self.accounts = AccountParser.parseAccountsConfig(self.accountsConfig, self.web3, dappPath(), self.logger, accounts);
+        self.accounts = AccountParser.parseAccountsConfig(self.accountsConfig, self.web3, dappPath(), self.logger, accounts);
+      } catch (_e) {
+        process.exit(1);
+      }
 
       if (!self.accounts.length) {
         self.accounts = accounts;

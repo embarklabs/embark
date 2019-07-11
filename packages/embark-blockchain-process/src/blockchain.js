@@ -163,7 +163,12 @@ Blockchain.prototype.initProxy = function () {
 Blockchain.prototype.setupProxy = async function () {
   if (!this.proxyIpc) this.proxyIpc = new IPC({ipcRole: 'client'});
 
-  const addresses = AccountParser.parseAccountsConfig(this.userConfig.accounts, false, dappPath(), this.logger);
+  let addresses;
+  try {
+    addresses = AccountParser.parseAccountsConfig(this.userConfig.accounts, false, dappPath(), this.logger);
+  } catch (_e) {
+    process.exit(1);
+  }
 
   let wsProxy;
   if (this.config.wsRPC) {

@@ -13,7 +13,7 @@ export class Simulator {
     this.logger = options.logger;
   }
 
-  /*eslint complexity: ["error", 25]*/
+  /*eslint complexity: ["error", 26]*/
   run(options) {
     let cmds = [];
 
@@ -42,7 +42,12 @@ export class Simulator {
     let simulatorAccounts = this.blockchainConfig.simulatorAccounts || options.simulatorAccounts;
     if (simulatorAccounts && simulatorAccounts.length > 0) {
       let web3 = new (require('web3'))();
-      let parsedAccounts = AccountParser.parseAccountsConfig(simulatorAccounts, web3, dappPath(), this.logger);
+      let parsedAccounts;
+      try {
+        parsedAccounts = AccountParser.parseAccountsConfig(simulatorAccounts, web3, dappPath(), this.logger);
+      } catch (_e) {
+        process.exit(1);
+      }
       parsedAccounts.forEach((account) => {
         let cmd = '--account="' + account.privateKey + ','+account.hexBalance + '"';
         cmds.push(cmd);
