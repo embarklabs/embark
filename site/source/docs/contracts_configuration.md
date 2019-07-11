@@ -347,6 +347,17 @@ tracking: 'path/to/some/file'
 
 Having the file referenced above under version control ensures that other users of our project don't redeploy the Smart Contracts on different platforms.
 
+
+### Reducing contract size
+
+To reduce the size of the contract JSON files that are included in the build directory, you can set `minimalContractSize` to `true`. It defaults to `false`.
+When set to `true`, Embark will not put te bytecode, gas estimates and other big configurations in the JSON file.
+
+```
+minimalContractSize: true
+```
+
+
 ## Deployment hooks
 
 Sometimes we want to execute certain logic when Smart Contracts are being deployed or after all of them have been deployed. In other cases, we'd even like to control whether a Smart Contract should be deployed in the first place. For those scenarios, Embark lets us define the deployment hooks `beforeDeploy`, `deployIf`, `onDeploy` and `afterDeploy`.
