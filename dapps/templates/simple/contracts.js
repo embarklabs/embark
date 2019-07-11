@@ -51,6 +51,9 @@ module.exports = {
     //            contracts section.
     //strategy: 'implicit',
 
+    // minimalContractSize, when set to true, tells Embark to generate contract files without the heavy bytecodes
+    // minimalContractSize: false,
+
     contracts: {
       // example:
       //SimpleStorage: {
