@@ -3,41 +3,21 @@ import { dappPath } from 'embark-utils';
 
 const PipelineAPI = require('./api.js');
 
-// TODO: pipeline should just generate files, but doesn't necessarily know much about them
-// specially their structure (i.e doesn't care if it's embarkjs or contracts or storage etc..)
-
 class Pipeline {
   constructor(embark, options) {
-    this.embark = embark;
     this.events = embark.events;
-    this.logger = embark.config.logger;
     this.plugins = embark.config.plugins;
     this.fs = embark.fs;
-
-    // this.events.setCommandHandler('pipeline:build', (options, callback) => {
-    //   if (!this.pipelineConfig.enabled) {
-    //     return this.buildContracts([], callback);
-    //   }
-    //   this.build(options, callback);
-    // });
-    // this.events.setCommandHandler('pipeline:build:contracts', callback => this.buildContracts([], callback));
-    // TODO: action in the constructor, shoudn't be happening..
-    // this.fs.removeSync(this.buildDir);
+    this.files = {}
 
     this.api = new PipelineAPI(embark, options);
     this.api.registerAPIs();
 
-    this.files = {}
-
-    this.events.setCommandHandler('pipeline:generateAll', (cb) => {
-      this.generateAll(cb);
-    });
+    this.events.setCommandHandler('pipeline:generateAll', this.generateAll.bind(this));
 
     this.events.setCommandHandler('pipeline:register', (params, cb) => {
       this.files[dappPath(...params.path, params.file)] = params;
-      if (cb) {
-        cb();
-      }
+      if (cb) { cb(); }
     });
   }
 
@@ -88,6 +68,7 @@ class Pipeline {
     });
   }
 
+  // TODO: can be refactored by joining with method above
   writeFile(params) {
     const self = this;
     const dir = dappPath(...params.path);

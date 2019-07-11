@@ -152,11 +152,13 @@ class BasicPipeline {
               self.logger.info('Pipeline: '.cyan + __("_1_ writing file") + " " + (joinPath(self.buildDir, targetFile)).bold.dim);
             }
             console.dir("async.map")
-            async.map(
+            // async.map(
+            async.mapLimit(
               files,
+              1,
               function (file, fileCb) {
                 self.logger.trace("reading " + file.path);
-                console.dir("reading " + file.path);
+                console.dir(":::::::: reading " + file.path);
                 file.content.then((fileContent) => {
                   self.runPlugins(file, fileContent, fileCb);
                 }).catch(fileCb);
@@ -165,6 +167,7 @@ class BasicPipeline {
                 try {
                 if (err) {
                   self.logger.error('Pipeline: '.cyan + __('errors found while generating') + ' ' + targetFile);
+                  console.dir(err);
                 }
                 let dir = targetFile.split('/').slice(0, -1).join('/');
                 self.logger.trace(`${'Pipeline:'.cyan} creating dir ` + joinPath(self.buildDir, dir));
@@ -179,6 +182,9 @@ class BasicPipeline {
                     targetDir = targetDir + '/';
                   }
 
+                  console.dir("===> contentFiles")
+                  console.dir(contentFiles)
+                  console.dir("----------")
                   async.each(contentFiles, function (file, eachCb) {
                     let filename = file.path.replace(file.basedir + '/', '');
                     self.logger.info(`${'Pipeline:'.cyan} __ writing file ` + (joinPath(self.buildDir, targetDir, filename)).bold.dim);
@@ -223,6 +229,27 @@ class BasicPipeline {
         });
       }
     ], done);
+  }
+
+  runPlugins(file, fileContent, fileCb) {
+    const self = this;
+    if (self.pipelinePlugins.length <= 0) {
+      return fileCb(null, {content: fileContent, path: file.path, basedir: file.basedir, modified: true});
+    }
+    async.eachSeries(self.pipelinePlugins, (plugin, pluginCB) => {
+      if (file.options && file.options.skipPipeline) {
+        return pluginCB();
+      }
+
+      fileContent = plugin.runPipeline({targetFile: file.path, source: fileContent});
+      file.modified = true;
+      pluginCB();
+    }, err => {
+      if (err) {
+        self.logger.error(err.message);
+      }
+      return fileCb(null, {content: fileContent, path: file.path, basedir: file.basedir, modified: true});
+    });
   }
 
 }
