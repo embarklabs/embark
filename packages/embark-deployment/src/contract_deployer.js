@@ -211,7 +211,7 @@ class ContractDeployer {
   }
 
   contractAlreadyDeployed(contract, trackedContract, callback) {
-    console.dir("contractAlreadyDeployed")
+    console.dir("--> contractAlreadyDeployed")
     this.logFunction(contract)(contract.className.bold.cyan + __(" already deployed at ").green + trackedContract.address.bold.cyan);
     contract.deployedAddress = trackedContract.address;
     this.events.emit("deploy:contract:deployed", contract);
@@ -363,7 +363,7 @@ class ContractDeployer {
                 return next(err);
               }
               next(null, receipt);
-          // });
+          });
         }, hash => {
           self.logFunction(contract)(__("deploying") + " " + contract.className.bold.cyan + " " + __("with").green + " " + contract.gas + " " + __("gas at the price of").green + " " + contract.gasPrice + " " + __("Wei, estimated cost:").green + " " + estimatedCost + " Wei".green + " (txHash: " + hash.bold.cyan + ")");
         });

@@ -142,7 +142,9 @@ class Engine {
 
   pipelineService(_options) {
     const self = this;
-    this.registerModulePackage('embark-pipeline', {
+    this.registerModulePackage('embark-pipeline', { plugins: this.plugins });
+    this.registerModule('basic-pipeline', {
+      plugins: this.plugins,
       webpackConfigName: this.webpackConfigName,
       useDashboard: this.useDashboard
     });

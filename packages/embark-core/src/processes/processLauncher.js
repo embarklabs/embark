@@ -62,7 +62,7 @@ export class ProcessLauncher {
         return self.exitCallback(code);
       }
       if (code) {
-        this.logger.info(`Child Process ${this.name} exited with code ${code}`);
+        self.logger.info(`Child Process ${this.name} exited with code ${code}`);
       }
     });
   }
