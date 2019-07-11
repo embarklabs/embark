@@ -44,31 +44,50 @@ class Pipeline {
       this.build(options, callback);
     });
     this.events.setCommandHandler('pipeline:build:contracts', callback => this.buildContracts([], callback));
-    this.fs.removeSync(this.buildDir);
+    // TODO: action in the constructor, shoudn't be happening..
+    // this.fs.removeSync(this.buildDir);
 
     this.api = new PipelineAPI(embark, options);
     this.api.registerAPIs();
 
     this.files = {}
 
-    this.events.setCommandHandler('pipeline:register', (params) => {
+    this.events.setCommandHandler('pipeline:register', (params, cb) => {
       this.files[dappPath(...params.path, params.file)] = params;
+      if (cb) {
+        cb();
+      }
     });
   }
 
   generateAll(cb) {
     console.dir("generating all files");
 
-    // TODO: make this async
-    for (let fileParams of Object.values(this.files)) {
-      if (fileParams.format === 'json') {
-        this.writeJSONFile(fileParams)
-      } else {
-        // TODO: other/js
+    async.waterfall([
+      (next) => {
+        this.plugins.runActionsForEvent("pipeline:generateAll:before", {}, (err) => {
+          next(err);
+        });
+      },
+      (next) => {
+        // TODO: make this async
+        for (let fileParams of Object.values(this.files)) {
+          if (fileParams.format === 'json') {
+            this.writeJSONFile(fileParams)
+          } else {
+            this.writeFile(fileParams)
+          }
+        }
+        next();
+      },
+      (next) => {
+        this.plugins.runActionsForEvent("pipeline:generateAll:after", {}, (err) => {
+          next(err);
+        });
       }
-    }
-
-    cb();
+    ], () => {
+      cb();
+    });
   }
 
   writeJSONFile(params) {
@@ -87,6 +106,29 @@ class Pipeline {
     ], () => {
     });
   }
+
+  writeFile(params) {
+    const self = this;
+    const dir = dappPath(...params.path);
+    const filename = dappPath(...params.path, params.file);
+    const content = params.content;
+
+    async.waterfall([
+      function makeDirectory(next) {
+        self.fs.mkdirp(dir, err => next(err));
+      },
+      function writeFile(next) {
+        self.fs.writeFile(filename, content, (err) => { next(err, true) });
+      }
+    ], () => {
+    });
+  }
+
+  // =================
+  // =================
+  // =================
+  // =================
+  // =================
 
   build({modifiedAssets}, callback) {
     let self = this;

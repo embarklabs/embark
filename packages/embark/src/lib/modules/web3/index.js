@@ -15,7 +15,9 @@ class Web3Plugin {
     let plugin = this.plugins.createPlugin('web3plugin', {});
 
     plugin.registerActionForEvent("deploy:contract:deployed", this.registerInVm.bind(this));
-    plugin.registerActionForEvent("deploy:contract:deployed", this.addToPipeline.bind(this));
+    plugin.registerActionForEvent("deploy:contract:deployed", this.addContractJSONToPipeline.bind(this));
+    plugin.registerActionForEvent("deploy:contract:deployed", this.addContractFileToPipeline.bind(this));
+    plugin.registerActionForEvent("pipeline:generateAll:before", this.addContractIndexToPipeline.bind(this));
   }
 
   registerInVm(params, cb) {
@@ -37,25 +39,67 @@ class Web3Plugin {
     });
   }
 
-  addToPipeline(params, cb) {
+  addContractJSONToPipeline(params, cb) {
     // TODO: check if this is correct json object to generate
-    let contract = params.contract;
+    const contract = params.contract;
 
     this.events.request("pipeline:register", {
       path: [this.embarkConfig.buildDir, 'contracts'],
       file: contract.className + '.json',
       format: 'json',
       content: contract
-    });
+    }, cb);
+  }
+
+  addContractFileToPipeline(params, cb) {
+    const contract = params.contract;
+    const contractName = contract.className;
+    const contractJSON = contract.abiDefinition;
+
+    const contractCode = `
+      "use strict";
+
+      const isNode = (typeof process !== 'undefined' && process.versions && process.versions.node);
+      const lib = isNode ? '../embarkjs.node' : '../embarkjs';
+
+      const EmbarkJSNode = isNode && require('../embarkjs.node');
+      let EmbarkJSBrowser;
+      try {
+        EmbarkJSBrowser = require('../embarkjs').default;
+      } catch(e) {};
+
+      const EmbarkJS = isNode ? EmbarkJSNode : EmbarkJSBrowser;
+
+      let ${contractName}JSONConfig = ${JSON.stringify(contractJSON)};
+      let ${contractName} = new EmbarkJS.Blockchain.Contract(${contractName}JSONConfig);
+      module.exports = ${contractName};
+    `.trim().replace(/^[\t\s]+/gm, '');
 
     this.events.request("pipeline:register", {
       path: [this.embarkConfig.generationDir, 'contracts'],
       file: contract.className + '.js',
       format: 'js',
-      content: contract
-    });
+      content: contractCode
+    }, cb);
+  }
 
-    cb();
+  addContractIndexToPipeline(_params, cb) {
+    this.events.request("contracts:list", (err, contracts) => {
+      let imports = contracts.map((c) => {
+        return `"${c.className}": require('./${c.className}').default)`;
+      }).join(",\n");
+
+      let code = 'module.exports = {\n';
+      code += imports;
+      code += '\n};';
+
+      this.events.request("pipeline:register", {
+        path: [this.embarkConfig.generationDir, 'contracts'],
+        file: 'index.js',
+        format: 'js',
+        content: code
+      }, cb);
+    });
   }
 
 }
