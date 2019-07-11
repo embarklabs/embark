@@ -16,7 +16,7 @@ class AccountParser {
       accountsConfig.forEach(accountConfig => {
         let account = AccountParser.getAccount(accountConfig, web3, dappPath, logger, nodeAccounts);
         if (account === ERROR_ACCOUNT) {
-          process.exit(1);
+          throw new Error('Error getting the account');
         }
         if (!account) {
           return;

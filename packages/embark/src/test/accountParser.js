@@ -4,7 +4,6 @@ const assert = require('assert');
 const sinon = require('sinon');
 let TestLogger = require('../lib/utils/test_logger');
 const Web3 = require('web3');
-const fs = require('../lib/core/fs');
 import { dappPath, getWeiBalanceFromString, getHexBalanceFromString, AccountParser } from 'embark-utils';
 i18n.setOrDetectLocale('en');
 
@@ -75,12 +74,12 @@ describe('embark.AccountParser', function () {
         ]);
     });
 
-    it('should return nothing with bad config', function () {
+    it('should return an error with bad config', function () {
       const account = AccountParser.getAccount({
         badConfig: 'not working'
       }, web3, dappPath(), testLogger);
 
-      assert.strictEqual(account, null);
+      assert.strictEqual(account, 'ERROR_ACCOUNT');
     });
 
     it('should just return the addresses when no web3', function () {

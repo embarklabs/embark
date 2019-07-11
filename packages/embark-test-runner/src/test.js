@@ -157,7 +157,11 @@ class Test {
 
     this.events.request("blockchain:get", (web3) => {
       if (accounts) {
-        self.simOptions.accounts = AccountParser.parseAccountsConfig(accounts, web3, this.dappPath);
+        try {
+          self.simOptions.accounts = AccountParser.parseAccountsConfig(accounts, web3, this.dappPath);
+        } catch (_e) {
+          process.exit(1);
+        }
       } else {
         self.simOptions.accounts = null;
       }
