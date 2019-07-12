@@ -32,6 +32,7 @@ class Test {
       storage: {},
       communication: {}
     };
+    this.needToRestetEmbarkJS = false;
 
     this.events.setCommandHandler("blockchain:provider:contract:accounts:get", cb => {
       this.events.request("blockchain:getAccounts", cb);
@@ -183,6 +184,7 @@ class Test {
       options[moduleName] = options[moduleName] || {};
       if (!deepEqual(options[moduleName], this.moduleConfigs[moduleName])) {
         this.moduleConfigs[moduleName] = options[moduleName];
+        this.needToRestetEmbarkJS = true;
         restartModules.push((paraCb) => {
           self.events.request(`config:${moduleName}Config:set`, recursiveMerge({}, self.originalConfigObj[`${moduleName}Config`], options[moduleName]), () => {
             self.events.request(`module:${moduleName}:reset`, paraCb);
@@ -199,6 +201,7 @@ class Test {
   config(options, callback) {
     const self = this;
     self.needConfig = false;
+    self.needToRestetEmbarkJS = false;
     if (typeof (options) === 'function') {
       callback = options;
       options = {};
@@ -278,6 +281,14 @@ class Test {
           self.ready = true;
           self.error = false;
           next(null, accounts);
+        });
+      },
+      function checkIfNeedToResetEmbarkJS(accounts, next) {
+        if (!self.needToRestetEmbarkJS) {
+          return next(null, accounts);
+        }
+        self.events.request("runcode:embarkjs:reset", (err) => {
+          next(err, accounts);
         });
       }
     ], (err, accounts) => {
