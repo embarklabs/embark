@@ -159,8 +159,8 @@ class Test {
       if (accounts) {
         try {
           self.simOptions.accounts = AccountParser.parseAccountsConfig(accounts, web3, this.dappPath);
-        } catch (_e) {
-          process.exit(1);
+        } catch (e) {
+         return callback(e);
         }
       } else {
         self.simOptions.accounts = null;
@@ -255,6 +255,7 @@ class Test {
       }
     ], (err, accounts) => {
       if (err) {
+        self.logger.error(err.message || err);
         // TODO Do not exit in case of not a normal run (eg after a change)
         if (!self.options.inProcess) process.exit(1);
       }

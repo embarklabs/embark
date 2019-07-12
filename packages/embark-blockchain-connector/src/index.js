@@ -64,7 +64,11 @@ class BlockchainConnector {
     embark.registerActionForEvent("contracts:deploy:afterAll", this.subscribeToContractEvents.bind(this));
 
     if (!this.web3) {
-      this.initWeb3();
+      this.initWeb3(err => {
+        if (err) {
+          this.logger.error(__('Error initiating Web3 provider'), err.message || err);
+        }
+      });
     } else {
       this.isWeb3Ready = true;
     }
@@ -177,7 +181,10 @@ class BlockchainConnector {
       if (err) {
         return self.logger.error(err);
       }
-      self.provider.startWeb3Provider(async () => {
+      self.provider.startWeb3Provider(async (err) => {
+        if (err) {
+          return cb(err);
+        }
         try {
           const blockNumber = await self.web3.eth.getBlockNumber();
           await self.web3.eth.getBlock(blockNumber);

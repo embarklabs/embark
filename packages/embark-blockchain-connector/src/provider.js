@@ -17,6 +17,7 @@ class Provider {
     this.isDev = options.isDev;
     this.events = options.events;
     this.nonceCache = {};
+    this.accounts = [];
 
     this.events.setCommandHandler("blockchain:provider:contract:accounts:get", cb => {
       const accounts = this.accounts.map(a => a.address || a);
@@ -80,8 +81,8 @@ class Provider {
         accounts = accounts.concat(self.blockchainAccounts);
 
         self.accounts = AccountParser.parseAccountsConfig(self.accountsConfig, self.web3, dappPath(), self.logger, accounts);
-      } catch (_e) {
-        process.exit(1);
+      } catch (e) {
+        return callback(e);
       }
 
       if (!self.accounts.length) {

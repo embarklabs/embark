@@ -45,7 +45,8 @@ export class Simulator {
       let parsedAccounts;
       try {
         parsedAccounts = AccountParser.parseAccountsConfig(simulatorAccounts, web3, dappPath(), this.logger);
-      } catch (_e) {
+      } catch (e) {
+        this.logger.error(e.message);
         process.exit(1);
       }
       parsedAccounts.forEach((account) => {
