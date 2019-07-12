@@ -5,6 +5,15 @@ const MyToken2 = require('Embark/contracts/MyToken2');
 const EmbarkJS = require('Embark/EmbarkJS');
 
 config({
+  namesystem: {
+    "register": {
+      "rootDomain": "embark.eth",
+      "subdomains": {
+        "mytoken": "$MyToken",
+        "MyToken2": "$MyToken2"
+      }
+    }
+  },
   contracts: {
     deploy: {
       "Token": {

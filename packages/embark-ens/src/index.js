@@ -67,28 +67,39 @@ class ENS {
     this.logger = embark.logger;
     this.events = embark.events;
     this.fs = embark.fs;
-    this.namesConfig = embark.config.namesystemConfig;
+    this.config = embark.config;
     this.enabled = false;
-    this.registration = this.namesConfig.register || {};
     this.embark = embark;
     this.ensConfig = ensConfig;
     this.configured = false;
     this.modulesPath = dappPath(embark.config.embarkConfig.generationDir, dappArtifacts.symlinkDir);
+    this.consoleCmdsRegistered = false;
+    this.eventsRegistered = false;
 
     this.events.setCommandHandler("ens:resolve", this.ensResolve.bind(this));
     this.events.setCommandHandler("ens:isENSName", this.isENSName.bind(this));
 
-    if (this.namesConfig === {} ||
-      this.namesConfig.enabled !== true ||
-      this.namesConfig.available_providers.indexOf('ens') < 0) {
-      return;
+    this.embark.events.setCommandHandler("module:namesystem:reset", (cb) => {
+      this.reset();
+      this.init(cb);
+    });
+
+    this.init();
+  }
+
+  init(cb = () => {}) {
+    if (this.config.namesystemConfig === {} ||
+      this.config.namesystemConfig.enabled !== true ||
+      !this.config.namesystemConfig.available_providers ||
+      this.config.namesystemConfig.available_providers.indexOf('ens') < 0) {
+      return cb();
     }
     this.enabled = true;
-    this.doSetENSProvider = this.namesConfig.provider === 'ens';
+    this.doSetENSProvider = this.config.namesystemConfig.provider === 'ens';
 
-    this.addENSToEmbarkJS();
     this.registerEvents();
     this.registerConsoleCommands();
+    this.addENSToEmbarkJS(cb);
   }
 
   reset() {
@@ -96,6 +107,10 @@ class ENS {
   }
 
   registerConsoleCommands() {
+    if (this.consoleCmdsRegistered) {
+      return;
+    }
+    this.consoleCmdsRegistered = true;
     this.embark.registerConsoleCommand({
       usage: 'resolve [name]',
       description: __('Resolves an ENS name'),
@@ -138,6 +153,10 @@ class ENS {
   }
 
   registerEvents() {
+    if (this.eventsRegistered) {
+      return;
+    }
+    this.eventsRegistered = true;
     this.embark.registerActionForEvent("deploy:beforeAll", this.configureContractsAndRegister.bind(this));
     this.events.on('blockchain:reseted', this.reset.bind(this));
     this.events.setCommandHandler("storage:ens:associate", this.associateStorageToEns.bind(this));
@@ -147,7 +166,7 @@ class ENS {
   getEnsConfig(cb) {
     cb({
       env: this.env,
-      registration: this.registration,
+      registration: this.config.namesystemConfig.register,
       registryAbi: this.ensConfig.ENSRegistry.abiDefinition,
       registryAddress: this.ensConfig.ENSRegistry.deployedAddress,
       registrarAbi: this.ensConfig.FIFSRegistrar.abiDefinition,
@@ -166,7 +185,7 @@ class ENS {
 
       self.events.request('blockchain:networkId', (networkId) => {
         const isKnownNetwork = Boolean(ENS_CONTRACTS_CONFIG[networkId]);
-        const shouldRegisterSubdomain = self.registration && self.registration.subdomains && Object.keys(self.registration.subdomains).length;
+        const shouldRegisterSubdomain = self.config.namesystemConfig.register && self.config.namesystemConfig.register.subdomains && Object.keys(self.config.namesystemConfig.register.subdomains).length;
         if (isKnownNetwork || !shouldRegisterSubdomain) {
           return cb();
         }
@@ -248,8 +267,8 @@ class ENS {
   registerConfigDomains(config, cb) {
 
     this.events.request("blockchain:defaultAccount:get", (defaultAccount) => {
-      async.each(Object.keys(this.registration.subdomains), (subDomainName, eachCb) => {
-        const address = this.registration.subdomains[subDomainName];
+      async.each(Object.keys(this.config.namesystemConfig.register.subdomains), (subDomainName, eachCb) => {
+        const address = this.config.namesystemConfig.register.subdomains[subDomainName];
         const directivesRegExp = new RegExp(/\$(\w+\[?\d?\]?)/g);
 
 
@@ -281,13 +300,13 @@ class ENS {
   }
 
   safeRegisterSubDomain(subDomainName, address, defaultAccount, callback) {
-    this.ensResolve(`${subDomainName}.${this.registration.rootDomain}`, (error, currentAddress) => {
+    this.ensResolve(`${subDomainName}.${this.config.namesystemConfig.register.rootDomain}`, (error, currentAddress) => {
       if (currentAddress && currentAddress.toLowerCase() === address.toLowerCase()) {
         return callback();
       }
 
       if (error && error !== NOT_REGISTERED_ERROR) {
-        this.logger.error(__('Error resolving %s', `${subDomainName}.${this.registration.rootDomain}`));
+        this.logger.error(__('Error resolving %s', `${subDomainName}.${this.config.namesystemConfig.register.rootDomain}`));
         return callback(error);
       }
 
@@ -299,7 +318,7 @@ class ENS {
   registerSubDomain(defaultAccount, subDomainName, reverseNode, address, secureSend, cb) {
     this.events.request("blockchain:get", (web3) => {
       ENSFunctions.registerSubDomain(web3, this.ensContract, this.registrarContract, this.resolverContract, defaultAccount,
-        subDomainName, this.registration.rootDomain, reverseNode, address, this.logger, secureSend, cb, namehash);
+        subDomainName, this.config.namesystemConfig.register.rootDomain, reverseNode, address, this.logger, secureSend, cb, namehash);
     });
   }
 
@@ -363,27 +382,30 @@ class ENS {
             if (error) {
               return res.send({error: error.message || error});
             }
-            res.send({name: `${req.body.subdomain}.${self.registration.rootDomain}`, address: req.body.address});
+            res.send({name: `${req.body.subdomain}.${self.config.namesystemConfig.register.rootDomain}`, address: req.body.address});
           });
         });
       }
     );
   }
 
-  addENSToEmbarkJS() {
+  addENSToEmbarkJS(cb) {
     this.events.request('version:downloadIfNeeded', 'eth-ens-namehash', (err, location) => {
       if (err) {
         this.logger.error(__('Error downloading NameHash'));
-        return this.logger.error(err.message || err);
+        this.logger.error(err.message || err);
+        return cb();
       }
 
       this.events.request('code-generator:ready', () => {
         this.events.request('code-generator:symlink:generate', location, 'eth-ens-namehash', (err) => {
           if (err) {
             this.logger.error(__('Error creating a symlink to eth-ens-namehash'));
-            return this.logger.error(err.message || err);
+            this.logger.error(err.message || err);
+            return cb();
           }
           this.events.emit('runcode:register', 'namehash', require('eth-ens-namehash'), () => {
+            cb();
           });
         });
       });
@@ -430,6 +452,7 @@ class ENS {
     if (self.configured) {
       return cb();
     }
+    const registration = this.config.namesystemConfig.register;
 
     async.waterfall([
       function getNetworkId(next) {
@@ -454,19 +477,19 @@ class ENS {
         });
       },
       function checkRootNode(next) {
-        if (!self.registration || !self.registration.rootDomain) {
+        if (!registration || !registration.rootDomain) {
           return next(NO_REGISTRATION);
         }
-        if (!self.isENSName(self.registration.rootDomain)) {
+        if (!self.isENSName(registration.rootDomain)) {
 
           return next(__('Invalid domain name: {{name}}\nValid extensions are: {{extenstions}}',
-            {name: self.registration.rootDomain, extenstions: ENS_WHITELIST.join(', ')}));
+            {name: registration.rootDomain, extenstions: ENS_WHITELIST.join(', ')}));
         }
         next();
       },
       function registrar(next) {
         const registryAddress = self.ensConfig.ENSRegistry.deployedAddress;
-        const rootNode = namehash.hash(self.registration.rootDomain);
+        const rootNode = namehash.hash(registration.rootDomain);
         const contract = self.ensConfig.FIFSRegistrar;
         contract.args = [registryAddress, rootNode];
 
@@ -518,7 +541,7 @@ class ENS {
           self.resolverContract = result[2];
           const web3 = result[3];
 
-          const rootNode = namehash.hash(self.registration.rootDomain);
+          const rootNode = namehash.hash(registration.rootDomain);
           var reverseNode = namehash.hash(web3.eth.defaultAccount.toLowerCase().substr(2) + reverseAddrSuffix);
           const owner = await self.ensContract.methods.owner(rootNode).call();
 
@@ -550,7 +573,7 @@ class ENS {
             }, false);
           }).then(() => {
             // Set name of the reverse node to the root domain
-            return secureSend(web3, self.resolverContract.methods.setName(reverseNode, self.registration.rootDomain), {
+            return secureSend(web3, self.resolverContract.methods.setName(reverseNode, registration.rootDomain), {
               from: web3.eth.defaultAccount,
               gas: ENS_GAS_PRICE
             }, false);

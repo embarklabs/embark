@@ -1,5 +1,6 @@
 import { __ } from 'embark-i18n';
 import { deconstructUrl, prepareContractsConfig, buildUrl } from 'embark-utils';
+import deepEqual from 'deep-equal';
 
 const async = require('async');
 const web3Utils = require('web3-utils');
@@ -24,7 +25,11 @@ class Test {
     this.accounts = [];
     this.embarkjs = {};
     this.dappPath = options.dappPath;
-    this.accounts = [];
+    this.moduleConfigs = {
+      namesystem: {},
+      storage: {},
+      communication: {}
+    };
 
     this.events.setCommandHandler("blockchain:provider:contract:accounts:get", cb => {
       this.events.request("blockchain:getAccounts", cb);
@@ -168,6 +173,26 @@ class Test {
     });
   }
 
+  checkModuleConfigs(options, callback) {
+    const self = this;
+    const restartModules = [];
+
+    Object.keys(this.moduleConfigs).forEach(moduleName => {
+      options[moduleName] = options[moduleName] || {};
+      if (!deepEqual(options[moduleName], this.moduleConfigs[moduleName])) {
+        restartModules.push(function (paraCb) {
+          self.events.request(`config:${moduleName}Config:set`, options[moduleName], true, () => {
+            self.events.request(`module:${moduleName}:reset`, paraCb);
+          });
+        });
+      }
+    });
+
+    async.parallel(restartModules, (err, _result) => {
+      callback(err);
+    });
+  }
+
   config(options, callback) {
     const self = this;
     self.needConfig = false;
@@ -197,6 +222,9 @@ class Test {
       },
       function checkDeploymentOpts(next) {
         self.checkDeploymentOptions(options, next);
+      },
+      function checkModuleConfigs(next) {
+        self.checkModuleConfigs(options, next);
       },
       function prepareContracts(next) {
         if (!self.firstDeployment || !self.options.coverage) {

@@ -4,7 +4,6 @@ import * as async from 'async';
 class Storage {
   constructor(embark, options){
     this.embark = embark;
-    this.storageConfig = embark.config.storageConfig;
     this.plugins = options.plugins;
     this.ready = false;
 
@@ -15,22 +14,24 @@ class Storage {
       this.embark.events.once("module:storage:ready", cb);
     });
 
-    if (!this.storageConfig.enabled) {
+    this.embark.events.setCommandHandler("module:storage:reset", (cb) => {
+      this.ready = false;
+      this.addSetProviders(cb);
+    });
+
+    if (!embark.config.storageConfig.enabled) {
       this.ready = true;
       return;
     }
 
     this.handleUploadCommand();
-    this.addSetProviders(() => {
-      this.ready = true;
-      this.embark.events.emit("module:storage:ready");
-    });
+    this.addSetProviders(() => {});
   }
 
   handleUploadCommand() {
     const self = this;
     this.embark.events.setCommandHandler('storage:upload', (cb) => {
-      let platform = self.storageConfig.upload.provider;
+      let platform = this.embark.config.storageConfig.upload.provider;
 
       let uploadCmds = self.plugins.getPluginsProperty('uploadCmds', 'uploadCmds');
       for (let uploadCmd of uploadCmds) {
@@ -44,7 +45,7 @@ class Storage {
   }
 
   addSetProviders(cb) {
-    let code = `\nEmbarkJS.Storage.setProviders(${JSON.stringify(this.storageConfig.dappConnection || [])}, {web3});`;
+    let code = `\nEmbarkJS.Storage.setProviders(${JSON.stringify(this.embark.config.storageConfig.dappConnection || [])}, {web3});`;
 
     let shouldInit = (storageConfig) => {
       return storageConfig.enabled;
@@ -75,7 +76,10 @@ class Storage {
       // in the case where the storage process is too slow when starting up we
       // execute ourselves the setProviders because the console provider init
       // was already executed
-      this.embark.events.request('runcode:eval', `if (Object.keys(EmbarkJS.Storage.Providers).length) { ${code} }`, cb, true);
+      this.embark.events.request('runcode:eval', `if (Object.keys(EmbarkJS.Storage.Providers).length) { ${code} }`, () => {
+        this.ready = true;
+        this.embark.events.emit("module:storage:ready");
+      }, true);
     });
   }
 
