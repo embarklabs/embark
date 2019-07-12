@@ -5,17 +5,29 @@ const MyToken2 = require('Embark/contracts/MyToken2');
 const EmbarkJS = require('Embark/EmbarkJS');
 
 config({
+  namesystem: {
+    enabled: true,
+    "register": {
+      "rootDomain": "embark.eth",
+      "subdomains": {
+        "mytoken": "$MyToken",
+        "MyToken2": "$MyToken2"
+      }
+    }
+  },
   contracts: {
-    "Token": {
-      deploy: false,
-      args: [1000]
-    },
-    "MyToken": {
-      instanceOf: "Token"
-    },
-    "MyToken2": {
-      instanceOf: "Token",
-      args: [2000]
+    deploy: {
+      "Token": {
+        deploy: false,
+        args: [1000]
+      },
+      "MyToken": {
+        instanceOf: "Token"
+      },
+      "MyToken2": {
+        instanceOf: "Token",
+        args: [2000]
+      }
     }
   }
 });

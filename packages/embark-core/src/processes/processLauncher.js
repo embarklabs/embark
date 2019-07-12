@@ -1,7 +1,7 @@
 const child_process = require('child_process');
 const constants = require('../../constants');
 const path = require('path');
-const ProcessLogsApi = require('embark-process-logs-api');
+// const ProcessLogsApi = require('embark-process-logs-api-manager');
 
 let processCount = 1;
 export class ProcessLauncher {
@@ -30,7 +30,7 @@ export class ProcessLauncher {
     this.exitCallback = options.exitCallback;
     this.embark = options.embark;
     this.logs = [];
-    this.processLogsApi = new ProcessLogsApi({embark: this.embark, processName: this.name, silent: this.silent});
+    this.events.request('process:logs:register', {processName: this.name, eventName: `process:${this.name}:log`, silent: this.silent});
 
     this.subscriptions = {};
     this._subscribeToMessages();
@@ -49,7 +49,7 @@ export class ProcessLauncher {
         self.logger.error(msg.error);
       }
       if (msg.result === constants.process.log) {
-        return self.processLogsApi.logHandler.handleLog(msg);
+        return this.events.emit(`process:${this.name}:log`, msg.type, msg.message);
       }
       if (msg.event) {
         return self._handleEvent(msg);

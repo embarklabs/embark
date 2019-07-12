@@ -1,11 +1,10 @@
-/*globals describe, it*/
+/*global describe, it*/
 const { dappPath } = require('embark-utils');
 const Config = require('../lib/core/config.js');
 const Plugins = require('../lib/core/plugins.js');
 const assert = require('assert');
 const TestLogger = require('../lib/utils/test_logger');
 const Events = require('../lib/core/events');
-const fs = require('../lib/core/fs');
 
 describe('embark.Config', function () {
   let config = new Config({
@@ -21,51 +20,73 @@ describe('embark.Config', function () {
       config.loadBlockchainConfigFile();
       let expectedConfig = {
         "enabled": true,
-        "ethereumClientName": "geth",
+        "client": "geth",
+        "proxy": true,
+        "datadir": ".embark/myenv/datadir",
+        "rpcHost": "localhost",
+        "rpcPort": 8545,
+        "rpcCorsDomain": {
+          "auto": true,
+          "additionalCors": []
+        },
+        "wsRPC": true,
+        "wsOrigins": {
+          "auto": true,
+          "additionalCors": []
+        },
+        "wsHost": "localhost",
+        "wsPort": 8546,
         "networkType": "custom",
-        "genesisBlock": "config/development/genesis.json",
-        "datadir": ".embark/development/datadir",
         "isDev": false,
         "mineWhenNeeded": true,
         "nodiscover": true,
-        "proxy": true,
-        "rpcHost": "localhost",
-        "rpcPort": 8545,
-        "rpcCorsDomain": "http://localhost:8000",
-        "wsOrigins": "auto",
-        "accounts": [
-          {
-            "password": "config/development/password"
-          }
-        ]
+        "maxpeers": 0,
+        "targetGasLimit": 8000000,
+        "simulatorBlocktime": 0,
+        "miningMode": "auto",
+        "endpoint": "ws://localhost:8546",
+        "isAutoEndpoint": true
       };
 
-      assert.deepEqual(config.blockchainConfig, expectedConfig);
+      assert.deepStrictEqual(config.blockchainConfig, expectedConfig);
     });
 
     it('should convert Ether units', function () {
       let expectedConfig = {
         "enabled": true,
-        "ethereumClientName": "geth",
-        "networkType": "custom",
-        "genesisBlock": "config/development/genesis.json",
-        "datadir": ".embark/development/datadir",
-        "isDev": false,
-        "targetGasLimit": "300000",
-        "gasPrice": "8000000",
-        "mineWhenNeeded": true,
-        "nodiscover": true,
+        "client": "geth",
         "proxy": true,
+        "datadir": ".embark/unitenv/datadir",
         "rpcHost": "localhost",
         "rpcPort": 8545,
-        "rpcCorsDomain": "http://localhost:8000",
-        "wsOrigins": "auto",
+        "rpcCorsDomain": {
+          "auto": true,
+          "additionalCors": []
+        },
+        "wsRPC": true,
+        "wsOrigins": {
+          "auto": true,
+          "additionalCors": []
+        },
+        "wsHost": "localhost",
+        "wsPort": 8546,
+        "networkType": "custom",
+        "isDev": false,
+        "mineWhenNeeded": true,
+        "nodiscover": true,
+        "maxpeers": 0,
+        "simulatorBlocktime": 0,
+        "miningMode": "auto",
+        "gasPrice": "8000000",
+        "targetGasLimit": "300000",
         "accounts": [
           {
             "password": "config/development/password",
             "balance": "3000000000000000000"
           }
-        ]
+        ],
+        "endpoint": "ws://localhost:8546",
+        "isAutoEndpoint": true
       };
 
       let config = new Config({
@@ -77,32 +98,45 @@ describe('embark.Config', function () {
       config.logger = new TestLogger({});
       config.loadBlockchainConfigFile();
 
-      assert.deepEqual(config.blockchainConfig, expectedConfig);
+      assert.deepStrictEqual(config.blockchainConfig, expectedConfig);
     });
 
     it('should accept unitless gas values', function () {
       let expectedConfig = {
         "enabled": true,
-        "ethereumClientName": "geth",
-        "networkType": "custom",
-        "genesisBlock": "config/development/genesis.json",
-        "datadir": ".embark/development/datadir",
-        "isDev": false,
-        "targetGasLimit": "20000000",
-        "gasPrice": "8000000",
-        "mineWhenNeeded": true,
-        "nodiscover": true,
+        "client": "geth",
         "proxy": true,
+        "datadir": ".embark/unitlessenv/datadir",
         "rpcHost": "localhost",
         "rpcPort": 8545,
-        "rpcCorsDomain": "http://localhost:8000",
-        "wsOrigins": "auto",
+        "rpcCorsDomain": {
+          "auto": true,
+          "additionalCors": []
+        },
+        "wsRPC": true,
+        "wsOrigins": {
+          "auto": true,
+          "additionalCors": []
+        },
+        "wsHost": "localhost",
+        "wsPort": 8546,
+        "networkType": "custom",
+        "isDev": false,
+        "mineWhenNeeded": true,
+        "nodiscover": true,
+        "maxpeers": 0,
+      "simulatorBlocktime": 0,
+        "miningMode": "auto",
+        "gasPrice": "8000000",
+        "targetGasLimit": "20000000",
         "accounts": [
           {
             "password": "config/development/password",
             "balance": "3000000000000000000"
           }
-        ]
+        ],
+        "endpoint": "ws://localhost:8546",
+        "isAutoEndpoint": true
       };
 
       let config = new Config({
@@ -114,7 +148,48 @@ describe('embark.Config', function () {
       config.logger = new TestLogger({});
       config.loadBlockchainConfigFile();
 
-      assert.deepEqual(config.blockchainConfig, expectedConfig);
+      assert.deepStrictEqual(config.blockchainConfig, expectedConfig);
+    });
+
+    it('should use the specified endpoint', () => {
+      let expectedConfig = {
+        "enabled": true,
+        "client": "geth",
+        "proxy": true,
+        "datadir": ".embark/extNetwork/datadir",
+        "rpcHost": "localhost",
+        "rpcPort": 8545,
+        "rpcCorsDomain": {
+          "auto": true,
+          "additionalCors": []
+        },
+        "wsRPC": true,
+        "wsOrigins": {
+          "auto": true,
+          "additionalCors": []
+        },
+        "wsHost": "localhost",
+        "wsPort": 8546,
+        "networkType": "custom",
+        "isDev": false,
+        "nodiscover": true,
+        "maxpeers": 0,
+        "simulatorBlocktime": 0,
+        "miningMode": "dev",
+        "targetGasLimit": 8000000,
+        "endpoint": "http://mynetwork.com"
+      };
+
+      let config = new Config({
+        env: 'extNetwork',
+        configDir: 'test1/config/',
+        events: new Events(),
+        logger: new TestLogger({}),
+        plugins: new Plugins({plugins: {}})
+      });
+      config.loadBlockchainConfigFile();
+
+      assert.deepStrictEqual(config.blockchainConfig, expectedConfig);
     });
   });
 
@@ -123,7 +198,6 @@ describe('embark.Config', function () {
       config.loadContractsConfigFile();
       let expectedConfig = {
         versions: {'web3': '1.2.1', solc: '0.5.0'},
-        deployment: {host: 'localhost', port: 8545, type: 'rpc', "accounts": [{"mnemonic": "12 word mnemonic", "balance": "5000000000"}]},
         dappConnection: ['$WEB3', 'localhost:8545'],
         dappAutoEnable: true,
         "gas": "400000",
@@ -140,13 +214,12 @@ describe('embark.Config', function () {
         }
       };
 
-      assert.deepEqual(config.contractsConfig, expectedConfig);
+      assert.deepStrictEqual(config.contractsConfig, expectedConfig);
     });
 
-    it('should replace occourences of `0x0` with full zero addresses', () => {
+    it('should replace occurrences of `0x0` with full zero addresses', () => {
       let expectedConfig = {
         versions: {'web3': '1.2.1', solc: '0.5.0'},
-        deployment: {host: 'localhost', port: 8545, type: 'rpc'},
         dappConnection: ['$WEB3', 'localhost:8545'],
         dappAutoEnable: true,
         "gas": "auto",
@@ -171,7 +244,7 @@ describe('embark.Config', function () {
       zeroAddressconfig.plugins = new Plugins({plugins: {}});
       zeroAddressconfig.logger = new TestLogger({});
       zeroAddressconfig.loadContractsConfigFile();
-      assert.deepEqual(zeroAddressconfig.contractsConfig, expectedConfig);
+      assert.deepStrictEqual(zeroAddressconfig.contractsConfig, expectedConfig);
     });
   });
 
@@ -228,7 +301,8 @@ describe('embark.Config', function () {
         }
       ];
       config.loadExternalContractsFiles();
-      assert.deepEqual(config.contractsFiles, expected);
+      const files = [Object.assign({}, config.contractsFiles[0]), Object.assign({}, config.contractsFiles[1]), Object.assign({}, config.contractsFiles[2])];
+      assert.deepStrictEqual(files, expected);
     });
   });
 });

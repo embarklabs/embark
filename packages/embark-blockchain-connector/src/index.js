@@ -7,11 +7,12 @@ const constants = require('embark-core/constants');
 const embarkJsUtils = require('embarkjs').Utils;
 const {bigNumberify} = require('ethers/utils/bignumber');
 const RLP = require('ethers/utils/rlp');
-import { buildUrl, dappPath } from 'embark-utils';
+import {AccountParser, buildUrl, dappPath, deconstructUrl} from 'embark-utils';
 
 const WEB3_READY = 'blockchain:ready';
 
 const BLOCK_LIMIT = 100;
+const BALANCE_10_ETHER_IN_HEX = '0x8AC7230489E80000';
 
 // TODO: consider another name, this is the blockchain connector
 class BlockchainConnector {
@@ -24,7 +25,6 @@ class BlockchainConnector {
     this.config = embark.config;
     this.web3 = options.web3;
     this.isDev = options.isDev;
-    this.web3Endpoint = '';
     this.isWeb3Ready = false;
     this.wait = options.wait;
     this.contractsSubscriptions = [];
@@ -47,11 +47,11 @@ class BlockchainConnector {
       });
     });
 
-    self.events.setCommandHandler("blockchain:ready", self.onReady.bind(this));
+    // self.events.setCommandHandler("blockchain:ready", self.onReady.bind(this));
 
-    self.events.setCommandHandler("blockchain:web3:isReady", (cb) => {
-      cb(self.isWeb3Ready);
-    });
+    // self.events.setCommandHandler("blockchain:web3:isReady", (cb) => {
+    //   cb(self.isWeb3Ready);
+    // });
 
     self.events.setCommandHandler("blockchain:object", (cb) => {
       cb(self);
@@ -97,7 +97,11 @@ class BlockchainConnector {
       return cb();
     }
 
-    let {type, host, port, accounts, protocol, coverage} = this.config.contractsConfig.deployment;
+    if (this.config.blockchainConfig.type === 'vm') {
+      return this._setupVM(cb);
+    }
+
+    let {type, host, port, protocol} = deconstructUrl(this.config.blockchainConfig.endpoint);
     if (!protocol) {
       protocol = (type === "rpc") ? 'http' : 'ws';
     }
@@ -111,80 +115,28 @@ class BlockchainConnector {
       this.logger.warn('Using RPC as deployment connection type is deprecated. It is recommended to use WS.');
     }
 
-    if (type === 'vm') {
-      const sim = self._getSimulator();
-      const options = Object.assign({}, self.config.contractsConfig.deployment, {
-        gasPrice: "0x01",
-        gasLimit: "0xfffffffffffff",
-        allowUnlimitedContractSize: coverage
-      });
-      self.provider = sim.provider(options);
-
-      if (coverage) {
-        // Here we patch the sendAsync method on the provider. The goal behind this is to force pure/constant/view calls to become
-        // transactions, so that we can pull in execution traces and account for those executions in code coverage.
-        //
-        // Instead of a simple call, here's what happens:
-        //
-        // 1) A transaction is sent with the same payload, and a pre-defined gas price;
-        // 2) We wait for the transaction to be mined by asking for the receipt;
-        // 3) Once we get the receipt back, we dispatch the real call and pass the original callback;
-        //
-        // This will still allow tests to get the return value from the call and run contracts unmodified.
-        self.provider.realSendAsync = self.provider.sendAsync.bind(self.provider);
-        self.provider.sendAsync = function(payload, cb) {
-          if(payload.method !== 'eth_call') {
-            return self.provider.realSendAsync(payload, cb);
-          }
-          self.events.request('reporter:toggleGasListener');
-          let newParams = Object.assign({}, payload.params[0]);
-          let newPayload = {
-            id: payload.id + 1,
-            method: constants.blockchain.transactionMethods.eth_sendTransaction,
-            params: [newParams],
-            jsonrpc: payload.jsonrpc
-          };
-
-          self.provider.realSendAsync(newPayload, (_err, response) => {
-            let txHash = response.result;
-            self.web3.eth.getTransactionReceipt(txHash, (_err, _res) => {
-              self.events.request('reporter:toggleGasListener');
-              self.provider.realSendAsync(payload, cb);
-            });
-          });
-        };
-      }
-
-      self.web3.setProvider(self.provider);
-      self._emitWeb3Ready();
-      return cb();
-    }
-
     protocol = (type === "rpc") ? protocol : 'ws';
 
-    this.web3Endpoint = buildUrl(protocol, host, port);
+    const web3Endpoint = buildUrl(protocol, host, port);
 
     const providerOptions = {
       web3: this.web3,
-      accountsConfig: accounts,
       blockchainConfig: this.config.blockchainConfig,
       logger: this.logger,
       isDev: this.isDev,
       type: type,
-      web3Endpoint: self.web3Endpoint,
+      web3Endpoint,
       events: this.events,
       fs: this.fs
     };
     this.provider = new Provider(providerOptions);
 
-    self.events.request("processes:launch", "blockchain", (err) => {
-      if (err) {
-        return self.logger.error(err);
-      }
-      self.provider.startWeb3Provider(async (err) => {
-        if (err) {
-          return cb(err);
-        }
+    // self.events.request("processes:launch", "blockchain", (err) => {
+      // if (err) {
+        // return self.logger.error(err);
+      // }
+    // setTimeout(() => {
+      self.provider.startWeb3Provider(async () => {
         try {
           const blockNumber = await self.web3.eth.getBlockNumber();
           await self.web3.eth.getBlock(blockNumber);
@@ -218,7 +170,70 @@ class BlockchainConnector {
           console.error(e);
         }
       });
+    // });
+  }
+
+  _setupVM(cb) {
+    const sim = this._getSimulator();
+    const coverage = !!this.config.blockchainConfig.coverage;
+
+    let accounts = null;
+    if (this.config.blockchainConfig.accounts) {
+      accounts = AccountParser.parseAccountsConfig(this.config.blockchainConfig.accounts, this.web3, dappPath());
+      accounts = accounts.map((account) => {
+        if (!account.hexBalance) {
+          account.hexBalance = BALANCE_10_ETHER_IN_HEX;
+        }
+        return {balance: account.hexBalance, secretKey: account.privateKey};
+      });
+    }
+
+    const options = Object.assign(this.config.blockchainConfig.endpoint ? deconstructUrl(this.config.blockchainConfig.endpoint): {}, {
+      gasPrice: "0x01",
+      gasLimit: "0xfffffffffffff",
+      allowUnlimitedContractSize: coverage,
+      accounts
     });
+    this.provider = sim.provider(options);
+
+    if (coverage) {
+      // Here we patch the sendAsync method on the provider. The goal behind this is to force pure/constant/view calls to become
+      // transactions, so that we can pull in execution traces and account for those executions in code coverage.
+      //
+      // Instead of a simple call, here's what happens:
+      //
+      // 1) A transaction is sent with the same payload, and a pre-defined gas price;
+      // 2) We wait for the transaction to be mined by asking for the receipt;
+      // 3) Once we get the receipt back, we dispatch the real call and pass the original callback;
+      //
+      // This will still allow tests to get the return value from the call and run contracts unmodified.
+      this.provider.realSendAsync = this.provider.sendAsync.bind(this.provider);
+      this.provider.sendAsync = (payload, cb) => {
+        if(payload.method !== 'eth_call') {
+          return this.provider.realSendAsync(payload, cb);
+        }
+        this.events.request('reporter:toggleGasListener');
+        let newParams = Object.assign({}, payload.params[0]);
+        let newPayload = {
+          id: payload.id + 1,
+          method: constants.blockchain.transactionMethods.eth_sendTransaction,
+          params: [newParams],
+          jsonrpc: payload.jsonrpc
+        };
+
+        this.provider.realSendAsync(newPayload, (_err, response) => {
+          let txHash = response.result;
+          this.web3.eth.getTransactionReceipt(txHash, (_err, _res) => {
+            this.events.request('reporter:toggleGasListener');
+            this.provider.realSendAsync(payload, cb);
+          });
+        });
+      };
+    }
+
+    this.web3.setProvider(this.provider);
+    this._emitWeb3Ready();
+    cb();
   }
 
   _emitWeb3Ready() {

@@ -4,12 +4,12 @@ const Test2 = require('Embark/contracts/Test2');
 
 config({
   contracts: {
-    "Test2": {
-    },
-    "ZAMyLib": {
-    },
-    "ZAMyLib2": {
-      "deploy": true
+    deploy: {
+      "Test2": {},
+      "ZAMyLib": {},
+      "ZAMyLib2": {
+        "deploy": true
+      }
     }
   }
 });

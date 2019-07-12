@@ -17,18 +17,13 @@ Let's take a look at the `config/contracts.js` file that we've created in the [Q
 ```
 module.exports = {
   default: {
-    deployment: {
-      host: "localhost",
-      port: 8546,
-      type: "ws"
-    },
     dappConnection: [
       "$WEB3",
       "ws://localhost:8546",
       "http://localhost:8545"
     ],
     gas: "auto",
-    contracts: {
+    deploy: {
       SimpleStorage: {
         args: [100]
       }
@@ -37,7 +32,7 @@ module.exports = {
 }
 ```
 
-Don't get too overwhelmed by all the different options and what they mean. We'll discuss those in-depth in [configuring Smart Contracts](contracts_configuration.html). The important part here is that `contracts.js` exports an object that provides a `default` configuration. This configuration is the default environment and can be overwritten or extended by other environments. 
+Don't get too overwhelmed by all the different options and what they mean. We'll discuss those in-depth in [configuring Smart Contracts](contracts_configuration.html) and `dappConneciton` [here](/docs/javascript_usage.html#Using-dappConnection). The important part here is that `contracts.js` exports an object that provides a `default` configuration. This configuration is the default environment and can be overwritten or extended by other environments. 
 
 If we execute `$ embark run`, Embark will use the `default` configuration to deploy our application's Smart Contracts.
 
@@ -49,7 +44,7 @@ As mentioned earlier, the `default` environment can be easily extended and overw
 module.exports = {
   ...
   custom: {
-    contracts: {
+    deploy: {
       SimpleStorage: {
         args: [200]
       }

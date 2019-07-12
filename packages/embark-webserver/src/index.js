@@ -1,5 +1,5 @@
 import { __ } from 'embark-i18n';
-import {joinPath, canonicalHost, checkIsAvailable, findNextPort} from 'embark-utils';
+import {joinPath, canonicalHost, checkIsAvailable/*, findNextPort*/} from 'embark-utils';
 var Server = require('./server.js');
 const open = require('open');
 
@@ -76,14 +76,14 @@ class WebServer {
       });
     });
 
-    findNextPort(this.port).then((newPort) => {
-      this.server.port = newPort;
-      this.events.request('processes:launch', 'webserver', (_err, message, port) => {
-        this.logger.info(message);
-        this.port = port;
-        this.setServiceCheck();
-      });
-    });
+    // findNextPort(this.port).then((newPort) => {
+    //   this.server.port = newPort;
+    //   this.events.request('processes:launch', 'webserver', (_err, message, port) => {
+    //     this.logger.info(message);
+    //     this.port = port;
+    //   });
+    // });
+    this.setServiceCheck();
 
     this.events.on('check:wentOffline:Webserver', () => {
       this.logger.info(__("Webserver is offline"));

@@ -1,0 +1,66 @@
+{
+  "name": "embark-mocha-tests",
+  "version": "4.1.1",
+  "description": "Mocha Test Runner",
+  "main": "dist/lib/index.js",
+  "repository": {
+    "directory": "packages/embark-mocha-tests",
+    "type": "git",
+    "url": "https://github.com/embark-framework/embark/"
+  },
+  "author": "Iuri Matias <iuri.matias@gmail.com>",
+  "license": "MIT",
+  "bugs": "https://github.com/embark-framework/embark/issues",
+  "keywords": [
+    "blockchain",
+    "dapps",
+    "ethereum",
+    "ipfs",
+    "serverless",
+    "solc",
+    "solidity"
+  ],
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "cross-env BABEL_ENV=node babel src --extensions \".js\" --out-dir dist --root-mode upward --source-maps",
+    "ci": "npm run qa",
+    "clean": "npm run reset",
+    "lint": "npm-run-all lint:*",
+    "lint:js": "eslint src/",
+    "// lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
+    "package": "npm pack",
+    "// qa": "npm-run-all lint typecheck build package",
+    "qa": "npm-run-all lint build package",
+    "reset": "npx rimraf dist embark-*.tgz package",
+    "start": "npm run watch",
+    "// typecheck": "tsc",
+    "watch": "run-p watch:*",
+    "watch:build": "npm run build -- --verbose --watch",
+    "// watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch",
+    "test": "mocha dist/test/**/*.js"
+  },
+  "eslintConfig": {
+    "extends": "../../.eslintrc.json"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.2.3",
+    "@babel/core": "7.2.2",
+    "@types/async": "2.0.50",
+    "async": "3.1.0",
+    "cross-env": "5.2.0",
+    "eslint": "5.7.0",
+    "mocha": "6.2.0",
+    "npm-run-all": "4.1.5",
+    "rimraf": "3.0.0",
+    "tslint": "5.16.0",
+    "typescript": "3.4.5",
+    "web3": "1.2.1"
+  },
+  "engines": {
+    "node": ">=8.12.0 <12.0.0",
+    "npm": ">=6.4.1",
+    "yarn": ">=1.12.3"
+  }
+}

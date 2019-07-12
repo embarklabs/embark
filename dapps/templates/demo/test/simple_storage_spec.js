@@ -12,8 +12,10 @@ config({
   //  ]
   //},
   contracts: {
-    "SimpleStorage": {
-      args: [100]
+    deploy: {
+      "SimpleStorage": {
+        args: [100]
+      }
     }
   }
 }, (_err, web3_accounts) => {

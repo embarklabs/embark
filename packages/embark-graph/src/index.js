@@ -1,21 +1,16 @@
 const async = require('async');
 const Viz = require('viz.js');
-const fs = require('fs');
 
 class GraphGenerator {
   constructor(embark, _options) {
-    const self = this;
+    this.embark = embark;
     this.events = embark.events;
-    this.contracts = [];
 
-    this.events.setCommandHandler("graph:create", function(options, cb) {
-      self.generate(options);
-      cb();
-    });
+    this.events.setCommandHandler("graph:create", this.generate.bind(this));
   }
 
   /*eslint complexity: ["error", 21]*/
-  generate(options) {
+  generate(options, cb) {
     const self = this;
     let id = 0;
     let contractString = "";
@@ -23,6 +18,7 @@ class GraphGenerator {
     let idMapping = {};
     let contractInheritance = {};
     let contractsDependencies = {};
+    this.contracts = [];
 
     async.waterfall([
       function getContractList(next) {
@@ -134,12 +130,13 @@ class GraphGenerator {
 
         let svg = Viz(dot);
 
-        fs.writeFileSync(options.output, svg, (err) => {
+        self.embark.fs.writeFileSync(options.output, svg, (err) => {
           if (err) throw err;
           next();
         });
       }
     ], function(_err, _result) {
+      cb();
     });
   }
 

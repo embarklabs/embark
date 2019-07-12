@@ -6,22 +6,24 @@ const MyToken2 = require('Embark/contracts/MyToken2');
 
 config({
   contracts: {
-    "SimpleStorage": {
-      args: [100]
-    },
-    "Token": {
-      deploy: false,
-      args: [1000]
-    },
-    "MyToken2": {
-      instanceOf: "Token",
-      args: [2000]
-    },
-    "SomeContract": {
-      "args": [
-        ["$MyToken2", "$SimpleStorage"],
-        100
-      ]
+    deploy: {
+      "SimpleStorage": {
+        args: [100]
+      },
+      "Token": {
+        deploy: false,
+        args: [1000]
+      },
+      "MyToken2": {
+        instanceOf: "Token",
+        args: [2000]
+      },
+      "SomeContract": {
+        "args": [
+          ["$MyToken2", "$SimpleStorage"],
+          100
+        ]
+      }
     }
   }
 });

@@ -2,6 +2,8 @@ import { __ } from 'embark-i18n';
 var EventEmitter = require('events');
 const cloneDeep = require('lodash.clonedeep');
 
+const fs = require('fs-extra');
+
 function warnIfLegacy(eventName) {
   const legacyEvents = [];
   if (legacyEvents.indexOf(eventName) >= 0) {
@@ -9,53 +11,130 @@ function warnIfLegacy(eventName) {
   }
 }
 
-function log(eventType, eventName) {
+function getOrigin() {
+  let origin = ((new Error().stack).split("at ")[3]).trim();
+  origin = origin.split("(")[0].trim();
+  return origin;
+}
+
+function log(eventType, eventName, origin) {
+  if (!(process && process.env && process.env.DEBUGEVENTS)) return;
   if (['end', 'prefinish', 'error', 'new', 'demo', 'block', 'version'].indexOf(eventName) >= 0) {
     return;
   }
-  if (eventType.indexOf("log") >= 0) {
+  if (eventName.indexOf("log") >= 0) {
     return;
+  }
+  // fs.appendFileSync(".embark/events.log", (new Error().stack) + "\n");
+  if (!origin && origin !== "") {
+    origin = ((new Error().stack).split("at ")[3]).trim();
+    origin = origin.split("(")[0].trim();
+    // origin = getOrigin();
+  }
+
+  fs.ensureDirSync(".embark/");
+  fs.appendFileSync(".embark/events.log", eventType + ": " + eventName + " -- (" + origin + ")\n");
+}
+
+// const cmdNames = {};
+//
+// function trackCmd(cmdName) {
+//   if (!(process && process.env && process.env.DEBUGEVENTS)) return;
+//   let origin = ((new Error().stack).split("at ")[3]).trim();
+//   origin = origin.split("(")[0].trim();
+//   cmdNames[cmdName] = origin;
+// }
+
+class EmbarkEmitter extends EventEmitter {
+
+  emit(requestName, ...args) {
+    warnIfLegacy(arguments[0]);
+    // log("\n|event", requestName);
+    return super.emit(requestName, ...args);
   }
 }
 
-EventEmitter.prototype._maxListeners = 350;
-const _on         = EventEmitter.prototype.on;
-const _once       = EventEmitter.prototype.once;
-const _setHandler = EventEmitter.prototype.setHandler;
-const _removeAllListeners = EventEmitter.prototype.removeAllListeners;
+
+// EmbarkEmitter.prototype.log  = log;
+EmbarkEmitter.prototype.log  = log;
+
+EmbarkEmitter.prototype._maxListeners = 350;
+const _on         = EmbarkEmitter.prototype.on;
+const _once       = EmbarkEmitter.prototype.once;
+const _setHandler = EmbarkEmitter.prototype.setHandler;
+const _removeAllListeners = EmbarkEmitter.prototype.removeAllListeners;
+const _emit       = EmbarkEmitter.prototype.emit;
 
 const toFire = [];
 
-EventEmitter.prototype.removeAllListeners = function(requestName) {
+EmbarkEmitter.prototype._emit = EmbarkEmitter.prototype.emit;
+
+EmbarkEmitter.prototype.removeAllListeners = function(requestName) {
   delete toFire[requestName];
   return _removeAllListeners.call(this, requestName);
 };
 
-EventEmitter.prototype.on = function(requestName, cb) {
-  log("listening to event: ", requestName);
+EmbarkEmitter.prototype.on = function(requestName, cb) {
+  // log("EVENT LISTEN", requestName);
   warnIfLegacy(requestName);
   return _on.call(this, requestName, cb);
 };
 
-EventEmitter.prototype.once = function(requestName, cb) {
-  log("listening to event (once): ", requestName);
+EmbarkEmitter.prototype.once = function(requestName, cb) {
+  // log("EVENT LISTEN ONCE", requestName);
   warnIfLegacy(requestName);
   return _once.call(this, requestName, cb);
 };
 
-EventEmitter.prototype.setHandler = function(requestName, cb) {
-  log("setting handler for: ", requestName);
+EmbarkEmitter.prototype.setHandler = function(requestName, cb) {
+  log("SET HANDLER", requestName);
   warnIfLegacy(requestName);
   return _setHandler.call(this, requestName, cb);
 };
 
-EventEmitter.prototype.request = function() {
+EmbarkEmitter.prototype.request2 = function() {
   let requestName = arguments[0];
   let other_args = [].slice.call(arguments, 1);
 
-  log("requesting: ", requestName);
+  log("\nREQUEST", requestName);
   warnIfLegacy(requestName);
+  if (this._events && !this._events['request:' + requestName]) {
+    log("NO REQUEST LISTENER", requestName);
+    console.log("made request without listener: " + requestName);
+    console.trace();
+  }
+
+  let promise = new Promise((resolve, reject) => {
+    other_args.push(
+      (err, ...res) => {
+        if (err) return reject(err);
+        if (res.length && res.length > 1) {
+          return resolve(res);
+        }
+        return resolve(res[0]);
+      }
+    );
+
+    this._emit('request:' + requestName, ...other_args);
+  });
+
+  return promise;
+};
+
+EmbarkEmitter.prototype.request = function() {
+  let requestName = arguments[0];
+  let other_args = [].slice.call(arguments, 1);
+
+  log("\nREQUEST(OLD)", requestName);
+  warnIfLegacy(requestName);
+  if (this._events && !this._events['request:' + requestName]) {
+    log("NO REQUEST LISTENER", requestName);
+    console.log("made request without listener: " + requestName);
+    console.trace();
+  }
   const listenerName = 'request:' + requestName;
+
+  // TODO: remove this, it will lead to illusion of things working when this situatio shouldnt' hapepn in the first place
 
   // if we don't have a command handler set for this event yet,
   // store it and fire it once a command handler is set
@@ -67,12 +146,20 @@ EventEmitter.prototype.request = function() {
     return;
   }
 
-  return this.emit(listenerName, ...other_args);
+  // return this.emit(listenerName, ...other_args);
+  return this._emit(listenerName, ...other_args);
 };
 
-EventEmitter.prototype.setCommandHandler = function(requestName, cb) {
-  log("setting command handler for: " + requestName);
+// TODO: ensure that it's only possible to create 1 command handler
+EmbarkEmitter.prototype.setCommandHandler = function(requestName, cb) {
+  log("SET COMMAND HANDLER", requestName);
+
+  // let origin = ((new Error().stack).split("at ")[3]).trim();
+  // origin = origin.split("(")[0].trim();
+  let origin = getOrigin();
+
   let listener = function(_cb) {
+    log("== REQUEST RESPONSE", requestName, origin);
     cb.call(this, ...arguments);
   };
   const listenerName = 'request:' + requestName;
@@ -80,6 +167,7 @@ EventEmitter.prototype.setCommandHandler = function(requestName, cb) {
   // unlike events, commands can only have 1 handler
   _removeAllListeners.call(this, listenerName);
 
+  // TODO: remove this, it will lead to illusion of things working when this situatio shouldnt' hapepn in the first place
   // if this event was requested prior to the command handler
   // being set up,
   // 1. delete the premature request(s) from the toFire array so they are not fired again
@@ -99,8 +187,8 @@ EventEmitter.prototype.setCommandHandler = function(requestName, cb) {
   return this.on(listenerName, listener);
 };
 
-EventEmitter.prototype.setCommandHandlerOnce = function(requestName, cb) {
-  log("setting command handler for: ", requestName);
+EmbarkEmitter.prototype.setCommandHandlerOnce = function(requestName, cb) {
+  log("SET COMMAND HANDLER ONCE", requestName);
 
   const listenerName = 'request:' + requestName;
 
@@ -124,4 +212,4 @@ EventEmitter.prototype.setCommandHandlerOnce = function(requestName, cb) {
   });
 };
 
-module.exports = EventEmitter;
+module.exports = EmbarkEmitter;

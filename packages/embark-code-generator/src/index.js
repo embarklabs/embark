@@ -28,10 +28,7 @@ class CodeGenerator {
     this.rpcHost = this.blockchainConfig.rpcHost || '';
     this.rpcPort = this.blockchainConfig.rpcPort || '';
     this.contractsConfig = embark.config.contractsConfig || {};
-    this.storageConfig = embark.config.storageConfig || {};
-    this.communicationConfig = embark.config.communicationConfig || {};
-    this.namesystemConfig = embark.config.namesystemConfig || {};
-    this.webServerConfig = embark.config.webServerConfig || {};
+    this.config = embark.config;
     this.env = options.env || 'development';
     this.plugins = options.plugins;
     this.events = embark.events;
@@ -172,7 +169,7 @@ class CodeGenerator {
       dappConnection: contractConfig.dappConnection,
       dappAutoEnable: contractConfig.dappAutoEnable,
       warnIfMetamask: this.blockchainConfig.isDev,
-      blockchainClient: this.blockchainConfig.ethereumClientName
+      blockchainClient: this.blockchainConfig.client
     };
     this.generateArtifact(this.dappConfigs.blockchain, constants.dappArtifacts.blockchain, constants.dappArtifacts.dir, (err, path, _updated) => {
       callback(err, path);
@@ -240,31 +237,31 @@ class CodeGenerator {
   }
 
   generateNamesInitialization(useEmbarkJS) {
-    if (!useEmbarkJS || this.namesystemConfig === {}) return "";
+    if (!useEmbarkJS || this.config.namesystemConfig === {}) return "";
 
     let result = "\n";
     result += Templates.define_when_env_loaded();
-    result += this._getInitCode('names', this.namesystemConfig);
+    result += this._getInitCode('names', this.config.namesystemConfig);
 
     return result;
   }
 
   generateStorageInitialization(useEmbarkJS) {
-    if (!useEmbarkJS || this.storageConfig === {}) return "";
+    if (!useEmbarkJS || this.config.storageConfig === {}) return "";
 
     let result = "\n";
     result += Templates.define_when_env_loaded();
-    result += this._getInitCode('storage', this.storageConfig);
+    result += this._getInitCode('storage', this.config.storageConfig);
 
     return result;
   }
 
   generateCommunicationInitialization(useEmbarkJS) {
-    if (!useEmbarkJS || this.communicationConfig === {}) return "";
+    if (!useEmbarkJS || this.config.communicationConfig === {}) return "";
 
     let result = "\n";
     result += Templates.define_when_env_loaded();
-    result += this._getInitCode('communication', this.communicationConfig);
+    result += this._getInitCode('communication', this.config.communicationConfig);
 
     return result;
   }
@@ -438,10 +435,10 @@ class CodeGenerator {
 
   getInitProviderCode() {
     const codeTypes = {
-      blockchain: this.blockchainConfig || {},
-      communication: this.communicationConfig || {},
-      names: this.namesystemConfig || {},
-      storage: this.storageConfig || {}
+      blockchain: this.config.blockchainConfig || {},
+      communication: this.config.communicationConfig || {},
+      names: this.config.namesystemConfig || {},
+      storage: this.config.storageConfig || {}
     };
 
     return this.plugins.getPluginsFor("initConsoleCode").reduce((acc, plugin) => {

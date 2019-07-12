@@ -79,3 +79,29 @@ However, we did introduce some small breaking changes. We removed:
 
 - **account**: This is completely replaced by the new accounts property (notice the s at the end of accounts). It gives the developer more flexibility. To have exactly the same behavior as before, just use the `nodeAccounts` account type as described in the docs
 - **simulatorMnemonic**: Removed in favor of Ganache’s default mnemonic. If this functionality is still needed, please specify the desired mnemonic in the [blockchain config’s mnemonic account type](/docs/blockchain_accounts_configuration.md#parameter-descriptions).
+
+
+## Updating to v5
+
+Summary:
+- Contract config
+  - Removed the deployment section (now all part of blockchain config)
+  - `contracts` renamed `deploy` to match `beforeDeploy` and `afterDeploy` and for tests
+- Blockchain config
+  - A lot of new defaults, so less that you need to configure [Source](/docs/blockchain_configuration.html#Common-Parameters)
+  - A lot of renamed parameters
+    - isDev: `miningMode: 'dev'`
+    - mineWhenNeeded: `miningMode: 'auto'`
+    - ethereumClientName: `client`
+  - New `endpoint` parameter that let's you connect to an external endpoint or configure more easily which local endpoint to start [Source](/docs/blockchain_configuration.html#Parameter-descriptions)
+  - Now is the only source for accounts [Source](/docs/blockchain_accounts_configuration.html)
+- Tests
+  - Can now configure module configuration
+    - Storage, namesystem (ENS) and communication modules can now be configured 
+      - Configure them just like in the configuration files
+      - Tests default to the `test` environment
+      - Modules are turned off by default
+      - Config merges with `test` and `default` so no need to rewrite all the provider configs
+  - `deployement` section removed
+    - You can now configure the accounts and the endpoint in the `blockchain` section
+  - `contracts` renamed `deploy` and put inside the `contracts` section

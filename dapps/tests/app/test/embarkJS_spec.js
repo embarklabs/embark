@@ -4,20 +4,28 @@ const SimpleStorage = require('Embark/contracts/SimpleStorage');
 const EmbarkJS = require('Embark/EmbarkJS');
 
 config({
+  namesystem: {
+    enabled: true,
+    register: {
+      "rootDomain": "test.eth"
+    }
+  },
   contracts: {
-    "SimpleStorage": {
-      args: [100]
+    deploy: {
+      "SimpleStorage": {
+        args: [100]
+      }
     }
   }
 });
 
 describe("EmbarkJS functions", function() {
-  it('should have access to ENS functions', async function() {
-    const rootAddress = await EmbarkJS.Names.resolve('embark.eth');
+  it('should have access to ENS functions and registered test.eth', async function() {
+    const rootAddress = await EmbarkJS.Names.resolve('test.eth');
     assert.strictEqual(rootAddress, web3.eth.defaultAccount);
 
     const rootName = await EmbarkJS.Names.lookup(rootAddress);
-    assert.strictEqual(rootName, 'embark.eth');
+    assert.strictEqual(rootName, 'test.eth');
   });
 
   it('should have access to Storage functions', async function() {

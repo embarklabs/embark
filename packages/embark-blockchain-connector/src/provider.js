@@ -1,4 +1,4 @@
-import { __ } from 'embark-i18n';
+import {__} from 'embark-i18n';
 const async = require('async');
 const { AccountParser, dappPath } = require('embark-utils');
 const fundAccount = require('./fundAccount');
@@ -9,7 +9,6 @@ const ethUtil = require('ethereumjs-util');
 class Provider {
   constructor(options) {
     this.web3 = options.web3;
-    this.accountsConfig = options.accountsConfig;
     this.blockchainConfig = options.blockchainConfig;
     this.type = options.type;
     this.web3Endpoint = options.web3Endpoint;
@@ -75,15 +74,7 @@ class Provider {
         self.logger.warn('Error while getting the node\'s accounts.', err.message || err);
       }
 
-      try {
-        self.blockchainAccounts = AccountParser.parseAccountsConfig(self.blockchainConfig.accounts, self.web3, dappPath(), self.logger, accounts);
-
-        accounts = accounts.concat(self.blockchainAccounts);
-
-        self.accounts = AccountParser.parseAccountsConfig(self.accountsConfig, self.web3, dappPath(), self.logger, accounts);
-      } catch (e) {
-        return callback(e);
-      }
+      self.accounts = AccountParser.parseAccountsConfig(self.blockchainConfig.accounts, self.web3, dappPath(), self.logger, accounts);
 
       if (!self.accounts.length) {
         self.accounts = accounts;

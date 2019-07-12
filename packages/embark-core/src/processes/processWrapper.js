@@ -46,6 +46,7 @@ export class ProcessWrapper {
     }, 500);
   }
 
+  // TODO: find better way - andre
   interceptLogs() {
     const context = {};
     context.console = console;

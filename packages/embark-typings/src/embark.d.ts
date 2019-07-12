@@ -4,6 +4,7 @@ import { Plugins } from "./plugins";
 export interface Events {
   on: any;
   request: any;
+  request2: any;
   emit: any;
   once: any;
   setCommandHandler(
@@ -24,6 +25,25 @@ export interface Config {
     };
     generationDir: string;
   };
+  blockchainConfig: {
+    endpoint: string;
+    accounts: any[];
+    proxy: boolean;
+    rpcPort: string | number;
+    wsPort: string | number;
+    rpcHost: string | number;
+    wsHost: string | number;
+    wsOrigins: string;
+    rpcCorsDomain: string;
+    wsRPC: boolean;
+    isDev: boolean;
+  };
+  webServerConfig: {
+    certOptions: {
+      key: string;
+      cert: string;
+    };
+  };
   plugins: Plugins;
   reloadConfig(): void;
 }
@@ -31,6 +51,7 @@ export interface Config {
 export interface Embark {
   env: string;
   events: Events;
+  plugins: Plugins;
   registerAPICall: any;
   registerConsoleCommand: any;
   logger: Logger;
@@ -39,6 +60,6 @@ export interface Embark {
   currentContext: string[];
   registerActionForEvent(
     name: string,
-    action: (callback: () => void) => void,
+    action: (params: any, cb: (error: any, result: any) => void) => void,
   ): void;
 }

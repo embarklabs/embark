@@ -6,9 +6,9 @@ contract SimpleStorageTest is Ownable {
   uint public storedData;
   address owner;
 
-  constructor(uint initialValue) public {
+  constructor(uint initialValue, address _owner) public {
     storedData = initialValue;
-    owner = msg.sender;
+    owner = _owner;
   }
 
   function set(uint x) public onlyOwner {

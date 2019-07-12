@@ -62,7 +62,10 @@
     "transactionMethods": {
       "eth_sendTransaction": "eth_sendTransaction",
       "eth_sendRawTransaction": "eth_sendRawTransaction",
-      "eth_getTransactionReceipt": "eth_getTransactionReceipt"
+      "eth_getTransactionReceipt": "eth_getTransactionReceipt",
+      "eth_call": "eth_call",
+      "eth_accounts": "eth_accounts",
+      "personal_listAccounts": "personal_listAccounts"
     }
   },
   "storage": {

@@ -7,6 +7,7 @@ const NO_DEBUG_SESSION = __("No debug session active. Activate one with `debug`"
 interface Events {
   on: any;
   request: any;
+  request2: any;
 }
 
 interface EmbarkApi {

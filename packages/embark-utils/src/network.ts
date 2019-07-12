@@ -91,3 +91,61 @@ export function getJson(url: string, cb: any) {
   }
   httpGetJson(url, cb);
 }
+
+export function pingEndpoint(host: string, port: number, type: string, protocol: string, origin: string, callback: any) {
+  // remove any extra information from a host string, e.g. port, path, query
+  const _host = require("url").parse(
+    // url.parse() expects a protocol segment else it won't parse as desired
+    host.slice(0, 4) === "http" ? host : `${protocol}://${host}`,
+  ).hostname;
+
+  let closed = false;
+  const close = (req: any, closeMethod: any) => {
+    if (!closed) {
+      closed = true;
+      req[closeMethod]();
+    }
+  };
+
+  const handleEvent = (req: any, closeMethod: any, ...args: any) => {
+    close(req, closeMethod);
+    setImmediate(() => { callback(...args); });
+  };
+
+  const handleError = (req: any, closeMethod: any) => {
+    req.on("error", (err: any) => {
+      if (err.code !== "ECONNREFUSED") {
+        console.error(
+          `Ping: Network error` +
+          (err.message ? ` '${err.message}'` : "") +
+          (err.code ? ` (code: ${err.code})` : ""),
+        );
+      }
+      // when closed additional error events will not callback
+      if (!closed) { handleEvent(req, closeMethod, err); }
+    });
+  };
+
+  const handleSuccess = (req: any, closeMethod: any, event: any) => {
+    req.once(event, () => {
+      handleEvent(req, closeMethod);
+    });
+  };
+
+  const handleRequest = (req: any, closeMethod: any, event: any) => {
+    handleError(req, closeMethod);
+    handleSuccess(req, closeMethod, event);
+  };
+
+  if (type === "ws") {
+    const url = `${protocol === "https" ? "wss" : "ws"}://${_host}:${port}/`;
+    const req = new (require("ws"))(url, origin ? {origin} : {});
+    handleRequest(req, "close", "open");
+  } else {
+    const headers = origin ? {Origin: origin} : {};
+    const req = (protocol === "https" ? require("https") : require("http")).get(
+      {headers, host: _host, port},
+    );
+    handleRequest(req, "abort", "response");
+  }
+}
