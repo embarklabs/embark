@@ -47,7 +47,7 @@ There are many different components inside a decentralized application that can 
 This file contains the configuration used for Embark to run a blockchain node with an Ethereum client such as go-ethereum, Parity, or a simulator like Ganache.
 
 * **contracts.js**
-This file contains the configuration for Smart Contracts, including their arguments and relationships between them, such as dependencies. Here we can also specify where to deploy our Smart Contracts and how the application should attempt to connect to a node. Please see [Configuring Contracts](contracts.html) for more details.
+This file contains the configuration for Smart Contracts, including their arguments and relationships between them, such as dependencies. Here we can also specify where to deploy our Smart Contracts and how the application should attempt to connect to a node. Please see [Configuring Contracts](contracts_configuration.html) for more details.
 
 * **storage.js**
 This file lets us configure what storage component to use (e.g IPFS), including what node to connect to, to upload and retrieve data through the application. Head over to our guide on [configuring decentralized storage](storage_configuration.html) for details configuring a decentralized storage system for our application.
