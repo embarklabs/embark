@@ -73,8 +73,7 @@ class ENS {
     this.ensConfig = ensConfig;
     this.configured = false;
     this.modulesPath = dappPath(embark.config.embarkConfig.generationDir, dappArtifacts.symlinkDir);
-    this.consoleCmdsRegistered = false;
-    this.eventsRegistered = false;
+    this.initated = false;
 
     this.events.setCommandHandler("ens:resolve", this.ensResolve.bind(this));
     this.events.setCommandHandler("ens:isENSName", this.isENSName.bind(this));
@@ -88,7 +87,7 @@ class ENS {
   }
 
   init(cb = () => {}) {
-    if (this.config.namesystemConfig === {} ||
+    if (this.initated || this.config.namesystemConfig === {} ||
       this.config.namesystemConfig.enabled !== true ||
       !this.config.namesystemConfig.available_providers ||
       this.config.namesystemConfig.available_providers.indexOf('ens') < 0) {
@@ -100,6 +99,7 @@ class ENS {
     this.registerEvents();
     this.registerConsoleCommands();
     this.addENSToEmbarkJS(cb);
+    this.initated = true;
   }
 
   reset() {
@@ -107,10 +107,6 @@ class ENS {
   }
 
   registerConsoleCommands() {
-    if (this.consoleCmdsRegistered) {
-      return;
-    }
-    this.consoleCmdsRegistered = true;
     this.embark.registerConsoleCommand({
       usage: 'resolve [name]',
       description: __('Resolves an ENS name'),
@@ -153,10 +149,6 @@ class ENS {
   }
 
   registerEvents() {
-    if (this.eventsRegistered) {
-      return;
-    }
-    this.eventsRegistered = true;
     this.embark.registerActionForEvent("deploy:beforeAll", this.configureContractsAndRegister.bind(this));
     this.events.on('blockchain:reseted', this.reset.bind(this));
     this.events.setCommandHandler("storage:ens:associate", this.associateStorageToEns.bind(this));

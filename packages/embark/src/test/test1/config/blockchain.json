@@ -1,11 +1,11 @@
 {
   "myenv": {
-    "clientMode": {
+    "clientConfig": {
       "miningMode": "auto"
     }
   },
   "unitenv": {
-    "clientMode": {
+    "clientConfig": {
       "miningMode": "auto",
       "gasPrice": "8 Mwei",
       "targetGasLimit": "300 Kwei"
@@ -19,7 +19,7 @@
   },
   "unitlessenv": {
 
-    "clientMode": {
+    "clientConfig": {
       "miningMode": "auto",
       "gasPrice": "8000000",
       "targetGasLimit": "20000000"
@@ -46,5 +46,8 @@
     "datadir": "yourdatadir",
     "networkId": "123",
     "nodes": []
+  },
+  "extNetwork": {
+    "endpoint": "http://mynetwork.com"
   }
 }

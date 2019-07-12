@@ -269,13 +269,23 @@ class Engine {
   }
 
   storageService(_options) {
-    if (this.config.storageConfig.available_providers.includes("ipfs")) {
-      this.registerModulePackage('embark-ipfs');
-    }
-    if (this.config.storageConfig.available_providers.includes("swarm")) {
-      this.registerModulePackage('embark-swarm');
-    }
+    this.registerModulePackage('embark-ipfs');
+    this.registerModulePackage('embark-swarm');
     this.registerModulePackage('embark-storage', {plugins: this.plugins});
+
+    this.events.setCommandHandler("module:storage:reset", (cb) => {
+      async.parallel([
+        (paraCb) => {
+          this.events.request("module:ipfs:reset", paraCb);
+        },
+        (paraCb) => {
+          this.events.request("module:swarm:reset", paraCb);
+        },
+        (paraCb) => {
+          this.events.request("module:storageJS:reset", paraCb);
+        }
+      ], cb);
+    });
   }
 
   web3Service(options) {
