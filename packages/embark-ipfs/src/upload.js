@@ -34,7 +34,11 @@ class IPFS {
         console.debug(cmd);
         shelljs.exec(cmd, {silent:true}, function(code, stdout, stderr){ // {silent:true}: don't echo cmd output so it can be controlled via logLevel
           console.log(stdout.green);
-          callback(stderr, stdout);
+          if (code) {
+            // stderr can sometimes be an error or the total uploaded size
+            return callback(stderr || __('IPFS exited with code %s', code.toString()));
+          }
+          callback(null, stdout);
         });
       },
       function getHashFromOutput(result, callback) {
@@ -78,8 +82,7 @@ class IPFS {
       }
     ], function (err, dir_hash) {
       if (err) {
-        console.log(__("error uploading to ipfs").red);
-        console.log(err);
+        console.error(__("error uploading to ipfs").red);
         cb(err);
       }
       else cb(null, dir_hash);
