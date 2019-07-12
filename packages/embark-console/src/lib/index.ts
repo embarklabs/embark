@@ -28,6 +28,7 @@ class Console {
   private cmdHistoryFile: string;
   private suggestions?: Suggestions;
   private providerReady: boolean;
+  private helpCmds: any;
 
   constructor(embark: Embark, options: any) {
     this.embark = embark;
@@ -42,6 +43,7 @@ class Console {
     this.cmdHistoryFile = options.cmdHistoryFile || dappPath(".embark", "cmd_history");
     this.providerReady = false;
     this.loadHistory();
+    this.helpCmds = {};
 
     if (this.ipc.isServer()) {
       this.ipc.on("console:executeCmd", (cmd: string, cb: any) => {
@@ -58,6 +60,15 @@ class Console {
         this.saveHistory(cmd, true);
       });
     }
+    this.events.setCommandHandler("console:register:helpCmd", (options: any, cb: any) => {
+      const {cmdName, cmdHelp} = options;
+      this.helpCmds[cmdName] = cmdHelp;
+      if (cb) { cb(); }
+    });
+    this.events.setCommandHandler("console:unregister:helpCmd", (cmdName: string, cb: any) => {
+      delete this.helpCmds[cmdName];
+      if (cb) { cb(); }
+    });
     this.events.setCommandHandler("console:executeCmd", this.executeCmd.bind(this));
     this.events.setCommandHandler("console:history", (cb: any) => this.getHistory(this.cmdHistorySize(), cb));
     this.events.setCommandHandler("console:provider:ready", (cb: any) => {
@@ -113,15 +124,20 @@ class Console {
         __("Welcome to Embark") + " " + this.version,
         "",
         __("possible commands are:"),
-        // TODO: only if the blockchain is actually active!
-        // will need to pass te current embark state here
         // TODO: this help commands should be passed through an API
+
         chalk.cyan("ipfs") + " - " + __("instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)"),
         chalk.cyan("swarm") + " - " + __("instantiated swarm-api object configured to the current environment (available if swarm is enabled)"),
-        chalk.cyan("web3") + " - " + __("instantiated web3.js object configured to the current environment"),
         chalk.cyan("EmbarkJS") + " - " + __("EmbarkJS static functions for Storage, Messages, Names, etc."),
         chalk.cyan("log [process] on/off") + " - " + __("Activate or deactivate the logs of a sub-process. Options: blockchain, ipfs, webserver"),
       ];
+
+      for (let cmdName in this.helpCmds) {
+        let helpCmd = this.helpCmds[cmdName];
+        helpText.push(chalk.cyan(cmdName) + " - " + helpCmd);
+      }
+
+      // TODO: remove old helpDescriptions
       helpDescriptions.forEach((helpDescription) => {
         let matches = [] as string[];
         if (Array.isArray(helpDescription.matches)) {

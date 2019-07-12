@@ -31,7 +31,8 @@
     "reset": "npx rimraf embark-*.tgz package"
   },
   "dependencies": {
-    "embark-utils": "^4.1.0-beta.2"
+    "embark-utils": "^4.1.0-beta.2",
+    "embark-i18n": "^4.1.0-beta.2"
   },
   "devDependencies": {
     "rimraf": "2.6.3"

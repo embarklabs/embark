@@ -1,3 +1,4 @@
+const { __ } = require("embark-i18n");
 const { dappPath, embarkPath } = require('embark-utils');
 const path = require('path');
 
@@ -14,6 +15,7 @@ class EmbarkJSConnectorWeb3 {
     // this.registerProvider();
     // TODO: will need to be changed to an action but that requires changes in the blockchain launch process
     this.events.on("blockchain:ready", this.executeEmbarkJSBlockchain.bind(this));
+    this.events.on("blockchain:ready", this.registerWeb3Help.bind(this));
   }
 
   async executeEmbarkJSBlockchain() {
@@ -31,6 +33,13 @@ class EmbarkJSConnectorWeb3 {
         return cb(err);
       }
     });
+  }
+
+  registerWeb3Help() {
+    this.events.request('console:register:helpCmd', {
+      cmdName: "web3",
+      cmdHelp: __("instantiated web3.js object configured to the current environment")
+    }, () => { })
   }
 
   // ===============

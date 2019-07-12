@@ -60,6 +60,8 @@ EventEmitter.prototype.request = function() {
   }
   const listenerName = 'request:' + requestName;
 
+  // TODO: remove this, it will lead to illusion of things working when this situatio shouldnt' hapepn in the first place
+
   // if we don't have a command handler set for this event yet,
   // store it and fire it once a command handler is set
   if (!this.listeners(listenerName).length) {
