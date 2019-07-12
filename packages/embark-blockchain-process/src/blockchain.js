@@ -166,7 +166,8 @@ Blockchain.prototype.setupProxy = async function () {
   let addresses;
   try {
     addresses = AccountParser.parseAccountsConfig(this.userConfig.accounts, false, dappPath(), this.logger);
-  } catch (_e) {
+  } catch (e) {
+    this.logger.error(e.message);
     process.exit(1);
   }
 
