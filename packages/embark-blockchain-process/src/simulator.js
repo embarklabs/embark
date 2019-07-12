@@ -19,6 +19,7 @@ export class Simulator {
 
     let useProxy = this.blockchainConfig.proxy || false;
     let host = (dockerHostSwap(options.host || this.blockchainConfig.rpcHost) || defaultHost);
+    // TODO change this
     const configPort = this.contractsConfig.deployment.type === 'rpc' ? this.blockchainConfig.rpcPort : this.blockchainConfig.wsPort;
     let port = (options.port || configPort || 8545);
     port = parseInt(port, 10) + (useProxy ? constants.blockchain.servicePortOnProxy : 0);

@@ -6,16 +6,18 @@ const EmbarkJS = require('Embark/EmbarkJS');
 
 config({
   contracts: {
-    "Token": {
-      deploy: false,
-      args: [1000]
-    },
-    "MyToken": {
-      instanceOf: "Token"
-    },
-    "MyToken2": {
-      instanceOf: "Token",
-      args: [2000]
+    deploy: {
+      "Token": {
+        deploy: false,
+        args: [1000]
+      },
+      "MyToken": {
+        instanceOf: "Token"
+      },
+      "MyToken2": {
+        instanceOf: "Token",
+        args: [2000]
+      }
     }
   }
 });

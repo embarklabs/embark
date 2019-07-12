@@ -1,16 +1,5 @@
 module.exports = {
   default: {
-    deployment: {
-      host: "localhost",
-      port: 8546,
-      type: "ws",
-      accounts: [
-        {
-          mnemonic: "example exile argue silk regular smile grass bomb merge arm assist farm",
-          balance: "5 ether"
-        }
-      ]
-    },
     dappConnection: [
       "ws://localhost:8546",
       "http://localhost:8550",
@@ -19,7 +8,7 @@ module.exports = {
       "$WEB3"
     ],
     gas: "auto",
-    contracts: {
+    deploy: {
       Ownable: {
         deploy: false
       },
@@ -88,7 +77,7 @@ module.exports = {
     ]
   },
   development: {
-    contracts: {
+    deploy: {
       MyToken2: {
         instanceOf: "Token",
         args: [2000]

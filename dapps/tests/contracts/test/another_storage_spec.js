@@ -6,11 +6,13 @@ let accounts;
 
 config({
   contracts: {
-    "SimpleStorage": {
-      args: [100]
-    },
-    "AnotherStorage": {
-      args: ["$SimpleStorage", "embark.eth"]
+    deploy: {
+      "SimpleStorage": {
+        args: [100]
+      },
+      "AnotherStorage": {
+        args: ["$SimpleStorage", "embark.eth"]
+      }
     }
   }
 }, (err, accs) => {

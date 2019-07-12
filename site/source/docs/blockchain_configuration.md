@@ -29,7 +29,7 @@ module.exports = {
     wsPort: 8546
   },
   development: {
-    ethereumClientName: "geth",
+    client: "geth",
     ethereumClientBin: "geth",
     datadir: ".embark/development/datadir",
     networkType: "custom",
@@ -61,7 +61,7 @@ Option | Type: `default` | Value
 `wsOrigins` | object | Same as `rpcCorsDomain`, but for the Websocket server
 `wsHost` | string: `localhost` | Same as `rpcHost`, but for the Websocket server
 `wsPort` | number: `8546` | Same as `rpcPort`, but for the Websocket server
-`ethereumClientName` | string: `geth` |  Client to use for the Ethereum node. Currently supported: `geth` and `parity`
+`client` | string: `geth` |  Client to use for the Ethereum node. Currently supported: `geth` and `parity`
 `ethereumClientBin` | string: `geth` |  Path to the client binary. By default, Embark uses the client name as an executable (if it is in the PATH)
 `datadir` | string |  Directory where to put the Node's data (eg: keystores)
 `networkType` | string: `custom` |  Can be: `testnet`, `rinkeby`, `kovan` or custom, in which case, it will use the specified `networkId`
