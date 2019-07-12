@@ -1,6 +1,7 @@
 import { __ } from 'embark-i18n';
-import { deconstructUrl, prepareContractsConfig, buildUrl } from 'embark-utils';
+import { deconstructUrl, prepareContractsConfig, buildUrl, recursiveMerge } from 'embark-utils';
 import deepEqual from 'deep-equal';
+import cloneDeep from 'lodash.clonedeep';
 
 const async = require('async');
 const web3Utils = require('web3-utils');
@@ -15,6 +16,7 @@ class Test {
     this.logger = options.logger;
     this.ipc = options.ipc;
     this.configObj = options.config;
+    this.originalConfigObj = cloneDeep(options.config);
     this.ready = true;
     this.firstRunConfig = true;
     this.error = false;
@@ -180,8 +182,9 @@ class Test {
     Object.keys(this.moduleConfigs).forEach(moduleName => {
       options[moduleName] = options[moduleName] || {};
       if (!deepEqual(options[moduleName], this.moduleConfigs[moduleName])) {
-        restartModules.push(function (paraCb) {
-          self.events.request(`config:${moduleName}Config:set`, options[moduleName], true, () => {
+        this.moduleConfigs[moduleName] = options[moduleName];
+        restartModules.push((paraCb) => {
+          self.events.request(`config:${moduleName}Config:set`, recursiveMerge({}, self.originalConfigObj[`${moduleName}Config`], options[moduleName]), () => {
             self.events.request(`module:${moduleName}:reset`, paraCb);
           });
         });

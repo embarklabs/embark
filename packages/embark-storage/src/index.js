@@ -14,18 +14,25 @@ class Storage {
       this.embark.events.once("module:storage:ready", cb);
     });
 
-    this.embark.events.setCommandHandler("module:storage:reset", (cb) => {
+    this.embark.events.setCommandHandler("module:storageJS:reset", (cb) => {
+      if (!this.isEnabled()) {
+        return cb();
+      }
       this.ready = false;
       this.addSetProviders(cb);
     });
 
-    if (!embark.config.storageConfig.enabled) {
+    if (!this.isEnabled()) {
       this.ready = true;
       return;
     }
 
     this.handleUploadCommand();
     this.addSetProviders(() => {});
+  }
+
+  isEnabled() {
+    return !!this.embark.config.storageConfig.enabled;
   }
 
   handleUploadCommand() {

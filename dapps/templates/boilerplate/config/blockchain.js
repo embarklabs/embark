@@ -50,7 +50,7 @@ module.exports = {
   },
 
   testnet: {
-    networkType: "testnet", // Can be: testnet, rinkeby, livenet or custom, in which case, it will use the specified networkId
+    networkType: "testnet", // Can be: testnet(ropsten), rinkeby, livenet or custom, in which case, it will use the specified networkId
     syncMode: "light",
     accounts: [
       {
