@@ -155,6 +155,22 @@
       </div>
     </div>
   </section>
+  <section class="o-container o-distance o-center">
+    <p class="c-subtitle u-text-death">Companies who use and love Embark.</p>
+    <div class="o-distance-m">
+      <ul class="o-list-inline o-flex-space-between o-nowrap">
+        <li class="o-list-inline__item">
+          <img src="{{url_for('assets/images/company-flexdapps.svg')}}" alt="Flexdapps">
+        </li>
+        <li class="o-list-inline__item">
+          <img src="{{url_for('assets/images/company-giveth.svg')}}" alt="Giveth">
+        </li>
+        <li class="o-list-inline__item">
+          <img src="{{url_for('assets/images/company-status.svg')}}" alt="status">
+        </li>
+      </ul>
+    </div>
+  </section>
   <section class="o-distance">
     <div class="c-box c-box--unframed" style="background-image: url({{url_for('assets/images/bg-hexagons.png')}})">
       {{
