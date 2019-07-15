@@ -19,7 +19,7 @@ class EnsContainer extends Component {
           <Col xs="12" sm="9" lg="6">
             <EnsLookup lookup={this.props.lookup} ensRecords={this.props.ensRecords}/>
             <EnsResolve resolve={this.props.resolve} ensRecords={this.props.ensRecords}/>
-            <EnsRegister register={this.props.register} ensRecords={this.props.ensRecords} ensErrors={this.props.ensErrors}/>
+            <EnsRegister register={this.props.register} ensRecords={this.props.ensRecords} ensErrors={this.props.ensErrors} errorMessage={this.props.errorMessage}/>
           </Col>
         </Row>
       </React.Fragment>
@@ -52,7 +52,8 @@ function mapStateToProps(state) {
   return {
     ensRecords: getEnsRecords(state),
     ensErrors: getEnsErrors(state),
-    isEnsEnabled: isEnsEnabled(state)
+    isEnsEnabled: isEnsEnabled(state),
+    errorMessage: state.errorMessage,
   };
 }
 

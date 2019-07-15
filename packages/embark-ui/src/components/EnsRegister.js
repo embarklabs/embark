@@ -36,8 +36,8 @@ class EnsRegister extends Component {
   }
 
   showResult() {
-    if (this.props.ensErrors) {
-      return <Alert className="mt-3" color="danger">An error happened: {this.props.ensErrors}</Alert>;
+    if (this.props.errorMessage) {
+      return <Alert className="mt-3" color="danger">An error happened: {this.props.errorMessage}</Alert>;
     } else {
       return <Alert className="mt-3" color="success">Successfully registered</Alert>;
     }
