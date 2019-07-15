@@ -22,14 +22,14 @@ export const authenticate = {
   success: (result, payload) => {
     return action(AUTHENTICATE[SUCCESS], {host: payload.host, token: result.token})
   },
-  failure: (error) => action(AUTHENTICATE[FAILURE], {error})
+  failure: (error) => action(AUTHENTICATE[FAILURE], {error, name: 'authenticate'})
 };
 
 export const CHANGE_THEME = createRequestTypes('CHANGE_THEME');
 export const changeTheme = {
   request: (theme) => action(CHANGE_THEME[REQUEST], {theme}),
   success: () => action(CHANGE_THEME[SUCCESS]),
-  failure: (error) => action(CHANGE_THEME[FAILURE], {error})
+  failure: (error) => action(CHANGE_THEME[FAILURE], {error, name: 'changeTheme'})
 };
 
 export const FETCH_THEME = createRequestTypes('FETCH_THEME');
@@ -65,21 +65,21 @@ export const ACCOUNTS = createRequestTypes('ACCOUNTS');
 export const accounts = {
   request: () => action(ACCOUNTS[REQUEST]),
   success: (accounts) => action(ACCOUNTS[SUCCESS], {accounts}),
-  failure: (error) => action(ACCOUNTS[FAILURE], {error})
+  failure: (error) => action(ACCOUNTS[FAILURE], {error, name: 'accounts'})
 };
 
 export const ACCOUNT = createRequestTypes('ACCOUNT');
 export const account = {
   request: (address) => action(ACCOUNT[REQUEST], {address}),
   success: (account) => action(ACCOUNT[SUCCESS], {accounts: [account]}),
-  failure: (error) => action(ACCOUNT[FAILURE], {error})
+  failure: (error) => action(ACCOUNT[FAILURE], {error, name: 'accounts'})
 };
 
 export const BLOCKS = createRequestTypes('BLOCKS');
 export const blocks = {
   request: (from) => action(BLOCKS[REQUEST], {from}),
   success: (blocks) => action(BLOCKS[SUCCESS], {blocks}),
-  failure: (error) => action(BLOCKS[FAILURE], {error})
+  failure: (error) => action(BLOCKS[FAILURE], {error, name: 'blocks'})
 };
 
 export const BLOCKS_FULL = createRequestTypes('BLOCKS_FULL');
@@ -88,49 +88,49 @@ export const blocksFull = {
     return action(BLOCKS_FULL[REQUEST], {from, limit, txObjects: true, txReceipts: true});
   },
   success: (blocksFull) => action(BLOCKS_FULL[SUCCESS], {blocksFull}),
-  failure: (error) => action(BLOCKS_FULL[FAILURE], {error})
+  failure: (error) => action(BLOCKS_FULL[FAILURE], {error, name: 'blocksFull'})
 };
 
 export const BLOCK = createRequestTypes('BLOCK');
 export const block = {
   request: (blockNumber) => action(BLOCK[REQUEST], {blockNumber}),
   success: (block) => action(BLOCK[SUCCESS], {blocks: [block]}),
-  failure: (error) => action(BLOCK[FAILURE], {error})
+  failure: (error) => action(BLOCK[FAILURE], {error, name: 'blocks'})
 };
 
 export const TRANSACTIONS = createRequestTypes('TRANSACTIONS');
 export const transactions = {
   request: (blockFrom, blockLimit) => action(TRANSACTIONS[REQUEST], {blockFrom, blockLimit}),
   success: (transactions) => action(TRANSACTIONS[SUCCESS], {transactions}),
-  failure: (error) => action(TRANSACTIONS[FAILURE], {error})
+  failure: (error) => action(TRANSACTIONS[FAILURE], {error, name: 'transactions'})
 };
 
 export const TRANSACTION = createRequestTypes('TRANSACTION');
 export const transaction = {
   request: (hash) => action(TRANSACTION[REQUEST], {hash}),
   success: (transaction) => action(TRANSACTION[SUCCESS], {transactions: [transaction]}),
-  failure: (error) => action(TRANSACTION[FAILURE], {error})
+  failure: (error) => action(TRANSACTION[FAILURE], {error, name: 'transactions'})
 };
 
 export const DECODED_TRANSACTION = createRequestTypes('DECODED_TRANSACTION');
 export const decodedTransaction = {
   request: (hash) => action(DECODED_TRANSACTION[REQUEST], {hash}),
   success: (transaction) => action(DECODED_TRANSACTION[SUCCESS], {transaction}),
-  failure: (error) => action(DECODED_TRANSACTION[FAILURE], {error})
+  failure: (error) => action(DECODED_TRANSACTION[FAILURE], {error, name: 'transaction'})
 };
 
 export const PROCESSES = createRequestTypes('PROCESSES');
 export const processes = {
   request: () => action(PROCESSES[REQUEST]),
   success: (processes) => action(PROCESSES[SUCCESS], {processes}),
-  failure: (error) => action(PROCESSES[FAILURE], {error})
+  failure: (error) => action(PROCESSES[FAILURE], {error, name: 'processes'})
 };
 
 export const SERVICES = createRequestTypes('SERVICES');
 export const services = {
   request: () => action(SERVICES[REQUEST]),
   success: (services) => action(SERVICES[SUCCESS], {services}),
-  failure: (error) => action(SERVICES[FAILURE], {error})
+  failure: (error) => action(SERVICES[FAILURE], {error, name: 'services'})
 };
 
 export const COMMANDS = createRequestTypes('COMMANDS');
@@ -149,7 +149,7 @@ export const commands = {
       ]
     });
   },
-  failure: (error) => action(COMMANDS[FAILURE], {error})
+  failure: (error) => action(COMMANDS[FAILURE], {error, name: 'processLogs'})
 };
 
 export const COMMAND_SUGGESTIONS = createRequestTypes('COMMAND_SUGGESTIONS');
@@ -158,7 +158,7 @@ export const commandSuggestions = {
   success: (command, payload) => {
     return action(COMMAND_SUGGESTIONS[SUCCESS], {commandSuggestions: command.result })
   },
-  failure: (error) => action(COMMAND_SUGGESTIONS[FAILURE], {error})
+  failure: (error) => action(COMMAND_SUGGESTIONS[FAILURE], {error, name: 'commandSuggestions'})
 };
 
 export const PROCESS_LOGS = createRequestTypes('PROCESS_LOGS');
@@ -167,84 +167,84 @@ export const processLogs = {
     return action(PROCESS_LOGS[REQUEST], {processName, limit});
   },
   success: (processLogs) => action(PROCESS_LOGS[SUCCESS], {processLogs}),
-  failure: (error) => action(PROCESS_LOGS[FAILURE], {error})
+  failure: (error) => action(PROCESS_LOGS[FAILURE], {error, name: 'processLogs'})
 };
 
 export const CONTRACT_LOGS = createRequestTypes('CONTRACT_LOGS');
 export const contractLogs = {
   request: () => action(CONTRACT_LOGS[REQUEST]),
   success: (contractLogs) => action(CONTRACT_LOGS[SUCCESS], {contractLogs}),
-  failure: (error) => action(CONTRACT_LOGS[FAILURE], {error})
+  failure: (error) => action(CONTRACT_LOGS[FAILURE], {error, name: 'contractLogs'})
 };
 
 export const CONTRACT_EVENTS = createRequestTypes('CONTRACT_EVENTS');
 export const contractEvents = {
   request: () => action(CONTRACT_EVENTS[REQUEST]),
   success: (contractEvents) => action(CONTRACT_EVENTS[SUCCESS], {contractEvents}),
-  failure: (error) => action(CONTRACT_EVENTS[FAILURE], {error})
+  failure: (error) => action(CONTRACT_EVENTS[FAILURE], {error, name: 'contractEvents'})
 };
 
 export const CONTRACTS = createRequestTypes('CONTRACTS');
 export const contracts = {
   request: () => action(CONTRACTS[REQUEST]),
   success: (contracts) => action(CONTRACTS[SUCCESS], {contracts}),
-  failure: (error) => action(CONTRACTS[FAILURE], {error})
+  failure: (error) => action(CONTRACTS[FAILURE], {error, name: 'contracts'})
 };
 
 export const CONTRACT = createRequestTypes('CONTRACT');
 export const contract = {
   request: (contractName) => action(CONTRACT[REQUEST], {contractName}),
   success: (contract) => action(CONTRACT[SUCCESS], {contracts: [contract]}),
-  failure: (error) => action(CONTRACT[FAILURE], {error})
+  failure: (error) => action(CONTRACT[FAILURE], {error, name: 'contracts'})
 };
 
 export const CONTRACT_PROFILE = createRequestTypes('CONTRACT_PROFILE');
 export const contractProfile = {
   request: (contractName) => action(CONTRACT_PROFILE[REQUEST], {contractName}),
   success: (contractProfile) => action(CONTRACT_PROFILE[SUCCESS], {contractProfiles: [contractProfile]}),
-  failure: (error) => action(CONTRACT_PROFILE[FAILURE], {error})
+  failure: (error) => action(CONTRACT_PROFILE[FAILURE], {error, name: 'contractProfiles'})
 };
 
 export const CONTRACT_FILE = createRequestTypes('CONTRACT_FILE');
 export const contractFile = {
   request: (filename) => action(CONTRACT_FILE[REQUEST], {filename}),
   success: (source, payload) => action(CONTRACT_FILE[SUCCESS], {contractFiles: [{source, filename: payload.filename}]}),
-  failure: (error) => action(CONTRACT_FILE[FAILURE], {error})
+  failure: (error) => action(CONTRACT_FILE[FAILURE], {error, name: 'contractFiles'})
 };
 
 export const CONTRACT_FUNCTION = createRequestTypes('CONTRACT_FUNCTION');
 export const contractFunction = {
   post: (contractName, method, inputs, gasPrice, value) => action(CONTRACT_FUNCTION[REQUEST], {contractName, method, inputs, gasPrice, value}),
   success: (result, payload) => action(CONTRACT_FUNCTION[SUCCESS], {contractFunctions: [{...result, ...payload}]}),
-  failure: (error) => action(CONTRACT_FUNCTION[FAILURE], {error})
+  failure: (error) => action(CONTRACT_FUNCTION[FAILURE], {error, name: 'contractFunctions'})
 };
 
 export const CONTRACT_DEPLOY = createRequestTypes('CONTRACT_DEPLOY');
 export const contractDeploy = {
   post: (contractName, method, inputs, gasPrice) => action(CONTRACT_DEPLOY[REQUEST], {contractName, method, inputs, gasPrice}),
   success: (result, payload) => action(CONTRACT_DEPLOY[SUCCESS], {contractDeploys: [{...result, ...payload}]}),
-  failure: (error) => action(CONTRACT_DEPLOY[FAILURE], {error})
+  failure: (error) => action(CONTRACT_DEPLOY[FAILURE], {error, name: 'contractDeploys'})
 };
 
 export const CONTRACT_COMPILE = createRequestTypes('CONTRACT_COMPILE');
 export const contractCompile = {
   post: (code, name) => action(CONTRACT_COMPILE[REQUEST], {code, name}),
   success: (result, payload) => action(CONTRACT_COMPILE[SUCCESS], {contractCompiles: [{...result, ...payload}]}),
-  failure: (error) => action(CONTRACT_COMPILE[FAILURE], {error})
+  failure: (error) => action(CONTRACT_COMPILE[FAILURE], {error, name: 'contractCompiles'})
 };
 
 export const VERSIONS = createRequestTypes('VERSIONS');
 export const versions = {
   request: () => action(VERSIONS[REQUEST]),
   success: (versions) => action(VERSIONS[SUCCESS], {versions}),
-  failure: (error) => action(VERSIONS[FAILURE], {error})
+  failure: (error) => action(VERSIONS[FAILURE], {error, name: 'versions'})
 };
 
 export const PLUGINS = createRequestTypes('PLUGINS');
 export const plugins = {
   request: () => action(PLUGINS[REQUEST]),
   success: (plugins) => action(PLUGINS[SUCCESS], {plugins}),
-  failure: (error) => action(PLUGINS[FAILURE], {error})
+  failure: (error) => action(PLUGINS[FAILURE], {error, name: 'plugins'})
 };
 
 export const MESSAGE_SEND = createRequestTypes('MESSAGE_SEND');
@@ -258,7 +258,7 @@ export const MESSAGE_LISTEN = createRequestTypes('MESSAGE_LISTEN');
 export const messageListen = {
   request: (messageChannel) => action(MESSAGE_LISTEN[REQUEST], {messageChannels: [messageChannel]}),
   success: (messages) => action(MESSAGE_LISTEN[SUCCESS], {messages}),
-  failure: (error) => action(MESSAGE_LISTEN[FAILURE], {error})
+  failure: (error) => action(MESSAGE_LISTEN[FAILURE], {error, name: 'messages'})
 };
 
 export const SIGN_MESSAGE = createRequestTypes('SIGN_MESSAGE');
@@ -280,35 +280,35 @@ export const ensRecord = {
   resolve: (name) => action(ENS_RECORD[REQUEST], {name}),
   lookup: (address) => action(ENS_RECORD[REQUEST], {address}),
   success: (record, payload) => action(ENS_RECORD[SUCCESS], {ensRecords: [Object.assign(payload, record)]}),
-  failure: (error) => action(ENS_RECORD[FAILURE], {error})
+  failure: (error) => action(ENS_RECORD[FAILURE], {error, name: 'ensRecords'})
 };
 
 export const ENS_RECORDS = createRequestTypes('ENS_RECORDS');
 export const ensRecords = {
   post: (subdomain, address) => action(ENS_RECORDS[REQUEST], {subdomain, address}),
   success: (record) => action(ENS_RECORDS[SUCCESS], {ensRecords: [record]}),
-  failure: (error) => action(ENS_RECORDS[FAILURE], {error})
+  failure: (error) => action(ENS_RECORDS[FAILURE], {error, name: 'ensRecords'})
 };
 
 export const FILES = createRequestTypes('FILES');
 export const files = {
   request: () => action(FILES[REQUEST]),
   success: (files) => action(FILES[SUCCESS], {files: files}),
-  failure: (error) => action(FILES[FAILURE], {error})
+  failure: (error) => action(FILES[FAILURE], {error, name: 'files'})
 };
 
 export const FILE = createRequestTypes('FILE');
 export const file = {
   request: (file) => action(FILE[REQUEST], file),
   success: (file) => action(FILE[SUCCESS], {file}),
-  failure: (error) => action(FILE[FAILURE], {error})
+  failure: (error) => action(FILE[FAILURE], {error, name: 'file'})
 };
 
 export const SAVE_FILE = createRequestTypes('SAVE_FILE');
 export const saveFile = {
   request: ({name, path, content}) => action(SAVE_FILE[REQUEST], {name, path, content}),
   success: (file) => action(SAVE_FILE[SUCCESS], {file}),
-  failure: (error) => action(SAVE_FILE[FAILURE], {error})
+  failure: (error) => action(SAVE_FILE[FAILURE], {error, name: 'file'})
 };
 
 export const SAVE_FOLDER = createRequestTypes('SAVE_FOLDER');
@@ -322,21 +322,21 @@ export const REMOVE_FILE = createRequestTypes('REMOVE_FILE');
 export const removeFile = {
   request: ({name, path, content}) => action(REMOVE_FILE[REQUEST], {name, path, content}),
   success: (_, file) => action(REMOVE_FILE[SUCCESS], {file}),
-  failure: (error) => action(REMOVE_FILE[FAILURE], {error})
+  failure: (error) => action(REMOVE_FILE[FAILURE], {error, name: 'file'})
 };
 
 export const GAS_ORACLE = createRequestTypes('GAS_ORACLE');
 export const gasOracle = {
   request: () => action(GAS_ORACLE[REQUEST]),
   success: (gasOracleStats) => action(GAS_ORACLE[SUCCESS], {gasOracleStats: [gasOracleStats]}),
-  failure: (error) => action(GAS_ORACLE[FAILURE], {error})
+  failure: (error) => action(GAS_ORACLE[FAILURE], {error, name: 'gasOracleStats'})
 };
 
 export const EXPLORER_SEARCH = createRequestTypes('EXPLORER_SEARCH');
 export const explorerSearch = {
   request: (searchValue) => action(EXPLORER_SEARCH[REQUEST], {searchValue}),
   success: (searchResult) => action(EXPLORER_SEARCH[SUCCESS], {searchResult}),
-  failure: (error) => action(EXPLORER_SEARCH[FAILURE], {error})
+  failure: (error) => action(EXPLORER_SEARCH[FAILURE], {error, name: 'searchResult'})
 };
 
 export const WEB3_CONNECT = createRequestTypes('WEB3_CONNECT');

@@ -202,13 +202,19 @@ function errorMessage(_state = null, action) {
 }
 
 function errorEntities(state = {}, action) {
-  if (!action.type.endsWith(SUCCESS)) {
+  const isSuccess = action.type.endsWith(SUCCESS);
+  if (!action.type.endsWith(FAILURE) && !isSuccess) {
     return state;
   }
   let newState = {};
   for (let name of Object.keys(entitiesDefaultState)) {
-    if (action[name] && action[name].length > 0 && action[name][0]) {
-      newState[name] = action[name][0].error;
+    if ((action.name && action.name === name) || (action[name] && action[name].length > 0 && action[name][0])) {
+      if (isSuccess) {
+        newState[name] = null;
+      } else {
+        newState[name] = action.name ? action.error : action[name][0].error;
+      }
+      break;
     }
   }
   return {...state, ...newState};
