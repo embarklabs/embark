@@ -277,7 +277,7 @@ class Engine {
   }
 
   storageService(_options) {
-    // this.registerModulePackage('embark-ipfs');
+    this.registerModulePackage('embark-ipfs');
     // this.registerModulePackage('embark-swarm');
     // this.registerModulePackage('embark-storage', {plugins: this.plugins});
 

@@ -120,7 +120,6 @@ class Console {
         __("possible commands are:"),
         // TODO: this help commands should be passed through an API
 
-        chalk.cyan("ipfs") + " - " + __("instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)"),
         chalk.cyan("swarm") + " - " + __("instantiated swarm-api object configured to the current environment (available if swarm is enabled)"),
         chalk.cyan("EmbarkJS") + " - " + __("EmbarkJS static functions for Storage, Messages, Names, etc."),
         chalk.cyan("log [process] on/off") + " - " + __("Activate or deactivate the logs of a sub-process. Options: blockchain, ipfs, webserver"),

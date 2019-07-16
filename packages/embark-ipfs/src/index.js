@@ -17,7 +17,6 @@ class IPFS {
     this.namesystemConfig = embark.config.namesystemConfig;
     this.embark = embark;
     this.fs = embark.fs;
-    this.isServiceRegistered = false;
     this.addedToConsole = false;
     this.storageProcessesLauncher = null;
     this.usingRunningNode = false;
@@ -27,17 +26,102 @@ class IPFS {
     this.webServerConfig = embark.config.webServerConfig;
     this.blockchainConfig = embark.config.blockchainConfig;
 
-    this.embark.events.setCommandHandler("module:ipfs:reset", (cb) => {
-      this.events.request("processes:stop", "ipfs", (err) => {
-        if (err) {
-          this.logger.error(__('Error stopping IPFS process'), err);
-        }
-        this.init(cb);
-      });
+    this.setServiceCheck()
+    // this.embark.events.setCommandHandler("module:ipfs:reset", (cb) => {
+    //   this.events.request("processes:stop", "ipfs", (err) => {
+    //     if (err) {
+    //       this.logger.error(__('Error stopping IPFS process'), err);
+    //     }
+    //     this.init(cb);
+    //   });
+    // });
+
+    // this.init();
+
+    this.events.request("processes:register", "ipfs", {
+      launchFn: (cb) => {
+        // if (this.usingRunningNode) {
+          // return cb(__("IPFS process is running in a separate process and cannot be started by Embark."));
+        // }
+        this.startProcess((err, newProcessStarted) => {
+          this.addObjectToConsole();
+               addObjectToConsole
+          this.events.emit("ipfs:process:started", err, newProcessStarted);
+          cb();
+        });
+      },
+      stopFn: (cb) => {
+        // if (this.usingRunningNode) {
+          // return cb(__("IPFS process is running in a separate process and cannot be stopped by Embark."));
+        // }
+        // this.stopProcess(cb);
+      }
     });
 
-    this.init();
+    this.events.request("processes:launch", "ipfs", (err, msg) => {
+      if (err) {
+        this.logger.error(err);
+        // return callback(err);
+      }
+      if (msg) {
+        this.logger.info(msg);
+      }
+      // callback();
+    });
+
   }
+
+  setServiceCheck() {
+    this.events.on('check:backOnline:IPFS', () => {
+      this.logger.info(__('IPFS node detected') + '...');
+    });
+
+    this.events.on('check:wentOffline:IPFS', () => {
+      this.logger.info(__('IPFS node is offline') + '...');
+    });
+
+    this.events.request("services:register", 'IPFS', (cb) => {
+      this._checkService((err, body) => {
+        if (err) {
+          this.logger.trace("IPFS unavailable");
+          return cb({name: "IPFS ", status: 'off'});
+        }
+        if (body.Version) {
+          this.logger.trace("IPFS available");
+          return cb({name: ("IPFS " + body.Version), status: 'on'});
+        }
+        this.logger.trace("IPFS available");
+        return cb({name: "IPFS ", status: 'on'});
+      });
+    });
+  }
+
+  _getNodeUrl() {
+    return buildUrlFromConfig(this._getNodeUrlConfig()) + '/api/v0/version';
+  }
+
+  _checkService(cb) {
+    let url = this._getNodeUrl();
+    getJson(url, cb);
+  }
+
+  addObjectToConsole() {
+    const {host, port} = this._getNodeUrlConfig();
+    let ipfs = IpfsApi(host, port);
+    this.events.emit("runcode:register", "ipfs", ipfs);
+
+    this.events.request('console:register:helpCmd', {
+      cmdName: "ipfs",
+      cmdHelp: __("instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)")
+    }, () => { })
+
+  }
+
+  // ===================
+  // ===================
+  // ===================
+  // ===================
+  // ===================
 
   init(callback = () => {}) {
     if (!this.isIpfsStorageEnabledInTheConfig()) {
@@ -100,35 +184,6 @@ class IPFS {
     });
   }
 
-  setServiceCheck() {
-    if (this.isServiceRegistered) return;
-    this.isServiceRegistered = true;
-    let self = this;
-
-    self.events.on('check:backOnline:IPFS', function () {
-      self.logger.info(__('IPFS node detected') + '...');
-    });
-
-    self.events.on('check:wentOffline:IPFS', function () {
-      self.logger.info(__('IPFS node is offline') + '...');
-    });
-
-    self.events.request("services:register", 'IPFS', function (cb) {
-      self._checkService((err, body) => {
-        if (err) {
-          self.logger.trace("IPFS unavailable");
-          return cb({name: "IPFS ", status: 'off'});
-        }
-        if (body.Version) {
-          self.logger.trace("IPFS available");
-          return cb({name: ("IPFS " + body.Version), status: 'on'});
-        }
-        self.logger.trace("IPFS available");
-        return cb({name: "IPFS ", status: 'on'});
-      });
-    });
-  }
-
   _getNodeUrlConfig() {
     if (this.config.storageConfig.upload.provider === 'ipfs') {
       return this.config.storageConfig.upload;
@@ -139,15 +194,6 @@ class IPFS {
         return connection;
       }
     }
-  }
-
-  _getNodeUrl() {
-    return buildUrlFromConfig(this._getNodeUrlConfig()) + '/api/v0/version';
-  }
-
-  _checkService(cb) {
-    let url = this._getNodeUrl();
-    getJson(url, cb);
   }
 
   addStorageProviderToEmbarkJS() {
@@ -189,15 +235,6 @@ class IPFS {
         });
       });
     });
-  }
-
-  addObjectToConsole() {
-    if(this.addedToConsole) return;
-    this.addedToConsole = true;
-
-    const {host, port} = this._getNodeUrlConfig();
-    let ipfs = IpfsApi(host, port);
-    this.events.emit("runcode:register", "ipfs", ipfs);
   }
 
   startProcess(callback) {
