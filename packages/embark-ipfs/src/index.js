@@ -38,6 +38,11 @@ class IPFS {
 
     // this.init();
 
+    this.events.on("ipfs:process:started", () => {
+    // this.events.on("blockchain:ready", () => {
+      this.registerAndSetIpfs();
+    });
+
     this.events.request("processes:register", "ipfs", {
       launchFn: (cb) => {
         // if (this.usingRunningNode) {
@@ -45,7 +50,6 @@ class IPFS {
         // }
         this.startProcess((err, newProcessStarted) => {
           this.addObjectToConsole();
-               addObjectToConsole
           this.events.emit("ipfs:process:started", err, newProcessStarted);
           cb();
         });
@@ -115,6 +119,21 @@ class IPFS {
       cmdHelp: __("instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)")
     }, () => { })
 
+  }
+
+  // TODO: should be done in embarkjs-ipfs
+  // TODO: check config, etc..
+  registerAndSetIpfs() {
+    const code = `
+      const __embarkIPFS = require('embarkjs-ipfs');
+      EmbarkJS.Storage.registerProvider('ipfs', __embarkIPFS.default || __embarkIPFS);
+    `;
+
+    this.events.request('runcode:eval', code, (err) => {
+      let providerCode = `\nEmbarkJS.Storage.setProviders(${JSON.stringify(this.embark.config.storageConfig.dappConnection || [])}, {web3});`;
+      this.events.request('runcode:eval', providerCode, (err) => {
+      });
+    });
   }
 
   // ===================
