@@ -50,46 +50,52 @@ config({
   }
 });
 
-describe("Token", function () {
+describe("Token", function() {
   this.timeout(0);
 
-  it("not deploy Token", function () {
-    assert.strictEqual(Token.address, undefined);
+  describe('Token Contract', function() {
+    it("not deploy Token", function() {
+      assert.strictEqual(Token.address, undefined);
+    });
   });
 
-  it("should deploy MyToken and MyToken2", function () {
-    assert.ok(MyToken.options.address);
-    assert.ok(MyToken2.options.address);
+  describe('MyToken Contracts', function() {
+    it("should deploy MyToken and MyToken2", function() {
+      assert.ok(MyToken.options.address);
+      assert.ok(MyToken2.options.address);
+    });
+
+    it("set MyToken Balance correctly", async function() {
+      let result = await MyToken.methods._supply().call();
+      assert.strictEqual(parseInt(result, 10), 1000);
+    });
+
+    it("set MyToken2 Balance correctly", async function() {
+      let result = await MyToken2.methods._supply().call();
+      assert.strictEqual(parseInt(result, 10), 2000);
+    });
   });
 
-  it("set MyToken Balance correctly", async function () {
-    let result = await MyToken.methods._supply().call();
-    assert.strictEqual(parseInt(result, 10), 1000);
-  });
+  describe('Other Contarcts', function() {
+    it("get right address", function() {
+      assert.strictEqual(AlreadyDeployedToken.options.address.toLowerCase(),
+        "0xCAFECAFECAFECAFECAFECAFECAFECAFECAFECAFE".toLowerCase());
+    });
 
-  it("set MyToken2 Balance correctly", async function () {
-    let result = await MyToken2.methods._supply().call();
-    assert.strictEqual(parseInt(result, 10), 2000);
-  });
+    it("should use onDeploy", async function() {
+      let result = await Test.methods.addr().call();
+      assert.strictEqual(result, MyToken.options.address);
+    });
 
-  it("get right address", function () {
-    assert.strictEqual(AlreadyDeployedToken.options.address.toLowerCase(),
-      "0xCAFECAFECAFECAFECAFECAFECAFECAFECAFECAFE".toLowerCase());
-  });
+    it("should not deploy if deployIf returns false", function() {
+      assert.ok(!SomeContract.options.address);
+    });
 
-  it("should use onDeploy", async function () {
-    let result = await Test.methods.addr().call();
-    assert.strictEqual(result, MyToken.options.address);
-  });
-
-  it("should not deploy if deployIf returns false", function() {
-    assert.ok(!SomeContract.options.address);
-  });
-
-  it("should set the ens attr to the address of embark.eth", async function() {
-    let result = await Test.methods.ens().call();
-    // Testing that it is an address as we don't really know the address
-    assert.strictEqual(web3.utils.isAddress(result), true);
-    assert.notStrictEqual(result, '0x0000000000000000000000000000000000000000');
+    it("should set the ens attr to the address of embark.eth", async function() {
+      let result = await Test.methods.ens().call();
+      // Testing that it is an address as we don't really know the address
+      assert.strictEqual(web3.utils.isAddress(result), true);
+      assert.notStrictEqual(result, '0x0000000000000000000000000000000000000000');
+    });
   });
 });

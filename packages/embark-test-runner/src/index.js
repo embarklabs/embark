@@ -235,9 +235,20 @@ class TestRunner {
                 if (global.embark.needConfig) {
                   global.config({});
                 }
-                global.embark.onReady((_err, accounts) => {
+
+                function runDescribe(accounts) {
                   self.ogMochaDescribe(describeName, callback.bind(mocha, accounts));
+                  setImmediate(() => {
+                    global.run(); // Call `run` in setImmediate to make sure tests with no `config()` don't hang
+                  });
                   global.run(); // This tells mocha that it can run the test (used in conjunction with `delay()`
+                }
+                if (global.embark.ready) {
+                  // Call describe straightaway otherwise `describe` inside `describe` end with 0 Passing
+                  return runDescribe(global.embark.accounts);
+                }
+                global.embark.onReady((_err, accounts) => {
+                  runDescribe(accounts);
                 });
               }
 
