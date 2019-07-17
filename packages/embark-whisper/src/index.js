@@ -13,11 +13,13 @@ class Whisper {
     this.events = embark.events;
     this.fs = embark.fs;
     this.communicationConfig = embark.config.communicationConfig;
+    this.embarkConfig = embark.config.embarkConfig;
     this.web3 = new Web3();
     this.embark = embark;
     this.web3Ready = false;
     this.webSocketsChannels = {};
     this.modulesPath = dappPath(embark.config.embarkConfig.generationDir, constants.dappArtifacts.symlinkDir);
+    this.plugins = options.plugins;
 
     if (embark.currentContext.includes('test') && options.node &&options.node === 'vm') {
       this.logger.info(__('Whisper disabled in the tests'));
@@ -48,6 +50,9 @@ class Whisper {
       this.registerAndSetWhisper();
     });
 
+    let plugin = this.plugins.createPlugin('whisperplugin', {});
+    plugin.registerActionForEvent("pipeline:generateAll:before", this.addArtifactFile.bind(this));
+
     // ===============================
     //   this.connectToProvider();
 
@@ -71,6 +76,21 @@ class Whisper {
     //   });
 
     //   this.events.request('processes:launch', 'whisper');
+  }
+
+  // TODO: should load the latest config
+  addArtifactFile(_params, cb) {
+    let config = {
+      // TODO: for consistency we should change this to be dappConnection or connection
+      connection: this.communicationConfig.connection
+    };
+
+    this.events.request("pipeline:register", {
+      path: [this.embarkConfig.generationDir, 'config'],
+      file: 'storage.json',
+      format: 'json',
+      content: config
+    }, cb);
   }
 
   connectToProvider() {

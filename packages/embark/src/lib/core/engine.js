@@ -277,9 +277,9 @@ class Engine {
   }
 
   storageService(_options) {
+    this.registerModulePackage('embark-storage', {plugins: this.plugins});
     this.registerModulePackage('embark-ipfs');
     // this.registerModulePackage('embark-swarm');
-    // this.registerModulePackage('embark-storage', {plugins: this.plugins});
 
     // this.events.setCommandHandler("module:storage:reset", (cb) => {
     //   async.parallel([
@@ -298,6 +298,7 @@ class Engine {
 
   web3Service(options) {
     this.registerModulePackage('embark-web3');
+    this.registerModule('blockchain', { plugins: this.plugins });
 
     this.registerModulePackage('embark-blockchain-process', {
       client: this.client,
@@ -314,7 +315,7 @@ class Engine {
       wait: options.wait
     });
 
-    this.registerModulePackage('embark-whisper');
+    this.registerModulePackage('embark-whisper', { plugins: this.plugins });
     this.registerModule('web3', { plugins: this.plugins });
   }
 

@@ -124,11 +124,13 @@ class IPFS {
   // TODO: should be done in embarkjs-ipfs
   // TODO: check config, etc..
   registerAndSetIpfs() {
+    // TODO: this should be at the start
     const code = `
       const __embarkIPFS = require('embarkjs-ipfs');
       EmbarkJS.Storage.registerProvider('ipfs', __embarkIPFS.default || __embarkIPFS);
     `;
 
+    // TODO: this should be done when a connection is detected
     this.events.request('runcode:eval', code, (err) => {
       let providerCode = `\nEmbarkJS.Storage.setProviders(${JSON.stringify(this.embark.config.storageConfig.dappConnection || [])}, {web3});`;
       this.events.request('runcode:eval', providerCode, (err) => {

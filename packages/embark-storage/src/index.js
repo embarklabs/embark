@@ -4,31 +4,30 @@ import * as async from 'async';
 class Storage {
   constructor(embark, options){
     this.embark = embark;
+    this.embarkConfig = embark.config.embarkConfig;
+    this.events = this.embark.events;
+    this.storageConfig = embark.config.storageConfig;
     this.plugins = options.plugins;
-    this.ready = false;
+    let plugin = this.plugins.createPlugin('storageplugin', {});
 
-    this.embark.events.setCommandHandler("module:storage:onReady", (cb) => {
-      if (this.ready) {
-        return cb();
-      }
-      this.embark.events.once("module:storage:ready", cb);
-    });
+    // this.handleUploadCommand();
+    // this.addSetProviders(() => {});
+    plugin.registerActionForEvent("pipeline:generateAll:before", this.addArtifactFile.bind(this));
 
-    this.embark.events.setCommandHandler("module:storageJS:reset", (cb) => {
-      if (!this.isEnabled()) {
-        return cb();
-      }
-      this.ready = false;
-      this.addSetProviders(cb);
-    });
+    // TODO: register xyz (e.g ipfs) to check for dappConnectionConfig
+  }
 
-    if (!this.isEnabled()) {
-      this.ready = true;
-      return;
-    }
+  addArtifactFile(_params, cb) {
+    let config = {
+      dappConnection: this.storageConfig.dappConnection
+    };
 
-    this.handleUploadCommand();
-    this.addSetProviders(() => {});
+    this.events.request("pipeline:register", {
+      path: [this.embarkConfig.generationDir, 'config'],
+      file: 'communication.json',
+      format: 'json',
+      content: config
+    }, cb);
   }
 
   isEnabled() {
