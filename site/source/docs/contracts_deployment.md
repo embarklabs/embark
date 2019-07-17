@@ -223,3 +223,26 @@ module.exports = {
 }
 ```
 
+## Deploying to Chainstack
+
+Embark can also connect to managed nodes deployed via Chainstack. To configure the web3 provider, use the following code.
+
+```
+module.exports = {
+  testnet: {
+    deployment:{
+      accounts: [
+        {
+         // your accounts here, see above for details
+        }
+      ],
+      host: "PROJECT-ID.p2pify.com",
+      port: false,
+      protocol: 'https',
+      type: "rpc"
+    }
+  }
+}
+```
+
+
