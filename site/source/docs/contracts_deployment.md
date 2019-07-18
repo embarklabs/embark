@@ -223,7 +223,7 @@ module.exports = {
 }
 ```
 
-## Deploying to s
+## Deploying to Chainstack
 
 Embark can also connect to managed nodes deployed via Chainstack. To configure the web3 provider, use the following code.
 
