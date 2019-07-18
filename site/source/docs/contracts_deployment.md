@@ -2,7 +2,7 @@ title: Accounts & Deployment
 layout: docs
 ---
 
-Embark is very flexible when it comes to configuring wallet accounts for deployment. Whether we want to deploy from generated node accounts, or our own key store file. In this guide we'll take a closer look at how to configure wallet accounts for deployment of Smart Contracts. 
+Embark is very flexible when it comes to configuring wallet accounts for deployment. Whether we want to deploy from generated node accounts, or our own key store file. In this guide we'll take a closer look at how to configure wallet accounts for deployment of Smart Contracts.
 
 ## Specifying a deployment account
 
@@ -223,3 +223,24 @@ module.exports = {
 }
 ```
 
+## Deploying to s
+
+Embark can also connect to managed nodes deployed via Chainstack. To configure the web3 provider, use the following code.
+
+```
+module.exports = {
+  testnet: {
+    deployment:{
+      accounts: [
+        {
+         // your accounts here, see above for details
+        }
+      ],
+      host: "PROJECT-ID.p2pify.com",
+      port: false,
+      protocol: 'https',
+      type: "rpc"
+    }
+  }
+}
+```
