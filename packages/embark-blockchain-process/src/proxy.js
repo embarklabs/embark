@@ -16,17 +16,26 @@ const modifyResponse = require('node-http-proxy-json');
 const Transaction = require('ethereumjs-tx');
 const ethUtil = require('ethereumjs-util');
 import { pingEndpoint } from './utils';
+import Web3 from 'web3';
 
-const METHODS_TO_MODIFY = {accounts: 'eth_accounts'};
+const METHODS_TO_MODIFY = {
+  accounts: 'eth_accounts',
+  personalAccounts: 'personal_listAccounts'
+};
 const REQUEST_TIMEOUT = 5000;
 
 const modifyPayload = (toModifyPayloads, body, accounts) => {
-  switch (toModifyPayloads[body.id]) {
-    case METHODS_TO_MODIFY.accounts:
-      delete toModifyPayloads[body.id];
-      body.result = Array.isArray(body.result) && body.result.concat(accounts);
-      break;
-    default:
+  if (toModifyPayloads[body.id] === METHODS_TO_MODIFY.accounts ||
+      toModifyPayloads[body.id] === METHODS_TO_MODIFY.personalAccounts) {
+    delete toModifyPayloads[body.id];
+    if (Array.isArray(body.result)) {
+      body.result = [
+        ...new Set([
+          ...accounts,
+          ...body.result.map(ethUtil.toChecksumAddress)
+        ])
+      ];
+    }
   }
   return body;
 };
@@ -225,6 +234,10 @@ export class Proxy {
         );
       });
     }());
+
+    const web3 = new Web3(`${ws ? 'ws' : 'http'}://${canonicalHost(host)}:${port}`);
+    accounts = (await web3.eth.getAccounts() || []).concat(accounts || []);
+    accounts = [...new Set(accounts.map(ethUtil.toChecksumAddress))];
 
     let proxy = httpProxy.createProxyServer({
       ssl: certOptions,
