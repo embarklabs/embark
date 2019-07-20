@@ -96,7 +96,8 @@ class Provider {
           self.web3.eth.accounts.wallet.add(account);
         }
       });
-      self.addresses = [...new Set(self.addresses)]; // Remove duplicates
+      // Normalize addresses and remove duplicates
+      self.addresses = [...new Set(self.addresses.map(ethUtil.toChecksumAddress))];
 
       if (self.accounts.length) {
         self.web3.eth.defaultAccount = self.addresses[0];
@@ -132,13 +133,18 @@ class Provider {
       }, 1);
 
       self.provider.send = function(payload, cb) {
-        if (payload.method === 'eth_accounts') {
+        if (payload.method === 'eth_accounts' || payload.method === 'personal_listAccounts') {
           return realSend(payload, function(err, result) {
             if (err) {
               return cb(err);
             }
             if (self.accounts.length) {
-              result.result = self.addresses;
+              result.result = [
+                ...new Set([
+                  ...self.addresses,
+                  ...result.result.map(ethUtil.toChecksumAddress)
+                ])
+              ];
             }
             cb(null, result);
           });
