@@ -243,6 +243,7 @@ class TestRunner {
   }
 
   runJSTests(files, options, cb) {
+    return;
     async.waterfall([
       (next) => { // setup global namespace
         global.assert = assert;
@@ -264,7 +265,7 @@ class TestRunner {
         next(null, mocha);
       },
       (mocha, next) => {
-        mocha.options.delay = false;
+        //mocha.options.delay = false;
         mocha.run(failures => next(null, failures));
       }
     ], (err, failures) => {
