@@ -56,7 +56,6 @@ class TestRunner {
     const testPath = options.file || "test";
     async.waterfall([
       (next) => { // list files in path
-        console.log("Getting files from dir", testPath);
         self.getFilesFromDir(testPath, next);
       },
       (files, next) => { // group files by types
@@ -72,9 +71,9 @@ class TestRunner {
         let fns = [];
 
         if (!options.solc && groups.jsFiles.length > 0) {
-          fns.push((cb) => self.runJSTests(groups.jsFiles, options, cb))
+          fns.push((cb) => self.runJSTests(groups.jsFiles, options, cb));
         } else if (options.solc && groups.solidityFiles.length > 0) {
-          fns.push((cb) => self.runJSTests(groups.solidityFiles, options, cb))
+          fns.push((cb) => self.runJSTests(groups.solidityFiles, options, cb));
         }
 
         if (fns.length === 0) {
@@ -117,27 +116,20 @@ class TestRunner {
         });
       },
       (results, next) => { // show report
-        const totalFailures = results.reduce((acc, result) => acc + result.failures, 0);
+        const totalFailures = results.reduce((acc, result) => acc + result, 0);
 
-        next(totalFailures, totalFailures ?
-            ` > Total number of failures: ${totalFailures}`.red.bold :
-            ' > All tests passed'.green.bold);
-
-      }, (err, msg) => {
-        console.log("Got to the last next");
-        console.log("ERROR:", err);
-        if (err) {
-          self.logger.error(msg);
-        } else {
-          self.logger.info(msg);
-        }
-
-        self.fs.remove('.embark/contracts');
-        self.fs.remove('.embark/remix_tests.sol');
-
-        return cb(err);
+        (totalFailures == 0)
+          ? next(null, ' > All tests passed'.green.bold)
+          : next(totalFailures, ` > Total number of failures: ${totalFailures}`.red.bold);
       }
-    ]);
+    ], (err, msg) => {
+      process.stdout.write(msg + "\n");
+
+      self.fs.remove('.embark/contracts');
+      self.fs.remove('.embark/remix_tests.sol');
+
+      return cb(err);
+    });
     // -------------------------------------------------------------------------------------------------------------
 
     /*
@@ -251,20 +243,15 @@ class TestRunner {
   }
 
   runJSTests(files, options, cb) {
-    const self = this;
-    console.log("runJSTests");
-
     async.waterfall([
       (next) => { // setup global namespace
         global.assert = assert;
         next();
       },
       (next) => { // override require
-        console.log("overriding require");
         next();
       },
       (next) => { // initialize Mocha
-        console.log("setting up mocha");
         const mocha = new Mocha();
 
         mocha.delay(); // stops test execution from automatically starting
@@ -273,24 +260,14 @@ class TestRunner {
         next(null, mocha);
       },
       (mocha, next) => { // register test files
-        console.log("registering files in mocha");
-        files.forEach((file) => {
-          console.log("adding file to mocha", file);
-          mocha.addFile(file);
-        });
+        files.forEach(file => mocha.addFile(file));
         next(null, mocha);
       },
       (mocha, next) => {
-        console.log("running mocha");
-
         mocha.options.delay = false;
-        mocha.run((failures) => {
-          console.log("finished run", failures);
-          next(null, failures);
-        });
+        mocha.run(failures => next(null, failures));
       }
     ], (err, failures) => {
-      console.log("FINISHED RUNNING TESTS");
       cb(err, failures);
     });
   }
