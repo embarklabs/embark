@@ -10,6 +10,9 @@ const {EmbarkSpec, EmbarkApiSpec} = require('./reporter');
 const SolcTest = require('./solc_test');
 import { COVERAGE_GAS_LIMIT, GAS_LIMIT } from './constants';
 
+// TODO(andremedeiros): move to constants
+const TEST_TIMEOUT = 15000; // 15 seconds in milliseconds
+
 class TestRunner {
   constructor(embark, options) {
     this.embark = embark;
@@ -18,6 +21,7 @@ class TestRunner {
     this.fs = embark.fs;
     this.ipc = options.ipc;
     this.runResults = [];
+    this.gasLimit = options.coverage ? COVERAGE_GAS_LIMIT : GAS_LIMIT;
 
     this.events.setCommandHandler('tests:run', (options, callback) => {
       this.run(options, callback);
@@ -47,6 +51,96 @@ class TestRunner {
   }
 
   run(options, cb) {
+    const self = this;
+
+    const testPath = options.file || "test";
+    async.waterfall([
+      (next) => { // list files in path
+        console.log("Getting files from dir", testPath);
+        self.getFilesFromDir(testPath, next);
+      },
+      (files, next) => { // group files by types
+        const types = { jsFiles: ".js", solidityFiles: "_test.sol" };
+        const groups = Object.entries(types).reduce((acc, [type, ext]) => {
+          acc[type] = files.filter(f => f.endsWith(ext));
+          return acc;
+        }, {});
+
+        next(null, groups);
+      },
+      (groups, next) => { // run tests
+        let fns = [];
+
+        if (!options.solc && groups.jsFiles.length > 0) {
+          fns.push((cb) => self.runJSTests(groups.jsFiles, options, cb))
+        } else if (options.solc && groups.solidityFiles.length > 0) {
+          fns.push((cb) => self.runJSTests(groups.solidityFiles, options, cb))
+        }
+
+        if (fns.length === 0) {
+          return next('No tests to run');
+        }
+
+        async.series(fns, next);
+      },
+      (results, next) => { // generate coverage report
+        if (!options.coverage) {
+          return next(null, results);
+        }
+
+        const cmd = [
+          embarkPath('node_modules/.bin/istanbul'),
+          "report",
+          "--root=.embark",
+          "--format=html",
+          "--format=lcov"
+        ].join(" ");
+
+        runCmd(cmd, {silent: false, exitOnError: false}, (err) => {
+          if (err) {
+            return next(err);
+          }
+
+          self.logger.info(`Coverage report created. You can find it here: ${dappPath('coverage/index.html')}`);
+
+          if (options.noBrowser) {
+            return next(null, results);
+          }
+
+          const opn = require('opn');
+          const _next = () => { next(null, results); };
+
+          opn(dappPath('coverage/index.html'), {wait: false})
+            .then(() => timer(1000))
+            .then(_next, _next);
+
+        });
+      },
+      (results, next) => { // show report
+        const totalFailures = results.reduce((acc, result) => acc + result.failures, 0);
+
+        next(totalFailures, totalFailures ?
+            ` > Total number of failures: ${totalFailures}`.red.bold :
+            ' > All tests passed'.green.bold);
+
+      }, (err, msg) => {
+        console.log("Got to the last next");
+        console.log("ERROR:", err);
+        if (err) {
+          self.logger.error(msg);
+        } else {
+          self.logger.info(msg);
+        }
+
+        self.fs.remove('.embark/contracts');
+        self.fs.remove('.embark/remix_tests.sol');
+
+        return cb(err);
+      }
+    ]);
+    // -------------------------------------------------------------------------------------------------------------
+
+    /*
     const self = this;
     let filePath = options.file;
     if (!filePath) {
@@ -124,6 +218,7 @@ class TestRunner {
       console.info(' > All tests passed'.green.bold);
       cb();
     });
+  */
   }
 
 
@@ -157,122 +252,46 @@ class TestRunner {
 
   runJSTests(files, options, cb) {
     const self = this;
-    const test = new Test({loglevel: options.loglevel, node: options.node, events: self.events, logger: self.logger,
-      config: self.embark.config, ipc: self.ipc, coverage: options.coverage, inProcess: options.inProcess, dappPath: dappPath()});
+    console.log("runJSTests");
+
     async.waterfall([
-      function setupGlobalNamespace(next) {
-        global.embark = test;
+      (next) => { // setup global namespace
         global.assert = assert;
-        global.config = test.config.bind(test);
-
-        let deprecatedWarning = function () {
-          self.logger.error(__('%s are not supported anymore', 'EmbarkSpec & deployAll').red);
-          self.logger.error(__('You can learn about the new revamped tests here: %s', 'https://embark.status.im/docs/testing.html'.underline));
-          if(!options.inProcess) process.exit(1);
-        };
-
-        global.deployAll = deprecatedWarning;
-        global.EmbarkSpec = {};
-        global.EmbarkSpec.deployAll = deprecatedWarning;
-        global.contract = function (describeName, callback) {
-          return Mocha.describe(describeName, callback);
-        };
-        self.events.request('blockchain:get', (web3) => {
-          // Global web3 used in the tests, not in the vm.
-          // We need to make this available here so tests can use
-          // web3 in the test description (ie `describe` or `contract`).
-          // NOTE: global.web3 will get overwritten on next test deploy
-          // (triggered in config() function).
-          global.web3 = web3;
-          next();
-        });
-      },
-      function overrideRequire (next) {
-        // Override require to enable `require('Embark/contracts/contractName');`
-        const Module = require('module');
-        const originalRequire = require('module').prototype.require;
-        Module.prototype.require = function (requireName) {
-          if (requireName.startsWith('Embark')) {
-            return test.require(...arguments);
-          }
-          return originalRequire.apply(this, arguments);
-        };
         next();
       },
-      function initTest(next) {
-
-        test.init((err) => {
-          next(err, files);
-        });
+      (next) => { // override require
+        console.log("overriding require");
+        next();
       },
-      function executeForAllFiles(files, next) {
-        let fns = files.map((file) => {
-          return (cb) => {
-            fs.readFile(file, (err, data) => {
-              if (err) {
-                self.logger.error(__('Error reading file %s', file));
-                self.logger.error(err);
-                cb(null, 1);
-              }
+      (next) => { // initialize Mocha
+        console.log("setting up mocha");
+        const mocha = new Mocha();
 
-              if (data.toString().search(/contract\(|describe\(/) === -1) {
-                return cb(null, 0);
-              }
+        mocha.delay(); // stops test execution from automatically starting
+        mocha.suite.timeout(TEST_TIMEOUT);
 
-              const mocha = new Mocha();
-              mocha.delay();
-              const gasLimit = options.coverage ? COVERAGE_GAS_LIMIT : GAS_LIMIT;
-              const reporter = options.inProcess ? EmbarkApiSpec : EmbarkSpec;
-              mocha.reporter(reporter, {
-                events: self.events,
-                gasDetails: options.gasDetails,
-                txDetails: options.txDetails,
-                gasLimit
-              });
-              mocha.suite.timeout(0);
-
-              function describeWithWait(describeName, callback) {
-                if (global.embark.needConfig) {
-                  global.config({});
-                }
-                global.embark.onReady((_err, accounts) => {
-                  self.ogMochaDescribe(describeName, callback.bind(mocha, accounts));
-                  global.run(); // This tells mocha that it can run the test (used in conjunction with `delay()`
-                });
-              }
-
-              mocha.suite.on('pre-require', function() {
-                // We do this to make such our globals don't get overriden by Mocha
-                global.describe = describeWithWait;
-                global.contract = describeWithWait;
-              });
-
-              mocha.addFile(file);
-
-              // This populates Mocha to have describe(), etc.
-              mocha.suite.emit('pre-require', global, file, mocha);
-
-              mocha.run(function(fails) {
-                mocha.suite.removeAllListeners();
-                // Mocha prints the error already
-                cb(null, fails);
-              });
-              self.ogMochaDescribe = Mocha.describe;
-            });
-          };
+        next(null, mocha);
+      },
+      (mocha, next) => { // register test files
+        console.log("registering files in mocha");
+        files.forEach((file) => {
+          console.log("adding file to mocha", file);
+          mocha.addFile(file);
         });
-        async.series(fns, next);
-      }
-    ], (err, runs) => {
-      if(err) {
-        return cb(err);
-      }
-      let failures = runs.reduce((acc, val) => acc + val, 0);
-      self.events.request('config:contractsFiles:reset', () => {
-        self.events.request('config:contractsConfig:set', { contracts: {}}, () => {
-          cb(null, {failures});
+        next(null, mocha);
+      },
+      (mocha, next) => {
+        console.log("running mocha");
+
+        mocha.options.delay = false;
+        mocha.run((failures) => {
+          console.log("finished run", failures);
+          next(null, failures);
         });
-      });
+      }
+    ], (err, failures) => {
+      console.log("FINISHED RUNNING TESTS");
+      cb(err, failures);
     });
   }
 

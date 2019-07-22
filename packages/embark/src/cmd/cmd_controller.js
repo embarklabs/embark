@@ -650,10 +650,10 @@ class EmbarkController {
     });
 
     async.waterfall([
-      function initEngine(callback) {
-        engine.init({}, callback);
+      function initEngine(next) {
+        engine.init({}, next);
       },
-      function startServices(callback) {
+      function startServices(next) {
         engine.startService("web3", {wait: true, node: options.node});
         engine.startService("processManager");
         engine.startService("libraryManager");
@@ -672,12 +672,14 @@ class EmbarkController {
         }
         engine.startService("testRunner");
 
-        callback();
+        next();
       },
-      function runTests(callback) {
-        engine.events.request('tests:run', options, callback);
+      function runTests(next) {
+        console.log("RUNNING TESTS");
+        engine.events.request('tests:run', options, next);
       }
     ], function (err) {
+      console.dir(err);
       if (err) {
         engine.logger.error(err.message || err);
       }
