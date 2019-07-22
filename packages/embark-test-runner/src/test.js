@@ -34,8 +34,13 @@ class Test {
     };
     this.needToRestetEmbarkJS = false;
 
+    /*
+     * TODO(andremedeiros): WHY?
+     */
     this.events.setCommandHandler("blockchain:provider:contract:accounts:get", cb => {
-      this.events.request("blockchain:getAccounts", cb);
+      console.log("NOPE");
+      return;
+      //this.events.request("blockchain:getAccounts", cb);
     });
   }
 
