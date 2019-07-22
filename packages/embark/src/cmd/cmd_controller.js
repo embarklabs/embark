@@ -675,11 +675,9 @@ class EmbarkController {
         next();
       },
       function runTests(next) {
-        console.log("RUNNING TESTS");
         engine.events.request('tests:run', options, next);
       }
     ], function (err) {
-      console.dir(err);
       if (err) {
         engine.logger.error(err.message || err);
       }
