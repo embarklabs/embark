@@ -343,11 +343,17 @@ class Pipeline {
         async.each(contracts, (contract, eachCb) => {
           if (self.embark.config.contractsConfig.minimalContractSize) {
             contract = Object.assign({}, contract);
-            delete contract.code;
-            delete contract.runtimeBytecode;
-            delete contract.realRuntimeBytecode;
-            delete contract.gasEstimates;
-            delete contract.swarmHash;
+
+            const filteredFields = self.embark.config.contractsConfig.filteredFields || [
+              'code',
+              'runtimeBytecode',
+              'realRuntimeBytecode',
+              'gasEstimates',
+              'swarmHash'
+            ];
+            filteredFields.forEach(filteredField => {
+              delete contract[filteredField];
+            });
           }
           self.fs.writeJson(dappPath(
             self.buildDir,
