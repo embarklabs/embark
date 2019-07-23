@@ -354,7 +354,16 @@ To reduce the size of the contract JSON files that are included in the build dir
 When set to `true`, Embark will not put te bytecode, gas estimates and other big configurations in the JSON file.
 
 ```
-minimalContractSize: true
+minimalContractSize: true,
+```
+
+You can also have more control over the filtering by adding a `filteredFields` array. In the array, you can add the name of the fields you want to filter out.
+This is useful for when you want to reduce the size of the contract files, but might still need a certain field, or if you want to filter even more aggressively.
+Note that you need to have `minimalContractSize` set to `true`.
+
+```
+minimalContractSize: true,
+filteredFields: ['runtimeBytecode', 'realRuntimeBytecode'] // This will filter out only runtimeBytecode and realRuntimeBytecode
 ```
 
 
