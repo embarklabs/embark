@@ -72,6 +72,62 @@ class Engine {
     this.plugins.loadInternalPlugin(moduleName, options || {}, true);
   }
 
+  registerModuleGroup(groupName, _options) {
+    let options = _options || {};
+
+    let groups = {
+      "blockchain": this.blockchainComponents,
+      "coreComponents": this.coreComponents
+    };
+
+    let group = groups[groupName];
+
+    if (!group) {
+      throw new Error("unknown service: " + groupName);
+    }
+
+    // need to be careful with circular references due to passing the web3 object
+    //this.logger.trace("calling: " + serviceName + "(" + JSON.stringify(options) + ")");
+    return group.apply(this, [options]);
+  }
+
+  coreComponents() {
+    // TODO: should be made into a component
+    this.processManager = new ProcessManager({
+      events: this.events,
+      logger: this.logger,
+      plugins: this.plugins
+    });
+
+    const ServicesMonitor = require('./services_monitor.js');
+    this.servicesMonitor = new ServicesMonitor({events: this.events, logger: this.logger, plugins: this.plugins});
+    this.servicesMonitor.addCheck('Embark', function (cb) {
+      return cb({name: 'Embark ' + this.version, status: 'on'});
+    }, 0);
+
+    let plugin = this.plugins.createPlugin('coreservicesplugin', {});
+    plugin.registerActionForEvent("embark:engine:started", (_params, cb) => {
+      console.dir("----- startMonitor")
+      this.servicesMonitor.startMonitor();
+      cb();
+    });
+    this.registerModulePackage('embark-code-runner', {ipc: this.ipc});
+  }
+
+  blockchainComponents() {
+    // stack component
+    this.registerModule('blockchain', { plugins: this.plugins });
+
+    // plugins
+    this.registerModule('geth', {
+      client: this.client,
+      locale: this.locale,
+      isDev: this.isDev,
+      plugins: this.plugins,
+      ipc: this.ipc
+    })
+  }
+
   startService(serviceName, _options) {
     let options = _options || {};
 
@@ -111,17 +167,6 @@ class Engine {
     // need to be careful with circular references due to passing the web3 object
     //this.logger.trace("calling: " + serviceName + "(" + JSON.stringify(options) + ")");
     return service.apply(this, [options]);
-  }
-
-  blockchainComponents() {
-    this.registerModule('blockchain', { plugins: this.plugins });
-    this.registerModule('geth', {
-      client: this.client,
-      locale: this.locale,
-      isDev: this.isDev,
-      plugins: this.plugins,
-      ipc: this.ipc
-    })
   }
 
   embarkListenerService(_options){
@@ -182,7 +227,6 @@ class Engine {
   }
 
   serviceMonitor() {
-    const self = this;
     const ServicesMonitor = require('./services_monitor.js');
     this.servicesMonitor = new ServicesMonitor({events: this.events, logger: this.logger, plugins: this.plugins});
     this.servicesMonitor.addCheck('Embark', function (cb) {

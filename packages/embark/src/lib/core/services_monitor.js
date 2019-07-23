@@ -14,6 +14,7 @@ class ServicesMonitor {
     this.working = false;
 
     self.events.setCommandHandler("services:register", (checkName, checkFn, time, initialStatus) => {
+      console.dir("check added for "+ checkName)
       self.addCheck(checkName, checkFn, time, initialStatus);
     });
   }
@@ -59,6 +60,8 @@ ServicesMonitor.prototype.addCheck = function (checkName, checkFn, time, initial
   this.logger.trace('add check: ' + checkName);
   this.checkList[checkName] = {fn: checkFn, interval: time || 5000, status: initialState};
 
+  console.dir("this.working")
+  console.dir(this.working)
   if (this.working) {
     this.initCheck(checkName);
   }
@@ -75,6 +78,7 @@ ServicesMonitor.prototype.startMonitor = function () {
   let self = this;
   this.working = true;
   this.logger.trace('startMonitor');
+  console.log('--> monitor started');
 
   let servicePlugins = this.plugins.getPluginsProperty('serviceChecks', 'serviceChecks');
   servicePlugins.forEach(function (pluginCheck) {
