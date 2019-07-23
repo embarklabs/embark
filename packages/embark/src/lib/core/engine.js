@@ -112,6 +112,16 @@ class Engine {
       cb();
     });
     this.registerModulePackage('embark-code-runner', {ipc: this.ipc});
+
+    // TODO: suggestions should be moved to their own module
+    this.registerModulePackage('embark-console', {
+      events: this.events,
+      plugins: this.plugins,
+      version: this.version,
+      ipc: this.ipc,
+      logger: this.logger,
+      config: this.config
+    });
   }
 
   blockchainComponents() {
@@ -237,17 +247,6 @@ class Engine {
 
   pluginCommandService() {
     this.registerModulePackage('embark-plugin-cmd', {embarkConfigFile: this.embarkConfig, embarkConfig: this.config.embarkConfig, packageFile: 'package.json'});
-  }
-
-  console(_options) {
-    this.registerModulePackage('embark-console', {
-      events: this.events,
-      plugins: this.plugins,
-      version: this.version,
-      ipc: this.ipc,
-      logger: this.logger,
-      config: this.config
-    });
   }
 
   codeRunnerService(_options) {
