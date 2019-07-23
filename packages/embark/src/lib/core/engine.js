@@ -154,6 +154,7 @@ class Engine {
 
   contractsComponents(options) {
     this.registerModulePackage('embark-contracts-manager', {plugins: this.plugins, compileOnceOnly: options.compileOnceOnly});
+    this.registerModulePackage('embark-deployment', {plugins: this.plugins, onlyCompile: options.onlyCompile});
   }
 
   startService(serviceName, _options) {

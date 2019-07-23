@@ -218,8 +218,12 @@ class EmbarkController {
                 console.dir(_contractsConfig);
                 let contractsConfig = cloneDeep(_contractsConfig);
 
-                engine.events.request("contracts:build", contractsConfig, compiledContracts, () => {
+                engine.events.request("contracts:build", contractsConfig, compiledContracts, (err, contractsList, contractDependencies) => {
                   console.dir("contracts config build done")
+
+                  engine.events.request("deployment:contracts:deploy", contractsList, contractDependencies, () => {
+                    console.dir("deployment done")
+                  })
                 })
               })
             })
