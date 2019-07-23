@@ -77,7 +77,8 @@ class Engine {
 
     let groups = {
       "blockchain": this.blockchainComponents,
-      "coreComponents": this.coreComponents
+      "coreComponents": this.coreComponents,
+      "compiler": this.compilerComponents
     };
 
     let group = groups[groupName];
@@ -136,6 +137,15 @@ class Engine {
       plugins: this.plugins,
       ipc: this.ipc
     })
+  }
+
+  compilerComponents(options) {
+    // stack component
+    this.registerModulePackage('embark-compiler', {plugins: this.plugins, isCoverage: options.isCoverage});
+
+    // TODO: should be moved (they are plugins)
+    this.registerModulePackage('embark-solidity', {ipc: this.ipc, useDashboard: this.useDashboard});
+    this.registerModulePackage('embark-vyper');
   }
 
   startService(serviceName, _options) {
