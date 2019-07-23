@@ -102,7 +102,7 @@ class Engine {
 
     const ServicesMonitor = require('./services_monitor.js');
     this.servicesMonitor = new ServicesMonitor({events: this.events, logger: this.logger, plugins: this.plugins});
-    this.servicesMonitor.addCheck('Embark', function (cb) {
+    this.servicesMonitor.addCheck('Embark', (cb) => {
       return cb({name: 'Embark ' + this.version, status: 'on'});
     }, 0);
 

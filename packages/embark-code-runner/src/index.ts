@@ -29,8 +29,8 @@ class CodeRunner {
       },
       // TODO: ideally shouldn't be needed or should be done through an API
       sandbox: {
-        EmbarkJS,
-        Web3,
+        EmbarkJS, // TODO: can just use registerVar in the embarkjs plugin
+        Web3, // TODO: can just use registerVar in the web3.js plugin
       },
     }, this.logger);
 

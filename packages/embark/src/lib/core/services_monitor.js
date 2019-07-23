@@ -14,7 +14,6 @@ class ServicesMonitor {
     this.working = false;
 
     self.events.setCommandHandler("services:register", (checkName, checkFn, time, initialStatus) => {
-      console.dir("check added for "+ checkName)
       self.addCheck(checkName, checkFn, time, initialStatus);
     });
   }
@@ -37,10 +36,10 @@ ServicesMonitor.prototype.initCheck = function (checkName) {
     }
     check.status = obj.status;
     const newState = {name: obj.name, status: obj.status, serviceName: checkName};
-    if (!deepEqual(newState, self.checkState[checkName])) {
+    // if (!deepEqual(newState, self.checkState[checkName])) {
       self.checkState[checkName] = {name: obj.name, status: obj.status, serviceName: checkName};
       self.events.emit("servicesState", self.checkState);
-    }
+    // }
   });
 
   if (check.interval !== 0) {

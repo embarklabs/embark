@@ -1,5 +1,6 @@
 const { normalizeInput } = require('embark-utils');
 import { BlockchainProcessLauncher } from './blockchainProcessLauncher';
+import {ws, rpc} from './check.js';
 
 class Geth {
 
@@ -13,7 +14,7 @@ class Geth {
     this.isDev = options.isDev;
     this.events = embark.events;
     this.plugins = options.plugins;
-    let plugin = this.plugins.createPlugin('gethplugin', {});
+    // let plugin = this.plugins.createPlugin('gethplugin', {});
 
     this.events.request("blockchain:node:register", "geth", (readyCb) => {
       console.dir('registering blockchain node')
@@ -32,44 +33,23 @@ class Geth {
     })
   }
 
-  registerServiceCheck() {
-    console.dir("registerServiceCheck")
-    this.events.request("services:register", 'Ethereum', function (cb) {
-      cb({ name: "go-ethereum 1.1", status: 'on' })
-      // async.waterfall([
-      //   function checkNodeConnection(next) {
-      //     if (!self.provider || !self.provider.connected()) {
-      //       return next(NO_NODE, { name: "No Blockchain node found", status: 'off' });
-      //     }
-      //     next();
-      //   },
-      //   function checkVersion(next) {
-      //     // TODO: web3_clientVersion method is currently not implemented in web3.js 1.0
-      //     self.web3._requestManager.send({ method: 'web3_clientVersion', params: [] }, (err, version) => {
-      //       if (err || !version) {
-      //         self.isWeb3Ready = false;
-      //         return next(null, { name: "Ethereum node not found", status: 'off' });
-      //       }
-      //       if (version.indexOf("/") < 0) {
-      //         self.events.emit(WEB3_READY);
-      //         self.isWeb3Ready = true;
-      //         return next(null, { name: version, status: 'on' });
-      //       }
-      //       let nodeName = version.split("/")[0];
-      //       let versionNumber = version.split("/")[1].split("-")[0];
-      //       let name = nodeName + " " + versionNumber + " (Ethereum)";
+  _getNodeState(err, version, cb) {
+    if (err) return cb({ name: "Ethereum node not found", status: 'off' });
 
-      //       self.events.emit(WEB3_READY);
-      //       self.isWeb3Ready = true;
-      //       return next(null, { name: name, status: 'on' });
-      //     });
-      //   }
-      // ], (err, statusObj) => {
-      //   if (err && err !== NO_NODE) {
-      //     return cb(err);
-      //   }
-      //   cb(statusObj);
-      // });
+    let nodeName = "go-ethereum"
+    let versionNumber = version.split("-")[0];
+    let name = nodeName + " " + versionNumber + " (Ethereum)";
+    return cb({ name, status: 'on' });
+  }
+
+  // TODO: need to get correct port taking into account the proxy
+  registerServiceCheck() {
+    this.events.request("services:register", 'Ethereum', (cb) => {
+      const {rpcHost, rpcPort, wsRPC, wsHost, wsPort} = this.blockchainConfig;
+      if (wsRPC) {
+        return ws(wsHost, wsPort+10, (err, version) => this._getNodeState(err, version, cb));
+      }
+      rpc(rpcHost, rpcPort+10, (err, version) => this._getNodeState(err, version, cb));
     }, 5000, 'off');
   }
 

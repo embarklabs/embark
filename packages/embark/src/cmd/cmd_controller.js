@@ -163,8 +163,8 @@ class EmbarkController {
 
         engine.registerModuleGroup("coreComponents");
 
-        engine.registerModuleGroup("blockchain");
-        engine.registerModuleGroup("compiler");
+        // engine.registerModuleGroup("blockchain");
+        // engine.registerModuleGroup("compiler");
 
         // engine.startService("processManager");
         // engine.startService("web3");
