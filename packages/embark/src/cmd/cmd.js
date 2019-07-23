@@ -2,7 +2,6 @@ import { __, setOrDetectLocale } from 'embark-i18n';
 import { diagramPath } from 'embark-utils';
 const program = require('commander');
 const EmbarkController = require('./cmd_controller.js');
-const fs = require('../lib/core/fs.js');
 
 let embark = new EmbarkController();
 
