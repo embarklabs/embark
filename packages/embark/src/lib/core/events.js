@@ -54,8 +54,10 @@ EventEmitter.prototype.request = function() {
   let other_args = [].slice.call(arguments, 1);
 
   log("requesting: ", requestName);
+  console.log("requesting: " + requestName);
   warnIfLegacy(requestName);
   if (this._events && !this._events['request:' + requestName]) {
+    log("made request without listener: " + requestName)
     console.log("made request without listener: " + requestName)
     console.trace();
   }

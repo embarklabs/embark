@@ -7,6 +7,7 @@ const constants = require('embark-core/constants');
 const Logger = require('embark-logger');
 const {reset: embarkReset, paths: defaultResetPaths} = require('embark-reset');
 const fs = require('../lib/core/fs.js');
+const cloneDeep = require('clone-deep');
 
 require('colors');
 
@@ -165,6 +166,7 @@ class EmbarkController {
 
         engine.registerModuleGroup("blockchain");
         engine.registerModuleGroup("compiler");
+        engine.registerModuleGroup("contracts");
 
         // engine.startService("processManager");
         // engine.startService("web3");
@@ -209,7 +211,17 @@ class EmbarkController {
           engine.events.request("config:contractsFiles", (contractsFiles) => {
             engine.events.request("compiler:contracts:compile", contractsFiles, (err, compiledContracts) => {
               console.dir("compilation done")
-              console.dir(compiledContracts)
+              // console.dir(compiledContracts)
+
+              console.dir("requesting contracts configuration")
+              engine.events.request("config:contractsConfig", (_contractsConfig) => {
+                console.dir(_contractsConfig);
+                let contractsConfig = cloneDeep(_contractsConfig);
+
+                engine.events.request("contracts:build", contractsConfig, compiledContracts, () => {
+                  console.dir("contracts config build done")
+                })
+              })
             })
           })
 

@@ -5,11 +5,24 @@ const constants = require('embark-core/constants');
 const path = require('path');
 const { dappPath, proposeAlternative, toposort } = require('embark-utils');
 
+async._waterfall = async.waterfall;
+async.waterfall = function (_tasks, callback) {
+  let tasks = _tasks.map(function (t) {
+    let fn = function () {
+      console.log("async " + (new Error()).stack.split("\n")[1] + ": " + t.name);
+      t.apply(t, arguments);
+    };
+    return fn;
+  });
+  async._waterfall(tasks, callback);
+};
+
 // TODO: create a contract object
 
 class ContractsManager {
   constructor(embark, options) {
-    const self = this;
+    console.dir("---- contracts manager---- ")
+    this.embark = embark;
     this.logger = embark.logger;
     this.events = embark.events;
     this.fs = embark.fs;
@@ -21,6 +34,23 @@ class ContractsManager {
     this.deployOnlyOnConfig = false;
     this.compileError = false;
     this.compileOnceOnly = options.compileOnceOnly;
+
+    this.events.setCommandHandler("contracts:build", this.buildContracts.bind(this));
+
+    console.dir("---- contracts manager---- ")
+    // this.registerCommands()
+    // this.registerAPIs()
+  }
+
+  registerCommands() {
+    const self = this;
+
+    // self.events.setCommandHandler("contracts:build", (configOnly, cb) => {
+    //   self.deployOnlyOnConfig = configOnly; // temporary, should refactor
+    //   self.build((err) => {
+    //     cb(err);
+    //   });
+    // });
 
     self.events.setCommandHandler('contracts:list', (cb) => {
       cb(self.compileError, self.listContracts());
@@ -44,13 +74,6 @@ class ContractsManager {
 
     self.events.setCommandHandler("contracts:contract:byTxHash", (txHash, cb) => {
       self.getContractByTxHash(txHash, cb);
-    });
-
-    self.events.setCommandHandler("contracts:build", (configOnly, cb) => {
-      self.deployOnlyOnConfig = configOnly; // temporary, should refactor
-      self.build((err) => {
-        cb(err);
-      });
     });
 
     self.events.setCommandHandler("contracts:reset:dependencies", (cb) => {
@@ -90,6 +113,12 @@ class ContractsManager {
       ));
       cb(contracts);
     });
+
+  }
+
+  registerAPIs() {
+    let embark = this.embark;
+    const self = this;
 
     embark.registerAPICall(
       'get',
@@ -256,72 +285,14 @@ class ContractsManager {
     );
   }
 
+  buildContracts(contractsConfig, compiledContracts, done) {
+    const self = this;
 
-  _contractsForApi() {
-    const result = [];
-    this.events.request('contracts:formatted:all', (contracts) => {
-      contracts.forEach((contract) => {
-        this.events.request('contracts:contract', contract.className, (c) => (
-          result.push(Object.assign(contract, c))
-        ));
-      });
-    });
-    return result;
-  }
-
-  build(done, _useContractFiles = true, resetContracts = true) {
-    let self = this;
-
-    if(resetContracts) self.contracts = {};
     async.waterfall([
-      function beforeBuild(callback) {
-        self.plugins.emitAndRunActionsForEvent("build:beforeAll", () => {
-          callback();
-        });
-      },
-      function loadContractFiles(callback) {
-        self.events.request("config:contractsFiles", (contractsFiles) => {
-          self.contractsFiles = contractsFiles;
-          callback();
-        });
-      },
-      function loadContractConfigs(callback) {
-        self.events.request("config:contractsConfig", (contractsConfig) => {
-          self.contractsConfig = cloneDeep(contractsConfig);
-          callback();
-        });
-      },
-      function allContractsCompiled(callback) {
-        const allContractsCompiled =
-          self.compiledContracts &&
-          self.contractsFiles &&
-          self.contractsFiles.every(contractFile =>
-            Object.values(self.compiledContracts).find(contract =>
-              contract.originalFilename === path.normalize(contractFile.originalPath)
-            )
-          );
-        callback(null, allContractsCompiled);
-      },
-      function compileContracts(allContractsCompiled, callback) {
-        self.events.emit("status", __("Compiling..."));
-        const hasCompiledContracts = self.compiledContracts && Object.keys(self.compiledContracts).length;
-        if (self.compileOnceOnly && hasCompiledContracts && allContractsCompiled) {
-          return callback();
-        }
-        self.events.request("compiler:contracts", self.contractsFiles, function (err, compiledObject) {
-          self.compiledContracts = compiledObject;
-          callback(err);
-        });
-      },
       function prepareContractsFromConfig(callback) {
         self.events.emit("status", __("Building..."));
 
-        // if we are appending contracts (ie fiddle), we
-        // don't need to build a contract from config, so
-        // we can skip this entirely
-        if(!resetContracts) return callback();
-
-        async.eachOf(self.contractsConfig.contracts, (contract, className, eachCb) => {
+        async.eachOf(contractsConfig.contracts, (contract, className, eachCb) => {
           if (!contract.artifact) {
             contract.className = className;
             contract.args = contract.args || [];
@@ -348,13 +319,12 @@ class ContractsManager {
           });
         }, callback);
       },
-      function getGasPriceForNetwork(callback) {
-        return callback(null, self.contractsConfig.gasPrice);
-      },
-      function prepareContractsForCompilation(gasPrice, callback) {
-        for (const className in self.compiledContracts) {
-          const compiledContract = self.compiledContracts[className];
-          const contractConfig = self.contractsConfig.contracts[className];
+      function prepareContractsForCompilation(callback) {
+        let gasPrice = contractsConfig.gasPrice;
+
+        for (const className in compiledContracts) {
+          const compiledContract = compiledContracts[className];
+          const contractConfig = contractsConfig.contracts[className];
 
           const contract = self.contracts[className] || {className: className, args: []};
 
@@ -370,7 +340,7 @@ class ContractsManager {
           contract.originalFilename = compiledContract.originalFilename || ("contracts/" + contract.filename);
           contract.path = dappPath(contract.originalFilename);
 
-          contract.gas = (contractConfig && contractConfig.gas) || self.contractsConfig.gas || 'auto';
+          contract.gas = (contractConfig && contractConfig.gas) || contractsConfig.gas || 'auto';
 
           contract.gasPrice = contract.gasPrice || gasPrice;
           contract.type = 'file';
@@ -389,16 +359,16 @@ class ContractsManager {
         let showInterfaceMessageTrace = false;
         let showInterfaceMessageWarn = false;
         const isTest = self.currentContext.includes(constants.contexts.test);
-        const contractsInConfig = Object.keys(self.contractsConfig.contracts);
+        const contractsInConfig = Object.keys(contractsConfig.contracts);
 
         for (className in self.contracts) {
           contract = self.contracts[className];
           contract.deploy = (contract.deploy === undefined) || contract.deploy;
-          if (self.deployOnlyOnConfig && !self.contractsConfig.contracts[className]) {
+          if (self.deployOnlyOnConfig && !contractsConfig.contracts[className]) {
             contract.deploy = false;
           }
 
-          if (!self.contractsConfig.contracts[className] && self.contractsConfig.strategy === constants.deploymentStrategy.explicit) {
+          if (!contractsConfig.contracts[className] && contractsConfig.strategy === constants.deploymentStrategy.explicit) {
             contract.deploy = false;
           }
 
@@ -579,16 +549,358 @@ class ContractsManager {
     ], function (err) {
       if (err) {
         self.compileError = true;
-        self.events.emit("status", __("Compile/Build error"));
+        self.events.emit("status", __("Build error"));
         self.events.emit("outputError", __("Error building Dapp, please check console"));
-        self.logger.error(__("Error Compiling/Building contracts"));
+        self.logger.error(__("Error Building contracts"));
       } else {
         self.compileError = false;
       }
       self.logger.trace("finished".underline);
-      done(err, self);
+      console.dir("done!!")
+
+      done(err, self.contracts);
     });
   }
+
+  _contractsForApi() {
+    const result = [];
+    this.events.request('contracts:formatted:all', (contracts) => {
+      contracts.forEach((contract) => {
+        this.events.request('contracts:contract', contract.className, (c) => (
+          result.push(Object.assign(contract, c))
+        ));
+      });
+    });
+    return result;
+  }
+
+  // build(done, _useContractFiles = true, resetContracts = true) {
+  //   let self = this;
+
+  //   if(resetContracts) self.contracts = {};
+  //   async.waterfall([
+  //     function beforeBuild(callback) {
+  //       self.plugins.emitAndRunActionsForEvent("build:beforeAll", () => {
+  //         callback();
+  //       });
+  //     },
+  //     function loadContractFiles(callback) {
+  //       self.events.request("config:contractsFiles", (contractsFiles) => {
+  //         self.contractsFiles = contractsFiles;
+  //         callback();
+  //       });
+  //     },
+  //     function loadContractConfigs(callback) {
+  //       self.events.request("config:contractsConfig", (contractsConfig) => {
+  //         self.contractsConfig = cloneDeep(contractsConfig);
+  //         callback();
+  //       });
+  //     },
+  //     function allContractsCompiled(callback) {
+  //       const allContractsCompiled =
+  //         self.compiledContracts &&
+  //         self.contractsFiles &&
+  //         self.contractsFiles.every(contractFile =>
+  //           Object.values(self.compiledContracts).find(contract =>
+  //             contract.originalFilename === path.normalize(contractFile.originalPath)
+  //           )
+  //         );
+  //       callback(null, allContractsCompiled);
+  //     },
+  //     function compileContracts(allContractsCompiled, callback) {
+  //       self.events.emit("status", __("Compiling..."));
+  //       const hasCompiledContracts = self.compiledContracts && Object.keys(self.compiledContracts).length;
+  //       if (self.compileOnceOnly && hasCompiledContracts && allContractsCompiled) {
+  //         return callback();
+  //       }
+  //       self.events.request("compiler:contracts", self.contractsFiles, function (err, compiledObject) {
+  //         self.compiledContracts = compiledObject;
+  //         callback(err);
+  //       });
+  //     },
+  //     function prepareContractsFromConfig(callback) {
+  //       self.events.emit("status", __("Building..."));
+
+  //       // if we are appending contracts (ie fiddle), we
+  //       // don't need to build a contract from config, so
+  //       // we can skip this entirely
+  //       if(!resetContracts) return callback();
+
+  //       async.eachOf(self.contractsConfig.contracts, (contract, className, eachCb) => {
+  //         if (!contract.artifact) {
+  //           contract.className = className;
+  //           contract.args = contract.args || [];
+
+  //           self.contracts[className] = contract;
+  //           return eachCb();
+  //         }
+
+  //         self.fs.readFile(dappPath(contract.artifact), (err, artifactBuf) => {
+  //           if (err) {
+  //             self.logger.error(__('Error while reading the artifact for "{{className}}" at {{path}}', {className, path: contract.artifact}));
+  //             return eachCb(err);
+  //           }
+  //           try {
+  //             self.contracts[className] = JSON.parse(artifactBuf.toString());
+  //             if (self.contracts[className].deployedAddress) {
+  //               self.contracts[className].address = self.contracts[className].deployedAddress;
+  //             }
+  //             eachCb();
+  //           } catch (e) {
+  //             self.logger.error(__('Artifact file does not seem to be valid JSON (%s)', contract.artifact));
+  //             eachCb(e.message);
+  //           }
+  //         });
+  //       }, callback);
+  //     },
+  //     function getGasPriceForNetwork(callback) {
+  //       return callback(null, self.contractsConfig.gasPrice);
+  //     },
+  //     function prepareContractsForCompilation(gasPrice, callback) {
+  //       for (const className in self.compiledContracts) {
+  //         const compiledContract = self.compiledContracts[className];
+  //         const contractConfig = self.contractsConfig.contracts[className];
+
+  //         const contract = self.contracts[className] || {className: className, args: []};
+
+  //         contract.code = compiledContract.code;
+  //         contract.runtimeBytecode = compiledContract.runtimeBytecode;
+  //         contract.realRuntimeBytecode = (compiledContract.realRuntimeBytecode || compiledContract.runtimeBytecode);
+  //         contract.linkReferences = compiledContract.linkReferences;
+  //         contract.swarmHash = compiledContract.swarmHash;
+  //         contract.gasEstimates = compiledContract.gasEstimates;
+  //         contract.functionHashes = compiledContract.functionHashes;
+  //         contract.abiDefinition = compiledContract.abiDefinition;
+  //         contract.filename = compiledContract.filename;
+  //         contract.originalFilename = compiledContract.originalFilename || ("contracts/" + contract.filename);
+  //         contract.path = dappPath(contract.originalFilename);
+
+  //         contract.gas = (contractConfig && contractConfig.gas) || self.contractsConfig.gas || 'auto';
+
+  //         contract.gasPrice = contract.gasPrice || gasPrice;
+  //         contract.type = 'file';
+  //         contract.className = className;
+
+  //         if (contract.address) {
+  //           contract.deployedAddress = contract.address;
+  //         }
+
+  //         self.contracts[className] = contract;
+  //       }
+  //       callback();
+  //     },
+  //     function setDeployIntention(callback) {
+  //       let className, contract;
+  //       let showInterfaceMessageTrace = false;
+  //       let showInterfaceMessageWarn = false;
+  //       const isTest = self.currentContext.includes(constants.contexts.test);
+  //       const contractsInConfig = Object.keys(self.contractsConfig.contracts);
+
+  //       for (className in self.contracts) {
+  //         contract = self.contracts[className];
+  //         contract.deploy = (contract.deploy === undefined) || contract.deploy;
+  //         if (self.deployOnlyOnConfig && !self.contractsConfig.contracts[className]) {
+  //           contract.deploy = false;
+  //         }
+
+  //         if (!self.contractsConfig.contracts[className] && self.contractsConfig.strategy === constants.deploymentStrategy.explicit) {
+  //           contract.deploy = false;
+  //         }
+
+  //         if (contract.code === "") {
+  //           const message = __("assuming %s to be an interface", className);
+  //           if (contract.silent || (isTest && !contractsInConfig.includes(className))) {
+  //             showInterfaceMessageTrace = true;
+  //             self.logger.trace(message);
+  //           } else {
+  //             showInterfaceMessageWarn = true;
+  //             self.logger.warn(message);
+  //           }
+  //           contract.deploy = false;
+  //         }
+  //       }
+  //       if (showInterfaceMessageTrace || showInterfaceMessageWarn) {
+  //         let logFunction = showInterfaceMessageWarn ? self.logger.warn : self.logger.trace;
+  //         logFunction.call(self.logger, __('To get more details on interface Smart contracts, go here: %s', 'https://embark.status.im/docs/troubleshooting.html#Assuming-Contract-to-be-an-interface'.underline));
+
+  //       }
+  //       callback();
+  //     },
+  //     /*eslint complexity: ["error", 11]*/
+  //     function dealWithSpecialConfigs(callback) {
+  //       let className, contract, parentContractName, parentContract;
+  //       let dictionary = Object.keys(self.contracts);
+
+  //       for (className in self.contracts) {
+  //         contract = self.contracts[className];
+
+  //         if (contract.instanceOf === undefined) {
+  //           continue;
+  //         }
+
+  //         parentContractName = contract.instanceOf;
+  //         parentContract = self.contracts[parentContractName];
+
+  //         if (parentContract === className) {
+  //           self.logger.error(__("%s : instanceOf is set to itself", className));
+  //           continue;
+  //         }
+
+  //         if (parentContract === undefined) {
+  //           self.logger.error(__("{{className}}: couldn't find instanceOf contract {{parentContractName}}", {
+  //             className: className,
+  //             parentContractName: parentContractName
+  //           }));
+  //           let suggestion = proposeAlternative(parentContractName, dictionary, [className, parentContractName]);
+  //           if (suggestion) {
+  //             self.logger.warn(__('did you mean "%s"?', suggestion));
+  //           }
+  //           continue;
+  //         }
+
+  //         if (parentContract.args && parentContract.args.length > 0 && ((contract.args && contract.args.length === 0) || contract.args === undefined)) {
+  //           contract.args = parentContract.args;
+  //         }
+
+  //         if (contract.code !== undefined) {
+  //           self.logger.error(__("{{className}} has code associated to it but it's configured as an instanceOf {{parentContractName}}", {
+  //             className: className,
+  //             parentContractName: parentContractName
+  //           }));
+  //         }
+
+  //         contract.path = parentContract.path;
+  //         contract.originalFilename = parentContract.originalFilename;
+  //         contract.filename = parentContract.filename;
+  //         contract.code = parentContract.code;
+  //         contract.runtimeBytecode = parentContract.runtimeBytecode;
+  //         contract.realRuntimeBytecode = (parentContract.realRuntimeBytecode || parentContract.runtimeBytecode);
+  //         contract.gasEstimates = parentContract.gasEstimates;
+  //         contract.functionHashes = parentContract.functionHashes;
+  //         contract.abiDefinition = parentContract.abiDefinition;
+  //         contract.linkReferences = parentContract.linkReferences;
+
+  //         contract.gas = contract.gas || parentContract.gas;
+  //         contract.gasPrice = contract.gasPrice || parentContract.gasPrice;
+  //         contract.type = 'instance';
+
+  //       }
+  //       callback();
+  //     },
+  //     function removeContractsWithNoCode(callback) {
+  //       let className, contract;
+  //       let dictionary = Object.keys(self.contracts);
+  //       for (className in self.contracts) {
+  //         contract = self.contracts[className];
+
+  //         if (contract.code === undefined && !contract.abiDefinition) {
+  //           self.logger.error(__("%s has no code associated", className));
+  //           let suggestion = proposeAlternative(className, dictionary, [className]);
+  //           if (suggestion) {
+  //             self.logger.warn(__('did you mean "%s"?', suggestion));
+  //           }
+  //           delete self.contracts[className];
+  //         }
+  //       }
+  //       self.logger.trace(self.contracts);
+  //       callback();
+  //     },
+  //     // TODO: needs refactoring, has gotten too complex
+  //     /*eslint complexity: ["error", 19]*/
+  //     /*eslint max-depth: ["error", 19]*/
+  //     function determineDependencies(callback) {
+  //       try {
+  //       for (const className in self.contracts) {
+  //         const contract = self.contracts[className];
+
+  //         self.contractDependencies[className] = self.contractDependencies[className] || [];
+
+  //         // if (Array.isArray(contract.deps)) {
+  //         //   self.contractDependencies[className] = self.contractDependencies[className].concat(contract.deps);
+  //         // }
+
+  //         // // look in linkReferences for dependencies
+  //         // if (contract.linkReferences) {
+  //         //   Object.values(contract.linkReferences).forEach(fileReference => {
+  //         //     Object.keys(fileReference).forEach(libName => {
+  //         //       self.contractDependencies[className].push(libName);
+  //         //     });
+  //         //   });
+  //         // }
+
+  //         // // look in arguments for dependencies
+  //         // if (contract.args === []) continue;
+
+  //         // let ref;
+  //         // if (Array.isArray(contract.args)) {
+  //         //   ref = contract.args;
+  //         // } else {
+  //         //   ref = Object.values(contract.args);
+  //         // }
+
+  //         // for (let j = 0; j < ref.length; j++) {
+  //         //   let arg = ref[j];
+  //         //   if (arg[0] === "$" && !arg.startsWith('$accounts')) {
+  //         //     self.contractDependencies[className].push(arg.substr(1));
+  //         //     self.checkDependency(className, arg.substr(1));
+  //         //   }
+  //         //   if (Array.isArray(arg)) {
+  //         //     for (let sub_arg of arg) {
+  //         //       if (sub_arg[0] === "$" && !sub_arg.startsWith('$accounts')) {
+  //         //         self.contractDependencies[className].push(sub_arg.substr(1));
+  //         //         self.checkDependency(className, sub_arg.substr(1));
+  //         //       }
+  //         //     }
+  //         //   }
+  //         // }
+
+  //         // // look in onDeploy for dependencies
+  //         // if (Array.isArray(contract.onDeploy)) {
+  //         //   let regex = /\$\w+/g;
+  //         //   contract.onDeploy.map((cmd) => {
+  //         //     if (cmd.indexOf('$accounts') > -1) {
+  //         //       return;
+  //         //     }
+  //         //     cmd.replace(regex, (match) => {
+  //         //       if (match.substring(1) === contract.className) {
+  //         //         // Contract self-referencing. In onDeploy, it should be available
+  //         //         return;
+  //         //       }
+  //         //       self.contractDependencies[className].push(match.substr(1));
+  //         //     });
+  //         //   });
+  //         // }
+
+  //         // // Remove duplicates
+  //         // if (self.contractDependencies[className]) {
+  //         //   const o = {};
+  //         //   self.contractDependencies[className].forEach(function (e) {
+  //         //     o[e] = true;
+  //         //   });
+  //         //   self.contractDependencies[className] = Object.keys(o);
+  //         // }
+  //       }
+  //       callback();
+
+  //       } catch (err) {
+  //         console.dir("---- done")
+  //         console.dir(err)
+  //       }
+  //     }
+  //   ], function (err) {
+  //     console.dir("contract build done")
+  //     if (err) {
+  //       self.compileError = true;
+  //       self.events.emit("status", __("Compile/Build error"));
+  //       self.events.emit("outputError", __("Error building Dapp, please check console"));
+  //       self.logger.error(__("Error Compiling/Building contracts"));
+  //     } else {
+  //       self.compileError = false;
+  //     }
+  //     self.logger.trace("finished".underline);
+  //     done(err, self);
+  //   });
+  // }
 
   checkDependency(className, dependencyName) {
     if (!this.contractDependencies[className]) {
