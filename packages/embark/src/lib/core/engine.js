@@ -123,6 +123,9 @@ class Engine {
       logger: this.logger,
       config: this.config
     });
+
+    // TODO: we shouldn't need useDashboard
+    this.registerModulePackage('embark-library-manager', {useDashboard: this.useDashboard});
   }
 
   blockchainComponents() {

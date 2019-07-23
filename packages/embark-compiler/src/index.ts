@@ -13,7 +13,8 @@ class Compiler {
     this.plugins = options.plugins;
     this.isCoverage = options.isCoverage;
 
-    embark.events.setCommandHandler("compiler:contracts", this.compile_contracts.bind(this));
+    // embark.events.setCommandHandler("compiler:contracts", this.compile_contracts.bind(this));
+    embark.events.setCommandHandler("compiler:contracts:compile", this.compile_contracts.bind(this));
   }
 
   private compile_contracts(contractFiles: any[], cb: any) {

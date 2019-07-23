@@ -163,8 +163,8 @@ class EmbarkController {
 
         engine.registerModuleGroup("coreComponents");
 
-        // engine.registerModuleGroup("blockchain");
-        // engine.registerModuleGroup("compiler");
+        engine.registerModuleGroup("blockchain");
+        engine.registerModuleGroup("compiler");
 
         // engine.startService("processManager");
         // engine.startService("web3");
@@ -205,6 +205,14 @@ class EmbarkController {
 
         engine.startEngine(() => {
           callback();
+
+          engine.events.request("config:contractsFiles", (contractsFiles) => {
+            engine.events.request("compiler:contracts:compile", contractsFiles, (err, compiledContracts) => {
+              console.dir("compilation done")
+              console.dir(compiledContracts)
+            })
+          })
+
         });
       },
       function startDashboard(callback) {
