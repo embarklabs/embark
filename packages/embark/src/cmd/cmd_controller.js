@@ -222,6 +222,9 @@ class EmbarkController {
         engine.init({}, callback);
       },
       function startServices(callback) {
+        if (options.env === 'development') {
+          engine.logger.warn(__('Building using the development environment. Did you forget to add an environment? eg: `embark build testnet`'));
+        }
         let pluginList = engine.plugins.listPlugins();
         if (pluginList.length > 0) {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
@@ -562,6 +565,9 @@ class EmbarkController {
             process.exit(1);
           }
           platform = engine.config.storageConfig.upload.provider;
+          if (options.env === 'development') {
+            engine.logger.warn(__('Uploading using the development environment. Did you forget to add an environment? eg: `embark upload testnet`'));
+          }
           callback();
         });
       },
