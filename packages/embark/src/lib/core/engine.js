@@ -53,6 +53,17 @@ class Engine {
     callback();
   }
 
+  startEngine(cb) {
+    this.plugins.emitAndRunActionsForEvent("embark:engine:started", {}, (err) => {
+      if (err) {
+        console.error("error starting engine")
+        console.error(err)
+        process.exit(1);
+      }
+      cb();
+    });
+  }
+
   registerModule(moduleName, options) {
     this.plugins.loadInternalPlugin(moduleName, options || {});
   }
@@ -87,7 +98,8 @@ class Engine {
       "coreProcess": this.coreProcessService,
       "processApi": this.processApiService,
       "blockchainListener": this.blockchainListenerService,
-      "embarkListener": this.embarkListenerService
+      "embarkListener": this.embarkListenerService,
+      "blockchain": this.blockchainComponents
     };
 
     let service = services[serviceName];
@@ -99,6 +111,17 @@ class Engine {
     // need to be careful with circular references due to passing the web3 object
     //this.logger.trace("calling: " + serviceName + "(" + JSON.stringify(options) + ")");
     return service.apply(this, [options]);
+  }
+
+  blockchainComponents() {
+    this.registerModule('blockchain', { plugins: this.plugins });
+    this.registerModule('geth', {
+      client: this.client,
+      locale: this.locale,
+      isDev: this.isDev,
+      plugins: this.plugins,
+      ipc: this.ipc
+    })
   }
 
   embarkListenerService(_options){
@@ -298,7 +321,6 @@ class Engine {
 
   web3Service(options) {
     this.registerModulePackage('embark-web3');
-    this.registerModule('blockchain', { plugins: this.plugins });
 
     this.registerModulePackage('embark-blockchain-process', {
       client: this.client,

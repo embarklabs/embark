@@ -1,5 +1,19 @@
 import { __ } from 'embark-i18n';
 const async = require('async');
+async._waterfall = async.waterfall;
+let filename = "index.js";
+async.waterfall = function (_tasks, callback) {
+  let tasks = _tasks.map(function (t) {
+    let fn = function () {
+      console.log("async " + (new Error()).stack.split("\n")[1] + ": " + t.name);
+      t.apply(t, arguments);
+    };
+    return fn;
+  });
+  async._waterfall(tasks, callback);
+};
+
+
 const ContractDeployer = require('./contract_deployer.js');
 const cloneDeep = require('clone-deep');
 const constants = require('embark-core/constants');

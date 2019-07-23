@@ -11,6 +11,19 @@ class Blockchain {
     let plugin = this.plugins.createPlugin('web3plugin', {});
 
     plugin.registerActionForEvent("pipeline:generateAll:before", this.addArtifactFile.bind(this));
+
+    this.blockchainNodes = {};
+    this.events.setCommandHandler("blockchain:node:register", (clientName, startCb) => {
+      this.blockchainNodes[clientName] = startCb
+    })
+
+    plugin.registerActionForEvent("embark:engine:started", (_params, cb) => {
+      const clientName = this.blockchainConfig.client;
+      const client = this.blockchainNodes[clientName];
+      if (!client) return cb("client " + clientName + " not found");
+
+      client.apply(client, [cb]);
+    })
   }
 
   addArtifactFile(_params, cb) {

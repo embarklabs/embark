@@ -53,6 +53,21 @@ class TestRunner {
   run(options, cb) {
     const self = this;
 
+    // config to connect to a vm
+    // config to use specific or random accounts for vm
+    // deploy contracts
+    // get contract objects, and make them available in the tests
+    // V run tests
+    // get tests results/data
+
+    // this.embark.config.blockchainConfig.type = 'vm';
+    // TODO: we should just use `deploy:contracts`
+    this.events.request('deploy:contracts:test', function (err) {
+      console.dir("deployment done")
+
+      return cb();
+    });
+
     const testPath = options.file || "test";
     async.waterfall([
       (next) => { // list files in path

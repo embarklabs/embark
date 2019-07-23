@@ -194,21 +194,57 @@ class Cmd {
   }
 
   blockchain() {
+
+    // program
+    //   .command('blockchain [environment]')
+    //   .option('-c, --client [client]', __('Use a specific ethereum client [%s] (default: %s)', 'geth, parity', 'geth'))
+    //   .option('--locale [locale]', __('language to use (default: en)'))
+    //   .description(__('run blockchain server (default: %s)', 'development'))
+    //   .action(function(env, options) {
+    //     setOrDetectLocale(options.locale);
+    //     embark.initConfig(env || 'development', {
+    //       embarkConfig: 'embark.json',
+    //       interceptLogs: false
+    //     });
+    //     if (embark.config.blockchainConfig.endpoint && !embark.config.blockchainConfig.isAutoEndpoint) {
+    //       embark.logger.warn(__('You are starting the blockchain node, but have an `endpoint` specified. `embark run` is probably what you wanted to run'));
+    //     }
+    //     embark.blockchain(env || 'development', options.client);
+    //   });
+
+    // TODO: fix me, re-add above
+
     program
       .command('blockchain [environment]')
+      .option('-p, --port [port]', __('port to run the dev webserver (default: %s)', '8000'))
       .option('-c, --client [client]', __('Use a specific ethereum client [%s] (default: %s)', 'geth, parity', 'geth'))
+      .option('-b, --host [host]', __('host to run the dev webserver (default: %s)', 'localhost'))
+      .option('--noserver', __('disable the development webserver'))
+      .option('--nodashboard', __('simple mode, disables the dashboard'))
+      .option('--nobrowser', __('prevent the development webserver from automatically opening a web browser'))
+      .option('--no-color', __('no colors in case it\'s needed for compatbility purposes'))
+      .option('--logfile [logfile]', __('filename to output logs (default: %s)', 'none'))
+      .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'debug')
       .option('--locale [locale]', __('language to use (default: en)'))
-      .description(__('run blockchain server (default: %s)', 'development'))
+      .option('--pipeline [pipeline]', __('webpack config to use (default: development)'))
+      .option('--no-single-use-auth-token', __('disable the single use of token in cockpit'))
+      .description(__('run dapp (default: %s)', 'development'))
       .action(function(env, options) {
         setOrDetectLocale(options.locale);
-        embark.initConfig(env || 'development', {
-          embarkConfig: 'embark.json',
-          interceptLogs: false
+        embark.blockchain({
+          env: env || 'development',
+          serverPort: options.port,
+          serverHost: options.host,
+          client: options.client,
+          locale: options.locale,
+          runWebserver: !options.noserver ? null : false,
+          useDashboard: !options.nodashboard,
+          logFile: options.logfile,
+          logLevel: options.loglevel,
+          webpackConfigName: options.pipeline || 'development',
+          openBrowser: !options.nobrowser ? null : false,
+          singleUseAuthToken: options.singleUseAuthToken
         });
-        if (embark.config.blockchainConfig.endpoint && !embark.config.blockchainConfig.isAutoEndpoint) {
-          embark.logger.warn(__('You are starting the blockchain node, but have an `endpoint` specified. `embark run` is probably what you wanted to run'));
-        }
-        embark.blockchain(env || 'development', options.client);
       });
   }
 

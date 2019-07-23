@@ -57,7 +57,7 @@ EventEmitter.prototype.request = function() {
   warnIfLegacy(requestName);
   if (this._events && !this._events['request:' + requestName]) {
     console.log("made request without listener: " + requestName)
-    console.trace();
+    // console.trace();
   }
   const listenerName = 'request:' + requestName;
 

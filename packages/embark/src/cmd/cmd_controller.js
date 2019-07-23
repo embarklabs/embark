@@ -35,17 +35,48 @@ class EmbarkController {
     this.plugins = this.config.plugins;
   }
 
-  blockchain(env, client) {
-    this.context = [constants.contexts.blockchain];
-    return BlockchainClient(this.config.blockchainConfig, {
-      clientName: client,
-      env,
-      certOptions: this.config.webServerConfig.certOptions,
-      logger: this.logger,
-      events: this.events,
-      isStandalone: true,
-      fs
-    }).run();
+  blockchain(options) {
+    const webServerConfig = {};
+
+    const Engine = require('../lib/core/engine.js');
+    const engine = new Engine({
+      env: options.env,
+      client: options.client,
+      locale: options.locale,
+      version: this.version,
+      embarkConfig: options.embarkConfig || 'embark.json',
+      logFile: options.logFile,
+      logLevel: options.logLevel,
+      context: this.context,
+      useDashboard: options.useDashboard,
+      webServerConfig: webServerConfig,
+      webpackConfigName: options.webpackConfigName,
+      singleUseAuthToken: options.singleUseAuthToken,
+      ipcRole: 'server'
+    });
+
+    engine.init({}, () => {
+      engine.startService("processManager");
+      engine.startService("coreProcess");
+      engine.startService("blockchain");
+
+      engine.startEngine(() => {
+        console.dir("done!")
+        // callback();
+      });
+    });
+
+    // this.context = [constants.contexts.blockchain];
+    // return BlockchainClient(this.config.blockchainConfig, {
+    //   clientName: client,
+    //   env,
+    //   certOptions: this.config.webServerConfig.certOptions,
+    //   logger: this.logger,
+    //   events: this.events,
+    //   isStandalone: true,
+    //   fs
+    // }).run();
+
   }
 
   simulator(options) {
@@ -165,7 +196,9 @@ class EmbarkController {
         }
         engine.startService("fileWatcher");
 
-        callback();
+        engine.startEngine(() => {
+          callback();
+        });
       },
       function startDashboard(callback) {
         if (!options.useDashboard) {
