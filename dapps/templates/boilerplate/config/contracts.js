@@ -52,7 +52,9 @@ module.exports = {
     //strategy: 'implicit',
 
     // minimalContractSize, when set to true, tells Embark to generate contract files without the heavy bytecodes
+    // Using filteredFields lets you customize which field you want to filter out of the contract file (requires minimalContractSize: true)
     // minimalContractSize: false,
+    // filteredFields: [],
 
     contracts: {
       // example:
