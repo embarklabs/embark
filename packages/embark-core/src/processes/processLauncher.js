@@ -10,6 +10,7 @@ class ProcessLauncher extends EventEmitter {
     this.name = options.name;
     this.command = options.command;
     this.args = options.args || [];
+    this.splitLines = !!options.splitLines;
   }
 
   start() {
@@ -18,9 +19,15 @@ class ProcessLauncher extends EventEmitter {
     }
 
     const stdioHandler = (chunk, fd) => {
+      const ev = `output:${fd}`; // output:stdout, output:stderr
+
+      if (!this.splitLines) {
+        return this.emit(ev, chunk.toString());
+      }
+
       const lines = chunk.toString().trim().split("\n");
       for (const l of lines) {
-        this.emit(`output:${fd}`, l);
+        this.emit(ev, l);
       }
     };
 
@@ -29,7 +36,7 @@ class ProcessLauncher extends EventEmitter {
       this.args,
       {
         detached: true,
-        stdio: [null, 'pipe', 'pipe'],
+        stdio: ['pipe', 'pipe', 'pipe'],
         windowsHide: true
       }
     );
@@ -56,6 +63,14 @@ class ProcessLauncher extends EventEmitter {
     process.on('exit', () => child.kill('SIGINT'));
   }
 
+  send(buf) {
+    if (!this.child) {
+      throw new Error('child process not started or killed');
+    }
+
+    this.child.stdin.write(buf);
+  }
+
   stop() {
     if (!this.child) {
       throw new Error('child process not started or killed');
@@ -67,8 +82,6 @@ class ProcessLauncher extends EventEmitter {
     child.kill('SIGINT');
   }
 }
-
-
 
 
 
