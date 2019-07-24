@@ -1,10 +1,129 @@
 const child_process = require('child_process');
+const EventEmitter = require('events');
+
+class ProcessLauncher extends EventEmitter {
+  constructor(embark, options) {
+    super();
+
+    this.embark = embark;
+
+    this.name = options.name;
+    this.command = options.command;
+    this.args = options.args || [];
+    this.splitLines = !!options.splitLines;
+  }
+
+  start() {
+    if (this.child) {
+      throw new Error('child process already started');
+    }
+
+    const stdioHandler = (chunk, fd) => {
+      const ev = `output:${fd}`; // output:stdout, output:stderr
+
+      if (!this.splitLines) {
+        return this.emit(ev, chunk.toString());
+      }
+
+      const lines = chunk.toString().trim().split("\n");
+      for (const l of lines) {
+        this.emit(ev, l);
+      }
+    };
+
+    const child = child_process.spawn(
+      this.command,
+      this.args,
+      {
+        detached: true,
+        stdio: ['pipe', 'pipe', 'pipe'],
+        windowsHide: true
+      }
+    );
+
+    child.on('error', (err) => {
+      // Make sure we have listeners for errors. If not, we should throw
+      // an error to make sure the operator handles it next time.
+      const listeners = this.listeners('error');
+      if (listeners.length === 0) {
+        throw err;
+      }
+
+      this.emit('error', err);
+    });
+
+    child.on('exit', (code) => this.emit('exit', code));
+    child.stdout.on('data', chunk => stdioHandler(chunk, 'stdout'));
+    child.stderr.on('data', chunk => stdioHandler(chunk, 'stderr'));
+
+    this.child = child;
+
+    // Ensure we kill child processes when SIGINT is signaled.
+    process.on('SIGINT', () => process.exit(0));
+    process.on('exit', () => child.kill('SIGINT'));
+  }
+
+  send(buf) {
+    if (!this.child) {
+      throw new Error('child process not started or killed');
+    }
+
+    this.child.stdin.write(buf);
+  }
+
+  stop() {
+    if (!this.child) {
+      throw new Error('child process not started or killed');
+    }
+
+    const child = this.child;
+    this.child = null;
+
+    child.kill('SIGINT');
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const constants = require('../../constants');
 const path = require('path');
 const ProcessLogsApi = require('embark-process-logs-api');
 
 let processCount = 1;
-export class ProcessLauncher {
+export class ProcessLauncherOld {
 
   /**
    * Constructor of ProcessLauncher. Forks the module and sets up the message handling
