@@ -176,24 +176,9 @@ class EmbarkController {
             console.dir("outputDone")
             engine.events.emit('outputDone');
           });
-        })
+        });
 
         // this.events.request('watcher:start');
-
-        // engine.startService("processManager");
-        // engine.startService("web3");
-        // engine.startService("coreProcess");
-        // engine.startService("blockchainListener");
-        // engine.startService("serviceMonitor");
-        // engine.startService("libraryManager");
-        // engine.startService("codeRunner");
-        // engine.startService("pipeline");
-        // engine.startService("deployment");
-        // engine.startService("storage");
-        // engine.startService("codeGenerator");
-        // engine.startService("console");
-        // engine.startService("cockpit");
-        // engine.startService("pluginCommand");
 
         // engine.events.on('check:backOnline:Ethereum', function () {
         //   engine.logger.info(__('Ethereum node detected') + '..');
@@ -219,6 +204,8 @@ class EmbarkController {
 
         engine.startEngine(() => {
           callback();
+
+          engine.events.request("webserver:start")
 
           engine.events.request("config:contractsFiles", (contractsFiles) => {
             engine.events.request("compiler:contracts:compile", contractsFiles, (err, compiledContracts) => {
