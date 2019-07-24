@@ -79,7 +79,10 @@ class Engine {
       "blockchain": this.blockchainComponents,
       "coreComponents": this.coreComponents,
       "compiler": this.compilerComponents,
-      "contracts": this.contractsComponents
+      "contracts": this.contractsComponents,
+      "pipeline": this.pipelineService,
+      "webserver": this.webserverService,
+      "filewatcher": this.filewatcherService
     };
 
     let group = groups[groupName];
@@ -91,6 +94,23 @@ class Engine {
     // need to be careful with circular references due to passing the web3 object
     //this.logger.trace("calling: " + serviceName + "(" + JSON.stringify(options) + ")");
     return group.apply(this, [options]);
+  }
+
+  webserverService(_options) {
+    this.registerModulePackage('embark-webserver');
+  }
+
+  filewatcherService(_options) {
+    this.registerModulePackage('embark-watcher');
+  }
+
+  pipelineService(_options) {
+    this.registerModulePackage('embark-pipeline', { plugins: this.plugins });
+    this.registerModule('basic-pipeline', {
+      plugins: this.plugins,
+      webpackConfigName: this.webpackConfigName,
+      useDashboard: this.useDashboard
+    });
   }
 
   coreComponents() {
@@ -155,6 +175,19 @@ class Engine {
   contractsComponents(options) {
     this.registerModulePackage('embark-contracts-manager', {plugins: this.plugins, compileOnceOnly: options.compileOnceOnly});
     this.registerModulePackage('embark-deployment', {plugins: this.plugins, onlyCompile: options.onlyCompile});
+
+  //   this.registerModulePackage('embark-blockchain-connector', {
+  //     isDev: this.isDev,
+  //     locale: this.locale,
+  //     plugins: this.plugins,
+  //     web3: options.web3,
+  //     wait: options.wait
+  //   });
+
+    this.registerModule('blockchain-client');
+    this.registerModule('ethereum-blockchain-client');
+    this.registerModule('web3', { plugins: this.plugins });
+    this.registerModulePackage('embark-web3');
   }
 
   startService(serviceName, _options) {
@@ -228,31 +261,6 @@ class Engine {
 
   scaffoldingService(_options) {
     this.registerModulePackage('embark-scaffolding',  {plugins: this.plugins});
-  }
-
-  pipelineService(_options) {
-    const self = this;
-    this.registerModulePackage('embark-pipeline', { plugins: this.plugins });
-    this.registerModule('basic-pipeline', {
-      plugins: this.plugins,
-      webpackConfigName: this.webpackConfigName,
-      useDashboard: this.useDashboard
-    });
-    // this.events.on('code-generator-ready', function (modifiedAssets) {
-    //   self.events.request('code', function (abi, contractsJSON) {
-    //     self.events.request('pipeline:build', {abi, contractsJSON, modifiedAssets}, () => {
-    //       self.events.emit('outputDone');
-    //     });
-    //   });
-    // });
-
-    // TODO: move this to cmd_controller and define all such behaviour there
-    this.events.on('contracts:deploy:afterAll', () => {
-      self.events.request('pipeline:generateAll', () => {
-        console.dir("outputDone")
-        self.events.emit('outputDone');
-      });
-    })
   }
 
   serviceMonitor() {

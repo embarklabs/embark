@@ -47,11 +47,11 @@ class BlockchainConnector {
       });
     });
 
-    self.events.setCommandHandler("blockchain:ready", self.onReady.bind(this));
+    // self.events.setCommandHandler("blockchain:ready", self.onReady.bind(this));
 
-    self.events.setCommandHandler("blockchain:web3:isReady", (cb) => {
-      cb(self.isWeb3Ready);
-    });
+    // self.events.setCommandHandler("blockchain:web3:isReady", (cb) => {
+    //   cb(self.isWeb3Ready);
+    // });
 
     self.events.setCommandHandler("blockchain:object", (cb) => {
       cb(self);
@@ -127,10 +127,11 @@ class BlockchainConnector {
     };
     this.provider = new Provider(providerOptions);
 
-    self.events.request("processes:launch", "blockchain", (err) => {
-      if (err) {
-        return self.logger.error(err);
-      }
+    // self.events.request("processes:launch", "blockchain", (err) => {
+      // if (err) {
+        // return self.logger.error(err);
+      // }
+    // setTimeout(() => {
       self.provider.startWeb3Provider(async () => {
         try {
           const blockNumber = await self.web3.eth.getBlockNumber();
@@ -165,7 +166,7 @@ class BlockchainConnector {
           console.error(e);
         }
       });
-    });
+    // });
   }
 
   _setupVM(cb) {

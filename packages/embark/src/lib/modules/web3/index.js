@@ -16,14 +16,15 @@ class Web3Plugin {
     this.plugins = options.plugins;
     let plugin = this.plugins.createPlugin('web3plugin', {});
 
-    plugin.registerActionForEvent("deploy:contract:deployed", this.registerInVm.bind(this));
-    plugin.registerActionForEvent("deploy:contract:deployed", this.addContractJSONToPipeline.bind(this));
-    plugin.registerActionForEvent("deploy:contract:deployed", this.addContractFileToPipeline.bind(this));
+    // plugin.registerActionForEvent("deployment:contract:deployed", this.registerInVm.bind(this));
+    plugin.registerActionForEvent("deployment:contract:deployed", this.addContractJSONToPipeline.bind(this));
+    plugin.registerActionForEvent("deployment:contract:deployed", this.addContractFileToPipeline.bind(this));
     plugin.registerActionForEvent("pipeline:generateAll:before", this.addEmbarkJSNode.bind(this));
     plugin.registerActionForEvent("pipeline:generateAll:before", this.addContractIndexToPipeline.bind(this));
   }
 
   registerInVm(params, cb) {
+    console.dir("-- registerInVm")
     let contract = params.contract;
     let abi = JSON.stringify(contract.abiDefinition);
     let gasLimit = 6000000;
@@ -31,10 +32,14 @@ class Web3Plugin {
 
     this.events.request('runcode:eval', contractCode, (err) => {
       if (err) {
+        console.dir("error!!!")
+        console.dir(err)
         return cb(err);
       }
       this.events.request('runcode:eval', contract.className, (err, result) => {
         if (err) {
+          console.dir("error!!!")
+        console.dir(err)
           return cb(err);
         }
         this.events.emit("runcode:register", contract.className, result, () => { cb() });
@@ -43,6 +48,7 @@ class Web3Plugin {
   }
 
   addContractJSONToPipeline(params, cb) {
+    console.dir("-- addContractJSONToPipeline")
     // TODO: check if this is correct json object to generate
     const contract = params.contract;
 
@@ -55,6 +61,7 @@ class Web3Plugin {
   }
 
   addContractFileToPipeline(params, cb) {
+    console.dir("-- addContractFileToPipeline")
     const contract = params.contract;
     const contractName = contract.className;
     console.dir("--------------");

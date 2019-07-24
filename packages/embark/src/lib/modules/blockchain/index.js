@@ -22,7 +22,12 @@ class Blockchain {
       const client = this.blockchainNodes[clientName];
       if (!client) return cb("client " + clientName + " not found");
 
-      client.apply(client, [cb]);
+      let onStart = () => {
+        this.events.emit("blockchain:started", clientName);
+        cb();
+      }
+
+      client.apply(client, [onStart]);
     })
   }
 

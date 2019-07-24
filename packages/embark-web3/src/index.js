@@ -14,7 +14,7 @@ class EmbarkWeb3 {
     this.config = embark.config;
     this.modulesPath = dappPath(embark.config.embarkConfig.generationDir, constants.dappArtifacts.symlinkDir);
 
-    this.addWeb3ToEmbarkJS();
+    // this.addWeb3ToEmbarkJS();
   }
 
   async addWeb3ToEmbarkJS() {

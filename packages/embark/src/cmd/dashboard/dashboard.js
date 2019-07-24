@@ -35,16 +35,17 @@ class Dashboard {
       (ws, _req) => {
         let dashboardState = {contractsState: [], environment: "", status: "", availableServices: []};
 
-        self.events.request('setDashboardState');
 
-        self.events.on('contractsState', (contracts) => {
-          dashboardState.contractsState = [];
 
-          contracts.forEach(function (row) {
-            dashboardState.contractsState.push({contractName: row[0], address: row[1], status: row[2]});
-          });
-          ws.send(JSON.stringify(dashboardState));
-        });
+        // self.events.request('setDashboardState');
+        // self.events.on('contractsState', (contracts) => {
+        //   dashboardState.contractsState = [];
+
+        //   contracts.forEach(function (row) {
+        //     dashboardState.contractsState.push({contractName: row[0], address: row[1], status: row[2]});
+        //   });
+        //   ws.send(JSON.stringify(dashboardState));
+        // });
         self.events.on('status', (status) => {
           dashboardState.status = status;
           ws.send(JSON.stringify(dashboardState));
@@ -56,7 +57,32 @@ class Dashboard {
       }
     );
 
-    this.events.on('contractsState', monitor.setContracts);
+    // this.events.on('contractsState', monitor.setContracts);
+
+    this.events.on("deployment:contract:error", (_contract) => {
+      console.dir("---- contract error event")
+      this.events.request("contracts:state", (err, contracts) => {
+        monitor.setContracts(contracts)
+      });
+      // self.events.emit('contractsState', self.contractsState());
+    });
+
+    this.events.on("deployment:contract:deployed", (_contract) => {
+      console.dir("---- contract deployed event")
+      // self.events.emit('contractsState', self.contractsState());
+      this.events.request("contracts:state", (err, contracts) => {
+        monitor.setContracts(contracts)
+      });
+    });
+
+    this.events.on("deployment:contract:undeployed", (_contract) => {
+      console.dir("---- contract undeployed event")
+      // self.events.emit('contractsState', self.contractsState());
+      this.events.request("contracts:state", (err, contracts) => {
+        monitor.setContracts(contracts)
+      });
+    });
+
     this.events.on('status', monitor.setStatus.bind(monitor));
     this.events.on('servicesState', monitor.availableServices.bind(monitor));
 

@@ -37,6 +37,14 @@ class ContractsManager {
 
     this.events.setCommandHandler("contracts:build", this.buildContracts.bind(this));
 
+    this.events.setCommandHandler('contracts:list', (cb) => {
+      cb(this.compileError, this.listContracts());
+    });
+
+    this.events.setCommandHandler('contracts:state', (cb) => {
+      cb(this.compileError, this.contractsState());
+    });
+
     console.dir("---- contracts manager---- ")
     // this.registerCommands()
     // this.registerAPIs()
@@ -51,10 +59,6 @@ class ContractsManager {
     //     cb(err);
     //   });
     // });
-
-    self.events.setCommandHandler('contracts:list', (cb) => {
-      cb(self.compileError, self.listContracts());
-    });
 
     self.events.setCommandHandler('contracts:add', (contract) => {
       this.contracts[contract.className] = contract;
@@ -79,18 +83,6 @@ class ContractsManager {
     self.events.setCommandHandler("contracts:reset:dependencies", (cb) => {
       self.contractDependencies = {};
       cb();
-    });
-
-    self.events.on("deploy:contract:error", (_contract) => {
-      self.events.emit('contractsState', self.contractsState());
-    });
-
-    self.events.on("deploy:contract:deployed", (_contract) => {
-      self.events.emit('contractsState', self.contractsState());
-    });
-
-    self.events.on("deploy:contract:undeployed", (_contract) => {
-      self.events.emit('contractsState', self.contractsState());
     });
 
     this.events.setCommandHandler('setDashboardState', () => {
@@ -558,7 +550,7 @@ class ContractsManager {
       self.logger.trace("finished".underline);
       console.dir("done!!")
 
-      done(err, self.contracts);
+      done(err, self.contracts, self.contractDependencies);
     });
   }
 

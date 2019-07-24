@@ -163,10 +163,22 @@ class EmbarkController {
         }
 
         engine.registerModuleGroup("coreComponents");
-
         engine.registerModuleGroup("blockchain");
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
+        engine.registerModuleGroup("pipeline");
+        engine.registerModuleGroup("webserver");
+        engine.registerModuleGroup("filewatcher");
+
+        engine.events.on('deployment:deployContracts:afterAll', () => {
+          console.dir("--- generating files...")
+          engine.events.request('pipeline:generateAll', () => {
+            console.dir("outputDone")
+            engine.events.emit('outputDone');
+          });
+        })
+
+        // this.events.request('watcher:start');
 
         // engine.startService("processManager");
         // engine.startService("web3");
