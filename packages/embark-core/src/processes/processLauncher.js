@@ -1,4 +1,5 @@
 const child_process = require('child_process');
+<<<<<<< HEAD
 const EventEmitter = require('events');
 
 class ProcessLauncher extends EventEmitter {
@@ -118,12 +119,14 @@ class ProcessLauncher extends EventEmitter {
 
 
 
+=======
+>>>>>>> parent of 2beeaa68... process launching code
 const constants = require('../../constants');
 const path = require('path');
 const ProcessLogsApi = require('embark-process-logs-api');
 
 let processCount = 1;
-export class ProcessLauncherOld {
+export class ProcessLauncher {
 
   /**
    * Constructor of ProcessLauncher. Forks the module and sets up the message handling
