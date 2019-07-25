@@ -169,20 +169,75 @@ class Provider {
     this.web3.setProvider(null);
   }
 
-  fundAccounts(callback) {
-    const self = this;
-    if (!self.accounts.length) {
-      return callback();
+  async fundAccounts() {
+    if (!this.accounts.length) {
+      return;
     }
-    if (!self.isDev) {
-      return callback();
+    if (!this.isDev) {
+      return;
     }
-    async.eachLimit(self.accounts, 1, (account, eachCb) => {
+
+    const coinbaseAddress = await this.getCoinbaseAddress(this.web3);
+
+    const fundAccountPromises = [];
+    for (let account of this.accounts) {
       if (!account.address) {
-        return eachCb();
+        continue;
       }
-      fundAccount(self.web3, account.address, account.hexBalance, eachCb);
-    }, callback);
+      fundAccountPromises.push(fundAccount(this.web3, account.address, coinbaseAddress, account.hexBalance));
+    }
+    // run in parallel
+    await Promise.all(fundAccountPromises);
+  }
+
+  async getCoinbaseAddress(web3) {
+
+    const findAccountWithMostFunds = async() => {
+      let highestBalance = {
+        balance: web3.utils.toBN(0),
+        address: ""
+      };
+      for (let account of this.accounts) {
+        const address = account.address;
+        // eslint-disable-next-line no-await-in-loop
+        let balance = await web3.eth.getBalance(address);
+        balance = web3.utils.toBN(balance);
+        if (balance.gt(highestBalance.balance)) {
+          highestBalance = { balance, address };
+        }
+      }
+      return highestBalance.address;
+    };
+
+    const findAlternativeCoinbase = async() => {
+      try {
+        return findAccountWithMostFunds();
+      }
+      catch (err) {
+        throw new Error(`Error getting coinbase address: ${err.message || err}`);
+      }
+    };
+
+    try {
+      const coinbaseAddress = await web3.eth.getCoinbase();
+      // if the blockchain returns a zeroed address, we can find the account
+      // with the most funds and use that as the "from" account to txfer
+      // funds.
+      if (!coinbaseAddress || web3.utils.hexToNumberString(coinbaseAddress) === "0") { // matches 0x0 and 0x00000000000000000000000000000000000000
+        return await findAlternativeCoinbase();
+      }
+      return coinbaseAddress;
+    }
+    catch (err) {
+      // if the blockchain doesn't support 'eth_coinbase' RPC commands, 
+      // we can find the account with the most funds and use that as the 
+      // "from" account to txfer funds.
+      if (err.message.includes("The method eth_coinbase does not exist/is not available")) {
+        const coinbase = await findAlternativeCoinbase();
+        return coinbase;
+      }
+      throw new Error(`Error finding coinbase address: ${err.message || err}`);
+    }
   }
 }
 

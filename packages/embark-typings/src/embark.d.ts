@@ -1,5 +1,6 @@
 import { Logger } from "./logger";
 import { Plugins } from "./plugins";
+import { BaseBlockchainClientOptions } from '../../embark-blockchain-process/index';
 
 export interface Events {
   on: any;
@@ -33,6 +34,7 @@ export interface Embark {
   events: Events;
   registerAPICall: any;
   registerConsoleCommand: any;
+  registerBlockchain: (name: string, clientPath: string, blockchainClientOptions: BaseBlockchainClientOptions, initCondition: (clientName: string) => boolean) => void;
   logger: Logger;
   fs: any;
   config: Config;
@@ -42,3 +44,5 @@ export interface Embark {
     action: (callback: () => void) => void,
   ): void;
 }
+
+export type Environment = String;

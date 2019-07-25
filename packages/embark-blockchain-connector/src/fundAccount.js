@@ -1,77 +1,31 @@
-const async = require('async');
 const TARGET = 0x7FFFFFFFFFFFFFFF;
-const ALREADY_FUNDED = 'alreadyFunded';
 
-function fundAccount(web3, accountAddress, hexBalance, callback) {
+async function fundAccount(web3, accountAddress, coinbaseAddress, hexBalance) {
   if (!hexBalance) {
     hexBalance = TARGET;
   }
   const targetBalance = web3.utils.toBN(hexBalance);
-  let accountBalance;
-  let coinbaseAddress;
-  let lastNonce;
-  let gasPrice;
 
-  async.waterfall([
-    function getAccountBalance(next) {
-      web3.eth.getBalance(accountAddress, (err, balance) => {
-        if (err) {
-          return next(err);
-        }
-        balance = web3.utils.toBN(balance);
-        if (balance.gte(targetBalance)) {
-          return next(ALREADY_FUNDED);
-        }
-        accountBalance = balance;
-        next();
-      });
-    },
-    function getNeededParams(next) {
-      async.parallel([
-        function getCoinbaseAddress(paraCb) {
-          web3.eth.getCoinbase()
-            .then((address) => {
-              coinbaseAddress = address;
-              paraCb();
-            }).catch(paraCb);
-        },
-        function getGasPrice(paraCb) {
-          web3.eth.getGasPrice((err, price) => {
-            if (err) {
-              return paraCb(err);
-            }
-            gasPrice = price;
-            paraCb();
-          });
-        }
-      ], (err, _result) => {
-        next(err);
-      });
-    },
-    function getNonce(next) {
-      web3.eth.getTransactionCount(coinbaseAddress, (err, nonce) => {
-        if (err) {
-          return next(err);
-        }
-        lastNonce = nonce;
-        next();
-      });
-    },
-    function sendTransaction(next) {
-      web3.eth.sendTransaction({
-        from: coinbaseAddress,
-        to: accountAddress,
-        value: targetBalance.sub(accountBalance),
-        gasPrice: gasPrice,
-        nonce: lastNonce
-      }, next);
-    }
-  ], (err) => {
-    if (err && err !== ALREADY_FUNDED) {
-      return callback(err);
-    }
-    callback();
-  });
+  // chekck if account is already funded
+  let accountBalance = await web3.eth.getBalance(accountAddress);
+  accountBalance = web3.utils.toBN(accountBalance);
+  if (accountBalance.gte(targetBalance)) {
+    return;
+  }
+
+  // run in parallel
+  let getGasPricePromise = web3.eth.getGasPrice(); 
+  let getTxCountPromise = web3.eth.getTransactionCount(coinbaseAddress);
+
+  const [gasPrice, lastNonce] = await Promise.all([getGasPricePromise, getTxCountPromise]);
+
+  return web3.eth.sendTransaction({
+    from: coinbaseAddress,
+    to: accountAddress,
+    value: targetBalance.sub(accountBalance),
+    gasPrice: gasPrice,
+    nonce: lastNonce
+  });  
 }
 
 module.exports = fundAccount;

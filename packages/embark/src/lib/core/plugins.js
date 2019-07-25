@@ -164,6 +164,7 @@ Plugins.prototype.getPluginsProperty = function(pluginType, property, sub_proper
 Plugins.prototype.runActionsForEvent = function(eventName, args, cb) {
   if (typeof (args) === 'function') {
     cb = args;
+    args = null;
   }
   let actionPlugins = this.getPluginsProperty('eventActions', 'eventActions', eventName);
 
@@ -172,7 +173,7 @@ Plugins.prototype.runActionsForEvent = function(eventName, args, cb) {
   }
 
   async.reduce(actionPlugins, args, function(current_args, plugin, nextEach) {
-    if (typeof (args) === 'function') {
+    if (!args) {
       plugin.call(plugin, (...params) => {
         nextEach(...params || current_args);
       });

@@ -10,6 +10,7 @@ const RLP = require('ethers/utils/rlp');
 import {AccountParser, buildUrl, dappPath, deconstructUrl} from 'embark-utils';
 
 const WEB3_READY = 'blockchain:ready';
+const BLOCKCHAIN_PROVIDER_READY = 'blockchain:provider:ready';
 
 const BLOCK_LIMIT = 100;
 const BALANCE_10_ETHER_IN_HEX = '0x8AC7230489E80000';
@@ -135,42 +136,54 @@ class BlockchainConnector {
       if (err) {
         return self.logger.error(err);
       }
-      self.provider.startWeb3Provider(async (err) => {
+      self.provider.startWeb3Provider((err) => {
         if (err) {
           return cb(err);
         }
-        try {
-          const blockNumber = await self.web3.eth.getBlockNumber();
-          await self.web3.eth.getBlock(blockNumber);
-          self.provider.fundAccounts(() => {
+        // fire an event BEFORE we fund accounts, to give any blockchain
+        // plugins a chance to handle account management (ie creating and
+        // unlocking of accounts).
+        self.plugins.emitAndRunActionsForEvent(BLOCKCHAIN_PROVIDER_READY, async (err) => {
+          if (err) {
+            self.logger.error(err);
+          }
+          try {
+            const blockNumber = await self.web3.eth.getBlockNumber();
+            await self.web3.eth.getBlock(blockNumber);
+            try {
+              await self.provider.fundAccounts();
+            }
+            catch (error) {
+              self.logger.error(`Error funding development accounts: ${error.message || error}`);
+            }
             self._emitWeb3Ready();
             cb();
-          });
-        } catch (e) {
-          const errorMessage = e.message || e;
-          if (errorMessage.indexOf('no suitable peers available') > 0) {
-            self.logger.warn(errorMessage);
-            self.logger.warn(__('Your node is probably not synchronized. Wait until your node is synchronized before deploying'));
-            process.exit(1);
+          } catch (e) {
+            const errorMessage = e.message || e;
+            if (errorMessage.indexOf('no suitable peers available') > 0) {
+              self.logger.warn(errorMessage);
+              self.logger.warn(__('Your node is probably not synchronized. Wait until your node is synchronized before deploying'));
+              process.exit(1);
+            }
+            self.logger.error(errorMessage);
+            cb(errorMessage);
           }
-          self.logger.error(errorMessage);
-          cb(errorMessage);
-        }
 
-        try {
-          const id = await this.getNetworkId();
-          let networkId = self.config.blockchainConfig.networkId;
-          if (!networkId &&
-            constants.blockchain.networkIds[self.config.blockchainConfig.networkType]) {
-            networkId = constants.blockchain.networkIds[self.config.blockchainConfig.networkType];
+          try {
+            const id = await this.getNetworkId();
+            let networkId = self.config.blockchainConfig.networkId;
+            if (!networkId &&
+              constants.blockchain.networkIds[self.config.blockchainConfig.networkType]) {
+              networkId = constants.blockchain.networkIds[self.config.blockchainConfig.networkType];
+            }
+            if (networkId && id.toString() !== networkId.toString()) {
+              self.logger.warn(__('Connected to a blockchain node on network {{realId}} while your config specifies {{configId}}', {realId: id, configId: networkId}));
+              self.logger.warn(__('Make sure you started the right blockchain node'));
+            }
+          } catch (e) {
+            console.error(e);
           }
-          if (networkId && id.toString() !== networkId.toString()) {
-            self.logger.warn(__('Connected to a blockchain node on network {{realId}} while your config specifies {{configId}}', {realId: id, configId: networkId}));
-            self.logger.warn(__('Make sure you started the right blockchain node'));
-          }
-        } catch (e) {
-          console.error(e);
-        }
+        });
       });
     });
   }

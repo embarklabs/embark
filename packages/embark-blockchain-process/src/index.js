@@ -5,6 +5,8 @@ const constants = require('embark-core/constants');
 import { BlockchainProcessLauncher } from './blockchainProcessLauncher';
 import { pingEndpoint } from './utils';
 
+export { BaseBlockchainPlugin } from './baseBlockchainPlugin';
+export { BaseBlockchainClient } from './baseBlockchainClient';
 export { BlockchainClient } from './blockchain';
 export { Simulator } from './simulator';
 export { Proxy } from './proxy';

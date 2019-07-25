@@ -26,21 +26,20 @@
   },
   "main": "./dist/index.js",
   "scripts": {
-    "build": "cross-env BABEL_ENV=node babel src --extensions \".js\" --out-dir dist --root-mode upward --source-maps",
+    "build": "cross-env BABEL_ENV=node babel src --extensions \".js,.ts\" --out-dir dist --root-mode upward --source-maps",
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
     "lint:js": "eslint src/",
-    "// lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
+    "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
     "package": "npm pack",
-    "// qa": "npm-run-all lint typecheck build package",
-    "qa": "npm-run-all lint build package",
+    "qa": "npm-run-all lint typecheck build package",
     "reset": "npx rimraf dist embark-*.tgz package",
     "start": "npm run watch",
-    "// typecheck": "tsc",
+    "typecheck": "tsc",
     "watch": "run-p watch:*",
     "watch:build": "npm run build -- --verbose --watch",
-    "// watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
+    "watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
   },
   "eslintConfig": {
     "extends": "../../.eslintrc.json"

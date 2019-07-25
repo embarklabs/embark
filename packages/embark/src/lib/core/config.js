@@ -280,16 +280,17 @@ Config.prototype._getFileOrObject = function(object, filePath, property) {
   return dappPath(object, filePath);
 };
 
-/*eslint complexity: ["error", 30]*/
+/*eslint complexity: ["error", 34]*/
 Config.prototype.loadBlockchainConfigFile = function() {
   const blockchainDefaults = getBlockchainDefaults(this.env);
   const configFilePath = this._getFileOrObject(this.configDir, 'blockchain', 'blockchain');
 
   const userConfig = this._loadConfigFile(configFilePath, blockchainDefaults, true);
   const envConfig = userConfig[this.env];
-
+  
   if (envConfig) {
-    if (envConfig.ethereumClientName || envConfig.hasOwnProperty('isDev') || envConfig.hasOwnProperty('mineWhenNeeded')) {
+    const isCustomBlockchain = ![constants.blockchain.clients.geth, constants.blockchain.clients.parity].includes(envConfig.client);
+    if (envConfig.ethereumClientName || (!isCustomBlockchain && envConfig.hasOwnProperty('isDev')) || envConfig.hasOwnProperty('mineWhenNeeded')) {
       this.logger.error(__('The blockchain config has changed quite a bit in Embark 5\nPlease visit %s to know what has to be changed', embark5ChangesUrl.underline));
       process.exit(1);
     }
@@ -302,7 +303,14 @@ Config.prototype.loadBlockchainConfigFile = function() {
       case 'auto': envConfig.isDev = false; envConfig.mineWhenNeeded = true; break;
       case 'always': envConfig.isDev = false; envConfig.mineWhenNeeded = false;  envConfig.mine = true; break;
       case 'off': envConfig.isDev = false; envConfig.mineWhenNeeded = false;  envConfig.mine = false; break;
-      default: envConfig.isDev = false;
+      default: {
+        if (!isCustomBlockchain) {
+          envConfig.isDev = false;
+        }
+      }
+    }
+    if (isCustomBlockchain && envConfig.isDev === undefined) {
+      envConfig.isDev = this.env === "development";
     }
     if (envConfig.cors) {
       const autoIndex = envConfig.cors.indexOf('auto');
@@ -365,7 +373,8 @@ Config.prototype.loadBlockchainConfigFile = function() {
     (/rinkeby|testnet|livenet/).test(this.blockchainConfig.networkType) &&
     !(this.blockchainConfig.accounts && this.blockchainConfig.accounts.find(acc => acc.password)) &&
     !this.blockchainConfig.isDev &&
-    this.env !== 'development' && this.env !== 'test') {
+    this.env !== 'development' && this.env !== 'test' &&
+    this.blockchainConfig.client === 'geth') {
     this.logger.warn((
       '\n=== ' + __('Cannot unlock account - account config missing').bold + ' ===\n' +
       __('Geth is configured to sync to a testnet/livenet and needs to unlock an account ' +
@@ -374,10 +383,8 @@ Config.prototype.loadBlockchainConfigFile = function() {
         'a valid address and password: \n') +
       ` - config/blockchain.js > ${this.env} > account\n\n`.italic +
       __('Please also make sure the keystore file for the account is located at: ') +
-      '\n - Mac: ' + `~/Library/Ethereum/${this.env}/keystore`.italic +
-      '\n - Linux: ' + `~/.ethereum/${this.env}/keystore`.italic +
-      '\n - Windows: ' + `%APPDATA%\\Ethereum\\${this.env}\\keystore`.italic) +
-      __('\n\nAlternatively, you could change ' +
+      `\n  ${this.blockchainConfig.datadir}/keystore`.italic +
+      __('\n\nAlternatively, you could change ') +
         `config/blockchain.js > ${this.env} > networkType`.italic +
         __(' to ') +
         '"custom"\n'.italic).yellow

@@ -25,7 +25,8 @@ class BlockchainProcess extends ProcessWrapper {
         certOptions: this.certOptions,
         onReadyCallback: this.blockchainReady.bind(this),
         onExitCallback: this.blockchainExit.bind(this),
-        logger: console
+        logger: console,
+        blockchainPlugins: options.blockchainPlugins
       }
     );
 

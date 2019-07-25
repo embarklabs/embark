@@ -1,11 +1,11 @@
-import { __ } from 'embark-i18n';
-import { ProcessLauncher } from 'embark-core';
-import { joinPath } from 'embark-utils';
+import {__} from 'embark-i18n';
+import {ProcessLauncher} from 'embark-core';
+import {joinPath} from 'embark-utils';
 const constants = require('embark-core/constants');
 
 export class BlockchainProcessLauncher {
 
-  constructor (options) {
+  constructor(options) {
     this.events = options.events;
     this.logger = options.logger;
     this.normalizeInput = options.normalizeInput;
@@ -32,6 +32,12 @@ export class BlockchainProcessLauncher {
       exitCallback: this.processEnded.bind(this),
       embark: this.embark
     });
+    const blockchainPlugins = this.embark.config.plugins.getPluginsProperty("blockchains", "blockchains")
+      .filter((blockchainPlugin) =>
+        blockchainPlugin.shouldInit.call(blockchainPlugin, this.blockchainConfig)
+      ).map((blockchainPlugin) =>
+        blockchainPlugin.config
+      );
     this.blockchainProcess.send({
       action: constants.blockchain.init, options: {
         blockchainConfig: this.blockchainConfig,
@@ -40,7 +46,8 @@ export class BlockchainProcessLauncher {
         isDev: this.isDev,
         locale: this.locale,
         certOptions: this.embark.config.webServerConfig.certOptions,
-        events: this.events
+        events: this.events,
+        blockchainPlugins
       }
     });
 
@@ -71,7 +78,7 @@ export class BlockchainProcessLauncher {
   }
 
   stopBlockchainNode(cb) {
-    if(this.blockchainProcess) {
+    if (this.blockchainProcess) {
       this.events.once(constants.blockchain.blockchainExit, cb);
       this.blockchainProcess.exitCallback = () => {}; // don't show error message as the process was killed on purpose
       this.blockchainProcess.send('exit');

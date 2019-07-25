@@ -62,13 +62,13 @@ class Storage {
 
     async.parallel([
       (next) => {
-        if (!this.storageConfig.available_providers.includes('ipfs')) {
+        if (!this.embark.config.storageConfig.available_providers.includes('ipfs')) {
           return next();
         }
         this.embark.events.once('ipfs:process:started', next);
       },
       (next) => {
-        if (!this.storageConfig.available_providers.includes('swarm')) {
+        if (!this.embark.config.storageConfig.available_providers.includes('swarm')) {
           return next();
         }
         this.embark.events.once('swarm:process:started', next);

@@ -1,4 +1,4 @@
-import { __ } from 'embark-i18n';
+import {__} from 'embark-i18n';
 const fs = require('fs-extra');
 const async = require('async');
 const {spawn, exec} = require('child_process');
@@ -6,17 +6,17 @@ const path = require('path');
 const constants = require('embark-core/constants');
 const GethClient = require('./gethClient.js');
 const ParityClient = require('./parityClient.js');
-import { Proxy } from './proxy';
-import { IPC } from 'embark-core';
+import {Proxy} from './proxy';
+import {IPC} from 'embark-core';
 
-import { compact, dappPath, defaultHost, dockerHostSwap, embarkPath, AccountParser} from 'embark-utils';
+import {compact, dappPath, defaultHost, dockerHostSwap, embarkPath, AccountParser} from 'embark-utils';
 const Logger = require('embark-logger');
 
 // time between IPC connection attempts (in ms)
 const IPC_CONNECT_INTERVAL = 2000;
 
 /*eslint complexity: ["error", 50]*/
-var Blockchain = function(userConfig, clientClass) {
+var Blockchain = function (userConfig, clientClass, blockchainClientConfig) {
   this.userConfig = userConfig;
   this.env = userConfig.env || 'development';
   this.isDev = userConfig.isDev;
@@ -27,24 +27,21 @@ var Blockchain = function(userConfig, clientClass) {
   this.proxyIpc = null;
   this.isStandalone = userConfig.isStandalone;
   this.certOptions = userConfig.certOptions;
-
-
-  let defaultWsApi = clientClass.DEFAULTS.WS_API;
-  if (this.isDev) defaultWsApi = clientClass.DEFAULTS.DEV_WS_API;
+  this.isCustomPlugin = userConfig.isCustomPlugin;
 
   this.config = {
     silent: this.userConfig.silent,
     client: this.userConfig.client,
     ethereumClientBin: this.userConfig.ethereumClientBin || this.userConfig.client,
-    networkType: this.userConfig.networkType || clientClass.DEFAULTS.NETWORK_TYPE,
-    networkId: this.userConfig.networkId || clientClass.DEFAULTS.NETWORK_ID,
+    networkType: this.userConfig.networkType,
+    networkId: this.userConfig.networkId,
     genesisBlock: this.userConfig.genesisBlock || false,
     datadir: this.userConfig.datadir,
     mineWhenNeeded: this.userConfig.mineWhenNeeded || false,
     rpcHost: dockerHostSwap(this.userConfig.rpcHost) || defaultHost,
     rpcPort: this.userConfig.rpcPort || 8545,
     rpcCorsDomain: this.userConfig.rpcCorsDomain || false,
-    rpcApi: this.userConfig.rpcApi || clientClass.DEFAULTS.RPC_API,
+    rpcApi: this.userConfig.rpcApi,
     port: this.userConfig.port || 30303,
     nodiscover: this.userConfig.nodiscover || false,
     mine: this.userConfig.mine || false,
@@ -56,7 +53,7 @@ var Blockchain = function(userConfig, clientClass) {
     wsHost: dockerHostSwap(this.userConfig.wsHost) || defaultHost,
     wsPort: this.userConfig.wsPort || 8546,
     wsOrigins: this.userConfig.wsOrigins || false,
-    wsApi: this.userConfig.wsApi || defaultWsApi,
+    wsApi: this.userConfig.wsApi,
     vmdebug: this.userConfig.vmdebug || false,
     targetGasLimit: this.userConfig.targetGasLimit || false,
     syncMode: this.userConfig.syncMode || this.userConfig.syncmode,
@@ -104,7 +101,7 @@ var Blockchain = function(userConfig, clientClass) {
     process.exit(1);
   }
   this.initProxy();
-  this.client = new clientClass({config: this.config, env: this.env, isDev: this.isDev});
+  this.client = new clientClass({config: this.config, env: this.env, isDev: this.isDev, ...blockchainClientConfig});
 
   this.initStandaloneProcess();
 };
@@ -140,7 +137,7 @@ Blockchain.prototype.initStandaloneProcess = function () {
       if (!this.ipc.connected) {
         this.ipc.connect(() => {
           if (this.ipc.connected) {
-            logQueue.forEach(message => { this.ipc.request('blockchain:log', message); });
+            logQueue.forEach(message => {this.ipc.request('blockchain:log', message);});
             logQueue = [];
             this.ipc.client.on('process:blockchain:stop', () => {
               this.kill();
@@ -216,7 +213,19 @@ Blockchain.prototype.run = function () {
         next();
       });
     },
-    function init(next) {
+    function initPluginClient(next) {
+      if (!self.isCustomPlugin) {
+        return next();
+      }
+      if (self.client.initChain) {
+        return self.client.initChain.apply(self.client, [next]);
+      }
+      next();
+    },
+    function initInternalClient(next) {
+      if (self.isCustomPlugin) {
+        return next();
+      }
       if (self.isDev) {
         return self.initDevChain((err) => {
           next(err);
@@ -232,7 +241,7 @@ Blockchain.prototype.run = function () {
         next(null, cmd, args);
       }, true);
     }
-  ], function(err, cmd, args) {
+  ], function (err, cmd, args) {
     if (err) {
       self.logger.error(err.message);
       return;
@@ -337,10 +346,13 @@ Blockchain.prototype.isClientInstalled = function (callback) {
   });
 };
 
-Blockchain.prototype.initDevChain = function(callback) {
+Blockchain.prototype.initDevChain = function (callback) {
   const self = this;
   const ACCOUNTS_ALREADY_PRESENT = 'accounts_already_present';
   // Init the dev chain
+  if (!self.client.initDevChain) {
+    return callback();
+  }
   self.client.initDevChain(self.config.datadir, (err) => {
     if (err) {
       return callback(err);
@@ -354,8 +366,8 @@ Blockchain.prototype.initDevChain = function(callback) {
       function listAccounts(next) {
         self.runCommand(self.client.listAccountsCommand(), {}, (err, stdout, _stderr) => {
           if (err || stdout === undefined || stdout.indexOf("Fatal") >= 0) {
-            console.log(__("no accounts found").green);
-            return next();
+            self.logger.log(__("no accounts found").green);
+            return next(null, null);
           }
           // List current addresses
           self.config.unlockAddressList = self.client.parseListAccountsCommandResultToAddressList(stdout);
@@ -371,10 +383,10 @@ Blockchain.prototype.initDevChain = function(callback) {
       function newAccounts(accountsToCreate, next) {
         var accountNumber = 0;
         async.whilst(
-          function() {
+          function () {
             return accountNumber < accountsToCreate;
           },
-          function(callback) {
+          function (callback) {
             accountNumber++;
             self.runCommand(self.client.newAccountCommand(), {}, (err, stdout, _stderr) => {
               if (err) {
@@ -384,7 +396,7 @@ Blockchain.prototype.initDevChain = function(callback) {
               callback(null, accountNumber);
             });
           },
-          function(err) {
+          function (err) {
             next(err);
           }
         );
@@ -464,8 +476,18 @@ export function BlockchainClient(userConfig, options) {
   if (!userConfig.client) userConfig.client = constants.blockchain.clients.geth;
   // if clientName is set, it overrides preferences
   if (options.clientName) userConfig.client = options.clientName;
+  userConfig.isCustomPlugin = false;
+  userConfig.isDev = (userConfig.isDev || userConfig.default);
+  userConfig.env = options.env;
+  userConfig.onReadyCallback = options.onReadyCallback;
+  userConfig.onExitCallback = options.onExitCallback;
+  userConfig.logger = options.logger;
+  userConfig.certOptions = options.certOptions;
+  userConfig.isStandalone = options.isStandalone;
+
   // Choose correct client instance based on clientName
   let clientClass;
+  let blockchainClientConfig = {};
   switch (userConfig.client) {
     case constants.blockchain.clients.geth:
       clientClass = GethClient;
@@ -474,16 +496,25 @@ export function BlockchainClient(userConfig, options) {
     case constants.blockchain.clients.parity:
       clientClass = ParityClient;
       break;
-    default:
-      console.error(__('Unknown client "%s". Please use one of the following: %s', userConfig.client, Object.keys(constants.blockchain.clients).join(', ')));
-      process.exit(1);
+
+    default: {
+      // check for blockchain plugins
+      const blockchainPlugins = options.blockchainPlugins.filter((blockchainPlugin) =>
+        blockchainPlugin.name === userConfig.client
+      );
+      if (!blockchainPlugins || !blockchainPlugins.length) {
+        console.error(__('Unknown client "%s". Please use one of the following: %s. Alternatively, a blockchain client plugin may exist for "%s"', userConfig.client, Object.keys(constants.blockchain.clients).join(', '), userConfig.client));
+        process.exit(1);
+      }
+      const blockchainPlugin = blockchainPlugins[0];
+      if (blockchainPlugins.length > 1) {
+        // console.warn does not actually show up in the conosle, so we are forced to use console.error here
+        console.error(__(`Multiple blockchain plugins have been registered for '${userConfig.client}', using the first one.`));
+      }
+      clientClass = require(blockchainPlugin.clientPath);
+      userConfig.isCustomPlugin = true;
+      blockchainClientConfig = blockchainPlugin.blockchainClientConfig;
+    }
   }
-  userConfig.isDev = (userConfig.isDev || userConfig.default);
-  userConfig.env = options.env;
-  userConfig.onReadyCallback = options.onReadyCallback;
-  userConfig.onExitCallback = options.onExitCallback;
-  userConfig.logger = options.logger;
-  userConfig.certOptions = options.certOptions;
-  userConfig.isStandalone = options.isStandalone;
-  return new Blockchain(userConfig, clientClass);
+  return new Blockchain(userConfig, clientClass, blockchainClientConfig);
 }

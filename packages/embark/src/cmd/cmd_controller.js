@@ -44,7 +44,8 @@ class EmbarkController {
       logger: this.logger,
       events: this.events,
       isStandalone: true,
-      fs
+      fs,
+      blockchainPlugins: this.plugins.getPluginsProperty("blockchains", "blockchains")
     }).run();
   }
 
