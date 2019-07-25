@@ -5,42 +5,34 @@ export { fs, VM };
 
 import { Callback, Embark, Events, Logger } /* supplied by @types/embark in packages/embark-typings */ from "embark";
 
-// TODO: ideally shouldn't be needed or should be done through an API
-import Web3 from "web3";
-const EmbarkJS = require("embarkjs");
-
 class CodeRunner {
-  private ready: boolean = false;
-  private blockchainConnected: boolean = false;
   private logger: Logger;
   private events: Events;
   private vm: VM;
-  private providerStates: { [key: string]: boolean } = {};
+
   constructor(embark: Embark, _options: any) {
     this.logger = embark.logger;
     this.events = embark.events;
 
-    EmbarkJS.environment = embark.env;
     this.vm = new VM({
       require: {
         mock: {
           fs,
         },
       },
-      // TODO: ideally shouldn't be needed or should be done through an API
       sandbox: {
-        EmbarkJS, // TODO: can just use registerVar in the embarkjs plugin
-        Web3, // TODO: can just use registerVar in the web3.js plugin
       },
     }, this.logger);
 
     this.registerEvents();
     this.registerCommands();
-    this.ready = true;
   }
 
   private registerEvents() {
+    // TODO: remove this on once all runcode:register have been converted to commands
     this.events.on("runcode:register", this.registerVar.bind(this));
+    this.events.setCommandHandler("runcode:register", this.registerVar.bind(this));
+    this.events.setCommandHandler("runcode:whitelist", this.whitelistVar.bind(this));
   }
 
   private registerCommands() {
@@ -48,6 +40,11 @@ class CodeRunner {
       cb(this.vm.options.sandbox);
     });
     this.events.setCommandHandler("runcode:eval", this.evalCode.bind(this));
+  }
+
+  private whitelistVar(varName: string, cb = () => { }) {
+    // @ts-ignore
+    this.vm._options.require.external.push(varName); // @ts-ignore
   }
 
   private registerVar(varName: string, code: any, cb = () => { }) {
@@ -61,8 +58,13 @@ class CodeRunner {
       return cb(null, "");
     }
 
+    console.dir("running");
+    console.dir(code);
+
     this.vm.doEval(code, tolerateError, (err, result) => {
       if (err) {
+        console.dir("error")
+        console.dir(err)
         return cb(err);
       }
 

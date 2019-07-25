@@ -186,8 +186,8 @@ class Engine {
 
     this.registerModule('blockchain-client');
     this.registerModule('ethereum-blockchain-client');
-    this.registerModule('web3', { plugins: this.plugins });
-    this.registerModulePackage('embark-web3');
+    // this.registerModule('web3', { plugins: this.plugins });
+    this.registerModulePackage('embark-web3', {plugins: this.plugins});
   }
 
   startService(serviceName, _options) {

@@ -202,31 +202,40 @@ class EmbarkController {
         // }
         // engine.startService("fileWatcher");
 
-        engine.startEngine(() => {
+        engine.startEngine(async () => {
           callback();
 
           engine.events.request("webserver:start")
 
-          engine.events.request("config:contractsFiles", (contractsFiles) => {
-            engine.events.request("compiler:contracts:compile", contractsFiles, (err, compiledContracts) => {
+          let contractsFiles = await engine.events.request2("config:contractsFiles");
+
+          // engine.events.request("config:contractsFiles", (contractsFiles) => {
+            // engine.events.request("compiler:contracts:compile", contractsFiles, (err, compiledContracts) => {
+          let compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
               console.dir("compilation done")
-              // console.dir(compiledContracts)
+              console.dir(compiledContracts)
 
               console.dir("requesting contracts configuration")
-              engine.events.request("config:contractsConfig", (_contractsConfig) => {
+              // engine.events.request("config:contractsConfig", (_contractsConfig) => {
+              let _contractsConfig = await engine.events.request2("config:contractsConfig");
                 console.dir(_contractsConfig);
                 let contractsConfig = cloneDeep(_contractsConfig);
 
-                engine.events.request("contracts:build", contractsConfig, compiledContracts, (err, contractsList, contractDependencies) => {
-                  console.dir("contracts config build done")
+                // engine.events.request("contracts:build", contractsConfig, compiledContracts, (err, contractsList, contractDependencies) => {
+                let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
 
-                  engine.events.request("deployment:contracts:deploy", contractsList, contractDependencies, () => {
-                    console.dir("deployment done")
-                  })
-                })
-              })
-            })
-          })
+                // let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
+                  console.dir("contracts config build done")
+                  console.dir(contractsList)
+                  console.dir(contractDependencies)
+
+                  // engine.events.request("deployment:contracts:deploy", contractsList, contractDependencies, () => {
+                  await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
+                  console.dir("deployment done")
+                // })
+              // })
+            // })
+          // })
 
         });
       },

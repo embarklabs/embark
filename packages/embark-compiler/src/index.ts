@@ -18,6 +18,9 @@ class Compiler {
   }
 
   private compile_contracts(contractFiles: any[], cb: any) {
+    console.dir("----- compile_contracts")
+    console.dir(contractFiles)
+    console.dir(cb)
     if (contractFiles.length === 0) {
       return cb(null, {});
     }

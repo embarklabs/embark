@@ -16,35 +16,10 @@ class Web3Plugin {
     this.plugins = options.plugins;
     let plugin = this.plugins.createPlugin('web3plugin', {});
 
-    // plugin.registerActionForEvent("deployment:contract:deployed", this.registerInVm.bind(this));
     plugin.registerActionForEvent("deployment:contract:deployed", this.addContractJSONToPipeline.bind(this));
     plugin.registerActionForEvent("deployment:contract:deployed", this.addContractFileToPipeline.bind(this));
     plugin.registerActionForEvent("pipeline:generateAll:before", this.addEmbarkJSNode.bind(this));
     plugin.registerActionForEvent("pipeline:generateAll:before", this.addContractIndexToPipeline.bind(this));
-  }
-
-  registerInVm(params, cb) {
-    console.dir("-- registerInVm")
-    let contract = params.contract;
-    let abi = JSON.stringify(contract.abiDefinition);
-    let gasLimit = 6000000;
-    let contractCode = Templates.vanilla_contract({ className: contract.className, abi: abi, contract: contract, gasLimit: gasLimit });
-
-    this.events.request('runcode:eval', contractCode, (err) => {
-      if (err) {
-        console.dir("error!!!")
-        console.dir(err)
-        return cb(err);
-      }
-      this.events.request('runcode:eval', contract.className, (err, result) => {
-        if (err) {
-          console.dir("error!!!")
-        console.dir(err)
-          return cb(err);
-        }
-        this.events.emit("runcode:register", contract.className, result, () => { cb() });
-      });
-    });
   }
 
   addContractJSONToPipeline(params, cb) {

@@ -69,7 +69,7 @@ Config.prototype.registerEvents = function() {
   });
 
   this.events.setCommandHandler("config:contractsConfig", (cb) => {
-    cb(this.contractsConfig);
+    cb(null, this.contractsConfig);
   });
 
   this.events.setCommandHandler("config:contractsConfig:set", this.setConfig.bind(this, 'contractsConfig'));
@@ -79,7 +79,7 @@ Config.prototype.registerEvents = function() {
   this.events.setCommandHandler("config:communicationConfig:set", this.setConfig.bind(this, 'communicationConfig'));
 
   this.events.setCommandHandler("config:contractsFiles", (cb) => {
-    cb(this.contractsFiles);
+    cb(null, this.contractsFiles);
   });
 
   // TODO: refactor this so reading the file can be done with a normal resolver or something that takes advantage of the plugin api

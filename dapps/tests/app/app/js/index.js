@@ -1,5 +1,6 @@
 
-import {SimpleStorage} from '../../embarkArtifacts/contracts';
+// import {SimpleStorage} from '../../embarkArtifacts/contracts';
+import SimpleStorage from '../../embarkArtifacts/contracts/SimpleStorage.js';
 
 window.SimpleStorage = SimpleStorage;
 

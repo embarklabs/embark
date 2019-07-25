@@ -49,6 +49,59 @@ EventEmitter.prototype.setHandler = function(requestName, cb) {
   return _setHandler.call(this, requestName, cb);
 };
 
+EventEmitter.prototype.get = function() {
+  let requestName = arguments[0];
+  let other_args = [].slice.call(arguments, 1);
+
+   log("get: ", requestName);
+  warnIfLegacy(requestName);
+  const listenerName = 'get:' + requestName;
+
+  let promise = new Promise((resolve, reject) => {
+    return this.emit(listenerName, ...other_args, (err, res) => {
+      if (err) return reject(err);
+      return resolve(res);
+    })
+  });
+
+   return promise;
+};
+
+EventEmitter.prototype.request2 = function() {
+  let requestName = arguments[0];
+  let other_args = [].slice.call(arguments, 1);
+
+  log("requesting: ", requestName);
+  console.log("requesting: " + requestName);
+  warnIfLegacy(requestName);
+  if (this._events && !this._events['request:' + requestName]) {
+    log("made request without listener: " + requestName)
+    console.log("made request without listener: " + requestName)
+    console.trace();
+  }
+
+  let promise = new Promise((resolve, reject) => {
+    console.dir("emitting... " + requestName)
+
+    other_args.push(
+      (err, ...res) => {
+        if (err) return reject(err);
+        if (res.length && res.length > 1) {
+          return resolve(res);
+        }
+        return resolve(res[0]);
+      }
+    )
+
+    console.dir("----- other_args")
+    console.dir(other_args)
+
+    this.emit('request:' + requestName, ...other_args)
+  });
+
+  return promise;
+};
+
 EventEmitter.prototype.request = function() {
   let requestName = arguments[0];
   let other_args = [].slice.call(arguments, 1);

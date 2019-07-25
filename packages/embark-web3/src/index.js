@@ -4,129 +4,89 @@ const { __ } = require('embark-i18n');
 const { dappPath, embarkPath, normalizePath, toForwardSlashes } = require('embark-utils');
 const constants = require('embark-core/constants');
 const path = require('path');
+const Web3 = require('web3');
+
+require('ejs');
+const Templates = {
+  vanilla_contract: require('./vanilla-contract.js.ejs'),
+  contract_artifact: require('./contract-artifact.js.ejs'),
+  web3_init: require('./web3_init.js.ejs'),
+};
 
 class EmbarkWeb3 {
-  constructor(embark, _options) {
+  constructor(embark, options) {
+    this.embarkConfig = embark.config.embarkConfig;
     this.embark = embark;
     this.logger = embark.logger;
     this.events = embark.events;
     this.fs = embark.fs;
     this.config = embark.config;
-    this.modulesPath = dappPath(embark.config.embarkConfig.generationDir, constants.dappArtifacts.symlinkDir);
+    let plugin = options.plugins.createPlugin('web3plugin', {});
 
-    // this.addWeb3ToEmbarkJS();
+    this.events.request("runcode:whitelist", 'web3', () => { });
+
+    this.events.on("blockchain:started", this.registerWeb3Object.bind(this));
+    plugin.registerActionForEvent("pipeline:generateAll:before", this.addWeb3Artifact.bind(this));
+    plugin.registerActionForEvent("deployment:contract:deployed", this.registerInVm.bind(this));
+    plugin.registerActionForEvent("deployment:contract:deployed", this.registerArtifact.bind(this));
+
+    this.registerWeb3Help()
   }
 
-  async addWeb3ToEmbarkJS() {
-    let blockchainConnectorReady = false;
-
-    code += "\nEmbarkJS.Blockchain.registerProvider('web3', embarkJSConnectorWeb3);";
-    // code += "\nEmbarkJS.Blockchain.setProvider('web3', {});";
-
-    code += "\nEmbarkJS.Blockchain.setProvider('web3', {web3});";
-
-    this.events.request('runcode:eval', code, (err) => {
-      if (err) {
-        return cb(err);
-      }
-    });
+  async registerWeb3Object() {
+    const web3 = new Web3("ws://localhost:8556");
+    await this.events.request2("runcode:register", 'web3', web3);
   }
 
-  registerWeb3Help() {
-    this.events.request('console:register:helpCmd', {
+  async registerWeb3Help() {
+    await this.events.request2('console:register:helpCmd', {
       cmdName: "web3",
       cmdHelp: __("instantiated web3.js object configured to the current environment")
-    }, () => { })
-  }
-
-  // ===============
-  // ===============
-  // ===============
-
-    let web3Location = await web3LocationPromise;
-    web3Location = normalizePath(web3Location, true);
-
-    await this.registerVar('__Web3', require(web3Location));
-
-    const symlinkLocation = await this.generateSymlink(web3Location);
-
-    let code = `\nconst Web3 = global.__Web3 || require('${symlinkLocation}');`;
-    code += `\nglobal.Web3 = Web3;`;
-
-    let linkedModulePath = path.join(this.modulesPath, 'embarkjs-web3');
-    if (process.platform === 'win32') linkedModulePath = linkedModulePath.replace(/\\/g, '\\\\');
-
-    code += `\n
-      const __embarkWeb3 = require('${linkedModulePath}');
-      EmbarkJS.Blockchain.registerProvider('web3', __embarkWeb3.default || __embarkWeb3);
-      EmbarkJS.Blockchain.setProvider('web3', {});
-    `;
-
-    const configPath = toForwardSlashes(dappPath(this.config.embarkConfig.generationDir, constants.dappArtifacts.dir, constants.dappArtifacts.blockchain));
-
-    code += `\nif (!global.__Web3) {`; // Only connect when in the Dapp
-    code += `\n  const web3ConnectionConfig = require('${configPath}');`;
-    code += `\n  EmbarkJS.Blockchain.connect(web3ConnectionConfig, (err) => {if (err) { console.error(err); } });`;
-    code += `\n}`;
-    this.events.request('version:downloadIfNeeded', 'embarkjs-web3', (err, location) => {
-      if (err) {
-        this.logger.error(__('Error downloading embarkjs-web3'));
-        throw err;
-      }
-
-      this.embark.addProviderInit("blockchain", code, () => { return true; });
-
-      // Make sure that we use our web3 for the console and the tests
-      code += `if (typeof web3 === 'undefined') {
-        throw new Error('Global web3 is not present');
-      }
-      EmbarkJS.Blockchain.setProvider('web3', {web3});`;
-
-      this.embark.addConsoleProviderInit("blockchain", code, () => { return true; });
-
-      this.embark.addGeneratedCode((cb) => {
-        return cb(null, code, 'embarkjs-web3', location);
-      });
     });
   }
 
-  getWeb3Location() {
-    return new Promise((resolve, reject) => {
-      this.events.request("version:get:web3", (web3Version) => {
-        if (web3Version === "1.0.0-beta") {
-          const nodePath = embarkPath('node_modules');
-          const web3Path = require.resolve("web3", {paths: [nodePath]});
-          return resolve(web3Path);
-        }
-        this.events.request("version:getPackageLocation", "web3", web3Version, (err, location) => {
-          if (err) {
-            return reject(err);
-          }
-          const locationPath = embarkPath(location);
-          resolve(locationPath);
-        });
-      });
-    });
+  async registerInVm(params, cb) {
+    let contract = params.contract;
+    let abi = JSON.stringify(contract.abiDefinition);
+    let gasLimit = 6000000;
+    let contractCode = Templates.vanilla_contract({ className: contract.className, abi: abi, contract: contract, gasLimit: gasLimit });
+
+    try {
+      await this.events.request2('runcode:eval', contractCode);
+      await this.events.request2('runcode:eval', contract.className);
+      await this.events.request2("runcode:register", contract.className, result);
+      cb();
+    } catch (err) {
+      cb(err);
+    }
   }
 
-  generateSymlink(location) {
-    return new Promise((resolve, reject) => {
-      this.events.request('code-generator:symlink:generate', location, 'web3', (err, symlinkDest) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(symlinkDest);
-      });
-    });
+  addWeb3Artifact(_params, cb) {
+    let web3Code = Templates.web3_init({});
+
+    this.events.request("pipeline:register", {
+      path: [this.embarkConfig.generationDir, 'contracts'],
+      file: 'web3_init.js',
+      format: 'js',
+      content: web3Code
+    }, cb);
   }
 
-  registerVar(name, code) {
-    return new Promise((resolve) => {
-      this.events.emit('runcode:register', name, code, () => {
-        resolve();
-      });
-    });
+  registerArtifact(params, cb) {
+    let contract = params.contract;
+    let abi = JSON.stringify(contract.abiDefinition);
+    let gasLimit = 6000000;
+
+    let contractCode = Templates.contract_artifact({ className: contract.className, abi: abi, contract: contract, gasLimit: gasLimit });
+
+    this.events.request("pipeline:register", {
+      path: [this.embarkConfig.generationDir, 'contracts'],
+      file: contract.className + '.js',
+      format: 'js',
+      content: contractCode
+    }, cb);
   }
+
 }
 
 module.exports = EmbarkWeb3;

@@ -32,7 +32,7 @@ class Blockchain {
   }
 
   addArtifactFile(_params, cb) {
-    this.events.request("config:contractsConfig", (contractsConfig) => {
+    this.events.request("config:contractsConfig", (_err, contractsConfig) => {
       let config = {
         dappConnection: contractsConfig.dappConnection,
         dappAutoEnable: contractsConfig.dappAutoEnable,
