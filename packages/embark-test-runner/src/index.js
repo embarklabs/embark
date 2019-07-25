@@ -258,7 +258,6 @@ class TestRunner {
   }
 
   runJSTests(files, options, cb) {
-    return;
     async.waterfall([
       (next) => { // setup global namespace
         global.assert = assert;
