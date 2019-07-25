@@ -6,7 +6,7 @@ const SimpleStorage = require('Embark/contracts/SimpleStorage');
 let accounts;
 
 config({
-  deployment: {
+  blockchain: {
     "accounts": [
       {
         "mnemonic": "example exile argue silk regular smile grass bomb merge arm assist farm",
@@ -15,11 +15,13 @@ config({
     ]
   },
   contracts: {
-    "SimpleStorage": {
-      args: [100]
-    },
-    "AnotherStorage": {
-      args: ["$SimpleStorage"]
+    deploy: {
+      "SimpleStorage": {
+        args: [100]
+      },
+      "AnotherStorage": {
+        args: ["$SimpleStorage"]
+      }
     }
   }
 }, (err, theAccounts) => {

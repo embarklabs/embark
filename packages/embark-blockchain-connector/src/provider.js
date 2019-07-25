@@ -9,7 +9,6 @@ const ethUtil = require('ethereumjs-util');
 class Provider {
   constructor(options) {
     this.web3 = options.web3;
-    this.accountsConfig = options.accountsConfig;
     this.blockchainConfig = options.blockchainConfig;
     this.type = options.type;
     this.web3Endpoint = options.web3Endpoint;
@@ -76,11 +75,7 @@ class Provider {
       }
 
       try {
-        self.blockchainAccounts = AccountParser.parseAccountsConfig(self.blockchainConfig.accounts, self.web3, dappPath(), self.logger, accounts);
-
-        accounts = accounts.concat(self.blockchainAccounts);
-
-        self.accounts = AccountParser.parseAccountsConfig(self.accountsConfig, self.web3, dappPath(), self.logger, accounts);
+        self.accounts = AccountParser.parseAccountsConfig(self.blockchainConfig.accounts, self.web3, dappPath(), self.logger, accounts);
       } catch (e) {
         return callback(e);
       }

@@ -1,11 +1,9 @@
 import { __ } from 'embark-i18n';
-import { deconstructUrl, prepareContractsConfig, AccountParser } from 'embark-utils';
+import { deconstructUrl, prepareContractsConfig, buildUrl } from 'embark-utils';
 
 const async = require('async');
 const web3Utils = require('web3-utils');
 import { GAS_LIMIT } from './constants';
-
-const BALANCE_10_ETHER_IN_HEX = '0x8AC7230489E80000';
 
 class Test {
   constructor(options) {
@@ -64,15 +62,6 @@ class Test {
   }
 
   initWeb3Provider(callback) {
-    if (this.simOptions.accounts) {
-      this.simOptions.accounts = this.simOptions.accounts.map((account) => {
-        if (!account.hexBalance) {
-          account.hexBalance = BALANCE_10_ETHER_IN_HEX;
-        }
-        return {balance: account.hexBalance, secretKey: account.privateKey};
-      });
-    }
-
     if (!this.simOptions.host && (this.options.node && this.options.node === 'vm')) {
       this.simOptions.type = 'vm';
     } else if (this.simOptions.host || (this.options.node && this.options.node !== 'vm')) {
@@ -87,9 +76,12 @@ class Test {
       Object.assign(this.simOptions, options);
     }
 
-    this.configObj.contractsConfig.deployment = this.simOptions;
-    this.configObj.contractsConfig.deployment.coverage = this.options.coverage;
-    this.events.request("config:contractsConfig:set", this.configObj.contractsConfig, () => {
+    this.configObj.blockchainConfig.endpoint = this.simOptions.host ? buildUrl(this.simOptions.protocol, this.simOptions.host, this.simOptions.port, this.simOptions.type) : null;
+    this.configObj.blockchainConfig.type = this.simOptions.type;
+    this.configObj.blockchainConfig.accounts = this.simOptions.accounts;
+    this.configObj.blockchainConfig.coverage = this.options.coverage;
+    this.logger.trace('Setting blockchain configs:', this.configObj.blockchainConfig);
+    this.events.request('config:blockchainConfig:set', this.configObj.blockchainConfig, () => {
       this.events.request('blockchain:reset', (err) => {
         if (err) {
           this.logger.error('Error restarting the blockchain connection');
@@ -137,9 +129,10 @@ class Test {
   }
 
   checkDeploymentOptions(options, callback) {
-    const self = this;
     let resetServices = false;
-    const {host, port, type, accounts} = options.deployment || {};
+    const blockchainConfig = options.blockchain || {};
+    const {host, port, type, protocol} = blockchainConfig.endpoint ? deconstructUrl(blockchainConfig.endpoint) : {};
+    const accounts = blockchainConfig.accounts;
 
     if (host && port && !['rpc', 'ws'].includes(type)) {
       return callback(__("contracts config error: unknown deployment type %s", type));
@@ -155,36 +148,21 @@ class Test {
       resetServices = true;
     }
 
-    this.events.request("blockchain:get", (web3) => {
-      if (accounts) {
-        try {
-          self.simOptions.accounts = AccountParser.parseAccountsConfig(accounts, web3, this.dappPath);
-        } catch (e) {
-         return callback(e);
-        }
-      } else {
-        self.simOptions.accounts = null;
+    Object.assign(this.simOptions, {host, port, type, protocol});
+    this.simOptions.accounts = accounts;
+
+    if (!resetServices && !this.firstRunConfig) {
+      return callback();
+    }
+
+    this.initWeb3Provider((err) => {
+      if (err) {
+        return callback(err);
       }
-
-      Object.assign(self.simOptions, {
-        host,
-        port,
-        type
-      });
-
-      if (!resetServices && !self.firstRunConfig) {
-        return callback();
-      }
-
-      self.initWeb3Provider((err) => {
-        if (err) {
-          return callback(err);
-        }
-        self.firstRunConfig = false;
-        self.events.request("blockchain:ready", () => {
-          self.events.request("code-generator:embarkjs:build", () => {
-            self.events.request("runcode:embarkjs:reset", callback);
-          });
+      this.firstRunConfig = false;
+      this.events.request("blockchain:ready", () => {
+        this.events.request("code-generator:embarkjs:build", () => {
+          this.events.request("runcode:embarkjs:reset", callback);
         });
       });
     });
@@ -280,11 +258,13 @@ class Test {
 
   async _deploy(config, callback) {
     const self = this;
+    let contractConfig = config.contracts || {};
     async.waterfall([
       function setConfig(next) {
-        prepareContractsConfig(config);
+        contractConfig = prepareContractsConfig(contractConfig);
         self.events.request('config:contractsConfig:set',
-          {contracts: config.contracts, versions: self.versions_default}, next);
+          // TODO find out what versions_default is where it went
+          {contracts: contractConfig.contracts, versions: self.versions_default}, next);
       },
       function getAccounts(next) {
         self.events.request('blockchain:getAccounts', (err, accounts) => {

@@ -5,9 +5,11 @@ const {Utils} = require('Embark/EmbarkJS');
 
 config({
   contracts: {
-    "SimpleStorage": {
-      args: [100],
-      onDeploy: ["SimpleStorage.methods.setRegistar('$SimpleStorage').send()"]
+    deploy: {
+      "SimpleStorage": {
+        args: [100],
+        onDeploy: ["SimpleStorage.methods.setRegistar('$SimpleStorage').send()"]
+      }
     }
   }
 }, (err, theAccounts) => {

@@ -5,8 +5,10 @@ const EmbarkJS = require('Embark/EmbarkJS');
 
 config({
   contracts: {
-    "SimpleStorage": {
-      args: [100]
+    deploy: {
+      "SimpleStorage": {
+        args: [100]
+      }
     }
   }
 });

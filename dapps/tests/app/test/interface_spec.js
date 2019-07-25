@@ -4,8 +4,10 @@ const AnotherStorage = require('Embark/contracts/AnotherStorage');
 
 config({
   contracts: {
-    AnotherStorage: {
-      args: ['$ERC20']
+    deploy: {
+      AnotherStorage: {
+        args: ['$ERC20']
+      }
     }
   }
 });
