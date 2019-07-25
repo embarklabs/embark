@@ -178,29 +178,42 @@ class EmbarkController {
           });
         });
 
-        // this.events.request('watcher:start');
+        let plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
+        plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
+          await engine.events.request2("blockchain:node:start", cb)
+        });
 
-        // engine.events.on('check:backOnline:Ethereum', function () {
-        //   engine.logger.info(__('Ethereum node detected') + '..');
-        //   engine.config.reloadConfig();
-        //   engine.events.request('deploy:contracts', function (err) {
-        //     if (err) {
-        //       return engine.logger.error(err.message || err);
-        //     }
-        //     engine.logger.info(__('Deployment Done'));
-        //   });
-        // });
+        engine.events.request('watcher:start');
 
-        // engine.events.on('outputDone', function () {
-        //   engine.logger.info((__("Looking for documentation? You can find it at") + " ").cyan + "http://embark.status.im/docs/".green.underline + ".".cyan);
-          // engine.logger.info(__("Ready").underline);
-        //   engine.events.emit("status", __("Ready").green);
-        // });
+        engine.events.on('check:backOnline:Ethereum', function () {
+          engine.logger.info(__('Ethereum node detected') + '..');
+          // TODO: deploy contracts, etc...
+        });
 
-        // if (webServerConfig.enabled !== false) {
-        //   engine.startService("webServer");
-        // }
-        // engine.startService("fileWatcher");
+        engine.events.on('outputDone', function () {
+          engine.logger.info((__("Looking for documentation? You can find it at") + " ").cyan + "http://embark.status.im/docs/".green.underline + ".".cyan);
+          engine.logger.info(__("Ready").underline);
+          engine.events.emit("status", __("Ready").green);
+        });
+
+        engine.events.on('file-event', async ({ fileType, path }) => {
+          // TODO: re-add async.cargo / or use rxjs to use latest request in the queue
+          console.dir("-- before timeout - file changed")
+
+          if (fileType === 'contract' || fileType === 'config') {
+            let contractsFiles = await engine.events.request2("config:contractsFiles");
+            let compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
+            let _contractsConfig = await engine.events.request2("config:contractsConfig");
+            let contractsConfig = cloneDeep(_contractsConfig);
+            let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
+            await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
+          } else if (fileType === 'asset') {
+            engine.events.request('pipeline:generateAll', () => {
+              console.dir("outputDone")
+              engine.events.emit('outputDone');
+            });
+          }
+        });
 
         engine.startEngine(async () => {
           callback();
@@ -208,35 +221,14 @@ class EmbarkController {
           engine.events.request("webserver:start")
 
           let contractsFiles = await engine.events.request2("config:contractsFiles");
-
-          // engine.events.request("config:contractsFiles", (contractsFiles) => {
-            // engine.events.request("compiler:contracts:compile", contractsFiles, (err, compiledContracts) => {
           let compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
-              console.dir("compilation done")
-              console.dir(compiledContracts)
+          let _contractsConfig = await engine.events.request2("config:contractsConfig");
+          let contractsConfig = cloneDeep(_contractsConfig);
+          let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
+          await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
+          console.dir("deployment done")
 
-              console.dir("requesting contracts configuration")
-              // engine.events.request("config:contractsConfig", (_contractsConfig) => {
-              let _contractsConfig = await engine.events.request2("config:contractsConfig");
-                console.dir(_contractsConfig);
-                let contractsConfig = cloneDeep(_contractsConfig);
-
-                // engine.events.request("contracts:build", contractsConfig, compiledContracts, (err, contractsList, contractDependencies) => {
-                let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
-
-                // let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
-                  console.dir("contracts config build done")
-                  console.dir(contractsList)
-                  console.dir(contractDependencies)
-
-                  // engine.events.request("deployment:contracts:deploy", contractsList, contractDependencies, () => {
-                  await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
-                  console.dir("deployment done")
-                // })
-              // })
-            // })
-          // })
-
+          await engine.events.request2("watcher:start")
         });
       },
       function startDashboard(callback) {

@@ -17,7 +17,7 @@ class Blockchain {
       this.blockchainNodes[clientName] = startCb
     })
 
-    plugin.registerActionForEvent("embark:engine:started", (_params, cb) => {
+    this.events.setCommandHandler("blockchain:node:start", (cb) => {
       const clientName = this.blockchainConfig.client;
       const client = this.blockchainNodes[clientName];
       if (!client) return cb("client " + clientName + " not found");

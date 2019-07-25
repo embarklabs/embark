@@ -330,29 +330,6 @@ class Engine {
     this.registerModulePackage('embark-deployment', {plugins: this.plugins, onlyCompile: options.onlyCompile});
     this.registerModulePackage('embark-transaction-tracker');
     this.registerModulePackage('embark-debugger');
-
-    this.events.on('file-event', function ({fileType, path}) {
-      clearTimeout(self.fileTimeout);
-      self.fileTimeout = setTimeout(() => {
-        // TODO: still need to redeploy contracts because the original contracts
-        // config is being corrupted
-        self.config.reloadConfig();
-
-        if (fileType === 'asset') {
-          // Throttle file changes so we re-write only once for all files
-          self.events.emit('asset-changed', path);
-        }
-        // TODO: for now need to deploy on asset changes as well
-        // because the contractsManager config is corrupted after a deploy
-        if (fileType === 'contract' || fileType === 'config') {
-          self.events.request('deploy:contracts', (err) => {
-            if (err) {
-              self.logger.error(err.message || err);
-            }
-          });
-        }
-      }, 50);
-    });
   }
 
   fileWatchService() {

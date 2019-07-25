@@ -2,6 +2,6 @@
 //console.log("foo");
 //console.log(web3);
 
-const FOO = "dude";
+const FOO = "hello";
 
 export default FOO;
