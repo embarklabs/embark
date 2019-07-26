@@ -34,7 +34,8 @@ class EmbarkWeb3 {
   }
 
   async registerWeb3Object() {
-    const web3 = new Web3("ws://localhost:8556");
+    const provider = await this.events.request2("blockchain:client:provider", "ethereum");
+    const web3 = new Web3(provider)
     await this.events.request2("runcode:register", 'web3', web3);
   }
 
@@ -49,11 +50,13 @@ class EmbarkWeb3 {
     let contract = params.contract;
     let abi = JSON.stringify(contract.abiDefinition);
     let gasLimit = 6000000;
-    let contractCode = Templates.vanilla_contract({ className: contract.className, abi: abi, contract: contract, gasLimit: gasLimit });
+    const provider = await this.events.request2("blockchain:client:provider", "ethereum");
+    let contractCode = Templates.vanilla_contract({ className: contract.className, abi: abi, contract: contract, gasLimit: gasLimit, provider: provider });
 
     try {
       await this.events.request2('runcode:eval', contractCode);
-      await this.events.request2('runcode:eval', contract.className);
+      let result = await this.events.request2('runcode:eval', contract.className);
+      result.currentProvider = provider;
       await this.events.request2("runcode:register", contract.className, result);
       cb();
     } catch (err) {
@@ -62,7 +65,7 @@ class EmbarkWeb3 {
   }
 
   addWeb3Artifact(_params, cb) {
-    let web3Code = Templates.web3_init({});
+    let web3Code = Templates.web3_init({connectionList: this.config.contractsConfig.dappConnection});
 
     this.events.request("pipeline:register", {
       path: [this.embarkConfig.generationDir, 'contracts'],

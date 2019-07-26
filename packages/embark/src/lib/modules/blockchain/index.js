@@ -17,8 +17,9 @@ class Blockchain {
       this.blockchainNodes[clientName] = startCb
     })
 
-    this.events.setCommandHandler("blockchain:node:start", (cb) => {
-      const clientName = this.blockchainConfig.client;
+    this.events.setCommandHandler("blockchain:node:start", (blockchainConfig, cb) => {
+      const clientName = blockchainConfig.client;
+      // const clientName = this.blockchainConfig.client;
       const client = this.blockchainNodes[clientName];
       if (!client) return cb("client " + clientName + " not found");
 

@@ -15,8 +15,10 @@ class EthereumBlockchainClient {
     return {};
   }
 
-  deployer(contract, done) {
-    var web3 = new Web3("ws://localhost:8556")
+  async deployer(contract, done) {
+    let provider = await this.events.request2("blockchain:client:provider", "ethereum");
+    var web3 = new Web3(provider)
+    // var web3 = new Web3("ws://localhost:8556")
     web3.eth.getAccounts().then((accounts) => {
       let account = accounts[0];
       // let contractObject = this.blockchain.ContractObject({abi: contract.abiDefinition});

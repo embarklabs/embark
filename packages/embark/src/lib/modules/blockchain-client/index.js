@@ -12,6 +12,13 @@ class BlockchainClient {
       this.client = blockchainClient;
     })
 
+    // TODO: unclear currently if this belongs here so it's a bit hardcoded for now
+    this.events.setCommandHandler("blockchain:client:provider", (clientName, cb) => {
+      const Web3 = require('web3');
+      var web3 = new Web3("ws://localhost:8556");
+      cb(null, web3.currentProvider);
+    })
+
     // TODO: maybe not the ideal event to listen to?
     // for e.g, could wait for all stack components to be ready
     // TODO: probably better to have 2 stages in engine, services start, then connections, etc..

@@ -257,6 +257,10 @@ class TestRunner {
     });
   }
 
+  executeTestFiile() {
+    let embark = this.embark;
+  }
+
   runJSTests(files, options, cb) {
     async.waterfall([
       (next) => { // setup global namespace

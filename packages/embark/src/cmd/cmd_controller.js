@@ -180,7 +180,7 @@ class EmbarkController {
 
         let plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
-          await engine.events.request2("blockchain:node:start", cb)
+          await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig, cb);
         });
 
         engine.events.request('watcher:start');
