@@ -44,7 +44,7 @@ export function pingEndpoint(host, port, type, protocol, origin, callback) {
   };
 
   if (type === "ws") {
-    const url = `${protocol === "https" ? "wss" : "ws"}://${_host}:${port}/`;
+    const url = `${protocol === "wss" ? "wss" : "ws"}://${_host}${port ? ":" + port : ""}/`;
     const req = new (require("ws"))(url, origin ? {origin} : {});
     handleRequest(req, "close", "open");
   } else {
