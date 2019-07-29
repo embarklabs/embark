@@ -1,9 +1,6 @@
 /* global __dirname module process require */
 
 const { __ } = require('embark-i18n');
-const { dappPath, embarkPath, normalizePath, toForwardSlashes } = require('embark-utils');
-const constants = require('embark-core/constants');
-const path = require('path');
 const Web3 = require('web3');
 
 require('ejs');

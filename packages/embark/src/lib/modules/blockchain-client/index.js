@@ -10,14 +10,14 @@ class BlockchainClient {
     this.events.setCommandHandler("blockchain:client:register", (clientName, blockchainClient) => {
       this.blockchainClients[clientName] = blockchainClient;
       this.client = blockchainClient;
-    })
+    });
 
     // TODO: unclear currently if this belongs here so it's a bit hardcoded for now
     this.events.setCommandHandler("blockchain:client:provider", (clientName, cb) => {
       const Web3 = require('web3');
       var web3 = new Web3("ws://localhost:8556");
       cb(null, web3.currentProvider);
-    })
+    });
 
     // TODO: maybe not the ideal event to listen to?
     // for e.g, could wait for all stack components to be ready
@@ -28,10 +28,7 @@ class BlockchainClient {
       // should do stuff like
       // connect to endpoint given
       // set default account
-    })
-
-
-
+    });
   }
 
 }
