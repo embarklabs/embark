@@ -82,6 +82,7 @@ class Engine {
       "contracts": this.contractsComponents,
       "pipeline": this.pipelineService,
       "webserver": this.webserverService,
+      "storage": this.storageComponent,
       "filewatcher": this.filewatcherService
     };
 
@@ -188,6 +189,11 @@ class Engine {
     this.registerModule('ethereum-blockchain-client');
     // this.registerModule('web3', { plugins: this.plugins });
     this.registerModulePackage('embark-web3', {plugins: this.plugins});
+  }
+
+  storageComponent() {
+    this.registerModulePackage('embark-storage', {plugins: this.plugins});
+    this.registerModulePackage('embark-ipfs');
   }
 
   startService(serviceName, _options) {

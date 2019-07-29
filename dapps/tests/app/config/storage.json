@@ -18,13 +18,7 @@
     ]
   },
   "development": {
-    "enabled": true,
-    "upload": {
-      "provider": "swarm",
-      "host": "localhost",
-      "port": 8500,
-      "getUrl": "http://localhost:8500/bzz-raw:/"
-    }
+    "enabled": true
   },
   "livenet": {
     "enabled": true,

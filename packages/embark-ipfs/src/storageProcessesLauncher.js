@@ -126,23 +126,25 @@ class StorageProcessesLauncher {
       silent: self.logger.logLevel !== 'trace',
       exitCallback: self.processExited.bind(this, storageName)
     });
-    this.events.request("blockchain:object", (blockchain) => {
-      blockchain.onReady(() => {
-        blockchain.determineDefaultAccount((err, defaultAccount) => {
-          if (err) {
-            return callback(err);
-          }
+    // this.events.request("blockchain:object", (blockchain) => {
+    //   blockchain.onReady(() => {
+    //     blockchain.determineDefaultAccount((err, defaultAccount) => {
+    //       if (err) {
+    //         return callback(err);
+    //       }
+
           self.processes[storageName].send({
             action: constants.storage.init, options: {
               storageConfig: self.storageConfig,
               blockchainConfig: self.blockchainConfig,
-              cors: self.buildCors(),
-              defaultAccount: defaultAccount
+              cors: self.buildCors()
+              // defaultAccount: defaultAccount
             }
           });
-        });
-      });
-    });
+
+    //     });
+    //   });
+    // });
 
 
     self.processes[storageName].on('result', constants.storage.initiated, (msg) => {
