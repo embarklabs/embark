@@ -15,19 +15,14 @@ class IPFS {
     this.logger = embark.logger;
     this.events = embark.events;
     this.logger = embark.logger;
-    // this.buildDir = options.buildDir;
     this.embarkConfig = embark.config.embarkConfig;
     this.config = embark.config;
-    // this.namesystemConfig = embark.config.namesystemConfig;
     this.storageConfig = embark.config.storageConfig;
     this.blockchainConfig = embark.config.blockchainConfig;
     this.webServerConfig = embark.config.webServerConfig;
     this.embark = embark;
     this.fs = embark.fs;
-    // this.addedToConsole = false;
     this.storageProcessesLauncher = null;
-    // this.usingRunningNode = false;
-    // this.modulesPath = dappPath(embark.config.embarkConfig.generationDir, constants.dappArtifacts.symlinkDir);
     this.registered = false;
 
     this.events.request("runcode:whitelist", 'ipfs-api', () => { });
@@ -36,12 +31,14 @@ class IPFS {
     this.events.on("storage:started", this.registerIpfsObject.bind(this));
     this.events.on("storage:started", this.connectEmbarkJSProvider.bind(this));
 
+    let plugin = options.plugins.createPlugin('ipfsplugin', {});
+    plugin.registerActionForEvent("pipeline:generateAll:before", this.addEmbarkJSIpfsArtifact.bind(this));
+
     this.events.request("storage:node:register", "ipfs", (readyCb) => {
       console.dir("--- ipfs readyCb")
       console.dir('--- registering ipfs node')
       this.events.request('processes:register', 'storage', {
         launchFn: (cb) => {
-          // this.startProcess(readyCb);
           this.startProcess(cb);
         },
         stopFn: (cb) => { this.stopProcess(cb); }
@@ -67,9 +64,25 @@ class IPFS {
   }
 
   // TODO:
-  // ipfs plugin
-  // * register upload command
   // * generate embarkjs storage artifact
+
+  async addEmbarkJSIpfsArtifact(params, cb) {
+    const code = `
+      var EmbarkJS;
+      if (typeof EmbarkJS === 'undefined') {
+        EmbarkJS = require('embarkjs');
+      }
+      const __embarkIPFS = require('embarkjs-ipfs');
+      EmbarkJS.Storage.registerProvider('ipfs', __embarkIPFS.default || __embarkIPFS);
+      EmbarkJS.Storage.setProviders(${JSON.stringify(this.embark.config.storageConfig.dappConnection || [])}, {web3});
+    `;
+    this.events.request("pipeline:register", {
+      path: [this.embarkConfig.generationDir, 'storage'],
+      file: 'init.js',
+      format: 'js',
+      content: code
+    }, cb);
+  }
 
   async registerIpfsObject() {
     const { host, port } = this._getNodeUrlConfig();

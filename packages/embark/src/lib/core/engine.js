@@ -193,7 +193,7 @@ class Engine {
 
   storageComponent() {
     this.registerModulePackage('embark-storage', {plugins: this.plugins});
-    this.registerModulePackage('embark-ipfs');
+    this.registerModulePackage('embark-ipfs', {plugins: this.plugins});
   }
 
   startService(serviceName, _options) {
