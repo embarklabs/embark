@@ -63,9 +63,6 @@ class IPFS {
     this.registerEmbarkJSStorage()
   }
 
-  // TODO:
-  // * generate embarkjs storage artifact
-
   async addEmbarkJSIpfsArtifact(params, cb) {
     const code = `
       var EmbarkJS;

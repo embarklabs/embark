@@ -83,6 +83,7 @@ class Engine {
       "pipeline": this.pipelineService,
       "webserver": this.webserverService,
       "storage": this.storageComponent,
+      "communication": this.communicationComponents,
       "filewatcher": this.filewatcherService
     };
 
@@ -194,6 +195,11 @@ class Engine {
   storageComponent() {
     this.registerModulePackage('embark-storage', {plugins: this.plugins});
     this.registerModulePackage('embark-ipfs', {plugins: this.plugins});
+  }
+
+  communicationComponents() {
+    this.registerModule('communication', {plugins: this.plugins});
+    this.registerModulePackage('embark-whisper', {plugins: this.plugins});
   }
 
   startService(serviceName, _options) {

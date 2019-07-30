@@ -170,6 +170,7 @@ class EmbarkController {
         engine.registerModuleGroup("webserver");
         engine.registerModuleGroup("filewatcher");
         engine.registerModuleGroup("storage");
+        engine.registerModuleGroup("communication");
 
         engine.events.on('deployment:deployContracts:afterAll', () => {
           console.dir("--- generating files...")
@@ -186,6 +187,10 @@ class EmbarkController {
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
           console.dir("====> requesting storage node to start...")
           await engine.events.request2("storage:node:start", engine.config.storageConfig, cb);
+        });
+        plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
+          console.dir("====> requesting communication node to start...")
+          await engine.events.request2("communication:node:start", engine.config.communicationConfig, cb);
         });
 
         engine.events.request('watcher:start');
@@ -856,6 +861,8 @@ class EmbarkController {
 
     const Engine = require('../lib/core/engine.js');
     const engine = new Engine({
+      // TODO: we should NOT use env, it's here because it's being used somewhere deep in the code
+      // but we should/need to remove it as it's causing unexpected behaviour
       env: options.env,
       client: options.client,
       locale: options.locale,
