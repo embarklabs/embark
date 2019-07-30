@@ -72,6 +72,10 @@ Config.prototype.registerEvents = function() {
     cb(null, this.contractsConfig);
   });
 
+  this.events.setCommandHandler("config:storageConfig", (cb) => {
+    cb(null, this.storageConfig);
+  });
+
   this.events.setCommandHandler("config:contractsConfig:set", this.setConfig.bind(this, 'contractsConfig'));
   this.events.setCommandHandler("config:blockchainConfig:set", this.setConfig.bind(this, 'blockchainConfig'));
   this.events.setCommandHandler("config:storageConfig:set", this.setConfig.bind(this, 'storageConfig'));

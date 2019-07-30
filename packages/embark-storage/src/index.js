@@ -39,6 +39,17 @@ class Storage {
 
       client.apply(client, [onStart]);
     });
+
+    this.uploadNodes = {};
+    this.events.setCommandHandler("storage:upload:register", (clientName, uploadCb) => {
+      this.uploadNodes[clientName] = uploadCb;
+    });
+
+    this.events.setCommandHandler("storage:upload", (clientName, cb) => {
+      const client = this.uploadNodes[clientName];
+      if (!client) return cb("upload client for  " + clientName + " not found");
+      client.apply(client, [cb]);
+    });
   }
 
   addArtifactFile(_params, cb) {

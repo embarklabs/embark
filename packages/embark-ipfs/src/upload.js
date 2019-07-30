@@ -34,7 +34,9 @@ class IPFS {
         console.debug(cmd);
         shelljs.exec(cmd, {silent:true}, function(code, stdout, stderr){ // {silent:true}: don't echo cmd output so it can be controlled via logLevel
           console.log(stdout.green);
-          callback(stderr, stdout);
+          // note: stderr is outputing upload information isntead of errors
+          // callback(stderr, stdout);
+          callback(null, stdout);
         });
       },
       function getHashFromOutput(result, callback) {
@@ -79,7 +81,9 @@ class IPFS {
     ], function (err, dir_hash) {
       if (err) {
         console.log(__("error uploading to ipfs").red);
-        console.log(err);
+        console.log("---------------");
+        console.dir(err);
+        console.log("---------------");
         cb(err);
       }
       else cb(null, dir_hash);

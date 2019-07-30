@@ -183,10 +183,10 @@ class EmbarkController {
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
           await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig, cb);
         });
-        // plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
-        //   console.dir("====> requesting storage node to start...")
-        //   await engine.events.request2("storage:node:start", engine.config.storageConfig, cb);
-        // });
+        plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
+          console.dir("====> requesting storage node to start...")
+          await engine.events.request2("storage:node:start", engine.config.storageConfig, cb);
+        });
 
         engine.events.request('watcher:start');
 
@@ -225,18 +225,15 @@ class EmbarkController {
 
           engine.events.request("webserver:start")
 
-          // await engine.events.request2("storage:node:start", engine.config.storageConfig, () => {});
-          engine.events.request2("storage:node:start", engine.config.storageConfig, () => {});
+          let contractsFiles = await engine.events.request2("config:contractsFiles");
+          let compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
+          let _contractsConfig = await engine.events.request2("config:contractsConfig");
+          let contractsConfig = cloneDeep(_contractsConfig);
+          let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
+          await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
+          console.dir("deployment done")
 
-          // let contractsFiles = await engine.events.request2("config:contractsFiles");
-          // let compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
-          // let _contractsConfig = await engine.events.request2("config:contractsConfig");
-          // let contractsConfig = cloneDeep(_contractsConfig);
-          // let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
-          // await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
-          // console.dir("deployment done")
-//
-          // await engine.events.request2("watcher:start")
+          await engine.events.request2("watcher:start")
         });
       },
       function startDashboard(callback) {
@@ -766,16 +763,23 @@ class EmbarkController {
         });
       },
       function startServices(callback) {
+        engine.registerModuleGroup("coreComponents");
+        engine.registerModuleGroup("blockchain");
+        engine.registerModuleGroup("compiler");
+        engine.registerModuleGroup("contracts");
+        engine.registerModuleGroup("pipeline");
+        engine.registerModuleGroup("webserver");
+        engine.registerModuleGroup("filewatcher");
+        engine.registerModuleGroup("storage");
 
-        engine.startService("web3");
-        engine.startService("processManager");
-        engine.startService("serviceMonitor");
-        engine.startService("libraryManager");
-        engine.startService("codeRunner");
-        engine.startService("pipeline");
-        engine.startService("deployment");
-        engine.startService("storage");
-        engine.startService("codeGenerator");
+        let plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
+        plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
+          await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig, cb);
+        });
+        plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
+          console.dir("====> requesting storage node to start...")
+          await engine.events.request2("storage:node:start", engine.config.storageConfig, cb);
+        });
 
         callback();
       },
@@ -787,33 +791,50 @@ class EmbarkController {
         callback();
       },
       function deploy(callback) {
-        engine.events.on('outputDone', function () {
-          engine.events.request("storage:upload", callback);
+        engine.startEngine(async () => {
+          let contractsFiles = await engine.events.request2("config:contractsFiles");
+          let compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
+          let _contractsConfig = await engine.events.request2("config:contractsConfig");
+          let contractsConfig = cloneDeep(_contractsConfig);
+          let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
+          await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
+          console.dir("deployment done")
+
+          await engine.events.request2('pipeline:generateAll');
+
+          let storageConfig = await engine.events.request2("config:storageConfig");
+          await engine.events.request2("storage:upload", storageConfig.upload.provider);
+
+          callback();
         });
-        engine.events.on('check:backOnline:Ethereum', function () {
-          engine.logger.info(__('Ethereum node detected') + '..');
-          engine.config.reloadConfig();
-          engine.events.request('deploy:contracts', function (err) {
-            if (err) {
-              return engine.logger.error(err.message || err);
-            }
-            engine.logger.info(__('Deployment Done'));
-          });
-        });
-      },
-      function associateToENS(hash, callback) {
-        if(!options.ensDomain) {
-          return callback(null, hash);
-        }
-        engine.events.request("storage:ens:associate",
-          {name: options.ensDomain, storageHash: hash}, (err) => {
-            if (err) {
-              return callback(err);
-            }
-            engine.logger.info(__('ENS association completed for {{hash}} at {{domain}}', {hash, domain: options.ensDomain}));
-            callback();
-          });
+
+        // engine.events.on('outputDone', function () {
+        //   engine.events.request("storage:upload", callback);
+        // });
+        // engine.events.on('check:backOnline:Ethereum', function () {
+        //   engine.logger.info(__('Ethereum node detected') + '..');
+        //   engine.config.reloadConfig();
+        //   engine.events.request('deploy:contracts', function (err) {
+        //     if (err) {
+        //       return engine.logger.error(err.message || err);
+        //     }
+        //     engine.logger.info(__('Deployment Done'));
+        //   });
+        // });
       }
+      // function associateToENS(hash, callback) {
+        // if(!options.ensDomain) {
+          // return callback(null, hash);
+        // }
+        // engine.events.request("storage:ens:associate",
+          // {name: options.ensDomain, storageHash: hash}, (err) => {
+            // if (err) {
+              // return callback(err);
+            // }
+            // engine.logger.info(__('ENS association completed for {{hash}} at {{domain}}', {hash, domain: options.ensDomain}));
+            // callback();
+          // });
+      // }
     ], function (err) {
       if (err) {
         if (err.message) {
