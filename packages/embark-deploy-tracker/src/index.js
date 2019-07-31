@@ -14,8 +14,8 @@ class DeployTracker {
     this.env = options.env;
     this.chainConfig = {};
     this.chainFile = embark.config.contractsConfig.tracking;
-    this.loadChainTrackerFile();
-    this.registerEvents();
+    // this.loadChainTrackerFile();
+    // this.registerEvents();
   }
 
   loadChainTrackerFile() {

@@ -163,6 +163,9 @@ class EmbarkController {
         }
 
         engine.registerModuleGroup("coreComponents");
+        engine.registerModuleGroup("stackComponents");
+
+        // TODO: replace with individual plugins
         engine.registerModuleGroup("blockchain");
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
@@ -171,6 +174,8 @@ class EmbarkController {
         engine.registerModuleGroup("filewatcher");
         engine.registerModuleGroup("storage");
         engine.registerModuleGroup("communication");
+        engine.registerModulePackage('embark-deploy-tracker');
+
 
         engine.events.on('deployment:deployContracts:afterAll', () => {
           console.dir("--- generating files...")

@@ -78,6 +78,7 @@ class Engine {
     let groups = {
       "blockchain": this.blockchainComponents,
       "coreComponents": this.coreComponents,
+      "stackComponents": this.stackComponents,
       "compiler": this.compilerComponents,
       "contracts": this.contractsComponents,
       "pipeline": this.pipelineService,
@@ -107,7 +108,6 @@ class Engine {
   }
 
   pipelineService(_options) {
-    this.registerModulePackage('embark-pipeline', { plugins: this.plugins });
     this.registerModule('basic-pipeline', {
       plugins: this.plugins,
       webpackConfigName: this.webpackConfigName,
@@ -151,10 +151,20 @@ class Engine {
     this.registerModulePackage('embark-library-manager', {useDashboard: this.useDashboard});
   }
 
-  blockchainComponents() {
-    // stack component
+  stackComponents(options) {
+    this.registerModulePackage('embark-pipeline', { plugins: this.plugins });
     this.registerModule('blockchain', { plugins: this.plugins });
+    // TODO: coverage param should be part of the request compilation command, not an option here
+    // some other params in the options might not longer be relevant, in fact we probably don't need options anymore
+    this.registerModulePackage('embark-compiler', {plugins: this.plugins, isCoverage: options.isCoverage});
+    this.registerModulePackage('embark-contracts-manager', {plugins: this.plugins, compileOnceOnly: options.compileOnceOnly});
+    this.registerModulePackage('embark-deployment', {plugins: this.plugins, onlyCompile: options.onlyCompile});
+    this.registerModule('blockchain-client');
+    this.registerModulePackage('embark-storage', {plugins: this.plugins});
+    this.registerModule('communication', {plugins: this.plugins});
+  }
 
+  blockchainComponents() {
     // plugins
     this.registerModule('geth', {
       client: this.client,
@@ -166,18 +176,12 @@ class Engine {
   }
 
   compilerComponents(options) {
-    // stack component
-    this.registerModulePackage('embark-compiler', {plugins: this.plugins, isCoverage: options.isCoverage});
-
     // TODO: should be moved (they are plugins)
     this.registerModulePackage('embark-solidity', {ipc: this.ipc, useDashboard: this.useDashboard});
     this.registerModulePackage('embark-vyper');
   }
 
   contractsComponents(options) {
-    this.registerModulePackage('embark-contracts-manager', {plugins: this.plugins, compileOnceOnly: options.compileOnceOnly});
-    this.registerModulePackage('embark-deployment', {plugins: this.plugins, onlyCompile: options.onlyCompile});
-
   //   this.registerModulePackage('embark-blockchain-connector', {
   //     isDev: this.isDev,
   //     locale: this.locale,
@@ -186,7 +190,6 @@ class Engine {
   //     wait: options.wait
   //   });
 
-    this.registerModule('blockchain-client');
     this.registerModule('ethereum-blockchain-client');
     // this.registerModule('web3', { plugins: this.plugins });
     this.registerModulePackage('embark-web3', {plugins: this.plugins});
@@ -194,12 +197,10 @@ class Engine {
   }
 
   storageComponent() {
-    this.registerModulePackage('embark-storage', {plugins: this.plugins});
     this.registerModulePackage('embark-ipfs', {plugins: this.plugins});
   }
 
   communicationComponents() {
-    this.registerModule('communication', {plugins: this.plugins});
     this.registerModulePackage('embark-whisper', {plugins: this.plugins});
   }
 
