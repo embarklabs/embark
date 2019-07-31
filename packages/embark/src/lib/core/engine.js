@@ -1,4 +1,4 @@
-import { ProcessManager, IPC } from 'embark-core';
+import {ProcessManager, IPC} from 'embark-core';
 const async = require('async');
 
 const utils = require('../utils/utils');
@@ -24,7 +24,7 @@ class Engine {
   }
 
   init(_options, callback) {
-    callback = callback || function() {};
+    callback = callback || function () {};
     const Events = require('./events.js');
     const Config = require('./config.js');
 
@@ -174,7 +174,14 @@ class Engine {
       isDev: this.isDev,
       plugins: this.plugins,
       ipc: this.ipc
-    })
+    });
+    this.registerModule('parity', {
+      client: this.client,
+      locale: this.locale,
+      isDev: this.isDev,
+      plugins: this.plugins,
+      ipc: this.ipc
+    });
   }
 
   testComponents() {
@@ -257,13 +264,17 @@ class Engine {
     return service.apply(this, [options]);
   }
 
-  blockchainListenerService(_options){
+  embarkListenerService(_options)  {
+    this.registerModulePackage('embark-listener');
+  }
+
+  blockchainListenerService(_options) {
     this.registerModulePackage('embark-blockchain-listener', {
       ipc: this.ipc
     });
   }
 
-  coreProcessService(_options){
+  coreProcessService(_options) {
     this.registerModulePackage('embark-core/process', {
       events: this.events
     });
@@ -282,7 +293,7 @@ class Engine {
   }
 
   scaffoldingService(_options) {
-    this.registerModulePackage('embark-scaffolding',  {plugins: this.plugins});
+    this.registerModulePackage('embark-scaffolding', {plugins: this.plugins});
   }
 
   serviceMonitor() {
@@ -307,25 +318,25 @@ class Engine {
   codeGeneratorService(_options) {
     return;
     // let self = this;
-//
+    //
     // this.registerModulePackage('embark-code-generator', {plugins: self.plugins, env: self.env});
-//
+    //
     // const generateCode = function (modifiedAssets) {
-      // // self.events.request("module:storage:onReady", () => {
-        // self.events.request("code-generator:embarkjs:build", () => {
-          // self.events.emit('code-generator-ready', modifiedAssets);
-        // });
-      // // });
+    // // self.events.request("module:storage:onReady", () => {
+    // self.events.request("code-generator:embarkjs:build", () => {
+    // self.events.emit('code-generator-ready', modifiedAssets);
+    // });
+    // // });
     // };
     // const cargo = async.cargo((tasks, callback) => {
-      // const modifiedAssets = tasks.map(task => task.modifiedAsset).filter(asset => asset); // filter null elements
-      // generateCode(modifiedAssets);
-      // self.events.once('outputDone', callback);
+    // const modifiedAssets = tasks.map(task => task.modifiedAsset).filter(asset => asset); // filter null elements
+    // generateCode(modifiedAssets);
+    // self.events.once('outputDone', callback);
     // });
     // const addToCargo = function (modifiedAsset) {
-      // cargo.push({modifiedAsset});
+    // cargo.push({modifiedAsset});
     // };
-//
+    //
     // this.events.on('contractsDeployed', addToCargo);
     // this.events.on('blockchainDisabled', addToCargo);
     // this.events.on('asset-changed', addToCargo);
@@ -411,8 +422,8 @@ class Engine {
       wait: options.wait
     });
 
-    this.registerModulePackage('embark-whisper', { plugins: this.plugins });
-    this.registerModule('web3', { plugins: this.plugins });
+    this.registerModulePackage('embark-whisper', {plugins: this.plugins});
+    this.registerModule('web3', {plugins: this.plugins});
   }
 
   libraryManagerService(_options) {
