@@ -4,8 +4,6 @@ let Web3 = require('web3');
 const constants = require('embark-core/constants');
 const API = require('./api.js');
 
-const EMBARK_RESOURCE_ORIGIN = "http://embark";
-
 class Whisper {
   constructor(embark, options) {
     this.logger = embark.logger;

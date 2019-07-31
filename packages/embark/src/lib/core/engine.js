@@ -190,6 +190,7 @@ class Engine {
     this.registerModule('ethereum-blockchain-client');
     // this.registerModule('web3', { plugins: this.plugins });
     this.registerModulePackage('embark-web3', {plugins: this.plugins});
+    this.registerModulePackage('embark-specialconfigs', {plugins: this.plugins});
   }
 
   storageComponent() {
@@ -201,6 +202,12 @@ class Engine {
     this.registerModule('communication', {plugins: this.plugins});
     this.registerModulePackage('embark-whisper', {plugins: this.plugins});
   }
+
+  // ================
+  // ================
+  // ================
+  // To be removed
+  // ================
 
   startService(serviceName, _options) {
     let options = _options || {};

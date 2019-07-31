@@ -8,17 +8,48 @@ module.exports = {
       "$WEB3"
     ],
     gas: "auto",
+    beforeDeploy: async () => {
+      console.log("==========================");
+      console.log("before deploying contracts");
+      console.log("==========================");
+    },
     deploy: {
       SimpleStorage: {
         fromIndex: 0,
         args: [100],
-        onDeploy: ["SimpleStorage.methods.setRegistar(web3.eth.defaultAccount).send()"]
+        onDeploy: [
+          "SimpleStorage.methods.setRegistar(web3.eth.defaultAccount).send()"
+        ]
       },
-   },
-    afterDeploy: [
-      //"Test.methods.changeAddress('$MyToken')",
-      //"web3.eth.getAccounts((err, accounts) => Test.methods.changeAddress(accounts[0]))"
-    ]
+    },
+    afterDeploy: async (dependencies) => {
+      console.log("==========================");
+      console.log("==========================");
+      console.log("==========================");
+      console.log("==========================");
+      console.log("==========================");
+      console.log("==========================");
+      console.log("after deploying contracts");
+      console.log("==========================");
+      console.log("==========================");
+      console.log("==========================");
+      console.log("==========================");
+      console.log("==========================");
+      console.log("==========================");
+      console.dir(dependencies);
+      // console.dir(dependencies.contracts.SimpleStorage.methods);
+      // try {
+      //   let value = await dependencies.contracts.SimpleStorage.methods.get().call();
+      //   console.dir(value)
+      // } catch(err) {
+      //   console.dir(err);
+      // }
+      console.log("==========================");
+    }
+    //afterDeploy: [
+    //"Test.methods.changeAddress('$MyToken')",
+    //"web3.eth.getAccounts((err, accounts) => Test.methods.changeAddress(accounts[0]))"
+    //]
   },
   development: {
     deploy: {
