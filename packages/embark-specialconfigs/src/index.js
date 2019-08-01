@@ -22,14 +22,14 @@ class SpecialConfigs {
     this.embark.registerActionForEvent('deployment:contract:beforeDeploy', this.beforeDeployAction.bind(this));
   }
 
-  async beforeAllDeployAction(cb) {
+  async beforeAllDeployAction(_params, cb) {
     if (typeof this.config.contractsConfig.beforeDeploy !== 'function') {
       return this.listConfigs.beforeAllDeployAction(cb);
     }
     return this.functionConfigs.beforeAllDeployAction(cb);
   }
 
-  async afterAllDeployAction(cb) {
+  async afterAllDeployAction(_params, cb) {
     if (typeof this.config.contractsConfig.afterDeploy !== 'function') {
       return this.listConfigs.afterAllDeployAction(cb);
     }

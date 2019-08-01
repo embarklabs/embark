@@ -18,8 +18,8 @@ class DeployTracker {
     this.chainConfig = {};
     this.chainFile = embark.config.contractsConfig.tracking;
 
-    // this.events.on("blockchain:started", this.loadChainTrackerFile.bind(this));
-    // this.embark.registerActionForEvent('deployment:deployContracts:beforeAll', this.setCurrentChain.bind(this));
+    this.events.on("blockchain:started", this.loadChainTrackerFile.bind(this));
+    this.embark.registerActionForEvent('deployment:deployContracts:beforeAll', this.setCurrentChain.bind(this));
     // this.embark.registerActionForEvent("deployment:contract:deployed", this.trackAndSaveContract.bind(this));
     // this.embark.registerActionForEvent("deploy:contract:shouldDeploy", this.checkIfDeploymentIsNeeded.bind(this));
   }
@@ -61,8 +61,8 @@ class DeployTracker {
   }
 
   setCurrentChain(_params, callback) {
-    if (!this.embark.config.contractsConfig.tracking) return;
-    if (this.chainFile === false) return;
+    if (!this.embark.config.contractsConfig.tracking) return callback();
+    if (this.chainFile === false) return callback();
     if (this.chainConfig === false) {
       this.currentChain = {contracts: []};
       return callback();

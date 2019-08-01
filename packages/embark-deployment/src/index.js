@@ -27,11 +27,11 @@ class Deployment {
     this.logger.info(__("deploying contracts"));
     async.waterfall([
       // TODO used to be called this.plugins.emitAndRunActionsForEvent("deploy:beforeAll", (err) => {
-      (next) => { this.plugins.emitAndRunActionsForEvent('deployment:deployContracts:beforeAll', () => { next() }); },
+      (next) => { this.plugins.emitAndRunActionsForEvent('deployment:deployContracts:beforeAll', {}, () => { next() }); },
       (next) => { this.deployAll(contracts, contractDependencies, () => { next() }); },
       (next) => {
         this.events.emit('contractsDeployed');
-        this.plugins.emitAndRunActionsForEvent('deployment:deployContracts:afterAll', () => { next() });
+        this.plugins.emitAndRunActionsForEvent('deployment:deployContracts:afterAll', {}, () => { next() });
         console.dir("==== finished deploying");
       }
     ], done);
