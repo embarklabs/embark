@@ -16,11 +16,15 @@ module.exports = {
     deploy: {
       SimpleStorage: {
         fromIndex: 0,
-        args: [100],
-        onDeploy: [
-          "SimpleStorage.methods.setRegistar(web3.eth.defaultAccount).send()"
-        ]
+        args: [100]
+        // onDeploy: [
+        //   "SimpleStorage.methods.setRegistar(web3.eth.defaultAccount).send()"
+        // ]
       },
+      AnotherStorage: {
+        args: ["$SimpleStorage"]
+        //args: ["0x0000000000000000000000000000000000000000"]
+      }
     },
     afterDeploy: async (dependencies) => {
       console.log("==========================");
@@ -36,7 +40,7 @@ module.exports = {
       console.log("==========================");
       console.log("==========================");
       console.log("==========================");
-      console.dir(dependencies);
+      // console.dir(dependencies);
       // console.dir(dependencies.contracts.SimpleStorage.methods);
       // try {
       //   let value = await dependencies.contracts.SimpleStorage.methods.get().call();

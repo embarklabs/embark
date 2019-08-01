@@ -45,6 +45,10 @@ class ContractsManager {
       cb(this.compileError, this.contractsState());
     });
 
+    this.events.setCommandHandler("contracts:contract", (contractName, cb) => {
+      cb(null, this.getContract(contractName));
+    });
+
     console.dir("---- contracts manager---- ")
     // this.registerCommands()
     // this.registerAPIs()
@@ -70,10 +74,6 @@ class ContractsManager {
 
     self.events.setCommandHandler('contracts:dependencies', (cb) => {
       cb(self.compileError, self.contractDependencies);
-    });
-
-    self.events.setCommandHandler("contracts:contract", (contractName, cb) => {
-      cb(self.getContract(contractName));
     });
 
     self.events.setCommandHandler("contracts:contract:byTxHash", (txHash, cb) => {
