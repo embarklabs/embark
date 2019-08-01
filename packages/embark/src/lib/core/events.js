@@ -22,7 +22,7 @@ function log(eventType, eventName, origin) {
   if (['end', 'prefinish', 'error', 'new', 'demo', 'block', 'version'].indexOf(eventName) >= 0) {
     return;
   }
-  if (eventType.indexOf("log") >= 0) {
+  if (eventName.indexOf("log") >= 0) {
     return;
   }
   // fs.appendFileSync(".embark/events.log", (new Error().stack) + "\n");
@@ -44,40 +44,54 @@ function trackCmd(cmdName) {
   cmdNames[cmdName] = origin;
 }
 
-EventEmitter.prototype.log  = log;
+class EmbarkEmitter extends EventEmitter {
 
-EventEmitter.prototype._maxListeners = 350;
-const _on         = EventEmitter.prototype.on;
-const _once       = EventEmitter.prototype.once;
-const _setHandler = EventEmitter.prototype.setHandler;
-const _removeAllListeners = EventEmitter.prototype.removeAllListeners;
+  emit(requestName, ...args) {
+    warnIfLegacy(arguments[0]);
+    // log("\n|event", requestName);
+    return super.emit(requestName, ...args);
+  }
+}
+
+
+// EmbarkEmitter.prototype.log  = log;
+EmbarkEmitter.prototype.log  = log;
+
+EmbarkEmitter.prototype._maxListeners = 350;
+const _on         = EmbarkEmitter.prototype.on;
+const _once       = EmbarkEmitter.prototype.once;
+const _setHandler = EmbarkEmitter.prototype.setHandler;
+const _removeAllListeners = EmbarkEmitter.prototype.removeAllListeners;
+const _emit       = EmbarkEmitter.prototype.emit;
 
 const toFire = [];
 
-EventEmitter.prototype.removeAllListeners = function(requestName) {
+EmbarkEmitter.prototype._emit = EmbarkEmitter.prototype.emit;
+
+EmbarkEmitter.prototype.removeAllListeners = function(requestName) {
   delete toFire[requestName];
   return _removeAllListeners.call(this, requestName);
 };
 
-EventEmitter.prototype.on = function(requestName, cb) {
+EmbarkEmitter.prototype.on = function(requestName, cb) {
   // log("EVENT LISTEN", requestName);
   warnIfLegacy(requestName);
   return _on.call(this, requestName, cb);
 };
 
-EventEmitter.prototype.once = function(requestName, cb) {
+EmbarkEmitter.prototype.once = function(requestName, cb) {
   // log("EVENT LISTEN ONCE", requestName);
   warnIfLegacy(requestName);
   return _once.call(this, requestName, cb);
 };
 
-EventEmitter.prototype.setHandler = function(requestName, cb) {
+EmbarkEmitter.prototype.setHandler = function(requestName, cb) {
   log("SET HANDLER", requestName);
   warnIfLegacy(requestName);
   return _setHandler.call(this, requestName, cb);
 };
 
-EventEmitter.prototype.request2 = function() {
+EmbarkEmitter.prototype.request2 = function() {
   let requestName = arguments[0];
   let other_args = [].slice.call(arguments, 1);
 
@@ -106,13 +120,14 @@ EventEmitter.prototype.request2 = function() {
     console.dir("----- other_args")
     console.dir(other_args)
 
-    this.emit('request:' + requestName, ...other_args)
+    // this.emit('request:' + requestName, ...other_args)
+    this._emit('request:' + requestName, ...other_args)
   });
 
   return promise;
 };
 
-EventEmitter.prototype.request = function() {
+EmbarkEmitter.prototype.request = function() {
   let requestName = arguments[0];
   let other_args = [].slice.call(arguments, 1);
 
@@ -138,11 +153,12 @@ EventEmitter.prototype.request = function() {
     return;
   }
 
-  return this.emit(listenerName, ...other_args);
+  // return this.emit(listenerName, ...other_args);
+  return this._emit(listenerName, ...other_args);
 };
 
 // TODO: ensure that it's only possible to create 1 command handler
-EventEmitter.prototype.setCommandHandler = function(requestName, cb) {
+EmbarkEmitter.prototype.setCommandHandler = function(requestName, cb) {
   log("SET COMMAND HANDLER", requestName);
 
   // let origin = ((new Error().stack).split("at ")[3]).trim();
@@ -184,7 +200,7 @@ EventEmitter.prototype.setCommandHandler = function(requestName, cb) {
   return this.on(listenerName, listener);
 };
 
-EventEmitter.prototype.setCommandHandlerOnce = function(requestName, cb) {
+EmbarkEmitter.prototype.setCommandHandlerOnce = function(requestName, cb) {
   log("SET COMMAND HANDLER ONCE", requestName);
 
   const listenerName = 'request:' + requestName;
@@ -209,4 +225,4 @@ EventEmitter.prototype.setCommandHandlerOnce = function(requestName, cb) {
   });
 };
 
-module.exports = EventEmitter;
+module.exports = EmbarkEmitter;
