@@ -20,15 +20,16 @@ class DeployTracker {
 
     this.events.on("blockchain:started", this.loadChainTrackerFile.bind(this));
     this.embark.registerActionForEvent('deployment:deployContracts:beforeAll', this.setCurrentChain.bind(this));
-    // this.embark.registerActionForEvent("deployment:contract:deployed", this.trackAndSaveContract.bind(this));
-    // this.embark.registerActionForEvent("deploy:contract:shouldDeploy", this.checkIfDeploymentIsNeeded.bind(this));
+    this.embark.registerActionForEvent("deployment:contract:deployed", this.trackAndSaveContract.bind(this));
+    this.embark.registerActionForEvent("deploy:contract:shouldDeploy", this.checkIfDeploymentIsNeeded.bind(this));
   }
 
   trackAndSaveContract(params, cb) {
-    if (!this.embark.config.contractsConfig.tracking) return;
+    if (!this.embark.config.contractsConfig.tracking) return cb();
     let contract = params.contract;
     this.trackContract(contract.className, contract.realRuntimeBytecode, contract.realArgs, contract.deployedAddress);
     this.save();
+    cb();
   }
 
   checkIfDeploymentIsNeeded(params, cb) {
