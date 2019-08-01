@@ -1,96 +1,101 @@
 import { __ } from 'embark-i18n';
 import { dappPath, sha3 } from 'embark-utils';
-import * as fs from 'fs-extra';
+const Web3 = require('web3');
 
 class DeployTracker {
 
   constructor(embark, options) {
     this.logger = embark.logger;
     this.events = embark.events;
+    this.plugins = options.plugins;
+    this.fs = embark.fs;
     this.embark = embark;
     this.trackContracts = (options.trackContracts !== false);
 
-    // TODO: unclear where it comes from
+    // TODO: unclear where env comes from
+    // TODO: we should be getting the env from a request to the config
     this.env = options.env;
     this.chainConfig = {};
     this.chainFile = embark.config.contractsConfig.tracking;
-    // this.loadChainTrackerFile();
-    // this.registerEvents();
+
+    this.events.on("blockchain:started", this.loadChainTrackerFile.bind(this));
+    this.embark.registerActionForEvent('deployment:deployContracts:beforeAll', this.setCurrentChain.bind(this));
+    // this.embark.registerActionForEvent("deployment:contract:deployed", this.trackAndSaveContract.bind(this));
+    // this.embark.registerActionForEvent("deploy:contract:shouldDeploy", this.checkIfDeploymentIsNeeded.bind(this));
+  }
+
+  trackAndSaveContract(params, cb) {
+    if (!this.embark.config.contractsConfig.tracking) return;
+    let contract = params.contract;
+    this.trackContract(contract.className, contract.realRuntimeBytecode, contract.realArgs, contract.deployedAddress);
+    this.save();
+  }
+
+  checkIfDeploymentIsNeeded(params, cb) {
+    if (!this.embark.config.contractsConfig.tracking) return;
+    if (!this.trackContracts) {
+      return cb(null, params);
+    }
+
+    let contract = params.contract;
+    let trackedContract = this.getContract(contract.className, contract.realRuntimeBytecode, contract.realArgs);
+    if (trackedContract) {
+      params.contract.address = trackedContract.address;
+    }
+    if (params.shouldDeploy && trackedContract) {
+      params.shouldDeploy = true;
+    }
+    cb(null, params);
   }
 
   loadChainTrackerFile() {
     if (this.chainFile === false) return;
     if (this.chainFile === undefined) this.chainFile = ".embark/chains.json";
     this.chainFile = dappPath(this.chainFile);
-    if (!fs.existsSync(this.chainFile)) {
+    if (!this.fs.existsSync(this.chainFile)) {
       this.logger.info(this.chainFile + ' ' + __('file not found, creating it...'));
-      fs.outputJSONSync(this.chainFile, {});
+      this.fs.outputJSONSync(this.chainFile, {});
     }
 
-    this.chainConfig = fs.readJSONSync(this.chainFile);
+    this.chainConfig = this.fs.readJSONSync(this.chainFile);
   }
 
-  registerEvents() {
+  setCurrentChain(_params, callback) {
+    if (!this.embark.config.contractsConfig.tracking) return;
     if (this.chainFile === false) return;
-    const self = this;
-
-    // TODO: re-add
-    // this.embark.registerActionForEvent("deploy:beforeAll", this.setCurrentChain.bind(this));
-
-    this.events.on("deploy:contract:deployed", (contract) => {
-      self.trackContract(contract.className, contract.realRuntimeBytecode, contract.realArgs, contract.deployedAddress);
-      self.save();
-    });
-
-    self.embark.registerActionForEvent("deploy:contract:shouldDeploy", (params, cb) => {
-      if (!self.trackContracts) {
-        return cb(null, params);
-      }
-
-      let contract = params.contract;
-      let trackedContract = self.getContract(contract.className, contract.realRuntimeBytecode, contract.realArgs);
-      if (trackedContract) {
-        params.contract.address = trackedContract.address;
-      }
-      if (params.shouldDeploy && trackedContract) {
-         params.shouldDeploy = true;
-      }
-      cb(null, params);
-    });
-  }
-
-  setCurrentChain(callback) {
-    const self = this;
     if (this.chainConfig === false) {
       this.currentChain = {contracts: []};
       return callback();
     }
 
-    function getBlock(blockNum, cb) {
-      self.events.request("blockchain:block:byNumber", blockNum, (err, block) => {
-        if (err) {
-          return cb(err);
-        }
-        let chainId = block.hash;
-
-        if (self.chainConfig[chainId] === undefined) {
-          self.chainConfig[chainId] = {contracts: {}};
-        }
-
-        self.currentChain = self.chainConfig[chainId];
-
-        self.currentChain.name = self.env;
-        cb();
-      });
-    }
-
-    getBlock(0, (err) => {
+    this.getBlock(0, (err) => {
       if (err) {
         // Retry with block 1 (Block 0 fails with Ganache-cli using the --fork option)
-        return getBlock(1, callback);
+        return this.getBlock(1, callback);
       }
       callback();
     });
+  }
+
+  async getBlock(blockNum, cb) {
+    let provider = await this.events.request2("blockchain:client:provider", "ethereum");
+    var web3 = new Web3(provider);
+
+    try {
+      let block = await web3.eth.getBlock(blockNum, true);
+      let chainId = block.hash;
+
+      if (self.chainConfig[chainId] === undefined) {
+        self.chainConfig[chainId] = { contracts: {} };
+      }
+
+      self.currentChain = self.chainConfig[chainId];
+
+      self.currentChain.name = self.env;
+      cb();
+    } catch (err) {
+      return cb(err);
+    }
   }
 
   loadConfig(config) {
@@ -98,30 +103,25 @@ class DeployTracker {
     return this;
   }
 
-  trackContract(contractName, code, args, address) {
+  trackContract(name, code, args, address) {
     if (!this.currentChain) return false;
-    this.currentChain.contracts[sha3(code + contractName + args.join(','))] = {
-      name: contractName,
-      address: address
-    };
+    this.currentChain.contracts[sha3(code + name + args.join(','))] = { name, address };
   }
 
-  getContract(contractName, code, args) {
+  getContract(name, code, args) {
     if (!this.currentChain) return false;
-    let contract = this.currentChain.contracts[sha3(code + contractName + args.join(','))];
+    let contract = this.currentChain.contracts[sha3(code + name + args.join(','))];
     if (contract && contract.address === undefined) {
       return false;
     }
     return contract;
   }
 
-  // TODO: abstract this
-  // chainConfig can be an abstract PersistentObject
   save() {
     if (this.chainConfig === false) {
       return;
     }
-    fs.writeJSONSync(this.chainFile, this.chainConfig, {spaces: 2});
+    this.fs.writeJSONSync(this.chainFile, this.chainConfig, {spaces: 2});
   }
 
 }
