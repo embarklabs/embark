@@ -58,6 +58,7 @@ export default class TrackingFunctions {
   }
 
   setCurrentChain(_params, callback) {
+    if (!this.chainFile) return callback();
     if (this.chainFile === false) return callback();
     if (this.chainConfig === false) {
       this.currentChain = {contracts: []};
