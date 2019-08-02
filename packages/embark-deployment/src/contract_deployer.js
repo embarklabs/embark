@@ -1,4 +1,4 @@
-import { __ } from 'embark-i18n';
+import {__} from 'embark-i18n';
 const async = require('async');
 
 class ContractDeployer {
@@ -8,7 +8,7 @@ class ContractDeployer {
     this.plugins = options.plugins;
     this.deployer = {};
     this.events.setCommandHandler("deployment:deployer:register", (blockchainType, deployerCb) => {
-      this.deployer[blockchainType] = deployerCb
+      this.deployer[blockchainType] = deployerCb;
     });
 
     this.events.setCommandHandler('deployment:contract:deploy', this.deployContract.bind(this));
@@ -28,33 +28,33 @@ class ContractDeployer {
       },
       (next) => {
         // self.plugins.emitAndRunActionsForEvent('deployment:contract:arguments', {contract: contract}, (_params) => {
-        this.plugins.emitAndRunActionsForEvent('deployment:contract:shouldDeploy', {contract: contract, shouldDeploy: true}, (_params) => {
-          next();
+        this.plugins.emitAndRunActionsForEvent('deployment:contract:shouldDeploy', {contract: contract, shouldDeploy: true}, (err, params) => {
+          next(err, params);
         });
       },
-      (next) => {
-        if (contract.deploy === false) {
+      (params, next) => {
+
+        if (!params.shouldDeploy) {
           this.events.emit("deployment:contract:undeployed", contract);
-          return next();
+          return next(null, null);
         }
 
-        console.dir("deploying contract");
-        console.dir(contract.className);
-        // this.deployer[contract.blockchainType].apply(this.deployer, [contract, next])
-        this.deployer["ethereum"].apply(this.deployer, [contract, next])
-        // next();
+        // TODO: implement `blockchainType` a la `this.deployer[contract.blockchainType].apply(this.deployer, [contract, next])`
+        this.deployer["ethereum"].apply(this.deployer, [contract, next]);
       },
-      (next) => {
-        console.dir("-------> contract deployed")
-        if (contract.deploy === false) return next();
-        console.dir("-------> contract deployed 2")
-        this.plugins.emitAndRunActionsForEvent('deployment:contract:deployed', {contract: contract}, (_params) => {
-          next();
+      (receipt, next) => {
+        if (!receipt) return next();
+        this.plugins.emitAndRunActionsForEvent('deployment:contract:deployed', {contract, receipt}, (err, _params) => {
+          next(err);
         });
       }
-    ], callback);
+    ], (err) => {
+      if (err) {
+        this.events.emit("deploy:contract:error", contract);
+      }
+      callback(err);
+    });
   }
-
 }
 
 module.exports = ContractDeployer;
