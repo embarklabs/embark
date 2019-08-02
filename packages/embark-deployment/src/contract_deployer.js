@@ -22,8 +22,8 @@ class ContractDeployer {
 
     async.waterfall([
       (next) => {
-        this.plugins.emitAndRunActionsForEvent('deployment:contract:beforeDeploy', {contract: contract}, (_params) => {
-          next();
+        this.plugins.emitAndRunActionsForEvent('deployment:contract:beforeDeploy', {contract: contract}, (err, _params) => {
+          next(err);
         });
       },
       (next) => {
