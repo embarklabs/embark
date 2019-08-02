@@ -1,6 +1,6 @@
-import { BlockchainClient, Simulator } from 'embark-blockchain-process';
-import { __ } from 'embark-i18n';
-import { dappPath, embarkPath } from 'embark-utils';
+import {BlockchainClient, Simulator} from 'embark-blockchain-process';
+import {__} from 'embark-i18n';
+import {dappPath, embarkPath} from 'embark-utils';
 import findUp from 'find-up';
 let async = require('async');
 const constants = require('embark-core/constants');
@@ -211,7 +211,7 @@ class EmbarkController {
           engine.events.emit("status", __("Ready").green);
         });
 
-        engine.events.on('file-event', async ({ fileType, path }) => {
+        engine.events.on('file-event', async ({fileType, path}) => {
           // TODO: re-add async.cargo / or use rxjs to use latest request in the queue
           console.dir("-- before timeout - file changed")
 
@@ -221,7 +221,12 @@ class EmbarkController {
             let _contractsConfig = await engine.events.request2("config:contractsConfig");
             let contractsConfig = cloneDeep(_contractsConfig);
             let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
-            await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
+            try {
+              await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
+            }
+            catch (err) {
+              engine.logger.error(err);
+            }
           } else if (fileType === 'asset') {
             engine.events.request('pipeline:generateAll', () => {
               console.dir("outputDone")
@@ -240,7 +245,12 @@ class EmbarkController {
           let _contractsConfig = await engine.events.request2("config:contractsConfig");
           let contractsConfig = cloneDeep(_contractsConfig);
           let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
-          await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
+          try {
+            await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
+          }
+          catch (err) {
+            engine.logger.error(err);
+          }
           console.dir("deployment done")
 
           await engine.events.request2("watcher:start")
@@ -472,7 +482,7 @@ class EmbarkController {
         });
       }
     ], function (err, canExit) {
-      if(err) {
+      if (err) {
         engine.logger.error(err.message || err);
       }
       // TODO: this should be moved out and determined somewhere else
@@ -501,7 +511,7 @@ class EmbarkController {
       webpackConfigName: options.webpackConfigName
     });
 
-    const isSecondaryProcess = (engine) => { return engine.ipc.connected && engine.ipc.isClient(); };
+    const isSecondaryProcess = (engine) => {return engine.ipc.connected && engine.ipc.isClient();};
 
     async.waterfall([
       function initEngine(callback) {
@@ -539,7 +549,7 @@ class EmbarkController {
       },
       function deploy(callback) {
         // Skip if we are connected to a websocket, the server will do it
-        if(isSecondaryProcess(engine)) {
+        if (isSecondaryProcess(engine)) {
           return callback();
         }
         engine.config.reloadConfig();
@@ -549,7 +559,7 @@ class EmbarkController {
       },
       function waitForWriteFinish(callback) {
         // Skip if we are connected to a websocket, the server will do it
-        if(isSecondaryProcess(engine)) {
+        if (isSecondaryProcess(engine)) {
           return callback();
         }
         engine.logger.info("Finished deploying".underline);
@@ -697,7 +707,7 @@ class EmbarkController {
         callback();
       },
       function generateContract(callback) {
-        engine.events.request('scaffolding:generate:contract', options, function(files) {
+        engine.events.request('scaffolding:generate:contract', options, function (files) {
           files.forEach(file => engine.events.request('config:contractsFiles:add', file));
           callback();
         });
@@ -716,7 +726,7 @@ class EmbarkController {
         callback();
       },
       function deploy(callback) {
-        engine.events.request('deploy:contracts', function(err) {
+        engine.events.request('deploy:contracts', function (err) {
           callback(err);
         });
       },
@@ -725,7 +735,7 @@ class EmbarkController {
           callback();
         });
       }
-    ], function(err) {
+    ], function (err) {
       if (err) {
         engine.logger.error(__("Error generating the UI: "));
         engine.logger.error(err.message || err);
@@ -807,7 +817,12 @@ class EmbarkController {
           let _contractsConfig = await engine.events.request2("config:contractsConfig");
           let contractsConfig = cloneDeep(_contractsConfig);
           let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
-          await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
+          try {
+            await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
+          }
+          catch (err) {
+            engine.logger.error(err);
+          }
           console.dir("deployment done")
 
           await engine.events.request2('pipeline:generateAll');
@@ -833,17 +848,17 @@ class EmbarkController {
         // });
       }
       // function associateToENS(hash, callback) {
-        // if(!options.ensDomain) {
-          // return callback(null, hash);
-        // }
-        // engine.events.request("storage:ens:associate",
-          // {name: options.ensDomain, storageHash: hash}, (err) => {
-            // if (err) {
-              // return callback(err);
-            // }
-            // engine.logger.info(__('ENS association completed for {{hash}} at {{domain}}', {hash, domain: options.ensDomain}));
-            // callback();
-          // });
+      // if(!options.ensDomain) {
+      // return callback(null, hash);
+      // }
+      // engine.events.request("storage:ens:associate",
+      // {name: options.ensDomain, storageHash: hash}, (err) => {
+      // if (err) {
+      // return callback(err);
+      // }
+      // engine.logger.info(__('ENS association completed for {{hash}} at {{domain}}', {hash, domain: options.ensDomain}));
+      // callback();
+      // });
       // }
     ], function (err) {
       if (err) {

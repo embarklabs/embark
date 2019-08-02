@@ -1,4 +1,4 @@
-import { __ } from 'embark-i18n';
+import {__} from 'embark-i18n';
 const async = require('async');
 
 const ContractDeployer = require('./contract_deployer.js');
@@ -15,7 +15,8 @@ class Deployment {
 
     this.contractDeployer = new ContractDeployer({
       events: this.events,
-      plugins: this.plugins
+      plugins: this.plugins,
+      logger: this.logger
     });
 
     this.events.setCommandHandler('deployment:contracts:deploy', (contractsList, contractDependencies, cb) => {
@@ -27,17 +28,17 @@ class Deployment {
     this.logger.info(__("deploying contracts"));
     async.waterfall([
       // TODO used to be called this.plugins.emitAndRunActionsForEvent("deploy:beforeAll", (err) => {
-      (next) => { this.plugins.emitAndRunActionsForEvent('deployment:deployContracts:beforeAll', {}, () => { next() }); },
-      (next) => { this.deployAll(contracts, contractDependencies, () => { next() }); },
+      (next) => {this.plugins.emitAndRunActionsForEvent('deployment:deployContracts:beforeAll', {}, () => {next()});},
+      (next) => {this.deployAll(contracts, contractDependencies, next);},
       (next) => {
         this.events.emit('contractsDeployed');
-        this.plugins.emitAndRunActionsForEvent('deployment:deployContracts:afterAll', {}, () => { next() });
+        this.plugins.emitAndRunActionsForEvent('deployment:deployContracts:afterAll', {}, () => {next()});
         console.dir("==== finished deploying");
       }
     ], done);
   }
 
-  deployContract(contract, callback) {
+  deployContract(contract, errors, callback) {
     console.dir("requesting to deploy contract")
     this.events.request('deployment:contract:deploy', contract, (err) => {
       if (err) {
@@ -63,7 +64,7 @@ class Deployment {
       function deploy(result, callback) {
         console.dir("== deploy")
         if (typeof result === 'function') callback = result;
-        self.deployContract(contract, callback);
+        self.deployContract(contract, errors, callback);
       }
 
       const className = contract.className;
@@ -75,23 +76,22 @@ class Deployment {
       contractDeploys[className].push(deploy);
     })
 
-    async.auto(contractDeploys, (_err, _results) => {
-      if (_err) {
+    async.auto(contractDeploys, (err, _results) => {
+      if (err) {
         console.dir("error deploying contracts")
-        console.dir(_err)
+        console.dir(err)
       }
       if (errors.length) {
-        _err = __("Error deploying contracts. Please fix errors to continue.");
-        this.logger.error(_err);
+        err = __("Error deploying contracts. Please fix errors to continue.");
         this.events.emit("outputError", __("Error deploying contracts, please check console"));
-        return done(_err);
+        return done(err);
       }
       if (contracts.length === 0) {
         this.logger.info(__("no contracts found"));
         return done();
       }
       this.logger.info(__("finished deploying contracts"));
-      done(_err);
+      done(err);
     });
   }
 
