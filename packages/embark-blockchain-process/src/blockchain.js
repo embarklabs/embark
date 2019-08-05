@@ -6,10 +6,9 @@ const path = require('path');
 const constants = require('embark-core/constants');
 const GethClient = require('./gethClient.js');
 const ParityClient = require('./parityClient.js');
-import { Proxy } from './proxy';
 import { IPC } from 'embark-core';
 
-import { compact, dappPath, defaultHost, dockerHostSwap, embarkPath, AccountParser} from 'embark-utils';
+import { compact, dappPath, defaultHost, dockerHostSwap, embarkPath} from 'embark-utils';
 const Logger = require('embark-logger');
 
 // time between IPC connection attempts (in ms)
@@ -24,7 +23,6 @@ var Blockchain = function(userConfig, clientClass) {
   this.onExitCallback = userConfig.onExitCallback;
   this.logger = userConfig.logger || new Logger({logLevel: 'debug', context: constants.contexts.blockchain}); // do not pass in events as we don't want any log events emitted
   this.events = userConfig.events;
-  this.proxyIpc = null;
   this.isStandalone = userConfig.isStandalone;
   this.certOptions = userConfig.certOptions;
 
@@ -60,8 +58,7 @@ var Blockchain = function(userConfig, clientClass) {
     vmdebug: this.userConfig.vmdebug || false,
     targetGasLimit: this.userConfig.targetGasLimit || false,
     syncMode: this.userConfig.syncMode || this.userConfig.syncmode,
-    verbosity: this.userConfig.verbosity,
-    proxy: this.userConfig.proxy
+    verbosity: this.userConfig.verbosity
   };
 
   this.devFunds = null;
@@ -103,7 +100,6 @@ var Blockchain = function(userConfig, clientClass) {
     this.logger.error(__(spaceMessage, 'genesisBlock'));
     process.exit(1);
   }
-  this.initProxy();
   this.client = new clientClass({config: this.config, env: this.env, isDev: this.isDev});
 
   this.initStandaloneProcess();
@@ -151,35 +147,6 @@ Blockchain.prototype.initStandaloneProcess = function () {
       }
     }, IPC_CONNECT_INTERVAL);
   }
-};
-
-Blockchain.prototype.initProxy = function () {
-  if (this.config.proxy) {
-    this.config.rpcPort += constants.blockchain.servicePortOnProxy;
-    this.config.wsPort += constants.blockchain.servicePortOnProxy;
-  }
-};
-
-Blockchain.prototype.setupProxy = async function () {
-  if (!this.proxyIpc) this.proxyIpc = new IPC({ipcRole: 'client'});
-
-  const addresses = AccountParser.parseAccountsConfig(this.userConfig.accounts, false, dappPath(), this.logger);
-
-  let wsProxy;
-  if (this.config.wsRPC) {
-    wsProxy = new Proxy(this.proxyIpc).serve(this.config.wsHost, this.config.wsPort, true, this.config.wsOrigins, addresses, this.certOptions);
-  }
-
-  [this.rpcProxy, this.wsProxy] = await Promise.all([new Proxy(this.proxyIpc).serve(this.config.rpcHost, this.config.rpcPort, false, null, addresses, this.certOptions), wsProxy]);
-};
-
-Blockchain.prototype.shutdownProxy = function () {
-  if (!this.config.proxy) {
-    return;
-  }
-
-  if (this.rpcProxy) this.rpcProxy.close();
-  if (this.wsProxy) this.wsProxy.close();
 };
 
 Blockchain.prototype.runCommand = function (cmd, options, callback) {
@@ -257,9 +224,6 @@ Blockchain.prototype.run = function () {
       data = data.toString();
       if (!self.readyCalled && self.client.isReady(data)) {
         self.readyCalled = true;
-        if (self.config.proxy) {
-          await self.setupProxy();
-        }
         self.readyCallback();
       }
       self.logger.info(`${self.client.name}: ${data}`);
@@ -297,7 +261,6 @@ Blockchain.prototype.readyCallback = function () {
 };
 
 Blockchain.prototype.kill = function () {
-  this.shutdownProxy();
   if (this.child) {
     this.child.kill();
   }

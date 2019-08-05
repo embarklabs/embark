@@ -116,6 +116,7 @@
     "embark-plugin-cmd": "^4.1.0-beta.5",
     "embark-process-logs-api": "^4.1.0-beta.5",
     "embark-profiler": "^4.1.0-beta.3",
+    "embark-proxy": "^4.1.0-beta.5",
     "embark-reset": "^4.1.0-beta.3",
     "embark-scaffolding": "^4.1.0-beta.5",
     "embark-solidity": "^4.1.0-beta.5",

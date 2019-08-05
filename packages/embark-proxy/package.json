@@ -1,10 +1,10 @@
 {
-  "name": "embark-blockchain-process",
+  "name": "embark-proxy",
   "version": "4.1.0-beta.5",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
-  "description": "Blockchain process abstraction for Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-blockchain-process#readme",
+  "description": "Proxy to listen to blockchain requests and responses",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-proxy#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -20,44 +20,41 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-blockchain-process",
+    "directory": "packages/embark-proxy",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },
   "main": "./dist/index.js",
   "scripts": {
-    "build": "cross-env BABEL_ENV=node babel src --extensions \".js\" --out-dir dist --root-mode upward --source-maps",
+    "build": "cross-env BABEL_ENV=node babel src --extensions \".ts\" --out-dir dist --root-mode upward --source-maps",
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
-    "lint:js": "eslint src/",
-    "// lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
+    "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
     "package": "npm pack",
-    "// qa": "npm-run-all lint typecheck build package",
-    "qa": "npm-run-all lint build package",
+    "qa": "npm-run-all lint typecheck build package",
     "reset": "npx rimraf dist embark-*.tgz package",
     "start": "npm run watch",
-    "// typecheck": "tsc",
+    "typecheck": "tsc",
     "watch": "run-p watch:*",
     "watch:build": "npm run build -- --verbose --watch",
-    "// watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
+    "watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
   },
   "eslintConfig": {
     "extends": "../../.eslintrc.json"
   },
   "dependencies": {
     "@babel/runtime-corejs2": "7.3.1",
-    "async": "2.6.1",
     "embark-core": "^4.1.0-beta.5",
     "embark-i18n": "^4.1.0-beta.3",
-    "embark-logger": "^4.1.0-beta.5",
     "embark-utils": "^4.1.0-beta.5",
-    "fs-extra": "7.0.1",
-    "netcat": "1.3.5",
-    "pkg-up": "2.0.0",
-    "semver": "5.6.0",
-    "shelljs": "0.8.3",
-    "ws": "6.1.2"
+    "ethereumjs-tx": "1.3.7",
+    "ethereumjs-util": "6.0.0",
+    "http-proxy": "1.17.0",
+    "node-http-proxy-json": "0.1.6",
+    "pump": "3.0.0",
+    "stream-json": "1.1.3",
+    "simples": "0.8.8"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
