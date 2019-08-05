@@ -1,8 +1,10 @@
 declare module "embark-utils" {
-  class File {
-    path: string;
+  import {Logger} from "embark";
+
+  export class File {
+    public path: string;
     constructor(options: any);
-    prepareForCompilation(isCoverage?: boolean): any;
+    public prepareForCompilation(isCoverage?: boolean): any;
   }
 
   function anchoredValue(anchor: string|null, value: string): string;
@@ -23,4 +25,9 @@ declare module "embark-utils" {
   function recursiveMerge(target: any, source: any): any;
   function pkgPath(...names: string[]): string;
   function removePureView(dir: string): void;
+  function pingEndpoint(host: string, port: number, type: string, protocol: string, origin: string, callback: any): void;
+
+  export class AccountParser {
+    public static parseAccountsConfig(accountsConfig: any[], web3: any, dappPath: string, logger: Logger, nodeAccounts?: any[]): any[];
+  }
 }

@@ -3,7 +3,7 @@
 require('./httpProxyOverride');
 const Asm = require('stream-json/Assembler');
 import { __ } from 'embark-i18n';
-import { canonicalHost, timer } from 'embark-utils';
+import { canonicalHost, timer, pingEndpoint } from 'embark-utils';
 const constants = require('embark-core/constants');
 const {Duplex} = require('stream');
 const http = require('http');
@@ -15,7 +15,6 @@ const WsWrapper = require('simples/lib/ws/wrapper');
 const modifyResponse = require('node-http-proxy-json');
 const Transaction = require('ethereumjs-tx');
 const ethUtil = require('ethereumjs-util');
-import { pingEndpoint } from './utils';
 
 const METHODS_TO_MODIFY = {accounts: 'eth_accounts'};
 const REQUEST_TIMEOUT = 5000;

@@ -24,6 +24,23 @@ export interface Config {
     };
     generationDir: string;
   };
+  blockchainConfig: {
+    accounts: any[];
+    proxy: boolean;
+    rpcPort: string | number;
+    wsPort: string | number;
+    rpcHost: string | number;
+    wsHost: string | number;
+    wsOrigins: string;
+    rpcCorsDomain: string;
+    wsRPC: boolean;
+  };
+  webServerConfig: {
+    certOptions: {
+      key: string;
+      cert: string;
+    };
+  };
   plugins: Plugins;
   reloadConfig(): void;
 }
