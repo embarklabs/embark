@@ -82,7 +82,8 @@ class Engine {
       "contracts": this.contractsComponents,
       "pipeline": this.pipelineService,
       "webserver": this.webserverService,
-      "filewatcher": this.filewatcherService
+      "filewatcher": this.filewatcherService,
+      "tests": this.testComponents
     };
 
     let group = groups[groupName];
@@ -161,6 +162,10 @@ class Engine {
       plugins: this.plugins,
       ipc: this.ipc
     })
+  }
+
+  testComponents() {
+    this.registerModulePackage('embark-test-runner');
   }
 
   compilerComponents(options) {
