@@ -74,6 +74,7 @@ class FunctionConfigs {
       let args = { contracts: {}, logger};
       for (let contract of contracts) {
         // TODO: for this to work correctly we need to add a default from address to the contract
+        if (contract.deploy === false) continue;
         let contractInstance = await this.events.request2("runcode:eval", contract.className);
         args.contracts[contract.className] = contractInstance;
       }

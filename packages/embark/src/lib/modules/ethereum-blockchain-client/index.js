@@ -8,7 +8,9 @@ class EthereumBlockchainClient {
     this.embark = embark;
     this.events = embark.events;
 
+    this.embark.registerActionForEvent("deployment:contract:deployed", this.addContractJSONToPipeline.bind(this));
     this.embark.registerActionForEvent('deployment:contract:beforeDeploy', this.determineArguments.bind(this));
+    this.embark.registerActionForEvent('deployment:contract:beforeDeploy', this.doLinking.bind(this));
     this.events.request("blockchain:client:register", "ethereum", this.getClient.bind(this));
     this.events.request("deployment:deployer:register", "ethereum", this.deployer.bind(this));
   }
@@ -42,6 +44,53 @@ class EthereumBlockchainClient {
         console.dir('hash is ' + hash);
       });
     })
+  }
+
+  async doLinking(params, callback) {
+    let contract = params.contract;
+
+    console.dir("= doLinking")
+
+    if (!contract.linkReferences || !Object.keys(contract.linkReferences).length) {
+      return callback(null, params);
+    }
+    let contractCode = contract.code;
+    let offset = 0;
+
+    async.eachLimit(contract.linkReferences, 1, (fileReference, eachCb1) => {
+      async.eachOfLimit(fileReference, 1, (references, libName, eachCb2) => {
+        let libContract = self.events.request2("contracts:contract", libName);
+
+        async.eachLimit(references, 1, (reference, eachCb3) => {
+          if (!libContract) {
+            return eachCb3(new Error(__('{{contractName}} has a link to the library {{libraryName}}, but it was not found. Is it in your contract folder?'), {
+              contractName: contract.className,
+              libraryName: libName
+            }));
+          }
+
+          let libAddress = libContract.deployedAddress;
+          if (!libAddress) {
+            return eachCb3(new Error(__("{{contractName}} needs {{libraryName}} but an address was not found, did you deploy it or configured an address?", {
+              contractName: contract.className,
+              libraryName: libName
+            })));
+          }
+
+          libAddress = libAddress.substr(2).toLowerCase();
+
+          // Multiplying by two because the original pos and length are in bytes, but we have an hex string
+          contractCode = contractCode.substring(0, (reference.start * 2) + offset) + libAddress + contractCode.substring((reference.start * 2) + offset + (reference.length * 2));
+          // Calculating an offset in case the length is at some point different than the address length
+          offset += libAddress.length - (reference.length * 2);
+
+          eachCb3();
+        }, eachCb2);
+      }, eachCb1);
+    }, (err) => {
+      contract.code = contractCode;
+      callback(err, params);
+    });
   }
 
   // TODO we can separate this into 3 separate methods, which will make it easier to test
@@ -120,6 +169,19 @@ class EthereumBlockchainClient {
       params.contract.args = realArgs;
       callback(null, params);
     });
+  }
+
+  addContractJSONToPipeline(params, cb) {
+    console.dir("-- addContractJSONToPipeline")
+    // TODO: check if this is correct json object to generate
+    const contract = params.contract;
+
+    this.events.request("pipeline:register", {
+      path: [this.embark.config.embarkConfig.buildDir, 'contracts'],
+      file: contract.className + '.json',
+      format: 'json',
+      content: contract
+    }, cb);
   }
 
 }

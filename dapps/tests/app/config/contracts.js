@@ -14,12 +14,19 @@ module.exports = {
       console.log("==========================");
     },
     deploy: {
+      Ownable: {
+        deploy: false
+      },
       SimpleStorage: {
         fromIndex: 0,
         args: [100]
         // onDeploy: [
         //   "SimpleStorage.methods.setRegistar(web3.eth.defaultAccount).send()"
         // ]
+      },
+      SimpleStorageTest: {
+        //file: "./some_folder/test_contract.sol",
+        args: [1000]
       },
       AnotherStorage: {
         args: ["$SimpleStorage"]

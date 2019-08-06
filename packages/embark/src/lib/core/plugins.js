@@ -218,7 +218,7 @@ Plugins.prototype.runActionsForEvent = function(eventName, args, cb) {
 
   this.events.log("ACTION", eventName, "");
 
-  async.reduce(actionPlugins, args, function(current_args, pluginObj, nextEach) {
+  async.reduce(actionPlugins, args, function (current_args, pluginObj, nextEach) {
     const [plugin, pluginName] = pluginObj;
 
     self.events.log("== ACTION FOR " + eventName, plugin.name, pluginName);
