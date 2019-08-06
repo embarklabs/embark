@@ -23,27 +23,35 @@ class EthereumBlockchainClient {
     let provider = await this.events.request2("blockchain:client:provider", "ethereum");
     var web3 = new Web3(provider)
     // var web3 = new Web3("ws://localhost:8556")
-    web3.eth.getAccounts().then((accounts) => {
-      let account = accounts[0];
-      // let contractObject = this.blockchain.ContractObject({abi: contract.abiDefinition});
-      console.dir("== ethereum contract deployer")
-      let contractObj = new web3.eth.Contract(contract.abiDefinition, contract.address);
-      // let deployObject = this.blockchain.deployContractObject(contractObject, {arguments: contractParams, data: dataCode});
-      let contractObject = contractObj.deploy({ arguments: (contract.args || []), data: ("0x" + contract.code) });
-      // this.blockchain.deployContractFromObject(deployObject,
-      console.dir({ arguments: contract.args, data: ("0x" + contract.code) });
-      console.dir("------- send")
+    // web3.eth.getAccounts().then((accounts) => {
+    let accounts = await web3.eth.getAccounts();
+    let account = accounts[0];
+    // let contractObject = this.blockchain.ContractObject({abi: contract.abiDefinition});
+    console.dir("== ethereum contract deployer")
+    let contractObj = new web3.eth.Contract(contract.abiDefinition, contract.address);
+    // let deployObject = this.blockchain.deployContractObject(contractObject, {arguments: contractParams, data: dataCode});
+    let contractObject = contractObj.deploy({ arguments: (contract.args || []), data: ("0x" + contract.code) });
 
-      embarkJsUtils.secureSend(web3, contractObject, {
-        from: account, gas: 800000
-      }, true, (err, receipt) => {
-        contract.deployedAddress = receipt.contractAddress;
-        contract.transactionHash = receipt.transactionHash;
-        done();
-      }, (hash) => {
-        console.dir('hash is ' + hash);
-      });
-    })
+    if (contract.gas === 'auto' || !contract.gas) {
+      let gasValue = await contractObject.estimateGas();
+      let increase_per = 1 + (Math.random() / 10.0);
+      contract.gas = Math.floor(gasValue * increase_per);
+    }
+
+    // this.blockchain.deployContractFromObject(deployObject,
+    console.dir({ arguments: contract.args, data: ("0x" + contract.code) });
+    console.dir("------- send")
+
+    embarkJsUtils.secureSend(web3, contractObject, {
+      from: account, gas: 800000
+    }, true, (err, receipt) => {
+      contract.deployedAddress = receipt.contractAddress;
+      contract.transactionHash = receipt.transactionHash;
+      done();
+    }, (hash) => {
+      console.dir('hash is ' + hash);
+    });
+    // })
   }
 
   async doLinking(params, callback) {
