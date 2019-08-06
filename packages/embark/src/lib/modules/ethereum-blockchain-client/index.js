@@ -38,6 +38,11 @@ class EthereumBlockchainClient {
       contract.gas = Math.floor(gasValue * increase_per);
     }
 
+    if (!contract.gasPrice) {
+      let gasPrice = await web3.eth.getGasPrice()
+      contract.gasPrice = contract.gasPrice || gasPrice;
+    }
+
     // this.blockchain.deployContractFromObject(deployObject,
     console.dir({ arguments: contract.args, data: ("0x" + contract.code) });
     console.dir("------- send")
