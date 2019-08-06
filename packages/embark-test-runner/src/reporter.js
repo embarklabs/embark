@@ -1,5 +1,5 @@
 const Base = require('mocha/lib/reporters/base');
-const ms = require('mocha/lib/ms');
+//const ms = require('mocha/lib/ms');
 const color = Base.color;
 import { getAddressToContract, getTransactionParams } from 'embark-utils';
 

@@ -9,6 +9,7 @@ const Test = require('./test');
 const {EmbarkSpec, EmbarkApiSpec} = require('./reporter');
 const SolcTest = require('./solc_test');
 import { COVERAGE_GAS_LIMIT, GAS_LIMIT } from './constants';
+const Web3 = require('web3');
 
 // TODO(andremedeiros): move to constants
 const TEST_TIMEOUT = 15000; // 15 seconds in milliseconds
@@ -27,6 +28,7 @@ class TestRunner {
       this.run(options, callback);
     });
 
+    /*
     this.events.setCommandHandler('tests:results:reset', () => {
       this.runResults = [];
     });
@@ -48,6 +50,7 @@ class TestRunner {
         this.run(options, () => res.send(this.runResults));
       }
     );
+    */
   }
 
   run(options, cb) {
@@ -88,7 +91,7 @@ class TestRunner {
         if (!options.solc && groups.jsFiles.length > 0) {
           fns.push((cb) => self.runJSTests(groups.jsFiles, options, cb));
         } else if (options.solc && groups.solidityFiles.length > 0) {
-          fns.push((cb) => self.runJSTests(groups.solidityFiles, options, cb));
+          fns.push((cb) => self.runSolidityTests(groups.solidityFiles, options, cb));
         }
 
         if (fns.length === 0) {
@@ -262,30 +265,76 @@ class TestRunner {
   }
 
   runJSTests(files, options, cb) {
+    const {events} = this.embark;
+    let compiledContracts;
+    let web3;
+
+    const config = (cfg, acctCb) => {
+      global.before((done) => {
+        async.waterfall([
+          (next) =>                              events.request("contracts:build", cfg, compiledContracts, next),
+          (contractsList, contractDeps, next) => events.request("deployment:contracts:deploy", contractsList, contractDeps, next),
+          (next) =>                              events.request("contracts:list", next),
+          (contracts, next) => {
+            for(const c of contracts) {
+              const instance = new web3.eth.Contract(c.abiDefinition, c.deployedAddress);
+              Object.setPrototypeOf(compiledContracts[c.className], instance);
+            }
+            next();
+          }
+        ], (_err) => {
+            acctCb([]);
+            done();
+        });
+      });
+    };
+
     async.waterfall([
-      (next) => { // setup global namespace
-        global.assert = assert;
+      (next) => { // request provider
+        events.request("blockchain:client:provider", "ethereum", next);;
+      },
+      (bcProvider, next) => { // set provider
+        web3 = new Web3(bcProvider);
         next();
       },
-      (next) => { // override require
+      (next) => { // get contract files
+        console.log('getting contract files');
+        events.request("config:contractsFiles", next);
+      },
+      (cf, next) => { // compile contracts
+        console.log('compiling contracts');
+        events.request("compiler:contracts:compile", cf, next);
+      },
+      (cc, next) => { // override require
+        compiledContracts = cc;
+
+        const Module = require("module");
+        const originalRequire = require("module").prototype.require;
+        Module.prototype.require = function(req) {
+          const prefix = "Embark/contracts/";
+          if (!req.startsWith(prefix)) {
+            return originalRequire.apply(this, arguments);
+          }
+
+          return cc[req.replace(prefix, "")];
+        };
+        next();
+      },
+      (next) => { // setup global namespace
+        global.assert = assert;
+        global.config = config;
         next();
       },
       (next) => { // initialize Mocha
         const mocha = new Mocha();
 
-        mocha.delay(); // stops test execution from automatically starting
         mocha.suite.timeout(TEST_TIMEOUT);
+        files.forEach(f => mocha.addFile(f));
 
-        next(null, mocha);
+        mocha.run((failures) => {
+          next(null, failures);
+        });
       },
-      (mocha, next) => { // register test files
-        files.forEach(file => mocha.addFile(file));
-        next(null, mocha);
-      },
-      (mocha, next) => {
-        //mocha.options.delay = false;
-        mocha.run(failures => next(null, failures));
-      }
     ], (err, failures) => {
       cb(err, failures);
     });

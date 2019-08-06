@@ -186,6 +186,7 @@ class EmbarkController {
 
         let plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
+          console.dir(engine.config.blockchainConfig);
           await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig, cb);
         });
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
@@ -861,13 +862,14 @@ class EmbarkController {
   }
 
   runTests(options) {
+    console.dir(options);
     this.context = [constants.contexts.test];
 
     const Engine = require('../lib/core/engine.js');
     const engine = new Engine({
-      // TODO: we should NOT use env, it's here because it's being used somewhere deep in the code
-      // but we should/need to remove it as it's causing unexpected behaviour
-      env: options.env,
+      // TODO: this should not be necessary
+      env: "development",
+      //env: options.env,
       client: options.client,
       locale: options.locale,
       version: this.version,
@@ -875,12 +877,90 @@ class EmbarkController {
       logFile: options.logFile,
       logLevel: options.logLevel || Logger.logLevels.warn,
       context: this.context,
-      useDashboard: options.useDashboard,
+      useDashboard: false,
       webpackConfigName: options.webpackConfigName,
       ipcRole: 'client',
       interceptLogs: false
     });
 
+    async.waterfall([
+      function initEngine(next) {
+        engine.init({}, next);
+      },
+      function loadPlugins(next) {
+        let pluginList = engine.plugins.listPlugins();
+        if (pluginList.length > 0) {
+          engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
+        }
+
+        engine.registerModuleGroup("coreComponents");
+        engine.registerModuleGroup("blockchain");
+        engine.registerModuleGroup("compiler");
+        engine.registerModuleGroup("contracts");
+        engine.registerModuleGroup("pipeline");
+        engine.registerModuleGroup("tests");
+
+        let plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
+        plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
+          console.dir(engine.config.blockchainConfig);
+          await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig, cb);
+        });
+
+        engine.startEngine(() => {
+          next();
+        });
+      },
+      function setupTestEnvironment(next) {
+        engine.events.request2('tests:run', options, next);
+      }
+    ], (err) => {
+        process.exit(err ? 1 : 0);
+    });
+
+
+
+
+
+    /*
+
+    console.log('going to start things now');
+    async.waterfall([
+      function initializeEngine(next) { // initialize engine
+      },
+      function loadPlugins(next) { // load plugins, start services
+        let pluginList = engine.plugins.listPlugins();
+        if (pluginList.length > 0) {
+          engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
+        }
+
+        engine.registerModuleGroup("coreComponents");
+        engine.registerModuleGroup("blockchain");
+        engine.registerModuleGroup("compiler");
+        engine.registerModuleGroup("contracts");
+        engine.registerModuleGroup("pipeline");
+        next();
+      },
+      function startBlockchainNode(next) { // start blockchain
+        let plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
+        plugin.registerActionForEvent("embark:engine:started", (_params, cb) => {
+          console.log('engine started, starting blockchain');
+          engine.events.request2("blockchain:node:start", engine.config.blockchainConfig, () => {
+            cb();
+          });
+        });
+      },
+      function startEngine(next) { // start engine
+        engine.startEngine(next);
+      },
+      function runSuite(next) { // run tests
+        console.log('running tests');
+        engine.events.request('tests:run', options, next);
+      },
+    ], (err) => {
+      console.log("OMG ERROR", err);
+    });
+
+    /*
     async.waterfall([
       function initEngine(next) {
         engine.init({}, next);
@@ -916,6 +996,7 @@ class EmbarkController {
 
       process.exit(err ? 1 : 0);
     });
+    */
   }
 }
 

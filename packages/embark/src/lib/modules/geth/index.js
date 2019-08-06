@@ -54,6 +54,7 @@ class Geth {
   }
 
   startBlockchainNode(callback) {
+    console.log('startBlockchainNode');
     this.blockchainProcess = new BlockchainProcessLauncher({
       events: this.events,
       logger: this.logger,
