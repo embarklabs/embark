@@ -86,16 +86,24 @@ class EmbarkWeb3 {
   getWeb3Location() {
     return new Promise((resolve, reject) => {
       this.events.request("version:get:web3", (web3Version) => {
+        const embarkWeb3Version = this.embark.config.package.dependencies["web3"];
         if (web3Version === "1.0.0-beta") {
+          web3Version = embarkWeb3Version;
+          this.logger.warn(`web3 version in embark.json is 1.0.0-beta, using ${embarkWeb3Version} instead, please update your project's embark.json`);
+        }
+        // NOTE: will behave less than ideally if embark switches to using a
+        // dependency range for the web3 package instead of an exact version
+        if (web3Version === embarkWeb3Version) {
           const nodePath = embarkPath('node_modules');
           const web3Path = require.resolve("web3", {paths: [nodePath]});
           return resolve(web3Path);
         }
+
         this.events.request("version:getPackageLocation", "web3", web3Version, (err, location) => {
           if (err) {
             return reject(err);
           }
-          const locationPath = embarkPath(location);
+          const locationPath = toForwardSlashes(dappPath(location));
           resolve(locationPath);
         });
       });

@@ -2,7 +2,7 @@
 let Web3 = require('web3');
 const {sendMessage, listenTo} = require('./communicationFunctions').default;
 
-// for the whisper v5 and web3.js 1.0
+// for the whisper v5 and web3.js 1.x
 let __embarkWhisperNewWeb3 = {};
 
 __embarkWhisperNewWeb3.real_sendMessage = sendMessage;

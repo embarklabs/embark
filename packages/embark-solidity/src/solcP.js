@@ -1,8 +1,6 @@
 import { ProcessWrapper } from 'embark-core';
 const fs = require('fs-extra');
 const semver = require('semver');
-const PluginManager = require('live-plugin-manager-git-fix').PluginManager;
-import { LongRunningProcessTimer } from 'embark-utils';
 
 class SolcProcess extends ProcessWrapper {
 
@@ -20,33 +18,6 @@ class SolcProcess extends ProcessWrapper {
     return {error: 'File not found'};
   }
 
-  installAndLoadCompiler(solcVersion, packagePath) {
-    let self = this;
-    return new Promise((resolve, reject) => {
-      let manager = new PluginManager({pluginsPath: packagePath});
-      let timer;
-      if (!fs.existsSync(packagePath)) {
-        timer = new LongRunningProcessTimer(
-          self._logger,
-          'solc',
-          solcVersion,
-          'Downloading and installing {{packageName}} {{version}}...',
-          'Still downloading and installing {{packageName}} {{version}}... ({{duration}})',
-          'Finished downloading and installing {{packageName}} {{version}} in {{duration}}',
-          { showSpinner: self._showSpinner }
-        );
-      }
-
-      if (timer) timer.start();
-      manager.install('solc', solcVersion).then(() => {
-        self.solc = manager.require('solc');
-        if (timer) timer.end();
-        resolve();
-      }).catch(reject);
-
-    });
-  }
-
   compile(jsonObj, cb) {
     // TODO: only available in 0.4.11; need to make versions warn about this
     try {
@@ -60,8 +31,6 @@ class SolcProcess extends ProcessWrapper {
       cb(err.message || err);
     }
   }
-
-
 }
 
 let solcProcess;
@@ -73,14 +42,8 @@ process.on('message', (msg) => {
   }
 
   else if (msg.action === 'loadCompiler') {
-    solcProcess.solc = require('solc');
+    solcProcess.solc = require(msg.requirePath);
     return process.send({result: "loadedCompiler"});
-  }
-
-  else if (msg.action === 'installAndLoadCompiler') {
-    solcProcess.installAndLoadCompiler(msg.solcVersion, msg.packagePath).then(() => {
-      return process.send({result: "loadedCompiler"});
-    });
   }
 
   else if (msg.action === 'compile') {

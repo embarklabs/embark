@@ -93,8 +93,9 @@ Plugins.prototype.loadInternalPlugin = function(pluginName, pluginConfig, isPack
     context: this.context,
     env: this.env
   });
-  pluginWrapper.loadInternalPlugin();
+  const pluginInstance = pluginWrapper.loadInternalPlugin();
   this.plugins.push(pluginWrapper);
+  return pluginInstance;
 };
 
 Plugins.prototype.loadPlugin = function(pluginName, pluginConfig) {

@@ -50,13 +50,15 @@
     "prettier-plugin-solidity": "1.0.0-alpha.25",
     "semver": "5.6.0",
     "solidity-parser-antlr": "0.4.5",
-    "web3-eth-contract": "1.0.0-beta.37"
+    "web3-eth-contract": "1.2.1"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
     "@babel/core": "7.2.2",
+    "@types/fs-extra": "7.0.0",
     "@types/mocha": "5.2.0",
     "@types/prettier": "1.16.4",
+    "@types/semver": "5.5.0",
     "@types/web3": "1.0.12",
     "cross-env": "5.2.0",
     "eslint": "5.7.0",

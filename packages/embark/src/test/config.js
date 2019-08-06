@@ -122,7 +122,7 @@ describe('embark.Config', function () {
     it('should load contract config correctly', function () {
       config.loadContractsConfigFile();
       let expectedConfig = {
-        versions: {'web3': '1.0.0-beta', solc: '0.5.0'},
+        versions: {'web3': '1.2.1', solc: '0.5.0'},
         deployment: {host: 'localhost', port: 8545, type: 'rpc', "accounts": [{"mnemonic": "12 word mnemonic", "balance": "5000000000"}]},
         dappConnection: ['$WEB3', 'localhost:8545'],
         dappAutoEnable: true,
@@ -145,7 +145,7 @@ describe('embark.Config', function () {
 
     it('should replace occourences of `0x0` with full zero addresses', () => {
       let expectedConfig = {
-        versions: {'web3': '1.0.0-beta', solc: '0.5.0'},
+        versions: {'web3': '1.2.1', solc: '0.5.0'},
         deployment: {host: 'localhost', port: 8545, type: 'rpc'},
         dappConnection: ['$WEB3', 'localhost:8545'],
         dappAutoEnable: true,
