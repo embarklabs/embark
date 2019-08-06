@@ -1,4 +1,6 @@
-/* global Web3 clearInterval setInterval */
+/* global clearInterval global require setInterval */
+
+const Web3 = global.Web3 || require('web3');
 
 let Utils = {
   fromAscii: function(str) {

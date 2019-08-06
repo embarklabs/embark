@@ -44,7 +44,7 @@ const buildDir = path.join(dappPath, embarkJson.buildDir);
 // unexpectedly
 let versions;
 try {
-  versions = glob.sync(path.join(dappPath, '.embark/versions/*/*'));
+  versions = glob.sync(path.join(dappPath, '.embark/versions/*/*/*'));
 } catch (e) {
   versions = [];
 }

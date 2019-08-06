@@ -22,7 +22,7 @@ Every application [created with Embark](create_project.html) comes with an `emba
   "generationDir": "embarkArtifacts",
   "config": "config/",
   "versions": {
-    "web3": "1.0.0-beta",
+    "web3": "1.2.1",
     "solc": "0.4.25",
     "ipfs-api": "17.2.4"
   },

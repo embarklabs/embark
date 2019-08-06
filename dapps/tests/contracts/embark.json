@@ -12,7 +12,7 @@
     "namesystem": "ens.json"
   },
   "versions": {
-    "web3": "1.0.0-beta",
+    "web3": "1.2.1",
     "solc": "0.4.24"
   },
   "plugins": {

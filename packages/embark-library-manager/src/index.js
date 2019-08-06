@@ -1,6 +1,7 @@
 import { __ } from 'embark-i18n';
 import { dappPath, embarkPath, normalizePath, toForwardSlashes } from 'embark-utils';
-var Npm = require('./npm.js');
+const Npm = require('./npm.js');
+const {callbackify} = require('util');
 
 class LibraryManager {
 
@@ -10,6 +11,7 @@ class LibraryManager {
     this.contractsConfig = this.config.contractsConfig;
     this.storageConfig = this.config.storageConfig;
     this.useDashboard = useDashboard;
+    this.npm = new Npm({logger: this.embark.logger, useDashboard});
 
     this.determineVersions();
 
@@ -22,7 +24,7 @@ class LibraryManager {
   determineVersions() {
     this.versions = {};
 
-    let solcVersionInConfig = this.contractsConfig.versions.solc;
+    let solcVersionInConfig = this.contractsConfig.versions["solc"];
     let web3VersionInConfig = this.contractsConfig.versions["web3"];
     let ipfsApiVersion = this.storageConfig.versions["ipfs-api"];
 
@@ -37,6 +39,63 @@ class LibraryManager {
         this.versions[versionKey] = newVersion;
       }
     });
+  }
+
+  installAll(callback) {
+    const installAll = async () => {
+      const useDashboard = this.npm._useDashboard;
+      this.npm._useDashboard = false;
+
+      const results = await Promise.all(
+        Object.entries(this.versions)
+          .filter(([packageName, version]) => {
+            // NOTE: will behave less than ideally if embark switches to using
+            // a dependency range for the various overridable packages instead
+            // of an exact version
+            if (version === this.embark.config.package.dependencies[packageName]) {
+              return false;
+            }
+            return true;
+          })
+          .map(
+            ([packageName, version]) => {
+              return new Promise((resolve) => {
+                this.npm.getPackageVersion(packageName, version, (err, location) => {
+                  resolve({packageName, version, err, location});
+                });
+              });
+            }
+          )
+      );
+
+      this.npm._useDashboard = useDashboard;
+
+      const errors = {};
+      const locations = {};
+
+      results.forEach(({packageName, version, err, location}) => {
+        if (err) {
+          errors[packageName] = {version, err};
+        } else {
+          locations[packageName] = {version, location};
+        }
+      });
+
+      if (!Object.keys(errors).length) return locations;
+
+      const packages = (Object.entries(errors).reduce((packages, [packageName, {version}]) => {
+        return packages.concat(`${packageName}@${version}`);
+      }, []));
+
+      const err = new Error(`install failed for ${packages.length} packages: ${packages.join(', ')}`);
+      err.results = {errors, locations};
+      throw err;
+    };
+
+    if (callback) {
+      return callbackify(installAll)(callback);
+    }
+    return installAll();
   }
 
   registerCommands() {
@@ -95,9 +154,8 @@ class LibraryManager {
   }
 
   listenToCommandsToGetLibrary() {
-    let npm = new Npm({logger: this.embark.logger, useDashboard: this.useDashboard});
     this.embark.events.setCommandHandler('version:getPackageLocation', (libName, version, cb) => {
-      npm.getPackageVersion(libName, version, cb);
+      this.npm.getPackageVersion(libName, version, cb);
     });
     this.embark.events.setCommandHandler('version:downloadIfNeeded', (libName, cb) => {
       this.downloadIfNeeded(libName, cb);

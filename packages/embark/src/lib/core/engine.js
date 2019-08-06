@@ -58,7 +58,7 @@ class Engine {
   }
 
   registerModulePackage(moduleName, options) {
-    this.plugins.loadInternalPlugin(moduleName, options || {}, true);
+    return this.plugins.loadInternalPlugin(moduleName, options || {}, true);
   }
 
   startService(serviceName, _options) {
@@ -300,7 +300,7 @@ class Engine {
   }
 
   libraryManagerService(_options) {
-    this.registerModulePackage('embark-library-manager', {useDashboard: this.useDashboard});
+    return this.registerModulePackage('embark-library-manager', {useDashboard: this.useDashboard});
   }
 
   codeCoverageService(_options) {

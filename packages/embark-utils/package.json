@@ -61,14 +61,15 @@
     "ora": "2.1.0",
     "pretty-ms": "4.0.0",
     "shelljs": "0.8.3",
-    "web3": "1.0.0-beta.37",
-    "web3-eth": "1.0.0-beta.37",
-    "web3-eth-abi": "1.0.0-beta.37"
+    "web3": "1.2.1",
+    "web3-eth": "1.2.1",
+    "web3-eth-abi": "1.2.1"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
     "@babel/core": "7.2.2",
     "@types/follow-redirects": "1.5.0",
+    "@types/fs-extra": "7.0.0",
     "@types/node": "10.11.7",
     "@types/pretty-ms": "3.2.0",
     "cross-env": "5.2.0",

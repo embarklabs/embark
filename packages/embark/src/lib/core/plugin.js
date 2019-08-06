@@ -114,7 +114,7 @@ Plugin.prototype.loadInternalPlugin = function() {
       this.pluginModule = this.pluginModule.default;
     }
   }
-  new this.pluginModule(this, this.pluginConfig); /*eslint no-new: "off"*/
+  return new this.pluginModule(this, this.pluginConfig); /*eslint no-new: "off"*/
 };
 
 Plugin.prototype.loadPluginFile = function(filename) {

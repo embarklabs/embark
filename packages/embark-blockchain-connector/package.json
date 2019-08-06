@@ -55,7 +55,7 @@
     "ethereumjs-tx": "1.3.7",
     "ethereumjs-util": "6.0.0",
     "ganache-cli": "6.4.3",
-    "web3": "1.0.0-beta.37"
+    "web3": "1.2.1"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",

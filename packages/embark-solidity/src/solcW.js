@@ -1,6 +1,6 @@
 import { __ } from 'embark-i18n';
 import { ProcessLauncher } from 'embark-core';
-import { dappPath, joinPath } from 'embark-utils';
+import { dappPath, joinPath, toForwardSlashes } from 'embark-utils';
 const uuid = require('uuid/v1');
 
 class SolcW {
@@ -36,43 +36,44 @@ class SolcW {
   }
 
   load_compiler_internally(done) {
-    const self = this;
     if (this.compilerLoaded) {
       return done();
     }
     this.solcProcess = new ProcessLauncher({
-      embark: self.embark,
+      embark: this.embark,
       modulePath: joinPath(__dirname, 'solcP.js'),
-      logger: self.logger,
-      events: self.events,
-      providerUrl: self.providerUrl,
+      logger: this.logger,
+      events: this.events,
+      providerUrl: this.providerUrl,
       silent: false
     });
 
     this.solcProcess.once("result", "initiated", () => {
-      this.events.request("version:get:solc", function(solcVersion) {
-        if (solcVersion === self.embark.config.package.dependencies.solc) {
-          return self.solcProcess.send({action: 'loadCompiler', requirePath: 'solc'});
+      this.events.request("version:get:solc", (solcVersion)  => {
+        if (solcVersion === this.embark.config.package.dependencies.solc) {
+          return this.solcProcess.send({action: 'loadCompiler', requirePath: 'solc'});
         }
-        self.events.request("version:getPackagePath", "solc", solcVersion, function(err, path) {
+        this.events.request("version:getPackageLocation", "solc", solcVersion, (err, location) => {
           if (err) {
             return done(err);
           }
-          let requirePath = dappPath(path);
-          self.solcProcess.send({action: 'installAndLoadCompiler', solcVersion: solcVersion, packagePath: requirePath});
+          this.solcProcess.send({
+            action: 'loadCompiler',
+            requirePath: toForwardSlashes(dappPath(location))
+          });
         });
       });
     });
 
     this.solcProcess.once("result", "loadedCompiler", () => {
-      self.compilerLoaded = true;
+      this.compilerLoaded = true;
       done();
     });
 
-    this.solcProcess.send({action: "init", options: {showSpinner: !self.useDashboard}});
+    this.solcProcess.send({action: "init", options: {showSpinner: !this.useDashboard}});
 
     if (this.ipc.isServer()) {
-      this.ipc.on('compile', self.compile.bind(this));
+      this.ipc.on('compile', this.compile.bind(this));
     }
   }
 

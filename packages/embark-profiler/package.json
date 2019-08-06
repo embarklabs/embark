@@ -49,7 +49,7 @@
     "@babel/runtime-corejs2": "7.3.1",
     "ascii-table": "0.0.9",
     "async": "2.6.1",
-    "web3-utils": "1.0.0-beta.37"
+    "web3-utils": "1.2.1"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",

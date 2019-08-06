@@ -25,7 +25,7 @@ EmbarkJS.Contract = function() {
   throw new Error('EmbarkJS.Contract is deprecated: please use EmbarkJS.Blockchain.Contract instead');
 };
 EmbarkJS.isNewWeb3 = function() {
-  throw new Error('EmbarkJS.isNewWeb3 is deprecated: only Web3 1.0 is supported now');
+  throw new Error('EmbarkJS.isNewWeb3 is deprecated: only Web3 >=1.2.1 is supported now');
 };
 
 export default EmbarkJS;

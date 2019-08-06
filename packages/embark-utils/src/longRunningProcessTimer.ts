@@ -119,10 +119,18 @@ export default class LongRunningProcessTimer {
   }
 
   public end() {
-    // stop updating console for ongoing download
+    // stop updating console upon success
     clearInterval(this.intOngoingDownload);
     performance.mark(this.endMark);
     performance.measure(this.downloadComplete, this.startMark, this.endMark);
+  }
+
+  public abort() {
+    if (this.spinner) {
+      this.spinner.fail(`Failed to download and install ${this.packageName} ${this.version}\n`);
+    }
+    // stop updating console upon failure
+    clearInterval(this.intOngoingDownload);
   }
 }
 
