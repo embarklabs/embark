@@ -9,16 +9,17 @@ export default class ProxyManager {
   private readonly logger: Logger;
   private readonly events: Events;
   private proxyIpc: IPC;
-  private rpcProxy: any;
-  private wsProxy: any;
+  private proxy: any;
+  private plugins: any;
   private readonly host: string;
   private rpcPort: number | undefined;
   private wsPort: number | undefined;
   private ready: boolean;
 
-  constructor(private embark: Embark, _options: any) {
+  constructor(private embark: Embark, options: any) {
     this.logger = embark.logger;
     this.events = embark.events;
+    this.plugins = options.plugins;
     this.proxyIpc = new IPC({ipcRole: "client"});
     this.ready = false;
 
@@ -30,6 +31,11 @@ export default class ProxyManager {
       this.events.emit("proxy:ready");
     });
 
+    this.events.setCommandHandler("proxy:onReady", async (cb) => {
+      await this.onReady();
+      cb();
+    });
+
     this.events.setCommandHandler("blockchain:client:endpoint", async (cb) => {
       await this.onReady();
       if (!this.embark.config.blockchainConfig.proxy) {
@@ -37,7 +43,7 @@ export default class ProxyManager {
       }
       // TODO Check if the proxy can support HTTPS, though it probably doesn't matter since it's local
       if (this.embark.config.blockchainConfig.wsRPC) {
-        return cb(null, `ws://${this.host}:${this.wsPort}`);
+        // return cb(null, `ws://${this.host}:${this.wsPort}`);
       }
       cb(null, `http://${this.host}:${this.rpcPort}`);
     });
@@ -65,27 +71,13 @@ export default class ProxyManager {
 
     const addresses = AccountParser.parseAccountsConfig(this.embark.config.blockchainConfig.accounts, false, dappPath(), this.logger);
 
-    [this.rpcProxy, this.wsProxy] = await Promise.all([
-      new Proxy(this.proxyIpc).serve(
-        this.embark.config.blockchainConfig.rpcHost,
-        this.embark.config.blockchainConfig.rpcPort,
-        this.host,
-        this.rpcPort,
-        false,
-        null,
-        addresses,
-        this.embark.config.webServerConfig.certOptions,
-      ),
-      this.embark.config.blockchainConfig.wsRPC ? new Proxy(this.proxyIpc).serve(
-        this.embark.config.blockchainConfig.wsHost,
-        this.embark.config.blockchainConfig.wsPort,
-        this.host,
-        this.wsPort,
-        true,
-        this.embark.config.blockchainConfig.wsOrigins,
-        addresses,
-        this.embark.config.webServerConfig.certOptions) : null,
-    ]);
+    this.proxy = await new Proxy(this.proxyIpc, this.events, this.plugins).serve(
+      this.embark.config.blockchainConfig.endpoint,
+      this.host,
+      this.rpcPort,
+      false,
+      null,
+    );
     return;
   }
 
@@ -94,11 +86,8 @@ export default class ProxyManager {
       return;
     }
 
-    if (this.rpcProxy) {
-      this.rpcProxy.close();
-    }
-    if (this.wsProxy) {
-      this.wsProxy.close();
+    if (this.proxy) {
+      this.proxy.close();
     }
   }
 }
