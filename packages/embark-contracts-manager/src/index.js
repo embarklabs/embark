@@ -34,7 +34,8 @@ class ContractsManager {
     });
 
     console.dir("---- contracts manager---- ")
-    // this.registerCommands()
+
+        // this.registerCommands()
     // this.registerAPIs()
   }
 

@@ -85,7 +85,8 @@ class Engine {
       "webserver": this.webserverService,
       "storage": this.storageComponent,
       "communication": this.communicationComponents,
-      "filewatcher": this.filewatcherService
+      "filewatcher": this.filewatcherService,
+      "tests": this.testComponents
     };
 
     let group = groups[groupName];
@@ -173,6 +174,10 @@ class Engine {
       plugins: this.plugins,
       ipc: this.ipc
     })
+  }
+
+  testComponents() {
+    this.registerModulePackage('embark-test-runner');
   }
 
   compilerComponents(options) {
