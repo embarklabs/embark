@@ -1,4 +1,4 @@
-import  { buildUrl } from 'embark-utils';
+import  { buildUrl, defaultHost, dockerHostSwap } from 'embark-utils';
 const Web3 = require('web3');
 const constants = require('embark-core/constants');
 
@@ -8,20 +8,20 @@ class DevTxs {
     this.networkId = null;
     if (options.provider) {
       this.provider = options.provider;
-    } else if (this.blockchainConfig.wsRPC) {
+    } else if (this.blockchainConfig.wsRPC !== false) {
       this.provider = new Web3.providers.WebsocketProvider(
         buildUrl(
           'ws',
-          this.blockchainConfig.wsHost,
-          this.blockchainConfig.wsPort
+          dockerHostSwap(this.blockchainConfig.wsHost) || defaultHost,
+          this.blockchainConfig.wsPort || constants.blockchain.defaults.wsPort
         ),
         {headers: {Origin: constants.embarkResourceOrigin}});
     } else {
       this.provider = new Web3.providers.HttpProvider(
         buildUrl(
           'http',
-          this.blockchainConfig.rpcHost,
-          this.blockchainConfig.rpcPort
+          dockerHostSwap(this.blockchainConfig.rpcHost) || defaultHost,
+          this.blockchainConfig.rpcPort || constants.blockchain.defaults.rpcPort
         )
       );
     }

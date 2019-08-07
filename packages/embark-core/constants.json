@@ -42,6 +42,10 @@
     },
     "blockchainReady": "blockchainReady",
     "blockchainExit": "blockchainExit",
+    "defaults": {
+      "rpcPort": 8545,
+      "wsPort": 8546
+    },
     "init": "init",
     "initiated": "initiated",
     "servicePortOnProxy": 10,

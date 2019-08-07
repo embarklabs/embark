@@ -235,7 +235,18 @@ export class Proxy {
       });
     }());
 
-    const web3 = new Web3(`${ws ? 'ws' : 'http'}://${canonicalHost(host)}:${port}`);
+    const web3 = new Web3();
+    if (ws) {
+      web3.setProvider(new Web3.providers.WebsocketProvider(
+        `ws://${canonicalHost(host)}:${port}`,
+        {headers: {Origin: constants.embarkResourceOrigin}}
+      ));
+    } else {
+      web3.setProvider(new Web3.providers.HttpProvider(
+        `http://${canonicalHost(host)}:${port}`
+      ));
+    }
+
     accounts = (await web3.eth.getAccounts() || []).concat(accounts || []);
     accounts = [...new Set(accounts.map(ethUtil.toChecksumAddress))];
 
