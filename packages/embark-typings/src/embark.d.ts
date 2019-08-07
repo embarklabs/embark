@@ -4,6 +4,7 @@ import { Plugins } from "./plugins";
 export interface Events {
   on: any;
   request: any;
+  request2: any;
   emit: any;
   once: any;
   setCommandHandler(
@@ -49,6 +50,7 @@ export interface Config {
 export interface Embark {
   env: string;
   events: Events;
+  plugins: Plugins;
   registerAPICall: any;
   registerConsoleCommand: any;
   logger: Logger;
@@ -57,6 +59,6 @@ export interface Embark {
   currentContext: string[];
   registerActionForEvent(
     name: string,
-    action: (callback: () => void) => void,
+    action: (params: any, cb: (error: any, result: any) => void) => void,
   ): void;
 }
