@@ -894,6 +894,8 @@ class EmbarkController {
         }
 
         engine.registerModuleGroup("coreComponents");
+        engine.registerModuleGroup("stackComponents");
+
         engine.registerModuleGroup("blockchain");
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
