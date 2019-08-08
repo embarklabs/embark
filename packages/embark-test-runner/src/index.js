@@ -323,6 +323,7 @@ class TestRunner {
       (next) => { // setup global namespace
         global.assert = assert;
         global.config = config;
+        global.contract = global.describe;
         next();
       },
       (next) => { // initialize Mocha
