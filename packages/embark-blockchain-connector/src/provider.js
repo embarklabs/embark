@@ -1,4 +1,4 @@
-import { __ } from 'embark-i18n';
+import {__} from 'embark-i18n';
 const async = require('async');
 const { AccountParser, dappPath } = require('embark-utils');
 const fundAccount = require('./fundAccount');
