@@ -10,8 +10,8 @@ module.exports = (api) => {
   const node = cloneDeep(base);
   Object.assign(node, {
     ignore: [
-      'src/lib/modules/pipeline/babel-loader-overrides.js',
-      'src/lib/modules/pipeline/webpack.config.js'
+      'src/babel-loader-overrides.js',
+      'src/webpack.config.js'
     ]
   });
 
