@@ -36,6 +36,7 @@ export interface Config {
     wsOrigins: string;
     rpcCorsDomain: string;
     wsRPC: boolean;
+    isDev: boolean;
   };
   webServerConfig: {
     certOptions: {
