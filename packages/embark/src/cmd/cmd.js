@@ -230,8 +230,8 @@ class Cmd {
         embark.simulator({
           port: options.port,
           host: options.host,
-          numAccounts: options.numAccounts,
-          defaultBalance: options.balance,
+          numAccounts: options.accounts,
+          defaultBalance: options.defaultBalanceEther,
           gasLimit: options.gasLimit
         });
       });
