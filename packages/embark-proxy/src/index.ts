@@ -71,13 +71,14 @@ export default class ProxyManager {
 
     const addresses = AccountParser.parseAccountsConfig(this.embark.config.blockchainConfig.accounts, false, dappPath(), this.logger);
 
-    this.proxy = await new Proxy(this.proxyIpc, this.events, this.plugins).serve(
-      this.embark.config.blockchainConfig.endpoint,
-      this.host,
-      this.rpcPort,
-      false,
-      null,
-    );
+    this.proxy = await new Proxy({ipc: this.proxyIpc, events: this.events, plugins: this.plugins, logger: this.logger})
+      .serve(
+        this.embark.config.blockchainConfig.endpoint,
+        this.host,
+        this.rpcPort,
+        false,
+        null,
+      );
     return;
   }
 

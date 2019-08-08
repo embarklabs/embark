@@ -1,40 +1,20 @@
 /* global Buffer exports require */
+import {__} from 'embark-i18n';
 import axios from "axios";
-
-require('./httpProxyOverride');
-const Asm = require('stream-json/Assembler');
 import {canonicalHost, timer, pingEndpoint, deconstructUrl} from 'embark-utils';
-
-const {parser: jsonParser} = require('stream-json');
-const pump = require('pump');
-const express = require('express');
-const bodyParser = require('body-parser');
+import express from 'express';
 
 export class Proxy {
-  constructor(ipc, events, plugins) {
-    this.ipc = ipc;
+  constructor(options) {
+    this.ipc = options.ipc;
     this.commList = {};
     this.receipts = {};
     this.transactions = {};
     this.toModifyPayloads = {};
     this.timeouts = {};
-    this.events = events;
-    this.plugins = plugins;
-  }
-
-  modifyPayload(toModifyPayloads, body) {
-    // this.plugins.emitAndRunActionsForEvent('proxy:redponse:received', {body: body}, () => {
-    //
-    // })
-
-    // switch (toModifyPayloads[body.id]) {
-    //   case METHODS_TO_MODIFY.accounts:
-    //     delete toModifyPayloads[body.id];
-    //     body.result = Array.isArray(body.result) && body.result.concat(accounts);
-    //     break;
-    //   default:
-    // }
-    // return body;
+    this.events = options.events;
+    this.plugins = options.plugins;
+    this.logger = options.logger;
   }
 
 
@@ -67,18 +47,39 @@ export class Proxy {
 
 
     app.use((req, res) => {
-      axios.post(endpoint, req.body)
-        .then((response) => {
-          // handle success
-          this.plugins.emitAndRunActionsForEvent('blockchain:proxy:response',
-            {respData: response.data, reqData: req.body},
-            (err, resp) => {
-            res.send(resp.respData);
-          });
-        })
-        .catch((error) => {
-          res.status(500);
-          res.send(error.message);
+      // Modify request
+      this.plugins.emitAndRunActionsForEvent('blockchain:proxy:request',
+        {reqData: req.body},
+        (err, resp) => {
+          if (err) {
+            this.logger.error(__('Error parsing the request in the proxy'));
+            this.logger.error(err);
+            // Reset the data to the original request so that it can be used anyway
+            resp = {reqData: req.body};
+          }
+
+          // Send the possibly modified request to the Node
+          axios.post(endpoint, resp.reqData)
+            .then((response) => {
+
+              // Send to plugins to possibly modify the response
+              this.plugins.emitAndRunActionsForEvent('blockchain:proxy:response',
+                {respData: response.data, reqData: req.body},
+                (err, resp) => {
+                  if (err) {
+                    this.logger.error(__('Error parsing the response in the proxy'));
+                    this.logger.error(err);
+                    // Reset the data to the original response so that it can be used anyway
+                    resp = {respData: response.data};
+                  }
+                  // Send back to the caller (web3)
+                  res.send(resp.respData);
+                });
+            })
+            .catch((error) => {
+              res.status(500);
+              res.send(error.message);
+            });
         });
     });
 
