@@ -266,6 +266,8 @@ class TestRunner {
 
   runJSTests(files, options, cb) {
     const {events} = this.embark;
+
+    let accounts = [];
     let compiledContracts;
     let web3;
 
@@ -283,7 +285,7 @@ class TestRunner {
             next();
           }
         ], (_err) => {
-            acctCb([]);
+            acctCb(accounts);
             done();
         });
       });
@@ -296,6 +298,14 @@ class TestRunner {
       (bcProvider, next) => { // set provider
         web3 = new Web3(bcProvider);
         next();
+      },
+      (next) => { // get accounts
+        web3.eth.getAccounts((accts) => {
+          console.log('got accounts from web3');
+          console.dir(accts);
+          accounts = accts;
+          next();
+        });
       },
       (next) => { // get contract files
         console.log('getting contract files');
@@ -321,8 +331,13 @@ class TestRunner {
         next();
       },
       (next) => { // setup global namespace
+        const originalDescribe = global.describe;
+
         global.assert = assert;
         global.config = config;
+        global.describe = (scenario, cb) => {
+          originalDescribe(scenario, cb(accounts));
+        };
         global.contract = global.describe;
         next();
       },
