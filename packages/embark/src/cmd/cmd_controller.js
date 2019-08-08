@@ -1,6 +1,9 @@
 import { BlockchainClient, Simulator } from 'embark-blockchain-process';
 import { __ } from 'embark-i18n';
 import { dappPath, embarkPath } from 'embark-utils';
+import { Observable, from, forkJoin } from 'rxjs';
+import { mergeMap, tap } from 'rxjs/operators';
+import { exhaustMapWithLastIgnored } from 'embark-rxjs-operators';
 import findUp from 'find-up';
 let async = require('async');
 const constants = require('embark-core/constants');
@@ -210,24 +213,30 @@ class EmbarkController {
           engine.events.emit("status", __("Ready").green);
         });
 
-        engine.events.on('file-event', async ({ fileType, path }) => {
-          // TODO: re-add async.cargo / or use rxjs to use latest request in the queue
-          console.dir("-- before timeout - file changed")
-
-          if (fileType === 'contract' || fileType === 'config') {
-            let contractsFiles = await engine.events.request2("config:contractsFiles");
-            let compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
-            let _contractsConfig = await engine.events.request2("config:contractsConfig");
-            let contractsConfig = cloneDeep(_contractsConfig);
-            let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
-            await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
-          } else if (fileType === 'asset') {
-            engine.events.request('pipeline:generateAll', () => {
-              console.dir("outputDone")
-              engine.events.emit('outputDone');
-            });
-          }
+        const fileChanges$ = Observable.create(obs => {
+          engine.events.on('file-event', (data) => {
+            obs.next(data);
+          });
         });
+
+        fileChanges$.pipe(
+          exhaustMapWithLastIgnored(({ fileType, path }) => {
+            if (fileType === 'contract' || fileType === 'config') {
+              const contractFiles$ = from(engine.events.request2("config:contractsFiles"));
+              const compiledContracts$ = contractFiles$.pipe(
+                mergeMap(contractsFiles => from(engine.events.request2("compiler:contracts:compile", contractsFiles)))
+              );
+              const contractsConfig$ = from(engine.events.request2("config:contractsConfig"));
+
+              return forkJoin(contractsConfig$, compiledContracts$).pipe(
+                mergeMap(([contractsConfig, compiledContracts]) => from(engine.events.request2("contracts:build", contractsConfig, compiledContracts))),
+                mergeMap(([contractsList, contractDependencies]) => from(engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies)))
+              );
+            } else if (fileType === 'asset') {
+              return from(engine.events.request2('pipeline:generateAll')).pipe(tap(_ => engine.events.emit('outputDone')));
+            }
+          })
+        ).subscribe();
 
         engine.startEngine(async () => {
           callback();
