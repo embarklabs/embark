@@ -204,9 +204,10 @@ class Engine {
   //   });
 
     this.registerModule('ethereum-blockchain-client');
-    this.registerModulePackage('embark-proxy');
+    this.registerModulePackage('embark-proxy', {plugins: this.plugins});
     // this.registerModule('web3', { plugins: this.plugins });
     this.registerModulePackage('embark-web3', {plugins: this.plugins});
+    this.registerModulePackage('embark-accounts-manager');
     this.registerModulePackage('embark-specialconfigs', {plugins: this.plugins});
     this.registerModulePackage('embark-console-listener', {ipc: this.ipc});
   }
