@@ -5,15 +5,15 @@ import Web3 from 'web3';
 export default class TrackingFunctions {
   constructor({config, env, fs, events, logger, trackContracts}) {
     this.config = config;
-    this.chainConfig = {};
-    this.chainFile = config.contractsConfig.tracking;
-    this.currentChain = null;
+    this.enabled = (config.contractsConfig.tracking !== false) && (trackContracts !== false);
+    this.chainsFilePath = dappPath(config.contractsConfig.tracking || ".embark/chains.json");
     this.env = env;
     this.fs = fs;
     this.events = events;
     this.logger = logger;
     this._web3 = null;
-    this.trackContracts = (trackContracts !== false);
+    this._chains = null;
+    this._currentChain = null;
   }
 
   get web3() {
@@ -26,87 +26,91 @@ export default class TrackingFunctions {
     })();
   }
 
-  getContract(contract) {
-    if (!this.currentChain) return false;
-    let contractInFile = this.currentChain.contracts[contract.hash];
+  get chains() {
+    return (async () => {
+      if (this._chains) {
+        return this._chains;
+      }
+      if (!this.enabled) {
+        this._chains = null;
+        return this._chains;
+      }
+      this._chains = await this.fs.readJSON(this.chainsFilePath);
+      return this._chains;
+    })();
+  }
+
+  get currentChain() {
+    return (async () => {
+      if (this._currentChain) {
+        return this._currentChain;
+      }
+      if (!this.enabled) {
+        this._currentChain = {contracts: []};
+        return this._currentChain;
+      }
+
+      let block;
+      const web3 = await this.web3;
+      try {
+        block = await web3.eth.getBlock(0, true);
+      } catch (err) {
+        // Retry with block 1 (Block 0 fails with Ganache-cli using the --fork option)
+        block = await web3.eth.getBlock(1, true);
+      }
+      const {hash} = block;
+      this._currentChain = (await this.chains)[hash];
+      if (this._currentChain === undefined) {
+        const empty = {contracts: {}};
+        this._chains[hash] = empty;
+        this._currentChain = empty;
+      }
+
+      this._currentChain.name = this.env;
+
+      return this._currentChain;
+    })();
+  }
+
+  async getContract(contract) {
+    const currentChain = await this.currentChain;
+    if (!currentChain || !this.enabled) return false;
+    let contractInFile = currentChain.contracts[contract.hash];
     if (contractInFile && contractInFile.address === undefined) {
       return false;
     }
     return contractInFile;
   }
 
-  trackAndSaveContract(params, cb) {
+  async trackAndSaveContract(params, cb) {
     const {contract} = params;
-    if (!this.chainFile || !this.trackContracts || contract.track === false) return cb();
-    this.trackContract(contract);
+    if (!this.enabled) return cb();
+    await this.trackContract(contract);
     this.save();
     cb();
   }
 
-  loadChainTrackerFile() {
-    if (this.chainFile === false) return;
-    if (this.chainFile === undefined) this.chainFile = ".embark/chains.json";
-    this.chainFile = dappPath(this.chainFile);
-    if (!this.fs.existsSync(this.chainFile)) {
-      this.logger.info(this.chainFile + ' ' + __('file not found, creating it...'));
-      this.fs.outputJSONSync(this.chainFile, {});
-      this.chainConfig = {};
+  async ensureChainTrackerFile() {
+    if (!this.enabled) return;
+    const exists = await this.fs.exists(this.chainsFilePath);
+    if (!exists) {
+      this.logger.info(this.chainsFilePath + ' ' + __('file not found, creating it...'));
+      return this.fs.outputJSON(this.chainsFilePath, {});
+    }
+  }
+
+  async trackContract(contract) {
+    const currentChain = await this.currentChain;
+    if (!this.enabled || !currentChain) return false;
+    const toTrack = {name: contract.className, address: contract.deployedAddress};
+    if (contract.track === false) toTrack.track = false;
+    currentChain.contracts[contract.hash] = toTrack;
+  }
+
+  async save() {
+    if (!this.enabled) {
       return;
     }
-
-    this.chainConfig = this.fs.readJSONSync(this.chainFile);
-  }
-
-  setCurrentChain(_params, callback) {
-    if (!this.chainFile) return callback();
-    if (this.chainFile === false) return callback();
-    if (this.chainConfig === false) {
-      this.currentChain = {contracts: []};
-      return callback();
-    }
-
-    this.getBlock(0, (err) => {
-      if (err) {
-        // Retry with block 1 (Block 0 fails with Ganache-cli using the --fork option)
-        return this.getBlock(1, callback);
-      }
-      callback();
-    });
-  }
-
-  async getBlock(blockNum, cb) {
-    try {
-      const web3 = await this.web3;
-      let block = await web3.eth.getBlock(blockNum, true);
-      let chainId = block.hash;
-
-      if (this.chainConfig[chainId] === undefined) {
-        this.chainConfig[chainId] = {contracts: {}};
-      }
-
-      this.currentChain = this.chainConfig[chainId];
-
-      this.currentChain.name = this.env;
-      cb();
-    } catch (err) {
-      return cb(err);
-    }
-  }
-
-  loadConfig(config) {
-    this.chainConfig = config;
-    return this;
-  }
-
-  trackContract(contract) {
-    if (!this.currentChain) return false;
-    this.currentChain.contracts[contract.hash] = {name: contract.className, address: contract.deployedAddress};
-  }
-
-  save() {
-    if (this.chainConfig === false) {
-      return;
-    }
-    this.fs.writeJSONSync(this.chainFile, this.chainConfig, {spaces: 2});
+    return this.fs.writeJSON(this.chainsFilePath, await this.chains, {spaces: 2});
   }
 }
