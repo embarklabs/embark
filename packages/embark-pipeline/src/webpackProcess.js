@@ -61,7 +61,7 @@ class WebpackProcess extends ProcessWrapper {
   }
 
   async writeStats(config, stats, callback){
-    if (!config.stats || config.stats === 'none') {
+    if (!config || !config.stats || config.stats === 'none') {
       return callback();
     }
     try {
