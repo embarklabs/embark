@@ -13,8 +13,7 @@ class DeployTracker {
     const trackingFunctions = new TrackingFunctions({config, fs, logger, events, env, trackContracts});
     const deploymentChecks = new DeploymentChecks({trackingFunctions, logger, events, plugins});
 
-    this.embark.events.on("blockchain:started", trackingFunctions.loadChainTrackerFile.bind(trackingFunctions));
-    this.embark.registerActionForEvent('deployment:deployContracts:beforeAll', trackingFunctions.setCurrentChain.bind(trackingFunctions));
+    this.embark.events.on("blockchain:started", trackingFunctions.ensureChainTrackerFile.bind(trackingFunctions));
     this.embark.registerActionForEvent("deployment:contract:deployed", trackingFunctions.trackAndSaveContract.bind(trackingFunctions));
     this.embark.registerActionForEvent("deployment:contract:shouldDeploy", deploymentChecks.checkContractConfig.bind(deploymentChecks));
     this.embark.registerActionForEvent("deployment:contract:shouldDeploy", deploymentChecks.checkIfAlreadyDeployed.bind(deploymentChecks));
