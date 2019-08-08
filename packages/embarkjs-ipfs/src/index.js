@@ -37,9 +37,9 @@ __embarkIPFS.isAvailable = function () {
     if (!this._ipfsConnection) {
       return resolve(false);
     }
-    this._ipfsConnection.id()
-      .then((id) => {
-        resolve(Boolean(id));
+    this._ipfsConnection.version()
+      .then((version) => {
+        resolve(Boolean(version));
       })
       .catch((err) => {
         console.error(err);
