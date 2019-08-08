@@ -27,30 +27,6 @@ class TestRunner {
     this.events.setCommandHandler('tests:run', (options, callback) => {
       this.run(options, callback);
     });
-
-    /*
-    this.events.setCommandHandler('tests:results:reset', () => {
-      this.runResults = [];
-    });
-
-    this.events.setCommandHandler('tests:results:get', (callback) => {
-      callback(this.runResults);
-    });
-
-
-    this.events.setCommandHandler('tests:results:report', (test) => {
-      this.runResults.push(test);
-    });
-
-    this.embark.registerAPICall(
-      'post',
-      '/embark-api/test',
-      (req, res) => {
-        const options = {file: req.body.files, solc: true, inProcess: true};
-        this.run(options, () => res.send(this.runResults));
-      }
-    );
-    */
   }
 
   run(options, cb) {
@@ -62,14 +38,6 @@ class TestRunner {
     // get contract objects, and make them available in the tests
     // V run tests
     // get tests results/data
-
-    // this.embark.config.blockchainConfig.type = 'vm';
-    // TODO: we should just use `deploy:contracts`
-    this.events.request('deploy:contracts:test', function (err) {
-      console.dir("deployment done")
-
-      return cb();
-    });
 
     const testPath = options.file || "test";
     async.waterfall([
@@ -148,87 +116,6 @@ class TestRunner {
 
       return cb(err);
     });
-    // -------------------------------------------------------------------------------------------------------------
-
-    /*
-    const self = this;
-    let filePath = options.file;
-    if (!filePath) {
-      filePath = 'test';
-    }
-    async.waterfall([
-      function getFiles(next) {
-        self.getFilesFromDir(filePath, next);
-      },
-      function groupFiles(files, next) {
-        let jsFiles = files.filter((filename) => filename.substr(-3) === '.js');
-        let solidityFiles = files.filter((filename) => filename.indexOf('_test.sol') > 0);
-        next(null, {jsFiles, solidityFiles});
-      },
-      function runTests(files, next) {
-        const fns = [];
-        if (!options.solc && files.jsFiles.length > 0) {
-          let fn = (callback) => {
-            self.runJSTests(files.jsFiles, options, callback);
-          };
-          fns.push(fn);
-        }
-        if(files.solidityFiles.length > 0) {
-          let fn = (callback) => {
-            self.runSolidityTests(files.solidityFiles, options, callback);
-          };
-          fns.push(fn);
-        }
-        if(fns.length === 0){
-          return next('No tests to run');
-        }
-        async.series(fns, next);
-      },
-      function runCoverage(results, next) {
-        if (!options.coverage) {
-          return next(null, results);
-        }
-
-        global.embark.events.emit('tests:finished', function() {
-          runCmd(`${embarkPath('node_modules/.bin/istanbul')} report --root .embark --format html --format lcov`,
-            {silent: false, exitOnError: false}, (err) => {
-              if (err) {
-                return next(err);
-              }
-              console.info(`Coverage report created. You can find it here: ${dappPath('coverage/index.html')}\n`);
-              const opn = require('opn');
-              const _next = () => { next(null, results); };
-              if (options.noBrowser) {
-                return next(null, results);
-              }
-              opn(dappPath('coverage/index.html'), {wait: false})
-                .then(() => timer(1000))
-                .then(_next, _next);
-            });
-        });
-      }
-    ], (err, results) => {
-      if (err) {
-        return cb(err);
-      }
-      self.fs.remove('.embark/contracts', (err) => {
-        if(err) {
-          console.error(__("Error deleting compiled contracts from .embark"), err);
-        }
-      });
-      self.fs.remove('.embark/remix_tests.sol', (err) => {
-        if(err) {
-          console.error(__("Error deleting '.embark/remix_tests.sol'"), err);
-        }
-      });
-      let totalFailures = results.reduce((acc, result) => acc + result.failures, 0);
-      if (totalFailures) {
-        return cb(` > Total number of failures: ${totalFailures}`.red.bold);
-      }
-      console.info(' > All tests passed'.green.bold);
-      cb();
-    });
-  */
   }
 
 
@@ -260,10 +147,6 @@ class TestRunner {
     });
   }
 
-  executeTestFiile() {
-    let embark = this.embark;
-  }
-
   runJSTests(files, options, cb) {
     const {events} = this.embark;
 
@@ -293,14 +176,18 @@ class TestRunner {
 
     async.waterfall([
       (next) => { // request provider
-        events.request("blockchain:client:provider", "ethereum", next);;
+        events.request("blockchain:client:provider", "ethereum", next);
       },
       (bcProvider, next) => { // set provider
         web3 = new Web3(bcProvider);
         next();
       },
       (next) => { // get accounts
-        web3.eth.getAccounts((accts) => {
+        web3.eth.getAccounts((err, accts) => {
+          if (err !== null) {
+            return next(err);
+          }
+
           console.log('got accounts from web3');
           console.dir(accts);
           accounts = accts;
@@ -331,18 +218,21 @@ class TestRunner {
         next();
       },
       (next) => { // setup global namespace
-        const originalDescribe = global.describe;
-
-        global.assert = assert;
-        global.config = config;
-        global.describe = (scenario, cb) => {
-          originalDescribe(scenario, cb(accounts));
-        };
-        global.contract = global.describe;
-        next();
+                next();
       },
       (next) => { // initialize Mocha
         const mocha = new Mocha();
+
+        const describeWithAccounts = (scenario, cb) => {
+          Mocha.describe(scenario, cb.bind(mocha, accounts));
+        };
+
+        mocha.suite.on('pre-require', () => {
+          global.describe = describeWithAccounts;
+          global.contract = describeWithAccounts;
+          global.assert = assert;
+          global.config = config;
+        });
 
         mocha.suite.timeout(TEST_TIMEOUT);
         files.forEach(f => mocha.addFile(f));
@@ -350,7 +240,7 @@ class TestRunner {
         mocha.run((failures) => {
           next(null, failures);
         });
-      },
+      }
     ], (err, failures) => {
       cb(err, failures);
     });
