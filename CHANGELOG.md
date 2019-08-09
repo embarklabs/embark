@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.6](https://github.com/embark-framework/embark/compare/v4.1.0-beta.5...v4.1.0-beta.6) (2019-08-09)
+
+
+### Bug Fixes
+
+* **@embark/accountParser:** exit on unsupported account configs ([78bb9bc](https://github.com/embark-framework/embark/commit/78bb9bc))
+* **@embark/cli:** properly forward cli options to ethereum simulator ([beebbe6](https://github.com/embark-framework/embark/commit/beebbe6))
+* **@embark/embarkjs-ipfs:** use `version()` API instead of `id()` to determine availability ([1595e4b](https://github.com/embark-framework/embark/commit/1595e4b))
+* **@embark/ipfs:** fix ipfs upload with wrong error message ([27bd574](https://github.com/embark-framework/embark/commit/27bd574))
+* **@embark/library-manager:** add a check/warning for `"1.0.0-beta"` web3 version in installAll ([6dd0628](https://github.com/embark-framework/embark/commit/6dd0628))
+* **@embark/pipeline:** adjust ignore paths ([e58c552](https://github.com/embark-framework/embark/commit/e58c552))
+* **@embark/pipeline:** check if config arg of writeStats is falsy ([9d81fc5](https://github.com/embark-framework/embark/commit/9d81fc5))
+* **@embark/pipeline:** streamline contract index file creation ([810c3be](https://github.com/embark-framework/embark/commit/810c3be))
+* **@embark/site:** fix configuring contract link in structure.md ([9c0923c](https://github.com/embark-framework/embark/commit/9c0923c))
+* **@embark/test-runner:** fix describe in describe tests ([c2094db](https://github.com/embark-framework/embark/commit/c2094db))
+* **@embark/ui:** fix errorEntities not working at all ([5ab4c22](https://github.com/embark-framework/embark/commit/5ab4c22))
+
+
+### Features
+
+* **@embark/cmd:** add a warning on build and upload if development ([9e74d32](https://github.com/embark-framework/embark/commit/9e74d32))
+* **@embark/pipeline:** add minimalContractSize to remove bytecode ([b0cccae](https://github.com/embark-framework/embark/commit/b0cccae))
+* **@embark/pipeline:** enable choosing which fields to filter out ([b5c81bd](https://github.com/embark-framework/embark/commit/b5c81bd))
+* **@embark/site:** add docs on filteredFields ([59eb69c](https://github.com/embark-framework/embark/commit/59eb69c))
+* **@embark/site:** add documentation on minimalContractSize ([f9fb302](https://github.com/embark-framework/embark/commit/f9fb302))
+* **homepage:** add section with logos from companies, who use embark ([178d8cd](https://github.com/embark-framework/embark/commit/178d8cd))
+
+
+
+
+
 # [4.1.0-beta.5](https://github.com/embark-framework/embark/compare/v4.1.0-beta.4...v4.1.0-beta.5) (2019-07-10)
 
 

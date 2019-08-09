@@ -1,6 +1,6 @@
 {
   "name": "embark-ens",
-  "version": "4.1.0-beta.5",
+  "version": "4.1.0-beta.6",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Implements ENS support in Embark",
@@ -49,11 +49,11 @@
   "dependencies": {
     "@babel/runtime-corejs2": "7.3.1",
     "async": "2.6.1",
-    "embark-core": "^4.1.0-beta.5",
+    "embark-core": "^4.1.0-beta.6",
     "embark-i18n": "^4.1.0-beta.3",
-    "embark-utils": "^4.1.0-beta.5",
-    "embarkjs": "^4.1.0-beta.5",
-    "embarkjs-ens": "^4.1.0-beta.5",
+    "embark-utils": "^4.1.0-beta.6",
+    "embarkjs": "^4.1.0-beta.6",
+    "embarkjs-ens": "^4.1.0-beta.6",
     "eth-ens-namehash": "2.0.8"
   },
   "devDependencies": {

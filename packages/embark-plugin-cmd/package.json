@@ -1,6 +1,6 @@
 {
   "name": "embark-plugin-cmd",
-  "version": "4.1.0-beta.5",
+  "version": "4.1.0-beta.6",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Plugin installation utility for Embark",
@@ -39,7 +39,7 @@
   "dependencies": {
     "async": "2.6.1",
     "embark-i18n": "^4.1.0-beta.3",
-    "embark-utils": "^4.1.0-beta.5"
+    "embark-utils": "^4.1.0-beta.6"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
