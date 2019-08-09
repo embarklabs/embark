@@ -233,7 +233,12 @@ class TemplateGenerator {
         }
       }
 
-      const installCmd = this.monorepoRootPath ? 'yarn install' : 'npm install';
+      let installCmd;
+      if (this.monorepoRootPath && !fs.existsSync('package-lock.json')) {
+        installCmd = 'yarn install';
+      } else {
+        installCmd = 'npm install';
+      }
 
       runCmd(installCmd, {exitOnError: false}, (err) => {
         if (err) {
