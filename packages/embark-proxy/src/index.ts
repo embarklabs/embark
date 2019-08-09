@@ -43,7 +43,7 @@ export default class ProxyManager {
       }
       // TODO Check if the proxy can support HTTPS, though it probably doesn't matter since it's local
       if (this.embark.config.blockchainConfig.wsRPC) {
-        // return cb(null, `ws://${this.host}:${this.wsPort}`);
+        return cb(null, `ws://${this.host}:${this.wsPort}`);
       }
       cb(null, `http://${this.host}:${this.rpcPort}`);
     });
@@ -75,8 +75,8 @@ export default class ProxyManager {
       .serve(
         this.embark.config.blockchainConfig.endpoint,
         this.host,
-        this.rpcPort,
-        false,
+        this.embark.config.blockchainConfig.wsRPC ? this.wsPort : this.rpcPort,
+        this.embark.config.blockchainConfig.wsRPC,
         null,
       );
     return;

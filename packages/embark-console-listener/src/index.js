@@ -120,6 +120,7 @@ class ConsoleListener {
       if (this.transactions[args.respData.result.transactionHash]) {
         // This is the normal case. If we don't get here, it's because we missed a TX
         dataObject = Object.assign(dataObject, this.transactions[args.respData.result.transactionHash]);
+        delete this.transactions[args.respData.result.transactionHash]; // No longer needed
       }
     } else {
       dataObject = args.reqData.params[0];
