@@ -28,6 +28,12 @@ class LibraryManager {
     let web3VersionInConfig = this.contractsConfig.versions["web3"];
     let ipfsApiVersion = this.storageConfig.versions["ipfs-api"];
 
+    if (web3VersionInConfig === "1.0.0-beta") {
+      const embarkWeb3Version = this.embark.config.package.dependencies["web3"];
+      web3VersionInConfig = embarkWeb3Version;
+      this.embark.logger.warn(`web3 version in embark.json is 1.0.0-beta, using ${embarkWeb3Version} instead, please update your project's embark.json`);
+    }
+
     this.versions['solc'] = solcVersionInConfig;
     this.versions['web3'] = web3VersionInConfig;
     this.versions['ipfs-api'] = ipfsApiVersion;
