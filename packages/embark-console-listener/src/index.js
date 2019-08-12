@@ -90,7 +90,6 @@ class ConsoleListener {
   }
 
   _onLogRequest(args) {
-    //TODO test this once you can Need to make the Dapp connect first
     const method = args.reqData.method;
     if (!this.contractsDeployed || !LISTENED_METHODS.includes(method)) {
       return;
@@ -156,7 +155,6 @@ class ConsoleListener {
     }
 
     if (method === ETH_CALL) {
-      // TODO check what the event does
       const log = Object.assign({}, args, {name, functionName, paramString});
       log.status = '0x1';
       return this.events.emit('contracts:log', log);

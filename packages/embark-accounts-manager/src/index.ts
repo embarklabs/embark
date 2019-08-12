@@ -44,7 +44,7 @@ export default class AccountsManager {
             return callback(err, null);
           }
           params.reqData.method = "eth_sendRawTransaction";
-          params.reqData.params = [result.rawTransaction] ;
+          params.reqData.params = [result.rawTransaction];
           callback(err, params);
         });
       }
@@ -75,7 +75,7 @@ export default class AccountsManager {
       const provider = await this.events.request2("blockchain:client:provider", "ethereum");
       this.web3 = new Web3(provider);
     }
-    // TODO add fund account
+
     const nodeAccounts = await this.web3.eth.getAccounts();
     this.accounts = AccountParser.parseAccountsConfig(this.embark.config.blockchainConfig.accounts, this.web3, dappPath(), this.logger, nodeAccounts);
 

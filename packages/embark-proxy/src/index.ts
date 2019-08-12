@@ -1,5 +1,6 @@
 import {Embark, Events, Logger} /* supplied by @types/embark in packages/embark-typings */ from "embark";
 import {IPC} from "embark-core";
+import {__} from "embark-i18n";
 import {AccountParser, dappPath, findNextPort} from "embark-utils";
 import {Proxy} from "./proxy";
 
@@ -30,6 +31,10 @@ export default class ProxyManager {
       this.ready = true;
       this.events.emit("proxy:ready");
     });
+
+    if (!this.embark.config.blockchainConfig.proxy) {
+      this.logger.warn(__("The proxy has been disabled. This means that some Embark features will not work, like the wallet for your custom accounts or the transaction logger"));
+    }
 
     this.events.setCommandHandler("proxy:onReady", async (cb) => {
       await this.onReady();
