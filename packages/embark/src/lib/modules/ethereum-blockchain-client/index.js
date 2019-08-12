@@ -16,6 +16,7 @@ class EthereumBlockchainClient {
     this.embark.registerActionForEvent('deployment:contract:beforeDeploy', this.determineArguments.bind(this));
     this.embark.registerActionForEvent('deployment:contract:beforeDeploy', this.doLinking.bind(this));
     this.embark.registerActionForEvent('deployment:contract:beforeDeploy', checkContractSize.bind(this));
+    this.embark.registerActionForEvent('deployment:contract:beforeDeploy', this.determineAccounts.bind(this));
     this.events.request("blockchain:client:register", "ethereum", this.getClient.bind(this));
     this.events.request("deployment:deployer:register", "ethereum", this.deployer.bind(this));
   }
@@ -188,6 +189,31 @@ class EthereumBlockchainClient {
       params.contract.args = realArgs;
       callback(null, params);
     });
+  }
+
+  async determineAccounts(params, callback) {
+    let provider = await this.events.request2("blockchain:client:provider", "ethereum");
+    let web3 = new Web3(provider)
+    let accounts = await web3.eth.getAccounts();
+    let deploymentAccount = accounts[0];
+    let contract = params.contract;
+
+    // applying deployer account configuration, if any
+    if (typeof contract.fromIndex === 'number') {
+      deploymentAccount = accounts[contract.fromIndex];
+      if (deploymentAccount === undefined) {
+        return callback(__("error deploying") + " " + contract.className + ": " + __("no account found at index") + " " + contract.fromIndex + __(" check the config"));
+      }
+    }
+    if (typeof contract.from === 'string' && typeof contract.fromIndex !== 'undefined') {
+      self.logger.warn(__('Both "from" and "fromIndex" are defined for contract') + ' "' + contract.className + '". ' + __('Using "from" as deployer account.'));
+    }
+    if (typeof contract.from === 'string') {
+      deploymentAccount = contract.from;
+    }
+
+    contract.deploymentAccount = deploymentAccount;
+    callback(null, params);
   }
 
   addContractJSONToPipeline(params, cb) {
