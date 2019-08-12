@@ -12,21 +12,20 @@ const Templates = {
 };
 
 class EmbarkWeb3 {
-  constructor(embark, options) {
+  constructor(embark, _options) {
     this.embarkConfig = embark.config.embarkConfig;
     this.embark = embark;
     this.logger = embark.logger;
     this.events = embark.events;
     this.fs = embark.fs;
     this.config = embark.config;
-    let plugin = options.plugins.createPlugin('web3plugin', {});
 
     this.events.request("runcode:whitelist", 'web3', () => { });
 
     this.events.on("blockchain:started", this.registerWeb3Object.bind(this));
-    plugin.registerActionForEvent("pipeline:generateAll:before", this.addWeb3Artifact.bind(this));
-    plugin.registerActionForEvent("deployment:contract:deployed", this.registerInVm.bind(this));
-    plugin.registerActionForEvent("deployment:contract:deployed", this.registerArtifact.bind(this));
+    embark.registerActionForEvent("pipeline:generateAll:before", this.addWeb3Artifact.bind(this));
+    embark.registerActionForEvent("deployment:contract:deployed", this.registerInVm.bind(this));
+    embark.registerActionForEvent("deployment:contract:deployed", this.registerArtifact.bind(this));
 
     this.registerWeb3Help()
   }
