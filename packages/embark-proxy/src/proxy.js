@@ -20,9 +20,6 @@ export class Proxy {
   }
 
   async serve(endpoint, localHost, localPort, ws, origin) {
-    console.log('Endpoint', endpoint);
-    console.log('localPort', localPort);
-    console.log('ws', ws);
     const start = Date.now();
     const {host, port} = deconstructUrl(endpoint);
     await (function waitOnTarget() {
@@ -63,7 +60,7 @@ export class Proxy {
           jsonData = JSON.parse(data);
         } catch (e) {
           this.logger.error(__('Error parsing response'), e.message);
-          return; // TODO what do we do?
+          return;
         }
         const msg = messages[jsonData.id];
         if (!msg) {
@@ -88,7 +85,7 @@ export class Proxy {
             jsonMsg = JSON.parse(msg);
           } catch (e) {
             this.logger.error(__('Error parsing request'), e.message);
-            return; // TODO what do we do?
+            return;
           }
           messages[jsonMsg.id] = {msg: jsonMsg, ws};
           // Modify request
