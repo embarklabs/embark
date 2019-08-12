@@ -1,6 +1,6 @@
 {
   "name": "embark-blockchain-connector",
-  "version": "4.1.0-beta.6",
+  "version": "4.1.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Blockchain Connector for Embark",
@@ -48,10 +48,10 @@
   "dependencies": {
     "@babel/runtime-corejs2": "7.3.1",
     "async": "2.6.1",
-    "embark-core": "^4.1.0-beta.6",
-    "embark-i18n": "^4.1.0-beta.3",
-    "embark-utils": "^4.1.0-beta.6",
-    "embarkjs": "^4.1.0-beta.6",
+    "embark-core": "^4.1.0",
+    "embark-i18n": "^4.1.0",
+    "embark-utils": "^4.1.0",
+    "embarkjs": "^4.1.0",
     "ethereumjs-tx": "1.3.7",
     "ethereumjs-util": "6.0.0",
     "ganache-cli": "6.4.3",

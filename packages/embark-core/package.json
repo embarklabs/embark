@@ -1,6 +1,6 @@
 {
   "name": "embark-core",
-  "version": "4.1.0-beta.6",
+  "version": "4.1.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Core library for Embark",
@@ -49,9 +49,9 @@
   },
   "dependencies": {
     "@babel/runtime-corejs2": "7.3.1",
-    "embark-i18n": "^4.1.0-beta.3",
-    "embark-process-logs-api": "^4.1.0-beta.6",
-    "embark-utils": "^4.1.0-beta.6",
+    "embark-i18n": "^4.1.0",
+    "embark-process-logs-api": "^4.1.0",
+    "embark-utils": "^4.1.0",
     "flatted": "0.2.3",
     "fs-extra": "7.0.1",
     "node-ipc": "9.1.1",
