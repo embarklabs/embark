@@ -215,7 +215,8 @@ class Engine {
   }
 
   storageComponent() {
-    this.registerModulePackage('embark-ipfs', {plugins: this.plugins});
+    this.registerModulePackage('embark-ipfs');
+    this.registerModulePackage('embark-swarm');
   }
 
   communicationComponents() {
@@ -394,6 +395,7 @@ class Engine {
   storageService(_options) {
     this.registerModulePackage('embark-storage', {plugins: this.plugins});
     this.registerModulePackage('embark-ipfs');
+    this.registerModulePackage('embark-swarm');
     // this.registerModulePackage('embark-swarm');
 
     // this.events.setCommandHandler("module:storage:reset", (cb) => {
@@ -412,7 +414,7 @@ class Engine {
   }
 
   web3Service(options) {
-    this.registerModulePackage('embark-web3');
+    this.registerModulePackage('embark-web3', {plugins: this.plugins});
 
     this.registerModulePackage('embark-blockchain-process', {
       client: this.client,

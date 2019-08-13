@@ -1,7 +1,7 @@
-import { __ } from 'embark-i18n';
+import {__} from 'embark-i18n';
 
 class Storage {
-  constructor(embark, options){
+  constructor(embark, options) {
     this.embark = embark;
     this.embarkConfig = embark.config.embarkConfig;
     this.events = this.embark.events;
@@ -20,12 +20,12 @@ class Storage {
       const client = this.storageNodes[clientName];
       if (!client) return cb("storage " + clientName + " not found");
 
-      client.apply(client, [
-        () => {
-          this.events.emit("storage:started", clientName);
-          cb();
-        }
-      ]);
+      let onStart = () => {
+        this.events.emit("storage:started", clientName);
+        cb();
+      };
+
+      client.apply(client, [onStart]);
     });
 
     this.uploadNodes = {};
@@ -47,7 +47,7 @@ class Storage {
 
     this.events.request("pipeline:register", {
       path: [this.embarkConfig.generationDir, 'config'],
-      file: 'communication.json',
+      file: 'storage.json',
       format: 'json',
       content: config
     }, cb);

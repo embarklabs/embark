@@ -1,5 +1,5 @@
-import { ProcessWrapper } from 'embark-core';
-import { dappPath } from 'embark-utils';
+import {ProcessWrapper} from 'embark-core';
+import {dappPath} from 'embark-utils';
 const child_process = require('child_process');
 const constants = require('embark-core/constants');
 
@@ -19,6 +19,7 @@ class SwarmProcess extends ProcessWrapper {
     const self = this;
     let bzzaccount;
     let password;
+    // TODO(ericmastro): This needs to be updated to use the first unlocked node account based on the configuration. If node accounts are disabled in the config, use storageConfig.account.address/password and show an error if they are not configured.
     // use our storage config address/password if we have it
     if (this.storageConfig.account && this.storageConfig.account.address && this.storageConfig.account.password) {
       bzzaccount = this.storageConfig.account.address;
@@ -69,9 +70,11 @@ class SwarmProcess extends ProcessWrapper {
       console.log('Swarm: ' + data);
     });
     this.child.on('exit', (code) => {
+      let message = 'Swarm process exited';
       if (code) {
-        console.error('Swarm exited with error code ' + code);
+        message += " with error code " + code;
       }
+      swarmProcess.send({result: constants.storage.exit, error: message});
     });
   }
 
