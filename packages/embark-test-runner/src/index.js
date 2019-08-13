@@ -21,11 +21,15 @@ class TestRunner {
     this.events = embark.events;
     this.fs = embark.fs;
     this.ipc = options.ipc;
-    this.runResults = [];
+    this.runners = {};
     this.gasLimit = options.coverage ? COVERAGE_GAS_LIMIT : GAS_LIMIT;
 
     this.events.setCommandHandler('tests:run', (options, callback) => {
       this.run(options, callback);
+    });
+
+    this.events.setCommandHandler('tests:runner:register', (name, glob, addFn, runFn) => {
+      this.runners[name] = {glob, addFn, runFn};
     });
   }
 
@@ -45,6 +49,7 @@ class TestRunner {
         self.getFilesFromDir(testPath, next);
       },
       (files, next) => { // group files by types
+        // TODO: figure out what files belong where
         const types = { jsFiles: ".js", solidityFiles: "_test.sol" };
         const groups = Object.entries(types).reduce((acc, [type, ext]) => {
           acc[type] = files.filter(f => f.endsWith(ext));
@@ -168,7 +173,8 @@ class TestRunner {
             next();
           }
         ], (_err) => {
-            acctCb(accounts);
+            console.log('=====================> finished config');
+            acctCb(null, accounts);
             done();
         });
       });
@@ -200,6 +206,7 @@ class TestRunner {
       },
       (cf, next) => { // compile contracts
         console.log('compiling contracts');
+        console.dir(cf);
         events.request("compiler:contracts:compile", cf, next);
       },
       (cc, next) => { // override require
