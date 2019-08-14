@@ -9,7 +9,7 @@
     "embark-reset": "^4.1.0",
     "fs-extra": "7.0.1",
     "haml": "0.4.3",
-    "jquery": "3.3.1",
+    "jquery": "3.4.0",
     "react": "16.7.0",
     "react-bootstrap": "0.32.4",
     "react-dom": "16.7.0",
