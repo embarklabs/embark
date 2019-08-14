@@ -10,6 +10,7 @@ export default class AccountsManager {
   private readonly logger: Logger;
   private readonly events: Events;
   private accounts: any[];
+  private nodeAccounts: string[];
   private web3: any;
   private ready: boolean;
 
@@ -17,6 +18,7 @@ export default class AccountsManager {
     this.logger = embark.logger;
     this.events = embark.events;
     this.accounts = [];
+    this.nodeAccounts = [];
     this.ready = false;
 
     this.events.setCommandHandler("accounts-manager:onReady", (cb) => {
@@ -38,7 +40,7 @@ export default class AccountsManager {
     if (params.reqData.method === "eth_sendTransaction" && this.accounts.length) {
       // Check if we have that account in our wallet
       const account = this.accounts.find((acc) => Web3.utils.toChecksumAddress(acc.address) === Web3.utils.toChecksumAddress(params.reqData.params[0].from));
-      if (account) {
+      if (account && account.privateKey) {
         return this.web3.eth.accounts.signTransaction(params.reqData.params[0], account.privateKey , (err: any, result: any) => {
           if (err) {
             return callback(err, null);
@@ -52,9 +54,26 @@ export default class AccountsManager {
     callback(null, params);
   }
 
+  public arrayEqual(arrayA: string[], arrayB: string[]) {
+    if (arrayA.length !== arrayB.length) {
+      return false;
+    } else {
+      return arrayA.every((address, index) => Web3.utils.toChecksumAddress(address) === Web3.utils.toChecksumAddress(arrayB[index]));
+    }
+  }
+
   private async checkBlockchainResponse(params: any, callback: (error: any, result: any) => void) {
-    if (params.reqData.method === "eth_accounts" && this.accounts.length) {
-      params.respData.result = this.accounts.map((acc) => acc.address);
+    if ((params.reqData.method === "eth_accounts" || params.reqData.method === "personal_listAccounts") && this.accounts.length) {
+      if (!this.arrayEqual(params.respData.result, this.nodeAccounts)) {
+        this.nodeAccounts = params.respData.result;
+        this.accounts = AccountParser.parseAccountsConfig(this.embark.config.blockchainConfig.accounts, this.web3, dappPath(), this.logger, this.nodeAccounts);
+      }
+      params.respData.result = this.accounts.map((acc) => {
+        if (acc.address) {
+          return acc.address;
+        }
+        return acc;
+      });
       return callback(null, params);
     }
     callback(null, params);
@@ -77,6 +96,7 @@ export default class AccountsManager {
     }
 
     const nodeAccounts = await this.web3.eth.getAccounts();
+    this.nodeAccounts = nodeAccounts;
     this.accounts = AccountParser.parseAccountsConfig(this.embark.config.blockchainConfig.accounts, this.web3, dappPath(), this.logger, nodeAccounts);
 
     if (!this.accounts.length || !this.embark.config.blockchainConfig.isDev) {
