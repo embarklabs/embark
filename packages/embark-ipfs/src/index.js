@@ -11,7 +11,7 @@ const Templates = {
 
 class IPFS {
 
-  constructor(embark, options) {
+  constructor(embark, _options) {
     this.logger = embark.logger;
     this.events = embark.events;
     this.logger = embark.logger;
@@ -31,8 +31,7 @@ class IPFS {
     this.events.on("storage:started", this.registerIpfsObject.bind(this));
     this.events.on("storage:started", this.connectEmbarkJSProvider.bind(this));
 
-    let plugin = options.plugins.createPlugin('ipfsplugin', {});
-    plugin.registerActionForEvent("pipeline:generateAll:before", this.addEmbarkJSIpfsArtifact.bind(this));
+    embark.registerActionForEvent("pipeline:generateAll:before", this.addEmbarkJSIpfsArtifact.bind(this));
 
     this.events.request("storage:node:register", "ipfs", (readyCb) => {
       console.dir("--- ipfs readyCb")

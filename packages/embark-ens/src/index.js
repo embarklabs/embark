@@ -75,15 +75,16 @@ class ENS {
     this.modulesPath = dappPath(embark.config.embarkConfig.generationDir, dappArtifacts.symlinkDir);
     this.initated = false;
 
-    this.events.setCommandHandler("ens:resolve", this.ensResolve.bind(this));
-    this.events.setCommandHandler("ens:isENSName", this.isENSName.bind(this));
+    this.events.request("namesystem:node:register", "ens", (readyCb) => {
+      this.events.setCommandHandler("ens:resolve", this.ensResolve.bind(this));
+      this.events.setCommandHandler("ens:isENSName", this.isENSName.bind(this));
 
-    this.embark.events.setCommandHandler("module:namesystem:reset", (cb) => {
-      this.reset();
-      this.init(cb);
+      this.embark.events.setCommandHandler("module:namesystem:reset", (cb) => {
+        this.reset();
+        this.init(cb);
+      });
+      this.init(readyCb);
     });
-
-    this.init();
   }
 
   init(cb = () => {}) {
@@ -98,8 +99,10 @@ class ENS {
 
     this.registerEvents();
     this.registerConsoleCommands();
-    this.addENSToEmbarkJS(cb);
+    // TODO add this back
+    // this.addENSToEmbarkJS(cb);
     this.initated = true;
+    cb();
   }
 
   reset() {
@@ -149,13 +152,11 @@ class ENS {
   }
 
   registerEvents() {
-    this.embark.registerActionForEvent("deploy:beforeAll", this.configureContractsAndRegister.bind(this));
     if (this.eventsRegistered) {
       return;
     }
     this.eventsRegistered = true;
-    // TODO: re-add
-    // this.embark.registerActionForEvent("deploy:beforeAll", this.configureContractsAndRegister.bind(this));
+    this.embark.registerActionForEvent("deployment:deployContracts:beforeAll", this.configureContractsAndRegister.bind(this));
     this.events.on('blockchain:reseted', this.reset.bind(this));
     this.events.setCommandHandler("storage:ens:associate", this.associateStorageToEns.bind(this));
     this.events.setCommandHandler("ens:config", this.getEnsConfig.bind(this));
@@ -458,12 +459,14 @@ class ENS {
 
     async.waterfall([
       function getNetworkId(next) {
-        self.events.request('blockchain:networkId', (networkId) => {
+      // TODO fix me
+      //   self.events.request('blockchain:networkId', (networkId) => {
+        const networkId = 1337;
           if (ENS_CONTRACTS_CONFIG[networkId]) {
             self.ensConfig = recursiveMerge(self.ensConfig, ENS_CONTRACTS_CONFIG[networkId]);
           }
           next();
-        });
+        // });
       },
       function registry(next) {
         self.events.request('contracts:add', self.ensConfig.ENSRegistry);

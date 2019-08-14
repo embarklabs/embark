@@ -8,12 +8,11 @@ class Storage {
     this.storageConfig = embark.config.storageConfig;
     this.plugins = options.plugins;
 
-    let plugin = this.plugins.createPlugin('storageplugin', {});
-    plugin.registerActionForEvent("pipeline:generateAll:before", this.addArtifactFile.bind(this));
+    embark.registerActionForEvent("pipeline:generateAll:before", this.addArtifactFile.bind(this));
 
     this.storageNodes = {};
     this.events.setCommandHandler("storage:node:register", (clientName, startCb) => {
-      this.storageNodes[clientName] = startCb
+      this.storageNodes[clientName] = startCb;
     });
 
     this.events.setCommandHandler("storage:node:start", (storageConfig, cb) => {
@@ -21,12 +20,12 @@ class Storage {
       const client = this.storageNodes[clientName];
       if (!client) return cb("storage " + clientName + " not found");
 
-      let onStart = () => {
-        this.events.emit("storage:started", clientName);
-        cb();
-      }
-
-      client.apply(client, [onStart]);
+      client.apply(client, [
+        () => {
+          this.events.emit("storage:started", clientName);
+          cb();
+        }
+      ]);
     });
 
     this.uploadNodes = {};
@@ -53,7 +52,6 @@ class Storage {
       content: config
     }, cb);
   }
-
 }
 
 module.exports = Storage;

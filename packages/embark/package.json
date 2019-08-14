@@ -113,6 +113,7 @@
     "embark-library-manager": "^4.1.0-beta.5",
     "embark-listener": "^4.1.0-beta.5",
     "embark-logger": "^4.1.0-beta.5",
+    "embark-namesystem": "^4.1.0-beta.5",
     "embark-pipeline": "^4.1.0-beta.5",
     "embark-plugin-cmd": "^4.1.0-beta.5",
     "embark-process-logs-api": "^4.1.0-beta.5",

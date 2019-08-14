@@ -85,6 +85,7 @@ class Engine {
       "webserver": this.webserverService,
       "storage": this.storageComponent,
       "communication": this.communicationComponents,
+      "namesystem": this.namesystemComponents,
       "filewatcher": this.filewatcherService,
       "tests": this.testComponents
     };
@@ -161,8 +162,9 @@ class Engine {
     this.registerModulePackage('embark-contracts-manager', {plugins: this.plugins, compileOnceOnly: options.compileOnceOnly});
     this.registerModulePackage('embark-deployment', {plugins: this.plugins, onlyCompile: options.onlyCompile});
     this.registerModule('blockchain-client');
-    this.registerModulePackage('embark-storage', {plugins: this.plugins});
-    this.registerModule('communication', {plugins: this.plugins});
+    this.registerModulePackage('embark-storage');
+    this.registerModule('communication');
+    this.registerModulePackage('embark-namesystem');
   }
 
   blockchainComponents() {
@@ -197,16 +199,20 @@ class Engine {
 
     this.registerModule('ethereum-blockchain-client');
     // this.registerModule('web3', { plugins: this.plugins });
-    this.registerModulePackage('embark-web3', {plugins: this.plugins});
+    this.registerModulePackage('embark-web3');
     this.registerModulePackage('embark-specialconfigs', {plugins: this.plugins});
   }
 
   storageComponent() {
-    this.registerModulePackage('embark-ipfs', {plugins: this.plugins});
+    this.registerModulePackage('embark-ipfs');
   }
 
   communicationComponents() {
-    this.registerModulePackage('embark-whisper', {plugins: this.plugins});
+    this.registerModulePackage('embark-whisper');
+  }
+
+  namesystemComponents() {
+    this.registerModulePackage('embark-ens');
   }
 
   // ================
@@ -350,7 +356,6 @@ class Engine {
     this.registerModulePackage('embark-profiler');
     this.registerModulePackage('embark-deploy-tracker', {trackContracts: options.trackContracts});
     this.registerModulePackage('embark-specialconfigs');
-    this.registerModulePackage('embark-ens');
     this.registerModulePackage('embark-console-listener', {ipc: self.ipc});
     this.registerModulePackage('embark-deployment', {plugins: this.plugins, onlyCompile: options.onlyCompile});
     this.registerModulePackage('embark-transaction-tracker');

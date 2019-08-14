@@ -28,7 +28,7 @@ class Deployment {
     async.waterfall([
       // TODO used to be called this.plugins.emitAndRunActionsForEvent("deploy:beforeAll", (err) => {
       (next) => { this.plugins.emitAndRunActionsForEvent('deployment:deployContracts:beforeAll', {}, () => { next() }); },
-      (next) => { this.deployAll(contracts, contractDependencies, () => { next() }); },
+      (next) => { this.deployAll(contracts, contractDependencies, () => { next(); }); },
       (next) => {
         this.events.emit('contractsDeployed');
         this.plugins.emitAndRunActionsForEvent('deployment:deployContracts:afterAll', {}, () => { next() });
