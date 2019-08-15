@@ -6,7 +6,6 @@ import {dappArtifacts, ens} from 'embark-core/constants.json';
 import EmbarkJS, {Utils as embarkJsUtils} from 'embarkjs';
 import ensJS from 'embarkjs-ens';
 const ENSFunctions = ensJS.ENSFunctions;
-import * as path from 'path';
 const Web3 = require('web3');
 
 const ensConfig = require('./ensContractConfigs');
@@ -111,7 +110,7 @@ class ENS {
     })();
   }
 
-  init(cb = () => {}) {
+  async init(cb = () => {}) {
     if (this.initated || this.config.namesystemConfig === {} ||
       this.config.namesystemConfig.enabled !== true ||
       !this.config.namesystemConfig.available_providers ||
@@ -123,8 +122,10 @@ class ENS {
 
     this.registerEvents();
     this.registerConsoleCommands();
-    // TODO add this back
-    // this.addENSToEmbarkJS(cb);
+    this.events.request2("runcode:whitelist", 'eth-ens-namehash');
+    this.events.request2("runcode:whitelist", 'embarkjs');
+    this.events.request2("runcode:whitelist", 'embarkjs-ens');
+    await this.registerEmbarkJSNaming();
     this.initated = true;
     cb();
   }
@@ -202,7 +203,8 @@ class ENS {
   setProviderAndRegisterDomains(cb = (() => {})) {
     this.getEnsConfig(async (config) => {
       if (this.doSetENSProvider) {
-        this.addSetProvider(config);
+        this.addENSArtifact(config);
+        this.connectEmbarkJSProvider(config);
       }
 
       const web3 = await this.web3;
@@ -417,62 +419,45 @@ class ENS {
     );
   }
 
-  addENSToEmbarkJS(cb) {
-    this.events.request('version:downloadIfNeeded', 'eth-ens-namehash', (err, location) => {
-      if (err) {
-        this.logger.error(__('Error downloading NameHash'));
-        this.logger.error(err.message || err);
-        return cb();
+  addENSArtifact(config, cb = () => {}) {
+    const code = `
+      var EmbarkJS;
+      if (typeof EmbarkJS === 'undefined') {
+        EmbarkJS = require('embarkjs');
       }
+      const __embarkENS = require('embarkjs-ens');
+      EmbarkJS.Names.registerProvider('ens', __embarkENS.default || __embarkENS);
+      EmbarkJS.Names.setProvider('ens', ${JSON.stringify(config)});
+    `;
 
-      this.events.request('code-generator:ready', () => {
-        this.events.request('code-generator:symlink:generate', location, 'eth-ens-namehash', (err) => {
-          if (err) {
-            this.logger.error(__('Error creating a symlink to eth-ens-namehash'));
-            this.logger.error(err.message || err);
-            return cb();
-          }
-          this.events.emit('runcode:register', 'namehash', require('eth-ens-namehash'), () => {
-            cb();
-          });
-        });
-      });
+    this.events.request("pipeline:register", {
+      path: [this.config.embarkConfig.generationDir, 'ens'],
+      file: 'init.js',
+      format: 'js',
+      content: code
+    }, cb);
 
-      let linkedModulePath = path.join(this.modulesPath, 'embarkjs-ens');
-      if (process.platform === 'win32') linkedModulePath = linkedModulePath.replace(/\\/g, '\\\\');
-
-      const code = `
-        const __embarkENS = require('${linkedModulePath}');
-        EmbarkJS.Names.registerProvider('ens', __embarkENS.default || __embarkENS);
-      `;
-
-      this.events.request('version:downloadIfNeeded', 'embarkjs-ens', (err, location) => {
-        if (err) {
-          this.logger.error(__('Error downloading embarkjs-ens'));
-          throw err;
-        }
-
-        this.embark.addProviderInit("names", code, () => { return true; });
-        this.embark.addConsoleProviderInit("names", code, () => { return true; });
-
-        this.embark.addGeneratedCode((cb) => {
-          return cb(null, code, `embarkjs-ens`, location);
-        });
-      });
-    });
   }
 
-  addSetProvider(config) {
-    let code = "\nEmbarkJS.Names.setProvider('ens'," + JSON.stringify(config) + ");";
+  async registerEmbarkJSNaming() {
+    const checkEmbarkJS = `return (typeof EmbarkJS === 'undefined');`;
+    const EmbarkJSNotDefined = await this.events.request2('runcode:eval', checkEmbarkJS);
 
-    let shouldInit = (namesConfig) => {
-      return (namesConfig.provider === 'ens' && namesConfig.enabled === true);
-    };
+    if (EmbarkJSNotDefined) {
+      await this.events.request2("runcode:register", 'EmbarkJS', require('embarkjs'));
+    }
 
-    console.log('SETTING ENS');
-    // TODO This stacks the setProviders making it so that we call it multiple times
-    this.embark.addProviderInit('names', code, shouldInit);
-    this.embark.addConsoleProviderInit('names', code, shouldInit);
+    const registerProviderCode = `
+      const __embarkENS = require('embarkjs-ens');
+      EmbarkJS.Names.registerProvider('ens', __embarkENS.default || __embarkENS);
+    `;
+
+    await this.events.request2('runcode:eval', registerProviderCode);
+  }
+
+  async connectEmbarkJSProvider(config) {
+    let providerCode = `\nEmbarkJS.Names.setProviders(${JSON.stringify(config)});`;
+    await this.events.request2('runcode:eval', providerCode);
   }
 
   async configureContractsAndRegister(_options, cb) {
