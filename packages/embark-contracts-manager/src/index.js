@@ -33,7 +33,11 @@ class ContractsManager {
       cb(null, this.getContract(contractName));
     });
 
-    console.dir("---- contracts manager---- ")
+    this.events.setCommandHandler('contracts:add', (contract) => {
+      this.contracts[contract.className] = contract;
+    });
+
+    console.dir("---- contracts manager---- ");
 
         // this.registerCommands()
     // this.registerAPIs()

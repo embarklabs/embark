@@ -48,8 +48,11 @@ class EthereumBlockchainClient {
     console.dir("------- send")
 
     embarkJsUtils.secureSend(web3, contractObject, {
-      from: account, gas: 800000
+      from: account, gas: contract.gas
     }, true, (err, receipt) => {
+      if (err) {
+        return done(err);
+      }
       contract.deployedAddress = receipt.contractAddress;
       contract.transactionHash = receipt.transactionHash;
       done();

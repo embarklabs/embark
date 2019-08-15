@@ -1,4 +1,4 @@
-import { __ } from 'embark-i18n';
+import {__} from 'embark-i18n';
 import {AddressUtils, dappPath, hashTo32ByteHexString, recursiveMerge} from 'embark-utils';
 const namehash = require('eth-ens-namehash');
 const async = require('async');
@@ -7,6 +7,7 @@ import EmbarkJS, {Utils as embarkJsUtils} from 'embarkjs';
 import ensJS from 'embarkjs-ens';
 const ENSFunctions = ensJS.ENSFunctions;
 import * as path from 'path';
+const Web3 = require('web3');
 
 const ensConfig = require('./ensContractConfigs');
 const secureSend = embarkJsUtils.secureSend;
@@ -77,7 +78,9 @@ class ENS {
 
     this.events.request("namesystem:node:register", "ens", (readyCb) => {
       this.events.setCommandHandler("ens:resolve", this.ensResolve.bind(this));
-      this.events.setCommandHandler("ens:isENSName", this.isENSName.bind(this));
+      this.events.setCommandHandler("ens:isENSName", (name, cb) => {
+        setImmediate(cb, this.isENSName(name));
+      });
 
       this.embark.events.setCommandHandler("module:namesystem:reset", (cb) => {
         this.reset();
@@ -85,6 +88,27 @@ class ENS {
       });
       this.init(readyCb);
     });
+  }
+
+  get web3() {
+    return (async () => {
+      if (!this._web3) {
+        const provider = await this.events.request2("blockchain:client:provider", "ethereum");
+        this._web3 = new Web3(provider);
+      }
+      return this._web3;
+    })();
+  }
+
+  get web3DefaultAccount() {
+    return (async () => {
+      const web3 = await this.web3;
+      if (!web3.eth.defaultAccount) {
+        const accounts = await web3.eth.getAccounts();
+        web3.eth.defaultAccount = accounts[0];
+      }
+      return web3.eth.defaultAccount;
+    })();
   }
 
   init(cb = () => {}) {
@@ -176,21 +200,21 @@ class ENS {
   }
 
   setProviderAndRegisterDomains(cb = (() => {})) {
-    const self = this;
-    this.getEnsConfig((config) => {
-      if (self.doSetENSProvider) {
-        self.addSetProvider(config);
+    this.getEnsConfig(async (config) => {
+      if (this.doSetENSProvider) {
+        this.addSetProvider(config);
       }
 
-      self.events.request('blockchain:networkId', (networkId) => {
-        const isKnownNetwork = Boolean(ENS_CONTRACTS_CONFIG[networkId]);
-        const shouldRegisterSubdomain = self.config.namesystemConfig.register && self.config.namesystemConfig.register.subdomains && Object.keys(self.config.namesystemConfig.register.subdomains).length;
-        if (isKnownNetwork || !shouldRegisterSubdomain) {
-          return cb();
-        }
+      const web3 = await this.web3;
 
-        self.registerConfigDomains(config, cb);
-      });
+      const networkId = await web3.eth.net.getId();
+      const isKnownNetwork = Boolean(ENS_CONTRACTS_CONFIG[networkId]);
+      const shouldRegisterSubdomain = this.config.namesystemConfig.register && this.config.namesystemConfig.register.subdomains && Object.keys(this.config.namesystemConfig.register.subdomains).length;
+      if (isKnownNetwork || !shouldRegisterSubdomain) {
+        return cb();
+      }
+
+      this.registerConfigDomains(config, cb);
     });
   }
 
@@ -263,42 +287,43 @@ class ENS {
     ], cb);
   }
 
-  registerConfigDomains(config, cb) {
+  async registerConfigDomains(config, cb) {
+    const defaultAccount = await this.web3DefaultAccount;
+    async.each(Object.keys(this.config.namesystemConfig.register.subdomains), (subDomainName, eachCb) => {
+      const address = this.config.namesystemConfig.register.subdomains[subDomainName];
+      const directivesRegExp = new RegExp(/\$(\w+\[?\d?\]?)/g);
 
-    this.events.request("blockchain:defaultAccount:get", (defaultAccount) => {
-      async.each(Object.keys(this.config.namesystemConfig.register.subdomains), (subDomainName, eachCb) => {
-        const address = this.config.namesystemConfig.register.subdomains[subDomainName];
-        const directivesRegExp = new RegExp(/\$(\w+\[?\d?\]?)/g);
-
-        const directives = directivesRegExp.exec(address);
-        if (directives && directives.length) {
-          this.embark.registerActionForEvent("contracts:deploy:afterAll", async (deployActionCb) => {
-            if (!this.config.namesystemConfig.enabled) {
-              // ENS was disabled
+      const directives = directivesRegExp.exec(address);
+      if (directives && directives.length) {
+        this.embark.registerActionForEvent("contracts:deploy:afterAll", async (deployActionCb) => {
+          if (!this.config.namesystemConfig.enabled) {
+            // ENS was disabled
+            return deployActionCb();
+          }
+          this.events.request("blockchain:defaultAccount:get", (currentDefaultAccount) => {
+            if (defaultAccount !== currentDefaultAccount) {
+              this.logger.trace(`Skipping registration of subdomain "${directives[1]}" as this action was registered for a previous configuration`);
               return deployActionCb();
             }
-            this.events.request("blockchain:defaultAccount:get", (currentDefaultAccount) => {
-              if(defaultAccount !== currentDefaultAccount) {
-                this.logger.trace(`Skipping registration of subdomain "${directives[1]}" as this action was registered for a previous configuration`);
+            this.events.request("contracts:contract", directives[1], (contract) => {
+              if (!contract) {
+                // if the contract is not registered in the config, it will be undefined here
+                this.logger.error(__('Tried to register the subdomain "{{subdomain}}" as contract "{{contractName}}", ' +
+                  'but "{{contractName}}" does not exist. Is it configured in your contract configuration?', {
+                  contractName: directives[1],
+                  subdomain: subDomainName
+                }));
                 return deployActionCb();
               }
-              this.events.request("contracts:contract", directives[1], (contract) => {
-                if(!contract) {
-                  // if the contract is not registered in the config, it will be undefined here
-                  this.logger.error(__('Tried to register the subdomain "{{subdomain}}" as contract "{{contractName}}", ' +
-                  'but "{{contractName}}" does not exist. Is it configured in your contract configuration?', {contractName: directives[1], subdomain: subDomainName}));
-                  return deployActionCb();
-                }
-                this.safeRegisterSubDomain(subDomainName, contract.deployedAddress, defaultAccount, deployActionCb);
-              });
+              this.safeRegisterSubDomain(subDomainName, contract.deployedAddress, defaultAccount, deployActionCb);
             });
           });
-          return eachCb();
-        }
+        });
+        return eachCb();
+      }
 
-        this.safeRegisterSubDomain(subDomainName, address, defaultAccount, eachCb);
-      }, cb);
-    });
+      this.safeRegisterSubDomain(subDomainName, address, defaultAccount, eachCb);
+    }, cb);
   }
 
   safeRegisterSubDomain(subDomainName, address, defaultAccount, callback) {
@@ -313,15 +338,16 @@ class ENS {
       }
 
       const reverseNode = namehash.hash(address.toLowerCase().substr(2) + reverseAddrSuffix);
-      this.registerSubDomain(defaultAccount, subDomainName, reverseNode, address, secureSend, callback);
+      this.registerSubDomain(defaultAccount, subDomainName, reverseNode, address, secureSend, (err, result) => {
+        callback(err, result);
+      });
     });
   }
 
-  registerSubDomain(defaultAccount, subDomainName, reverseNode, address, secureSend, cb) {
-    this.events.request("blockchain:get", (web3) => {
-      ENSFunctions.registerSubDomain(web3, this.ensContract, this.registrarContract, this.resolverContract, defaultAccount,
-        subDomainName, this.config.namesystemConfig.register.rootDomain, reverseNode, address, this.logger, secureSend, cb, namehash);
-    });
+  async registerSubDomain(defaultAccount, subDomainName, reverseNode, address, secureSend, cb) {
+    const web3 = await this.web3;
+    ENSFunctions.registerSubDomain(web3, this.ensContract, this.registrarContract, this.resolverContract, defaultAccount,
+      subDomainName, this.config.namesystemConfig.register.rootDomain, reverseNode, address, this.logger, secureSend, cb, namehash);
   }
 
   createResolverContract(config, callback) {
@@ -449,38 +475,29 @@ class ENS {
     this.embark.addConsoleProviderInit('names', code, shouldInit);
   }
 
-  configureContractsAndRegister(cb) {
+  async configureContractsAndRegister(_options, cb) {
     const NO_REGISTRATION = 'NO_REGISTRATION';
     const self = this;
     if (self.configured) {
       return cb();
     }
     const registration = this.config.namesystemConfig.register;
+    const web3 = await this.web3;
+
+    const networkId = await web3.eth.net.getId();
+
+    if (ENS_CONTRACTS_CONFIG[networkId]) {
+      this.ensConfig = recursiveMerge(this.ensConfig, ENS_CONTRACTS_CONFIG[networkId]);
+    }
+
+    this.events.request('contracts:add', this.ensConfig.ENSRegistry);
+    await this.events.request2('deployment:contract:deploy', this.ensConfig.ENSRegistry);
+
+    this.ensConfig.Resolver.args = [this.ensConfig.ENSRegistry.deployedAddress];
+    this.events.request('contracts:add', this.ensConfig.Resolver);
+    await this.events.request2('deployment:contract:deploy', this.ensConfig.Resolver);
 
     async.waterfall([
-      function getNetworkId(next) {
-      // TODO fix me
-      //   self.events.request('blockchain:networkId', (networkId) => {
-        const networkId = 1337;
-          if (ENS_CONTRACTS_CONFIG[networkId]) {
-            self.ensConfig = recursiveMerge(self.ensConfig, ENS_CONTRACTS_CONFIG[networkId]);
-          }
-          next();
-        // });
-      },
-      function registry(next) {
-        self.events.request('contracts:add', self.ensConfig.ENSRegistry);
-        self.events.request('deploy:contract', self.ensConfig.ENSRegistry, (err, _receipt) => {
-          return next(err);
-        });
-      },
-      function resolver(next) {
-        self.ensConfig.Resolver.args = [self.ensConfig.ENSRegistry.deployedAddress];
-        self.events.request('contracts:add', self.ensConfig.Resolver);
-        self.events.request('deploy:contract', self.ensConfig.Resolver, (err, _receipt) => {
-          return next(err);
-        });
-      },
       function checkRootNode(next) {
         if (!registration || !registration.rootDomain) {
           return next(NO_REGISTRATION);
@@ -499,7 +516,7 @@ class ENS {
         contract.args = [registryAddress, rootNode];
 
         self.events.request('contracts:add', contract);
-        self.events.request('deploy:contract', contract, (err, _receipt) => {
+        self.events.request('deployment:contract:deploy', contract, (err) => {
           return next(err);
         });
       },
@@ -512,87 +529,61 @@ class ENS {
           resolverAbi: self.ensConfig.Resolver.abiDefinition,
           resolverAddress: self.ensConfig.Resolver.deployedAddress
         };
-        async.parallel([
-          function createRegistryContract(paraCb) {
-            self.events.request("blockchain:contract:create",
-              {abi: config.registryAbi, address: config.registryAddress},
-              (registry) => {
-                paraCb(null, registry);
-              });
-          },
-          function createRegistrarContract(paraCb) {
-            self.events.request("blockchain:contract:create",
-              {abi: config.registrarAbi, address: config.registrarAddress},
-              (registrar) => {
-                paraCb(null, registrar);
-              });
-          },
-          function createResolverContract(paraCb) {
-            self.events.request("blockchain:contract:create",
-              {abi: config.resolverAbi, address: config.resolverAddress},
-              (resolver) => {
-                paraCb(null, resolver);
-              });
-          },
-          function getWeb3(paraCb) {
-            self.events.request("blockchain:get",
-              (web3) => {
-                paraCb(null, web3);
-              });
-          }
-        ], async (err, result) => {
-          self.ensContract = result[0];
-          self.registrarContract = result[1];
-          self.resolverContract = result[2];
-          const web3 = result[3];
+
+        async function send() {
+          self.ensContract = new web3.eth.Contract(config.registryAbi, config.registryAddress);
+          self.registrarContract = new web3.eth.Contract(config.registrarAbi, config.registrarAddress);
+          self.resolverContract = new web3.eth.Contract(config.resolverAbi, config.resolverAddress);
+
+          const defaultAccount = await self.web3DefaultAccount;
 
           const rootNode = namehash.hash(registration.rootDomain);
-          var reverseNode = namehash.hash(web3.eth.defaultAccount.toLowerCase().substr(2) + reverseAddrSuffix);
+          const reverseNode = namehash.hash(defaultAccount.toLowerCase().substr(2) + reverseAddrSuffix);
           const owner = await self.ensContract.methods.owner(rootNode).call();
 
-          if (owner === web3.eth.defaultAccount) {
+          if (owner === defaultAccount) {
             return next();
           }
 
           // Set defaultAccount as the owner of the Registry
-          secureSend(web3, self.ensContract.methods.setOwner(rootNode, web3.eth.defaultAccount), {
-            from: web3.eth.defaultAccount,
+          secureSend(web3, self.ensContract.methods.setOwner(rootNode, defaultAccount), {
+            from: defaultAccount,
             gas: ENS_GAS_PRICE
           }, false).then(() => {
             // Set Registry's resolver to the one deployed above
             return secureSend(web3, self.ensContract.methods.setResolver(rootNode, config.resolverAddress), {
-              from: web3.eth.defaultAccount,
+              from: defaultAccount,
               gas: ENS_GAS_PRICE
             }, false);
           }).then(() => {
             // Set reverse node's resolver to the one above (needed for reverse resolve)
             return secureSend(web3, self.ensContract.methods.setResolver(reverseNode, config.resolverAddress), {
-              from: web3.eth.defaultAccount,
+              from: defaultAccount,
               gas: ENS_GAS_PRICE
             }, false);
           }).then(() => {
             // Set node to the default account in the resolver (means that the ENS node now resolves to the account)
-            return secureSend(web3, self.resolverContract.methods.setAddr(rootNode, web3.eth.defaultAccount), {
-              from: web3.eth.defaultAccount,
+            return secureSend(web3, self.resolverContract.methods.setAddr(rootNode, defaultAccount), {
+              from: defaultAccount,
               gas: ENS_GAS_PRICE
             }, false);
           }).then(() => {
             // Set name of the reverse node to the root domain
             return secureSend(web3, self.resolverContract.methods.setName(reverseNode, registration.rootDomain), {
-              from: web3.eth.defaultAccount,
+              from: defaultAccount,
               gas: ENS_GAS_PRICE
             }, false);
           }).then((_result) => {
             next();
-          })
-            .catch(err => {
-              self.logger.error('Error while registering the root domain');
-              if (err.message.indexOf('Transaction has been reverted by the EVM') > -1) {
-                return next(__('Registration was rejected. Did you change the deployment account? If so, delete chains.json'));
-              }
-              next(err);
-            });
-        });
+          }).catch(err => {
+            self.logger.error('Error while registering the root domain');
+            if (err.message.indexOf('Transaction has been reverted by the EVM') > -1) {
+              return next(__('Registration was rejected. Did you change the deployment account? If so, delete chains.json'));
+            }
+            next(err);
+          });
+        }
+        send();
       }
     ], (err) => {
       self.configured = true;
@@ -640,22 +631,13 @@ class ENS {
     ], cb);
   }
 
-  isENSName(name, callback = () => {}) {
-    // TODO in general (not just this function) control flow at callsite of
-    // internal/external APIs should be consistently async or sync:
-    //   + shouldn't both return a meaningful value and invoke callback, should
-    //     yield control flow to caller / it's callback one way or the other
-    //   + should return a promise if no callback is supplied
-    //   + NodeJS style callback-last callbacks should be expected to have
-    //     consistent `(err, value)` signature/behavior
-    //   + callback should executed async; see: built-in util.callbackify
+  isENSName(name) {
     let test;
     if (typeof name !== 'string') {
       test = false;
     } else {
       test = ENS_WHITELIST.some(ensExt => name.endsWith(ensExt));
     }
-    callback(test);
     return test;
   }
 }
