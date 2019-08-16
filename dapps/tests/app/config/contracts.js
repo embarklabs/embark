@@ -1,6 +1,7 @@
 module.exports = {
   default: {
     dappConnection: [
+      "ws://localhost:8556",
       "ws://localhost:8546",
       "http://localhost:8550",
       "http://localhost:8545",
