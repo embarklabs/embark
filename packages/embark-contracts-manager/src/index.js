@@ -1,11 +1,11 @@
-import { __ } from 'embark-i18n';
+import {__} from 'embark-i18n';
+
 const async = require('async');
 const constants = require('embark-core/constants');
-const { dappPath, proposeAlternative, toposort } = require('embark-utils');
+const {dappPath, proposeAlternative, toposort} = require('embark-utils');
 
 class ContractsManager {
   constructor(embark, options) {
-    console.dir("---- contracts manager---- ")
     this.embark = embark;
     this.logger = embark.logger;
     this.events = embark.events;
@@ -466,9 +466,6 @@ class ContractsManager {
             });
           }
 
-          // look in arguments for dependencies
-          if (contract.args === []) continue;
-
           let ref;
           if (Array.isArray(contract.args)) {
             ref = contract.args;
@@ -530,7 +527,7 @@ class ContractsManager {
         self.compileError = false;
       }
       self.logger.trace("finished".underline);
-      console.dir("done!!")
+      console.dir("done!!");
 
       done(err, self.contracts, self.contractDependencies);
     });

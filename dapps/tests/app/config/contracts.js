@@ -24,7 +24,7 @@ module.exports = {
       },
       SimpleStorageTest: {
         //file: "./some_folder/test_contract.sol",
-        args: [1000]
+        args: [1000, 'embark.eth']
       },
       AnotherStorage: {
         args: ["$SimpleStorage"]

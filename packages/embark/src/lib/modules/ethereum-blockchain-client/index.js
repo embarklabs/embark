@@ -1,10 +1,13 @@
+import {__} from 'embark-i18n';
+import {AddressUtils} from 'embark-utils';
 const async = require('async');
 const Web3 = require('web3');
 const embarkJsUtils = require('embarkjs').Utils;
+const {ZERO_ADDRESS} = AddressUtils;
 
 class EthereumBlockchainClient {
 
-  constructor(embark, options) {
+  constructor(embark, _options) {
     this.embark = embark;
     this.events = embark.events;
 
@@ -21,13 +24,13 @@ class EthereumBlockchainClient {
 
   async deployer(contract, done) {
     let provider = await this.events.request2("blockchain:client:provider", "ethereum");
-    var web3 = new Web3(provider)
+    var web3 = new Web3(provider);
     // var web3 = new Web3("ws://localhost:8556")
     // web3.eth.getAccounts().then((accounts) => {
     let accounts = await web3.eth.getAccounts();
     let account = accounts[0];
     // let contractObject = this.blockchain.ContractObject({abi: contract.abiDefinition});
-    console.dir("== ethereum contract deployer")
+    console.dir("== ethereum contract deployer");
     let contractObj = new web3.eth.Contract(contract.abiDefinition, contract.address);
     // let deployObject = this.blockchain.deployContractObject(contractObject, {arguments: contractParams, data: dataCode});
     let contractObject = contractObj.deploy({ arguments: (contract.args || []), data: ("0x" + contract.code) });
@@ -39,13 +42,13 @@ class EthereumBlockchainClient {
     }
 
     if (!contract.gasPrice) {
-      let gasPrice = await web3.eth.getGasPrice()
+      let gasPrice = await web3.eth.getGasPrice();
       contract.gasPrice = contract.gasPrice || gasPrice;
     }
 
     // this.blockchain.deployContractFromObject(deployObject,
     console.dir({ arguments: contract.args, data: ("0x" + contract.code) });
-    console.dir("------- send")
+    console.dir("------- send");
 
     embarkJsUtils.secureSend(web3, contractObject, {
       from: account, gas: contract.gas
@@ -65,7 +68,7 @@ class EthereumBlockchainClient {
   async doLinking(params, callback) {
     let contract = params.contract;
 
-    console.dir("= doLinking")
+    console.dir("= doLinking");
 
     if (!contract.linkReferences || !Object.keys(contract.linkReferences).length) {
       return callback(null, params);
@@ -110,13 +113,14 @@ class EthereumBlockchainClient {
   }
 
   // TODO we can separate this into 3 separate methods, which will make it easier to test
+  // TODO maybe move this to special-configs
   // determineArguments(suppliedArgs, contract, accounts, callback) {
   async determineArguments(params, callback) {
-    let suppliedArgs = params.contract.args;
-    let contract = params.contract;
-    let provider = await this.events.request2("blockchain:client:provider", "ethereum");
-    let web3 = new Web3(provider)
-    let accounts = await web3.eth.getAccounts();
+    const suppliedArgs = params.contract.args;
+    const contract = params.contract;
+    const provider = await this.events.request2("blockchain:client:provider", "ethereum");
+    const web3 = new Web3(provider);
+    const accounts = await web3.eth.getAccounts();
 
     const self = this;
 
@@ -160,21 +164,17 @@ class EthereumBlockchainClient {
           return checkArgs(arg, nextEachCb);
         }
 
-        return nextEachCb(null, arg);
-
-        // TODO: re-add after ENS is re-added OR better yet, move this to the ENS plugin
-        // self.events.request('ens:isENSName', arg, (isENSName) => {
-        //   if (isENSName) {
-        //     return self.events.request("ens:resolve", arg, (err, address) => {
-        //       if (err) {
-        //         return nextEachCb(err);
-        //       }
-        //       nextEachCb(err, address);
-        //     });
-        //   }
-
-        //   nextEachCb(null, arg);
-        // });
+        self.events.request('ens:isENSName', arg, (isENSName) => {
+          if (!isENSName) {
+            return nextEachCb(null, arg);
+          }
+          self.events.request("ens:resolve", arg, (err, address) => {
+            if (err) {
+              return nextEachCb(err);
+            }
+            nextEachCb(null, address);
+          });
+        });
       }, cb);
     }
 
@@ -188,7 +188,7 @@ class EthereumBlockchainClient {
   }
 
   addContractJSONToPipeline(params, cb) {
-    console.dir("-- addContractJSONToPipeline")
+    console.dir("-- addContractJSONToPipeline");
     // TODO: check if this is correct json object to generate
     const contract = params.contract;
 
