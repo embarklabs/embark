@@ -113,7 +113,6 @@ class EthereumBlockchainClient {
   }
 
   // TODO we can separate this into 3 separate methods, which will make it easier to test
-  // TODO maybe move this to special-configs
   // determineArguments(suppliedArgs, contract, accounts, callback) {
   async determineArguments(params, callback) {
     const suppliedArgs = params.contract.args;
@@ -156,25 +155,13 @@ class EthereumBlockchainClient {
 
     function checkArgs(argus, cb) {
       async.map(argus, (arg, nextEachCb) => {
-        if (arg[0] === "$") {
-          return parseArg(arg, nextEachCb);
-        }
-
         if (Array.isArray(arg)) {
           return checkArgs(arg, nextEachCb);
         }
-
-        self.events.request('ens:isENSName', arg, (isENSName) => {
-          if (!isENSName) {
-            return nextEachCb(null, arg);
-          }
-          self.events.request("ens:resolve", arg, (err, address) => {
-            if (err) {
-              return nextEachCb(err);
-            }
-            nextEachCb(null, address);
-          });
-        });
+        if (arg[0] === "$") {
+          return parseArg(arg, nextEachCb);
+        }
+        nextEachCb(null, arg);
       }, cb);
     }
 

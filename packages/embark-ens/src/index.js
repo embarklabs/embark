@@ -182,6 +182,7 @@ class ENS {
     }
     this.eventsRegistered = true;
     this.embark.registerActionForEvent("deployment:deployContracts:beforeAll", this.configureContractsAndRegister.bind(this));
+    this.embark.registerActionForEvent('deployment:contract:beforeDeploy', this.modifyENSArguments.bind(this));
     this.events.on('blockchain:reseted', this.reset.bind(this));
     this.events.setCommandHandler("storage:ens:associate", this.associateStorageToEns.bind(this));
     this.events.setCommandHandler("ens:config", this.getEnsConfig.bind(this));
@@ -578,6 +579,36 @@ class ENS {
       }
       self.registerAPI();
       self.setProviderAndRegisterDomains(cb);
+    });
+  }
+
+  modifyENSArguments(params, callback) {
+    const self = this;
+
+    function checkArgs(argus, cb) {
+      async.map(argus, (arg, nextEachCb) => {
+        if (Array.isArray(arg)) {
+          return checkArgs(arg, nextEachCb);
+        }
+
+        if (!self.isENSName(arg)) {
+          return nextEachCb(null, arg);
+        }
+        self.ensResolve(arg,  (err, address) => {
+          if (err) {
+            return nextEachCb(err);
+          }
+          nextEachCb(null, address);
+        });
+      }, cb);
+    }
+
+    checkArgs(params.contract.args, (err, realArgs) => {
+      if (err) {
+        return callback(err);
+      }
+      params.contract.args = realArgs;
+      callback(null, params);
     });
   }
 
