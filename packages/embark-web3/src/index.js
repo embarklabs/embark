@@ -64,6 +64,7 @@ class EmbarkWeb3 {
   addWeb3Artifact(_params, cb) {
     let web3Code = Templates.web3_init({connectionList: this.config.contractsConfig.dappConnection});
 
+    // TODO: generate a .node file
     this.events.request("pipeline:register", {
       path: [this.embarkConfig.generationDir, 'contracts'],
       file: 'web3_init.js',
