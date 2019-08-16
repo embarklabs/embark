@@ -488,7 +488,6 @@ class ENS {
           return next(NO_REGISTRATION);
         }
         if (!self.isENSName(registration.rootDomain)) {
-
           return next(__('Invalid domain name: {{name}}\nValid extensions are: {{extenstions}}',
             {name: registration.rootDomain, extenstions: ENS_WHITELIST.join(', ')}));
         }
@@ -582,7 +581,7 @@ class ENS {
     });
   }
 
-  ensResolve(name, cb) {
+  async ensResolve(name, cb) {
     const self = this;
     if (!self.enabled) {
       return cb('ENS not enabled');
@@ -591,6 +590,7 @@ class ENS {
       return cb('ENS not configured');
     }
     const hashedName = namehash.hash(name);
+    const web3 = await this.web3;
     async.waterfall([
       function getResolverAddress(next) {
         self.ensContract.methods.resolver(hashedName).call((err, resolverAddress) => {
@@ -604,11 +604,8 @@ class ENS {
         });
       },
       function createResolverContract(resolverAddress, next) {
-        self.events.request("blockchain:contract:create",
-          {abi: self.ensConfig.Resolver.abiDefinition, address: resolverAddress},
-          (resolver) => {
-            next(null, resolver);
-          });
+        const resolverContract = new web3.eth.Contract(self.ensConfig.Resolver.abiDefinition, resolverAddress);
+        next(null, resolverContract);
       },
       function resolveName(resolverContract, next) {
         resolverContract.methods.addr(hashedName).call(next);
