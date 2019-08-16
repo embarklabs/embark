@@ -214,15 +214,9 @@ class EmbarkController {
           console.dir("-- before timeout - file changed")
 
           if (fileType === 'contract' || fileType === 'config') {
-            let contractsFiles = await engine.events.request2("config:contractsFiles");
-            let compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
-            let _contractsConfig = await engine.events.request2("config:contractsConfig");
-            let contractsConfig = cloneDeep(_contractsConfig);
-            let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
             try {
-              await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
-            }
-            catch (err) {
+              await compileAndDeploySmartContracts(engine);
+            } catch (err) {
               engine.logger.error(err);
             }
           } else if (fileType === 'asset') {
@@ -474,13 +468,11 @@ class EmbarkController {
         });
 
         engine.startEngine(async () => {
-          let contractsFiles = await engine.events.request2("config:contractsFiles");
-          let compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
-          let _contractsConfig = await engine.events.request2("config:contractsConfig");
-          let contractsConfig = cloneDeep(_contractsConfig);
-          let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
-
-          await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
+          try {
+            await compileAndDeploySmartContracts(engine);
+          } catch (e) {
+            return callback(e);
+          }
           callback();
         });
       },
@@ -529,58 +521,75 @@ class EmbarkController {
     const isSecondaryProcess = (engine) => {return engine.ipc.connected && engine.ipc.isClient();};
 
     async.waterfall([
-      function initEngine(callback) {
+      callback => {
         engine.init({}, callback);
       },
-      function startServices(callback) {
+      callback => {
         let pluginList = engine.plugins.listPlugins();
         if (pluginList.length > 0) {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
 
-        engine.startService("web3");
-        engine.startService("deployment");
-        engine.startService("codeGenerator");
-        engine.startService("codeRunner");
-        engine.startService("console");
+        engine.registerModuleGroup("coreComponents");
+        engine.registerModuleGroup("stackComponents");
 
+        engine.registerModuleGroup("blockchain");
+        engine.registerModuleGroup("compiler");
+        engine.registerModuleGroup("contracts");
+        engine.registerModuleGroup("pipeline");
+        engine.registerModuleGroup("filewatcher");
+        engine.registerModuleGroup("storage");
+        engine.registerModuleGroup("communication");
+        engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
+        engine.registerModulePackage('embark-plugin-cmd', {embarkConfigFile: engine.embarkConfig, embarkConfig: engine.config.embarkConfig, packageFile: 'package.json'});
+        callback();
+      },
+      callback => {
         if (isSecondaryProcess(engine)) {
           return callback();
         }
-        engine.startService("embarkListener");
-        engine.startService("processManager");
-        engine.startService("coreProcess");
-        engine.startService("serviceMonitor");
-        engine.startService("libraryManager");
-        engine.startService("pipeline");
-        engine.startService("storage");
-        engine.startService("cockpit");
-        engine.startService("pluginCommand");
 
-        engine.events.request('blockchain:ready', callback);
-      },
-      function ipcConnect(callback) {
-        return callback();
-      },
-      function deploy(callback) {
-        // Skip if we are connected to a websocket, the server will do it
-        if (isSecondaryProcess(engine)) {
-          return callback();
-        }
-        engine.config.reloadConfig();
-        engine.events.request('deploy:contracts', function (err) {
-          callback(err);
+        let plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
+
+        plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
+          await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig);
+          try {
+            await Promise.all([
+              engine.events.request2("storage:node:start", engine.config.storageConfig),
+              engine.events.request2("communication:node:start", engine.config.communicationConfig)
+            ]);
+          } catch (e) {
+            return cb(e);
+          }
+          cb();
         });
-      },
-      function waitForWriteFinish(callback) {
-        // Skip if we are connected to a websocket, the server will do it
-        if (isSecondaryProcess(engine)) {
-          return callback();
-        }
-        engine.logger.info("Finished deploying".underline);
-        engine.events.once('outputDone', (err) => {
-          engine.logger.info(__("finished building").underline);
-          callback(err);
+
+        engine.events.on('outputDone', function () {
+          engine.logger.info((__("Looking for documentation? You can find it at") + " ").cyan + "http://embark.status.im/docs/".green.underline + ".".cyan);
+          engine.logger.info(__("Ready").underline);
+          engine.events.emit("status", __("Ready").green);
+        });
+
+        engine.events.on('file-event', async ({ fileType, path }) => {
+          if (fileType === 'contract' || fileType === 'config') {
+            try {
+              await compileAndDeploySmartContracts(engine);
+            } catch (e) {
+              engine.logger.error(e);
+            }
+          } else if (fileType === 'asset') {
+            engine.events.request('pipeline:generateAll', () => engine.events.emit('outputDone'));
+          }
+        });
+
+        engine.startEngine(async () => {
+          try {
+            await compileAndDeploySmartContracts(engine);
+          } catch (e) {
+            return callback(e);
+          }
+          engine.events.request2("watcher:start")
+          callback();
         });
       },
       function startREPL(callback) {
@@ -596,6 +605,7 @@ class EmbarkController {
       if (err) {
         engine.logger.error(err.message);
         engine.logger.info(err.stack);
+        process.exit(1);
       } else {
         engine.events.emit('firstDeploymentDone');
       }
@@ -1033,3 +1043,12 @@ class EmbarkController {
 }
 
 module.exports = EmbarkController;
+
+async function compileAndDeploySmartContracts(engine) {
+  let contractsFiles = await engine.events.request2("config:contractsFiles");
+  let compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
+  let _contractsConfig = await engine.events.request2("config:contractsConfig");
+  let contractsConfig = cloneDeep(_contractsConfig);
+  let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
+  return await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
+}
