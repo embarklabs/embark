@@ -419,54 +419,70 @@ class EmbarkController {
       client: options.client,
       locale: options.locale,
       version: this.version,
-      embarkConfig: 'embark.json',
+      embarkConfig: options.embarkConfig || 'embark.json',
       interceptLogs: false,
       logFile: options.logFile,
       logLevel: options.logLevel,
-      events: options.events,
       logger: options.logger,
       config: options.config,
-      plugins: options.plugins,
       context: this.context,
       webpackConfigName: options.webpackConfigName
     });
 
 
     async.waterfall([
-      function initEngine(callback) {
+      callback => {
         engine.init({}, callback);
       },
-      function startServices(callback) {
+      callback => {
         let pluginList = engine.plugins.listPlugins();
         if (pluginList.length > 0) {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
 
-        if (!options.onlyCompile) engine.startService("web3");
-        engine.startService("processManager");
-        engine.startService("libraryManager");
-        engine.startService("codeRunner");
-        engine.startService("pipeline");
-        engine.startService("codeGenerator");
+        engine.registerModuleGroup("coreComponents");
+        engine.registerModuleGroup("stackComponents");
+
+        engine.registerModuleGroup("compiler");
+        engine.registerModuleGroup("contracts");
+        engine.registerModuleGroup("pipeline");
+        engine.registerModuleGroup("communication");
+        engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
+
+        engine.registerModuleGroup("blockchain");
         if (!options.onlyCompile) {
-          engine.startService("deployment", {onlyCompile: options.onlyCompile});
-          engine.startService("storage");
-        } else {
-          engine.startService('compiler');
+          engine.registerModuleGroup("storage");
         }
 
-        callback();
-      },
-      function buildOrBuildAndDeploy(callback) {
-        if (options.onlyCompile) {
-          return engine.events.request('contracts:build', {}, err => {
-            if (err !== undefined) return callback(err);
-            engine.events.request('pipeline:build:contracts', err => callback(err));
+        engine.events.on('deployment:deployContracts:afterAll', () => {
+          engine.events.request('pipeline:generateAll', () => {
+            engine.events.emit('outputDone');
           });
-        }
+        });
 
-        // deploy:contracts will trigger a build as well
-        engine.events.request('deploy:contracts', err => callback(err));
+        let plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
+        plugin.registerActionForEvent("embark:engine:started", async (_, cb) => {
+          try {
+            await Promise.all([
+              engine.events.request2("blockchain:node:start", engine.config.blockchainConfig),
+              engine.events.request2("communication:node:start", engine.config.communicationConfig)
+            ]);
+          } catch (e) {
+            return cb(e);
+          }
+          cb();
+        });
+
+        engine.startEngine(async () => {
+          let contractsFiles = await engine.events.request2("config:contractsFiles");
+          let compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
+          let _contractsConfig = await engine.events.request2("config:contractsConfig");
+          let contractsConfig = cloneDeep(_contractsConfig);
+          let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
+
+          await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
+          callback();
+        });
       },
       function waitForWriteFinish(callback) {
         if (options.onlyCompile) {
@@ -478,6 +494,7 @@ class EmbarkController {
           engine.logger.info(__("Finished building").underline);
           callback(err, true);
         });
+
       }
     ], function (err, canExit) {
       if (err) {
