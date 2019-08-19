@@ -47,7 +47,7 @@
     "@storybook/addon-links": "^4.1.6",
     "@storybook/addon-options": "4.1.6",
     "@storybook/addons": "^4.1.6",
-    "@storybook/react": "^4.1.6",
+    "@storybook/react": "^5.1.11",
     "@svgr/webpack": "2.4.1",
     "ansi-to-html": "0.6.11",
     "array-move": "2.0.0",
