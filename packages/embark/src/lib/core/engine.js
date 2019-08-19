@@ -86,7 +86,8 @@ class Engine {
       "storage": this.storageComponent,
       "communication": this.communicationComponents,
       "filewatcher": this.filewatcherService,
-      "tests": this.testComponents
+      "tests": this.testComponents,
+      cockpit: this.cockpitModules
     };
 
     let group = groups[groupName];
@@ -137,7 +138,6 @@ class Engine {
       cb();
     });
     this.registerModulePackage('embark-code-runner', {ipc: this.ipc});
-
     // TODO: suggestions should be moved to their own module
     this.registerModulePackage('embark-console', {
       events: this.events,
@@ -147,6 +147,7 @@ class Engine {
       logger: this.logger,
       config: this.config
     });
+
 
     // TODO: we shouldn't need useDashboard
     this.registerModulePackage('embark-library-manager', {useDashboard: this.useDashboard});
@@ -199,6 +200,7 @@ class Engine {
     // this.registerModule('web3', { plugins: this.plugins });
     this.registerModulePackage('embark-web3', {plugins: this.plugins});
     this.registerModulePackage('embark-specialconfigs', {plugins: this.plugins});
+    this.registerModulePackage('embark-console-listener', {ipc: this.ipc});
   }
 
   storageComponent() {
@@ -241,7 +243,6 @@ class Engine {
       "coreProcess": this.coreProcessService,
       "processApi": this.processApiService,
       "blockchainListener": this.blockchainListenerService,
-      "embarkListener": this.embarkListenerService,
       "blockchain": this.blockchainComponents
     };
 
@@ -254,10 +255,6 @@ class Engine {
     // need to be careful with circular references due to passing the web3 object
     //this.logger.trace("calling: " + serviceName + "(" + JSON.stringify(options) + ")");
     return service.apply(this, [options]);
-  }
-
-  embarkListenerService(_options){
-    this.registerModulePackage('embark-listener');
   }
 
   blockchainListenerService(_options){
@@ -363,6 +360,11 @@ class Engine {
   }
 
   cockpitService() {
+    this.registerModulePackage('embark-authenticator', {singleUseAuthToken: this.singleUseAuthToken});
+    this.registerModulePackage('embark-api', {plugins: this.plugins});
+  }
+
+  cockpitModules() {
     this.registerModulePackage('embark-authenticator', {singleUseAuthToken: this.singleUseAuthToken});
     this.registerModulePackage('embark-api', {plugins: this.plugins});
   }
