@@ -20,7 +20,7 @@
     "hexo-renderer-sass": "^0.3.2",
     "hexo-renderer-stylus": "^0.3.1",
     "hexo-server": "^0.3.3",
-    "lodash": "^4.5.1",
+    "lodash": "^4.17.13",
     "lunr": "^2.1.2",
     "uuid": "^3.3.2"
   },
