@@ -147,7 +147,6 @@ class Engine {
       logger: this.logger,
       config: this.config
     });
-    this.registerModulePackage('embark-listener');
 
 
     // TODO: we shouldn't need useDashboard
@@ -201,6 +200,7 @@ class Engine {
     // this.registerModule('web3', { plugins: this.plugins });
     this.registerModulePackage('embark-web3', {plugins: this.plugins});
     this.registerModulePackage('embark-specialconfigs', {plugins: this.plugins});
+    this.registerModulePackage('embark-console-listener', {ipc: this.ipc});
   }
 
   storageComponent() {
@@ -243,7 +243,6 @@ class Engine {
       "coreProcess": this.coreProcessService,
       "processApi": this.processApiService,
       "blockchainListener": this.blockchainListenerService,
-      "embarkListener": this.embarkListenerService,
       "blockchain": this.blockchainComponents
     };
 
@@ -256,10 +255,6 @@ class Engine {
     // need to be careful with circular references due to passing the web3 object
     //this.logger.trace("calling: " + serviceName + "(" + JSON.stringify(options) + ")");
     return service.apply(this, [options]);
-  }
-
-  embarkListenerService(_options){
-    this.registerModulePackage('embark-listener');
   }
 
   blockchainListenerService(_options){
