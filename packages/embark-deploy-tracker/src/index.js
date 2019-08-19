@@ -86,7 +86,12 @@ class DeployTracker {
     getBlock(0, (err) => {
       if (err) {
         // Retry with block 1 (Block 0 fails with Ganache-cli using the --fork option)
-        return getBlock(1, callback);
+        return getBlock(1, (err) => {
+          if (err) {
+            self.logger.error(__('Error getting block data. The deploy-tracker will not work'), err);
+          }
+          callback();
+        });
       }
       callback();
     });
