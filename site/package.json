@@ -6,7 +6,7 @@
     "version": "3.8.0"
   },
   "dependencies": {
-    "cheerio": "^0.20.0",
+    "cheerio": "^0.22.0",
     "hexo": "3.8.0",
     "hexo-autoprefixer": "^2.0.0",
     "hexo-deployer-git": "^0.3.1",
