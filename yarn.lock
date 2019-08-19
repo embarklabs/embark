@@ -18000,10 +18000,10 @@ stream-browserify@^2.0.1:
     inherits "~2.0.1"
     readable-stream "^2.0.2"
 
-stream-chain@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/stream-chain/-/stream-chain-2.0.3.tgz#9155237a719c8bb2de883c2d1af66d1546f910c9"
-  integrity sha512-uCjJTDTAOgBrM2dLkS3mJGICUV3fL0eiTsGQ0bXiKU6et6/7dkTzZCp0eP1d8ZIwiWjthvQZlSx7NxMt7t1aFQ==
+stream-chain@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/stream-chain/-/stream-chain-2.1.0.tgz#a058a7104d7261a71bf7eb4c5f496f13dc665320"
+  integrity sha512-PAUXdRGm0G8P0+/+JEd3O9kfmB9kwmr2nKIc5zhcsHn0KdBByD5PJ2po21iDzc+TZsOSEbU8j4JbAevJsZkLyQ==
 
 stream-each@^1.1.0:
   version "1.2.3"
@@ -18029,12 +18029,12 @@ stream-http@^2.7.2:
     to-arraybuffer "^1.0.0"
     xtend "^4.0.0"
 
-stream-json@1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/stream-json/-/stream-json-1.1.3.tgz#4ebef75590f3af2a7291726a8e2bb2ce06d2c166"
-  integrity sha512-y+ChhCov2A5nDqC2aZ6HKXs3OvDlvAp0Ps3BF1P/Iv8tUZJQQsMVaSzk0WryVTVoGITKv01UYahCXMpAs7I0lQ==
+stream-json@1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/stream-json/-/stream-json-1.3.0.tgz#c7c0f40a808ce91181c15018fc3dbcd09bcd6cf8"
+  integrity sha512-3qLDv/xnwmleb5kssgmKbGPqcLou2tbFIgj3CM3fy5PxKaAmeCv103Zp4LKIALdE30zMHTJn09yVwxq773btaw==
   dependencies:
-    stream-chain "^2.0.3"
+    stream-chain "^2.1.0"
 
 stream-shift@^1.0.0:
   version "1.0.0"
