@@ -75,7 +75,7 @@
     "eslint-plugin-flowtype": "2.50.1",
     "eslint-plugin-import": "2.14.0",
     "eslint-plugin-jsx-a11y": "6.1.2",
-    "eslint-plugin-react": "7.11.1",
+    "eslint-plugin-react": "7.14.3",
     "ethereumjs-units": "0.2.0",
     "file-loader": "2.0.0",
     "font-awesome": "4.7.0",
@@ -137,6 +137,11 @@
     "extends": "react-app",
     "rules": {
       "react/prop-types": "warn"
+    },
+    "settings": {
+      "react": {
+        "version": "detect"
+      }
     }
   },
   "browserslist": [
