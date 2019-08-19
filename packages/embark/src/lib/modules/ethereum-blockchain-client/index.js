@@ -3,6 +3,7 @@ import {__} from 'embark-i18n';
 const async = require('async');
 const Web3 = require('web3');
 const embarkJsUtils = require('embarkjs').Utils;
+import checkContractSize from "./checkContractSize";
 
 class EthereumBlockchainClient {
 
@@ -14,6 +15,7 @@ class EthereumBlockchainClient {
     this.embark.registerActionForEvent("deployment:contract:deployed", this.addContractJSONToPipeline.bind(this));
     this.embark.registerActionForEvent('deployment:contract:beforeDeploy', this.determineArguments.bind(this));
     this.embark.registerActionForEvent('deployment:contract:beforeDeploy', this.doLinking.bind(this));
+    this.embark.registerActionForEvent('deployment:contract:beforeDeploy', checkContractSize.bind(this));
     this.events.request("blockchain:client:register", "ethereum", this.getClient.bind(this));
     this.events.request("deployment:deployer:register", "ethereum", this.deployer.bind(this));
   }
