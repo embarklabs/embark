@@ -16,7 +16,7 @@
     "hexo-generator-feed": "^1.1.0",
     "hexo-generator-sitemap": "^1.1.2",
     "hexo-renderer-jade": "^0.4.1",
-    "hexo-renderer-marked": "^0.2.10",
+    "hexo-renderer-marked": "^1.0.1",
     "hexo-renderer-sass": "^0.3.2",
     "hexo-renderer-stylus": "^0.3.1",
     "hexo-server": "^0.3.3",

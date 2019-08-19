@@ -2641,15 +2641,14 @@ hexo-renderer-jade@^0.4.1:
     jade "^1.11.0"
     pug "^2.0.0-rc.1"
 
-hexo-renderer-marked@^0.2.10:
-  version "0.2.11"
-  resolved "https://registry.yarnpkg.com/hexo-renderer-marked/-/hexo-renderer-marked-0.2.11.tgz#32fd3880d3c3979fd7b8015ec121a6c44ff49f84"
-  integrity sha1-Mv04gNPDl5/XuAFewSGmxE/0n4Q=
+hexo-renderer-marked@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/hexo-renderer-marked/-/hexo-renderer-marked-1.0.1.tgz#7752e55afa789eb05e0d47c72e286a12c2c8e080"
+  integrity sha512-oAOthvEYWJx4hvzD8WE7hOSYoTooOe5Vtb7mW6LtM3rEpQhXaWXPq7fOrEhCfdjgDr3DusSi7x19XgLIx+hcmQ==
   dependencies:
-    hexo-util "^0.6.0"
-    marked "^0.3.5"
-    object-assign "^4.1.0"
-    strip-indent "^1.0.1"
+    hexo-util "^0.6.2"
+    marked "^0.6.1"
+    strip-indent "^2.0.0"
 
 hexo-renderer-sass@^0.3.2:
   version "0.3.2"
@@ -2681,7 +2680,7 @@ hexo-server@^0.3.3:
     opn "^5.3.0"
     serve-static "^1.13.2"
 
-hexo-util@^0.6.0, hexo-util@^0.6.3:
+hexo-util@^0.6.0, hexo-util@^0.6.2, hexo-util@^0.6.3:
   version "0.6.3"
   resolved "https://registry.yarnpkg.com/hexo-util/-/hexo-util-0.6.3.tgz#16a2ade457bef955af0dfd22a3fe6f0a49a9137c"
   integrity sha512-zPxaqCWZz3/25SAB4FlrRtWktJ+Pr+vBiv/nyHpXKgXPt1m70liViKlRwWLqDmRjJ72x6/k4qCEeXHajvcGHUw==
@@ -3668,10 +3667,10 @@ markdown@~0.5.0:
   dependencies:
     nopt "~2.1.1"
 
-marked@^0.3.5:
-  version "0.3.19"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-0.3.19.tgz#5d47f709c4c9fc3c216b6d46127280f40b39d790"
-  integrity sha512-ea2eGWOqNxPcXv8dyERdSr/6FmzvWwzjMxpfGB/sbMccXoct+xY+YukPD+QTUZwyvK7BZwcr4m21WBOW41pAkg==
+marked@^0.6.1:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-0.6.3.tgz#79babad78af638ba4d522a9e715cdfdd2429e946"
+  integrity sha512-Fqa7eq+UaxfMriqzYLayfqAE40WN03jf+zHjT18/uXNuzjq3TY0XTbrAoPeqSJrAmPz11VuUA+kBPYOhHt9oOQ==
 
 matchdep@^2.0.0:
   version "2.0.0"
