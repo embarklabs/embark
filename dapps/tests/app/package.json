@@ -10,7 +10,7 @@
     "fs-extra": "7.0.1",
     "haml": "0.4.3",
     "jquery": "3.4.0",
-    "react": "16.7.0",
+    "react": "16.9.0",
     "react-bootstrap": "0.32.4",
     "react-dom": "16.7.0",
     "zeppelin-solidity": "1.12.0"
