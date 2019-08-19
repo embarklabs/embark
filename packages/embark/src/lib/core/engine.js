@@ -138,7 +138,6 @@ class Engine {
       cb();
     });
     this.registerModulePackage('embark-code-runner', {ipc: this.ipc});
-
     // TODO: suggestions should be moved to their own module
     this.registerModulePackage('embark-console', {
       events: this.events,
@@ -148,6 +147,8 @@ class Engine {
       logger: this.logger,
       config: this.config
     });
+    this.registerModulePackage('embark-listener');
+
 
     // TODO: we shouldn't need useDashboard
     this.registerModulePackage('embark-library-manager', {useDashboard: this.useDashboard});
