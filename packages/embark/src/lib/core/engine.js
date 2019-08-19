@@ -86,7 +86,8 @@ class Engine {
       "storage": this.storageComponent,
       "communication": this.communicationComponents,
       "filewatcher": this.filewatcherService,
-      "tests": this.testComponents
+      "tests": this.testComponents,
+      cockpit: this.cockpitModules
     };
 
     let group = groups[groupName];
@@ -363,6 +364,11 @@ class Engine {
   }
 
   cockpitService() {
+    this.registerModulePackage('embark-authenticator', {singleUseAuthToken: this.singleUseAuthToken});
+    this.registerModulePackage('embark-api', {plugins: this.plugins});
+  }
+
+  cockpitModules() {
     this.registerModulePackage('embark-authenticator', {singleUseAuthToken: this.singleUseAuthToken});
     this.registerModulePackage('embark-api', {plugins: this.plugins});
   }
