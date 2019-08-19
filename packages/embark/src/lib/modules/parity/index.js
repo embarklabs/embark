@@ -3,7 +3,7 @@ import {BlockchainProcessLauncher} from './blockchainProcessLauncher';
 import {ws, rpc} from './check.js';
 const constants = require('embark-core/constants');
 
-class Geth {
+class Parity {
 
   constructor(embark, options) {
     this.embark = embark;
@@ -21,7 +21,7 @@ class Geth {
       return;
     }
 
-    this.events.request("blockchain:node:register", constants.blockchain.clients.geth, (readyCb) => {
+    this.events.request("blockchain:node:register", constants.blockchain.clients.parity, (readyCb) => {
       console.dir('registering blockchain node');
       console.dir(readyCb);
       this.events.request('processes:register', 'blockchain', {
@@ -53,7 +53,7 @@ class Geth {
   _getNodeState(err, version, cb) {
     if (err) return cb({name: "Ethereum node not found", status: 'off'});
 
-    let nodeName = "go-ethereum";
+    let nodeName = "parity";
     let versionNumber = version.split("-")[0];
     let name = nodeName + " " + versionNumber + " (Ethereum)";
     return cb({name, status: 'on'});
@@ -71,7 +71,6 @@ class Geth {
   }
 
   startBlockchainNode(callback) {
-    console.log('startBlockchainNode');
     this.blockchainProcess = new BlockchainProcessLauncher({
       events: this.events,
       logger: this.logger,
@@ -101,4 +100,4 @@ class Geth {
 
 }
 
-module.exports = Geth;
+module.exports = Parity;

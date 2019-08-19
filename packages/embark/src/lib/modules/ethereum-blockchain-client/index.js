@@ -1,3 +1,5 @@
+import {__} from 'embark-i18n';
+
 const async = require('async');
 const Web3 = require('web3');
 const embarkJsUtils = require('embarkjs').Utils;
@@ -7,6 +9,7 @@ class EthereumBlockchainClient {
   constructor(embark, options) {
     this.embark = embark;
     this.events = embark.events;
+    this.logger = embark.logger;
 
     this.embark.registerActionForEvent("deployment:contract:deployed", this.addContractJSONToPipeline.bind(this));
     this.embark.registerActionForEvent('deployment:contract:beforeDeploy', this.determineArguments.bind(this));
@@ -30,7 +33,7 @@ class EthereumBlockchainClient {
     console.dir("== ethereum contract deployer")
     let contractObj = new web3.eth.Contract(contract.abiDefinition, contract.address);
     // let deployObject = this.blockchain.deployContractObject(contractObject, {arguments: contractParams, data: dataCode});
-    let contractObject = contractObj.deploy({ arguments: (contract.args || []), data: ("0x" + contract.code) });
+    let contractObject = contractObj.deploy({arguments: (contract.args || []), data: ("0x" + contract.code)});
 
     if (contract.gas === 'auto' || !contract.gas) {
       let gasValue = await contractObject.estimateGas();
@@ -44,7 +47,7 @@ class EthereumBlockchainClient {
     }
 
     // this.blockchain.deployContractFromObject(deployObject,
-    console.dir({ arguments: contract.args, data: ("0x" + contract.code) });
+    console.dir({arguments: contract.args, data: ("0x" + contract.code)});
     console.dir("------- send")
 
     embarkJsUtils.secureSend(web3, contractObject, {
@@ -52,7 +55,8 @@ class EthereumBlockchainClient {
     }, true, (err, receipt) => {
       contract.deployedAddress = receipt.contractAddress;
       contract.transactionHash = receipt.transactionHash;
-      done();
+      contract.log(`${contract.className.bold.cyan} ${__('deployed at').green} ${receipt.contractAddress.bold.cyan} ${__("using").green} ${receipt.gasUsed} ${__("gas").green} (txHash: ${receipt.transactionHash.bold.cyan})`);
+      done(err, receipt);
     }, (hash) => {
       console.dir('hash is ' + hash);
     });

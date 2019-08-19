@@ -1,7 +1,8 @@
-import { __ } from 'embark-i18n';
+import {__} from 'embark-i18n';
+import Contract from './contract';
 const async = require('async');
 const constants = require('embark-core/constants');
-const { dappPath, proposeAlternative, toposort } = require('embark-utils');
+const {dappPath, proposeAlternative, toposort} = require('embark-utils');
 
 class ContractsManager {
   constructor(embark, options) {
@@ -123,7 +124,7 @@ class ContractsManager {
           self.events.request("blockchain:contract:create", {abi: contract.abiDefinition, address: contract.deployedAddress}, async (contractObj) => {
             try {
               let value = typeof req.body.value === "number" ? req.body.value.toString() : req.body.value;
-              const gas = await contractObj.methods[req.body.method].apply(this, req.body.inputs).estimateGas({ value });
+              const gas = await contractObj.methods[req.body.method].apply(this, req.body.inputs).estimateGas({value});
               contractObj.methods[req.body.method].apply(this, req.body.inputs)[funcCall]({
                 from: account,
                 gasPrice: req.body.gasPrice,
@@ -148,7 +149,7 @@ class ContractsManager {
                   return res.send({result: error.message});
                 }
 
-                if(funcCall === 'call') {
+                if (funcCall === 'call') {
                   contractLog.status = '0x1';
                   return res.send({result});
                 }
@@ -223,13 +224,13 @@ class ContractsManager {
       '/embark-api/contract/deploy',
       (req, res) => {
         this.logger.trace(`POST request /embark-api/contract/deploy:\n ${JSON.stringify(req.body)}`);
-        if(typeof req.body.compiledContract !== 'object'){
+        if (typeof req.body.compiledContract !== 'object') {
           return res.send({error: 'Body parameter \'compiledContract\' must be an object'});
         }
         self.compiledContracts = Object.assign(self.compiledContracts, req.body.compiledContract);
         const contractNames = Object.keys(req.body.compiledContract);
         self.build((err, _mgr) => {
-          if(err){
+          if (err) {
             return res.send({error: err.message});
           }
 
@@ -243,12 +244,12 @@ class ContractsManager {
             });
           }, (err) => {
             let responseData = {};
-            if(err){
+            if (err) {
               responseData.error = err.message;
             }
             else responseData.result = contractNames;
-          this.logger.trace(`POST response /embark-api/contract/deploy:\n ${JSON.stringify(responseData)}`);
-          res.send(responseData);
+            this.logger.trace(`POST response /embark-api/contract/deploy:\n ${JSON.stringify(responseData)}`);
+            res.send(responseData);
           });
         }, false, false);
       }
@@ -263,6 +264,7 @@ class ContractsManager {
         self.events.emit("status", __("Building..."));
 
         async.eachOf(contractsConfig.contracts, (contract, className, eachCb) => {
+          contract = new Contract(self.logger, contract);
           if (!contract.artifact) {
             contract.className = className;
             contract.args = contract.args || [];
