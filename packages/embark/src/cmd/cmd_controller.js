@@ -145,9 +145,6 @@ class EmbarkController {
     async.waterfall([
       function initEngine(callback) {
         engine.init({}, () => {
-          // TODO: we can hook up this module to the action engine:start instead
-          // TODO: embark-listener & embark-process-logs-api can probably be merged
-          // engine.startService("embarkListener");
           if (!options.useDashboard) {
             engine.logger.info('========================'.bold.green);
             engine.logger.info((__('Welcome to Embark') + ' ' + engine.version).yellow.bold);

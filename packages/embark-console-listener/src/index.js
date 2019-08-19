@@ -1,6 +1,9 @@
 const async = require('async');
 import { __ } from 'embark-i18n';
 import { dappPath, getAddressToContract, getTransactionParams, hexToNumber } from 'embark-utils';
+const ProcessLogsApi = require('embark-process-logs-api');
+
+const EMBARK_PROCESS_NAME = 'embark';
 
 class ConsoleListener {
   constructor(embark, options) {
@@ -14,6 +17,7 @@ class ConsoleListener {
     this.contractsDeployed = false;
     this.outputDone = false;
     this.logFile = dappPath(".embark", "contractLogs.json");
+    this.processLogsApi = new ProcessLogsApi({embark: this.embark, processName: EMBARK_PROCESS_NAME, silent: false});
 
     if (this.ipc.ipcRole === 'server') {
       this._listenForLogRequests();
@@ -21,6 +25,9 @@ class ConsoleListener {
     this._registerAPI();
 
     this.events.on("contracts:log", this._saveLog.bind(this));
+    this.events.on("log", (logLevel, message) => {
+      this.processLogsApi.logHandler.handleLog({logLevel, message}, true);
+    });
     this.events.on('outputDone', () => {
       this.outputDone = true;
     });
