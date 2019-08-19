@@ -174,6 +174,7 @@ class EmbarkController {
         engine.registerModuleGroup("filewatcher");
         engine.registerModuleGroup("storage");
         engine.registerModuleGroup("communication");
+        engine.registerModuleGroup("cockpit");
         engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
 
         engine.events.on('deployment:deployContracts:afterAll', () => {
