@@ -116,7 +116,7 @@
     "react-sortable-hoc": "1.8.3",
     "react-treebeard": "3.1.0",
     "reactstrap": "6.5.0",
-    "redux": "4.0.1",
+    "redux": "4.0.4",
     "redux-saga": "0.16.2",
     "resolve": "1.8.1",
     "rimraf": "2.6.3",
