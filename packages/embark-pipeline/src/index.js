@@ -372,7 +372,7 @@ class Pipeline {
           // e.g. import * as Contracts from 'Embark/contracts'
           let importHelperFileCode = 'module.exports = {\n';
           Object.values(contracts).forEach(contract => {
-            importHelperFileCode += `"${contract.className}": require('./${contract.className}').default,\n`;
+            importHelperFileCode += `"${contract.className}": require('./${contract.className}'),\n`;
           });
           importHelperFileCode += '};';
           self.fs.writeFile(joinPath(contractsDir, 'index.js'), importHelperFileCode, (err) => {
