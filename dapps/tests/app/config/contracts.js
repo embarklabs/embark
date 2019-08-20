@@ -1,11 +1,8 @@
 module.exports = {
   default: {
     dappConnection: [
-      "ws://localhost:8556",
+      "$EMBARK",
       "ws://localhost:8546",
-      "http://localhost:8550",
-      "http://localhost:8545",
-      "http://localhost:8550",
       "$WEB3"
     ],
     gas: "auto",

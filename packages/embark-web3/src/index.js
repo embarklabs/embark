@@ -1,7 +1,8 @@
 /* global __dirname module process require */
 
-const { __ } = require('embark-i18n');
+const {__} = require('embark-i18n');
 const Web3 = require('web3');
+const async = require('async');
 
 require('ejs');
 const Templates = {
@@ -62,15 +63,27 @@ class EmbarkWeb3 {
   }
 
   addWeb3Artifact(_params, cb) {
-    let web3Code = Templates.web3_init({connectionList: this.config.contractsConfig.dappConnection});
+    async.map(this.config.contractsConfig.dappConnection, (conn, mapCb) => {
+      if (conn === '$EMBARK') {
+        // Connect to Embark's endpoint (proxy)
+        return this.events.request("blockchain:client:endpoint", mapCb);
+      }
+      mapCb(null, conn);
+    }, (err, results) => {
+      if (err) {
+        this.logger.error(__('Error getting dapp connection'));
+        return cb(err);
+      }
+      let web3Code = Templates.web3_init({connectionList: results});
 
     // TODO: generate a .node file
-    this.events.request("pipeline:register", {
-      path: [this.embarkConfig.generationDir, 'contracts'],
-      file: 'web3_init.js',
-      format: 'js',
-      content: web3Code
-    }, cb);
+      this.events.request("pipeline:register", {
+        path: [this.embarkConfig.generationDir, 'contracts'],
+        file: 'web3_init.js',
+        format: 'js',
+        content: web3Code
+      }, cb);
+    });
   }
 
   registerArtifact(params, cb) {
