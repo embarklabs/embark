@@ -14112,10 +14112,10 @@ mkdirp@*, mkdirp@0.5.1, mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0
   dependencies:
     minimist "0.0.8"
 
-mocha-sinon@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/mocha-sinon/-/mocha-sinon-1.2.0.tgz#95f034a8dade4da966a0f3afc89c126d8b589123"
-  integrity sha1-lfA0qNreTalmoPOvyJwSbYtYkSM=
+mocha-sinon@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/mocha-sinon/-/mocha-sinon-2.1.0.tgz#61e92727e577bee44cac6f32162dcec33c1301e5"
+  integrity sha512-E+rqBhoCQlvo+Kn9SY9qvoO/TWqJFnmxG70dyVYdFc6LGZAq08dr+pV2yUP4sBeMMYGYABB8T7NHNsG+4scy/A==
 
 mocha@5.2.0:
   version "5.2.0"
