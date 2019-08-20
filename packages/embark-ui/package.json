@@ -119,7 +119,7 @@
     "redux": "4.0.4",
     "redux-saga": "0.16.2",
     "resolve": "1.8.1",
-    "rimraf": "2.6.3",
+    "rimraf": "3.0.0",
     "sass-loader": "7.1.0",
     "simple-line-icons": "2.4.1",
     "style-loader": "0.23.0",

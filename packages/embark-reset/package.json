@@ -18,7 +18,7 @@
     "bin.js"
   ],
   "dependencies": {
-    "rimraf": "2.6.3"
+    "rimraf": "3.0.0"
   },
   "engines": {
     "node": ">=8.12.0 <12.0.0",
