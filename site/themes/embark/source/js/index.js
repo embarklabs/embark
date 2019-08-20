@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
     e.clearSelection();
   });
 
-  if (linkjuice) {
+  if (typeof linkjuice !== 'undefined') {
     linkjuice.init('.o-standard-page', {
       selectors: ['h2', 'h3', 'h4'],
       icon: '#',
@@ -55,4 +55,3 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
-
