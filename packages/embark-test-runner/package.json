@@ -51,7 +51,8 @@
     "embark-i18n": "^4.1.0",
     "embark-utils": "^4.1.0",
     "fs-extra": "7.0.1",
-    "mocha": "5.2.0"
+    "mocha": "5.2.0",
+    "open": "6.4.0"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",

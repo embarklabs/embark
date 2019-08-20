@@ -92,12 +92,12 @@ class TestRunner {
                 return next(err);
               }
               console.info(`Coverage report created. You can find it here: ${dappPath('coverage/index.html')}\n`);
-              const opn = require('opn');
+              const open = require('open');
               const _next = () => { next(null, results); };
               if (options.noBrowser) {
                 return next(null, results);
               }
-              opn(dappPath('coverage/index.html'), {wait: false})
+              open(dappPath('coverage/index.html'))
                 .then(() => timer(1000))
                 .then(_next, _next);
             });

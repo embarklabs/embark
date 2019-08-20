@@ -1,7 +1,7 @@
 import { __ } from 'embark-i18n';
 import {joinPath, canonicalHost, checkIsAvailable, findNextPort} from 'embark-utils';
 var Server = require('./server.js');
-const opn = require('opn');
+const open = require('open');
 
 require('ejs');
 const Templates = {
@@ -182,9 +182,8 @@ class WebServer {
 
   openBrowser(cb) {
     const _cb = () => { cb(); };
-    return opn(
-      `${this.protocol}://${canonicalHost(this.server.hostname)}:${this.server.port}`,
-      {wait: false}
+    return open(
+      `${this.protocol}://${canonicalHost(this.server.hostname)}:${this.server.port}`
     ).then(_cb, _cb); // fail silently, e.g. in a docker container
   }
 }
