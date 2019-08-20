@@ -13,12 +13,15 @@ export default class AccountsManager {
   private nodeAccounts: string[];
   private web3: any;
   private ready: boolean;
+  private signTransactionQueue: any;
+  private nonceCache: any;
 
   constructor(private readonly embark: Embark, _options: any) {
     this.logger = embark.logger;
     this.events = embark.events;
     this.accounts = [];
     this.nodeAccounts = [];
+    this.nonceCache = {};
     this.ready = false;
 
     this.events.setCommandHandler("accounts-manager:onReady", (cb) => {
@@ -34,6 +37,43 @@ export default class AccountsManager {
     this.events.setCommandHandler("accounts:get", (cb: any) => {
       cb(null, this.accounts);
     });
+
+    // Allow to run transaction in parallel by resolving the nonce manually.
+    // For each transaction, resolve the nonce by taking the max of current transaction count and the cache we keep locally.
+    // Update the nonce and sign it
+    this.signTransactionQueue = async.queue(({payload, account}, callback: (error: any, result: any) => void) => {
+      this.getNonce(payload.from, (err: any, newNonce: number) => {
+        if (err) {
+          return callback(err, null);
+        }
+        payload.nonce = newNonce;
+        this.web3.eth.accounts.signTransaction(payload, account.privateKey , (signingError: any, result: any) => {
+          if (signingError) {
+            return callback(signingError, null);
+          }
+          callback(null, result.rawTransaction);
+        });
+      });
+    }, 1);
+  }
+
+  private getNonce(address: string, callback: (error: any, result: any) => void) {
+    this.web3.eth.getTransactionCount(address, undefined, (error: any, transactionCount: number) => {
+      if (error) {
+        return callback(error, null);
+      }
+      if (this.nonceCache[address] === undefined) {
+        this.nonceCache[address] = -1;
+      }
+
+      if (transactionCount > this.nonceCache[address]) {
+        this.nonceCache[address] = transactionCount;
+        return callback(null, this.nonceCache[address]);
+      }
+
+      this.nonceCache[address]++;
+      callback(null, this.nonceCache[address]);
+    });
   }
 
   private async checkBlockchainRequest(params: any, callback: (error: any, result: any) => void) {
@@ -41,12 +81,12 @@ export default class AccountsManager {
       // Check if we have that account in our wallet
       const account = this.accounts.find((acc) => Web3.utils.toChecksumAddress(acc.address) === Web3.utils.toChecksumAddress(params.reqData.params[0].from));
       if (account && account.privateKey) {
-        return this.web3.eth.accounts.signTransaction(params.reqData.params[0], account.privateKey , (err: any, result: any) => {
+        return this.signTransactionQueue.push({payload: params.reqData.params[0], account}, (err: any, newPayload: any) => {
           if (err) {
             return callback(err, null);
           }
           params.reqData.method = "eth_sendRawTransaction";
-          params.reqData.params = [result.rawTransaction];
+          params.reqData.params = [newPayload];
           callback(err, params);
         });
       }
