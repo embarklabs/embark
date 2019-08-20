@@ -1,8 +1,24 @@
 
 // import {SimpleStorage} from '../../embarkArtifacts/contracts';
+import $ from 'jquery';
 import SimpleStorage from '../../embarkArtifacts/contracts/SimpleStorage.js';
-
+import web3 from '../../embarkArtifacts/contracts/web3_init';
+window.web3 = web3;
 window.SimpleStorage = SimpleStorage;
+
+$("#blockchain button.set").click(function() {
+  var value = parseInt($("#blockchain input.text").val(), 10);
+
+  SimpleStorage.methods.set(value).send({from: web3.eth.defaultAccount, gas: 5300000});
+});
+
+// TODO check why from not set
+$("#blockchain button.get").click(function() {
+  SimpleStorage.methods.get().call({from: web3.eth.defaultAccount}, function(err, value) {
+    console.log('GET', err, value);
+    $("#blockchain .value").html(value);
+  });
+});
 
 // /*global web3*/
 // import React  from 'react';

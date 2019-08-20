@@ -1,15 +1,23 @@
 const async = require('async');
-import { __ } from 'embark-i18n';
-import { dappPath, getAddressToContract, getTransactionParams, hexToNumber } from 'embark-utils';
+import {__} from 'embark-i18n';
+import {dappPath, getAddressToContract, getTransactionParams, hexToNumber} from 'embark-utils';
 const ProcessLogsApi = require('embark-process-logs-api');
 
 const EMBARK_PROCESS_NAME = 'embark';
 
+const Transaction = require('ethereumjs-tx');
+const ethUtil = require('ethereumjs-util');
+
+const ETH_CALL = 'eth_call';
+const GET_TX_RECEIPT = 'eth_getTransactionReceipt';
+const SEND_TX = 'eth_sendTransaction';
+const SEND_RAW_TX = 'eth_sendRawTransaction';
+const LISTENED_METHODS = [ETH_CALL, GET_TX_RECEIPT, SEND_TX, SEND_RAW_TX];
+
 class ConsoleListener {
-  constructor(embark, options) {
+  constructor(embark, _options) {
     this.embark = embark;
     this.logger = embark.logger;
-    this.ipc = options.ipc;
     this.events = embark.events;
     this.fs = embark.fs;
     this.addressToContract = [];
@@ -18,10 +26,9 @@ class ConsoleListener {
     this.outputDone = false;
     this.logFile = dappPath(".embark", "contractLogs.json");
     this.processLogsApi = new ProcessLogsApi({embark: this.embark, processName: EMBARK_PROCESS_NAME, silent: false});
+    this.transactions = {};
 
-    if (this.ipc.ipcRole === 'server') {
-      this._listenForLogRequests();
-    }
+    this._listenForLogRequests();
     this._registerAPI();
 
     this.events.on("contracts:log", this._saveLog.bind(this));
@@ -79,23 +86,53 @@ class ConsoleListener {
       });
     });
 
-    this.ipc.on('log', (request) => {
-      this._onIpcLogRequest(request);
-    });
+    this.events.on('blockchain:proxy:response', this._onLogRequest.bind(this));
   }
 
-  _onIpcLogRequest(request) {
-    if (request.type !== 'contract-log') {
-      return this.logger.info(JSON.stringify(request));
+  _onLogRequest(args) {
+    //TODO test this once you can Need to make the Dapp connect first
+    const method = args.reqData.method;
+    if (!this.contractsDeployed || !LISTENED_METHODS.includes(method)) {
+      return;
     }
 
-    if (!this.contractsDeployed) return;
+    if (method === SEND_TX) {
+      // We just gather data and wait for the receipt
+      this.transactions[args.respData.result] = {
+        address: args.reqData.params[0].to,
+        data: args.reqData.params[0].data,
+        txHash: args.respData.result
+      };
+      return;
+    } else if (method === SEND_RAW_TX) {
+      const rawData = Buffer.from(ethUtil.stripHexPrefix(args.reqData.params[0]), 'hex');
+      const tx = new Transaction(rawData, 'hex');
+      this.transactions[args.respData.result] = {
+        address: '0x' + tx.to.toString('hex'),
+        data: '0x' + tx.data.toString('hex')
+      };
+      return;
+    }
 
-    const {address, data} = request;
+    let dataObject;
+    if (method === GET_TX_RECEIPT) {
+      dataObject = args.respData.result;
+      if (this.transactions[args.respData.result.transactionHash]) {
+        // This is the normal case. If we don't get here, it's because we missed a TX
+        dataObject = Object.assign(dataObject, this.transactions[args.respData.result.transactionHash]);
+      }
+    } else {
+      dataObject = args.reqData.params[0];
+    }
+    const {to: address, data} = dataObject;
+    if (!address) {
+      // It's a deployment
+      return;
+    }
     const contract = this.addressToContract[address];
 
     if (!contract) {
-      this.logger.info(`Contract log for unknown contract: ${JSON.stringify(request)}`);
+      this.logger.info(`Contract log for unknown contract: ${JSON.stringify(args)}`);
       return this._getContractsList((contractsList) => {
         this.addressToContract = getAddressToContract(contractsList, this.addressToContract);
       });
@@ -106,22 +143,40 @@ class ConsoleListener {
       return;
     }
 
-    const {functionName, paramString} = getTransactionParams(contract, data);
+    let functionName, paramString;
+    if (!data) {
+      // We missed the TX
+      functionName = 'unknown';
+      paramString = 'unknown';
+    } else {
+      const txParams = getTransactionParams(contract, data);
+      functionName = txParams.functionName;
+      paramString = txParams.paramString;
+    }
 
-    if (request.kind === 'call') {
-      const log = Object.assign({}, request, {name, functionName, paramString});
+    if (method === ETH_CALL) {
+      // TODO check what the event does
+      const log = Object.assign({}, args, {name, functionName, paramString});
       log.status = '0x1';
       return this.events.emit('contracts:log', log);
     }
 
-    let {transactionHash, blockNumber, gasUsed, status} = request;
+    let {transactionHash, blockNumber, gasUsed, status} = args.respData.result;
     gasUsed = hexToNumber(gasUsed);
     blockNumber = hexToNumber(blockNumber);
-    const log = Object.assign({}, request, {name, functionName, paramString, gasUsed, blockNumber});
+    const log = Object.assign({}, args, {name, functionName, paramString, gasUsed, blockNumber});
 
     this.events.emit('contracts:log', log);
     this.logger.info(`Blockchain>`.underline + ` ${name}.${functionName}(${paramString})`.bold + ` | ${transactionHash} | gas:${gasUsed} | blk:${blockNumber} | status:${status}`);
-    this.events.emit('blockchain:tx', {name: name, functionName: functionName, paramString: paramString, transactionHash: transactionHash, gasUsed: gasUsed, blockNumber: blockNumber, status: status});
+    this.events.emit('blockchain:tx', {
+      name: name,
+      functionName: functionName,
+      paramString: paramString,
+      transactionHash: transactionHash,
+      gasUsed: gasUsed,
+      blockNumber: blockNumber,
+      status: status
+    });
   }
 
   _registerAPI() {
@@ -130,8 +185,10 @@ class ConsoleListener {
       'ws',
       apiRoute,
       (ws, _req) => {
-        this.events.on('contracts:log', function (log) {
-          ws.send(JSON.stringify(log), () => {});
+        // FIXME this will be broken probably in the cokcpit because we don't send the same data as before
+        this.events.on('contracts:log', function(log) {
+          ws.send(JSON.stringify(log), () => {
+          });
         });
       }
     );
