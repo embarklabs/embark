@@ -25,6 +25,7 @@ export interface Config {
     generationDir: string;
   };
   blockchainConfig: {
+    endpoint: string;
     accounts: any[];
     proxy: boolean;
     rpcPort: string | number;

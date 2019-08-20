@@ -204,13 +204,13 @@ export class Proxy {
     this.sendIpcMessage('blockchain:devtxs:sendtx');
   }
 
-  async serve(host, port, ws, origin, accounts, certOptions={}) {
+  async serve(endpointHost, endpointPort, localHost, localPort, ws, origin, accounts, certOptions={}) {
     const start = Date.now();
     await (function waitOnTarget() {
       return new Promise(resolve => {
         pingEndpoint(
-          canonicalHost(host),
-          port,
+          canonicalHost(endpointHost),
+          endpointPort,
           ws ? 'ws': false,
           'http',
           origin ? origin.split(',')[0] : undefined,
@@ -228,8 +228,8 @@ export class Proxy {
     let proxy = httpProxy.createProxyServer({
       ssl: certOptions,
       target: {
-        host: canonicalHost(host),
-        port: port
+        host: canonicalHost(endpointHost),
+        port: endpointPort
       },
       ws: ws,
       createWsServerTransformStream: (_req, _proxyReq, _proxyRes) => {
@@ -309,8 +309,8 @@ export class Proxy {
 
     return new Promise(resolve => {
       server.listen(
-        port - constants.blockchain.servicePortOnProxy,
-        host,
+        localPort,
+        localHost,
         () => { resolve(server); }
       );
     });

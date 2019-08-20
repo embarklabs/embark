@@ -1,3 +1,4 @@
+const Web3 = require('web3');
 
 class BlockchainClient {
 
@@ -14,9 +15,13 @@ class BlockchainClient {
 
     // TODO: unclear currently if this belongs here so it's a bit hardcoded for now
     this.events.setCommandHandler("blockchain:client:provider", (clientName, cb) => {
-      const Web3 = require('web3');
-      var web3 = new Web3("ws://localhost:8556");
-      cb(null, web3.currentProvider);
+      this.events.request("blockchain:client:endpoint", (err, endpoint) => {
+        if (err) {
+          return cb(err);
+        }
+        const web3 = new Web3(endpoint);
+        cb(null, web3.currentProvider);
+      });
     });
 
     // TODO: maybe not the ideal event to listen to?
