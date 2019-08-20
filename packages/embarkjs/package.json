@@ -72,7 +72,7 @@
     "npm-run-all": "4.1.5",
     "nyc": "13.1.0",
     "rimraf": "3.0.0",
-    "source-map-support": "0.5.9",
+    "source-map-support": "0.5.13",
     "web3": "1.2.1"
   },
   "engines": {
