@@ -1,9 +1,7 @@
 const path = require('path');
 const pkgUp = require('pkg-up');
 let shelljs = require('shelljs');
-import { IPC } from 'embark-core';
-const constants = require('embark-core/constants');
-import { AccountParser, dappPath, defaultHost, dockerHostSwap, embarkPath, deconstructUrl } from 'embark-utils';
+import {AccountParser, dappPath, defaultHost, dockerHostSwap, embarkPath, deconstructUrl} from 'embark-utils';
 
 export class Simulator {
   constructor(options) {
@@ -16,12 +14,10 @@ export class Simulator {
   run(options) {
     let cmds = [];
 
-    // TODO change this probably
-    let useProxy = this.blockchainConfig.proxy || false;
     let {host, port} = deconstructUrl(this.blockchainConfig.endpoint);
     host = (dockerHostSwap(options.host || host) || defaultHost);
     port = (options.port || port || 8545);
-    port = parseInt(port, 10) + (useProxy ? constants.blockchain.servicePortOnProxy : 0);
+    port = parseInt(port, 10);
 
     cmds.push("-p " + port);
     cmds.push("-h " + host);
@@ -36,7 +32,7 @@ export class Simulator {
       cmds.push("--mnemonic \"" + (simulatorMnemonic) + "\"");
     }
     cmds.push("-a " + (options.numAccounts || mnemonicAccount.numAddresses || 10));
-    cmds.push("-e " + (options.defaultBalance || mnemonicAccount.balance|| 100));
+    cmds.push("-e " + (options.defaultBalance || mnemonicAccount.balance || 100));
 
     // as ganache-cli documentation explains, the simulatorAccounts configuration overrides a mnemonic
     let simulatorAccounts = this.blockchainConfig.simulatorAccounts || options.simulatorAccounts;
@@ -44,7 +40,7 @@ export class Simulator {
       let web3 = new (require('web3'))();
       let parsedAccounts = AccountParser.parseAccountsConfig(simulatorAccounts, web3, dappPath(), this.logger);
       parsedAccounts.forEach((account) => {
-        let cmd = '--account="' + account.privateKey + ','+account.hexBalance + '"';
+        let cmd = '--account="' + account.privateKey + ',' + account.hexBalance + '"';
         cmds.push(cmd);
       });
     }
@@ -52,7 +48,7 @@ export class Simulator {
     // adding blocktime only if it is defined in the blockchainConfig or options
     let simulatorBlocktime = this.blockchainConfig.simulatorBlocktime || options.simulatorBlocktime;
     if (simulatorBlocktime) {
-      cmds.push("-b \"" + (simulatorBlocktime) +"\"");
+      cmds.push("-b \"" + (simulatorBlocktime) + "\"");
     }
 
     // Setting up network id for simulator from blockchainConfig or options.
@@ -62,10 +58,10 @@ export class Simulator {
       cmds.push("--networkId " + networkId);
     }
 
-    this.runCommand(cmds, useProxy, host, port);
+    this.runCommand(cmds, host, port);
   }
 
-  runCommand(cmds, useProxy, host, port) {
+  runCommand(cmds) {
     const ganache_main = require.resolve('ganache-cli', {paths: [embarkPath('node_modules')]});
     const ganache_json = pkgUp.sync(path.dirname(ganache_main));
     const ganache_root = path.dirname(ganache_json);
@@ -81,6 +77,6 @@ export class Simulator {
     const program = ganache;
     console.log(`running: ${programName} ${cmds.join(' ')}`);
 
-    shelljs.exec(`node ${program} ${cmds.join(' ')}`, {async : true});
+    shelljs.exec(`node ${program} ${cmds.join(' ')}`, {async: true});
   }
 }

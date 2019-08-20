@@ -12,6 +12,7 @@ class Deployment {
     this.logger = embark.logger;
     this.plugins = options.plugins;
     this.blockchainConfig = this.config.blockchainConfig;
+    this.errors = [];
 
     this.contractDeployer = new ContractDeployer({
       events: this.events,
@@ -61,7 +62,7 @@ class Deployment {
 
   deployAll(contracts, contractDependencies, done) {
     const self = this;
-    console.dir("doing deployAll")
+    // console.dir("doing deployAll")
     const contractDeploys = {};
     const errors = [];
 
