@@ -209,7 +209,7 @@ class Engine {
     this.registerModulePackage('embark-web3', {plugins: this.plugins});
     this.registerModulePackage('embark-accounts-manager');
     this.registerModulePackage('embark-specialconfigs', {plugins: this.plugins});
-    this.registerModulePackage('embark-console-listener', {ipc: this.ipc});
+    this.registerModulePackage('embark-console-listener');
   }
 
   storageComponent() {

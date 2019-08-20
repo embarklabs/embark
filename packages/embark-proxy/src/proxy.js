@@ -3,10 +3,11 @@ import {__} from 'embark-i18n';
 import axios from "axios";
 import {canonicalHost, timer, pingEndpoint, deconstructUrl} from 'embark-utils';
 import express from 'express';
+import cors from 'cors';
+import {rsort} from "semver";
 
 export class Proxy {
   constructor(options) {
-    this.ipc = options.ipc;
     this.commList = {};
     this.receipts = {};
     this.transactions = {};
@@ -42,6 +43,7 @@ export class Proxy {
 
     const app = express();
 
+    app.use(cors())
     app.use(express.json());
     app.use(express.urlencoded({extended: true}));
 

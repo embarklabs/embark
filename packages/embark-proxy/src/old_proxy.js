@@ -54,9 +54,6 @@ export class Proxy {
   }
 
   modifyPayload(toModifyPayloads, body, accounts) {
-    this.plugins.emitAndRunActionsForEvent('proxy:redponse:received', {body: body}, () => {
-
-    })
     switch (toModifyPayloads[body.id]) {
       case METHODS_TO_MODIFY.accounts:
         delete toModifyPayloads[body.id];
