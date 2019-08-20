@@ -212,7 +212,7 @@
     "web3-utils": "1.2.1",
     "webpack": "4.29.3",
     "window-size": "1.1.1",
-    "ws": "6.1.2"
+    "ws": "7.1.2"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
