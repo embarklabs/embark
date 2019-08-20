@@ -3,7 +3,6 @@ subtitle: "The all-in-one developer platform for building and deploying decentra
 description: "Embark is a simple & powerful framework for decentralized applications"
 author: Embark
 language: en
-timezone: UTC
 
 url: https://embark.status.im
 root: /
@@ -39,4 +38,3 @@ node_sass:
   outputStyle: nested
   precision: 5
   sourceComments: false
-
