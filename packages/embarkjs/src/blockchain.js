@@ -172,7 +172,7 @@ Blockchain.doConnect = function(connectionList, opts, doneCb) {
 
     if (connectionString === '$WEB3') {
       connectWeb3(next);
-    } else if (connectionString.indexOf('ws://') >= 0) {
+    } else if ((/^wss?:\/\//).test(connectionString)) {
       connectWebsocket(connectionString, next);
     } else {
       connectHttp(connectionString, next);
