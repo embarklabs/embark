@@ -7,12 +7,13 @@ import expressWs from 'express-ws';
 import cors from 'cors';
 const WebSocket = require("ws");
 
+const ACTION_TIMEOUT = 5000;
+
 export class Proxy {
   constructor(options) {
     this.commList = {};
     this.receipts = {};
     this.transactions = {};
-    this.toModifyPayloads = {};
     this.timeouts = {};
     this.events = options.events;
     this.plugins = options.plugins;
@@ -126,6 +127,17 @@ export class Proxy {
   }
 
   emitActionsForRequest(body, cb) {
+    let calledBack = false;
+    setTimeout(() => {
+      if (calledBack) {
+        return;
+      }
+      this.logger.warn(__('Action for request "%s" timed out', body.method));
+      this.logger.debug(body);
+      cb(null, {reqData: body});
+      calledBack = true;
+    }, ACTION_TIMEOUT);
+
     this.plugins.emitAndRunActionsForEvent('blockchain:proxy:request',
       {reqData: body},
       (err, resp) => {
@@ -135,11 +147,28 @@ export class Proxy {
           // Reset the data to the original request so that it can be used anyway
           resp = {reqData: body};
         }
+        if (calledBack) {
+          // Action timed out
+          return;
+        }
         cb(null, resp);
+        calledBack = true;
       });
   }
 
   emitActionsForResponse(reqData, respData, cb) {
+    let calledBack = false;
+    setTimeout(() => {
+      if (calledBack) {
+        return;
+      }
+      this.logger.warn(__('Action for request "%s" timed out', reqData.method));
+      this.logger.debug(reqData);
+      this.logger.debug(respData);
+      cb(null, {respData});
+      calledBack = true;
+    }, ACTION_TIMEOUT);
+
     this.plugins.emitAndRunActionsForEvent('blockchain:proxy:response',
       {respData, reqData},
       (err, resp) => {
@@ -149,7 +178,12 @@ export class Proxy {
           // Reset the data to the original response so that it can be used anyway
           resp = {respData};
         }
+        if (calledBack) {
+          // Action timed out
+          return;
+        }
         cb(null, resp);
+        calledBack = true;
       });
   }
 }

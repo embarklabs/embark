@@ -65,7 +65,7 @@ class EmbarkWeb3 {
     async.map(this.config.contractsConfig.dappConnection, (conn, mapCb) => {
       if (conn === '$EMBARK') {
         // Connect to Embark's endpoint (proxy)
-        return this.events.request("blockchain:client:endpoint", mapCb);
+        return this.events.request("proxy:endpoint", mapCb);
       }
       mapCb(null, conn);
     }, (err, results) => {

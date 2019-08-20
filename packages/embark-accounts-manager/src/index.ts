@@ -11,7 +11,7 @@ export default class AccountsManager {
   private readonly events: Events;
   private accounts: any[];
   private nodeAccounts: string[];
-  private web3: any;
+  private _web3: any;
   private ready: boolean;
   private signTransactionQueue: any;
   private nonceCache: any;
@@ -24,30 +24,26 @@ export default class AccountsManager {
     this.nonceCache = {};
     this.ready = false;
 
-    this.events.setCommandHandler("accounts-manager:onReady", (cb) => {
-      if (this.ready) {
-        return cb();
-      }
-      this.events.once("accounts-manager:ready", cb);
-    });
-    this.events.request("proxy:onReady", () => {
-      this.parseAccounts();
-    });
+    this.parseAndFundAccounts();
 
     this.events.setCommandHandler("accounts:get", (cb: any) => {
       cb(null, this.accounts);
     });
 
+    this.embark.registerActionForEvent("blockchain:proxy:request", this.checkBlockchainRequest.bind(this));
+    this.embark.registerActionForEvent("blockchain:proxy:response", this.checkBlockchainResponse.bind(this));
+
     // Allow to run transaction in parallel by resolving the nonce manually.
     // For each transaction, resolve the nonce by taking the max of current transaction count and the cache we keep locally.
     // Update the nonce and sign it
     this.signTransactionQueue = async.queue(({payload, account}, callback: (error: any, result: any) => void) => {
-      this.getNonce(payload.from, (err: any, newNonce: number) => {
+      this.getNonce(payload.from, async (err: any, newNonce: number) => {
         if (err) {
           return callback(err, null);
         }
         payload.nonce = newNonce;
-        this.web3.eth.accounts.signTransaction(payload, account.privateKey , (signingError: any, result: any) => {
+        const web3 = await this.web3;
+        web3.eth.accounts.signTransaction(payload, account.privateKey , (signingError: any, result: any) => {
           if (signingError) {
             return callback(signingError, null);
           }
@@ -57,8 +53,19 @@ export default class AccountsManager {
     }, 1);
   }
 
-  private getNonce(address: string, callback: (error: any, result: any) => void) {
-    this.web3.eth.getTransactionCount(address, undefined, (error: any, transactionCount: number) => {
+  get web3() {
+    return (async () => {
+      if (!this._web3) {
+        const provider = await this.events.request2("blockchain:client:provider", "ethereum");
+        this._web3 = new Web3(provider);
+      }
+      return this._web3;
+    })();
+  }
+
+  private async getNonce(address: string, callback: (error: any, result: any) => void) {
+    const web3 = await this.web3;
+    web3.eth.getTransactionCount(address, undefined, (error: any, transactionCount: number) => {
       if (error) {
         return callback(error, null);
       }
@@ -77,6 +84,9 @@ export default class AccountsManager {
   }
 
   private async checkBlockchainRequest(params: any, callback: (error: any, result: any) => void) {
+    if (!this.ready) {
+      return callback(null, params);
+    }
     if (params.reqData.method === "eth_sendTransaction" && this.accounts.length) {
       // Check if we have that account in our wallet
       const account = this.accounts.find((acc) => Web3.utils.toChecksumAddress(acc.address) === Web3.utils.toChecksumAddress(params.reqData.params[0].from));
@@ -103,10 +113,14 @@ export default class AccountsManager {
   }
 
   private async checkBlockchainResponse(params: any, callback: (error: any, result: any) => void) {
+    if (!this.ready) {
+      return callback(null, params);
+    }
     if ((params.reqData.method === "eth_accounts" || params.reqData.method === "personal_listAccounts") && this.accounts.length) {
       if (!this.arrayEqual(params.respData.result, this.nodeAccounts)) {
         this.nodeAccounts = params.respData.result;
-        this.accounts = AccountParser.parseAccountsConfig(this.embark.config.blockchainConfig.accounts, this.web3, dappPath(), this.logger, this.nodeAccounts);
+        const web3 = await this.web3;
+        this.accounts = AccountParser.parseAccountsConfig(this.embark.config.blockchainConfig.accounts, web3, dappPath(), this.logger, this.nodeAccounts);
       }
       params.respData.result = this.accounts.map((acc) => {
         if (acc.address) {
@@ -123,21 +137,16 @@ export default class AccountsManager {
     if (this.ready) {
       return;
     }
-    this.embark.registerActionForEvent("blockchain:proxy:request", this.checkBlockchainRequest.bind(this));
-    this.embark.registerActionForEvent("blockchain:proxy:response", this.checkBlockchainResponse.bind(this));
     this.ready = true;
     this.events.emit("accounts-manager:ready");
   }
 
-  private async parseAccounts() {
-    if (!this.web3) {
-      const provider = await this.events.request2("blockchain:client:provider", "ethereum");
-      this.web3 = new Web3(provider);
-    }
+  private async parseAndFundAccounts() {
+    const web3 = await this.web3;
 
-    const nodeAccounts = await this.web3.eth.getAccounts();
+    const nodeAccounts = await web3.eth.getAccounts();
     this.nodeAccounts = nodeAccounts;
-    this.accounts = AccountParser.parseAccountsConfig(this.embark.config.blockchainConfig.accounts, this.web3, dappPath(), this.logger, nodeAccounts);
+    this.accounts = AccountParser.parseAccountsConfig(this.embark.config.blockchainConfig.accounts, web3, dappPath(), this.logger, nodeAccounts);
 
     if (!this.accounts.length || !this.embark.config.blockchainConfig.isDev) {
       return this.setReady();
@@ -146,7 +155,7 @@ export default class AccountsManager {
       if (!account.address) {
         return eachCb();
       }
-      fundAccount(this.web3, account.address, account.hexBalance, eachCb);
+      fundAccount(web3, account.address, account.hexBalance, eachCb);
     }, (err) => {
       if (err) {
         this.logger.error(__("Error funding accounts"), err.message || err);

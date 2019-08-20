@@ -1,7 +1,6 @@
 import {Embark, Events, Logger} /* supplied by @types/embark in packages/embark-typings */ from "embark";
-import {IPC} from "embark-core";
 import {__} from "embark-i18n";
-import {AccountParser, dappPath, findNextPort} from "embark-utils";
+import {buildUrl, findNextPort} from "embark-utils";
 import {Proxy} from "./proxy";
 
 const constants = require("embark-core/constants");
@@ -9,20 +8,20 @@ const constants = require("embark-core/constants");
 export default class ProxyManager {
   private readonly logger: Logger;
   private readonly events: Events;
-  private proxyIpc: IPC;
   private proxy: any;
   private plugins: any;
   private readonly host: string;
-  private rpcPort: number | undefined;
-  private wsPort: number | undefined;
+  private rpcPort: number;
+  private wsPort: number;
   private ready: boolean;
 
   constructor(private embark: Embark, options: any) {
     this.logger = embark.logger;
     this.events = embark.events;
     this.plugins = options.plugins;
-    this.proxyIpc = new IPC({ipcRole: "client"});
     this.ready = false;
+    this.rpcPort = 0;
+    this.wsPort = 0;
 
     this.host = "localhost";
 
@@ -36,21 +35,16 @@ export default class ProxyManager {
       this.logger.warn(__("The proxy has been disabled. This means that some Embark features will not work, like the wallet for your custom accounts or the transaction logger"));
     }
 
-    this.events.setCommandHandler("proxy:onReady", async (cb) => {
-      await this.onReady();
-      cb();
-    });
-
-    this.events.setCommandHandler("blockchain:client:endpoint", async (cb) => {
+    this.events.setCommandHandler("proxy:endpoint", async (cb) => {
       await this.onReady();
       if (!this.embark.config.blockchainConfig.proxy) {
         return cb(null, this.embark.config.blockchainConfig.endpoint);
       }
       // TODO Check if the proxy can support HTTPS, though it probably doesn't matter since it's local
       if (this.embark.config.blockchainConfig.wsRPC) {
-        return cb(null, `ws://${this.host}:${this.wsPort}`);
+        return cb(null, buildUrl("ws", this.host, this.wsPort, "ws"));
       }
-      cb(null, `http://${this.host}:${this.rpcPort}`);
+      cb(null, buildUrl("http", this.host, this.rpcPort, "rpc"));
     });
   }
 
@@ -74,9 +68,7 @@ export default class ProxyManager {
     this.rpcPort = port;
     this.wsPort = port + 1;
 
-    const addresses = AccountParser.parseAccountsConfig(this.embark.config.blockchainConfig.accounts, false, dappPath(), this.logger);
-
-    this.proxy = await new Proxy({ipc: this.proxyIpc, events: this.events, plugins: this.plugins, logger: this.logger})
+    this.proxy = await new Proxy({events: this.events, plugins: this.plugins, logger: this.logger})
       .serve(
         this.embark.config.blockchainConfig.endpoint,
         this.host,

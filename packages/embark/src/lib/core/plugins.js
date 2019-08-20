@@ -209,6 +209,7 @@ Plugins.prototype.runActionsForEvent = function(eventName, args, cb) {
   const self = this;
   if (typeof (args) === 'function') {
     cb = args;
+    args = [];
   }
   let actionPlugins = this.getPluginsPropertyAndPluginName('eventActions', 'eventActions', eventName);
 
