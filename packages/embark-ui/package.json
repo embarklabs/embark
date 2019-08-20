@@ -106,7 +106,7 @@
     "react-bootstrap-typeahead": "3.2.4",
     "react-copy-to-clipboard": "5.0.1",
     "react-dev-utils": "6.1.1",
-    "react-dom": "16.6.3",
+    "react-dom": "16.9.0",
     "react-fontawesome": "1.6.1",
     "react-helmet": "5.2.0",
     "react-json-view": "1.19.1",
