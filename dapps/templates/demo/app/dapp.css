@@ -55,3 +55,19 @@ input.form-control {
 .alert-result {
   margin-left: 0;
 }
+
+.small-input {
+  width: 200px;
+}
+
+.inline-input-btn .form-control {
+  margin: 0;
+  width: 200px;
+  border-radius: 0.25rem 0 0 0.25rem;
+  float: left;
+  border-right: 0;
+}
+
+.inline-input-btn .btn {
+  border-radius: 0 0.25rem 0.25rem 0;
+}

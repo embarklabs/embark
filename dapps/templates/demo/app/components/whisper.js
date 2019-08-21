@@ -1,6 +1,6 @@
 import EmbarkJS from 'Embark/EmbarkJS';
 import React from 'react';
-import {Alert, Form, FormGroup, FormControl, Button} from 'react-bootstrap';
+import {Alert, Form, FormGroup, Input, Button, FormText} from 'reactstrap';
 
 class Whisper extends React.Component {
 
@@ -80,28 +80,25 @@ class Whisper extends React.Component {
     return (
       <React.Fragment>
         {
-          !this.props.enabled ?
+          !this.props.enabled &&
             <React.Fragment>
-              <Alert bsStyle="warning">The node you are using does not support Whisper</Alert>
-              <Alert bsStyle="warning">The node uses an unsupported version of Whisper</Alert>
-            </React.Fragment> : ''
-        }
+              <Alert color="warning">The node you are using does not support Whisper</Alert>
+              <Alert color="warning">The node uses an unsupported version of Whisper</Alert>
+            </React.Fragment>}
         <h3>Listen To channel</h3>
-        <Form inline onKeyDown={(e) => this.checkEnter(e, this.listenToChannel)}>
-          <FormGroup>
-            <FormControl
+        <Form onKeyDown={(e) => this.checkEnter(e, this.listenToChannel)}>
+          <FormGroup className="inline-input-btn">
+            <Input
               type="text"
               defaultValue={this.state.listenTo}
               placeholder="channel"
               onChange={e => this.handleChange(e, 'listenTo')}/>
-            <Button disabled={!this.state.listenToChannelIsValid} bsStyle="primary" onClick={(e) => this.listenToChannel(e)}>Start Listening</Button>
-            {!this.state.listenToChannelIsValid && <p><span className="alert-danger">Channel has to be at least 4 characters long</span></p>}
+            <Button disabled={!this.state.listenToChannelIsValid} color="primary" onClick={(e) => this.listenToChannel(e)}>Start Listening</Button>
+            {!this.state.listenToChannelIsValid && <FormText color="danger">Channel has to be at least 4 characters long</FormText>}
             <div id="subscribeList">
-              {this.state.subscribedChannels.map((item, i) => {
-                return <p key={i}><span>Subscribed to <b>{item}</b>. Now try sending a message</span></p>
-              })}
+              {this.state.subscribedChannels.map((item, i) => <p key={i}><span>Subscribed to <b>{item}</b>. Now try sending a message</span></p>)}
             </div>
-            <p>messages received:</p>
+            <h5>Messages received:</h5>
             <div id="messagesList">
               {this.state.messageList.map((item, i) => <p key={i}>{item}</p>)}
             </div>
@@ -111,17 +108,20 @@ class Whisper extends React.Component {
         <h3>Send Message</h3>
         <Form inline onKeyDown={(e) => this.checkEnter(e, this.sendMessage)}>
           <FormGroup>
-            <FormControl
+            <Input
               type="text"
               defaultValue={this.state.channel}
               placeholder="channel"
               onChange={e => this.handleChange(e, 'channel')}/>
-            <FormControl
-              type="text"
-              defaultValue={this.state.message}
-              placeholder="message"
-              onChange={e => this.handleChange(e, 'message')}/>
-            <Button bsStyle="primary" disabled={!this.state.channelIsValid} onClick={(e) => this.sendMessage(e)}>Send Message</Button>
+            <div className="inline-input-btn m-0">
+              <Input
+                type="text"
+                defaultValue={this.state.message}
+                placeholder="message"
+                onChange={e => this.handleChange(e, 'message')}/>
+              <Button color="primary" disabled={!this.state.channelIsValid} onClick={(e) => this.sendMessage(e)}>Send
+                Message</Button>
+            </div>
           </FormGroup>
         </Form>
 

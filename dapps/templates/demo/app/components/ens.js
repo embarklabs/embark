@@ -1,9 +1,7 @@
 /*global web3*/
 import EmbarkJS from 'Embark/EmbarkJS';
 import React from 'react';
-import { Alert, Form, FormGroup, FormControl, Button } from 'react-bootstrap';
-
-window.EmbarkJS = EmbarkJS;
+import { Alert, Form, FormGroup, Input, Button } from 'reactstrap';
 
 class ENS extends React.Component {
 
@@ -35,7 +33,7 @@ class ENS extends React.Component {
       this.setState({
         addressRegister: web3.eth.defaultAccount,
         valueLookup: web3.eth.defaultAccount
-      })
+      });
     });
   }
 
@@ -115,53 +113,54 @@ class ENS extends React.Component {
 
   render() {
     return (<React.Fragment>
-        {this.state.globalError && <Alert bsStyle="danger">{this.state.globalError}</Alert>}
+        {this.state.globalError && <Alert color="danger">{this.state.globalError}</Alert>}
         <h3>Resolve a name</h3>
-        <Form inline onKeyDown={(e) => this.checkEnter(e, this.resolveName)}>
-          <FormGroup>
+        <Form onKeyDown={(e) => this.checkEnter(e, this.resolveName)}>
+          <FormGroup className="inline-input-btn">
             {this.state.responseResolve &&
-            <Alert className="alert-result" bsStyle={this.state.isResolveError ? 'danger' : 'success'}>
+            <Alert className="alert-result" color={this.state.isResolveError ? 'danger' : 'success'}>
               Resolved address: <span className="value">{this.state.responseResolve}</span>
             </Alert>}
-            <FormControl
+            <Input
               type="text"
               defaultValue={this.state.valueResolve}
               onChange={(e) => this.handleChange('valueResolve', e)}/>
-            <Button bsStyle="primary" onClick={(e) => this.resolveName(e)}>Resolve name</Button>
+            <Button color="primary" onClick={(e) => this.resolveName(e)}>Resolve name</Button>
           </FormGroup>
         </Form>
 
         <h3>Lookup an address</h3>
-        <Form inline onKeyDown={(e) => this.checkEnter(e, this.lookupAddress)}>
-          <FormGroup>
+        <Form onKeyDown={(e) => this.checkEnter(e, this.lookupAddress)}>
+          <FormGroup className="inline-input-btn">
             {this.state.responseLookup &&
-            <Alert className="alert-result" bsStyle={this.state.isLookupError ? 'danger' : 'success'}>
+            <Alert className="alert-result" color={this.state.isLookupError ? 'danger' : 'success'}>
               Looked up domain: <span className="value">{this.state.responseLookup}</span>
             </Alert>}
-            <FormControl
+            <Input
               type="text"
               defaultValue={this.state.valueLookup}
               onChange={(e) => this.handleChange('valueLookup', e)}/>
-            <Button bsStyle="primary" onClick={(e) => this.lookupAddress(e)}>Lookup address</Button>
+            <Button color="primary" onClick={(e) => this.lookupAddress(e)}>Lookup address</Button>
           </FormGroup>
         </Form>
 
         <h3>Register subdomain</h3>
-        <Form inline onKeyDown={(e) => this.checkEnter(e, this.registerSubDomain)}>
+        <Form onKeyDown={(e) => this.checkEnter(e, this.registerSubDomain)}>
           <FormGroup>
             {this.state.responseRegister &&
-            <Alert className="alert-result" bsStyle={this.state.isRegisterError ? 'danger' : 'success'}>
+            <Alert className="alert-result" color={this.state.isRegisterError ? 'danger' : 'success'}>
               <span className="value">{this.state.responseRegister}</span>
             </Alert>}
-            <FormControl
-              type="text"
-              defaultValue={this.state.valueRegister}
+            <Input
+              defaultValue={this.state.valueRegister} className="small-input float-left"
               onChange={(e) => this.handleChange('valueRegister', e)}/>
-            <FormControl
-              type="text"
-              defaultValue={this.state.addressRegister}
-              onChange={(e) => this.handleChange('addressRegister', e)}/>
-            <Button bsStyle="primary" onClick={(e) => this.registerSubDomain(e)}>Register subdomain</Button>
+            <div className="inline-input-btn m-0">
+              <Input
+                type="text"
+                defaultValue={this.state.addressRegister}
+                onChange={(e) => this.handleChange('addressRegister', e)}/>
+              <Button color="primary" onClick={(e) => this.registerSubDomain(e)}>Register subdomain</Button>
+            </div>
           </FormGroup>
         </Form>
 
