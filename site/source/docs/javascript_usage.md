@@ -45,15 +45,15 @@ EmbarkJS.onReady((error) => {
 
 ## Using `dappConnection`
 
-After reading the section above on `EmbarkJS.onReady`, you might be wondering, but where does EmbarkJS connect?
+After reading the section above on `EmbarkJS.onReady`, you might be wondering where EmbarkJS establishes a connection.
 
-The answer is: you decide! You can configure it using `dappConnection`, a config property you can find in the Contracts config (by default at `config/contracts.js`).
+The answer is: you decide! You can configure it using `dappConnection`, a config property you can find in the Smart Contract config (by default at `config/contracts.js`).
 
-You will notice that property name reused in some other config files too, like the Storage one, because you can configure where those connect too.
+You will notice that property name reused in some other config files too, like the Storage one, because you can configure where those connect as well.
 
-`dappConnection` is a bit weird, but is quite simple. It's an array of strings where EmbarkJS will try each of those in order (from 0 to N) and as soon as one of the connections work, it will stop.
+The expressions used within `dappConnection` come with special semantics. Here's how they work: it is an array of strings where EmbarkJS will try each of those in order (from 0 to N) and as soon as one of the connections work, it will stop.
 
-In the case of the Contracts config `dappConnection`, the one that is used to connect to the blockchain node and that is indirectly used in `EmbarkJS.onReady`, you will see two special entities: `$WEB3` and `$EMBARK`.
+In the case of the Smart Contract config `dappConnection`, the one that is used to connect to the blockchain node and that is indirectly used in `EmbarkJS.onReady`, you will see two special entities: `$WEB3` and `$EMBARK`.
 
 - `$WEB3` tells EmbarkJS to connect to the browser's web3 instance. For example, Metamask or Status.
 - `$EMBARK` tells EmbarkJS to connect to Embark's wallet, implemented using a proxy in between the Dapp and the blockchain node.
