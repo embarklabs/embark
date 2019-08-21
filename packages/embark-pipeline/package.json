@@ -54,7 +54,7 @@
     "embark-utils": "^4.1.0",
     "find-up": "2.1.0",
     "fs-extra": "7.0.1",
-    "webpack": "4.29.3"
+    "webpack": "4.39.2"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
