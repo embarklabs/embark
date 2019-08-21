@@ -13,6 +13,7 @@ class EthereumBlockchainClient {
     this.events = embark.events;
     this.logger = embark.logger;
 
+    this.embark.registerActionForEvent("deployment:contract:undeployed", this.addContractJSONToPipeline.bind(this));
     this.embark.registerActionForEvent("deployment:contract:deployed", this.addContractJSONToPipeline.bind(this));
     this.embark.registerActionForEvent('deployment:contract:beforeDeploy', this.determineArguments.bind(this));
     this.embark.registerActionForEvent('deployment:contract:beforeDeploy', this.doLinking.bind(this));
