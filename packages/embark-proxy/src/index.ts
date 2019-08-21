@@ -32,7 +32,8 @@ export default class ProxyManager {
     });
 
     if (!this.embark.config.blockchainConfig.proxy) {
-      this.logger.warn(__("The proxy has been disabled. This means that some Embark features will not work, like the wallet for your custom accounts or the transaction logger"));
+      this.logger.warn(__("The proxy has been disabled -- some Embark features will not work."));
+      this.logger.warn(__("Configured wallet accounts will be ignored and cannot be used in the DApp, and transactions will not be logged."));
     }
 
     this.events.setCommandHandler("proxy:endpoint", async (cb) => {

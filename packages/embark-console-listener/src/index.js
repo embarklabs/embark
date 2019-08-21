@@ -1,5 +1,7 @@
 const async = require('async');
 import {__} from 'embark-i18n';
+
+const {blockchain: blockchainConstants} = require('embark-core/constants');
 import {dappPath, getAddressToContract, getTransactionParams, hexToNumber} from 'embark-utils';
 const ProcessLogsApi = require('embark-process-logs-api');
 
@@ -8,11 +10,12 @@ const EMBARK_PROCESS_NAME = 'embark';
 const Transaction = require('ethereumjs-tx');
 const ethUtil = require('ethereumjs-util');
 
-const ETH_CALL = 'eth_call';
-const GET_TX_RECEIPT = 'eth_getTransactionReceipt';
-const SEND_TX = 'eth_sendTransaction';
-const SEND_RAW_TX = 'eth_sendRawTransaction';
-const LISTENED_METHODS = [ETH_CALL, GET_TX_RECEIPT, SEND_TX, SEND_RAW_TX];
+const LISTENED_METHODS = [
+  blockchainConstants.transactionMethods.eth_call,
+  blockchainConstants.transactionMethods.eth_getTransactionReceipt,
+  blockchainConstants.transactionMethods.eth_sendTransaction,
+  blockchainConstants.transactionMethods.eth_sendRawTransaction
+];
 
 class ConsoleListener {
   constructor(embark, _options) {
@@ -95,7 +98,7 @@ class ConsoleListener {
       return;
     }
 
-    if (method === SEND_TX) {
+    if (method === blockchainConstants.transactionMethods.eth_sendTransaction) {
       // We just gather data and wait for the receipt
       this.transactions[args.respData.result] = {
         address: args.reqData.params[0].to,
@@ -103,7 +106,7 @@ class ConsoleListener {
         txHash: args.respData.result
       };
       return;
-    } else if (method === SEND_RAW_TX) {
+    } else if (method === blockchainConstants.transactionMethods.eth_sendRawTransaction) {
       const rawData = Buffer.from(ethUtil.stripHexPrefix(args.reqData.params[0]), 'hex');
       const tx = new Transaction(rawData, 'hex');
       this.transactions[args.respData.result] = {
@@ -114,7 +117,7 @@ class ConsoleListener {
     }
 
     let dataObject;
-    if (method === GET_TX_RECEIPT) {
+    if (method === blockchainConstants.transactionMethods.eth_getTransactionReceipt) {
       dataObject = args.respData.result;
       if (this.transactions[args.respData.result.transactionHash]) {
         // This is the normal case. If we don't get here, it's because we missed a TX
@@ -154,7 +157,7 @@ class ConsoleListener {
       paramString = txParams.paramString;
     }
 
-    if (method === ETH_CALL) {
+    if (method === blockchainConstants.transactionMethods.eth_call) {
       const log = Object.assign({}, args, {name, functionName, paramString});
       log.status = '0x1';
       return this.events.emit('contracts:log', log);
