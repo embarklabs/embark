@@ -3,26 +3,31 @@ import {Embark, Events, Logger} /* supplied by @types/embark in packages/embark-
 import {__} from "embark-i18n";
 import {AccountParser, dappPath} from "embark-utils";
 import Web3 from "web3";
+const {blockchain: blockchainConstants} = require("embark-core/constants");
 
 import fundAccount from "./fundAccount";
+
+function arrayEqual(arrayA: string[], arrayB: string[]) {
+  if (arrayA.length !== arrayB.length) {
+    return false;
+  } else {
+    return arrayA.every((address, index) => Web3.utils.toChecksumAddress(address) === Web3.utils.toChecksumAddress(arrayB[index]));
+  }
+}
 
 export default class AccountsManager {
   private readonly logger: Logger;
   private readonly events: Events;
-  private accounts: any[];
-  private nodeAccounts: string[];
-  private _web3: any;
-  private ready: boolean;
+  private accounts: any[] = [];
+  private nodeAccounts: string[] = [];
+  private _web3: Web3 | null = null;
+  private ready = false;
   private signTransactionQueue: any;
-  private nonceCache: any;
+  private nonceCache: any = {};
 
   constructor(private readonly embark: Embark, _options: any) {
     this.logger = embark.logger;
     this.events = embark.events;
-    this.accounts = [];
-    this.nodeAccounts = [];
-    this.nonceCache = {};
-    this.ready = false;
 
     this.parseAndFundAccounts();
 
@@ -87,7 +92,7 @@ export default class AccountsManager {
     if (!this.ready) {
       return callback(null, params);
     }
-    if (params.reqData.method === "eth_sendTransaction" && this.accounts.length) {
+    if (params.reqData.method === blockchainConstants.transactionMethods.eth_sendTransaction && this.accounts.length) {
       // Check if we have that account in our wallet
       const account = this.accounts.find((acc) => Web3.utils.toChecksumAddress(acc.address) === Web3.utils.toChecksumAddress(params.reqData.params[0].from));
       if (account && account.privateKey) {
@@ -95,7 +100,7 @@ export default class AccountsManager {
           if (err) {
             return callback(err, null);
           }
-          params.reqData.method = "eth_sendRawTransaction";
+          params.reqData.method = blockchainConstants.transactionMethods.eth_sendRawTransaction;
           params.reqData.params = [newPayload];
           callback(err, params);
         });
@@ -104,20 +109,13 @@ export default class AccountsManager {
     callback(null, params);
   }
 
-  public arrayEqual(arrayA: string[], arrayB: string[]) {
-    if (arrayA.length !== arrayB.length) {
-      return false;
-    } else {
-      return arrayA.every((address, index) => Web3.utils.toChecksumAddress(address) === Web3.utils.toChecksumAddress(arrayB[index]));
-    }
-  }
-
   private async checkBlockchainResponse(params: any, callback: (error: any, result: any) => void) {
     if (!this.ready) {
       return callback(null, params);
     }
-    if ((params.reqData.method === "eth_accounts" || params.reqData.method === "personal_listAccounts") && this.accounts.length) {
-      if (!this.arrayEqual(params.respData.result, this.nodeAccounts)) {
+    if ((params.reqData.method === blockchainConstants.transactionMethods.eth_accounts ||
+      params.reqData.method === blockchainConstants.transactionMethods.personal_listAccounts) && this.accounts.length) {
+      if (!arrayEqual(params.respData.result, this.nodeAccounts)) {
         this.nodeAccounts = params.respData.result;
         const web3 = await this.web3;
         this.accounts = AccountParser.parseAccountsConfig(this.embark.config.blockchainConfig.accounts, web3, dappPath(), this.logger, this.nodeAccounts);
@@ -133,14 +131,6 @@ export default class AccountsManager {
     callback(null, params);
   }
 
-  private setReady() {
-    if (this.ready) {
-      return;
-    }
-    this.ready = true;
-    this.events.emit("accounts-manager:ready");
-  }
-
   private async parseAndFundAccounts() {
     const web3 = await this.web3;
 
@@ -149,7 +139,8 @@ export default class AccountsManager {
     this.accounts = AccountParser.parseAccountsConfig(this.embark.config.blockchainConfig.accounts, web3, dappPath(), this.logger, nodeAccounts);
 
     if (!this.accounts.length || !this.embark.config.blockchainConfig.isDev) {
-      return this.setReady();
+      this.ready = true;
+      return;
     }
     async.eachLimit(this.accounts, 1, (account, eachCb) => {
       if (!account.address) {
@@ -160,7 +151,7 @@ export default class AccountsManager {
       if (err) {
         this.logger.error(__("Error funding accounts"), err.message || err);
       }
-      this.setReady();
+      this.ready = true;
     });
   }
 }
