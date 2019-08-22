@@ -6,7 +6,6 @@ const {dappPath, proposeAlternative, toposort} = require('embark-utils');
 
 class ContractsManager {
   constructor(embark, options) {
-    console.dir("---- contracts manager---- ")
     this.embark = embark;
     this.logger = embark.logger;
     this.events = embark.events;
@@ -34,7 +33,12 @@ class ContractsManager {
       cb(null, this.getContract(contractName));
     });
 
-    console.dir("---- contracts manager---- ")
+    this.events.setCommandHandler('contracts:add', (contract, cb = () => {}) => {
+      this.contracts[contract.className] = new Contract(this.logger, contract);
+      cb(null, this.contracts[contract.className]);
+    });
+
+    console.dir("---- contracts manager---- ");
 
     // this.registerCommands()
     // this.registerAPIs()
@@ -471,9 +475,6 @@ class ContractsManager {
             });
           }
 
-          // look in arguments for dependencies
-          if (contract.args === []) continue;
-
           let ref;
           if (Array.isArray(contract.args)) {
             ref = contract.args;
@@ -535,7 +536,7 @@ class ContractsManager {
         self.compileError = false;
       }
       self.logger.trace("finished".underline);
-      console.dir("done!!")
+      console.dir("done!!");
 
       done(err, self.contracts, self.contractDependencies);
     });

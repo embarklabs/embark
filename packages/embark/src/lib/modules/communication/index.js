@@ -1,19 +1,17 @@
 import { __ } from 'embark-i18n';
 
 class Communication {
-  constructor(embark, options){
+  constructor(embark, _options){
     this.embark = embark;
     this.embarkConfig = embark.config.embarkConfig;
     this.events = this.embark.events;
     this.communicationConfig = embark.config.communicationConfig;
-    this.plugins = options.plugins;
 
-    let plugin = this.plugins.createPlugin('communicationplugin', {});
-    plugin.registerActionForEvent("pipeline:generateAll:before", this.addArtifactFile.bind(this));
+    embark.registerActionForEvent("pipeline:generateAll:before", this.addArtifactFile.bind(this));
 
     this.communicationNodes = {};
     this.events.setCommandHandler("communication:node:register", (clientName, startCb) => {
-      this.communicationNodes[clientName] = startCb
+      this.communicationNodes[clientName] = startCb;
     });
 
     this.events.setCommandHandler("communication:node:start", (communicationConfig, cb) => {
@@ -24,7 +22,7 @@ class Communication {
       let onStart = () => {
         this.events.emit("communication:started", clientName);
         cb();
-      }
+      };
 
       client.apply(client, [onStart]);
     });
@@ -34,7 +32,7 @@ class Communication {
     let config = {
       // TODO: for consistency we should change this to be dappConnection or connection
       connection: this.communicationConfig.connection
-    }
+    };
     this.events.request("pipeline:register", {
       path: [this.embarkConfig.generationDir, 'config'],
       file: 'communication.json',

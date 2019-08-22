@@ -18,15 +18,8 @@ export default class Contract {
   public realRuntimeBytecode: string = "";
   public realArgs: any[] = [];
   constructor(logger: Logger, contractConfig: ContractConfig = {}) {
+    Object.assign(this, contractConfig);
     this.logger = logger;
-    this.address = contractConfig.address;
-    this.args = contractConfig.args;
-    this.instanceOf = contractConfig.instanceOf;
-    this.gas = contractConfig.gas;
-    this.gasPrice = contractConfig.gasPrice;
-    this.silent = contractConfig.silent;
-    this.track = contractConfig.track;
-    this.deploy = contractConfig.deploy;
   }
 
   /**

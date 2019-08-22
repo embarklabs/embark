@@ -5,7 +5,7 @@ const constants = require('embark-core/constants');
 const API = require('./api.js');
 
 class Whisper {
-  constructor(embark, options) {
+  constructor(embark, _options) {
     this.logger = embark.logger;
     this.events = embark.events;
     this.fs = embark.fs;
@@ -16,7 +16,6 @@ class Whisper {
     this.web3Ready = false;
     this.webSocketsChannels = {};
     this.modulesPath = dappPath(embark.config.embarkConfig.generationDir, constants.dappArtifacts.symlinkDir);
-    this.plugins = options.plugins;
 
     this.api = new API(embark, this.web3);
     this.api.registerAPICalls();
@@ -28,8 +27,7 @@ class Whisper {
     // this.events.on("communication:started", this.connectEmbarkJSProvider.bind(this));
     this.events.on("blockchain:started", this.connectEmbarkJSProvider.bind(this));
 
-    let plugin = this.plugins.createPlugin('whisperplugin', {});
-    plugin.registerActionForEvent("pipeline:generateAll:before", this.addEmbarkJSWhisperArtifact.bind(this));
+    embark.registerActionForEvent("pipeline:generateAll:before", this.addEmbarkJSWhisperArtifact.bind(this));
 
     this.events.request("communication:node:register", "whisper", (readyCb) => {
       // TODO: should launch its own whisper node

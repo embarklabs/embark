@@ -172,6 +172,7 @@ class EmbarkController {
         engine.registerModuleGroup("storage");
         engine.registerModuleGroup("communication");
         engine.registerModuleGroup("cockpit");
+        engine.registerModuleGroup("namesystem");
         engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
 
         engine.events.on('deployment:deployContracts:afterAll', () => {
@@ -184,16 +185,18 @@ class EmbarkController {
 
         let plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
-          console.dir(engine.config.blockchainConfig);
-          await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig, cb);
-        });
-        plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
-          console.dir("====> requesting storage node to start...")
-          await engine.events.request2("storage:node:start", engine.config.storageConfig, cb);
-        });
-        plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
-          console.dir("====> requesting communication node to start...")
-          await engine.events.request2("communication:node:start", engine.config.communicationConfig, cb);
+          try {
+            await Promise.all([
+              engine.events.request2("blockchain:node:start", engine.config.blockchainConfig),
+              engine.events.request2("storage:node:start", engine.config.storageConfig),
+              engine.events.request2("communication:node:start", engine.config.communicationConfig),
+              engine.events.request2("namesystem:node:start", engine.config.namesystemConfig)
+            ]);
+          } catch (e) {
+            return cb(e);
+          }
+
+          cb();
         });
 
         engine.events.request('watcher:start');
@@ -232,20 +235,19 @@ class EmbarkController {
 
           engine.events.request("webserver:start")
 
-          let contractsFiles = await engine.events.request2("config:contractsFiles");
-          let compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
-          let _contractsConfig = await engine.events.request2("config:contractsConfig");
-          let contractsConfig = cloneDeep(_contractsConfig);
-          let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
           try {
+            let contractsFiles = await engine.events.request2("config:contractsFiles");
+            let compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
+            let _contractsConfig = await engine.events.request2("config:contractsConfig");
+            let contractsConfig = cloneDeep(_contractsConfig);
+            let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
             await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
-          }
-          catch (err) {
-            engine.logger.error(err);
-          }
-          console.dir("deployment done")
+            console.dir("deployment done");
 
-          await engine.events.request2("watcher:start")
+            await engine.events.request2("watcher:start");
+          } catch (e) {
+            engine.logger.error(__('Error building and deploying'), e);
+          }
         });
       },
       function startDashboard(callback) {

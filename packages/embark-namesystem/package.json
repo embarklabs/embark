@@ -1,10 +1,10 @@
 {
-  "name": "embark-ens",
+  "name": "embark-namesystem",
   "version": "4.1.0-beta.5",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
-  "description": "Implements ENS support in Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-ens#readme",
+  "description": "Namesystem provider abstraction module for Embark",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-namesystem#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -21,7 +21,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-ens",
+    "directory": "packages/embark-namesystem",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },
@@ -31,7 +31,7 @@
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
-    "lint:js": "eslint src/",
+    "lint:js": "eslint processes.js src/",
     "// lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
     "package": "npm pack",
     "// qa": "npm-run-all lint typecheck build package",
@@ -48,14 +48,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs2": "7.3.1",
-    "async": "2.6.1",
-    "embark-core": "^4.1.0-beta.5",
-    "embark-i18n": "^4.1.0-beta.3",
-    "embark-utils": "^4.1.0-beta.5",
-    "embarkjs": "^4.1.0-beta.5",
-    "embarkjs-ens": "^4.1.0-beta.5",
-    "eth-ens-namehash": "2.0.8",
-    "web3": "1.0.0-beta.37"
+    "embark-i18n": "^4.1.0-beta.3"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
