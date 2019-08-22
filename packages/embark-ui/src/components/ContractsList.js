@@ -27,7 +27,7 @@ const ContractsList = ({contracts, changePage, currentPage, numberOfPages}) => (
               return (
                 <tr key={contract.className} className={contractDisplay.stateColor}>
                   <td><Link to={`/explorer/contracts/${contract.className}`}>{contract.className}</Link></td>
-                  <td>{contractDisplay.address}</td>
+                  <td>{contractDisplay.deployedAddress}</td>
                   <td>{contractDisplay.state}</td>
                 </tr>
               );

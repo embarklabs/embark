@@ -37,7 +37,7 @@ export function *searchExplorer(entity, payload) {
   yield fetchContracts({});
   const contracts = yield select(getContracts);
   result = contracts.find(contract => {
-    return contract.address === searchValue || contract.className.toLowerCase() === searchValue.toLowerCase();
+    return contract.deployedAddress === searchValue || contract.className.toLowerCase() === searchValue.toLowerCase();
   });
 
   if (result) {
