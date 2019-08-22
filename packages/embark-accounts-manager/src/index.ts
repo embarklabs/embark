@@ -142,16 +142,18 @@ export default class AccountsManager {
       this.ready = true;
       return;
     }
-    async.eachLimit(this.accounts, 1, (account, eachCb) => {
-      if (!account.address) {
-        return eachCb();
-      }
-      fundAccount(web3, account.address, account.hexBalance, eachCb);
-    }, (err) => {
-      if (err) {
-        this.logger.error(__("Error funding accounts"), err.message || err);
-      }
-      this.ready = true;
-    });
+    try {
+      const coinbase = await web3.eth.getCoinbase();
+      const fundingAccounts = this.accounts.map((account) => {
+        if (!account.address) {
+          return null;
+        }
+        return fundAccount(web3, account.address, coinbase, account.hexBalance);
+      });
+      await Promise.all(fundingAccounts);
+    } catch (err) {
+      this.logger.error(__("Error funding accounts"), err.message || err);
+    }
+    this.ready = true;
   }
 }

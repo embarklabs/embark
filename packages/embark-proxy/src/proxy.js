@@ -15,6 +15,7 @@ export class Proxy {
     this.receipts = {};
     this.transactions = {};
     this.timeouts = {};
+    // TODO create local events instance for the ready events that are just used locally once `events.js` is extracted in a package
     this.events = options.events;
     this.plugins = options.plugins;
     this.logger = options.logger;
