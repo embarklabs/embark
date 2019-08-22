@@ -9,6 +9,7 @@ class BlockchainProcess extends ProcessWrapper {
   constructor(options) {
     super();
     this.blockchainConfig = options.blockchainConfig;
+    this.communicationConfig = options.communicationConfig;
     this.client = options.client;
     this.env = options.env;
     this.isDev = options.isDev;
@@ -26,7 +27,8 @@ class BlockchainProcess extends ProcessWrapper {
         onReadyCallback: this.blockchainReady.bind(this),
         onExitCallback: this.blockchainExit.bind(this),
         logger: console
-      }
+      },
+      this.communicationConfig
     );
 
     this.blockchain.run();

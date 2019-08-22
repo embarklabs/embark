@@ -201,7 +201,7 @@ Blockchain.prototype.run = function () {
     args = compact(args);
 
     let full_cmd = cmd + " " + args.join(' ');
-    self.logger.info(__("running: %s", full_cmd.underline).green);
+    self.logger.info(__(">>>>>>>>>>>>>>>>> running: %s", full_cmd.underline).green);
     self.child = spawn(cmd, args, {cwd: process.cwd()});
 
     self.child.on('error', (err) => {
