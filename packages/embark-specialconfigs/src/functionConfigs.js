@@ -54,7 +54,7 @@ class FunctionConfigs {
     }
   }
 
-  async beforeDeployAction(_params, cb) {
+  async beforeDeployAction(params, cb) {
     const beforeDeployFn = params.contract.beforeDeploy;
     const contract = params.contract;
     try {
@@ -68,7 +68,7 @@ class FunctionConfigs {
   }
 
   getDependenciesObject(logger) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve, _reject) => {
       let contracts = await this.events.request2("contracts:list");
 
       let args = { contracts: {}, logger};
