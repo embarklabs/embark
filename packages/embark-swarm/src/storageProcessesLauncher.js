@@ -132,7 +132,6 @@ class StorageProcessesLauncher {
         storageConfig: self.storageConfig,
         blockchainConfig: self.blockchainConfig,
         cors: self.buildCors()
-        // defaultAccount: defaultAccount
       }
     });
 
