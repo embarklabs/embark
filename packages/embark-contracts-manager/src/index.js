@@ -13,12 +13,12 @@ class ContractsManager {
     this.fs = embark.fs;
     this.plugins = options.plugins;
     this.currentContext = embark.currentContext || [];
-
     this.contracts = {};
     this.contractDependencies = {};
     this.deployOnlyOnConfig = false;
     this.compileError = false;
     this.compileOnceOnly = options.compileOnceOnly;
+    this._web3 = null;
 
     this.events.setCommandHandler("contracts:reset", (cb) => {
       this.contracts = {};
@@ -44,17 +44,22 @@ class ContractsManager {
       cb(null, this.contracts[contract.className]);
     });
 
-    // this.registerCommands()
+    this.registerCommands();
     this.registerAPIs();
+  }
+
+  get web3() {
+    return (async () => {
+      if (!this._web3) {
+        const provider = await this.events.request2("blockchain:client:provider", "ethereum");
+        this._web3 = new Web3(provider);
+      }
+      return this._web3;
+    })();
   }
 
   registerCommands() {
     const self = this;
-
-    self.events.setCommandHandler('contracts:add', (contract) => {
-      const contractInstance = new Contract(this.logger, contract);
-      this.contracts[contract.className] = contractInstance;
-    });
 
     self.events.setCommandHandler('contracts:all', (cb) => {
       cb(self.compileError, self.contracts);
@@ -95,32 +100,36 @@ class ContractsManager {
     embark.registerAPICall(
       'get',
       '/embark-api/contract/:contractName',
-      (req, res) => res.status(200).send(this.getContract(req.params.contractName))
+      (req, res) => {
+        try {
+          const contract = self.getContract(req.params.contractName);
+          if (!contract) {
+            res.status(404).send({error: `Contract '${req.params.contractName}' not found.`});
+          }
+          res.status(200).send(contract);
+        } catch (err) {
+          res.status(500).send({error: `Error getting contract: ${err.message || err}`});
+        }
+      }
     );
 
     embark.registerAPICall(
       'post',
       '/embark-api/contract/:contractName/function',
       async (req, res) => {
-        const contract = this.getContract(req.body.contractName);
-        let web3, accounts;
+        let funcCall;
         try {
-          web3 = await this.web3;
-          accounts = await web3.eth.getAccounts();
-        } catch (e) {
-          res.status(500).send(e.message);
-        }
-        const account = accounts[0];
-
-        const abi = contract.abiDefinition.find(definition => definition.name === req.body.method);
-        const funcCall = (abi.constant === true || abi.stateMutability === 'view' || abi.stateMutability === 'pure') ? 'call' : 'send';
-
-        const contractObj = new web3.eth.Contract(contract.abiDefinition, contract.deployedAddress);
-        try {
+          const contract = this.getContract(req.body.contractName);
+          const web3 = await this.web3;
+          const accounts = await web3.eth.getAccounts();
+          const contractObj = new web3.eth.Contract(contract.abiDefinition, contract.deployedAddress);
+          const abi = contract.abiDefinition.find(definition => definition.name === req.body.method);
+          funcCall = (abi.constant === true || abi.stateMutability === 'view' || abi.stateMutability === 'pure') ? 'call' : 'send';
           let value = typeof req.body.value === "number" ? req.body.value.toString() : req.body.value;
           const gas = await contractObj.methods[req.body.method].apply(this, req.body.inputs).estimateGas({value});
+
           contractObj.methods[req.body.method].apply(this, req.body.inputs)[funcCall]({
-            from: account,
+            from: web3.eth.defaultAccount || accounts[0],
             gasPrice: req.body.gasPrice,
             gas: Math.floor(gas),
             value
@@ -140,21 +149,21 @@ class ContractsManager {
 
             if (error) {
               self.events.emit('contracts:log', contractLog);
-              return res.status(500).send({result: error.message});
+              return res.status(200).send({result: error.message});
             }
 
             if (funcCall === 'call') {
               contractLog.status = '0x1';
-              return res.send({result});
+              return res.status(200).send({result});
             }
 
             res.send({result});
           });
-        } catch (e) {
-          if (funcCall === 'call' && e.message === constants.blockchain.gasAllowanceError) {
-            return res.status(500).send({result: constants.blockchain.gasAllowanceErrorMessage});
+        } catch (err) {
+          if (funcCall === 'call' && err.message === constants.blockchain.gasAllowanceError) {
+            return res.status(200).send({result: constants.blockchain.gasAllowanceErrorMessage});
           }
-          res.status(500).send({result: e.message});
+          res.status(200).send({result: err.message || err});
         }
       }
     );
@@ -162,35 +171,23 @@ class ContractsManager {
     embark.registerAPICall(
       'post',
       '/embark-api/contract/:contractName/deploy',
-      (req, res) => {
-        async.parallel({
-          contract: (callback) => {
-            self.events.request('contracts:contract', req.body.contractName, (contract) => callback(null, contract));
-          },
-          account: (callback) => {
-            self.events.request("blockchain:defaultAccount:get", (account) => callback(null, account));
+      async (req, res) => {
+        try {
+          const contract = this.getContract(req.body.contractName);
+          const web3 = await this.web3;
+          const accounts = await web3.eth.getAccounts();
+          const contractObj = new web3.eth.Contract(contract.abiDefinition, contract.deployedAddress);
+          try {
+            const params = {data: `0x${contract.code}`, arguments: req.body.inputs};
+            let gas = await contractObj.deploy(params).estimateGas();
+            let newContract = await contractObj.deploy(params).send({from: web3.eth.defaultAccount || accounts[0], gas, gasPrice: req.body.gasPrice});
+            res.status(200).send({result: newContract._address});
+          } catch (e) {
+            res.status(200).send({result: e.message});
           }
-        }, (error, result) => {
-          if (error) {
-            return res.send({error: error.message});
-          }
-          const {account, contract} = result;
-
-          self.events.request("blockchain:contract:create", {abi: contract.abiDefinition}, async (contractObj) => {
-            try {
-              const params = {data: `0x${contract.code}`, arguments: req.body.inputs};
-              let gas = await contractObj.deploy(params).estimateGas();
-              let newContract = await contractObj.deploy(params).send({
-                from: account,
-                gas,
-                gasPrice: req.body.gasPrice
-              });
-              res.send({result: newContract._address});
-            } catch (e) {
-              res.send({result: e.message});
-            }
-          });
-        });
+        } catch (err) {
+          res.status(500).send({error: `Error deploying contract: ${err.message || err}`});
+        }
       }
     );
 
@@ -198,7 +195,7 @@ class ContractsManager {
       'get',
       '/embark-api/contracts',
       (_req, res) => {
-        res.send(this._contractsForApi());
+        res.status(200).send(this._contractsForApi());
       }
     );
 
@@ -549,7 +546,7 @@ class ContractsManager {
   }
 
   _contractsForApi() {
-    const contracts =  this.formatContracts();
+    const contracts = this.formatContracts();
     contracts.forEach((contract) => {
       Object.assign(contract, this.getContract(contract.className));
     });

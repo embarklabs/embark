@@ -79,8 +79,8 @@ class EditorContainer extends React.Component {
       this.setState({currentFile: this.props.currentFile});
     }
 
-    if(this.props.contracts.length && this.props.transaction) {
-      const debuggingContract = this.props.contracts.find(contract => contract.address === this.props.transaction.to)
+    if (this.props.contracts.length && this.props.transaction) {
+      const debuggingContract = this.props.contracts.find(contract => contract.deployedAddress === this.props.transaction.to)
       if (debuggingContract && this.state.debuggingContract !== debuggingContract) {
         const editorWidth = this.getNewEditorWidth(OPERATIONS.LESS)
         this.setState({currentAsideTab: TextEditorToolbarTabs.Debugger, editorWidth, debuggingContract})

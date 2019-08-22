@@ -42,7 +42,7 @@ const LayoutContract = ({contract, children, title = contract.className, isLoadi
   <Card>
     <CardHeader>
       <CardTitle>
-        <span className={orderClassName(contract.address)}>{contract.deployIndex + 1}</span>
+        <span className={orderClassName(contract.deployedAddress)}>{contract.deployIndex + 1}</span>
         {title}&nbsp;
         {isLoading && <FontAwesome name="spinner" spin />}
         {!isLoading && <span>{(isDeployed && deployedTitleSuffix) || notDeployedTitleSuffix}</span>}
@@ -205,12 +205,12 @@ Web3Contract.propTypes = {
 };
 
 const EmbarkContract = ({contract, toggleContractOverview}) => (
-  <LayoutContract contract={contract} 
-                  isDeployed={!!contract.address}
-                  deployedTitleSuffix={`deployed at ${contract.address}`}
-                  notDeployedTitleSuffix={'not deployed'}
-                  title={<a href='#toggleContract' onClick={() => toggleContractOverview(contract)}>{contract.className}</a>}>
-    {contract.address && <p><strong>Arguments:</strong> {JSON.stringify(contract.args)}</p>}
+  <LayoutContract contract={contract}
+    isDeployed={!!contract.deployedAddress}
+    deployedTitleSuffix={`deployed at ${contract.deployedAddress}`}
+    notDeployedTitleSuffix={'not deployed'}
+    title={<a href='#toggleContract' onClick={() => toggleContractOverview(contract)}>{contract.className}</a>}>
+    {contract.deployedAddress && <p><strong>Arguments:</strong> {JSON.stringify(contract.args)}</p>}
     {contract.transactionHash &&
     <React.Fragment>
       <p><strong>Transaction Hash:</strong> {contract.transactionHash}</p>
@@ -218,8 +218,8 @@ const EmbarkContract = ({contract, toggleContractOverview}) => (
         cost: <strong>{contract.gas * contract.gasPrice}</strong> Wei</p>
     </React.Fragment>
     }
-    {contract.address && !contract.transactionHash &&
-    <p><strong>Contract already deployed</strong></p>
+    {contract.deployedAddress && !contract.transactionHash &&
+      <p><strong>Contract already deployed</strong></p>
     }
   </LayoutContract>
 );

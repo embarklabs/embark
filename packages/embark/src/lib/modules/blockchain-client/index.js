@@ -2,7 +2,7 @@ const Web3 = require('web3');
 
 class BlockchainClient {
 
-  constructor(embark, _options) {
+  constructor(embark, options) {
     this.embark = embark;
     this.events = embark.events;
 
