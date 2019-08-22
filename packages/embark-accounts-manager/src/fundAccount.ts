@@ -1,4 +1,4 @@
-import Web3 = require("web3");
+import Web3 from "web3";
 
 const TARGET = 0x7FFFFFFFFFFFFFFF;
 
@@ -23,9 +23,9 @@ export default async function fundAccount(web3: Web3, accountAddress: string, co
 
   return web3.eth.sendTransaction({
     from: coinbaseAddress,
+    gasPrice,
+    nonce: lastNonce,
     to: accountAddress,
-    value: targetBalance.sub(accountBalance),
-    gasPrice: gasPrice,
-    nonce: lastNonce
+    value: targetBalance.sub(accountBalance).toString(),
   });
 }
