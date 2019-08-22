@@ -5,6 +5,7 @@ const {spawn, exec} = require('child_process');
 const path = require('path');
 const constants = require('embark-core/constants');
 const GethClient = require('./gethClient.js');
+const WhisperGethClient = require('./whisperClient.js');
 // const ParityClient = require('./parityClient.js');
 import { IPC } from 'embark-core';
 
@@ -15,7 +16,7 @@ const Logger = require('embark-logger');
 const IPC_CONNECT_INTERVAL = 2000;
 
 /*eslint complexity: ["error", 50]*/
-var Blockchain = function(userConfig, clientClass) {
+var Blockchain = function(userConfig, clientClass, communicationConfig) {
   this.userConfig = userConfig;
   this.env = userConfig.env || 'development';
   this.isDev = userConfig.isDev;
@@ -100,8 +101,7 @@ var Blockchain = function(userConfig, clientClass) {
     this.logger.error(__(spaceMessage, 'genesisBlock'));
     process.exit(1);
   }
-  this.client = new clientClass({config: this.config, env: this.env, isDev: this.isDev});
-
+  this.client = new clientClass({config: this.config, env: this.env, isDev: this.isDev, communicationConfig: communicationConfig});
   this.initStandaloneProcess();
 };
 
@@ -201,7 +201,7 @@ Blockchain.prototype.run = function () {
     args = compact(args);
 
     let full_cmd = cmd + " " + args.join(' ');
-    self.logger.info(__("running: %s", full_cmd.underline).green);
+    self.logger.info(__(">>>>>>>>>>>>>>>> running: %s", full_cmd.underline).green);
     self.child = spawn(cmd, args, {cwd: process.cwd()});
 
     self.child.on('error', (err) => {
@@ -413,7 +413,7 @@ Blockchain.prototype.initChainAndGetAddress = function (callback) {
   });
 };
 
-export function BlockchainClient(userConfig, options) {
+export function BlockchainClient(userConfig, options, communicationConfig) {
   if ((userConfig === {} || JSON.stringify(userConfig) === '{"enabled":true}') && options.env !== 'development') {
     options.logger.info("===> " + __("warning: running default config on a non-development environment"));
   }
@@ -423,18 +423,13 @@ export function BlockchainClient(userConfig, options) {
   if (options.clientName) userConfig.client = options.clientName;
   // Choose correct client instance based on clientName
   let clientClass;
-  switch (userConfig.client) {
-    case constants.blockchain.clients.geth:
-      clientClass = GethClient;
-      break;
 
-    // case constants.blockchain.clients.parity:
-      // clientClass = ParityClient;
-      // break;
-    default:
-      console.error(__('Unknown client "%s". Please use one of the following: %s', userConfig.client, Object.keys(constants.blockchain.clients).join(', ')));
-      process.exit(1);
+  if (communicationConfig) {
+    clientClass = WhisperGethClient
+  } else {
+    clientClass = GethClient;
   }
+
   userConfig.isDev = (userConfig.isDev || userConfig.default);
   userConfig.env = options.env;
   userConfig.onReadyCallback = options.onReadyCallback;
@@ -442,5 +437,5 @@ export function BlockchainClient(userConfig, options) {
   userConfig.logger = options.logger;
   userConfig.certOptions = options.certOptions;
   userConfig.isStandalone = options.isStandalone;
-  return new Blockchain(userConfig, clientClass);
+  return new Blockchain(userConfig, clientClass, communicationConfig);
 }

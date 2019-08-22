@@ -17,35 +17,42 @@ class Whisper {
     this.webSocketsChannels = {};
     this.modulesPath = dappPath(embark.config.embarkConfig.generationDir, constants.dappArtifacts.symlinkDir);
 
-    this.api = new API(embark, this.web3);
-    this.api.registerAPICalls();
+    this.whisperNodes = {};
+
+    this.events.setCommandHandler("whisper:node:register", (clientName, startCb) => {
+      this.whisperNodes[clientName] = startCb;
+    });
+
+    this.events.request("communication:node:register", "whisper", (readyCb) => {
+      let clientName = this.communicationConfig.client;
+      let registerCb = this.whisperNodes[clientName];
+      registerCb.apply(registerCb, [readyCb]);
+    });
 
     this.events.request("runcode:whitelist", 'embarkjs', () => { });
     this.events.request("runcode:whitelist", 'embarkjs-whisper', () => { });
 
-    // TODO: should launch its own whisper node
-    // this.events.on("communication:started", this.connectEmbarkJSProvider.bind(this));
-    this.events.on("blockchain:started", this.connectEmbarkJSProvider.bind(this));
-
-    embark.registerActionForEvent("pipeline:generateAll:before", this.addEmbarkJSWhisperArtifact.bind(this));
-
-    this.events.request("communication:node:register", "whisper", (readyCb) => {
-      // TODO: should launch its own whisper node
-      console.dir("--- whisper readyCb")
-      console.dir('--- registering whisper node')
-      // this.events.request('processes:register', 'communication', {
-        // launchFn: (cb) => {
-          // this.startProcess(cb);
-        // },
-        // stopFn: (cb) => { this.stopProcess(cb); }
-      // });
-      // this.events.request("processes:launch", "communication", (err) => {
-        readyCb()
-      // });
-      // this.registerServiceCheck()
+    this.events.on("communication:started", () => {
+      this.setWhisperProvider();
+      this.api = new API(embark, this.web3);
+      this.api.registerAPICalls();
+      this.connectEmbarkJSProvider.bind(this)
     });
 
+    let plugin = this.plugins.createPlugin('whisperplugin', {});
+    plugin.registerActionForEvent("pipeline:generateAll:before", this.addEmbarkJSWhisperArtifact.bind(this));
     this.registerEmbarkJSCommunication()
+  }
+
+  setWhisperProvider() {
+    let {host, port} = this.communicationConfig.connection;
+    let web3Endpoint = 'ws://' + host + ':' + port;
+    // Note: dont't pass to the provider things like {headers: {Origin: "embark"}}. Origin header is for browser to fill
+    // to protect user, it has no meaning if it is used server-side. See here for more details: https://github.com/ethereum/go-ethereum/issues/16608
+    // Moreover, Parity reject origins that are not urls so if you try to connect with Origin: "embark" it gives the followin error:
+    // << Blocked connection to WebSockets server from untrusted origin: Some("embark") >>
+    // The best choice is to use void origin, BUT Geth rejects void origin, so to keep both clients happy we can use http://embark
+    this.web3.setProvider(new Web3.providers.WebsocketProvider(web3Endpoint, {headers: {Origin: constants.embarkResourceOrigin}}));
   }
 
   async addEmbarkJSWhisperArtifact(params, cb) {

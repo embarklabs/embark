@@ -13,7 +13,6 @@ class API {
     this.embark = embark;
     this.logger = embark.logger;
     this.web3 = web3;
-    this.registerAPICalls();
   }
 
   registerAPICalls() {
