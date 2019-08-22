@@ -10,6 +10,7 @@ export class BlockchainProcessLauncher {
     this.logger = options.logger;
     this.normalizeInput = options.normalizeInput;
     this.blockchainConfig = options.blockchainConfig;
+    this.communicationConfig = options.communicationConfig;
     this.locale = options.locale;
     this.isDev = options.isDev;
     this.client = options.client;
@@ -35,6 +36,7 @@ export class BlockchainProcessLauncher {
     this.blockchainProcess.send({
       action: constants.blockchain.init, options: {
         blockchainConfig: this.blockchainConfig,
+        communicationConfig: this.communicationConfig,
         client: this.client,
         env: this.env,
         isDev: this.isDev,

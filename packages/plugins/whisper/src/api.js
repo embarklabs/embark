@@ -15,8 +15,6 @@ class API {
     this.embark = embark;
     this.logger = embark.logger;
     this.communicationConfig = embark.config.communicationConfig;
-
-    embark.events.on("blockchain:started", this.registerAPICalls.bind(this));
   }
 
   async registerAPICalls() {
