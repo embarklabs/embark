@@ -1,3 +1,5 @@
+import async from 'async';
+const {__} = require('embark-i18n');
 
 class Blockchain {
 
@@ -36,19 +38,31 @@ class Blockchain {
 
   addArtifactFile(_params, cb) {
     this.events.request("config:contractsConfig", (_err, contractsConfig) => {
-      let config = {
-        dappConnection: contractsConfig.dappConnection,
-        dappAutoEnable: contractsConfig.dappAutoEnable,
-        warnIfMetamask: this.blockchainConfig.isDev,
-        blockchainClient: this.blockchainConfig.client
-      };
+      async.map(contractsConfig.dappConnection, (conn, mapCb) => {
+        if (conn === '$EMBARK') {
+          // Connect to Embark's endpoint (proxy)
+          return this.events.request("proxy:endpoint", mapCb);
+        }
+        mapCb(null, conn);
+      }, (err, results) => {
+        if (err) {
+          this.logger.error(__('Error getting dapp connection'));
+          return cb(err);
+        }
+        let config = {
+          dappConnection: results,
+          dappAutoEnable: contractsConfig.dappAutoEnable,
+          warnIfMetamask: this.blockchainConfig.isDev,
+          blockchainClient: this.blockchainConfig.client
+        };
 
-      this.events.request("pipeline:register", {
-        path: [this.embarkConfig.generationDir, 'config'],
-        file: 'blockchain.json',
-        format: 'json',
-        content: config
-      }, cb);
+        this.events.request("pipeline:register", {
+          path: [this.embarkConfig.generationDir, 'config'],
+          file: 'blockchain.json',
+          format: 'json',
+          content: config
+        }, cb);
+      });
     });
   }
 

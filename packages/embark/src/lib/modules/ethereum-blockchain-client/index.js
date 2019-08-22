@@ -4,6 +4,8 @@ const async = require('async');
 const Web3 = require('web3');
 const embarkJsUtils = require('embarkjs').Utils;
 import checkContractSize from "./checkContractSize";
+import {AddressUtils} from 'embark-utils';
+const {ZERO_ADDRESS} = AddressUtils;
 
 class EthereumBlockchainClient {
 
@@ -56,6 +58,9 @@ class EthereumBlockchainClient {
     embarkJsUtils.secureSend(web3, contractObject, {
       from: account, gas: 800000
     }, true, (err, receipt) => {
+        if (err) {
+          return done(err);
+        }
       contract.deployedAddress = receipt.contractAddress;
       contract.transactionHash = receipt.transactionHash;
       contract.log(`${contract.className.bold.cyan} ${__('deployed at').green} ${receipt.contractAddress.bold.cyan} ${__("using").green} ${receipt.gasUsed} ${__("gas").green} (txHash: ${receipt.transactionHash.bold.cyan})`);

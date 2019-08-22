@@ -1,13 +1,13 @@
 import {__} from 'embark-i18n';
 import {toChecksumAddress} from 'embark-utils';
 import Web3 from "web3";
+require("colors");
 
 export default class DeploymentChecks {
-  constructor({trackingFunctions, logger, events, plugins}) {
+  constructor({trackingFunctions, events, logger}) {
     this.trackingFunctions = trackingFunctions;
-    this.logger = logger;
     this.events = events;
-    this.plugins = plugins;
+    this.logger = logger;
     this._web3 = null;
   }
 
@@ -29,6 +29,12 @@ export default class DeploymentChecks {
       return cb(null, params);
     }
 
+    // check if contract set to not deploy in the config
+    if (contract.deploy === false) {
+      params.shouldDeploy = false;
+      return cb(null, params);
+    }
+
     // contract config address field set - do not deploy
     if (contract.address !== undefined) {
       try {
@@ -47,7 +53,7 @@ export default class DeploymentChecks {
 
   async checkIfAlreadyDeployed(params, cb) {
     const {contract} = params;
-    const trackedContract = this.trackingFunctions.getContract(contract);
+    const trackedContract = await this.trackingFunctions.getContract(contract);
 
     // previous event action check
     if (!params.shouldDeploy) {
@@ -60,7 +66,7 @@ export default class DeploymentChecks {
     }
 
     // tracked contract has track field set - deploy anyway, but tell user
-    if (trackedContract.track === false || this.trackingFunctions.trackContracts === false) {
+    if (contract.track === false || this.trackingFunctions.trackContracts === false) {
       contract.log(contract.className.bold.cyan + __(" will be redeployed").green);
       return cb(null, params);
     }
@@ -78,6 +84,20 @@ export default class DeploymentChecks {
       contract.deployedAddress = trackedContract.address;
       contract.log(contract.className.bold.cyan + __(" already deployed at ").green + contract.deployedAddress.bold.cyan);
       params.shouldDeploy = false;
+
+      // handle special case where user has changed their DApp config from `track: false`,
+      // deployed (which is then saved in chains.json), then changed to `track: true|undefined`
+      // in this case we assume
+      // 1) the contract is already tracked
+      // 2) contract.track is truthy
+      if (contract.track !== false) {
+        return this.trackingFunctions.trackAndSaveContract(params, () => {
+          // no need to wait for this function to finish as it has no impact on operation
+          // past this point
+          this.logger.trace(__("Contract tracking setting has been updatred in chains.json"));
+          cb(null, params);
+        });
+      }
     }
     cb(null, params);
   }

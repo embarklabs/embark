@@ -36,7 +36,7 @@ class ContractsManager {
 
     console.dir("---- contracts manager---- ")
 
-        // this.registerCommands()
+    // this.registerCommands()
     // this.registerAPIs()
   }
 
@@ -44,7 +44,8 @@ class ContractsManager {
     const self = this;
 
     self.events.setCommandHandler('contracts:add', (contract) => {
-      this.contracts[contract.className] = contract;
+      const contractInstance = new Contract(this.logger, contract);
+      this.contracts[contract.className] = contractInstance;
     });
 
     self.events.setCommandHandler('contracts:all', (cb) => {
@@ -279,7 +280,8 @@ class ContractsManager {
               return eachCb(err);
             }
             try {
-              self.contracts[className] = JSON.parse(artifactBuf.toString());
+              const contract = JSON.parse(artifactBuf.toString());
+              self.contracts[className] = new Contract(self.logger, contract);
               if (self.contracts[className].deployedAddress) {
                 self.contracts[className].address = self.contracts[className].deployedAddress;
               }
@@ -298,7 +300,12 @@ class ContractsManager {
           const compiledContract = compiledContracts[className];
           const contractConfig = contractsConfig.contracts[className];
 
-          const contract = self.contracts[className] || {className: className, args: []};
+          let contract = self.contracts[className];
+          if (!contract) {
+            contract = new Contract(self.logger, contractConfig);
+            contract.className = className;
+            contract.args = [];
+          }
 
           contract.code = compiledContract.code;
           contract.runtimeBytecode = compiledContract.runtimeBytecode;

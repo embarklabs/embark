@@ -1,7 +1,8 @@
 /* global __dirname module process require */
 
-const { __ } = require('embark-i18n');
+const {__} = require('embark-i18n');
 const Web3 = require('web3');
+const async = require('async');
 
 require('ejs');
 const Templates = {
@@ -11,21 +12,20 @@ const Templates = {
 };
 
 class EmbarkWeb3 {
-  constructor(embark, options) {
+  constructor(embark, _options) {
     this.embarkConfig = embark.config.embarkConfig;
     this.embark = embark;
     this.logger = embark.logger;
     this.events = embark.events;
     this.fs = embark.fs;
     this.config = embark.config;
-    let plugin = options.plugins.createPlugin('web3plugin', {});
 
     this.events.request("runcode:whitelist", 'web3', () => { });
 
     this.events.on("blockchain:started", this.registerWeb3Object.bind(this));
-    plugin.registerActionForEvent("pipeline:generateAll:before", this.addWeb3Artifact.bind(this));
-    plugin.registerActionForEvent("deployment:contract:deployed", this.registerInVm.bind(this));
-    plugin.registerActionForEvent("deployment:contract:deployed", this.registerArtifact.bind(this));
+    embark.registerActionForEvent("pipeline:generateAll:before", this.addWeb3Artifact.bind(this));
+    embark.registerActionForEvent("deployment:contract:deployed", this.registerInVm.bind(this));
+    embark.registerActionForEvent("deployment:contract:deployed", this.registerArtifact.bind(this));
 
     this.registerWeb3Help()
   }
@@ -62,15 +62,27 @@ class EmbarkWeb3 {
   }
 
   addWeb3Artifact(_params, cb) {
-    let web3Code = Templates.web3_init({connectionList: this.config.contractsConfig.dappConnection});
+    async.map(this.config.contractsConfig.dappConnection, (conn, mapCb) => {
+      if (conn === '$EMBARK') {
+        // Connect to Embark's endpoint (proxy)
+        return this.events.request("proxy:endpoint", mapCb);
+      }
+      mapCb(null, conn);
+    }, (err, results) => {
+      if (err) {
+        this.logger.error(__('Error getting dapp connection'));
+        return cb(err);
+      }
+      let web3Code = Templates.web3_init({connectionList: results});
 
     // TODO: generate a .node file
-    this.events.request("pipeline:register", {
-      path: [this.embarkConfig.generationDir, 'contracts'],
-      file: 'web3_init.js',
-      format: 'js',
-      content: web3Code
-    }, cb);
+      this.events.request("pipeline:register", {
+        path: [this.embarkConfig.generationDir, 'contracts'],
+        file: 'web3_init.js',
+        format: 'js',
+        content: web3Code
+      }, cb);
+    });
   }
 
   registerArtifact(params, cb) {

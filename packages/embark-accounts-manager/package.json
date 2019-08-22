@@ -1,10 +1,10 @@
 {
-  "name": "embark-console-listener",
+  "name": "embark-accounts-manager",
   "version": "4.1.0-beta.5",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
-  "description": "Console listener component for Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-console-listener#readme",
+  "description": "Embark account manager. Takes the blockchain config and, along with the proxy, makes sure to send back the correct accounts",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-accounts-manager#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -20,27 +20,25 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-console-listener",
+    "directory": "packages/embark-accounts-manager",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },
   "main": "./dist/index.js",
   "scripts": {
-    "build": "cross-env BABEL_ENV=node babel src --extensions \".js\" --out-dir dist --root-mode upward --source-maps",
+    "build": "cross-env BABEL_ENV=node babel src --extensions \".ts\",\".js\" --out-dir dist --root-mode upward --source-maps",
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
-    "lint:js": "eslint src/",
-    "// lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
+    "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
     "package": "npm pack",
-    "// qa": "npm-run-all lint typecheck build package",
-    "qa": "npm-run-all lint build package",
+    "qa": "npm-run-all lint typecheck build package",
     "reset": "npx rimraf dist embark-*.tgz package",
     "start": "npm run watch",
-    "// typecheck": "tsc",
+    "typecheck": "tsc",
     "watch": "run-p watch:*",
     "watch:build": "npm run build -- --verbose --watch",
-    "// watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
+    "watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
   },
   "eslintConfig": {
     "extends": "../../.eslintrc.json"
@@ -51,8 +49,7 @@
     "embark-core": "^4.1.0-beta.5",
     "embark-i18n": "^4.1.0-beta.3",
     "embark-utils": "^4.1.0-beta.5",
-    "ethereumjs-tx": "1.3.7",
-    "ethereumjs-util": "6.0.0"
+    "web3": "1.0.0-beta.37"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
@@ -61,7 +58,6 @@
     "eslint": "5.7.0",
     "npm-run-all": "4.1.5",
     "rimraf": "2.6.3",
-    "source-map-support": "0.5.9",
     "tslint": "5.16.0",
     "typescript": "3.4.5"
   },

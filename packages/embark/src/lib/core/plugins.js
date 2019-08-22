@@ -209,6 +209,7 @@ Plugins.prototype.runActionsForEvent = function(eventName, args, cb) {
   const self = this;
   if (typeof (args) === 'function') {
     cb = args;
+    args = [];
   }
   let actionPlugins = this.getPluginsPropertyAndPluginName('eventActions', 'eventActions', eventName);
 
@@ -236,7 +237,11 @@ Plugins.prototype.runActionsForEvent = function(eventName, args, cb) {
 };
 
 Plugins.prototype.emitAndRunActionsForEvent = function(eventName, args, cb) {
-  this.events.emit(eventName);
+  if (typeof (args) === 'function') {
+    cb = args;
+    args = [];
+  }
+  this.events.emit(eventName, args);
   return this.runActionsForEvent(eventName, args, cb);
 };
 

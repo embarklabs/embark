@@ -17,7 +17,7 @@ export default class Contract {
   public deploy?: boolean = true;
   public realRuntimeBytecode: string = "";
   public realArgs: any[] = [];
-  constructor(logger: Logger, contractConfig: ContractConfig) {
+  constructor(logger: Logger, contractConfig: ContractConfig = {}) {
     this.logger = logger;
     this.address = contractConfig.address;
     this.args = contractConfig.args;

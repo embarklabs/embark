@@ -15,10 +15,6 @@ class ContractDeployer {
   }
 
   deployContract(contract, callback) {
-    if (contract.deploy === false) {
-      this.events.emit("deployment:contract:undeployed", contract);
-      return callback();
-    }
 
     async.waterfall([
       (next) => {

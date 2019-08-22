@@ -3,11 +3,10 @@ const async = require('async');
 const { normalizeInput, deconstructUrl } = require('embark-utils');
 const constants = require('embark-core/constants');
 import { BlockchainProcessLauncher } from './blockchainProcessLauncher';
-import { pingEndpoint } from './utils';
+import {pingEndpoint} from 'embark-utils';
 
 export { BlockchainClient } from './blockchain';
 export { Simulator } from './simulator';
-export { Proxy } from './proxy';
 
 export default class BlockchainModule {
 

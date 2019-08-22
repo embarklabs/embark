@@ -43,6 +43,30 @@ EmbarkJS.onReady((error) => {
 });
 ```
 
+## Using `dappConnection`
+
+After reading the section above on `EmbarkJS.onReady`, you might be wondering where EmbarkJS establishes a connection.
+
+The answer is: you decide! You can configure it using `dappConnection`, a config property you can find in the Smart Contract config (by default at `config/contracts.js`).
+
+You will notice that property name reused in some other config files too, like the Storage one, because you can configure where those connect as well.
+
+The expressions used within `dappConnection` come with special semantics. Here's how they work: it is an array of strings where EmbarkJS will try each of those in order (from 0 to N) and as soon as one of the connections work, it will stop.
+
+In the case of the Smart Contract config `dappConnection`, the one that is used to connect to the blockchain node and that is indirectly used in `EmbarkJS.onReady`, you will see two special entities: `$WEB3` and `$EMBARK`.
+
+- `$WEB3` tells EmbarkJS to connect to the browser's web3 instance. For example, Metamask or Status.
+- `$EMBARK` tells EmbarkJS to connect to Embark's wallet, implemented using a proxy in between the Dapp and the blockchain node.
+  - This let's you use you own accounts, as set up in your Blockchain config's `accounts` section
+    - If you don't use custom accounts, using `$EMBARK` is still useful, because it connects to the node more easily for you and uses the unlocked accounts on the node, like when using the `dev` `miningMode`
+  - Also, Embark gets to see the transactions processed and logs them back to you in a human readable manner
+  
+If you want, you can also put a valid node URL in the `dappConnection` array. In that case, EmbarkJS will connect directly to the node, without using Embark's proxy.
+It is, however, not recommended as you lose some of Embark's features, like the transaction logger.
+
+If you want to use an external node,  like Infura, we instead recommend to set it in the Blockchain config (`config/blockchain.js`) using the property `endpoint`.
+Then, using `$EMBARK` will use Embark's proxy, which in part will be connected to that endpoint.
+
 ## Requesting account access
 
 As of [EIP1102](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md), decentralized applications MUST request access to a DApp's user accounts. Embark offers several options on how to implement this.
