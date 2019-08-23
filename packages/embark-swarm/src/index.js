@@ -187,6 +187,7 @@ class Swarm {
   }
 
   async connectEmbarkJSProvider() {
+    // TODO: should initialize its own object web3 instead of relying on a global one
     let providerCode = `\nEmbarkJS.Storage.setProviders(${JSON.stringify(this.embark.config.storageConfig.dappConnection || [])}, {web3});`;
     await this.events.request2('runcode:eval', providerCode);
   }

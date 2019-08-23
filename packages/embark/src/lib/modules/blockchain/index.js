@@ -24,10 +24,8 @@ class Blockchain {
       // const clientName = this.blockchainConfig.client;
       const client = this.blockchainNodes[clientName];
       if (!client) return cb("client " + clientName + " not found");
-      console.log('starting', clientName, 'blockchain client');
 
       let onStart = () => {
-        console.log("blockchain onStart being called");
         this.events.emit("blockchain:started", clientName);
         cb();
       }

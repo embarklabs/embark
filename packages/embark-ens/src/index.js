@@ -76,17 +76,15 @@ class ENS {
     this.initated = false;
 
     this.events.request("namesystem:node:register", "ens", (readyCb) => {
-      this.events.setCommandHandler("ens:resolve", this.ensResolve.bind(this));
-      this.events.setCommandHandler("ens:isENSName", (name, cb) => {
-        setImmediate(cb, this.isENSName(name));
-      });
-
-      this.embark.events.setCommandHandler("module:namesystem:reset", (cb) => {
-        this.reset();
-        this.init(cb);
-      });
-      this.init(readyCb);
+      readyCb();
     });
+
+    this.events.setCommandHandler("ens:resolve", this.ensResolve.bind(this));
+    this.events.setCommandHandler("ens:isENSName", (name, cb) => {
+      setImmediate(cb, this.isENSName(name));
+    });
+
+    this.init(() => {});
   }
 
   get web3() {
@@ -120,12 +118,12 @@ class ENS {
     this.enabled = true;
     this.doSetENSProvider = this.config.namesystemConfig.provider === 'ens';
 
+    this.registerEmbarkJSNaming();
     this.registerEvents();
     this.registerConsoleCommands();
     this.events.request2("runcode:whitelist", 'eth-ens-namehash');
     this.events.request2("runcode:whitelist", 'embarkjs');
     this.events.request2("runcode:whitelist", 'embarkjs-ens');
-    await this.registerEmbarkJSNaming();
     this.initated = true;
     cb();
   }
@@ -456,7 +454,7 @@ class ENS {
   }
 
   async connectEmbarkJSProvider(config) {
-    let providerCode = `\nEmbarkJS.Names.setProviders(${JSON.stringify(config)});`;
+    let providerCode = `\nEmbarkJS.Names.setProvider('ens', ${JSON.stringify(config)});`;
     await this.events.request2('runcode:eval', providerCode);
   }
 
