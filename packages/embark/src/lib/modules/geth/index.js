@@ -11,6 +11,7 @@ class Geth {
     this.embark = embark;
     this.embarkConfig = embark.config.embarkConfig;
     this.blockchainConfig = embark.config.blockchainConfig;
+    this.communicationConfig = embark.config.communicationConfig;
     this.locale = options.locale;
     this.logger = embark.logger;
     this.client = options.client;
@@ -25,7 +26,6 @@ class Geth {
     this.events.request("blockchain:node:register", constants.blockchain.clients.geth, (readyCb) => {
       this.events.request('processes:register', 'blockchain', {
         launchFn: (cb) => {
-          // this.startBlockchainNode(readyCb);
           this.startBlockchainNode(cb);
         },
         stopFn: (cb) => {
@@ -39,6 +39,24 @@ class Geth {
         readyCb();
       });
       this.registerServiceCheck();
+    });
+
+    this.events.request("whisper:node:register", constants.blockchain.clients.geth, readyCb => {
+      this.events.request('processes:register', 'communication', {
+        launchFn: cb => {
+          this.startWhisperNode(cb);
+        },
+        stopFn: cb => {
+          this.stopWhisperNode(cb);
+        }
+      });
+
+      this.events.request("processes:launch", "communication", (err) => {
+        if (err) {
+          this.logger.error(`Error launching whisper process: ${err.message || err}`);
+        }
+        readyCb();
+      });
     });
   }
 
@@ -94,6 +112,31 @@ class Geth {
     });
 
     this.blockchainProcess.startBlockchainNode(callback);
+  }
+
+  startWhisperNode(callback) {
+    this.whisperProcess = new BlockchainProcessLauncher({
+      events: this.events,
+      logger: this.logger,
+      normalizeInput,
+      blockchainConfig: this.blockchainConfig,
+      communicationConfig: this.communicationConfig,
+      locale: this.locale,
+      client: this.client,
+      isDev: this.isDev,
+      embark: this.embark
+    });
+    this.whisperProcess.startBlockchainNode(callback);
+  }
+
+  stopWhisperNode(cb) {
+    if (!this.whisperProcess) {
+      return cb();
+    }
+    this.whisperProcess.stopBlockchainNode(() => {
+      this.logger.info(`The whisper process has been stopped.`);
+      cb();
+    });
   }
 
   stopBlockchainNode(cb) {

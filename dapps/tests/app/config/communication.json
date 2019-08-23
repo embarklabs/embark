@@ -1,11 +1,12 @@
 {
   "default": {
-    "enabled": true,
+    "client": "geth",
     "provider": "whisper",
+    "enabled": true,
     "available_providers": ["whisper"],
     "connection": {
       "host": "localhost",
-      "port": 8546,
+      "port": 3777,
       "type": "ws"
     }
   }
