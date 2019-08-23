@@ -58,13 +58,8 @@ class CodeRunner {
       return cb(null, "");
     }
 
-    console.dir("running");
-    console.dir(code);
-
     this.vm.doEval(code, tolerateError, (err, result) => {
       if (err) {
-        console.dir("error")
-        console.dir(err)
         return cb(err);
       }
 

@@ -37,7 +37,6 @@ class BasicPipeline {
   }
 
   webpackAssets(params, done) {
-    console.dir("=======================> webpackAssets");
     let self = this;
     let placeholderPage;
     const importsList = {};
@@ -50,13 +49,11 @@ class BasicPipeline {
 
     async.waterfall([
       (next) => {
-        console.dir("=======================> importsList");
         importsList["Embark/EmbarkJS"] = dappPath(self.embarkConfig.generationDir, 'embarkjs.js');
         importsList["Embark/contracts"] = this.embarkConfig.generationDir;
         next();
       },
       function shouldRunWebpack(next) {
-        console.dir("=======================> shouldRunWebpack");
         // assuming we got here because an asset was changed, let's check our webpack config
         // to see if the changed asset requires webpack to run
         if (!(modifiedAssets && modifiedAssets.length)) return next(null, false);
@@ -73,7 +70,6 @@ class BasicPipeline {
         });
       },
       function runWebpack(shouldNotRun, next) {
-        console.dir("=======================> runWebpack");
         if (shouldNotRun) return next();
         const assets = Object.keys(self.assetFiles).filter(key => key.match(/\.js$/));
         if (!assets || !assets.length) {
@@ -135,7 +131,6 @@ class BasicPipeline {
         });
       },
       function assetFileWrite(next) {
-        console.dir("=======================> assetFileWrite 136");
         async.eachOf(
           // assetFileWrite should not process .js files
           Object.keys(self.assetFiles)
@@ -145,20 +140,17 @@ class BasicPipeline {
               return obj;
             }, {}),
           function (files, targetFile, cb) {
-            console.dir("== eachOf: " + targetFile);
             const isDir = targetFile.slice(-1) === '/' || targetFile.slice(-1) === '\\' || targetFile.indexOf('.') === -1;
             // if it's not a directory
             if (!isDir) {
               self.logger.info('Pipeline: '.cyan + __("_1_ writing file") + " " + (joinPath(self.buildDir, targetFile)).bold.dim);
             }
-            console.dir("async.map")
             // async.map(
             async.mapLimit(
               files,
               1,
               function (file, fileCb) {
                 self.logger.trace("reading " + file.path);
-                console.dir(":::::::: reading " + file.path);
                 file.content.then((fileContent) => {
                   self.runPlugins(file, fileContent, fileCb);
                 }).catch(fileCb);
@@ -167,7 +159,6 @@ class BasicPipeline {
                 try {
                 if (err) {
                   self.logger.error('Pipeline: '.cyan + __('errors found while generating') + ' ' + targetFile);
-                  console.dir(err);
                 }
                 let dir = targetFile.split('/').slice(0, -1).join('/');
                 self.logger.trace(`${'Pipeline:'.cyan} creating dir ` + joinPath(self.buildDir, dir));
@@ -175,16 +166,12 @@ class BasicPipeline {
 
                 // if it's a directory
                 if (isDir) {
-                  console.dir("---> isDir")
                   let targetDir = targetFile;
 
                   if (targetDir.slice(-1) !== '/') {
                     targetDir = targetDir + '/';
                   }
 
-                  console.dir("===> contentFiles")
-                  console.dir(contentFiles)
-                  console.dir("----------")
                   async.each(contentFiles, function (file, eachCb) {
                     let filename = file.path.replace(file.basedir + '/', '');
                     self.logger.info(`${'Pipeline:'.cyan} __ writing file ` + (joinPath(self.buildDir, targetDir, filename)).bold.dim);
@@ -194,7 +181,6 @@ class BasicPipeline {
                   return;
                 }
 
-                console.dir("---> not a dir")
                 let content = contentFiles.map(file => {
                   if (file === undefined) {
                     return "";
@@ -206,7 +192,6 @@ class BasicPipeline {
                   targetFile = targetFile.replace('index', 'index-temp');
                   placeholderPage = targetFile;
                 }
-                console.dir("--> writing file")
                 self.fs.writeFile(joinPath(self.buildDir, targetFile), content, cb);
                 } catch(err) {
                   console.dir(err)
@@ -218,7 +203,6 @@ class BasicPipeline {
         );
       },
       function removePlaceholderPage(next) {
-        console.dir("=======================> removePlaceholderPage");
         let placeholderFile = joinPath(self.buildDir, placeholderPage);
         self.fs.access(joinPath(self.buildDir, placeholderPage), (err) => {
           if (err) return next(); // index-temp doesn't exist, do nothing

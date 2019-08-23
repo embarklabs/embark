@@ -194,19 +194,14 @@ class TestRunner {
             return next(err);
           }
 
-          console.log('got accounts from web3');
-          console.dir(accts);
           accounts = accts;
           next();
         });
       },
       (next) => { // get contract files
-        console.log('getting contract files');
         events.request("config:contractsFiles", next);
       },
       (cf, next) => { // compile contracts
-        console.log('compiling contracts');
-        console.dir(cf);
         events.request("compiler:contracts:compile", cf, next);
       },
       (cc, next) => { // override require

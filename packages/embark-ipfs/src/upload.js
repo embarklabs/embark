@@ -81,9 +81,7 @@ class IPFS {
     ], function (err, dir_hash) {
       if (err) {
         console.log(__("error uploading to ipfs").red);
-        console.log("---------------");
         console.dir(err);
-        console.log("---------------");
         cb(err);
       }
       else cb(null, dir_hash);

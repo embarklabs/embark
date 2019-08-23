@@ -34,7 +34,6 @@ class EthereumBlockchainClient {
     let accounts = await web3.eth.getAccounts();
     let account = accounts[0];
     // let contractObject = this.blockchain.ContractObject({abi: contract.abiDefinition});
-    console.dir("== ethereum contract deployer");
     let contractObj = new web3.eth.Contract(contract.abiDefinition, contract.address);
     // let deployObject = this.blockchain.deployContractObject(contractObject, {arguments: contractParams, data: dataCode});
     let contractObject = contractObj.deploy({arguments: (contract.args || []), data: ("0x" + contract.code)});
@@ -50,10 +49,6 @@ class EthereumBlockchainClient {
       contract.gasPrice = contract.gasPrice || gasPrice;
     }
 
-    // this.blockchain.deployContractFromObject(deployObject,
-    console.dir({arguments: contract.args, data: ("0x" + contract.code)});
-    console.dir("------- send");
-
     embarkJsUtils.secureSend(web3, contractObject, {
       from: account, gas: contract.gas
     }, true, (err, receipt) => {
@@ -65,15 +60,12 @@ class EthereumBlockchainClient {
       contract.log(`${contract.className.bold.cyan} ${__('deployed at').green} ${receipt.contractAddress.bold.cyan} ${__("using").green} ${receipt.gasUsed} ${__("gas").green} (txHash: ${receipt.transactionHash.bold.cyan})`);
       done(err, receipt);
     }, (hash) => {
-      console.dir('hash is ' + hash);
     });
     // })
   }
 
   async doLinking(params, callback) {
     let contract = params.contract;
-
-    console.dir("= doLinking");
 
     if (!contract.linkReferences || !Object.keys(contract.linkReferences).length) {
       return callback(null, params);
@@ -205,7 +197,6 @@ class EthereumBlockchainClient {
   }
 
   addContractJSONToPipeline(params, cb) {
-    console.dir("-- addContractJSONToPipeline");
     // TODO: check if this is correct json object to generate
     const contract = params.contract;
 

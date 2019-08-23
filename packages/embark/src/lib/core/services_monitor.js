@@ -59,8 +59,6 @@ ServicesMonitor.prototype.addCheck = function (checkName, checkFn, time, initial
   this.logger.trace('add check: ' + checkName);
   this.checkList[checkName] = {fn: checkFn, interval: time || 5000, status: initialState};
 
-  console.dir("this.working")
-  console.dir(this.working)
   if (this.working) {
     this.initCheck(checkName);
   }

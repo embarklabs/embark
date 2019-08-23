@@ -62,7 +62,6 @@ class EmbarkController {
       engine.startService("blockchain");
 
       engine.startEngine(() => {
-        console.dir("done!")
         // callback();
       });
     });
@@ -176,9 +175,7 @@ class EmbarkController {
         engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
 
         engine.events.on('deployment:deployContracts:afterAll', () => {
-          console.dir("--- generating files...")
           engine.events.request('pipeline:generateAll', () => {
-            console.dir("outputDone")
             engine.events.emit('outputDone');
           });
         });
@@ -214,7 +211,6 @@ class EmbarkController {
 
         engine.events.on('file-event', async ({fileType, path}) => {
           // TODO: re-add async.cargo / or use rxjs to use latest request in the queue
-          console.dir("-- before timeout - file changed")
 
           if (fileType === 'contract' || fileType === 'config') {
             try {
@@ -224,7 +220,6 @@ class EmbarkController {
             }
           } else if (fileType === 'asset') {
             engine.events.request('pipeline:generateAll', () => {
-              console.dir("outputDone")
               engine.events.emit('outputDone');
             });
           }
@@ -242,7 +237,6 @@ class EmbarkController {
             let contractsConfig = cloneDeep(_contractsConfig);
             let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
             await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
-            console.dir("deployment done");
 
             await engine.events.request2("watcher:start");
           } catch (e) {
@@ -874,7 +868,6 @@ class EmbarkController {
   }
 
   runTests(options) {
-    console.dir(options);
     this.context = [constants.contexts.test];
 
     const Engine = require('../lib/core/engine.js');
@@ -916,7 +909,6 @@ class EmbarkController {
 
         let plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
-          console.dir(engine.config.blockchainConfig);
           await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig, cb);
         });
 

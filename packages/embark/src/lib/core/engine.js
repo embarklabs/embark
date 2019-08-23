@@ -134,7 +134,6 @@ class Engine {
 
     let plugin = this.plugins.createPlugin('coreservicesplugin', {});
     plugin.registerActionForEvent("embark:engine:started", (_params, cb) => {
-      console.dir("----- startMonitor")
       this.servicesMonitor.startMonitor();
       cb();
     });

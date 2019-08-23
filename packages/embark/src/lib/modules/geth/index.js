@@ -15,15 +15,12 @@ class Geth {
     this.isDev = options.isDev;
     this.events = embark.events;
     this.plugins = options.plugins;
-    // let plugin = this.plugins.createPlugin('gethplugin', {});
 
     if (!this.shouldInit()) {
       return;
     }
 
     this.events.request("blockchain:node:register", constants.blockchain.clients.geth, (readyCb) => {
-      console.dir('registering blockchain node');
-      console.dir(readyCb);
       this.events.request('processes:register', 'blockchain', {
         launchFn: (cb) => {
           // this.startBlockchainNode(readyCb);
@@ -71,7 +68,6 @@ class Geth {
   }
 
   startBlockchainNode(callback) {
-    console.log('startBlockchainNode');
     this.blockchainProcess = new BlockchainProcessLauncher({
       events: this.events,
       logger: this.logger,

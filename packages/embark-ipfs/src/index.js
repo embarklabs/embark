@@ -226,8 +226,6 @@ class IPFS {
       }
       self.logger.trace(`Storage module: Launching ipfs process...`);
       return this.storageProcessesLauncher.launchProcess('ipfs', (err) => {
-        console.dir("--- launchProcess callback")
-        console.dir(err)
         callback(err, true);
       });
     });

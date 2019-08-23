@@ -38,8 +38,6 @@ class ContractsManager {
       cb(null, this.contracts[contract.className]);
     });
 
-    console.dir("---- contracts manager---- ");
-
     // this.registerCommands()
     // this.registerAPIs()
   }
@@ -536,7 +534,6 @@ class ContractsManager {
         self.compileError = false;
       }
       self.logger.trace("finished".underline);
-      console.dir("done!!");
 
       done(err, self.contracts, self.contractDependencies);
     });

@@ -22,8 +22,6 @@ class Parity {
     }
 
     this.events.request("blockchain:node:register", constants.blockchain.clients.parity, (readyCb) => {
-      console.dir('registering blockchain node');
-      console.dir(readyCb);
       this.events.request('processes:register', 'blockchain', {
         launchFn: (cb) => {
           // this.startBlockchainNode(readyCb);

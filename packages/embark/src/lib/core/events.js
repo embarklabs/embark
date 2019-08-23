@@ -32,6 +32,7 @@ function log(eventType, eventName, origin) {
     // origin = getOrigin();
   }
 
+  fs.ensureDirSync(".embark/");
   fs.appendFileSync(".embark/events.log", eventType + ": " + eventName + " -- (" + origin + ")\n");
 }
 
@@ -96,7 +97,6 @@ EmbarkEmitter.prototype.request2 = function() {
   let other_args = [].slice.call(arguments, 1);
 
   log("\nREQUEST", requestName);
-  console.log("requesting: " + requestName);
   warnIfLegacy(requestName);
   if (this._events && !this._events['request:' + requestName]) {
     log("NO REQUEST LISTENER", requestName)
@@ -105,8 +105,6 @@ EmbarkEmitter.prototype.request2 = function() {
   }
 
   let promise = new Promise((resolve, reject) => {
-    console.dir("emitting... " + requestName)
-
     other_args.push(
       (err, ...res) => {
         if (err) return reject(err);
@@ -117,10 +115,6 @@ EmbarkEmitter.prototype.request2 = function() {
       }
     )
 
-    console.dir("----- other_args")
-    console.dir(other_args)
-
-    // this.emit('request:' + requestName, ...other_args)
     this._emit('request:' + requestName, ...other_args)
   });
 
@@ -132,7 +126,6 @@ EmbarkEmitter.prototype.request = function() {
   let other_args = [].slice.call(arguments, 1);
 
   log("\nREQUEST(OLD)", requestName);
-  console.log("requesting: " + requestName);
   warnIfLegacy(requestName);
   if (this._events && !this._events['request:' + requestName]) {
     log("NO REQUEST LISTENER", requestName)
@@ -167,12 +160,6 @@ EmbarkEmitter.prototype.setCommandHandler = function(requestName, cb) {
 
   let listener = function(_cb) {
     log("== REQUEST RESPONSE", requestName, origin);
-    console.dir(requestName)
-    // console.dir(cb)
-    // console.dir(Object.getOwnPropertyNames(cb))
-    // console.dir(cb.length)
-   // console.dir(Object.values(cb))
-    // process.exit(0)
     cb.call(this, ...arguments);
   };
   const listenerName = 'request:' + requestName;

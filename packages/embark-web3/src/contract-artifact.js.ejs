@@ -7,7 +7,6 @@ let <%- className %> = new web3.eth.Contract(<%- className %>Abi);
 <%- className %>.options.from = web3.eth.defaultAccount;
 
 web3.execWhenReady(() => {
-  console.dir("running execWhenReady")
   <%- className %>.options.from = web3.eth.defaultAccount;
   if (!<%- className %>.currentProvider) {
     <%- className %>.setProvider(web3.currentProvider);

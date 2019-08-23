@@ -44,7 +44,6 @@ class Deployment {
   }
 
   deployContract(contract, callback) {
-    console.dir("requesting to deploy contract")
     this.events.request('deployment:contract:deploy', contract, (err) => {
       if (err) {
         contract.error = err.message || err;
@@ -61,13 +60,11 @@ class Deployment {
 
   deployAll(contracts, contractDependencies, done) {
     const self = this;
-    console.dir("doing deployAll")
     const contractDeploys = {};
     const errors = [];
 
     Object.values(contracts).forEach((contract) => {
       function deploy(result, callback) {
-        console.dir("== deploy")
         if (typeof result === 'function') callback = result;
         self.deployContract(contract, (err) => {
           if (err) {

@@ -22,8 +22,6 @@ class Pipeline {
   }
 
   generateAll(cb) {
-    console.dir("generating all files");
-
     async.waterfall([
       (next) => {
         this.plugins.runActionsForEvent("pipeline:generateAll:before", {}, (err) => {
