@@ -1,6 +1,6 @@
 import EmbarkJS from 'Embark/EmbarkJS';
-import React from 'react';
-import {Alert, Form, FormGroup, FormControl, HelpBlock, Button} from 'react-bootstrap';
+import React, {Fragment} from 'react';
+import {Alert, Form, FormGroup, Input, FormText, Button} from 'reactstrap';
 
 class Storage extends React.Component {
 
@@ -19,7 +19,7 @@ class Storage extends React.Component {
       logs: [],
       storageError: '',
       valueRegister: '',
-      valueResolver: '',
+      valueResolver: ''
     };
   }
 
@@ -101,7 +101,7 @@ class Storage extends React.Component {
       });
   }
 
-  loadFile(e) {
+  loadFile(_e) {
     let _url = EmbarkJS.Storage.getUrl(this.state.imageToDownload);
     this.setState({url: _url});
     this.addToLog("EmbarkJS.Storage.getUrl('" + this.state.imageToDownload + "')");
@@ -116,7 +116,7 @@ class Storage extends React.Component {
       let isRegisterError = false;
       if (err) {
         isRegisterError = true;
-        responseRegister = "Name Register Error: " + (err.message || err)
+        responseRegister = "Name Register Error: " + (err.message || err);
       } else {
         responseRegister = name;
       }
@@ -138,7 +138,7 @@ class Storage extends React.Component {
       let isResolverError = false;
       if (err) {
         isResolverError = true;
-        responseResolver = "Name Resolve Error: " + (err.message || err)
+        responseResolver = "Name Resolve Error: " + (err.message || err);
       } else {
         responseResolver = path;
       }
@@ -157,101 +157,101 @@ class Storage extends React.Component {
 
   render() {
     return <React.Fragment>
-      {
-        !this.props.enabled ?
-          <React.Fragment>
-            <Alert bsStyle="warning">The node you are using does not support IPFS. Please ensure <a
-              href="https://github.com/ipfs/js-ipfs-api#cors" target="_blank">CORS</a> is setup for the IPFS
-              node.</Alert>
-          </React.Fragment> : ''
-      }
-      {
-        this.state.storageError !== '' ?
-          <Alert bsStyle="danger">{this.state.storageError}</Alert>
-          : ''
-      }
+      {this.props.enabled &&
+      <React.Fragment>
+        <Alert color="warning">The node you are using does not support IPFS. Please ensure <a
+          href="https://github.com/ipfs/js-ipfs-api#cors" target="_blank">CORS</a> is setup for the IPFS
+          node.</Alert>
+      </React.Fragment>}
+
+      {this.state.storageError !== '' &&
+      <Alert color="danger">{this.state.storageError}</Alert>}
+
       <h3>Save text to storage</h3>
-      <Form inline onKeyDown={(e) => this.checkEnter(e, this.setText)}>
-        <FormGroup>
-          <FormControl
+      <Form onKeyDown={(e) => this.checkEnter(e, this.setText)}>
+        <FormGroup className="inline-input-btn">
+          <Input
             type="text"
             defaultValue={this.state.textToSave}
             onChange={e => this.handleChange(e, 'textToSave')}/>
-          <Button bsStyle="primary" onClick={(e) => this.setText(e)}>Save Text</Button>
-          <HelpBlock>generated Hash: <span className="textHash">{this.state.generatedHash}</span></HelpBlock>
+          <Button color="primary" onClick={(e) => this.setText(e)}>Save Text</Button>
+          {this.state.generatedHash && <FormText>Generated Hash: <span className="textHash font-weight-bold">{this.state.generatedHash}</span></FormText>}
         </FormGroup>
       </Form>
 
       <h3>Load text from storage given an hash</h3>
-      <Form inline onKeyDown={(e) => this.checkEnter(e, this.loadHash)}>
-        <FormGroup>
-          <FormControl
+      <Form onKeyDown={(e) => this.checkEnter(e, this.loadHash)}>
+        <FormGroup className="inline-input-btn">
+          <Input
             type="text"
             value={this.state.loadText}
             onChange={e => this.handleChange(e, 'loadText')}/>
-          <Button bsStyle="primary" onClick={(e) => this.loadHash(e)}>Load</Button>
-          <HelpBlock>result: <span className="textHash">{this.state.storedText}</span></HelpBlock>
+          <Button color="primary" onClick={(e) => this.loadHash(e)}>Load</Button>
+          {this.state.storedText && <FormText>Result: <span className="textHash font-weight-bold">{this.state.storedText}</span></FormText>}
         </FormGroup>
       </Form>
 
       <h3>Upload file to storage</h3>
-      <Form inline>
+      <Form>
         <FormGroup>
-          <FormControl
+          <Input
             type="file"
             onChange={(e) => this.handleFileUpload(e)}/>
-          <Button bsStyle="primary" onClick={(e) => this.uploadFile(e)}>Upload</Button>
-          <HelpBlock>generated hash: <span className="fileHash">{this.state.fileHash}</span></HelpBlock>
+          <Button color="primary" onClick={(e) => this.uploadFile(e)} className="mt-2">Upload</Button>
+          {this.state.fileHash && <FormText>Generated hash: <span className="fileHash">{this.state.fileHash}</span></FormText>}
         </FormGroup>
       </Form>
 
       <h3>Get file or image from storage</h3>
-      <Form inline onKeyDown={(e) => this.checkEnter(e, this.loadFile)}>
-        <FormGroup>
-          <FormControl
+      <Form onKeyDown={(e) => this.checkEnter(e, this.loadFile)}>
+        <FormGroup className="inline-input-btn">
+          <Input
             type="text"
             value={this.state.imageToDownload}
             onChange={e => this.handleChange(e, 'imageToDownload')}/>
-          <Button bsStyle="primary" onClick={(e) => this.loadFile(e)}>Download</Button>
-          <HelpBlock>file available at: <span><a href={this.state.url}
-                                                 target="_blank">{this.state.url}</a></span></HelpBlock>
-          <HelpBlock><img src={this.state.url}/></HelpBlock>
+          <Button color="primary" onClick={(e) => this.loadFile(e)}>Download</Button>
+          {this.state.url && <Fragment>
+            <FormText>
+              File available at: <span><a href={this.state.url} target="_blank">{this.state.url}</a></span>
+            </FormText>
+            <FormText><img alt="file image" src={this.state.url}/></FormText>
+          </Fragment>}
         </FormGroup>
       </Form>
 
-      {!this.isIpfs() && <Alert bsStyle="warning">The 2 functions below are only available with IPFS</Alert>}
+      {!this.isIpfs() && <Alert color="warning">The 2 functions below are only available with IPFS</Alert>}
 
       <h3>Register to IPNS</h3>
-      <Form inline onKeyDown={(e) => this.checkEnter(e, this.ipnsRegister)}>
-        <FormGroup>
-          <FormControl
+      <Form onKeyDown={(e) => this.checkEnter(e, this.ipnsRegister)}>
+        <FormGroup className="inline-input-btn">
+          <Input
             type="text"
             value={this.state.valueRegister}
             onChange={e => this.handleChange(e, 'valueRegister')}/>
-          <Button bsStyle="primary" onClick={(e) => this.ipnsRegister(e)}>
+          <Button color="primary" onClick={(e) => this.ipnsRegister(e)}>
             {this.state.registering ? 'Registering...' : 'Register' }
           </Button>
-          <HelpBlock>It will take around 1 minute</HelpBlock>
+          <FormText>It will take around 1 minute</FormText>
           {this.state.responseRegister &&
-          <Alert className="alert-result" bsStyle={this.state.isRegisterError ? 'danger' : 'success'}>
+          <Alert className="alert-result" color={this.state.isRegisterError ? 'danger' : 'success'}>
             <span className="value">{this.state.responseRegister}</span>
           </Alert>}
         </FormGroup>
       </Form>
 
       <h3>Resolve name</h3>
-      <Form inline onKeyDown={(e) => this.checkEnter(e, this.ipnsResolve)}>
-        <FormGroup>
-          <FormControl
+      <Form onKeyDown={(e) => this.checkEnter(e, this.ipnsResolve)}>
+        <FormGroup className="inline-input-btn">
+          <Input
             type="text"
             value={this.state.valueResolver}
             onChange={e => this.handleChange(e, 'valueResolver')}/>
-          <Button bsStyle="primary" onClick={(e) => this.ipnsResolve(e)}>
+          <Button color="primary" onClick={(e) => this.ipnsResolve(e)}>
             {this.state.resolving ? 'Resolving...' : 'Resolve' }
           </Button>
-          <HelpBlock>It will take around 1 minute</HelpBlock>
+          <FormText>It will take around 1 minute</FormText>
           {this.state.responseResolver &&
-          <Alert className="alert-result" bsStyle={this.state.isResolverError ? 'danger' : 'success'}>
+          <Alert className="alert-result" color={this.state.isResolverError ? 'danger' : 'success'}>
             <span className="value">{this.state.responseResolver}</span>
           </Alert>}
         </FormGroup>
