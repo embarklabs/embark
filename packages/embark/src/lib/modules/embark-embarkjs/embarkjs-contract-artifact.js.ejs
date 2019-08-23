@@ -1,0 +1,6 @@
+import EmbarkJS from '../embarkjs';
+
+let <%- className %>Config = <%- JSON.stringify(contract) %>;
+let <%- className %> = new EmbarkJS.Blockchain.Contract(<%- className %>Config);
+
+export default <%- className %>;
