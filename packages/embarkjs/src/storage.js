@@ -78,7 +78,7 @@ Storage.setProviders = function (dappConnOptions, addlOpts) {
   detectSeries(dappConnOptions, (dappConn, callback) => {
     let options = dappConn;
     if (dappConn === '$BZZ') options = {"useOnlyGivenProvider": true};
-    options = {...options, ...addlOpts};
+    options = {...options, ...addlOpts, ...dappConn};
     try {
       self.setProvider(dappConn === '$BZZ' ? dappConn : dappConn.provider, options).then(() => {
         self.isAvailable().then((isAvailable) => {

@@ -160,6 +160,9 @@ class EmbarkController {
 
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
+        engine.registerModuleGroup("namesystem");
+
+        engine.registerModule('embark-embarkjs', {plugins: engine.plugins});
 
         // TODO: replace with individual plugins
         engine.registerModuleGroup("blockchain");
@@ -171,7 +174,6 @@ class EmbarkController {
         engine.registerModuleGroup("storage");
         engine.registerModuleGroup("communication");
         engine.registerModuleGroup("cockpit");
-        engine.registerModuleGroup("namesystem");
         engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
 
         engine.events.on('deployment:deployContracts:afterAll', () => {

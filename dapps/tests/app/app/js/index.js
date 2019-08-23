@@ -2,9 +2,11 @@
 // import {SimpleStorage} from '../../embarkArtifacts/contracts';
 import $ from 'jquery';
 import SimpleStorage from '../../embarkArtifacts/contracts/SimpleStorage.js';
-import web3 from '../../embarkArtifacts/contracts/web3_init';
-window.web3 = web3;
+// import web3 from '../../embarkArtifacts/contracts/web3_init';
+// window.web3 = web3;
 window.SimpleStorage = SimpleStorage;
+import EmbarkJS from '../../embarkArtifacts/embarkjs.js';
+window.EmbarkJS = EmbarkJS;
 
 $("#blockchain button.set").click(function() {
   var value = parseInt($("#blockchain input.text").val(), 10);

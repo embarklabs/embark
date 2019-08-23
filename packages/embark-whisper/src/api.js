@@ -1,6 +1,8 @@
+import {canonicalHost, defaultHost} from 'embark-utils';
 const {parallel} = require('async');
 const {fromEvent} = require('rxjs');
 const {map, takeUntil} = require('rxjs/operators');
+let Web3 = require('web3');
 
 import whisper from 'embarkjs-whisper';
 
@@ -9,15 +11,25 @@ const listenTo = whisper.real_listenTo;
 
 class API {
 
-  constructor(embark, web3) {
+  constructor(embark) {
     this.embark = embark;
     this.logger = embark.logger;
-    this.web3 = web3;
-    this.registerAPICalls();
+    this.communicationConfig = embark.config.communicationConfig;
+
+    embark.events.on("blockchain:started", this.registerAPICalls.bind(this));
   }
 
-  registerAPICalls() {
+  async registerAPICalls() {
     const self = this;
+
+    let connection = this.communicationConfig.connection || {};
+    const config = {
+      server: canonicalHost(connection.host || defaultHost),
+      port: connection.port || '8546',
+      type: connection.type || 'ws'
+    };
+    this.web3 = new Web3(config.type + "://" + config.server + ":" + config.port);
+
     if (self.apiCallsRegistered) {
       return;
     }

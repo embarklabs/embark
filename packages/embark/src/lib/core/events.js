@@ -12,6 +12,7 @@ function warnIfLegacy(eventName) {
 }
 
 function getOrigin() {
+  if (!(process && process.env && process.env.DEBUGEVENTS)) return "";
   let origin = ((new Error().stack).split("at ")[3]).trim();
   origin = origin.split("(")[0].trim();
   return origin;
@@ -116,6 +117,14 @@ EmbarkEmitter.prototype.request2 = function() {
     );
 
     this._emit('request:' + requestName, ...other_args);
+  });
+
+  let ogStack = (new Error().stack);
+
+  promise.catch((e) => {
+    console.dir(ogStack);
+    log("\n======== Exception ========", requestName, "\n " + ogStack + "\n==============");
+    return e;
   });
 
   return promise;
