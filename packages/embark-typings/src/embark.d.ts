@@ -11,6 +11,10 @@ export interface Events {
     name: string,
     callback: (options: any, cb: () => void) => void,
   ): void;
+  setCommandHandler(
+    name: string,
+    callback: (option: string, option2: string, cb: () => void) => void,
+  ): void;
 }
 
 export interface Config {
@@ -53,6 +57,7 @@ export interface Embark {
   events: Events;
   plugins: Plugins;
   registerAPICall: any;
+  registerAPICall(method: string, endpoint: string, cb: (...args: any[]) => void): void;
   registerConsoleCommand: any;
   logger: Logger;
   fs: any;
