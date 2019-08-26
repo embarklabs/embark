@@ -50,7 +50,7 @@ class App extends React.Component {
     let className = available ? 'pull-right status-online' : 'pull-right status-offline';
     return <React.Fragment>
       {title}
-      <span className={className}></span>
+      <span className={className}/>
     </React.Fragment>;
   }
 
