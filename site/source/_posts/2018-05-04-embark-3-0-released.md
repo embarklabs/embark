@@ -4,6 +4,7 @@ summary: "We're happy to announce that Embark 3.0 has been released! Read on for
 categories:
   - announcements
 layout: blog-post
+alias: news/2018/05/03/embark-3-0-released/
 ---
 
 Embark is now part of [Status](https://status.im/) and we are happy to announce Embark 3.0 by Status!

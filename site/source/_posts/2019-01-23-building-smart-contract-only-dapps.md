@@ -4,6 +4,7 @@ summary: "In this article we're going to explore how to build applications with 
 categories:
   - tutorials
 layout: blog-post
+alias: news/2019/01/22/building-smart-contract-only-dapps/
 ---
 
 Building decentralized applications often involves many parts and components, such as Smart Contracts and a front-end, that have to play well together, in order to provide users the best experience possible. In other cases, all we really need is a set of Smart Contracts that will be called at some point by something or somebody, without us worrying about building or maintaining a user interface.
@@ -27,7 +28,7 @@ With that out of the way, we can start creating our Smart Contracts only applica
 To create an application that really only focusses on Smart Contract development, we can take advantage of the command's `--contracts-only` option. Let's go ahead and do that. In this tutorial we'll be creating a rather trivial project, namely a simple storage, so let's call the project `simple-storage`:
 
 ```
-$ embark new simple-storage --contracts-only 
+$ embark new simple-storage --contracts-only
 $ cd simple-storage
 ```
 

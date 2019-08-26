@@ -5,6 +5,7 @@ categories:
   - announcements
 layout: blog-post
 image: '/assets/images/EMBARK_HEADER_ALT_OPTIMIZED.jpg'
+alias: news/2019/03/18/introducing-embark-4/
 ---
 
 ![Embark](/assets/images/EMBARK_HEADER_ALT_OPTIMIZED.jpg "Embark")

@@ -4,6 +4,7 @@ summary: "In this article we're going to learn how to run tests on a Continuous 
 categories:
   - tutorials
 layout: blog-post
+alias: news/2019/01/27/running-embark-tests-on-a-continuous-integration-server/
 ---
 
 Part of developing a decentralized application is to also testing it thoroughly. Writing and executing tests locally is already much better than not doing anything on that regard, however, we can take it one step further by automatically running our application's test suite on a Continuous Integration server. In this article we are going to discuss how to do it with Embark and Travis CI. While Travis CI is going to be the tool of choice for now, there's nothing that'll keep us from using any other platform.

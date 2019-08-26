@@ -4,6 +4,7 @@ categories:
   - tutorials
 layout: blog-post
 author: pascal_precht
+alias: news/2019/02/17/building-a-decentralized-reddit-with-embark-part-3/
 ---
 
 Hopefully you've read [the first](/news/2019/02/04/building-a-decentralized-reddit-with-embark-part-1/) and [second part](/news/2019/02/11/building-a-decentralized-reddit-with-embark-part-2/) of this tutorial on building a decentralized Reddit application using Embark. If not, we highly recommend you doing so, because in this part, we'll be focussing on building the front-end for our application and continue where we've left off.
@@ -154,7 +155,7 @@ export class CreatePost extends Component {
 
   constructor(props) {
     super(props);
-    
+
     this.state = {
       topic: '',
       content: '',
@@ -205,16 +206,16 @@ Notice how we're using `setState()` inside `handleChange()` to update whatever f
 <form onSubmit={e => createPost(e)}>
   <div>
     <label>Topic</label>
-    <input 
-      type="text" 
-      name="topic" 
-      value={this.state.topic} 
+    <input
+      type="text"
+      name="topic"
+      value={this.state.topic}
       onChange={e => handleChange('topic', e)} />
   </div>
   <div>
-    <textarea 
-      name="content" 
-      value={this.state.content} 
+    <textarea
+      name="content"
+      value={this.state.content}
       onChange={e => handleChange('content', e})></textarea>
   </div>
   <button type="submit">Post</button>
@@ -234,7 +235,7 @@ Luckily, EmbarkJS comes with plenty of convenient APIs to do exactly that! `Emba
 ```
 async createPost(event) {
   event.preventDefault();
-  
+
   this.setState({
     loading: true
   });
@@ -257,7 +258,7 @@ We use `JSON.stringify()` on an object that holds the `topic` and `content` of t
 ```
 <form onSubmit={e => createPost(e)}>
   ...
-  {this.state.loading && 
+  {this.state.loading &&
     <p>Posting...</p>
   }
 </form>
@@ -290,7 +291,7 @@ async createPost(event) {
   const accounts = await web3.eth.getAccounts();
   const createPost = DReddit.methods.createPost(web3.utils.toHex(ipfsHash));
   const estimate = await createPost.estimateGas();
-  
+
   await createPost.send({from: accounts[0], gas: estimate});
   ...
 }
@@ -420,7 +421,7 @@ export class App extends Component {
       <React.Fragment>
         <h1>DReddit</h1>
         <CreatePost />
-        <Post 
+        <Post
           description="0x516d655338444b53464546725369656a747751426d683377626b56707566335770636e4c715978726b516e4b5250"
           creationDate="1550073772"
           owner="0x00000000000"
@@ -463,7 +464,7 @@ export class List extends Component {
     return (<React.Fragment>
       {this.state.posts.map(post => {
         return (
-          <Post 
+          <Post
             key={post.id}
             description={post.description}
             creationDate={post.creationDate}
@@ -669,7 +670,7 @@ export class List extends Component {
   render() {
     return (<React.Fragment>
       {this.props.posts.map(post => {
-        return (<Post 
+        return (<Post
           key={post.id}
           description={post.description}
           creationDate={post.creationDate}

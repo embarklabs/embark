@@ -5,6 +5,7 @@ categories:
   - tutorials
 alias:
   - "tutorials/token_factory_1.html"
+  - "news/2018/09/26/how-to-create-a-token-factory-with-embark-part-1/"
 layout: blog-post
 ---
 
@@ -107,7 +108,7 @@ contract Token {
     function allowance(address owner, address spender) public view returns (uint _allowance) {
         return _approvals[owner][spender];
     }
-    
+
     function safeToAdd(uint a, uint b) internal pure returns (bool) {
         return (a + b >= a);
     }
@@ -184,7 +185,7 @@ To input the address to query, we’ll edit *app/index.html* and add a simple fo
 
 **Adding jQuery**
 
-To simplify the code a bit in this tutorial, we’ll add the jQuery library to our DApp. 
+To simplify the code a bit in this tutorial, we’ll add the jQuery library to our DApp.
 
 {% code_block copyBtn:true %}
 $ npm install jquery@3 --save
@@ -213,7 +214,7 @@ $(document).ready(function() {
     web3.eth.getAccounts(function(err, accounts) {
       $('#queryBalance input').val(accounts[0]);
     });
-    
+
   });
 });
 {% endcode_block %}
@@ -337,7 +338,7 @@ $(document).ready(function() {
     $('#transfer button').click(function() {
       var address = $('#transfer .address').val();
       var num = $('#transfer .num').val();
-    
+
       Token.methods.transfer(address, num).send().then(function() {
         $('#transfer .result').html('Done!');
       });
