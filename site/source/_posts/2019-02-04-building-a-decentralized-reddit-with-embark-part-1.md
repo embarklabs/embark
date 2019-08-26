@@ -4,6 +4,7 @@ summary: "Ever wanted to know what it needs to build a decentralized equivalent 
 categories:
   - tutorials
 layout: blog-post
+alias: news/2019/02/03/building-a-decentralized-reddit-with-embark-part-1/
 ---
 
 In this tutorial we want to get very practical and build a decentralized Reddit application from scratch using Embark. The goal is to get a better idea of not only what parts and components are involved when building such an application, but also which steps are required to get there, without getting too overwhelmed.
@@ -69,8 +70,8 @@ Great! With that in place, let's introduce a couple of data structures for creat
 
 {% code_block copyBtn:true %}
 struct Post {
-  uint creationDate;   
-  bytes description;   
+  uint creationDate;
+  bytes description;
   address owner;
 }
 {% endcode_block %}
@@ -96,7 +97,7 @@ function createPost(bytes _description) public {
 }
 {% endcode_block %}
 
-The first thing we do is creating an id for the post to be stored. We then use our `Post` struct to create a new post instance. Notice that we leverage the `postId` when storing the Post in our `posts` array. To set the owner, we take advantage of Solidity's global `msg` object which is available in every transaction. 
+The first thing we do is creating an id for the post to be stored. We then use our `Post` struct to create a new post instance. Notice that we leverage the `postId` when storing the Post in our `posts` array. To set the owner, we take advantage of Solidity's global `msg` object which is available in every transaction.
 
 ### Emitting events
 
@@ -165,7 +166,7 @@ function createPost(bytes _description) public {
 }
 ```
 
-With these building blocks at hand, let's implement a `vote(uint postId, uint8 _vote)` method. `_vote` is going to be one of our defined `Ballot` types and is represented as uint going from 0 - 2. We'll use Solidity's `require()` statement to ensure we only vote on posts that actually exist, as well as nobody can actually vote multiple times on the same post. 
+With these building blocks at hand, let's implement a `vote(uint postId, uint8 _vote)` method. `_vote` is going to be one of our defined `Ballot` types and is represented as uint going from 0 - 2. We'll use Solidity's `require()` statement to ensure we only vote on posts that actually exist, as well as nobody can actually vote multiple times on the same post.
 
 We then increment the up or down vote counter respectively, store the voter and emit a `NewVote` event:
 
@@ -224,8 +225,8 @@ contract DReddit {
   enum Ballot { NONE, UPVOTE, DOWNVOTE }
 
   struct Post {
-    uint creationDate;   
-    bytes description;   
+    uint creationDate;
+    bytes description;
     address owner;
     uint upvotes;
     uint downvotes;

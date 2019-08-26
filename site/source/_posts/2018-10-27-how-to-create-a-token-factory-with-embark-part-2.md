@@ -5,6 +5,7 @@ categories:
   - tutorials
 alias:
   - "tutorials/token_factory_2.html"
+  - "/news/2018/10/26/how-to-create-a-token-factory-with-embark-part-2/"
 layout: blog-post
 ---
 
@@ -215,7 +216,7 @@ $(document).ready(function() {
 });
 {% endcode_block %}
 
-When the Deploy button is clicked, we’ll get the supply entered and deploy a new Token with `Token.methods.deploy([supply])`. 
+When the Deploy button is clicked, we’ll get the supply entered and deploy a new Token with `Token.methods.deploy([supply])`.
 The resulting promise `.then(function(deployedToken) {})` will contain the contract object of newly deployed contract. We’ll assign this new token object to the current one *currentToken* and also inform the user of the address;
 
 So let’s try this out! Entering the supply as 500 and clicking Deploy:
@@ -233,7 +234,7 @@ It returns *500* as expected! Let’s deploy another token with a different supp
 After deploying a new token with the supply at *200*, clicking query is also returning *200* as expected.
 
 Let’s switch back to the first deployed token with “Use this Token” functionality to see if everything is working as expected.
-Each time we are deploying a token in the client, the DApp is informing us “Token deployed with address: 0x…”, so let’s use this to copy paste the address of the first deployed contract into the Token Address field, then click “Use this Token” to switch back to that token.  
+Each time we are deploying a token in the client, the DApp is informing us “Token deployed with address: 0x…”, so let’s use this to copy paste the address of the first deployed contract into the Token Address field, then click “Use this Token” to switch back to that token.
 
 ![Screenshot](/assets/images/token_factory_2/page_6.png)
 

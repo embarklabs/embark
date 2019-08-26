@@ -4,6 +4,7 @@ author: jonathan_rainville
 categories:
   - tutorials
 layout: blog-post
+alias: news/2019/03/17/upgrading-to-embark-4/
 ---
 
 The release of Embark 4.0 is close at hand and the release candidate, `beta.1`, will introduce some breaking changes. Let's see what it takes to update an Embark 3.x Dapp to Embark 4.

@@ -4,6 +4,7 @@ summary: "This is the second part of the three part tutorial about building a de
 categories:
   - tutorials
 layout: blog-post
+alias: news/2019/02/10/building-a-decentralized-reddit-with-embark-part-2/
 ---
 
 In [the first part of this tutorial](/news/2019/02/04/building-a-decentralized-reddit-with-embark-part-1/) we've implemented a `DReddit` Smart Contract that comes with methods to create and vote on topic posts. In this part we'll continue right where we've left off and take a closer look at how we can test our Smart Contract using Embark. Make sure to check out the other parts as well:
@@ -62,7 +63,7 @@ Let's test the core functionality of our application - the creation of posts. Fo
 
 ### Requiring Smart Contract instances
 
-When running tests, Embark adds a couple of custom functions and objects to the global scope, which are necessary. One of those functions is a custom `require()` that lets us import Smart Contract instances from an Embark specific path. This is done so that we can easily import 
+When running tests, Embark adds a couple of custom functions and objects to the global scope, which are necessary. One of those functions is a custom `require()` that lets us import Smart Contract instances from an Embark specific path. This is done so that we can easily import
 
 For example, in order to get an instance of our `DReddit` Smart Contract within the test, we add the following line to our spec file:
 
@@ -137,7 +138,7 @@ it ('post should have correct data', async () => {
 });
 ```
 
-You might notice that we're referring to `accounts[0]` here. However, just by looking at the code, we can't really know if `accounts[0]` is really the one we're expecting. This is where Embark offers another helping hand. When the `accounts` are set up, Embark will automatically set the first account of the wallet (`accounts[0]`) to the default account that'll be used for all transactions. With that knowledge we can make an assertion, expecting `accounts[0]` to be the owner of the post. 
+You might notice that we're referring to `accounts[0]` here. However, just by looking at the code, we can't really know if `accounts[0]` is really the one we're expecting. This is where Embark offers another helping hand. When the `accounts` are set up, Embark will automatically set the first account of the wallet (`accounts[0]`) to the default account that'll be used for all transactions. With that knowledge we can make an assertion, expecting `accounts[0]` to be the owner of the post.
 
 Another way would be to just always explicitly pass any of the accounts to a Smart Contract method's `send()` function, in which case we'd have full control over which account of the wallet will be used.
 
@@ -214,5 +215,5 @@ Compiling contracts
 
  > All tests passed
 ```
- 
+
  Awesome! If you run into any issues, check out the repository with all steps recorded [here](https://github.com/embark-framework/dreddit-tutorial). In [the next and last part of this series](/news/2019/02/18/building-a-decentralized-reddit-with-embark-part-3/), we'll be building a front-end for our DReddit app using React. Until then, feel free to add more tests as you like!

@@ -4,6 +4,7 @@ author: pascal_precht
 categories:
   - announcements
 layout: blog-post
+alias: news/2019/07/22/whats-new-in-embark-4.1/
 ---
 
 After four months of development we're happy to tell you that we've released Embark 4.1 which comes with tons of bug fixes and a lot of new features. In this post we'll take a closer look at some of these features, however as always, we recommend having a look at our [change log](https://github.com/embark-framework/embark/blob/master/CHANGELOG.md) to get a more detailed overview of what has landed in Embark's latest release. Let's get right to it!
