@@ -39,8 +39,7 @@ class Whisper {
       this.connectEmbarkJSProvider.bind(this)
     });
 
-    let plugin = this.plugins.createPlugin('whisperplugin', {});
-    plugin.registerActionForEvent("pipeline:generateAll:before", this.addEmbarkJSWhisperArtifact.bind(this));
+    this.embark.registerActionForEvent("pipeline:generateAll:before", this.addEmbarkJSWhisperArtifact.bind(this));
     this.registerEmbarkJSCommunication()
   }
 
