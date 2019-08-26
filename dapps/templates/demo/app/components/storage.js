@@ -157,11 +157,12 @@ class Storage extends React.Component {
 
   render() {
     return <React.Fragment>
-      {this.props.enabled &&
+      {!this.props.enabled &&
       <React.Fragment>
-        <Alert color="warning">The node you are using does not support IPFS. Please ensure <a
-          href="https://github.com/ipfs/js-ipfs-api#cors" target="_blank">CORS</a> is setup for the IPFS
-          node.</Alert>
+        <Alert color="warning">The node you are using does not support IPFS. If
+          you haven't explicitly disabled IPFS in <code>config/storage.js</code> then
+          please ensure <a href="https://github.com/ipfs/js-ipfs-api#cors"
+          target="_blank">CORS</a> is setup for the IPFS node.</Alert>
       </React.Fragment>}
 
       {this.state.storageError !== '' &&
