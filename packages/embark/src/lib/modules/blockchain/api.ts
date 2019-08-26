@@ -13,9 +13,10 @@ export default class BlockchainAPI {
     this.events = embark.events;
 
     this.embark.events.setCommandHandler("blockchain:api:register", (blockchainName: string, callName: string, executionCb: () => void) => {
-      const apiPlugin = this.apiPlugins.get(blockchainName);
+      let apiPlugin = this.apiPlugins.get(blockchainName);
       if (!apiPlugin) {
-        return;
+        this.apiPlugins.set(blockchainName, new Map());
+        apiPlugin = this.apiPlugins.get(blockchainName);
       }
       if (apiPlugin.has(callName)) {
         this.embark.logger.warn(`${blockchainName} blockchain API for call '${callName}' is being overwritten.`);
@@ -23,9 +24,10 @@ export default class BlockchainAPI {
       apiPlugin.set(callName, executionCb);
     });
     this.embark.events.setCommandHandler("blockchain:request:register", (blockchainName: string, requestName: string, executionCb: () => void) => {
-      const requestPlugin = this.requestPlugins.get(blockchainName);
+      let requestPlugin = this.requestPlugins.get(blockchainName);
       if (!requestPlugin) {
-        return;
+        this.requestPlugins.set(blockchainName, new Map());
+        requestPlugin = this.requestPlugins.get(blockchainName);
       }
       if (requestPlugin.has(requestName)) {
         this.embark.logger.warn(`${blockchainName} blockchain request for '${requestName}' is being overwritten.`);

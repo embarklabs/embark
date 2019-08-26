@@ -35,8 +35,6 @@ class Blockchain {
     });
     this.blockchainApi.registerAPIs("ethereum");
     this.blockchainApi.registerRequests("ethereum");
-
-
   }
 
   addArtifactFile(_params, cb) {
