@@ -2693,10 +2693,10 @@ hexo-renderer-marked@^1.0.1:
     marked "^0.6.1"
     strip-indent "^2.0.0"
 
-hexo-renderer-sass@^0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/hexo-renderer-sass/-/hexo-renderer-sass-0.3.2.tgz#d93106a788d4090a41890c039adbae40c7c89382"
-  integrity sha512-0TFXrqxQftLLtmANwQJ3yS97PJa3AaAjSN4cDS2rRXM0yvnZIB9i1pDbFdZi9QusNnVAUMxsLjrFMiz/M5v0Xg==
+hexo-renderer-sass@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/hexo-renderer-sass/-/hexo-renderer-sass-0.4.0.tgz#d885a04df93e70fdb4ba107505e6b8093c1a5d87"
+  integrity sha512-goQ/r8J/2s5XnIp+dSDwWgaxHl6h/VVEsp95Jr/+sYqFfXHXDIC4evC+V1to9ezfQwOS//ZZFQptTZIKTuh8Lg==
   dependencies:
     node-sass "^4.5.3"
 
