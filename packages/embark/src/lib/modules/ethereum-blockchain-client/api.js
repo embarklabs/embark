@@ -1,4 +1,5 @@
 import async from "async";
+import {dappPath} from 'embark-utils';
 const embarkJsUtils = require('embarkjs').Utils;
 const {bigNumberify} = require('ethers/utils/bignumber');
 const RLP = require('ethers/utils/rlp');
@@ -11,6 +12,8 @@ export default class EthereumAPI {
     this.embark = embark;
     this.blockchainName = blockchainName;
     this.web3 = web3;
+    this.fs = embark.fs;
+    this.logFile = dappPath(".embark", "contractEvents.json");
   }
 
   registerAPIs() {

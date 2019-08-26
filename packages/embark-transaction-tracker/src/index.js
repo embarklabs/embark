@@ -1,3 +1,5 @@
+import Web3 from 'web3';
+
 class TransactionTracker {
   constructor(embark, _options) {
     this.logger = embark.logger;
@@ -5,40 +7,67 @@ class TransactionTracker {
     this.transactions = {};
     this.embark = embark;
     this.startTimestamp = Date.now() / 1000;
+    this._web3 = null;
 
-    embark.events.on("block:pending:transaction", this.onPendingTransaction.bind(this));
     embark.events.on("block:header", this.onBlockHeader.bind(this));
     this.registerAPICalls();
+    this.subscribeToPendingTransactions();
   }
 
-  onPendingTransaction(pendingTransactionHash) {
-    this.transactions[pendingTransactionHash] = {
-      startTimestamp: Date.now() / 1000
-    };
+  get web3() {
+    return (async () => {
+      if (!this._web3) {
+        const provider = await this.events.request2("blockchain:client:provider", "ethereum");
+        this._web3 = new Web3(provider);
+      }
+      return this._web3;
+    })();
   }
 
-  onBlockHeader(blockHeader) {
-    this.events.request("blockchain:block:byNumber", blockHeader.number , (err, block) => {
-      if (err) {
-        return this.logger.error('Error getting block header', err.message || err);
-      }
-      // Don't know why, but sometimes we receive nothing
-      if (!block || !block.transactions) {
-        return;
-      }
-      block.transactions.forEach(transaction => {
-        if (this.transactions[transaction.hash]) {
-          let wait = block.timestamp - this.transactions[transaction.hash].startTimestamp;
-          if (wait < 0.1) {
-            wait = 0.1;
-          }
-          Object.assign(this.transactions[transaction.hash],
-            {endTimestamp: block.timestamp, wait, gasPrice: transaction.gasPrice});
-        }
+  async subscribeToPendingTransactions() {
+    const web3 = await this.web3;
+    web3.eth.subscribe('newBlockHeaders')
+      .on("data", (blockHeader) => {
+        this.events.emit('block:header', blockHeader);
       });
-      this.events.emit('blockchain:gas:oracle:new');
-      this.cullOldTransactions();
+
+
+    web3.eth.subscribe('pendingTransactions', (error, transaction) => {
+      if (!error) {
+        this.transactions[transaction] = {
+          startTimestamp: Date.now() / 1000
+        };
+      }
     });
+  }
+
+  async onBlockHeader(blockHeader) {
+
+    let block;
+    try {
+      const web3 = await this.web3;
+      block = await web3.eth.getBlock(blockHeader.number, true);
+
+    } catch (err) {
+      return this.logger.error('Error getting block header', err.message);
+    }
+
+    // Don't know why, but sometimes we receive nothing
+    if (!block || !block.transactions) {
+      return;
+    }
+    block.transactions.forEach(transaction => {
+      if (this.transactions[transaction.hash]) {
+        let wait = block.timestamp - this.transactions[transaction.hash].startTimestamp;
+        if (wait < 0.1) {
+          wait = 0.1;
+        }
+        Object.assign(this.transactions[transaction.hash],
+          {endTimestamp: block.timestamp, wait, gasPrice: transaction.gasPrice});
+      }
+    });
+    this.events.emit('blockchain:gas:oracle:new');
+    this.cullOldTransactions();
   }
 
   cullOldTransactions() {

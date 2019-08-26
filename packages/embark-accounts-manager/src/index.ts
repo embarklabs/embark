@@ -106,13 +106,7 @@ export default class AccountsManager {
   }
 
   private async checkBlockchainResponse(params: any, callback: (error: any, result: any) => void) {
-    if (params.reqData.method === "eth_accounts") {
-      console.dir("===== eth_accounts response, raw: " + JSON.stringify(params.respData.result));
-    }
     if (!this.ready) {
-      if (params.reqData.method === "eth_accounts") {
-        console.dir("===== eth_accounts response, UNmodified: " + JSON.stringify(params.respData.result));
-      }
       return callback(null, params);
     }
     if ((params.reqData.method === blockchainConstants.transactionMethods.eth_accounts ||
@@ -128,13 +122,7 @@ export default class AccountsManager {
         }
         return acc;
       });
-      if (params.reqData.method === "eth_accounts") {
-        console.dir("===== eth_accounts response, modified: " + JSON.stringify(params.respData.result));
-      }
       return callback(null, params);
-    }
-    if (params.reqData.method === "eth_accounts") {
-      console.dir("===== eth_accounts response, modified: " + JSON.stringify(params.respData.result));
     }
     callback(null, params);
   }
