@@ -27,46 +27,17 @@ export default class EthereumAPI {
   }
 
   registerRequests() {
-    this.events.setCommandHandler("blockchain:get", (cb) => {
-      cb(this.web3);
+    this.embark.events.request("blockchain:request:register", this.blockchainName, "blockchainObject", async () => {
+      return this.web3;
     });
-
-    this.events.setCommandHandler("blockchain:defaultAccount:get", (cb) => {
-      cb(this.defaultAccount());
-    });
-
-    this.events.setCommandHandler("blockchain:defaultAccount:set", (account, cb) => {
-      this.setDefaultAccount(account);
-      cb();
-    });
-
-    this.events.setCommandHandler("blockchain:getAccounts", (cb) => {
-      this.getAccounts(cb);
-    });
-
-    this.events.setCommandHandler("blockchain:getBalance", (address, cb) => {
-      this.getBalance(address, cb);
-    });
-
-    this.events.setCommandHandler("blockchain:block:byNumber", (blockNumber, cb) => {
-      this.getBlock(blockNumber, cb);
-    });
-
-    this.events.setCommandHandler("blockchain:block:byHash", (blockHash, cb) => {
-      this.getBlock(blockHash, cb);
-    });
-
-    this.events.setCommandHandler("blockchain:gasPrice", (cb) => {
-      this.getGasPrice(cb);
-    });
-
-    this.events.setCommandHandler("blockchain:networkId", (cb) => {
-      this.getNetworkId().then(cb);
-    });
-
-    this.events.setCommandHandler("blockchain:contract:create", (params, cb) => {
-      cb(this.contractObject(params));
-    });
+    this.embark.events.request("blockchain:request:register", this.blockchainName, "getDefaultAccount", this.defaultAccount.bind(this));
+    this.embark.events.request("blockchain:request:register", this.blockchainName, "setDefaultAccount", this.setDefaultAccount.bind(this));
+    this.embark.events.request("blockchain:request:register", this.blockchainName, "getAccounts", this.getAccounts.bind(this));
+    this.embark.events.request("blockchain:request:register", this.blockchainName, "getBalance", this.getBalance.bind(this));
+    this.embark.events.request("blockchain:request:register", this.blockchainName, "getBlock", this.getBlock.bind(this));
+    this.embark.events.request("blockchain:request:register", this.blockchainName, "getGasPrice", this.getGasPrice.bind(this));
+    this.embark.events.request("blockchain:request:register", this.blockchainName, "getNetworkId", this.getNetworkId.bind(this));
+    this.embark.events.request("blockchain:request:register", this.blockchainName, "contractObject", this.contractObject.bind(this));
   }
 
   getAccountsWithTransactionCount(callback) {

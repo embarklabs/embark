@@ -4,7 +4,6 @@ import Contract from './contract';
 const async = require('async');
 const constants = require('embark-core/constants');
 const {dappPath, proposeAlternative, toposort} = require('embark-utils');
-import Web3 from 'web3';
 
 class ContractsManager {
   constructor(embark, options) {
@@ -56,11 +55,6 @@ class ContractsManager {
 
   registerCommands() {
     const self = this;
-
-    self.events.setCommandHandler('contracts:add', (contract) => {
-      const contractInstance = new Contract(this.logger, contract);
-      this.contracts[contract.className] = contractInstance;
-    });
 
     self.events.setCommandHandler('contracts:all', (cb) => {
       cb(self.compileError, self.contracts);
@@ -547,7 +541,7 @@ class ContractsManager {
   }
 
   _contractsForApi() {
-    const contracts =  this.formatContracts();
+    const contracts = this.formatContracts();
     contracts.forEach((contract) => {
       Object.assign(contract, this.getContract(contract.className));
     });

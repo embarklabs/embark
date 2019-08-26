@@ -10,7 +10,7 @@ class Blockchain {
     this.events = embark.events;
     this.blockchainConfig = embark.config.blockchainConfig;
     this.contractConfig = embark.config.contractConfig;
-    this.blockchainApi = new this.BlockchainAPI(embark);
+    this.blockchainApi = new BlockchainAPI(embark);
 
 
     embark.registerActionForEvent("pipeline:generateAll:before", this.addArtifactFile.bind(this));
@@ -34,6 +34,7 @@ class Blockchain {
       client.apply(client, [onStart]);
     });
     this.blockchainApi.registerAPIs("ethereum");
+    this.blockchainApi.registerRequests("ethereum");
 
 
   }

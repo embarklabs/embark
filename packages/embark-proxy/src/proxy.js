@@ -71,10 +71,13 @@ export class Proxy {
         }
         delete messages[jsonData.id];
         // Send to plugins to possibly modify the response
+        if (jsonData.method === "eth_accounts") console.dir("=== ws response, raw: " + JSON.stringify(jsonData));
         this.emitActionsForResponse(msg.msg, jsonData, (_err, resp) => {
-            // Send back to the caller (web3)
-            msg.ws.send(JSON.stringify(resp.respData));
-          });
+          if (jsonData.method === "eth_accounts") console.dir("=== ws response, modified, err: " + _err);
+          if (jsonData.method === "eth_accounts") console.dir("=== ws response, modified: " + JSON.stringify(resp.respData));
+          // Send back to the caller (web3)
+          msg.ws.send(JSON.stringify(resp.respData));
+        });
       });
       conn.on("error", (e) => {
         this.logger.error(__('Error executing the request on the Node'), JSON.stringify(e));
@@ -91,31 +94,36 @@ export class Proxy {
           }
           messages[jsonMsg.id] = {msg: jsonMsg, ws};
           // Modify request
+          if (jsonMsg.method === "eth_accounts") console.dir("=== ws request, raw: " + JSON.stringify(jsonMsg));
           this.emitActionsForRequest(jsonMsg, (_err, resp) => {
-              // Send the possibly modified request to the Node
-              conn.send(JSON.stringify(resp.reqData));
-            });
+            if (jsonMsg.method === "eth_accounts") console.dir("=== ws request, modified: " + JSON.stringify(resp.reqData));
+            // Send the possibly modified request to the Node
+            conn.send(JSON.stringify(resp.reqData));
+          });
         });
       });
     } else {
       // HTTP
       app.use((req, res) => {
         // Modify request
-       this.emitActionsForRequest(req.body, (_err, resp) => {
-            // Send the possibly modified request to the Node
-            axios.post(endpoint, resp.reqData)
-              .then((response) => {
-                // Send to plugins to possibly modify the response
-                this.emitActionsForResponse(resp.reqData, response.data, (_err, resp) => {
-                    // Send back to the caller (web3)
-                    res.send(resp.respData);
-                  });
-              })
-              .catch((error) => {
-                res.status(500);
-                res.send(error.message);
+        this.emitActionsForRequest(req.body, (_err, resp) => {
+          // Send the possibly modified request to the Node
+          axios.post(endpoint, resp.reqData)
+            .then((response) => {
+              // Send to plugins to possibly modify the response
+              this.emitActionsForResponse(resp.reqData, response.data, (_err, resp) => {
+                // Send back to the caller (web3)
+                console.dir("=== request: " + JSON.stringify(resp.reqData));
+                console.dir("=== response after running actions, err: " + _err);
+                console.dir("=== response after running actions: " + resp.respData);
+                res.send(resp.respData);
               });
-          });
+            })
+            .catch((error) => {
+              res.status(500);
+              res.send(error.message);
+            });
+        });
       });
     }
 

@@ -9,11 +9,11 @@ export interface Events {
   once: any;
   setCommandHandler(
     name: string,
-    callback: (options: any, cb: () => void) => void,
+    callback: (options: any, cb: (...args: any[]) => void) => void,
   ): void;
   setCommandHandler(
     name: string,
-    callback: (option: string, option2: string, cb: () => void) => void,
+    callback: (option: string, option2: string, cb: (...args: any[]) => void) => void,
   ): void;
 }
 
@@ -56,7 +56,6 @@ export interface Embark {
   env: string;
   events: Events;
   plugins: Plugins;
-  registerAPICall: any;
   registerAPICall(method: string, endpoint: string, cb: (...args: any[]) => void): void;
   registerConsoleCommand: any;
   logger: Logger;

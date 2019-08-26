@@ -5,7 +5,8 @@ export default class BlockchainAPI {
   private embark: Embark;
   private logger: Logger;
   private events: Events;
-  private apiPlugins: Map<string, Map<string, (...args: any[]) => void>> = new Map(); // { [key: string]: ({[key: string]: any[]})[] } = {};
+  private apiPlugins: Map<string, Map<string, (...args: any[]) => void>> = new Map();
+  private requestPlugins: Map<string, Map<string, (...args: any[]) => any>> = new Map();
   constructor(embark: Embark) {
     this.embark = embark;
     this.logger = embark.logger;
@@ -21,6 +22,16 @@ export default class BlockchainAPI {
       }
       apiPlugin.set(callName, executionCb);
     });
+    this.embark.events.setCommandHandler("blockchain:request:register", (blockchainName: string, requestName: string, executionCb: () => void) => {
+      const requestPlugin = this.requestPlugins.get(blockchainName);
+      if (!requestPlugin) {
+        return;
+      }
+      if (requestPlugin.has(requestName)) {
+        this.embark.logger.warn(`${blockchainName} blockchain request for '${requestName}' is being overwritten.`);
+      }
+      requestPlugin.set(requestName, executionCb);
+    });
   }
 
   private getCallForBlockchain(blockchainName: string, callName: string) {
@@ -33,6 +44,71 @@ export default class BlockchainAPI {
       throw new Error(`API call '${callName}' is not registered as an API plugin for the '${blockchainName}' blockchain.`);
     }
     return apiPluginExecCb;
+  }
+
+  private getRequestForBlockchain(blockchainName: string, callName: string) {
+    const requestPlugin = this.requestPlugins.get(blockchainName);
+    if (!requestPlugin) {
+      throw new Error(`Blockchain '${blockchainName}' does not have any requests registered.`);
+    }
+    const requestPluginExecCb = requestPlugin.get(callName);
+    if (!requestPluginExecCb) {
+      throw new Error(`Request '${callName}' is not registered as a request plugin for the '${blockchainName}' blockchain.`);
+    }
+    return requestPluginExecCb;
+  }
+
+  protected registerRequests(blockchainName: string) {
+    this.events.setCommandHandler("blockchain:get", async (cb) => {
+      const blockchainObject = await this.getRequestForBlockchain(blockchainName, "blockchainObject");
+      cb(blockchainObject);
+    });
+
+    this.events.setCommandHandler("blockchain:defaultAccount:get", (cb) => {
+      const getDefaultAccount = this.getRequestForBlockchain(blockchainName, "getDefaultAccount");
+      cb(getDefaultAccount);
+    });
+
+    this.events.setCommandHandler("blockchain:defaultAccount:set", (account, cb) => {
+      const setDefaultAccount = this.getRequestForBlockchain(blockchainName, "setDefaultAccount");
+      setDefaultAccount(account);
+      cb();
+    });
+
+    this.events.setCommandHandler("blockchain:getAccounts", (cb) => {
+      const getAccounts = this.getRequestForBlockchain(blockchainName, "getAccounts");
+      getAccounts(cb);
+    });
+
+    this.events.setCommandHandler("blockchain:getBalance", (address, cb) => {
+      const getBalance = this.getRequestForBlockchain(blockchainName, "getBalance");
+      getBalance(address, cb);
+    });
+
+    this.events.setCommandHandler("blockchain:block:byNumber", (blockNumber, cb) => {
+      const getBlock = this.getRequestForBlockchain(blockchainName, "getBlock");
+      getBlock(blockNumber, cb);
+    });
+
+    this.events.setCommandHandler("blockchain:block:byHash", (blockHash, cb) => {
+      const getBlock = this.getRequestForBlockchain(blockchainName, "getBlock");
+      getBlock(blockHash, cb);
+    });
+
+    this.events.setCommandHandler("blockchain:gasPrice", (cb) => {
+      const getGasPrice = this.getRequestForBlockchain(blockchainName, "getGasPrice");
+      getGasPrice(cb);
+    });
+
+    this.events.setCommandHandler("blockchain:networkId", async (cb) => {
+      const getNetworkId = await this.getRequestForBlockchain(blockchainName, "getNetworkId");
+      cb(getNetworkId);
+    });
+
+    this.events.setCommandHandler("blockchain:contract:create", (params, cb) => {
+      const contractObject = this.getRequestForBlockchain(blockchainName, "contractObject")(params);
+      cb(contractObject);
+    });
   }
 
   protected registerAPIs(blockchainName: string) {
