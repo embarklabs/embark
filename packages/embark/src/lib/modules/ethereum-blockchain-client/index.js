@@ -102,6 +102,7 @@ class EthereumBlockchainClient {
 
   async registerAPIRequests() {
     const ethereumApi = new EthereumAPI(this.embark, await this.web3, "ethereum");
+    ethereumApi.registerRequests();
     ethereumApi.registerAPIs();
   }
 

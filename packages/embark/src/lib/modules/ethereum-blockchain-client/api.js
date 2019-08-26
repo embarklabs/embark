@@ -14,11 +14,7 @@ export default class EthereumAPI {
   }
 
   registerAPIs() {
-    this.embark.events.request("blockchain:api:register", this.blockchainName, "getAccountsWithTransactionCount",
-      (cb) => {
-        this.getAccountsWithTransactionCount(cb);
-      }
-    );
+    this.embark.events.request("blockchain:api:register", this.blockchainName, "getAccountsWithTransactionCount", this.getAccountsWithTransactionCount.bind(this));
     this.embark.events.request("blockchain:api:register", this.blockchainName, "getAccount", this.getAccount.bind(this));
     this.embark.events.request("blockchain:api:register", this.blockchainName, "getBlocks", this.getBlocks.bind(this));
     this.embark.events.request("blockchain:api:register", this.blockchainName, "getBlock", this.getBlock.bind(this));
@@ -28,6 +24,49 @@ export default class EthereumAPI {
     this.embark.events.request("blockchain:api:register", this.blockchainName, "getEvents", this.getEvents.bind(this));
     this.embark.events.request("blockchain:api:register", this.blockchainName, "signMessage", this.signMessage.bind(this));
     this.embark.events.request("blockchain:api:register", this.blockchainName, "verifyMessage", this.verifyMessage.bind(this));
+  }
+
+  registerRequests() {
+    this.events.setCommandHandler("blockchain:get", (cb) => {
+      cb(this.web3);
+    });
+
+    this.events.setCommandHandler("blockchain:defaultAccount:get", (cb) => {
+      cb(this.defaultAccount());
+    });
+
+    this.events.setCommandHandler("blockchain:defaultAccount:set", (account, cb) => {
+      this.setDefaultAccount(account);
+      cb();
+    });
+
+    this.events.setCommandHandler("blockchain:getAccounts", (cb) => {
+      this.getAccounts(cb);
+    });
+
+    this.events.setCommandHandler("blockchain:getBalance", (address, cb) => {
+      this.getBalance(address, cb);
+    });
+
+    this.events.setCommandHandler("blockchain:block:byNumber", (blockNumber, cb) => {
+      this.getBlock(blockNumber, cb);
+    });
+
+    this.events.setCommandHandler("blockchain:block:byHash", (blockHash, cb) => {
+      this.getBlock(blockHash, cb);
+    });
+
+    this.events.setCommandHandler("blockchain:gasPrice", (cb) => {
+      this.getGasPrice(cb);
+    });
+
+    this.events.setCommandHandler("blockchain:networkId", (cb) => {
+      this.getNetworkId().then(cb);
+    });
+
+    this.events.setCommandHandler("blockchain:contract:create", (params, cb) => {
+      cb(this.contractObject(params));
+    });
   }
 
   getAccountsWithTransactionCount(callback) {
@@ -273,7 +312,7 @@ export default class EthereumAPI {
     return this.web3.eth.getTransaction(hash, cb);
   }
 
-  ContractObject(params) {
+  contractObject(params) {
     return new this.web3.eth.Contract(params.abi, params.address);
   }
 
@@ -354,7 +393,7 @@ export default class EthereumAPI {
           return;
         }
 
-        const contract = this.ContractObject({abi: contractObject.abiDefinition, address: contractObject.deployedAddress});
+        const contract = this.contractObject({abi: contractObject.abiDefinition, address: contractObject.deployedAddress});
         const eventEmitter = contract.events.allEvents();
         this.contractsSubscriptions.push(eventEmitter);
         eventEmitter.on('data', (data) => {
