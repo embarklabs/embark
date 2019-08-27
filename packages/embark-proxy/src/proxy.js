@@ -1,11 +1,10 @@
 /* global Buffer exports require */
 import {__} from 'embark-i18n';
-import axios from "axios";
 import {canonicalHost, timer, pingEndpoint, deconstructUrl} from 'embark-utils';
 import express from 'express';
 import expressWs from 'express-ws';
+import Web3 from 'web3';
 import cors from 'cors';
-const WebSocket = require("ws");
 
 const ACTION_TIMEOUT = 5000;
 
@@ -43,6 +42,8 @@ export class Proxy {
       });
     }());
 
+    const web3 = new Web3(endpoint);
+
     const app = express();
     if (ws) {
       expressWs(app);
@@ -53,33 +54,6 @@ export class Proxy {
     app.use(express.urlencoded({extended: true}));
 
     if (ws) {
-      const messages = {};
-      const conn = new WebSocket(endpoint);
-      conn.on("message", (data) => {
-        // Message from the Node
-        let jsonData;
-        try {
-          jsonData = JSON.parse(data);
-        } catch (e) {
-          this.logger.error(__('Error parsing response'), e.message);
-          return;
-        }
-        const msg = messages[jsonData.id];
-        if (!msg) {
-          // Not a request
-          return;
-        }
-        delete messages[jsonData.id];
-        // Send to plugins to possibly modify the response
-        this.emitActionsForResponse(msg.msg, jsonData, (_err, resp) => {
-            // Send back to the caller (web3)
-            msg.ws.send(JSON.stringify(resp.respData));
-          });
-      });
-      conn.on("error", (e) => {
-        this.logger.error(__('Error executing the request on the Node'), JSON.stringify(e));
-      });
-
       app.ws('/', (ws, _wsReq) => {
         ws.on('message', (msg) => {
           let jsonMsg;
@@ -89,33 +63,37 @@ export class Proxy {
             this.logger.error(__('Error parsing request'), e.message);
             return;
           }
-          messages[jsonMsg.id] = {msg: jsonMsg, ws};
           // Modify request
           this.emitActionsForRequest(jsonMsg, (_err, resp) => {
-              // Send the possibly modified request to the Node
-              conn.send(JSON.stringify(resp.reqData));
+            // Send the possibly modified request to the Node
+            web3._requestManager.send(resp.reqData, (err, result) => {
+              if (err) {
+                return this.logger.error(__('Error executing the request on the Node'), JSON.stringify(err));
+              }
+              this.emitActionsForResponse(resp.reqData, {jsonrpc: "2.0", id: resp.reqData.id, result}, (_err, resp) => {
+                // Send back to the caller (web3)
+                ws.send(JSON.stringify(resp.respData));
+              });
             });
+          });
         });
       });
     } else {
       // HTTP
       app.use((req, res) => {
         // Modify request
-       this.emitActionsForRequest(req.body, (_err, resp) => {
-            // Send the possibly modified request to the Node
-            axios.post(endpoint, resp.reqData)
-              .then((response) => {
-                // Send to plugins to possibly modify the response
-                this.emitActionsForResponse(resp.reqData, response.data, (_err, resp) => {
-                    // Send back to the caller (web3)
-                    res.send(resp.respData);
-                  });
-              })
-              .catch((error) => {
-                res.status(500);
-                res.send(error.message);
-              });
+        this.emitActionsForRequest(req.body, (_err, resp) => {
+          // Send the possibly modified request to the Node
+          web3._requestManager.send(resp.reqData, (err, result) => {
+            if (err) {
+              res.status(500).send(err.message || err);
+            }
+            this.emitActionsForResponse(resp.reqData, {jsonrpc: "2.0", id: resp.reqData.id, result}, (_err, resp) => {
+              // Send back to the caller (web3)
+              res.status(200).send(resp.respData);
+            });
           });
+        });
       });
     }
 
