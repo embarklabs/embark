@@ -20,6 +20,11 @@ class ContractsManager {
     this.compileError = false;
     this.compileOnceOnly = options.compileOnceOnly;
 
+    this.events.setCommandHandler("contracts:reset", (cb) => {
+      this.contracts = {};
+      cb(null);
+    });
+
     this.events.setCommandHandler("contracts:build", this.buildContracts.bind(this));
 
     this.events.setCommandHandler('contracts:list', (cb) => {

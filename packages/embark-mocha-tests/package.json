@@ -1,10 +1,10 @@
 {
-  "name": "embark-solidity-tests",
+  "name": "embark-mocha-tests",
   "version": "5.0.0",
-  "description": "Plugin to run Embark solidity tests",
+  "description": "Mocha Test Runner",
   "main": "dist/lib/index.js",
   "repository": {
-    "directory": "packages/embark-solidity-tests",
+    "directory": "packages/embark-mocha-tests",
     "type": "git",
     "url": "https://github.com/embark-framework/embark/"
   },
@@ -53,7 +53,6 @@
     "eslint": "5.7.0",
     "mocha": "6.2.0",
     "npm-run-all": "4.1.5",
-    "remix-tests": "0.1.14",
     "rimraf": "2.6.3",
     "tslint": "5.16.0",
     "typescript": "3.4.5",

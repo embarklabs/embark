@@ -55,7 +55,7 @@
   "devDependencies": {
     "@babel/cli": "7.2.3",
     "@babel/core": "7.2.2",
-    "@types/mocha": "6.2.0",
+    "@types/mocha": "5.2.7",
     "@types/prettier": "1.16.4",
     "@types/web3": "1.0.12",
     "cross-env": "5.2.0",
