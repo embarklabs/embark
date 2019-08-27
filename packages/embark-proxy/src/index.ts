@@ -14,6 +14,7 @@ export default class ProxyManager {
   private rpcPort: number;
   private wsPort: number;
   private ready: boolean;
+  private isWs = false;
 
   constructor(private embark: Embark, options: any) {
     this.logger = embark.logger;
@@ -42,7 +43,7 @@ export default class ProxyManager {
         return cb(null, this.embark.config.blockchainConfig.endpoint);
       }
       // TODO Check if the proxy can support HTTPS, though it probably doesn't matter since it's local
-      if (this.embark.config.blockchainConfig.wsRPC) {
+      if (this.isWs) {
         return cb(null, buildUrl("ws", this.host, this.wsPort, "ws"));
       }
       cb(null, buildUrl("http", this.host, this.rpcPort, "rpc"));
@@ -68,13 +69,14 @@ export default class ProxyManager {
 
     this.rpcPort = port;
     this.wsPort = port + 1;
+    this.isWs = (/wss?/).test(this.embark.config.blockchainConfig.endpoint);
 
     this.proxy = await new Proxy({events: this.events, plugins: this.plugins, logger: this.logger})
       .serve(
         this.embark.config.blockchainConfig.endpoint,
         this.host,
-        this.embark.config.blockchainConfig.wsRPC ? this.wsPort : this.rpcPort,
-        this.embark.config.blockchainConfig.wsRPC,
+        this.isWs ? this.wsPort : this.rpcPort,
+        this.isWs,
         null,
       );
     return;
