@@ -1,6 +1,6 @@
-# `embark-console-listener`
+# `embark-process-logs-api-manager`
 
-> Listens to Embark logs and stores them so that they can be printed in Cockpit
+Manages and registers APIs for Embark process logs
 
 Visit [embark.status.im](https://embark.status.im/) to get started with
 [Embark](https://github.com/embark-framework/embark).
