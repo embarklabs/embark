@@ -15,7 +15,7 @@ class BlockchainClient {
 
     // TODO: unclear currently if this belongs here so it's a bit hardcoded for now
     this.events.setCommandHandler("blockchain:client:provider", (clientName, cb) => {
-      this.events.request("proxy:endpoint", (err, endpoint) => {
+      this.events.request("proxy:endpoint:get", (err, endpoint) => {
         if (err) {
           return cb(err);
         }
