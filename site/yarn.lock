@@ -2684,14 +2684,14 @@ hexo-renderer-jade@^0.4.1:
     jade "^1.11.0"
     pug "^2.0.0-rc.1"
 
-hexo-renderer-marked@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/hexo-renderer-marked/-/hexo-renderer-marked-1.0.1.tgz#7752e55afa789eb05e0d47c72e286a12c2c8e080"
-  integrity sha512-oAOthvEYWJx4hvzD8WE7hOSYoTooOe5Vtb7mW6LtM3rEpQhXaWXPq7fOrEhCfdjgDr3DusSi7x19XgLIx+hcmQ==
+hexo-renderer-marked@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/hexo-renderer-marked/-/hexo-renderer-marked-2.0.0.tgz#458540b014141e7cf72145a82ec591be359cdba1"
+  integrity sha512-+LMjgPkJSUAOlWYHJnBXxUHwGqemGNlK/I+JNO4zA5rEHWNWZ9wNAZKd5g0lEVdMAZzAV54gCylXGURgMO4IAw==
   dependencies:
-    hexo-util "^0.6.2"
-    marked "^0.6.1"
-    strip-indent "^2.0.0"
+    hexo-util "1.0.0"
+    marked "^0.7.0"
+    strip-indent "^3.0.0"
 
 hexo-renderer-sass@^0.4.0:
   version "0.4.0"
@@ -2723,7 +2723,19 @@ hexo-server@^0.3.3:
     opn "^5.3.0"
     serve-static "^1.13.2"
 
-hexo-util@^0.6.0, hexo-util@^0.6.2, hexo-util@^0.6.3:
+hexo-util@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/hexo-util/-/hexo-util-1.0.0.tgz#2545efcd66e345ef92fe48a73a35470cd65f0b2a"
+  integrity sha512-oV1/Y7ablc7e3d2kFFvQ/Ypi/BfL/uDSc1oNaMcxqr/UOH8F0QkHZ0Dmv+yLrEpFNYrrhBA0uavo3e+EqHNjnQ==
+  dependencies:
+    bluebird "^3.5.2"
+    camel-case "^3.0.0"
+    cross-spawn "^6.0.5"
+    highlight.js "^9.13.1"
+    html-entities "^1.2.1"
+    striptags "^3.1.1"
+
+hexo-util@^0.6.0, hexo-util@^0.6.3:
   version "0.6.3"
   resolved "https://registry.yarnpkg.com/hexo-util/-/hexo-util-0.6.3.tgz#16a2ade457bef955af0dfd22a3fe6f0a49a9137c"
   integrity sha512-zPxaqCWZz3/25SAB4FlrRtWktJ+Pr+vBiv/nyHpXKgXPt1m70liViKlRwWLqDmRjJ72x6/k4qCEeXHajvcGHUw==
@@ -2768,6 +2780,11 @@ hexo@3.9.0:
     titlecase "^1.1.2"
     warehouse "^2.2.0"
 
+highlight.js@^9.13.1:
+  version "9.15.10"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.15.10.tgz#7b18ed75c90348c045eef9ed08ca1319a2219ad2"
+  integrity sha512-RoV7OkQm0T3os3Dd2VHLNMoaoDVx77Wygln3n9l5YV172XonWG6rgQD3XnF/BuFFZw9A0TJgmMSO8FEWQgvcXw==
+
 highlight.js@^9.4.0:
   version "9.14.2"
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.14.2.tgz#efbfb22dc701406e4da406056ef8c2b70ebe5b26"
@@ -2785,7 +2802,7 @@ hosted-git-info@^2.1.4:
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.7.1.tgz#97f236977bd6e125408930ff6de3eec6281ec047"
   integrity sha512-7T/BxH19zbcCTa8XkMlbK5lTo1WtgkFi3GvdWEyNuc4Vex7/9Dqbnpsf4JMydcfj9HCg4zUWFTL3Za6lapg5/w==
 
-html-entities@^1.2.0:
+html-entities@^1.2.0, html-entities@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-1.2.1.tgz#0df29351f0721163515dfb9e5543e5f6eed5162f"
   integrity sha1-DfKTUfByEWNRXfueVUPl9u7VFi8=
@@ -3616,10 +3633,10 @@ markdown@~0.5.0:
   dependencies:
     nopt "~2.1.1"
 
-marked@^0.6.1:
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-0.6.3.tgz#79babad78af638ba4d522a9e715cdfdd2429e946"
-  integrity sha512-Fqa7eq+UaxfMriqzYLayfqAE40WN03jf+zHjT18/uXNuzjq3TY0XTbrAoPeqSJrAmPz11VuUA+kBPYOhHt9oOQ==
+marked@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-0.7.0.tgz#b64201f051d271b1edc10a04d1ae9b74bb8e5c0e"
+  integrity sha512-c+yYdCZJQrsRjTPhUx7VKkApw9bwDkNbHUKo1ovgcfDjb2kc8rLuRbIFyXL5WOEUwzSSKo3IXpph2K6DqB/KZg==
 
 matchdep@^2.0.0:
   version "2.0.0"
@@ -3728,6 +3745,11 @@ mimic-response@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/mimic-response/-/mimic-response-1.0.1.tgz#4923538878eef42063cb8a3e3b0798781487ab1b"
   integrity sha512-j5EctnkH7amfV/q5Hgmoal1g2QHFJRraOtmx0JpIqkxhBhI/lJSl1nMpQ45hVarwNETOoWEimndZ4QK0RHxuxQ==
+
+min-indent@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/min-indent/-/min-indent-1.0.0.tgz#cfc45c37e9ec0d8f0a0ec3dd4ef7f7c3abe39256"
+  integrity sha1-z8RcN+nsDY8KDsPdTvf3w6vjklY=
 
 "minimatch@2 || 3", minimatch@^3.0.0, minimatch@^3.0.2, minimatch@^3.0.3, minimatch@^3.0.4, minimatch@~3.0.2:
   version "3.0.4"
@@ -5544,6 +5566,13 @@ strip-indent@^2.0.0:
   resolved "https://registry.yarnpkg.com/strip-indent/-/strip-indent-2.0.0.tgz#5ef8db295d01e6ed6cbf7aab96998d7822527b68"
   integrity sha1-XvjbKV0B5u1sv3qrlpmNeCJSe2g=
 
+strip-indent@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/strip-indent/-/strip-indent-3.0.0.tgz#c32e1cee940b6b3432c771bc2c54bcce73cd3001"
+  integrity sha512-laJTa3Jb+VQpaC6DseHhF7dXVqHTfJPCRDaEbid/drOhgitgYku/letMUqOXFoWV0zIIUbjpdH2t+tYj4bQMRQ==
+  dependencies:
+    min-indent "^1.0.0"
+
 strip-json-comments@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-3.0.1.tgz#85713975a91fb87bf1b305cca77395e40d2a64a7"
@@ -5558,6 +5587,11 @@ striptags@^2.1.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/striptags/-/striptags-2.2.1.tgz#4c450b708d41b8bf39cf24c49ff234fc6aabfd32"
   integrity sha1-TEULcI1BuL85zyTEn/I0/Gqr/TI=
+
+striptags@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/striptags/-/striptags-3.1.1.tgz#c8c3e7fdd6fb4bb3a32a3b752e5b5e3e38093ebd"
+  integrity sha1-yMPn/db7S7OjKjt1LltePjgJPr0=
 
 stylus@0.54.5, stylus@^0.54.5:
   version "0.54.5"
