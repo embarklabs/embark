@@ -51,7 +51,7 @@
     "embark-utils": "^4.1.0-beta.5",
     "express": "4.17.1",
     "express-ws": "4.0.0",
-    "web3": "1.0.0-beta.37"
+    "web3-core-requestmanager": "1.0.0-beta.37"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",

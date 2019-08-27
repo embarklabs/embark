@@ -3,8 +3,8 @@ import {__} from 'embark-i18n';
 import {canonicalHost, timer, pingEndpoint, deconstructUrl} from 'embark-utils';
 import express from 'express';
 import expressWs from 'express-ws';
-import Web3 from 'web3';
 import cors from 'cors';
+const Web3RequestManager = require('web3-core-requestmanager');
 
 const ACTION_TIMEOUT = 5000;
 
@@ -42,7 +42,7 @@ export class Proxy {
       });
     }());
 
-    const web3 = new Web3(endpoint);
+    const requestManager = new Web3RequestManager.Manager(endpoint);
 
     const app = express();
     if (ws) {
@@ -66,7 +66,7 @@ export class Proxy {
           // Modify request
           this.emitActionsForRequest(jsonMsg, (_err, resp) => {
             // Send the possibly modified request to the Node
-            web3._requestManager.send(resp.reqData, (err, result) => {
+            requestManager.send(resp.reqData, (err, result) => {
               if (err) {
                 return this.logger.error(__('Error executing the request on the Node'), JSON.stringify(err));
               }
@@ -84,7 +84,7 @@ export class Proxy {
         // Modify request
         this.emitActionsForRequest(req.body, (_err, resp) => {
           // Send the possibly modified request to the Node
-          web3._requestManager.send(resp.reqData, (err, result) => {
+          requestManager.send(resp.reqData, (err, result) => {
             if (err) {
               res.status(500).send(err.message || err);
             }
