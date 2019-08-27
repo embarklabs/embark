@@ -39,7 +39,7 @@ class Blockchain {
       async.map(contractsConfig.dappConnection, (conn, mapCb) => {
         if (conn === '$EMBARK') {
           // Connect to Embark's endpoint (proxy)
-          return this.events.request("proxy:endpoint", mapCb);
+          return this.events.request("proxy:endpoint:get", mapCb);
         }
         mapCb(null, conn);
       }, (err, results) => {

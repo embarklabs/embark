@@ -37,7 +37,7 @@ export default class ProxyManager {
       this.logger.warn(__("Configured wallet accounts will be ignored and cannot be used in the DApp, and transactions will not be logged."));
     }
 
-    this.events.setCommandHandler("proxy:endpoint", async (cb) => {
+    this.events.setCommandHandler("proxy:endpoint:get", async (cb) => {
       await this.onReady();
       if (!this.embark.config.blockchainConfig.proxy) {
         return cb(null, this.embark.config.blockchainConfig.endpoint);
@@ -80,15 +80,5 @@ export default class ProxyManager {
         null,
       );
     return;
-  }
-
-  public shutdownProxy() {
-    if (!this.embark.config.blockchainConfig.proxy) {
-      return;
-    }
-
-    if (this.proxy) {
-      this.proxy.close();
-    }
   }
 }
