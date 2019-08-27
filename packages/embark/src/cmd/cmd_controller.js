@@ -909,100 +909,27 @@ class EmbarkController {
 
         let plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
-          await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig, cb);
+          try {
+            await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig);
+          } catch (e) {
+            return cb(e);
+          }
+
+          cb();
         });
 
-        engine.startEngine(() => {
-          next();
-        });
+        engine.startEngine(next);
       },
       function setupTestEnvironment(next) {
         engine.events.request2('tests:run', options, next);
       }
-    ], (err) => {
-      process.exit(err ? 1 : 0);
-    });
-
-
-
-
-
-    /*
-
-    console.log('going to start things now');
-    async.waterfall([
-      function initializeEngine(next) { // initialize engine
-      },
-      function loadPlugins(next) { // load plugins, start services
-        let pluginList = engine.plugins.listPlugins();
-        if (pluginList.length > 0) {
-          engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
-        }
-
-        engine.registerModuleGroup("coreComponents");
-        engine.registerModuleGroup("blockchain");
-        engine.registerModuleGroup("compiler");
-        engine.registerModuleGroup("contracts");
-        engine.registerModuleGroup("pipeline");
-        next();
-      },
-      function startBlockchainNode(next) { // start blockchain
-        let plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
-        plugin.registerActionForEvent("embark:engine:started", (_params, cb) => {
-          console.log('engine started, starting blockchain');
-          engine.events.request2("blockchain:node:start", engine.config.blockchainConfig, () => {
-            cb();
-          });
-        });
-      },
-      function startEngine(next) { // start engine
-        engine.startEngine(next);
-      },
-      function runSuite(next) { // run tests
-        console.log('running tests');
-        engine.events.request('tests:run', options, next);
-      },
-    ], (err) => {
-      console.log("OMG ERROR", err);
-    });
-
-    /*
-    async.waterfall([
-      function initEngine(next) {
-        engine.init({}, next);
-      },
-      function startServices(next) {
-        engine.startService("web3", {wait: true, node: options.node});
-        engine.startService("processManager");
-        engine.startService("libraryManager");
-        engine.startService("codeRunner");
-        engine.startService("deployment", {
-          trackContracts: false,
-          compileOnceOnly: true,
-          isCoverage: options.coverage
-        });
-        engine.startService("storage");
-        engine.startService("codeGenerator");
-        engine.startService("console");
-        engine.startService("pluginCommand");
-        if (options.coverage) {
-          engine.startService("codeCoverage");
-        }
-        engine.startService("testRunner");
-
-        next();
-      },
-      function runTests(next) {
-        engine.events.request('tests:run', options, next);
-      }
-    ], function (err) {
-      if (err) {
-        engine.logger.error(err.message || err);
+    ], (err, passes, fails) => {
+      if(err) {
+        engine.logger.error(`Error occurred while running tests: ${ err.message || err}`);
       }
 
-      process.exit(err ? 1 : 0);
+      process.exit(err || (fails > 0) ? 1 : 0);
     });
-    */
   }
 }
 

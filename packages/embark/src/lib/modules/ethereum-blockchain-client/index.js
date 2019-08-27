@@ -73,28 +73,31 @@ class EthereumBlockchainClient {
     let contractCode = contract.code;
     let offset = 0;
 
+    let contractsList = await this.events.request2("contracts:list");
+
     async.eachLimit(contract.linkReferences, 1, (fileReference, eachCb1) => {
       async.eachOfLimit(fileReference, 1, (references, libName, eachCb2) => {
-        let libContract = self.events.request2("contracts:contract", libName);
+        const libContract = contractsList.find(c => c.className === libName);
+
+        if (!libContract) {
+          return eachCb2(new Error(__('{{contractName}} has a link to the library {{libraryName}}, but it was not found. Is it in your contract folder?'), {
+            contractName: contract.className,
+            libraryName: libName
+          }));
+        }
+
+        let libAddress = libContract.deployedAddress;
+
+        if (!libAddress) {
+          return eachCb2(new Error(__("{{contractName}} needs {{libraryName}} but an address was not found, did you deploy it or configured an address?", {
+            contractName: contract.className,
+            libraryName: libName
+          })));
+        }
+
+        libAddress = libAddress.substr(2).toLowerCase();
 
         async.eachLimit(references, 1, (reference, eachCb3) => {
-          if (!libContract) {
-            return eachCb3(new Error(__('{{contractName}} has a link to the library {{libraryName}}, but it was not found. Is it in your contract folder?'), {
-              contractName: contract.className,
-              libraryName: libName
-            }));
-          }
-
-          let libAddress = libContract.deployedAddress;
-          if (!libAddress) {
-            return eachCb3(new Error(__("{{contractName}} needs {{libraryName}} but an address was not found, did you deploy it or configured an address?", {
-              contractName: contract.className,
-              libraryName: libName
-            })));
-          }
-
-          libAddress = libAddress.substr(2).toLowerCase();
-
           // Multiplying by two because the original pos and length are in bytes, but we have an hex string
           contractCode = contractCode.substring(0, (reference.start * 2) + offset) + libAddress + contractCode.substring((reference.start * 2) + offset + (reference.length * 2));
           // Calculating an offset in case the length is at some point different than the address length
@@ -108,7 +111,6 @@ class EthereumBlockchainClient {
       callback(err, params);
     });
   }
-
   // TODO we can separate this into 3 separate methods, which will make it easier to test
   // determineArguments(suppliedArgs, contract, accounts, callback) {
   async determineArguments(params, callback) {

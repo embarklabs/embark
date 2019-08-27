@@ -113,6 +113,7 @@
     "embark-ipfs": "^4.1.0-beta.5",
     "embark-library-manager": "^4.1.0-beta.5",
     "embark-logger": "^4.1.0-beta.5",
+    "embark-mocha-tests": "5.0.0",
     "embark-namesystem": "^4.1.0-beta.5",
     "embark-pipeline": "^4.1.0-beta.5",
     "embark-plugin-cmd": "^4.1.0-beta.5",
