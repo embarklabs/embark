@@ -25,7 +25,6 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "acorn": "^6.0.0",
     "del": "^3.0.0",
     "eslint": "^6.2.2",
     "eslint-config-hexo": "^3.0.0",
