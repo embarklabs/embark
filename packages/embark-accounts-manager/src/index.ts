@@ -31,10 +31,6 @@ export default class AccountsManager {
 
     this.parseAndFundAccounts();
 
-    this.events.setCommandHandler("accounts:get", (cb: any) => {
-      cb(null, this.accounts);
-    });
-
     this.embark.registerActionForEvent("blockchain:proxy:request", this.checkBlockchainRequest.bind(this));
     this.embark.registerActionForEvent("blockchain:proxy:response", this.checkBlockchainResponse.bind(this));
 
