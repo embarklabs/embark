@@ -180,7 +180,7 @@ class EmbarkController {
           });
         });
 
-        let plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
+        const plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
           try {
             await Promise.all([

@@ -4,6 +4,8 @@ const async = require('async');
 const utils = require('../utils/utils');
 const Logger = require('embark-logger');
 
+const EMBARK_PROCESS_NAME = 'embark';
+
 class Engine {
   constructor(options) {
     this.env = options.env;
@@ -166,6 +168,7 @@ class Engine {
     this.registerModulePackage('embark-storage');
     this.registerModule('communication');
     this.registerModulePackage('embark-namesystem');
+    this.registerModulePackage('embark-process-logs-api-manager');
   }
 
   blockchainComponents() {
@@ -212,7 +215,6 @@ class Engine {
     this.registerModulePackage('embark-web3');
     this.registerModulePackage('embark-accounts-manager');
     this.registerModulePackage('embark-specialconfigs', {plugins: this.plugins});
-    this.registerModulePackage('embark-console-listener');
     this.registerModulePackage('embark-transaction-logger');
   }
 
@@ -388,6 +390,8 @@ class Engine {
   cockpitModules() {
     this.registerModulePackage('embark-authenticator', {singleUseAuthToken: this.singleUseAuthToken});
     this.registerModulePackage('embark-api', {plugins: this.plugins});
+    // Register logs for the cockpit console
+    this.events.request('process:logs:register', {processName: EMBARK_PROCESS_NAME, eventName: "log", silent: false, alwaysAlreadyLogged: true});
   }
 
   webServerService() {
