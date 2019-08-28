@@ -1,6 +1,6 @@
 {
   "name": "embark-whisper",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Module to add Whisper support to Embark",
@@ -48,10 +48,10 @@
   "dependencies": {
     "@babel/runtime-corejs2": "7.3.1",
     "async": "2.6.1",
-    "embark-core": "^4.1.0",
-    "embark-i18n": "^4.1.0",
-    "embark-utils": "^4.1.0",
-    "embarkjs-whisper": "^4.1.0",
+    "embark-core": "^4.1.1",
+    "embark-i18n": "^4.1.1",
+    "embark-utils": "^4.1.1",
+    "embarkjs-whisper": "^4.1.1",
     "rxjs": "6.4.0"
   },
   "devDependencies": {

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.1](https://github.com/embark-framework/embark/compare/v4.1.0...v4.1.1) (2019-08-28)
+
+
+### Bug Fixes
+
+* **@embark/deploy-tracker:** continue if getting block fails ([0fe070c](https://github.com/embark-framework/embark/commit/0fe070c))
+
+
+
+
+
 # [4.1.0](https://github.com/embark-framework/embark/compare/v4.1.0-beta.6...v4.1.0) (2019-08-12)
 
 **Note:** Version bump only for package embark-deploy-tracker

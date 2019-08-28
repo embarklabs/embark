@@ -1,6 +1,6 @@
 {
   "name": "embark-webserver",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Webserver for Embark",
@@ -48,8 +48,8 @@
   "dependencies": {
     "@babel/runtime-corejs2": "7.3.1",
     "async": "2.6.1",
-    "embark-i18n": "^4.1.0",
-    "embark-utils": "^4.1.0",
+    "embark-i18n": "^4.1.1",
+    "embark-utils": "^4.1.1",
     "express": "4.16.3",
     "express-http-proxy": "1.5.1",
     "express-ws": "4.0.0",
