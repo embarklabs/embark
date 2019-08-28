@@ -35,6 +35,7 @@
     "webpackDone": "webpackDone"
   },
   "blockchain": {
+    "vm": "vm",
     "call": "eth_call",
     "clients": {
       "geth": "geth",

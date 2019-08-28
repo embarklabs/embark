@@ -97,7 +97,7 @@ class BlockchainConnector {
       return cb();
     }
 
-    if (this.config.blockchainConfig.type === 'vm') {
+    if (this.config.blockchainConfig.type === constants.blockchain.vm) {
       return this._setupVM(cb);
     }
 
@@ -862,5 +862,5 @@ class BlockchainConnector {
   }
 }
 
-BlockchainConnector.ACCEPTED_TYPES = ['rpc', 'ws', 'vm'];
+BlockchainConnector.ACCEPTED_TYPES = ['rpc', 'ws', constants.blockchain.vm];
 module.exports = BlockchainConnector;

@@ -1,5 +1,6 @@
 import async from 'async';
 const {__} = require('embark-i18n');
+const constants = require('embark-core/constants');
 
 class Blockchain {
 
@@ -19,14 +20,22 @@ class Blockchain {
       this.blockchainNodes[clientName] = startCb;
     });
 
-    this.events.setCommandHandler("blockchain:node:start", (blockchainConfig, cb) => {
+    this.events.setCommandHandler("blockchain:node:start", (blockchainConfig, node, cb) => {
+      if (typeof node === 'function') {
+        cb = node;
+        node = null;
+      }
       const clientName = blockchainConfig.client;
       // const clientName = this.blockchainConfig.client;
+      if (node && node === constants.blockchain.vm) {
+        this.events.emit("blockchain:started", clientName, node);
+        return cb();
+      }
       const client = this.blockchainNodes[clientName];
       if (!client) return cb("client " + clientName + " not found");
 
       let onStart = () => {
-        this.events.emit("blockchain:started", clientName);
+        this.events.emit("blockchain:started", clientName, node);
         cb();
       };
 
