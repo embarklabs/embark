@@ -1,3 +1,4 @@
+import './src/omg-js-util';
 import './src/prettier-plugin-solidity';
 import './src/remix-debug-debugtest';
 

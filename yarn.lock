@@ -2598,6 +2598,17 @@
     universal-user-agent "^3.0.0"
     url-template "^2.0.8"
 
+"@omisego/omg-js-util@2.0.0-v0.2":
+  version "2.0.0-v0.2"
+  resolved "https://registry.yarnpkg.com/@omisego/omg-js-util/-/omg-js-util-2.0.0-v0.2.tgz#30b5882cc8a45446e7206576240caade614c8590"
+  integrity sha512-J5J5Q2XC7ZkpfQJiXJxii/66Tn3x4rhnhky3BmL++XEBoK6I34wgWMs/7dzsejWNHmmhGv/M/OZb+QBI+HlvlA==
+  dependencies:
+    eth-sig-util "^2.1.1"
+    ethereumjs-util "^6.0.0"
+    js-sha3 "^0.8.0"
+    number-to-bn "^1.7.0"
+    rlp "^2.2.2"
+
 "@reach/router@^1.2.1":
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@reach/router/-/router-1.2.1.tgz#34ae3541a5ac44fa7796e5506a5d7274a162be4e"
@@ -3145,6 +3156,11 @@
   integrity sha512-XIB2XbzHTN6ieIjfIMV9hlVcfPU26s2vafYWQcZHWXHOxiaRZYEDKEwdl129Zyg50+foYV2jCgtrqSA6qNuNSA==
   dependencies:
     defer-to-connect "^1.0.1"
+
+"@types/async@2.0.50":
+  version "2.0.50"
+  resolved "https://registry.yarnpkg.com/@types/async/-/async-2.0.50.tgz#117540e026d64e1846093abbd5adc7e27fda7bcb"
+  integrity sha512-VMhZMMQgV1zsR+lX/0IBfAk+8Eb7dPVMWiQGFAt3qjo5x7Ml6b77jUo0e1C3ToD+XRDXqtrfw+6AB0uUsPEr3Q==
 
 "@types/async@3.0.3":
   version "3.0.3"
@@ -5096,7 +5112,7 @@ bn.js@4.11.6:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.6.tgz#53344adb14617a13f6e8dd2ce28905d1c0ba3215"
   integrity sha1-UzRK2xRhehP26N0s4okF0cC6MhU=
 
-bn.js@4.11.8, bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.11.0, bn.js@^4.11.1, bn.js@^4.11.6, bn.js@^4.11.8, bn.js@^4.4.0, bn.js@^4.8.0:
+bn.js@4.11.8, bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.10.0, bn.js@^4.11.0, bn.js@^4.11.1, bn.js@^4.11.6, bn.js@^4.11.8, bn.js@^4.4.0, bn.js@^4.8.0:
   version "4.11.8"
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
   integrity sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==
@@ -8543,6 +8559,18 @@ eth-lib@0.2.7:
     elliptic "^6.4.0"
     xhr-request-promise "^0.1.2"
 
+eth-sig-util@^2.1.1:
+  version "2.4.4"
+  resolved "https://registry.yarnpkg.com/eth-sig-util/-/eth-sig-util-2.4.4.tgz#8804ead83de8648bcf81eadbfac1e3ccdd360aea"
+  integrity sha512-iWGqEJwsUMgtk8AqQQqIDTjMz+pW8s2Sq8gN640dh9U9HoEFQJO3m6ro96DgV6hMB2LYu8F5812LQyynOgCbEw==
+  dependencies:
+    buffer "^5.2.1"
+    elliptic "^6.4.0"
+    ethereumjs-abi "0.6.5"
+    ethereumjs-util "^5.1.1"
+    tweetnacl "^1.0.0"
+    tweetnacl-util "^0.15.0"
+
 ethashjs@~0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/ethashjs/-/ethashjs-0.0.7.tgz#30bfe4196726690a0c59d3b8272e70d4d0c34bae"
@@ -8569,6 +8597,14 @@ ethereum-common@^0.0.18:
   version "0.0.18"
   resolved "https://registry.yarnpkg.com/ethereum-common/-/ethereum-common-0.0.18.tgz#2fdc3576f232903358976eb39da783213ff9523f"
   integrity sha1-L9w1dvIykDNYl26znaeDIT/5Uj8=
+
+ethereumjs-abi@0.6.5:
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/ethereumjs-abi/-/ethereumjs-abi-0.6.5.tgz#5a637ef16ab43473fa72a29ad90871405b3f5241"
+  integrity sha1-WmN+8Wq0NHP6cqKa2QhxQFs/UkE=
+  dependencies:
+    bn.js "^4.10.0"
+    ethereumjs-util "^4.3.0"
 
 ethereumjs-account@^2.0.3:
   version "2.0.5"
@@ -8668,7 +8704,7 @@ ethereumjs-util@6.0.0, ethereumjs-util@~6.0.0:
     safe-buffer "^5.1.1"
     secp256k1 "^3.0.1"
 
-ethereumjs-util@^4.0.1, ethereumjs-util@^4.5.0:
+ethereumjs-util@^4.0.1, ethereumjs-util@^4.3.0, ethereumjs-util@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/ethereumjs-util/-/ethereumjs-util-4.5.0.tgz#3e9428b317eebda3d7260d854fddda954b1f1bc6"
   integrity sha1-PpQosxfuvaPXJg2FT93alUsfG8Y=
@@ -8679,7 +8715,7 @@ ethereumjs-util@^4.0.1, ethereumjs-util@^4.5.0:
     rlp "^2.0.0"
     secp256k1 "^3.0.1"
 
-ethereumjs-util@^5.0.0, ethereumjs-util@^5.1.2, ethereumjs-util@^5.2.0:
+ethereumjs-util@^5.0.0, ethereumjs-util@^5.1.1, ethereumjs-util@^5.1.2, ethereumjs-util@^5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/ethereumjs-util/-/ethereumjs-util-5.2.0.tgz#3e0c0d1741471acf1036052d048623dee54ad642"
   integrity sha512-CJAKdI0wgMbQFLlLRtZKGcy/L6pzVRgelIZqRqNbuVFM3K9VEnyfbcvz0ncWMRNCe4kaHWjwRYQcYMucmwsnWA==
@@ -14562,7 +14598,7 @@ number-is-nan@^1.0.0:
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
   integrity sha1-CXtgK1NCKlIsGvuHkDGDNpQaAR0=
 
-number-to-bn@1.7.0:
+number-to-bn@1.7.0, number-to-bn@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/number-to-bn/-/number-to-bn-1.7.0.tgz#bb3623592f7e5f9e0030b1977bd41a0c53fe1ea0"
   integrity sha1-uzYjWS9+X54AMLGXe9QaDFP+HqA=
@@ -18058,7 +18094,7 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
-rlp@^2.0.0:
+rlp@^2.0.0, rlp@^2.2.2:
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/rlp/-/rlp-2.2.3.tgz#7f94aef86cec412df87d5ea1d8cb116a47d45f0e"
   integrity sha512-l6YVrI7+d2vpW6D6rS05x2Xrmq8oW7v3pieZOJKBEdjuTF4Kz/iwk55Zyh1Zaz+KOB2kC8+2jZlp2u9L4tTzCQ==
@@ -20178,6 +20214,11 @@ tunnel-agent@^0.6.0:
   integrity sha1-J6XeoGs2sEoKmWZ3SykIaPD8QP0=
   dependencies:
     safe-buffer "^5.0.1"
+
+tweetnacl-util@^0.15.0:
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/tweetnacl-util/-/tweetnacl-util-0.15.0.tgz#4576c1cee5e2d63d207fee52f1ba02819480bc75"
+  integrity sha1-RXbBzuXi1j0gf+5S8boCgZSAvHU=
 
 tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"

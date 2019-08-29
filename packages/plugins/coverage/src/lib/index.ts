@@ -77,7 +77,7 @@ export default class Coverage {
     this.fs.ensureDirSync(path.join(dappPath(), ".embark"));
     const coveragePath = path.join(dappPath(), ".embark", "coverage.json");
 
-    const coverageReport = this.contracts.reduce((acc: {[name: string]: ICoverage}, contract) => {
+    const coverageReport = this.contracts.reduce((acc: { [name: string]: ICoverage }, contract) => {
       if (contract.source) {
         acc[contract.filepath] = contract.coverage;
       }
@@ -90,7 +90,7 @@ export default class Coverage {
 
   private collectEvents(web3Contracts: Web3Contract[]) {
     return web3Contracts.map(async (web3Contract) => {
-      const events = await web3Contract.getPastEvents("allEvents", {fromBlock: 0});
+      const events = await web3Contract.getPastEvents("allEvents", { fromBlock: 0 });
       this.contracts.forEach((contract) => contract.updateCoverage(events));
     });
   }
@@ -99,7 +99,7 @@ export default class Coverage {
     return new Promise<Web3Contract>((resolve) => {
       const address = deployedContract.deployedAddress;
       const abi = deployedContract.abiDefinition;
-      this.embark.events.request("blockchain:contract:create", {address, abi}, (web3Contract: Web3Contract) => {
+      this.embark.events.request("blockchain:contract:create", { address, abi }, (web3Contract: Web3Contract) => {
         resolve(web3Contract);
       });
     });
@@ -107,7 +107,7 @@ export default class Coverage {
 
   private getDeployedContracts() {
     return new Promise<Contract[]>((resolve, reject) => {
-      this.embark.events.request("contracts:all", (error: Error, contracts: {[name: string]: Contract}) => {
+      this.embark.events.request("contracts:all", (error: Error, contracts: { [name: string]: Contract }) => {
         if (error) {
           return reject(error);
         }
@@ -118,7 +118,7 @@ export default class Coverage {
 
   private async getWeb3Contracts() {
     const web3Contracts = this.deployedContracts.filter((deployedContract) => deployedContract.deployedAddress)
-                                                .map((deployedContract) => this.getWeb3Contract(deployedContract));
+      .map((deployedContract) => this.getWeb3Contract(deployedContract));
 
     return (await Promise.all(web3Contracts)).concat(this.web3Contracts);
   }

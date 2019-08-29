@@ -78,13 +78,13 @@ export class Engine {
   }
 
   init(_options, callback) {
-    callback = callback || function() {};
+    callback = callback || function () { };
 
     const options = _options || {};
     this.events = options.events || this.events || new Events();
-    this.logger = options.logger || new Logger({context: this.context, logLevel: options.logLevel || this.logLevel || 'info', events: this.events, logFile: this.logFile});
-    this.config = new Config({env: this.env, logger: this.logger, events: this.events, context: this.context, webServerConfig: this.webServerConfig, version: this.version, package: this.package});
-    this.config.loadConfigFiles({embarkConfig: this.embarkConfig, interceptLogs: this.interceptLogs});
+    this.logger = options.logger || new Logger({ context: this.context, logLevel: options.logLevel || this.logLevel || 'info', events: this.events, logFile: this.logFile });
+    this.config = new Config({ env: this.env, logger: this.logger, events: this.events, context: this.context, webServerConfig: this.webServerConfig, version: this.version, package: this.package });
+    this.config.loadConfigFiles({ embarkConfig: this.embarkConfig, interceptLogs: this.interceptLogs });
     this.plugins = this.config.plugins;
     this.isDev = this.config && this.config.blockchainConfig && (this.config.blockchainConfig.isDev || this.config.blockchainConfig.default);
 
@@ -92,7 +92,7 @@ export class Engine {
       interceptLogs(console, this.logger);
     }
 
-    this.ipc = new IPC({logger: this.logger, ipcRole: this.ipcRole});
+    this.ipc = new IPC({ logger: this.logger, ipcRole: this.ipcRole });
     if (this.ipc.isClient()) {
       return this.ipc.connect((_err) => {
         callback();
@@ -103,6 +103,13 @@ export class Engine {
     }
 
     callback();
+  }
+
+  loadDappPlugins() {
+    if (this.config) {
+      this.config.plugins.loadPlugins();
+      this.config.reloadConfig();
+    }
   }
 
   startEngine(cb) {
@@ -189,26 +196,26 @@ export class Engine {
       plugins: this.plugins
     });
 
-    this.servicesMonitor = new ServicesMonitor({events: this.events, logger: this.logger, plugins: this.plugins});
+    this.servicesMonitor = new ServicesMonitor({ events: this.events, logger: this.logger, plugins: this.plugins });
 
     if (this.servicesMonitor) {
       this.servicesMonitor.addCheck('Embark', (cb) => {
-        return cb({name: 'Embark ' + this.version, status: 'on'});
+        return cb({ name: 'Embark ' + this.version, status: 'on' });
       }, 0);
 
       if (this.plugins) {
         const plugin = this.plugins.createPlugin('coreservicesplugin', {});
-        plugin.registerActionForEvent("embark:engine:started", (_params, cb) => {
+        plugin.registerActionForEvent("embark:engine:started", undefined, (_params, cb) => {
           this.servicesMonitor && this.servicesMonitor.startMonitor();
           cb();
         });
       }
     }
 
-    this.registerModulePackage('embark-code-runner', {ipc: this.ipc});
+    this.registerModulePackage('embark-code-runner', { ipc: this.ipc });
 
     // TODO: we shouldn't need useDashboard
-    this.registerModulePackage('embark-library-manager', {useDashboard: this.useDashboard});
+    this.registerModulePackage('embark-library-manager', { useDashboard: this.useDashboard });
   }
 
   consoleComponents() {
@@ -233,18 +240,18 @@ export class Engine {
   stackComponents(options) {
     this.registerModulePackage('embark-pipeline', { plugins: this.plugins });
     this.registerModulePackage('embark-blockchain', { plugins: this.plugins });
-    this.registerModulePackage('embark-proxy', {plugins: this.plugins});
+    this.registerModulePackage('embark-proxy', { plugins: this.plugins });
     // TODO: coverage param should be part of the request compilation command, not an option here
     // some other params in the options might not longer be relevant, in fact we probably don't need options anymore
-    this.registerModulePackage('embark-compiler', {plugins: this.plugins, isCoverage: options.isCoverage});
-    this.registerModulePackage('embark-contracts-manager', {plugins: this.plugins, compileOnceOnly: options.compileOnceOnly});
-    this.registerModulePackage('embark-deployment', {plugins: this.plugins, onlyCompile: options.onlyCompile});
+    this.registerModulePackage('embark-compiler', { plugins: this.plugins, isCoverage: options.isCoverage });
+    this.registerModulePackage('embark-contracts-manager', { plugins: this.plugins, compileOnceOnly: options.compileOnceOnly });
+    this.registerModulePackage('embark-deployment', { plugins: this.plugins, onlyCompile: options.onlyCompile });
     this.registerModulePackage('embark-blockchain-client');
     this.registerModulePackage('embark-storage');
     this.registerModulePackage('embark-communication');
     this.registerModulePackage('embark-namesystem');
     this.registerModulePackage('embark-process-logs-api-manager');
-    this.registerModulePackage('embark-embarkjs', {plugins: this.plugins});
+    this.registerModulePackage('embark-embarkjs', { plugins: this.plugins });
   }
 
   blockchainComponents() {
@@ -266,15 +273,15 @@ export class Engine {
   }
 
   testComponents(options) {
-    this.registerModulePackage('embark-test-runner', {plugins: this.plugins});
-    this.registerModulePackage('embark-coverage', {plugins: this.plugins, coverage: options.coverage});
-    this.registerModulePackage('embark-solidity-tests', {plugins: this.plugins, coverage: options.coverage});
-    this.registerModulePackage('embark-mocha-tests', {plugins: this.plugins, coverage: options.coverage});
+    this.registerModulePackage('embark-test-runner', { plugins: this.plugins });
+    this.registerModulePackage('embark-coverage', { plugins: this.plugins, coverage: options.coverage });
+    this.registerModulePackage('embark-solidity-tests', { plugins: this.plugins, coverage: options.coverage });
+    this.registerModulePackage('embark-mocha-tests', { plugins: this.plugins, coverage: options.coverage });
   }
 
   compilerComponents(_options) {
     // TODO: should be moved (they are plugins)
-    this.registerModulePackage('embark-solidity', {ipc: this.ipc, useDashboard: this.useDashboard});
+    this.registerModulePackage('embark-solidity', { ipc: this.ipc, useDashboard: this.useDashboard });
     this.registerModulePackage('embark-vyper');
   }
 
@@ -283,7 +290,8 @@ export class Engine {
     this.registerModulePackage('embark-ethereum-blockchain-client');
     this.registerModulePackage('embark-web3');
     this.registerModulePackage('embark-accounts-manager');
-    this.registerModulePackage('embark-specialconfigs', {plugins: this.plugins});
+    this.registerModulePackage('embark-rpc-manager');
+    this.registerModulePackage('embark-specialconfigs', { plugins: this.plugins });
     this.registerModulePackage('embark-transaction-logger');
     this.registerModulePackage('embark-transaction-tracker');
     this.registerModulePackage('embark-profiler');
@@ -303,10 +311,10 @@ export class Engine {
   }
 
   cockpitModules() {
-    this.registerModulePackage('embark-authenticator', {singleUseAuthToken: this.singleUseAuthToken});
-    this.registerModulePackage('embark-api', {plugins: this.plugins});
+    this.registerModulePackage('embark-authenticator', { singleUseAuthToken: this.singleUseAuthToken });
+    this.registerModulePackage('embark-api', { plugins: this.plugins });
     // Register logs for the cockpit console
-    this.events.request('process:logs:register', {processName: EMBARK_PROCESS_NAME, eventName: "log", silent: false, alwaysAlreadyLogged: true});
+    this.events.request('process:logs:register', { processName: EMBARK_PROCESS_NAME, eventName: "log", silent: false, alwaysAlreadyLogged: true });
   }
 }
 
@@ -314,23 +322,23 @@ function interceptLogs(consoleContext, logger) {
   const context: any = {};
   context.console = consoleContext;
 
-  context.console.log = function() {
+  context.console.log = function () {
     logger.info(normalizeInput(arguments));
   };
-  context.console.warn = function() {
+  context.console.warn = function () {
     logger.warn(normalizeInput(arguments));
   };
-  context.console.info = function() {
+  context.console.info = function () {
     logger.info(normalizeInput(arguments));
   };
-  context.console.debug = function() {
+  context.console.debug = function () {
     // TODO: ue JSON.stringify
     logger.debug(normalizeInput(arguments));
   };
-  context.console.trace = function() {
+  context.console.trace = function () {
     logger.trace(normalizeInput(arguments));
   };
-  context.console.dir = function() {
+  context.console.dir = function () {
     logger.dir(normalizeInput(arguments));
   };
 }

@@ -125,6 +125,10 @@ export class Plugin {
     if (!Array.isArray(this.acceptedContext)) {
       this.acceptedContext = [this.acceptedContext];
     }
+    this.registerActionForEvent("tests:config:updated", { priority: 30 }, async ({ accounts }, cb) => {
+      this.config.blockchainConfig.accounts = accounts;
+      cb(null, null);
+    });
   }
 
   _log(type) {
@@ -157,8 +161,8 @@ export class Plugin {
   }
 
   loadPlugin() {
-    if (!this.isContextValid())  {
-      this.logger.warn(__('Plugin {{name}} can only be loaded in the context of "{{contexts}}"', {name: this.name, contexts: this.acceptedContext.join(', ')}));
+    if (!this.isContextValid()) {
+      this.logger.warn(__('Plugin {{name}} can only be loaded in the context of "{{contexts}}"', { name: this.name, contexts: this.acceptedContext.join(', ') }));
       return false;
     }
     this.loaded = true;
@@ -217,12 +221,12 @@ export class Plugin {
 
   registerPipeline(matcthingFiles, cb) {
     // TODO: generate error for more than one pipeline per plugin
-    this.pipeline.push({matcthingFiles, cb});
+    this.pipeline.push({ matcthingFiles, cb });
     this.addPluginType('pipeline');
   }
 
   registerDappGenerator(framework, cb) {
-    this.dappGenerators.push({framework, cb});
+    this.dappGenerators.push({ framework, cb });
     this.pluginTypes.push('dappGenerator');
   }
 
@@ -231,7 +235,7 @@ export class Plugin {
   }
 
   addFileToPipeline(file, intendedPath, options) {
-    this.pipelineFiles.push({file, intendedPath, options});
+    this.pipelineFiles.push({ file, intendedPath, options });
     this.addPluginType('pipelineFiles');
   }
 
@@ -254,7 +258,7 @@ export class Plugin {
 
   // TODO: this only works for services done on startup
   registerServiceCheck(checkName, checkFn, time) {
-    this.serviceChecks.push({checkName, checkFn, time});
+    this.serviceChecks.push({ checkName, checkFn, time });
     this.addPluginType('serviceChecks');
   }
 
@@ -268,13 +272,13 @@ export class Plugin {
   }
 
   generateProvider(args) {
-    return this.clientWeb3Providers.map(function(cb) {
+    return this.clientWeb3Providers.map(function (cb) {
       return cb.call(this, args);
     }).join("\n");
   }
 
   generateContracts(args) {
-    return this.contractsGenerators.map(function(cb) {
+    return this.contractsGenerators.map(function (cb) {
       return cb.call(this, args);
     }).join("\n");
   }
@@ -285,12 +289,12 @@ export class Plugin {
   }
 
   registerCompiler(extension, cb) {
-    this.compilers.push({extension, cb});
+    this.compilers.push({ extension, cb });
     this.addPluginType('compilers');
   }
 
   registerUploadCommand(cmd, cb) {
-    this.uploadCmds.push({cmd, cb});
+    this.uploadCmds.push({ cmd, cb });
     this.addPluginType('uploadCmds');
   }
 
@@ -335,26 +339,26 @@ export class Plugin {
     if (!this.eventActions[eventName]) {
       this.eventActions[eventName] = [];
     }
-    this.eventActions[eventName].push({action: cb, options: Object.assign({priority: DEFAULT_ACTION_PRIORITY}, options)});
+    this.eventActions[eventName].push({ action: cb, options: Object.assign({ priority: DEFAULT_ACTION_PRIORITY }, options) });
     this.addPluginType('eventActions');
   }
 
   registerAPICall(method, endpoint, cb) {
-    this.apiCalls.push({method, endpoint, cb});
+    this.apiCalls.push({ method, endpoint, cb });
     this.addPluginType('apiCalls');
-    this.events.emit('plugins:register:api', {method, endpoint, cb});
+    this.events.emit('plugins:register:api', { method, endpoint, cb });
   }
 
   runFilePipeline() {
     return this.pipelineFiles.map(file => {
-        let obj: any = {};
-        obj.filename = file.file.replace('./', '');
-        obj.content = this.loadPluginFile(file.file).toString();
-        obj.intendedPath = file.intendedPath;
-        obj.options = file.options;
-        obj.path = this.pathToFile(obj.filename);
+      let obj: any = {};
+      obj.filename = file.file.replace('./', '');
+      obj.content = this.loadPluginFile(file.file).toString();
+      obj.intendedPath = file.intendedPath;
+      obj.options = file.options;
+      obj.path = this.pathToFile(obj.filename);
 
-        return obj;
+      return obj;
     });
   }
 

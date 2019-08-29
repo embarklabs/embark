@@ -173,27 +173,28 @@ export class Proxy {
         // stripped out by modifying the response (via actions for blockchain:proxy:response)
         respData.error = fwdReqErr.message || fwdReqErr;
       }
+    }
 
-      try {
-        const modifiedResp = await this.emitActionsForResponse(modifiedRequest.reqData, respData);
-        // Send back to the client
-        if (modifiedResp && modifiedResp.respData && modifiedResp.respData.error) {
-          // error returned from the node and it wasn't stripped by our response actions
-          const error = modifiedResp.respData.error.message || modifiedResp.respData.error;
-          this.logger.error(__(`Error returned from the node: ${error}`));
-          const rpcErrorObj = { "jsonrpc": "2.0", "error": { "code": -32603, "message": error }, "id": modifiedResp.respData.id };
-          return this.respondError(transport, rpcErrorObj);
-        }
-        this.respondOK(transport, modifiedResp.respData);
-      }
-      catch (resError) {
-        // if was an error in response actions (resError), send the error in the response
-        const error = resError.message || resError;
-        this.logger.error(__(`Error executing response actions: ${error}`));
-        const rpcErrorObj = { "jsonrpc": "2.0", "error": { "code": -32603, "message": error }, "id": modifiedRequest.reqData.id };
+    try {
+      const modifiedResp = await this.emitActionsForResponse(modifiedRequest.reqData, respData);
+      // Send back to the client
+      if (modifiedResp && modifiedResp.respData && modifiedResp.respData.error) {
+        // error returned from the node and it wasn't stripped by our response actions
+        const error = modifiedResp.respData.error.message || modifiedResp.respData.error;
+        this.logger.error(__(`Error returned from the node: ${error}`));
+        const rpcErrorObj = { "jsonrpc": "2.0", "error": { "code": -32603, "message": error }, "id": modifiedResp.respData.id };
         return this.respondError(transport, rpcErrorObj);
       }
+      this.respondOK(transport, modifiedResp.respData);
     }
+    catch (resError) {
+      // if was an error in response actions (resError), send the error in the response
+      const error = resError.message || resError;
+      this.logger.error(__(`Error executing response actions: ${error}`));
+      const rpcErrorObj = { "jsonrpc": "2.0", "error": { "code": -32603, "message": error }, "id": modifiedRequest.reqData.id };
+      return this.respondError(transport, rpcErrorObj);
+    }
+
 
 
   }
