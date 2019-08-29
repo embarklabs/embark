@@ -107,7 +107,9 @@ export default class ProxyManager {
       this.wsProxy.stop();
       this.wsProxy = null;
     }
-    this.httpProxy.stop();
-    this.httpProxy = null;
+    if (this.httpProxy) {
+      this.httpProxy.stop();
+      this.httpProxy = null;
+    }
   }
 }
