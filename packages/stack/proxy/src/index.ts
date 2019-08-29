@@ -9,7 +9,8 @@ const constants = require("embark-core/constants");
 export default class ProxyManager {
   private readonly logger: Logger;
   private readonly events: Events;
-  private proxy: any;
+  private wsProxy: any;
+  private httpProxy: any;
   private plugins: any;
   private readonly host: string;
   private rpcPort = 0;
@@ -79,7 +80,7 @@ export default class ProxyManager {
     if (!this.embark.config.blockchainConfig.proxy) {
       return;
     }
-    if (this.proxy) {
+    if (this.httpProxy || this.wsProxy) {
       throw new Error("Proxy is already started");
     }
     const port = await findNextPort(this.embark.config.blockchainConfig.rpcPort + constants.blockchain.servicePortOnProxy);
@@ -88,23 +89,47 @@ export default class ProxyManager {
     this.wsPort = port + 1;
     this.isWs = clientName === constants.blockchain.vm || (/wss?/).test(this.embark.config.blockchainConfig.endpoint);
 
-    this.proxy = await new Proxy({
-      endpoint: clientName === constants.blockchain.vm ? constants.blockchain.vm : this.embark.config.blockchainConfig.endpoint,
-      events: this.events,
-      isWs: this.isWs,
-      logger: this.logger,
-      plugins: this.plugins,
-      vms: this.vms,
-    });
-
-    await this.proxy.serve(
-      this.host,
-      this.isWs ? this.wsPort : this.rpcPort,
-    );
+    // HTTP
+    if (clientName !== constants.blockchain.vm) {
+      this.httpProxy = await new Proxy({
+        endpoint: this.embark.config.blockchainConfig.endpoint,
+        events: this.events,
+        isWs: false,
+        logger: this.logger,
+        plugins: this.plugins,
+        vms: this.vms,
+      })
+      .serve(
+        this.host,
+        this.rpcPort,
+      );
+      this.logger.info(`HTTP Proxy for node endpoint ${this.embark.config.blockchainConfig.endpoint} listening on ${buildUrl("http", this.host, this.rpcPort, "rpc")}`);
+    }
+    if (this.isWs) {
+      const endpoint = clientName === constants.blockchain.vm ? constants.blockchain.vm : this.embark.config.blockchainConfig.endpoint;
+      this.wsProxy = await new Proxy({
+        endpoint,
+        events: this.events,
+        isWs: true,
+        logger: this.logger,
+        plugins: this.plugins,
+        vms: this.vms,
+      })
+      .serve(
+        this.host,
+        this.wsPort,
+      );
+      this.logger.info(`WS Proxy for node endpoint ${endpoint} listening on ${buildUrl("ws", this.host, this.wsPort, "ws")}`);
+    }
   }
-
   private stopProxy() {
-    this.proxy.stop();
-    this.proxy = null;
+    if (this.wsProxy) {
+      this.wsProxy.stop();
+      this.wsProxy = null;
+    }
+    if (this.httpProxy) {
+      this.httpProxy.stop();
+      this.httpProxy = null;
+    }
   }
 }

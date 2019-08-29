@@ -2,7 +2,7 @@ import Web3 from "web3";
 
 const TARGET = 0x7FFFFFFFFFFFFFFF;
 
-export default async function fundAccount(web3: Web3, accountAddress: string, coinbaseAddress: string, hexBalance: string | number | undefined) {
+export default async function fundAccount(web3: Web3, accountAddress: string, coinbaseAddress: string, hexBalance?: string | number) {
   if (!hexBalance) {
     hexBalance = TARGET;
   }

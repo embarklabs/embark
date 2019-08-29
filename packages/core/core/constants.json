@@ -66,7 +66,9 @@
       "eth_getTransactionReceipt": "eth_getTransactionReceipt",
       "eth_call": "eth_call",
       "eth_accounts": "eth_accounts",
-      "personal_listAccounts": "personal_listAccounts"
+      "eth_signTypedData": "eth_signTypedData",
+      "personal_listAccounts": "personal_listAccounts",
+      "personal_newAccount": "personal_newAccount"
     }
   },
   "storage": {

@@ -42,7 +42,7 @@ export class Config {
 
   pipelineConfig: any = {};
 
-  namesystemConfig: any  = {};
+  namesystemConfig: any = {};
 
   communicationConfig: any = {};
 
@@ -88,7 +88,7 @@ export class Config {
 
   constructor(options) {
     this.env = options.env || 'default';
-    this.webServerConfig  = options.webServerConfig;
+    this.webServerConfig = options.webServerConfig;
     this.configDir = options.configDir || DEFAULT_CONFIG_PATH;
     this.chainsFile = options.chainsFile;
     this.plugins = options.plugins;
@@ -132,8 +132,8 @@ export class Config {
 
     // TODO: refactor this so reading the file can be done with a normal resolver or something that takes advantage of the plugin api
     this.events.setCommandHandler("config:contractsFiles:add", (filename, resolver) => {
-      resolver = resolver || function(callback) { callback(fs.readFileSync(filename).toString()); };
-      this.contractsFiles.push(new File({path: filename, originalPath: filename, type: Types.custom, resolver}));
+      resolver = resolver || function (callback) { callback(fs.readFileSync(filename).toString()); };
+      this.contractsFiles.push(new File({ path: filename, originalPath: filename, type: Types.custom, resolver }));
     });
 
     this.events.setCommandHandler("config:contractsFiles:reset", (cb) => {
@@ -179,7 +179,6 @@ export class Config {
       env: this.env,
       version: this.version
     });
-    this.plugins.loadPlugins();
 
     this.loadEmbarkConfigFile();
     this.loadBlockchainConfigFile();
@@ -208,6 +207,7 @@ export class Config {
     this.loadAssetFiles();
     this.loadContractsConfigFile();
     this.loadExternalContractsFiles();
+    this.loadPluginContractFiles();
 
     this._updateBlockchainCors();
   }
@@ -302,7 +302,7 @@ export class Config {
     if (env) {
       if (env === 'test' && !configObject[env]) {
         // Disabled all configs in tests as they are opt in
-        return Object.assign({}, defaultConfig.default, {enabled: false});
+        return Object.assign({}, defaultConfig.default, { enabled: false });
       }
       return recursiveMerge(configObject.default || {}, configObject[env]);
     } else if (env !== false) {
@@ -343,8 +343,8 @@ export class Config {
       switch (envConfig.miningMode) {
         case 'dev': envConfig.isDev = true; break;
         case 'auto': envConfig.isDev = false; envConfig.mineWhenNeeded = true; break;
-        case 'always': envConfig.isDev = false; envConfig.mineWhenNeeded = false;  envConfig.mine = true; break;
-        case 'off': envConfig.isDev = false; envConfig.mineWhenNeeded = false;  envConfig.mine = false; break;
+        case 'always': envConfig.isDev = false; envConfig.mineWhenNeeded = false; envConfig.mine = true; break;
+        case 'off': envConfig.isDev = false; envConfig.mineWhenNeeded = false; envConfig.mine = false; break;
         default: envConfig.isDev = false;
       }
       if (envConfig.cors) {
@@ -395,10 +395,10 @@ export class Config {
         port: this.blockchainConfig.wsPort,
         type: 'ws'
       } : {
-        host: this.blockchainConfig.rpcHost,
-        port: this.blockchainConfig.rpcPort,
-        type: 'rpc'
-      };
+          host: this.blockchainConfig.rpcHost,
+          port: this.blockchainConfig.rpcPort,
+          type: 'rpc'
+        };
       this.blockchainConfig.endpoint = buildUrlFromConfig(urlConfig);
       this.blockchainConfig.isAutoEndpoint = true;
     }
@@ -448,7 +448,7 @@ export class Config {
     let configObject = getContractDefaults(this.embarkConfig.versions);
 
     const contractsConfigs = this.plugins.getPluginsProperty('contractsConfig', 'contractsConfigs');
-    contractsConfigs.forEach(function(pluginConfig) {
+    contractsConfigs.forEach(function (pluginConfig) {
       configObject = recursiveMerge(configObject, pluginConfig);
     });
 
@@ -485,7 +485,7 @@ export class Config {
     const contracts = this.contractsConfig.contracts;
     const storageConfig = this.storageConfig;
     if (storageConfig && storageConfig.upload && storageConfig.upload.getUrl) {
-        this.providerUrl = storageConfig.upload.getUrl;
+      this.providerUrl = storageConfig.upload.getUrl;
     }
     for (const contractName in contracts) {
       const contract = contracts[contractName];
@@ -534,11 +534,11 @@ export class Config {
         upload: {
           provider: "ipfs",
           protocol: "http",
-          host : defaultHost,
+          host: defaultHost,
           port: 5001,
           getUrl: "http://localhost:8080/ipfs/"
         },
-        dappConnection: [{provider: "ipfs", host: "localhost", port: 5001, getUrl: "http://localhost:8080/ipfs/"}]
+        dappConnection: [{ provider: "ipfs", host: "localhost", port: 5001, getUrl: "http://localhost:8080/ipfs/" }]
       }
     };
 
@@ -610,7 +610,7 @@ export class Config {
       }
     }
     if (configFilePath === false) {
-      this.webServerConfig = {enabled: false};
+      this.webServerConfig = { enabled: false };
       return;
     }
     if (this.webServerConfig) {
@@ -649,7 +649,7 @@ export class Config {
     });
     this.contractDirectories.push(constants.httpContractsDirectory);
 
-    this.buildDir  = this.embarkConfig.buildDir;
+    this.buildDir = this.embarkConfig.buildDir;
     this.configDir = this.embarkConfig.config;
   }
 
@@ -698,11 +698,11 @@ export class Config {
     const readFiles: File[] = [];
     const storageConfig = self.storageConfig;
 
-    originalFiles.filter(function(file) {
+    originalFiles.filter(function (file) {
       return (file[0] === '$' || file.indexOf('.') >= 0);
-    }).filter(function(file) {
+    }).filter(function (file) {
       const basedir = findMatchingExpression(file, files);
-      readFiles.push(new File({path: file, originalPath: file, type: Types.dappFile, basedir, storageConfig}));
+      readFiles.push(new File({ path: file, originalPath: file, type: Types.dappFile, basedir, storageConfig }));
     });
 
     const filesFromPlugins: File[] = [];
@@ -718,7 +718,7 @@ export class Config {
         self.logger.error(err.message);
       }
     });
-    filesFromPlugins.filter(function(file) {
+    filesFromPlugins.filter(function (file) {
       if ((file.intendedPath && fileMatchesPattern(files, file.intendedPath)) || fileMatchesPattern(files, file.file)) {
         readFiles.push(file);
       }
@@ -735,7 +735,8 @@ export class Config {
     contractsPlugins.forEach((plugin: Plugin) => {
       plugin.contractsFiles.forEach(file => {
         const filename = file.replace('./', '');
-        self.contractsFiles.push(new File({ path: filename, originalPath: path.join(plugin.pluginPath, filename), pluginPath: plugin.pluginPath, type: Types.custom, storageConfig,
+        self.contractsFiles.push(new File({
+          path: filename, originalPath: path.join(plugin.pluginPath, filename), pluginPath: plugin.pluginPath, type: Types.custom, storageConfig,
           resolver(callback) {
             callback(plugin.loadPluginFile(file));
           }

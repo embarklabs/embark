@@ -122,7 +122,7 @@ describe('embark.Config', function () {
         "mineWhenNeeded": true,
         "nodiscover": true,
         "maxpeers": 0,
-      "simulatorBlocktime": 0,
+        "simulatorBlocktime": 0,
         "miningMode": "auto",
         "gasPrice": "8000000",
         "targetGasLimit": "20000000",

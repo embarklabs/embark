@@ -1,12 +1,15 @@
 const WebSocket = require("ws");
 const http = require("http");
 
-const LIVENESS_CHECK=`{"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":42}`;
+const LIVENESS_CHECK = `{"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":42}`;
 
 const parseAndRespond = (data, cb) => {
   let resp;
   try {
     resp = JSON.parse(data);
+    if (resp.error) {
+      return cb(resp.error);
+    }
   } catch (e) {
     return cb('Version data is not valid JSON');
   }

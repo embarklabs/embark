@@ -4,7 +4,7 @@ import { dappPath, embarkPath, joinPath, setUpEnv } from 'embark-utils';
 import { Logger } from 'embark-logger';
 let async = require('async');
 const constants = require('embark-core/constants');
-const {reset: embarkReset, paths: defaultResetPaths} = require('embark-reset');
+const { reset: embarkReset, paths: defaultResetPaths } = require('embark-reset');
 const cloneDeep = require('clone-deep');
 
 setUpEnv(joinPath(__dirname, '../../'));
@@ -26,10 +26,10 @@ class EmbarkController {
 
   initConfig(env, options) {
     this.events = new Events();
-    this.logger = new Logger({logLevel: Logger.logLevels.debug, events: this.events, context: this.context});
+    this.logger = new Logger({ logLevel: Logger.logLevels.debug, events: this.events, context: this.context });
 
     this.logger.info('foo');
-    this.config = new Config({env: env, logger: this.logger, events: this.events, context: this.context, version: this.version});
+    this.config = new Config({ env: env, logger: this.logger, events: this.events, context: this.context, version: this.version });
     this.config.loadConfigFiles(options);
     this.plugins = this.config.plugins;
   }
@@ -62,7 +62,7 @@ class EmbarkController {
 
       engine.startEngine(async () => {
         try {
-          const alreadyStarted = await engine.events.request2("blockchain:node:start", Object.assign(engine.config.blockchainConfig, {isStandalone: true}));
+          const alreadyStarted = await engine.events.request2("blockchain:node:start", Object.assign(engine.config.blockchainConfig, { isStandalone: true }));
           if (alreadyStarted) {
             engine.logger.warn(__('Blockchain process already started. No need to run `embark blockchain`'));
             process.exit(0);
@@ -147,10 +147,6 @@ class EmbarkController {
         });
       },
       function (callback) {
-        const pluginList = engine.plugins.listPlugins();
-        if (pluginList.length > 0) {
-          engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
-        }
 
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
@@ -167,7 +163,14 @@ class EmbarkController {
         engine.registerModuleGroup("filewatcher");
         engine.registerModuleGroup("storage");
         engine.registerModuleGroup("cockpit");
-        engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
+        engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins });
+
+        // load custom plugins
+        engine.loadDappPlugins();
+        let pluginList = engine.plugins.listPlugins();
+        if (pluginList.length > 0) {
+          engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
+        }
 
         const plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
@@ -274,7 +277,7 @@ class EmbarkController {
         engine.registerModuleGroup("pipeline");
         engine.registerModuleGroup("communication");
         engine.registerModuleGroup("namesystem");
-        engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
+        engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins });
 
         engine.registerModuleGroup("blockchain");
 
@@ -353,7 +356,7 @@ class EmbarkController {
       package: pkg
     });
 
-    const isSecondaryProcess = (engine) => {return engine.ipc.connected && engine.ipc.isClient();};
+    const isSecondaryProcess = (engine) => { return engine.ipc.connected && engine.ipc.isClient(); };
 
     async.waterfall([
       callback => {
@@ -382,7 +385,7 @@ class EmbarkController {
         if (!isSecondaryProcess(engine)) {
           engine.registerModuleGroup("cockpit");
         }
-        engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
+        engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins });
 
         callback();
       },
@@ -525,7 +528,7 @@ class EmbarkController {
         return path.charAt(path.length - 1) === '/' ? path.substr(0, path.length - 1) : path;
       }))
     ];
-    await embarkReset({removePaths});
+    await embarkReset({ removePaths });
   }
 
   ejectWebpack() {
@@ -587,7 +590,7 @@ class EmbarkController {
         engine.startService("web3");
         engine.startService("processManager");
         engine.startService("codeRunner");
-        engine.startService("deployment", {onlyCompile: true});
+        engine.startService("deployment", { onlyCompile: true });
 
         callback();
       },
@@ -607,7 +610,7 @@ class EmbarkController {
         engine.logger.error(err.message || err);
       }
       engine.logger.info(__("finished generating the UI").underline);
-      engine.logger.info(__("To see the result, execute {{cmd}} and go to /{{contract}}.html", {cmd: 'embark run'.underline, contract: options.contract}));
+      engine.logger.info(__("To see the result, execute {{cmd}} and go to /{{contract}}.html", { cmd: 'embark run'.underline, contract: options.contract }));
 
       process.exit(err ? 1 : 0);
     });
@@ -668,7 +671,7 @@ class EmbarkController {
         engine.registerModuleGroup("webserver");
         engine.registerModuleGroup("filewatcher");
         engine.registerModuleGroup("storage");
-        engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
+        engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins });
 
         const plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
@@ -733,12 +736,7 @@ class EmbarkController {
       function initEngine(next) {
         engine.init({}, next);
       },
-      function loadPlugins(next) {
-        let pluginList = engine.plugins.listPlugins();
-        if (pluginList.length > 0) {
-          engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
-        }
-
+      function loadModules(next) {
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
 
@@ -747,11 +745,23 @@ class EmbarkController {
         engine.registerModuleGroup("contracts");
         engine.registerModuleGroup("pipeline");
         engine.registerModuleGroup("tests", options);
-        engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins, trackContracts: false});
+        engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins, trackContracts: false });
         engine.registerModuleGroup("namesystem");
         engine.registerModuleGroup("storage");
         engine.registerModuleGroup("communication");
+        next();
+      },
+      function loadDappPlugins(next) {
+        // load custom plugins
+        engine.loadDappPlugins();
 
+        let pluginList = engine.plugins.listPlugins();
+        if (pluginList.length > 0) {
+          engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
+        }
+        next();
+      },
+      function startEngine(next) {
         engine.startEngine(next);
       },
       function startNodes(next) {
@@ -767,7 +777,7 @@ class EmbarkController {
         engine.events.request2('tests:run', options, next);
       }
     ], (err, passes, fails) => {
-      if(err) {
+      if (err) {
         engine.logger.error(`Error occurred while running tests: ${err.message || err}`);
       }
 
@@ -780,14 +790,14 @@ module.exports = EmbarkController;
 
 async function compileAndDeploySmartContracts(engine) {
   try {
-  let contractsFiles = await engine.events.request2("config:contractsFiles");
-  let compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
-  let _contractsConfig = await engine.events.request2("config:contractsConfig");
-  let contractsConfig = cloneDeep(_contractsConfig);
-  let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
-  await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
-  await engine.events.request2('pipeline:generateAll');
-  engine.events.emit('outputDone');
+    let contractsFiles = await engine.events.request2("config:contractsFiles");
+    let compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
+    let _contractsConfig = await engine.events.request2("config:contractsConfig");
+    let contractsConfig = cloneDeep(_contractsConfig);
+    let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
+    await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
+    await engine.events.request2('pipeline:generateAll');
+    engine.events.emit('outputDone');
   } catch (e) {
     console.log(e);
   }
@@ -809,7 +819,7 @@ async function setupCargoAndWatcher(engine) {
   });
 
   let fileTimeout;
-  engine.events.on('file-event', ({fileType, _path}) => {
+  engine.events.on('file-event', ({ fileType, _path }) => {
     clearTimeout(fileTimeout);
     // Throttle file changes so we re-write only once for all files
     fileTimeout = setTimeout(async () => {
