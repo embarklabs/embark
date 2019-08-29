@@ -37,6 +37,7 @@ class MochaTestRunner {
 
   run(options, cb) {
     const {events} = this.embark;
+    const {reporter} = options;
 
     const Module = require("module");
     const originalRequire = require("module").prototype.require;
@@ -67,6 +68,10 @@ class MochaTestRunner {
             next();
           }
         ], (err) => {
+          // Reset the gas accumulator so that we don't show deployment gas on the
+          // first test.
+          reporter.resetGas();
+
           if (acctCb) {
             acctCb(err, accounts);
           }
@@ -80,8 +85,8 @@ class MochaTestRunner {
       (next) => { // request provider
         events.request("blockchain:client:provider", "ethereum", next);
       },
-      (bcProvider, next) => { // set provider
-        web3 = new Web3(bcProvider);
+      (provider, next) => { // set provider
+        web3 = new Web3(provider);
         next();
       },
       (next) => { // get accounts
@@ -126,7 +131,7 @@ class MochaTestRunner {
       (next) => { // initialize Mocha
         const mocha = new Mocha();
 
-        mocha.reporter(Reporter, { reporter: options.reporter });
+        mocha.reporter(Reporter, { reporter: reporter });
         const describeWithAccounts = (scenario, cb) => {
           Mocha.describe(scenario, cb.bind(mocha, accounts));
         };
