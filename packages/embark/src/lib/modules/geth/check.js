@@ -1,12 +1,18 @@
 const WebSocket = require("ws");
 const http = require("http");
 
-const LIVENESS_CHECK=`{"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":42}`;
+const LIVENESS_CHECK = `{"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":42}`;
 
 const parseAndRespond = (data, cb) => {
   const resp = JSON.parse(data);
-  const [_, version, __] = resp.result.split('/');
-  cb(null, version);
+  if (resp.error) {
+    return cb(resp.error);
+  }
+  if (resp.result && typeof resp.result === "string" && resp.result.includes("/")) {
+    const [_, version, __] = resp.result.split('/');
+    return cb(null, version);
+  }
+  return cb(`Version response not valid: ${resp.result}`);
 };
 
 const rpc = (host, port, cb) => {

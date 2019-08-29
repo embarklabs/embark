@@ -1,4 +1,4 @@
-import {ProcessManager, IPC} from 'embark-core';
+import {ProcessManager, Events, IPC} from 'embark-core';
 
 const EMBARK_PROCESS_NAME = 'embark';
 
@@ -26,7 +26,6 @@ class Engine {
 
   init(_options, callback) {
     callback = callback || function () {};
-    const Events = require('./events.js');
     const Config = require('./config.js');
 
     let options = _options || {};
@@ -156,14 +155,14 @@ class Engine {
   }
 
   blockchainStackComponents() {
-    this.registerModule('blockchain', { plugins: this.plugins });
+    this.registerModule('blockchain', {plugins: this.plugins});
     this.registerModule('blockchain-client');
     this.registerModulePackage('embark-process-logs-api-manager');
   }
 
   stackComponents(options) {
-    this.registerModulePackage('embark-pipeline', { plugins: this.plugins });
-    this.registerModule('blockchain', { plugins: this.plugins });
+    this.registerModulePackage('embark-pipeline', {plugins: this.plugins});
+    this.registerModule('blockchain', {plugins: this.plugins});
     this.registerModulePackage('embark-proxy', {plugins: this.plugins});
     // TODO: coverage param should be part of the request compilation command, not an option here
     // some other params in the options might not longer be relevant, in fact we probably don't need options anymore
@@ -214,6 +213,7 @@ class Engine {
     this.registerModule('ganache');
     this.registerModulePackage('embark-web3');
     this.registerModulePackage('embark-accounts-manager');
+    this.registerModulePackage('embark-rpc-manager');
     this.registerModulePackage('embark-specialconfigs', {plugins: this.plugins});
     this.registerModulePackage('embark-transaction-logger');
     this.registerModulePackage('embark-transaction-tracker');

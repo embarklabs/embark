@@ -125,6 +125,7 @@
     "embark-test-runner": "^4.1.1",
     "embark-transaction-logger": "^4.1.1",
     "embark-transaction-tracker": "^4.1.1",
+    "embark-rpc-manager": "^4.1.1",
     "embark-ui": "^4.1.1",
     "embark-utils": "^4.1.1",
     "embark-vyper": "^4.1.1",

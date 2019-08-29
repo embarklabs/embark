@@ -1,4 +1,4 @@
-import { __ } from 'embark-i18n';
+import {__} from 'embark-i18n';
 var EventEmitter = require('events');
 const cloneDeep = require('lodash.clonedeep');
 
@@ -57,43 +57,43 @@ class EmbarkEmitter extends EventEmitter {
 
 
 // EmbarkEmitter.prototype.log  = log;
-EmbarkEmitter.prototype.log  = log;
+EmbarkEmitter.prototype.log = log;
 
 EmbarkEmitter.prototype._maxListeners = 350;
-const _on         = EmbarkEmitter.prototype.on;
-const _once       = EmbarkEmitter.prototype.once;
+const _on = EmbarkEmitter.prototype.on;
+const _once = EmbarkEmitter.prototype.once;
 const _setHandler = EmbarkEmitter.prototype.setHandler;
 const _removeAllListeners = EmbarkEmitter.prototype.removeAllListeners;
-const _emit       = EmbarkEmitter.prototype.emit;
+const _emit = EmbarkEmitter.prototype.emit;
 
 const toFire = [];
 
 EmbarkEmitter.prototype._emit = EmbarkEmitter.prototype.emit;
 
-EmbarkEmitter.prototype.removeAllListeners = function(requestName) {
+EmbarkEmitter.prototype.removeAllListeners = function (requestName) {
   delete toFire[requestName];
   return _removeAllListeners.call(this, requestName);
 };
 
-EmbarkEmitter.prototype.on = function(requestName, cb) {
+EmbarkEmitter.prototype.on = function (requestName, cb) {
   // log("EVENT LISTEN", requestName);
   warnIfLegacy(requestName);
   return _on.call(this, requestName, cb);
 };
 
-EmbarkEmitter.prototype.once = function(requestName, cb) {
+EmbarkEmitter.prototype.once = function (requestName, cb) {
   // log("EVENT LISTEN ONCE", requestName);
   warnIfLegacy(requestName);
   return _once.call(this, requestName, cb);
 };
 
-EmbarkEmitter.prototype.setHandler = function(requestName, cb) {
+EmbarkEmitter.prototype.setHandler = function (requestName, cb) {
   log("SET HANDLER", requestName);
   warnIfLegacy(requestName);
   return _setHandler.call(this, requestName, cb);
 };
 
-EmbarkEmitter.prototype.request2 = function() {
+EmbarkEmitter.prototype.request2 = function () {
   let requestName = arguments[0];
   let other_args = [].slice.call(arguments, 1);
 
@@ -130,7 +130,7 @@ EmbarkEmitter.prototype.request2 = function() {
   return promise;
 };
 
-EmbarkEmitter.prototype.request = function() {
+EmbarkEmitter.prototype.request = function () {
   let requestName = arguments[0];
   let other_args = [].slice.call(arguments, 1);
 
@@ -148,7 +148,7 @@ EmbarkEmitter.prototype.request = function() {
   // if we don't have a command handler set for this event yet,
   // store it and fire it once a command handler is set
   if (!this.listeners(listenerName).length) {
-    if(!toFire[listenerName]) {
+    if (!toFire[listenerName]) {
       toFire[listenerName] = [];
     }
     toFire[listenerName].push(other_args);
@@ -160,14 +160,14 @@ EmbarkEmitter.prototype.request = function() {
 };
 
 // TODO: ensure that it's only possible to create 1 command handler
-EmbarkEmitter.prototype.setCommandHandler = function(requestName, cb) {
+EmbarkEmitter.prototype.setCommandHandler = function (requestName, cb) {
   log("SET COMMAND HANDLER", requestName);
 
   // let origin = ((new Error().stack).split("at ")[3]).trim();
   // origin = origin.split("(")[0].trim();
   let origin = getOrigin();
 
-  let listener = function(_cb) {
+  let listener = function (_cb) {
     log("== REQUEST RESPONSE", requestName, origin);
     cb.call(this, ...arguments);
   };
@@ -196,7 +196,7 @@ EmbarkEmitter.prototype.setCommandHandler = function(requestName, cb) {
   return this.on(listenerName, listener);
 };
 
-EmbarkEmitter.prototype.setCommandHandlerOnce = function(requestName, cb) {
+EmbarkEmitter.prototype.setCommandHandlerOnce = function (requestName, cb) {
   log("SET COMMAND HANDLER ONCE", requestName);
 
   const listenerName = 'request:' + requestName;
@@ -216,9 +216,9 @@ EmbarkEmitter.prototype.setCommandHandlerOnce = function(requestName, cb) {
     return;
   }
 
-  return this.once(listenerName, function(_cb) {
+  return this.once(listenerName, function (_cb) {
     cb.call(this, ...arguments);
   });
 };
 
-module.exports = EmbarkEmitter;
+module.exports = {Events: EmbarkEmitter};

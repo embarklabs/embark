@@ -1,10 +1,10 @@
 /*global describe, it*/
-const { dappPath } = require('embark-utils');
+const {dappPath} = require('embark-utils');
 const Config = require('../lib/core/config.js');
 const Plugins = require('../lib/core/plugins.js');
 const assert = require('assert');
 const TestLogger = require('../lib/utils/test_logger');
-const Events = require('../lib/core/events');
+import {Events} from "embark-core";
 
 describe('embark.Config', function () {
   let config = new Config({
@@ -125,7 +125,7 @@ describe('embark.Config', function () {
         "mineWhenNeeded": true,
         "nodiscover": true,
         "maxpeers": 0,
-      "simulatorBlocktime": 0,
+        "simulatorBlocktime": 0,
         "miningMode": "auto",
         "gasPrice": "8000000",
         "targetGasLimit": "20000000",

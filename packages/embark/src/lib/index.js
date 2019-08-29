@@ -9,7 +9,6 @@ class Embark {
   }
 
   initConfig(env, options) {
-    let Events = require('./core/events.js');
     let Config = require('./core/config.js');
 
     this.events = new Events();

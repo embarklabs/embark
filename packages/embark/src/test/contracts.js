@@ -6,7 +6,7 @@ let Compiler = require('embark-compiler');
 let Logger = require('embark-logger');
 import { IPC } from 'embark-core';
 let TestLogger = require('../lib/utils/test_logger');
-let Events = require('../lib/core/events');
+import {Events} from "embark-core";
 const fs = require('../lib/core/fs');
 let assert = require('assert');
 

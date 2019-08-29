@@ -1,5 +1,6 @@
 import {__} from 'embark-i18n';
 import {dappPath, embarkPath} from 'embark-utils';
+import {Events} from 'embark-core';
 let async = require('async');
 const constants = require('embark-core/constants');
 const Logger = require('embark-logger');
@@ -23,7 +24,6 @@ class EmbarkController {
   }
 
   initConfig(env, options) {
-    let Events = require('../lib/core/events.js');
     let Config = require('../lib/core/config.js');
 
     this.events = new Events();
@@ -746,7 +746,7 @@ simulator(_options) {
         engine.events.request2('tests:run', options, next);
       }
     ], (err, passes, fails) => {
-      if(err) {
+      if (err) {
         engine.logger.error(`Error occurred while running tests: ${err.message || err}`);
       }
 

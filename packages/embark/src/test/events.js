@@ -3,7 +3,7 @@ import { File, Types } from 'embark-utils';
 const Assert = require("assert");
 const {expect} = require("chai");
 const fs = require("../lib/core/fs");
-const Events = require("../lib/core/events");
+import {Events} from "embark-core";
 
 let events;
 const testEventName = "testevent";
