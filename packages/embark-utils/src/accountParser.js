@@ -124,7 +124,7 @@ class AccountParser {
     }
 
     if (accountConfig.mnemonic) {
-      const hdwallet = hdkey.fromMasterSeed(bip39.mnemonicToSeed(accountConfig.mnemonic.trim()));
+      const hdwallet = hdkey.fromMasterSeed(bip39.mnemonicToSeedSync(accountConfig.mnemonic.trim()));
 
       const addressIndex = accountConfig.addressIndex || 0;
       const numAddresses = accountConfig.numAddresses || 1;
