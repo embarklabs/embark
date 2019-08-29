@@ -16,7 +16,7 @@ class ContractsManager {
     this.contracts = {};
     this.contractDependencies = {};
     this.deployOnlyOnConfig = false;
-    this.compileError = false;
+    this.compileError = null;
     this.compileOnceOnly = options.compileOnceOnly;
     this._web3 = null;
 
@@ -532,12 +532,12 @@ class ContractsManager {
       }
     ], function (err) {
       if (err) {
-        self.compileError = true;
+        self.compileError = err;
         self.events.emit("status", __("Build error"));
         self.events.emit("outputError", __("Error building Dapp, please check console"));
         self.logger.error(__("Error Building contracts"));
       } else {
-        self.compileError = false;
+        self.compileError = null;
       }
       self.logger.trace("finished".underline);
 
