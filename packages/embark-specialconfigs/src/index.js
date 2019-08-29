@@ -70,7 +70,7 @@ class SpecialConfigs {
       return this.functionConfigs.deployIfAction(params, cb);
     }
     return this.listConfigs.deployIfAction(params, cb);
- }
+  }
 
 }
 

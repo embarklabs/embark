@@ -32,8 +32,9 @@ class ContractDeployer {
       (params, next) => {
 
         if (!params.shouldDeploy) {
-          this.events.emit("deployment:contract:undeployed", contract);
-          return next(null, null);
+          return this.plugins.emitAndRunActionsForEvent('deployment:contract:undeployed', {contract}, (err, _params) => {
+            next(err, null);
+          });
         }
 
         // TODO: implement `blockchainType` a la `this.deployer[contract.blockchainType].apply(this.deployer, [contract, next])`

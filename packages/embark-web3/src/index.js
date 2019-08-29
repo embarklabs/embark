@@ -25,9 +25,11 @@ class EmbarkWeb3 {
     this.events.on("blockchain:started", this.registerWeb3Object.bind(this));
     embark.registerActionForEvent("pipeline:generateAll:before", this.addWeb3Artifact.bind(this));
     embark.registerActionForEvent("deployment:contract:deployed", this.registerInVm.bind(this));
+    embark.registerActionForEvent("deployment:contract:undeployed", this.registerInVm.bind(this));
     embark.registerActionForEvent("deployment:contract:deployed", this.registerArtifact.bind(this));
+    embark.registerActionForEvent("deployment:contract:undeployed", this.registerArtifact.bind(this));
 
-    this.registerWeb3Help()
+    this.registerWeb3Help();
   }
 
   async registerWeb3Object() {

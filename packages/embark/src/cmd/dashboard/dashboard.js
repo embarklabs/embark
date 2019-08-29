@@ -69,7 +69,14 @@ class Dashboard {
     this.events.on("deployment:contract:deployed", (_contract) => {
       // self.events.emit('contractsState', self.contractsState());
       this.events.request("contracts:state", (err, contracts) => {
-        monitor.setContracts(contracts)
+        monitor.setContracts(contracts);
+      });
+    });
+
+    this.events.on("deployment:contract:undeployed", (_contract) => {
+      // self.events.emit('contractsState', self.contractsState());
+      this.events.request("contracts:state", (err, contracts) => {
+        monitor.setContracts(contracts);
       });
     });
 
