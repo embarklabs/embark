@@ -79,7 +79,7 @@
     "babel-plugin-macros": "2.4.5",
     "babel-plugin-module-resolver": "3.2.0",
     "babel-plugin-transform-react-remove-prop-types": "0.4.24",
-    "bip39": "2.5.0",
+    "bip39": "3.0.2",
     "body-parser": "1.18.3",
     "chalk": "2.4.2",
     "clone-deep": "4.0.0",
