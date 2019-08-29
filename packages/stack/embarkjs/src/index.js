@@ -18,17 +18,27 @@ class EmbarkJS {
 
     this.events.request("runcode:whitelist", 'embarkjs', () => {
       this.registerEmbarkJS();
-     });
+    });
 
     this.embarkJSPlugins = {};
+    this.customEmbarkJSPlugins = {};
     this.events.setCommandHandler("embarkjs:plugin:register", (stackName, pluginName, packageName) => {
       this.embarkJSPlugins[stackName] = this.embarkJSPlugins[stackName] || {};
       this.embarkJSPlugins[stackName][pluginName] = packageName;
     });
+    this.events.setCommandHandler("embarkjs:plugin:register:custom", (stackName, pluginName, packageName) => {
+      this.customEmbarkJSPlugins[stackName] = this.customEmbarkJSPlugins[stackName] || {};
+      this.customEmbarkJSPlugins[stackName][pluginName] = packageName;
+    });
 
     this.events.setCommandHandler("embarkjs:console:register", (stackName, pluginName, packageName, cb) => {
-      this.events.request("runcode:whitelist", packageName, () => { });
+      this.events.request("runcode:whitelist", packageName, () => {});
       this.registerEmbarkJSPlugin(stackName, pluginName, packageName, cb || (() => {}));
+    });
+
+    this.events.setCommandHandler("embarkjs:console:regsiter:custom", (stackName, pluginName, packageName, options, cb) => {
+      this.events.request("runcode:whitelist", packageName, () => {});
+      this.registerCustomEmbarkJSPluginInVm(stackName, pluginName, packageName, options, cb || (() => {}));
     });
 
     this.events.setCommandHandler("embarkjs:console:setProvider", this.setProvider.bind(this));
@@ -65,8 +75,27 @@ class EmbarkJS {
     cb();
   }
 
+  async registerCustomEmbarkJSPluginInVm(stackName, pluginName, packageName, options, cb) {
+    await this.registerEmbarkJS();
+
+    const customPluginCode = `
+      let __embark${pluginName} = require('${packageName}');
+      __embark${pluginName} = __embark${pluginName}.default || __embark${pluginName};
+      const customPluginOptions = ${JSON.stringify(options)};
+      EmbarkJS.${stackName} = new __embark${pluginName}({pluginConfig: customPluginOptions});
+      EmbarkJS.${stackName}.init();
+    `;
+
+    await this.events.request2('runcode:eval', customPluginCode);
+    cb();
+  }
+
   addEmbarkJSArtifact(_params, cb) {
-    const embarkjsCode = Templates.embarkjs_artifact({ plugins: this.embarkJSPlugins, hasWebserver: this.embark.config.webServerConfig.enabled });
+    const embarkjsCode = Templates.embarkjs_artifact({
+      plugins: this.embarkJSPlugins,
+      hasWebserver: this.embark.config.webServerConfig.enabled,
+      customPlugins: this.customEmbarkJSPlugins
+    });
 
     // TODO: generate a .node file
     this.events.request("pipeline:register", {
@@ -142,10 +171,10 @@ class EmbarkJS {
       const result = await this.events.request2('runcode:eval', contract.className);
       result.currentProvider = provider;
       await this.events.request2("runcode:register", contract.className, result);
-      cb();
     } catch (err) {
-      cb(err);
+      return cb(err);
     }
+    cb();
   }
 
 }

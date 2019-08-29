@@ -169,6 +169,9 @@ class EmbarkController {
         engine.registerModuleGroup("cockpit");
         engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
 
+        // load custom plugins
+        engine.config.plugins.loadPlugins();
+
         const plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
           try {
@@ -767,7 +770,7 @@ class EmbarkController {
         engine.events.request2('tests:run', options, next);
       }
     ], (err, passes, fails) => {
-      if(err) {
+      if (err) {
         engine.logger.error(`Error occurred while running tests: ${err.message || err}`);
       }
 

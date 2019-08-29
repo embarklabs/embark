@@ -12,6 +12,9 @@ const ERROR_ACCOUNT = 'ERROR_ACCOUNT';
 export default class AccountParser {
   static parseAccountsConfig(accountsConfig, web3, dappPath, logger, nodeAccounts) {
     let accounts = [];
+    if (!(accountsConfig && accountsConfig.length)) {
+      return nodeAccounts;
+    }
     if (accountsConfig && accountsConfig.length) {
       accountsConfig.forEach(accountConfig => {
         let account = AccountParser.getAccount(accountConfig, web3, dappPath, logger, nodeAccounts);

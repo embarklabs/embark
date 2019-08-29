@@ -179,7 +179,6 @@ export class Config {
       env: this.env,
       version: this.version
     });
-    this.plugins.loadPlugins();
 
     this.loadEmbarkConfigFile();
     this.loadBlockchainConfigFile();
