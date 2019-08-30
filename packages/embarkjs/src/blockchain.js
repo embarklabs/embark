@@ -221,8 +221,8 @@ let Contract = function(options) {
   var self = this;
   var ContractClass;
 
-  this.abi = options.abi;
-  this.address = options.address;
+  this.abi = options.abi || options.abiDefinition;
+  this.address = options.address || options.deployedAddress;
   this.gas = options.gas;
   this.code = '0x' + options.code;
 

@@ -6,7 +6,6 @@ require('ejs');
 const Templates = {
   vanilla_contract: require('./vanilla-contract.js.ejs'),
   contract_artifact: require('./contract-artifact.js.ejs'),
-  embarkjs_contract_artifact: require('./embarkjs-contract-artifact.js.ejs'),
   web3_init: require('./web3_init.js.ejs'),
 };
 
@@ -16,17 +15,15 @@ class EmbarkWeb3 {
     this.embark = embark;
     this.logger = embark.logger;
     this.events = embark.events;
-    this.fs = embark.fs;
     this.config = embark.config;
 
     this.setupWeb3Api();
     this.setupEmbarkJS();
 
-    embark.registerActionForEvent("pipeline:generateAll:before", this.addWeb3Artifact.bind(this));
     embark.registerActionForEvent("deployment:contract:deployed", this.registerInVm.bind(this));
     embark.registerActionForEvent("deployment:contract:undeployed", this.registerInVm.bind(this));
-    // embark.registerActionForEvent("deployment:contract:deployed", this.registerArtifact.bind(this));
-    // embark.registerActionForEvent("deployment:contract:undeployed", this.registerArtifact.bind(this));
+    embark.registerActionForEvent("deployment:contract:deployed", this.registerArtifact.bind(this));
+    embark.registerActionForEvent("deployment:contract:undeployed", this.registerArtifact.bind(this));
   }
 
   async setupEmbarkJS() {
@@ -62,60 +59,11 @@ class EmbarkWeb3 {
   }
 
   async registerInVm(params, cb) {
-    let contract = params.contract;
-    let abi = JSON.stringify(contract.abiDefinition);
-    let gasLimit = 6000000;
-    const provider = await this.events.request2("blockchain:client:provider", "ethereum");
-    let contractCode = Templates.vanilla_contract({ className: contract.className, abi: abi, contract: contract, gasLimit: gasLimit, provider: provider });
-
-    try {
-      await this.events.request2('runcode:eval', contractCode);
-      let result = await this.events.request2('runcode:eval', contract.className);
-      result.currentProvider = provider;
-      await this.events.request2("runcode:register", contract.className, result);
-      cb();
-    } catch (err) {
-      cb(err);
-    }
-  }
-
-  addWeb3Artifact(_params, cb) {
-    async.map(this.config.contractsConfig.dappConnection, (conn, mapCb) => {
-      if (conn === '$EMBARK') {
-        // Connect to Embark's endpoint (proxy)
-        return this.events.request("proxy:endpoint", mapCb);
-      }
-      mapCb(null, conn);
-    }, (err, results) => {
-      if (err) {
-        this.logger.error(__('Error getting dapp connection'));
-        return cb(err);
-      }
-      let web3Code = Templates.web3_init({connectionList: results});
-
-    // TODO: generate a .node file
-      this.events.request("pipeline:register", {
-        path: [this.embarkConfig.generationDir, 'contracts'],
-        file: 'web3_init.js',
-        format: 'js',
-        content: web3Code
-      }, cb);
-    });
+    this.events.request("embarkjs:contract:runInVm", params.contract, cb);
   }
 
   registerArtifact(params, cb) {
-    let contract = params.contract;
-    let abi = JSON.stringify(contract.abiDefinition);
-    let gasLimit = 6000000;
-
-    let contractCode = Templates.embarkjs_contract_artifact({ className: contract.className, abi: abi, contract: contract, gasLimit: gasLimit });
-
-    this.events.request("pipeline:register", {
-      path: [this.embarkConfig.generationDir, 'contracts'],
-      file: contract.className + '.js',
-      format: 'js',
-      content: contractCode
-    }, cb);
+    this.events.request("embarkjs:contract:generate", params.contract, cb);
   }
 
 }
