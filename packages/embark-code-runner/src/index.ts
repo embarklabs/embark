@@ -53,6 +53,8 @@ class CodeRunner {
 
   private evalCode(code: string, cb: Callback<any>, tolerateError = false) {
     cb = cb || (() => { });
+    console.dir("---")
+    console.dir(code)
 
     if (!code) {
       return cb(null, "");
@@ -60,6 +62,7 @@ class CodeRunner {
 
     this.vm.doEval(code, tolerateError, (err, result) => {
       if (err) {
+        console.dir(err);
         return cb(err);
       }
 

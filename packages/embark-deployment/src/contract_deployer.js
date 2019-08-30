@@ -30,20 +30,19 @@ class ContractDeployer {
         });
       },
       (params, next) => {
-
         if (!params.shouldDeploy) {
-          this.events.emit("deployment:contract:undeployed", contract);
-          return next(null, null);
+          return this.plugins.emitAndRunActionsForEvent('deployment:contract:undeployed', { contract }, (err, _params) => {
+            next();
+          });
         }
 
         // TODO: implement `blockchainType` a la `this.deployer[contract.blockchainType].apply(this.deployer, [contract, next])`
-        this.deployer["ethereum"].apply(this.deployer, [contract, next]);
-      },
-      (receipt, next) => {
-        if (!receipt) return next();
-        this.plugins.emitAndRunActionsForEvent('deployment:contract:deployed', {contract, receipt}, (err, _params) => {
-          next(err);
-        });
+        this.deployer["ethereum"].apply(this.deployer, [contract, (err, receipt) => {
+          if (!receipt) return next();
+          this.plugins.emitAndRunActionsForEvent('deployment:contract:deployed', { contract, receipt }, (err, _params) => {
+            next(err);
+          });
+        }]);
       }
     ], (err) => {
       if (err) {
