@@ -1,5 +1,6 @@
 /* global global require */
-const EmbarkJS = global.EmbarkJS || require('embarkjs');
+let EmbarkJS = global.EmbarkJS || require('embarkjs');
+EmbarkJS = EmbarkJS.default || EmbarkJS;
 const ENSFunctions = require('./ENSFunctions').default;
 const Web3 = require('web3');
 const namehash = require('eth-ens-namehash');
@@ -159,6 +160,7 @@ __embarkENS.setProvider = function(config) {
   self.registration = config.registration;
   self.env = config.env;
   self.ready = false;
+
   // FIXME EmbarkJS.onReady doesn't work. Possibility of a race condition
   EmbarkJS.Blockchain.blockchainConnector.getNetworkId()
     .then((id) => {

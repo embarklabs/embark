@@ -60,7 +60,9 @@ class CodeRunner {
 
     this.vm.doEval(code, tolerateError, (err, result) => {
       if (err) {
-        console.dir(err);
+        this.logger.error("error running code");
+        this.logger.error(code);
+        this.logger.error(err.toString());
         return cb(err);
       }
 

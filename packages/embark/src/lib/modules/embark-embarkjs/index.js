@@ -25,9 +25,9 @@ class EmbarkJS {
       this.embarkJSPlugins[stackName][pluginName] = packageName;
     });
 
-    this.events.setCommandHandler("embarkjs:console:register", (stackName, pluginName, packageName) => {
+    this.events.setCommandHandler("embarkjs:console:register", (stackName, pluginName, packageName, cb) => {
       this.events.request("runcode:whitelist", packageName, () => { });
-      this.registerEmbarkJSPlugin(stackName, pluginName, packageName);
+      this.registerEmbarkJSPlugin(stackName, pluginName, packageName, cb || (() => {}));
     });
 
     this.events.setCommandHandler("embarkjs:console:setProvider", this.setProvider.bind(this));
@@ -45,13 +45,14 @@ class EmbarkJS {
     await this.events.request2("runcode:register", 'EmbarkJS', require('embarkjs'));
   }
 
-  async registerEmbarkJSPlugin(stackName, pluginName, packageName) {
+  async registerEmbarkJSPlugin(stackName, pluginName, packageName, cb) {
     await this.registerEmbarkJS();
 
     let moduleName = stackName;
     if (moduleName === 'messages') moduleName = 'Messages';
     if (moduleName === 'storage') moduleName = 'Storage';
     if (moduleName === 'blockchain') moduleName = 'Blockchain';
+    if (moduleName === 'names') moduleName = 'Names';
 
     const registerProviderCode = `
       const __embark_${stackName}_${pluginName} = require('${packageName}');
@@ -59,6 +60,7 @@ class EmbarkJS {
     `;
 
     await this.events.request2('runcode:eval', registerProviderCode);
+    cb();
   }
 
   addEmbarkJSArtifact(_params, cb) {
@@ -78,6 +80,7 @@ class EmbarkJS {
     if (moduleName === 'messages') moduleName = 'Messages';
     if (moduleName === 'storage') moduleName = 'Storage';
     if (moduleName === 'blockchain') moduleName = 'Blockchain';
+    if (moduleName === 'names') moduleName = 'Names';
 
     let code = "";
     if (stackName === 'storage') {
