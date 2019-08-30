@@ -1,4 +1,4 @@
-import {BlockchainClient, Simulator} from 'embark-blockchain-process';
+import {Simulator} from 'embark-blockchain-process';
 import {__} from 'embark-i18n';
 import {dappPath, embarkPath} from 'embark-utils';
 import findUp from 'find-up';
@@ -196,8 +196,6 @@ class EmbarkController {
           cb();
         });
 
-        engine.events.request('watcher:start');
-
         engine.events.on('check:backOnline:Ethereum', function () {
           engine.logger.info(__('Ethereum node detected') + '..');
           // TODO: deploy contracts, etc...
@@ -209,36 +207,14 @@ class EmbarkController {
           engine.events.emit("status", __("Ready").green);
         });
 
-        engine.events.on('file-event', async ({fileType, path}) => {
-          // TODO: re-add async.cargo / or use rxjs to use latest request in the queue
-
-          if (fileType === 'contract' || fileType === 'config') {
-            try {
-              await compileAndDeploySmartContracts(engine);
-            } catch (err) {
-              engine.logger.error(err);
-            }
-          } else if (fileType === 'asset') {
-            engine.events.request('pipeline:generateAll', () => {
-              engine.events.emit('outputDone');
-            });
-          }
-        });
-
         engine.startEngine(async () => {
           callback();
 
-          engine.events.request("webserver:start")
+          engine.events.request("webserver:start");
 
           try {
-            let contractsFiles = await engine.events.request2("config:contractsFiles");
-            let compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
-            let _contractsConfig = await engine.events.request2("config:contractsConfig");
-            let contractsConfig = cloneDeep(_contractsConfig);
-            let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
-            await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
-
-            await engine.events.request2("watcher:start");
+            await compileAndDeploySmartContracts(engine);
+            await setupCargoAndWatcher(engine);
           } catch (e) {
             engine.logger.error(__('Error building and deploying'), e);
           }
@@ -570,25 +546,14 @@ class EmbarkController {
           engine.events.emit("status", __("Ready").green);
         });
 
-        engine.events.on('file-event', async ({ fileType, path }) => {
-          if (fileType === 'contract' || fileType === 'config') {
-            try {
-              await compileAndDeploySmartContracts(engine);
-            } catch (e) {
-              engine.logger.error(e);
-            }
-          } else if (fileType === 'asset') {
-            engine.events.request('pipeline:generateAll', () => engine.events.emit('outputDone'));
-          }
-        });
-
         engine.startEngine(async () => {
           try {
             await compileAndDeploySmartContracts(engine);
+            await setupCargoAndWatcher(engine);
           } catch (e) {
             return callback(e);
           }
-          engine.events.request2("watcher:start")
+
           callback();
         });
       },
@@ -955,5 +920,37 @@ async function compileAndDeploySmartContracts(engine) {
   let _contractsConfig = await engine.events.request2("config:contractsConfig");
   let contractsConfig = cloneDeep(_contractsConfig);
   let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
-  return await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
+  return engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
+}
+
+async function setupCargoAndWatcher(engine) {
+  const cargo = async.cargo(async (tasks) => {
+    if (tasks.includes('contract') || tasks.includes('config')) {
+      try {
+        await compileAndDeploySmartContracts(engine);
+        return new Promise((resolve) => {
+          engine.events.once('outputDone', () => {
+            resolve();
+          });
+        });
+      } catch (err) {
+        engine.logger.error(err);
+        return;
+      }
+    }
+
+    await engine.events.request2('pipeline:generateAll');
+    engine.events.emit('outputDone');
+  });
+
+  let fileTimeout;
+  engine.events.on('file-event', ({fileType, _path}) => {
+    clearTimeout(fileTimeout);
+    // Throttle file changes so we re-write only once for all files
+    fileTimeout = setTimeout(async () => {
+      cargo.push(fileType);
+    }, 50);
+  });
+
+  await engine.events.request2("watcher:start");
 }
