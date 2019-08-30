@@ -27,6 +27,7 @@ EmbarkJS.Storage.setProviders(storageConfig.dappConnection);
 
 <% if (Object.values(plugins['blockchain']).length > 0) { %>
 var blockchainConfig = require('./config/blockchain.json');
+EmbarkJS.Blockchain.setProvider(blockchainConfig.provider, {});
 EmbarkJS.Blockchain.connect(blockchainConfig, (err) => {if (err) { console.error(err); } });
 <% }; %>
 
