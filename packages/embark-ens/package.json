@@ -54,7 +54,8 @@
     "embark-utils": "^4.1.1",
     "embarkjs": "^4.1.1",
     "embarkjs-ens": "^4.1.1",
-    "eth-ens-namehash": "2.0.8"
+    "eth-ens-namehash": "2.0.8",
+    "web3": "1.2.1"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",

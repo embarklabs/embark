@@ -17,7 +17,7 @@ describe('embark.Blockchain', function() {
         const expectedConfig = {
           networkType: 'custom',
           genesisBlock: false,
-          ethereumClientName: 'geth',
+          client: 'geth',
           ethereumClientBin: 'geth',
           datadir: dappPath(".embark/development/datadir"),
           mineWhenNeeded: false,
@@ -56,7 +56,7 @@ describe('embark.Blockchain', function() {
         let config = {
           networkType: 'livenet',
           genesisBlock: 'foo/bar/genesis.json',
-          ethereumClientName: 'parity',
+          client: 'parity',
           ethereumClientBin: 'parity',
           datadir: '/foo/datadir/',
           mineWhenNeeded: true,
@@ -98,7 +98,7 @@ describe('embark.Blockchain', function() {
         let expectedConfig = {
           networkType: 'livenet',
           genesisBlock: 'foo/bar/genesis.json',
-          ethereumClientName: 'parity',
+          client: 'parity',
           ethereumClientBin: 'parity',
           datadir: '/foo/datadir/',
           mineWhenNeeded: true,

@@ -162,17 +162,69 @@ Plugins.prototype.getPluginsProperty = function(pluginType, property, sub_proper
   return matchingProperties.reduce((a,b) => { return a.concat(b); }) || [];
 };
 
+Plugins.prototype.getPluginsPropertyAndPluginName = function(pluginType, property, sub_property) {
+  let matchingPlugins = this.plugins.filter(function(plugin) {
+    return plugin.has(pluginType);
+  });
+
+  // Sort internal plugins first
+  matchingPlugins.sort((a, b) => {
+    if (a.isInternal) {
+      return -1;
+    }
+    if (b.isInternal) {
+      return 1;
+    }
+    return 0;
+  });
+
+  let matchingProperties = [];
+  matchingPlugins.map((plugin) => {
+    if (sub_property) {
+      let newList = [];
+      for (let kall of (plugin[property][sub_property] || [])) {
+        matchingProperties.push([kall, plugin.name]);
+      }
+      return newList;
+    }
+
+    let newList = [];
+    for (let kall of (plugin[property] || [])) {
+      matchingProperties.push([kall, plugin.name]);
+    }
+    return newList;
+  });
+
+  // Remove empty properties
+  matchingProperties = matchingProperties.filter((property) => property[0]);
+
+  //return flattened list
+  if (matchingProperties.length === 0) return [];
+  // return matchingProperties.reduce((a,b) => { return a.concat(b); }) || [];
+  return matchingProperties;
+};
+
+
+// TODO: because this is potentially hanging, we should issue a trace warning if the event does not exists
 Plugins.prototype.runActionsForEvent = function(eventName, args, cb) {
+  const self = this;
   if (typeof (args) === 'function') {
     cb = args;
+    args = [];
   }
-  let actionPlugins = this.getPluginsProperty('eventActions', 'eventActions', eventName);
+  let actionPlugins = this.getPluginsPropertyAndPluginName('eventActions', 'eventActions', eventName);
 
   if (actionPlugins.length === 0) {
-    return cb(args);
+    return cb(null, args);
   }
 
-  async.reduce(actionPlugins, args, function(current_args, plugin, nextEach) {
+  this.events.log("ACTION", eventName, "");
+
+  async.reduce(actionPlugins, args, function (current_args, pluginObj, nextEach) {
+    const [plugin, pluginName] = pluginObj;
+
+    self.events.log("== ACTION FOR " + eventName, plugin.name, pluginName);
+
     if (typeof (args) === 'function') {
       plugin.call(plugin, (...params) => {
         nextEach(...params || current_args);
@@ -186,7 +238,11 @@ Plugins.prototype.runActionsForEvent = function(eventName, args, cb) {
 };
 
 Plugins.prototype.emitAndRunActionsForEvent = function(eventName, args, cb) {
-  this.events.emit(eventName);
+  if (typeof (args) === 'function') {
+    cb = args;
+    args = [];
+  }
+  this.events.emit(eventName, args);
   return this.runActionsForEvent(eventName, args, cb);
 };
 

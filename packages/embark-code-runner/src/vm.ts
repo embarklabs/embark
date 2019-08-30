@@ -29,7 +29,8 @@ class VM {
    * Currently, all of the allowed external requires appear in the EmbarkJS scripts. If
    * the requires change in any of the EmbarkJS scripts, they will need to be updated here.
    */
-  private _options: NodeVMOptions = {
+  // private _options: NodeVMOptions = {
+  public _options: NodeVMOptions = {
     require: {
       builtin: ["path", "util"],
       external: [
@@ -37,16 +38,18 @@ class VM {
         "@babel/runtime-corejs2/core-js/object/assign",
         "@babel/runtime-corejs2/core-js/promise",
         "@babel/runtime-corejs2/helpers/interopRequireDefault",
-        "embark-utils",
-        "embarkjs-ens",
-        "embarkjs-ipfs",
-        "embarkjs-swarm",
-        "embarkjs-whisper",
-        "eth-ens-namehash",
-        "ipfs-api",
+        // "embark-utils",
+        // TODO: ideally this shouldnt' be needed/here or should be configurable by the modules themselves somehow
+        // "embarkjs-ens",
+        // "embarkjs-ipfs",
+        // "embarkjs-swarm",
+        // "embarkjs-whisper",
+        // "eth-ens-namehash",
+        // "ipfs-api",
         "rxjs",
         "rxjs/operators",
-        "swarm-api",
+        // "web3",
+        // "swarm-api",
       ],
     },
     sandbox: { __dirname: dappPath() },

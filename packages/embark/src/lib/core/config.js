@@ -23,15 +23,20 @@ import {
 const cloneDeep = require('lodash.clonedeep');
 const { replaceZeroAddressShorthand } = AddressUtils;
 
+import {getBlockchainDefaults, getContractDefaults} from './configDefaults';
+
 const DEFAULT_CONFIG_PATH = 'config/';
 const PACKAGE = require('../../../package.json');
 
+const embark5ChangesUrl = 'https://embark.status.im/docs/migrating_from_3.x.html#Updating-to-v5';
+
 var Config = function(options) {
-  const self = this;
   this.env = options.env || 'default';
   this.blockchainConfig = {};
   this.contractsConfig  = {};
   this.pipelineConfig   = {};
+  this.namesystemConfig = {};
+  this.communicationConfig = {};
   this.webServerConfig  = options.webServerConfig;
   this.chainTracker     = {};
   this.assetFiles = {};
@@ -48,46 +53,61 @@ var Config = function(options) {
   this.shownNoAccountConfigMsg = false; // flag to ensure "no account config" message is only displayed once to the user
   this.corsParts = [];
   this.providerUrl = null;
+
+  this.registerEvents();
+};
+
+Config.prototype.setConfig = function(configName, newConfig, cb) {
+  this[configName] = newConfig;
+  cb();
+};
+
+Config.prototype.registerEvents = function() {
   this.events.setCommandHandler("config:cors:add", (url) => {
     this.corsParts.push(url);
     this._updateBlockchainCors();
   });
 
-  self.events.setCommandHandler("config:contractsConfig", (cb) => {
-    cb(self.contractsConfig);
+  this.events.setCommandHandler("config:contractsConfig", (cb) => {
+    cb(null, this.contractsConfig);
   });
 
-  self.events.setCommandHandler("config:contractsConfig:set", (config, cb) => {
-    self.contractsConfig = config;
-    cb();
+  this.events.setCommandHandler("config:storageConfig", (cb) => {
+    cb(null, this.storageConfig);
   });
 
-  self.events.setCommandHandler("config:contractsFiles", (cb) => {
-    cb(self.contractsFiles);
+  this.events.setCommandHandler("config:contractsConfig:set", this.setConfig.bind(this, 'contractsConfig'));
+  this.events.setCommandHandler("config:blockchainConfig:set", this.setConfig.bind(this, 'blockchainConfig'));
+  this.events.setCommandHandler("config:storageConfig:set", this.setConfig.bind(this, 'storageConfig'));
+  this.events.setCommandHandler("config:namesystemConfig:set", this.setConfig.bind(this, 'namesystemConfig'));
+  this.events.setCommandHandler("config:communicationConfig:set", this.setConfig.bind(this, 'communicationConfig'));
+
+  this.events.setCommandHandler("config:contractsFiles", (cb) => {
+    cb(null, this.contractsFiles);
   });
 
   // TODO: refactor this so reading the file can be done with a normal resolver or something that takes advantage of the plugin api
-  self.events.setCommandHandler("config:contractsFiles:add", (filename, resolver) => {
+  this.events.setCommandHandler("config:contractsFiles:add", (filename, resolver) => {
     resolver = resolver || function(callback) {
       callback(fs.readFileSync(filename).toString());
     };
-    self.contractsFiles.push(new File({path: filename, originalPath: filename, type: Types.custom, resolver}));
+    this.contractsFiles.push(new File({path: filename, originalPath: filename, type: Types.custom, resolver}));
   });
 
-  self.events.setCommandHandler("config:contractsFiles:reset", (cb) => {
-    self.contractsFiles.forEach((file) => {
+  this.events.setCommandHandler("config:contractsFiles:reset", (cb) => {
+    this.contractsFiles.forEach((file) => {
       if(file.path.includes(".embark")) {
         fs.removeSync(file.path);
       }
-      self.contractsFiles = self.contractsFiles.filter((contractFile) => contractFile.path !== file.path);
+      this.contractsFiles = this.contractsFiles.filter((contractFile) => contractFile.path !== file.path);
     });
     cb();
   });
 
-  self.events.on('file-remove', (fileType, removedPath) => {
+  this.events.on('file-remove', (fileType, removedPath) => {
     if(fileType !== 'contract') return;
     const normalizedPath = path.normalize(removedPath);
-    self.contractsFiles = self.contractsFiles.filter(file => path.normalize(file.path) !== normalizedPath);
+    this.contractsFiles = this.contractsFiles.filter(file => path.normalize(file.path) !== normalizedPath);
   });
 };
 
@@ -217,36 +237,44 @@ Config.prototype._updateBlockchainCors = function(){
   }
 };
 
-Config.prototype._mergeConfig = function(configFilePath, defaultConfig, env, enabledByDefault) {
+Config.prototype._loadConfigFile = function (configFilePath, defaultConfig, enabledByDefault) {
   if (!configFilePath) {
-    let configToReturn = defaultConfig['default'] || {};
+    const configToReturn = defaultConfig['default'] || {};
     configToReturn.enabled = enabledByDefault || false;
     return configToReturn;
   }
-
-  // due to embark.json; TODO: refactor this
   configFilePath = configFilePath.replace('.json','').replace('.js', '');
-  if (!fs.existsSync(configFilePath + '.js') && !fs.existsSync(configFilePath + '.json')) {
-    // TODO: remove this if
-    if (this.logger) {
-      this.logger.warn(__("no config file found at %s using default config", configFilePath));
-    }
-    return defaultConfig['default'] || {};
-  }
-
   let config;
   if (fs.existsSync(configFilePath + '.js')) {
     delete require.cache[configFilePath + '.js'];
     config = require(configFilePath + '.js');
-  } else {
+  } else if (fs.existsSync(configFilePath + '.json')) {
     config = fs.readJSONSync(configFilePath + '.json');
+  } else {
+    this.logger.warn(__("no config file found at %s using default config", configFilePath));
+    return defaultConfig['default'] || {};
   }
+  return config;
+};
+
+Config.prototype._doMergeConfig = function(config, defaultConfig, env) {
   let configObject = recursiveMerge(defaultConfig, config);
 
   if (env) {
-    return recursiveMerge(configObject['default'] || {}, configObject[env]);
+    if (env === 'test' && !configObject[env]) {
+      // Disabled all configs in tests as they are opt in
+      return Object.assign({}, defaultConfig.default, {enabled: false});
+    }
+    return recursiveMerge(configObject.default || {}, configObject[env]);
+  } else if (env !== false) {
+    this.logger.info(__("No environment called %s found. Using defaults.", env));
   }
   return configObject;
+};
+
+Config.prototype._loadAndMergeConfig = function(configFilePath, defaultConfig, env, enabledByDefault) {
+  const config = this._loadConfigFile(configFilePath, defaultConfig, enabledByDefault);
+  return this._doMergeConfig(config, defaultConfig, env, enabledByDefault);
 };
 
 Config.prototype._getFileOrObject = function(object, filePath, property) {
@@ -256,21 +284,52 @@ Config.prototype._getFileOrObject = function(object, filePath, property) {
   return dappPath(object, filePath);
 };
 
+/*eslint complexity: ["error", 30]*/
 Config.prototype.loadBlockchainConfigFile = function() {
-  var configObject = {
-    default: {
-      enabled: true,
-      ethereumClientName: constants.blockchain.clients.geth,
-      rpcCorsDomain: "auto",
-      wsOrigins: "auto",
-      proxy: true,
-      datadir: '.embark/' + this.env + '/datadir'
+  const blockchainDefaults = getBlockchainDefaults(this.env);
+  const configFilePath = this._getFileOrObject(this.configDir, 'blockchain', 'blockchain');
+
+  const userConfig = this._loadConfigFile(configFilePath, blockchainDefaults, true);
+  const envConfig = userConfig[this.env];
+
+  if (envConfig) {
+    if (envConfig.ethereumClientName || envConfig.hasOwnProperty('isDev') || envConfig.hasOwnProperty('mineWhenNeeded')) {
+      this.logger.error(__('The blockchain config has changed quite a bit in Embark 5\nPlease visit %s to know what has to be changed', embark5ChangesUrl.underline));
+      process.exit(1);
     }
-  };
+    if (envConfig.clientConfig) {
+      Object.assign(envConfig, envConfig.clientConfig);
+      delete envConfig.clientConfig;
+    }
+    switch (envConfig.miningMode) {
+      case 'dev': envConfig.isDev = true; break;
+      case 'auto': envConfig.isDev = false; envConfig.mineWhenNeeded = true; break;
+      case 'always': envConfig.isDev = false; envConfig.mineWhenNeeded = false;  envConfig.mine = true; break;
+      case 'off': envConfig.isDev = false; envConfig.mineWhenNeeded = false;  envConfig.mine = false; break;
+      default: envConfig.isDev = false;
+    }
+    if (envConfig.cors) {
+      const autoIndex = envConfig.cors.indexOf('auto');
+      envConfig.rpcCorsDomain = {};
+      envConfig.wsOrigins = {};
+      if (autoIndex > -1) {
+        envConfig.rpcCorsDomain.auto = true;
+        envConfig.wsOrigins.auto = true;
+        envConfig.cors.splice(autoIndex, 1);
+      } else {
+        envConfig.rpcCorsDomain.auto = false;
+        envConfig.wsOrigins.auto = false;
+      }
+      envConfig.rpcCorsDomain.additionalCors = envConfig.cors;
+      envConfig.wsOrigins.additionalCors = envConfig.cors;
+      delete envConfig.cors;
+    }
 
-  let configFilePath = this._getFileOrObject(this.configDir, 'blockchain', 'blockchain');
+    userConfig[this.env] = envConfig;
+  }
 
-  this.blockchainConfig = this._mergeConfig(configFilePath, configObject, this.env, true);
+  this.blockchainConfig = this._doMergeConfig(userConfig, blockchainDefaults, this.env);
+
   if (!configFilePath) {
     this.blockchainConfig.default = true;
   }
@@ -289,6 +348,20 @@ Config.prototype.loadBlockchainConfigFile = function() {
         acc.balance = getWeiBalanceFromString(acc.balance, web3);
       }
     });
+  }
+
+  if (!this.blockchainConfig.endpoint) {
+    const urlConfig = (this.blockchainConfig.wsHost) ? {
+      host: this.blockchainConfig.wsHost,
+      port: this.blockchainConfig.wsPort,
+      type: 'ws'
+    } : {
+      host: this.blockchainConfig.rpcHost,
+      port: this.blockchainConfig.rpcPort,
+      type: 'rpc'
+    };
+    this.blockchainConfig.endpoint = buildUrlFromConfig(urlConfig);
+    this.blockchainConfig.isAutoEndpoint = true;
   }
 
   if (
@@ -333,46 +406,25 @@ Config.prototype.loadBlockchainConfigFile = function() {
 };
 
 Config.prototype.loadContractsConfigFile = function() {
-  var defaultVersions = {
-    "web3": "1.2.1",
-    "solc": "0.5.0"
-  };
-  var versions = recursiveMerge(defaultVersions, this.embarkConfig.versions || {});
+  let configObject = getContractDefaults(this.embarkConfig.versions);
 
-  var configObject = {
-    "default": {
-      "versions": versions,
-      "deployment": {
-        "host": "localhost", "port": 8545, "type": "rpc"
-      },
-      "dappConnection": [
-        "$WEB3",
-        "localhost:8545"
-      ],
-      "dappAutoEnable": true,
-      "strategy": constants.deploymentStrategy.implicit,
-      "gas": "auto",
-      "contracts": {
-      }
-    }
-  };
-
-  var contractsConfigs = this.plugins.getPluginsProperty('contractsConfig', 'contractsConfigs');
+  const contractsConfigs = this.plugins.getPluginsProperty('contractsConfig', 'contractsConfigs');
   contractsConfigs.forEach(function(pluginConfig) {
     configObject = recursiveMerge(configObject, pluginConfig);
   });
 
   let configFilePath = this._getFileOrObject(this.configDir, 'contracts', 'contracts');
-  let newContractsConfig = this._mergeConfig(configFilePath, configObject, this.env);
+  let newContractsConfig = this._loadAndMergeConfig(configFilePath, configObject, this.env);
+  if (newContractsConfig.contracts) {
+    this.logger.error(__('`contracts` has been renamed `deploy` in contracts config\nFor more information: %s', embark5ChangesUrl.underline));
+    process.exit(1);
+  }
+  if (newContractsConfig.deployment) {
+    this.logger.error(__('`deployment` has been removed from contracts config and is now part of blockchain config\nFor more information: %s', embark5ChangesUrl.underline));
+    process.exit(1);
+  }
   if (newContractsConfig.gas.match(unitRegex)) {
     newContractsConfig.gas = getWeiBalanceFromString(newContractsConfig.gas, web3);
-  }
-  if (newContractsConfig.deployment && 'accounts' in newContractsConfig.deployment) {
-    newContractsConfig.deployment.accounts.forEach((account) => {
-      if (account.balance && account.balance.match(unitRegex)) {
-        account.balance = getWeiBalanceFromString(account.balance, web3);
-      }
-    });
   }
 
   newContractsConfig = prepareContractsConfig(newContractsConfig);
@@ -456,7 +508,7 @@ Config.prototype.loadStorageConfigFile = function() {
 
   let configFilePath = this._getFileOrObject(this.configDir, 'storage', 'storage');
 
-  this.storageConfig = this._mergeConfig(configFilePath, configObject, this.env);
+  this.storageConfig = this._loadAndMergeConfig(configFilePath, configObject, this.env);
   this.events.emit('config:load:storage', this.storageConfig);
 };
 
@@ -470,7 +522,7 @@ Config.prototype.loadNameSystemConfigFile = function() {
 
   let configFilePath = this._getFileOrObject(this.configDir, 'namesystem', 'namesystem');
 
-  this.namesystemConfig = this._mergeConfig(configFilePath, configObject, this.env);
+  this.namesystemConfig = this._loadAndMergeConfig(configFilePath, configObject, this.env);
 };
 
 Config.prototype.loadCommunicationConfigFile = function() {
@@ -489,7 +541,7 @@ Config.prototype.loadCommunicationConfigFile = function() {
 
   let configFilePath = this._getFileOrObject(this.configDir, 'communication', 'communication');
 
-  this.communicationConfig = this._mergeConfig(configFilePath, configObject, this.env);
+  this.communicationConfig = this._loadAndMergeConfig(configFilePath, configObject, this.env);
   this.events.emit('config:load:communication', this.communicationConfig);
 };
 
@@ -505,7 +557,7 @@ Config.prototype.loadWebServerConfigFile = function() {
 
   let configFilePath = this._getFileOrObject(this.configDir, 'webserver', 'webserver');
 
-  let webServerConfig = this._mergeConfig(configFilePath, configObject, false);
+  let webServerConfig = this._loadAndMergeConfig(configFilePath, configObject, false);
 
   if (webServerConfig.https){
     try {

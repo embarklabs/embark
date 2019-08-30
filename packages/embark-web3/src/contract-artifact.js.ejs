@@ -1,0 +1,21 @@
+const web3 = require("./web3_init.js").default
+
+let <%- className %>Abi = <%- abi %>;
+let <%- className %> = new web3.eth.Contract(<%- className %>Abi);
+<%- className %>.options.address = '<%- contract.deployedAddress %>';
+<%- className %>.address = '<%- contract.deployedAddress %>';
+<%- className %>.options.from = web3.eth.defaultAccount;
+
+web3.execWhenReady(() => {
+  <%- className %>.options.from = web3.eth.defaultAccount;
+  if (!<%- className %>.currentProvider) {
+    <%- className %>.setProvider(web3.currentProvider);
+  }
+})
+
+<% if (gasLimit != false) { %>
+  <%- className %>.options.gas = <%- gasLimit %>;
+  <%- className %>.options.gasLimit = <%- gasLimit %>;
+<% } %>
+
+module.exports = <%- className %>;

@@ -1,13 +1,12 @@
 import { __ } from 'embark-i18n';
 const async = require('async');
-const { normalizeInput, buildUrlFromConfig } = require('embark-utils');
+const { normalizeInput, deconstructUrl } = require('embark-utils');
 const constants = require('embark-core/constants');
 import { BlockchainProcessLauncher } from './blockchainProcessLauncher';
-import { pingEndpoint } from './utils';
+import {pingEndpoint} from 'embark-utils';
 
 export { BlockchainClient } from './blockchain';
 export { Simulator } from './simulator';
-export { Proxy } from './proxy';
 
 export default class BlockchainModule {
 
@@ -15,7 +14,6 @@ export default class BlockchainModule {
     this.logger = embark.logger;
     this.events = embark.events;
     this.blockchainConfig = embark.config.blockchainConfig;
-    this.contractsConfig = embark.config.contractsConfig;
     this.embark = embark;
     this.locale = options.locale;
     this.isDev = options.isDev;
@@ -41,7 +39,7 @@ export default class BlockchainModule {
 
     if (!this.ipc.isServer()) return;
     this.ipc.on('blockchain:node', (_message, cb) => {
-      cb(null, buildUrlFromConfig(this.contractsConfig.deployment));
+      cb(null, this.blockchainConfig.endpoint);
     });
   }
 
@@ -89,10 +87,10 @@ export default class BlockchainModule {
         });
       },
       function _pingEndpoint(next) {
-        if (!self.contractsConfig || !self.contractsConfig.deployment || !self.contractsConfig.deployment.host) {
+        if (!self.blockchainConfig || !self.blockchainConfig.endpoint) {
           return next();
         }
-        const {host, port, type, protocol} = self.contractsConfig.deployment;
+        const {host, port, type, protocol} = deconstructUrl(self.blockchainConfig.endpoint);
         pingEndpoint(host, port, type, protocol, self.blockchainConfig.wsOrigins.split(',')[0], next);
       }
     ], function(err) {

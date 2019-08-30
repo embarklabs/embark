@@ -1,84 +1,57 @@
-import { __ } from 'embark-i18n';
-import * as async from 'async';
+import {__} from 'embark-i18n';
 
 class Storage {
-  constructor(embark, options){
+  constructor(embark, options) {
     this.embark = embark;
+    this.embarkConfig = embark.config.embarkConfig;
+    this.events = this.embark.events;
     this.storageConfig = embark.config.storageConfig;
     this.plugins = options.plugins;
-    this.ready = false;
 
-    this.embark.events.setCommandHandler("module:storage:onReady", (cb) => {
-      if (this.ready) {
-        return cb();
-      }
-      this.embark.events.once("module:storage:ready", cb);
+    embark.registerActionForEvent("pipeline:generateAll:before", this.addArtifactFile.bind(this));
+
+    this.storageNodes = {};
+    this.events.setCommandHandler("storage:node:register", (clientName, startCb) => {
+      this.storageNodes[clientName] = startCb;
     });
 
-    if (!this.storageConfig.enabled) {
-      this.ready = true;
-      return;
-    }
+    this.events.setCommandHandler("storage:node:start", (storageConfig, cb) => {
+      const clientName = storageConfig.upload.provider;
+      const client = this.storageNodes[clientName];
+      if (!client) return cb("storage " + clientName + " not found");
 
-    this.handleUploadCommand();
-    this.addSetProviders(() => {
-      this.ready = true;
-      this.embark.events.emit("module:storage:ready");
+      let onStart = () => {
+        this.events.emit("storage:started", clientName);
+        cb();
+      };
+
+      client.apply(client, [onStart]);
     });
-  }
 
-  handleUploadCommand() {
-    const self = this;
-    this.embark.events.setCommandHandler('storage:upload', (cb) => {
-      let platform = self.storageConfig.upload.provider;
+    this.uploadNodes = {};
+    this.events.setCommandHandler("storage:upload:register", (clientName, uploadCb) => {
+      this.uploadNodes[clientName] = uploadCb;
+    });
 
-      let uploadCmds = self.plugins.getPluginsProperty('uploadCmds', 'uploadCmds');
-      for (let uploadCmd of uploadCmds) {
-        if (uploadCmd.cmd === platform) {
-          return uploadCmd.cb.call(uploadCmd.cb, cb);
-        }
-      }
-
-      cb({message: __('platform "{{platform}}" is specified as the upload provider, however no plugins have registered an upload command for "{{platform}}".', {platform: platform})});
+    this.events.setCommandHandler("storage:upload", (clientName, cb) => {
+      const client = this.uploadNodes[clientName];
+      if (!client) return cb("upload client for  " + clientName + " not found");
+      client.apply(client, [cb]);
     });
   }
 
-  addSetProviders(cb) {
-    let code = `\nEmbarkJS.Storage.setProviders(${JSON.stringify(this.storageConfig.dappConnection || [])}, {web3});`;
-
-    let shouldInit = (storageConfig) => {
-      return storageConfig.enabled;
+  addArtifactFile(_params, cb) {
+    let config = {
+      dappConnection: this.storageConfig.dappConnection
     };
 
-    this.embark.addProviderInit('storage', code, shouldInit);
-
-    async.parallel([
-      (next) => {
-        if (!this.storageConfig.available_providers.includes('ipfs')) {
-          return next();
-        }
-        this.embark.events.once('ipfs:process:started', next);
-      },
-      (next) => {
-        if (!this.storageConfig.available_providers.includes('swarm')) {
-          return next();
-        }
-        this.embark.events.once('swarm:process:started', next);
-      }
-    ], (err) => {
-      if (err) {
-        console.error(__('Error starting storage process(es): %s', err));
-      }
-
-      this.embark.addConsoleProviderInit('storage', code, shouldInit);
-      // TODO: fix me, this is an ugly workaround for race conditions
-      // in the case where the storage process is too slow when starting up we
-      // execute ourselves the setProviders because the console provider init
-      // was already executed
-      this.embark.events.request('runcode:eval', `if (Object.keys(EmbarkJS.Storage.Providers).length) { ${code} }`, cb, true);
-    });
+    this.events.request("pipeline:register", {
+      path: [this.embarkConfig.generationDir, 'config'],
+      file: 'storage.json',
+      format: 'json',
+      content: config
+    }, cb);
   }
-
 }
 
 module.exports = Storage;

@@ -6,10 +6,9 @@ const path = require('path');
 const constants = require('embark-core/constants');
 const GethClient = require('./gethClient.js');
 const ParityClient = require('./parityClient.js');
-import { Proxy } from './proxy';
 import { IPC } from 'embark-core';
 
-import { compact, dappPath, defaultHost, dockerHostSwap, embarkPath, AccountParser} from 'embark-utils';
+import { compact, dappPath, defaultHost, dockerHostSwap, embarkPath} from 'embark-utils';
 const Logger = require('embark-logger');
 
 // time between IPC connection attempts (in ms)
@@ -24,7 +23,6 @@ var Blockchain = function(userConfig, clientClass) {
   this.onExitCallback = userConfig.onExitCallback;
   this.logger = userConfig.logger || new Logger({logLevel: 'debug', context: constants.contexts.blockchain}); // do not pass in events as we don't want any log events emitted
   this.events = userConfig.events;
-  this.proxyIpc = null;
   this.isStandalone = userConfig.isStandalone;
   this.certOptions = userConfig.certOptions;
 
@@ -34,8 +32,8 @@ var Blockchain = function(userConfig, clientClass) {
 
   this.config = {
     silent: this.userConfig.silent,
-    ethereumClientName: this.userConfig.ethereumClientName,
-    ethereumClientBin: this.userConfig.ethereumClientBin || this.userConfig.ethereumClientName,
+    client: this.userConfig.client,
+    ethereumClientBin: this.userConfig.ethereumClientBin || this.userConfig.client,
     networkType: this.userConfig.networkType || clientClass.DEFAULTS.NETWORK_TYPE,
     networkId: this.userConfig.networkId || clientClass.DEFAULTS.NETWORK_ID,
     genesisBlock: this.userConfig.genesisBlock || false,
@@ -60,8 +58,7 @@ var Blockchain = function(userConfig, clientClass) {
     vmdebug: this.userConfig.vmdebug || false,
     targetGasLimit: this.userConfig.targetGasLimit || false,
     syncMode: this.userConfig.syncMode || this.userConfig.syncmode,
-    verbosity: this.userConfig.verbosity,
-    proxy: this.userConfig.proxy
+    verbosity: this.userConfig.verbosity
   };
 
   this.devFunds = null;
@@ -77,7 +74,7 @@ var Blockchain = function(userConfig, clientClass) {
     }
   }
 
-  if (this.userConfig === {} || this.userConfig.default || JSON.stringify(this.userConfig) === '{"ethereumClientName":"geth"}') {
+  if (this.userConfig === {} || this.userConfig.default || JSON.stringify(this.userConfig) === '{"client":"geth"}') {
     if (this.env === 'development') {
       this.isDev = true;
     } else {
@@ -103,7 +100,6 @@ var Blockchain = function(userConfig, clientClass) {
     this.logger.error(__(spaceMessage, 'genesisBlock'));
     process.exit(1);
   }
-  this.initProxy();
   this.client = new clientClass({config: this.config, env: this.env, isDev: this.isDev});
 
   this.initStandaloneProcess();
@@ -151,41 +147,6 @@ Blockchain.prototype.initStandaloneProcess = function () {
       }
     }, IPC_CONNECT_INTERVAL);
   }
-};
-
-Blockchain.prototype.initProxy = function () {
-  if (this.config.proxy) {
-    this.config.rpcPort += constants.blockchain.servicePortOnProxy;
-    this.config.wsPort += constants.blockchain.servicePortOnProxy;
-  }
-};
-
-Blockchain.prototype.setupProxy = async function () {
-  if (!this.proxyIpc) this.proxyIpc = new IPC({ipcRole: 'client'});
-
-  let addresses;
-  try {
-    addresses = AccountParser.parseAccountsConfig(this.userConfig.accounts, false, dappPath(), this.logger);
-  } catch (e) {
-    this.logger.error(e.message);
-    process.exit(1);
-  }
-
-  let wsProxy;
-  if (this.config.wsRPC) {
-    wsProxy = new Proxy(this.proxyIpc).serve(this.config.wsHost, this.config.wsPort, true, this.config.wsOrigins, addresses, this.certOptions);
-  }
-
-  [this.rpcProxy, this.wsProxy] = await Promise.all([new Proxy(this.proxyIpc).serve(this.config.rpcHost, this.config.rpcPort, false, null, addresses, this.certOptions), wsProxy]);
-};
-
-Blockchain.prototype.shutdownProxy = function () {
-  if (!this.config.proxy) {
-    return;
-  }
-
-  if (this.rpcProxy) this.rpcProxy.close();
-  if (this.wsProxy) this.wsProxy.close();
 };
 
 Blockchain.prototype.runCommand = function (cmd, options, callback) {
@@ -263,9 +224,6 @@ Blockchain.prototype.run = function () {
       data = data.toString();
       if (!self.readyCalled && self.client.isReady(data)) {
         self.readyCalled = true;
-        if (self.config.proxy) {
-          await self.setupProxy();
-        }
         self.readyCallback();
       }
       self.logger.info(`${self.client.name}: ${data}`);
@@ -303,7 +261,6 @@ Blockchain.prototype.readyCallback = function () {
 };
 
 Blockchain.prototype.kill = function () {
-  this.shutdownProxy();
   if (this.child) {
     this.child.kill();
   }
@@ -461,12 +418,12 @@ export function BlockchainClient(userConfig, options) {
     options.logger.info("===> " + __("warning: running default config on a non-development environment"));
   }
   // if client is not set in preferences, default is geth
-  if (!userConfig.ethereumClientName) userConfig.ethereumClientName = constants.blockchain.clients.geth;
+  if (!userConfig.client) userConfig.client = constants.blockchain.clients.geth;
   // if clientName is set, it overrides preferences
-  if (options.clientName) userConfig.ethereumClientName = options.clientName;
+  if (options.clientName) userConfig.client = options.clientName;
   // Choose correct client instance based on clientName
   let clientClass;
-  switch (userConfig.ethereumClientName) {
+  switch (userConfig.client) {
     case constants.blockchain.clients.geth:
       clientClass = GethClient;
       break;
@@ -475,7 +432,7 @@ export function BlockchainClient(userConfig, options) {
       clientClass = ParityClient;
       break;
     default:
-      console.error(__('Unknown client "%s". Please use one of the following: %s', userConfig.ethereumClientName, Object.keys(constants.blockchain.clients).join(', ')));
+      console.error(__('Unknown client "%s". Please use one of the following: %s', userConfig.client, Object.keys(constants.blockchain.clients).join(', ')));
       process.exit(1);
   }
   userConfig.isDev = (userConfig.isDev || userConfig.default);

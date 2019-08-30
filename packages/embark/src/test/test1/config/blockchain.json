@@ -1,32 +1,15 @@
 {
   "myenv": {
-    "networkType": "custom",
-    "genesisBlock": "config/development/genesis.json",
-    "datadir": ".embark/development/datadir",
-    "isDev": false,
-    "mineWhenNeeded": true,
-    "nodiscover": true,
-    "rpcHost": "localhost",
-    "rpcPort": 8545,
-    "rpcCorsDomain": "http://localhost:8000",
-    "accounts": [
-      {
-        "password": "config/development/password"
-      }
-    ]
+    "clientConfig": {
+      "miningMode": "auto"
+    }
   },
   "unitenv": {
-    "networkType": "custom",
-    "genesisBlock": "config/development/genesis.json",
-    "datadir": ".embark/development/datadir",
-    "isDev": false,
-    "gasPrice": "8 Mwei",
-    "mineWhenNeeded": true,
-    "nodiscover": true,
-    "rpcHost": "localhost",
-    "rpcPort": 8545,
-    "rpcCorsDomain": "http://localhost:8000",
-    "targetGasLimit": "300 Kwei",
+    "clientConfig": {
+      "miningMode": "auto",
+      "gasPrice": "8 Mwei",
+      "targetGasLimit": "300 Kwei"
+    },
     "accounts": [
       {
         "password": "config/development/password",
@@ -35,17 +18,12 @@
     ]
   },
   "unitlessenv": {
-      "networkType": "custom",
-      "genesisBlock": "config/development/genesis.json",
-      "datadir": ".embark/development/datadir",
-      "isDev": false,
+
+    "clientConfig": {
+      "miningMode": "auto",
       "gasPrice": "8000000",
-      "mineWhenNeeded": true,
-      "nodiscover": true,
-      "rpcHost": "localhost",
-      "rpcPort": 8545,
-      "rpcCorsDomain": "http://localhost:8000",
-      "targetGasLimit": "20000000",
+      "targetGasLimit": "20000000"
+    },
     "accounts": [
       {
         "password": "config/development/password",
@@ -54,15 +32,10 @@
     ]
   },
   "testnet": {
-    "networkType": "testnet",
-    "rpcHost": "localhost",
-    "rpcPort": 8545
+    "networkType": "testnet"
   },
   "livenet": {
     "networkType": "livenet",
-    "rpcHost": "localhost",
-    "rpcPort": 8545,
-    "rpcCorsDomain": "http://localhost:8000",
     "accounts": [
       {
         "password": "config/development/password"
@@ -70,11 +43,11 @@
     ]
   },
   "privatenet": {
-    "networkType": "custom",
-    "rpcHost": "localhost",
-    "rpcPort": 8545,
     "datadir": "yourdatadir",
     "networkId": "123",
     "nodes": []
+  },
+  "extNetwork": {
+    "endpoint": "http://mynetwork.com"
   }
 }

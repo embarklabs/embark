@@ -1,7 +1,7 @@
 {
   "default": {
     "gas": "auto",
-    "contracts": {
+    "deploy": {
       "SimpleStorage": {
         "args": [
           100
@@ -11,7 +11,7 @@
   },
   "zeroaddress": {
     "gas": "auto",
-    "contracts": {
+    "deploy": {
       "SimpleStorage": {
         "address": "0x0",
         "args": [
@@ -30,7 +30,7 @@
   },
   "myenv": {
     "gas": "400 Kwei",
-    "contracts": {
+    "deploy": {
       "SimpleStorage": {
         "gas": "123 Kwei",
         "gasPrice": "1 Kwei"
@@ -40,14 +40,6 @@
           200
         ]
       }
-    },
-    "deployment": {
-      "accounts": [
-        {
-          "mnemonic": "12 word mnemonic",
-          "balance": "5000 Mwei"
-        }
-      ]
     }
   }
 }

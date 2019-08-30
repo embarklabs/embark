@@ -9,6 +9,9 @@ const DAPP_BABEL_LOADER_OVERRIDES_CONFIG_FILE = 'babel-loader-overrides.js';
 
 // TODO: this should be receiving the config object not re-reading the
 // embark.json file
+
+// TODO: rename file events to comply with naming convention
+
 class Watcher {
   constructor(embark) {
     this.logger = embark.logger;
@@ -21,6 +24,7 @@ class Watcher {
     this.events.setCommandHandler('watcher:restart', () => this.restart());
   }
 
+  // TODO: it needs to be more agnostic, the files to watch should be registered through the plugin api
   start() {
     let self = this;
     // TODO: should come from the config object instead of reading the file

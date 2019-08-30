@@ -1,6 +1,5 @@
 import { __ } from 'embark-i18n';
 const async = require('../utils/async_extend.js');
-const deepEqual = require('deep-equal');
 
 class ServicesMonitor {
   constructor(options) {
@@ -35,11 +34,11 @@ ServicesMonitor.prototype.initCheck = function (checkName) {
       self.events.emit('check:wentOffline:' + checkName);
     }
     check.status = obj.status;
-    const newState = {name: obj.name, status: obj.status, serviceName: checkName};
-    if (!deepEqual(newState, self.checkState[checkName])) {
+    // const newState = {name: obj.name, status: obj.status, serviceName: checkName};
+    // if (!deepEqual(newState, self.checkState[checkName])) {
       self.checkState[checkName] = {name: obj.name, status: obj.status, serviceName: checkName};
       self.events.emit("servicesState", self.checkState);
-    }
+    // }
   });
 
   if (check.interval !== 0) {
@@ -75,6 +74,7 @@ ServicesMonitor.prototype.startMonitor = function () {
   let self = this;
   this.working = true;
   this.logger.trace('startMonitor');
+  console.log('--> monitor started');
 
   let servicePlugins = this.plugins.getPluginsProperty('serviceChecks', 'serviceChecks');
   servicePlugins.forEach(function (pluginCheck) {

@@ -48,13 +48,34 @@ We recommend using [environment variables](https://www.schrodinger.com/kb/1842) 
   - **numAddresses**: Number of addresses you want from the node. Defaults to `1`
   - **password**: Password file where the password to create and unlock the accounts is. This is required
 - **privateKey**: Private key string
-- **privateKeyFile**: Either a file containing comma separated private keys or a keystore (password needed for the latter)
+- **privateKeyFile**: Either a file containing comma separated private keys or a keystore (password needed for the latter). This can also be set to `random` to generate a random account (useful when testing)
   - **password**: Password string for the keystore
 - **mnemonic**: 12 word mnemonic
   - **addressIndex**: Index where to start getting the addresses. Defaults to `0`
   - **numAddresses**: Number of addresses to get. Defaults to `1`
   - **hdpath**: HD derivation path. Defaults to `"m/44'/60'/0'/0/"`
 
-{% notification info 'Old parameters' %}
-Please note, `account` has been replaced by `nodeAccounts` and `simulatorMnemonic` by adding a `mnemonic` account in the `accounts` array
+{% notification info 'Accounts order' %}
+The order in the accounts array is important. This means that using `nodeAccounts` first, as above, will set the node's account as the `defaultAccount` for deployment.
 {% endnotification %}
+
+### Configuring account balance for development
+
+When in development, we can specify the balance of each account using the `balance` option:
+
+```
+module.exports = {
+  development: {
+      deployment: {
+        accounts: [
+          {
+            mnemonic: "12 word mnemonic",
+            balance: "5 ether"
+          }
+        ]
+      }
+  }
+}
+```
+
+Balances can be specified using [human readable units](/docs/contracts_configuration.html#Human-readable-Ether-units) such as "5 ether" or "200 finney". If no unit is specified the value will be in Wei.

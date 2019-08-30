@@ -158,7 +158,8 @@ __embarkENS.setProvider = function(config) {
   const ERROR_MESSAGE = 'ENS is not available in this chain';
   self.registration = config.registration;
   self.env = config.env;
-  // FIXME EmbarkJS.onReady odesn't work. Possibility of a race condition
+  self.ready = false;
+  // FIXME EmbarkJS.onReady doesn't work. Possibility of a race condition
   EmbarkJS.Blockchain.blockchainConnector.getNetworkId()
     .then((id) => {
       const registryAddress = self.registryAddresses[id] || config.registryAddress;
@@ -178,8 +179,10 @@ __embarkENS.setProvider = function(config) {
         address: config.resolverAddress,
         web3: EmbarkJS.Blockchain.blockchainConnector.getInstance()
       });
+      self.ready = true;
     })
     .catch(err => {
+      self.ready = true;
       if (err.message.indexOf('Provider not set or invalid') > -1) {
         console.warn(ERROR_MESSAGE);
         return;
@@ -188,11 +191,28 @@ __embarkENS.setProvider = function(config) {
     });
 };
 
+__embarkENS.waitForProviderReady = function() {
+  return new Promise((resolve, reject) => {
+    const self = this;
+    function checkReady() {
+      if (self.ready === undefined) {
+        return reject(providerNotSetError);
+      }
+      if (self.ready) {
+        if (!self.ens) {
+          return reject(providerNotSetError);
+        }
+        return resolve();
+      }
+      setTimeout(checkReady, 100);
+    }
+    checkReady();
+  });
+};
+
 __embarkENS.resolve = function (name, callback) {
   const resolve = async (name) => {
-    if (!this.ens) {
-      throw new Error(providerNotSetError);
-    }
+    await this.waitForProviderReady();
     if (!EmbarkJS.Blockchain.blockchainConnector.getDefaultAccount()) {
       throw new Error(defaultAccountNotSetError);
     }
@@ -230,9 +250,7 @@ __embarkENS.resolve = function (name, callback) {
 
 __embarkENS.lookup = function (address, callback) {
   const lookup = async (address) => {
-    if (!this.ens) {
-      throw new Error(providerNotSetError);
-    }
+    await this.waitForProviderReady();
     if (!EmbarkJS.Blockchain.blockchainConnector.getDefaultAccount()) {
       throw new Error(defaultAccountNotSetError);
     }

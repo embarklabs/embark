@@ -1,15 +1,13 @@
-import { __ } from 'embark-i18n';
+import {__} from 'embark-i18n';
+import Web3 from 'web3';
+import Contract from './contract';
 const async = require('async');
-const cloneDeep = require('clone-deep');
 const constants = require('embark-core/constants');
-const path = require('path');
-const { dappPath, proposeAlternative, toposort } = require('embark-utils');
-
-// TODO: create a contract object
+const {dappPath, proposeAlternative, toposort} = require('embark-utils');
 
 class ContractsManager {
   constructor(embark, options) {
-    const self = this;
+    this.embark = embark;
     this.logger = embark.logger;
     this.events = embark.events;
     this.fs = embark.fs;
@@ -22,12 +20,40 @@ class ContractsManager {
     this.compileError = false;
     this.compileOnceOnly = options.compileOnceOnly;
 
-    self.events.setCommandHandler('contracts:list', (cb) => {
-      cb(self.compileError, self.listContracts());
+    this.events.setCommandHandler("contracts:reset", (cb) => {
+      this.contracts = {};
+      cb(null);
     });
 
+    this.events.setCommandHandler("contracts:build", this.buildContracts.bind(this));
+
+    this.events.setCommandHandler('contracts:list', (cb) => {
+      cb(this.compileError, this.listContracts());
+    });
+
+    this.events.setCommandHandler('contracts:state', (cb) => {
+      cb(this.compileError, this.contractsState());
+    });
+
+    this.events.setCommandHandler("contracts:contract", (contractName, cb) => {
+      cb(null, this.getContract(contractName));
+    });
+
+    this.events.setCommandHandler('contracts:add', (contract, cb = () => {}) => {
+      this.contracts[contract.className] = new Contract(this.logger, contract);
+      cb(null, this.contracts[contract.className]);
+    });
+
+    // this.registerCommands()
+    this.registerAPIs();
+  }
+
+  registerCommands() {
+    const self = this;
+
     self.events.setCommandHandler('contracts:add', (contract) => {
-      this.contracts[contract.className] = contract;
+      const contractInstance = new Contract(this.logger, contract);
+      this.contracts[contract.className] = contractInstance;
     });
 
     self.events.setCommandHandler('contracts:all', (cb) => {
@@ -38,19 +64,8 @@ class ContractsManager {
       cb(self.compileError, self.contractDependencies);
     });
 
-    self.events.setCommandHandler("contracts:contract", (contractName, cb) => {
-      cb(self.getContract(contractName));
-    });
-
     self.events.setCommandHandler("contracts:contract:byTxHash", (txHash, cb) => {
       self.getContractByTxHash(txHash, cb);
-    });
-
-    self.events.setCommandHandler("contracts:build", (configOnly, cb) => {
-      self.deployOnlyOnConfig = configOnly; // temporary, should refactor
-      self.build((err) => {
-        cb(err);
-      });
     });
 
     self.events.setCommandHandler("contracts:reset:dependencies", (cb) => {
@@ -58,112 +73,89 @@ class ContractsManager {
       cb();
     });
 
-    self.events.on("deploy:contract:error", (_contract) => {
-      self.events.emit('contractsState', self.contractsState());
-    });
-
-    self.events.on("deploy:contract:deployed", (_contract) => {
-      self.events.emit('contractsState', self.contractsState());
-    });
-
-    self.events.on("deploy:contract:undeployed", (_contract) => {
-      self.events.emit('contractsState', self.contractsState());
-    });
-
     this.events.setCommandHandler('setDashboardState', () => {
       self.events.emit('contractsState', self.contractsState());
     });
+  }
 
-    self.events.setCommandHandler("contracts:formatted:all", (cb) => {
-      const contracts = self.listContracts().map((contract, index) => (
-        {
-          className: contract.className,
-          deploy: contract.deploy,
-          error: contract.error,
-          address: contract.deployedAddress,
-          args: contract.args,
-          transactionHash: contract.transactionHash,
-          gas: contract.gas,
-          gasPrice: contract.gasPrice,
-          index
-        }
-      ));
-      cb(contracts);
-    });
+  get web3() {
+    return (async () => {
+      if (!this._web3) {
+        const provider = await this.events.request2("blockchain:client:provider", "ethereum");
+        this._web3 = new Web3(provider);
+      }
+      return this._web3;
+    })();
+  }
+
+  registerAPIs() {
+    let embark = this.embark;
+    const self = this;
 
     embark.registerAPICall(
       'get',
       '/embark-api/contract/:contractName',
-      (req, res) => {
-        self.events.request('contracts:contract', req.params.contractName, res.send.bind(res));
-      }
+      (req, res) => res.status(200).send(this.getContract(req.params.contractName))
     );
 
     embark.registerAPICall(
       'post',
       '/embark-api/contract/:contractName/function',
-      (req, res) => {
-        async.parallel({
-          contract: (callback) => {
-            self.events.request('contracts:contract', req.body.contractName, (contract) => callback(null, contract));
-          },
-          web3: (callback) => {
-            self.events.request("blockchain:get", web3 => callback(null, web3));
-          },
-          account: (callback) => {
-            self.events.request("blockchain:defaultAccount:get", (account) => callback(null, account));
-          }
-        }, (error, result) => {
-          if (error) {
-            return res.send({error: error.message});
-          }
-          const {account, contract} = result;
-          const abi = contract.abiDefinition.find(definition => definition.name === req.body.method);
-          const funcCall = (abi.constant === true || abi.stateMutability === 'view' || abi.stateMutability === 'pure') ? 'call' : 'send';
+      async (req, res) => {
+        const contract = this.getContract(req.body.contractName);
+        let web3, accounts;
+        try {
+          web3 = await this.web3;
+          accounts = await web3.eth.getAccounts();
+        } catch (e) {
+          res.status(500).send(e.message);
+        }
+        const account = accounts[0];
 
-          self.events.request("blockchain:contract:create", {abi: contract.abiDefinition, address: contract.deployedAddress}, async (contractObj) => {
-            try {
-              let value = typeof req.body.value === "number" ? req.body.value.toString() : req.body.value;
-              const gas = await contractObj.methods[req.body.method].apply(this, req.body.inputs).estimateGas({ value });
-              contractObj.methods[req.body.method].apply(this, req.body.inputs)[funcCall]({
-                from: account,
-                gasPrice: req.body.gasPrice,
-                gas: Math.floor(gas),
-                value
-              }, (error, result) => {
-                const paramString = abi.inputs.map((input, idx) => {
-                  const quote = input.type.indexOf("int") === -1 ? '"' : '';
-                  return quote + req.body.inputs[idx] + quote;
-                }).join(', ');
+        const abi = contract.abiDefinition.find(definition => definition.name === req.body.method);
+        const funcCall = (abi.constant === true || abi.stateMutability === 'view' || abi.stateMutability === 'pure') ? 'call' : 'send';
 
-                let contractLog = {
-                  name: req.body.contractName,
-                  functionName: req.body.method,
-                  paramString: paramString,
-                  address: contract.deployedAddress,
-                  status: '0x0'
-                };
+        const contractObj = new web3.eth.Contract(contract.abiDefinition, contract.deployedAddress);
+        try {
+          let value = typeof req.body.value === "number" ? req.body.value.toString() : req.body.value;
+          const gas = await contractObj.methods[req.body.method].apply(this, req.body.inputs).estimateGas({value});
+          contractObj.methods[req.body.method].apply(this, req.body.inputs)[funcCall]({
+            from: account,
+            gasPrice: req.body.gasPrice,
+            gas: Math.floor(gas),
+            value
+          }, (error, result) => {
+            const paramString = abi.inputs.map((input, idx) => {
+              const quote = input.type.indexOf("int") === -1 ? '"' : '';
+              return quote + req.body.inputs[idx] + quote;
+            }).join(', ');
 
-                if (error) {
-                  self.events.emit('contracts:log', contractLog);
-                  return res.send({result: error.message});
-                }
+            let contractLog = {
+              name: req.body.contractName,
+              functionName: req.body.method,
+              paramString: paramString,
+              address: contract.deployedAddress,
+              status: '0x0'
+            };
 
-                if(funcCall === 'call') {
-                  contractLog.status = '0x1';
-                  return res.send({result});
-                }
-
-                res.send({result});
-              });
-            } catch (e) {
-              if (funcCall === 'call' && e.message === constants.blockchain.gasAllowanceError) {
-                return res.send({result: constants.blockchain.gasAllowanceErrorMessage});
-              }
-              res.send({result: e.message});
+            if (error) {
+              self.events.emit('contracts:log', contractLog);
+              return res.status(500).send({result: error.message});
             }
+
+            if (funcCall === 'call') {
+              contractLog.status = '0x1';
+              return res.send({result});
+            }
+
+            res.send({result});
           });
-        });
+        } catch (e) {
+          if (funcCall === 'call' && e.message === constants.blockchain.gasAllowanceError) {
+            return res.status(500).send({result: constants.blockchain.gasAllowanceErrorMessage});
+          }
+          res.status(500).send({result: e.message});
+        }
       }
     );
 
@@ -188,7 +180,11 @@ class ContractsManager {
             try {
               const params = {data: `0x${contract.code}`, arguments: req.body.inputs};
               let gas = await contractObj.deploy(params).estimateGas();
-              let newContract = await contractObj.deploy(params).send({from: account, gas, gasPrice: req.body.gasPrice});
+              let newContract = await contractObj.deploy(params).send({
+                from: account,
+                gas,
+                gasPrice: req.body.gasPrice
+              });
               res.send({result: newContract._address});
             } catch (e) {
               res.send({result: e.message});
@@ -224,13 +220,13 @@ class ContractsManager {
       '/embark-api/contract/deploy',
       (req, res) => {
         this.logger.trace(`POST request /embark-api/contract/deploy:\n ${JSON.stringify(req.body)}`);
-        if(typeof req.body.compiledContract !== 'object'){
+        if (typeof req.body.compiledContract !== 'object') {
           return res.send({error: 'Body parameter \'compiledContract\' must be an object'});
         }
         self.compiledContracts = Object.assign(self.compiledContracts, req.body.compiledContract);
         const contractNames = Object.keys(req.body.compiledContract);
         self.build((err, _mgr) => {
-          if(err){
+          if (err) {
             return res.send({error: err.message});
           }
 
@@ -244,84 +240,43 @@ class ContractsManager {
             });
           }, (err) => {
             let responseData = {};
-            if(err){
+            if (err) {
               responseData.error = err.message;
             }
             else responseData.result = contractNames;
-          this.logger.trace(`POST response /embark-api/contract/deploy:\n ${JSON.stringify(responseData)}`);
-          res.send(responseData);
+            this.logger.trace(`POST response /embark-api/contract/deploy:\n ${JSON.stringify(responseData)}`);
+            res.send(responseData);
           });
         }, false, false);
       }
     );
   }
 
-
-  _contractsForApi() {
-    const result = [];
-    this.events.request('contracts:formatted:all', (contracts) => {
-      contracts.forEach((contract) => {
-        this.events.request('contracts:contract', contract.className, (c) => (
-          result.push(Object.assign(contract, c))
-        ));
-      });
-    });
-    return result;
+  formatContracts() {
+    return this.listContracts().map((contract, index) => (
+      {
+        className: contract.className,
+        deploy: contract.deploy,
+        error: contract.error,
+        address: contract.deployedAddress,
+        args: contract.args,
+        transactionHash: contract.transactionHash,
+        gas: contract.gas,
+        gasPrice: contract.gasPrice,
+        index
+      }
+    ));
   }
 
-  build(done, _useContractFiles = true, resetContracts = true) {
-    let self = this;
+  buildContracts(contractsConfig, compiledContracts, done) {
+    const self = this;
 
-    if(resetContracts) self.contracts = {};
     async.waterfall([
-      function beforeBuild(callback) {
-        self.plugins.emitAndRunActionsForEvent("build:beforeAll", () => {
-          callback();
-        });
-      },
-      function loadContractFiles(callback) {
-        self.events.request("config:contractsFiles", (contractsFiles) => {
-          self.contractsFiles = contractsFiles;
-          callback();
-        });
-      },
-      function loadContractConfigs(callback) {
-        self.events.request("config:contractsConfig", (contractsConfig) => {
-          self.contractsConfig = cloneDeep(contractsConfig);
-          callback();
-        });
-      },
-      function allContractsCompiled(callback) {
-        const allContractsCompiled =
-          self.compiledContracts &&
-          self.contractsFiles &&
-          self.contractsFiles.every(contractFile =>
-            Object.values(self.compiledContracts).find(contract =>
-              contract.originalFilename === path.normalize(contractFile.originalPath)
-            )
-          );
-        callback(null, allContractsCompiled);
-      },
-      function compileContracts(allContractsCompiled, callback) {
-        self.events.emit("status", __("Compiling..."));
-        const hasCompiledContracts = self.compiledContracts && Object.keys(self.compiledContracts).length;
-        if (self.compileOnceOnly && hasCompiledContracts && allContractsCompiled) {
-          return callback();
-        }
-        self.events.request("compiler:contracts", self.contractsFiles, function (err, compiledObject) {
-          self.compiledContracts = compiledObject;
-          callback(err);
-        });
-      },
       function prepareContractsFromConfig(callback) {
         self.events.emit("status", __("Building..."));
 
-        // if we are appending contracts (ie fiddle), we
-        // don't need to build a contract from config, so
-        // we can skip this entirely
-        if(!resetContracts) return callback();
-
-        async.eachOf(self.contractsConfig.contracts, (contract, className, eachCb) => {
+        async.eachOf(contractsConfig.contracts, (contract, className, eachCb) => {
+          contract = new Contract(self.logger, contract);
           if (!contract.artifact) {
             contract.className = className;
             contract.args = contract.args || [];
@@ -336,7 +291,8 @@ class ContractsManager {
               return eachCb(err);
             }
             try {
-              self.contracts[className] = JSON.parse(artifactBuf.toString());
+              const contract = JSON.parse(artifactBuf.toString());
+              self.contracts[className] = new Contract(self.logger, contract);
               if (self.contracts[className].deployedAddress) {
                 self.contracts[className].address = self.contracts[className].deployedAddress;
               }
@@ -348,15 +304,19 @@ class ContractsManager {
           });
         }, callback);
       },
-      function getGasPriceForNetwork(callback) {
-        return callback(null, self.contractsConfig.gasPrice);
-      },
-      function prepareContractsForCompilation(gasPrice, callback) {
-        for (const className in self.compiledContracts) {
-          const compiledContract = self.compiledContracts[className];
-          const contractConfig = self.contractsConfig.contracts[className];
+      function prepareContractsForCompilation(callback) {
+        let gasPrice = contractsConfig.gasPrice;
 
-          const contract = self.contracts[className] || {className: className, args: []};
+        for (const className in compiledContracts) {
+          const compiledContract = compiledContracts[className];
+          const contractConfig = contractsConfig.contracts[className];
+
+          let contract = self.contracts[className];
+          if (!contract) {
+            contract = new Contract(self.logger, contractConfig);
+            contract.className = className;
+            contract.args = [];
+          }
 
           contract.code = compiledContract.code;
           contract.runtimeBytecode = compiledContract.runtimeBytecode;
@@ -370,7 +330,7 @@ class ContractsManager {
           contract.originalFilename = compiledContract.originalFilename || ("contracts/" + contract.filename);
           contract.path = dappPath(contract.originalFilename);
 
-          contract.gas = (contractConfig && contractConfig.gas) || self.contractsConfig.gas || 'auto';
+          contract.gas = (contractConfig && contractConfig.gas) || contractsConfig.gas || 'auto';
 
           contract.gasPrice = contract.gasPrice || gasPrice;
           contract.type = 'file';
@@ -389,16 +349,16 @@ class ContractsManager {
         let showInterfaceMessageTrace = false;
         let showInterfaceMessageWarn = false;
         const isTest = self.currentContext.includes(constants.contexts.test);
-        const contractsInConfig = Object.keys(self.contractsConfig.contracts);
+        const contractsInConfig = Object.keys(contractsConfig.contracts);
 
         for (className in self.contracts) {
           contract = self.contracts[className];
           contract.deploy = (contract.deploy === undefined) || contract.deploy;
-          if (self.deployOnlyOnConfig && !self.contractsConfig.contracts[className]) {
+          if (self.deployOnlyOnConfig && !contractsConfig.contracts[className]) {
             contract.deploy = false;
           }
 
-          if (!self.contractsConfig.contracts[className] && self.contractsConfig.strategy === constants.deploymentStrategy.explicit) {
+          if (!contractsConfig.contracts[className] && contractsConfig.strategy === constants.deploymentStrategy.explicit) {
             contract.deploy = false;
           }
 
@@ -522,9 +482,6 @@ class ContractsManager {
             });
           }
 
-          // look in arguments for dependencies
-          if (contract.args === []) continue;
-
           let ref;
           if (Array.isArray(contract.args)) {
             ref = contract.args;
@@ -579,15 +536,24 @@ class ContractsManager {
     ], function (err) {
       if (err) {
         self.compileError = true;
-        self.events.emit("status", __("Compile/Build error"));
+        self.events.emit("status", __("Build error"));
         self.events.emit("outputError", __("Error building Dapp, please check console"));
-        self.logger.error(__("Error Compiling/Building contracts"));
+        self.logger.error(__("Error Building contracts"));
       } else {
         self.compileError = false;
       }
       self.logger.trace("finished".underline);
-      done(err, self);
+
+      done(err, self.contracts, self.contractDependencies);
     });
+  }
+
+  _contractsForApi() {
+    const contracts =  this.formatContracts();
+    contracts.forEach((contract) => {
+      Object.assign(contract, this.getContract(contract.className));
+    });
+    return contracts;
   }
 
   checkDependency(className, dependencyName) {

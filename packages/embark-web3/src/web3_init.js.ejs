@@ -1,0 +1,148 @@
+const {reduce} = require('async')
+const Web3 = require('web3')
+let web3 = new Web3();
+
+let todo = [];
+let done = false;
+
+web3.execWhenReady = function(cb) {
+  if (done) {
+    return cb();
+  }
+  todo.push(cb);
+}
+
+let __whenEnvIsLoaded = function(cb) {
+  if (typeof document !== 'undefined' && document !== null && !(/comp|inter|loaded/).test(document.readyState)) {
+    document.addEventListener('DOMContentLoaded', cb);
+  } else {
+    cb();
+  }
+};
+
+let doConnect = function(connectionList, opts, doneCb) {
+  const self = this;
+
+  let blockchainConnector = web3;
+
+  const checkConnect = (next) => {
+    blockchainConnector.eth.getAccounts((error, _a) => {
+      // const provider = blockchainConnector.getCurrentProvider();
+      const provider = blockchainConnector.currentProvider;
+      const connectionString = provider.host;
+
+      if (error) blockchainConnector.setProvider(null);
+
+      return next(null, {
+        connectionString,
+        error,
+        connected: !error
+      });
+    });
+  };
+
+  const connectWeb3 = async (next) => {
+    const connectionString = 'web3://';
+
+    if (typeof window !== 'undefined' && window.ethereum) {
+      try {
+        if (Blockchain.autoEnable) {
+          await ethereum.enable();
+        }
+        blockchainConnector.setProvider(ethereum);
+        return checkConnect(next);
+      } catch (error) {
+        return next(null, {
+          connectionString,
+          error,
+          connected: false
+        });
+      }
+    }
+
+    return next(null, {
+      connectionString,
+      error: new Error("web3 provider not detected"),
+      connected: false
+    });
+  };
+
+  const connectWebsocket = (value, next) => {
+    //blockchainConnector.setProvider(blockchainConnector.getNewProvider('WebsocketProvider', value));
+    blockchainConnector.setProvider(new Web3.providers.WebsocketProvider(value));
+    checkConnect(next);
+  };
+
+  const connectHttp = (value, next) => {
+    //blockchainConnector.setProvider(blockchainConnector.getNewProvider('HttpProvider', value));
+    blockchainConnector.setProvider(new Web3.providers.HttpProvider(value));
+    checkConnect(next);
+  };
+
+  let connectionErrs = {};
+
+  reduce(connectionList, false, function(result, connectionString, next) {
+    if (result.connected) {
+      return next(null, result);
+    } else if (result) {
+      connectionErrs[result.connectionString] = result.error;
+    }
+
+    if (connectionString === '$WEB3') {
+      connectWeb3(next);
+    } else if (connectionString.indexOf('ws://') >= 0) {
+      connectWebsocket(connectionString, next);
+    } else {
+      connectHttp(connectionString, next);
+    }
+  }, async function(_err, result) {
+    if (!result.connected || result.error) {
+      // return doneCb(new BlockchainConnectionError(connectionErrs));
+      return doneCb(new Error(connectionErrs));
+    }
+
+    //blockchainConnector.getAccounts(async (err, accounts) => {
+    blockchainConnector.eth.getAccounts(async (err, accounts) => {
+      if (err) {
+        return doneCb(err);
+      }
+      //const currentProv = blockchainConnector.getCurrentProvider();
+      const currentProv = blockchainConnector.currentProvider;
+      if (opts.warnAboutMetamask) {
+        // if we are using metamask, ask embark to turn on dev_funds
+        // embark will only do this if geth is our client and we are in
+        // dev mode
+        // if (opts.blockchainClient === 'geth') {
+        //   // TODO find a way to share the port number
+        //   console.warn("%cNote: There is a known issue with Geth (when in `--dev` mode) that may cause transactions to get stuck. To enable a workaround, start an Embark console (run command `embark console` in your terminal) or open the dashboard in Cockpit (http://localhost:55555), then type in the console command `devtxs on`. To disable the workaround, type `devtxs off` in the console.", "font-size: 2em");
+        // }
+        if ((currentProv && currentProv.isMetaMask) ||
+          (typeof window !== 'undefined' && window.ethereum && window.ethereum.isMetaMask)) {
+          console.warn("%cNote: Embark has detected you are in the development environment and using Metamask, please make sure Metamask is connected to your local node", "font-size: 2em");
+          // if(opts.blockchainClient === 'parity') {
+          //   console.warn("%cNote: Parity blocks the connection from browser extensions like Metamask. To resolve this problem, go to https://embark.status.im/docs/blockchain_configuration.html#Using-Parity-and-Metamask", "font-size: 2em");
+          // }
+        }
+      }
+      if (accounts) {
+        //blockchainConnector.setDefaultAccount(accounts[0]);
+        blockchainConnector.eth.defaultAccount = accounts[0];
+      }
+
+      doneCb();
+    });
+  });
+};
+
+__whenEnvIsLoaded(() => {
+  let connectList = [<%- connectionList.map(x => "'" + x + "'").join(",") %>];
+
+  doConnect(connectList, {
+    warnAboutMetamask: false, // TODO: can/should be part as the code generation instead...
+  }, () => {
+    todo.forEach((x) => x.apply(x))
+    done = true;
+  })
+})
+
+export default web3;

@@ -1,0 +1,9 @@
+<%- className %>Abi = <%- abi %>;
+<%- className %> = new web3.eth.Contract(<%- className %>Abi);
+<%- className %>.options.address = '<%- contract.deployedAddress %>';
+<%- className %>.address = '<%- contract.deployedAddress %>';
+<%- className %>.options.from = web3.eth.defaultAccount;
+<% if (gasLimit != false) { %>
+  <%- className %>.options.gas = <%- gasLimit %>;
+  <%- className %>.options.gasLimit = <%- gasLimit %>;
+<% } %>

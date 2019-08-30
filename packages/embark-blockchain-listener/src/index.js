@@ -2,7 +2,6 @@ import { dappPath } from 'embark-utils';
 import { __ } from 'embark-i18n';
 const async = require('async');
 const DevTxs = require('./dev_txs');
-const ProcessLogsApi = require('embark-process-logs-api');
 const constants = require('embark-core/constants');
 
 const PROCESS_NAME = 'blockchain';
@@ -48,7 +47,7 @@ class BlockchainListener {
     });
 
     this.ipc.server.once('connect', () => {
-      this.processLogsApi = new ProcessLogsApi({embark: this.embark, processName: PROCESS_NAME, silent: true});
+      this.events.request('process:logs:register', {processName: PROCESS_NAME, eventName: "blockchain:log", silent: true});
       this._listenToBlockchainLogs();
     });
     if (this.ipc.isServer() && this.isDev) {
@@ -72,7 +71,7 @@ class BlockchainListener {
    */
   _listenToBlockchainLogs() {
     this.ipc.on('blockchain:log', ({logLevel, message}) => {
-      this.processLogsApi.logHandler.handleLog({logLevel, message});
+      this.events.emit('blockchain:log', logLevel, message);
     });
   }
 

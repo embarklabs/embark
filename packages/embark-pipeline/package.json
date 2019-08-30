@@ -53,8 +53,7 @@
     "embark-i18n": "^4.1.1",
     "embark-utils": "^4.1.1",
     "find-up": "2.1.0",
-    "fs-extra": "7.0.1",
-    "webpack": "4.39.2"
+    "fs-extra": "7.0.1"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",

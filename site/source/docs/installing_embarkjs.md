@@ -18,8 +18,8 @@ Let's see what that generated config file looks like at `embarkArtifacts/config/
 {
   "dappConnection": [
     "$WEB3",
-    "ws://localhost:8546",
-    "http://localhost:8545"
+    "$EMBARK",
+    "ws://localhost:8546"
   ],
   "dappAutoEnable": true,
   "warnIfMetamask": true,
@@ -30,7 +30,7 @@ Let's see what that generated config file looks like at `embarkArtifacts/config/
 
 #### Connection parameters:
 
-- **dappConnection**: Copied from the contracts config. This is the list of connections Embark will try to connect to in order.
+- **dappConnection**: Copied from the contracts config. This is the list of connections Embark will try to connect to in order. For more information, look at [the guide on EmbakJS](/docs/javascript_usage.html#Using-dappConnection).
 - **dappAutoEnable**: Copied from the contracts config. This tells EmbarkJS to either automatically connect to Metamask (or Mist) or wait for the developper (you) to do it.
  - Read more on it [below](#Provider)
 - **warnIfMetamask**: Is true when `isDev` is true in the blockchain config. Will warn you in the console if Metamask is detected, to make sure you connect Metamask correctly to the local node.

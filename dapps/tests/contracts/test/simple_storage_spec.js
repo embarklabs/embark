@@ -4,8 +4,10 @@ const SimpleStorage = require('Embark/contracts/SimpleStorage');
 
 config({
   contracts: {
-    "SimpleStorage": {
-      args: [100]
+    deploy: {
+      "SimpleStorage": {
+        args: [100]
+      }
     }
   }
 });

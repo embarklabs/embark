@@ -1,8 +1,10 @@
 declare module "embark-utils" {
-  class File {
-    path: string;
+  import {Logger} from "embark";
+
+  export class File {
+    public path: string;
     constructor(options: any);
-    prepareForCompilation(isCoverage?: boolean): any;
+    public prepareForCompilation(isCoverage?: boolean): any;
   }
 
   function anchoredValue(anchor: string|null, value: string): string;
@@ -10,6 +12,7 @@ declare module "embark-utils" {
   function compact(array: any): any;
   function checkIsAvailable(url: string, callback: any): void;
   function dockerHostSwap(host: string): string;
+  function buildUrl(protocol: string, host: string, port: number, type: string): string;
   function dappPath(...names: string[]): string;
   function diagramPath(...names: string[]): string;
   function escapeHtml(message: any): string;
@@ -23,4 +26,9 @@ declare module "embark-utils" {
   function recursiveMerge(target: any, source: any): any;
   function pkgPath(...names: string[]): string;
   function removePureView(dir: string): void;
+  function pingEndpoint(host: string, port: number, type: string, protocol: string, origin: string, callback: any): void;
+
+  export class AccountParser {
+    public static parseAccountsConfig(accountsConfig: any[], web3: any, dappPath: string, logger: Logger, nodeAccounts?: any[]): any[];
+  }
 }

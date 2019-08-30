@@ -3,11 +3,6 @@
     "versions": {
       "solc": "0.4.24"
     },
-    "deployment": {
-      "host": "localhost",
-      "port": 8545,
-      "type": "rpc"
-    },
     "dappConnection": [
       "$WEB3",
       "ws://localhost:8546",
@@ -16,7 +11,7 @@
       "http://localhost:8550"
     ],
     "gas": "auto",
-    "contracts": {
+    "deploy": {
       "Ownable": {
         "deploy": false
       },
@@ -73,7 +68,7 @@
     ]
   },
   "development": {
-    "contracts": {
+    "deploy": {
       "MyToken2": {
         "instanceOf": "Token",
         "args": [2000]

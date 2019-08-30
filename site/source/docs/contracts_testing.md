@@ -23,7 +23,7 @@ This is a single test spec which will always pass. We're using a globally availa
 `contract()` is just an alias for Mocha's `describe()` function and is globally available. In general, global functions and objects are:
 
 - `contract()`: Same as Mocha's `describe`
-- `config()`: Function to deploy Smart Contracts using custom configurations.
+- `config()`: Function to configure Embark and deploy contracts
 - `web3`: Web3 object
 - `assert`: Node's assert
 - Mocha functions: `describe()`, `it()`, `before()`, etc.
@@ -72,16 +72,24 @@ When running tests, we can even get an idea of what the gas costs of our Smart C
 $ embark test --gasDetails
 ```
 
+## Test environment
+
+When running tests, the default [environment}(/docs/environments.html) is `test`. You can obviously change this using the `--env` flag.
+
+The special thing with the `test` environment is that if you do not have a `test` section in your module configuration, that module with be disabled (`enabled: false`). This is done to speed up the test as if you don't need a module, it is disabled.
+
 ## Configuring Smart Contracts for tests
 
-Very similar to how we [configure our Smart Contracts](/docs/contracts_configuration.html) for deployment on test or production nets, we have to configure them for our tests as well. This is important, so that our Smart Contracts get deployed with the correct testing data.
+Very similar to how we [configure our Smart Contracts](/docs/contracts_configuration.html) for deployment, we have to configure them for our tests as well. This is important, so that our Smart Contracts get deployed with the correct testing data.
 
 To do that, Embark adds a global `config()` function to the execution context, which uses the same API as the configuration object for our application's Smart Contracts. So if we had a `SomeContract` that should be picked up for deployment, this is what the configuration would look like:
 
 ```
 config({
   contracts: {
-    SomeContract: {} // options as discussed in Smart Contract configuration guide
+    deploy: {
+      SomeContract: {} // options as discussed in Smart Contract configuration guide
+    }
   }
 });
 
@@ -107,7 +115,9 @@ const SomeContract = require('EmbarkJS/contracts/SomeContract');
 
 config({
   contracts: {
-    SomeContract: {}
+    deploy: {
+      SomeContract: {}
+    }
   }
 });
 
@@ -134,7 +144,7 @@ Accounts within the testing environment can be configured [just like we're used 
 
 ```
 config({
-  deployment: {
+  blockchain: {
     accounts: [
       {
         privateKeyFile: 'path/to/file',
@@ -179,13 +189,36 @@ By default, Embark will use an internal VM to run the tests. However we can also
 
 ```
 config({
-  deployment: {
-    "host": "localhost",
-    "port": 8545,
-    "type": "rpc"
+  blockchain: {
+    "endpoint": "http://localhost:8545"
   }
 });
 ```
+
+## Configuring modules
+
+You can configure the different Embark modules directly in your test file. The available modules are: [storage](/docs/storage_configuration.html), [namesystem](/docs/naming_configuration.html) and [communication](/docs/messages_configuration.html).
+
+All configuration options for the respective modules are available. Also, the configurations you put inside the `config` function are merged inside the ones that are in the configuration file (meaning that you don't have to put all the provider options if they are already in the default configs).
+
+```
+config({
+  storage: {
+    enabled: true
+  },
+  communication: {
+    enabled: true
+  },
+  namesystem: {
+    enabled: true,
+    register: {
+      rootDomain: "test.eth"
+    }
+  }
+});
+```
+
+If the module is not started (eg. IPFS), Embark will start it for you.
 
 ## Manually deploying Smart Contracts
 

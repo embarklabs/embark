@@ -1,5 +1,5 @@
 {
-  "contracts": ["app/contracts/**", "contracts/**"],
+  "contracts": ["app/contracts/**"],
   "app": {
     "js/jquery.js": "app/js/_vendor/jquery.min.js",
     "js/bootstrap.js": "app/js/_vendor/bootstrap.min.js",
@@ -19,9 +19,7 @@
     "web3": "1.2.1",
     "ipfs-api": "17.2.7"
   },
-  "plugins": {
-    "embark-dapp-test-service": {}
-  },
+  "plugins": {},
   "options": {
     "solc": {
       "optimize": true,
