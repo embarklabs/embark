@@ -75,7 +75,7 @@
     "ajv": "6.5.5",
     "ascii-table": "0.0.9",
     "async": "2.6.1",
-    "babel-loader": "8.0.5",
+    "babel-loader": "8.0.6",
     "babel-plugin-macros": "2.4.5",
     "babel-plugin-module-resolver": "3.2.0",
     "babel-plugin-transform-react-remove-prop-types": "0.4.24",
