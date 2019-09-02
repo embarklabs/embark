@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "del": "^5.1.0",
-    "eslint": "^6.2.2",
+    "eslint": "^6.3.0",
     "eslint-config-hexo": "^3.0.0",
     "gulp": "^4.0.2",
     "gulp-cheerio": "^0.6.2",
