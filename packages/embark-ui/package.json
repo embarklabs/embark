@@ -70,7 +70,7 @@
     "dotenv-expand": "4.2.0",
     "embark-api-client": "^4.1.1",
     "eslint": "5.7.0",
-    "eslint-config-react-app": "3.0.5",
+    "eslint-config-react-app": "3.0.8",
     "eslint-loader": "3.0.0",
     "eslint-plugin-flowtype": "2.50.1",
     "eslint-plugin-import": "2.14.0",
