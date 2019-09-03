@@ -164,6 +164,8 @@ describe('embark.deploymentChecks', function () {
       });
     });
     it("should not deploy if contract is tracked, but bytecode exists on chain", async function () {
+      trackingFunctions._web3.eth.getCode = () => "0x0123";
+      params.contract.runtimeBytecode = '0123';
       return deploymentChecks.checkIfAlreadyDeployed(params, (err, params) => {
         expect(err).to.be(null);
         expect(params.shouldDeploy).to.be(false);
@@ -180,6 +182,8 @@ describe('embark.deploymentChecks', function () {
     it("should update tracked contract in chains.json when contract.track !== false", async function () {
       const trackAndSaveContract = sinon.stub(trackingFunctions, "trackAndSaveContract");
       const {contract} = params;
+      trackingFunctions._web3.eth.getCode = () => "0x0123";
+      params.contract.runtimeBytecode = '0123';
       return deploymentChecks.checkIfAlreadyDeployed(params, (err, params) => {
         expect(err).to.be(null);
         expect(params.shouldDeploy).to.be(false);
