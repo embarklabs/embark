@@ -57,7 +57,7 @@
   "devDependencies": {
     "@babel/cli": "7.2.3",
     "@babel/core": "7.2.2",
-    "ajv": "6.5.2",
+    "ajv": "6.10.2",
     "chai": "4.2.0",
     "cross-env": "5.2.0",
     "lodash.clonedeep": "4.5.0",
