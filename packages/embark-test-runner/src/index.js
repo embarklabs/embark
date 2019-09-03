@@ -1,6 +1,8 @@
 import { __ } from 'embark-i18n';
 const async = require('async');
+const chalk = require('chalk');
 const path = require('path');
+const { embarkPath, dappPath, runCmd } = require('embark-utils');
 import fs from 'fs';
 import { COVERAGE_GAS_LIMIT, GAS_LIMIT } from './constants';
 
@@ -60,10 +62,32 @@ class TestRunner {
         });
 
         async.series(runnerFns, next);
-      }
+      },
+      (_results, next) => {
+        if (!options.coverage) {
+          return next();
+        }
+
+        const cmd = `${embarkPath('node_modules/.bin/istanbul')} report --root .embark --format html --format lcov`;
+        runCmd(cmd, {silent: false, exitOnError: false}, next);
+      },
     ], (err) => {
       reporter.footer();
-      cb(err, reporter.passes, reporter.fails);
+
+      if (!options.coverage) {
+        return cb(err, reporter.passes, reporter.fails);
+      }
+
+      process.stdout.write(chalk`{blue Coverage report created. You can find it here:}\n{white.underline ${dappPath('coverage/index.html')}}\n`);
+
+      if (options.noBrowser) {
+        return cb(err, reporter.passes, reporter.fails);
+      }
+
+      const open = require('open');
+      open(dappPath('coverage/index.html')).then(() => {
+        cb(err, reporter.passes, reporter.fails);
+      });
     });
   }
 

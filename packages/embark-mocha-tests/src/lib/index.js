@@ -76,6 +76,7 @@ class MochaTestRunner {
             acctCb(err, accounts);
           }
 
+          events.emit('tests:ready', accounts);
           done();
         });
       });
@@ -103,7 +104,13 @@ class MochaTestRunner {
         events.request("contracts:reset", next);
       },
       (next) => { // get contract files
-        events.request("config:contractsFiles", next);
+        if (!options.coverage) {
+          return events.request("config:contractsFiles", next);
+        }
+
+        events.request("coverage:prepareContracts", () => {
+          events.request("config:contractsFiles", next);
+        });
       },
       (cf, next) => { // compile contracts
         events.request("compiler:contracts:compile", cf, next);
@@ -149,12 +156,14 @@ class MochaTestRunner {
         }
 
         mocha.run((failures) => {
-          next(null, failures);
+          next();
         });
       }
-    ], (err, failures) => {
+    ], (err) => {
+      events.emit('tests:finished');
+
       Module.prototype.require = originalRequire;
-      cb(err, failures);
+      cb(err);
     });
   }
 }

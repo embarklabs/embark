@@ -190,6 +190,7 @@ class Engine {
 
   testComponents() {
     this.registerModulePackage('embark-test-runner');
+    this.registerModulePackage('embark-coverage');
     this.registerModulePackage('embark-solidity-tests');
     this.registerModulePackage('embark-mocha-tests');
   }
