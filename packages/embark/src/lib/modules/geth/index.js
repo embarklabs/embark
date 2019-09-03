@@ -5,7 +5,6 @@ import {ws, rpc} from './check.js';
 const constants = require('embark-core/constants');
 
 class Geth {
-
   constructor(embark, options) {
     this.embark = embark;
     this.embarkConfig = embark.config.embarkConfig;
