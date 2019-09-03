@@ -30,7 +30,7 @@ class TestRunner {
   }
 
   run(options, cb) {
-    const reporter = new Reporter();
+    const reporter = new Reporter(this.embark);
     const testPath = options.file || "test";
 
     async.waterfall([
