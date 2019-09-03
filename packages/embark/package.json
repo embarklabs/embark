@@ -72,7 +72,7 @@
     "@babel/preset-react": "7.0.0",
     "@babel/preset-typescript": "7.1.0",
     "@babel/runtime-corejs2": "7.3.1",
-    "ajv": "6.5.5",
+    "ajv": "6.10.2",
     "ascii-table": "0.0.9",
     "async": "2.6.1",
     "babel-loader": "8.0.6",
