@@ -1,17 +1,24 @@
 import {__} from 'embark-i18n';
-import {AddressUtils} from 'embark-utils';
+import {AddressUtils, dappPath} from 'embark-utils';
 const async = require('async');
-const Web3 = require('web3');
+import Web3 from 'web3';
 const embarkJsUtils = require('embarkjs').Utils;
 import checkContractSize from "./checkContractSize";
 const {ZERO_ADDRESS} = AddressUtils;
+import EthereumAPI from "./api";
+
 
 class EthereumBlockchainClient {
 
-  constructor(embark, _options) {
+  constructor(embark) {
     this.embark = embark;
     this.events = embark.events;
     this.logger = embark.logger;
+    this.fs = embark.fs;
+    this.contractsSubscriptions = [];
+    this.contractsEvents = [];
+
+    this.logFile = dappPath(".embark", "contractEvents.json");
 
     this.embark.registerActionForEvent("deployment:contract:undeployed", this.addContractJSONToPipeline.bind(this));
     this.embark.registerActionForEvent("deployment:contract:deployed", this.addContractJSONToPipeline.bind(this));
@@ -21,6 +28,24 @@ class EthereumBlockchainClient {
     this.embark.registerActionForEvent('deployment:contract:beforeDeploy', this.determineAccounts.bind(this));
     this.events.request("blockchain:client:register", "ethereum", this.getClient.bind(this));
     this.events.request("deployment:deployer:register", "ethereum", this.deployer.bind(this));
+
+    this.registerAPIRequests();
+  }
+
+  get web3() {
+    return (async () => {
+      if (!this._web3) {
+        const provider = await this.events.request2("blockchain:client:provider", "ethereum");
+        this._web3 = new Web3(provider);
+      }
+      return this._web3;
+    })();
+  }
+
+  async registerAPIRequests() {
+    const ethereumApi = new EthereumAPI(this.embark, await this.web3, "ethereum");
+    ethereumApi.registerRequests();
+    ethereumApi.registerAPIs();
   }
 
   getClient() {
@@ -28,8 +53,7 @@ class EthereumBlockchainClient {
   }
 
   async deployer(contract, done) {
-    let provider = await this.events.request2("blockchain:client:provider", "ethereum");
-    var web3 = new Web3(provider);
+    const web3 = await this.web3;
     // var web3 = new Web3("ws://localhost:8556")
     // web3.eth.getAccounts().then((accounts) => {
     let accounts = await web3.eth.getAccounts();
@@ -117,8 +141,7 @@ class EthereumBlockchainClient {
   async determineArguments(params, callback) {
     const suppliedArgs = params.contract.args;
     const contract = params.contract;
-    const provider = await this.events.request2("blockchain:client:provider", "ethereum");
-    const web3 = new Web3(provider);
+    const web3 = await this.web3;
     const accounts = await web3.eth.getAccounts();
 
     const self = this;

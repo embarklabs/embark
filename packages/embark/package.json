@@ -221,7 +221,7 @@
     "@types/async": "2.0.50",
     "@types/body-parser": "1.17.0",
     "@types/cors": "2.8.4",
-    "@types/express": "4.16.0",
+    "@types/express": "4.17.1",
     "@types/express-ws": "3.0.0",
     "@types/find-up": "2.1.0",
     "@types/globule": "1.1.3",

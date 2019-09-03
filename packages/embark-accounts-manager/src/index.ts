@@ -1,9 +1,9 @@
 import async from "async";
-import {Embark, Events, Logger} /* supplied by @types/embark in packages/embark-typings */ from "embark";
-import {__} from "embark-i18n";
-import {AccountParser, dappPath} from "embark-utils";
+import { Embark, Events, Logger } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { __ } from "embark-i18n";
+import { AccountParser, dappPath } from "embark-utils";
 import Web3 from "web3";
-const {blockchain: blockchainConstants} = require("embark-core/constants");
+const { blockchain: blockchainConstants } = require("embark-core/constants");
 
 import fundAccount from "./fundAccount";
 
@@ -37,14 +37,14 @@ export default class AccountsManager {
     // Allow to run transaction in parallel by resolving the nonce manually.
     // For each transaction, resolve the nonce by taking the max of current transaction count and the cache we keep locally.
     // Update the nonce and sign it
-    this.signTransactionQueue = async.queue(({payload, account}, callback: (error: any, result: any) => void) => {
+    this.signTransactionQueue = async.queue(({ payload, account }, callback: (error: any, result: any) => void) => {
       this.getNonce(payload.from, async (err: any, newNonce: number) => {
         if (err) {
           return callback(err, null);
         }
         payload.nonce = newNonce;
         const web3 = await this.web3;
-        web3.eth.accounts.signTransaction(payload, account.privateKey , (signingError: any, result: any) => {
+        web3.eth.accounts.signTransaction(payload, account.privateKey, (signingError: any, result: any) => {
           if (signingError) {
             return callback(signingError, null);
           }
@@ -92,7 +92,7 @@ export default class AccountsManager {
       // Check if we have that account in our wallet
       const account = this.accounts.find((acc) => Web3.utils.toChecksumAddress(acc.address) === Web3.utils.toChecksumAddress(params.reqData.params[0].from));
       if (account && account.privateKey) {
-        return this.signTransactionQueue.push({payload: params.reqData.params[0], account}, (err: any, newPayload: any) => {
+        return this.signTransactionQueue.push({ payload: params.reqData.params[0], account }, (err: any, newPayload: any) => {
           if (err) {
             return callback(err, null);
           }
@@ -145,7 +145,7 @@ export default class AccountsManager {
         .map((account) => {
           return fundAccount(web3, account.address, coinbase, account.hexBalance);
       });
-      await Promise.all(fundingAccounts);
+      await Promise.all([fundingAccounts]);
     } catch (err) {
       this.logger.error(__("Error funding accounts"), err.message || err);
     }

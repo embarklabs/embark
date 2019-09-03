@@ -1,18 +1,19 @@
 import async from 'async';
 const {__} = require('embark-i18n');
 
+import BlockchainAPI from "./api";
 class Blockchain {
 
-  constructor(embark, options) {
+  constructor(embark) {
     this.embarkConfig = embark.config.embarkConfig;
     this.logger = embark.logger;
     this.events = embark.events;
     this.blockchainConfig = embark.config.blockchainConfig;
     this.contractConfig = embark.config.contractConfig;
-    this.plugins = options.plugins;
-    let plugin = this.plugins.createPlugin('web3plugin', {});
+    this.blockchainApi = new BlockchainAPI(embark);
 
-    plugin.registerActionForEvent("pipeline:generateAll:before", this.addArtifactFile.bind(this));
+
+    embark.registerActionForEvent("pipeline:generateAll:before", this.addArtifactFile.bind(this));
 
     this.blockchainNodes = {};
     this.events.setCommandHandler("blockchain:node:register", (clientName, startCb) => {
@@ -32,6 +33,8 @@ class Blockchain {
 
       client.apply(client, [onStart]);
     });
+    this.blockchainApi.registerAPIs("ethereum");
+    this.blockchainApi.registerRequests("ethereum");
   }
 
   addArtifactFile(_params, cb) {

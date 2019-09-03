@@ -33,7 +33,7 @@ const Contracts = ({contracts, changePage, currentPage, numberOfPages, title = "
                   <Row>
                     <Col>
                       <strong>Address</strong>
-                      <div>{contract.address}</div>
+                      <div>{contract.deployedAddress}</div>
                     </Col>
                     <Col>
                       <strong>State</strong>

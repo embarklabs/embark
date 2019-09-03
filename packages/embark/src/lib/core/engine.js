@@ -215,6 +215,7 @@ class Engine {
     this.registerModulePackage('embark-accounts-manager');
     this.registerModulePackage('embark-specialconfigs', {plugins: this.plugins});
     this.registerModulePackage('embark-transaction-logger');
+    this.registerModulePackage('embark-transaction-tracker');
   }
 
   storageComponent() {
