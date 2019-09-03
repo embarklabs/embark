@@ -48,10 +48,10 @@ SignAndVerifyContainer.propTypes = {
   fetchAccounts: PropTypes.func,
   signMessage: PropTypes.func,
   signatureError: PropTypes.string,
-  signaturePending: PropTypes.boolean,
+  signaturePending: PropTypes.bool,
   signedMessage: PropTypes.string,
   verificationError: PropTypes.string,
-  verificationPending: PropTypes.boolean,
+  verificationPending: PropTypes.bool,
   verifiedAddress: PropTypes.string,
   verifyMessage: PropTypes.func
 };

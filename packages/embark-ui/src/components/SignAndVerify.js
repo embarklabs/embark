@@ -99,14 +99,14 @@ class SignAndVerify extends React.Component {
 
 SignAndVerify.propTypes = {
   accounts: PropTypes.array,
-  signMessage: PropTypes.function,
+  signMessage: PropTypes.func,
   signatureError: PropTypes.string,
-  signaturePending: PropTypes.function,
+  signaturePending: PropTypes.func,
   signedMessage: PropTypes.string,
   verificationError: PropTypes.string,
-  verificationPending: PropTypes.boolean,
+  verificationPending: PropTypes.bool,
   verifiedAddress: PropTypes.string,
-  verifyMessage: PropTypes.function
+  verifyMessage: PropTypes.func
 };
 
 export default SignAndVerify;
