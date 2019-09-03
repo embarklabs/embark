@@ -440,6 +440,7 @@ class EmbarkController {
         engine.registerModuleGroup("contracts");
         engine.registerModuleGroup("pipeline");
         engine.registerModuleGroup("communication");
+        engine.registerModuleGroup("namesystem");
         engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
 
         engine.registerModuleGroup("blockchain");
@@ -459,7 +460,8 @@ class EmbarkController {
           try {
             await Promise.all([
               engine.events.request2("blockchain:node:start", engine.config.blockchainConfig),
-              engine.events.request2("communication:node:start", engine.config.communicationConfig)
+              engine.events.request2("communication:node:start", engine.config.communicationConfig),
+              engine.events.request2("namesystem:node:start", engine.config.namesystemConfig)
             ]);
           } catch (e) {
             return cb(e);
@@ -540,6 +542,7 @@ class EmbarkController {
         engine.registerModuleGroup("filewatcher");
         engine.registerModuleGroup("storage");
         engine.registerModuleGroup("communication");
+        engine.registerModuleGroup("namesystem");
         engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
         engine.registerModulePackage('embark-plugin-cmd', {embarkConfigFile: engine.embarkConfig, embarkConfig: engine.config.embarkConfig, packageFile: 'package.json'});
         callback();
@@ -556,7 +559,8 @@ class EmbarkController {
           try {
             await Promise.all([
               engine.events.request2("storage:node:start", engine.config.storageConfig),
-              engine.events.request2("communication:node:start", engine.config.communicationConfig)
+              engine.events.request2("communication:node:start", engine.config.communicationConfig),
+              engine.events.request2("namesystem:node:start", engine.config.namesystemConfig)
             ]);
           } catch (e) {
             return cb(e);
