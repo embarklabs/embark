@@ -3,6 +3,7 @@ let SolcW = require('./solcW.js');
 const path = require('path');
 import { __ } from 'embark-i18n';
 import {normalizePath} from 'embark-utils';
+const cloneDeep = require('lodash.clonedeep');
 
 class Solidity {
 
@@ -196,6 +197,8 @@ class Solidity {
     let self = this;
     let input = {};
     let originalFilepath = {};
+
+    contractFiles = cloneDeep(contractFiles);
 
     async.waterfall([
       function prepareInput(callback) {
