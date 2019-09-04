@@ -1,4 +1,4 @@
-import {canonicalHost, defaultHost} from 'embark-utils';
+import {buildUrlFromConfig, canonicalHost, defaultHost} from 'embark-utils';
 const {parallel} = require('async');
 const {fromEvent} = require('rxjs');
 const {map, takeUntil} = require('rxjs/operators');
@@ -28,7 +28,7 @@ class API {
       port: connection.port || '8546',
       type: connection.type || 'ws'
     };
-    this.web3 = new Web3(config.type + "://" + config.server + ":" + config.port);
+    this.web3 = new Web3(buildUrlFromConfig(config));
 
     if (self.apiCallsRegistered) {
       return;

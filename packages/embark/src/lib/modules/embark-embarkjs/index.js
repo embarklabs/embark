@@ -38,8 +38,8 @@ class EmbarkJS {
   }
 
   async registerEmbarkJS() {
-    let checkEmbarkJS = `return (typeof EmbarkJS === 'undefined');`;
-    let EmbarkJSNotDefined = await this.events.request2('runcode:eval', checkEmbarkJS);
+    const checkEmbarkJS = `return (typeof EmbarkJS === 'undefined');`;
+    const EmbarkJSNotDefined = await this.events.request2('runcode:eval', checkEmbarkJS);
 
     if (!EmbarkJSNotDefined) return;
     await this.events.request2("runcode:register", 'EmbarkJS', require('embarkjs'));
@@ -94,10 +94,10 @@ class EmbarkJS {
   }
 
   async addContractArtifact(contract, cb) {
-    let abi = JSON.stringify(contract.abiDefinition);
-    let gasLimit = 6000000;
+    const abi = JSON.stringify(contract.abiDefinition);
+    const gasLimit = 6000000;
 
-    let contractCode = Templates.embarkjs_contract_artifact({ className: contract.className, abi: abi, contract: contract, gasLimit: gasLimit });
+    const contractCode = Templates.embarkjs_contract_artifact({ className: contract.className, abi: abi, contract: contract, gasLimit: gasLimit });
 
     this.events.request("pipeline:register", {
       path: [this.embarkConfig.generationDir, 'contracts'],
@@ -108,15 +108,15 @@ class EmbarkJS {
   }
 
   async runInVm(contract, cb) {
-    let abi = contract.abiDefinition;
-    let gasLimit = 6000000;
+    const abi = contract.abiDefinition;
+    const gasLimit = 6000000;
     const provider = await this.events.request2("blockchain:client:provider", "ethereum");
-    let contractCode = Templates.embarkjs_console_contract({ className: contract.className, abi: abi, contract: contract, gasLimit: gasLimit, provider: provider });
+    const contractCode = Templates.embarkjs_console_contract({ className: contract.className, abi: abi, contract: contract, gasLimit: gasLimit, provider: provider });
 
     try {
       await this.registerEmbarkJS();
       await this.events.request2('runcode:eval', contractCode);
-      let result = await this.events.request2('runcode:eval', contract.className);
+      const result = await this.events.request2('runcode:eval', contract.className);
       result.currentProvider = provider;
       await this.events.request2("runcode:register", contract.className, result);
       cb();

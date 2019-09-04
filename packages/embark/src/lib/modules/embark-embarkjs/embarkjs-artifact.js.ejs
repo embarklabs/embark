@@ -21,24 +21,23 @@ EmbarkJS.Names.registerProvider('<%- pluginName %>', __embark<%- pluginName %>.d
 <% }; %>
 
 <% if (plugins['messages'] && Object.values(plugins['messages']).length > 0) { %>
-var communicationConfig = require('./config/communication.json');
+const communicationConfig = require('./config/communication.json');
 EmbarkJS.Messages.setProvider(communicationConfig.provider, communicationConfig.connection);
 <% }; %>
 
 <% if (plugins['storage'] && Object.values(plugins['storage']).length > 0) { %>
-var storageConfig = require('./config/storage.json');
+const storageConfig = require('./config/storage.json');
 EmbarkJS.Storage.setProviders(storageConfig.dappConnection);
 <% }; %>
 
 <% if (plugins['blockchain'] && Object.values(plugins['blockchain']).length > 0) { %>
-var blockchainConfig = require('./config/blockchain.json');
+const blockchainConfig = require('./config/blockchain.json');
 EmbarkJS.Blockchain.setProvider(blockchainConfig.provider, {});
 EmbarkJS.Blockchain.connect(blockchainConfig, (err) => {if (err) { console.error(err); } });
 <% }; %>
 
 <% if (plugins['names'] && Object.values(plugins['names']).length > 0) { %>
-var namesConfig = require('./config/namesystem.json');
-console.dir(namesConfig);
+const namesConfig = require('./config/namesystem.json');
 EmbarkJS.Names.setProvider(namesConfig.provider, namesConfig);
 <% }; %>
 

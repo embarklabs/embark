@@ -1,10 +1,10 @@
 import {__} from 'embark-i18n';
+import {buildUrlFromConfig} from 'embark-utils';
 const UploadSwarm = require('./upload.js');
 const SwarmAPI = require('swarm-api');
 const StorageProcessesLauncher = require('./storageProcessesLauncher');
 const constants = require('embark-core/constants');
 require('colors');
-import {buildUrlFromConfig} from 'embark-utils';
 
 class Swarm {
 

@@ -1,6 +1,6 @@
-let __embarkSwarm = {_swarmConnection: undefined};
+const __embarkSwarm = {_swarmConnection: undefined};
 let SwarmAPI = require('swarm-api');
-let Web3 = require('web3');
+const Web3 = require('web3');
 if (SwarmAPI.default) {
   SwarmAPI = SwarmAPI.default;
 }

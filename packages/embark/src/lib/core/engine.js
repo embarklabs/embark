@@ -168,6 +168,7 @@ class Engine {
     this.registerModule('communication');
     this.registerModulePackage('embark-namesystem');
     this.registerModulePackage('embark-process-logs-api-manager');
+    this.registerModule('embark-embarkjs', {plugins: this.plugins});
   }
 
   blockchainComponents() {
