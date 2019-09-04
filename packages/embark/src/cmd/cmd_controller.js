@@ -160,9 +160,6 @@ class EmbarkController {
 
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
-        engine.registerModuleGroup("namesystem");
-
-        engine.registerModule('embark-embarkjs', {plugins: engine.plugins});
 
         // TODO: replace with individual plugins
         engine.registerModuleGroup("namesystem");
