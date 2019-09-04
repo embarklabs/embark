@@ -48,7 +48,7 @@ class Blockchain {
           return cb(err);
         }
         let config = {
-          provider: 'web3', // should come from the config
+          provider: contractsConfig.library || 'web3',
           dappConnection: results,
           dappAutoEnable: contractsConfig.dappAutoEnable,
           warnIfMetamask: this.blockchainConfig.isDev,

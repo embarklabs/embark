@@ -15,8 +15,8 @@ __embarkSwarm.setProvider = function (options) {
 
   return new Promise((resolve, reject) => {
     let web3;
-    if(!options.web3) {
-      web3 = new Web3(_this._connectUrl);
+    if (!options.web3) {
+      web3 = new Web3(this._connectUrl);
     }
     try {
       if (!web3.bzz.currentProvider) {

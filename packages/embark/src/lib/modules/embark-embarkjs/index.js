@@ -39,9 +39,9 @@ class EmbarkJS {
 
   async registerEmbarkJS() {
     const checkEmbarkJS = `return (typeof EmbarkJS === 'undefined');`;
-    const EmbarkJSNotDefined = await this.events.request2('runcode:eval', checkEmbarkJS);
+    const embarkJSNotDefined = await this.events.request2('runcode:eval', checkEmbarkJS);
 
-    if (!EmbarkJSNotDefined) return;
+    if (!embarkJSNotDefined) return;
     await this.events.request2("runcode:register", 'EmbarkJS', require('embarkjs'));
   }
 
