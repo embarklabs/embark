@@ -24,7 +24,7 @@ class API {
 
     const connection = this.communicationConfig.connection || {};
     const config = {
-      server: canonicalHost(connection.host || defaultHost),
+      host: canonicalHost(connection.host || defaultHost),
       port: connection.port || '8546',
       type: connection.type || 'ws'
     };
