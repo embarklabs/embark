@@ -1,8 +1,13 @@
 import { __ } from 'embark-i18n';
 const async = require('async');
 const chalk = require('chalk');
+
+const coverage = require('istanbul-lib-coverage');
+const reporter = require('istanbul-lib-report');
+const reports = require('istanbul-reports');
+
 const path = require('path');
-const { embarkPath, dappPath, runCmd } = require('embark-utils');
+const { dappPath } = require('embark-utils');
 import fs from 'fs';
 import { COVERAGE_GAS_LIMIT, GAS_LIMIT } from './constants';
 
@@ -18,6 +23,8 @@ class TestRunner {
     this.runners = [];
     this.gasLimit = options.coverage ? COVERAGE_GAS_LIMIT : GAS_LIMIT;
     this.files = [];
+
+    //this.istanbulPath = findup('node_modules/.bin/istanbul', { cwd: __dirname });
 
     this.events.setCommandHandler('tests:run', (options, callback) => {
       this.run(options, callback);
@@ -63,14 +70,6 @@ class TestRunner {
 
         async.series(runnerFns, next);
       },
-      (_results, next) => {
-        if (!options.coverage) {
-          return next();
-        }
-
-        const cmd = `${embarkPath('node_modules/.bin/istanbul')} report --root .embark --format html --format lcov`;
-        runCmd(cmd, {silent: false, exitOnError: false}, next);
-      },
     ], (err) => {
       reporter.footer();
 
@@ -78,6 +77,7 @@ class TestRunner {
         return cb(err, reporter.passes, reporter.fails);
       }
 
+      this.generateCoverageReport();
       process.stdout.write(chalk`{blue Coverage report created. You can find it here:}\n{white.underline ${dappPath('coverage/index.html')}}\n`);
 
       if (options.noBrowser) {
@@ -89,6 +89,18 @@ class TestRunner {
         cb(err, reporter.passes, reporter.fails);
       });
     });
+  }
+
+  generateCoverageReport() {
+    const coveragePath = path.join(dappPath(), ".embark", "coverage.json");
+    const coverageMap = JSON.parse(fs.readFileSync(coveragePath));
+    const map = coverage.createCoverageMap(coverageMap);
+    const tree = reporter.summarizers.nested(map);
+
+    const ctx = reporter.createContext({ dir: 'coverage' });
+    const report = reports.create('html', { skipEmpty: false, skipFull: false });
+
+    tree.visit(report, ctx);
   }
 
   getFilesFromDir(filePath, cb) {

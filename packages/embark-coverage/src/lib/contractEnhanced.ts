@@ -142,6 +142,7 @@ export class ContractEnhanced {
       line,
       loc: location,
       name,
+      decl: location
     };
     this.coverage.f[coverageId] = 0;
     this.functionsBodyLocation[coverageId] = bodyLocation;
