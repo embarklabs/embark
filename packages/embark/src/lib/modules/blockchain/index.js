@@ -21,16 +21,11 @@ class Blockchain {
       this.blockchainNodes[clientName] = startCb;
     });
 
-    this.events.setCommandHandler("blockchain:node:start", (blockchainConfig, node, cb) => {
-      if (typeof node === 'function') {
-        cb = node;
-        node = null;
-      }
+    this.events.setCommandHandler("blockchain:node:start", (blockchainConfig, cb) => {
       const clientName = blockchainConfig.client;
-      // const clientName = this.blockchainConfig.client;
-      if (node && node === constants.blockchain.vm) {
-        this.startedClient = constants.blockchain.vm;
-        this.events.emit("blockchain:started", clientName, node);
+      if (clientName === constants.blockchain.vm) {
+        this.startedClient = clientName;
+        this.events.emit("blockchain:started", clientName);
         return cb();
       }
       const clientFunctions = this.blockchainNodes[clientName];
@@ -39,7 +34,7 @@ class Blockchain {
       }
 
       let onStart = () => {
-        this.events.emit("blockchain:started", clientName, node);
+        this.events.emit("blockchain:started", clientName);
         cb();
       };
 

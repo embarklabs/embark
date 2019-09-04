@@ -66,8 +66,7 @@ class MochaTestRunner {
       resetServices = true;
     }
 
-    Object.assign(this.simOptions, {host, port, type, protocol});
-    this.simOptions.accounts = accounts;
+    Object.assign(this.simOptions, {host, port, type, protocol, accounts, client: options.blockchain && options.blockchain.client});
 
     if (!resetServices) {
       return;
@@ -80,6 +79,7 @@ class MochaTestRunner {
     let node = this.options.node;
     if (!this.simOptions.host && (node && node === 'vm')) {
       this.simOptions.type = 'vm';
+      this.simOptions.client = 'vm';
     } else if (this.simOptions.host || (node && node !== 'vm')) {
       let options = this.simOptions;
       if (node && node !== 'vm') {
@@ -99,6 +99,9 @@ class MochaTestRunner {
       accounts: this.simOptions.accounts,
       coverage: this.options.coverage
     });
+    if (this.simOptions.client) {
+      this.configObj.blockchainConfig.client = this.simOptions.client;
+    }
     this.logger.trace('Setting blockchain configs:', this.configObj.blockchainConfig);
     await this.events.request2('config:blockchainConfig:set', this.configObj.blockchainConfig);
 
@@ -108,7 +111,7 @@ class MochaTestRunner {
       // Nothing to do here, the node probably wasn't even started
     }
 
-    await this.events.request2("blockchain:node:start", this.configObj.blockchainConfig, node);
+    await this.events.request2("blockchain:node:start", this.configObj.blockchainConfig);
     const provider = await this.events.request2("blockchain:client:provider", "ethereum");
     if (!this.web3) {
       this.web3 = new Web3();
