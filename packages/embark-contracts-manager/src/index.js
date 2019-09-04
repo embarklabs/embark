@@ -83,16 +83,6 @@ class ContractsManager {
     });
   }
 
-  get web3() {
-    return (async () => {
-      if (!this._web3) {
-        const provider = await this.events.request2("blockchain:client:provider", "ethereum");
-        this._web3 = new Web3(provider);
-      }
-      return this._web3;
-    })();
-  }
-
   registerAPIs() {
     let embark = this.embark;
     const self = this;

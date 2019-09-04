@@ -20,7 +20,7 @@ class Reporter {
         return;
       }
 
-      const gas = parseInt(result.gasUsed);
+      const gas = parseInt(result.gasUsed, 16);
       this.gasAccumulator += gas;
     });
   }
@@ -55,10 +55,10 @@ class Reporter {
 
     if (passed) {
       this.passes++;
-      process.stdout.write(chalk`{bgGreen.white.bold ${' PASS '}} {underline ${ test }} {bold >} {${ timeFormat } ${ time }s} {bold >} {bold ${ formattedGas } gas}\n`);
+      process.stdout.write(chalk`{bgGreen.white.bold ${' PASS '}} {underline ${test}} {bold >} {${timeFormat} ${time}s} {bold >} {bold ${formattedGas} gas}\n`);
     } else {
       this.fails++;
-      process.stdout.write(chalk`{bgRed.white.bold ${' FAIL '}} {underline ${ test }} {bold >} {${ timeFormat } ${ time }s} {bold >} {bold ${ formattedGas } gas} > {red ${message || 'no error message'}}\n`);
+      process.stdout.write(chalk`{bgRed.white.bold ${' FAIL '}} {underline ${test}} {bold >} {${timeFormat} ${time}s} {bold >} {bold ${formattedGas} gas} > {red ${message || 'no error message'}}\n`);
     }
 
     this.resetGas();
@@ -66,7 +66,7 @@ class Reporter {
 
   // stolen from https://blog.abelotech.com/posts/number-currency-formatting-javascript/
   formatNumber(num) {
-    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
   }
 }
 
