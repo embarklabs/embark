@@ -118,7 +118,6 @@ class ENS {
     this.enabled = true;
     this.doSetENSProvider = this.config.namesystemConfig.provider === 'ens';
 
-    //this.registerEmbarkJSNaming();
     this.registerEvents();
     this.registerConsoleCommands();
     this.events.request2("runcode:whitelist", 'eth-ens-namehash');

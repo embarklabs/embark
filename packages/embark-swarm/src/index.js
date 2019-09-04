@@ -104,9 +104,9 @@ class Swarm {
     });
   }
 
-  setupEmbarkJS() {
+  async setupEmbarkJS() {
     this.events.request("embarkjs:plugin:register", 'storage', 'swarm', 'embarkjs-swarm');
-    this.events.request("embarkjs:console:register", 'storage', 'swarm', 'embarkjs-swarm');
+    await this.events.request2("embarkjs:console:register", 'storage', 'swarm', 'embarkjs-swarm');
 
     this.events.on("storage:started", () => {
       let config = this.embark.config.storageConfig.dappConnection || [];

@@ -2,7 +2,7 @@ import {canonicalHost, defaultHost} from 'embark-utils';
 const {parallel} = require('async');
 const {fromEvent} = require('rxjs');
 const {map, takeUntil} = require('rxjs/operators');
-let Web3 = require('web3');
+const Web3 = require('web3');
 
 import whisper from 'embarkjs-whisper';
 
@@ -22,7 +22,7 @@ class API {
   async registerAPICalls() {
     const self = this;
 
-    let connection = this.communicationConfig.connection || {};
+    const connection = this.communicationConfig.connection || {};
     const config = {
       server: canonicalHost(connection.host || defaultHost),
       port: connection.port || '8546',

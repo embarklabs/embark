@@ -30,7 +30,7 @@ class Communication {
   }
 
   addArtifactFile(_params, cb) {
-    let connection = this.communicationConfig.connection;
+    const connection = this.communicationConfig.connection;
     this.communicationConfig.connection.server = canonicalHost(connection.host || defaultHost);
 
     this.events.request("pipeline:register", {

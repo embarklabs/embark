@@ -1,3 +1,4 @@
+import { __ } from 'embark-i18n';
 import * as fs from "./fs";
 import VM from "./vm";
 
@@ -60,8 +61,7 @@ class CodeRunner {
 
     this.vm.doEval(code, tolerateError, (err, result) => {
       if (err) {
-        this.logger.error("error running code");
-        this.logger.error(code);
+        this.logger.error(__("Error running code: %s", code));
         this.logger.error(err.toString());
         return cb(err);
       }

@@ -38,7 +38,7 @@ class ContractDeployer {
 
         // TODO: implement `blockchainType` a la `this.deployer[contract.blockchainType].apply(this.deployer, [contract, next])`
         this.deployer["ethereum"].apply(this.deployer, [contract, (err, receipt) => {
-          if (!receipt) return next();
+          if (!receipt) return next(err);
           this.plugins.emitAndRunActionsForEvent('deployment:contract:deployed', { contract, receipt }, (err, _params) => {
             next(err);
           });

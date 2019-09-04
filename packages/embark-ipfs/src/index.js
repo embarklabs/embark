@@ -89,9 +89,9 @@ class IPFS {
     });
   }
 
-  setupEmbarkJS() {
+  async setupEmbarkJS() {
     this.events.request("embarkjs:plugin:register", 'storage', 'ipfs', 'embarkjs-ipfs');
-    this.events.request("embarkjs:console:register", 'storage', 'ipfs', 'embarkjs-ipfs');
+    await this.events.request2("embarkjs:console:register", 'storage', 'ipfs', 'embarkjs-ipfs');
     this.events.on("storage:started", () => {
       let config = this.embark.config.storageConfig.dappConnection || [];
       this.events.request("embarkjs:console:setProvider", 'storage', 'ipfs', config);

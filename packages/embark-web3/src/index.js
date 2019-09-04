@@ -28,7 +28,7 @@ class EmbarkWeb3 {
 
   async setupEmbarkJS() {
     this.events.request("embarkjs:plugin:register", 'blockchain', 'web3', 'embarkjs-web3');
-    this.events.request("embarkjs:console:register", 'blockchain', 'web3', 'embarkjs-web3');
+    await this.events.request2("embarkjs:console:register", 'blockchain', 'web3', 'embarkjs-web3');
     this.events.on("blockchain:started", async () => {
       await this.registerWeb3Object()
       this.events.request("embarkjs:console:setProvider", 'blockchain', 'web3', '{web3}');
@@ -41,10 +41,10 @@ class EmbarkWeb3 {
   }
 
   async registerWeb3Object() {
-    let checkWeb3 = `return (typeof web3 === 'undefined');`;
-    let Web3NotDefined = await this.events.request2('runcode:eval', checkWeb3);
+    const checkWeb3 = `return (typeof web3 === 'undefined');`;
+    const web3NotDefined = await this.events.request2('runcode:eval', checkWeb3);
 
-    if (!Web3NotDefined) return;
+    if (!web3NotDefined) return;
 
     const provider = await this.events.request2("blockchain:client:provider", "ethereum");
     const web3 = new Web3(provider);
