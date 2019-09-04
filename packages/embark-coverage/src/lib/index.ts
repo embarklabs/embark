@@ -18,14 +18,25 @@ export default class Coverage {
   constructor(private embark: Embark, options: any) {
     this.fs = embark.fs;
     this.fs.ensureDirSync(coverageContractsPath());
-    this.originalContractFiles = embark.config.contractsFiles;
 
-    this.contracts = this.getContracts();
+    this.contracts = [];
 
-    this.embark.events.setCommandHandler("coverage:prepareContracts", async (done) => {
+    if (!options.coverage) {
+      return;
+    }
+
+    this.embark.registerActionForEvent('tests:contracts:compile:before', async (contractsFiles, cb) => {
+      const solcVersion = this.embark.config.embarkConfig.versions.solc;
+      const enhancedContracts = contractsFiles.map((file: File) => new ContractEnhanced(file.path, solcVersion));
+
+      this.mergeContracts(enhancedContracts);
       await this.prepareContracts();
-      this.swapContracts();
-      done();
+
+      contractsFiles.forEach((cf: any) => {
+        cf.path = path.join(coverageContractsPath(), cf.path);
+      });
+
+      cb(null, contractsFiles);
     });
 
     this.embark.events.on("tests:ready", this.pushDeployedContracts.bind(this));
@@ -33,9 +44,14 @@ export default class Coverage {
     this.embark.events.on("tests:manualDeploy", this.registerWeb3Contract.bind(this));
   }
 
-  private getContracts() {
-    const solcVersion = this.embark.config.embarkConfig.versions.solc;
-    return this.originalContractFiles.map((file) => new ContractEnhanced(file.path, solcVersion));
+  private async mergeContracts(contracts: ContractEnhanced[]) {
+    contracts.forEach((contract: ContractEnhanced) => {
+      if (this.contracts.some((cc: ContractEnhanced) => cc.filepath === contract.filepath)) {
+        return;
+      }
+
+      this.contracts.push(contract);
+    });
   }
 
   private async prepareContracts() {
@@ -44,14 +60,6 @@ export default class Coverage {
       contract.save();
     });
     await Promise.all(promises);
-  }
-
-  private swapContracts() {
-    this.embark.config.embarkConfig.contracts = this.originalContractFiles.map((file: File) => (
-      path.join(coverageContractsPath(), file.path)
-    ));
-    this.embark.config.contractsFiles = [];
-    this.embark.config.reloadConfig();
   }
 
   private async pushDeployedContracts() {

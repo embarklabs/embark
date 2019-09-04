@@ -28,9 +28,10 @@ const ASSERT_LIB = new File({
 });
 
 class SolidityTestRunner {
-  constructor(embark, _options) {
+  constructor(embark, options) {
     this.embark = embark;
     this.events = embark.events;
+    this.plugins = options.plugins;
 
     this.files = [];
 
@@ -56,7 +57,7 @@ class SolidityTestRunner {
 
   run(options, cb) {
     const reporter = new Reporter(options.reporter);
-    const {events} = this;
+    const {events, plugins} = this;
 
     if (this.files.length === 0) {
       return cb(null, 0);
@@ -87,9 +88,19 @@ class SolidityTestRunner {
       (next) => {
         events.request("contracts:reset", next);
       },
+      /*
+      (next) => {
+        plugins.emitAndRunActionsForEvent('tests:contracts:compile:before', contractFiles, next);
+      },
+      */
       (next) => {
         events.request("compiler:contracts:compile", contractFiles, next);
       },
+      /*
+      (cc, next) => {
+        plugins.emitAndRunActionsForEvent('tests:contracts:compile:after', cc, next);
+      },
+      */
       (compiledContracts, next) => {
         // TODO: fetch config and use it here
         events.request("contracts:build", { contracts: {} }, compiledContracts, next);
@@ -110,6 +121,7 @@ class SolidityTestRunner {
         events.request("deployment:contracts:deploy", contractsToDeploy, contractDependencies, next);
       },
       (_result, next) => {
+        events.emit('tests:ready');
         events.request("blockchain:client:provider", "ethereum", next);
       },
       (bcProvider, next) => {
