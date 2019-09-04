@@ -12,6 +12,7 @@ class Blockchain {
     this.contractConfig = embark.config.contractConfig;
     this.plugins = options.plugins;
     let plugin = this.plugins.createPlugin('web3plugin', {});
+    this.startedClient = null;
 
     plugin.registerActionForEvent("pipeline:generateAll:before", this.addArtifactFile.bind(this));
 
@@ -28,18 +29,51 @@ class Blockchain {
       const clientName = blockchainConfig.client;
       // const clientName = this.blockchainConfig.client;
       if (node && node === constants.blockchain.vm) {
+        this.startedClient = constants.blockchain.vm;
         this.events.emit("blockchain:started", clientName, node);
         return cb();
       }
-      const client = this.blockchainNodes[clientName];
-      if (!client) return cb("client " + clientName + " not found");
+      const clientFunctions = this.blockchainNodes[clientName];
+      if (!clientFunctions) {
+        return cb(__("Client %s not found", clientName));
+      }
 
       let onStart = () => {
         this.events.emit("blockchain:started", clientName, node);
         cb();
       };
 
-      client.apply(client, [onStart]);
+      this.startedClient = clientName;
+      clientFunctions.launchFn.apply(clientFunctions, [onStart]);
+    });
+
+    this.events.setCommandHandler("blockchain:node:stop", (clientName, cb) => {
+      if (typeof clientName === 'function') {
+        if (!this.startedClient) {
+          return cb(__('No blockchain client is currently started'));
+        }
+        cb = clientName;
+        clientName = this.startedClient;
+      }
+
+      if (clientName === constants.blockchain.vm) {
+        this.startedClient = null;
+        this.events.emit("blockchain:stopped", clientName);
+        return cb();
+      }
+
+      const clientFunctions = this.blockchainNodes[clientName];
+      if (!clientFunctions) {
+        return cb(__("Client %s not found", clientName));
+      }
+
+      clientFunctions.stopFn.apply(clientFunctions, [
+        () => {
+          this.events.emit("blockchain:stopped", clientName);
+          cb();
+        }
+      ]);
+      this.startedClient = null;
     });
   }
 

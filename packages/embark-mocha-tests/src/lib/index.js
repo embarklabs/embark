@@ -1,5 +1,7 @@
 import {__} from 'embark-i18n';
-import {deconstructUrl, buildUrl} from 'embark-utils';
+import {deconstructUrl, buildUrl, recursiveMerge} from 'embark-utils';
+import cloneDeep from 'lodash.clonedeep';
+import fs from 'fs';
 
 const assert = require('assert').strict;
 const async = require('async');
@@ -17,6 +19,7 @@ class MochaTestRunner {
     this.logger = embark.logger;
     this.events = embark.events;
     this.configObj = embark.config;
+    this.originalConfigObj = cloneDeep(embark.config);
 
     this.files = [];
     this.simOptions = {};
@@ -59,8 +62,7 @@ class MochaTestRunner {
       this.logger.warn(__('You can change to a WS node (`"type": "ws"`) or use the simulator (no node or `"type": "vm"`)'));
     }
 
-    if (accounts || (port && port !== this.simOptions.port) || (type && type !== this.simOptions.type) ||
-      (host && host !== this.simOptions.host)) {
+    if (accounts || port !== this.simOptions.port || type !== this.simOptions.type || host !== this.simOptions.host) {
       resetServices = true;
     }
 
@@ -91,14 +93,21 @@ class MochaTestRunner {
       node = null;
     }
 
-    this.configObj.blockchainConfig.endpoint = this.simOptions.host ? buildUrl(this.simOptions.protocol, this.simOptions.host, this.simOptions.port, this.simOptions.type) : null;
-    this.configObj.blockchainConfig.type = this.simOptions.type;
-    this.configObj.blockchainConfig.accounts = this.simOptions.accounts;
-    this.configObj.blockchainConfig.coverage = this.options.coverage;
-    // TODO fix this be there by default
-    this.configObj.blockchainConfig.isDev = true;
+    this.configObj.blockchainConfig = recursiveMerge({}, this.originalConfigObj.blockchainConfig, {
+      endpoint: this.simOptions.host ? buildUrl(this.simOptions.protocol, this.simOptions.host, this.simOptions.port, this.simOptions.type) : null,
+      type: this.simOptions.type,
+      accounts: this.simOptions.accounts,
+      coverage: this.options.coverage
+    });
     this.logger.trace('Setting blockchain configs:', this.configObj.blockchainConfig);
     await this.events.request2('config:blockchainConfig:set', this.configObj.blockchainConfig);
+
+    try {
+      await this.events.request2("blockchain:node:stop");
+    } catch (e) {
+      // Nothing to do here, the node probably wasn't even started
+    }
+
     await this.events.request2("blockchain:node:start", this.configObj.blockchainConfig, node);
     const provider = await this.events.request2("blockchain:client:provider", "ethereum");
     if (!this.web3) {
@@ -159,45 +168,62 @@ class MochaTestRunner {
     const contractFiles = await events.request2("config:contractsFiles");
     compiledContracts = await events.request2("compiler:contracts:compile", contractFiles);
 
-    Module.prototype.require = function(req) {
-      const prefix = "Embark/contracts/";
-      if (!req.startsWith(prefix)) {
-        return originalRequire.apply(this, arguments);
-      }
+    let fns = this.files.map((file) => {
+      return (seriesCb) => {
+        fs.readFile(file, (err, data) => {
+          if (err) {
+            self.logger.error(__('Error reading file %s', file));
+            self.logger.error(err);
+            seriesCb(null, 1);
+          }
 
-      const contractClass = req.replace(prefix, "");
-      const instance = compiledContracts[contractClass];
+          if (data.toString().search(/contract\(|describe\(/) === -1) {
+            return seriesCb(null, 0);
+          }
 
-      if (!instance) {
-        throw new Error(`Cannot find module '${req}'`);
-      }
+          Module.prototype.require = function(req) {
+            const prefix = "Embark/contracts/";
+            if (!req.startsWith(prefix)) {
+              return originalRequire.apply(this, arguments);
+            }
 
-      return instance;
-    };
+            const contractClass = req.replace(prefix, "");
+            const instance = compiledContracts[contractClass];
 
-    const mocha = new Mocha();
+            if (!instance) {
+              throw new Error(`Cannot find module '${req}'`);
+            }
 
-    mocha.reporter(Reporter, { reporter: options.reporter });
-    const describeWithAccounts = (scenario, cb) => {
-      Mocha.describe(scenario, cb.bind(mocha, accounts));
-    };
+            return instance;
+          };
 
-    mocha.suite.on('pre-require', () => {
-      global.describe = describeWithAccounts;
-      global.contract = describeWithAccounts;
-      global.assert = assert;
-      global.config = config;
+          const mocha = new Mocha();
+
+          mocha.reporter(Reporter, {reporter: options.reporter});
+          const describeWithAccounts = (scenario, cb) => {
+            Mocha.describe(scenario, cb.bind(mocha, accounts));
+          };
+
+          mocha.suite.on('pre-require', () => {
+            global.describe = describeWithAccounts;
+            global.contract = describeWithAccounts;
+            global.assert = assert;
+            global.config = config;
+          });
+
+
+          mocha.suite.timeout(TEST_TIMEOUT);
+          mocha.addFile(file);
+
+          mocha.run((failures) => {
+            Module.prototype.require = originalRequire;
+            seriesCb(null, failures);
+          });
+        });
+      };
     });
 
-    mocha.suite.timeout(TEST_TIMEOUT);
-    for(const file of this.files) {
-      mocha.addFile(file);
-    }
-
-    mocha.run((failures) => {
-      Module.prototype.require = originalRequire;
-      cb(null, failures);
-    });
+    async.series(fns, cb);
   }
 }
 

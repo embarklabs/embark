@@ -17,6 +17,8 @@ export class Proxy {
     this.timeouts = {};
     this.plugins = options.plugins;
     this.logger = options.logger;
+    this.app = null;
+    this.server = null;
   }
 
   async serve(endpoint, localHost, localPort, ws, origin) {
@@ -49,17 +51,17 @@ export class Proxy {
     }
     const requestManager = new Web3RequestManager.Manager(endpoint);
 
-    const app = express();
+    this.app = express();
     if (ws) {
-      expressWs(app);
+      expressWs(this.app);
     }
 
-    app.use(cors());
-    app.use(express.json());
-    app.use(express.urlencoded({extended: true}));
+    this.app.use(cors());
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({extended: true}));
 
     if (ws) {
-      app.ws('/', (ws, _wsReq) => {
+      this.app.ws('/', (ws, _wsReq) => {
         ws.on('message', (msg) => {
           let jsonMsg;
           try {
@@ -85,7 +87,7 @@ export class Proxy {
       });
     } else {
       // HTTP
-      app.use((req, res) => {
+      this.app.use((req, res) => {
         // Modify request
         this.emitActionsForRequest(req.body, (_err, resp) => {
           // Send the possibly modified request to the Node
@@ -103,9 +105,9 @@ export class Proxy {
     }
 
     return new Promise(resolve => {
-      app.listen(localPort, localHost, null,
+      this.server = this.app.listen(localPort, localHost, null,
         () => {
-          resolve(app);
+          resolve(this.app);
         });
     });
   }
@@ -169,5 +171,18 @@ export class Proxy {
         cb(null, resp);
         calledBack = true;
       });
+  }
+
+  stop() {
+    if (!this.server) {
+      return;
+    }
+    this.server.close();
+    this.server = null;
+    this.app = null;
+    this.commList = {};
+    this.receipts = {};
+    this.transactions = {};
+    this.timeouts = {};
   }
 }

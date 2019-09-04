@@ -20,23 +20,28 @@ class Geth {
       return;
     }
 
-    this.events.request("blockchain:node:register", constants.blockchain.clients.geth, (readyCb) => {
-      this.events.request('processes:register', 'blockchain', {
-        launchFn: (cb) => {
-          // this.startBlockchainNode(readyCb);
-          this.startBlockchainNode(cb);
-        },
-        stopFn: (cb) => {
-          this.stopBlockchainNode(cb);
-        }
-      });
-      this.events.request("processes:launch", "blockchain", (err) => {
-        if (err) {
-          this.logger.error(`Error launching blockchain process: ${err.message || err}`);
-        }
-        readyCb();
-      });
-      this.registerServiceCheck();
+    this.events.request("blockchain:node:register", constants.blockchain.clients.geth, {
+      launchFn: (readyCb) => {
+        this.events.request('processes:register', 'blockchain', {
+          launchFn: (cb) => {
+            this.startBlockchainNode(cb);
+          },
+          stopFn: (cb) => {
+            this.stopBlockchainNode(cb);
+          }
+        });
+        this.events.request("processes:launch", "blockchain", (err) => {
+          if (err) {
+            this.logger.error(`Error launching blockchain process: ${err.message || err}`);
+          }
+          readyCb();
+        });
+        this.registerServiceCheck();
+      },
+      stopFn: async (cb) => {
+        await this.events.request("processes:stop", "blockchain");
+        cb();
+      }
     });
   }
 
