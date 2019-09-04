@@ -5,7 +5,7 @@ import {Embark, Plugins} /* supplied by @types/embark in packages/embark-typings
 import { __ } from "embark-i18n";
 import { embarkPath } from "embark-utils";
 import express, {NextFunction, Request, Response} from "express";
-import expressWs from "express-ws";
+import expressWs, { Application } from "express-ws";
 import findUp from "find-up";
 import helmet from "helmet";
 import * as http from "http";
@@ -292,7 +292,7 @@ export default class Server {
     if (callDescription.method === "ws") {
       instance.app.ws(callDescription.endpoint, this.applyWSFunction.bind(this, callDescription.cb));
     } else {
-      instance.app[callDescription.method].apply(instance.app, [callDescription.endpoint, this.applyHTTPFunction.bind(this, callDescription.cb)]);
+      instance.app[callDescription.method].apply(instance.app, [callDescription.endpoint, (this.applyHTTPFunction.bind(this, callDescription.cb) as Application)]);
     }
   }
 

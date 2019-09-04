@@ -10,10 +10,10 @@ class Reporter {
         this.file = payload.filename;
         break;
       case 'testPass':
-        this.reporter.report(`${ this.contract } ${ payload.value }`, payload.time, true);
+        this.reporter.report(`${this.contract} ${payload.value}`, payload.time, true);
         break;
       case 'testFailure':
-        this.reporter.report(`${ this.contract } ${ payload.value }`, payload.time, false, payload.errMsg);
+        this.reporter.report(`${this.contract} ${payload.value}`, payload.time, false, payload.errMsg);
         break;
       default:
         console.log('dont know how to handle');

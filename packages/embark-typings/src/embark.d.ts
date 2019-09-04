@@ -1,6 +1,21 @@
 import { Logger } from "./logger";
 import { Plugins } from "./plugins";
 
+type CommandCallback = (
+  opt1?: any,
+  opt2?: any,
+  opt3?: any,
+  opt4?: any,
+  opt5?: any,
+  opt6?: any,
+  opt7?: any,
+  opt8?: any,
+  opt9?: any,
+  opt10?: any,
+  opt11?: any,
+  opt12?: any,
+) => any;
+
 export interface Events {
   on: any;
   request: any;
@@ -9,11 +24,7 @@ export interface Events {
   once: any;
   setCommandHandler(
     name: string,
-    callback: (options: any, cb: (...args: any[]) => void) => void,
-  ): void;
-  setCommandHandler(
-    name: string,
-    callback: (option: string, option2: string, cb: (...args: any[]) => void) => void,
+    callback: CommandCallback,
   ): void;
 }
 

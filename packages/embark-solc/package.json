@@ -46,8 +46,8 @@
     "extends": "../../.eslintrc.json"
   },
   "dependencies": {
-    "async": "^2.6.0",
-    "semver": "^5.6.0",
+    "async": "2.6.1",
+    "semver": "5.6.0",
     "shelljs": "0.8.3"
   },
   "devDependencies": {
