@@ -138,7 +138,6 @@ Config.prototype.loadConfigFiles = function(options) {
     env: this.env,
     version: this.version
   });
-  this.plugins.loadPlugins();
 
   this.loadEmbarkConfigFile();
   this.loadBlockchainConfigFile();

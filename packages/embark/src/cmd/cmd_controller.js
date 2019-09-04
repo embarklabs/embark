@@ -163,6 +163,9 @@ simulator(_options) {
         engine.registerModuleGroup("storage");
         engine.registerModuleGroup("cockpit");
         engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
+        
+        // load custom plugins
+        engine.config.plugins.loadPlugins();
 
         const plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {

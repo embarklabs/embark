@@ -52,4 +52,13 @@ if (typeof WebSocket !== 'undefined') {
 }
 <% } %>
 
+<% for (let stackName in (customPlugins || [])) { %>
+  <% for (let pluginName in (customPlugins[stackName] || [])) { %>
+    let __embark<%- pluginName %> = require('<%- customPlugins[stackName][pluginName] %>');
+    __embark<%- pluginName %> = __embark<%- pluginName %>.default || __embark<%- pluginName %>;
+    const customPluginConfig = require('./config/<%- stackName %>.json');
+    EmbarkJS.<%- stackName %> = new __embark<%- pluginName %>({pluginConfig: customPluginConfig});
+  <% }; %>
+<% }; %>
+
 export default EmbarkJS;
