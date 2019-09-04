@@ -174,12 +174,6 @@ class EmbarkController {
         engine.registerModuleGroup("namesystem");
         engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
 
-        engine.events.on('deployment:deployContracts:afterAll', () => {
-          engine.events.request('pipeline:generateAll', () => {
-            engine.events.emit('outputDone');
-          });
-        });
-
         const plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
           try {
@@ -920,19 +914,16 @@ async function compileAndDeploySmartContracts(engine) {
   let _contractsConfig = await engine.events.request2("config:contractsConfig");
   let contractsConfig = cloneDeep(_contractsConfig);
   let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
-  return engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
+  await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
+  await engine.events.request2('pipeline:generateAll');
+  engine.events.emit('outputDone');
 }
 
 async function setupCargoAndWatcher(engine) {
   const cargo = async.cargo(async (tasks) => {
     if (tasks.includes('contract') || tasks.includes('config')) {
       try {
-        await compileAndDeploySmartContracts(engine);
-        return new Promise((resolve) => {
-          engine.events.once('outputDone', () => {
-            resolve();
-          });
-        });
+        return await compileAndDeploySmartContracts(engine);
       } catch (err) {
         engine.logger.error(err);
         return;
