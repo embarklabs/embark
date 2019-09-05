@@ -99,6 +99,13 @@ describe('embark.trackingFunctions', function () {
       expect(readJSON.calledOnceWith(chainsPath)).to.be(false);
       expect(chains).to.be(null);
     });
+    it("non-existant chains file path, should not read chains.json and return null", async function () {
+      exists.restore();
+      exists = sinon.stub(fs, 'exists').returns(false);
+      const chains = await trackingFunctions.chains;
+      expect(readJSON.calledOnceWith(chainsPath)).to.be(false);
+      expect(chains).to.be(null);
+    });
     it("trackContracts is false, should not read chains.json and return null", async function () {
       trackingFunctions = new TrackingFunctions({
         config: {
@@ -125,10 +132,17 @@ describe('embark.trackingFunctions', function () {
       expect(currentChain).to.be.equal(contractInChainsFake);
     });
 
-    it("should return emtpy contracts when not enabled", async function () {
+    it("should return null when not enabled", async function () {
       trackingFunctions.enabled = false;
       const currentChain = await trackingFunctions.currentChain;
-      expect(currentChain).to.be.eql({contracts: []});
+      expect(currentChain).to.be(null);
+    });
+
+    it("should return undefined when there is no chains file", async function () {
+      exists.restore();
+      exists = sinon.stub(fs, 'exists').returns(false);
+      const currentChain = await trackingFunctions.currentChain;
+      expect(currentChain).to.be(undefined);
     });
   });
 
@@ -196,7 +210,8 @@ describe('embark.trackingFunctions', function () {
   describe('#ensureChainTrackerFile', function () {
     it("should do nothing when disabled", async function () {
       trackingFunctions.enabled = false;
-
+      exists.restore();
+      exists = sinon.stub(fs, 'exists').returns(true);
       await trackingFunctions.ensureChainTrackerFile();
       expect(exists.called).to.be(false);
     });
@@ -205,7 +220,12 @@ describe('embark.trackingFunctions', function () {
       exists.restore();
       exists = sinon.stub(fs, 'exists').returns(false);
       await trackingFunctions.ensureChainTrackerFile();
-      expect(outputJSON.calledOnceWith(chainsPath, {})).to.be(true);
+      expect(outputJSON.calledOnceWith(chainsPath, {
+        "0x7aec9250dcc5f6bedc3d0d582e0be8b8d159a4d483c47309e122ba5702ec6a16": {
+          contracts: {},
+          name: "development"
+        }
+      })).to.be(true);
     });
   });
 
@@ -251,6 +271,12 @@ describe('embark.trackingFunctions', function () {
   describe('#save', function () {
     it("should not save when tracking is disabled", async function () {
       trackingFunctions.enabled = false;
+      expect(writeJSON.called).to.be(false);
+    });
+
+    it("should not save when chains is null", async function () {
+      exists.restore();
+      exists = sinon.stub(fs, 'exists').returns(false);
       expect(writeJSON.called).to.be(false);
     });
 

@@ -18,6 +18,7 @@ describe('embark.deploymentChecks', function () {
   let contractInChainsFake;
   let chainsFake;
   let trackedContract;
+  let exists;
   let readJSON;
   let writeJSON;
   let _web3;
@@ -50,6 +51,7 @@ describe('embark.deploymentChecks', function () {
         }
       }
     };
+    exists = sinon.stub(fs, 'exists').returns(true);
     readJSON = sinon.stub(fs, 'readJSON').returns(chainsFake);
     writeJSON = sinon.stub(fs, 'writeJSON');
     trackingFunctions = new TrackingFunctions({
@@ -79,6 +81,7 @@ describe('embark.deploymentChecks', function () {
     deploymentChecks._web3 = _web3;
   });
   afterEach(() => {
+    exists.restore();
     readJSON.restore();
     writeJSON.restore();
   });
@@ -191,7 +194,7 @@ describe('embark.deploymentChecks', function () {
       });
     });
     it("should error (and not deploy) if tracked contract address is invalid", async function () {
-      trackingFunctions._web3.eth.getCode = () => { throw new Error(); };
+      trackingFunctions._web3.eth.getCode = () => {throw new Error();};
       return deploymentChecks.checkIfAlreadyDeployed(params, (err, _params) => {
         expect(err).to.not.be(null);
       });

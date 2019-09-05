@@ -14,6 +14,9 @@ export default class TrackingFunctions {
     this._web3 = null;
     this._chains = null;
     this._currentChain = null;
+    this._block = null;
+
+    this.ensureChainTrackerFile();
   }
 
   get web3() {
@@ -31,13 +34,23 @@ export default class TrackingFunctions {
       if (this._chains) {
         return this._chains;
       }
-      if (!this.enabled) {
+
+      const exists = await this.fs.exists(this.chainsFilePath);
+      if (!this.enabled || !exists) {
         this._chains = null;
         return this._chains;
       }
+
       this._chains = await this.fs.readJSON(this.chainsFilePath);
       return this._chains;
     })();
+  }
+
+  set chains(chains) {
+    this._chains = chains;
+    // chains has changed, therefore currentChain should too
+    // reset the backing variable for currentChain so it can be recalculated on next get
+    this._currentChain = null;
   }
 
   get currentChain() {
@@ -45,30 +58,32 @@ export default class TrackingFunctions {
       if (this._currentChain) {
         return this._currentChain;
       }
+
       if (!this.enabled) {
-        this._currentChain = {contracts: []};
-        return this._currentChain;
+        return null;
       }
 
-      let block;
+      const chains = (await this.chains) || {};
+      const {hash} = await this.block;
+      this._currentChain = chains[hash];
+      return this._currentChain;
+    })();
+  }
+
+  get block() {
+    return (async () => {
+      if (this._block) {
+        return this._block;
+      }
       const web3 = await this.web3;
       try {
-        block = await web3.eth.getBlock(0, true);
+        this._block = await web3.eth.getBlock(0, true);
       } catch (err) {
         // Retry with block 1 (Block 0 fails with Ganache-cli using the --fork option)
-        block = await web3.eth.getBlock(1, true);
+        this._block = await web3.eth.getBlock(1, true);
+      } finally {
+        return this._block;
       }
-      const {hash} = block;
-      this._currentChain = (await this.chains)[hash];
-      if (this._currentChain === undefined) {
-        const empty = {contracts: {}};
-        this._chains[hash] = empty;
-        this._currentChain = empty;
-      }
-
-      this._currentChain.name = this.env;
-
-      return this._currentChain;
     })();
   }
 
@@ -86,7 +101,7 @@ export default class TrackingFunctions {
     const {contract} = params;
     if (!this.enabled) return cb();
     await this.trackContract(contract);
-    this.save();
+    await this.save();
     cb();
   }
 
@@ -95,7 +110,13 @@ export default class TrackingFunctions {
     const exists = await this.fs.exists(this.chainsFilePath);
     if (!exists) {
       this.logger.info(this.chainsFilePath + ' ' + __('file not found, creating it...'));
-      return this.fs.outputJSON(this.chainsFilePath, {});
+      const {hash} = await this.block;
+      return this.fs.outputJSON(this.chainsFilePath, {
+        [hash]: {
+          contracts: {},
+          name: this.env
+        }
+      });
     }
   }
 
@@ -104,13 +125,17 @@ export default class TrackingFunctions {
     if (!this.enabled || !currentChain) return false;
     const toTrack = {name: contract.className, address: contract.deployedAddress};
     if (contract.track === false) toTrack.track = false;
-    currentChain.contracts[contract.hash] = toTrack;
+    const {hash} = await this.block;
+    const chains = await this.chains;
+    chains[hash].contracts[contract.hash] = toTrack;
+    this.chains = chains;
   }
 
   async save() {
-    if (!this.enabled) {
+    const chains = await this.chains;
+    if (!this.enabled || !chains) {
       return;
     }
-    return this.fs.writeJSON(this.chainsFilePath, await this.chains, {spaces: 2});
+    return this.fs.writeJSON(this.chainsFilePath, chains, {spaces: 2});
   }
 }
