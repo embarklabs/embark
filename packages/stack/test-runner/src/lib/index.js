@@ -2,8 +2,12 @@ import { __ } from 'embark-i18n';
 const async = require('async');
 const chalk = require('chalk');
 const path = require('path');
-const { embarkPath, dappPath, runCmd } = require('embark-utils');
+const { dappPath } = require('embark-utils');
 import { COVERAGE_GAS_LIMIT, GAS_LIMIT } from './constants';
+
+const coverage = require('istanbul-lib-coverage');
+const reporter = require('istanbul-lib-report');
+const reports = require('istanbul-reports');
 
 const Reporter = require('./reporter');
 
@@ -62,14 +66,6 @@ class TestRunner {
 
         async.series(runnerFns, next);
       },
-      (_results, next) => {
-        if (!options.coverage) {
-          return next();
-        }
-
-        const cmd = `${embarkPath('node_modules/.bin/istanbul')} report --root .embark --format html --format lcov`;
-        runCmd(cmd, {silent: false, exitOnError: false}, next);
-      }
     ], (err) => {
       reporter.footer();
 
@@ -77,17 +73,35 @@ class TestRunner {
         return cb(err, reporter.passes, reporter.fails);
       }
 
-      process.stdout.write(chalk`{blue Coverage report created. You can find it here:}\n{white.underline ${dappPath('coverage/index.html')}}\n`);
+      try {
+        this.generateCoverageReport();
+        process.stdout.write(chalk`{blue Coverage report created. You can find it here:}\n{white.underline ${dappPath('coverage/index.html')}}\n`);
 
-      if (options.noBrowser) {
-        return cb(err, reporter.passes, reporter.fails);
-      }
+        if (options.noBrowser) {
+          return cb(err, reporter.passes, reporter.fails);
+        }
 
-      const open = require('open');
-      open(dappPath('coverage/index.html')).then(() => {
+        const open = require('open');
+        open(dappPath('coverage/index.html')).then(() => {
+          cb(err, reporter.passes, reporter.fails);
+        });
+      } catch(err) {
+        process.stdout.write(chalk`{red Coverage report could not be created:}\n{white ${err.message}}\n`);
         cb(err, reporter.passes, reporter.fails);
-      });
+      }
     });
+  }
+
+  generateCoverageReport() {
+    const coveragePath = dappPath(".embark", "coverage.json");
+    const coverageMap = JSON.parse(fs.readFileSync(coveragePath));
+    const map = coverage.createCoverageMap(coverageMap);
+    const tree = reporter.summarizers.nested(map);
+
+    const ctx = reporter.createContext({ dir: 'coverage' });
+    const report = reports.create('html', { skipEmpty: false, skipFull: false });
+
+    tree.visit(report, ctx);
   }
 
   getFilesFromDir(filePath, cb) {
