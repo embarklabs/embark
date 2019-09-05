@@ -882,7 +882,7 @@ class EmbarkController {
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
         engine.registerModuleGroup("pipeline");
-        engine.registerModuleGroup("tests");
+        engine.registerModuleGroup("tests", options);
 
         let plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {

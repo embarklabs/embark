@@ -36,9 +36,9 @@ class Reporter {
   footer() {
     const total = this.passes + this.fails;
     if (this.fails > 0) {
-      process.stdout.write(`>>> Failed ${this.fails} / ${total} test(s).\n`);
+      process.stdout.write(chalk`{red Failed ${this.fails} / ${total} test(s).}\n`);
     } else {
-      process.stdout.write(`>>> Passed ${this.passes} test(s).\n`);
+      process.stdout.write(chalk`{green Passed ${this.passes} test(s).}\n`);
 
     }
   }

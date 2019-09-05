@@ -9,13 +9,14 @@ const JAVASCRIPT_TEST_MATCH = /^.+\.js$/i;
 const TEST_TIMEOUT = 15000; // 15 seconds in milliseconds
 
 class MochaTestRunner {
-  constructor(embark, _options) {
+  constructor(embark, options) {
     this.embark = embark;
+    this.events = embark.events;
+    this.plugins = options.plugins;
 
     this.files = [];
 
-    const { events } = embark;
-    events.request('tests:runner:register',
+    this.events.request('tests:runner:register',
       'JavaScript (Mocha)',
       this.match.bind(this),
       this.addFile.bind(this),
@@ -36,7 +37,7 @@ class MochaTestRunner {
   }
 
   run(options, cb) {
-    const {events} = this.embark;
+    const {events, plugins} = this;
     const {reporter} = options;
 
     const Module = require("module");
@@ -76,6 +77,7 @@ class MochaTestRunner {
             acctCb(err, accounts);
           }
 
+          events.emit('tests:ready', accounts);
           done();
         });
       });
@@ -105,8 +107,14 @@ class MochaTestRunner {
       (next) => { // get contract files
         events.request("config:contractsFiles", next);
       },
+      (cf, next) => {
+        plugins.emitAndRunActionsForEvent('tests:contracts:compile:before', cf, next);
+      },
       (cf, next) => { // compile contracts
         events.request("compiler:contracts:compile", cf, next);
+      },
+      (cc, next) => {
+        plugins.emitAndRunActionsForEvent('tests:contracts:compile:after', cc, next);
       },
       (cc, next) => { // override require
         compiledContracts = cc;
@@ -149,12 +157,14 @@ class MochaTestRunner {
         }
 
         mocha.run((failures) => {
-          next(null, failures);
+          next();
         });
       }
-    ], (err, failures) => {
+    ], (err) => {
+      events.emit('tests:finished');
+
       Module.prototype.require = originalRequire;
-      cb(err, failures);
+      cb(err);
     });
   }
 }
