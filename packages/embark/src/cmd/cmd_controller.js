@@ -162,6 +162,7 @@ class EmbarkController {
         engine.registerModuleGroup("stackComponents");
 
         // TODO: replace with individual plugins
+        engine.registerModuleGroup("namesystem");
         engine.registerModuleGroup("blockchain");
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
@@ -171,7 +172,6 @@ class EmbarkController {
         engine.registerModuleGroup("storage");
         engine.registerModuleGroup("communication");
         engine.registerModuleGroup("cockpit");
-        engine.registerModuleGroup("namesystem");
         engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
 
         const plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});

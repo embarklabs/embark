@@ -39,13 +39,8 @@ class IPFS {
       return;
     }
 
-    this.events.request("runcode:whitelist", 'ipfs-api', () => {});
-    this.events.request("runcode:whitelist", 'embarkjs', () => {});
-    this.events.request("runcode:whitelist", 'embarkjs-ipfs', () => {});
-    this.events.on("storage:started", this.registerIpfsObject.bind(this));
-    this.events.on("storage:started", this.connectEmbarkJSProvider.bind(this));
-
-    this.embark.registerActionForEvent("pipeline:generateAll:before", this.addEmbarkJSIpfsArtifact.bind(this));
+    this.setupIpfsApi();
+    this.setupEmbarkJS();
 
     this.events.request("storage:node:register", "ipfs", (readyCb) => {
       this.events.request('processes:register', 'storage', {
@@ -72,8 +67,35 @@ class IPFS {
 
       upload_ipfs.deploy(readyCb);
     });
+  }
 
-    this.registerEmbarkJSStorage();
+  async setupIpfsApi() {
+    this.events.request("runcode:whitelist", 'ipfs-api', () => {});
+    this.events.on("storage:started", this.registerIpfsObject.bind(this));
+    this.registerIpfsObject();
+    this.registerIpfsHelp();
+  }
+
+  async registerIpfsObject() {
+    const {host, port} = this.config;
+    let ipfs = IpfsApi(host, port);
+    await this.events.request2("runcode:register", "ipfs", ipfs);
+  }
+
+  async registerIpfsHelp() {
+    await this.events.request2('console:register:helpCmd', {
+      cmdName: "ipfs",
+      cmdHelp: __("instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)")
+    });
+  }
+
+  async setupEmbarkJS() {
+    this.events.request("embarkjs:plugin:register", 'storage', 'ipfs', 'embarkjs-ipfs');
+    await this.events.request2("embarkjs:console:register", 'storage', 'ipfs', 'embarkjs-ipfs');
+    this.events.on("storage:started", () => {
+      let config = this.embark.config.storageConfig.dappConnection || [];
+      this.events.request("embarkjs:console:setProvider", 'storage', 'ipfs', config);
+    });
   }
 
   get config() {
@@ -113,61 +135,6 @@ class IPFS {
       );
 
     return this._enabled;
-  }
-
-  async addEmbarkJSIpfsArtifact(params, cb) {
-    const code = `
-      var EmbarkJS;
-      if (typeof EmbarkJS === 'undefined') {
-        EmbarkJS = require('embarkjs');
-      }
-      const __embarkIPFS = require('embarkjs-ipfs');
-      EmbarkJS.Storage.registerProvider('ipfs', __embarkIPFS.default || __embarkIPFS);
-      EmbarkJS.Storage.setProviders(${JSON.stringify(this.embark.config.storageConfig.dappConnection || [])}, {web3});
-    `;
-    this.events.request("pipeline:register", {
-      path: [this.embarkConfig.generationDir, 'storage'],
-      file: 'init.js',
-      format: 'js',
-      content: code
-    }, cb);
-  }
-
-  async registerIpfsObject() {
-    const {host, port} = this.config;
-    let ipfs = IpfsApi(host, port);
-    await this.events.request2("runcode:register", "ipfs", ipfs);
-    this.registerIpfsHelp();
-  }
-
-  async registerIpfsHelp() {
-    await this.events.request2('console:register:helpCmd', {
-      cmdName: "ipfs",
-      cmdHelp: __("instantiated js-ipfs object configured to the current environment (available if ipfs is enabled)")
-    });
-  }
-
-  async registerEmbarkJSStorage() {
-    let checkEmbarkJS = `
-      return (typeof EmbarkJS === 'undefined');
-    `;
-    let EmbarkJSNotDefined = await this.events.request2('runcode:eval', checkEmbarkJS);
-
-    if (EmbarkJSNotDefined) {
-      await this.events.request2("runcode:register", 'EmbarkJS', require('embarkjs'));
-    }
-
-    const registerProviderCode = `
-      const __embarkIPFS = require('embarkjs-ipfs');
-      EmbarkJS.Storage.registerProvider('ipfs', __embarkIPFS.default || __embarkIPFS);
-    `;
-
-    await this.events.request2('runcode:eval', registerProviderCode);
-  }
-
-  async connectEmbarkJSProvider() {
-    let providerCode = `\nEmbarkJS.Storage.setProviders(${JSON.stringify(this.embark.config.storageConfig.dappConnection || [])}, {web3});`;
-    await this.events.request2('runcode:eval', providerCode);
   }
 
   registerServiceCheck() {

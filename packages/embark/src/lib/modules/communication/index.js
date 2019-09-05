@@ -1,4 +1,5 @@
 import { __ } from 'embark-i18n';
+import {canonicalHost, defaultHost} from 'embark-utils';
 
 class Communication {
   constructor(embark, _options){
@@ -29,15 +30,14 @@ class Communication {
   }
 
   addArtifactFile(_params, cb) {
-    let config = {
-      // TODO: for consistency we should change this to be dappConnection or connection
-      connection: this.communicationConfig.connection
-    };
+    const connection = this.communicationConfig.connection;
+    this.communicationConfig.connection.server = canonicalHost(connection.host || defaultHost);
+
     this.events.request("pipeline:register", {
       path: [this.embarkConfig.generationDir, 'config'],
       file: 'communication.json',
       format: 'json',
-      content: config
+      content: this.communicationConfig
     }, cb);
   }
 

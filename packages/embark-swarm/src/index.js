@@ -1,10 +1,10 @@
 import {__} from 'embark-i18n';
+import {buildUrlFromConfig} from 'embark-utils';
 const UploadSwarm = require('./upload.js');
 const SwarmAPI = require('swarm-api');
 const StorageProcessesLauncher = require('./storageProcessesLauncher');
 const constants = require('embark-core/constants');
 require('colors');
-import {buildUrlFromConfig} from 'embark-utils';
 
 class Swarm {
 
@@ -50,16 +50,11 @@ class Swarm {
       });
     });
 
-    this.events.request("runcode:whitelist", 'swarm-api', () => {});
-    this.events.request("runcode:whitelist", 'embarkjs', () => {});
-    this.events.request("runcode:whitelist", 'embarkjs-swarm', () => {});
-    this.events.on("storage:started", this.registerSwarmObject.bind(this));
-    this.events.on("storage:started", this.connectEmbarkJSProvider.bind(this));
-
-    this.embark.registerActionForEvent("pipeline:generateAll:before", this.addEmbarkJSSwarmArtifact.bind(this));
-
     this.providerUrl = buildUrlFromConfig(this.config);
     this.swarm = new SwarmAPI({gateway: this.providerUrl});
+
+    this.setupSwarmAPI();
+    this.setupEmbarkJS();
 
     this.events.request("storage:node:register", "swarm", (readyCb) => {
       this.events.request("processes:register", "storage", {
@@ -96,8 +91,27 @@ class Swarm {
 
       upload_swarm.deploy(readyCb);
     });
+  }
 
-    this.registerEmbarkJSStorage();
+  setupSwarmAPI() {
+    this.events.request("runcode:whitelist", 'swarm-api', () => {});
+    this.events.on("storage:started", async () => {
+      await this.events.request2("runcode:register", "swarm", this.swarm);
+      await this.events.request2('console:register:helpCmd', {
+        cmdName: "swarm",
+        cmdHelp: __("instantiated swarm-api object configured to the current environment (available if swarm is enabled)")
+      });
+    });
+  }
+
+  async setupEmbarkJS() {
+    this.events.request("embarkjs:plugin:register", 'storage', 'swarm', 'embarkjs-swarm');
+    await this.events.request2("embarkjs:console:register", 'storage', 'swarm', 'embarkjs-swarm');
+
+    this.events.on("storage:started", () => {
+      let config = this.embark.config.storageConfig.dappConnection || [];
+      this.events.request("embarkjs:console:setProvider", 'storage', 'swarm', config);
+    });
   }
 
   get config() {
@@ -136,60 +150,6 @@ class Swarm {
       );
 
     return this._enabled;
-  }
-
-  async addEmbarkJSSwarmArtifact(params, cb) {
-    const code = `
-      var EmbarkJS;
-      if (typeof EmbarkJS === 'undefined') {
-        EmbarkJS = require('embarkjs');
-      }
-      const __embarkSwarm = require('embarkjs-swarm');
-      EmbarkJS.Storage.registerProvider('swarm', __embarkSwarm.default || __embarkSwarm);
-      EmbarkJS.Storage.setProviders(${JSON.stringify(this.embark.config.storageConfig.dappConnection || [])}, {web3});
-    `;
-    this.events.request("pipeline:register", {
-      path: [this.embarkConfig.generationDir, 'storage'],
-      file: 'init.js',
-      format: 'js',
-      content: code
-    }, cb);
-  }
-
-  async registerSwarmObject() {
-    await this.events.request2("runcode:register", "swarm", this.swarm);
-    this.registerSwarmHelp();
-  }
-
-  async registerSwarmHelp() {
-    await this.events.request2('console:register:helpCmd', {
-      cmdName: "swarm",
-      cmdHelp: __("instantiated swarm-api object configured to the current environment (available if swarm is enabled)")
-    });
-  }
-
-  async registerEmbarkJSStorage() {
-    let checkEmbarkJS = `
-      return (typeof EmbarkJS === 'undefined');
-    `;
-    let embarkJSNotDefined = await this.events.request2('runcode:eval', checkEmbarkJS);
-
-    if (embarkJSNotDefined) {
-      await this.events.request2("runcode:register", 'EmbarkJS', require('embarkjs'));
-    }
-
-    const registerProviderCode = `
-      const __embarkSwarm = require('embarkjs-swarm');
-      EmbarkJS.Storage.registerProvider('swarm', __embarkSwarm.default || __embarkSwarm);
-    `;
-
-    await this.events.request2('runcode:eval', registerProviderCode);
-  }
-
-  async connectEmbarkJSProvider() {
-    // TODO: should initialize its own object web3 instead of relying on a global one
-    let providerCode = `\nEmbarkJS.Storage.setProviders(${JSON.stringify(this.embark.config.storageConfig.dappConnection || [])}, {web3});`;
-    await this.events.request2('runcode:eval', providerCode);
   }
 
   registerServiceCheck() {
