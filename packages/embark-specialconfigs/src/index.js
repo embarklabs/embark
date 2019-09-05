@@ -15,11 +15,16 @@ class SpecialConfigs {
     this.listConfigs = new ListConfigs(embark);
     this.functionConfigs = new FunctionConfigs(embark);
 
+    this.events.setCommandHandler('deployment:contract:address', this.executeAddressHandlerForContract.bind(this));
     this.embark.registerActionForEvent('deployment:deployContracts:beforeAll', this.beforeAllDeployAction.bind(this));
     this.embark.registerActionForEvent('deployment:deployContracts:afterAll', this.afterAllDeployAction.bind(this));
     this.embark.registerActionForEvent("deployment:contract:deployed", this.doOnDeployAction.bind(this));
     this.embark.registerActionForEvent("deployment:contract:shouldDeploy", this.deployIfAction.bind(this));
     this.embark.registerActionForEvent('deployment:contract:beforeDeploy', this.beforeDeployAction.bind(this));
+  }
+
+  async executeAddressHandlerForContract(params, cb) {
+    return this.functionConfigs.executeContractAddressHandler(params.contract, cb);
   }
 
   async beforeAllDeployAction(_params, cb) {

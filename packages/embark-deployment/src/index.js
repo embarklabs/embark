@@ -66,6 +66,19 @@ class Deployment {
     Object.values(contracts).forEach((contract) => {
       function deploy(result, callback) {
         if (typeof result === 'function') callback = result;
+        if (contract.addressHandler) {
+          return self.events.request('deployment:contract:address', {contract}, (err, address) => {
+            if (err) {
+              errors.push(err);
+            } else {
+              contract.address = address;
+              contract.deployedAddress = address;
+              self.logger.info(__('{{contractName}} already deployed at {{address}}', {contractName: contract.className.bold.cyan, address: contract.address.bold.cyan}));
+              self.events.emit("deployment:contract:deployed", contract);
+            }
+            callback();
+          });
+        }
         self.deployContract(contract, (err) => {
           if (err) {
             errors.push(err);

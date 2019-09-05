@@ -131,7 +131,7 @@ production: {
 
 In order to give users full control over which Smart Contracts should be deployed, Embark comes with a configuration feature called "deployment strategies". Deployment strategies tell Embark whether it should deploy all of the user's Smart Contracts (and its (3rd-party) dependencies, or just deploy individual Smart Contracts.
 
-There are two possible strategy options: 
+There are two possible strategy options:
 
 - **implicit** - This is the default. Using the `implicit` strategy, Embark tries to deploy all Smart Contracts configured in the `deploy` configuration, including its (3rd-party) dependencies.
 - **explicit** - Setting this option to `explicit` tells Embark to deploy the Smart Contracts specified in the `deploy` configuration without their dependencies. This can be combined with [disabling deployment](#Disabling-deployment) of individual Smart Contracts for fine control.
@@ -201,6 +201,29 @@ module.exports = {
   }
 }
 ```
+
+## Dynamic Addresses
+
+There are scenarios in which we want to configure a Smart Contract that is already deployed by a third-party, but its address can only be computed at run-time. For such cases, Embark supports specifying a function as `address`, which returns the address we're interested in. Usually, other Smart Contract instances are needed to perform that computation, so the [`deps` configuration](#Deployment-hooks) comes in handy as well:
+
+```
+deploy: {
+  SimpleStorage: {
+    fromIndex: 0,
+    args: [100],
+  },
+  OtherContract: {
+    deps: ['SimpleStorage'],
+    address: async (deps) => {
+      // use `deps.contracts.SimpleStorage` to determine and return address
+    },
+    abiDefinition: ABI
+  },
+}
+```
+
+In the example above, `OtherContract` will be deployed after `SimpleStorage` because it uses the `deps` property to define Smart Contracts that it depends on. All dependencies are exposed on the `address` function parameter similar to [deployment hooks](#Deployment-hooks). Also, notice that the `abiDefinition` is only needed if the Smart Contracts bytecode isn't already on disk.
+
 
 ## Configuring source files
 
@@ -541,7 +564,7 @@ deploy: {
 }
 ```
 
-Which will result in 
+Which will result in
 
 ```
 SimpleStorage > onDeploy > Hello from onDeploy!

@@ -183,7 +183,7 @@ function prepareContractsConfig(config) {
       config.contracts[contractName].gasPrice = getWeiBalanceFromString(gasPrice);
     }
 
-    if (address) {
+    if (address && typeof address === 'string') {
       config.contracts[contractName].address = extendZeroAddressShorthand(address);
     }
 
