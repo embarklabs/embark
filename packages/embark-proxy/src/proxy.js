@@ -1,6 +1,5 @@
 /* global Buffer exports require */
 import {__} from 'embark-i18n';
-import {canonicalHost, timer, pingEndpoint, deconstructUrl} from 'embark-utils';
 import express from 'express';
 import expressWs from 'express-ws';
 import cors from 'cors';
@@ -18,29 +17,14 @@ export class Proxy {
     this.logger = options.logger;
   }
 
-  async serve(endpoint, localHost, localPort, ws, origin) {
-    const start = Date.now();
-    const {host, port} = deconstructUrl(endpoint);
-    await (function waitOnTarget() {
-      return new Promise(resolve => {
-        pingEndpoint(
-          canonicalHost(host),
-          port,
-          ws ? 'ws' : false,
-          'http',
-          origin ? origin.split(',')[0] : undefined,
-          (err) => {
-            if (!err || (Date.now() - start > 10000)) {
-              resolve();
-            } else {
-              timer(250).then(waitOnTarget).then(resolve);
-            }
-          }
-        );
-      });
-    }());
-
+  async serve(endpoint, localHost, localPort, ws) {
     const requestManager = new Web3RequestManager.Manager(endpoint);
+
+    try {
+      await requestManager.send({method: 'eth_accounts'});
+    } catch (e) {
+      throw new Error(__('Unable to connect to the blockchain endpoint'));
+    }
 
     const app = express();
     if (ws) {

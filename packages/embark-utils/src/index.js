@@ -154,7 +154,7 @@ function toposort(graph) {
 }
 
 function deconstructUrl(endpoint) {
-  const matches = endpoint.match(/(wss?|https?):\/\/([a-zA-Z0-9_.-]*):?([0-9]*)?/);
+  const matches = endpoint.match(/(wss?|https?):\/\/([a-zA-Z0-9_.\/-]*):?([0-9]*)?/);
   return {
     protocol: matches[1],
     host: matches[2],
