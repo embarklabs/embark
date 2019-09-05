@@ -1,9 +1,9 @@
 import {ProcessManager, IPC} from 'embark-core';
 
+const EMBARK_PROCESS_NAME = 'embark';
+
 const utils = require('../utils/utils');
 const Logger = require('embark-logger');
-
-const EMBARK_PROCESS_NAME = 'embark';
 
 class Engine {
   constructor(options) {
@@ -210,16 +210,7 @@ class Engine {
   }
 
   contractsComponents(_options) {
-  //   this.registerModulePackage('embark-blockchain-connector', {
-  //     isDev: this.isDev,
-  //     locale: this.locale,
-  //     plugins: this.plugins,
-  //     web3: options.web3,
-  //     wait: options.wait
-  //   });
-
     this.registerModule('ethereum-blockchain-client');
-    // this.registerModule('web3', { plugins: this.plugins });
     this.registerModulePackage('embark-web3');
     this.registerModulePackage('embark-accounts-manager');
     this.registerModulePackage('embark-specialconfigs', {plugins: this.plugins});
@@ -240,226 +231,12 @@ class Engine {
     this.registerModulePackage('embark-ens');
   }
 
-  // ================
-  // ================
-  // ================
-  // To be removed
-  // ================
-
-  startService(serviceName, _options) {
-    let options = _options || {};
-
-    let services = {
-      "serviceMonitor": this.serviceMonitor,
-      "pipeline": this.pipelineService,
-      "cockpit": this.cockpitService,
-      "codeRunner": this.codeRunnerService,
-      "codeGenerator": this.codeGeneratorService,
-      "compiler": this.setupCompilerAndContractsManagerService,
-      "deployment": this.deploymentService,
-      "fileWatcher": this.fileWatchService,
-      "webServer": this.webServerService,
-      "console": this.console,
-      "web3": this.web3Service,
-      "libraryManager": this.libraryManagerService,
-      "processManager": this.processManagerService,
-      "storage": this.storageService,
-      "pluginCommand": this.pluginCommandService,
-      "graph": this.graphService,
-      "testRunner": this.testRunnerService,
-      "codeCoverage": this.codeCoverageService,
-      "scaffolding": this.scaffoldingService,
-      "coreProcess": this.coreProcessService,
-      "processApi": this.processApiService,
-      "blockchainListener": this.blockchainListenerService,
-      "blockchain": this.blockchainComponents
-    };
-
-    let service = services[serviceName];
-
-    if (!service) {
-      throw new Error("unknown service: " + serviceName);
-    }
-
-    // need to be careful with circular references due to passing the web3 object
-    //this.logger.trace("calling: " + serviceName + "(" + JSON.stringify(options) + ")");
-    return service.apply(this, [options]);
-  }
-
-  embarkListenerService(_options)  {
-    this.registerModulePackage('embark-listener');
-  }
-
-  blockchainListenerService(_options) {
-    this.registerModulePackage('embark-blockchain-listener', {
-      ipc: this.ipc
-    });
-  }
-
-  coreProcessService(_options) {
-    this.registerModulePackage('embark-core/process', {
-      events: this.events
-    });
-  }
-
-  processManagerService(_options) {
-    this.processManager = new ProcessManager({
-      events: this.events,
-      logger: this.logger,
-      plugins: this.plugins
-    });
-  }
-
-  graphService(_options) {
-    this.registerModulePackage('embark-graph');
-  }
-
-  scaffoldingService(_options) {
-    this.registerModulePackage('embark-scaffolding', {plugins: this.plugins});
-  }
-
-  serviceMonitor() {
-    const ServicesMonitor = require('./services_monitor.js');
-    this.servicesMonitor = new ServicesMonitor({events: this.events, logger: this.logger, plugins: this.plugins});
-    this.servicesMonitor.addCheck('Embark', function (cb) {
-      return cb({name: 'Embark ' + self.version, status: 'on'});
-    }, 0);
-    this.servicesMonitor.startMonitor();
-  }
-
-  pluginCommandService() {
-    this.registerModulePackage('embark-plugin-cmd', {embarkConfigFile: this.embarkConfig, embarkConfig: this.config.embarkConfig, packageFile: 'package.json'});
-  }
-
-  codeRunnerService(_options) {
-    this.registerModulePackage('embark-code-runner', {
-      ipc: this.ipc
-    });
-  }
-
-  codeGeneratorService(_options) {
-    return;
-    // let self = this;
-    //
-    // this.registerModulePackage('embark-code-generator', {plugins: self.plugins, env: self.env});
-    //
-    // const generateCode = function (modifiedAssets) {
-    // // self.events.request("module:storage:onReady", () => {
-    // self.events.request("code-generator:embarkjs:build", () => {
-    // self.events.emit('code-generator-ready', modifiedAssets);
-    // });
-    // // });
-    // };
-    // const cargo = async.cargo((tasks, callback) => {
-    // const modifiedAssets = tasks.map(task => task.modifiedAsset).filter(asset => asset); // filter null elements
-    // generateCode(modifiedAssets);
-    // self.events.once('outputDone', callback);
-    // });
-    // const addToCargo = function (modifiedAsset) {
-    // cargo.push({modifiedAsset});
-    // };
-    //
-    // this.events.on('contractsDeployed', addToCargo);
-    // this.events.on('blockchainDisabled', addToCargo);
-    // this.events.on('asset-changed', addToCargo);
-  }
-
-  setupCompilerAndContractsManagerService(options) {
-    this.registerModulePackage('embark-compiler', {plugins: this.plugins, isCoverage: options.isCoverage});
-    this.registerModulePackage('embark-solidity', {ipc: this.ipc, useDashboard: this.useDashboard});
-    this.registerModulePackage('embark-vyper');
-    this.registerModulePackage('embark-contracts-manager', {plugins: this.plugins, compileOnceOnly: options.compileOnceOnly});
-  }
-
-  deploymentService(options) {
-    let self = this;
-
-    this.setupCompilerAndContractsManagerService(options);
-    this.registerModulePackage('embark-solidity', {ipc: self.ipc, useDashboard: this.useDashboard});
-    this.registerModulePackage('embark-vyper');
-    this.registerModulePackage('embark-profiler');
-    this.registerModulePackage('embark-deploy-tracker', {trackContracts: options.trackContracts});
-    this.registerModulePackage('embark-specialconfigs');
-    this.registerModulePackage('embark-console-listener', {ipc: self.ipc});
-    this.registerModulePackage('embark-deployment', {plugins: this.plugins, onlyCompile: options.onlyCompile});
-    this.registerModulePackage('embark-transaction-tracker');
-    this.registerModulePackage('embark-debugger');
-  }
-
-  fileWatchService() {
-    this.registerModulePackage('embark-watcher');
-    this.events.request('watcher:start');
-  }
-
-  cockpitService() {
-    this.registerModulePackage('embark-authenticator', {singleUseAuthToken: this.singleUseAuthToken});
-    this.registerModulePackage('embark-api', {plugins: this.plugins});
-  }
 
   cockpitModules() {
     this.registerModulePackage('embark-authenticator', {singleUseAuthToken: this.singleUseAuthToken});
     this.registerModulePackage('embark-api', {plugins: this.plugins});
     // Register logs for the cockpit console
     this.events.request('process:logs:register', {processName: EMBARK_PROCESS_NAME, eventName: "log", silent: false, alwaysAlreadyLogged: true});
-  }
-
-  webServerService() {
-    this.registerModulePackage('embark-webserver');
-  }
-
-  storageService(_options) {
-    this.registerModulePackage('embark-storage', {plugins: this.plugins});
-    this.registerModulePackage('embark-ipfs');
-    this.registerModulePackage('embark-swarm');
-    // this.registerModulePackage('embark-swarm');
-
-    // this.events.setCommandHandler("module:storage:reset", (cb) => {
-    //   async.parallel([
-    //     (paraCb) => {
-    //       this.events.request("module:ipfs:reset", paraCb);
-    //     },
-    //     (paraCb) => {
-    //       this.events.request("module:swarm:reset", paraCb);
-    //     },
-    //     (paraCb) => {
-    //       this.events.request("module:storageJS:reset", paraCb);
-    //     }
-    //   ], cb);
-    // });
-  }
-
-  web3Service(options) {
-    this.registerModulePackage('embark-web3', {plugins: this.plugins});
-
-    this.registerModulePackage('embark-blockchain-process', {
-      client: this.client,
-      locale: this.locale,
-      isDev: this.isDev,
-      ipc: this.ipc
-    });
-
-    this.registerModulePackage('embark-blockchain-connector', {
-      isDev: this.isDev,
-      locale: this.locale,
-      plugins: this.plugins,
-      web3: options.web3,
-      wait: options.wait
-    });
-
-    this.registerModulePackage('embark-whisper', {plugins: this.plugins});
-    this.registerModule('web3', {plugins: this.plugins});
-  }
-
-  libraryManagerService(_options) {
-    return this.registerModulePackage('embark-library-manager', {useDashboard: this.useDashboard});
-  }
-
-  codeCoverageService(_options) {
-    this.registerModulePackage('embark-coverage');
-  }
-
-  testRunnerService(options) {
-    this.registerModulePackage('embark-test-runner', Object.assign(options, {ipc: this.ipc}));
   }
 
 }
