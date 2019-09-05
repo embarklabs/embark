@@ -75,7 +75,11 @@
     "packages": [
       "dapps/templates/*",
       "dapps/tests/*",
-      "packages/*"
+      "packages/core/*",
+      "packages/plugins/*",
+      "packages/stack/*",
+      "packages/*",
+      "core/*"
     ],
     "nohoist": [
       "embark/embark-test-contract-0",

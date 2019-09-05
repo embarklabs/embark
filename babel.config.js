@@ -9,6 +9,7 @@ module.exports = (api) => {
     babelrcRoots: [
       '.',
       'packages/*',
+      'core/*',
     ],
     plugins: [
       'babel-plugin-macros',
