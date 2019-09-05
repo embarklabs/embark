@@ -1,4 +1,5 @@
 import { __ } from 'embark-i18n';
+import {BlockchainClient} from "../geth/blockchain";
 const {normalizeInput} = require('embark-utils');
 import {BlockchainProcessLauncher} from './blockchainProcessLauncher';
 import {ws, rpc} from './check.js';
@@ -70,6 +71,18 @@ class Parity {
   }
 
   startBlockchainNode(callback) {
+    if (this.blockchainConfig.isStandalone) {
+      return BlockchainClient(this.blockchainConfig, {
+        clientName: 'parity',
+        env: this.embark.env,
+        certOptions: this.embark.config.webServerConfig.certOptions,
+        logger: this.logger,
+        events: this.events,
+        isStandalone: true,
+        fs: this.embark.fs
+      }).run();
+    }
+
     this.blockchainProcess = new BlockchainProcessLauncher({
       events: this.events,
       logger: this.logger,

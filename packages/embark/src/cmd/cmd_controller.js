@@ -1,4 +1,4 @@
-import {BlockchainClient, Simulator} from 'embark-blockchain-process';
+import {Simulator} from 'embark-blockchain-process';
 import {__} from 'embark-i18n';
 import {dappPath, embarkPath} from 'embark-utils';
 import findUp from 'find-up';
@@ -37,6 +37,7 @@ class EmbarkController {
   }
 
   blockchain(options) {
+    this.context = options.context || [constants.contexts.blockchain];
     const webServerConfig = {};
 
     const Engine = require('../lib/core/engine.js');
@@ -57,26 +58,14 @@ class EmbarkController {
     });
 
     engine.init({}, () => {
-      engine.startService("processManager");
-      engine.startService("coreProcess");
-      engine.startService("blockchain");
+      engine.registerModuleGroup("coreComponents");
+      engine.registerModuleGroup("stackComponents");
+      engine.registerModuleGroup("blockchain");
 
-      engine.startEngine(() => {
-        // callback();
+      engine.startEngine(async () => {
+        await engine.events.request2("blockchain:node:start", Object.assign(engine.config.blockchainConfig, {isStandalone: true}));
       });
     });
-
-    // this.context = [constants.contexts.blockchain];
-    // return BlockchainClient(this.config.blockchainConfig, {
-    //   clientName: client,
-    //   env,
-    //   certOptions: this.config.webServerConfig.certOptions,
-    //   logger: this.logger,
-    //   events: this.events,
-    //   isStandalone: true,
-    //   fs
-    // }).run();
-
   }
 
   simulator(options) {
@@ -102,7 +91,7 @@ class EmbarkController {
   }
 
   run2(options) {
-    let self = this;
+    const self = this;
     self.context = options.context || [constants.contexts.run, constants.contexts.build];
     let Dashboard = require('./dashboard/dashboard.js');
 
@@ -153,7 +142,7 @@ class EmbarkController {
         });
       },
       function (callback) {
-        let pluginList = engine.plugins.listPlugins();
+        const pluginList = engine.plugins.listPlugins();
         if (pluginList.length > 0) {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }

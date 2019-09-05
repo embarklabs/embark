@@ -102,7 +102,9 @@ var Blockchain = function(userConfig, clientClass) {
   }
   this.client = new clientClass({config: this.config, env: this.env, isDev: this.isDev});
 
-  this.initStandaloneProcess();
+  if (this.isStandalone) {
+    this.initStandaloneProcess();
+  }
 };
 
 /**
@@ -113,40 +115,40 @@ var Blockchain = function(userConfig, clientClass) {
  *
  * @returns {void}
  */
-Blockchain.prototype.initStandaloneProcess = function () {
-  if (this.isStandalone) {
-    let logQueue = [];
+Blockchain.prototype.initStandaloneProcess = function() {
+  let logQueue = [];
 
-    // on every log logged in logger (say that 3x fast), send the log
-    // to the IPC serve listening (only if we're connected of course)
-    this.logger.events.on('log', (logLevel, message) => {
-      if (this.ipc.connected) {
-        this.ipc.request('blockchain:log', {logLevel, message});
-      } else {
-        logQueue.push({logLevel, message});
-      }
-    });
+  // on every log logged in logger (say that 3x fast), send the log
+  // to the IPC serve listening (only if we're connected of course)
+  this.logger.events.on('log', (logLevel, message) => {
+    if (this.ipc.connected) {
+      this.ipc.request('blockchain:log', {logLevel, message});
+    } else {
+      logQueue.push({logLevel, message});
+    }
+  });
 
-    this.ipc = new IPC({ipcRole: 'client'});
+  this.ipc = new IPC({ipcRole: 'client'});
 
-    // Wait for an IPC server to start (ie `embark run`) by polling `.connect()`.
-    // Do not kill this interval as the IPC server may restart (ie restart
-    // `embark run` without restarting `embark blockchain`)
-    setInterval(() => {
-      if (!this.ipc.connected) {
-        this.ipc.connect(() => {
-          if (this.ipc.connected) {
-            logQueue.forEach(message => { this.ipc.request('blockchain:log', message); });
-            logQueue = [];
-            this.ipc.client.on('process:blockchain:stop', () => {
-              this.kill();
-              process.exit(0);
-            });
-          }
-        });
-      }
-    }, IPC_CONNECT_INTERVAL);
-  }
+  // Wait for an IPC server to start (ie `embark run`) by polling `.connect()`.
+  // Do not kill this interval as the IPC server may restart (ie restart
+  // `embark run` without restarting `embark blockchain`)
+  setInterval(() => {
+    if (!this.ipc.connected) {
+      this.ipc.connect(() => {
+        if (this.ipc.connected) {
+          logQueue.forEach(message => {
+            this.ipc.request('blockchain:log', message);
+          });
+          logQueue = [];
+          this.ipc.client.on('process:blockchain:stop', () => {
+            this.kill();
+            process.exit(0);
+          });
+        }
+      });
+    }
+  }, IPC_CONNECT_INTERVAL);
 };
 
 Blockchain.prototype.runCommand = function (cmd, options, callback) {
