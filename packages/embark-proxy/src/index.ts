@@ -77,7 +77,6 @@ export default class ProxyManager {
         this.host,
         this.isWs ? this.wsPort : this.rpcPort,
         this.isWs,
-        null,
       );
     return;
   }

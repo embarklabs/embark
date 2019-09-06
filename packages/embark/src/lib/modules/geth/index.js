@@ -1,6 +1,7 @@
 import { __ } from 'embark-i18n';
 const {normalizeInput} = require('embark-utils');
 import {BlockchainProcessLauncher} from './blockchainProcessLauncher';
+import {BlockchainClient} from './blockchain';
 import {ws, rpc} from './check.js';
 const constants = require('embark-core/constants');
 
@@ -69,6 +70,18 @@ class Geth {
   }
 
   startBlockchainNode(callback) {
+    if (this.blockchainConfig.isStandalone) {
+      return BlockchainClient(this.blockchainConfig, {
+        clientName: 'geth',
+        env: this.embark.env,
+        certOptions: this.embark.config.webServerConfig.certOptions,
+        logger: this.logger,
+        events: this.events,
+        isStandalone: true,
+        fs: this.embark.fs
+      }).run();
+    }
+
     this.blockchainProcess = new BlockchainProcessLauncher({
       events: this.events,
       logger: this.logger,

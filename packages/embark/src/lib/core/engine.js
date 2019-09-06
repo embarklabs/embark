@@ -77,18 +77,19 @@ class Engine {
     let options = _options || {};
 
     let groups = {
-      "blockchain": this.blockchainComponents,
-      "coreComponents": this.coreComponents,
-      "stackComponents": this.stackComponents,
-      "compiler": this.compilerComponents,
-      "contracts": this.contractsComponents,
-      "pipeline": this.pipelineService,
-      "webserver": this.webserverService,
-      "storage": this.storageComponent,
-      "communication": this.communicationComponents,
-      "namesystem": this.namesystemComponents,
-      "filewatcher": this.filewatcherService,
-      "tests": this.testComponents,
+      blockchain: this.blockchainComponents,
+      coreComponents: this.coreComponents,
+      stackComponents: this.stackComponents,
+      blockchainStackComponents: this.blockchainStackComponents,
+      compiler: this.compilerComponents,
+      contracts: this.contractsComponents,
+      pipeline: this.pipelineService,
+      webserver: this.webserverService,
+      storage: this.storageComponent,
+      communication: this.communicationComponents,
+      namesystem: this.namesystemComponents,
+      filewatcher: this.filewatcherService,
+      tests: this.testComponents,
       cockpit: this.cockpitModules
     };
 
@@ -152,6 +153,12 @@ class Engine {
 
     // TODO: we shouldn't need useDashboard
     this.registerModulePackage('embark-library-manager', {useDashboard: this.useDashboard});
+  }
+
+  blockchainStackComponents() {
+    this.registerModule('blockchain', { plugins: this.plugins });
+    this.registerModule('blockchain-client');
+    this.registerModulePackage('embark-process-logs-api-manager');
   }
 
   stackComponents(options) {

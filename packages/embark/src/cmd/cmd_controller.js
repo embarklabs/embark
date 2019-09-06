@@ -37,6 +37,7 @@ class EmbarkController {
   }
 
   blockchain(options) {
+    this.context = options.context || [constants.contexts.blockchain];
     const webServerConfig = {};
 
     const Engine = require('../lib/core/engine.js');
@@ -57,26 +58,18 @@ class EmbarkController {
     });
 
     engine.init({}, () => {
-      engine.startService("processManager");
-      engine.startService("coreProcess");
-      engine.startService("blockchain");
+      engine.registerModuleGroup("coreComponents");
+      engine.registerModuleGroup("blockchainStackComponents");
+      engine.registerModuleGroup("blockchain");
 
-      engine.startEngine(() => {
-        // callback();
+      engine.startEngine(async () => {
+        const alreadyStarted = await engine.events.request2("blockchain:node:start", Object.assign(engine.config.blockchainConfig, {isStandalone: true}));
+        if (alreadyStarted) {
+          engine.logger.warn(__('Blockchain process already started. No need to run `embark blockchain`'));
+          process.exit(0);
+        }
       });
     });
-
-    // this.context = [constants.contexts.blockchain];
-    // return BlockchainClient(this.config.blockchainConfig, {
-    //   clientName: client,
-    //   env,
-    //   certOptions: this.config.webServerConfig.certOptions,
-    //   logger: this.logger,
-    //   events: this.events,
-    //   isStandalone: true,
-    //   fs
-    // }).run();
-
   }
 
   simulator(options) {
@@ -102,7 +95,7 @@ class EmbarkController {
   }
 
   run2(options) {
-    let self = this;
+    const self = this;
     self.context = options.context || [constants.contexts.run, constants.contexts.build];
     let Dashboard = require('./dashboard/dashboard.js');
 
@@ -153,7 +146,7 @@ class EmbarkController {
         });
       },
       function (callback) {
-        let pluginList = engine.plugins.listPlugins();
+        const pluginList = engine.plugins.listPlugins();
         if (pluginList.length > 0) {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
@@ -178,11 +171,6 @@ class EmbarkController {
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
           try {
             await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig);
-            await Promise.all([
-              engine.events.request2("storage:node:start", engine.config.storageConfig),
-              engine.events.request2("communication:node:start", engine.config.communicationConfig),
-              engine.events.request2("namesystem:node:start", engine.config.namesystemConfig)
-            ]);
           } catch (e) {
             return cb(e);
           }

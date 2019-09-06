@@ -1,5 +1,6 @@
 import async from 'async';
 const {__} = require('embark-i18n');
+const Web3RequestManager = require('web3-core-requestmanager');
 
 import BlockchainAPI from "./api";
 class Blockchain {
@@ -20,18 +21,36 @@ class Blockchain {
       this.blockchainNodes[clientName] = startCb;
     });
 
-    this.events.setCommandHandler("blockchain:node:start", (blockchainConfig, cb) => {
-      const clientName = blockchainConfig.client;
-      // const clientName = this.blockchainConfig.client;
-      const client = this.blockchainNodes[clientName];
-      if (!client) return cb("client " + clientName + " not found");
+    this.events.setCommandHandler("blockchain:node:start", async (blockchainConfig, cb) => {
+      const requestManager = new Web3RequestManager.Manager(blockchainConfig.endpoint);
 
-      let onStart = () => {
-        this.events.emit("blockchain:started", clientName);
-        cb();
+      const ogConsoleError = console.error;
+      // TODO remove this once we update to web3 2.0
+      // TODO in web3 1.0, it console.errors "connection not open on send()" even if we catch the error
+      console.error = (...args) => {
+        if (args[0].indexOf('connection not open on send()') > -1) {
+          return;
+        }
+        ogConsoleError(...args);
       };
+      requestManager.send({method: 'eth_accounts'}, (err, _accounts) => {
+        console.error = ogConsoleError;
+        if (!err) {
+          // Node is already started
+          this.events.emit("blockchain:started");
+          return cb(null, true);
+        }
+        const clientName = blockchainConfig.client;
+        const client = this.blockchainNodes[clientName];
+        if (!client) return cb("client " + clientName + " not found");
 
-      client.apply(client, [onStart]);
+        let onStart = () => {
+          this.events.emit("blockchain:started", clientName);
+          cb();
+        };
+
+        client.apply(client, [onStart]);
+      });
     });
     this.blockchainApi.registerAPIs("ethereum");
     this.blockchainApi.registerRequests("ethereum");
