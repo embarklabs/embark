@@ -1,7 +1,0 @@
-var whenEnvIsLoaded = function(cb) {
-  if (typeof document !== 'undefined' && document !== null && !/comp|inter|loaded/.test(document.readyState)) {
-      document.addEventListener('DOMContentLoaded', cb);
-  } else {
-    cb();
-  }
-}

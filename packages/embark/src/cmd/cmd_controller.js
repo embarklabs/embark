@@ -1,4 +1,3 @@
-import {Simulator} from 'embark-blockchain-process';
 import {__} from 'embark-i18n';
 import {dappPath, embarkPath} from 'embark-utils';
 import findUp from 'find-up';
@@ -71,16 +70,15 @@ class EmbarkController {
       });
     });
   }
-
-  simulator(options) {
-    this.context = options.context || [constants.contexts.simulator, constants.contexts.blockchain];
-    let simulator = new Simulator({
-      blockchainConfig: this.config.blockchainConfig,
-      contractsConfig: this.config.contractsConfig,
-      logger: this.logger,
-      fs
-    });
-    simulator.run(options);
+simulator(options) {
+    // this.context = options.context || [constants.contexts.simulator, constants.contexts.blockchain];
+    // let simulator = new Simulator({
+    //   blockchainConfig: this.config.blockchainConfig,
+    //   contractsConfig: this.config.contractsConfig,
+    //   logger: this.logger,
+    //   fs
+    // });
+    // simulator.run(options);
   }
 
   generateTemplate(templateName, destinationFolder, name, url) {
@@ -94,8 +92,8 @@ class EmbarkController {
     templateGenerator.generate(destinationFolder, name);
   }
 
-  run2(options) {
-    const self = this;
+  run(options) {
+    let self = this;
     self.context = options.context || [constants.contexts.run, constants.contexts.build];
     let Dashboard = require('./dashboard/dashboard.js');
 
@@ -226,137 +224,6 @@ class EmbarkController {
         engine.logger.info(err.stack);
       } else {
         // engine.events.emit('firstDeploymentDone');
-      }
-    });
-  }
-
-  run(options) {
-    let self = this;
-    self.context = options.context || [constants.contexts.run, constants.contexts.build];
-    let Dashboard = require('./dashboard/dashboard.js');
-
-    const webServerConfig = {};
-
-    if (options.runWebserver !== null && options.runWebserver !== undefined) {
-      webServerConfig.enabled = options.runWebserver;
-    }
-
-    if (options.serverHost !== null && options.serverHost !== undefined) {
-      webServerConfig.host = options.serverHost;
-    }
-
-    if (options.serverPort !== null && options.serverPort !== undefined) {
-      webServerConfig.port = options.serverPort;
-    }
-
-    if (options.openBrowser !== null && options.openBrowser !== undefined) {
-      webServerConfig.openBrowser = options.openBrowser;
-    }
-
-    const Engine = require('../lib/core/engine.js');
-    const engine = new Engine({
-      env: options.env,
-      client: options.client,
-      locale: options.locale,
-      version: this.version,
-      embarkConfig: options.embarkConfig || 'embark.json',
-      logFile: options.logFile,
-      logLevel: options.logLevel,
-      context: self.context,
-      useDashboard: options.useDashboard,
-      webServerConfig: webServerConfig,
-      webpackConfigName: options.webpackConfigName,
-      singleUseAuthToken: options.singleUseAuthToken,
-      ipcRole: 'server'
-    });
-
-    async.waterfall([
-      function initEngine(callback) {
-        engine.init({}, () => {
-          engine.startService("embarkListener");
-          if (!options.useDashboard) {
-            engine.logger.info('========================'.bold.green);
-            engine.logger.info((__('Welcome to Embark') + ' ' + engine.version).yellow.bold);
-            engine.logger.info('========================'.bold.green);
-          }
-          callback();
-        });
-      },
-      function (callback) {
-        engine.startService("libraryManager").installAll((err) => callback(err ? err : null));
-      },
-      function (callback) {
-        let pluginList = engine.plugins.listPlugins();
-        if (pluginList.length > 0) {
-          engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
-        }
-
-        engine.startService("web3");
-        engine.startService("processManager");
-        engine.startService("coreProcess");
-        engine.startService("blockchainListener");
-        engine.startService("serviceMonitor");
-        engine.startService("codeRunner");
-        engine.startService("pipeline");
-        engine.startService("deployment");
-        engine.startService("storage");
-        engine.startService("codeGenerator");
-        engine.startService("console");
-        engine.startService("cockpit");
-        engine.startService("pluginCommand");
-        engine.startService("blockchain");
-
-        engine.events.on('check:backOnline:Ethereum', function () {
-          engine.logger.info(__('Ethereum node detected') + '..');
-          engine.config.reloadConfig();
-          engine.events.request('deploy:contracts', function (err) {
-            if (err) {
-              return engine.logger.error(err.message || err);
-            }
-            engine.logger.info(__('Deployment Done'));
-          });
-        });
-
-        engine.events.on('outputDone', function () {
-          engine.logger.info((__("Looking for documentation? You can find it at") + " ").cyan + "http://embark.status.im/docs/".green.underline + ".".cyan);
-          engine.logger.info(__("Ready").underline);
-          engine.events.emit("status", __("Ready").green);
-        });
-
-        if (webServerConfig.enabled !== false) {
-          engine.startService("webServer");
-        }
-        engine.startService("fileWatcher");
-
-        engine.startEngine(() => {
-          callback();
-        });
-      },
-      function startDashboard(callback) {
-        if (!options.useDashboard) {
-          return callback();
-        }
-
-        let dashboard = new Dashboard({
-          events: engine.events,
-          logger: engine.logger,
-          plugins: engine.plugins,
-          version: self.version,
-          env: engine.env,
-          ipc: engine.ipc
-        });
-        dashboard.start(function () {
-          engine.logger.info(__('dashboard start'));
-          callback();
-        });
-      }
-    ], function (err, _result) {
-      if (err) {
-        engine.logger.error(err.message);
-        engine.logger.info(err.stack);
-        process.exit(1);
-      } else {
-        engine.events.emit('firstDeploymentDone');
       }
     });
   }

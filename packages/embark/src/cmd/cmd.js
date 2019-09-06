@@ -15,7 +15,6 @@ class Cmd {
     this.demo();
     this.build();
     this.run();
-    this.run2();
     this.console();
     this.blockchain();
     this.simulator();
@@ -169,42 +168,6 @@ class Cmd {
         });
       });
   }
-
-  run2() {
-    program
-      .command('run2 [environment]')
-      .option('-p, --port [port]', __('port to run the dev webserver (default: %s)', '8000'))
-      .option('-c, --client [client]', __('Use a specific ethereum client [%s] (default: %s)', 'geth, parity', 'geth'))
-      .option('-b, --host [host]', __('host to run the dev webserver (default: %s)', 'localhost'))
-      .option('--noserver', __('disable the development webserver'))
-      .option('--nodashboard', __('simple mode, disables the dashboard'))
-      .option('--nobrowser', __('prevent the development webserver from automatically opening a web browser'))
-      .option('--no-color', __('no colors in case it\'s needed for compatbility purposes'))
-      .option('--logfile [logfile]', __('filename to output logs (default: %s)', 'none'))
-      .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'debug')
-      .option('--locale [locale]', __('language to use (default: en)'))
-      .option('--pipeline [pipeline]', __('webpack config to use (default: development)'))
-      .option('--no-single-use-auth-token', __('disable the single use of token in cockpit'))
-      .description(__('run dapp (default: %s)', 'development'))
-      .action(function(env, options) {
-        setOrDetectLocale(options.locale);
-        embark.run2({
-          env: env || 'development',
-          serverPort: options.port,
-          serverHost: options.host,
-          client: options.client,
-          locale: options.locale,
-          runWebserver: !options.noserver ? null : false,
-          useDashboard: !options.nodashboard,
-          logFile: options.logfile,
-          logLevel: options.loglevel,
-          webpackConfigName: options.pipeline || 'development',
-          openBrowser: !options.nobrowser ? null : false,
-          singleUseAuthToken: options.singleUseAuthToken
-        });
-      });
-  }
-
 
   console() {
     program
