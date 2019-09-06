@@ -78,6 +78,7 @@
       "packages/core/*",
       "packages/plugins/*",
       "packages/stack/*",
+      "packages/embarkjs/*",
       "packages/*",
       "core/*"
     ],
