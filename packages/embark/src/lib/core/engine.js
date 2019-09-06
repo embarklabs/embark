@@ -210,6 +210,7 @@ class Engine {
   //   });
 
     this.registerModule('ethereum-blockchain-client');
+    this.registerModule('ganache');
     // this.registerModule('web3', { plugins: this.plugins });
     this.registerModulePackage('embark-web3');
     this.registerModulePackage('embark-accounts-manager');

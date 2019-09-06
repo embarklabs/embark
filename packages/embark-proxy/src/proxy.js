@@ -17,6 +17,7 @@ export class Proxy {
     this.timeouts = {};
     this.plugins = options.plugins;
     this.logger = options.logger;
+    this.vms = options.vms;
     this.app = null;
     this.server = null;
   }
@@ -46,8 +47,7 @@ export class Proxy {
     }
 
     if (endpoint === constants.blockchain.vm) {
-      const ganache = require('ganache-cli');
-      endpoint = ganache.provider(); // Change the endpoint to the Ganache provider
+      endpoint = this.vms[this.vms.length - 1]();
     }
     const requestManager = new Web3RequestManager.Manager(endpoint);
 

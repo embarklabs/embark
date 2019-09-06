@@ -11,18 +11,17 @@ export default class ProxyManager {
   private proxy: any;
   private plugins: any;
   private readonly host: string;
-  private rpcPort: number;
-  private wsPort: number;
-  private ready: boolean;
+  private rpcPort = 0;
+  private wsPort = 0;
+  private ready = false;
   private isWs = false;
+  private vms: any[];
 
   constructor(private embark: Embark, options: any) {
     this.logger = embark.logger;
     this.events = embark.events;
     this.plugins = options.plugins;
-    this.ready = false;
-    this.rpcPort = 0;
-    this.wsPort = 0;
+    this.vms = [];
 
     this.host = "localhost";
 
@@ -52,6 +51,10 @@ export default class ProxyManager {
       }
       cb(null, buildUrl("http", this.host, this.rpcPort, "rpc"));
     });
+
+    this.events.setCommandHandler("proxy:vm:register", (handler: any) => {
+      this.vms.push(handler);
+    });
   }
 
   public onReady() {
@@ -78,7 +81,7 @@ export default class ProxyManager {
     this.wsPort = port + 1;
     this.isWs = (/wss?/).test(this.embark.config.blockchainConfig.endpoint);
 
-    this.proxy = await new Proxy({events: this.events, plugins: this.plugins, logger: this.logger});
+    this.proxy = await new Proxy({events: this.events, plugins: this.plugins, logger: this.logger, vms: this.vms});
 
     await this.proxy.serve(
       clientName === constants.blockchain.vm ? constants.blockchain.vm : this.embark.config.blockchainConfig.endpoint,
