@@ -27,7 +27,12 @@ class Blockchain {
       const ogConsoleError = console.error;
       // TODO remove this once we update to web3 2.0
       // TODO in web3 1.0, it console.errors "connection not open on send()" even if we catch the error
-      console.error = () => {};
+      console.error = (...args) => {
+        if (args[0].indexOf('connection not open on send()') > -1) {
+          return;
+        }
+        ogConsoleError(...args);
+      };
       requestManager.send({method: 'eth_accounts'}, (err, _accounts) => {
         console.error = ogConsoleError;
         if (!err) {
