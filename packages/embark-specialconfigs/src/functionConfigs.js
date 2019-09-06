@@ -9,6 +9,17 @@ class FunctionConfigs {
     this.config = embark.config;
   }
 
+  async executeContractAddressHandler(contract, cb) {
+    try {
+      const logger = Utils.createLoggerWithPrefix(this.logger, 'addressHandler >');
+      const dependencies = await this.getDependenciesObject(logger);
+      const address = await contract.addressHandler(dependencies);
+      cb(null, address);
+    } catch (err) {
+      cb(new Error(`Error running addressHandler for ${contract.className}: ${err.message}`));
+    }
+  }
+
   async beforeAllDeployAction(cb) {
     try {
       const beforeDeployFn = this.config.contractsConfig.beforeDeploy;
@@ -76,6 +87,10 @@ class FunctionConfigs {
         // TODO: for this to work correctly we need to add a default from address to the contract
         if (contract.deploy === false) continue;
         // eslint-disable-next-line no-await-in-loop
+        const contractRegisteredInVM = await this.checkContractRegisteredInVM(contract);
+        if (!contractRegisteredInVM) {
+          await this.events.request2("embarkjs:contract:runInVM", contract);
+        }
         let contractInstance = await this.events.request2("runcode:eval", contract.className);
         args.contracts[contract.className] = contractInstance;
       }
@@ -90,6 +105,12 @@ class FunctionConfigs {
     });
   }
 
+  async checkContractRegisteredInVM(contract) {
+    const checkContract = `
+      return typeof ${contract.className} !== 'undefined';
+    `;
+    return await this.events.request2('runcode:eval', checkContract);
+  }
 }
 
 module.exports = FunctionConfigs;
