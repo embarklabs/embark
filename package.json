@@ -79,8 +79,7 @@
       "packages/plugins/*",
       "packages/stack/*",
       "packages/embarkjs/*",
-      "packages/*",
-      "core/*"
+      "packages/*"
     ],
     "nohoist": [
       "embark/embark-test-contract-0",
