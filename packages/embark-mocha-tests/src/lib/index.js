@@ -1,6 +1,4 @@
 import {__} from 'embark-i18n';
-import {deconstructUrl, buildUrl, recursiveMerge} from 'embark-utils';
-import cloneDeep from 'lodash.clonedeep';
 import fs from 'fs';
 
 const assert = require('assert').strict;
@@ -18,11 +16,9 @@ class MochaTestRunner {
     this.embark = embark;
     this.logger = embark.logger;
     this.events = embark.events;
-    this.configObj = embark.config;
-    this.originalConfigObj = cloneDeep(embark.config);
+
 
     this.files = [];
-    this.simOptions = {};
     this.options = {};
     this.web3 = null;
 
@@ -47,78 +43,6 @@ class MochaTestRunner {
     return JAVASCRIPT_TEST_MATCH.test(path);
   }
 
-  async checkDeploymentOptions(options) {
-    let resetServices = false;
-    const blockchainConfig = options.blockchain || {};
-    const {host, port, type, protocol} = blockchainConfig.endpoint ? deconstructUrl(blockchainConfig.endpoint) : {};
-    const accounts = blockchainConfig.accounts;
-
-    if (host && port && !['rpc', 'ws'].includes(type)) {
-      throw new Error(__("contracts config error: unknown deployment type %s", type));
-    }
-
-    if (this.options.coverage && type === 'rpc') {
-      this.logger.warn(__('Coverage does not work with an RPC node'));
-      this.logger.warn(__('You can change to a WS node (`"type": "ws"`) or use the simulator (no node or `"type": "vm"`)'));
-    }
-
-    if (accounts || port !== this.simOptions.port || type !== this.simOptions.type || host !== this.simOptions.host) {
-      resetServices = true;
-    }
-
-    Object.assign(this.simOptions, {host, port, type, protocol, accounts, client: options.blockchain && options.blockchain.client});
-
-    if (!resetServices) {
-      return;
-    }
-
-    await this.startBlockchainNode();
-  }
-
-  async startBlockchainNode() {
-    let node = this.options.node;
-    if (!this.simOptions.host && (node && node === 'vm')) {
-      this.simOptions.type = 'vm';
-      this.simOptions.client = 'vm';
-    } else if (this.simOptions.host || (node && node !== 'vm')) {
-      let options = this.simOptions;
-      if (node && node !== 'vm') {
-        options = deconstructUrl(node);
-      }
-
-      if (!options.protocol) {
-        options.protocol = (options.type === "rpc") ? 'http' : 'ws';
-      }
-      Object.assign(this.simOptions, options);
-      node = null;
-    }
-
-    this.configObj.blockchainConfig = recursiveMerge({}, this.originalConfigObj.blockchainConfig, {
-      endpoint: this.simOptions.host ? buildUrl(this.simOptions.protocol, this.simOptions.host, this.simOptions.port, this.simOptions.type) : null,
-      type: this.simOptions.type,
-      accounts: this.simOptions.accounts,
-      coverage: this.options.coverage
-    });
-    if (this.simOptions.client) {
-      this.configObj.blockchainConfig.client = this.simOptions.client;
-    }
-    this.logger.trace('Setting blockchain configs:', this.configObj.blockchainConfig);
-    await this.events.request2('config:blockchainConfig:set', this.configObj.blockchainConfig);
-
-    try {
-      await this.events.request2("blockchain:node:stop");
-    } catch (e) {
-      // Nothing to do here, the node probably wasn't even started
-    }
-
-    await this.events.request2("blockchain:node:start", this.configObj.blockchainConfig);
-    const provider = await this.events.request2("blockchain:client:provider", "ethereum");
-    if (!this.web3) {
-      this.web3 = new Web3();
-    }
-    this.web3.setProvider(provider);
-  }
-
   async run(options, cb) {
     const {events} = this.embark;
     this.options = options;
@@ -133,9 +57,15 @@ class MochaTestRunner {
       global.before((done) => {
         async.waterfall([
           (next) => {
-            this.checkDeploymentOptions(cfg)
-              .then(next)
-              .catch(next);
+            events.request("tests:deployment:check", cfg, this.options, (err, provider) => {
+              if (err) {
+                return next(err);
+              }
+              if (provider) {
+                this.web3.setProvider(provider);
+              }
+              next();
+            });
           },
           (next) => {
             events.request("contracts:build", cfg, compiledContracts, next);
@@ -154,6 +84,12 @@ class MochaTestRunner {
             }
 
             next();
+          },
+          (next) => {
+            this.web3.eth.getAccounts((err, accts) => {
+              accounts = accts;
+              next(err);
+            });
           }
         ], (err) => {
           if (acctCb) {
@@ -165,7 +101,8 @@ class MochaTestRunner {
       });
     };
 
-    await this.startBlockchainNode();
+    const provider = await this.events.request2("tests:blockchain:start", this.options);
+    this.web3 = new Web3(provider);
     accounts = await this.web3.eth.getAccounts();
     await events.request2("contracts:reset");
     const contractFiles = await events.request2("config:contractsFiles");
