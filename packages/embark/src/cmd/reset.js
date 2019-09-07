@@ -8,7 +8,7 @@ const dappPath = process.env.DAPP_PATH || process.cwd();
 
 const green = (text) => '\x1b[32m' + text + '\x1b[0m';
 
-exports.paths = new Set([
+const removePaths = new Set([
   '.embark',
   'chains.json',
   'coverage',
@@ -17,10 +17,7 @@ exports.paths = new Set([
   'node_modules/.cache'
 ]);
 
-exports.reset = async ({
-  doneMessage = green('Done!'),
-  removePaths = exports.paths
-} = {}) => {
+async function reset() {
   const completePaths = [...removePaths].map(relative => join(dappPath, relative));
 
   console.log(green('Removing the following files:\n'));
@@ -28,5 +25,11 @@ exports.reset = async ({
   await Promise.all(
     completePaths.map(path => rimraf(path))
   );
+  let doneMessage = green('Done!');
   console.log(`\n${doneMessage}`);
+};
+
+module.exports = {
+  paths: removePaths,
+  reset
 };

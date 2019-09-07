@@ -1,8 +1,7 @@
 {
   "description": "Test DApp for integration testing purposes",
   "devDependencies": {
-    "embark": "^4.1.1",
-    "embark-reset": "^4.1.1"
+    "embark": "^4.1.1"
   },
   "name": "embark-dapp-test-contracts",
   "private": true,
@@ -10,7 +9,6 @@
     "ci": "npm run qa",
     "clean": "npm run reset",
     "qa": "npm run test",
-    "reset": "npx embark-reset",
     "test": "npx embark test"
   },
   "version": "4.1.1"

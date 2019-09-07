@@ -116,7 +116,6 @@
     "embark-process-logs-api-manager": "^4.1.1",
     "embark-profiler": "^4.1.1",
     "embark-proxy": "^4.1.1",
-    "embark-reset": "^4.1.1",
     "embark-scaffolding": "^4.1.1",
     "embark-solidity": "^4.1.1",
     "embark-specialconfigs": "^4.1.1",

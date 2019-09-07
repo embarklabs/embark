@@ -4,7 +4,7 @@ import findUp from 'find-up';
 let async = require('async');
 const constants = require('embark-core/constants');
 const Logger = require('embark-logger');
-const {reset: embarkReset, paths: defaultResetPaths} = require('embark-reset');
+const {reset: embarkReset, paths: defaultResetPaths} = require('./reset');
 const fs = require('../lib/core/fs.js');
 const cloneDeep = require('clone-deep');
 
