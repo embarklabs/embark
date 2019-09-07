@@ -1,4 +1,4 @@
-import { __ } from 'embark-i18n';
+import { __ } from "embark-i18n";
 import * as fs from "./fs";
 import VM from "./vm";
 

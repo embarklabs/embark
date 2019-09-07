@@ -1,13 +1,12 @@
 const {__} = require('embark-i18n');
 const Web3 = require('web3');
-const async = require('async');
 
 require('ejs');
-const Templates = {
-  vanilla_contract: require('./vanilla-contract.js.ejs'),
-  contract_artifact: require('./contract-artifact.js.ejs'),
-  web3_init: require('./web3_init.js.ejs')
-};
+// const Templates = {
+//   vanilla_contract: require('./vanilla-contract.js.ejs'),
+//   contract_artifact: require('./contract-artifact.js.ejs'),
+//   web3_init: require('./web3_init.js.ejs')
+// };
 
 class EmbarkWeb3 {
   constructor(embark, _options) {
@@ -30,7 +29,7 @@ class EmbarkWeb3 {
     this.events.request("embarkjs:plugin:register", 'blockchain', 'web3', 'embarkjs-web3');
     await this.events.request2("embarkjs:console:register", 'blockchain', 'web3', 'embarkjs-web3');
     this.events.on("blockchain:started", async () => {
-      await this.registerWeb3Object()
+      await this.registerWeb3Object();
       this.events.request("embarkjs:console:setProvider", 'blockchain', 'web3', '{web3}');
     });
   }

@@ -81,9 +81,8 @@ export default class TrackingFunctions {
       } catch (err) {
         // Retry with block 1 (Block 0 fails with Ganache-cli using the --fork option)
         this._block = await web3.eth.getBlock(1, true);
-      } finally {
-        return this._block;
       }
+      return this._block;
     })();
   }
 

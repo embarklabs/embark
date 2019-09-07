@@ -156,7 +156,7 @@ class MochaTestRunner {
           mocha.addFile(file);
         }
 
-        mocha.run((failures) => {
+        mocha.run((_failures) => {
           next();
         });
       }

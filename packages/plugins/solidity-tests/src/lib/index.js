@@ -57,7 +57,7 @@ class SolidityTestRunner {
 
   run(options, cb) {
     const reporter = new Reporter(options.reporter);
-    const {events, plugins} = this;
+    const {events, _plugins} = this;
 
     if (this.files.length === 0) {
       return cb(null, 0);
@@ -88,6 +88,7 @@ class SolidityTestRunner {
       (next) => {
         events.request("contracts:reset", next);
       },
+
       /*
       (next) => {
         plugins.emitAndRunActionsForEvent('tests:contracts:compile:before', contractFiles, next);
@@ -96,6 +97,7 @@ class SolidityTestRunner {
       (next) => {
         events.request("compiler:contracts:compile", contractFiles, next);
       },
+
       /*
       (cc, next) => {
         plugins.emitAndRunActionsForEvent('tests:contracts:compile:after', cc, next);
