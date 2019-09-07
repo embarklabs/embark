@@ -1,5 +1,10 @@
 const {escapeHtml, LogHandler} = require('embark-utils');
 
+// =========
+// TODO: it's unclear if this is a core or stack component, there are requests from core being made to it
+// we should move it to core/ but the API part should probably be a plugin instead
+// =========
+
 class ProcessLogsApiManager {
   constructor(embark) {
     this.embark = embark;
