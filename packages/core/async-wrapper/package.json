@@ -1,10 +1,10 @@
 {
-  "name": "embark-core",
+  "name": "embark-async-wrapper",
   "version": "4.1.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
-  "description": "Core library for Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-core#readme",
+  "description": "Extensions to caolan/async used by Embark",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-async-wrapper#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -15,24 +15,22 @@
     "solc",
     "solidity"
   ],
-  "files": [
-    "constants.json",
-    "dist",
-    "process.js"
-  ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-core",
+    "directory": "packages/embark-async-wrapper",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },
   "main": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "cross-env BABEL_ENV=node babel src --extensions \".js\" --out-dir dist --root-mode upward --source-maps",
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
-    "lint:js": "eslint process.js src/",
+    "lint:js": "eslint src/",
     "// lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
     "package": "npm pack",
     "// qa": "npm-run-all lint typecheck build package",
@@ -49,12 +47,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs2": "7.3.1",
-    "embark-i18n": "^4.1.1",
-    "embark-utils": "^4.1.1",
-    "flatted": "0.2.3",
-    "fs-extra": "7.0.1",
-    "node-ipc": "9.1.1",
-    "uuid": "3.3.2"
+    "async": "2.6.1"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",

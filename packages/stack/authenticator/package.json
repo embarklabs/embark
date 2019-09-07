@@ -1,10 +1,10 @@
 {
-  "name": "embark-core",
+  "name": "embark-authenticator",
   "version": "4.1.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
-  "description": "Core library for Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-core#readme",
+  "description": "Authenticator module for Embark's Cockpit",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-authenticator#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -16,13 +16,11 @@
     "solidity"
   ],
   "files": [
-    "constants.json",
-    "dist",
-    "process.js"
+    "dist"
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-core",
+    "directory": "packages/embark-authenticator",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },
@@ -32,7 +30,7 @@
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
-    "lint:js": "eslint process.js src/",
+    "lint:js": "eslint src/",
     "// lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
     "package": "npm pack",
     "// qa": "npm-run-all lint typecheck build package",
@@ -51,9 +49,7 @@
     "@babel/runtime-corejs2": "7.3.1",
     "embark-i18n": "^4.1.1",
     "embark-utils": "^4.1.1",
-    "flatted": "0.2.3",
-    "fs-extra": "7.0.1",
-    "node-ipc": "9.1.1",
+    "keccakjs": "0.2.3",
     "uuid": "3.3.2"
   },
   "devDependencies": {
