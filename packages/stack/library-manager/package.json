@@ -43,7 +43,7 @@
     "// watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
   },
   "eslintConfig": {
-    "extends": "../../.eslintrc.json"
+    "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
     "@babel/runtime-corejs2": "7.3.1",
