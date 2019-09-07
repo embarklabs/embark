@@ -89,8 +89,10 @@ class FunctionConfigs {
         // eslint-disable-next-line no-await-in-loop
         const contractRegisteredInVM = await this.checkContractRegisteredInVM(contract);
         if (!contractRegisteredInVM) {
+          // eslint-disable-next-line no-await-in-loop
           await this.events.request2("embarkjs:contract:runInVM", contract);
         }
+        // eslint-disable-next-line no-await-in-loop
         let contractInstance = await this.events.request2("runcode:eval", contract.className);
         args.contracts[contract.className] = contractInstance;
       }
@@ -109,7 +111,7 @@ class FunctionConfigs {
     const checkContract = `
       return typeof ${contract.className} !== 'undefined';
     `;
-    return await this.events.request2('runcode:eval', checkContract);
+    return this.events.request2('runcode:eval', checkContract);
   }
 }
 

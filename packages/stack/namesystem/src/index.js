@@ -1,5 +1,5 @@
 import {__} from 'embark-i18n';
-import {canonicalHost, defaultHost} from 'embark-utils';
+// import {canonicalHost, defaultHost} from 'embark-utils';
 
 export default class Namesystem {
   constructor(embark, _options) {

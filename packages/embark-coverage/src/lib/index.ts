@@ -25,7 +25,7 @@ export default class Coverage {
       return;
     }
 
-    this.embark.registerActionForEvent('tests:contracts:compile:before', async (contractsFiles, cb) => {
+    this.embark.registerActionForEvent("tests:contracts:compile:before", async (contractsFiles, cb) => {
       const solcVersion = this.embark.config.embarkConfig.versions.solc;
       const enhancedContracts = contractsFiles.map((file: File) => new ContractEnhanced(file.path, solcVersion));
 

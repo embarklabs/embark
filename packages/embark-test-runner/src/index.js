@@ -70,7 +70,7 @@ class TestRunner {
 
         const cmd = `${embarkPath('node_modules/.bin/istanbul')} report --root .embark --format html --format lcov`;
         runCmd(cmd, {silent: false, exitOnError: false}, next);
-      },
+      }
     ], (err) => {
       reporter.footer();
 

@@ -194,7 +194,7 @@ describe('embark.deploymentChecks', function () {
       });
     });
     it("should error (and not deploy) if tracked contract address is invalid", async function () {
-      trackingFunctions._web3.eth.getCode = () => {throw new Error();};
+      trackingFunctions._web3.eth.getCode = () => { throw new Error(); };
       return deploymentChecks.checkIfAlreadyDeployed(params, (err, _params) => {
         expect(err).to.not.be(null);
       });
