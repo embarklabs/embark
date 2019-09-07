@@ -79,6 +79,7 @@
       "packages/plugins/*",
       "packages/stack/*",
       "packages/embarkjs/*",
+      "packages/cockpit/*",
       "packages/*"
     ],
     "nohoist": [
