@@ -29,7 +29,7 @@ $ nvm use --lts
 
 ### IPFS (Optional)
 
-IPFS can be used to distribute our application's content on the decentralized IPFS nodes. This can be skipped in case this isn't planned, however we do recommend it. Checkout IPFS' [installation guide](https://docs.ipfs.io/introduction/install/) to learn how to install IPFS on our local machine.
+IPFS can be used to distribute our application's content on the decentralized IPFS nodes. This can be skipped in case this isn't planned, however we do recommend it. Checkout IPFS' [installation guide](https://docs.ipfs.io/guides/guides/install/) to learn how to install IPFS on our local machine.
 
 To verify that the installation was successful, simply run the following command:
 
