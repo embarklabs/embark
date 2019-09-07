@@ -8,8 +8,7 @@ module.exports = (api) => {
   const base = {
     babelrcRoots: [
       '.',
-      'packages/*',
-      'core/*',
+      'packages/*'
     ],
     plugins: [
       'babel-plugin-macros',
