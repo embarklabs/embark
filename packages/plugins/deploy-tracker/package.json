@@ -1,10 +1,10 @@
 {
-  "name": "embark-test-runner",
+  "name": "embark-deploy-tracker",
   "version": "4.1.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
-  "description": "Embark Testrunner",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-test-runner#readme",
+  "description": "Console component for Embark",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-console#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -16,11 +16,11 @@
     "solidity"
   ],
   "files": [
-    "dist"
+    "dist/"
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-test-runner",
+    "directory": "packages/embark-console",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },
@@ -35,41 +35,42 @@
     "package": "npm pack",
     "// qa": "npm-run-all lint typecheck build package",
     "qa": "npm-run-all lint build package",
-    "reset": "npx rimraf dist embark-*.tgz package",
+    "reset": "npx rimraf .nyc_output coverage dist embark-*.tgz package",
     "start": "npm run watch",
+    "test": "nyc --reporter=html --reporter=json mocha \"dist/test/**/*.js\" --exit --no-timeouts --require source-map-support/register",
     "// typecheck": "tsc",
     "watch": "run-p watch:*",
     "watch:build": "npm run build -- --verbose --watch",
     "// watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
   },
   "eslintConfig": {
-    "extends": "../../.eslintrc.json"
+    "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "7.3.1",
-    "async": "2.6.1",
-    "chalk": "2.4.2",
-    "embark-i18n": "^4.1.1",
+    "colors": "1.3.2",
     "embark-utils": "^4.1.1",
     "fs-extra": "7.0.1",
-    "istanbul": "0.4.5",
-    "mocha": "6.2.0",
-    "open": "6.4.0"
+    "web3": "1.2.1"
   },
   "devDependencies": {
-    "@babel/cli": "7.2.3",
-    "@babel/core": "7.2.2",
-    "@types/async": "2.0.50",
-    "cross-env": "5.2.0",
     "eslint": "5.7.0",
+    "expect.js": "0.3.1",
+    "mocha": "6.2.0",
     "npm-run-all": "4.1.5",
+    "nyc": "13.1.0",
     "rimraf": "3.0.0",
-    "tslint": "5.16.0",
-    "typescript": "3.4.5"
+    "sinon": "7.4.1"
   },
   "engines": {
     "node": ">=8.12.0 <12.0.0",
     "npm": ">=6.4.1",
     "yarn": ">=1.12.3"
+  },
+  "nyc": {
+    "exclude": [
+      "**/node_modules/**",
+      "coverage/**",
+      "dist/test/**"
+    ]
   }
 }

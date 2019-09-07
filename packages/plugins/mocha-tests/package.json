@@ -42,7 +42,7 @@
     "test": "mocha dist/test/**/*.js"
   },
   "eslintConfig": {
-    "extends": "../../.eslintrc.json"
+    "extends": "../../../.eslintrc.json"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",

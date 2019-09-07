@@ -1,32 +1,23 @@
 {
-  "name": "embark-web3",
+  "name": "embark-plugin-cmd",
   "version": "4.1.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
-  "description": "Module to add Web3 support to Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-web3#readme",
+  "description": "Plugin installation utility for Embark",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-plugin-cmd#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
-  "keywords": [
-    "blockchain",
-    "dapps",
-    "ethereum",
-    "ipfs",
-    "serverless",
-    "solc",
-    "solidity"
-  ],
-  "files": [
-    "dist"
-  ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-web3",
+    "directory": "packages/embark-plugin-cmd",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },
+  "files": [
+    "dist"
+  ],
   "main": "./dist/index.js",
   "scripts": {
-    "build": "cross-env BABEL_ENV=node babel src --extensions \".js\" --out-dir dist --root-mode upward --source-maps --copy-files",
+    "build": "cross-env BABEL_ENV=node babel src --extensions \".js\" --out-dir dist --root-mode upward --source-maps",
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
@@ -43,15 +34,12 @@
     "// watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
   },
   "eslintConfig": {
-    "extends": "../../.eslintrc.json"
+    "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
-    "@babel/core": "7.2.2",
-    "@babel/runtime-corejs2": "7.3.1",
-    "ejs": "2.6.1",
-    "embark-core": "^4.1.1",
-    "embark-utils": "^4.1.1",
-    "embarkjs-web3": "^4.1.1"
+    "async": "2.6.1",
+    "embark-i18n": "^4.1.1",
+    "embark-utils": "^4.1.1"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",

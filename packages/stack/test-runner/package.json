@@ -1,10 +1,10 @@
 {
-  "name": "embark-watcher",
+  "name": "embark-test-runner",
   "version": "4.1.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
-  "description": "Watches changes in the file system",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-watcher#readme",
+  "description": "Embark Testrunner",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-test-runner#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -20,7 +20,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-watcher",
+    "directory": "packages/embark-test-runner",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },
@@ -43,17 +43,23 @@
     "// watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
   },
   "eslintConfig": {
-    "extends": "../../.eslintrc.json"
+    "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
     "@babel/runtime-corejs2": "7.3.1",
-    "chokidar": "2.1.6",
+    "async": "2.6.1",
+    "chalk": "2.4.2",
     "embark-i18n": "^4.1.1",
-    "embark-utils": "^4.1.1"
+    "embark-utils": "^4.1.1",
+    "fs-extra": "7.0.1",
+    "istanbul": "0.4.5",
+    "mocha": "6.2.0",
+    "open": "6.4.0"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
     "@babel/core": "7.2.2",
+    "@types/async": "2.0.50",
     "cross-env": "5.2.0",
     "eslint": "5.7.0",
     "npm-run-all": "4.1.5",

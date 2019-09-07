@@ -1,10 +1,10 @@
 {
-  "name": "embark-webserver",
+  "name": "embark-watcher",
   "version": "4.1.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
-  "description": "Webserver for Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-webserver#readme",
+  "description": "Watches changes in the file system",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-watcher#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -20,13 +20,13 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-webserver",
+    "directory": "packages/embark-watcher",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },
   "main": "./dist/index.js",
   "scripts": {
-    "build": "cross-env BABEL_ENV=node babel src --copy-files --extensions \".js\" --out-dir dist --root-mode upward --source-maps",
+    "build": "cross-env BABEL_ENV=node babel src --extensions \".js\" --out-dir dist --root-mode upward --source-maps",
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
@@ -43,18 +43,13 @@
     "// watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
   },
   "eslintConfig": {
-    "extends": "../../.eslintrc.json"
+    "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
     "@babel/runtime-corejs2": "7.3.1",
-    "async": "2.6.1",
+    "chokidar": "2.1.6",
     "embark-i18n": "^4.1.1",
-    "embark-utils": "^4.1.1",
-    "express": "4.16.3",
-    "express-http-proxy": "1.5.1",
-    "express-ws": "4.0.0",
-    "open": "6.4.0",
-    "serve-static": "1.13.2"
+    "embark-utils": "^4.1.1"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
