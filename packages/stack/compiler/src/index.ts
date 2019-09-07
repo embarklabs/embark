@@ -106,12 +106,7 @@ class Compiler {
           );
         },
         (compiledObject: any, next: Callback<any>) => {
-          this.plugins.runActionsForEvent("compiler:contracts:compile:after", compiledObject, (err?: Error | null, compiledObj: any = {}) => {
-            if (err) {
-              return next(err);
-            }
-            next(null, compiledObj);
-          });
+          this.plugins.runActionsForEvent("compiler:contracts:compile:after", compiledObject, next);
         },
       ],
       (err?: Error | null, compiledObject?: any) => {
