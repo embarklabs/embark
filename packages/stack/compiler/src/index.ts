@@ -27,13 +27,13 @@ class Compiler {
     async.waterfall(
       [
         (next: Callback<any[]>) => {
-          this.plugins.runActionsForEvent("compiler:contracts:compile:before", contractFiles, (err?: Error | null, files: any[] = []) => {
+          this.plugins.runActionsForEvent("compiler:contracts:compile:before", contractFiles, (err?: Error | null, contractFilesArr: any[] = []) => {
             if (err) {
               return next(err);
             }
             next(
               null,
-              files.map((file: any) =>
+              contractFilesArr.map((file: any) =>
                 file instanceof File
                   ? file
                   : new File({
@@ -48,7 +48,7 @@ class Compiler {
             );
           });
         },
-        (files: any[], next: Callback<any>) => {
+        (contractFilesArr: any[], next: Callback<any>) => {
           const compiledObject: { [index: string]: any } = {};
 
           const compilerOptions = {
@@ -58,7 +58,7 @@ class Compiler {
           async.eachObject(
             this.getAvailableCompilers(),
             (extension: string, compilers: any, nextObj: any) => {
-              const matchingFiles = files.filter(this.filesMatchingExtension(extension));
+              const matchingFiles = contractFilesArr.filter(this.filesMatchingExtension(extension));
               if (matchingFiles.length === 0) {
                 return nextObj();
               }
@@ -96,7 +96,7 @@ class Compiler {
                 return next(err);
               }
 
-              files
+              contractFilesArr
                 .filter((f: any) => !f.compiled)
                 .forEach((file: any) => {
                   this.logger.warn(__("%s doesn't have a compatible contract compiler. Maybe a plugin exists for it.", file.path));
