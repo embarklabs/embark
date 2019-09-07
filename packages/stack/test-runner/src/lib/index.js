@@ -3,7 +3,6 @@ const async = require('async');
 const chalk = require('chalk');
 const path = require('path');
 const { embarkPath, dappPath, runCmd } = require('embark-utils');
-import fs from 'fs';
 import { COVERAGE_GAS_LIMIT, GAS_LIMIT } from './constants';
 
 const Reporter = require('./reporter');
@@ -23,11 +22,11 @@ class TestRunner {
       this.run(options, callback);
     });
 
-    this.events.setCommandHandler('tests:runner:register', (name, matchFn, addFn, runFn) => {
+    this.events.setCommandHandler('tests:runner:register', (pluginName, matchFn, addFn, runFn) => {
       // We unshift to give priority to runners registered after the default ones, making it
       // possible to override the ones Embark ships with. This will open the door for things
       // like Jest tests and such.
-      this.runners.unshift({name, matchFn, addFn, runFn});
+      this.runners.unshift({pluginName, matchFn, addFn, runFn});
     });
   }
 
@@ -92,6 +91,8 @@ class TestRunner {
   }
 
   getFilesFromDir(filePath, cb) {
+    const {fs} = this;
+
     fs.stat(filePath, (err, fileStat) => {
       const errorMessage = `File "${filePath}" doesn't exist or you don't have permission to it`.red;
       if (err) {
