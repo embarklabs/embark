@@ -1,6 +1,5 @@
 const async = require("async");
 const { dappPath } = require("embark-utils");
-const fs = require("fs");
 const remixTests = require('remix-tests');
 const Web3 = require('web3');
 
@@ -31,6 +30,8 @@ class SolidityTestRunner {
   constructor(embark, options) {
     this.embark = embark;
     this.events = embark.events;
+    this.fs = embark.fs;
+
     this.plugins = options.plugins;
 
     this.files = [];
@@ -57,7 +58,7 @@ class SolidityTestRunner {
 
   run(options, cb) {
     const reporter = new Reporter(options.reporter);
-    const {events, _plugins} = this;
+    const {events, fs} = this;
 
     if (this.files.length === 0) {
       return cb(null, 0);
