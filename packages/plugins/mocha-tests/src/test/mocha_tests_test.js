@@ -1,4 +1,3 @@
-/* globals describe, it */
 const assert = require('assert').strict;
 const refute = require('refute')(assert);
 const sinon = require('sinon');

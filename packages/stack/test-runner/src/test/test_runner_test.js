@@ -1,4 +1,3 @@
-/* globals describe, it */
 const assert = require('assert').strict;
 const refute = require('refute')(assert);
 const sinon = require('sinon');
@@ -39,13 +38,13 @@ describe('Test Runner', () => {
         instance.runners = [first, second];
         instance.getFilesFromDir = (_, cb) => {
           cb(null, ['test/file_first.js', 'test/file_second.js']);
-        }
+        };
       });
 
       it('should warn when a file does not match any plugins', (done) => {
         instance.getFilesFromDir = (_, cb) => {
           cb(null, ['luri.js']);
-        }
+        };
 
         instance.run({}, (err) => {
           // Ensure no error was returned

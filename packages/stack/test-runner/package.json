@@ -44,6 +44,9 @@
     "test": "mocha dist/test/**/*.js"
   },
   "eslintConfig": {
+    "env": {
+      "mocha": true
+    },
     "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
