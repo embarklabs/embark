@@ -1,9 +1,11 @@
 import { Callback, CompilerPluginObject, Embark, Plugins /* supplied by @types/embark in packages/embark-typings */ } from "embark";
 import { __ } from "embark-i18n";
 import * as fs from "fs-extra";
+import * as os from "os";
+import * as path from "path";
 
 const async = require("embark-async-wrapper");
-const { File, Types } = require("embark-utils");
+const { File, Types, dappPath } = require("embark-utils");
 
 class Compiler {
   private logger: any;
@@ -31,21 +33,51 @@ class Compiler {
             if (err) {
               return next(err);
             }
-            next(
-              null,
-              contractFilesArr.map((file: any) =>
-                file instanceof File
-                  ? file
-                  : new File({
-                      originalPath: file.path,
-                      path: file.path,
-                      resolver: (callback: Callback<any>) => {
-                        fs.readFile(file.path, { encoding: "utf-8" }, callback);
-                      },
-                      type: Types.dappFile,
-                    }),
-              ),
-            );
+
+            const _contractFilesArr: any[] = [];
+            const _dappPath = dappPath();
+            const osTmpDir = os.tmpdir();
+
+            for (const file of contractFilesArr) {
+              if (file instanceof File) {
+                _contractFilesArr.push(file);
+                continue;
+              }
+
+              if (!file.path) {
+                err = new TypeError("path property was missing on contract file object");
+                break;
+              }
+
+              let filePath: string;
+              if (!path.isAbsolute(file.path)) {
+                filePath = dappPath(file.path);
+              } else {
+                filePath = path.normalize(file.path);
+              }
+
+              if (![_dappPath, osTmpDir].some((dir) => filePath.startsWith(dir))) {
+                err = new Error("path must be within the DApp project or the OS temp directory");
+                break;
+              }
+
+              _contractFilesArr.push(
+                new File({
+                  originalPath: file.path,
+                  path: file.path,
+                  resolver: (callback: Callback<any>) => {
+                    fs.readFile(file.path, { encoding: "utf-8" }, callback);
+                  },
+                  type: Types.dappFile,
+                }),
+              );
+            }
+
+            if (err) {
+              return next(err);
+            }
+
+            next(null, _contractFilesArr);
           });
         },
         (contractFilesArr: any[], next: Callback<any>) => {
