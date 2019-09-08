@@ -34,15 +34,17 @@ const cleanCode = (code) => {
 
 describe("SolidityTestRunner", () => {
   let embark;
+  let options;
 
   beforeEach(() => {
     const events = { request: sinon.spy() };
     embark = { events: events };
+    options = {};
   });
 
   describe("constructor", () => {
     it("registers the runner", () => {
-      const _ = new SolidityTestRunner(embark);
+      const _ = new SolidityTestRunner(embark, options);
       assert(embark.events.request.called);
     });
   });
@@ -50,7 +52,7 @@ describe("SolidityTestRunner", () => {
   describe("methods", () => {
     let instance;
 
-    beforeEach(() => { instance = new SolidityTestRunner(embark); });
+    beforeEach(() => { instance = new SolidityTestRunner(embark, options); });
 
     describe("match", () => {
       it("matches .sol files", () => {
