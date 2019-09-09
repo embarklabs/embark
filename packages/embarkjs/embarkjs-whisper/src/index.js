@@ -1,5 +1,7 @@
 /* global EmbarkJS Web3 listenTo sendMessage */
 let Web3 = require('web3');
+let { Manager } = require('web3-core-requestmanager');
+
 const {sendMessage, listenTo} = require('./communicationFunctions').default;
 
 // for the whisper v5 and web3.js 1.x
@@ -10,14 +12,18 @@ __embarkWhisperNewWeb3.real_listenTo = listenTo;
 
 __embarkWhisperNewWeb3.setProvider = function(options) {
   const self = this;
-  let provider;
+  let endpoint;
   if (options === undefined) {
-    provider = "localhost:8546";
+    endpoint = "localhost:8546";
   } else {
-    provider = options.server + ':' + options.port;
+    endpoint = options.server + ':' + options.port;
   }
   // TODO: take into account type
-  self.web3 = new Web3(new Web3.providers.WebsocketProvider("ws://" + provider, options.providerOptions));
+  const provider = new Web3.providers.WebsocketProvider("ws://" + endpoint, options.providerOptions);
+
+  self.web3 = new Web3(provider);
+  self.requestManager = new Manager(provider);
+
   self.web3.currentProvider.on('connect', () => {
     self.getWhisperVersion(function(err, version) {
       if (err) {
@@ -77,7 +83,7 @@ __embarkWhisperNewWeb3.getWhisperVersion = function(cb) {
   // 2) web3 1.0 still does not implement web3_clientVersion
   // so we must do all by our own
   const self = this;
-  self.web3._requestManager.send({method: 'web3_clientVersion', params: []}, (err, clientVersion) => {
+  self.requestManager.send({method: 'web3_clientVersion', params: []}, (err, clientVersion) => {
     if (err) return cb(err);
     if (clientVersion.indexOf("Parity-Ethereum//v2") === 0) {
       // This is Parity
