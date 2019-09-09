@@ -4,6 +4,7 @@ const embarkJsUtils = require('embarkjs').Utils;
 const {bigNumberify} = require('ethers/utils/bignumber');
 const RLP = require('ethers/utils/rlp');
 const ethUtil = require('ethereumjs-util');
+let { Manager } = require('web3-core-requestmanager');
 
 const BLOCK_LIMIT = 100;
 
@@ -12,6 +13,7 @@ export default class EthereumAPI {
     this.embark = embark;
     this.blockchainName = blockchainName;
     this.web3 = web3;
+    this.requestManager = new Manager(web3.currentProvider);
     this.fs = embark.fs;
     this.logFile = dappPath(".embark", "contractEvents.json");
   }
@@ -277,7 +279,7 @@ export default class EthereumAPI {
   }
 
   getClientVersion(cb) {
-    this.web3._requestManager.send({method: 'web3_clientVersion', params: []}, cb);
+    this.requestManager.send({method: 'web3_clientVersion', params: []}, cb);
   }
 
   getNetworkId() {
