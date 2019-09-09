@@ -1,5 +1,6 @@
 const assert = require('assert').strict;
 const async = require('async');
+const EmbarkJS = require('embarkjs');
 const Mocha = require('mocha');
 const Web3 = require('web3');
 
@@ -61,9 +62,27 @@ class MochaTestRunner {
           },
           (contracts, next) => {
             for(const contract of contracts) {
-              const instance = compiledContracts[contract.className];
-              const contractObj = new web3.eth.Contract(instance.abiDefinition, contract.deployedAddress);
-              Object.setPrototypeOf(compiledContracts[contract.className], contractObj);
+              const instance = EmbarkJS.Blockchain.Contract(contract);
+
+              // Here we switch the prototype of the instance we had lying around to the more
+              // complete web3 contract instance (with some methods of our own.) Despite this
+              // looking hacky, it's necessary. As mocha tests look something like this:
+              //
+              //   const SimpleStorage = require('Embark/contracts/SimpleStorage');
+              //
+              //   config({
+              //     contracts: {
+              //       SimpleStorage: { args: [100] }
+              //     }
+              //   }, (err, accounts) => {
+              //
+              //   });
+              //
+              // it means that we have to return something before the address is set. So,
+              // due to that constraint, the only sane way to modify the object the test
+              // file is hanging on to is to replace the prototype instead of switching
+              // it around and having the test losing the reference.
+              Object.setPrototypeOf(compiledContracts[contract.className], instance);
             }
 
             next();
@@ -87,21 +106,12 @@ class MochaTestRunner {
       (next) => { // request provider
         events.request("blockchain:client:provider", "ethereum", next);
       },
-      (provider, next) => { // set provider
+      (provider, next) => { // set provider and fetch account list
         web3 = new Web3(provider);
-        next();
+        web3.eth.getAccounts(next);
       },
-      (next) => { // get accounts
-        web3.eth.getAccounts((err, accts) => {
-          if (err) {
-            return next(err);
-          }
-
-          accounts = accts;
-          next();
-        });
-      },
-      (next) => { // reset contracts as we might have state leakage from other plugins
+      (accts, next) => { // reset contracts as we might have state leakage from other plugins
+        accounts = accts;
         events.request("contracts:reset", next);
       },
       (next) => { // get contract files

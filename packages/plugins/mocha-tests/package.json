@@ -62,6 +62,7 @@
   },
   "dependencies": {
     "async": "2.6.1",
+    "embarkjs": "^4.1.1",
     "mocha": "6.2.0",
     "web3": "1.2.1"
   },
