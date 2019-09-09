@@ -141,6 +141,7 @@ export class ContractEnhanced {
     this.coverage.fnMap[coverageId] = {
       line,
       loc: location,
+      decl: location,
       name,
     };
     this.coverage.f[coverageId] = 0;

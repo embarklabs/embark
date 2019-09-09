@@ -26,6 +26,7 @@ export interface Coverage {
     [functionId: number]: {
       line: number;
       loc: Location;
+      decl: Location;
       name: string;
       skip?: boolean;
     };
