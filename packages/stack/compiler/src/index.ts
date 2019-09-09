@@ -1,6 +1,5 @@
 import { Callback, CompilerPluginObject, Embark, Plugins /* supplied by @types/embark in packages/embark-typings */ } from "embark";
 import { __ } from "embark-i18n";
-import * as fs from "fs-extra";
 import * as os from "os";
 import * as path from "path";
 
@@ -8,20 +7,19 @@ const async = require("embark-async-wrapper");
 const { File, Types, dappPath } = require("embark-utils");
 
 class Compiler {
+  private fs: any;
   private logger: any;
   private plugins: Plugins;
-  private isCoverage: boolean;
 
   constructor(embark: Embark, options: any) {
+    this.fs = embark.fs;
     this.logger = embark.logger;
     this.plugins = options.plugins;
-    this.isCoverage = options.isCoverage;
 
-    // embark.events.setCommandHandler("compiler:contracts", this.compile_contracts.bind(this));
-    embark.events.setCommandHandler("compiler:contracts:compile", this.compile_contracts.bind(this));
+    embark.events.setCommandHandler("compiler:contracts:compile", this.compileContracts.bind(this));
   }
 
-  private compile_contracts(contractFiles: any[], cb: Callback<any>) {
+  private compileContracts(contractFiles: any[], cb: Callback<any>) {
     if (contractFiles.length === 0) {
       return cb(null, {});
     }
@@ -66,26 +64,20 @@ class Compiler {
                   originalPath: file.path,
                   path: file.path,
                   resolver: (callback: Callback<any>) => {
-                    fs.readFile(file.path, { encoding: "utf-8" }, callback);
+                    this.fs.readFile(file.path, { encoding: "utf-8" }, callback);
                   },
                   type: Types.dappFile,
                 }),
               );
             }
 
-            if (err) {
-              return next(err);
-            }
-
-            next(null, _contractFilesArr);
+            next(err || null, _contractFilesArr);
           });
         },
         (contractFilesArr: any[], next: Callback<any>) => {
           const compiledObject: { [index: string]: any } = {};
 
-          const compilerOptions = {
-            isCoverage: this.isCoverage,
-          };
+          const compilerOptions = {};
 
           async.eachObject(
             this.getAvailableCompilers(),
@@ -133,6 +125,7 @@ class Compiler {
                 .forEach((file: any) => {
                   this.logger.warn(__("%s doesn't have a compatible contract compiler. Maybe a plugin exists for it.", file.path));
                 });
+
               next(null, compiledObject);
             },
           );
@@ -142,23 +135,20 @@ class Compiler {
         },
       ],
       (err?: Error | null, compiledObject?: any) => {
-        if (err) {
-          return cb(err);
-        }
-        cb(null, compiledObject || {});
+        cb(err || null, compiledObject || {});
       },
     );
   }
 
   private getAvailableCompilers() {
-    const available_compilers: { [index: string]: any } = {};
+    const availableCompilers: { [index: string]: any } = {};
     this.plugins.getPluginsProperty("compilers", "compilers").forEach((compilerObject: CompilerPluginObject) => {
-      if (!available_compilers[compilerObject.extension]) {
-        available_compilers[compilerObject.extension] = [];
+      if (!availableCompilers[compilerObject.extension]) {
+        availableCompilers[compilerObject.extension] = [];
       }
-      available_compilers[compilerObject.extension].unshift(compilerObject.cb);
+      availableCompilers[compilerObject.extension].unshift(compilerObject.cb);
     });
-    return available_compilers;
+    return availableCompilers;
   }
 
   private filesMatchingExtension(extension: string) {
