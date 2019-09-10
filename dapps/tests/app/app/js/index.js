@@ -27,8 +27,6 @@ $(document).ready(function() {
     }
   });
 
-  console.log([1,2,3].map(v => v + 1));
-
   $("#blockchain button.set").click(function() {
     var value = parseInt($("#blockchain input.text").val(), 10);
 
@@ -49,23 +47,9 @@ $(document).ready(function() {
 // Storage (IPFS) example
 // ===========================
 $(document).ready(function() {
-  // automatic set if config/storage.json has "enabled": true and "provider": "ipfs"
-  //EmbarkJS.Storage.setProvider('ipfs',{server: 'localhost', port: '5001'});
-
   $("#storage .error").hide();
-  //EmbarkJS.Storage.ipfsConnection.version()
-  //  .then(function(){
-        $("#status-storage").addClass('status-online');
-        $("#storage-controls").show();
-   // })
-   // .catch(function(err) {
-   //   if(err){
-   //     console.log("IPFS Connection Error => " + err.message);
-   //     $("#storage .error").show();
-   //     $("#status-storage").addClass('status-offline');
-   //     $("#storage-controls").hide();
-   //   }
-   // });
+  $("#status-storage").addClass('status-online');
+  $("#storage-controls").show();
 
   $("#storage button.setIpfsText").click(function() {
     var value = $("#storage input.ipfsText").val();
@@ -74,11 +58,11 @@ $(document).ready(function() {
       $("input.textHash").val(hash);
       addToLog("#storage", "EmbarkJS.Storage.saveText('" + value + "').then(function(hash) { })");
     })
-    .catch(function(err) {
-      if(err){
-        console.log("IPFS saveText Error => " + err.message);
-      }
-    });
+      .catch(function(err) {
+        if (err) {
+          console.log("IPFS saveText Error => " + err.message);
+        }
+      });
   });
 
   $("#storage button.loadIpfsHash").click(function() {
@@ -87,11 +71,11 @@ $(document).ready(function() {
       $("span.ipfsText").html(content);
       addToLog("#storage", "EmbarkJS.Storage.get('" + value + "').then(function(content) { })");
     })
-    .catch(function(err) {
-      if(err){
-        console.log("IPFS get Error => " + err.message);
-      }
-    });
+      .catch(function(err) {
+        if (err) {
+          console.log("IPFS get Error => " + err.message);
+        }
+      });
   });
 
   $("#storage button.uploadFile").click(function() {
@@ -101,11 +85,11 @@ $(document).ready(function() {
       $("input.fileIpfsHash").val(hash);
       addToLog("#storage", "EmbarkJS.Storage.uploadFile($('input[type=file]')).then(function(hash) { })");
     })
-    .catch(function(err) {
-      if(err){
-        console.log("IPFS uploadFile Error => " + err.message);
-      }
-    });
+      .catch(function(err) {
+        if (err) {
+          console.log("IPFS uploadFile Error => " + err.message);
+        }
+      });
   });
 
   $("#storage button.loadIpfsFile").click(function() {
@@ -154,6 +138,5 @@ $(document).ready(function() {
     EmbarkJS.Messages.sendMessage({topic: channel, data: message});
     addToLog("#communication", "EmbarkJS.Messages.sendMessage({topic: '" + channel + "', data: '" + message + "'})");
   });
-
 });
 
