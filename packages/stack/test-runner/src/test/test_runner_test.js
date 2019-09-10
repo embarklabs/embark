@@ -2,6 +2,8 @@ const assert = require('assert').strict;
 const refute = require('refute')(assert);
 const sinon = require('sinon');
 
+const {fakeEmbark} = require('embark-testing');
+
 const TestRunner = require('../lib/index.js');
 
 describe('Test Runner', () => {
@@ -9,10 +11,7 @@ describe('Test Runner', () => {
   let instance;
 
   beforeEach(() => {
-    const events = { setCommandHandler: () => {}, on: () => {} };
-    const logger = { warn: sinon.fake() };
-
-    embark = { events, logger };
+    embark = fakeEmbark();
     instance = new TestRunner(embark, {});
   });
 
@@ -36,6 +35,7 @@ describe('Test Runner', () => {
         };
 
         instance.runners = [first, second];
+
         instance.getFilesFromDir = (_, cb) => {
           cb(null, ['test/file_first.js', 'test/file_second.js']);
         };
@@ -54,7 +54,7 @@ describe('Test Runner', () => {
           sinon.assert.calledWith(second.matchFn, 'luri.js');
 
           // Ensure that we logged
-          sinon.assert.calledWithMatch(embark.logger.warn, /luri.js/);
+          embark.assert.logged('warn', /luri.js/);
 
           done();
         });
