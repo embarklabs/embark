@@ -762,7 +762,7 @@ simulator(_options) {
       }
     ], (err, passes, fails) => {
       if(err) {
-        engine.logger.error(`Error occurred while running tests: ${ err.message || err}`);
+        engine.logger.error(`Error occurred while running tests: ${err.message || err}`);
       }
 
       process.exit(err || (fails > 0) ? 1 : 0);
