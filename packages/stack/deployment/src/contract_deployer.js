@@ -1,9 +1,7 @@
-import {__} from 'embark-i18n';
 const async = require('async');
 
 class ContractDeployer {
   constructor(options) {
-    this.logger = options.logger;
     this.events = options.events;
     this.plugins = options.plugins;
     this.deployer = {};
