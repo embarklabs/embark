@@ -1,7 +1,6 @@
 import async from 'async';
-const {__} = require('embark-i18n');
+const { __ } = require('embark-i18n');
 const constants = require('embark-core/constants');
-const Web3RequestManager = require('web3-core-requestmanager');
 
 import BlockchainAPI from "./api";
 class Blockchain {
@@ -22,57 +21,50 @@ class Blockchain {
     embark.registerActionForEvent("pipeline:generateAll:before", this.addArtifactFile.bind(this));
 
     this.blockchainNodes = {};
-    this.events.setCommandHandler("blockchain:node:register", (clientName, startCb) => {
-      this.blockchainNodes[clientName] = startCb;
+    this.events.setCommandHandler("blockchain:node:register", (clientName, { isStartedFn, launchFn, stopFn }) => {
+
+      if (!isStartedFn) {
+        throw new Error(`Blockchain client '${clientName}' must be registered with an 'isStarted' function, client not registered.`);
+      }
+      if (!launchFn) {
+        throw new Error(`Blockchain client '${clientName}' must be registered with a 'launchFn' function, client not registered.`);
+      }
+      if (!stopFn) {
+        throw new Error(`Blockchain client '${clientName}' must be registered with a 'stopFn' function, client not registered.`);
+      }
+
+      this.blockchainNodes[clientName] = { isStartedFn, launchFn, stopFn };
     });
 
-    this.events.setCommandHandler("blockchain:node:start", async (initialBlockchainConfig, cb) => {
-      this.plugins.emitAndRunActionsForEvent("blockchain:config:modify", initialBlockchainConfig, (err, blockchainConfig) => {
+    this.events.setCommandHandler("blockchain:node:start", (blockchainConfig, cb) => {
+      const clientName = blockchainConfig.client;
+      const started = () => {
+        this.startedClient = clientName;
+        this.events.emit("blockchain:started", clientName);
+      };
+      if (clientName === constants.blockchain.vm) {
+        started();
+        return cb();
+      }
+
+      const client = this.blockchainNodes[clientName];
+
+      if (!client) return cb(`Blockchain client '${clientName}' not found, please register this node using 'blockchain:node:register'.`);
+
+      // check if we should should start
+      client.isStartedFn.call(client, (err, isStarted) => {
         if (err) {
-          this.logger.error(__('Error getting modified blockchain config: %s', err.message || err));
-          blockchainConfig = initialBlockchainConfig;
+          return cb(err);
         }
-        const self = this;
-        const clientName = blockchainConfig.client;
-        function started() {
-          self.startedClient = clientName;
-          self.events.emit("blockchain:started", clientName);
-        }
-        if (clientName === constants.blockchain.vm) {
+        if (isStarted) {
+          // Node may already be started
           started();
-          return cb();
+          return cb(null, true);
         }
-        const requestManager = new Web3RequestManager.Manager(blockchainConfig.endpoint);
-
-        const ogConsoleError = console.error;
-        // TODO remove this once we update to web3 2.0
-        // TODO in web3 1.0, it console.errors "connection not open on send()" even if we catch the error
-        console.error = (...args) => {
-          if (args[0].indexOf('connection not open on send()') > -1) {
-            return;
-          }
-          ogConsoleError(...args);
-        };
-        requestManager.send({method: 'eth_accounts'}, (err, _accounts) => {
-          console.error = ogConsoleError;
-          if (!err) {
-            // Node is already started
-            started();
-            return cb(null, true);
-          }
-          const clientFunctions = this.blockchainNodes[clientName];
-          if (!clientFunctions) {
-            return cb(__("Client %s not found in registered plugins", clientName));
-          }
-
-          let onStart = () => {
-            started();
-            cb();
-          };
-
-          this.startedClient = clientName;
-          clientFunctions.launchFn.apply(clientFunctions, [onStart]);
-
+        // start node
+        client.launchFn.call(client, () => {
+          started();
+          cb();
         });
       });
     });
