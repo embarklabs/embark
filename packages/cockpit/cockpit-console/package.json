@@ -1,9 +1,9 @@
 {
-  "name": "embark-ui",
+  "name": "cockpit-console",
   "version": "4.1.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
-  "description": "Web frontend for interactive DApp development with Embark",
+  "description": "Cockpit console react component",
   "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-ui#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
@@ -21,9 +21,7 @@
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },
-  "files": [
-    "build"
-  ],
+  "main": "./src/Console.js",
   "scripts": {
     "build": "node scripts/build.js",
     "build-storybook": "build-storybook -s public",
@@ -64,7 +62,6 @@
     "chalk": "2.4.2",
     "classnames": "2.2.6",
     "connected-react-router": "4.5.0",
-    "cockpit-console": "^4.1.1",
     "css-loader": "1.0.0",
     "date-fns": "1.30.1",
     "dotenv": "6.0.0",

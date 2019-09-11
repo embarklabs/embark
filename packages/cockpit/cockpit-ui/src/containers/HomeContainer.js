@@ -17,7 +17,7 @@ import {
 } from "../actions";
 
 import DataWrapper from "../components/DataWrapper";
-import Console from '../components/Console';
+import Console from 'cockpit-console';
 import {EMBARK_PROCESS_NAME, LOG_LIMIT} from '../constants';
 import PageHead from '../components/PageHead';
 import ServicesContainer from './ServicesContainer';

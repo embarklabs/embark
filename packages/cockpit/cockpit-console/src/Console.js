@@ -9,7 +9,6 @@ import ReactJson from 'react-json-view';
 
 import Logs from "./Logs";
 import "./Console.css";
-import {EMBARK_PROCESS_NAME} from '../constants';
 
 const convert = new Convert({newline: true, escapeXML: true});
 
@@ -20,7 +19,7 @@ class Console extends Component {
     this.processes = [...props.processes];
     this.processes.unshift({name: 'embark', state: 'running'});
 
-    this.state = {value: '', isLoading: true, options: [], activeTab: EMBARK_PROCESS_NAME};
+    this.state = {value: '', isLoading: true, options: [], activeTab: 'embark'};
   }
 
   handleSubmit(event) {
