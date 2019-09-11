@@ -46,7 +46,7 @@ __embarkWhisperNewWeb3.setProvider = function(options) {
   });
 };
 
-__embarkWhisperNewWeb3.sendMessage = function(options) {
+__embarkWhisperNewWeb3.sendMessage = function(options, callback) {
   const data = options.data || options.payload;
   if (!data) {
     throw new Error("missing option: data");
@@ -64,6 +64,7 @@ __embarkWhisperNewWeb3.sendMessage = function(options) {
     if (err) {
       throw new Error(err);
     }
+    callback();
   });
 };
 

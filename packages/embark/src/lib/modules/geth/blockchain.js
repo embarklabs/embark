@@ -101,7 +101,7 @@ var Blockchain = function(userConfig, clientClass, communicationConfig) {
     this.logger.error(__(spaceMessage, 'genesisBlock'));
     process.exit(1);
   }
-  this.client = new clientClass({config: this.config, env: this.env, isDev: this.isDev});
+  this.client = new clientClass({config: this.config, env: this.env, isDev: this.isDev, communicationConfig: communicationConfig});
 
   if (this.isStandalone) {
     this.initStandaloneProcess();
