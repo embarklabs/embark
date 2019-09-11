@@ -15,27 +15,26 @@ class Whisper {
     this.modulesPath = dappPath(embark.config.embarkConfig.generationDir, constants.dappArtifacts.symlinkDir);
 
     this.api = new API(embark);
-    this.api.registerAPICalls();
+    this.whisperNodes = {};
 
     this.events.request("embarkjs:plugin:register", 'messages', 'whisper', 'embarkjs-whisper');
     this.events.request("embarkjs:console:register", 'messages', 'whisper', 'embarkjs-whisper');
 
-    // TODO: should launch its own whisper node
-    // this.events.on("communication:started", this.connectEmbarkJSProvider.bind(this));
-    this.events.on("blockchain:started", this.connectEmbarkJSProvider.bind(this));
+    this.events.setCommandHandler("whisper:node:register", (clientName, startCb) => {
+      this.whisperNodes[clientName] = startCb;
+    });
 
     this.events.request("communication:node:register", "whisper", (readyCb) => {
-      // TODO: should launch its own whisper node
-      // this.events.request('processes:register', 'communication', {
-        // launchFn: (cb) => {
-          // this.startProcess(cb);
-        // },
-        // stopFn: (cb) => { this.stopProcess(cb); }
-      // });
-      // this.events.request("processes:launch", "communication", (err) => {
-        readyCb();
-      // });
-      // this.registerServiceCheck()
+      let clientName = this.communicationConfig.client || "geth";
+      let registerCb = this.whisperNodes[clientName];
+      if (!registerCb) return cb("whisper client " + clientName + " not found");
+      registerCb.apply(registerCb, [readyCb]);
+    });
+
+    this.events.on("communication:started", () => {
+      this.api = new API(embark);
+      this.api.registerAPICalls();
+      this.connectEmbarkJSProvider()
     });
   }
 

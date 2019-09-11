@@ -11,7 +11,7 @@ module.exports = {
   development: {
     connection: {
       host: "localhost", // Host of the blockchain node
-      port: 8546, // Port of the blockchain node
+      port: 8557, // Port of the blockchain node
       type: "ws" // Type of connection (ws or rpc)
     }
   },

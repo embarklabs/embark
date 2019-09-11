@@ -5,8 +5,7 @@ const {spawn, exec} = require('child_process');
 const path = require('path');
 const constants = require('embark-core/constants');
 const GethClient = require('./gethClient.js');
-const WhisperGethClient = require('./whisperClient.js');
-// const ParityClient = require('./parityClient.js');
+const ParityClient = require('./parityClient.js');
 import { IPC } from 'embark-core';
 
 import { compact, dappPath, defaultHost, dockerHostSwap, embarkPath} from 'embark-utils';
@@ -16,7 +15,7 @@ const Logger = require('embark-logger');
 const IPC_CONNECT_INTERVAL = 2000;
 
 /*eslint complexity: ["error", 50]*/
-var Blockchain = function(userConfig, clientClass, communicationConfig) {
+var Blockchain = function(userConfig, clientClass) {
   this.userConfig = userConfig;
   this.env = userConfig.env || 'development';
   this.isDev = userConfig.isDev;
@@ -101,11 +100,9 @@ var Blockchain = function(userConfig, clientClass, communicationConfig) {
     this.logger.error(__(spaceMessage, 'genesisBlock'));
     process.exit(1);
   }
-  this.client = new clientClass({config: this.config, env: this.env, isDev: this.isDev, communicationConfig: communicationConfig});
+  this.client = new clientClass({config: this.config, env: this.env, isDev: this.isDev});
 
-  if (this.isStandalone) {
-    this.initStandaloneProcess();
-  }
+  this.initStandaloneProcess();
 };
 
 /**
@@ -116,40 +113,40 @@ var Blockchain = function(userConfig, clientClass, communicationConfig) {
  *
  * @returns {void}
  */
-Blockchain.prototype.initStandaloneProcess = function() {
-  let logQueue = [];
+Blockchain.prototype.initStandaloneProcess = function () {
+  if (this.isStandalone) {
+    let logQueue = [];
 
-  // on every log logged in logger (say that 3x fast), send the log
-  // to the IPC serve listening (only if we're connected of course)
-  this.logger.events.on('log', (logLevel, message) => {
-    if (this.ipc.connected) {
-      this.ipc.request('blockchain:log', {logLevel, message});
-    } else {
-      logQueue.push({logLevel, message});
-    }
-  });
+    // on every log logged in logger (say that 3x fast), send the log
+    // to the IPC serve listening (only if we're connected of course)
+    this.logger.events.on('log', (logLevel, message) => {
+      if (this.ipc.connected) {
+        this.ipc.request('blockchain:log', {logLevel, message});
+      } else {
+        logQueue.push({logLevel, message});
+      }
+    });
 
-  this.ipc = new IPC({ipcRole: 'client'});
+    this.ipc = new IPC({ipcRole: 'client'});
 
-  // Wait for an IPC server to start (ie `embark run`) by polling `.connect()`.
-  // Do not kill this interval as the IPC server may restart (ie restart
-  // `embark run` without restarting `embark blockchain`)
-  setInterval(() => {
-    if (!this.ipc.connected) {
-      this.ipc.connect(() => {
-        if (this.ipc.connected) {
-          logQueue.forEach(message => {
-            this.ipc.request('blockchain:log', message);
-          });
-          logQueue = [];
-          this.ipc.client.on('process:blockchain:stop', () => {
-            this.kill();
-            process.exit(0);
-          });
-        }
-      });
-    }
-  }, IPC_CONNECT_INTERVAL);
+    // Wait for an IPC server to start (ie `embark run`) by polling `.connect()`.
+    // Do not kill this interval as the IPC server may restart (ie restart
+    // `embark run` without restarting `embark blockchain`)
+    setInterval(() => {
+      if (!this.ipc.connected) {
+        this.ipc.connect(() => {
+          if (this.ipc.connected) {
+            logQueue.forEach(message => { this.ipc.request('blockchain:log', message); });
+            logQueue = [];
+            this.ipc.client.on('process:blockchain:stop', () => {
+              this.kill();
+              process.exit(0);
+            });
+          }
+        });
+      }
+    }, IPC_CONNECT_INTERVAL);
+  }
 };
 
 Blockchain.prototype.runCommand = function (cmd, options, callback) {
@@ -204,7 +201,7 @@ Blockchain.prototype.run = function () {
     args = compact(args);
 
     let full_cmd = cmd + " " + args.join(' ');
-    self.logger.info(__(">>>>>>>>>>>>>>>> running: %s", full_cmd.underline).green);
+    self.logger.info(__(">>>>>>>>>>>>>>>>> running: %s", full_cmd.underline).green);
     self.child = spawn(cmd, args, {cwd: process.cwd()});
 
     self.child.on('error', (err) => {
@@ -416,7 +413,7 @@ Blockchain.prototype.initChainAndGetAddress = function (callback) {
   });
 };
 
-export function BlockchainClient(userConfig, options, communicationConfig) {
+export function BlockchainClient(userConfig, options) {
   if ((userConfig === {} || JSON.stringify(userConfig) === '{"enabled":true}') && options.env !== 'development') {
     options.logger.info("===> " + __("warning: running default config on a non-development environment"));
   }
@@ -426,13 +423,18 @@ export function BlockchainClient(userConfig, options, communicationConfig) {
   if (options.clientName) userConfig.client = options.clientName;
   // Choose correct client instance based on clientName
   let clientClass;
+  switch (userConfig.client) {
+    case constants.blockchain.clients.geth:
+      clientClass = GethClient;
+      break;
 
-  if (communicationConfig) {
-    clientClass = WhisperGethClient
-  } else {
-    clientClass = GethClient;
+    case constants.blockchain.clients.parity:
+      clientClass = ParityClient;
+      break;
+    default:
+      console.error(__('Unknown client "%s". Please use one of the following: %s', userConfig.client, Object.keys(constants.blockchain.clients).join(', ')));
+      process.exit(1);
   }
-
   userConfig.isDev = (userConfig.isDev || userConfig.default);
   userConfig.env = options.env;
   userConfig.onReadyCallback = options.onReadyCallback;
@@ -440,5 +442,5 @@ export function BlockchainClient(userConfig, options, communicationConfig) {
   userConfig.logger = options.logger;
   userConfig.certOptions = options.certOptions;
   userConfig.isStandalone = options.isStandalone;
-  return new Blockchain(userConfig, clientClass, communicationConfig);
+  return new Blockchain(userConfig, clientClass);
 }

@@ -154,6 +154,7 @@ simulator(_options) {
 
         // TODO: replace with individual plugins
         engine.registerModuleGroup("namesystem");
+        engine.registerModuleGroup("communication");
         engine.registerModuleGroup("blockchain");
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
@@ -161,7 +162,6 @@ simulator(_options) {
         engine.registerModuleGroup("webserver");
         engine.registerModuleGroup("filewatcher");
         engine.registerModuleGroup("storage");
-        engine.registerModuleGroup("communication");
         engine.registerModuleGroup("cockpit");
         engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
 
@@ -177,7 +177,6 @@ simulator(_options) {
           } catch (e) {
             return cb(e);
           }
-
           cb();
         });
 
@@ -748,6 +747,12 @@ simulator(_options) {
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
           try {
             await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig);
+
+            await Promise.all([
+              engine.events.request2("storage:node:start", engine.config.storageConfig),
+              engine.events.request2("communication:node:start", engine.config.communicationConfig),
+              engine.events.request2("namesystem:node:start", engine.config.namesystemConfig)
+            ]);
           } catch (e) {
             return cb(e);
           }
