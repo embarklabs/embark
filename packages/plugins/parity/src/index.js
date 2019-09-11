@@ -24,29 +24,33 @@ class Parity {
     }
 
     this.events.request("blockchain:node:register", constants.blockchain.clients.parity, {
+      isStartedFn: (isStartedCb) => {
+        this._doCheck((state) => {
+          return isStartedCb(null, state.status === "on");
+        });
+      },
       launchFn: (readyCb) => {
-      this.events.request('processes:register', 'blockchain', {
-        launchFn: (cb) => {
-          // this.startBlockchainNode(readyCb);
-          this.startBlockchainNode(cb);
-        },
-        stopFn: (cb) => {
-          this.stopBlockchainNode(cb);
-        }
-      });
-      this.events.request("processes:launch", "blockchain", (err) => {
-        if (err) {
-          this.logger.error(`Error launching blockchain process: ${err.message || err}`);
-        }
-        readyCb();
-      });
-      this.registerServiceCheck();
-    },
-    stopFn: async (cb) => {
-      await this.events.request("processes:stop", "blockchain");
-      cb();
-    }
-  });
+        this.events.request('processes:register', 'blockchain', {
+          launchFn: (cb) => {
+            this.startBlockchainNode(cb);
+          },
+          stopFn: (cb) => {
+            this.stopBlockchainNode(cb);
+          }
+        });
+        this.events.request("processes:launch", "blockchain", (err) => {
+          if (err) {
+            this.logger.error(`Error launching blockchain process: ${err.message || err}`);
+          }
+          readyCb();
+        });
+        this.registerServiceCheck();
+      },
+      stopFn: async (cb) => {
+        await this.events.request("processes:stop", "blockchain");
+        cb();
+      }
+    });
   }
 
   shouldInit() {
@@ -57,23 +61,25 @@ class Parity {
   }
 
   _getNodeState(err, version, cb) {
-    if (err) return cb({name: "Ethereum node not found", status: 'off'});
+    if (err) return cb({ name: "Ethereum node not found", status: 'off' });
 
     let nodeName = "parity";
     let versionNumber = version.split("-")[0];
     let name = nodeName + " " + versionNumber + " (Ethereum)";
-    return cb({name, status: 'on'});
+    return cb({ name, status: 'on' });
+  }
+
+  _doCheck(cb) {
+    const { rpcHost, rpcPort, wsRPC, wsHost, wsPort } = this.blockchainConfig;
+    if (wsRPC) {
+      return ws(wsHost, wsPort, (err, version) => this._getNodeState(err, version, cb));
+    }
+    rpc(rpcHost, rpcPort, (err, version) => this._getNodeState(err, version, cb));
   }
 
   // TODO: need to get correct port taking into account the proxy
   registerServiceCheck() {
-    this.events.request("services:register", 'Ethereum', (cb) => {
-      const {rpcHost, rpcPort, wsRPC, wsHost, wsPort} = this.blockchainConfig;
-      if (wsRPC) {
-        return ws(wsHost, wsPort, (err, version) => this._getNodeState(err, version, cb));
-      }
-      rpc(rpcHost, rpcPort, (err, version) => this._getNodeState(err, version, cb));
-    }, 5000, 'off');
+    this.events.request("services:register", 'Ethereum', this._doCheck.bind(this), 5000, 'off');
   }
 
   startBlockchainNode(callback) {
