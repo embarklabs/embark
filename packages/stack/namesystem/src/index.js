@@ -28,12 +28,16 @@ export default class Namesystem {
     embark.registerActionForEvent("pipeline:generateAll:before", this.addArtifactFile.bind(this));
   }
 
-  addArtifactFile(_params, cb) {
-    this.events.request("pipeline:register", {
-      path: [this.embarkConfig.generationDir, 'config'],
-      file: 'namesystem.json',
-      format: 'json',
-      content: this.namesystemConfig
-    }, cb);
+  async addArtifactFile(_params, cb) {
+    // FIXME this shouldn't be done as the stack component calls the plugins
+    // FIXME this will be refactored along with the ENS plugin refactor
+    this.events.request("ens:config", (config) => {
+      this.events.request("pipeline:register", {
+        path: [this.embarkConfig.generationDir, 'config'],
+        file: 'namesystem.json',
+        format: 'json',
+        content: Object.assign({}, this.namesystemConfig, config)
+      }, cb);
+    });
   }
 }

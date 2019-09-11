@@ -3,42 +3,53 @@ import EmbarkJS from 'embarkjs';
 <% for (let pluginName in (plugins['messages'] || [])) { %>
 const __embark<%- pluginName %> = require('<%- plugins['messages'][pluginName] %>');
 EmbarkJS.Messages.registerProvider('<%- pluginName %>', __embark<%- pluginName %>.default || __embark<%- pluginName %>);
-<% }; %>
+<% } %>
 
 <% for (let pluginName in (plugins['storage'] || [])) { %>
 const __embark<%- pluginName %> = require('<%- plugins['storage'][pluginName] %>');
 EmbarkJS.Storage.registerProvider('<%- pluginName %>', __embark<%- pluginName %>.default || __embark<%- pluginName %>);
-<% }; %>
+<% } %>
 
 <% for (let pluginName in (plugins['blockchain'] || [])) { %>
 const __embark<%- pluginName %> = require('<%- plugins['blockchain'][pluginName] %>');
 EmbarkJS.Blockchain.registerProvider('<%- pluginName %>', __embark<%- pluginName %>.default || __embark<%- pluginName %>);
-<% }; %>
+<% } %>
 
 <% for (let pluginName in (plugins['names'] || [])) { %>
 const __embark<%- pluginName %> = require('<%- plugins['names'][pluginName] %>');
 EmbarkJS.Names.registerProvider('<%- pluginName %>', __embark<%- pluginName %>.default || __embark<%- pluginName %>);
-<% }; %>
+<% } %>
 
 <% if (plugins['messages'] && Object.values(plugins['messages']).length > 0) { %>
 const communicationConfig = require('./config/communication.json');
 EmbarkJS.Messages.setProvider(communicationConfig.provider, communicationConfig.connection);
-<% }; %>
+<% } %>
 
 <% if (plugins['storage'] && Object.values(plugins['storage']).length > 0) { %>
 const storageConfig = require('./config/storage.json');
 EmbarkJS.Storage.setProviders(storageConfig.dappConnection);
-<% }; %>
+<% } %>
 
 <% if (plugins['blockchain'] && Object.values(plugins['blockchain']).length > 0) { %>
 const blockchainConfig = require('./config/blockchain.json');
 EmbarkJS.Blockchain.setProvider(blockchainConfig.provider, {});
 EmbarkJS.Blockchain.connect(blockchainConfig, (err) => {if (err) { console.error(err); } });
-<% }; %>
+<% } %>
 
 <% if (plugins['names'] && Object.values(plugins['names']).length > 0) { %>
 const namesConfig = require('./config/namesystem.json');
 EmbarkJS.Names.setProvider(namesConfig.provider, namesConfig);
-<% }; %>
+<% } %>
+
+<% if (hasWebserver) { %>
+if (typeof WebSocket !== 'undefined') {
+    const ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.hostname}:${location.port}`);
+    ws.addEventListener('message', (evt) => {
+        if (evt.data === 'outputDone') {
+            location.reload(true);
+        }
+    });
+}
+<% } %>
 
 export default EmbarkJS;

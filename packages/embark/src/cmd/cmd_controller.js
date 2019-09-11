@@ -70,7 +70,7 @@ class EmbarkController {
       });
     });
   }
-simulator(options) {
+simulator(_options) {
     // this.context = options.context || [constants.contexts.simulator, constants.contexts.blockchain];
     // let simulator = new Simulator({
     //   blockchainConfig: this.config.blockchainConfig,
@@ -169,6 +169,11 @@ simulator(options) {
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
           try {
             await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig);
+            await Promise.all([
+              engine.events.request2("storage:node:start", engine.config.storageConfig),
+              engine.events.request2("communication:node:start", engine.config.communicationConfig),
+              engine.events.request2("namesystem:node:start", engine.config.namesystemConfig)
+            ]);
           } catch (e) {
             return cb(e);
           }
@@ -757,7 +762,7 @@ simulator(options) {
       }
     ], (err, passes, fails) => {
       if(err) {
-        engine.logger.error(`Error occurred while running tests: ${ err.message || err}`);
+        engine.logger.error(`Error occurred while running tests: ${err.message || err}`);
       }
 
       process.exit(err || (fails > 0) ? 1 : 0);

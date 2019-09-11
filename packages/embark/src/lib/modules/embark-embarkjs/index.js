@@ -14,6 +14,7 @@ class EmbarkJS {
     this.embarkConfig = embark.config.embarkConfig;
     this.events = embark.events;
     this.logger = embark.logger;
+    this.contractArtifacts = {};
 
     this.events.request("runcode:whitelist", 'embarkjs', () => {
       this.registerEmbarkJS();
@@ -35,6 +36,7 @@ class EmbarkJS {
     this.events.setCommandHandler("embarkjs:contract:runInVm", this.runInVm.bind(this));
 
     embark.registerActionForEvent("pipeline:generateAll:before", this.addEmbarkJSArtifact.bind(this));
+    embark.registerActionForEvent("pipeline:generateAll:before", this.addContractIndexArtifact.bind(this));
   }
 
   async registerEmbarkJS() {
@@ -64,7 +66,7 @@ class EmbarkJS {
   }
 
   addEmbarkJSArtifact(_params, cb) {
-    let embarkjsCode = Templates.embarkjs_artifact({ plugins: this.embarkJSPlugins });
+    const embarkjsCode = Templates.embarkjs_artifact({ plugins: this.embarkJSPlugins, hasWebserver: this.embark.config.webServerConfig.enabled });
 
     // TODO: generate a .node file
     this.events.request("pipeline:register", {
@@ -96,6 +98,7 @@ class EmbarkJS {
   async addContractArtifact(contract, cb) {
     const abi = JSON.stringify(contract.abiDefinition);
     const gasLimit = 6000000;
+    this.contractArtifacts[contract.className] = contract.className + '.js';
 
     const contractCode = Templates.embarkjs_contract_artifact({ className: contract.className, abi: abi, contract: contract, gasLimit: gasLimit });
 
@@ -104,6 +107,21 @@ class EmbarkJS {
       file: contract.className + '.js',
       format: 'js',
       content: contractCode
+    }, cb);
+  }
+
+  async addContractIndexArtifact(_options, cb) {
+    let indexCode = 'module.exports = {';
+    Object.keys(this.contractArtifacts).forEach(className => {
+      indexCode += `\n"${className}": require('./${this.contractArtifacts[className]}').default,`;
+    });
+    indexCode += `\n};`;
+
+    this.events.request("pipeline:register", {
+      path: [this.embarkConfig.generationDir, 'contracts'],
+      file: 'index.js',
+      format: 'js',
+      content: indexCode
     }, cb);
   }
 
