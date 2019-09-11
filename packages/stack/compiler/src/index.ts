@@ -1,88 +1,130 @@
-import {Callback, CompilerPluginObject, Embark, Plugins} /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Callback, CompilerPluginObject, Embark, Plugins /* supplied by @types/embark in packages/embark-typings */ } from "embark";
 import { __ } from "embark-i18n";
+import * as os from "os";
+import * as path from "path";
+import { promisify } from "util";
 
-const async = require("embark-async-wrapper");
+const { File, Types, dappPath } = require("embark-utils");
 
 class Compiler {
+  private fs: any;
   private logger: any;
   private plugins: Plugins;
-  private isCoverage: boolean;
 
   constructor(embark: Embark, options: any) {
+    this.fs = embark.fs;
     this.logger = embark.logger;
     this.plugins = options.plugins;
-    this.isCoverage = options.isCoverage;
 
-    // embark.events.setCommandHandler("compiler:contracts", this.compile_contracts.bind(this));
-    embark.events.setCommandHandler("compiler:contracts:compile", this.compile_contracts.bind(this));
+    embark.events.setCommandHandler("compiler:contracts:compile", this.compileContracts.bind(this));
   }
 
-  private compile_contracts(contractFiles: any[], cb: any) {
-    if (contractFiles.length === 0) {
+  private async runAfterActions(compiledObject: any): Promise<any> {
+    return (((await promisify(this.plugins.runActionsForEvent.bind(this.plugins, "compiler:contracts:compile:after"))(compiledObject)) as unknown) as any) || {};
+  }
+
+  private async runBeforeActions(contractFiles: any[]): Promise<any[]> {
+    return (((await promisify(this.plugins.runActionsForEvent.bind(this.plugins, "compiler:contracts:compile:before"))(contractFiles)) as unknown) as any[]) || [];
+  }
+
+  private *callCompilers(compilers: any, matchingFiles: any[], compilerOptions: object) {
+    for (const compiler of compilers) {
+      yield promisify(compiler)(matchingFiles, compilerOptions);
+    }
+  }
+
+  private checkContractFiles(contractFiles: any[]) {
+    const _dappPath = dappPath();
+    const osTmpDir = os.tmpdir();
+
+    return contractFiles.map((file) => {
+      if (file instanceof File) {
+        return file;
+      }
+
+      if (!file.path) {
+        throw new TypeError("path property was missing on contract file object");
+      }
+
+      let filePath: string;
+      if (!path.isAbsolute(file.path)) {
+        filePath = dappPath(file.path);
+      } else {
+        filePath = path.normalize(file.path);
+      }
+
+      if (![_dappPath, osTmpDir].some((dir) => filePath.startsWith(dir))) {
+        throw new Error("path must be within the DApp project or the OS temp directory");
+      }
+
+      return new File({
+        originalPath: file.path,
+        path: file.path,
+        resolver: (callback: Callback<any>) => {
+          this.fs.readFile(file.path, { encoding: "utf-8" }, callback);
+        },
+        type: Types.dappFile,
+      });
+    });
+  }
+
+  private async compileContracts(contractFiles: any[], cb: Callback<any>) {
+    if (!contractFiles.length) {
       return cb(null, {});
     }
 
-    const compiledObject: {[index: string]: any} = {};
+    const compiledObject: { [index: string]: any } = {};
+    const compilerOptions = {};
 
-    const compilerOptions = {
-      isCoverage: this.isCoverage,
-    };
+    try {
+      contractFiles = this.checkContractFiles(await this.runBeforeActions(contractFiles));
 
-    async.eachObject(this.getAvailableCompilers(),
-      (extension: string, compilers: any, next: any) => {
-        const matchingFiles = contractFiles.filter(this.filesMatchingExtension(extension));
-        if (matchingFiles.length === 0) {
-          return next();
-        }
+      await Promise.all(
+        Object.entries(this.getAvailableCompilers()).map(async ([extension, compilers]: [string, any]) => {
+          const matchingFiles = contractFiles.filter(this.filesMatchingExtension(extension));
+          if (!matchingFiles.length) {
+            return;
+          }
 
-        async.someLimit(compilers, 1, (compiler: any, someCb: Callback<boolean>) => {
-          compiler.call(compiler, matchingFiles, compilerOptions, (err: any, compileResult: any) => {
-            if (err) {
-              return someCb(err);
-            }
+          for await (const compileResult of this.callCompilers(compilers, matchingFiles, compilerOptions)) {
             if (compileResult === false) {
-              // Compiler not compatible, trying the next one
-              return someCb(null, false);
+              continue;
             }
             Object.assign(compiledObject, compileResult);
-            someCb(null, true);
-          });
-        }, (err: Error, result: boolean) => {
-          if (err) {
-            return next(err);
+            return;
           }
-          if (!result) {
-            // No compiler was compatible
-            return next(new Error(__("No installed compiler was compatible with your version of %s files", extension)));
-          }
-          next();
-        });
-      },
-      (err: any) => {
-        contractFiles.filter((f: any) => !f.compiled).forEach((file: any) => {
+
+          throw new Error(__("No installed compiler was compatible with your version of %s files", extension));
+        }),
+      );
+
+      contractFiles
+        .filter((f: any) => !f.compiled)
+        .forEach((file: any) => {
           this.logger.warn(__("%s doesn't have a compatible contract compiler. Maybe a plugin exists for it.", file.path));
         });
 
-        cb(err, compiledObject);
-      },
-    );
+      cb(null, await this.runAfterActions(compiledObject));
+    } catch (err) {
+      cb(err);
+    }
   }
 
   private getAvailableCompilers() {
-    const available_compilers: { [index: string]: any } = {};
+    const availableCompilers: { [index: string]: any } = {};
     this.plugins.getPluginsProperty("compilers", "compilers").forEach((compilerObject: CompilerPluginObject) => {
-      if (!available_compilers[compilerObject.extension]) {
-        available_compilers[compilerObject.extension] = [];
+      if (!availableCompilers[compilerObject.extension]) {
+        availableCompilers[compilerObject.extension] = [];
       }
-      available_compilers[compilerObject.extension].unshift(compilerObject.cb);
+      availableCompilers[compilerObject.extension].unshift(compilerObject.cb);
     });
-    return available_compilers;
+    return availableCompilers;
   }
 
   private filesMatchingExtension(extension: string) {
     return (file: any) => {
       const fileMatch = file.path.match(/\.[0-9a-z]+$/);
-      if (fileMatch && (fileMatch[0] === extension)) {
+      if (fileMatch && fileMatch[0] === extension) {
         file.compiled = true;
         return true;
       }

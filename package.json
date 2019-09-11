@@ -75,19 +75,19 @@
     "packages": [
       "dapps/templates/*",
       "dapps/tests/*",
-      "packages/core/*",
-      "packages/plugins/*",
-      "packages/stack/*",
-      "packages/embarkjs/*",
+      "packages/*",
       "packages/cockpit/*",
-      "packages/*"
+      "packages/core/*",
+      "packages/embarkjs/*",
+      "packages/plugins/*",
+      "packages/stack/*"
     ],
     "nohoist": [
-      "embark/embark-test-contract-0",
-      "embark/embark-test-contract-1",
       "embark-dapp-template-demo/bootstrap",
       "embark-dapp-test-app/embark-dapp-test-service",
-      "embark-dapp-test-app/zeppelin-solidity"
+      "embark-dapp-test-app/zeppelin-solidity",
+      "embark/embark-test-contract-0",
+      "embark/embark-test-contract-1"
     ]
   }
 }

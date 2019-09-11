@@ -62,5 +62,3 @@ arguments:
   * `callback(error, compiledObject)`
 
 ## Dependencies
-
-* async.eachObject
