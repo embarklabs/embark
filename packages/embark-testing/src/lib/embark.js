@@ -4,6 +4,9 @@ class Embark {
   constructor(events, plugins) {
     this.events = events;
     this.plugins = plugins;
+    this.config = {
+      blockchainConfig: {}
+    };
 
     this.assert = new EmbarkAssert(this);
 
@@ -13,6 +16,14 @@ class Embark {
       warn: sinon.fake(),
       error: sinon.fake(),
     };
+  }
+
+  registerActionForEvent(name, cb) {
+    this.plugins.registerActionForEvent(name, cb);
+  }
+
+  teardown() {
+    this.plugins.teardown();
   }
 }
 

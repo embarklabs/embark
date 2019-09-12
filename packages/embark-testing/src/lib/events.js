@@ -21,6 +21,10 @@ class Events {
     this.handlers[ev].push(cb);
   }
 
+  emit() {
+
+  }
+
   trigger(ev, ...args) {
     if (!this.handlers[ev]) {
       return;
@@ -49,10 +53,16 @@ class EventsAssert {
     assert(this.events.commandHandlers[cmd], `command handler for ${ cmd } wanted, but not registered`);
   }
 
-  commandHandlerCalled(cmd, ...args) {
+  commandHandlerCalled(cmd) {
     this.commandHandlerRegistered(cmd);
-    sinon.assert.calledWith(this.commandHandlers[cmd], ...args);
+    sinon.assert.called(this.events.commandHandlers[cmd]);
   }
+
+  commandHandlerCalledWith(cmd, ...args) {
+    this.commandHandlerRegistered(cmd);
+    sinon.assert.calledWith(this.events.commandHandlers[cmd], ...args);
+  }
+
 }
 
 module.exports = Events;

@@ -1,19 +1,22 @@
 const Embark = require('./embark');
 const Events = require('./events');
-const Plugin = require('./plugin');
+const Plugins = require('./plugin');
 
 const fakeEmbark = () => {
   const events = new Events();
-  const plugin = new Plugin();
+  const plugins = new Plugins();
 
-  const embark = new Embark(events, plugin);
-  return embark;
+  const embark = new Embark(events, plugins);
+  return {
+    embark,
+    plugins
+  };
 };
 
 module.exports = {
   Embark,
   Events,
-  Plugin,
+  Plugins,
 
   fakeEmbark
 };

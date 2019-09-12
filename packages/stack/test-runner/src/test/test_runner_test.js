@@ -7,11 +7,12 @@ const {fakeEmbark} = require('embark-testing');
 const TestRunner = require('../lib/index.js');
 
 describe('Test Runner', () => {
-  let embark;
+  let _embark;
   let instance;
 
   beforeEach(() => {
-    embark = fakeEmbark();
+    const { embark } = fakeEmbark();
+    _embark = embark;
     instance = new TestRunner(embark, {});
   });
 
@@ -54,7 +55,7 @@ describe('Test Runner', () => {
           sinon.assert.calledWith(second.matchFn, 'luri.js');
 
           // Ensure that we logged
-          embark.assert.logged('warn', /luri.js/);
+          _embark.assert.logged('warn', /luri.js/);
 
           done();
         });
@@ -66,7 +67,7 @@ describe('Test Runner', () => {
           refute(err);
 
           // Ensure that we didn't warn that runners weren't registered.
-          sinon.assert.notCalled(embark.logger.warn);
+          sinon.assert.notCalled(_embark.logger.warn);
 
           // Ensure plugins received the correct files
           sinon.assert.calledWith(first.addFn, 'test/file_first.js');
