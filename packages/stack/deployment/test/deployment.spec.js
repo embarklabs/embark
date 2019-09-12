@@ -1,68 +1,11 @@
 import sinon from 'sinon';
 import assert from 'assert';
+import { fakeEmbark, Plugins } from 'embark-testing';
 import Deployment from '../src/';
 
-const events = {
-  listeners: {},
-  setCommandHandler: sinon.spy((cmd, fn) => {
-    events.listeners[cmd] = fn;
-  }),
-  request: sinon.spy((cmd, ...args) => {
-    assert(events.listeners[cmd]);
-    events.listeners[cmd](...args);
-  }),
-  emit: (name) => {}
-};
-
-const plugins = {
-  listeners: {},
-  _plugin: {
-    listeners: {},
-    registerActionForEvent: (name, cb) => {
-      if (!plugins._plugin.listeners[name]) {
-        plugins._plugin.listeners[name] = [];
-      }
-      plugins._plugin.listeners[name].push(cb);
-    }
-  },
-  createPlugin: (name, opts) => {
-    return _plugin;
-  },
-  emitAndRunActionsForEvent: sinon.spy((name, options, cb) => {
-    if (plugins._plugin.listeners[name]) {
-      plugins._plugin.listeners[name].forEach(fn => {
-        fn(options, cb);
-      });
-    }
-  })
-};
-
-const fakeEmbark = {
-  events,
-  logger: {
-    info: () => {}
-  },
-  config: {
-    blockchainConfig: {}
-  },
-  assert: {
-    hasCommandHandler: (cmd) => {
-      sinon.assert.calledWith(fakeEmbark.events.setCommandHandler, cmd);
-    },
-    hasRequested: (cmd) => {
-      sinon.assert.calledWith(fakeEmbark.events.request, cmd);
-    },
-    hasRequestedWith: (cmd, ...args) => {
-      sinon.assert.calledWith(fakeEmbark.events.request, cmd, ...args);
-    },
-  },
-  teardown: () => {
-    fakeEmbark.events.listeners = {};
-    plugins._plugin.listeners = {};
-  }
-};
-
 describe('stack/deployment', () => {
+
+  const { embark, plugins } = fakeEmbark();
 
   let deployment;
   let deployedContracts = [];
@@ -72,7 +15,7 @@ describe('stack/deployment', () => {
   let doneCb;
 
   beforeEach(() => {
-    deployment = new Deployment(fakeEmbark, { plugins });
+    deployment = new Deployment(embark, { plugins });
 
     beforeAllAction = sinon.spy((params, cb) => { cb(null, params); });
     beforeDeployAction = sinon.spy((params, cb) => { cb(null, params); });
@@ -90,7 +33,7 @@ describe('stack/deployment', () => {
 
   afterEach(() => {
     deployedContracts = [];
-    fakeEmbark.teardown();
+    embark.teardown();
     sinon.restore();
   });
 
@@ -98,12 +41,12 @@ describe('stack/deployment', () => {
 
     let testContract = { className: 'TestContract', shouldDeploy: true };
 
-    plugins._plugin.registerActionForEvent('deployment:contract:beforeDeploy', beforeDeployAction);
-    plugins._plugin.registerActionForEvent('deployment:contract:shouldDeploy', shouldDeployAction);
-    plugins._plugin.registerActionForEvent('deployment:contract:deployed', deployedAction);
+    embark.registerActionForEvent('deployment:contract:beforeDeploy', beforeDeployAction);
+    embark.registerActionForEvent('deployment:contract:shouldDeploy', shouldDeployAction);
+    embark.registerActionForEvent('deployment:contract:deployed', deployedAction);
 
-    events.request('deployment:deployer:register', 'ethereum', deployFn);
-    events.request('deployment:contract:deploy', testContract, doneCb);
+    embark.events.request('deployment:deployer:register', 'ethereum', deployFn);
+    embark.events.request('deployment:contract:deploy', testContract, doneCb);
 
     assert(beforeDeployAction.calledOnce)
     assert(shouldDeployAction.calledOnce)
@@ -120,20 +63,20 @@ describe('stack/deployment', () => {
       { className: 'Contract3', shouldDeploy: true }
     ];
 
-    plugins._plugin.registerActionForEvent('deployment:deployContracts:beforeAll', beforeAllAction);
-    plugins._plugin.registerActionForEvent('deployment:contract:beforeDeploy', beforeDeployAction);
-    plugins._plugin.registerActionForEvent('deployment:contract:shouldDeploy', shouldDeployAction);
-    plugins._plugin.registerActionForEvent('deployment:contract:deployed', deployedAction);
-    plugins._plugin.registerActionForEvent('deployment:deployContracts:afterAll', afterAllAction);
+    embark.registerActionForEvent('deployment:deployContracts:beforeAll', beforeAllAction);
+    embark.registerActionForEvent('deployment:contract:beforeDeploy', beforeDeployAction);
+    embark.registerActionForEvent('deployment:contract:shouldDeploy', shouldDeployAction);
+    embark.registerActionForEvent('deployment:contract:deployed', deployedAction);
+    embark.registerActionForEvent('deployment:deployContracts:afterAll', afterAllAction);
 
-    events.request('deployment:deployer:register', 'ethereum', deployFn);
-    events.request('deployment:contracts:deploy', testContracts, {}, doneCb);
+    embark.events.request('deployment:deployer:register', 'ethereum', deployFn);
+    embark.events.request('deployment:contracts:deploy', testContracts, {}, doneCb);
 
     assert(beforeAllAction.calledOnce);
 
-    fakeEmbark.assert.hasRequestedWith('deployment:contract:deploy', testContracts[0]);
-    fakeEmbark.assert.hasRequestedWith('deployment:contract:deploy', testContracts[1]);
-    fakeEmbark.assert.hasRequestedWith('deployment:contract:deploy', testContracts[2]);
+    embark.events.assert.commandHandlerCalledWith('deployment:contract:deploy', testContracts[0]);
+    embark.events.assert.commandHandlerCalledWith('deployment:contract:deploy', testContracts[1]);
+    embark.events.assert.commandHandlerCalledWith('deployment:contract:deploy', testContracts[2]);
 
     assert(deployFn.calledWith(testContracts[0]));
     assert(deployFn.calledWith(testContracts[1]));
@@ -164,14 +107,14 @@ describe('stack/deployment', () => {
       F: []
     };
 
-    plugins._plugin.registerActionForEvent('deployment:deployContracts:beforeAll', beforeAllAction);
-    plugins._plugin.registerActionForEvent('deployment:contract:beforeDeploy', beforeDeployAction);
-    plugins._plugin.registerActionForEvent('deployment:contract:shouldDeploy', shouldDeployAction);
-    plugins._plugin.registerActionForEvent('deployment:contract:deployed', deployedAction);
-    plugins._plugin.registerActionForEvent('deployment:deployContracts:afterAll', afterAllAction);
+    embark.registerActionForEvent('deployment:deployContracts:beforeAll', beforeAllAction);
+    embark.registerActionForEvent('deployment:contract:beforeDeploy', beforeDeployAction);
+    embark.registerActionForEvent('deployment:contract:shouldDeploy', shouldDeployAction);
+    embark.registerActionForEvent('deployment:contract:deployed', deployedAction);
+    embark.registerActionForEvent('deployment:deployContracts:afterAll', afterAllAction);
 
-    events.request('deployment:deployer:register', 'ethereum', deployFn);
-    events.request('deployment:contracts:deploy', testContracts, testContractDependencies, doneCb);
+    embark.events.request('deployment:deployer:register', 'ethereum', deployFn);
+    embark.events.request('deployment:contracts:deploy', testContracts, testContractDependencies, doneCb);
 
     assert.equal(deployedContracts.length, 6);
 
