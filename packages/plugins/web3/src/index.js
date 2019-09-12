@@ -40,11 +40,6 @@ class EmbarkWeb3 {
   }
 
   async registerWeb3Object() {
-    const checkWeb3 = `return (typeof web3 === 'undefined');`;
-    const web3NotDefined = await this.events.request2('runcode:eval', checkWeb3);
-
-    if (!web3NotDefined) return;
-
     const provider = await this.events.request2("blockchain:client:provider", "ethereum");
     const web3 = new Web3(provider);
     await this.events.request2("runcode:register", 'web3', web3);

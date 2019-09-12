@@ -11,25 +11,28 @@ export default class ProxyManager {
   private proxy: any;
   private plugins: any;
   private readonly host: string;
-  private rpcPort: number;
-  private wsPort: number;
-  private ready: boolean;
+  private rpcPort = 0;
+  private wsPort = 0;
+  private ready = false;
   private isWs = false;
+  private vms: any[];
 
   constructor(private embark: Embark, options: any) {
     this.logger = embark.logger;
     this.events = embark.events;
     this.plugins = options.plugins;
-    this.ready = false;
-    this.rpcPort = 0;
-    this.wsPort = 0;
+    this.vms = [];
 
     this.host = "localhost";
 
-    this.events.once("blockchain:started", async () => {
-      await this.setupProxy();
+    this.events.on("blockchain:started", async (clientName: string) => {
+      await this.setupProxy(clientName);
       this.ready = true;
       this.events.emit("proxy:ready");
+    });
+    this.events.on("blockchain:stopped", async (clientName: string, node?: string) => {
+      this.ready = false;
+      await this.stopProxy();
     });
 
     if (!this.embark.config.blockchainConfig.proxy) {
@@ -48,6 +51,10 @@ export default class ProxyManager {
       }
       cb(null, buildUrl("http", this.host, this.rpcPort, "rpc"));
     });
+
+    this.events.setCommandHandler("proxy:vm:register", (handler: any) => {
+      this.vms.push(handler);
+    });
   }
 
   public onReady() {
@@ -61,23 +68,31 @@ export default class ProxyManager {
     });
   }
 
-  private async setupProxy() {
+  private async setupProxy(clientName: string) {
     if (!this.embark.config.blockchainConfig.proxy) {
       return;
+    }
+    if (this.proxy) {
+      throw new Error("Proxy is already started");
     }
     const port = await findNextPort(this.embark.config.blockchainConfig.rpcPort + constants.blockchain.servicePortOnProxy);
 
     this.rpcPort = port;
     this.wsPort = port + 1;
-    this.isWs = (/wss?/).test(this.embark.config.blockchainConfig.endpoint);
+    this.isWs = clientName === constants.blockchain.vm || (/wss?/).test(this.embark.config.blockchainConfig.endpoint);
 
-    this.proxy = await new Proxy({events: this.events, plugins: this.plugins, logger: this.logger})
-      .serve(
-        this.embark.config.blockchainConfig.endpoint,
-        this.host,
-        this.isWs ? this.wsPort : this.rpcPort,
-        this.isWs,
-      );
-    return;
+    this.proxy = await new Proxy({events: this.events, plugins: this.plugins, logger: this.logger, vms: this.vms});
+
+    await this.proxy.serve(
+      clientName === constants.blockchain.vm ? constants.blockchain.vm : this.embark.config.blockchainConfig.endpoint,
+      this.host,
+      this.isWs ? this.wsPort : this.rpcPort,
+      this.isWs,
+    );
+  }
+
+  private stopProxy() {
+    this.proxy.stop();
+    this.proxy = null;
   }
 }

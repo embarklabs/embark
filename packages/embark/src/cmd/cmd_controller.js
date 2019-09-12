@@ -708,9 +708,7 @@ simulator(_options) {
 
     const Engine = require('../lib/core/engine.js');
     const engine = new Engine({
-      // TODO: this should not be necessary
-      env: "development",
-      //env: options.env,
+      env: options.env,
       client: options.client,
       locale: options.locale,
       version: this.version,
@@ -742,23 +740,6 @@ simulator(_options) {
         engine.registerModuleGroup("contracts");
         engine.registerModuleGroup("pipeline");
         engine.registerModuleGroup("tests", options);
-
-        let plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
-        plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
-          try {
-            await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig);
-
-            await Promise.all([
-              engine.events.request2("storage:node:start", engine.config.storageConfig),
-              engine.events.request2("communication:node:start", engine.config.communicationConfig),
-              engine.events.request2("namesystem:node:start", engine.config.namesystemConfig)
-            ]);
-          } catch (e) {
-            return cb(e);
-          }
-
-          cb();
-        });
 
         engine.startEngine(next);
       },

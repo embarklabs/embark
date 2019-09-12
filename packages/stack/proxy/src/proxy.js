@@ -4,6 +4,7 @@ import express from 'express';
 import expressWs from 'express-ws';
 import cors from 'cors';
 const Web3RequestManager = require('web3-core-requestmanager');
+const constants = require("embark-core/constants");
 
 const ACTION_TIMEOUT = 5000;
 
@@ -15,9 +16,15 @@ export class Proxy {
     this.timeouts = {};
     this.plugins = options.plugins;
     this.logger = options.logger;
+    this.vms = options.vms;
+    this.app = null;
+    this.server = null;
   }
 
   async serve(endpoint, localHost, localPort, ws) {
+    if (endpoint === constants.blockchain.vm) {
+      endpoint = this.vms[this.vms.length - 1]();
+    }
     const requestManager = new Web3RequestManager.Manager(endpoint);
 
     try {
@@ -26,17 +33,17 @@ export class Proxy {
       throw new Error(__('Unable to connect to the blockchain endpoint'));
     }
 
-    const app = express();
+    this.app = express();
     if (ws) {
-      expressWs(app);
+      expressWs(this.app);
     }
 
-    app.use(cors());
-    app.use(express.json());
-    app.use(express.urlencoded({extended: true}));
+    this.app.use(cors());
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({extended: true}));
 
     if (ws) {
-      app.ws('/', (ws, _wsReq) => {
+      this.app.ws('/', (ws, _wsReq) => {
         ws.on('message', (msg) => {
           let jsonMsg;
           try {
@@ -50,7 +57,7 @@ export class Proxy {
             // Send the possibly modified request to the Node
             requestManager.send(resp.reqData, (err, result) => {
               if (err) {
-                return this.logger.error(__('Error executing the request on the Node'), JSON.stringify(err));
+                return this.logger.error(__('Error executing the request on the Node'), err.message || err);
               }
               this.emitActionsForResponse(resp.reqData, {jsonrpc: "2.0", id: resp.reqData.id, result}, (_err, resp) => {
                 // Send back to the caller (web3)
@@ -62,7 +69,7 @@ export class Proxy {
       });
     } else {
       // HTTP
-      app.use((req, res) => {
+      this.app.use((req, res) => {
         // Modify request
         this.emitActionsForRequest(req.body, (_err, resp) => {
           // Send the possibly modified request to the Node
@@ -80,9 +87,9 @@ export class Proxy {
     }
 
     return new Promise(resolve => {
-      app.listen(localPort, localHost, null,
+      this.server = this.app.listen(localPort, localHost, null,
         () => {
-          resolve(app);
+          resolve(this.app);
         });
     });
   }
@@ -146,5 +153,18 @@ export class Proxy {
         cb(null, resp);
         calledBack = true;
       });
+  }
+
+  stop() {
+    if (!this.server) {
+      return;
+    }
+    this.server.close();
+    this.server = null;
+    this.app = null;
+    this.commList = {};
+    this.receipts = {};
+    this.transactions = {};
+    this.timeouts = {};
   }
 }

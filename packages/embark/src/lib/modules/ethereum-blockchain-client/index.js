@@ -29,6 +29,10 @@ class EthereumBlockchainClient {
     this.events.request("blockchain:client:register", "ethereum", this.getClient.bind(this));
     this.events.request("deployment:deployer:register", "ethereum", this.deployer.bind(this));
 
+    this.events.on("blockchain:started", () => {
+      this._web3 = null;
+    });
+
     this.registerAPIRequests();
   }
 
@@ -54,23 +58,18 @@ class EthereumBlockchainClient {
 
   async deployer(contract, done) {
     const web3 = await this.web3;
-    // var web3 = new Web3("ws://localhost:8556")
-    // web3.eth.getAccounts().then((accounts) => {
-    let accounts = await web3.eth.getAccounts();
-    let account = accounts[0];
-    // let contractObject = this.blockchain.ContractObject({abi: contract.abiDefinition});
-    let contractObj = new web3.eth.Contract(contract.abiDefinition, contract.address);
-    // let deployObject = this.blockchain.deployContractObject(contractObject, {arguments: contractParams, data: dataCode});
-    let contractObject = contractObj.deploy({arguments: (contract.args || []), data: ("0x" + contract.code)});
+    const [account] = await web3.eth.getAccounts();
+    const contractObj = new web3.eth.Contract(contract.abiDefinition, contract.address);
+    const contractObject = contractObj.deploy({arguments: (contract.args || []), data: ("0x" + contract.code)});
 
     if (contract.gas === 'auto' || !contract.gas) {
-      let gasValue = await contractObject.estimateGas();
-      let increase_per = 1 + (Math.random() / 10.0);
+      const gasValue = await contractObject.estimateGas();
+      const increase_per = 1 + (Math.random() / 10.0);
       contract.gas = Math.floor(gasValue * increase_per);
     }
 
     if (!contract.gasPrice) {
-      let gasPrice = await web3.eth.getGasPrice();
+      const gasPrice = await web3.eth.getGasPrice();
       contract.gasPrice = contract.gasPrice || gasPrice;
     }
 
@@ -198,8 +197,7 @@ class EthereumBlockchainClient {
   }
 
   async determineAccounts(params, callback) {
-    let provider = await this.events.request2("blockchain:client:provider", "ethereum");
-    let web3 = new Web3(provider);
+    const web3 = await this.web3;
     let accounts = await web3.eth.getAccounts();
     let deploymentAccount = accounts[0];
     let contract = params.contract;

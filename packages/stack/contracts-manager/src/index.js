@@ -44,6 +44,10 @@ class ContractsManager {
       cb(null, this.contracts[contract.className]);
     });
 
+    this.events.on("blockchain:started", () => {
+      this._web3 = null;
+    });
+
     this.registerCommands();
     this.registerAPIs();
   }
@@ -262,6 +266,9 @@ class ContractsManager {
       function prepareContractsFromConfig(callback) {
         self.events.emit("status", __("Building..."));
 
+        if (contractsConfig.contracts.deploy) {
+          contractsConfig.contracts = contractsConfig.contracts.deploy;
+        }
         async.eachOf(contractsConfig.contracts, (contract, className, eachCb) => {
           contract = new Contract(self.logger, contract);
           if (!contract.artifact) {
