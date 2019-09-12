@@ -1,0 +1,96 @@
+{
+  "name": "embark-snark",
+  "version": "4.1.1",
+  "author": "Anthony Laibe",
+  "contributors": [
+    "Michael Bradley <michaelsbradleyjr@gmail.com> (https://github.com/michaelsbradleyjr/)"
+  ],
+  "description": "Snark plugin for Embark",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/snark#readme",
+  "bugs": "https://github.com/embark-framework/embark/issues",
+  "keywords": [
+    "blockchain",
+    "circom",
+    "dapps",
+    "embark",
+    "ethereum",
+    "ipfs",
+    "serverless",
+    "snark",
+    "snarkjs",
+    "solc",
+    "solidity",
+    "zksnark"
+  ],
+  "license": "MIT",
+  "repository": {
+    "directory": "packages/plugins/snark",
+    "type": "git",
+    "url": "https://github.com/embark-framework/embark.git"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "cross-env BABEL_ENV=node babel src --extensions \".js\" --out-dir dist --source-maps",
+    "ci": "npm run qa",
+    "clean": "npm run reset",
+    "lint": "eslint babel.config.js src/ test/",
+    "package": "npm pack",
+    "qa": "npm-run-all lint build test package",
+    "reset": "npx rimraf coverage dist embark-*.tgz package",
+    "start": "npm run watch",
+    "test": "jest",
+    "watch": "npm run build -- --verbose --watch"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs2": "7.6.0",
+    "circom": "0.0.31",
+    "find-up": "4.1.0",
+    "glob": "7.1.4",
+    "snarkjs": "0.1.19"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.5.5",
+    "@babel/core": "7.5.5",
+    "@babel/plugin-proposal-class-properties": "7.5.5",
+    "@babel/plugin-transform-runtime": "7.5.5",
+    "@babel/preset-env": "7.5.5",
+    "babel-eslint": "10.0.3",
+    "babel-jest": "24.9.0",
+    "cross-env": "5.2.0",
+    "eslint": "6.2.2",
+    "eslint-config-prettier": "6.1.0",
+    "eslint-plugin-jest": "22.5.1",
+    "eslint-plugin-prettier": "3.1.0",
+    "jest": "24.9.0",
+    "lodash.clonedeep": "4.5.0",
+    "npm-run-all": "4.1.5",
+    "prettier": "1.18.2",
+    "rimraf": "3.0.0"
+  },
+  "eslintConfig": {
+    "env": {
+      "es6": true,
+      "node": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:jest/recommended",
+      "plugin:jest/style",
+      "plugin:prettier/recommended"
+    ],
+    "parser": "babel-eslint"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/test/**/*.js"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true
+  }
+}
