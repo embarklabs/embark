@@ -26,8 +26,8 @@ export default class ProxyManager {
 
     this.host = "localhost";
 
-    this.events.once("blockchain:started", async () => {
-      await this.setupProxy();
+    this.events.once("blockchain:started", async (clientName: string, node?: string) => {
+      await this.setupProxy(clientName, node);
       this.ready = true;
       this.events.emit("proxy:ready");
     });
@@ -61,7 +61,7 @@ export default class ProxyManager {
     });
   }
 
-  private async setupProxy() {
+  private async setupProxy(clientName: string, node?: string) {
     if (!this.embark.config.blockchainConfig.proxy) {
       return;
     }
@@ -73,7 +73,7 @@ export default class ProxyManager {
 
     this.proxy = await new Proxy({events: this.events, plugins: this.plugins, logger: this.logger})
       .serve(
-        this.embark.config.blockchainConfig.endpoint,
+        node || this.embark.config.blockchainConfig.endpoint,
         this.host,
         this.isWs ? this.wsPort : this.rpcPort,
         this.isWs,

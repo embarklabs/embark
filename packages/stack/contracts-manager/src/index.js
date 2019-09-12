@@ -28,11 +28,11 @@ class ContractsManager {
     this.events.setCommandHandler("contracts:build", this.buildContracts.bind(this));
 
     this.events.setCommandHandler('contracts:list', (cb) => {
-      cb(this.compileError, this.listContracts());
+      cb(null, this.listContracts());
     });
 
     this.events.setCommandHandler('contracts:state', (cb) => {
-      cb(this.compileError, this.contractsState());
+      cb(null, this.contractsState());
     });
 
     this.events.setCommandHandler("contracts:contract", (contractName, cb) => {
@@ -262,6 +262,9 @@ class ContractsManager {
       function prepareContractsFromConfig(callback) {
         self.events.emit("status", __("Building..."));
 
+        if (contractsConfig.contracts.deploy) {
+          contractsConfig.contracts = contractsConfig.contracts.deploy;
+        }
         async.eachOf(contractsConfig.contracts, (contract, className, eachCb) => {
           contract = new Contract(self.logger, contract);
           if (!contract.artifact) {

@@ -1,5 +1,6 @@
 import async from 'async';
 const {__} = require('embark-i18n');
+const constants = require('embark-core/constants');
 const Web3RequestManager = require('web3-core-requestmanager');
 
 import BlockchainAPI from "./api";
@@ -21,7 +22,12 @@ class Blockchain {
       this.blockchainNodes[clientName] = startCb;
     });
 
-    this.events.setCommandHandler("blockchain:node:start", async (blockchainConfig, cb) => {
+    this.events.setCommandHandler("blockchain:node:start", async (blockchainConfig, node, cb) => {
+      if (typeof node === 'function') {
+        cb = node;
+        node = null;
+      }
+
       const requestManager = new Web3RequestManager.Manager(blockchainConfig.endpoint);
 
       const ogConsoleError = console.error;
@@ -41,11 +47,15 @@ class Blockchain {
           return cb(null, true);
         }
         const clientName = blockchainConfig.client;
+      if (node && node === constants.blockchain.vm) {
+        this.events.emit("blockchain:started", clientName, node);
+        return cb();
+      }
         const client = this.blockchainNodes[clientName];
         if (!client) return cb("client " + clientName + " not found");
 
         let onStart = () => {
-          this.events.emit("blockchain:started", clientName);
+          this.events.emit("blockchain:started", clientName, node);
           cb();
         };
 

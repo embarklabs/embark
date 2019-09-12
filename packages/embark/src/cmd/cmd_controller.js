@@ -746,7 +746,7 @@ simulator(_options) {
         let plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
           try {
-            await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig);
+            await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig, options.node);
 
             await Promise.all([
               engine.events.request2("storage:node:start", engine.config.storageConfig),

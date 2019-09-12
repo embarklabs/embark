@@ -4,6 +4,7 @@ import express from 'express';
 import expressWs from 'express-ws';
 import cors from 'cors';
 const Web3RequestManager = require('web3-core-requestmanager');
+const constants = require("embark-core/constants");
 
 const ACTION_TIMEOUT = 5000;
 
@@ -18,6 +19,10 @@ export class Proxy {
   }
 
   async serve(endpoint, localHost, localPort, ws) {
+    if (endpoint === constants.blockchain.vm) {
+      const ganache = require('ganache-cli');
+      endpoint = ganache.provider(); // Change the endpoint to the Ganache provider
+    }
     const requestManager = new Web3RequestManager.Manager(endpoint);
 
     try {
@@ -50,7 +55,7 @@ export class Proxy {
             // Send the possibly modified request to the Node
             requestManager.send(resp.reqData, (err, result) => {
               if (err) {
-                return this.logger.error(__('Error executing the request on the Node'), JSON.stringify(err));
+                return this.logger.error(__('Error executing the request on the Node'), err.message || err);
               }
               this.emitActionsForResponse(resp.reqData, {jsonrpc: "2.0", id: resp.reqData.id, result}, (_err, resp) => {
                 // Send back to the caller (web3)
