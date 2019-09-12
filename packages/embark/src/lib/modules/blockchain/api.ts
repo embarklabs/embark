@@ -76,7 +76,7 @@ export default class BlockchainAPI {
 
     this.events.setCommandHandler("blockchain:defaultAccount:get", (cb) => {
       const getDefaultAccount = this.getRequestForBlockchain(blockchainName, "getDefaultAccount");
-      cb(getDefaultAccount);
+      cb(null, getDefaultAccount());
     });
 
     this.events.setCommandHandler("blockchain:defaultAccount:set", (account, cb) => {

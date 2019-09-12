@@ -100,8 +100,8 @@ class ListConfigs {
       return stringReplaceAsync.seq(cmd, regex, (ensDomain) => {
         ensDomain = ensDomain.slice(1, ensDomain.length - 1);
         return (new Promise((resolve, reject) => {
-          this.events.request("ens:resolve", ensDomain, (err, address) => {
-            if(err) {
+          this.events.request("namesystem:resolve", ensDomain, (err, address) => {
+            if (err) {
               return reject(new Error(err));
             }
             address = `'${address}'`;
