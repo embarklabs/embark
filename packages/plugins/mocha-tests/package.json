@@ -47,6 +47,14 @@
     },
     "extends": "../../../.eslintrc.json"
   },
+  "dependencies": {
+    "@babel/runtime-corejs2": "7.3.1",
+    "async": "3.1.0",
+    "embark-i18n": "^4.1.1",
+    "embark-utils": "^4.1.1",
+    "mocha": "6.2.0",
+    "web3": "1.2.1"
+  },
   "devDependencies": {
     "@babel/cli": "7.2.3",
     "@babel/core": "7.2.2",
@@ -60,12 +68,7 @@
     "tslint": "5.16.0",
     "typescript": "3.4.5"
   },
-  "dependencies": {
-    "async": "2.6.1",
     "embarkjs": "^4.1.1",
-    "mocha": "6.2.0",
-    "web3": "1.2.1"
-  },
   "engines": {
     "node": ">=8.12.0 <12.0.0",
     "npm": ">=6.4.1",

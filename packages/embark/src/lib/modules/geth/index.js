@@ -6,7 +6,6 @@ import {ws, rpc} from './check.js';
 const constants = require('embark-core/constants');
 
 class Geth {
-
   constructor(embark, options) {
     this.embark = embark;
     this.embarkConfig = embark.config.embarkConfig;
@@ -23,22 +22,28 @@ class Geth {
       return;
     }
 
-    this.events.request("blockchain:node:register", constants.blockchain.clients.geth, (readyCb) => {
-      this.events.request('processes:register', 'blockchain', {
-        launchFn: (cb) => {
-          this.startBlockchainNode(cb);
-        },
-        stopFn: (cb) => {
-          this.stopBlockchainNode(cb);
-        }
-      });
-      this.events.request("processes:launch", "blockchain", (err) => {
-        if (err) {
-          this.logger.error(`Error launching blockchain process: ${err.message || err}`);
-        }
-        readyCb();
-      });
-      this.registerServiceCheck();
+    this.events.request("blockchain:node:register", constants.blockchain.clients.geth, {
+      launchFn: (readyCb) => {
+        this.events.request('processes:register', 'blockchain', {
+          launchFn: (cb) => {
+            this.startBlockchainNode(cb);
+          },
+          stopFn: (cb) => {
+            this.stopBlockchainNode(cb);
+          }
+        });
+        this.events.request("processes:launch", "blockchain", (err) => {
+          if (err) {
+            this.logger.error(`Error launching blockchain process: ${err.message || err}`);
+          }
+          readyCb();
+        });
+        this.registerServiceCheck();
+      },
+      stopFn: async (cb) => {
+        await this.events.request("processes:stop", "blockchain");
+        cb();
+      }
     });
 
     this.events.request("whisper:node:register", constants.blockchain.clients.geth, readyCb => {

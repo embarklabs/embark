@@ -13,7 +13,7 @@ class Blockchain {
     this.blockchainConfig = embark.config.blockchainConfig;
     this.contractConfig = embark.config.contractConfig;
     this.blockchainApi = new BlockchainAPI(embark);
-
+    this.startedClient = null;
 
     embark.registerActionForEvent("pipeline:generateAll:before", this.addArtifactFile.bind(this));
 
@@ -22,12 +22,17 @@ class Blockchain {
       this.blockchainNodes[clientName] = startCb;
     });
 
-    this.events.setCommandHandler("blockchain:node:start", async (blockchainConfig, node, cb) => {
-      if (typeof node === 'function') {
-        cb = node;
-        node = null;
+    this.events.setCommandHandler("blockchain:node:start", async (blockchainConfig, cb) => {
+      const self = this;
+      const clientName = blockchainConfig.client;
+      function started() {
+        self.startedClient = clientName;
+        self.events.emit("blockchain:started", clientName);
       }
-
+      if (clientName === constants.blockchain.vm) {
+        started();
+        return cb();
+      }
       const requestManager = new Web3RequestManager.Manager(blockchainConfig.endpoint);
 
       const ogConsoleError = console.error;
@@ -43,24 +48,51 @@ class Blockchain {
         console.error = ogConsoleError;
         if (!err) {
           // Node is already started
-          this.events.emit("blockchain:started");
+          started();
           return cb(null, true);
         }
-        const clientName = blockchainConfig.client;
-      if (node && node === constants.blockchain.vm) {
-        this.events.emit("blockchain:started", clientName, node);
-        return cb();
-      }
-        const client = this.blockchainNodes[clientName];
-        if (!client) return cb("client " + clientName + " not found");
+        const clientFunctions = this.blockchainNodes[clientName];
+        if (!clientFunctions) {
+          return cb(__("Client %s not found", clientName));
+        }
 
         let onStart = () => {
-          this.events.emit("blockchain:started", clientName, node);
+          started();
           cb();
         };
 
-        client.apply(client, [onStart]);
+        this.startedClient = clientName;
+        clientFunctions.launchFn.apply(clientFunctions, [onStart]);
       });
+    });
+
+    this.events.setCommandHandler("blockchain:node:stop", (clientName, cb) => {
+      if (typeof clientName === 'function') {
+        if (!this.startedClient) {
+          return cb(__('No blockchain client is currently started'));
+        }
+        cb = clientName;
+        clientName = this.startedClient;
+      }
+
+      if (clientName === constants.blockchain.vm) {
+        this.startedClient = null;
+        this.events.emit("blockchain:stopped", clientName);
+        return cb();
+      }
+
+      const clientFunctions = this.blockchainNodes[clientName];
+      if (!clientFunctions) {
+        return cb(__("Client %s not found", clientName));
+      }
+
+      clientFunctions.stopFn.apply(clientFunctions, [
+        () => {
+          this.events.emit("blockchain:stopped", clientName);
+          cb();
+        }
+      ]);
+      this.startedClient = null;
     });
     this.blockchainApi.registerAPIs("ethereum");
     this.blockchainApi.registerRequests("ethereum");

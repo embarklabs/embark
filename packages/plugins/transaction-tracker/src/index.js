@@ -10,6 +10,9 @@ class TransactionTracker {
     this._web3 = null;
 
     embark.events.on("block:header", this.onBlockHeader.bind(this));
+    this.events.on("blockchain:started", () => {
+      this._web3 = null;
+    });
     this.registerAPICalls();
     this.subscribeToPendingTransactions();
   }

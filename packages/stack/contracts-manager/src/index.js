@@ -28,11 +28,11 @@ class ContractsManager {
     this.events.setCommandHandler("contracts:build", this.buildContracts.bind(this));
 
     this.events.setCommandHandler('contracts:list', (cb) => {
-      cb(null, this.listContracts());
+      cb(this.compileError, this.listContracts());
     });
 
     this.events.setCommandHandler('contracts:state', (cb) => {
-      cb(null, this.contractsState());
+      cb(this.compileError, this.contractsState());
     });
 
     this.events.setCommandHandler("contracts:contract", (contractName, cb) => {
@@ -42,6 +42,10 @@ class ContractsManager {
     this.events.setCommandHandler('contracts:add', (contract, cb = () => {}) => {
       this.contracts[contract.className] = new Contract(this.logger, contract);
       cb(null, this.contracts[contract.className]);
+    });
+
+    this.events.on("blockchain:started", () => {
+      this._web3 = null;
     });
 
     this.registerCommands();

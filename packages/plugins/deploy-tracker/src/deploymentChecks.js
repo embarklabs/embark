@@ -9,6 +9,10 @@ export default class DeploymentChecks {
     this.events = events;
     this.logger = logger;
     this._web3 = null;
+
+    this.events.on("blockchain:started", () => {
+      this._web3 = null;
+    });
   }
 
   get web3() {

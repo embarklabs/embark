@@ -1,3 +1,5 @@
+import {__} from 'embark-i18n';
+
 const assert = require('assert').strict;
 const async = require('async');
 const EmbarkJS = require('embarkjs');
@@ -14,8 +16,12 @@ class MochaTestRunner {
     this.embark = embark;
     this.events = embark.events;
     this.plugins = options.plugins;
+    this.logger = embark.logger;
+    this.fs = embark.fs;
 
     this.files = [];
+    this.options = {};
+    this.web3 = null;
 
     this.events.request('tests:runner:register',
       'JavaScript (Mocha)',
@@ -37,20 +43,31 @@ class MochaTestRunner {
     return JAVASCRIPT_TEST_MATCH.test(path);
   }
 
-  run(options, cb) {
-    const {events, plugins} = this;
+  async run(options, cb) {
+    const {events} = this.embark;
     const {reporter} = options;
+    this.options = options;
 
     const Module = require("module");
     const originalRequire = require("module").prototype.require;
 
     let accounts = [];
     let compiledContracts = {};
-    let web3;
 
     const config = (cfg, acctCb) => {
       global.before((done) => {
         async.waterfall([
+          (next) => {
+            events.request("tests:deployment:check", cfg, this.options, (err, provider) => {
+              if (err) {
+                return next(err);
+              }
+              if (provider) {
+                this.web3.setProvider(provider);
+              }
+              next();
+            });
+          },
           (next) => {
             events.request("contracts:build", cfg, compiledContracts, next);
           },
@@ -86,6 +103,12 @@ class MochaTestRunner {
             }
 
             next();
+          },
+          (next) => {
+            this.web3.eth.getAccounts((err, accts) => {
+              accounts = accts;
+              next(err);
+            });
           }
         ], (err) => {
           // Reset the gas accumulator so that we don't show deployment gas on the
@@ -102,73 +125,79 @@ class MochaTestRunner {
       });
     };
 
+    const provider = await this.events.request2("tests:blockchain:start", this.options);
+    this.web3 = new Web3(provider);
+    accounts = await this.web3.eth.getAccounts();
+    await events.request2("contracts:reset");
+    let contractFiles = await events.request2("config:contractsFiles");
+
     async.waterfall([
-      (next) => { // request provider
-        events.request("blockchain:client:provider", "ethereum", next);
+      (next) => {
+        this.plugins.emitAndRunActionsForEvent('tests:contracts:compile:before', contractFiles, next);
       },
-      (provider, next) => { // set provider and fetch account list
-        web3 = new Web3(provider);
-        web3.eth.getAccounts(next);
+      (_contractFiles, next) => {
+        contractFiles = _contractFiles;
+        events.request("compiler:contracts:compile", _contractFiles, next);
       },
-      (accts, next) => { // reset contracts as we might have state leakage from other plugins
-        accounts = accts;
-        events.request("contracts:reset", next);
+      (_compiledContracts, next) => {
+        this.plugins.emitAndRunActionsForEvent('tests:contracts:compile:after', _compiledContracts, next);
       },
-      (next) => { // get contract files
-        events.request("config:contractsFiles", next);
-      },
-      (cf, next) => {
-        plugins.emitAndRunActionsForEvent('tests:contracts:compile:before', cf, next);
-      },
-      (cf, next) => { // compile contracts
-        events.request("compiler:contracts:compile", cf, next);
-      },
-      (cc, next) => {
-        plugins.emitAndRunActionsForEvent('tests:contracts:compile:after', cc, next);
-      },
-      (cc, next) => { // override require
-        compiledContracts = cc;
+      (_compiledContracts, next) => {
+        compiledContracts = _compiledContracts;
+        const fns = this.files.map((file) => {
+          return (seriesCb) => {
 
-        Module.prototype.require = function(req) {
-          const prefix = "Embark/contracts/";
-          if (!req.startsWith(prefix)) {
-            return originalRequire.apply(this, arguments);
-          }
+            this.fs.readFile(file, (err, data) => {
+              if (err) {
+                self.logger.error(__('Error reading file %s', file));
+                self.logger.error(err);
+                seriesCb(null, 1);
+              }
+              if (data.toString().search(/contract\(|describe\(/) === -1) {
+                return seriesCb(null, 0);
+              }
 
-          const contractClass = req.replace(prefix, "");
-          const instance = compiledContracts[contractClass];
+              Module.prototype.require = function(req) {
+                const prefix = "Embark/contracts/";
+                if (!req.startsWith(prefix)) {
+                  return originalRequire.apply(this, arguments);
+                }
 
-          if (!instance) {
-            throw new Error(`Cannot find module '${req}'`);
-          }
+                const contractClass = req.replace(prefix, "");
+                const instance = compiledContracts[contractClass];
 
-          return instance;
-        };
-        next();
-      },
-      (next) => { // initialize Mocha
-        const mocha = new Mocha();
+                if (!instance) {
+                  throw new Error(`Cannot find module '${req}'`);
+                }
+                return instance;
+              };
 
-        mocha.reporter(Reporter, { reporter: reporter });
-        const describeWithAccounts = (scenario, cb) => {
-          Mocha.describe(scenario, cb.bind(mocha, accounts));
-        };
+              const mocha = new Mocha();
+              mocha.reporter(Reporter, {reporter: options.reporter});
+              const describeWithAccounts = (scenario, cb) => {
+                Mocha.describe(scenario, cb.bind(mocha, accounts));
+              };
 
-        mocha.suite.on('pre-require', () => {
-          global.describe = describeWithAccounts;
-          global.contract = describeWithAccounts;
-          global.assert = assert;
-          global.config = config;
+              mocha.suite.on('pre-require', () => {
+                global.describe = describeWithAccounts;
+                global.contract = describeWithAccounts;
+                global.assert = assert;
+                global.config = config;
+              });
+
+
+              mocha.suite.timeout(TEST_TIMEOUT);
+              mocha.addFile(file);
+
+              mocha.run((failures) => {
+                Module.prototype.require = originalRequire;
+                seriesCb(null, failures);
+              });
+            });
+          };
         });
 
-        mocha.suite.timeout(TEST_TIMEOUT);
-        for(const file of this.files) {
-          mocha.addFile(file);
-        }
-
-        mocha.run((_failures) => {
-          next();
-        });
+        async.series(fns, next);
       }
     ], (err) => {
       events.emit('tests:finished');

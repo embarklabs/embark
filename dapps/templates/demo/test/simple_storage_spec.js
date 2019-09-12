@@ -5,7 +5,7 @@ let accounts;
 
 // For documentation please see https://embark.status.im/docs/contracts_testing.html
 config({
-  //deployment: {
+  //blockchain: {
   //  accounts: [
   //    // you can configure custom accounts with a custom balance
   //    // see https://embark.status.im/docs/contracts_testing.html#Configuring-accounts
@@ -31,7 +31,7 @@ contract("SimpleStorage", function () {
   });
 
   it("set storage value", async function () {
-    await SimpleStorage.methods.set(150).send();
+    await SimpleStorage.methods.set(150).send({from: web3.eth.defaultAccount});
     let result = await SimpleStorage.methods.get().call();
     assert.strictEqual(parseInt(result, 10), 150);
   });

@@ -22,7 +22,7 @@ export function getBlockchainDefaults(env) {
     wsHost: "localhost",
     wsPort: 8546,
     networkType: "custom",
-    miningMode: 'dev',
+    isDev: true,
     nodiscover: true,
     maxpeers: 0,
     targetGasLimit: 8000000,

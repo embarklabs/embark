@@ -34,6 +34,10 @@ export default class AccountsManager {
     this.embark.registerActionForEvent("blockchain:proxy:request", this.checkBlockchainRequest.bind(this));
     this.embark.registerActionForEvent("blockchain:proxy:response", this.checkBlockchainResponse.bind(this));
 
+    this.events.on("blockchain:started", () => {
+      this._web3 = null;
+    });
+
     // Allow to run transaction in parallel by resolving the nonce manually.
     // For each transaction, resolve the nonce by taking the max of current transaction count and the cache we keep locally.
     // Update the nonce and sign it

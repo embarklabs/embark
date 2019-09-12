@@ -84,6 +84,10 @@ class ENS {
       setImmediate(cb, this.isENSName(name));
     });
 
+    this.events.on("blockchain:started", () => {
+      this._web3 = null;
+    });
+
     this.init(() => {});
   }
 

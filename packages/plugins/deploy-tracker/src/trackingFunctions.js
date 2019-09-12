@@ -17,6 +17,10 @@ export default class TrackingFunctions {
     this._block = null;
 
     this.ensureChainTrackerFile();
+
+    this.events.on("blockchain:started", () => {
+      this._web3 = null;
+    });
   }
 
   get web3() {
