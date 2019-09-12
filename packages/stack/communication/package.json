@@ -1,0 +1,86 @@
+{
+  "name": "embark-communication",
+  "version": "4.1.1",
+  "author": "Iuri Matias <iuri.matias@gmail.com>",
+  "contributors": [],
+  "description": "Communication APIs for Embark",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/stack/communication#readme",
+  "bugs": "https://github.com/embark-framework/embark/issues",
+  "keywords": [
+    "blockchain",
+    "dapps",
+    "ethereum",
+    "ipfs",
+    "serverless",
+    "solc",
+    "solidity"
+  ],
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "repository": {
+    "directory": "packages/stack/communication",
+    "type": "git",
+    "url": "https://github.com/embark-framework/embark.git"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "cross-env BABEL_ENV=node babel src --extensions \".js\" --out-dir dist --root-mode upward --source-maps",
+    "ci": "npm run qa",
+    "clean": "npm run reset",
+    "lint": "npm-run-all lint:*",
+    "lint:js": "eslint src/",
+    "// lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
+    "package": "npm pack",
+    "// qa": "npm-run-all lint typecheck build package",
+    "qa": "npm-run-all lint build package",
+    "reset": "npx rimraf dist embark-*.tgz package",
+    "start": "npm run watch",
+    "test": "jest",
+    "// typecheck": "tsc",
+    "watch": "run-p watch:*",
+    "watch:build": "npm run build -- --verbose --watch",
+    "// watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
+  },
+  "eslintConfig": {
+    "extends": "../../../.eslintrc.json"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs2": "7.3.1",
+    "async": "2.6.1",
+    "clone-deep": "4.0.0",
+    "embark-core": "^4.1.1",
+    "embark-i18n": "^4.1.1",
+    "embark-utils": "^4.1.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.5.5",
+    "@babel/core": "7.5.5",
+    "@babel/plugin-proposal-class-properties": "7.5.5",
+    "@babel/plugin-transform-runtime": "7.5.5",
+    "@babel/preset-env": "7.5.5",
+    "babel-jest": "24.9.0",
+    "cross-env": "5.2.0",
+    "embark-testing": "^5.0.0",
+    "eslint": "5.7.0",
+    "jest": "24.9.0",
+    "npm-run-all": "4.1.5",
+    "rimraf": "3.0.0",
+    "tslint": "5.16.0",
+    "typescript": "3.4.5"
+  },
+  "engines": {
+    "node": ">=8.12.0 <12.0.0",
+    "npm": ">=6.4.1",
+    "yarn": ">=1.12.3"
+  },
+   "jest": {
+    "collectCoverage": true,
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/test/**/*.js"
+    ]
+  }
+}
+
