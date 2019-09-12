@@ -172,7 +172,7 @@ class Engine {
     this.registerModulePackage('embark-deployment', {plugins: this.plugins, onlyCompile: options.onlyCompile});
     this.registerModule('blockchain-client');
     this.registerModulePackage('embark-storage');
-    this.registerModule('communication');
+    this.registerModulePackage('embark-communication');
     this.registerModulePackage('embark-namesystem');
     this.registerModulePackage('embark-process-logs-api-manager');
     this.registerModule('embark-embarkjs', {plugins: this.plugins});

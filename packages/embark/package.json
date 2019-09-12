@@ -94,6 +94,7 @@
     "embark-api": "^4.1.1",
     "embark-authenticator": "^4.1.1",
     "embark-code-runner": "^4.1.1",
+    "embark-communication": "^4.1.1",
     "embark-compiler": "^4.1.1",
     "embark-console": "^4.1.1",
     "embark-contracts-manager": "^4.1.1",
