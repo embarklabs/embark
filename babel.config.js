@@ -59,5 +59,11 @@ module.exports = (api) => {
     return node;
   }
 
+  const test = cloneDeep(node);
+
+  if (env === 'test') {
+    return test;
+  }
+
   return {};
 };
