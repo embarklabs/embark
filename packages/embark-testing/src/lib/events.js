@@ -34,12 +34,12 @@ class Events {
   }
 
   request(cmd, ...args) {
-    assert(this.commandHandlers[cmd], `command handler for ${ cmd } not registered`);
+    assert(this.commandHandlers[cmd], `command handler for ${cmd} not registered`);
     Promise.resolve(this.commandHandlers[cmd](...args));
   }
 
   request2(cmd, ...args) {
-    assert(this.commandHandlers[cmd], `command handler for ${ cmd } not registered`);
+    assert(this.commandHandlers[cmd], `command handler for ${cmd} not registered`);
     this.commandHandlers[cmd](...args);
   }
 }
@@ -50,7 +50,7 @@ class EventsAssert {
   }
 
   commandHandlerRegistered(cmd) {
-    assert(this.events.commandHandlers[cmd], `command handler for ${ cmd } wanted, but not registered`);
+    assert(this.events.commandHandlers[cmd], `command handler for ${cmd} wanted, but not registered`);
   }
 
   commandHandlerCalled(cmd) {
