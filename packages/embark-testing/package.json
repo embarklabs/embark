@@ -39,7 +39,7 @@
     "watch": "run-p watch:*",
     "watch:build": "npm run build -- --verbose --watch",
     "// watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch",
-    "test": "jest dist/test/**/*.js"
+    "test": "jest"
   },
   "eslintConfig": {
     "extends": "../../.eslintrc.json"
@@ -64,6 +64,13 @@
     "rimraf": "2.6.3",
     "tslint": "5.16.0",
     "typescript": "3.4.5"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/test/**/*.js"
+    ]
   },
   "engines": {
     "node": ">=8.12.0 <12.0.0",
