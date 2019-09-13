@@ -27,14 +27,14 @@ class Whisper {
     this.events.request("communication:node:register", "whisper", (readyCb) => {
       let clientName = this.communicationConfig.client || "geth";
       let registerCb = this.whisperNodes[clientName];
-      if (!registerCb) return cb("whisper client " + clientName + " not found");
+      if (!registerCb) return readyCb("whisper client " + clientName + " not found");
       registerCb.apply(registerCb, [readyCb]);
     });
 
     this.events.on("communication:started", () => {
       this.api = new API(embark);
       this.api.registerAPICalls();
-      this.connectEmbarkJSProvider()
+      this.connectEmbarkJSProvider();
     });
   }
 
