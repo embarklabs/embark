@@ -59,7 +59,7 @@
     "merge": "1.2.1",
     "multihashes": "0.4.14",
     "ora": "2.1.0",
-    "pretty-ms": "4.0.0",
+    "pretty-ms": "5.0.0",
     "shelljs": "0.8.3",
     "web3": "1.2.1",
     "web3-eth": "1.2.1",
