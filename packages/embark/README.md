@@ -7,6 +7,7 @@
 ![Closed PRs](https://img.shields.io/github/issues-pr-closed-raw/embark-framework/embark.svg)
 ![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/y/embark-framework/embark.svg)
 [![Coverage Status](https://coveralls.io/repos/github/embark-framework/embark/badge.svg)](https://coveralls.io/github/embark-framework/embark)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=embark-framework/embark)](https://dependabot.com)
 
 What is Embark
 ======
