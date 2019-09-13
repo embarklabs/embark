@@ -1,8 +1,5 @@
 import { __ } from 'embark-i18n';
-import { dappPath, ipcPath } from 'embark-utils';
 const async = require('async');
-const {exec, spawn} = require('child_process');
-const path = require('path');
 const GethMiner = require('./miner');
 const semver = require('semver');
 const constants = require('embark-core/constants');
@@ -140,7 +137,7 @@ class WhisperGethClient {
     return accounts;
   }
 
-  parseListAccountsCommandResultToAddressCount(data = "") {
+  parseListAccountsCommandResultToAddressCount(_data = "") {
     return 0;
   }
 
@@ -258,4 +255,3 @@ class WhisperGethClient {
 }
 
 module.exports = WhisperGethClient;
-

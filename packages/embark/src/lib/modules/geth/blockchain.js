@@ -428,7 +428,7 @@ export function BlockchainClient(userConfig, options, communicationConfig) {
   let clientClass;
 
   if (communicationConfig) {
-    clientClass = WhisperGethClient
+    clientClass = WhisperGethClient;
   } else {
     clientClass = GethClient;
   }
