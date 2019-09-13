@@ -2782,10 +2782,10 @@ hexo-renderer-sass@^0.4.0:
   dependencies:
     node-sass "^4.5.3"
 
-hexo-renderer-stylus@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/hexo-renderer-stylus/-/hexo-renderer-stylus-1.0.0.tgz#efb26ffbdac6b7420bf405020bbdacb245582c8c"
-  integrity sha512-QyRXpmPu41zBDbV/9bwqVQsiN9TT25VNvaN6liS4Mn+5FHqJg2DtrLBu63VdACCKBHLwFs9FDzMaf0NTar7J0Q==
+hexo-renderer-stylus@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/hexo-renderer-stylus/-/hexo-renderer-stylus-1.1.0.tgz#7a0a107bcf4b74fdf88f28da2db47b8dc9e208e5"
+  integrity sha512-aXfMuro2aQOvpM5pyPEModAPvqYi73VN4t37vGMQCbT0QTmw8YohEmUpO/G/1k6j88ong6344v+A0xrpUGQRnQ==
   dependencies:
     nib "^1.1.2"
     stylus "^0.54.5"
