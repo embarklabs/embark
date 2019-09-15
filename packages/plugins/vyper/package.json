@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs2": "7.3.1",
-    "embark-async-wrapper": "^4.1.1",
+    "async": "2.6.1",
     "embark-i18n": "^4.1.1",
     "shelljs": "0.8.3"
   },

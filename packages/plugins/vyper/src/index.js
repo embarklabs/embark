@@ -1,5 +1,5 @@
 import { __ } from 'embark-i18n';
-const async = require("embark-async-wrapper");
+const async = require('async');
 const shelljs = require('shelljs');
 const path = require('path');
 
