@@ -5,6 +5,7 @@ class API {
 
   constructor(embark, _options) {
     this.plugins = embark.config.plugins;
+    this.fs = embark.fs;
   }
 
   registerAPIs() {
