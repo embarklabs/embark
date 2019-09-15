@@ -438,7 +438,7 @@ describe('embark-snark', () => {
             somePath,
             `${basename}${Snarks.Extensions.Solidity}`
           );
-          vkVerifierPath = contractPath = path.join(
+          vkVerifierPath = path.join(
             somePath,
             `${basename}${Snarks.Extensions.VkVerifier}`
           );
@@ -523,7 +523,7 @@ describe('embark-snark', () => {
           };
           contractFiles = [existingContract];
 
-          filename = 'foo${Snarks.Extensions.Solidity}';
+          filename = `foo${Snarks.Extensions.Solidity}`;
           filepath = path.join(somePath, filename);
 
           request = jest.fn(() => {});
