@@ -18,8 +18,14 @@ declare module "embark-utils" {
   function escapeHtml(message: any): string;
   function embarkPath(...names: string[]): string;
   function exit(code?: any): void;
+  function findMonorepoPackageFromRoot(pkgName: string, prefilter?: null | ((pkgName: string) => (pkgJsonPath: string) => boolean)): Promise<string>;
+  function findMonorepoPackageFromRootSync(pkgName: string, prefilter?: null | ((pkgName: string) => (pkgJsonPath: string) => boolean)): string;
   function findNextPort(port: number): Promise<number>;
   function isEs6Module(module: any): boolean;
+  function isInsideMonorepo(): Promise<boolean>;
+  function isInsideMonorepoSync(): boolean;
+  function monorepoRootPath(): Promise<string>;
+  function monorepoRootPathSync(): string;
   function jsonFunctionReplacer(key: any, value: any): any;
   function fuzzySearch(text: string, list: any, filter: any): any;
   function getExternalContractUrl(file: string, provideUrl: string): string;
