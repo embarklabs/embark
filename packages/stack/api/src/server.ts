@@ -3,7 +3,7 @@ import "colors";
 import cors from "cors";
 import {Embark, Plugins} /* supplied by @types/embark in packages/embark-typings */ from "embark";
 import { __ } from "embark-i18n";
-import { embarkPath } from "embark-utils";
+import {embarkPath, findMonorepoPackageFromRootSync, isInsideMonorepoSync, monorepoRootPathSync} from "embark-utils";
 import express, {NextFunction, Request, Response} from "express";
 import expressWs, { Application } from "express-ws";
 import findUp from "find-up";
@@ -22,9 +22,9 @@ interface CallDescription {
 }
 
 export default class Server {
-  private _isInsideMonorepo: boolean | null = null;
-  private _monorepoRootDir: string = "";
-  private embarkUiBuildDir: string = "";
+  private isInsideMonorepo: boolean;
+  private monorepoRootPath: string = "";
+  private embarkUiBuildDir: string = embarkPath("node_modules/embark-ui/build");
   private expressInstance: expressWs.Instance;
   private isLogging: boolean = false;
   private server?: http.Server;
@@ -32,7 +32,15 @@ export default class Server {
   private openSockets = new Set<net.Socket>();
 
   constructor(private embark: Embark, private port: number, private hostname: string, private plugins: Plugins) {
-    this.embarkUiBuildDir = (findUp.sync("node_modules/embark-ui/build", {cwd: embarkPath()}) || embarkPath("node_modules/embark-ui/build"));
+    this.isInsideMonorepo = isInsideMonorepoSync();
+    if (this.isInsideMonorepo) {
+      this.monorepoRootPath = monorepoRootPathSync();
+    }
+    // in the monorepo and other deduped installs embark-ui may be in a higher-up node_modules
+    const foundEmbarkUi = findUp.sync("node_modules/embark-ui", {cwd: embarkPath()});
+    if (foundEmbarkUi) {
+      this.embarkUiBuildDir = path.join(foundEmbarkUi, "build");
+    }
     this.expressInstance = this.initApp();
   }
 
@@ -42,22 +50,6 @@ export default class Server {
 
   public disableLogging() {
     this.isLogging = false;
-  }
-
-  private get isInsideMonorepo() {
-    if (this._isInsideMonorepo === null) {
-      this._isInsideMonorepo = this.embark.fs.existsSync(embarkPath("../../packages/embark")) &&
-        this.embark.fs.existsSync(embarkPath("../../lerna.json")) &&
-        path.resolve(embarkPath("../../packages/embark")) === embarkPath();
-    }
-    return this._isInsideMonorepo;
-  }
-
-  private get monorepoRootDir() {
-    if (!this._monorepoRootDir && this.isInsideMonorepo) {
-      this._monorepoRootDir = path.resolve(embarkPath("../.."));
-    }
-    return this._monorepoRootDir;
   }
 
   public start() {
@@ -154,14 +146,14 @@ export default class Server {
 
   private makePage503(redirectSeconds: number) {
     return this.makePage(`
-      <p><code>lib/modules/api/server</code> is inside the monorepo at
-        <code>${path.join(this.monorepoRootDir, "packages/embark")}</code></p>
+      <p><code>dist/server</code> is inside the monorepo at
+        <code>${findMonorepoPackageFromRootSync("embark-api")}</code></p>
       <p>to access <code>embark-ui</code> in development use port
         <code>3000</code></p>
       <p>if you haven't already, please run either:</p>
-      <p><code>cd ${this.monorepoRootDir} && yarn start</code><br />
+      <p><code>cd ${this.monorepoRootPath} && yarn start</code><br />
         or<br />
-        <code>cd ${path.join(this.monorepoRootDir, "packages/embark-ui")} &&
+        <code>cd ${findMonorepoPackageFromRootSync("embark-ui")} &&
           yarn start</code></p>
         <p>to instead use a static build from the monorepo, restart embark with:
           <code>EMBARK_UI_STATIC=t embark run</code></p>
@@ -249,20 +241,19 @@ export default class Server {
               file an issue</a></p>
         `;
         if (this.isInsideMonorepo) {
+          const embarkUiPath = findMonorepoPackageFromRootSync("embark-ui");
           envReport = `
             <p><code>process.env.EMBARK_UI_STATIC ===
               ${JSON.stringify(process.env.EMBARK_UI_STATIC)}</code></p>
           `;
           inside = `
-            inside the monorepo at <code>
-              ${path.join(this.monorepoRootDir, "packages/embark-ui")}</code>
+            inside the monorepo at <code>${embarkUiPath}</code>
           `;
           notice = `
             <p>to build <code>embark-ui</code> please run either:</p>
-            <p><code>cd ${this.monorepoRootDir} && yarn build</code><br />
+            <p><code>cd ${this.monorepoRootPath} && yarn build</code><br />
               or<br />
-              <code>cd ${path.join(this.monorepoRootDir, "packages/embark-ui")}
-                && yarn build</code></p>
+              <code>cd ${embarkUiPath} && yarn build</code></p>
             <p>restart <code>embark run</code> after building
               <code>embark-ui</code></p>
             <p>to instead use a live development build from the monorepo: unset
