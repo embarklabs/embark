@@ -1,5 +1,4 @@
 import { __ } from 'embark-i18n';
-const async = require('../utils/async_extend.js');
 
 class ServicesMonitor {
   constructor(options) {
@@ -81,11 +80,10 @@ ServicesMonitor.prototype.startMonitor = function () {
     self.addCheck(pluginCheck.checkName, pluginCheck.checkFn, pluginCheck.time);
   });
 
-  async.eachObject(this.checkList, function (checkName, check, callback) {
-    self.initCheck(checkName);
-    callback();
-  }, function (err) {
-    if (err) {
+  Object.entries(this.checkList).forEach(([checkName, check]) => {
+    try {
+      self.initCheck(checkName);
+    } catch (err) {
       self.logger.error(__("error running service check"));
       self.logger.error(err.message);
     }
