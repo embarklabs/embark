@@ -1,6 +1,5 @@
 import {__} from 'embark-i18n';
 import {dappPath, embarkPath} from 'embark-utils';
-import findUp from 'find-up';
 let async = require('async');
 const constants = require('embark-core/constants');
 const Logger = require('embark-logger');
@@ -514,12 +513,12 @@ simulator(_options) {
   }
 
   ejectWebpack() {
-    const embarkConfig = (findUp.sync('node_modules/embark-pipeline/dist/webpack.config.js', {cwd: embarkPath()}) || embarkPath("node_modules/embark-pipeline/dist/webpack.config.js"));
+    const embarkConfig = embarkPath("dist/lib/modules/basic-pipeline/webpack.config.js");
     const dappConfig = dappPath('webpack.config.js');
     fs.copyPreserve(embarkConfig, dappConfig);
     console.log(__('webpack config ejected to:').dim.yellow);
     console.log(`${dappConfig}`.green);
-    const embarkOverrides = (findUp.sync('node_modules/embark-pipeline/dist/babel-loader-overrides.js', {cwd: embarkPath()}) || embarkPath("node_modules/embark-pipeline/dist/babel-loader-overrides.js"));
+    const embarkOverrides = embarkPath("dist/lib/modules/basic-pipeline/babel-loader-overrides.js");
     const dappOverrides = dappPath('babel-loader-overrides.js');
     fs.copyPreserve(embarkOverrides, dappOverrides);
     console.log(__('webpack overrides ejected to:').dim.yellow);
