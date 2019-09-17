@@ -4,7 +4,7 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Web frontend for interactive DApp development with Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-ui#readme",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/cockpit/cockpit-ui#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -17,7 +17,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-ui",
+    "directory": "packages/cockpit/cockpit-ui",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },
@@ -25,22 +25,25 @@
     "build"
   ],
   "scripts": {
-    "build": "node scripts/build.js",
+    "build": "react-scripts build",
     "build-storybook": "build-storybook -s public",
-    "ci": "npm-run-all lint package",
+    "ci": "npm-run-all lint test package",
     "clean": "npm run reset",
     "lint": "eslint src/",
     "package": "npm pack",
-    "qa": "npm-run-all lint build package",
-    "reset": "npx rimraf build embark-*.tgz package",
-    "start": "node scripts/start.js",
+    "prebuild": "node scripts/copy-monaco-to-public",
+    "prestart": "node scripts/copy-monaco-to-public dev",
+    "qa": "npm-run-all lint test build package",
+    "reset": "npx rimraf build embark-*.tgz package public/vsdir storybook-static",
+    "start": "react-scripts start",
     "storybook": "start-storybook -p 9009 -s public",
-    "test_": "node scripts/test.js"
+    "test": "react-scripts test --watchAll=false",
+    "watch:test": "react-scripts test"
   },
   "devDependencies": {
-    "@babel/core": "7.1.0",
     "@coreui/coreui": "2.1.0",
     "@coreui/react": "2.1.0",
+    "@monaco-editor/react": "1.2.1",
     "@storybook/addon-actions": "5.1.11",
     "@storybook/addon-info": "5.1.11",
     "@storybook/addon-knobs": "5.1.11",
@@ -48,152 +51,59 @@
     "@storybook/addon-options": "5.1.11",
     "@storybook/addons": "5.1.11",
     "@storybook/react": "5.1.11",
-    "@svgr/webpack": "2.4.1",
     "ansi-to-html": "0.6.11",
     "array-move": "2.0.0",
     "autoscroll-react": "3.2.0",
-    "babel-core": "7.0.0-bridge.0",
-    "babel-eslint": "9.0.0",
-    "babel-jest": "23.6.0",
-    "babel-loader": "8.0.6",
-    "babel-plugin-named-asset-import": "0.2.3",
-    "babel-preset-react-app": "6.1.0",
-    "bfj": "6.1.1",
     "bignumber.js": "2.0.7",
-    "case-sensitive-paths-webpack-plugin": "2.1.2",
-    "chalk": "2.4.2",
     "classnames": "2.2.6",
     "connected-react-router": "4.5.0",
-    "css-loader": "1.0.0",
     "date-fns": "1.30.1",
-    "dotenv": "6.0.0",
-    "dotenv-expand": "4.2.0",
     "embark-api-client": "^4.1.1",
-    "eslint": "5.7.0",
-    "eslint-config-react-app": "3.0.8",
-    "eslint-loader": "3.0.0",
-    "eslint-plugin-flowtype": "2.50.1",
-    "eslint-plugin-import": "2.14.0",
-    "eslint-plugin-jsx-a11y": "6.1.2",
-    "eslint-plugin-react": "7.14.3",
     "ethereumjs-units": "0.2.0",
-    "file-loader": "4.2.0",
+    "find-up": "4.1.0",
     "font-awesome": "4.7.0",
-    "fork-ts-checker-webpack-plugin-alt": "0.4.14",
-    "fs-extra": "7.0.1",
+    "fs-extra": "8.1.0",
     "history": "4.7.2",
-    "html-webpack-plugin": "4.0.0-beta.8",
-    "identity-obj-proxy": "3.0.0",
-    "jest": "23.6.0",
-    "jest-pnp-resolver": "1.0.1",
-    "jest-resolve": "23.6.0",
-    "mini-css-extract-plugin": "0.8.0",
     "monaco-editor": "0.14.3",
-    "monaco-editor-webpack-plugin": "1.6.0",
     "npm-run-all": "4.1.5",
-    "optimize-css-assets-webpack-plugin": "5.0.1",
-    "pnp-webpack-plugin": "1.1.0",
-    "postcss-flexbugs-fixes": "4.1.0",
-    "postcss-loader": "3.0.0",
-    "postcss-preset-env": "6.7.0",
-    "postcss-safe-parser": "4.0.1",
     "prop-types": "15.7.2",
     "qs": "6.5.2",
     "re-resizable": "4.9.3",
     "react": "16.9.0",
-    "react-app-polyfill": "0.1.3",
     "react-blockies": "1.4.0",
     "react-bootstrap-typeahead": "3.4.6",
     "react-copy-to-clipboard": "5.0.1",
-    "react-dev-utils": "6.1.1",
     "react-dom": "16.9.0",
     "react-fontawesome": "1.6.1",
     "react-helmet": "5.2.0",
     "react-json-view": "1.19.1",
     "react-redux": "5.1.1",
     "react-router-dom": "4.3.1",
-    "react-scroll-to-component": "1.0.2",
+    "react-scripts": "3.1.1",
     "react-sortable-hoc": "1.8.3",
     "react-treebeard": "3.1.0",
     "reactstrap": "6.5.0",
     "redux": "4.0.4",
     "redux-saga": "0.16.2",
-    "resolve": "1.8.1",
     "rimraf": "3.0.0",
-    "sass-loader": "7.1.0",
     "simple-line-icons": "2.4.1",
-    "style-loader": "0.23.0",
-    "terser-webpack-plugin": "1.1.0",
-    "url-loader": "2.1.0",
     "uuid": "3.3.2",
     "velocity-react": "1.4.1",
-    "web3": "1.2.1",
-    "webpack": "4.39.2",
-    "webpack-dev-server": "3.1.11",
-    "webpack-manifest-plugin": "2.0.4",
-    "workbox-webpack-plugin": "3.6.3"
+    "web3": "1.2.1"
   },
   "eslintConfig": {
-    "extends": "react-app",
-    "rules": {
-      "react/prop-types": "warn"
-    },
-    "settings": {
-      "react": {
-        "version": "detect"
-      }
-    }
+    "extends": "react-app"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
     ],
-    "resolver": "jest-pnp-resolver",
-    "setupFiles": [
-      "react-app-polyfill/jsdom"
-    ],
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
-      "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,ts,tsx}"
-    ],
-    "testEnvironment": "jsdom",
-    "testURL": "http://localhost",
-    "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss)$"
-    ],
-    "moduleNameMapper": {
-      "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "react-app"
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
     ]
   },
   "engines": {
