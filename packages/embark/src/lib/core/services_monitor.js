@@ -80,7 +80,7 @@ ServicesMonitor.prototype.startMonitor = function () {
     self.addCheck(pluginCheck.checkName, pluginCheck.checkFn, pluginCheck.time);
   });
 
-  Object.entries(this.checkList).forEach(([checkName, check]) => {
+  Object.keys(this.checkList).forEach(checkName => {
     try {
       self.initCheck(checkName);
     } catch (err) {
