@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {withRouter} from "react-router-dom";
 import {Row, Col} from 'reactstrap';
 import classnames from 'classnames';
-import Resizable from 're-resizable';
+import {Resizable} from 're-resizable';
 
 import TextEditorAsideContainer from './TextEditorAsideContainer';
 import TextEditorContainer from './TextEditorContainer';
