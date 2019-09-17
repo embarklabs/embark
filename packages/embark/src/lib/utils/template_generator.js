@@ -1,12 +1,14 @@
 import { __ } from 'embark-i18n';
-const findUp = require('find-up');
 const fs = require('../core/fs.js');
 const hostedGitInfo = require('hosted-git-info');
 const utils = require('./utils.js');
 import {
   embarkPath,
   downloadFile,
+  findMonorepoPackageFromRootSync,
+  isInsideMonorepoSync,
   joinPath,
+  monorepoRootPathSync,
   runCmd,
   tmpDir as tmpDirUtil,
   errorMessage
@@ -14,6 +16,7 @@ import {
 const semver = require('semver');
 const {promisify} = require('util');
 const {execSync} = require('child_process');
+const {normalize} = require('path');
 
 const REPLACEMENTS = {
   'git@github.com/': 'git@github.com:',
@@ -26,6 +29,10 @@ const REPLACEMENTS = {
 
 class TemplateGenerator {
   constructor(templateName) {
+    this.isInsideMonorepo = isInsideMonorepoSync();
+    if (this.isInsideMonorepo) {
+      this.monorepoRootPath = monorepoRootPathSync();
+    }
     this.templateName = templateName;
   }
 
@@ -112,13 +119,14 @@ class TemplateGenerator {
 
     const templatePkg = `embark-dapp-template-${this.templateName}`;
     let templateSpecifier;
-    if (this.monorepoRootPath) {
-      templateSpecifier = joinPath(
-        this.monorepoRootPath, 'dapps/templates', this.templateName
+    if (this.isInsideMonorepo) {
+      templateSpecifier = findMonorepoPackageFromRootSync(
+        templatePkg,
+        () => (pkgJsonPath) => pkgJsonPath.includes(normalize('dapps/templates'))
       );
     } else {
       const version = fs.readJSONSync(embarkPath('package.json')).version;
-      templateSpecifier = `${templatePkg}@^${version}`;
+      templateSpecifier = `${templatePkg}@${semver(version).major}.x`;
     }
 
     const tmpDir = require('fs-extra').mkdtempSync(
@@ -146,23 +154,6 @@ class TemplateGenerator {
         }
       );
     });
-  }
-
-  get monorepoRootPath() {
-    if (this._monorepoRootPath === undefined) {
-      let monorepoRootPath = null;
-      const maybeMonorepoRootPath = fs.existsSync(
-        embarkPath('../../packages/embark')
-      );
-      if (maybeMonorepoRootPath) {
-        const lernaJsonPath = findUp.sync('lerna.json', {cwd: embarkPath()});
-        if (lernaJsonPath) {
-          monorepoRootPath = utils.dirname(lernaJsonPath);
-        }
-      }
-      this._monorepoRootPath = monorepoRootPath;
-    }
-    return this._monorepoRootPath;
   }
 
   installTemplate(templatePath, name, installPackages, cb) {
@@ -206,7 +197,7 @@ class TemplateGenerator {
 
     if (installPackages) {
       console.log(__('Installing packages...').green);
-      if (this.monorepoRootPath) {
+      if (this.isInsideMonorepo) {
         let links = [];
         execSync(
           'npx lerna list --long --parseable',
@@ -234,7 +225,7 @@ class TemplateGenerator {
       }
 
       let installCmd;
-      if (this.monorepoRootPath && !fs.existsSync('package-lock.json')) {
+      if (this.isInsideMonorepo && !fs.existsSync('package-lock.json')) {
         installCmd = 'yarn install';
       } else {
         installCmd = 'npm install';
