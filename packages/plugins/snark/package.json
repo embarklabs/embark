@@ -32,34 +32,31 @@
   "files": [
     "dist"
   ],
+  "embark-collective": {
+    "build:node": true
+  },
   "scripts": {
-    "build": "cross-env BABEL_ENV=node babel src --extensions \".js\" --out-dir dist --source-maps",
+    "_build": "npm run solo -- build",
     "ci": "npm run qa",
     "clean": "npm run reset",
-    "lint": "eslint babel.config.js src/ test/",
-    "package": "npm pack",
-    "qa": "npm-run-all lint build test package",
+    "lint": "eslint src/ test/",
+    "qa": "npm-run-all lint _build test",
     "reset": "npx rimraf coverage dist embark-*.tgz package",
-    "start": "npm run watch",
-    "test": "jest",
-    "watch": "npm run build -- --verbose --watch"
+    "solo": "embark-solo",
+    "test": "jest"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "7.6.0",
+    "@babel/runtime-corejs2": "7.6.2",
     "circom": "0.0.31",
     "find-up": "4.1.0",
     "glob": "7.1.4",
     "snarkjs": "0.1.19"
   },
   "devDependencies": {
-    "@babel/cli": "7.5.5",
-    "@babel/core": "7.5.5",
-    "@babel/plugin-proposal-class-properties": "7.5.5",
-    "@babel/plugin-transform-runtime": "7.5.5",
-    "@babel/preset-env": "7.5.5",
+    "@babel/core": "7.6.2",
     "babel-eslint": "10.0.3",
     "babel-jest": "24.9.0",
-    "cross-env": "5.2.0",
+    "embark-solo": "^4.1.1",
     "eslint": "6.2.2",
     "eslint-config-prettier": "6.1.0",
     "eslint-plugin-jest": "22.5.1",
@@ -88,7 +85,15 @@
     "testEnvironment": "node",
     "testMatch": [
       "**/test/**/*.js"
-    ]
+    ],
+    "transform": {
+      "\\.js$": [
+        "babel-jest",
+        {
+          "rootMode": "upward"
+        }
+      ]
+    }
   },
   "prettier": {
     "singleQuote": true

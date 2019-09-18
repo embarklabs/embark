@@ -1,0 +1,23 @@
+{
+  "name": "embark-solo",
+  "private": true,
+  "version": "4.1.1",
+  "author": "Michael Bradley <michaelsbradleyjr@gmail.com> (https://github.com/michaelsbradleyjr/)",
+  "description": "Resistance is not futile?",
+  "keywords": [],
+  "license": "MIT",
+  "bin": "./bin/solo",
+  "main": "index.js",
+  "files": [],
+  "scripts": {},
+  "devDependencies": {
+    "embark-collective": "^4.1.1",
+    "find-up": "4.1.0",
+    "fs-extra": "8.1.0"
+  },
+  "engines": {
+    "node": ">=8.12.0 <12.0.0",
+    "npm": ">=6.4.1",
+    "yarn": ">=1.12.3"
+  }
+}

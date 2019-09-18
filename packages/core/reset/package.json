@@ -17,8 +17,15 @@
   "files": [
     "bin.js"
   ],
+  "embark-collective": {},
+  "scripts": {
+    "solo": "embark-solo"
+  },
   "dependencies": {
     "rimraf": "3.0.0"
+  },
+  "devDependencies": {
+    "embark-solo": "^4.1.1"
   },
   "engines": {
     "node": ">=8.12.0 <12.0.0",

@@ -4,7 +4,7 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Swarm plugin for embarkjs",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embarkjs-swarm#readme",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embarkjs/embarkjs-swarm#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -17,14 +17,12 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embarkjs-swarm",
+    "directory": "packages/embarkjs/embarkjs-swarm",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },
   "main": "dist/node/index.js",
-  "browser": {
-    "./dist/node/index.js": "./dist/browser/index.js"
-  },
+  "browser": "./dist/browser/index.js",
   "browserslist": [
     "last 1 version",
     "not dead",
@@ -33,39 +31,29 @@
   "files": [
     "dist"
   ],
+  "embark-collective": {
+    "build:browser": true,
+    "build:node": true
+  },
   "scripts": {
-    "build": "npm-run-all build:**",
-    "build:browser": "cross-env BABEL_ENV=browser babel src --extensions \".js\" --out-dir dist/browser --root-mode upward",
-    "build:node": "cross-env BABEL_ENV=node babel src --extensions \".js\" --out-dir dist --root-mode upward --source-maps",
-    "build:node:async": "cross-env BABEL_ENV=node:async babel src/node --extensions \".js\" --out-dir dist --root-mode upward --source-maps",
-    "// build:node:test": "cross-env BABEL_ENV=node:test babel test --extensions \".js\" --out-dir build-test --root-mode upward --source-maps",
+    "_build": "npm run solo -- build",
     "ci": "npm run qa",
     "clean": "npm run reset",
-    "package": "npm pack",
-    "// qa": "npm-run-all build test package",
-    "qa": "npm-run-all build package",
-    "reset": "npx rimraf .nyc_output build-test coverage dist embarkjs-*.tgz package",
-    "start": "npm run watch",
-    "// test": "nyc --reporter=html --reporter=json mocha \"build-test/**/*.js\" --exit --no-timeouts --require source-map-support/register",
-    "watch": "run-p \"build:** -- --verbose --watch\""
+    "qa": "npm-run-all _build",
+    "reset": "npx rimraf coverage dist embarkjs-*.tgz package",
+    "solo": "embark-solo"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "7.3.1",
+    "@babel/runtime-corejs2": "7.6.2",
     "swarm-api": "0.1.2",
     "web3": "1.2.1"
   },
   "devDependencies": {
-    "@babel/cli": "7.2.3",
-    "@babel/core": "7.2.2",
     "ajv": "6.10.2",
-    "chai": "4.2.0",
-    "cross-env": "5.2.0",
+    "embark-solo": "^4.1.1",
     "lodash.clonedeep": "4.5.0",
-    "mocha": "6.2.0",
     "npm-run-all": "4.1.5",
-    "nyc": "13.1.0",
-    "rimraf": "3.0.0",
-    "source-map-support": "0.5.13"
+    "rimraf": "3.0.0"
   },
   "engines": {
     "node": ">=8.12.0 <12.0.0",

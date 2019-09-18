@@ -30,7 +30,7 @@ i18n.configure({
 });
 
 const isSupported = (locale: string) => {
-  return Object.values(SupportedLanguage).includes(locale);
+  return (Object.values(SupportedLanguage) as string[]).includes(locale);
 };
 
 export const setOrDetectLocale = (locale: Maybe<string>) => {
