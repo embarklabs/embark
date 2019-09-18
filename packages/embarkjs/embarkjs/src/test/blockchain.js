@@ -2,7 +2,7 @@
 
 const {startRPCMockServer, TestProvider} = require('./helpers/blockchain');
 const {assert} = require('chai');
-const {Blockchain} = require('..');
+const {Blockchain} = require('../lib/node');
 const {promisify} = require('util');
 
 describe('Blockchain', () => {

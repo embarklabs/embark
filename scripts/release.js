@@ -5,7 +5,6 @@ const {execSync} = require('child_process');
 const minimist = require('minimist');
 const path = require('path');
 const {prompt} = require('promptly');
-const semver = require('semver');
 
 const args = minimist(process.argv.slice(2));
 

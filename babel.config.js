@@ -1,5 +1,12 @@
 /* global module require */
 
+/*
+ * dependencies of this config should be specified in
+ * `utils/collective/package.json` relative to this config file, with reliance
+ * on yarn-workspace hoisting for those packages to be resolvable from the
+ * monorepo root
+ */
+
 const cloneDeep = require('lodash.clonedeep');
 
 module.exports = (api) => {

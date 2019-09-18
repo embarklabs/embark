@@ -10,36 +10,21 @@ module.exports = (api) => {
   const browser = cloneDeep(base);
   Object.assign(browser, {
     ignore: [
-      'src/embarkjs.js',
-      'src/node/index.js'
+      'src/node'
     ]
   });
 
   const node = cloneDeep(base);
-  Object.assign(node, {
-    ignore: [
-      'src/browser.js'
-    ]
-  });
 
-  const nodeAsync = cloneDeep(base);
-  Object.assign(nodeAsync, {
-    ignore: [
-      'src/node/index.js'
-    ]
-  });
-
-  const nodeTest = cloneDeep(base);
+  const test = cloneDeep(node);
 
   switch (env) {
     case 'browser':
       return browser;
     case 'node':
       return node;
-    case 'node:async':
-      return nodeAsync;
-    case 'node:test':
-      return nodeTest;
+    case 'test':
+      return test;
     default:
       return base;
   }

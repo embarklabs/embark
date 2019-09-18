@@ -1,1 +1,1 @@
-module.exports = require('../embarkjs').default;
+module.exports = require('..').default;
