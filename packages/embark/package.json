@@ -70,7 +70,7 @@
     "@babel/plugin-transform-runtime": "7.2.0",
     "@babel/preset-env": "7.5.5",
     "@babel/preset-react": "7.0.0",
-    "@babel/preset-typescript": "7.1.0",
+    "@babel/preset-typescript": "7.6.0",
     "@babel/runtime-corejs2": "7.3.1",
     "ajv": "6.10.2",
     "ascii-table": "0.0.9",
