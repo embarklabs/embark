@@ -146,7 +146,7 @@
     "flatted": "0.2.3",
     "fs-extra": "7.0.1",
     "ganache-cli": "6.4.3",
-    "glob": "7.1.3",
+    "glob": "7.1.4",
     "globule": "1.2.1",
     "hard-source-webpack-plugin": "0.13.1",
     "helmet": "3.13.0",
