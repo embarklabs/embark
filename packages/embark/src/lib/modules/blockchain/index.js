@@ -6,7 +6,7 @@ const Web3RequestManager = require('web3-core-requestmanager');
 import BlockchainAPI from "./api";
 class Blockchain {
 
-  constructor(embark) {
+  constructor(embark, options) {
     this.embarkConfig = embark.config.embarkConfig;
     this.logger = embark.logger;
     this.events = embark.events;
@@ -14,6 +14,7 @@ class Blockchain {
     this.contractConfig = embark.config.contractConfig;
     this.blockchainApi = new BlockchainAPI(embark);
     this.startedClient = null;
+    this.plugins = options.plugins;
 
     embark.registerActionForEvent("pipeline:generateAll:before", this.addArtifactFile.bind(this));
 
@@ -22,47 +23,54 @@ class Blockchain {
       this.blockchainNodes[clientName] = startCb;
     });
 
-    this.events.setCommandHandler("blockchain:node:start", async (blockchainConfig, cb) => {
-      const self = this;
-      const clientName = blockchainConfig.client;
-      function started() {
-        self.startedClient = clientName;
-        self.events.emit("blockchain:started", clientName);
-      }
-      if (clientName === constants.blockchain.vm) {
-        started();
-        return cb();
-      }
-      const requestManager = new Web3RequestManager.Manager(blockchainConfig.endpoint);
-
-      const ogConsoleError = console.error;
-      // TODO remove this once we update to web3 2.0
-      // TODO in web3 1.0, it console.errors "connection not open on send()" even if we catch the error
-      console.error = (...args) => {
-        if (args[0].indexOf('connection not open on send()') > -1) {
-          return;
+    this.events.setCommandHandler("blockchain:node:start", async (initialBlockchainConfig, cb) => {
+      this.plugins.emitAndRunActionsForEvent("blockchain:config:modify", initialBlockchainConfig, (err, blockchainConfig) => {
+        if (err) {
+          this.logger.error(__('Error getting modified blockchain config: %s', err.message || err));
+          blockchainConfig = initialBlockchainConfig;
         }
-        ogConsoleError(...args);
-      };
-      requestManager.send({method: 'eth_accounts'}, (err, _accounts) => {
-        console.error = ogConsoleError;
-        if (!err) {
-          // Node is already started
+        const self = this;
+        const clientName = blockchainConfig.client;
+        function started() {
+          self.startedClient = clientName;
+          self.events.emit("blockchain:started", clientName);
+        }
+        if (clientName === constants.blockchain.vm) {
           started();
-          return cb(null, true);
+          return cb();
         }
-        const clientFunctions = this.blockchainNodes[clientName];
-        if (!clientFunctions) {
-          return cb(__("Client %s not found", clientName));
-        }
+        const requestManager = new Web3RequestManager.Manager(blockchainConfig.endpoint);
 
-        let onStart = () => {
-          started();
-          cb();
+        const ogConsoleError = console.error;
+        // TODO remove this once we update to web3 2.0
+        // TODO in web3 1.0, it console.errors "connection not open on send()" even if we catch the error
+        console.error = (...args) => {
+          if (args[0].indexOf('connection not open on send()') > -1) {
+            return;
+          }
+          ogConsoleError(...args);
         };
+        requestManager.send({method: 'eth_accounts'}, (err, _accounts) => {
+          console.error = ogConsoleError;
+          if (!err) {
+            // Node is already started
+            started();
+            return cb(null, true);
+          }
+          const clientFunctions = this.blockchainNodes[clientName];
+          if (!clientFunctions) {
+            return cb(__("Client %s not found", clientName));
+          }
 
-        this.startedClient = clientName;
-        clientFunctions.launchFn.apply(clientFunctions, [onStart]);
+          let onStart = () => {
+            started();
+            cb();
+          };
+
+          this.startedClient = clientName;
+          clientFunctions.launchFn.apply(clientFunctions, [onStart]);
+
+        });
       });
     });
 

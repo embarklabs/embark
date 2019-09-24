@@ -44,7 +44,9 @@ class EmbarkWeb3 {
     const web3 = new Web3(provider);
     await this.events.request2("runcode:register", 'web3', web3);
     const accounts = await web3.eth.getAccounts();
-    await this.events.request2('runcode:eval', `web3.eth.defaultAccount = '${accounts[0]}'`);
+    if (accounts.length) {
+      await this.events.request2('runcode:eval', `web3.eth.defaultAccount = '${accounts[0]}'`);
+    }
 
     await this.events.request2('console:register:helpCmd', {
       cmdName: "web3",

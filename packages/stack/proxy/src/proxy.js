@@ -75,7 +75,7 @@ export class Proxy {
           // Send the possibly modified request to the Node
           requestManager.send(resp.reqData, (err, result) => {
             if (err) {
-              res.status(500).send(err.message || err);
+              return res.status(500).send(err.message || err);
             }
             this.emitActionsForResponse(resp.reqData, {jsonrpc: "2.0", id: resp.reqData.id, result}, (_err, resp) => {
               // Send back to the caller (web3)
