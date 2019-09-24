@@ -60,7 +60,8 @@ class EthereumBlockchainClient {
     const web3 = await this.web3;
     const [account] = await web3.eth.getAccounts();
     const contractObj = new web3.eth.Contract(contract.abiDefinition, contract.address);
-    const contractObject = contractObj.deploy({arguments: (contract.args || []), data: ("0x" + contract.code)});
+    const code = contract.code.substring(0, 2) === '0x' ? contract.code : "0x" + contract.code;
+    const contractObject = contractObj.deploy({arguments: (contract.args || []), data: code});
 
     if (contract.gas === 'auto' || !contract.gas) {
       const gasValue = await contractObject.estimateGas();

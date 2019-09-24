@@ -381,6 +381,16 @@ class GethClient {
           return callback(null, '--dev');
         }
         callback(null, '');
+      },
+      function customOptions(callback) {
+        if (config.customOptions) {
+          if (Array.isArray(config.customOptions)) {
+            config.customOptions = config.customOptions.join(' ');
+          }
+          args.push(config.customOptions);
+          return callback(null, config.customOptions);
+        }
+        callback(null, '');
       }
     ], function(err) {
       if (err) {

@@ -394,6 +394,16 @@ class ParityClient {
         // Default Parity gas limit is 4700000: let's set to the geth default
         args.push("--gas-floor-target=" + DEFAULTS.TARGET_GAS_LIMIT);
         return callback(null, "--gas-floor-target=" + DEFAULTS.TARGET_GAS_LIMIT);
+      },
+      function customOptions(callback) {
+        if (config.customOptions) {
+          if (Array.isArray(config.customOptions)) {
+            config.customOptions = config.customOptions.join(' ');
+          }
+          args.push(config.customOptions);
+          return callback(null, config.customOptions);
+        }
+        callback(null, '');
       }
     ], function (err) {
       if (err) {

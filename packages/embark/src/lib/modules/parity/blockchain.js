@@ -61,7 +61,8 @@ var Blockchain = function (userConfig, clientClass) {
     targetGasLimit: this.userConfig.targetGasLimit || false,
     syncMode: this.userConfig.syncMode || this.userConfig.syncmode,
     verbosity: this.userConfig.verbosity,
-    proxy: this.userConfig.proxy
+    proxy: this.userConfig.proxy,
+    customOptions: this.userConfig.customOptions
   };
 
   this.devFunds = null;
