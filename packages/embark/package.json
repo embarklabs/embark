@@ -173,7 +173,7 @@
     "pump": "3.0.0",
     "remix-tests": "0.1.1",
     "request": "2.88.0",
-    "sass-loader": "7.1.0",
+    "sass-loader": "8.0.0",
     "semver": "5.6.0",
     "shelljs": "0.8.3",
     "simples": "0.8.8",
