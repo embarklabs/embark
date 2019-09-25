@@ -207,7 +207,7 @@
     "web3-providers-ws": "1.2.1",
     "web3-shh": "1.2.1",
     "web3-utils": "1.2.1",
-    "webpack": "4.39.2",
+    "webpack": "4.41.0",
     "window-size": "1.1.1",
     "ws": "7.1.2"
   },
