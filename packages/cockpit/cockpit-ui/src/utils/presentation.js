@@ -1,5 +1,5 @@
-import isToday from 'date-fns/is_today';
-import distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
+import isToday from 'date-fns/isToday';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 export function formatContractForDisplay(contract) {
   let address = (contract.deployedAddress || contract.deployedAddress);
@@ -23,7 +23,7 @@ export function formatContractForDisplay(contract) {
 
 export function formatTimestampForDisplay(timestamp) {
   if (isToday(new Date(timestamp * 1000))) {
-    return distanceInWordsToNow(new Date(timestamp * 1000), {addSuffix: true});
+    return formatDistanceToNow(new Date(timestamp * 1000), {addSuffix: true});
   }
   return new Date(timestamp * 1000).toLocaleString();
 }
