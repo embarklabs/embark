@@ -4,7 +4,7 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Embark wrapper for the Vyper compiler",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-vyper#readme",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/vyper#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -17,7 +17,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-vyper",
+    "directory": "packages/plugins/vyper",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },

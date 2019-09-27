@@ -4,7 +4,7 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Module to add Web3 support to Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-web3#readme",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/web3#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -20,7 +20,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-web3",
+    "directory": "packages/plugins/web3",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },

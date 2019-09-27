@@ -4,7 +4,7 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Utils used by Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-utils#readme",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/core/utils#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -20,7 +20,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-utils",
+    "directory": "packages/core/utils",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },

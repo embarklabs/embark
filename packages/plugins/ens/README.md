@@ -1,12 +1,14 @@
-## Embark ENS module
+# `embark-ens`
 
-This module implements ENS support in embark. It:
+> Implements ENS support in Embark
+
+This module:
 * registers console commands to interact with ENS
 * deploys & setups ENS contracts depending on the network
 * implements ENS support in EmbarkJS
 * setups generated code acording to the config
 
-### API
+## API
 
 **command: `ens:resolve`** - _returns the address of an ens name_
 
@@ -42,7 +44,7 @@ response:
 
 * `error` - if an error occurs, null otherwise
 
-### Web API
+## Web API
 
 **endpoint: GET `/embark-api/ens/resolve`** - _returns the address of an ens name_
 
@@ -88,7 +90,7 @@ response:
 }
 ```
 
-### Dependencies
+## Dependencies
 
 * async
 * eth-ens-namehash

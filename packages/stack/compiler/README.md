@@ -2,12 +2,9 @@
 
 > Embark compiler module
 
-Visit [embark.status.im](https://embark.status.im/) to get started with
-[Embark](https://github.com/embark-framework/embark).
-
-This module abstracts the compiler interface. It exposes a plugin api to
-register contract extensions and how to handle them. It accepts command
-requests to compile and returns the aggregated compilation result.
+Abstracts the compiler interface and exposes a plugin api to register contract
+extensions and how to handle them. It accepts command requests to compile and
+returns the aggregated compilation result.
 
 ## API
 
@@ -61,4 +58,5 @@ arguments:
   * `contractFiles`: filenames matching the extension
   * `callback(error, compiledObject)`
 
-## Dependencies
+Visit [embark.status.im](https://embark.status.im/) to get started with
+[Embark](https://github.com/embark-framework/embark).

@@ -4,11 +4,11 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "DApp reset utlity for Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-reset#readme",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/core/reset#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-reset",
+    "directory": "packages/core/reset",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },

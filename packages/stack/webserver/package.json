@@ -4,7 +4,7 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Webserver for Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-webserver#readme",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/stack/webserver#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -20,7 +20,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-webserver",
+    "directory": "packages/stack/webserver",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },

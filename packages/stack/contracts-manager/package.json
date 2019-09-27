@@ -4,7 +4,7 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Smart contracts manager for Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-contracts-manager#readme",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/stack/contracts-manager#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -20,7 +20,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-contracts-manager",
+    "directory": "packages/stack/contracts-manager",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },

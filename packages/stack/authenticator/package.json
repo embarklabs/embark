@@ -4,7 +4,7 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Authenticator module for Embark's Cockpit",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-authenticator#readme",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/stack/authenticator#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -20,7 +20,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-authenticator",
+    "directory": "packages/stack/authenticator",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },

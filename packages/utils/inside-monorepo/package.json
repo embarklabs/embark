@@ -1,0 +1,15 @@
+{
+  "name": "embark-inside-monorepo",
+  "private": true,
+  "version": "4.1.1",
+  "author": "Michael Bradley <michaelsbradleyjr@gmail.com> (https://github.com/michaelsbradleyjr/)",
+  "description": "If a package from the monorepo can resolve this package then the first package is inside the monorepo",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {},
+  "engines": {
+    "node": ">=8.12.0 <12.0.0",
+    "npm": ">=6.4.1",
+    "yarn": ">=1.12.3"
+  }
+}

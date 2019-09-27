@@ -4,7 +4,7 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Smart contract profiler for Embark DApps",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-profiler#readme",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/profiler#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -20,7 +20,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-profiler",
+    "directory": "packages/plugins/profiler",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },

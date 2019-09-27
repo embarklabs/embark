@@ -4,7 +4,7 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Console component for Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-console#readme",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/core/console#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -21,7 +21,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-console",
+    "directory": "packages/core/console",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },

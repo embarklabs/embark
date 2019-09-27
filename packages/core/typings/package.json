@@ -5,23 +5,7 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "TypeScript definitions for Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-typings#readme",
-  "bugs": "https://github.com/embark-framework/embark/issues",
-  "keywords": [
-    "blockchain",
-    "dapps",
-    "ethereum",
-    "ipfs",
-    "serverless",
-    "solc",
-    "solidity"
-  ],
   "license": "MIT",
-  "repository": {
-    "directory": "packages/embark-typings",
-    "type": "git",
-    "url": "https://github.com/embark-framework/embark.git"
-  },
   "main": "",
   "types": "index",
   "embark-collective": {},
