@@ -3,6 +3,7 @@
   "dependencies": {
     "haml": "0.4.3"
   },
+  "license": "MIT",
   "main": "index.js",
   "name": "embark-dapp-test-service",
   "private": true,

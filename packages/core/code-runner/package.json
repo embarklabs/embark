@@ -4,7 +4,7 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Code execution VM for Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-code-runner#readme",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/core/code-runner#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -20,7 +20,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-code-runner",
+    "directory": "packages/core/code-runner",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },

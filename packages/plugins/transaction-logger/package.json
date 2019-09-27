@@ -4,7 +4,7 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Transaction listener and logger for Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-transaction-logger#readme",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/transaction-logger#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -20,7 +20,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-transaction-logger",
+    "directory": "packages/plugins/transaction-logger",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },

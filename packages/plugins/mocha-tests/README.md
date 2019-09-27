@@ -1,5 +1,4 @@
-embark-mocha-test-runner
-========================
+# `embark-mocha-test-runner`
 
 > Mocha Test Runner
 

@@ -4,7 +4,7 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Module for downloading and managing libraries",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-library-manager#readme",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/stack/library-manager#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -20,7 +20,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-library-manager",
+    "directory": "packages/stack/library-manager",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },

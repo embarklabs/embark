@@ -3,8 +3,8 @@
   "version": "4.1.1",
   "author": "Richard Ramos",
   "contributors": [],
-  "description": "Solc plugin for Embark (uses command line)",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-solc#readme",
+  "description": "Solc plugin for Embark",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/solc#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -20,7 +20,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-solc",
+    "directory": "packages/plugins/solc",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },

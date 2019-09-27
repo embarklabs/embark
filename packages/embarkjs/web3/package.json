@@ -1,0 +1,62 @@
+{
+  "name": "embarkjs-web3",
+  "version": "4.1.1",
+  "author": "Iuri Matias <iuri.matias@gmail.com>",
+  "contributors": [],
+  "description": "Web3 plugin for embarkjs",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embarkjs/web3#readme",
+  "bugs": "https://github.com/embark-framework/embark/issues",
+  "keywords": [
+    "blockchain",
+    "dapps",
+    "ethereum",
+    "ipfs",
+    "serverless",
+    "solc",
+    "solidity"
+  ],
+  "license": "MIT",
+  "repository": {
+    "directory": "packages/embarkjs/web3",
+    "type": "git",
+    "url": "https://github.com/embark-framework/embark.git"
+  },
+  "main": "dist/node/index.js",
+  "browser": "./dist/browser/index.js",
+  "browserslist": [
+    "last 1 version",
+    "not dead",
+    "> 0.2%"
+  ],
+  "files": [
+    "dist"
+  ],
+  "embark-collective": {
+    "build:browser": true,
+    "build:node": true
+  },
+  "scripts": {
+    "_build": "npm run solo -- build",
+    "ci": "npm run qa",
+    "clean": "npm run reset",
+    "qa": "npm-run-all _build",
+    "reset": "npx rimraf coverage dist embarkjs-*.tgz package",
+    "solo": "embark-solo"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs2": "7.6.2",
+    "web3": "1.2.1"
+  },
+  "devDependencies": {
+    "ajv": "6.10.2",
+    "embark-solo": "^4.1.1",
+    "lodash.clonedeep": "4.5.0",
+    "npm-run-all": "4.1.5",
+    "rimraf": "3.0.0"
+  },
+  "engines": {
+    "node": ">=8.12.0 <12.0.0",
+    "npm": ">=6.4.1",
+    "yarn": ">=1.12.3"
+  }
+}

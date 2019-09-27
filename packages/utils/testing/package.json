@@ -1,0 +1,79 @@
+{
+  "name": "embark-testing",
+  "version": "4.1.1",
+  "description": "Testing",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/utils/testing#readme",
+  "main": "dist/lib/index.js",
+  "repository": {
+    "directory": "packages/utils/testing",
+    "type": "git",
+    "url": "https://github.com/embark-framework/embark/"
+  },
+  "author": "Iuri Matias <iuri.matias@gmail.com>",
+  "license": "MIT",
+  "bugs": "https://github.com/embark-framework/embark/issues",
+  "keywords": [
+    "blockchain",
+    "dapps",
+    "ethereum",
+    "ipfs",
+    "serverless",
+    "solc",
+    "solidity"
+  ],
+  "files": [
+    "dist"
+  ],
+  "embark-collective": {
+    "build:node": true
+  },
+  "scripts": {
+    "_build": "npm run solo -- build",
+    "ci": "npm run qa",
+    "clean": "npm run reset",
+    "lint": "eslint src/",
+    "qa": "npm-run-all lint _build",
+    "reset": "npx rimraf dist embark-*.tgz package",
+    "solo": "embark-solo",
+    "test": "jest"
+  },
+  "eslintConfig": {
+    "extends": "../../../.eslintrc.json"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs2": "7.6.2",
+    "refute": "1.0.2",
+    "sinon": "7.4.2"
+  },
+  "devDependencies": {
+    "@babel/core": "7.6.2",
+    "@types/async": "2.0.50",
+    "babel-jest": "24.9.0",
+    "embark-solo": "^4.1.1",
+    "eslint": "5.7.0",
+    "jest": "24.9.0",
+    "lodash.clonedeep": "4.5.0",
+    "npm-run-all": "4.1.5",
+    "rimraf": "2.6.3"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/test/**/*.js"
+    ],
+    "transform": {
+      "\\.js$": [
+        "babel-jest",
+        {
+          "rootMode": "upward"
+        }
+      ]
+    }
+  },
+  "engines": {
+    "node": ">=8.12.0 <12.0.0",
+    "npm": ">=6.4.1",
+    "yarn": ">=1.12.3"
+  }
+}

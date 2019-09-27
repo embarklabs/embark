@@ -4,7 +4,7 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Adds various configs to embark's contract.js config file",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-specialconfigs#readme",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/specialconfigs#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -20,7 +20,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-specialconfigs",
+    "directory": "packages/plugins/specialconfigs",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },

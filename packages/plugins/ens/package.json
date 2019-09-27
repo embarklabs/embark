@@ -4,7 +4,7 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Implements ENS support in Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-ens#readme",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/ens#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -21,7 +21,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-ens",
+    "directory": "packages/plugins/ens",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },

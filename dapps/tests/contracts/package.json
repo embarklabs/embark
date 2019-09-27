@@ -4,6 +4,7 @@
     "embark": "^4.1.1",
     "embark-reset": "^4.1.1"
   },
+  "license": "MIT",
   "name": "embark-dapp-test-contracts",
   "private": true,
   "scripts": {

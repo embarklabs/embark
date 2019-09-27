@@ -3,8 +3,9 @@
   "version": "4.1.1",
   "description": "Mocha Test Runner",
   "main": "dist/lib/index.js",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/mocha-tests#readme",
   "repository": {
-    "directory": "packages/embark-mocha-tests",
+    "directory": "packages/plugins/mocha-tests",
     "type": "git",
     "url": "https://github.com/embark-framework/embark/"
   },

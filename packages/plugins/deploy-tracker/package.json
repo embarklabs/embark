@@ -3,8 +3,8 @@
   "version": "4.1.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
-  "description": "Console component for Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-console#readme",
+  "description": "Contract deployment tracker for Embark",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/deploy-tracker#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -20,7 +20,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-console",
+    "directory": "packages/plugins/deploy-tracker",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },

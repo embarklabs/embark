@@ -3,8 +3,8 @@
   "version": "4.1.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
-  "description": "Code Coverage capabilities for Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-coverage#readme",
+  "description": "Code coverage capabilities for Embark",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/coverage#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -20,7 +20,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-coverage",
+    "directory": "packages/plugins/coverage",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },

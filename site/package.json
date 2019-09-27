@@ -2,6 +2,7 @@
   "name": "embark-site",
   "version": "0.0.0",
   "private": true,
+  "license": "MIT",
   "hexo": {
     "version": "3.9.0"
   },

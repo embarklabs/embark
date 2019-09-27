@@ -4,7 +4,7 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Provides scaffolding utilities",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embark-scaffolding#readme",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/scaffolding#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -20,7 +20,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embark-scaffolding",
+    "directory": "packages/plugins/scaffolding",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },
