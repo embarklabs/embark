@@ -144,7 +144,7 @@
     "file-loader": "4.2.0",
     "find-up": "2.1.0",
     "flatted": "0.2.3",
-    "fs-extra": "7.0.1",
+    "fs-extra": "8.1.0",
     "ganache-cli": "6.4.3",
     "glob": "7.1.4",
     "globule": "1.2.1",
