@@ -1,8 +1,14 @@
 const WebSocket = require("ws");
 const http = require("http");
 
-const LIVENESS_CHECK=`{"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":42}`;
+const LIVENESS_CHECK = JSON.stringify({
+  jsonrpc:'2.0',
+  method: 'shh_version',
+  params:[],
+  id:42
+});
 
+// eslint-disable-next-line complexity
 const parseAndRespond = (data, cb) => {
   let resp;
   try {
@@ -11,19 +17,18 @@ const parseAndRespond = (data, cb) => {
       return cb(resp.error);
     }
   } catch (e) {
-    return cb('Version data is not valid JSON');
+    return cb("Version data is not valid JSON");
   }
   if (!resp || !resp.result) {
-    return cb('No version returned');
+    return cb("No version returned");
   }
-  const [_, version, __] = resp.result.split('/');
-  cb(null, version);
+  cb(null, resp.result);
 };
 
 const rpc = (host, port, cb) => {
   const options = {
     hostname: host, // TODO(andremedeiros): get from config
-    port: port, // TODO(andremedeiros): get from config
+    port, // TODO(andremedeiros): get from config
     method: "POST",
     timeout: 1000,
     headers: {
@@ -34,7 +39,7 @@ const rpc = (host, port, cb) => {
 
   const req = http.request(options, (res) => {
     let data = "";
-    res.on("data", chunk => { data += chunk; });
+    res.on("data", (chunk) => { data += chunk; });
     res.on("end", () => parseAndRespond(data, cb));
   });
   req.on("error", (e) => cb(e));

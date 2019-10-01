@@ -303,9 +303,9 @@ Blockchain.prototype.isClientInstalled = function (callback) {
     const parsedVersion = this.client.parseVersion(stdout);
     const supported = this.client.isSupportedVersion(parsedVersion);
     if (supported === undefined) {
-      this.logger.error((__('WARNING! Ethereum client version could not be determined or compared with version range') + ' ' + this.client.versSupported + __(', for best results please use a supported version')).yellow);
+      this.logger.warn((__('WARNING! Ethereum client version could not be determined or compared with version range') + ' ' + this.client.versSupported + __(', for best results please use a supported version')));
     } else if (!supported) {
-      this.logger.error((__('WARNING! Ethereum client version unsupported, for best results please use a version in range') + ' ' + this.client.versSupported).yellow);
+      this.logger.warn((__('WARNING! Ethereum client version unsupported, for best results please use a version in range') + ' ' + this.client.versSupported));
     }
     callback();
   });

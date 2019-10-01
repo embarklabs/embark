@@ -1,5 +1,5 @@
-import EmbarkJS from 'embarkjs';
-import EmbarkJSWhisper from 'embarkjs-whisper';
+import EmbarkJS from "embarkjs";
+import EmbarkJSWhisper from "embarkjs-whisper";
 
 class API {
 
@@ -11,8 +11,8 @@ class API {
   async initEmbarkJSWhisper() {
     if (Object.keys(EmbarkJS.Messages.Providers).includes("whisper")) return;
 
-    EmbarkJS.Messages.registerProvider('whisper', EmbarkJSWhisper);
-    EmbarkJS.Messages.setProvider('whisper', this.communicationConfig.connection);
+    EmbarkJS.Messages.registerProvider("whisper", EmbarkJSWhisper);
+    EmbarkJS.Messages.setProvider("whisper", this.communicationConfig.connection);
   }
 
   async registerAPICalls() {
@@ -23,8 +23,8 @@ class API {
 
   async registerSendMessageCall() {
     this.embark.registerAPICall(
-      'post',
-      '/embark-api/communication/sendMessage',
+      "post",
+      "/embark-api/communication/sendMessage",
       (req, res) => {
         EmbarkJS.Messages.sendMessage({ topic: req.body.topic, data: req.body.message }, (err, result) => {
           if (err) {
@@ -37,8 +37,8 @@ class API {
 
   async registerListenToCall() {
     this.embark.registerAPICall(
-      'ws',
-      '/embark-api/communication/listenTo/:topic',
+      "ws",
+      "/embark-api/communication/listenTo/:topic",
       (ws, req) => {
         EmbarkJS.Messages.listenTo({ topic: req.params.topic }).subscribe(data => {
           ws.send(JSON.stringify(data));
