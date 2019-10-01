@@ -303,7 +303,8 @@ export class Engine {
   }
 
   communicationComponents() {
-    this.registerModulePackage('embark-whisper');
+    this.registerModulePackage('embark-whisper-geth');
+    this.registerModulePackage('embark-whisper-parity');
   }
 
   namesystemComponents() {

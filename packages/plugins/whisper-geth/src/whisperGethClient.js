@@ -1,17 +1,16 @@
-import { __ } from 'embark-i18n';
-const async = require('async');
-const GethMiner = require('./miner');
-const semver = require('semver');
-const constants = require('embark-core/constants');
+import { __ } from "embark-i18n";
+const async = require("async");
+const semver = require("semver");
+const constants = require("embark-core/constants");
 
 const DEFAULTS = {
   "BIN": "geth",
   "VERSIONS_SUPPORTED": ">=1.9.7",
   "NETWORK_TYPE": "custom",
   "NETWORK_ID": 1337,
-  "RPC_API": ['web3'],
-  "WS_API": ['web3', 'shh'],
-  "DEV_WS_API": ['web3', 'shh'],
+  "RPC_API": ["web3"],
+  "WS_API": ["web3", "shh"],
+  "DEV_WS_API": ["web3", "shh"],
   "TARGET_GAS_LIMIT": 8000000
 };
 
@@ -21,11 +20,12 @@ class WhisperGethClient {
     return DEFAULTS;
   }
 
+  // eslint-disable-next-line complexity
   constructor(options) {
-    this.config = options && options.hasOwnProperty('config') ? options.config : {};
+    this.config = options && options.hasOwnProperty("config") ? options.config : {};
     this.communicationConfig = options.communicationConfig;
-    this.env = options && options.hasOwnProperty('env') ? options.env : 'development';
-    this.isDev = options && options.hasOwnProperty('isDev') ? options.isDev : (this.env === 'development');
+    this.env = options && options.hasOwnProperty("env") ? options.env : "development";
+    this.isDev = options && options.hasOwnProperty("isDev") ? options.isDev : (this.env === "development");
     this.name = constants.blockchain.clients.geth;
     this.prettyName = "Go-Ethereum (https://github.com/ethereum/go-ethereum)";
     this.bin = this.config.ethereumClientBin || DEFAULTS.BIN;
@@ -35,26 +35,14 @@ class WhisperGethClient {
   }
 
   isReady(data) {
-    if (data.indexOf('WebSocket endpoint opened') > -1) {
+    if (data.indexOf("WebSocket endpoint opened") > -1) {
       this.wsReady = true;
     }
     return this.wsReady;
   }
 
-  /**
-   * Check if the client needs some sort of 'keep alive' transactions to avoid freezing by inactivity
-   * @returns {boolean} if keep alive is needed
-   */
-  needKeepAlive() {
-    return false;
-  }
-
   commonOptions() {
-    return ['--ipcdisable'];
-  }
-
-  getMiner() {
-    return new GethMiner({datadir: this.config.datadir});
+    return [];
   }
 
   getBinaryPath() {
@@ -79,8 +67,10 @@ class WhisperGethClient {
     try {
       let v = semver(parsedVersion);
       v = `${v.major}.${v.minor}.${v.patch}`;
+      // eslint-disable-next-line no-cap
       test = semver.Range(this.versSupported).test(semver(v));
-      if (typeof test !== 'boolean') {
+      if (typeof test !== "boolean") {
+        // eslint-disable-next-line no-undefined
         test = undefined;
       }
     } finally {
@@ -91,11 +81,11 @@ class WhisperGethClient {
 
   determineNetworkType(config) {
     let cmd;
-    if (config.networkType === 'testnet') {
+    if (config.networkType === "testnet") {
       cmd = "--testnet";
-    } else if (config.networkType === 'rinkeby') {
+    } else if (config.networkType === "rinkeby") {
       cmd = "--rinkeby";
-    } else if (config.networkType === 'custom') {
+    } else if (config.networkType === "custom") {
       cmd = "--networkid=" + config.networkId;
     }
     return cmd;
@@ -109,38 +99,6 @@ class WhisperGethClient {
     return "";
   }
 
-  newAccountCommand() {
-    return "";
-  }
-
-  parseNewAccountCommandResultToAddress(data = "") {
-    if (data.match(/{(\w+)}/)) return "0x" + data.match(/{(\w+)}/)[1];
-    return "";
-  }
-
-  listAccountsCommand() {
-    return "";
-  }
-
-  parseListAccountsCommandResultToAddress(data = "") {
-    if (data.match(/{(\w+)}/)) return "0x" + data.match(/{(\w+)}/)[1];
-    return "";
-  }
-
-  parseListAccountsCommandResultToAddressList(data = "") {
-    const regex = RegExp(/{(\w+)}/g);
-    let match;
-    const accounts = [];
-    while ((match = regex.exec(data)) !== null) {
-      accounts.push('0x' + match[1]);
-    }
-    return accounts;
-  }
-
-  parseListAccountsCommandResultToAddressCount(_data = "") {
-    return 0;
-  }
-
   determineRpcOptions(config) {
     let cmd = [];
     cmd.push("--port=30304");
@@ -149,21 +107,22 @@ class WhisperGethClient {
     cmd.push("--rpcaddr=" + config.rpcHost);
 
     if (config.rpcCorsDomain) {
-      if (config.rpcCorsDomain === '*') {
-        console.warn('==================================');
-        console.warn(__('rpcCorsDomain set to *'));
-        console.warn(__('make sure you know what you are doing'));
-        console.warn('==================================');
+      if (config.rpcCorsDomain === "*") {
+        console.warn("==================================");
+        console.warn(__("rpcCorsDomain set to *"));
+        console.warn(__("make sure you know what you are doing"));
+        console.warn("==================================");
       }
       cmd.push("--rpccorsdomain=" + config.rpcCorsDomain);
     } else {
-      console.warn('==================================');
-      console.warn(__('warning: cors is not set'));
-      console.warn('==================================');
+      console.warn("==================================");
+      console.warn(__("warning: cors is not set"));
+      console.warn("==================================");
     }
     return cmd;
   }
 
+  // eslint-disable-next-line complexity
   determineWsOptions(config, communicationConfig) {
     let cmd = [];
     if (config.wsRPC) {
@@ -173,17 +132,17 @@ class WhisperGethClient {
       cmd.push(`--wsaddr=${communicationConfig.connection.host || config.wsHost++}`);
 
       if (config.wsOrigins) {
-        if (config.wsOrigins === '*') {
-          console.warn('==================================');
-          console.warn(__('wsOrigins set to *'));
-          console.warn(__('make sure you know what you are doing'));
-          console.warn('==================================');
+        if (config.wsOrigins === "*") {
+          console.warn("==================================");
+          console.warn(__("wsOrigins set to *"));
+          console.warn(__("make sure you know what you are doing"));
+          console.warn("==================================");
         }
         cmd.push("--wsorigins=" + config.wsOrigins);
       } else {
-        console.warn('==================================');
-        console.warn(__('warning: wsOrigins is not set'));
-        console.warn('==================================');
+        console.warn("==================================");
+        console.warn(__("warning: wsOrigins is not set"));
+        console.warn("==================================");
       }
     }
     return cmd;
@@ -196,8 +155,8 @@ class WhisperGethClient {
   mainCommand(address, done) {
     let self = this;
     let config = this.config;
-    let rpc_api = this.config.rpcApi;
-    let ws_api = this.config.wsApi;
+    let rpcApi = this.config.rpcApi;
+    let wsApi = this.config.wsApi;
     let args = [];
     async.series([
       function commonOptions(callback) {
@@ -217,7 +176,7 @@ class WhisperGethClient {
         }
         callback(null, "");
       },
-     function maxPeers(callback) {
+      function maxPeers(callback) {
         let cmd = "--maxpeers=" + config.maxpeers;
         args.push(cmd);
         callback(null, cmd);
@@ -230,22 +189,22 @@ class WhisperGethClient {
         callback("");
       },
       function whisper(callback) {
-        rpc_api.push('shh');
-        if (ws_api.indexOf('shh') === -1) {
-          ws_api.push('shh');
+        rpcApi.push("shh");
+        if (wsApi.indexOf("shh") === -1) {
+          wsApi.push("shh");
         }
         args.push("--shh");
         return callback(null, "--shh ");
       },
-      function rpcApi(callback) {
-        args.push('--rpcapi=' + rpc_api.join(','));
-        callback(null, '--rpcapi=' + rpc_api.join(','));
+      function rpcApiArgs(callback) {
+        args.push("--rpcapi=" + rpcApi.join(","));
+        callback(null, "--rpcapi=" + rpcApi.join(","));
       },
-      function wsApi(callback) {
-        args.push('--wsapi=' + ws_api.join(','));
-        callback(null, '--wsapi=' + ws_api.join(','));
+      function wsApiArgs(callback) {
+        args.push("--wsapi=" + wsApi.join(","));
+        callback(null, "--wsapi=" + wsApi.join(","));
       }
-    ], function(err) {
+    ], function (err) {
       if (err) {
         throw new Error(err.message);
       }

@@ -50,24 +50,6 @@ class Geth {
         cb();
       }
     });
-
-    this.events.request("whisper:node:register", constants.blockchain.clients.geth, readyCb => {
-      this.events.request('processes:register', 'communication', {
-        launchFn: cb => {
-          this.startWhisperNode(cb);
-        },
-        stopFn: cb => {
-          this.stopWhisperNode(cb);
-        }
-      });
-
-      this.events.request("processes:launch", "communication", (err) => {
-        if (err) {
-          this.logger.error(`Error launching whisper process: ${err.message || err}`);
-        }
-        readyCb();
-      });
-    });
   }
 
   shouldInit() {
@@ -130,31 +112,6 @@ class Geth {
     });
 
     this.blockchainProcess.startBlockchainNode(callback);
-  }
-
-  startWhisperNode(callback) {
-    this.whisperProcess = new BlockchainProcessLauncher({
-      events: this.events,
-      logger: this.logger,
-      normalizeInput,
-      blockchainConfig: this.blockchainConfig,
-      communicationConfig: this.communicationConfig,
-      locale: this.locale,
-      client: this.client,
-      isDev: this.isDev,
-      embark: this.embark
-    });
-    this.whisperProcess.startBlockchainNode(callback);
-  }
-
-  stopWhisperNode(cb) {
-    if (!this.whisperProcess) {
-      return cb();
-    }
-    this.whisperProcess.stopBlockchainNode(() => {
-      this.logger.info(`The whisper process has been stopped.`);
-      cb();
-    });
   }
 
   stopBlockchainNode(cb) {
