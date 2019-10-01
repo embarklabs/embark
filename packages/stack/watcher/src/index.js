@@ -19,13 +19,13 @@ class Watcher {
     this.fs = embark.fs;
     this.fileWatchers = [];
 
-    this.events.setCommandHandler('watcher:start', () => this.start());
+    this.events.setCommandHandler('watcher:start', (cb) => this.start(cb));
     this.events.setCommandHandler('watcher:stop', () => this.stop());
     this.events.setCommandHandler('watcher:restart', () => this.restart());
   }
 
   // TODO: it needs to be more agnostic, the files to watch should be registered through the plugin api
-  start() {
+  start(cb) {
     let self = this;
     // TODO: should come from the config object instead of reading the file
     // directly
@@ -52,6 +52,7 @@ class Watcher {
     });
 
     this.logger.info(__("ready to watch file changes"));
+    cb();
   }
 
   restart() {
