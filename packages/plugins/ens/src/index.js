@@ -146,6 +146,10 @@ class ENS {
 
   async registerConfigDomains(config, cb) {
     const defaultAccount = await this.web3DefaultAccount;
+    if (!this.config.namesystemConfig.register) {
+      return cb();
+    }
+
     async.each(Object.keys(this.config.namesystemConfig.register.subdomains), (subDomainName, eachCb) => {
       const address = this.config.namesystemConfig.register.subdomains[subDomainName];
       const directivesRegExp = new RegExp(/\$(\w+\[?\d?\]?)/g);
@@ -164,6 +168,10 @@ class ENS {
     }
 
     const defaultAccount = await this.web3DefaultAccount;
+
+    if (!this.config.namesystemConfig.register) {
+      return cb();
+    }
 
     await Promise.all(Object.keys(this.config.namesystemConfig.register.subdomains).map((subDomainName) => {
       return new Promise(async (resolve, _reject) => {
