@@ -4,6 +4,9 @@ const constants = require('embark-core/constants');
 
 export function getBlockchainDefaults(env) {
   const defaults = {
+    clientConfig: {
+      miningMode: 'dev' // Mode in which the node mines. Options: dev, auto, always, off
+    },
     enabled: true,
     client: constants.blockchain.clients.geth,
     proxy: true,
@@ -46,6 +49,7 @@ export function getContractDefaults(embarkConfigVersions) {
       "versions": versions,
       "dappConnection": [
         "$WEB3",
+        "ws://localhost:8546",
         "localhost:8545"
       ],
       "dappAutoEnable": true,

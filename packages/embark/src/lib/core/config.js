@@ -533,7 +533,7 @@ Config.prototype.loadCommunicationConfigFile = function() {
       "available_providers": ["whisper"],
       "connection": {
         "host": defaultHost,
-        "port": 8546,
+        "port": 8557,
         "type": "ws"
       }
     }
