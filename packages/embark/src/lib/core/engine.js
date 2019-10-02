@@ -167,7 +167,7 @@ class Engine {
 
   stackComponents(options) {
     this.registerModulePackage('embark-pipeline', { plugins: this.plugins });
-    this.registerModule('blockchain', { plugins: this.plugins });
+    this.registerModulePackage('embark-blockchain', { plugins: this.plugins });
     this.registerModulePackage('embark-proxy', {plugins: this.plugins});
     // TODO: coverage param should be part of the request compilation command, not an option here
     // some other params in the options might not longer be relevant, in fact we probably don't need options anymore
