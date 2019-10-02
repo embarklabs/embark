@@ -2,11 +2,11 @@ const Embark = require('./embark');
 const Events = require('./events');
 const Plugins = require('./plugin');
 
-const fakeEmbark = () => {
+const fakeEmbark = (config) => {
   const events = new Events();
   const plugins = new Plugins();
 
-  const embark = new Embark(events, plugins);
+  const embark = new Embark(events, plugins, config);
   return {
     embark,
     plugins
