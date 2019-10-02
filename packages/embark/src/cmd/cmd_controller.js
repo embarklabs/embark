@@ -363,16 +363,19 @@ simulator(_options) {
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
 
+        // TODO: replace with individual plugins
+        engine.registerModuleGroup("namesystem");
+        engine.registerModuleGroup("communication");
         engine.registerModuleGroup("blockchain");
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
         engine.registerModuleGroup("pipeline");
+        engine.registerModuleGroup("webserver");
         engine.registerModuleGroup("filewatcher");
         engine.registerModuleGroup("storage");
-        engine.registerModuleGroup("communication");
-        engine.registerModuleGroup("namesystem");
+        engine.registerModuleGroup("cockpit");
         engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
-        engine.registerModulePackage('embark-plugin-cmd', {embarkConfigFile: engine.embarkConfig, embarkConfig: engine.config.embarkConfig, packageFile: 'package.json'});
+
         callback();
       },
       callback => {
