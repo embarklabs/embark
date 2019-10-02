@@ -1,13 +1,10 @@
 const sinon = require('sinon');
 
 class Embark {
-  constructor(events, plugins) {
+  constructor(events, plugins, config) {
     this.events = events;
     this.plugins = plugins;
-    this.config = {
-      blockchainConfig: {}
-    };
-
+    this.config = config || {};
     this.assert = new EmbarkAssert(this);
 
     this.logger = {
@@ -23,7 +20,12 @@ class Embark {
   }
 
   teardown() {
+    this.config = {};
     this.plugins.teardown();
+  }
+
+  setConfig(config) {
+    this.config = config;
   }
 }
 

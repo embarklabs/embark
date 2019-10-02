@@ -10,6 +10,15 @@ describe('stack/communication', () => {
   const { embark } = fakeEmbark();
 
   beforeEach(() => {
+    embark.setConfig({
+      communicationConfig: {
+        connection: {
+          host: 'localhost',
+        }
+      },
+      embarkConfig: {}
+    });
+
     communication = new Communication(embark);
 
     communicationNodeLaunchFn = sinon.spy(done => {
@@ -46,6 +55,15 @@ describe('stack/communication', () => {
     embark.events.request('communication:node:start', communicationConfig, doneCb);
 
     assert(communicationNodeLaunchFn.calledOnce);
+    assert(doneCb.calledOnce);
+  });
+
+  test('it should register artifact file from configuration', () => {
+    const pipelineRegisterHandler = sinon.spy((params, fn) => fn());
+    embark.events.setCommandHandler('pipeline:register', pipelineRegisterHandler);
+    embark.plugins.emitAndRunActionsForEvent('pipeline:generateAll:before', {}, doneCb);
+
+    assert(pipelineRegisterHandler.calledOnce);
     assert(doneCb.calledOnce);
   });
 });
