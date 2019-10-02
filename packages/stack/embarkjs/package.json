@@ -1,0 +1,60 @@
+{
+  "name": "embark-embarkjs",
+  "version": "4.1.1",
+  "author": "Iuri Matias <iuri.matias@gmail.com>",
+  "contributors": [],
+  "description": "EmbarkJS APIs for Embark",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/stack/embarkjs#readme",
+  "bugs": "https://github.com/embark-framework/embark/issues",
+  "keywords": [
+    "blockchain",
+    "dapps",
+    "ethereum",
+    "ipfs",
+    "serverless",
+    "solc",
+    "solidity"
+  ],
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "repository": {
+    "directory": "packages/stack/embarkjs",
+    "type": "git",
+    "url": "https://github.com/embark-framework/embark.git"
+  },
+  "main": "./dist/index.js",
+  "embark-collective": {
+    "build:node": true
+  },
+  "scripts": {
+    "_build": "npm run solo -- build",
+    "ci": "npm run qa",
+    "clean": "npm run reset",
+    "lint": "eslint src/",
+    "qa": "npm-run-all lint _build",
+    "reset": "npx rimraf dist embark-*.tgz package",
+    "solo": "embark-solo"
+  },
+  "eslintConfig": {
+    "extends": "../../../.eslintrc.json"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs2": "7.6.2",
+    "ejs": "2.6.1",
+    "embark-core": "^4.1.1",
+    "embark-i18n": "^4.1.1"
+  },
+  "devDependencies": {
+    "embark-solo": "^4.1.1",
+    "eslint": "5.7.0",
+    "npm-run-all": "4.1.5",
+    "rimraf": "3.0.0"
+  },
+  "engines": {
+    "node": ">=8.12.0 <12.0.0",
+    "npm": ">=6.4.1",
+    "yarn": ">=1.12.3"
+  }
+}
