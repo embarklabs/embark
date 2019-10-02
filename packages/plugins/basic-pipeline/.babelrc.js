@@ -3,7 +3,7 @@
 const cloneDeep = require('lodash.clonedeep');
 const {copySync, ensureDirSync} = require('fs-extra');
 const glob = require('glob');
-const {dirname, join, normalize, relative, sep} = require('path');
+const {dirname, join, relative} = require('path');
 
 // @babel/cli v7's --copy-files option does not work well together with
 // config-specified ignore paths, and that's a problem for embark-collective
@@ -27,9 +27,9 @@ function copyFiles (ignored) {
     ]}
   ).map(path => relative(__dirname, path));
 
-  ignored = ignored.concat(others).map(normalize);
+  ignored = ignored.concat(others);
   ignored
-    .map(path => path.replace(`src${sep}`, `dist${sep}`))
+    .map(path => path.replace('src/', 'dist/'))
     .forEach((dest, index) => {
       ensureDirSync(dirname(join(__dirname, dest)));
       const source = ignored[index];
@@ -43,16 +43,22 @@ module.exports = (api) => {
   const base = {};
 
   const node = cloneDeep(base);
+  Object.assign(node, {
+    ignore: [
+      'src/babel-loader-overrides.js',
+      'src/webpack.config.js'
+    ]
+  });
 
   if (env === 'node') {
-    copyFiles(node.ignore || []);
+    copyFiles(node.ignore);
     return node;
   }
 
   const test = cloneDeep(node);
 
   if (env === 'test') {
-    copyFiles(test.ignore || []);
+    copyFiles(test.ignore);
     return test;
   }
 

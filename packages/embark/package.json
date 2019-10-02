@@ -94,6 +94,7 @@
     "embark-accounts-manager": "^4.1.1",
     "embark-api": "^4.1.1",
     "embark-authenticator": "^4.1.1",
+    "embark-basic-pipeline": "^4.1.1",
     "embark-code-runner": "^4.1.1",
     "embark-communication": "^4.1.1",
     "embark-compiler": "^4.1.1",
@@ -207,7 +208,6 @@
     "web3-providers-ws": "1.2.1",
     "web3-shh": "1.2.1",
     "web3-utils": "1.2.1",
-    "webpack": "4.41.0",
     "window-size": "1.1.1",
     "ws": "7.1.2",
     "yo-yoify": "4.3.0"
