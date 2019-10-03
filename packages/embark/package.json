@@ -153,7 +153,6 @@
     "helmet": "3.13.0",
     "hosted-git-info": "2.7.1",
     "http-proxy": "1.17.0",
-    "http-shutdown": "1.2.0",
     "ipfs-api": "17.2.4",
     "istanbul": "0.4.5",
     "json-parse-better-errors": "1.0.2",
