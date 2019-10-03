@@ -122,7 +122,7 @@ class TemplateGenerator {
     if (this.isInsideMonorepo) {
       templateSpecifier = findMonorepoPackageFromRootSync(
         templatePkg,
-        () => (pkgJsonPath) => pkgJsonPath.includes(normalize('dapps/templates'))
+        () => (pkgJsonPath) => normalize(pkgJsonPath).includes(normalize('dapps/templates'))
       );
     } else {
       const version = fs.readJSONSync(embarkPath('package.json')).version;
