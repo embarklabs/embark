@@ -106,6 +106,7 @@
     "embark-deployment": "^4.1.1",
     "embark-embarkjs": "^4.1.1",
     "embark-ens": "^4.1.1",
+    "embark-geth": "^4.1.1",
     "embark-graph": "^4.1.1",
     "embark-i18n": "^4.1.1",
     "embark-ipfs": "^4.1.1",
