@@ -16,6 +16,9 @@ class Storage {
     });
 
     this.events.setCommandHandler("storage:node:start", (storageConfig, cb) => {
+      if (!storageConfig.enabled) {
+        return cb();
+      }
       const clientName = storageConfig.upload.provider;
       const client = this.storageNodes[clientName];
       if (!client) return cb("storage " + clientName + " not found");
