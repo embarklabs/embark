@@ -17,6 +17,9 @@ export default class Namesystem {
     });
 
     this.events.setCommandHandler("namesystem:node:start", (namesystemConfig, cb) => {
+      if (!namesystemConfig.enabled) {
+        return cb();
+      }
       const nodeName = namesystemConfig.provider;
       const client = this.namesystemNodes[nodeName];
       if (!client) return cb(__("Namesystem client %s not found", nodeName));
