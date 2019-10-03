@@ -36,8 +36,8 @@
     "lint": "eslint src/",
     "qa": "npm-run-all lint _build",
     "reset": "npx rimraf dist embark-*.tgz package",
-    "solo": "embark-solo"
-    "test": "jest",
+    "solo": "embark-solo",
+    "test": "jest"
   },
   "dependencies": {
     "@babel/runtime-corejs2": "7.6.2",

@@ -1,5 +1,7 @@
 const ENS = require("../dist/index");
 const { fakeEmbark } = require('embark-testing');
+const {Utils} = require('embarkjs');
+const secureSend = Utils.secureSend;
 
 describe('embark-ens', () => {
   let ens, doneCb;
@@ -49,8 +51,8 @@ describe('embark-ens', () => {
       ens.ensResolve = jest.fn((name, cb) => {cb(null, null)});
       ens.registerSubDomain = jest.fn((defaultAccount, subDomainName, reverseNode, address, secureSend, callback) => callback());
 
-      ens.safeRegisterSubDomain('test.eth', '0x0123', '0x4321', () => {
-        expect(ens.registerSubDomain).toHaveBeenCalled();
+      ens.safeRegisterSubDomain('test.eth', '0x0123', '0x4321',  () => {
+        expect(ens.registerSubDomain).toHaveBeenCalledWith('0x4321', 'test.eth', '0xd523d7aaff8eefa323a17f2c79662ff1a8d952f6fa9cf53986347e99ada8098c', '0x0123', secureSend, expect.any(Function));
         done();
       });
     });
