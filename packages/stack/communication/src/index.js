@@ -16,6 +16,9 @@ class Communication {
     });
 
     this.events.setCommandHandler("communication:node:start", (communicationConfig, cb) => {
+      if (!communicationConfig.enabled) {
+        return cb();
+      }
       const clientName = communicationConfig.provider;
       const client = this.communicationNodes[clientName];
       if (!client) return cb("communication " + clientName + " not found");
