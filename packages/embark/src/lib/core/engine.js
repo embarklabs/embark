@@ -191,7 +191,7 @@ class Engine {
       plugins: this.plugins,
       ipc: this.ipc
     });
-    this.registerModule('parity', {
+    this.registerModulePackage('embark-parity', {
       client: this.client,
       locale: this.locale,
       isDev: this.isDev,

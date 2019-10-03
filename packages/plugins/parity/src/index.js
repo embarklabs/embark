@@ -23,7 +23,8 @@ class Parity {
       return;
     }
 
-    this.events.request("blockchain:node:register", constants.blockchain.clients.parity, (readyCb) => {
+    this.events.request("blockchain:node:register", constants.blockchain.clients.parity, {
+      launchFn: (readyCb) => {
       this.events.request('processes:register', 'blockchain', {
         launchFn: (cb) => {
           // this.startBlockchainNode(readyCb);
@@ -40,12 +41,17 @@ class Parity {
         readyCb();
       });
       this.registerServiceCheck();
-    });
+    },
+    stopFn: async (cb) => {
+      await this.events.request("processes:stop", "blockchain");
+      cb();
+    }
+  });
   }
 
   shouldInit() {
     return (
-      this.blockchainConfig.client === constants.blockchain.clients.geth &&
+      this.blockchainConfig.client === constants.blockchain.clients.parity &&
       this.blockchainConfig.enabled
     );
   }
@@ -64,9 +70,9 @@ class Parity {
     this.events.request("services:register", 'Ethereum', (cb) => {
       const {rpcHost, rpcPort, wsRPC, wsHost, wsPort} = this.blockchainConfig;
       if (wsRPC) {
-        return ws(wsHost, wsPort + 10, (err, version) => this._getNodeState(err, version, cb));
+        return ws(wsHost, wsPort, (err, version) => this._getNodeState(err, version, cb));
       }
-      rpc(rpcHost, rpcPort + 10, (err, version) => this._getNodeState(err, version, cb));
+      rpc(rpcHost, rpcPort, (err, version) => this._getNodeState(err, version, cb));
     }, 5000, 'off');
   }
 
