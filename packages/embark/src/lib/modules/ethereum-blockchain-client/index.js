@@ -84,9 +84,10 @@ class EthereumBlockchainClient {
       contract.transactionHash = receipt.transactionHash;
       contract.log(`${contract.className.bold.cyan} ${__('deployed at').green} ${receipt.contractAddress.bold.cyan} ${__("using").green} ${receipt.gasUsed} ${__("gas").green} (txHash: ${receipt.transactionHash.bold.cyan})`);
       done(err, receipt);
-    }, (_hash) => {
+    }, (hash) => {
+      const estimatedCost = contract.gas * contract.gasPrice;
+      contract.log(`${__("Deploying")} ${contract.className.bold.cyan} ${__("with").green} ${contract.gas} ${__("gas at the price of").green} ${contract.gasPrice} ${__("Wei. Estimated cost:").green} ${estimatedCost} ${"Wei".green}  (txHash: ${hash.bold.cyan})`);
     });
-    // })
   }
 
   async doLinking(params, callback) {
