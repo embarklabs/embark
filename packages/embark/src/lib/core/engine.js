@@ -80,6 +80,7 @@ class Engine {
       blockchain: this.blockchainComponents,
       coreComponents: this.coreComponents,
       stackComponents: this.stackComponents,
+      consoleComponents: this.consoleComponents,
       blockchainStackComponents: this.blockchainStackComponents,
       compiler: this.compilerComponents,
       contracts: this.contractsComponents,
@@ -140,6 +141,12 @@ class Engine {
       cb();
     });
     this.registerModulePackage('embark-code-runner', {ipc: this.ipc});
+
+    // TODO: we shouldn't need useDashboard
+    this.registerModulePackage('embark-library-manager', {useDashboard: this.useDashboard});
+  }
+
+  consoleComponents() {
     // TODO: suggestions should be moved to their own module
     this.registerModulePackage('embark-console', {
       events: this.events,
@@ -149,10 +156,7 @@ class Engine {
       logger: this.logger,
       config: this.config
     });
-
-
-    // TODO: we shouldn't need useDashboard
-    this.registerModulePackage('embark-library-manager', {useDashboard: this.useDashboard});
+    this.registerModulePackage('embark-plugin-cmd');
   }
 
   blockchainStackComponents() {

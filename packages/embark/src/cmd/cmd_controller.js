@@ -69,7 +69,8 @@ class EmbarkController {
       });
     });
   }
-simulator(_options) {
+
+  simulator(_options) {
     // this.context = options.context || [constants.contexts.simulator, constants.contexts.blockchain];
     // let simulator = new Simulator({
     //   blockchainConfig: this.config.blockchainConfig,
@@ -150,6 +151,7 @@ simulator(_options) {
 
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
+        engine.registerModuleGroup("consoleComponents");
 
         // TODO: replace with individual plugins
         engine.registerModuleGroup("namesystem");
@@ -362,6 +364,7 @@ simulator(_options) {
 
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
+        engine.registerModuleGroup("consoleComponents");
 
         // TODO: replace with individual plugins
         engine.registerModuleGroup("namesystem");
