@@ -59,7 +59,7 @@ class Blockchain {
           }
           const clientFunctions = this.blockchainNodes[clientName];
           if (!clientFunctions) {
-            return cb(__("Client %s not found", clientName));
+            return cb(__("Client %s not found in registered plugins", clientName));
           }
 
           let onStart = () => {
@@ -91,7 +91,7 @@ class Blockchain {
 
       const clientFunctions = this.blockchainNodes[clientName];
       if (!clientFunctions) {
-        return cb(__("Client %s not found", clientName));
+        return cb(__("Client %s not found in registered plugins", clientName));
       }
 
       clientFunctions.stopFn.apply(clientFunctions, [

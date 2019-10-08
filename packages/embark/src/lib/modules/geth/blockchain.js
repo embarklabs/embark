@@ -199,8 +199,8 @@ Blockchain.prototype.run = function () {
     }
   ], function(err, cmd, args) {
     if (err) {
-      self.logger.error(err.message);
-      return;
+      self.logger.error(err.message || err);
+      process.exit(1);
     }
     args = compact(args);
 
