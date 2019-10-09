@@ -28,7 +28,6 @@ module.exports = {
   // default environment, merges with the settings in default
   // assumed to be the intended environment by `embark run`
   development: {
-    enabled: true,
     upload: {
       provider: "ipfs",
       host: "localhost",
