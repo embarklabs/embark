@@ -75,15 +75,14 @@ class EmbarkController {
     });
   }
 
-  simulator(_options) {
-    // this.context = options.context || [constants.contexts.simulator, constants.contexts.blockchain];
-    // let simulator = new Simulator({
-    //   blockchainConfig: this.config.blockchainConfig,
-    //   contractsConfig: this.config.contractsConfig,
-    //   logger: this.logger,
-    //   fs
-    // });
-    // simulator.run(options);
+  simulator(options) {
+    this.context = options.context || [constants.contexts.simulator, constants.contexts.blockchain];
+    const Simulator = require('./simulator');
+    let simulator = new Simulator({
+      blockchainConfig: this.config.blockchainConfig,
+      logger: this.logger
+    });
+    simulator.run(options);
   }
 
   generateTemplate(templateName, destinationFolder, name, url) {
