@@ -57,6 +57,7 @@ export class Proxy {
             // Send the possibly modified request to the Node
             requestManager.send(resp.reqData, (err, result) => {
               if (err) {
+                this.logger.debug(JSON.stringify(resp.reqData));
                 return this.logger.error(__('Error executing the request on the Node'), err.message || err);
               }
               this.emitActionsForResponse(resp.reqData, {jsonrpc: "2.0", id: resp.reqData.id, result}, (_err, resp) => {

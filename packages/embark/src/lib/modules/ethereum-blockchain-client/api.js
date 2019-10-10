@@ -153,11 +153,13 @@ export default class EthereumAPI {
         });
       },
       function (next) {
-        async.times(limit, function (n, eachCb) {
-          self.web3.eth.getBlock(from - n, returnTransactionObjects, function (err, block) {
+        if (from - limit < 0) {
+          limit = from + 1;
+        }
+        async.times(limit, (n, eachCb) => {
+          self.web3.eth.getBlock(from - n, returnTransactionObjects, (err, block) => {
             if (err) {
-              // FIXME Returns an error because we are too low
-              return eachCb();
+              return eachCb(err);
             }
             if (!block) {
               return eachCb();
