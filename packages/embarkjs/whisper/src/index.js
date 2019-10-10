@@ -46,7 +46,7 @@ __embarkWhisperNewWeb3.setProvider = function(options) {
   });
 };
 
-__embarkWhisperNewWeb3.sendMessage = function(options, callback) {
+__embarkWhisperNewWeb3.sendMessage = function(options) {
   const data = options.data || options.payload;
   if (!data) {
     throw new Error("missing option: data");
@@ -60,12 +60,7 @@ __embarkWhisperNewWeb3.sendMessage = function(options, callback) {
     data
   });
 
-  this.real_sendMessage(options, (err) => {
-    if (err) {
-      throw new Error(err);
-    }
-    callback();
-  });
+  return this.real_sendMessage(options);
 };
 
 __embarkWhisperNewWeb3.listenTo = function (options) {
