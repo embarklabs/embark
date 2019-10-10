@@ -7,6 +7,7 @@ import BlockchainAPI from "./api";
 class Blockchain {
 
   constructor(embark, options) {
+    this.embark = embark;
     this.embarkConfig = embark.config.embarkConfig;
     this.logger = embark.logger;
     this.events = embark.events;
@@ -15,6 +16,8 @@ class Blockchain {
     this.blockchainApi = new BlockchainAPI(embark);
     this.startedClient = null;
     this.plugins = options.plugins;
+
+    this.registerConsoleCommands();
 
     embark.registerActionForEvent("pipeline:generateAll:before", this.addArtifactFile.bind(this));
 
@@ -137,6 +140,20 @@ class Blockchain {
     });
   }
 
+  registerConsoleCommands() {
+    this.embark.registerConsoleCommand({
+      matches: ['log blockchain on'],
+      process: (cmd, callback) => {
+        this.events.request('logs:ethereum:enable', callback);
+      }
+    });
+    this.embark.registerConsoleCommand({
+      matches: ['log blockchain off'],
+      process: (cmd, callback) => {
+        this.events.request('logs:ethereum:disable', callback);
+      }
+    });
+  }
 }
 
 module.exports = Blockchain;
