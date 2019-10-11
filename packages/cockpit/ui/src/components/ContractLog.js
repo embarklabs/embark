@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React from 'react';
-import {Row, Col, Table, FormGroup, Label, Input, Form} from 'reactstrap';
+import {Row, Col, Table, FormGroup, Label, Input, Form, UncontrolledTooltip} from 'reactstrap';
 import DebugButton from './DebugButton';
 
 import "./ContractLog.scss";
@@ -149,7 +149,13 @@ class ContractLog extends React.Component {
                         <td>{log.events.join(', ')}</td>
                         <td>{log.gasUsed}</td>
                         <td>{log.blockNumber}</td>
-                        <td>{log.status}</td>
+                        <td id={'tx-status-' + index}>
+                          {log.status}
+                          {log.reason && <sup>?</sup>}
+                          {log.reason && <UncontrolledTooltip placement="bottom" target={'tx-status-' + index}>
+                            Reason of the failure: {log.reason}
+                          </UncontrolledTooltip>}
+                        </td>
                         <td>{log.transactionHash}</td>
                       </tr>
                     );

@@ -173,8 +173,11 @@ class TransactionLogger {
 
     let {transactionHash, blockNumber, gasUsed, status} = args.respData.result;
     let reason;
+    if (status !== '0x0' && status !== '0x1') {
+      status = !status ? '0x0' : '0x1';
+    }
 
-    if (!status || status === '0x0') {
+    if (status === '0x0') {
       const web3 = await this.web3;
       const tx = await web3.eth.getTransaction(transactionHash);
       if (tx) {
@@ -186,18 +189,19 @@ class TransactionLogger {
 
     gasUsed = hexToNumber(gasUsed);
     blockNumber = hexToNumber(blockNumber);
-    const log = Object.assign({}, args, {name, functionName, paramString, gasUsed, blockNumber});
+    const log = Object.assign({}, args, {name, functionName, paramString, gasUsed, blockNumber, reason, status, transactionHash});
 
     this.events.emit('contracts:log', log);
     this.logger.info(`Blockchain>`.underline + ` ${name}.${functionName}(${paramString})`.bold + ` | ${transactionHash} | gas:${gasUsed} | blk:${blockNumber} | status:${status}${reason ? ` | reason: "${reason}"` : ''}`);
     this.events.emit('blockchain:tx', {
-      name: name,
-      functionName: functionName,
-      paramString: paramString,
-      transactionHash: transactionHash,
-      gasUsed: gasUsed,
-      blockNumber: blockNumber,
-      status: status
+      name,
+      functionName,
+      paramString,
+      transactionHash,
+      gasUsed,
+      blockNumber,
+      status,
+      reason
     });
   }
 
@@ -207,8 +211,7 @@ class TransactionLogger {
       'ws',
       apiRoute,
       (ws, _req) => {
-        // FIXME this will be broken probably in the cokcpit because we don't send the same data as before
-        this.events.on('contracts:log', function(log) {
+        this.events.on('contracts:log', (log) => {
           ws.send(JSON.stringify(log), () => {
           });
         });
