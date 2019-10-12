@@ -192,7 +192,10 @@ class Watcher {
     this.logger.trace(files);
 
     let configWatcher = chokidar.watch(files, {
-      ignored: /[\/\\]\.|tmp_/, persistent: true, ignoreInitial: true, followSymlinks: true
+      // FIXME this should be handled by the nim-compiler plugin somehow
+      //  panicoverride.nim is a file added by nimplay when compiling but then removed
+      //  If we don't ignore that file, we start an inifite loop of compilation
+      ignored: /[\/\\]\.|tmp_|panicoverride\.nim/, persistent: true, ignoreInitial: true, followSymlinks: true
     });
     this.fileWatchers.push(configWatcher);
 
