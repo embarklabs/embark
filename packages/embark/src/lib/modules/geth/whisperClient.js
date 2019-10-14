@@ -50,7 +50,7 @@ class WhisperGethClient {
   }
 
   commonOptions() {
-    return [];
+    return ['--ipcdisable'];
   }
 
   getMiner() {
