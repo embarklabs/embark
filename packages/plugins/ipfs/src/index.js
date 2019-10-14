@@ -67,6 +67,19 @@ class IPFS {
 
       upload_ipfs.deploy(readyCb);
     });
+
+    this.embark.registerConsoleCommand({
+      matches: ['log ipfs on'],
+      process: (cmd, callback) => {
+        this.events.request('logs:ipfs:enable', callback);
+      }
+    });
+    this.embark.registerConsoleCommand({
+      matches: ['log ipfs off'],
+      process: (cmd, callback) => {
+        this.events.request('logs:ipfs:disable', callback);
+      }
+    });
   }
 
   async setupIpfsApi() {

@@ -159,12 +159,12 @@ class StorageProcessesLauncher {
       callback(error);
     });
 
-    self.events.on('logs:swarm:enable', () => {
-      self.processes[storageName].silent = false;
+    self.events.setCommandHandler('logs:swarm:enable', () => {
+      self.processes[storageName].setSilent(false);
     });
 
-    self.events.on('logs:swarm:disable', () => {
-      self.processes[storageName].silent = true;
+    self.events.setCommandHandler('logs:swarm:disable', () => {
+      self.processes[storageName].setSilent(true);
     });
   }
 

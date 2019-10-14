@@ -58,12 +58,13 @@ export class BlockchainProcessLauncher {
       this.blockchainProcess.kill();
     });
 
-    this.events.on('logs:ethereum:enable', () => {
-      this.blockchainProcess.silent = false;
+
+    this.events.setCommandHandler('logs:ethereum:enable', () => {
+      this.blockchainProcess.setSilent(false);
     });
 
-    this.events.on('logs:ethereum:disable', () => {
-      this.blockchainProcess.silent = true;
+    this.events.setCommandHandler('logs:ethereum:disable', () => {
+      this.blockchainProcess.setSilent(true);
     });
 
     this.events.on('exit', () => {

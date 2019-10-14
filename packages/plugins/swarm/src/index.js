@@ -91,6 +91,19 @@ class Swarm {
 
       upload_swarm.deploy(readyCb);
     });
+
+    this.embark.registerConsoleCommand({
+      matches: ['log swarm on'],
+      process: (cmd, callback) => {
+        this.events.request('logs:swarm:enable', callback);
+      }
+    });
+    this.embark.registerConsoleCommand({
+      matches: ['log swarm off'],
+      process: (cmd, callback) => {
+        this.events.request('logs:swarm:disable', callback);
+      }
+    });
   }
 
   setupSwarmAPI() {

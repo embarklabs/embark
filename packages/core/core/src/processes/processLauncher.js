@@ -35,6 +35,14 @@ export class ProcessLauncher {
     this._subscribeToMessages();
   }
 
+  setSilent(value) {
+    if (this.silent === value) {
+      return;
+    }
+    this.silent = value;
+    this.events.request('process:logs:register', {processName: this.name, eventName: `process:${this.name}:log`, silent: this.silent});
+  }
+
   _isDebug() {
     const argvString= process.execArgv.join();
     return argvString.includes('--debug') || argvString.includes('--inspect');

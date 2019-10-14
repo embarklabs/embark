@@ -139,7 +139,7 @@ class Console {
         helpText.push(`${chalk.cyan(helpDescription.usage || matches.join("/"))} - ${helpDescription.description}`);
       });
       // Add end commands
-      helpText.push(chalk.cyan("quit") + " - " + __("to immediatly exit (alias: exit)"),
+      helpText.push(chalk.cyan("quit") + " - " + __("to immediately exit (alias: exit)"),
         "",
         __("The web3 object and the interfaces for the deployed contracts and their methods are also available"));
       return helpText.join("\n");
