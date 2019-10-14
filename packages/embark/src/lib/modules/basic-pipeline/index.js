@@ -143,7 +143,7 @@ class BasicPipeline {
             const isDir = targetFile.slice(-1) === '/' || targetFile.slice(-1) === '\\' || targetFile.indexOf('.') === -1;
             // if it's not a directory
             if (!isDir) {
-              self.logger.info('Pipeline: '.cyan + __("_1_ writing file") + " " + (joinPath(self.buildDir, targetFile)).bold.dim);
+              self.logger.info('Pipeline: '.cyan + __("-- writing file") + " " + (joinPath(self.buildDir, targetFile)).bold.dim);
             }
             // async.map(
             async.mapLimit(
@@ -174,7 +174,7 @@ class BasicPipeline {
 
                   async.each(contentFiles, function (file, eachCb) {
                     let filename = file.path.replace(file.basedir + '/', '');
-                    self.logger.info(`${'Pipeline:'.cyan} __ writing file ` + (joinPath(self.buildDir, targetDir, filename)).bold.dim);
+                    self.logger.info(`${'Pipeline:'.cyan} -- writing file ` + (joinPath(self.buildDir, targetDir, filename)).bold.dim);
 
                     self.fs.copy(file.path, joinPath(self.buildDir, targetDir, filename), {overwrite: true}, eachCb);
                   }, cb);
