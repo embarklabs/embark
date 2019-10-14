@@ -22,7 +22,7 @@
     "hexo-renderer-stylus": "^1.1.0",
     "hexo-server": "^1.0.0",
     "lodash": "^4.17.13",
-    "lunr": "^2.3.6",
+    "lunr": "^2.3.7",
     "uuid": "^3.3.3"
   },
   "devDependencies": {
