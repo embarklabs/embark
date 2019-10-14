@@ -184,7 +184,7 @@ class Engine {
 
   blockchainComponents() {
     // plugins
-    this.registerModule('geth', {
+    this.registerModulePackage('embark-geth', {
       client: this.client,
       locale: this.locale,
       isDev: this.isDev,

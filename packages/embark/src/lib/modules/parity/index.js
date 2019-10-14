@@ -1,5 +1,5 @@
 import { __ } from 'embark-i18n';
-import {BlockchainClient} from "../geth/blockchain";
+import {BlockchainClient} from "./blockchain";
 const {normalizeInput} = require('embark-utils');
 import {BlockchainProcessLauncher} from './blockchainProcessLauncher';
 import {ws, rpc} from './check.js';
