@@ -26,12 +26,12 @@ class EmbarkWeb3 {
   }
 
   async setupEmbarkJS() {
-    this.events.request("embarkjs:plugin:register", 'blockchain', 'web3', 'embarkjs-web3');
-    await this.events.request2("embarkjs:console:register", 'blockchain', 'web3', 'embarkjs-web3');
     this.events.on("blockchain:started", async () => {
       await this.registerWeb3Object();
       this.events.request("embarkjs:console:setProvider", 'blockchain', 'web3', '{web3}');
     });
+    this.events.request("embarkjs:plugin:register", 'blockchain', 'web3', 'embarkjs-web3');
+    await this.events.request2("embarkjs:console:register", 'blockchain', 'web3', 'embarkjs-web3');
   }
 
   async setupWeb3Api() {
