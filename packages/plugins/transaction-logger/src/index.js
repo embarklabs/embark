@@ -1,5 +1,6 @@
 const async = require('async');
 import {__} from 'embark-i18n';
+const Web3 = require('Web3');
 
 const {blockchain: blockchainConstants} = require('embark-core/constants');
 import {dappPath, getAddressToContract, getTransactionParams, hexToNumber} from 'embark-utils';
@@ -59,6 +60,16 @@ class TransactionLogger {
     });
   }
 
+  get web3() {
+    return (async () => {
+      if (!this._web3) {
+        const provider = await this.events.request2("blockchain:client:provider", "ethereum");
+        this._web3 = new Web3(provider);
+      }
+      return this._web3;
+    })();
+  }
+
   _getContractsList(callback) {
     this.events.request("contracts:list", (err, contractsList) => {
       if (err) {
@@ -86,7 +97,7 @@ class TransactionLogger {
     this.events.on('blockchain:proxy:response', this._onLogRequest.bind(this));
   }
 
-  _onLogRequest(args) {
+  async _onLogRequest(args) {
     const method = args.reqData.method;
     if (!this.contractsDeployed || !LISTENED_METHODS.includes(method)) {
       return;
@@ -161,20 +172,36 @@ class TransactionLogger {
     }
 
     let {transactionHash, blockNumber, gasUsed, status} = args.respData.result;
+    let reason;
+    if (status !== '0x0' && status !== '0x1') {
+      status = !status ? '0x0' : '0x1';
+    }
+
+    if (status === '0x0') {
+      const web3 = await this.web3;
+      const tx = await web3.eth.getTransaction(transactionHash);
+      if (tx) {
+        const code = await web3.eth.call(tx, tx.blockNumber);
+        // Convert to Ascii and remove the useless bytes around the revert message
+        reason = web3.utils.hexToAscii('0x' + code.substring(138)).toString().replace(/[^\x20-\x7E]/g, '');
+      }
+    }
+
     gasUsed = hexToNumber(gasUsed);
     blockNumber = hexToNumber(blockNumber);
-    const log = Object.assign({}, args, {name, functionName, paramString, gasUsed, blockNumber});
+    const log = Object.assign({}, args, {name, functionName, paramString, gasUsed, blockNumber, reason, status, transactionHash});
 
     this.events.emit('contracts:log', log);
-    this.logger.info(`Blockchain>`.underline + ` ${name}.${functionName}(${paramString})`.bold + ` | ${transactionHash} | gas:${gasUsed} | blk:${blockNumber} | status:${status}`);
+    this.logger.info(`Blockchain>`.underline + ` ${name}.${functionName}(${paramString})`.bold + ` | ${transactionHash} | gas:${gasUsed} | blk:${blockNumber} | status:${status}${reason ? ` | reason: "${reason}"` : ''}`);
     this.events.emit('blockchain:tx', {
-      name: name,
-      functionName: functionName,
-      paramString: paramString,
-      transactionHash: transactionHash,
-      gasUsed: gasUsed,
-      blockNumber: blockNumber,
-      status: status
+      name,
+      functionName,
+      paramString,
+      transactionHash,
+      gasUsed,
+      blockNumber,
+      status,
+      reason
     });
   }
 
@@ -184,8 +211,7 @@ class TransactionLogger {
       'ws',
       apiRoute,
       (ws, _req) => {
-        // FIXME this will be broken probably in the cokcpit because we don't send the same data as before
-        this.events.on('contracts:log', function(log) {
+        this.events.on('contracts:log', (log) => {
           ws.send(JSON.stringify(log), () => {
           });
         });
