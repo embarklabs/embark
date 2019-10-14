@@ -45,6 +45,7 @@ class LogHandler {
    */
   handleLog(msg, alreadyLogged = false) {
     if (!msg) return;
+    msg.logLevel = msg.logLevel || msg.type;
 
     // Sometimes messages come in with line breaks, so we need to break them up accordingly.
     let processedMessages = [];
@@ -86,11 +87,11 @@ class LogHandler {
       }
       this.logs.push(log);
       this.events.emit(`process-log-${this.processName}`, log);
-      if ((this.silent && msg.type !== 'error') || alreadyLogged) {
+      if ((this.silent && msg.logLevel !== 'error') || alreadyLogged) {
         return;
       }
-      if (this.logger[msg.type]) {
-        return this.logger[msg.type](normalizeInput(message));
+      if (this.logger[msg.logLevel]) {
+        return this.logger[msg.logLevel](normalizeInput(message));
       }
       this.logger.debug(normalizeInput(message));
     });

@@ -61,10 +61,15 @@ class EmbarkController {
       engine.registerModuleGroup("blockchain");
 
       engine.startEngine(async () => {
-        const alreadyStarted = await engine.events.request2("blockchain:node:start", Object.assign(engine.config.blockchainConfig, {isStandalone: true}));
-        if (alreadyStarted) {
-          engine.logger.warn(__('Blockchain process already started. No need to run `embark blockchain`'));
-          process.exit(0);
+        try {
+          const alreadyStarted = await engine.events.request2("blockchain:node:start", Object.assign(engine.config.blockchainConfig, {isStandalone: true}));
+          if (alreadyStarted) {
+            engine.logger.warn(__('Blockchain process already started. No need to run `embark blockchain`'));
+            process.exit(0);
+          }
+        } catch (e) {
+          engine.logger.error(e);
+          process.exit(1);
         }
       });
     });
