@@ -29,7 +29,7 @@ function copyFiles (ignored) {
 
   ignored = ignored.concat(others);
   ignored
-    .map(path => path.replace('src/', 'dist/'))
+    .map(path => path.replace('src', 'dist'))
     .forEach((dest, index) => {
       ensureDirSync(dirname(join(__dirname, dest)));
       const source = ignored[index];
