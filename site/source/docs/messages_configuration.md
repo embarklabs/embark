@@ -26,6 +26,6 @@ Available options:
 Option | Type: `default` | Value         
 --- | --- | --- 
 `enabled` | boolean: `true/false` | To enable or completely disable communication support
-`provider` |  string: `wisper`  | Desired provider to automatically connect to in the dapp.
+`provider` |  string: `whisper`  | Desired provider to automatically connect to in the dapp.
 `available_providers`  | array: `["whisper"]` |  List of communication platforms to be supported in the dapp. This will affect what's available with the EmbarkJS library in the dapp so if you don't need Whisper for example, removing it from this will considerably reduce the file size of the generated JS code.
 
