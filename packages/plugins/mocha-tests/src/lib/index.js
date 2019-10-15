@@ -1,6 +1,5 @@
 import {__} from 'embark-i18n';
 
-const assert = require('assert').strict;
 const async = require('async');
 const EmbarkJS = require('embarkjs');
 const Mocha = require('mocha');
@@ -181,10 +180,8 @@ class MochaTestRunner {
               mocha.suite.on('pre-require', () => {
                 global.describe = describeWithAccounts;
                 global.contract = describeWithAccounts;
-                global.assert = assert;
                 global.config = config;
               });
-
 
               mocha.suite.timeout(TEST_TIMEOUT);
               mocha.addFile(file);

@@ -1,5 +1,6 @@
 import { __ } from 'embark-i18n';
 import {buildUrl, deconstructUrl, recursiveMerge} from "embark-utils";
+const assert = require('assert').strict;
 const async = require('async');
 const chalk = require('chalk');
 const path = require('path');
@@ -47,6 +48,8 @@ class TestRunner {
   run(options, cb) {
     const reporter = new Reporter(this.embark);
     const testPath = options.file || "test";
+
+    this.setupGlobalVariables();
 
     async.waterfall([
       (next) => {
@@ -100,6 +103,28 @@ class TestRunner {
         cb(e, reporter.passes, reporter.fails);
       }
     });
+  }
+
+  setupGlobalVariables() {
+    assert.reverts = async function(method, params = {}, message) {
+      if (typeof params === 'string') {
+        message = params;
+        params = {};
+      }
+      try {
+        await method.send(params);
+      } catch (error) {
+        if (message) {
+          assert.strictEqual(error.message, message);
+        } else {
+          assert.ok(error);
+        }
+        return;
+      }
+      assert.fail('Method did not revert');
+    };
+
+    global.assert = assert;
   }
 
   generateCoverageReport() {
