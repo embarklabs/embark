@@ -106,6 +106,9 @@ class MochaTestRunner {
               // due to that constraint, the only sane way to modify the object the test
               // file is hanging on to is to replace the prototype instead of switching
               // it around and having the test losing the reference.
+              if (!compiledContracts[contract.className]) {
+                compiledContracts[contract.className] = {};
+              }
               Object.setPrototypeOf(compiledContracts[contract.className], instance);
             }
 
@@ -172,10 +175,15 @@ class MochaTestRunner {
 
                   if (!instance) {
                     compiledContracts[contractClass] = {};
-                    return compiledContracts[contractClass];
-                    // throw new Error(`Cannot find module '${req}'`);
                   }
-                  return instance;
+                  if (!compiledContracts[contractClass].abiDefinition) {
+                    return compiledContracts[contractClass];
+                  }
+                  try {
+                    return Object.setPrototypeOf(instance, EmbarkJS.Blockchain.Contract(instance));
+                  } catch (e) {
+                    return instance;
+                  }
                 }
                 if (req === "Embark/EmbarkJS") {
                   return EmbarkJS;

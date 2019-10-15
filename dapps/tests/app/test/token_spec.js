@@ -68,24 +68,24 @@ describe("Token", function() {
     });
 
     it("set MyToken Balance correctly", async function() {
-      let result = await MyToken.methods._supply().call();
+      const result = await MyToken.methods._supply().call();
       assert.strictEqual(parseInt(result, 10), 1000);
     });
 
     it("set MyToken2 Balance correctly", async function() {
-      let result = await MyToken2.methods._supply().call();
+      const result = await MyToken2.methods._supply().call();
       assert.strictEqual(parseInt(result, 10), 2000);
     });
   });
 
-  describe('Other Contarcts', function() {
+  describe('Other Contracts', function() {
     it("get right address", function() {
       assert.strictEqual(AlreadyDeployedToken.options.address.toLowerCase(),
         "0xCAFECAFECAFECAFECAFECAFECAFECAFECAFECAFE".toLowerCase());
     });
 
     it("should use onDeploy", async function() {
-      let result = await Test.methods.addr().call();
+      const result = await Test.methods.addr().call();
       assert.strictEqual(result, MyToken.options.address);
     });
 
@@ -93,8 +93,9 @@ describe("Token", function() {
       assert.ok(!SomeContract.options.address);
     });
 
-    it("should set the ens attr to the address of embark.eth", async function() {
-      let result = await Test.methods.ens().call();
+    // FIXME when ENS is activated in tests again
+    xit("should set the ens attr to the address of embark.eth", async function() {
+      const result = await Test.methods.ens().call();
       // Testing that it is an address as we don't really know the address
       assert.strictEqual(web3.utils.isAddress(result), true);
       assert.notStrictEqual(result, '0x0000000000000000000000000000000000000000');

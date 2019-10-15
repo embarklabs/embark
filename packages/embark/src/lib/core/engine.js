@@ -201,7 +201,7 @@ class Engine {
   }
 
   testComponents(options) {
-    this.registerModulePackage('embark-test-runner');
+    this.registerModulePackage('embark-test-runner', {plugins: this.plugins});
     this.registerModulePackage('embark-coverage', {plugins: this.plugins, coverage: options.coverage});
     this.registerModulePackage('embark-solidity-tests', {plugins: this.plugins, coverage: options.coverage});
     this.registerModulePackage('embark-mocha-tests', {plugins: this.plugins, coverage: options.coverage});

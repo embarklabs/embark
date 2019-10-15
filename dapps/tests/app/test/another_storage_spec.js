@@ -29,19 +29,15 @@ config({
   defaultAccount = accounts[0];
 });
 
-contract("AnotherStorage", function(accountsAgain) {
+contract("AnotherStorage", function() {
   this.timeout(0);
 
   it("should have got the default account in the describe", function () {
     assert.strictEqual(defaultAccount, accounts[0]);
   });
 
-  it("should have the accounts in the describe callback too", function () {
-    assert.deepStrictEqual(accountsAgain, accounts);
-  });
-
   it("should have account with balance", async function() {
-    let balance = await web3.eth.getBalance(accounts[0]);
+    const balance = await web3.eth.getBalance(accounts[0]);
     assert.ok(parseInt(balance, 10) > 4900000000000000000);
     assert.ok(parseInt(balance, 10) <= 5000000000000000000);
   });

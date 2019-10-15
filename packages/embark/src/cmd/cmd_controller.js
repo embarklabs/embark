@@ -749,6 +749,7 @@ class EmbarkController {
         engine.registerModuleGroup("contracts");
         engine.registerModuleGroup("pipeline");
         engine.registerModuleGroup("tests", options);
+        engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
 
         engine.startEngine(next);
       },

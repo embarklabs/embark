@@ -19,7 +19,9 @@
     "web3": "1.2.1",
     "ipfs-api": "17.2.7"
   },
-  "plugins": {},
+  "plugins": {
+    "embark-dapp-test-service": {}
+  },
   "options": {
     "solc": {
       "optimize": true,

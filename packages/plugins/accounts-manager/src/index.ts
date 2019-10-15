@@ -29,13 +29,17 @@ export default class AccountsManager {
     this.logger = embark.logger;
     this.events = embark.events;
 
-    this.parseAndFundAccounts();
-
     this.embark.registerActionForEvent("blockchain:proxy:request", this.checkBlockchainRequest.bind(this));
     this.embark.registerActionForEvent("blockchain:proxy:response", this.checkBlockchainResponse.bind(this));
 
     this.events.on("blockchain:started", () => {
       this._web3 = null;
+      this.parseAndFundAccounts(null);
+    });
+    this.embark.registerActionForEvent("accounts:reseted", async (params, cb) => {
+      this.ready = false;
+      await this.parseAndFundAccounts(params.accounts);
+      cb(null, null);
     });
 
     // Allow to run transaction in parallel by resolving the nonce manually.
@@ -131,12 +135,12 @@ export default class AccountsManager {
     callback(null, params);
   }
 
-  private async parseAndFundAccounts() {
+  private async parseAndFundAccounts(accounts: any[] | null) {
     const web3 = await this.web3;
 
     const nodeAccounts = await web3.eth.getAccounts();
     this.nodeAccounts = nodeAccounts;
-    this.accounts = AccountParser.parseAccountsConfig(this.embark.config.blockchainConfig.accounts, web3, dappPath(), this.logger, nodeAccounts);
+    this.accounts = AccountParser.parseAccountsConfig(accounts || this.embark.config.blockchainConfig.accounts, web3, dappPath(), this.logger, nodeAccounts);
 
     if (!this.accounts.length || !this.embark.config.blockchainConfig.isDev) {
       this.ready = true;
