@@ -41,7 +41,7 @@
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
     "lint:js": "eslint bin/embark src/bin/ src/lib/",
-    "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
+    "// lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
     "qa": "npm-run-all lint typecheck _build test",
     "reset": "npx rimraf .nyc_output coverage dist embark-*.tgz package",
     "solo": "embark-solo",

@@ -42,6 +42,7 @@ describe('stack/communication', () => {
 
   test('it should register and start communication node', () => {
     const communicationConfig = {
+      enabled: true,
       provider: 'whisper'
     };
 

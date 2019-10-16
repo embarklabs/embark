@@ -32,7 +32,7 @@
     "_build": "npm run solo -- build",
     "ci": "npm run qa",
     "clean": "npm run reset",
-    "lint": "npm-run-all lint:*",
+    "// lint": "npm-run-all lint:*",
     "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
     "qa": "npm-run-all lint typecheck _build",
     "reset": "npx rimraf dist embark-*.tgz package",

@@ -36,7 +36,7 @@
     "qa": "npm-run-all lint _build",
     "reset": "npx rimraf dist embark-*.tgz package",
     "solo": "embark-solo",
-    "test": "jest"
+    "// test": "jest"
   },
   "eslintConfig": {
     "extends": "../../../.eslintrc.json"
