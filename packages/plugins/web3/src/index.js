@@ -43,10 +43,10 @@ class EmbarkWeb3 {
       await this.events.request2('runcode:eval', `web3.eth.defaultAccount = '${accounts[0]}'`);
     }
 
-    this.events.request2('console:register:helpCmd', {
+    this.events.request('console:register:helpCmd', {
       cmdName: "web3",
       cmdHelp: __("instantiated web3.js object configured to the current environment")
-    });
+    }, () => {});
   }
 
   async registerInVm(params, cb) {

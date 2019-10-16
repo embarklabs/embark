@@ -23,6 +23,11 @@ contract SimpleStorage {
     emit EventOnSet2(true, "hi");
   }
 
+  function set3(uint x) public {
+    require(x > 5, "Value needs to be higher than 5");
+    storedData = x;
+  }
+
   function get() public view returns (uint retVal) {
     return storedData;
   }

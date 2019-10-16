@@ -53,6 +53,9 @@ class TestRunner {
 
     async.waterfall([
       (next) => {
+        this.events.request("config:contractsConfig:set", Object.assign(this.configObj.contractsConfig, {explicit: true}), next);
+      },
+      (next) => {
         this.getFilesFromDir(testPath, next);
       },
       (files, next) => {
@@ -125,6 +128,8 @@ class TestRunner {
     };
 
     global.assert = assert;
+
+    global.embark = this.embark;
   }
 
   generateCoverageReport() {

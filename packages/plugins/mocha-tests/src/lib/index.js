@@ -71,7 +71,15 @@ class MochaTestRunner {
             events.request("contracts:build", cfg, compiledContracts, next);
           },
           (contractsList, contractDeps, next) => {
-            events.request("deployment:contracts:deploy", contractsList, contractDeps, next);
+            // Remove contracts that are not in the configs
+            const realContracts = {};
+            const deployKeys = Object.keys(cfg.contracts);
+            Object.keys(contractsList).forEach((className) => {
+              if (deployKeys.includes(className)) {
+                realContracts[className] = contractsList[className];
+              }
+            });
+            events.request("deployment:contracts:deploy", realContracts, contractDeps, next);
           },
           (_result, next) => {
             events.request("contracts:list", next);
@@ -158,17 +166,22 @@ class MochaTestRunner {
 
               Module.prototype.require = function(req) {
                 const prefix = "Embark/contracts/";
-                if (!req.startsWith(prefix)) {
-                  return originalRequire.apply(this, arguments);
+                if (req.startsWith(prefix)) {
+                  const contractClass = req.replace(prefix, "");
+                  const instance = compiledContracts[contractClass];
+
+                  if (!instance) {
+                    compiledContracts[contractClass] = {};
+                    return compiledContracts[contractClass];
+                    // throw new Error(`Cannot find module '${req}'`);
+                  }
+                  return instance;
+                }
+                if (req === "Embark/EmbarkJS") {
+                  return EmbarkJS;
                 }
 
-                const contractClass = req.replace(prefix, "");
-                const instance = compiledContracts[contractClass];
-
-                if (!instance) {
-                  throw new Error(`Cannot find module '${req}'`);
-                }
-                return instance;
+                return originalRequire.apply(this, arguments);
               };
 
               const mocha = new Mocha();

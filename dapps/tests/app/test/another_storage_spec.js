@@ -3,7 +3,7 @@ const assert = require('assert');
 const AnotherStorage = require('Embark/contracts/AnotherStorage');
 const SimpleStorage = require('Embark/contracts/SimpleStorage');
 
-let accounts;
+let accounts, defaultAccount;
 
 config({
   blockchain: {
@@ -26,10 +26,10 @@ config({
   }
 }, (err, theAccounts) => {
   accounts = theAccounts;
+  defaultAccount = accounts[0];
 });
 
 contract("AnotherStorage", function(accountsAgain) {
-  const defaultAccount = accounts[0];
   this.timeout(0);
 
   it("should have got the default account in the describe", function () {
