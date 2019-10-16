@@ -104,7 +104,6 @@ var Blockchain = function (userConfig, clientClass) {
     this.logger.error(__(spaceMessage, 'genesisBlock'));
     process.exit(1);
   }
-  this.initProxy();
   this.client = new clientClass({config: this.config, env: this.env, isDev: this.isDev});
 
   this.initStandaloneProcess();
@@ -151,13 +150,6 @@ Blockchain.prototype.initStandaloneProcess = function () {
         });
       }
     }, IPC_CONNECT_INTERVAL);
-  }
-};
-
-Blockchain.prototype.initProxy = function () {
-  if (this.config.proxy) {
-    this.config.rpcPort += constants.blockchain.servicePortOnProxy;
-    this.config.wsPort += constants.blockchain.servicePortOnProxy;
   }
 };
 
