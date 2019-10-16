@@ -174,7 +174,7 @@ class Engine {
     this.registerModulePackage('embark-compiler', {plugins: this.plugins, isCoverage: options.isCoverage});
     this.registerModulePackage('embark-contracts-manager', {plugins: this.plugins, compileOnceOnly: options.compileOnceOnly});
     this.registerModulePackage('embark-deployment', {plugins: this.plugins, onlyCompile: options.onlyCompile});
-    this.registerModule('blockchain-client');
+    this.registerModulePackage('embark-blockchain-client');
     this.registerModulePackage('embark-storage');
     this.registerModulePackage('embark-communication');
     this.registerModulePackage('embark-namesystem');
