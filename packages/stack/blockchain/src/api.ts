@@ -1,6 +1,4 @@
 import { Embark, Events, Logger } from "embark";
-import { Request, Response } from "express";
-import Websocket from "ws";
 export default class BlockchainAPI {
   private embark: Embark;
   private logger: Logger;
