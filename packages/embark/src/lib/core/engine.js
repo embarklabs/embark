@@ -214,8 +214,8 @@ class Engine {
   }
 
   contractsComponents(_options) {
-    this.registerModule('ethereum-blockchain-client');
     this.registerModulePackage('embark-ganache');
+    this.registerModulePackage('embark-ethereum-blockchain-client');
     this.registerModulePackage('embark-web3');
     this.registerModulePackage('embark-accounts-manager');
     this.registerModulePackage('embark-specialconfigs', {plugins: this.plugins});
