@@ -1,5 +1,6 @@
 import { __ } from 'embark-i18n';
 import {buildUrl, deconstructUrl, recursiveMerge} from "embark-utils";
+const assert = require('assert').strict;
 const async = require('async');
 const chalk = require('chalk');
 const path = require('path');
@@ -7,6 +8,7 @@ const { dappPath } = require('embark-utils');
 import cloneDeep from "lodash.clonedeep";
 import { COVERAGE_GAS_LIMIT, GAS_LIMIT } from './constants';
 const constants = require('embark-core/constants');
+const Web3 = require('web3');
 
 const coverage = require('istanbul-lib-coverage');
 const reporter = require('istanbul-lib-report');
@@ -48,7 +50,12 @@ class TestRunner {
     const reporter = new Reporter(this.embark);
     const testPath = options.file || "test";
 
+    this.setupGlobalVariables();
+
     async.waterfall([
+      (next) => {
+        this.events.request("config:contractsConfig:set", Object.assign(this.configObj.contractsConfig, {explicit: true}), next);
+      },
       (next) => {
         this.getFilesFromDir(testPath, next);
       },
@@ -100,6 +107,55 @@ class TestRunner {
         cb(e, reporter.passes, reporter.fails);
       }
     });
+  }
+
+  setupGlobalVariables() {
+    assert.reverts = async function(method, params = {}, message) {
+      if (typeof params === 'string') {
+        message = params;
+        params = {};
+      }
+      try {
+        await method.send(params);
+      } catch (error) {
+        if (message) {
+          assert.strictEqual(error.message, message);
+        } else {
+          assert.ok(error);
+        }
+        return;
+      }
+      assert.fail('Method did not revert');
+    };
+
+    assert.eventEmitted = function(transaction, event, values) {
+      if (!transaction.events) {
+        return assert.fail('No events triggered for the transaction');
+      }
+      if (values === undefined || values === null || !transaction.events[event]) {
+        return assert.ok(transaction.events[event], `Event ${event} was not triggered`);
+      }
+      if (Array.isArray(values)) {
+        values.forEach((value, index) => {
+          assert.strictEqual(transaction.events[event].returnValues[index], value, `Value at index ${index} incorrect.\n\tExpected: ${value}\n\tActual: ${transaction.events[event].returnValues[index]}`);
+        });
+        return;
+      }
+      if (typeof values === 'object') {
+        Object.keys(values).forEach(key => {
+          assert.strictEqual(transaction.events[event].returnValues[key], values[key], `Value at key "${key}" incorrect.\n\tExpected: ${values[key]}\n\tActual: ${transaction.events[event].returnValues[key]}`);
+        });
+      }
+    };
+
+    global.assert = assert;
+
+    global.embark = this.embark;
+
+    global.increaseTime = async (amount) => {
+      await this.evmMethod("evm_increaseTime", [Number(amount)]);
+      await this.evmMethod("evm_mine");
+    };
   }
 
   generateCoverageReport() {
@@ -211,6 +267,37 @@ class TestRunner {
     const provider = await this.events.request2("blockchain:client:provider", "ethereum");
     cb(null, provider);
     return provider;
+  }
+
+  get web3() {
+    return (async () => {
+      if (!this._web3) {
+        const provider = await this.events.request2("blockchain:client:provider", "ethereum");
+        this._web3 = new Web3(provider);
+      }
+      return this._web3;
+    })();
+  }
+
+  evmMethod(method, params = []) {
+    return new Promise(async (resolve, reject) => {
+      const web3 = await this.web3;
+      const sendMethod = (web3.currentProvider.sendAsync) ? web3.currentProvider.sendAsync.bind(web3.currentProvider) : web3.currentProvider.send.bind(web3.currentProvider);
+      sendMethod(
+        {
+          jsonrpc: '2.0',
+          method,
+          params,
+          id: Date.now().toString().substring(9)
+        },
+        (error, res) => {
+          if (error) {
+            return reject(error);
+          }
+          resolve(res.result);
+        }
+      );
+    });
   }
 }
 

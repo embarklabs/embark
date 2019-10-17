@@ -90,7 +90,7 @@ class FunctionConfigs {
         const contractRegisteredInVM = await this.checkContractRegisteredInVM(contract);
         if (!contractRegisteredInVM) {
           // eslint-disable-next-line no-await-in-loop
-          await this.events.request2("embarkjs:contract:runInVM", contract);
+          await this.events.request2("embarkjs:contract:runInVm", contract);
         }
         // eslint-disable-next-line no-await-in-loop
         let contractInstance = await this.events.request2("runcode:eval", contract.className);

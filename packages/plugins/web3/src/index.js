@@ -16,7 +16,6 @@ class EmbarkWeb3 {
     this.events = embark.events;
     this.config = embark.config;
 
-    this.setupWeb3Api();
     this.setupEmbarkJS();
 
     embark.registerActionForEvent("deployment:contract:deployed", this.registerInVm.bind(this));
@@ -34,24 +33,20 @@ class EmbarkWeb3 {
     await this.events.request2("embarkjs:console:register", 'blockchain', 'web3', 'embarkjs-web3');
   }
 
-  async setupWeb3Api() {
-    this.events.request("runcode:whitelist", 'web3', () => { });
-    this.events.on("blockchain:started", this.registerWeb3Object.bind(this));
-  }
-
   async registerWeb3Object() {
     const provider = await this.events.request2("blockchain:client:provider", "ethereum");
     const web3 = new Web3(provider);
+    this.events.request("runcode:whitelist", 'web3', () => {});
     await this.events.request2("runcode:register", 'web3', web3);
     const accounts = await web3.eth.getAccounts();
     if (accounts.length) {
       await this.events.request2('runcode:eval', `web3.eth.defaultAccount = '${accounts[0]}'`);
     }
 
-    await this.events.request2('console:register:helpCmd', {
+    this.events.request('console:register:helpCmd', {
       cmdName: "web3",
       cmdHelp: __("instantiated web3.js object configured to the current environment")
-    });
+    }, () => {});
   }
 
   async registerInVm(params, cb) {

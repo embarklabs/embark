@@ -59,4 +59,12 @@ contract("SimpleStorage", function() {
     SimpleStorage.methods.set2(150).send();
   });
 
+  it('asserts event triggered', async function() {
+    const tx = await SimpleStorage.methods.set2(160).send();
+    assert.eventEmitted(tx, 'EventOnSet2', {passed: true, message: "hi"});
+  });
+
+  it("should revert with a value lower than 5", async function() {
+    await assert.reverts(SimpleStorage.methods.set3(2), {from: web3.eth.defaultAccount}, 'Returned error: VM Exception while processing transaction: revert Value needs to be higher than 5');
+  });
 });

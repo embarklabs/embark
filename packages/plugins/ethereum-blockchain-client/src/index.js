@@ -57,37 +57,41 @@ class EthereumBlockchainClient {
   }
 
   async deployer(contract, done) {
-    const web3 = await this.web3;
-    const [account] = await web3.eth.getAccounts();
-    const contractObj = new web3.eth.Contract(contract.abiDefinition, contract.address);
-    const code = contract.code.substring(0, 2) === '0x' ? contract.code : "0x" + contract.code;
-    const contractObject = contractObj.deploy({arguments: (contract.args || []), data: code});
-
-    if (contract.gas === 'auto' || !contract.gas) {
-      const gasValue = await contractObject.estimateGas();
-      const increase_per = 1 + (Math.random() / 10.0);
-      contract.gas = Math.floor(gasValue * increase_per);
-    }
-
-    if (!contract.gasPrice) {
-      const gasPrice = await web3.eth.getGasPrice();
-      contract.gasPrice = contract.gasPrice || gasPrice;
-    }
-
-    embarkJsUtils.secureSend(web3, contractObject, {
-      from: account, gas: contract.gas
-    }, true, (err, receipt) => {
-      if (err) {
-        return done(err);
+    try {
+      const web3 = await this.web3;
+      const [account] = await web3.eth.getAccounts();
+      const contractObj = new web3.eth.Contract(contract.abiDefinition, contract.address);
+      const code = contract.code.substring(0, 2) === '0x' ? contract.code : "0x" + contract.code;
+      const contractObject = contractObj.deploy({arguments: (contract.args || []), data: code});
+      if (contract.gas === 'auto' || !contract.gas) {
+        const gasValue = await contractObject.estimateGas();
+        const increase_per = 1 + (Math.random() / 10.0);
+        contract.gas = Math.floor(gasValue * increase_per);
       }
-      contract.deployedAddress = receipt.contractAddress;
-      contract.transactionHash = receipt.transactionHash;
-      contract.log(`${contract.className.bold.cyan} ${__('deployed at').green} ${receipt.contractAddress.bold.cyan} ${__("using").green} ${receipt.gasUsed} ${__("gas").green} (txHash: ${receipt.transactionHash.bold.cyan})`);
-      done(err, receipt);
-    }, (hash) => {
-      const estimatedCost = contract.gas * contract.gasPrice;
-      contract.log(`${__("Deploying")} ${contract.className.bold.cyan} ${__("with").green} ${contract.gas} ${__("gas at the price of").green} ${contract.gasPrice} ${__("Wei. Estimated cost:").green} ${estimatedCost} ${"Wei".green}  (txHash: ${hash.bold.cyan})`);
-    });
+
+      if (!contract.gasPrice) {
+        const gasPrice = await web3.eth.getGasPrice();
+        contract.gasPrice = contract.gasPrice || gasPrice;
+      }
+
+      embarkJsUtils.secureSend(web3, contractObject, {
+        from: account, gas: contract.gas
+      }, true, (err, receipt) => {
+        if (err) {
+          return done(err);
+        }
+        contract.deployedAddress = receipt.contractAddress;
+        contract.transactionHash = receipt.transactionHash;
+        contract.log(`${contract.className.bold.cyan} ${__('deployed at').green} ${receipt.contractAddress.bold.cyan} ${__("using").green} ${receipt.gasUsed} ${__("gas").green} (txHash: ${receipt.transactionHash.bold.cyan})`);
+        done(err, receipt);
+      }, (hash) => {
+        const estimatedCost = contract.gas * contract.gasPrice;
+        contract.log(`${__("Deploying")} ${contract.className.bold.cyan} ${__("with").green} ${contract.gas} ${__("gas at the price of").green} ${contract.gasPrice} ${__("Wei. Estimated cost:").green} ${estimatedCost} ${"Wei".green}  (txHash: ${hash.bold.cyan})`);
+      });
+    } catch (e) {
+      this.logger.error(__('Error deploying contract %s', contract.className.underline));
+      done(e);
+    }
   }
 
   async doLinking(params, callback) {

@@ -137,7 +137,7 @@ class ListConfigs {
           }
 
           let referedContractName = match.slice(1);
-          this.events.request('contracts:contract', referedContractName, (referedContract) => {
+          this.events.request('contracts:contract', referedContractName, (_err, referedContract) => {
             if (!referedContract) {
               this.logger.error(referedContractName + ' does not exist');
               this.logger.error("error running cmd: " + cmd);
