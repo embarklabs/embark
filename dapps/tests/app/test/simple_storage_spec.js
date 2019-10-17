@@ -48,8 +48,7 @@ contract("SimpleStorage", function() {
     assert.strictEqual(SimpleStorage.options.address, SimpleStorage.address);
   });
 
-  // FIXME Events seem broken
-  xit('listens to events', function(done) {
+  it('listens to events', function(done) {
     SimpleStorage.once('EventOnSet2', async function(error, _result) {
       assert.strictEqual(error, null);
       let result = await SimpleStorage.methods.get().call();

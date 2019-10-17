@@ -44,6 +44,11 @@ export class Proxy {
 
     if (ws) {
       this.app.ws('/', async (ws, _wsReq) => {
+        // Watch from subscription data for events
+        this.requestManager.provider.on('data', function(result, deprecatedResult) {
+          ws.send(JSON.stringify(result || deprecatedResult))
+        });
+
         ws.on('message', async (msg) => {
           try {
             const jsonMsg = JSON.parse(msg);
@@ -156,7 +161,6 @@ export class Proxy {
 
   respondOK(transport, response, isWs) {
     return isWs ? this.respondWs(transport, response) : this.respondHttp(transport, 200, response)
-
   }
 
   emitActionsForRequest(body) {
