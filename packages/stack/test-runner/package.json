@@ -56,7 +56,8 @@
     "istanbul-lib-report": "2.0.8",
     "istanbul-reports": "2.2.4",
     "mocha": "6.2.0",
-    "open": "6.4.0"
+    "open": "6.4.0",
+    "web3": "1.2.1"
   },
   "devDependencies": {
     "@types/async": "2.0.50",
