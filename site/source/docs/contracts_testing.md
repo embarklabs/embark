@@ -241,14 +241,14 @@ contract('SimpleStorage Deploy', () => {
 });
 ```
 
-## Special asserts
+## Util functions
 
 ### assert.reverts
 
 Using `assert.reverts`, you can easily assert that your transaction reverts.
 
 ```javascript
-assert.reverts(contractMethodAndArguments[, options][, message])
+await assert.reverts(contractMethodAndArguments[, options][, message])
 ```
 
 - `contractMethodAndArguments`: [Function] Contract method to call `send` on, including the arguments
@@ -282,6 +282,24 @@ assert.eventEmitted(transaction, event[, values])
 it('asserts that the event was triggered', async function() {
  const transaction = await SimpleStorage.methods.set(100).send();
  assert.eventEmitted(transaction, 'EventOnSet', {value: "100", success: true});
+});
+```
+
+### increaseTime
+
+This function lets you increase the time of the EVM. It is useful in the case where you want to test expiration times for example.
+
+```javascript
+await increaseTime(amount);
+```
+
+`amount`: [Number] Number of seconds to increase
+
+```javascript
+it("should have expired after increasing time", async function () {
+    await increaseTime(5001);
+    const isExpired = await Expiration.methods.isExpired().call();
+    assert.strictEqual(isExpired, true);
 });
 ```
 
