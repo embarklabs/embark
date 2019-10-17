@@ -127,7 +127,7 @@ class TestRunner {
       assert.fail('Method did not revert');
     };
 
-    assert.eventTriggered = function(transaction, event, values) {
+    assert.eventEmitted = function(transaction, event, values) {
       if (!transaction.events) {
         return assert.fail('No events triggered for the transaction');
       }

@@ -61,7 +61,7 @@ contract("SimpleStorage", function() {
 
   it('asserts event triggered', async function() {
     const tx = await SimpleStorage.methods.set2(160).send();
-    assert.eventTriggered(tx, 'EventOnSet2', {passed: true, message: "hi"});
+    assert.eventEmitted(tx, 'EventOnSet2', {passed: true, message: "hi"});
   });
 
   it("should revert with a value lower than 5", async function() {

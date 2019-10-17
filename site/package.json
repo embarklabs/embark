@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "hexo": {
-    "version": "3.9.0"
+    "version": "3.8.0"
   },
   "dependencies": {
     "cheerio": "^0.22.0",

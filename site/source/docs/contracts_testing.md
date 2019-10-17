@@ -241,6 +241,50 @@ contract('SimpleStorage Deploy', () => {
 });
 ```
 
+## Special asserts
+
+### assert.reverts
+
+Using `assert.reverts`, you can easily assert that your transaction reverts.
+
+```javascript
+assert.reverts(contractMethodAndArguments[, options][, message])
+```
+
+- `contractMethodAndArguments`: [Function] Contract method to call `send` on, including the arguments
+- `options`: [Object] Optional options to pass to the `send` function
+- `message`: [String] Optional string to match the revert message
+
+Returns a promise that you can wait for with `await`.
+
+```javascript
+it("should revert with a value lower than 5", async function() {
+    await assert.reverts(SimpleStorage.methods.setHigher5(2), {from: web3.eth.defaultAccount},
+      'Returned error: VM Exception while processing transaction: revert Value needs to be higher than 5');
+  });
+```
+
+### assert.eventEmitted
+
+Using `eventEmitted`, you can assert that a transaction has emitted an event. You can also check for the returned values.
+
+```javascript
+assert.eventEmitted(transaction, event[, values])
+```
+
+- `transaction`: [Object] Transaction object returns by a `send` call
+- `event`: [String] Name of the event being emitted
+- `values`: [Array or Object] Optional array or object of the returned values of the event.
+    - Using array: The order of the values put in the array need to match the order in which the values are returned by the event
+    - Using object: The object needs to have the right key/value pair(s)
+    
+```javascript
+it('asserts that the event was triggered', async function() {
+ const transaction = await SimpleStorage.methods.set(100).send();
+ assert.eventEmitted(transaction, 'EventOnSet', {value: "100", success: true});
+});
+```
+
 ## Code coverage
 
 Embark allows you to generate a coverage report for your Solidity Smart Contracts by passing the `--coverage` option on the `embark test` command.
