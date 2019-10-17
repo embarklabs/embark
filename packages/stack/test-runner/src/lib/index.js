@@ -127,6 +127,26 @@ class TestRunner {
       assert.fail('Method did not revert');
     };
 
+    assert.eventTriggered = function(transaction, event, values) {
+      if (!transaction.events) {
+        return assert.fail('No events triggered for the transaction');
+      }
+      if (values === undefined || values === null || !transaction.events[event]) {
+        return assert.ok(transaction.events[event], `Event ${event} was not triggered`);
+      }
+      if (Array.isArray(values)) {
+        values.forEach((value, index) => {
+          assert.strictEqual(transaction.events[event].returnValues[index], value, `Value at index ${index} incorrect.\n\tExpected: ${value}\n\tActual: ${transaction.events[event].returnValues[index]}`);
+        });
+        return;
+      }
+      if (typeof values === 'object') {
+        Object.keys(values).forEach(key => {
+          assert.strictEqual(transaction.events[event].returnValues[key], values[key], `Value at key "${key}" incorrect.\n\tExpected: ${values[key]}\n\tActual: ${transaction.events[event].returnValues[key]}`);
+        });
+      }
+    };
+
     global.assert = assert;
 
     global.embark = this.embark;
