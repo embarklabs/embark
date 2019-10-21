@@ -45,8 +45,8 @@ export class Proxy {
     if (ws) {
       this.app.ws('/', async (ws, _wsReq) => {
         // Watch from subscription data for events
-        this.requestManager.provider.on('data', function(result, deprecatedResult) {
-          ws.send(JSON.stringify(result || deprecatedResult))
+        this.requestManager.provider.on('data', (result, deprecatedResult) => {
+          this.respondWs(ws, result || deprecatedResult);
         });
 
         ws.on('message', async (msg) => {
@@ -149,7 +149,16 @@ export class Proxy {
     if (typeof response === "object") {
       response = JSON.stringify(response);
     }
-    ws.send(response);
+    if (ws.readyState === ws.OPEN) {
+      return ws.send(response);
+    }
+    const stateMap = {
+      0: "connecting",
+      1: "open",
+      2: "closing",
+      3: "closed"
+    };
+    this.logger.warn(`[Proxy]: Failed to send WebSocket response because the socket is ${stateMap[ws.readyState]}. Response: ${response}`);
   }
   respondHttp(res, statusCode, response) {
     res.status(statusCode).send(response);
