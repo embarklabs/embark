@@ -42,7 +42,8 @@ describe('stack/communication', () => {
 
   test('it should register and start communication node', () => {
     const communicationConfig = {
-      provider: 'whisper'
+      provider: 'whisper',
+      enabled: true
     };
 
     const processRegisterHandler = sinon.spy((name, fns) => {});
