@@ -39,16 +39,11 @@
     "_build": "npm run solo -- build",
     "ci": "npm run qa",
     "clean": "npm run reset",
-    "lint": "npm-run-all lint:*",
-    "lint:js": "eslint bin/embark src/bin/ src/lib/",
-    "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
-    "qa": "npm-run-all lint typecheck _build test",
+    "lint": "eslint bin/embark src/bin/ src/lib/",
+    "qa": "npm-run-all lint _build test",
     "reset": "npx rimraf .nyc_output coverage dist embark-*.tgz package",
     "solo": "embark-solo",
-    "test": "nyc --reporter=html --reporter=json mocha \"dist/test/**/*.js\" --exit --no-timeouts --require ./scripts/test.js --require source-map-support/register",
-    "typecheck": "tsc",
-    "watch": "run-p watch:*",
-    "watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
+    "test": "nyc --reporter=html --reporter=json mocha \"dist/test/**/*.js\" --exit --no-timeouts --require ./scripts/test.js --require source-map-support/register"
   },
   "eslintConfig": {
     "extends": "../../.eslintrc.json"
@@ -235,9 +230,7 @@
     "nyc": "13.1.0",
     "rejected-or-not": "1.0.1",
     "rimraf": "3.0.0",
-    "sinon": "4.5.0",
-    "tslint": "5.16.0",
-    "typescript": "3.6.3"
+    "sinon": "4.5.0"
   },
   "engines": {
     "node": ">=8.12.0 <12.0.0",
