@@ -1,6 +1,6 @@
 const async = require('async');
 import {__} from 'embark-i18n';
-const Web3 = require('Web3');
+const Web3 = require('web3');
 
 const {blockchain: blockchainConstants} = require('embark-core/constants');
 import {dappPath, getAddressToContract, getTransactionParams, hexToNumber} from 'embark-utils';
