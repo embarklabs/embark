@@ -24,7 +24,7 @@ module.exports = function (cliArgs) {
     join(embarkCollectivePath, 'package.json')
   );
 
-  const npxCmd = process.platform === 'win32' ? 'npx.cmd': 'npx';
+  const npmCmd = process.platform === 'win32' ? 'npm.cmd': 'npm';
   process.chdir(embarkCollectivePath);
-  spawn(npxCmd, ['run', '--', ...cliArgs], {stdio: 'inherit'});
+  spawn(npmCmd, ['run', '--', ...cliArgs], {stdio: 'inherit'});
 };
