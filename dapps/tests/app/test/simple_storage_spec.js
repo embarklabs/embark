@@ -8,7 +8,9 @@ config({
     deploy: {
       "SimpleStorage": {
         args: [100],
-        onDeploy: ["SimpleStorage.methods.setRegistar('$SimpleStorage').send()"]
+        onDeploy: (dependencies) => {
+          return dependencies.contracts.SimpleStorage.methods.setRegistar(dependencies.contracts.SimpleStorage.options.address).send();
+        }
       }
     }
   }
