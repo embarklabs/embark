@@ -53,7 +53,7 @@ class TestRunner {
 
     async.waterfall([
       (next) => {
-        this.events.request("config:contractsConfig:set", Object.assign(this.configObj.contractsConfig, {explicit: true}), next);
+        this.events.request("config:contractsConfig:set", Object.assign(this.configObj.contractsConfig, {explicit: true, afterDeploy: null, beforeDeploy: null}), next);
       },
       (next) => {
         this.getFilesFromDir(testPath, next);

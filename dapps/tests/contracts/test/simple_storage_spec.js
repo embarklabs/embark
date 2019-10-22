@@ -21,7 +21,9 @@ contract("SimpleStorage", function () {
   });
 
   it("set storage value", async function () {
-    await SimpleStorage.methods.set(150).send();
+    const toSend = SimpleStorage.methods.set(150);
+    const gas = await toSend.estimateGas();
+    await toSend.send({gas});
     let result = await SimpleStorage.methods.get().call();
     assert.strictEqual(parseInt(result, 10), 499650);
   });

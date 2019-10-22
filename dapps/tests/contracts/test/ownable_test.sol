@@ -12,6 +12,6 @@ contract OwnableTests {
   }
 
   function shouldnotbezeroAddress() public {
-    Assert.equal(true, true, "owner is uninitialized");
+    require(true == true, "owner is uninitialized");
   }
 }

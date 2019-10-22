@@ -9,6 +9,6 @@ contract MyTest {
   }
 
   function valueShouldBe1() public {
-    Assert.equal(1, i, "value is not correct");
+    require(1 == i, "value is not correct");
   }
 }
