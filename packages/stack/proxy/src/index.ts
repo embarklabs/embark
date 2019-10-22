@@ -1,7 +1,7 @@
-import {Embark, Events, Logger} /* supplied by @types/embark in packages/embark-typings */ from "embark";
-import {__} from "embark-i18n";
-import {buildUrl, findNextPort} from "embark-utils";
-import {Proxy} from "./proxy";
+import { Embark, Events, Logger } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { __ } from "embark-i18n";
+import { buildUrl, findNextPort } from "embark-utils";
+import { Proxy } from "./proxy";
 
 const constants = require("embark-core/constants");
 
@@ -26,9 +26,15 @@ export default class ProxyManager {
     this.host = "localhost";
 
     this.events.on("blockchain:started", async (clientName: string) => {
-      await this.setupProxy(clientName);
-      this.ready = true;
-      this.events.emit("proxy:ready");
+      try {
+        await this.setupProxy(clientName);
+
+        this.ready = true;
+        this.events.emit("proxy:ready");
+      } catch (error) {
+        this.logger.error(`Error during proxy setup: ${error.message}. Use '--loglevel debug' for more detailed information.`);
+        this.logger.debug(`Error during proxy setup:\n${error.stack}`);
+      }
     });
     this.events.on("blockchain:stopped", async (clientName: string, node?: string) => {
       this.ready = false;
@@ -81,13 +87,18 @@ export default class ProxyManager {
     this.wsPort = port + 1;
     this.isWs = clientName === constants.blockchain.vm || (/wss?/).test(this.embark.config.blockchainConfig.endpoint);
 
-    this.proxy = await new Proxy({events: this.events, plugins: this.plugins, logger: this.logger, vms: this.vms});
+    this.proxy = await new Proxy({
+      endpoint: clientName === constants.blockchain.vm ? constants.blockchain.vm : this.embark.config.blockchainConfig.endpoint,
+      events: this.events,
+      isWs: this.isWs,
+      logger: this.logger,
+      plugins: this.plugins,
+      vms: this.vms,
+    });
 
     await this.proxy.serve(
-      clientName === constants.blockchain.vm ? constants.blockchain.vm : this.embark.config.blockchainConfig.endpoint,
       this.host,
       this.isWs ? this.wsPort : this.rpcPort,
-      this.isWs,
     );
   }
 
