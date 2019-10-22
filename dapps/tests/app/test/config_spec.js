@@ -1,4 +1,4 @@
-/*global embark, config, it, web3*/
+/*global embark, config, it, web3, before, describe*/
 const {__} = require('embark-i18n');
 const assert = require('assert');
 
@@ -13,7 +13,7 @@ config({
       // see https://embark.status.im/docs/contracts_testing.html#Configuring-accounts
       {
         privateKey: "random",
-        balance: "100000 ether"
+        balance: "10 ether"
       }
     ]
   },
@@ -48,18 +48,19 @@ embark.events.on("block:header", (blockHeader) => {
   gasUsedForDeploy += blockHeader.gasUsed;
 });
 
-describe("Account balance", function () {
-  before(function (done) {
+describe("Account balance", function() {
+  before(function(done) {
     embark.events.request("blockchain:gasPrice", (err, blkGasPrice) => {
       if (err) {
-        return next(new Error(__("could not get the gas price")));
+        return done(new Error(__("could not get the gas price")));
       }
       gasPrice = parseInt(blkGasPrice, 10);
       done();
     });
   });
-  it('should create an account balance from a large ether value in config', async function () {
-    const shouldBeWeiBN = web3.utils.toBN('100000000000000000000000');
+
+  it('should create an account balance from a large ether value in config', async function() {
+    const shouldBeWeiBN = web3.utils.toBN('1000000000000000000');
     const actualBalanceWei = await web3.eth.getBalance(accounts[0]);
     const actualBalanceWeiBN = web3.utils.toBN(actualBalanceWei);
     const gasUsedWeiBN = web3.utils.toBN((gasUsedForDeploy * gasPrice).toString());

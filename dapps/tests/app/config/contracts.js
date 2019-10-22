@@ -24,6 +24,10 @@ module.exports = {
         //file: "./some_folder/test_contract.sol",
         args: [1000, 'embark.eth']
       },
+      StandardToken: {
+        file: "https://github.com/status-im/contracts/blob/151-embark31/contracts/token/StandardToken.sol",
+        deploy: false
+      },
       AnotherStorage: {
         args: ["$SimpleStorage"]
         //args: ["0x0000000000000000000000000000000000000000"]
@@ -31,17 +35,7 @@ module.exports = {
     },
     afterDeploy: async (dependencies) => {
       console.log("==========================");
-      console.log("==========================");
-      console.log("==========================");
-      console.log("==========================");
-      console.log("==========================");
-      console.log("==========================");
       console.log("after deploying contracts");
-      console.log("==========================");
-      console.log("==========================");
-      console.log("==========================");
-      console.log("==========================");
-      console.log("==========================");
       console.log("==========================");
       // console.dir(dependencies);
       // console.dir(dependencies.contracts.SimpleStorage.methods);
@@ -51,7 +45,6 @@ module.exports = {
       // } catch(err) {
       //   console.dir(err);
       // }
-      console.log("==========================");
     }
     //afterDeploy: [
     //"Test.methods.changeAddress('$MyToken')",

@@ -6,9 +6,9 @@ const chalk = require('chalk');
 const path = require('path');
 const { dappPath } = require('embark-utils');
 import cloneDeep from "lodash.clonedeep";
-import { COVERAGE_GAS_LIMIT, GAS_LIMIT } from './constants';
 const constants = require('embark-core/constants');
 const Web3 = require('web3');
+const deepEqual = require('deep-equal');
 
 const coverage = require('istanbul-lib-coverage');
 const reporter = require('istanbul-lib-report');
@@ -21,10 +21,9 @@ class TestRunner {
     this.embark = embark;
     this.logger = embark.logger;
     this.events = embark.events;
+    this.plugins = options.plugins;
     this.fs = embark.fs;
-    this.ipc = options.ipc;
     this.runners = [];
-    this.gasLimit = options.coverage ? COVERAGE_GAS_LIMIT : GAS_LIMIT;
     this.files = [];
 
     this.configObj = embark.config;
@@ -212,11 +211,16 @@ class TestRunner {
       type = constants.blockchain.vm;
     }
 
-    if (accounts || port !== this.simOptions.port || type !== this.simOptions.type || host !== this.simOptions.host) {
+    if (port !== this.simOptions.port || type !== this.simOptions.type || host !== this.simOptions.host) {
       resetServices = true;
     }
 
+    const ogAccounts = this.simOptions.accounts;
     Object.assign(this.simOptions, {host, port, type, protocol, accounts, client: config.blockchain && config.blockchain.client});
+
+    if (!resetServices && !deepEqual(accounts, ogAccounts)) {
+      return this.plugins.emitAndRunActionsForEvent("accounts:reseted", {accounts}, cb);
+    }
 
     if (!resetServices) {
       return cb();

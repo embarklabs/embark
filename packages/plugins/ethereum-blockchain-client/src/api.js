@@ -275,9 +275,8 @@ export default class EthereumAPI {
 
   getGasPrice(cb) {
     const self = this;
-    this.onReady(() => {
-      self.web3.eth.getGasPrice(cb);
-    });
+
+    self.web3.eth.getGasPrice(cb);
   }
 
   getClientVersion(cb) {
@@ -335,26 +334,25 @@ export default class EthereumAPI {
 
   subscribeToPendingTransactions() {
     const self = this;
-    this.onReady(() => {
-      if (self.logsSubscription) {
-        self.logsSubscription.unsubscribe();
-      }
-      self.logsSubscription = self.web3.eth
-        .subscribe('newBlockHeaders', () => {})
-        .on("data", function (blockHeader) {
-          self.events.emit('block:header', blockHeader);
-        });
+    if (self.logsSubscription) {
+      self.logsSubscription.unsubscribe();
+    }
+    self.logsSubscription = self.web3.eth
+      .subscribe('newBlockHeaders', () => {
+      })
+      .on("data", function(blockHeader) {
+        self.events.emit('block:header', blockHeader);
+      });
 
-      if (self.pendingSubscription) {
-        self.pendingSubscription.unsubscribe();
-      }
-      self.pendingSubscription = self.web3.eth
-        .subscribe('pendingTransactions', function (error, transaction) {
-          if (!error) {
-            self.events.emit('block:pending:transaction', transaction);
-          }
-        });
-    });
+    if (self.pendingSubscription) {
+      self.pendingSubscription.unsubscribe();
+    }
+    self.pendingSubscription = self.web3.eth
+      .subscribe('pendingTransactions', function(error, transaction) {
+        if (!error) {
+          self.events.emit('block:pending:transaction', transaction);
+        }
+      });
   }
 
   subscribeToContractEvents(callback) {
