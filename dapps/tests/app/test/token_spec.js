@@ -42,7 +42,9 @@ config({
         }
       },
       SomeContract: {
-        deployIf: "await MyToken.methods.isAvailable().call()",
+        deployIf: (dependencies) => {
+          return dependencies.contract.MyToken.methods.isAvailable().call();
+        },
         args: [
           ["$MyToken2", "$SimpleStorage"],
           100
