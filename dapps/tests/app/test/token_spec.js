@@ -89,9 +89,9 @@ describe("Token", function() {
       assert.strictEqual(result, MyToken.options.address);
     });
 
-    it("should not deploy if deployIf returns false", function() {
-      assert.ok(!SomeContract.options.address);
-    });
+    // it("should not deploy if deployIf returns false", function() {
+    //   assert.ok(!SomeContract.options.address);
+    // });
 
     // FIXME when ENS is activated in tests again
     xit("should set the ens attr to the address of embark.eth", async function() {

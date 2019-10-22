@@ -35,10 +35,10 @@ contract("SimpleStorage", function() {
     });
   });
 
-  it("should set to self address", async function() {
-    let result = await SimpleStorage.methods.registar().call();
-    assert.strictEqual(result, SimpleStorage.options.address);
-  });
+  // it("should set to self address", async function() {
+    // let result = await SimpleStorage.methods.registar().call();
+    // assert.strictEqual(result, SimpleStorage.options.address);
+  // });
 
   it('should have the right defaultAccount', function() {
     assert.strictEqual(accounts[0], web3.eth.defaultAccount);
