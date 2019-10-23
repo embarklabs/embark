@@ -20,9 +20,9 @@ import "remix_tests.sol";
 // ----------------------
 `;
 const ASSERT_LIB = new File({
-  path: "remix_tests.sol",
-  originalPath: dappPath("remix_tests.sol"),
-  type: Types.dappFile,
+  path: dappPath(".embark", "remix_tests.sol"),
+  originalPath: dappPath(".embark", "remix_tests.sol"),
+  type: Types.custom,
   resolver: (cb) => { cb(remixTests.assertLibCode); }
 });
 
@@ -78,13 +78,13 @@ class SolidityTestRunner {
       };
     };
 
-    const contractFiles = this.files.map(f => new File({path: f, originalPath: f, type: Types.dappFile, resolver: resolverFn(f)}));
+    const contractFiles = this.files.map(f => new File({path: f, originalPath: f, type: Types.custom, resolver: resolverFn(f)}));
     contractFiles.unshift(ASSERT_LIB);
 
     async.waterfall([
       (next) => {
         // write the remix_tests file where it will be found.
-        fs.writeFile(dappPath('remix_tests.sol'), remixTests.assertLibCode, next);
+        fs.writeFile(ASSERT_LIB.originalPath, remixTests.assertLibCode, next);
       },
       (next) => {
         events.request("contracts:reset", next);

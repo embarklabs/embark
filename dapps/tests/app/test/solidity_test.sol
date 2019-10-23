@@ -1,5 +1,4 @@
 pragma solidity ^0.4.25;
-import 'remix_tests.sol';
 
 contract MyTest {
   uint i = 0;
