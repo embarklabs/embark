@@ -22,7 +22,7 @@ import "remix_tests.sol";
 const ASSERT_LIB = new File({
   path: dappPath(".embark", "remix_tests.sol"),
   originalPath: dappPath(".embark", "remix_tests.sol"),
-  type: Types.dappFile,
+  type: Types.custom,
   resolver: (cb) => { cb(remixTests.assertLibCode); }
 });
 
@@ -78,7 +78,7 @@ class SolidityTestRunner {
       };
     };
 
-    const contractFiles = this.files.map(f => new File({path: f, originalPath: f, type: Types.dappFile, resolver: resolverFn(f)}));
+    const contractFiles = this.files.map(f => new File({path: f, originalPath: f, type: Types.custom, resolver: resolverFn(f)}));
     contractFiles.unshift(ASSERT_LIB);
 
     async.waterfall([
