@@ -1,4 +1,4 @@
-/*global describe, config, it, web3*/
+/*global describe, config, it, web3, xit*/
 const assert = require('assert');
 const Token = require('Embark/contracts/Token');
 const MyToken = require('Embark/contracts/MyToken');
@@ -91,7 +91,7 @@ describe("Token", function() {
       assert.strictEqual(result, MyToken.options.address);
     });
 
-    it("should not deploy if deployIf returns false", function() {
+    xit("should not deploy if deployIf returns false", function() {
       assert.ok(!SomeContract.options.address);
     });
 
