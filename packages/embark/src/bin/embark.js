@@ -540,7 +540,7 @@ PkgJsonEmbark.prototype.noCheck = true;
 // if changing to the `nodeRangeDefault` value, make sure to manually check
 // that it's a valid semver range, otherwise fallback logic in the prototype
 // methods won't be reliable
-PkgJsonEmbark.prototype.nodeRangeDefault = semver.Range('>=8.11.3').range;
+PkgJsonEmbark.prototype.nodeRangeDefault = semver.Range('>=10.17.0').range;
 
 PkgJsonEmbark.prototype.setNodeRange = function () {
   if (isObject(this.json) &&
@@ -1007,7 +1007,7 @@ function setupProto(Sub, Par) {
   Sub.prototype.constructor = Sub;
 }
 
-// See: https://github.com/npm/cli/blob/v6.4.1/lib/utils/parse-json.js#L16
+// See: https://github.com/npm/cli/blob/v6.11.3/lib/utils/parse-json.js#L16
 function stripBOM (content) {
   content = content.toString();
   if (content.charCodeAt(0) === 0xFEFF) {

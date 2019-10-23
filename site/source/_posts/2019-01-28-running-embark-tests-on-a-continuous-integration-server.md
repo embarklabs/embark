@@ -72,7 +72,7 @@ os:
 node_js:
   - "10"
 before_install:
-  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.12.3
+  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.19.1
   - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 cache:
   - yarn: true

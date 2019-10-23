@@ -59,7 +59,7 @@ module.exports = (api) => {
     'babel-plugin-dynamic-import-node'
   );
   node.presets[0] = [node.presets[0], {
-    targets: {node: '8.11.3'}
+    targets: {node: '10.17.0'}
   }];
 
   if (env === 'node' || env.startsWith('node:')) {
