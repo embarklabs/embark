@@ -1,27 +1,17 @@
 variables:
-  ipfsVersion: '0.4.19'
-  node8: '^8.12.0'
-  node10: '^10.0.0'
+  ipfsVersion: '0.4.22'
+  node10: '^10.17.0'
   pythonVersion: '2.7.x'
-  yarnVersion: '1.12.3'
+  yarnVersion: '1.19.1'
 
 strategy:
   matrix:
-    Node 8 / Linux:
-      nodeVersion: $(node8)
-      imageName: 'ubuntu-16.04'
-    Node 8 / macOS:
-      nodeVersion: $(node8)
-      imageName: 'macos-10.13'
-    Node 8 / Windows:
-      nodeVersion: $(node8)
-      imageName: 'vs2017-win2016'
     Node 10 / Linux:
       nodeVersion: $(node10)
-      imageName: 'ubuntu-16.04'
+      imageName: 'ubuntu-18.04'
     Node 10 / macOS:
       nodeVersion: $(node10)
-      imageName: 'macos-10.13'
+      imageName: 'macos-10.14'
     Node 10 / Windows:
       nodeVersion: $(node10)
       imageName: 'vs2017-win2016'
