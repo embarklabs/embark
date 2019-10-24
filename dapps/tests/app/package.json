@@ -1,7 +1,7 @@
 {
   "description": "Test DApp for integration testing purposes",
   "devDependencies": {
-    "@babel/code-frame": "7.0.0",
+    "@babel/code-frame": "7.5.5",
     "bootstrap": "3.4.1",
     "embark": "^4.1.1",
     "embark-dapp-test-service": "^4.0.0",

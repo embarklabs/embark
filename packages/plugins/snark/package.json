@@ -46,14 +46,14 @@
     "test": "jest"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "7.6.2",
+    "@babel/runtime-corejs3": "7.6.3",
     "circom": "0.0.31",
     "find-up": "4.1.0",
     "glob": "7.1.4",
     "snarkjs": "0.1.19"
   },
   "devDependencies": {
-    "@babel/core": "7.6.2",
+    "@babel/core": "7.6.4",
     "babel-eslint": "10.0.3",
     "babel-jest": "24.9.0",
     "embark-solo": "^4.1.1",

@@ -26,9 +26,10 @@ module.exports = (api) => {
       ['@babel/plugin-proposal-class-properties', {
         loose: true
       }],
+      '@babel/plugin-proposal-nullish-coalescing-operator',
       '@babel/plugin-proposal-optional-chaining',
       ['@babel/plugin-transform-runtime', {
-        corejs: 2
+        corejs: 3
       }]
     ],
     presets: [
@@ -44,8 +45,11 @@ module.exports = (api) => {
   const browser = cloneDeep(base);
   browser.plugins[browser.plugins.length - 1][1].useESModules = true;
   browser.presets[0] = [browser.presets[0], {
+    corejs: 3,
     modules: false,
-    targets: {browsers: ['last 1 version', 'not dead', '> 0.2%']}
+    shippedProposals: true,
+    targets: {browsers: ['last 1 version', 'not dead', '> 0.2%']},
+    useBuiltIns: 'usage'
   }];
 
   if (env === 'browser' || env.startsWith('browser:')) {
@@ -59,7 +63,10 @@ module.exports = (api) => {
     'babel-plugin-dynamic-import-node'
   );
   node.presets[0] = [node.presets[0], {
-    targets: {node: '10.17.0'}
+    corejs: 3,
+    shippedProposals: true,
+    targets: {node: '10.17.0'},
+    useBuiltIns: 'usage'
   }];
 
   if (env === 'node' || env.startsWith('node:')) {

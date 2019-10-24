@@ -41,7 +41,7 @@
     "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "7.6.2",
+    "@babel/runtime-corejs3": "7.6.3",
     "ganache-cli": "6.4.3"
   },
   "devDependencies": {

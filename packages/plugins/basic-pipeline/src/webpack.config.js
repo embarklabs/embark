@@ -143,7 +143,7 @@ const base = {
             ],
             [
               '@babel/plugin-transform-runtime', {
-                corejs: 2,
+                corejs: 3,
                 useESModules: true
               }
             ],
@@ -152,11 +152,14 @@ const base = {
           presets: [
             [
               '@babel/preset-env', {
+                corejs: 3,
                 exclude: ['transform-typeof-symbol'],
                 modules: false,
+                shippedProposals: true,
                 targets: {
                   browsers: ['last 1 version', 'not dead', '> 0.2%']
-                }
+                },
+                useBuiltIns: 'usage'
               }
             ],
             [

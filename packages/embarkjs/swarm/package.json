@@ -44,7 +44,7 @@
     "solo": "embark-solo"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "7.6.2",
+    "@babel/runtime-corejs3": "7.6.3",
     "swarm-api": "0.1.2",
     "web3": "1.2.1"
   },
