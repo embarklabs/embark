@@ -41,7 +41,7 @@
     "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "7.6.2",
+    "@babel/runtime-corejs3": "7.6.3",
     "async": "3.1.0",
     "remix-tests": "0.1.14",
     "web3": "1.2.1",

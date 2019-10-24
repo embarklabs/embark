@@ -41,7 +41,7 @@
     "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "7.6.2",
+    "@babel/runtime-corejs3": "7.6.3",
     "async": "2.6.1",
     "viz.js": "1.8.2"
   },

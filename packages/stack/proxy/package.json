@@ -45,7 +45,7 @@
     "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "7.6.2",
+    "@babel/runtime-corejs3": "7.6.3",
     "cors": "2.8.5",
     "embark-core": "^4.1.1",
     "embark-i18n": "^4.1.1",

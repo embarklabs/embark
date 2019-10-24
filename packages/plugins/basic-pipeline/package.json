@@ -42,17 +42,17 @@
     "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "7.6.2",
+    "@babel/runtime-corejs3": "7.6.3",
     "async": "2.6.1",
     "clone-deep": "4.0.0",
     "embark-core": "^4.1.1",
     "embark-i18n": "^4.1.1",
     "embark-utils": "^4.1.1",
     "fs-extra": "8.1.0",
-    "webpack": "4.41.0"
+    "webpack": "4.41.2"
   },
   "devDependencies": {
-    "@babel/core": "7.6.2",
+    "@babel/core": "7.6.4",
     "babel-jest": "24.9.0",
     "embark-solo": "^4.1.1",
     "embark-testing": "^4.1.1",

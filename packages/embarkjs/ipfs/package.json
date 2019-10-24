@@ -44,7 +44,7 @@
     "solo": "embark-solo"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "7.6.2",
+    "@babel/runtime-corejs3": "7.6.3",
     "ipfs-api": "17.2.4"
   },
   "devDependencies": {

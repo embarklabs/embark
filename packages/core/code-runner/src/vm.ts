@@ -34,10 +34,10 @@ class VM {
     require: {
       builtin: ["path", "util"],
       external: [
-        "@babel/runtime-corejs2/core-js/json/stringify",
-        "@babel/runtime-corejs2/core-js/object/assign",
-        "@babel/runtime-corejs2/core-js/promise",
-        "@babel/runtime-corejs2/helpers/interopRequireDefault",
+        "@babel/runtime-corejs3/core-js/json/stringify",
+        "@babel/runtime-corejs3/core-js/object/assign",
+        "@babel/runtime-corejs3/core-js/promise",
+        "@babel/runtime-corejs3/helpers/interopRequireDefault",
         // "embark-utils",
         // TODO: ideally this shouldnt' be needed/here or should be configurable by the modules themselves somehow
         // "embarkjs-ens",

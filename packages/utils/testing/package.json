@@ -41,12 +41,12 @@
     "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "7.6.2",
+    "@babel/runtime-corejs3": "7.6.3",
     "refute": "1.0.2",
     "sinon": "7.4.2"
   },
   "devDependencies": {
-    "@babel/core": "7.6.2",
+    "@babel/core": "7.6.4",
     "@types/async": "2.0.50",
     "babel-jest": "24.9.0",
     "embark-solo": "^4.1.1",

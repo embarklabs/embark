@@ -41,7 +41,7 @@
     "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "7.6.2",
+    "@babel/runtime-corejs3": "7.6.3",
     "chokidar": "2.1.6",
     "embark-i18n": "^4.1.1",
     "embark-utils": "^4.1.1"
