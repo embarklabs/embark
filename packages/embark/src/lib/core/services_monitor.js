@@ -73,7 +73,6 @@ ServicesMonitor.prototype.startMonitor = function () {
   let self = this;
   this.working = true;
   this.logger.trace('startMonitor');
-  console.log('--> monitor started');
 
   let servicePlugins = this.plugins.getPluginsProperty('serviceChecks', 'serviceChecks');
   servicePlugins.forEach(function (pluginCheck) {

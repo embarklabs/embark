@@ -101,8 +101,11 @@ EmbarkEmitter.prototype.request2 = function() {
   warnIfLegacy(requestName);
   if (this._events && !this._events['request:' + requestName]) {
     log("NO REQUEST LISTENER", requestName);
-    console.log("made request without listener: " + requestName);
-    console.trace();
+
+    if (process && process.env && process.env.DEBUGEVENTS) {
+      console.log("made request without listener: " + requestName);
+      console.trace();
+    }
   }
 
   let promise = new Promise((resolve, reject) => {
@@ -122,7 +125,10 @@ EmbarkEmitter.prototype.request2 = function() {
   let ogStack = (new Error().stack);
 
   promise.catch((e) => {
-    console.dir(ogStack);
+    if (process && process.env && process.env.DEBUGEVENTS) {
+      console.dir(requestName);
+      console.dir(ogStack);
+    }
     log("\n======== Exception ========", requestName, "\n " + ogStack + "\n==============");
     return e;
   });
@@ -138,8 +144,10 @@ EmbarkEmitter.prototype.request = function() {
   warnIfLegacy(requestName);
   if (this._events && !this._events['request:' + requestName]) {
     log("NO REQUEST LISTENER", requestName);
-    console.log("made request without listener: " + requestName);
-    console.trace();
+    if (process && process.env && process.env.DEBUGEVENTS) {
+      console.log("made request without listener: " + requestName);
+      console.trace();
+    }
   }
   const listenerName = 'request:' + requestName;
 
