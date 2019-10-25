@@ -148,7 +148,6 @@
     "promptly": "2.2.0",
     "propose": "0.0.5",
     "pump": "3.0.0",
-    "remix-tests": "0.1.1",
     "request": "2.88.0",
     "semver": "5.6.0",
     "shelljs": "0.8.3",
@@ -180,16 +179,9 @@
     "web3-providers-ws": "1.2.1",
     "web3-shh": "1.2.1",
     "web3-utils": "1.2.1",
-    "window-size": "1.1.1",
-    "yo-yoify": "4.3.0"
+    "window-size": "1.1.1"
   },
   "devDependencies": {
-    "@types/async": "2.0.50",
-    "@types/find-up": "2.1.0",
-    "@types/i18n": "0.8.3",
-    "@types/node": "12.7.8",
-    "@types/request": "2.48.3",
-    "@types/web3": "1.0.12",
     "chai": "4.1.2",
     "embark-solo": "^4.1.1",
     "embark-test-contract-0": "0.0.2",
