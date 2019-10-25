@@ -45,8 +45,7 @@
     "async": "2.6.1",
     "embark-i18n": "^4.1.1",
     "embark-utils": "^4.1.1",
-    "express": "4.16.3",
-    "express-http-proxy": "1.5.1",
+    "express": "4.17.1",
     "express-ws": "4.0.0",
     "open": "6.4.0",
     "serve-static": "1.13.2"
