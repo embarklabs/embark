@@ -34,9 +34,10 @@
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
     "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
-    "qa": "npm-run-all lint typecheck _build",
+    "qa": "npm-run-all lint typecheck _build test",
     "reset": "npx rimraf dist embark-*.tgz package",
     "solo": "embark-solo",
+    "test": "jest",
     "typecheck": "tsc",
     "watch": "run-p watch:*",
     "watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
@@ -47,7 +48,13 @@
     "embark-utils": "^4.1.1"
   },
   "devDependencies": {
+    "@babel/core": "7.6.4",
+    "babel-jest": "24.9.0",
+    "clone-deep": "4.0.0",
+    "cross-env": "5.2.0",
     "embark-solo": "^4.1.1",
+    "embark-testing": "^4.1.1",
+    "jest": "24.9.0",
     "npm-run-all": "4.1.5",
     "rimraf": "3.0.0",
     "tslint": "5.16.0",
@@ -57,5 +64,20 @@
     "node": ">=10.17.0 <12.0.0",
     "npm": ">=6.11.3",
     "yarn": ">=1.19.1"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/test/**/*.js"
+    ],
+    "transform": {
+      "\\.(js|ts)$": [
+        "babel-jest",
+        {
+          "rootMode": "upward"
+        }
+      ]
+    }
   }
 }
