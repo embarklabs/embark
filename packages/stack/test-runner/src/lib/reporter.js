@@ -1,8 +1,9 @@
 const chalk = require('chalk');
 
 class Reporter {
-  constructor(embark) {
+  constructor(embark, options) {
     this.embark = embark;
+    this.stdout = options.stdout || process.stdout;
 
     this.passes = 0;
     this.fails = 0;
@@ -36,9 +37,9 @@ class Reporter {
   footer() {
     const total = this.passes + this.fails;
     if (this.fails > 0) {
-      process.stdout.write(chalk`{red Failed ${this.fails} / ${total} test(s).}\n`);
+      this.stdout.write(chalk`{red Failed ${this.fails} / ${total} test(s).}\n`);
     } else {
-      process.stdout.write(chalk`{green Passed ${this.passes} test(s).}\n`);
+      this.stdout.write(chalk`{green Passed ${this.passes} test(s).}\n`);
 
     }
   }
@@ -55,10 +56,10 @@ class Reporter {
 
     if (passed) {
       this.passes++;
-      process.stdout.write(chalk`{bgGreen.white.bold ${' PASS '}} {underline ${test}} {bold >} {${timeFormat} ${time}s} {bold >} {bold ${formattedGas} gas}\n`);
+      this.stdout.write(chalk`{bgGreen.white.bold ${' PASS '}} {underline ${test}} {bold >} {${timeFormat} ${time}s} {bold >} {bold ${formattedGas} gas}\n`);
     } else {
       this.fails++;
-      process.stdout.write(chalk`{bgRed.white.bold ${' FAIL '}} {underline ${test}} {bold >} {${timeFormat} ${time}s} {bold >} {bold ${formattedGas} gas} > {red ${message || 'no error message'}}\n`);
+      this.stdout.write(chalk`{bgRed.white.bold ${' FAIL '}} {underline ${test}} {bold >} {${timeFormat} ${time}s} {bold >} {bold ${formattedGas} gas} > {red ${message || 'no error message'}}\n`);
     }
 
     this.resetGas();
