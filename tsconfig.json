@@ -2,7 +2,7 @@
   "compilerOptions": {
     "allowJs": true,
     "esModuleInterop": true,
-    "lib": ["ES2017"],
+    "lib": ["ES2017", "dom"],
     "module": "CommonJS",
     "noEmit": true,
     "noImplicitThis": false,
