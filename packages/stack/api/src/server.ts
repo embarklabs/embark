@@ -37,7 +37,7 @@ export default class Server {
       this.monorepoRootPath = monorepoRootPathSync();
     }
     // in the monorepo and other deduped installs embark-ui may be in a higher-up node_modules
-    const foundEmbarkUi = findUp.sync("node_modules/embark-ui", {cwd: embarkPath()});
+    const foundEmbarkUi = findUp.sync("node_modules/embark-ui", {cwd: embarkPath(), type: "directory"});
     if (foundEmbarkUi) {
       this.embarkUiBuildDir = path.join(foundEmbarkUi, "build");
     }
