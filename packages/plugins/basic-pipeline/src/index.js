@@ -4,6 +4,7 @@ import { ProcessLauncher } from 'embark-core';
 import { dappPath, joinPath, LongRunningProcessTimer } from 'embark-utils';
 const constants = require('embark-core/constants');
 const WebpackConfigReader = require('./webpackConfigReader');
+require('./env');
 
 class BasicPipeline {
 
