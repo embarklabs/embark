@@ -60,7 +60,6 @@
     "web3": "1.2.1"
   },
   "devDependencies": {
-    "@types/async": "2.0.50",
     "embark-solo": "^4.1.1",
     "eslint": "5.7.0",
     "mocha": "6.2.0",
