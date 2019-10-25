@@ -27,6 +27,8 @@ export function setUpEnv(defaultEmbarkPath) {
   const DEFAULT_PKG_PATH = anchoredValue(PWD);
   anchoredValue(PKG_PATH, DEFAULT_PKG_PATH);
 
+  const node_paths = process.env[NODE_PATH] ? process.env[NODE_PATH].split(delimiter) : [];
+
   const EMBARK_NODE_MODULES_PATHS = [];
   let len = 0;
   let start = anchoredValue(EMBARK_PATH);
@@ -35,7 +37,8 @@ export function setUpEnv(defaultEmbarkPath) {
     const found = findUp.sync('node_modules', {cwd: start});
     if (!found) break;
     start = joinPath(start, '..');
-    if (EMBARK_NODE_MODULES_PATHS[len - 1] !== found) {
+    if ((EMBARK_NODE_MODULES_PATHS[len - 1] !== found) &&
+        !node_paths.includes(found)) {
       len = EMBARK_NODE_MODULES_PATHS.push(found);
     }
   }
@@ -46,4 +49,3 @@ export function setUpEnv(defaultEmbarkPath) {
     (process.env[NODE_PATH] ? delimiter : '') +
     (process.env[NODE_PATH] || '');
 }
-

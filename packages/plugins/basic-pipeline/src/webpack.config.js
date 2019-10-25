@@ -1,11 +1,14 @@
 /* global __dirname module process require */
 
+const fs = require('fs');
 const path = require('path');
 
 const dappPath = process.env.DAPP_PATH;
+const embarkBasicPipelinePath = process.env.EMBARK_BASIC_PIPELINE_PATH;
 const embarkPath = process.env.EMBARK_PATH;
 
 const dappNodeModules = path.join(dappPath, 'node_modules');
+const embarkBasicPipelineNodeModules = path.join(embarkBasicPipelinePath, 'node_modules');
 const embarkNodeModules = path.join(embarkPath, 'node_modules');
 let nodePathNodeModules;
 if (process.env.NODE_PATH) {
@@ -13,20 +16,37 @@ if (process.env.NODE_PATH) {
 } else {
   nodePathNodeModules = [];
 }
-if (!nodePathNodeModules.includes(embarkNodeModules)) {
+if (fs.existsSync(embarkNodeModules) &&
+    !nodePathNodeModules.includes(embarkNodeModules)) {
   nodePathNodeModules.unshift(embarkNodeModules);
+}
+if (fs.existsSync(embarkBasicPipelineNodeModules) &&
+    !nodePathNodeModules.includes(embarkBasicPipelineNodeModules)) {
+  nodePathNodeModules.unshift(embarkBasicPipelineNodeModules);
 }
 
 function requireFromEmbark(mod) {
   return require(requireFromEmbark.resolve(mod));
 }
 
-requireFromEmbark.resolve = function (mod) {
-  return require.resolve(
-    mod,
-    {paths: [embarkNodeModules]}
-  );
-};
+(function () {
+  const paths = [];
+  if (fs.existsSync(embarkNodeModules)) {
+    paths.unshift(embarkNodeModules);
+  }
+  if (fs.existsSync(embarkBasicPipelineNodeModules)) {
+    paths.unshift(embarkBasicPipelineNodeModules);
+  }
+
+  const opts = {};
+  if (paths.length) {
+    opts.paths = paths;
+  }
+
+  requireFromEmbark.resolve = function (mod) {
+    return require.resolve(mod, opts);
+  };
+}());
 
 const cloneDeep = requireFromEmbark('lodash.clonedeep');
 const glob = requireFromEmbark('glob');
