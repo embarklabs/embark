@@ -11,9 +11,13 @@ describe('Test Runner', () => {
   let instance;
 
   beforeEach(() => {
-    const { embark } = fakeEmbark();
+    const { embark } = fakeEmbark({ contractsConfig: {} });
+    embark.events.setCommandHandler('config:contractsConfig:set', (config, cb) => {
+      embark.config.contractsConfig = config;
+      cb(null);
+    });
     _embark = embark;
-    instance = new TestRunner(embark, {});
+    instance = new TestRunner(embark, {stdout: {write: () => {}}});
   });
 
   describe('command handlers', () => {

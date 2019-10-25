@@ -22,6 +22,7 @@ class TestRunner {
     this.logger = embark.logger;
     this.events = embark.events;
     this.plugins = options.plugins;
+    this.stdout = options.stdout || process.stdout;
     this.fs = embark.fs;
     this.runners = [];
     this.files = [];
@@ -46,7 +47,7 @@ class TestRunner {
   }
 
   run(options, cb) {
-    const reporter = new Reporter(this.embark);
+    const reporter = new Reporter(this.embark, {stdout: this.stdout});
     const testPath = options.file || "test";
 
     this.setupGlobalVariables();
