@@ -46,6 +46,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.6.3",
+    "core-js": "3.3.4",
     "cors": "2.8.5",
     "embark-core": "^4.1.1",
     "embark-i18n": "^4.1.1",

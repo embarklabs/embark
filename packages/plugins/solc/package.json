@@ -43,6 +43,7 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.6.3",
     "async": "2.6.1",
+    "core-js": "3.3.4",
     "semver": "5.6.0",
     "shelljs": "0.8.3"
   },

@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.6.3",
+    "core-js": "3.3.4",
     "ejs": "2.6.1",
     "embark-core": "^4.1.1",
     "embark-i18n": "^4.1.1"

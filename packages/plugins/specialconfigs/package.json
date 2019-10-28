@@ -43,6 +43,7 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.6.3",
     "async": "2.6.1",
+    "core-js": "3.3.4",
     "embark-i18n": "^4.1.1",
     "viz.js": "1.8.2"
   },

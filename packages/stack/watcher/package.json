@@ -43,6 +43,7 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.6.3",
     "chokidar": "2.1.6",
+    "core-js": "3.3.4",
     "embark-i18n": "^4.1.1",
     "embark-utils": "^4.1.1"
   },

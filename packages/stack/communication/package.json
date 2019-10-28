@@ -45,6 +45,7 @@
     "@babel/runtime-corejs3": "7.6.3",
     "async": "2.6.1",
     "clone-deep": "4.0.0",
+    "core-js": "3.3.4",
     "embark-core": "^4.1.1",
     "embark-i18n": "^4.1.1",
     "embark-utils": "^4.1.1"
