@@ -4,7 +4,15 @@ const http = require("http");
 const LIVENESS_CHECK=`{"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":42}`;
 
 const parseAndRespond = (data, cb) => {
-  const resp = JSON.parse(data);
+  let resp;
+  try {
+    resp = JSON.parse(data);
+  } catch (e) {
+    return cb('Version data is not valid JSON');
+  }
+  if (!resp || !resp.result) {
+    return cb('No version returned');
+  }
   const [_, version, __] = resp.result.split('/');
   cb(null, version);
 };
