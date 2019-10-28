@@ -160,8 +160,8 @@ class Engine {
   }
 
   blockchainStackComponents() {
-    this.registerModule('blockchain', { plugins: this.plugins });
-    this.registerModule('blockchain-client');
+    this.registerModulePackage('embark-blockchain', { plugins: this.plugins });
+    this.registerModulePackage('embark-blockchain-client');
     this.registerModulePackage('embark-process-logs-api-manager');
   }
 
