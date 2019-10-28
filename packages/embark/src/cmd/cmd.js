@@ -463,7 +463,7 @@ class Cmd {
           console.log((__('did you mean') + ' "%s"?').green, suggestion);
         }
         console.log("type embark --help to see the available commands");
-        process.exit(0);
+        process.exit(1);
       });
   }
 
