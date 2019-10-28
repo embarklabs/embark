@@ -389,10 +389,16 @@ class ENS {
   }
 
   ensResolve(name, cb) {
+    if (!this.ensContract) {
+      return cb(__('ENS not registered for this configuration'));
+    }
     ENSFunctions.resolveName(name, this.ensContract, this.createResolverContract.bind(this), cb, namehash);
   }
 
   ensLookup(address, cb) {
+    if (!this.ensContract) {
+      return cb(__('ENS not registered for this configuration'));
+    }
     ENSFunctions.lookupAddress(address, this.ensContract, namehash, this.createResolverContract.bind(this), cb);
   }
 
