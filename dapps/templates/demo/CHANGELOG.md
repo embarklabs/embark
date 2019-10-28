@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.0](https://github.com/embark-framework/embark/compare/v4.1.1...v5.0.0-alpha.0) (2019-10-28)
+
+
+### Bug Fixes
+
+* fix test-app, contracts index file and reload on change ([#1892](https://github.com/embark-framework/embark/issues/1892)) ([ee634c8](https://github.com/embark-framework/embark/commit/ee634c8))
+
+
+### Code Refactoring
+
+* initial steps toward 5.0.0-alpha.0 ([#1856](https://github.com/embark-framework/embark/issues/1856)) ([b736ebe](https://github.com/embark-framework/embark/commit/b736ebe))
+
+
+### Features
+
+* **@embark/test-runner:** make vm default node ([#1846](https://github.com/embark-framework/embark/issues/1846)) ([f54fbf0](https://github.com/embark-framework/embark/commit/f54fbf0))
+* call action before starting the blockchain node ([c54b8d9](https://github.com/embark-framework/embark/commit/c54b8d9))
+
+
+### BREAKING CHANGES
+
+* There are more than several breaking changes, including DApp configuration for
+accounts.
+
+
+
+
+
 ## [4.1.1](https://github.com/embark-framework/embark/compare/v4.1.0...v4.1.1) (2019-08-28)
 
 

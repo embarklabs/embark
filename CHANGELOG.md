@@ -3,6 +3,87 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.0](https://github.com/embark-framework/embark/compare/v4.1.1...v5.0.0-alpha.0) (2019-10-28)
+
+
+### Bug Fixes
+
+* fix process logs not showing on errors ([#1962](https://github.com/embark-framework/embark/issues/1962)) ([913267b](https://github.com/embark-framework/embark/commit/913267b))
+* **@cockpit:** PropTypes typos: boolean -> bool, function -> func ([58c55ed](https://github.com/embark-framework/embark/commit/58c55ed))
+* **@contract-app:** fix contracts app tests ([#1982](https://github.com/embark-framework/embark/issues/1982)) ([6e9635c](https://github.com/embark-framework/embark/commit/6e9635c))
+* **@embark/basic-pipeline:** Remove `_1_` from pipeline output ([#1941](https://github.com/embark-framework/embark/issues/1941)) ([5dbc1c7](https://github.com/embark-framework/embark/commit/5dbc1c7))
+* **@embark/cmd_controller:** ensure blockchain module is started before storage ([#1821](https://github.com/embark-framework/embark/issues/1821)) ([c7eb586](https://github.com/embark-framework/embark/commit/c7eb586))
+* **@embark/cmd_controller:** ensure namesystem is set up in console command ([#1822](https://github.com/embark-framework/embark/issues/1822)) ([dd82a01](https://github.com/embark-framework/embark/commit/dd82a01))
+* **@embark/cmd_controller:** use the correct path for eject-webpack ([98400dc](https://github.com/embark-framework/embark/commit/98400dc))
+* **@embark/core:** make blockchain command work again ([8fee0b8](https://github.com/embark-framework/embark/commit/8fee0b8))
+* **@embark/core:** set loglevel back to info ([a03ffd5](https://github.com/embark-framework/embark/commit/a03ffd5))
+* **@embark/embark-deploy-tracker:** Fix reading of empty file ([#1872](https://github.com/embark-framework/embark/issues/1872)) ([022a3c1](https://github.com/embark-framework/embark/commit/022a3c1))
+* **@embark/ens:** fix trying to resolve when ENS is not registered ([1302f9f](https://github.com/embark-framework/embark/commit/1302f9f))
+* **@embark/geth:** fix version result not available ([9803507](https://github.com/embark-framework/embark/commit/9803507))
+* **@embark/parity:** fix version result not available ([a4b3ef4](https://github.com/embark-framework/embark/commit/a4b3ef4))
+* **@embark/proxy:** Check if WebSocket open before sending ([#1978](https://github.com/embark-framework/embark/issues/1978)) ([db71a93](https://github.com/embark-framework/embark/commit/db71a93))
+* patch for infinite loop with panic override ([#1964](https://github.com/embark-framework/embark/issues/1964)) ([80df4fa](https://github.com/embark-framework/embark/commit/80df4fa))
+* **@embark/proxy:** Fix contract event subscriptions ([173d53d](https://github.com/embark-framework/embark/commit/173d53d))
+* **@embark/stack/pipeline:** set missing `this.fs` to `embark.fs` ([86a9766](https://github.com/embark-framework/embark/commit/86a9766))
+* **@embark/transaction-logger:** don't show logs for stray receipts ([395ae83](https://github.com/embark-framework/embark/commit/395ae83))
+* **@embarkjs/swarm:** web3@1.0.0-beta.37 -> web3@1.2.1 ([25a0644](https://github.com/embark-framework/embark/commit/25a0644))
+* add back log command for modules ([#1969](https://github.com/embark-framework/embark/issues/1969)) ([918a00c](https://github.com/embark-framework/embark/commit/918a00c))
+* **template_generator:** fix condition for windows ([7fae609](https://github.com/embark-framework/embark/commit/7fae609))
+* **test-app:** make test app test all pass ([#1980](https://github.com/embark-framework/embark/issues/1980)) ([2193d82](https://github.com/embark-framework/embark/commit/2193d82))
+* do not start modules if they are disabled ([d6bf5c2](https://github.com/embark-framework/embark/commit/d6bf5c2))
+* fix error logs in the cockpit due from negative blocks numbers ([#1967](https://github.com/embark-framework/embark/issues/1967)) ([4b947bb](https://github.com/embark-framework/embark/commit/4b947bb))
+* fix test-app, contracts index file and reload on change ([#1892](https://github.com/embark-framework/embark/issues/1892)) ([ee634c8](https://github.com/embark-framework/embark/commit/ee634c8))
+* fix windows build for pipeline and embarkjs ([#1971](https://github.com/embark-framework/embark/issues/1971)) ([08c97a2](https://github.com/embark-framework/embark/commit/08c97a2))
+* re-enable plugin command module and clean up engine ([#1961](https://github.com/embark-framework/embark/issues/1961)) ([5b72620](https://github.com/embark-framework/embark/commit/5b72620))
+* type checker and linter errors on master after recent PR merges ([8716373](https://github.com/embark-framework/embark/commit/8716373))
+
+
+### Build System
+
+* bump all packages' engines settings ([#1985](https://github.com/embark-framework/embark/issues/1985)) ([ed02cc8](https://github.com/embark-framework/embark/commit/ed02cc8))
+
+
+### Code Refactoring
+
+* initial steps toward 5.0.0-alpha.0 ([#1856](https://github.com/embark-framework/embark/issues/1856)) ([b736ebe](https://github.com/embark-framework/embark/commit/b736ebe))
+
+
+### Features
+
+* call action before starting the blockchain node ([c54b8d9](https://github.com/embark-framework/embark/commit/c54b8d9))
+* **@embark/cmd_controller:** add back embark simulator ([#1965](https://github.com/embark-framework/embark/issues/1965)) ([915b949](https://github.com/embark-framework/embark/commit/915b949))
+* **@embark/compiler:** support :before and :after hooks on event compiler:contracts:compile ([#1878](https://github.com/embark-framework/embark/issues/1878)) ([043ccc0](https://github.com/embark-framework/embark/commit/043ccc0))
+* **@embark/specialconfigs:** introduce dynamic addresses ([#1873](https://github.com/embark-framework/embark/issues/1873)) ([86ee867](https://github.com/embark-framework/embark/commit/86ee867)), closes [#1690](https://github.com/embark-framework/embark/issues/1690)
+* **@embark/test-runner:** add reports to tests ([#1864](https://github.com/embark-framework/embark/issues/1864)) ([230fe59](https://github.com/embark-framework/embark/commit/230fe59))
+* **@embark/test-runner:** make vm default node ([#1846](https://github.com/embark-framework/embark/issues/1846)) ([f54fbf0](https://github.com/embark-framework/embark/commit/f54fbf0))
+* **@embark/testing:** introduce plugin APIs to register compilers ([f289a6f](https://github.com/embark-framework/embark/commit/f289a6f))
+* **@embark/utils:** "inside monorepo" APIs ([de0e12d](https://github.com/embark-framework/embark/commit/de0e12d))
+* **deployement:** add back deployment message with hash ([2f09a88](https://github.com/embark-framework/embark/commit/2f09a88))
+
+
+### BREAKING CHANGES
+
+* node: >=10.17.0 <12.0.0
+npm: >=6.11.3
+yarn: >=1.19.1
+
+node v10.17.0 is the latest in the 10.x series and is still in the Active LTS
+lifecycle. Embark is still not compatible with node's 12.x and 13.x
+series (because of some dependencies), otherwise it would probably make sense
+to bump our minimum supported node version all the way to the most recent 12.x
+release.
+
+npm v6.11.3 is the version that's bundled with node v10.17.0.
+
+yarn v1.19.1 is the most recent version as of the time node v10.17.0 was
+released.
+* There are more than several breaking changes, including DApp configuration for
+accounts.
+
+
+
+
+
 ## [4.1.1](https://github.com/embark-framework/embark/compare/v4.1.0...v4.1.1) (2019-08-28)
 
 

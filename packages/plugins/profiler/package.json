@@ -1,6 +1,6 @@
 {
   "name": "embark-profiler",
-  "version": "4.1.1",
+  "version": "5.0.0-alpha.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Smart contract profiler for Embark DApps",
@@ -48,7 +48,7 @@
     "web3-utils": "1.2.1"
   },
   "devDependencies": {
-    "embark-solo": "^4.1.1",
+    "embark-solo": "^5.0.0-alpha.0",
     "eslint": "5.7.0",
     "npm-run-all": "4.1.5",
     "rimraf": "3.0.0"

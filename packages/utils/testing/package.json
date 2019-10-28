@@ -1,6 +1,6 @@
 {
   "name": "embark-testing",
-  "version": "4.1.1",
+  "version": "5.0.0-alpha.0",
   "description": "Testing",
   "homepage": "https://github.com/embark-framework/embark/tree/master/packages/utils/testing#readme",
   "main": "dist/lib/index.js",
@@ -50,7 +50,7 @@
     "@babel/core": "7.6.4",
     "@types/async": "2.0.50",
     "babel-jest": "24.9.0",
-    "embark-solo": "^4.1.1",
+    "embark-solo": "^5.0.0-alpha.0",
     "eslint": "5.7.0",
     "jest": "24.9.0",
     "lodash.clonedeep": "4.5.0",

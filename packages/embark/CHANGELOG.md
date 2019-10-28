@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.0](https://github.com/embark-framework/embark/compare/v4.1.1...v5.0.0-alpha.0) (2019-10-28)
+
+
+### Bug Fixes
+
+* **@embark/basic-pipeline:** Remove `_1_` from pipeline output ([#1941](https://github.com/embark-framework/embark/issues/1941)) ([5dbc1c7](https://github.com/embark-framework/embark/commit/5dbc1c7))
+* re-enable plugin command module and clean up engine ([#1961](https://github.com/embark-framework/embark/issues/1961)) ([5b72620](https://github.com/embark-framework/embark/commit/5b72620))
+* **@embark/cmd_controller:** ensure blockchain module is started before storage ([#1821](https://github.com/embark-framework/embark/issues/1821)) ([c7eb586](https://github.com/embark-framework/embark/commit/c7eb586))
+* **@embark/cmd_controller:** ensure namesystem is set up in console command ([#1822](https://github.com/embark-framework/embark/issues/1822)) ([dd82a01](https://github.com/embark-framework/embark/commit/dd82a01))
+* **@embark/cmd_controller:** use the correct path for eject-webpack ([98400dc](https://github.com/embark-framework/embark/commit/98400dc))
+* **@embark/core:** make blockchain command work again ([8fee0b8](https://github.com/embark-framework/embark/commit/8fee0b8))
+* **@embark/core:** set loglevel back to info ([a03ffd5](https://github.com/embark-framework/embark/commit/a03ffd5))
+* **template_generator:** fix condition for windows ([7fae609](https://github.com/embark-framework/embark/commit/7fae609))
+* **test-app:** make test app test all pass ([#1980](https://github.com/embark-framework/embark/issues/1980)) ([2193d82](https://github.com/embark-framework/embark/commit/2193d82))
+* add back log command for modules ([#1969](https://github.com/embark-framework/embark/issues/1969)) ([918a00c](https://github.com/embark-framework/embark/commit/918a00c))
+* fix error logs in the cockpit due from negative blocks numbers ([#1967](https://github.com/embark-framework/embark/issues/1967)) ([4b947bb](https://github.com/embark-framework/embark/commit/4b947bb))
+* fix process logs not showing on errors ([#1962](https://github.com/embark-framework/embark/issues/1962)) ([913267b](https://github.com/embark-framework/embark/commit/913267b))
+* fix test-app, contracts index file and reload on change ([#1892](https://github.com/embark-framework/embark/issues/1892)) ([ee634c8](https://github.com/embark-framework/embark/commit/ee634c8))
+* type checker and linter errors on master after recent PR merges ([8716373](https://github.com/embark-framework/embark/commit/8716373))
+
+
+### Build System
+
+* bump all packages' engines settings ([#1985](https://github.com/embark-framework/embark/issues/1985)) ([ed02cc8](https://github.com/embark-framework/embark/commit/ed02cc8))
+
+
+### Code Refactoring
+
+* initial steps toward 5.0.0-alpha.0 ([#1856](https://github.com/embark-framework/embark/issues/1856)) ([b736ebe](https://github.com/embark-framework/embark/commit/b736ebe))
+
+
+### Features
+
+* call action before starting the blockchain node ([c54b8d9](https://github.com/embark-framework/embark/commit/c54b8d9))
+* **@embark/cmd_controller:** add back embark simulator ([#1965](https://github.com/embark-framework/embark/issues/1965)) ([915b949](https://github.com/embark-framework/embark/commit/915b949))
+* **@embark/test-runner:** make vm default node ([#1846](https://github.com/embark-framework/embark/issues/1846)) ([f54fbf0](https://github.com/embark-framework/embark/commit/f54fbf0))
+* **deployement:** add back deployment message with hash ([2f09a88](https://github.com/embark-framework/embark/commit/2f09a88))
+
+
+### BREAKING CHANGES
+
+* node: >=10.17.0 <12.0.0
+npm: >=6.11.3
+yarn: >=1.19.1
+
+node v10.17.0 is the latest in the 10.x series and is still in the Active LTS
+lifecycle. Embark is still not compatible with node's 12.x and 13.x
+series (because of some dependencies), otherwise it would probably make sense
+to bump our minimum supported node version all the way to the most recent 12.x
+release.
+
+npm v6.11.3 is the version that's bundled with node v10.17.0.
+
+yarn v1.19.1 is the most recent version as of the time node v10.17.0 was
+released.
+* There are more than several breaking changes, including DApp configuration for
+accounts.
+
+
+
+
+
 ## [4.1.1](https://github.com/embark-framework/embark/compare/v4.1.0...v4.1.1) (2019-08-28)
 
 **Note:** Version bump only for package embark

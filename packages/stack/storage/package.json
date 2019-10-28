@@ -1,6 +1,6 @@
 {
   "name": "embark-storage",
-  "version": "4.1.1",
+  "version": "5.0.0-alpha.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Storage provider abstraction module for Embark",
@@ -45,14 +45,14 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.6.3",
     "core-js": "3.3.4",
-    "embark-core": "^4.1.1",
-    "embark-i18n": "^4.1.1",
-    "embark-utils": "^4.1.1",
+    "embark-core": "^5.0.0-alpha.0",
+    "embark-i18n": "^5.0.0-alpha.0",
+    "embark-utils": "^5.0.0-alpha.0",
     "lodash.clonedeep": "4.5.0",
     "shelljs": "0.8.3"
   },
   "devDependencies": {
-    "embark-solo": "^4.1.1",
+    "embark-solo": "^5.0.0-alpha.0",
     "eslint": "5.7.0",
     "npm-run-all": "4.1.5",
     "rimraf": "3.0.0"

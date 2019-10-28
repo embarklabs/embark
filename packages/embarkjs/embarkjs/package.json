@@ -1,6 +1,6 @@
 {
   "name": "embarkjs",
-  "version": "4.1.1",
+  "version": "5.0.0-alpha.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "JavaScript library for easily interacting with web3 technologies",
@@ -65,7 +65,7 @@
   "devDependencies": {
     "ajv": "6.10.2",
     "chai": "4.2.0",
-    "embark-solo": "^4.1.1",
+    "embark-solo": "^5.0.0-alpha.0",
     "lodash.clonedeep": "4.5.0",
     "mocha": "6.2.0",
     "npm-run-all": "4.1.5",
