@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.6.3",
+    "core-js": "3.3.4",
     "refute": "1.0.2",
     "sinon": "7.4.2"
   },
