@@ -125,8 +125,13 @@ class TemplateGenerator {
         () => (pkgJsonPath) => normalize(pkgJsonPath).includes(normalize('dapps/templates'))
       );
     } else {
-      const version = fs.readJSONSync(embarkPath('package.json')).version;
-      templateSpecifier = `${templatePkg}@${semver(version).major}.x`;
+      const version = semver(fs.readJSONSync(embarkPath('package.json')).version);
+      if (!version.prerelease.length) {
+        templateSpecifier = `${templatePkg}@${version.major}.x`;
+      } else {
+        const majorMinorPatch = `${version.major}.${version.minor}.${version.patch}`;
+        templateSpecifier = `"${templatePkg}@^${majorMinorPatch}- <${majorMinorPatch}"`;
+      }
     }
 
     const tmpDir = require('fs-extra').mkdtempSync(
