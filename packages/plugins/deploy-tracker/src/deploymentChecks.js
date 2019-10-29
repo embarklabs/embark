@@ -98,7 +98,7 @@ export default class DeploymentChecks {
         return this.trackingFunctions.trackAndSaveContract(params, () => {
           // no need to wait for this function to finish as it has no impact on operation
           // past this point
-          this.logger.trace(__("Contract tracking setting has been updatred in chains.json"));
+          this.logger.trace(__("Contract tracking setting has been updated in chains.json"));
           cb(null, params);
         });
       }

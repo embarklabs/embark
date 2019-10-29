@@ -3,11 +3,11 @@ import {dappPath} from 'embark-utils';
 import Web3 from 'web3';
 
 export default class TrackingFunctions {
-  constructor({config, env, fs, events, logger, trackContracts}) {
+  constructor({config, fs, events, logger, trackContracts}) {
     this.config = config;
     this.enabled = (config.contractsConfig.tracking !== false) && (trackContracts !== false);
     this.chainsFilePath = dappPath(config.contractsConfig.tracking || ".embark/chains.json");
-    this.env = env;
+    this.env = config.env;
     this.fs = fs;
     this.events = events;
     this.logger = logger;
@@ -69,7 +69,10 @@ export default class TrackingFunctions {
 
       const chains = (await this.chains) || {};
       const {hash} = await this.block;
-      this._currentChain = chains[hash];
+      this._currentChain = chains[hash] || {
+        contracts: {},
+        name: this.env
+      };
       return this._currentChain;
     })();
   }
@@ -130,6 +133,12 @@ export default class TrackingFunctions {
     if (contract.track === false) toTrack.track = false;
     const {hash} = await this.block;
     const chains = await this.chains;
+    if (!chains[hash]) {
+      chains[hash] = {
+        contracts: {},
+        name: this.env
+      };
+    }
     chains[hash].contracts[contract.hash] = toTrack;
     this.chains = chains;
   }
