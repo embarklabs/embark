@@ -35,6 +35,9 @@ const style = (theme) => ({
         padding: '0px 5px',
         display: 'block'
       },
+      activeLink: {
+        backgroundColor: isDarkTheme(theme) ? '#1C1C1C' : '#FFFFFF',
+      },
       toggle: {
         base: {
           display: 'inline-block',
