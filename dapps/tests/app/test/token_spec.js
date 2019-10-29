@@ -43,7 +43,7 @@ config({
       },
       SomeContract: {
         deployIf: (dependencies) => {
-          return dependencies.contract.MyToken.methods.isAvailable().call();
+          return dependencies.contracts.MyToken.methods.isAvailable().call();
         },
         args: [
           ["$MyToken2", "$SimpleStorage"],
@@ -91,7 +91,7 @@ describe("Token", function() {
       assert.strictEqual(result, MyToken.options.address);
     });
 
-    xit("should not deploy if deployIf returns false", function() {
+    it("should not deploy if deployIf returns false", function() {
       assert.ok(!SomeContract.options.address);
     });
 

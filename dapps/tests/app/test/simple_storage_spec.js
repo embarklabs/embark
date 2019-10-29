@@ -1,4 +1,4 @@
-/*global contract, config, it, assert, web3, xit*/
+/*global contract, config, it, assert, web3*/
 const SimpleStorage = require('Embark/contracts/SimpleStorage');
 let accounts;
 const {Utils} = require('Embark/EmbarkJS');
@@ -37,7 +37,7 @@ contract("SimpleStorage", function() {
     });
   });
 
-  xit("should set to self address", async function() {
+  it("should set to self address", async function() {
     let result = await SimpleStorage.methods.registar().call();
     assert.strictEqual(result, SimpleStorage.options.address);
   });
