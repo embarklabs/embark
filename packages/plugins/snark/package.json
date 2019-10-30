@@ -48,7 +48,7 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.6.3",
     "circom": "0.0.31",
-    "core-js": "3.3.4",
+    "core-js": "3.3.5",
     "find-up": "4.1.0",
     "glob": "7.1.4",
     "snarkjs": "0.1.19"

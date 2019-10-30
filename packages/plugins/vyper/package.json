@@ -43,7 +43,7 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.6.3",
     "async": "2.6.1",
-    "core-js": "3.3.4",
+    "core-js": "3.3.5",
     "embark-i18n": "^5.0.0-alpha.0",
     "shelljs": "0.8.3"
   },

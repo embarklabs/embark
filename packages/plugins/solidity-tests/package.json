@@ -43,7 +43,7 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.6.3",
     "async": "3.1.0",
-    "core-js": "3.3.4",
+    "core-js": "3.3.5",
     "remix-tests": "0.1.14",
     "web3": "1.2.1",
     "yo-yoify": "4.3.0"

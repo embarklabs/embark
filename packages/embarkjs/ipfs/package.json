@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.6.3",
-    "core-js": "3.3.4",
+    "core-js": "3.3.5",
     "ipfs-api": "17.2.4"
   },
   "devDependencies": {

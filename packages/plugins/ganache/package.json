@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.6.3",
-    "core-js": "3.3.4",
+    "core-js": "3.3.5",
     "ganache-cli": "6.4.3"
   },
   "devDependencies": {
