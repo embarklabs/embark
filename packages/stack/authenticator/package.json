@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.6.3",
-    "core-js": "3.3.4",
+    "core-js": "3.3.5",
     "embark-i18n": "^5.0.0-alpha.0",
     "embark-utils": "^5.0.0-alpha.0",
     "keccakjs": "0.2.3",
