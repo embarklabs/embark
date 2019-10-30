@@ -1,4 +1,5 @@
 const Web3 = require('web3');
+const constants = require('embark-core/constants');
 
 class BlockchainClient {
 
@@ -18,6 +19,16 @@ class BlockchainClient {
       this.events.request("proxy:endpoint:get", (err, endpoint) => {
         if (err) {
           return cb(err);
+        }
+        if (endpoint.startsWith('ws')) {
+          return cb(null, new Web3.providers.WebsocketProvider(endpoint, {
+            headers: {Origin: constants.embarkResourceOrigin},
+            // TODO remove this when Geth fixes this: https://github.com/ethereum/go-ethereum/issues/16846
+            //  Edit: This has been fixed in Geth 1.9, but we don't support 1.9 yet and still support 1.8
+            clientConfig: {
+              fragmentationThreshold: 81920
+            }
+          }));
         }
         const web3 = new Web3(endpoint);
         cb(null, web3.currentProvider);

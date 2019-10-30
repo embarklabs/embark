@@ -31,6 +31,9 @@ module.exports = {
       AnotherStorage: {
         args: ["$SimpleStorage"]
         //args: ["0x0000000000000000000000000000000000000000"]
+      },
+      BFC: {
+        args: [100]
       }
     },
     afterDeploy: async (dependencies) => {
