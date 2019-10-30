@@ -194,26 +194,6 @@ class Cmd {
   }
 
   blockchain() {
-
-    // program
-    //   .command('blockchain [environment]')
-    //   .option('-c, --client [client]', __('Use a specific ethereum client [%s] (default: %s)', 'geth, parity', 'geth'))
-    //   .option('--locale [locale]', __('language to use (default: en)'))
-    //   .description(__('run blockchain server (default: %s)', 'development'))
-    //   .action(function(env, options) {
-    //     setOrDetectLocale(options.locale);
-    //     embark.initConfig(env || 'development', {
-    //       embarkConfig: 'embark.json',
-    //       interceptLogs: false
-    //     });
-    //     if (embark.config.blockchainConfig.endpoint && !embark.config.blockchainConfig.isAutoEndpoint) {
-    //       embark.logger.warn(__('You are starting the blockchain node, but have an `endpoint` specified. `embark run` is probably what you wanted to run'));
-    //     }
-    //     embark.blockchain(env || 'development', options.client);
-    //   });
-
-    // TODO: fix me, re-add above
-
     program
       .command('blockchain [environment]')
       .option('-p, --port [port]', __('port to run the dev webserver (default: %s)', '8000'))

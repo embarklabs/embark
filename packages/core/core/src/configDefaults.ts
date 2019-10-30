@@ -39,23 +39,23 @@ export function getBlockchainDefaults(env) {
 
 export function getContractDefaults(embarkConfigVersions) {
   const defaultVersions = {
-    "web3": "1.2.1",
-    "solc": "0.5.0"
+    web3: "1.2.1",
+    solc: "0.5.0"
   };
   const versions = recursiveMerge(defaultVersions, embarkConfigVersions || {});
 
   return {
-    "default": {
-      "versions": versions,
-      "dappConnection": [
+    default: {
+      versions: versions,
+      dappConnection: [
         "$WEB3",
         "ws://localhost:8546",
         "localhost:8545"
       ],
-      "dappAutoEnable": true,
-      "strategy": constants.deploymentStrategy.implicit,
-      "gas": "auto",
-      "deploy": {
+      dappAutoEnable: true,
+      strategy: constants.deploymentStrategy.implicit,
+      gas: "auto",
+      deploy: {
       }
     }
   };

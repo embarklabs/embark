@@ -3,27 +3,36 @@ const https = require('follow-redirects').https;
 const shelljs = require('shelljs');
 const clipboardy = require('clipboardy');
 
-const {canonicalHost, defaultCorsHost, defaultHost, dockerHostSwap, isDocker} = require('./host');
-const {downloadFile, findNextPort, getJson, httpGet, httpsGet, httpGetJson, httpsGetJson, pingEndpoint} = require('./network');
+import { canonicalHost } from './host';
+export { canonicalHost, defaultCorsHost, defaultHost, dockerHostSwap, isDocker } from './host';
+export { downloadFile, findNextPort, getJson, httpGet, httpsGet, httpGetJson, httpsGetJson, pingEndpoint } from './network';
 const logUtils = require('./log-utils');
+export const escapeHtml = logUtils.escapeHtml;
+export const normalizeInput = logUtils.normalizeInput;
+export { LogHandler } from './logHandler';
 const toposortGraph = require('./toposort');
-import { unitRegex } from './constants';
 import * as AddressUtils from './addressUtils';
-import {
-  getWeiBalanceFromString,
-  getHexBalanceFromString,
-  hexToNumber,
+export { AddressUtils };
+import { unitRegex } from './constants';
+export { unitRegex } from './constants';
+import { isHex, getWeiBalanceFromString } from './web3Utils';
+export {
   decodeParams,
+  isHex,
+  getHexBalanceFromString,
+  getWeiBalanceFromString,
+  hexToNumber,
   sha3,
   sha512,
-  isHex,
   soliditySha3,
   toChecksumAddress
 } from './web3Utils';
-import { getAddressToContract, getTransactionParams } from './transactionUtils';
+export { getAddressToContract, getTransactionParams } from './transactionUtils';
 import LongRunningProcessTimer from './longRunningProcessTimer';
+export { LongRunningProcessTimer };
 import AccountParser from './accountParser';
-import {
+export { AccountParser };
+export {
   anchoredValue,
   dappPath,
   diagramPath,
@@ -42,15 +51,15 @@ import {
   normalizePath,
   toForwardSlashes
 } from './pathUtils';
-import { setUpEnv } from './env';
+export { setUpEnv } from './env';
 
 const { extendZeroAddressShorthand, replaceZeroAddressShorthand } = AddressUtils;
 
-import { compact, last, recursiveMerge, groupBy } from './collections';
-import { prepareForCompilation } from './solidity/remapImports';
-import { File, getExternalContractUrl, Types } from './file';
+export { compact, last, recursiveMerge, groupBy } from './collections';
+export { prepareForCompilation } from './solidity/remapImports';
+export { File, getExternalContractUrl, Types } from './file';
 
-import {
+export {
   findMonorepoPackageFromRoot,
   findMonorepoPackageFromRootSync,
   isInsideMonorepo,
@@ -59,25 +68,23 @@ import {
   monorepoRootPathSync
 } from './monorepo';
 
-function timer(ms) {
+export function timer(ms: number) {
   const then = Date.now();
   return new Promise(resolve => (
     setTimeout(() => resolve(Date.now() - then), ms)
   ));
 }
 
-function checkIsAvailable(url, callback) {
+export function checkIsAvailable(url: string, callback: (isAvailable: boolean) => void) {
   const protocol = url.split(':')[0];
   const httpObj = (protocol === 'https') ? https : http;
 
-  httpObj.get(url, function (_res) {
-    callback(true);
-  }).on('error', function (_res) {
-    callback(false);
-  });
+  httpObj
+    .get(url, (_res: any) => callback(true))
+    .on('error', (_res: any) => callback(false));
 }
 
-function hashTo32ByteHexString(hash) {
+export function hashTo32ByteHexString(hash: string) {
   if (isHex(hash)) {
     if (!hash.startsWith('0x')) {
       hash = '0x' + hash;
@@ -85,84 +92,84 @@ function hashTo32ByteHexString(hash) {
     return hash;
   }
   const multihash = require('multihashes');
-  let buf = multihash.fromB58String(hash);
-  let digest = multihash.decode(buf).digest;
+  const buf = multihash.fromB58String(hash);
+  const digest = multihash.decode(buf).digest;
   return '0x' + multihash.toHexString(digest);
 }
 
-function exit(code) {
+export function exit(code: number) {
   process.exit(code);
 }
 
-function runCmd(cmd, options, callback) {
+export function runCmd(cmd: string, options: any, callback: any) {
   options = Object.assign({silent: true, exitOnError: true, async: true}, options || {});
   const outputToConsole = !options.silent;
   options.silent = true;
-  let result = shelljs.exec(cmd, options, function (code, stdout) {
-    if(code !== 0) {
+  const result = shelljs.exec(cmd, options, (code, stdout: string) => {
+    if (code !== 0) {
       if (options.exitOnError) {
-        return exit();
+        return exit(code);
       }
-      if(typeof callback === 'function') {
+      if (typeof callback === 'function') {
         callback(`shell returned code ${code}`);
       }
     } else {
-      if(typeof callback === 'function') {
+      if (typeof callback === 'function') {
         return callback(null, stdout);
       }
     }
   });
 
-  result.stdout.on('data', function(data) {
-    if(outputToConsole) {
+  result.stdout.on('data', (data: any) => {
+    if (outputToConsole) {
       console.log(data);
     }
   });
 
-  result.stderr.on('data', function(data) {
+  result.stderr.on('data', (data: any) => {
     if (outputToConsole) {
       console.log(data);
     }
   });
 }
 
-function copyToClipboard(text) {
+export function copyToClipboard(text: string) {
   clipboardy.writeSync(text);
 }
 
-function byName(a, b) {
+export function byName(a, b) {
   return a.name.localeCompare(b.name);
 }
 
-function isFolder(node) {
+export function isFolder(node) {
   return node.children && node.children.length;
 }
 
-function isNotFolder(node){
+export function isNotFolder(node) {
   return !isFolder(node);
 }
 
-function fileTreeSort(nodes){
+export function fileTreeSort(nodes) {
   const folders = nodes.filter(isFolder).sort(byName);
   const files = nodes.filter(isNotFolder).sort(byName);
 
   return folders.concat(files);
 }
 
-function proposeAlternative(word, _dictionary, _exceptions) {
+export function proposeAlternative(word, _dictionary, _exceptions) {
   const propose = require('propose');
-  let exceptions = _exceptions || [];
-  let dictionary = _dictionary.filter((entry) => {
+  const exceptions = _exceptions || [];
+  const dictionary = _dictionary.filter((entry) => {
     return exceptions.indexOf(entry) < 0;
   });
   return propose(word, dictionary, {threshold: 0.3});
 }
 
-function toposort(graph) {
+export function toposort(graph) {
   return toposortGraph(graph);
 }
 
-function deconstructUrl(endpoint) {
+export function deconstructUrl(endpoint) {
   const matches = endpoint.match(/(wss?|https?):\/\/([a-zA-Z0-9_.\/-]*):?([0-9]*)?/);
   return {
     protocol: matches[1],
@@ -172,7 +179,7 @@ function deconstructUrl(endpoint) {
   };
 }
 
-function prepareContractsConfig(config) {
+export function prepareContractsConfig(config) {
   if (config.deploy) {
     config.contracts = config.deploy;
     delete config.deploy;
@@ -213,7 +220,7 @@ function prepareContractsConfig(config) {
   return config;
 }
 
-function jsonFunctionReplacer(_key, value) {
+export function jsonFunctionReplacer(_key, value) {
   if (typeof value === 'function') {
     return value.toString();
   }
@@ -221,9 +228,11 @@ function jsonFunctionReplacer(_key, value) {
   return value;
 }
 
-function fuzzySearch(text, list, filter) {
+export function fuzzySearch(text, list, filter) {
   const fuzzy = require('fuzzy');
-  return fuzzy.filter(text, list, {extract: (filter || function () {})});
+  return fuzzy.filter(text, list, {
+    extract: filter
+  });
 }
 
 /**
@@ -239,10 +248,15 @@ function fuzzySearch(text, list, filter) {
  *  Type of connection
  * @returns {string} the constructued URL, with defaults
  */
-function buildUrl(protocol, host, port, type) {
-  if (!host) throw new Error('utils.buildUrl: parameter \'host\' is required');
-  if (port) port = ':' + port;
-  else port = '';
+export function buildUrl(protocol, host, port, type) {
+  if (!host) {
+    throw new Error('utils.buildUrl: parameter \'host\' is required');
+  }
+  if (port) {
+    port = ':' + port;
+  } else {
+    port = '';
+  }
   if (!protocol) {
     protocol = type === 'ws' ? 'ws' : 'http';
   }
@@ -258,13 +272,17 @@ function buildUrl(protocol, host, port, type) {
  *      * port          {String}    (optional) The URL port, default to empty string.
  * @returns {string} the constructued URL, with defaults
  */
-function buildUrlFromConfig(configObj) {
-  if (!configObj) throw new Error('[utils.buildUrlFromConfig]: config object must cannot be null');
-  if (!configObj.host) throw new Error('[utils.buildUrlFromConfig]: object must contain a \'host\' property');
+export function buildUrlFromConfig(configObj) {
+  if (!configObj) {
+    throw new Error('[utils.buildUrlFromConfig]: config object must cannot be null');
+  }
+  if (!configObj.host) {
+    throw new Error('[utils.buildUrlFromConfig]: object must contain a \'host\' property');
+  }
   return buildUrl(configObj.protocol, canonicalHost(configObj.host), configObj.port, configObj.type);
 }
 
-function errorMessage(e) {
+export function errorMessage(e) {
   if (typeof e === 'string') {
     return e;
   } else if (e && e.message) {
@@ -273,95 +291,10 @@ function errorMessage(e) {
   return e;
 }
 
-function isConstructor(obj) {
+export function isConstructor(obj) {
   return !!obj.prototype && !!obj.prototype.constructor.name;
 }
 
-function isEs6Module(module) {
+export function isEs6Module(module) {
   return (typeof module === 'function' && isConstructor(module)) || (typeof module === 'object' && typeof module.default === 'function' && module.__esModule);
 }
-
-const Utils = {
-  anchoredValue,
-  buildUrl,
-  buildUrlFromConfig,
-  joinPath,
-  tmpDir,
-  ipcPath,
-  dappPath,
-  downloadFile,
-  embarkPath,
-  normalizePath,
-  toForwardSlashes,
-  jsonFunctionReplacer,
-  fuzzySearch,
-  canonicalHost,
-  compact,
-  copyToClipboard,
-  diagramPath,
-  deconstructUrl,
-  defaultCorsHost,
-  defaultHost,
-  decodeParams,
-  dockerHostSwap,
-  exit,
-  errorMessage,
-  getAddressToContract,
-  getTransactionParams,
-  isDocker,
-  isEs6Module,
-  checkIsAvailable,
-  File,
-  findNextPort,
-  fileTreeSort,
-  hashTo32ByteHexString,
-  hexToNumber,
-  isHex,
-  last,
-  soliditySha3,
-  recursiveMerge,
-  prepareContractsConfig,
-  findMonorepoPackageFromRoot,
-  findMonorepoPackageFromRootSync,
-  getWeiBalanceFromString,
-  getHexBalanceFromString,
-  getExternalContractUrl,
-  getJson,
-  groupBy,
-  httpGet,
-  httpsGet,
-  httpGetJson,
-  httpsGetJson,
-  isInsideMonorepo,
-  isInsideMonorepoSync,
-  monorepoRootPath,
-  monorepoRootPathSync,
-  pingEndpoint,
-  setUpEnv,
-  sha512,
-  sha3,
-  timer,
-  Types,
-  unitRegex,
-  urlJoin,
-  runCmd,
-  escapeHtml: logUtils.escapeHtml,
-  normalizeInput: logUtils.normalizeInput,
-  LogHandler: require('./logHandler'),
-  LongRunningProcessTimer,
-  pkgPath,
-  prepareForCompilation,
-  proposeAlternative,
-  toChecksumAddress,
-  toposort,
-  AddressUtils,
-  AccountParser,
-  PWD,
-  DAPP_PATH,
-  DIAGRAM_PATH,
-  EMBARK_PATH,
-  PKG_PATH,
-  NODE_PATH
-};
-
-module.exports = Utils;

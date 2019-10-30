@@ -6,6 +6,7 @@
     "module": "CommonJS",
     "noEmit": true,
     "noImplicitThis": false,
+    "noImplicitAny": false,
     "strict": true,
     "target": "ES2017",
     "resolveJsonModule": true

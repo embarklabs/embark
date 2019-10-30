@@ -13,6 +13,8 @@ declare module "embark-utils" {
   function checkIsAvailable(url: string, callback: any): void;
   function dockerHostSwap(host: string): string;
   function buildUrl(protocol: string, host: string, port: number, type: string): string;
+  function buildUrlFromConfig(config: any): string;
+  function canonicalHost(host: string): string;
   function dappPath(...names: string[]): string;
   function diagramPath(...names: string[]): string;
   function escapeHtml(message: any): string;

@@ -1,12 +1,10 @@
 /*globals describe, it, beforeEach*/
 const {expect} = require('chai');
 const sinon = require('sinon');
-const fs = require('../../lib/core/fs');
-const Events = require('../../lib/core/events');
-const Logger = require('embark-logger');
+import { Logger } from 'embark-logger';
 import { getAddressToContract } from 'embark-utils';
 const ConsoleListener = require('embark-console-listener');
-import { IPC } from 'embark-core';
+import { Events, fs, IPC } from 'embark-core';
 require('colors');
 
 let events,

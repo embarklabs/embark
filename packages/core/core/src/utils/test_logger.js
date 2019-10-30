@@ -2,7 +2,7 @@ require('colors');
 
 // TODO: just logFunction changes, probably doesn't need a whole new module just
 // for this
-class TestLogger {
+export class TestLogger {
   constructor(options) {
     this.logLevels = ['error', 'warn', 'info', 'debug', 'trace'];
     this.logLevel = options.logLevel || 'info';
@@ -52,5 +52,3 @@ class TestLogger {
   }
 
 }
-
-module.exports = TestLogger;

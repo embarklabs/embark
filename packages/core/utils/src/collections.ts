@@ -1,4 +1,4 @@
-const merge = require("merge");
+const merge = require('merge');
 
 export function last(array: any) {
   return array[array.length - 1];

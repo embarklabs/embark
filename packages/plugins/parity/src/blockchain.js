@@ -10,7 +10,7 @@ const ParityClient = require('./parityClient.js');
 import {IPC} from 'embark-core';
 
 import {compact, dappPath, defaultHost, dockerHostSwap, embarkPath/*, AccountParser*/} from 'embark-utils';
-const Logger = require('embark-logger');
+import { Logger } from 'embark-logger';
 
 // time between IPC connection attempts (in ms)
 const IPC_CONNECT_INTERVAL = 2000;

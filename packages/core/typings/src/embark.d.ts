@@ -1,5 +1,5 @@
-import { Logger } from "./logger";
-import { Plugins } from "./plugins";
+import { Logger } from './logger';
+import { Plugins } from './plugins';
 
 type CommandCallback = (
   opt1?: any,

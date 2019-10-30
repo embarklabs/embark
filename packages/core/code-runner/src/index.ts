@@ -1,10 +1,10 @@
+import { Callback, Embark, Events } /* supplied by @types/embark in packages/embark-typings */ from "embark";
 import { __ } from "embark-i18n";
+import { Logger } from 'embark-logger';
 import * as fs from "./fs";
 import VM from "./vm";
 
 export { fs, VM };
-
-import { Callback, Embark, Events, Logger } /* supplied by @types/embark in packages/embark-typings */ from "embark";
 
 class CodeRunner {
   private logger: Logger;

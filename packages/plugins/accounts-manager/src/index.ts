@@ -1,7 +1,8 @@
 import async from "async";
-import { Embark, Events, Logger } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Embark, Events } /* supplied by @types/embark in packages/embark-typings */ from "embark";
 import { __ } from "embark-i18n";
 import { AccountParser, dappPath } from "embark-utils";
+import { Logger } from 'embark-logger';
 import Web3 from "web3";
 const { blockchain: blockchainConstants } = require("embark-core/constants");
 

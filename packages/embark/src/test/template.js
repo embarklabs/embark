@@ -1,6 +1,6 @@
 /*globals describe, it, before*/
 const assert = require('assert');
-const TemplateGenerator = require('../lib/utils/template_generator');
+import { TemplateGenerator } from 'embark-core';
 const semver = require('semver');
 const sinon = require('sinon');
 const request = require('request');

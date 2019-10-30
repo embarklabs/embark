@@ -1,12 +1,10 @@
 /*global describe, it, require*/
+import { Events, Plugins, TestLogger } from 'embark-core';
 import { File, Types } from "embark-utils";
 
 const assert = require('assert');
 
 const Compiler = require('embark-compiler');
-const Plugins = require('../../../lib/core/plugins.js');
-const TestLogger = require('../../../lib/utils/test_logger');
-const Events = require('../../../lib/core/events');
 
 const readFile = function(file) {
   return new File({filename: file, type: Types.dappFile, path: file});
