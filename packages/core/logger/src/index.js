@@ -95,8 +95,11 @@ Logger.prototype.writeToFile = function (_txt) {
   if (!this.logFile) {
     return;
   }
+
+  let origin = "[" + ((new Error().stack).split("at ")[3]).trim() + "]";
+
   const formattedDate = [`[${date.format(new Date(), DATE_FORMAT)}]`]; // adds a timestamp to the logs in the logFile
-  fs.appendFileSync(this.logFile, "\n" + formattedDate.concat(Array.from(arguments)).join(' '));
+  fs.appendFileSync(this.logFile, "\n" + formattedDate.concat(origin, Array.from(arguments)).join(' '));
 };
 
 Logger.prototype.error = function () {
