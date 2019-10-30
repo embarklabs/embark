@@ -53,7 +53,8 @@
     "embark-utils": "^5.0.0-alpha.0",
     "express": "4.17.1",
     "express-ws": "4.0.0",
-    "web3-core-requestmanager": "1.2.1"
+    "web3-core-requestmanager": "1.2.1",
+    "web3-providers-ws": "1.2.1"
   },
   "devDependencies": {
     "@types/cors": "2.8.6",

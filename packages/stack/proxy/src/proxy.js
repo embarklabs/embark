@@ -4,6 +4,7 @@ import express from 'express';
 import expressWs from 'express-ws';
 import cors from 'cors';
 const Web3RequestManager = require('web3-core-requestmanager');
+const Web3WsProvider = require('web3-providers-ws');
 const constants = require("embark-core/constants");
 
 const ACTION_TIMEOUT = 5000;
@@ -21,6 +22,16 @@ export class Proxy {
     this.endpoint = options.endpoint;
     if (options.endpoint === constants.blockchain.vm) {
       this.endpoint = this.vms[this.vms.length - 1]();
+    }
+    if (typeof this.endpoint === 'string' && this.endpoint.startsWith('ws')) {
+      this.endpoint = new Web3WsProvider(this.endpoint, {
+        headers: {Origin: constants.embarkResourceOrigin},
+        // TODO remove this when Geth fixes this: https://github.com/ethereum/go-ethereum/issues/16846
+        //  Edit: This has been fixed in Geth 1.9, but we don't support 1.9 yet and still support 1.8
+        clientConfig: {
+          fragmentationThreshold: 81920
+        }
+      });
     }
     this.isWs = options.isWs;
     // used to service all non-long-living WS connections, including any
@@ -52,7 +63,7 @@ export class Proxy {
     this.app.use(express.urlencoded({ extended: true }));
 
     if (this.isWs) {
-      this.app.ws('/', async (conn, wsReq) => {
+      this.app.ws('/', async (conn, _wsReq) => {
 
         conn.on('message', async (msg) => {
           try {
@@ -111,7 +122,9 @@ export class Proxy {
       // kill our manually created long-living connection for eth_subscribe if we have one
       if (this.isWs && modifiedRequest.reqData.method === 'eth_unsubscribe') {
         const id = modifiedRequest.reqData.params[0];
-        this.nodeSubscriptions[id] && this.nodeSubscriptions[id].provider && this.nodeSubscriptions[id].provider.disconnect && this.nodeSubscriptions[id].provider.disconnect();
+        if (this.nodeSubscriptions[id] && this.nodeSubscriptions[id].provider && this.nodeSubscriptions[id].provider.disconnect) {
+          this.nodeSubscriptions[id].provider.disconnect();
+        }
       }
       // create a long-living WS connection to the node
       if (this.isWs && modifiedRequest.reqData.method === 'eth_subscribe') {
@@ -216,11 +229,11 @@ export class Proxy {
   }
 
   respondError(transport, error) {
-    return this.isWs ? this.respondWs(transport, error) : this.respondHttp(transport, 500, error)
+    return this.isWs ? this.respondWs(transport, error) : this.respondHttp(transport, 500, error);
   }
 
   respondOK(transport, response) {
-    return this.isWs ? this.respondWs(transport, response) : this.respondHttp(transport, 200, response)
+    return this.isWs ? this.respondWs(transport, response) : this.respondHttp(transport, 200, response);
   }
 
   emitActionsForRequest(body) {
