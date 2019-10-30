@@ -33,7 +33,7 @@
     "gulp-cheerio": "^0.6.2",
     "gulp-clean-css": "^4.2.0",
     "gulp-if": "^3.0.0",
-    "gulp-responsive": "^2.14.0",
+    "gulp-responsive": "^3.0.1",
     "gulp-rev": "^9.0.0",
     "gulp-rev-collector": "^1.0.2",
     "gulp-rev-replace": "^0.4.3",
