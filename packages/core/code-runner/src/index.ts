@@ -52,7 +52,7 @@ class CodeRunner {
     this.vm.registerVar(varName, code, cb);
   }
 
-  private evalCode(code: string, cb: Callback<any>, tolerateError = false) {
+  private evalCode(code: string, cb: Callback<any>, tolerateError = false, logCode = true, logError = true) {
     cb = cb || (() => { });
 
     if (!code) {
@@ -61,8 +61,12 @@ class CodeRunner {
 
     this.vm.doEval(code, tolerateError, (err, result) => {
       if (err) {
-        this.logger.error(__("Error running code: %s", code));
-        this.logger.error(err.toString());
+        if (logCode) {
+          this.logger.error(__("Error running code: %s", code));
+        }
+        if (logError) {
+          this.logger.error(err.toString());
+        }
         return cb(err);
       }
 
