@@ -47,13 +47,18 @@ class Console {
 
     if (this.ipc.isServer()) {
       this.ipc.on("console:executeCmd", (cmd: string, cb: any) => {
-        this.executeCmd(cmd, (err: string, result: any) => {
-          let error = null;
+        this.executeCmd(cmd, (err: any, result: any) => {
           if (err) {
             // reformat for IPC reply
-            error = { name: "Console error", message: err, stack: err };
+            err = { name: "Console error", message: err, stack: err.stack };
+            return cb(err);
           }
-          cb(error, util.inspect(result));
+          cb(null, util.inspect(result));
+        });
+      });
+      this.ipc.on("console:executePartial", (cmd: string, cb: any) => {
+        this.executePartial(cmd, (_: any, result: any) => {
+          cb(null, util.inspect(result));
         });
       });
       this.ipc.on("console:history:save", true, (cmd: string) => {
@@ -70,6 +75,7 @@ class Console {
       if (cb) { cb(); }
     });
     this.events.setCommandHandler("console:executeCmd", this.executeCmd.bind(this));
+    this.events.setCommandHandler("console:executePartial", this.executePartial.bind(this));
     this.events.setCommandHandler("console:history", (cb: any) => this.getHistory(this.cmdHistorySize(), cb));
     this.registerConsoleCommands();
 
@@ -149,7 +155,19 @@ class Console {
     return false;
   }
 
-  private executeCmd(cmd: string, callback: any) {
+  private executePartial(cmd: string, callback: any) {
+    // if this is the embark console process, send the command to the process
+    // running all the needed services (ie the process running `embark run`)
+    if (this.isEmbarkConsole) {
+      return this.ipc.request("console:executePartial", cmd, callback);
+    }
+
+    this.executeCmd(cmd, (_: any, result: any) => {
+      callback(null, result);
+    });
+  }
+
+  private executeCmd(cmd: string, callback?: any, logEvalCode = false, logEvalError = false) {
     // if this is the embark console process, send the command to the process
     // running all the needed services (ie the process running `embark run`)
     if (this.isEmbarkConsole) {
@@ -197,12 +215,7 @@ class Console {
       return callback(null, output);
     }
 
-    this.events.request("runcode:eval", cmd, (err: Error, result: any) => {
-      if (err) {
-        return callback(err.message);
-      }
-      callback(null, result);
-    }, true);
+    this.events.request("runcode:eval", cmd, callback, true, logEvalCode, logEvalError);
   }
 
   private registerConsoleCommands() {

@@ -27,7 +27,7 @@ class REPL {
     this.events.request('console:executeCmd', cmd.trim(), function (err, message) {
       if (err) {
         // Do not return as the first param (error), because the dashboard doesn't print errors
-        return callback(null, err.red);
+        return callback(null, err.message ? err.message.red : err.red);
       }
       callback(null, message === undefined ? '' : message); // This way, we don't print undefined
     });
@@ -58,9 +58,9 @@ class REPL {
       hint = partial;
     }
 
-    this.events.request('console:executeCmd', context, (err, result)  => {
-      if (err !== null) {
-        cb(err, [[], partial]);
+    this.events.request('console:executePartial', context, (err, result)  => {
+      if (err || !result) {
+        return cb(null, [[], partial]);
       }
 
       let props = Object
