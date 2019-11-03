@@ -78,14 +78,19 @@ Plugins.prototype.loadInternalPlugin = function(pluginName, pluginConfig, isPack
     plugin = plugin.default;
   }
 
+  let logId = this.logger.moduleInit(pluginName);
+  let events = Object.assign({}, this.events, {logId: logId, logger: this.logger});
+  Object.setPrototypeOf(events, this.events);
+
   const pluginWrapper = new Plugin({
     name: pluginName,
     pluginModule: plugin,
     pluginConfig: pluginConfig || {},
     logger: this.logger,
+    logId: logId,
     pluginPath: pluginPath,
     interceptLogs: this.interceptLogs,
-    events: this.events,
+    events: events,
     config: this.config,
     plugins: this.plugins,
     fs: this.fs,

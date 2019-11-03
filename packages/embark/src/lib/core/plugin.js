@@ -49,6 +49,7 @@ var Plugin = function(options) {
   this.acceptedContext = options.pluginConfig.context || [constants.contexts.any];
   this.version = options.version;
   this.constants = constants;
+  this.logId = options.logId;
 
   if (!Array.isArray(this.currentContext)) {
     this.currentContext = [this.currentContext];
