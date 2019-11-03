@@ -10,11 +10,11 @@ class Deployment {
     this.config = embark.config;
 
     this.logger = embark.logger;
-    this.logId = this.logger.moduleInit("DeploymentModule");
+    this.events = embark.events;
+    this.logId = embark.logId;
 
-    // this.events = embark.events;
-    this.events = Object.assign({}, embark.events, {logId: this.logId, logger: this.logger});
-    Object.setPrototypeOf(this.events, embark.events);
+    // this.events = Object.assign({}, embark.events, {logId: this.logId, logger: this.logger});
+    // Object.setPrototypeOf(this.events, embark.events);
 
     this.plugins = options.plugins;
     this.blockchainConfig = this.config.blockchainConfig;

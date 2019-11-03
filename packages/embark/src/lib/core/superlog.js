@@ -1,14 +1,23 @@
 const Logger = require('embark-logger');
 const uuid = require('uuid');
 const fs = require('fs-extra');
+import stringify from "json-stringify-safe";
+
+function jsonFunctionReplacer(_key, value) {
+  if (typeof value === 'function') {
+    return value.toString();
+  }
+
+  return value;
+}
 
 var DB = {
 }
 
 function addRecord(data) {
   DB[data.id] = data
-  console.dir("---> added")
-  console.dir(DB[data.id])
+  // console.dir("---> added")
+  // console.dir(DB[data.id])
 }
 
 function findRecord(id) {
@@ -17,13 +26,17 @@ function findRecord(id) {
 
 function updateRecord(id, data) {
   DB[id] = {...DB[id], ...data}
-  console.dir("---> updated")
-  console.dir(DB[id])
+  // console.dir("---> updated")
+  // console.dir(DB[id])
 }
 
 setTimeout(() => {
-  console.dir(DB);
-  fs.writeJSONSync("./log.json", DB);
+  // console.dir(DB);
+
+  let value = JSON.parse(stringify(DB, jsonFunctionReplacer, 2));
+
+  // fs.writeJSONSync("./log.json", DB);
+  fs.writeJSONSync("./log.json", value);
   process.exit(0);
 }, 60*1000);
 
