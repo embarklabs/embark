@@ -2,7 +2,8 @@ import {__} from 'embark-i18n';
 import {dappPath, embarkPath} from 'embark-utils';
 let async = require('async');
 const constants = require('embark-core/constants');
-const Logger = require('embark-logger');
+// const Logger = require('embark-logger');
+const Logger = require('../lib/core/superlog.js');
 const {reset: embarkReset, paths: defaultResetPaths} = require('embark-reset');
 const fs = require('../lib/core/fs.js');
 const cloneDeep = require('clone-deep');
@@ -152,6 +153,11 @@ class EmbarkController {
         if (pluginList.length > 0) {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
+
+        let runId = engine.logger.moduleInit("run_command")
+        let _events = Object.assign({}, engine.events, {logId: runId, logger: engine.logger});
+        Object.setPrototypeOf(_events, engine.events);
+        engine.events = _events;
 
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
