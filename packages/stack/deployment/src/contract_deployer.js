@@ -2,7 +2,14 @@ const async = require('async');
 
 class ContractDeployer {
   constructor(options) {
-    this.events = options.events;
+    // this.events = options.events;
+
+    this.logger = options.logger;
+    this.logId = this.logger.moduleInit("ContractDeployer");
+
+    this.events = Object.assign({}, options.events, {logId: this.logId, logger: this.logger});
+    Object.setPrototypeOf(this.events, options.events);
+
     this.plugins = options.plugins;
     this.deployer = {};
     this.events.setCommandHandler("deployment:deployer:register", (blockchainType, deployerCb) => {

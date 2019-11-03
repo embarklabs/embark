@@ -152,6 +152,11 @@ class EmbarkController {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
 
+        let runId = engine.logger.moduleInit("run_command")
+        let _events = Object.assign({}, engine.events, {logId: runId, logger: engine.logger});
+        Object.setPrototypeOf(_events, engine.events);
+        engine.events = _events;
+
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
         engine.registerModuleGroup("consoleComponents");

@@ -8,14 +8,21 @@ const constants = require('embark-core/constants');
 class Deployment {
   constructor(embark, options) {
     this.config = embark.config;
-    this.events = embark.events;
+
     this.logger = embark.logger;
+    this.logId = this.logger.moduleInit("DeploymentModule");
+
+    // this.events = embark.events;
+    this.events = Object.assign({}, embark.events, {logId: this.logId, logger: this.logger});
+    Object.setPrototypeOf(this.events, embark.events);
+
     this.plugins = options.plugins;
     this.blockchainConfig = this.config.blockchainConfig;
 
     this.contractDeployer = new ContractDeployer({
       events: this.events,
-      plugins: this.plugins
+      plugins: this.plugins,
+      logger: this.logger
     });
 
     this.events.setCommandHandler('deployment:contracts:deploy', (contractsList, contractDependencies, cb) => {
@@ -24,6 +31,8 @@ class Deployment {
   }
 
   deployContracts(contracts, contractDependencies, done) {
+    let subId = this.logger.log({parent_id: this.logId, type: "method", name: "deployContracts", inputs: {contracts, contractDependencies}});
+
     this.logger.info(__("deploying contracts"));
     async.waterfall([
       // TODO used to be called this.plugins.emitAndRunActionsForEvent("deploy:beforeAll", (err) => {
@@ -44,6 +53,7 @@ class Deployment {
   }
 
   deployContract(contract, callback) {
+    let subId = this.logger.log({parent_id: this.logId, type: "method", name: "deployContract", inputs: {contract}});
     this.events.request('deployment:contract:deploy', contract, (err) => {
       if (err) {
         contract.error = err.message || err;
@@ -52,13 +62,16 @@ class Deployment {
         } else {
           this.logger.error(`[${contract.className}]: ${err.message || err}`);
         }
+        this.logger.log({id: subId, outputs: err, error: true});
         return callback(err);
       }
+      this.logger.log({id: subId, outputs: ""});
       callback();
     });
   }
 
   deployAll(contracts, contractDependencies, done) {
+    let subId = this.logger.log({parent_id: this.logId, type: "method", name: "deployAll", inputs: {contracts, contractDependencies}});
     const self = this;
     const contractDeploys = {};
     const errors = [];
@@ -99,13 +112,17 @@ class Deployment {
     async.auto(contractDeploys, (err, _results) => {
       if (errors.length) {
         err = __("Error deploying contracts. Please fix errors to continue.");
+
+        this.logger.log({id: subId, outputs: err, error: true});
         return done(err);
       }
       if (contracts.length === 0) {
         this.logger.info(__("no contracts found"));
+        this.logger.log({id: subId, outputs: "", msg: "no contracts found"});
         return done();
       }
       this.logger.info(__("finished deploying contracts"));
+      this.logger.log({id: subId, outputs: err, error: !!err, msg: "finished deploying contracts"});
       done(err);
     });
   }

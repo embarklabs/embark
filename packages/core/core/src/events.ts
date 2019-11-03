@@ -107,6 +107,11 @@ EmbarkEmitter.prototype.request2 = function() {
   const requestName = arguments[0];
   const other_args: any[] = [].slice.call(arguments, 1);
 
+  let requestId;
+  if (this.logger && this.logId) {
+    requestId = this.logger.log({parent_id: this.logId, type: "request", name: requestName, inputs: other_args})
+  }
+
   log("\nREQUEST", requestName);
   warnIfLegacy(requestName);
   if (this._events && !this._events['request:' + requestName]) {
@@ -121,9 +126,21 @@ EmbarkEmitter.prototype.request2 = function() {
   const promise = new Promise((resolve, reject) => {
     other_args.push(
       (err, ...res) => {
-        if (err) { return reject(err); }
+        if (err) {
+          if (this.logger && this.logId) {
+            this.logger.log({id: requestId, type: "request", name: requestName, msg: err, error: true})
+          }
+          return reject(err);
+        }
+
         if (res.length && res.length > 1) {
+          if (this.logger && this.logId) {
+            this.logger.log({id: requestId, type: "request", name: requestName, outputs: res})
+          }
           return resolve(res);
+        }
+        if (this.logger && this.logId) {
+          this.logger.log({id: requestId, type: "request", name: requestName, outputs: res[0]})
         }
         return resolve(res[0]);
       }
@@ -150,6 +167,11 @@ EmbarkEmitter.prototype.request = function() {
   const requestName = arguments[0];
   const other_args = [].slice.call(arguments, 1);
 
+  let requestId;
+  if (this.logger && this.logId) {
+    requestId = this.logger.log({parent_id: this.logId, type: "old_request", name: requestName, inputs: other_args})
+  }
+
   log("\nREQUEST(OLD)", requestName);
   warnIfLegacy(requestName);
   if (this._events && !this._events['request:' + requestName]) {
@@ -161,7 +183,7 @@ EmbarkEmitter.prototype.request = function() {
   }
   const listenerName = 'request:' + requestName;
 
-  // TODO: remove this, it will lead to illusion of things working when this situatio shouldnt' hapepn in the first place
+  // TODO: remove this, it will lead to illusion of things working when this situation shouldnt' hapepn in the first place
 
   // if we don't have a command handler set for this event yet,
   // store it and fire it once a command handler is set
@@ -180,6 +202,10 @@ EmbarkEmitter.prototype.request = function() {
 // TODO: ensure that it's only possible to create 1 command handler
 EmbarkEmitter.prototype.setCommandHandler = function(requestName, cb) {
   log("SET COMMAND HANDLER", requestName);
+
+  if (this.logger && this.logId) {
+    this.logger.log({parent_id: this.logId, type: "setCommandHandler", name: requestName})
+  }
 
   // let origin = ((new Error().stack).split("at ")[3]).trim();
   // origin = origin.split("(")[0].trim();
