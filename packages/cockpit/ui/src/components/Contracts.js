@@ -17,23 +17,22 @@ const Contracts = ({contracts, changePage, currentPage, numberOfPages, title = "
         <CardBody>
           {!contracts.length && "No contracts to display"}
           {contracts
-            .map((contract, key) => {
-              const contractDisplay = formatContractForDisplay(contract);
-              if (!contractDisplay) {
-                return '';
+           .map((contract, key) => {
+              if (!contract) {
+                return null;
               }
-
+              const contractDisplay = formatContractForDisplay(contract);
               return (
                 <div className="explorer-row border-top" key={`contract-${key}`}>
-                  <CardTitleIdenticon id={contract.className}>
-                    <Link to={`/explorer/contracts/${contract.className}`}>
-                      {contract.className}
+                  <CardTitleIdenticon id={contractDisplay.name}>
+                    <Link to={`/explorer/contracts/${contractDisplay.name}`}>
+                      {contractDisplay.name}
                     </Link>
                   </CardTitleIdenticon>
                   <Row>
                     <Col>
                       <strong>Address</strong>
-                      <div>{contract.deployedAddress}</div>
+                      <div>{contractDisplay.address}</div>
                     </Col>
                     <Col>
                       <strong>State</strong>

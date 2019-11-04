@@ -2,7 +2,8 @@ import isToday from 'date-fns/isToday';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 export function formatContractForDisplay(contract) {
-  let address = (contract.deployedAddress || contract.deployedAddress);
+  let address = contract.deployedAddress;
+  let name = contract.className;
   let state = 'Deployed';
   let stateColor = 'success';
   if (contract.deploy === false) {
@@ -18,7 +19,7 @@ export function formatContractForDisplay(contract) {
     state = 'Pending';
     stateColor = 'warning';
   }
-  return {address, state, stateColor};
+  return {address, name, state, stateColor};
 }
 
 export function formatTimestampForDisplay(timestamp) {
