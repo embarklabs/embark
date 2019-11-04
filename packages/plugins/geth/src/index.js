@@ -41,7 +41,7 @@ class Geth {
         this.registerServiceCheck();
       },
       stopFn: async (cb) => {
-        await this.events.request("processes:stop", "blockchain");
+        await this.events.request2("processes:stop", "blockchain");
         cb();
       }
     });
