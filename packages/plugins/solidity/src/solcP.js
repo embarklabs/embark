@@ -8,7 +8,6 @@ class SolcProcess extends ProcessWrapper {
     super({pingParent: false});
     this._logger = options.logger;
     this._showSpinner = options.showSpinner === true;
-    this._providerUrl = options.providerUrl;
   }
 
   findImports(filename) {

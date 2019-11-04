@@ -11,27 +11,47 @@ class SolcW {
     this.events = options.events;
     this.ipc = options.ipc;
     this.compilerLoaded = false;
+    this.ipcConnected = false;
     this.solcProcess = null;
     this.useDashboard = options.useDashboard;
-    this.providerUrl = options.providerUrl;
   }
 
   load_compiler(done) {
-    const self = this;
-    if (!self.ipc.isClient()) {
-      return self.load_compiler_internally(done);
+    if (!this.ipc.isClient()) {
+      return this.load_compiler_internally(done);
     }
 
-    if (self.ipc.connected) {
-      self.compilerLoaded = true;
-      return done();
-    }
-    self.ipc.connect((err) => {
+    this.checkIpcConnection((err) => {
       if (err) {
-        return self.load_compiler_internally(done);
+        return this.load_compiler_internally(done);
       }
-      self.compilerLoaded = true;
+      this.ipcConnected = true;
+      this.compilerLoaded = true;
       done();
+    });
+  }
+
+  checkIpcConnection(cb) {
+    if (this.ipc.connected) {
+      this.testIpcConnection(cb);
+    }
+    this.ipc.connect((err) => {
+      if (err) {
+        // No IPC. Load internally
+        return cb(err);
+      }
+      this.testIpcConnection(cb);
+    });
+  }
+
+  testIpcConnection(cb) {
+    const connectionTimeout = setTimeout(() => {
+      cb('No compiler through IPC connection');
+    }, 1000);
+    this.ipc.request('testConnection', () => {
+      // Connection works, the compiler is available through IPC
+      clearTimeout(connectionTimeout);
+      cb();
     });
   }
 
@@ -44,7 +64,6 @@ class SolcW {
       modulePath: joinPath(__dirname, 'solcP.js'),
       logger: this.logger,
       events: this.events,
-      providerUrl: this.providerUrl,
       silent: false
     });
 
@@ -74,6 +93,9 @@ class SolcW {
 
     if (this.ipc.isServer()) {
       this.ipc.on('compile', this.compile.bind(this));
+      this.ipc.on('testConnection', (cb) => {
+        cb(true);
+      });
     }
   }
 
@@ -84,7 +106,7 @@ class SolcW {
   compile(jsonObj,  done) {
     const id = uuid();
 
-    if (this.ipc.isClient() && this.ipc.connected) {
+    if (this.ipcConnected) {
       return this.ipc.request('compile', jsonObj, done);
     }
 
