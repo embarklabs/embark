@@ -11,13 +11,9 @@ contract BigFreakingContract {
   mapping( address => mapping( address => uint ) ) _approvals;
   uint public _supply;
 
-  // TODO: currently commented due to a bug with the params
-  // constructor( uint initial_balance ) public {
-  constructor() public {
-    // _balances[msg.sender] = initial_balance;
-    // _supply = initial_balance;
-    _balances[msg.sender] = 100;
-    _supply = 100;
+  constructor( uint initial_balance ) public {
+    _balances[msg.sender] = initial_balance;
+    _supply = initial_balance;
   }
   function totalSupply() public constant returns (uint supply) {
     return _supply;

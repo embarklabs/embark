@@ -15,6 +15,10 @@ module.exports = {
       Ownable: {
         deploy: false
       },
+      Token: {
+        deploy: false,
+        args: [1000]
+      },
       SimpleStorage: {
         fromIndex: 0,
         args: [100],
@@ -32,9 +36,37 @@ module.exports = {
         args: ["$SimpleStorage"]
         //args: ["0x0000000000000000000000000000000000000000"]
       },
-      BFC: {
+      BigFreakingContract: {
         args: [100]
-      }
+      },
+      ContractArgs: {
+        args: [
+          ["$MyToken2", "$SimpleStorage"],
+          123
+        ]
+      },
+      SomeContract: {
+        deployIf: 'await MyToken.methods.isAvailable().call()',
+        deps: ['MyToken'],
+        args: [
+          ["$MyToken2", "$SimpleStorage"],
+          100
+        ]
+      },
+      Expiration: {
+        args: [1000]
+      },
+      SimpleStorageWithHttpImport: {
+        fromIndex: 0,
+        args: [100]
+      },
+      MyToken: {
+        instanceOf: "Token"
+      },
+      MyToken2: {
+        instanceOf: "Token",
+        args: [200]
+      },
     },
     afterDeploy: async (dependencies) => {
       console.log("==========================");
