@@ -1,6 +1,6 @@
 {
   "name": "embark-scaffolding",
-  "version": "5.0.0-alpha.0",
+  "version": "5.0.0-alpha.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Provides scaffolding utilities",
@@ -45,8 +45,8 @@
     "@babel/runtime-corejs3": "7.6.3",
     "ajv": "6.10.2",
     "core-js": "3.3.5",
-    "embark-i18n": "^5.0.0-alpha.0",
-    "embark-utils": "^5.0.0-alpha.0",
+    "embark-i18n": "^5.0.0-alpha.1",
+    "embark-utils": "^5.0.0-alpha.1",
     "handlebars": "4.2.0"
   },
   "devDependencies": {

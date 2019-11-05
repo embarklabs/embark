@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.1](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.0...v5.0.0-alpha.1) (2019-11-05)
+
+
+### Bug Fixes
+
+* **@embark/console:** ensure Cockpit is only started in non-secondary mode ([#2026](https://github.com/embark-framework/embark/issues/2026)) ([b0e71d9](https://github.com/embark-framework/embark/commit/b0e71d9))
+* **@embark/core:** set loglevel back to info ([b8f7ec2](https://github.com/embark-framework/embark/commit/b8f7ec2))
+* **@embark/test-runner:** fix test contracts being tracked ([fe3e604](https://github.com/embark-framework/embark/commit/fe3e604))
+
+
+
+
+
 # [5.0.0-alpha.0](https://github.com/embark-framework/embark/compare/v4.1.1...v5.0.0-alpha.0) (2019-10-28)
 
 

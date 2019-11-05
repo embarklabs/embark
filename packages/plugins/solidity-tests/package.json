@@ -1,6 +1,6 @@
 {
   "name": "embark-solidity-tests",
-  "version": "5.0.0-alpha.0",
+  "version": "5.0.0-alpha.1",
   "description": "Plugin to run Embark solidity tests",
   "main": "dist/lib/index.js",
   "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/solidity-tests#readme",

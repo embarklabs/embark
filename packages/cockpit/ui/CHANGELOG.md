@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.1](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.0...v5.0.0-alpha.1) (2019-11-05)
+
+
+### Bug Fixes
+
+* **@cockpit/dashboard:** "Deployed Contracts" should auto-update after deployment ([#2020](https://github.com/embark-framework/embark/issues/2020)) ([1a43dca](https://github.com/embark-framework/embark/commit/1a43dca))
+
+
+
+
+
 # [5.0.0-alpha.0](https://github.com/embark-framework/embark/compare/v4.1.1...v5.0.0-alpha.0) (2019-10-28)
 
 

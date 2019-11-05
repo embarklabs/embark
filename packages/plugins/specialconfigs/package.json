@@ -1,6 +1,6 @@
 {
   "name": "embark-specialconfigs",
-  "version": "5.0.0-alpha.0",
+  "version": "5.0.0-alpha.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Adds various configs to embark's contract.js config file",
@@ -44,7 +44,7 @@
     "@babel/runtime-corejs3": "7.6.3",
     "async": "2.6.1",
     "core-js": "3.3.5",
-    "embark-i18n": "^5.0.0-alpha.0",
+    "embark-i18n": "^5.0.0-alpha.1",
     "viz.js": "1.8.2"
   },
   "devDependencies": {

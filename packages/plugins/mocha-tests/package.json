@@ -1,6 +1,6 @@
 {
   "name": "embark-mocha-tests",
-  "version": "5.0.0-alpha.0",
+  "version": "5.0.0-alpha.1",
   "description": "Mocha Test Runner",
   "main": "dist/lib/index.js",
   "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/mocha-tests#readme",
@@ -47,9 +47,9 @@
     "@babel/runtime-corejs3": "7.6.3",
     "async": "3.1.0",
     "core-js": "3.3.5",
-    "embark-i18n": "^5.0.0-alpha.0",
-    "embark-utils": "^5.0.0-alpha.0",
-    "embarkjs": "^5.0.0-alpha.0",
+    "embark-i18n": "^5.0.0-alpha.1",
+    "embark-utils": "^5.0.0-alpha.1",
+    "embarkjs": "^5.0.0-alpha.1",
     "mocha": "6.2.0",
     "web3": "1.2.1"
   },

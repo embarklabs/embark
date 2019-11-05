@@ -1,6 +1,6 @@
 {
   "name": "embark-embarkjs",
-  "version": "5.0.0-alpha.0",
+  "version": "5.0.0-alpha.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "EmbarkJS APIs for Embark",
@@ -44,8 +44,8 @@
     "@babel/runtime-corejs3": "7.6.3",
     "core-js": "3.3.5",
     "ejs": "2.6.1",
-    "embark-core": "^5.0.0-alpha.0",
-    "embark-i18n": "^5.0.0-alpha.0"
+    "embark-core": "^5.0.0-alpha.1",
+    "embark-i18n": "^5.0.0-alpha.1"
   },
   "devDependencies": {
     "embark-solo": "^5.0.0-alpha.0",

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.1](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.0...v5.0.0-alpha.1) (2019-11-05)
+
+
+### Bug Fixes
+
+* fix ws providers to have the patch for a bigger threshold ([#2017](https://github.com/embark-framework/embark/issues/2017)) ([9e654c5](https://github.com/embark-framework/embark/commit/9e654c5))
+* **@cockpit/dashboard:** "Deployed Contracts" should auto-update after deployment ([#2020](https://github.com/embark-framework/embark/issues/2020)) ([1a43dca](https://github.com/embark-framework/embark/commit/1a43dca))
+* **@embark/cockpit:** ensure correct data is send to web3's `ecRecover` ([#2024](https://github.com/embark-framework/embark/issues/2024)) ([abe79c8](https://github.com/embark-framework/embark/commit/abe79c8))
+* **@embark/console:** ensure Cockpit is only started in non-secondary mode ([#2026](https://github.com/embark-framework/embark/issues/2026)) ([b0e71d9](https://github.com/embark-framework/embark/commit/b0e71d9))
+* **@embark/core:** set loglevel back to info ([b8f7ec2](https://github.com/embark-framework/embark/commit/b8f7ec2))
+* **@embark/deploy-tracker:** fix not storing different chains ([72278aa](https://github.com/embark-framework/embark/commit/72278aa))
+* **@embark/proxy:** Fix contract event subscriptions ([f9ad486](https://github.com/embark-framework/embark/commit/f9ad486))
+* **@embark/templates:** ensure boilerplate template comes with valid whisper port ([bad2207](https://github.com/embark-framework/embark/commit/bad2207)), closes [/github.com/embark-framework/embark/commit/e330b338ea2a45acb14eebd93af93bc2aba62516#diff-a61fbc84e4172487789d676437f26b5fR14](https://github.com//github.com/embark-framework/embark/commit/e330b338ea2a45acb14eebd93af93bc2aba62516/issues/diff-a61fbc84e4172487789d676437f26b5fR14)
+* **@embark/test-runner:** fix test contracts being tracked ([fe3e604](https://github.com/embark-framework/embark/commit/fe3e604))
+
+
+
+
+
 # [5.0.0-alpha.0](https://github.com/embark-framework/embark/compare/v4.1.1...v5.0.0-alpha.0) (2019-10-28)
 
 

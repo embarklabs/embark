@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.1](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.0...v5.0.0-alpha.1) (2019-11-05)
+
+
+### Bug Fixes
+
+* **@embark/test-runner:** fix test contracts being tracked ([fe3e604](https://github.com/embark-framework/embark/commit/fe3e604))
+* fix ws providers to have the patch for a bigger threshold ([#2017](https://github.com/embark-framework/embark/issues/2017)) ([9e654c5](https://github.com/embark-framework/embark/commit/9e654c5))
+
+
+
+
+
 # [5.0.0-alpha.0](https://github.com/embark-framework/embark/compare/v4.1.1...v5.0.0-alpha.0) (2019-10-28)
 
 

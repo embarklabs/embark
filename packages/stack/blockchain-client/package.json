@@ -1,6 +1,6 @@
 {
   "name": "embark-blockchain-client",
-  "version": "5.0.0-alpha.0",
+  "version": "5.0.0-alpha.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Provides ability to register a blockchain technology in Embark, ie Ethereum.",
