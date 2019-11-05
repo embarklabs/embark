@@ -380,7 +380,9 @@ class EmbarkController {
         engine.registerModuleGroup("webserver");
         engine.registerModuleGroup("filewatcher");
         engine.registerModuleGroup("storage");
-        engine.registerModuleGroup("cockpit");
+        if (!isSecondaryProcess(engine)) {
+          engine.registerModuleGroup("cockpit");
+        }
         engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
 
         callback();
