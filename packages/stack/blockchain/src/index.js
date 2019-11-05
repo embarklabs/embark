@@ -79,11 +79,11 @@ class Blockchain {
 
     this.events.setCommandHandler("blockchain:node:stop", (clientName, cb) => {
       if (typeof clientName === 'function') {
+        cb = clientName;
+        clientName = this.startedClient;
         if (!this.startedClient) {
           return cb(__('No blockchain client is currently started'));
         }
-        cb = clientName;
-        clientName = this.startedClient;
       }
 
       if (clientName === constants.blockchain.vm) {

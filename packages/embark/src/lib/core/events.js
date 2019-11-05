@@ -4,6 +4,10 @@ const cloneDeep = require('lodash.clonedeep');
 
 const fs = require('fs-extra');
 
+function debugEventsEnabled() {
+  return process && process.env && process.env.DEBUGEVENTS;
+}
+
 function warnIfLegacy(eventName) {
   const legacyEvents = [];
   if (legacyEvents.indexOf(eventName) >= 0) {
@@ -12,14 +16,14 @@ function warnIfLegacy(eventName) {
 }
 
 function getOrigin() {
-  if (!(process && process.env && process.env.DEBUGEVENTS)) return "";
+  if (!(debugEventsEnabled())) return "";
   let origin = ((new Error().stack).split("at ")[3]).trim();
   origin = origin.split("(")[0].trim();
   return origin;
 }
 
 function log(eventType, eventName, origin) {
-  if (!(process && process.env && process.env.DEBUGEVENTS)) return;
+  if (!(debugEventsEnabled())) return;
   if (['end', 'prefinish', 'error', 'new', 'demo', 'block', 'version'].indexOf(eventName) >= 0) {
     return;
   }
@@ -101,8 +105,11 @@ EmbarkEmitter.prototype.request2 = function() {
   warnIfLegacy(requestName);
   if (this._events && !this._events['request:' + requestName]) {
     log("NO REQUEST LISTENER", requestName);
-    console.log("made request without listener: " + requestName);
-    console.trace();
+
+    if (debugEventsEnabled()) {
+      console.log("made request without listener: " + requestName);
+      console.trace();
+    }
   }
 
   let promise = new Promise((resolve, reject) => {
@@ -122,7 +129,10 @@ EmbarkEmitter.prototype.request2 = function() {
   let ogStack = (new Error().stack);
 
   promise.catch((e) => {
-    console.dir(ogStack);
+    if (debugEventsEnabled()) {
+      console.dir(requestName);
+      console.dir(ogStack);
+    }
     log("\n======== Exception ========", requestName, "\n " + ogStack + "\n==============");
     return e;
   });
@@ -138,8 +148,10 @@ EmbarkEmitter.prototype.request = function() {
   warnIfLegacy(requestName);
   if (this._events && !this._events['request:' + requestName]) {
     log("NO REQUEST LISTENER", requestName);
-    console.log("made request without listener: " + requestName);
-    console.trace();
+    if (debugEventsEnabled()) {
+      console.log("made request without listener: " + requestName);
+      console.trace();
+    }
   }
   const listenerName = 'request:' + requestName;
 
