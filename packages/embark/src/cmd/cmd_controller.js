@@ -458,13 +458,9 @@ class EmbarkController {
       context: this.context
     });
 
-
     async.waterfall([
       function (callback) {
         engine.init({}, callback);
-      },
-      function (callback) {
-        engine.startService("libraryManager").installAll((err) => callback(err ? err : null));
       },
       function (callback) {
         let pluginList = engine.plugins.listPlugins();
@@ -472,13 +468,22 @@ class EmbarkController {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
 
-        engine.startService("processManager");
-        engine.startService("serviceMonitor");
-        engine.startService("compiler");
-        engine.startService("codeGenerator");
-        engine.startService("graph");
+        engine.registerModuleGroup("coreComponents");
+        engine.registerModuleGroup("stackComponents");
 
-        engine.events.request('contracts:build', {}, callback);
+        engine.registerModuleGroup("compiler");
+        engine.registerModuleGroup("contracts");
+        engine.registerModulePackage("embark-graph");
+
+        engine.startEngine(async () => {
+          let contractsFiles = await engine.events.request2("config:contractsFiles");
+          let compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
+          let _contractsConfig = await engine.events.request2("config:contractsConfig");
+          let contractsConfig = cloneDeep(_contractsConfig);
+          await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
+
+          callback();
+        });
       }
     ], (err) => {
       if (err) {
@@ -647,18 +652,16 @@ class EmbarkController {
           callback();
         });
       },
-      function (callback) {
-        engine.startService("libraryManager").installAll((err) => callback(err ? err : null));
-      },
       function startServices(callback) {
         let pluginList = engine.plugins.listPlugins();
         if (pluginList.length > 0) {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
-
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
 
+        engine.registerModuleGroup("namesystem");
+        engine.registerModuleGroup("communication");
         engine.registerModuleGroup("blockchain");
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
@@ -668,29 +671,23 @@ class EmbarkController {
         engine.registerModuleGroup("storage");
         engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins});
 
-        let plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
+        const plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
-          await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig, cb);
-        });
-        plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
-          await engine.events.request2("storage:node:start", engine.config.storageConfig, cb);
+          try {
+            await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig);
+            await Promise.all([
+              engine.events.request2("storage:node:start", engine.config.storageConfig),
+              engine.events.request2("communication:node:start", engine.config.communicationConfig),
+              engine.events.request2("namesystem:node:start", engine.config.namesystemConfig)
+            ]);
+          } catch (e) {
+            return cb(e);
+          }
+          cb();
         });
 
         engine.startEngine(async () => {
-
-          let contractsFiles = await engine.events.request2("config:contractsFiles");
-          let compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
-          let _contractsConfig = await engine.events.request2("config:contractsConfig");
-          let contractsConfig = cloneDeep(_contractsConfig);
-          let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
-          try {
-            await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
-          }
-          catch (err) {
-            engine.logger.error(err);
-          }
-
-          await engine.events.request2('pipeline:generateAll');
+          await compileAndDeploySmartContracts(engine);
 
           let storageConfig = await engine.events.request2("config:storageConfig");
           await engine.events.request2("storage:upload", storageConfig.upload.provider);
