@@ -407,6 +407,6 @@ export default class EthereumAPI {
   }
 
   async verifyMessage(message, signature) {
-    return this.web3.eth.personal.ecRecover(signature.message, signature.signature);
+    return this.web3.eth.personal.ecRecover(message, signature);
   }
 }
