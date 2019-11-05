@@ -20,14 +20,14 @@ const ContractsList = ({contracts, changePage, currentPage, numberOfPages}) => (
         {
           contracts
             .map((contract) => {
-              const contractDisplay = formatContractForDisplay(contract);
-              if (!contractDisplay) {
+              if (!contract) {
                 return null;
               }
+              const contractDisplay = formatContractForDisplay(contract);
               return (
-                <tr key={contract.className} className={contractDisplay.stateColor}>
-                  <td><Link to={`/explorer/contracts/${contract.className}`}>{contract.className}</Link></td>
-                  <td>{contractDisplay.deployedAddress}</td>
+                <tr key={contractDisplay.name} className={contractDisplay.stateColor}>
+                  <td><Link to={`/explorer/contracts/${contractDisplay.name}`}>{contractDisplay.name}</Link></td>
+                  <td>{contractDisplay.address}</td>
                   <td>{contractDisplay.state}</td>
                 </tr>
               );
