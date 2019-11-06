@@ -18,7 +18,7 @@ class EmbarkWeb3 {
 
     this.setupEmbarkJS();
 
-    embark.registerActionForEvent("deployment:contract:deployed", this.registerInVm.bind(this));
+    embark.registerActionForEvent("deployment:contract:deployed", {priority: 40}, this.registerInVm.bind(this));
     embark.registerActionForEvent("deployment:contract:undeployed", this.registerInVm.bind(this));
     embark.registerActionForEvent("deployment:contract:deployed", this.registerArtifact.bind(this));
     embark.registerActionForEvent("deployment:contract:undeployed", this.registerArtifact.bind(this));

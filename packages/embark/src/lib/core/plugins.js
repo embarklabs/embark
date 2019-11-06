@@ -218,19 +218,31 @@ Plugins.prototype.runActionsForEvent = function(eventName, args, cb) {
     return cb(null, args);
   }
 
+  actionPlugins.sort((a, b) => {
+    const aPriority = a[0].options.priority;
+    const bPriority = b[0].options.priority;
+    if (aPriority < bPriority) {
+      return -1;
+    }
+    if (aPriority > bPriority) {
+      return 1;
+    }
+    return 0;
+  });
+
   this.events.log("ACTION", eventName, "");
 
   async.reduce(actionPlugins, args, function (current_args, pluginObj, nextEach) {
     const [plugin, pluginName] = pluginObj;
 
-    self.events.log("== ACTION FOR " + eventName, plugin.name, pluginName);
+    self.events.log("== ACTION FOR " + eventName, plugin.action.name, pluginName);
 
     if (typeof (args) === 'function') {
-      plugin.call(plugin, (...params) => {
+      plugin.action.call(plugin.action, (...params) => {
         nextEach(...params || current_args);
       });
     } else {
-      plugin.call(plugin, args, (...params) => {
+      plugin.action.call(plugin.action, args, (...params) => {
         nextEach(...params || current_args);
       });
     }

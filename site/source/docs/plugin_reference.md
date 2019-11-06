@@ -438,3 +438,44 @@ module.exports = function(embark) {
   embark.registerImportFile("my-lib", path.join(__dirname, "my-lib.js"));
 }
 ```
+
+## .registerActionForEvent(eventName, options, cb)
+
+This lets you register an action for an event. An action, is like a regular command handler event, but enables multiple actions to be registered for the same event and let's you modify the params before sending them back to the next action or back to Embark.
+
+Here is an example where, before deploying a contract, we check the length of the bytecode to see if it reaches the limit:
+```
+embark.registerActionForEvent("deployment:contract:beforeDeploy", async (params, cb) => {
+  cosnt contarct = params.contract;
+  if (!contract.code) {
+    return callback();
+  }
+  
+  const code = (contract.code.indexOf('0x') === 0) ? contract.code.substr(2) : contract.code;
+  const contractCodeLength = Buffer.from(code, 'hex').toString().length;
+  if (contractCodeLength > MAX_CONTRACT_BYTECODE_LENGTH) {
+    return callback(new Error(`Bytecode for ${contract.className} contract is too large. Not deploying.`));
+  }
+  callback();
+});
+```
+
+### Parameters
+- `eventName`: String, Name fo the event you want an action to be registered to
+- `options`: Object, optional, options for the action registration
+  - `priority`: Integer, priority for when the action should be called. Useful if you want to run before or after other actions. The default priority is 50 and the highest priority is 1 (so high priority runs first)
+
+### Available events for actions
+
+- `embark:engine:started`: Called when the engine just started. No params
+- `blockchain:config:modify`: Let's you modify the blockchain configs before starting a blockchain node. Only param is the initial `blockchainConfig`
+- `deployment:contract:beforeDeploy`: Called before a contract is deployed. Only param is the `contract`
+- `deployment:contract:shouldDeploy`: Also called before a contract is deployed, but let's you determine if the contract should be deployed. Two params: `contract` and `shouldDeploy`, set `shouldDeploy` to `false` to disable its deployment
+- `deployment:contract:undeployed`: Called after a contract is determined to not deploy. Only param is `contract`
+- `deployment:contract:deployed`: Called after a contract deployed. Only param is `contract`
+- `deployment:deployContracts:beforeAll`: Called before any contract is deployed. No params
+- `deployment:deployContracts:afterAll`: Called after all contracts have deployed. No params
+- `tests:contracts:compile:before`: Called before the contracts are compiled in the context of the test. Only param is `contractFiles`
+- `tests:contracts:compile:after`: Called after the contracts are compiled in the context of the test. Only param is `compiledContracts`
+- `blockchain:proxy:request`: Called before a request from Embark or the Dapp is sent to the blockchain node. You can modify or react to the payload of the request. Only param is `reqData`, an object containing the payload
+- `blockchain:proxy:response`: Called before the node response is sent back to Embark or the Dapp. You can modify or react to the payload of the response. Two params, `reqData` and `respData`, objects containing the payloads

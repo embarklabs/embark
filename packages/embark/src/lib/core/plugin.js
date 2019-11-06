@@ -5,6 +5,9 @@ const constants = require('embark-core/constants');
 const fs = require('fs-extra');
 const deepEqual = require('deep-equal');
 
+// Default priority of actions with no specified priority. 1 => Highest
+const DEFAULT_ACTION_PRIORITY = 50;
+
 // TODO: pass other params like blockchainConfig, contract files, etc..
 var Plugin = function(options) {
   this.name = options.name;
@@ -261,11 +264,15 @@ Plugin.prototype.registerImportFile = function(importName, importLocation) {
   this.addPluginType('imports');
 };
 
-Plugin.prototype.registerActionForEvent = function(eventName, cb) {
+Plugin.prototype.registerActionForEvent = function(eventName, options, cb) {
+  if (typeof options === 'function') {
+    cb = options;
+    options = {};
+  }
   if (!this.eventActions[eventName]) {
     this.eventActions[eventName] = [];
   }
-  this.eventActions[eventName].push(cb);
+  this.eventActions[eventName].push({action: cb, options: Object.assign({priority: DEFAULT_ACTION_PRIORITY}, options)});
   this.addPluginType('eventActions');
 };
 
