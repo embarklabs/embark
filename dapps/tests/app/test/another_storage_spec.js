@@ -4,13 +4,15 @@ const AnotherStorage = require('Embark/contracts/AnotherStorage');
 const SimpleStorage = require('Embark/contracts/SimpleStorage');
 
 let accounts, defaultAccount;
+const numAddresses = 10;
 
 config({
   blockchain: {
     "accounts": [
       {
         "mnemonic": "example exile argue silk regular smile grass bomb merge arm assist farm",
-        balance: "5ether"
+        balance: "5ether",
+        numAddresses: 10
       }
     ]
   },
@@ -40,6 +42,16 @@ contract("AnotherStorage", function() {
     const balance = await web3.eth.getBalance(accounts[0]);
     assert.ok(parseInt(balance, 10) > 4900000000000000000);
     assert.ok(parseInt(balance, 10) <= 5000000000000000000);
+  });
+
+  it("should have the right balance for all other accounts ", async function() {
+    let balance;
+
+    for (let i = 1; i < numAddresses - 3; i++) {
+      balance = await web3.eth.getBalance(accounts[i]);
+      console.log('Account', i , balance);
+      assert.strictEqual(parseInt(balance, 10), 5000000000000000000, `Account ${i} doesn't have the balance set`);
+    }
   });
 
   it("set SimpleStorage address", async function() {
