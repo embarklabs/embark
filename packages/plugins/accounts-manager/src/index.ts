@@ -148,12 +148,16 @@ export default class AccountsManager {
     }
     try {
       const coinbase = await web3.eth.getCoinbase();
-      const fundingAccounts = this.accounts
-        .filter((account) => account.address)
-        .map((account) => {
-          return fundAccount(web3, account.address, coinbase, account.hexBalance);
+      const accts = this.accounts
+        .filter((account) => account.address);
+
+      async.eachLimit(accts, 1, (acct, eachCb) => {
+        fundAccount(web3, acct.address, coinbase, acct.hexBalance)
+          .then(() => {
+            eachCb();
+          })
+          .catch(eachCb);
       });
-      await Promise.all([fundingAccounts]);
     } catch (err) {
       this.logger.error(__("Error funding accounts"), err.message || err);
     }
