@@ -44,7 +44,7 @@
   "devDependencies": {
     "@babel/core": "7.6.4",
     "@babel/runtime": "7.6.3",
-    "@coreui/coreui": "2.1.0",
+    "@coreui/coreui": "2.1.16",
     "@coreui/react": "2.1.0",
     "@emotion/core": "10.0.22",
     "@emotion/styled": "10.0.23",
