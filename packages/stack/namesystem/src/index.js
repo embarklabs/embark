@@ -38,7 +38,6 @@ export default class Namesystem {
     });
   }
 
-  // TODO START PLS
   startNode(namesystemConfig, cb) {
     if (!namesystemConfig.enabled) {
       return cb();

@@ -1,5 +1,5 @@
 import { __ } from 'embark-i18n';
-import {buildUrl, deconstructUrl, recursiveMerge, prepareContractsConfig} from "embark-utils";
+import {buildUrl, deconstructUrl, recursiveMerge} from "embark-utils";
 const assert = require('assert').strict;
 const async = require('async');
 const chalk = require('chalk');
@@ -32,9 +32,7 @@ class TestRunner {
     this.simOptions = {};
 
     this.moduleConfigs = {
-      namesystem: {},
-      storage: {},
-      communication: {}
+      namesystem: {}
     };
 
     this.events.setCommandHandler('tests:run', (options, callback) => {

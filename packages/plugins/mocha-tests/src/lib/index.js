@@ -68,15 +68,9 @@ class MochaTestRunner {
             });
           },
           (next) => {
-            events.request('tests:config:check', cfg, (err, needResetEmbarkJS) => {
+            events.request('tests:config:check', cfg, (err) => {
               if (err) {
                 return next(err);
-              }
-              if (needResetEmbarkJS) {
-                // TODO add back this event?
-                // events.request("runcode:embarkjs:reset", (err) => {
-                //   next(err, accounts);
-                // });
               }
               next();
             });
