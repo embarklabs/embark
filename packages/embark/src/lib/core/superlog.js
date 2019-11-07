@@ -29,16 +29,6 @@ function updateRecord(id, data) {
   fs.appendFileSync(LOGFILE, "\n" + stringify(data, jsonFunctionReplacer, 0));
 }
 
-// setTimeout(() => {
-//   // console.dir(DB);
-
-//   let value = JSON.parse(stringify(DB, jsonFunctionReplacer, 2));
-
-//   // fs.writeJSONSync("./log.json", DB);
-//   fs.writeJSONSync("./log_all.json", value);
-//   process.exit(0);
-// }, 60*1000);
-
 class SuperLog extends Logger {
 
   startSession() {
@@ -75,17 +65,9 @@ class SuperLog extends Logger {
   }
 
   log(values) {
-    // console.log("=> logging")
-    // console.log(values.id)
-
     if (values.id) {
-      // console.log("=> has an id")
-      // let existingLog = findRecord(values.id);
-      // console.log("=> record found")
-      // if (existingLog) {
-        updateRecord(values.id, values)
-        return values.id;
-      // }
+      updateRecord(values.id, values)
+      return values.id;
     }
 
     let id = uuid.v4();
@@ -123,32 +105,3 @@ class SuperLog extends Logger {
 
 module.exports = SuperLog;
 
-// session
-// branch
-// branch
-
-// cmd_controller
-// * startSession()
-
-// * module
-// * log
-// * branch off
-
-// API:
-// logger.startSession() - to start tracking logs
-// let id = logger.tag({whatever-you-want}) - appends {whatever-you-want} to  a mongo db, associated to the current session id
-// let sub_id = logger.tag({parent_id: id, ...whatever-you-want}) - appends {whatever-you-want} to  a mongo db, associated to the current session id and parent_id id
-
-// - name (e.g module name, method name)
-// - type (e.g module init, function call, event)
-// - inputs
-// - outputs
-// - timestamp
-// - file/origin (can kinda be done automatically almost)
-// for inputs and outputs
-// let sub_id = logger.tag({parent_id: id, ...whatever-you-want})
-// logger.tag({id: sub_id, inputs: xyz})
-// .... code
-// // gonna return
-// logger.tag({id: sub_id, outputs: [1,2,3]})
-// return [1,2,3]
