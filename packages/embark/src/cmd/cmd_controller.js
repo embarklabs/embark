@@ -749,8 +749,19 @@ class EmbarkController {
         engine.registerModuleGroup("tests", options);
         engine.registerModulePackage('embark-deploy-tracker', {plugins: engine.plugins, trackContracts: false});
         engine.registerModuleGroup("namesystem");
+        engine.registerModuleGroup("storage");
+        engine.registerModuleGroup("communication");
 
         engine.startEngine(next);
+      },
+      function startNodes(next) {
+        Promise.all([
+          engine.events.request2("storage:node:start", engine.config.storageConfig),
+          engine.events.request2("communication:node:start", engine.config.communicationConfig),
+          engine.events.request2("namesystem:node:start", engine.config.namesystemConfig)
+        ]).then(() => {
+          next();
+        }).catch(next);
       },
       function setupTestEnvironment(next) {
         engine.events.request2('tests:run', options, next);
