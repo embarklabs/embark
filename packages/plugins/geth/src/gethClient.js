@@ -9,7 +9,7 @@ const constants = require('embark-core/constants');
 
 const DEFAULTS = {
   "BIN": "geth",
-  "VERSIONS_SUPPORTED": ">=1.8.14",
+  "VERSIONS_SUPPORTED": ">=1.9.7",
   "NETWORK_TYPE": "custom",
   "NETWORK_ID": 1337,
   "RPC_API": ['eth', 'web3', 'net', 'debug', 'personal'],
