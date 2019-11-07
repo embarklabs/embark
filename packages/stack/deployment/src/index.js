@@ -39,7 +39,7 @@ class Deployment {
       (next) => {
         this.plugins.emitAndRunActionsForEvent('deployment:deployContracts:beforeAll', {}, (err) => {
           next(err);
-        });
+        }, subId);
       },
       (next) => { this.deployAll(contracts, contractDependencies, next); }
     ], (err) => {
@@ -48,7 +48,7 @@ class Deployment {
         this.logger.error(err.message || err);
       }
       this.events.emit('contractsDeployed');
-      this.plugins.emitAndRunActionsForEvent('deployment:deployContracts:afterAll', {}, done);
+      this.plugins.emitAndRunActionsForEvent('deployment:deployContracts:afterAll', {}, done, subId);
     });
   }
 

@@ -146,6 +146,7 @@ Blockchain.doConnect = function(connectionList, opts, doneCb) {
   let connectionErrs = {};
 
   reduce(connectionList, false, function(result, connectionString, next) {
+    debugger;
     if (result.connected) {
       return next(null, result);
     } else if (result) {

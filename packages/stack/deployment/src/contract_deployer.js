@@ -20,23 +20,24 @@ class ContractDeployer {
   }
 
   deployContract(contract, callback) {
+    let subId = this.logger.log({parent_id: this.logId, type: "method", name: "deployContract", inputs: {contract, callback}});
     async.waterfall([
       (next) => {
         this.plugins.emitAndRunActionsForEvent('deployment:contract:beforeDeploy', {contract: contract}, (err, _params) => {
           // TODO: confirm this really works and shouldn't be next(err, params)
           next(err);
-        });
+        }, subId);
       },
       (next) => {
         this.plugins.emitAndRunActionsForEvent('deployment:contract:shouldDeploy', {contract: contract, shouldDeploy: true}, (err, params) => {
           next(err, params);
-        });
+        }, subId);
       },
       (params, next) => {
         if (!params.shouldDeploy) {
           return this.plugins.emitAndRunActionsForEvent('deployment:contract:undeployed', {contract}, (err, _params) => {
             next(err, null);
-          });
+          }, subId);
         }
 
         // TODO: implement `blockchainType` a la `this.deployer[contract.blockchainType].apply(this.deployer, [contract, next])`
@@ -45,7 +46,7 @@ class ContractDeployer {
             if (!receipt) return next(err);
             this.plugins.emitAndRunActionsForEvent('deployment:contract:deployed', { contract, receipt }, (err, _params) => {
               next(err);
-            });
+            }, subId);
           }
         ]);
       }
