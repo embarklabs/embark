@@ -313,7 +313,9 @@ Blockchain.prototype.initDevChain = function(callback) {
     // Create other accounts
     async.waterfall([
       function listAccounts(next) {
-        self.runCommand(self.client.listAccountsCommand(), {}, (err, stdout, _stderr) => {
+        const listAccountsCommand = self.client.listAccountsCommand();
+        if (!listAccountsCommand) return next(null, 0);
+        self.runCommand(listAccountsCommand, {}, (err, stdout, _stderr) => {
           if (err || stdout === undefined || stdout.indexOf("Fatal") >= 0) {
             console.log(__("no accounts found").green);
             return next();
@@ -330,6 +332,8 @@ Blockchain.prototype.initDevChain = function(callback) {
         });
       },
       function newAccounts(accountsToCreate, next) {
+        const newAccountCommand = self.client.newAccountCommand();
+        if (!newAccountCommand) return next();
         var accountNumber = 0;
         async.whilst(
           function() {
@@ -337,7 +341,7 @@ Blockchain.prototype.initDevChain = function(callback) {
           },
           function(callback) {
             accountNumber++;
-            self.runCommand(self.client.newAccountCommand(), {}, (err, stdout, _stderr) => {
+            self.runCommand(newAccountCommand, {}, (err, stdout, _stderr) => {
               if (err) {
                 return callback(err, accountNumber);
               }
