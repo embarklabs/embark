@@ -1,4 +1,4 @@
-/*global describe, config, it, web3, xit*/
+/*global describe, config, it, web3*/
 const assert = require('assert');
 const Token = require('Embark/contracts/Token');
 const MyToken = require('Embark/contracts/MyToken');
@@ -95,8 +95,7 @@ describe("Token", function() {
       assert.ok(!SomeContract.options.address);
     });
 
-    // FIXME when ENS is activated in tests again
-    xit("should set the ens attr to the address of embark.eth", async function() {
+    it("should set the ens attr to the address of embark.eth", async function() {
       const result = await Test.methods.ens().call();
       // Testing that it is an address as we don't really know the address
       assert.strictEqual(web3.utils.isAddress(result), true);
