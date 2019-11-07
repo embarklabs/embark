@@ -17,6 +17,7 @@ export class Proxy {
     this.timeouts = {};
     this.plugins = options.plugins;
     this.logger = options.logger;
+    this.logId = options.logId;
     this.vms = options.vms;
     this.app = null;
     this.endpoint = options.endpoint;
@@ -266,7 +267,7 @@ export class Proxy {
           }
           calledBack = true;
           resolve(resp);
-        });
+        }, this.logId);
     });
   }
 
@@ -299,7 +300,7 @@ export class Proxy {
           }
           calledBack = true;
           resolve(resp);
-        });
+        }, this.logId);
     });
   }
 

@@ -17,11 +17,13 @@ export default class ProxyManager {
   private ready = false;
   private isWs = false;
   private vms: any[];
+  private logId: any;
 
   constructor(private embark: Embark, options: any) {
     this.logger = embark.logger;
     this.events = embark.events;
     this.plugins = options.plugins;
+    this.logId = embark.logId;
     this.vms = [];
 
     this.host = "localhost";
@@ -92,6 +94,7 @@ export default class ProxyManager {
       endpoint: clientName === constants.blockchain.vm ? constants.blockchain.vm : this.embark.config.blockchainConfig.endpoint,
       events: this.events,
       isWs: this.isWs,
+      logId: this.logId,
       logger: this.logger,
       plugins: this.plugins,
       vms: this.vms,

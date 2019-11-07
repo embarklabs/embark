@@ -7,17 +7,17 @@ function jsonFunctionReplacer(_key, value) {
   if (typeof value === 'function') {
     return value.toString();
   }
-
   return value;
 }
 
 var DB = {
 }
 
+const LOGFILE = "./log.json"
+
 function addRecord(data) {
   DB[data.id] = data
-  // console.dir("---> added")
-  // console.dir(DB[data.id])
+  fs.appendFileSync(LOGFILE, "\n" + stringify(data, jsonFunctionReplacer, 0));
 }
 
 function findRecord(id) {
@@ -26,24 +26,25 @@ function findRecord(id) {
 
 function updateRecord(id, data) {
   DB[id] = {...DB[id], ...data}
-  // console.dir("---> updated")
-  // console.dir(DB[id])
+  fs.appendFileSync(LOGFILE, "\n" + stringify(data, jsonFunctionReplacer, 0));
 }
 
-setTimeout(() => {
-  // console.dir(DB);
+// setTimeout(() => {
+//   // console.dir(DB);
 
-  let value = JSON.parse(stringify(DB, jsonFunctionReplacer, 2));
+//   let value = JSON.parse(stringify(DB, jsonFunctionReplacer, 2));
 
-  // fs.writeJSONSync("./log.json", DB);
-  fs.writeJSONSync("./log.json", value);
-  process.exit(0);
-}, 60*1000);
+//   // fs.writeJSONSync("./log.json", DB);
+//   fs.writeJSONSync("./log_all.json", value);
+//   process.exit(0);
+// }, 60*1000);
 
 class SuperLog extends Logger {
 
   startSession() {
     this.session = uuid.v4();
+
+    this.modules = {}
 
     addRecord({
       session: this.session,
@@ -68,6 +69,8 @@ class SuperLog extends Logger {
       name: name
     })
 
+    this.modules[name] = id
+
     return id;
   }
 
@@ -77,22 +80,28 @@ class SuperLog extends Logger {
 
     if (values.id) {
       // console.log("=> has an id")
-      let existingLog = findRecord(values.id);
+      // let existingLog = findRecord(values.id);
       // console.log("=> record found")
-      if (existingLog) {
+      // if (existingLog) {
         updateRecord(values.id, values)
         return values.id;
-      }
+      // }
     }
 
     let id = uuid.v4();
+
+    if (values.module) {
+      values.parent_id = this.modules[values.module] || this.session
+    } else if (!values.parent_id) {
+      values.parent_id = this.session
+    }
 
     addRecord({
       session: this.session,
       timestamp: Date.now(),
       id: id,
       ...values
-    })
+    }, this.db)
 
     return id;
   }

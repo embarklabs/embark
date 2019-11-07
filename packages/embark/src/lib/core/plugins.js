@@ -211,7 +211,7 @@ Plugins.prototype.getPluginsPropertyAndPluginName = function(pluginType, propert
 
 
 // TODO: because this is potentially hanging, we should issue a trace warning if the event does not exists
-Plugins.prototype.runActionsForEvent = function(eventName, args, cb) {
+Plugins.prototype.runActionsForEvent = function(eventName, args, cb, logId) {
   const self = this;
   if (typeof (args) === 'function') {
     cb = args;
@@ -223,32 +223,38 @@ Plugins.prototype.runActionsForEvent = function(eventName, args, cb) {
     return cb(null, args);
   }
 
+  this.logger.log({parent_id: logId, type: "trigger_action", name: eventName, source: this.events.getOrigin(true), givenLogId: logId, plugins: actionPlugins, inputs: args});
+
   this.events.log("ACTION", eventName, "");
 
   async.reduce(actionPlugins, args, function (current_args, pluginObj, nextEach) {
     const [plugin, pluginName] = pluginObj;
 
     self.events.log("== ACTION FOR " + eventName, plugin.name, pluginName);
+    let actionLogId = self.logger.log({module: pluginName, type: "action_run", name: (eventName + plugin.name), source: pluginName, inputs: current_args});
 
     if (typeof (args) === 'function') {
       plugin.call(plugin, (...params) => {
-        nextEach(...params || current_args);
+        self.logger.log({id: actionLogId, outputs: params || current_args});
+        return nextEach(...params || current_args);
       });
     } else {
       plugin.call(plugin, args, (...params) => {
-        nextEach(...params || current_args);
+        self.logger.log({id: actionLogId, outputs: (args, params || current_args)});
+        return nextEach(...params || current_args);
       });
     }
   }, cb);
 };
 
-Plugins.prototype.emitAndRunActionsForEvent = function(eventName, args, cb) {
+Plugins.prototype.emitAndRunActionsForEvent = function(eventName, args, cb, logId) {
   if (typeof (args) === 'function') {
+    logId = cb; // TODO: check if this is correct
     cb = args;
     args = [];
   }
   this.events.emit(eventName, args);
-  return this.runActionsForEvent(eventName, args, cb);
+  return this.runActionsForEvent(eventName, args, cb, logId);
 };
 
 module.exports = Plugins;
