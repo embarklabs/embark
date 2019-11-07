@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "babel-eslint": "10.0.3",
     "chalk": "2.4.2",
     "coveralls": "3.0.6",
     "find-up": "4.1.0",

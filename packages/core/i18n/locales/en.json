@@ -67,7 +67,7 @@
   "Webserver": "Webserver",
   "versions": "versions",
   "possible commands are:": "possible commands are:",
-  "display versions in use for libraries and tools like web3 and solc": "display versions in use for libraries and tools like web3 and solc",
+  "display versions in use for libraries and tools like solc": "display versions in use for libraries and tools like solc",
   "instantiated web3.js object configured to the current environment": "instantiated web3.js object configured to the current environment",
   "to immediatly exit (alias: exit)": "to immediatly exit (alias: exit)",
   "The web3 object and the interfaces for the deployed contracts and their methods are also available": "The web3 object and the interfaces for the deployed contracts and their methods are also available",

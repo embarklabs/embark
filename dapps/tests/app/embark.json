@@ -15,9 +15,7 @@
   "buildDir": "dist/",
   "config": "config/",
   "versions": {
-    "solc": "0.4.25",
-    "web3": "1.2.1",
-    "ipfs-api": "17.2.7"
+    "solc": "0.4.25"
   },
   "plugins": {
     "embark-dapp-test-service": {}

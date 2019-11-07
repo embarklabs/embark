@@ -487,11 +487,8 @@ Config.prototype.loadExternalContractsFiles = function() {
 };
 
 Config.prototype.loadStorageConfigFile = function() {
-  var versions = recursiveMerge({"ipfs-api": "17.2.4"}, this.embarkConfig.versions || {});
-
   var configObject = {
     "default": {
-      "versions": versions,
       "enabled": true,
       "available_providers": ["ipfs", "swarm"],
       "ipfs_bin": "ipfs",

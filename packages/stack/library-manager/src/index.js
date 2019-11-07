@@ -22,29 +22,43 @@ class LibraryManager {
   }
 
   determineVersions() {
+    let unversionable = [];
+    Object.keys(this.config.embarkConfig.versions).forEach(pkgName => {
+      if (!this.isVersionable(pkgName)) unversionable.push(pkgName);
+    });
+
+    if (unversionable.length) {
+      const plural = unversionable.length > 1;
+      if (plural) {
+        const last = unversionable.pop();
+        const count = unversionable.length;
+        unversionable = unversionable.join(', ') + `${count > 1 ? ',' : ''} and ${last}`;
+      } else {
+        unversionable = unversionable[0];
+      }
+      this.embark.logger.warn(`package${plural ? 's' : ''} ${unversionable} ${plural ? 'are' : 'is'} not versionable, please remove ${plural ? 'them' : 'it'} from this project's embark.json`);
+    }
+
     this.versions = {};
 
     let solcVersionInConfig = this.contractsConfig.versions["solc"];
-    let web3VersionInConfig = this.contractsConfig.versions["web3"];
-    let ipfsApiVersion = this.storageConfig.versions["ipfs-api"];
-
-    if (web3VersionInConfig === "1.0.0-beta") {
-      const embarkWeb3Version = this.embark.config.package.dependencies["web3"];
-      web3VersionInConfig = embarkWeb3Version;
-      this.embark.logger.warn(`web3 version in embark.json is 1.0.0-beta, using ${embarkWeb3Version} instead, please update your project's embark.json`);
-    }
 
     this.versions['solc'] = solcVersionInConfig;
-    this.versions['web3'] = web3VersionInConfig;
-    this.versions['ipfs-api'] = ipfsApiVersion;
 
     Object.keys(this.versions).forEach(versionKey => {
+      if (!this.isVersionable(versionKey)) return;
       const newVersion = this.versions[versionKey].trim();
       if (newVersion !== this.versions[versionKey]) {
         this.embark.logger.warn(__('There is a space in the version of {{versionKey}}. We corrected it for you ({{correction}}).', {versionKey: versionKey, correction: `"${this.versions[versionKey]}" => "${newVersion}"`}));
         this.versions[versionKey] = newVersion;
       }
     });
+  }
+
+  static versionablePkgs = new Set(['solc']);
+
+  isVersionable(name) {
+    return LibraryManager.versionablePkgs.has(name);
   }
 
   installAll(callback) {
@@ -55,6 +69,7 @@ class LibraryManager {
       const results = await Promise.all(
         Object.entries(this.versions)
           .filter(([packageName, version]) => {
+            if (!this.isVersionable(packageName)) return false;
             // NOTE: will behave less than ideally if embark switches to using
             // a dependency range for the various overridable packages instead
             // of an exact version
@@ -112,7 +127,7 @@ class LibraryManager {
     }
     this.embark.registerConsoleCommand({
       matches,
-      description: __("display versions in use for libraries and tools like web3 and solc"),
+      description: __("display versions in use for libraries and tools like solc"),
       process: (cmd, callback) => {
         let text = [__('versions in use') + ':'];
         for (let lib in self.versions) {
@@ -161,6 +176,9 @@ class LibraryManager {
 
   listenToCommandsToGetLibrary() {
     this.embark.events.setCommandHandler('version:getPackageLocation', (libName, version, cb) => {
+      if (!this.isVersionable(libName)) {
+        return cb(new Error(`package ${libName} is not versionable`));
+      }
       this.npm.getPackageVersion(libName, version, cb);
     });
     this.embark.events.setCommandHandler('version:downloadIfNeeded', (libName, cb) => {

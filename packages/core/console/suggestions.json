@@ -33,7 +33,7 @@
     {
       "value": "versions",
       "command_type": "embark command",
-      "description": "display versions in use for libraries and tools like web3 and solc"
+      "description": "display versions in use for libraries and tools like solc"
     },
     {
       "value": "ipfs",

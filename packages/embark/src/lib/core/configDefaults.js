@@ -39,7 +39,6 @@ export function getBlockchainDefaults(env) {
 
 export function getContractDefaults(embarkConfigVersions) {
   const defaultVersions = {
-    "web3": "1.2.1",
     "solc": "0.5.0"
   };
   const versions = recursiveMerge(defaultVersions, embarkConfigVersions || {});

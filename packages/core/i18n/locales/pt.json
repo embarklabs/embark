@@ -10,7 +10,7 @@
   "loading solc compiler": "carregando o compilador solc",
   "Welcome to Embark": "Bem-vindo ao Embark",
   "possible commands are:": "comandos possíveis são:",
-  "display versions in use for libraries and tools like web3 and solc": "lista versões em uso para bibliotecas e ferramentas como web3 e solc",
+  "display versions in use for libraries and tools like solc": "lista versões em uso para bibliotecas e ferramentas como solc",
   "instantiated web3.js object configured to the current environment": "objeto web3.js instanciado configurado para o ambiente atual",
   "to immediatly exit (alias: exit)": "para sair imediatamente (atalho: exit)",
   "The web3 object and the interfaces for the deployed contracts and their methods are also available": "O objeto web3 e as interfaces para os contratos implantados e seus métodos também estão disponíveis",
