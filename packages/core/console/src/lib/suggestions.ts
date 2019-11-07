@@ -1,4 +1,4 @@
-import { Embark, Events } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Contract, Embark, Events } /* supplied by @types/embark in packages/embark-typings */ from "embark";
 import { fuzzySearch } from "embark-utils";
 import { suggestions as defaultSuggestions } from "../../suggestions.json";
 
@@ -44,7 +44,7 @@ export default class Suggestions {
 
     this._suggestions = [...Suggestions.DEFAULT_SUGGESTIONS];
 
-    Object.values(this.contracts).forEach((contract: any) => {
+    Object.values(this.contracts).forEach((contract: Contract) => {
       this._suggestions.push({value: contract.className, command_type: "web3 object", description: "contract deployed at " + contract.deployedAddress});
       this._suggestions.push({value: "profile " + contract.className, command_type: "embark command", description: "profile " + contract.className + " contract"});
     });
@@ -71,11 +71,17 @@ export default class Suggestions {
   }
 
   private listenToEvents() {
-    this.events.on("deploy:contract:deployed", (contract: any) => {
-      this.contracts[contract.className] = contract;
+    this.embark.events.once("deployment:deployContracts:afterAll", () => {
+      this.events.on("deployment:contract:deployed", ({contract}: {contract: Contract}) => {
+        this.contracts[contract.className] = contract;
+        // reset backing variable so contracts suggestions can be re-built for next request
+        this._suggestions = [];
+      });
 
-      // reset backing variable so contracts suggestions can be re-built for next request
-      this._suggestions = [];
+      this.embark.events.request("contracts:list", (_: any, contracts: Contract[]) => {
+        contracts.forEach((contract) => { this.contracts[contract.className] = contract; });
+        this._suggestions = [];
+      });
     });
   }
 
