@@ -22,9 +22,7 @@ Every application [created with Embark](create_project.html) comes with an `emba
   "generationDir": "embarkArtifacts",
   "config": "config/",
   "versions": {
-    "web3": "1.2.1",
-    "solc": "0.4.25",
-    "ipfs-api": "17.2.4"
+    "solc": "0.4.25"
   },
   "plugins": {
   },
@@ -92,7 +90,9 @@ This is the location of the configuration files. There are different options to 
 
 ### versions (3rd-party libraries)
 
-Here you can optionally specify the versions of the library to be used by Embark. Embark will automatically download the specific library version if necessary. It's possible to override this in other configuration files such as `contracts.json` on a per environment basis.
+Here you can optionally specify the versions of the library to be used by Embark. Embark will automatically download the specific library version if necessary.
+
+Currently, `solc` is the only library that can be specified in this way. It's possible to override the `solc` version in other configuration files such as `contracts.json` on a per environment basis.
 
 ### plugins
 

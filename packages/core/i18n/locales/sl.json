@@ -67,7 +67,7 @@
   "Webserver": "Spletni strežnik",
   "versions": "različice",
   "possible commands are:": "možni ukazi so:",
-  "display versions in use for libraries and tools like web3 and solc": "pokaži različice v uporabi za orodja kot sta web3 in solc",
+  "display versions in use for libraries and tools like solc": "pokaži različice v uporabi za orodja kot sta solc",
   "instantiated web3.js object configured to the current environment": "nameščen web3.js objekt nastavljen za uporabo v trenutnem okolju",
   "to immediatly exit (alias: exit)": "za takojšnji izhod (alias: exit)",
   "The web3 object and the interfaces for the deployed contracts and their methods are also available": "Web3 objekt in The web3 object and the vmesniki so na voljo",

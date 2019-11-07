@@ -25,10 +25,7 @@ module.exports = {
     "dappConnection":[
       {"provider": "swarm", "host": "localhost", "port": 8500, "getUrl": "http://localhost:8500/bzz:/"},
       {"provider": "ipfs", "host": "localhost", "port": 5001, "getUrl": "http://localhost:8080/ipfs/"}
-    ],
-    "versions": {
-      "ipfs-api": "17.2.4"
-    }
+    ]
   },
   "development": {
     "enabled": true,
@@ -41,8 +38,8 @@ module.exports = {
 
 The available options are:
 
-Option | Type: `default` | Value         
---- | --- | --- 
+Option | Type: `default` | Value
+--- | --- | ---
 `enabled`    | boolean: `true` | Enables or completely disables storage support
 `ipfs_bin`    | string: `ipfs` | Name or desired path to the ipfs binary
 `available_providers`    | array: `["ipfs", "swarm"]` | List of storages to be supported on the dapp. This will affect what's available with the EmbarkJS library on the dapp.
@@ -53,12 +50,11 @@ Option | Type: `default` | Value
 `upload.port`        | integer: `5001` | Port value used to interact with the storage provider for upload, i.e. `5001` (IPFS local node) or `8500` (Swarm local node) or `80`
 `upload.getUrl`      | string: `http://localhost:8080/ipfs/` | Only for IPFS. This sets the file/document retrieval URL, which is different than the host/port combination used to interact with the IPFS API.
 `dappConnection`     | | List of storage providers to attempt connection to in the dapp. Each provider process will be launched in a child process. Each connection listed will be tried in order on the dapp, until one is avaialable. Can also specify `$BZZ` to attempt to connect to an injected swarm object.
-`dappConnection.provider` | string: `ipfs` | Desired provider to use for dapp storage. 
+`dappConnection.provider` | string: `ipfs` | Desired provider to use for dapp storage.
 `dappConnection.protocol`    | string: `http` | Storage provider protocol used in the dapp, i.e. `http` or `https`
 `dappConnection.host`        | string | Host value used to interact with the storage provider in the dapp, i.e. `localhost` or `swarm-gateways.net`
 `dappConnection.port`        | integer | Port value used to interact with the storage provider in the dapp, i.e. `5001` (IPFS local node) or `8500` (Swarm local node) or `80`. Can specify `false` if a port should not be included in the connection URL (i.e. for a public gateway like `http://swarm-gateways.net`).
 `dappConnection.getUrl`      | string | Only for IPFS. This sets the file/document retrieval URL, which is different than the host/port combination used to interact with the IPFS API.
-`versions`    | object | key-value hash of library and its desired version
 
 ## Using a local node
 
@@ -130,4 +126,3 @@ NOTE: `http://localhost:8545` and `ws://localhost:8546` are for geth.
 ```
 swarm --bzzaccount=fedda09fd9218d1ea4fd41ad44694fa4ccba1878 --datadir=~/.bzz-data/ --password=config/development/password --corsdomain=http://localhost:8000,http://localhost:8080,http://localhost:8545,ws://localhost:8546 --ens-api=''
 ```
-

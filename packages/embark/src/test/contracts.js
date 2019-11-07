@@ -89,7 +89,6 @@ describe('embark.Contracts', function() {
 
     contractsConfig = {
       "versions": {
-        "web3": "1.2.1",
         "solc": "0.4.17"
       },
       "deployment": {
@@ -213,7 +212,6 @@ describe('embark.Contracts', function() {
 
     contractsConfig = {
       "versions": {
-        "web3": "1.2.1",
         "solc": "0.4.17"
       },
       "deployment": {
