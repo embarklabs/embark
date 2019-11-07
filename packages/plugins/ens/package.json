@@ -49,6 +49,7 @@
     "embarkjs": "^5.0.0-alpha.1",
     "embarkjs-ens": "^5.0.0-alpha.1",
     "eth-ens-namehash": "2.0.8",
+    "lodash.clonedeep": "4.5.0",
     "web3": "1.2.1"
   },
   "devDependencies": {

@@ -16,21 +16,7 @@ export default class Namesystem {
       this.namesystemNodes[nodeName] = {startFunction, executeCommand, started: false};
     });
 
-    this.events.setCommandHandler("namesystem:node:start", (namesystemConfig, cb) => {
-      if (!namesystemConfig.enabled) {
-        return cb();
-      }
-      const nodeName = namesystemConfig.provider;
-      const client = this.namesystemNodes[nodeName];
-      if (!client) return cb(__("Namesystem client %s not found", nodeName));
-
-      client.startFunction.apply(client, [
-        () => {
-          client.started = true;
-          cb();
-        }
-      ]);
-    });
+    this.events.setCommandHandler("namesystem:node:start", this.startNode.bind(this));
 
     this.events.setCommandHandler("namesystem:resolve", (name, cb) => {
       this.executeNodeCommand('resolve', [name], cb);
@@ -42,6 +28,29 @@ export default class Namesystem {
 
     this.events.setCommandHandler("namesystem:registerSubdomain", (name, address, cb) => {
       this.executeNodeCommand('registerSubdomain', [name, address], cb);
+    });
+
+    this.embark.events.setCommandHandler("module:namesystem:reset", (cb) => {
+      this.executeNodeCommand('reset', [], (_err) => {
+        // We ignore the error because it's just the reset, the node might have not been started at all
+        this.startNode(this.embark.config.namesystemConfig, cb);
+      });
+    });
+  }
+
+  // TODO START PLS
+  startNode(namesystemConfig, cb) {
+    if (!namesystemConfig.enabled) {
+      return cb();
+    }
+    const nodeName = namesystemConfig.provider;
+    if (!nodeName) return cb(__("No namesystem provider specified in configs"));
+    const client = this.namesystemNodes[nodeName];
+    if (!client) return cb(__("Namesystem client %s not found", nodeName));
+
+    client.startFunction(() => {
+      client.started = true;
+      cb();
     });
   }
 

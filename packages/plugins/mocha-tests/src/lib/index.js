@@ -68,18 +68,32 @@ class MochaTestRunner {
             });
           },
           (next) => {
-            events.request("contracts:build", cfg, compiledContracts, next);
+            events.request('tests:config:check', cfg, (err, needResetEmbarkJS) => {
+              if (err) {
+                return next(err);
+              }
+              if (needResetEmbarkJS) {
+                // TODO add back this event?
+                // events.request("runcode:embarkjs:reset", (err) => {
+                //   next(err, accounts);
+                // });
+              }
+              next();
+            });
           },
-          (contractsList, contractDeps, next) => {
-            // Remove contracts that are not in the configs
+          (next) => {
+          // Remove contracts that are not in the configs
             const realContracts = {};
-            const deployKeys = Object.keys(cfg.contracts);
-            Object.keys(contractsList).forEach((className) => {
+            const deployKeys = Object.keys(cfg.contracts.deploy);
+            Object.keys(compiledContracts).forEach((className) => {
               if (deployKeys.includes(className)) {
-                realContracts[className] = contractsList[className];
+                realContracts[className] = compiledContracts[className];
               }
             });
-            events.request("deployment:contracts:deploy", realContracts, contractDeps, next);
+            events.request("contracts:build", cfg, realContracts, next);
+          },
+          (contractsList, contractDeps, next) => {
+            events.request("deployment:contracts:deploy", contractsList, contractDeps, next);
           },
           (_result, next) => {
             events.request("contracts:list", next);
@@ -130,7 +144,7 @@ class MochaTestRunner {
           }
 
           events.emit('tests:ready', accounts);
-          done();
+          done(err);
         });
       });
     };

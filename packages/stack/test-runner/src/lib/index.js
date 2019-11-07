@@ -1,5 +1,5 @@
 import { __ } from 'embark-i18n';
-import {buildUrl, deconstructUrl, recursiveMerge} from "embark-utils";
+import {buildUrl, deconstructUrl, recursiveMerge, prepareContractsConfig} from "embark-utils";
 const assert = require('assert').strict;
 const async = require('async');
 const chalk = require('chalk');
@@ -31,6 +31,12 @@ class TestRunner {
     this.originalConfigObj = cloneDeep(embark.config);
     this.simOptions = {};
 
+    this.moduleConfigs = {
+      namesystem: {},
+      storage: {},
+      communication: {}
+    };
+
     this.events.setCommandHandler('tests:run', (options, callback) => {
       this.run(options, callback);
     });
@@ -44,6 +50,7 @@ class TestRunner {
 
     this.events.setCommandHandler('tests:deployment:check', this.checkDeploymentOptions.bind(this));
     this.events.setCommandHandler('tests:blockchain:start', this.startBlockchainNode.bind(this));
+    this.events.setCommandHandler('tests:config:check', this.checkModuleConfigs.bind(this));
   }
 
   run(options, cb) {
@@ -272,6 +279,26 @@ class TestRunner {
     const provider = await this.events.request2("blockchain:client:provider", "ethereum");
     cb(null, provider);
     return provider;
+  }
+
+  checkModuleConfigs(options, callback) {
+    const restartModules = [];
+
+    Object.keys(this.moduleConfigs).forEach(moduleName => {
+      options[moduleName] = options[moduleName] || {};
+      if (!deepEqual(options[moduleName], this.moduleConfigs[moduleName])) {
+        this.moduleConfigs[moduleName] = options[moduleName];
+        restartModules.push((paraCb) => {
+          this.events.request(`config:${moduleName}Config:set`, recursiveMerge({}, this.originalConfigObj[`${moduleName}Config`], options[moduleName]), () => {
+            this.events.request(`module:${moduleName}:reset`, paraCb);
+          });
+        });
+      }
+    });
+
+    async.parallel(restartModules, (err, _result) => {
+      callback(err);
+    });
   }
 
   get web3() {

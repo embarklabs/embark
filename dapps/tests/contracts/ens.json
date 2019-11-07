@@ -1,7 +1,8 @@
 {
   "default" : {
     "enabled": true,
-    "available_providers": "ens",
+    "available_providers": ["ens"],
+    "provider": "ens",
     "register": {
       "rootDomain": "embark.eth"
     }

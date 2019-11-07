@@ -9,6 +9,7 @@ import ensContractAddresses from './ensContractAddresses';
 import EnsAPI from './api';
 const ENSFunctions = ensJS.ENSFunctions;
 const Web3 = require('web3');
+const cloneDeep = require('lodash.clonedeep');
 
 const ensConfig = require('./ensContractConfigs');
 const secureSend = embarkJsUtils.secureSend;
@@ -29,7 +30,7 @@ class ENS {
     this.config = embark.config;
     this.enabled = false;
     this.embark = embark;
-    this.ensConfig = ensConfig;
+    this.ensConfig = cloneDeep(ensConfig);
     this.configured = false;
     this.initated = false;
 
@@ -107,6 +108,12 @@ class ENS {
       case 'resolve': this.ensResolve(args[0], cb); break;
       case 'lookup': this.ensLookup(args[0], cb); break;
       case 'registerSubdomain': this.ensRegisterSubdomain(args[0], args[1], cb); break;
+      case 'reset': {
+        this.configured = false;
+        this.ensConfig = cloneDeep(ensConfig);
+        cb();
+        break;
+      }
       default: cb(__('Unknown command %s', command));
     }
   }
@@ -169,7 +176,7 @@ class ENS {
 
     const defaultAccount = await this.web3DefaultAccount;
 
-    if (!this.config.namesystemConfig.register) {
+    if (!this.config.namesystemConfig.register || !this.config.namesystemConfig.register.subdomains) {
       return cb();
     }
 
@@ -251,16 +258,19 @@ class ENS {
       this.ensConfig = recursiveMerge(this.ensConfig, ensContractAddresses[networkId]);
     }
 
-    this.ensConfig.ENSRegistry = await this.events.request2('contracts:add', this.ensConfig.ENSRegistry);
-    await this.events.request2('deployment:contract:deploy', this.ensConfig.ENSRegistry);
+    const doRegister = registration && registration.rootDomain;
 
-    this.ensConfig.Resolver.args = [this.ensConfig.ENSRegistry.deployedAddress];
-    this.ensConfig.Resolver = await this.events.request2('contracts:add', this.ensConfig.Resolver);
-    await this.events.request2('deployment:contract:deploy', this.ensConfig.Resolver);
+    if (doRegister) {
+      this.ensConfig.ENSRegistry = await this.events.request2('contracts:add', this.ensConfig.ENSRegistry);
+      await this.events.request2('deployment:contract:deploy', this.ensConfig.ENSRegistry);
+      this.ensConfig.Resolver.args = [this.ensConfig.ENSRegistry.deployedAddress];
+      this.ensConfig.Resolver = await this.events.request2('contracts:add', this.ensConfig.Resolver);
+      await this.events.request2('deployment:contract:deploy', this.ensConfig.Resolver);
+    }
 
     async.waterfall([
       function checkRootNode(next) {
-        if (!registration || !registration.rootDomain) {
+        if (!doRegister) {
           return next(NO_REGISTRATION);
         }
         if (!self.isENSName(registration.rootDomain)) {

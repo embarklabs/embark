@@ -13,11 +13,8 @@ config({
       "SimpleStorage": {
         args: [100]
       },
-      // "AnotherStorage": {
-      //   args: ["$SimpleStorage", "embark.eth"]
-      // },
       "AnotherStorage": {
-        args: ["$SimpleStorage", "$SimpleStorage"]
+        args: ["$SimpleStorage", "embark.eth"]
       }
     }
   }
@@ -33,8 +30,7 @@ contract("AnotherStorage", function() {
     assert.equal(result.toString(), SimpleStorage.options.address);
   });
 
-  // FIXME add back when the ENS feature is back
-  xit("set ENS address", async function() {
+  it("set ENS address", async function() {
     const result = await AnotherStorage.methods.ens().call();
     assert.equal(result.toString(), accounts[0]);
   });
