@@ -16,7 +16,6 @@ function warnIfLegacy(eventName) {
 }
 
 function getOrigin(override) {
-  if (!override && !(debugEventsEnabled())) return "";
   let origin = ((new Error().stack).split("at ")[3]).trim();
   origin = origin.split("(")[0].trim();
   return origin;
@@ -30,6 +29,7 @@ function log(eventType, eventName, origin) {
   if (eventName.indexOf("log") >= 0) {
     return;
   }
+
   // fs.appendFileSync(".embark/events.log", (new Error().stack) + "\n");
   if (!origin && origin !== "") {
     origin = ((new Error().stack).split("at ")[3]).trim();
@@ -40,15 +40,6 @@ function log(eventType, eventName, origin) {
   fs.ensureDirSync(".embark/");
   fs.appendFileSync(".embark/events.log", eventType + ": " + eventName + " -- (" + origin + ")\n");
 }
-
-// const cmdNames = {};
-//
-// function trackCmd(cmdName) {
-//   if (!(process && process.env && process.env.DEBUGEVENTS)) return;
-//   let origin = ((new Error().stack).split("at ")[3]).trim();
-//   origin = origin.split("(")[0].trim();
-//   cmdNames[cmdName] = origin;
-// }
 
 class EmbarkEmitter extends EventEmitter {
 
@@ -100,7 +91,7 @@ EmbarkEmitter.prototype.once = function(requestName, cb) {
 };
 
 EmbarkEmitter.prototype.setHandler = function(requestName, cb) {
-  log("SET HANDLER", requestName);
+  // log("SET HANDLER", requestName);
   warnIfLegacy(requestName);
   return _setHandler.call(this, requestName, cb);
 };
@@ -111,13 +102,13 @@ EmbarkEmitter.prototype.request2 = function() {
 
   let requestId = this.debugLog.log({parent_id: this.logId, type: "request", name: requestName, inputs: other_args});
 
-  log("\nREQUEST", requestName);
+  // log("\nREQUEST", requestName);
   warnIfLegacy(requestName);
   if (this._events && !this._events['request:' + requestName]) {
-    this.debugLog.log({id: requestId, error: "no request listener for " + requestName})
-    log("NO REQUEST LISTENER", requestName);
 
-    if (debugEventsEnabled()) {
+    if (this.debugLog.isEnabled()) {
+      this.debugLog.log({ id: requestId, error: "no request listener for " + requestName, source: this.getOrigin()})
+      // KEPT for now until api refactor separating requests from commands
       console.log("made request without listener: " + requestName);
       console.trace();
     }
@@ -142,16 +133,18 @@ EmbarkEmitter.prototype.request2 = function() {
     this._emit('request:' + requestName, ...other_args);
   });
 
-  let ogStack = (new Error().stack);
+  let ogStack;
+  if (this.debugLog.isEnabled()) {
+    ogStack = (new Error().stack);
+  }
 
   promise.catch((e) => {
-    if (debugEventsEnabled()) {
+    if (this.debugLog.isEnabled()) {
       console.dir(requestName);
       console.dir(ogStack);
     }
 
-    this.debugLog.log({id: requestId, error: "promise exception", stack: ogStack})
-    log("\n======== Exception ========", requestName, "\n " + ogStack + "\n==============");
+    this.debugLog.log({id: requestId, error: "promise exception", outputs: ogStack, source: ogStack})
     return e;
   });
 
@@ -162,14 +155,18 @@ EmbarkEmitter.prototype.request = function() {
   let requestName = arguments[0];
   let other_args = [].slice.call(arguments, 1);
 
-  let requestId = this.debugLog.log({parent_id: this.logId, type: "old_request", name: requestName, inputs: other_args})
+  let origin;
+  if (this.debugLog.isEnabled) {
+    origin = this.getOrigin();
+  }
 
-  log("\nREQUEST(OLD)", requestName);
+  let requestId = this.debugLog.log({parent_id: this.logId, type: "old_request", name: requestName, inputs: other_args, source: origin})
+
+  // log("\nREQUEST(OLD)", requestName);
   warnIfLegacy(requestName);
   if (this._events && !this._events['request:' + requestName]) {
-    this.debugLog.log({id: requestId, error: "no request listener for " + requestName})
-    log("NO REQUEST LISTENER", requestName);
-    if (debugEventsEnabled()) {
+    if (this.debugLog.isEnabled()) {
+      this.debugLog.log({id: requestId, error: "no request listener for " + requestName})
       console.log("made request without listener: " + requestName);
       console.trace();
     }
@@ -194,17 +191,20 @@ EmbarkEmitter.prototype.request = function() {
 
 // TODO: ensure that it's only possible to create 1 command handler
 EmbarkEmitter.prototype.setCommandHandler = function(requestName, cb) {
-  log("SET COMMAND HANDLER", requestName);
+  // log("SET COMMAND HANDLER", requestName);
 
   let requestId = this.debugLog.log({parent_id: this.logId, type: "setCommandHandler", name: requestName})
 
   // let origin = ((new Error().stack).split("at ")[3]).trim();
   // origin = origin.split("(")[0].trim();
-  let origin = getOrigin();
+  let origin;
+  if (this.debugLog.isEnabled()) {
+    origin = this.getOrigin();
+  }
 
   let listener = function(_cb) {
     this.debugLog.log({id: requestId, output: origin, source: origin});
-    log("== REQUEST RESPONSE", requestName, origin);
+    // log("== REQUEST RESPONSE", requestName, origin);
     cb.call(this, ...arguments);
   };
   const listenerName = 'request:' + requestName;
@@ -234,7 +234,7 @@ EmbarkEmitter.prototype.setCommandHandler = function(requestName, cb) {
 
 // TODO: deprecated/remove this
 EmbarkEmitter.prototype.setCommandHandlerOnce = function(requestName, cb) {
-  log("SET COMMAND HANDLER ONCE", requestName);
+  // log("SET COMMAND HANDLER ONCE", requestName);
 
   const listenerName = 'request:' + requestName;
 

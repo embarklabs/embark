@@ -20,6 +20,11 @@ class SuperLog {
     this.logfile = "./structlog-" + (processIdentifier || "log") + ".json";
   }
 
+  // TODO: make this a flag depending on ENV var or constructor
+  isEnabled() {
+    return true;
+  }
+
   addRecord(data) {
     // DB[data.id] = data
     fs.appendFileSync(this.logfile, "\n" + stringify(data, jsonFunctionReplacer, 0));
@@ -107,5 +112,3 @@ class SuperLog {
 }
 
 module.exports = SuperLog;
-
-
