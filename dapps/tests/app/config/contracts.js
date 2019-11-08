@@ -40,10 +40,10 @@ module.exports = {
         args: [100]
       },
       ContractArgs: {
-        args: [
-          ["$MyToken2", "$SimpleStorage"],
-          123
-        ]
+        args: {
+          initialValue: 123,
+          _addresses: ["$MyToken2", "$SimpleStorage"]
+        }
       },
       SomeContract: {
         deployIf: 'await MyToken.methods.isAvailable().call()',
