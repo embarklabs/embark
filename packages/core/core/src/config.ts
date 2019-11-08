@@ -657,7 +657,6 @@ export class Config {
   }
 
   loadPipelineConfigFile() {
-
     const defaultPipelineConfig = {
       typescript: false,
       enabled: true

@@ -10,17 +10,17 @@ This reference covers all APIs exposed by the `embark` object passed to every cu
 
 ```
 "plugins": {
-  "embark-babel": { 
+  "embark-babel": {
     "files": ["**/*.js", "!**/jquery.min.js"],
     "presets": ["es2015", "react"]
   }
 }
 ```
 
-`embark.pluginConfig` will contain 
+`embark.pluginConfig` will contain
 
 ```
-{ 
+{
   "files": ["**/*.js", "!**/jquery.min.js"],
   "presets": ["es2015", "react"]
 }
@@ -141,61 +141,6 @@ module.exports = function(embark) {
 }
 ```
 
-## .registerClientWeb3Provider(callback(options))
-
-This call can be used to override the default web3 object generation in the dapp. it's useful if you want to add a plugin to interact with services like http://infura.io or if you want to use your own web3.js library extension.
-
-options available:
- * rpcHost - configured rpc Host to connect to
- * rpcPort - configured rpc Port to connect to
- * blockchainConfig - object containing the full blockchain configuration for the current environment
-
-expected return: ``string``
-
-example:
-
-<pre><code class="javascript">module.exports = function(embark) {
-  embark.registerClientWeb3Provider(function(options) {
-    return "web3 = new Web3(new Web3.providers.HttpProvider('http://" + options.rpcHost + ":" + options.rpcPort + "'));";
-  });
-}
-</code></pre>
-
-
-## .registerContractsGeneration(callback(options))
-
-By default Embark will use EmbarkJS to declare contracts in the Dapp. You can override that and use your own client side library.
-
-Available options:
-  * contracts - Hash of objects containing all the deployed contracts. (key: contractName, value: contract object)
-    * abiDefinition
-    * code
-    * deployedAddress
-    * gasEstimates
-    * gas
-    * gasPrice
-    * runtimeByteCode
-
-Returns `string`
-
- The generated string will be used to create the contract objects in the Embark console and will be generated in `embarkArtifacts` so that the Dapp can use them.
-
-```
-module.exports = (embark) => {
-  embark.registerContractsGeneration((options) => {
-    const contractGenerations = [];
-    Object.keys(options.contracts).map(className => {
-      const contract = options.contracts[className];
-      const abi = JSON.stringify(contract.abiDefinition);
-
-      contractGenerations.push(`${className} = new web3.eth.Contract(${abi}, '${contract.deployedAddress}');
-      module.exports = ${className};`);
-    });
-    return contractGenerations.join('\n');
-  });
-};
-```
-
 ## .registerConsoleCommand(options)
 
 This call is used to extend the console with custom commands.
@@ -220,7 +165,7 @@ module.exports = function(embark) {
     // OR a function for more complex cases
     matches: (cmd) => {
       const [commandName, name] = cmd.split(' '); // You can use `split` for commands that receive parameters
-      return commandName === 'hello' || commandName === 'hellowWorld'; 
+      return commandName === 'hello' || commandName === 'hellowWorld';
     },
     usage: "hello &lt;name&gt; or helloWorld &lt;name&gt;",
     process: (cmd, callback) => {
@@ -244,7 +189,7 @@ Arguments:
  - **doneCallback(error, result)**: The final callback to call once every file is compiled or when there is an error
    - **error**: Error string or object when something goes wrong
    - **result**: An object containing the compiled contracts result (key: contractName, value: contract object) or, `false` if your plugin is not compatible
-    - **code** - [required] contract bytecode (string)      
+    - **code** - [required] contract bytecode (string)
     - **abiDefinition** - [required] contract abi (array of objects)
       - e.g ``[{"constant":true,"inputs":[],"name":"storedData","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"}, etc...``
     - **runtimeBytecode** - [optional] contract runtimeBytecode (string)
@@ -269,7 +214,7 @@ module.exports = function(embark) {
       // This let's Embark know that we are not compatible, that way Embark will fallback to another compiler
       return cb(null, false);
     }
-  
+
     // prepare input for solc
     var input = {};
     for (var i = 0; i < contractFiles.length; i++) {
@@ -384,57 +329,5 @@ module.exports = function(embark) {
       return cb({name: "MyServer Offline", status: "off"});
     }
   });
-}
-```
-
-## .registerUploadCommand(cmdName, callback)
-
-This call is used to add a new cmd to ``embark upload`` to upload the dapp to a new storage service. In the example, `run` doesn't exist. You need to import a library that runs shell commands like [shelljs](https://www.npmjs.com/package/shelljs)
-
-```
-module.exports = function(embark) {
-  embark.registerUploadCommand("ipfs", function() {
-    run("ipfs add -r dist/");
-  });
-}
-```
-
-## .addCodeToEmbarkJS(code)
-
-This call is used to add code to the embark.js library. It's typically used to extend it with new functionality, new storage providers, new communication providers, etc..
-
-```
-module.exports = function(embark) {
-  embark.addCodeToEmbarkJS("alert('hello world!')");
-}
-```
-
-## .addProviderInit(providerType, code, initCondition(config))
-
-This call is used to add code to be executed in the initialization under the condition that ``initCondition`` returns true. For example this can be used to set the storage provider of EmbarkJS to ipfs if ipfs is enabled as a provider in the config
-
-* providerType - type of provider (string, "storage" or "communication")
-* code - code to add (string)
-* callback:
-  * "config" - config of the ``providerType``
-
-```
-module.exports = function(embark) {
-  let code = "\nEmbarkJS.Storage.setProvider('ipfs')";
-  embark.addProviderInit('storage', code, (storageConfig) => {
-    return (storageConfig.provider === 'ipfs' && storageConfig.enabled === true);
-  });
-}
-```
-
-## .registerImportFile(importName, importLocation)
-
-This call is used so the plugin can make a certain file available as a library to a user
-
-```
-var path = require('path')
-
-module.exports = function(embark) {
-  embark.registerImportFile("my-lib", path.join(__dirname, "my-lib.js"));
 }
 ```

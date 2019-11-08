@@ -25,15 +25,7 @@ export class Plugin {
 
   shouldInterceptLogs: boolean;
 
-  clientWeb3Providers: any[] = [];
-
   beforeDeploy: any[] = [];
-
-  contractsGenerators: any[] = [];
-
-  generateCustomContractCode = null;
-
-  testContractFactory = null;
 
   pipeline: any[] = [];
 
@@ -49,23 +41,9 @@ export class Plugin {
 
   serviceChecks: any[] = [];
 
-  dappGenerators: any[] = [];
-
   pluginTypes: string[] = [];
 
-  uploadCmds: any[] = [];
-
   apiCalls: any[] = [];
-
-  imports: any[] = [];
-
-  embarkjs_code: any[] = [];
-
-  generated_code: any[] = [];
-
-  embarkjs_init_code: any[] = [];
-
-  embarkjs_init_console_code: any[] = [];
 
   fs: any;
 
@@ -191,36 +169,10 @@ export class Plugin {
     return joinPath(this.pluginPath, filename);
   }
 
-  // TODO: add deploy provider
-  registerClientWeb3Provider(cb) {
-    this.clientWeb3Providers.push(cb);
-    this.addPluginType('clientWeb3Provider');
-  }
-
-  registerContractsGeneration(cb) {
-    this.contractsGenerators.push(cb);
-    this.addPluginType('contractGeneration');
-  }
-
-  registerCustomContractGenerator(cb) {
-    this.generateCustomContractCode = cb;
-    this.addPluginType('customContractGeneration');
-  }
-
-  registerTestContractFactory(cb) {
-    this.testContractFactory = cb;
-    this.addPluginType('testContractFactory');
-  }
-
   registerPipeline(matcthingFiles, cb) {
     // TODO: generate error for more than one pipeline per plugin
     this.pipeline.push({matcthingFiles, cb});
     this.addPluginType('pipeline');
-  }
-
-  registerDappGenerator(framework, cb) {
-    this.dappGenerators.push({framework, cb});
-    this.pluginTypes.push('dappGenerator');
   }
 
   registerCustomType(type) {
@@ -264,18 +216,6 @@ export class Plugin {
     this.pluginTypes = Array.from(new Set(this.pluginTypes));
   }
 
-  generateProvider(args) {
-    return this.clientWeb3Providers.map(function(cb) {
-      return cb.call(this, args);
-    }).join("\n");
-  }
-
-  generateContracts(args) {
-    return this.contractsGenerators.map(function(cb) {
-      return cb.call(this, args);
-    }).join("\n");
-  }
-
   registerContractConfiguration(config) {
     this.contractsConfigs.push(config);
     this.addPluginType('contractsConfig');
@@ -284,44 +224,6 @@ export class Plugin {
   registerCompiler(extension, cb) {
     this.compilers.push({extension, cb});
     this.addPluginType('compilers');
-  }
-
-  registerUploadCommand(cmd, cb) {
-    this.uploadCmds.push({cmd, cb});
-    this.addPluginType('uploadCmds');
-  }
-
-  addCodeToEmbarkJS(code) {
-    this.addPluginType('embarkjsCode');
-    // TODO: what is this/why
-    if (!this.embarkjs_code.some((existingCode) => deepEqual(existingCode, code))) {
-      this.embarkjs_code.push(code);
-    }
-  }
-
-  addGeneratedCode(codeCb) {
-    this.addPluginType('generatedCode');
-    this.generated_code.push(codeCb);
-  }
-
-  addProviderInit(providerType, code, initCondition) {
-    this.embarkjs_init_code[providerType] = this.embarkjs_init_code[providerType] || [];
-    this.embarkjs_init_code[providerType].push([code, initCondition]);
-    this.addPluginType('initCode');
-  }
-
-  addConsoleProviderInit(providerType, code, initCondition) {
-    this.embarkjs_init_console_code[providerType] = this.embarkjs_init_console_code[providerType] || [];
-    this.addPluginType('initConsoleCode');
-    const toAdd = [code, initCondition];
-    if (!this.embarkjs_init_console_code[providerType].some((initConsoleCode) => deepEqual(initConsoleCode, toAdd))) {
-      this.embarkjs_init_console_code[providerType].push(toAdd);
-    }
-  }
-
-  registerImportFile(importName, importLocation) {
-    this.imports.push([importName, importLocation]);
-    this.addPluginType('imports');
   }
 
   registerActionForEvent(eventName, cb) {
