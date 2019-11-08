@@ -64,7 +64,6 @@ export class EmbarkEmitter extends EventEmitter {
 
   emit(requestName, ...args) {
     warnIfLegacy(arguments[0]);
-    // log("\n|event", requestName);
     return super.emit(requestName, ...args);
   }
 }
@@ -90,19 +89,16 @@ EmbarkEmitter.prototype.removeAllListeners = function(requestName) {
 };
 
 EmbarkEmitter.prototype.on = function(requestName, cb) {
-  // log("EVENT LISTEN", requestName);
   warnIfLegacy(requestName);
   return _on.call(this, requestName, cb);
 };
 
 EmbarkEmitter.prototype.once = function(requestName, cb) {
-  // log("EVENT LISTEN ONCE", requestName);
   warnIfLegacy(requestName);
   return _once.call(this, requestName, cb);
 };
 
 EmbarkEmitter.prototype.setHandler = function(requestName, cb) {
-  // log("SET HANDLER", requestName);
   warnIfLegacy(requestName);
   return _setHandler.call(this, requestName, cb);
 };
@@ -113,12 +109,11 @@ EmbarkEmitter.prototype.request2 = function() {
 
   let requestId = this.debugLog.log({parent_id: this.logId, type: "request", name: requestName, inputs: other_args});
 
-  // log("\nREQUEST", requestName);
   warnIfLegacy(requestName);
   if (this._events && !this._events['request:' + requestName]) {
 
     if (this.debugLog.isEnabled()) {
-      this.debugLog.log({ id: requestId, error: "no request listener for " + requestName, source: this.getOrigin()})
+      this.debugLog.log({ id: requestId, error: "no request listener for " + requestName})
       // KEPT for now until api refactor separating requests from commands
       console.log("made request without listener: " + requestName);
       console.trace();
@@ -145,10 +140,7 @@ EmbarkEmitter.prototype.request2 = function() {
     this._emit('request:' + requestName, ...other_args);
   });
 
-  let ogStack;
-  if (this.debugLog.isEnabled()) {
-    ogStack = (new Error().stack);
-  }
+  let ogStack = this.debugLog.getStackTrace();
 
   promise.catch((e) => {
     if (this.debugLog.isEnabled()) {
@@ -156,7 +148,7 @@ EmbarkEmitter.prototype.request2 = function() {
       console.dir(ogStack);
     }
 
-    this.debugLog.log({id: requestId, error: "promise exception", outputs: ogStack, source: ogStack})
+    this.debugLog.log({id: requestId, error: "promise exception", outputs: ogStack, stack: ogStack})
     return e;
   });
 
@@ -167,14 +159,8 @@ EmbarkEmitter.prototype.request = function() {
   const requestName = arguments[0];
   const other_args = [].slice.call(arguments, 1);
 
-  let origin;
-  if (this.debugLog.isEnabled) {
-    origin = this.getOrigin();
-  }
+  let requestId = this.debugLog.log({parent_id: this.logId, type: "old_request", name: requestName, inputs: other_args})
 
-  let requestId = this.debugLog.log({parent_id: this.logId, type: "old_request", name: requestName, inputs: other_args, source: origin})
-
-  // log("\nREQUEST(OLD)", requestName);
   warnIfLegacy(requestName);
   if (this._events && !this._events['request:' + requestName]) {
     if (this.debugLog.isEnabled()) {
@@ -206,16 +192,10 @@ EmbarkEmitter.prototype.setCommandHandler = function(requestName, cb) {
   // log("SET COMMAND HANDLER", requestName);
 
   let requestId = this.debugLog.log({parent_id: this.logId, type: "setCommandHandler", name: requestName})
-
-  // let origin = ((new Error().stack).split("at ")[3]).trim();
-  // origin = origin.split("(")[0].trim();
-  let origin;
-  if (this.debugLog.isEnabled()) {
-    origin = this.getOrigin();
-  }
+  let origin = this.debugLog.getStackTrace();
 
   const listener = function(_cb) {
-    this.debugLog.log({id: requestId, output: origin, source: origin});
+    this.debugLog.log({id: requestId, output: origin, stack: origin});
     // log("== REQUEST RESPONSE", requestName, origin);
     cb.call(this, ...arguments);
   };
@@ -246,8 +226,6 @@ EmbarkEmitter.prototype.setCommandHandler = function(requestName, cb) {
 
 // TODO: deprecated/remove this
 EmbarkEmitter.prototype.setCommandHandlerOnce = function(requestName, cb) {
-  // log("SET COMMAND HANDLER ONCE", requestName);
-
   const listenerName = 'request:' + requestName;
 
   // if this event was requested prior to the command handler

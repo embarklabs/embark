@@ -227,12 +227,7 @@ Plugins.prototype.runActionsForEvent = function(eventName, args, cb, logId) {
     return cb(null, args);
   }
 
-  let origin;
-  if (this.debugLog.isEnabled()) {
-    origin = this.events.getOrigin();
-  }
-
-  this.debugLog.log({parent_id: logId, type: "trigger_action", name: eventName, source: origin, givenLogId: logId, plugins: actionPlugins, inputs: args});
+  this.debugLog.log({parent_id: logId, type: "trigger_action", name: eventName, givenLogId: logId, plugins: actionPlugins, inputs: args});
 
   async.reduce(actionPlugins, args, function (current_args, pluginObj, nextEach) {
     const [plugin, pluginName] = pluginObj;
