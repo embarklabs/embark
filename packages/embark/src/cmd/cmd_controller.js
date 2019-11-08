@@ -156,9 +156,7 @@ class EmbarkController {
         }
 
         let runId = engine.debugLog.moduleInit("run_command")
-        let _events = Object.assign({}, engine.events, {logId: runId, logger: engine.logger});
-        Object.setPrototypeOf(_events, engine.events);
-        engine.events = _events;
+        engine.events = engine.debugLog.tagObject(engine.events, runId);
 
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
@@ -746,11 +744,6 @@ class EmbarkController {
         if (pluginList.length > 0) {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
-
-        // let runId = engine.logger.moduleInit("test command")
-        // let _events = Object.assign({}, engine.events, {logId: runId, logger: engine.logger});
-        // Object.setPrototypeOf(_events, engine.events);
-        // engine.events = _events;
 
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");

@@ -86,7 +86,6 @@ export class Engine {
     const options = _options || {};
 
     this.debugLog = new DebugLog("embark");
-    // TODO: only start if there is a flag doing so
     this.debugLog.startSession();
 
     this.events = options.events || this.events || new Events({debugLog: this.debugLog});

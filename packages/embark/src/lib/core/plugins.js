@@ -82,8 +82,7 @@ Plugins.prototype.loadInternalPlugin = function(pluginName, pluginConfig, isPack
   }
 
   let logId = this.debugLog.moduleInit(pluginName);
-  let events = Object.assign({}, this.events, {logId: logId, debugLog: this.debugLog});
-  Object.setPrototypeOf(events, this.events);
+  let events = this.debugLog.tagObject(this.events, logId);
 
   const pluginWrapper = new Plugin({
     name: pluginName,

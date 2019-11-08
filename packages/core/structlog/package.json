@@ -7,13 +7,8 @@
   "homepage": "https://github.com/embark-framework/embark/tree/master/packages/core/structlog#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
-    "blockchain",
-    "dapps",
-    "ethereum",
-    "ipfs",
-    "serverless",
-    "solc",
-    "solidity"
+    "logs",
+    "logging"
   ],
   "files": [
     "dist"

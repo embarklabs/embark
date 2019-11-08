@@ -14,9 +14,6 @@ class Deployment {
     this.logId = embark.logId;
     this.debugLog = embark.debugLog;
 
-    // this.events = Object.assign({}, embark.events, {logId: this.logId, logger: this.logger});
-    // Object.setPrototypeOf(this.events, embark.events);
-
     this.plugins = options.plugins;
     this.blockchainConfig = this.config.blockchainConfig;
 

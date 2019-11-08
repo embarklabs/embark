@@ -7,9 +7,7 @@ class ContractDeployer {
     this.logger = options.logger;
     this.debugLog = options.debugLog;
     this.logId = this.debugLog.moduleInit("ContractDeployer");
-
-    this.events = Object.assign({}, options.events, {logId: this.logId, logger: this.logger});
-    Object.setPrototypeOf(this.events, options.events);
+    this.events = this.debugLog.tagObject(options.events, this.logId);
 
     this.plugins = options.plugins;
     this.deployer = {};

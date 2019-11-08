@@ -1,4 +1,3 @@
-// const Logger = require('embark-logger');
 const uuid = require('uuid');
 const fs = require('fs-extra');
 import stringify from "json-stringify-safe";
@@ -10,33 +9,27 @@ function jsonFunctionReplacer(_key, value) {
   return value;
 }
 
-// var DB = {
-// }
-
-// class SuperLog extends Logger {
-class SuperLog {
+class StructLog {
 
   constructor(processIdentifier) {
     this.logfile = "./structlog-" + (processIdentifier || "log") + ".json";
   }
 
-  // TODO: make this a flag depending on ENV var or constructor
   isEnabled() {
-    //return process && process.env && process.env.DEBUGLOGS;
-    return true;
+    return process && process.env && process.env.DEBUGLOGS;
+  }
+
+  tagObject(ogObject, logId) {
+    let newObject = Object.assign({}, ogObject, { logId });
+    Object.setPrototypeOf(newObject, ogObject);
+    return newObject;
   }
 
   addRecord(data) {
-    // DB[data.id] = data
     fs.appendFileSync(this.logfile, "\n" + stringify(data, jsonFunctionReplacer, 0));
   }
 
-  // findRecord(id) {
-  //   return DB[id];
-  // }
-
   updateRecord(id, data) {
-    // DB[id] = { ...DB[id], ...data }
     fs.appendFileSync(this.logfile, "\n" + stringify(data, jsonFunctionReplacer, 0));
   }
 
@@ -111,20 +104,6 @@ class SuperLog {
     return id;
   }
 
-  info() {
-    if (!this.isEnabled()) return;
-    let id = uuid.v4();
-    this.log({
-      session: this.session,
-      timestamp: Date.now(),
-      parent_id: this.session,
-      id: id,
-      type: "log_info",
-      name: "info: " + arguments[0]
-    })
-    // super.info(...arguments);
-  }
-
 }
 
-module.exports = SuperLog;
+module.exports = StructLog;
