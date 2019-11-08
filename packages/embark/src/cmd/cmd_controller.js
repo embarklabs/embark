@@ -157,6 +157,7 @@ class EmbarkController {
 
         let runId = engine.debugLog.moduleInit("run_command")
         engine.events = engine.debugLog.tagObject(engine.events, runId);
+        engine.logger = engine.debugLog.tagObject(engine.logger, runId);
 
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");

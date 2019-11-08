@@ -89,7 +89,7 @@ export class Engine {
     this.debugLog.startSession();
 
     this.events = options.events || this.events || new Events({debugLog: this.debugLog});
-    this.logger = options.logger || new Logger({context: this.context, logLevel: options.logLevel || this.logLevel || 'info', events: this.events, logFile: this.logFile});
+    this.logger = options.logger || new Logger({context: this.context, debugLog: this.debugLog, logLevel: options.logLevel || this.logLevel || 'info', events: this.events, logFile: this.logFile});
 
     this.config = new Config({env: this.env, logger: this.logger, debugLog: this.debugLog, events: this.events, context: this.context, webServerConfig: this.webServerConfig, version: this.version, package: this.package});
 

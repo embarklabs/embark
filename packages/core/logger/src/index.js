@@ -10,6 +10,7 @@ const LOG_REGEX = new RegExp(/\[(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d:\d\d\d)\] (?:
 export class Logger {
   constructor(options) {
     this.events = options.events || {emit: function(){}};
+    this.debugLog = options.debugLog;
     this.logLevels = Object.keys(Logger.logLevels);
     this.logLevel = options.logLevel || 'info';
     this._logFunction = options.logFunction || console.log;
@@ -91,7 +92,11 @@ Logger.prototype.registerAPICall = function (plugins) {
   );
 };
 
-Logger.prototype.writeToFile = function (_txt) {
+Logger.prototype.writeToFile = function (txt) {
+  if (this.debugLog) {
+    this.debugLog.log({parent_id: this.logId, type: "log_info", name: txt});
+  }
+
   if (!this.logFile) {
     return;
   }

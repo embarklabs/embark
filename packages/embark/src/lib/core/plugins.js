@@ -83,12 +83,14 @@ Plugins.prototype.loadInternalPlugin = function(pluginName, pluginConfig, isPack
 
   let logId = this.debugLog.moduleInit(pluginName);
   let events = this.debugLog.tagObject(this.events, logId);
+  let logger = this.debugLog.tagObject(this.logger, logId);
+  // let logger = this.logger;
 
   const pluginWrapper = new Plugin({
     name: pluginName,
     pluginModule: plugin,
     pluginConfig: pluginConfig || {},
-    logger: this.logger,
+    logger: logger,
     debugLog: this.debugLog,
     logId: logId,
     pluginPath: pluginPath,

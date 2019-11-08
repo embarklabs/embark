@@ -4,10 +4,10 @@ class ContractDeployer {
   constructor(options) {
     // this.events = options.events;
 
-    this.logger = options.logger;
     this.debugLog = options.debugLog;
     this.logId = this.debugLog.moduleInit("ContractDeployer");
     this.events = this.debugLog.tagObject(options.events, this.logId);
+    this.logger = this.debugLog.tagObject(options.logger, this.logId);
 
     this.plugins = options.plugins;
     this.deployer = {};
