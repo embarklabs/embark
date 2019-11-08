@@ -1,6 +1,7 @@
 let version = require('../../package.json').version;
 const Logger = require('embark-logger');
 
+// TODO: remove this file??
 class Embark {
 
   constructor(options) {

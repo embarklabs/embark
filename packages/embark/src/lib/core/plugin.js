@@ -50,6 +50,7 @@ var Plugin = function(options) {
   this.version = options.version;
   this.constants = constants;
   this.logId = options.logId;
+  this.debugLog = options.debugLog;
 
   if (!Array.isArray(this.currentContext)) {
     this.currentContext = [this.currentContext];

@@ -5,7 +5,8 @@ class ContractDeployer {
     // this.events = options.events;
 
     this.logger = options.logger;
-    this.logId = this.logger.moduleInit("ContractDeployer");
+    this.debugLog = options.debugLog;
+    this.logId = this.debugLog.moduleInit("ContractDeployer");
 
     this.events = Object.assign({}, options.events, {logId: this.logId, logger: this.logger});
     Object.setPrototypeOf(this.events, options.events);
@@ -20,7 +21,7 @@ class ContractDeployer {
   }
 
   deployContract(contract, callback) {
-    let subId = this.logger.log({parent_id: this.logId, type: "method", name: "deployContract", inputs: {contract, callback}});
+    let subId = this.debugLog.log({parent_id: this.logId, type: "method", name: "deployContract", inputs: {contract, callback}});
     async.waterfall([
       (next) => {
         this.plugins.emitAndRunActionsForEvent('deployment:contract:beforeDeploy', {contract: contract}, (err, _params) => {

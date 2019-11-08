@@ -12,6 +12,7 @@ class Deployment {
     this.logger = embark.logger;
     this.events = embark.events;
     this.logId = embark.logId;
+    this.debugLog = embark.debugLog;
 
     // this.events = Object.assign({}, embark.events, {logId: this.logId, logger: this.logger});
     // Object.setPrototypeOf(this.events, embark.events);
@@ -22,7 +23,8 @@ class Deployment {
     this.contractDeployer = new ContractDeployer({
       events: this.events,
       plugins: this.plugins,
-      logger: this.logger
+      logger: this.logger,
+      debugLog: this.debugLog
     });
 
     this.events.setCommandHandler('deployment:contracts:deploy', (contractsList, contractDependencies, cb) => {
@@ -31,7 +33,7 @@ class Deployment {
   }
 
   deployContracts(contracts, contractDependencies, done) {
-    let subId = this.logger.log({parent_id: this.logId, type: "method", name: "deployContracts", inputs: {contracts, contractDependencies}});
+    let subId = this.debugLog.log({parent_id: this.logId, type: "method", name: "deployContracts", inputs: {contracts, contractDependencies}});
 
     this.logger.info(__("deploying contracts"));
     async.waterfall([
@@ -53,7 +55,7 @@ class Deployment {
   }
 
   deployContract(contract, callback) {
-    let subId = this.logger.log({parent_id: this.logId, type: "method", name: "deployContract", inputs: {contract}});
+    let subId = this.debugLog.log({parent_id: this.logId, type: "method", name: "deployContract", inputs: {contract}});
     this.events.request('deployment:contract:deploy', contract, (err) => {
       if (err) {
         contract.error = err.message || err;
@@ -62,16 +64,16 @@ class Deployment {
         } else {
           this.logger.error(`[${contract.className}]: ${err.message || err}`);
         }
-        this.logger.log({id: subId, outputs: err, error: true});
+        this.debugLog.log({id: subId, outputs: err, error: true});
         return callback(err);
       }
-      this.logger.log({id: subId, outputs: ""});
+      this.debugLog.log({id: subId, outputs: ""});
       callback();
     });
   }
 
   deployAll(contracts, contractDependencies, done) {
-    let subId = this.logger.log({parent_id: this.logId, type: "method", name: "deployAll", inputs: {contracts, contractDependencies}});
+    let subId = this.debugLog.log({parent_id: this.logId, type: "method", name: "deployAll", inputs: {contracts, contractDependencies}});
     const self = this;
     const contractDeploys = {};
     const errors = [];
@@ -113,16 +115,16 @@ class Deployment {
       if (errors.length) {
         err = __("Error deploying contracts. Please fix errors to continue.");
 
-        this.logger.log({id: subId, outputs: err, error: true});
+        this.debugLog.log({id: subId, outputs: err, error: true});
         return done(err);
       }
       if (contracts.length === 0) {
         this.logger.info(__("no contracts found"));
-        this.logger.log({id: subId, outputs: "", msg: "no contracts found"});
+        this.debugLog.log({id: subId, outputs: "", msg: "no contracts found"});
         return done();
       }
       this.logger.info(__("finished deploying contracts"));
-      this.logger.log({id: subId, outputs: err, error: !!err, msg: "finished deploying contracts"});
+      this.debugLog.log({id: subId, outputs: err, error: !!err, msg: "finished deploying contracts"});
       done(err);
     });
   }

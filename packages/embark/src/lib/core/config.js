@@ -45,6 +45,7 @@ var Config = function(options) {
   this.chainsFile = options.chainsFile || './chains.json';
   this.plugins = options.plugins;
   this.logger = options.logger;
+  this.debugLog = options.debugLog;
   this.package = PACKAGE;
   this.events = options.events;
   this.embarkConfig = {};
@@ -131,6 +132,7 @@ Config.prototype.loadConfigFiles = function(options) {
   this.plugins = new Plugins({
     plugins: this.embarkConfig.plugins,
     logger: this.logger,
+    debugLog: this.debugLog,
     interceptLogs: interceptLogs,
     events: this.events,
     config: this,

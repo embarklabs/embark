@@ -52,6 +52,13 @@ function log(eventType, eventName, origin) {
 
 class EmbarkEmitter extends EventEmitter {
 
+  constructor(options) {
+    super();
+    if (options) {
+      this.debugLog = options.debugLog;
+    }
+  }
+
   emit(requestName, ...args) {
     warnIfLegacy(arguments[0]);
     // log("\n|event", requestName);
@@ -102,17 +109,12 @@ EmbarkEmitter.prototype.request2 = function() {
   let requestName = arguments[0];
   let other_args = [].slice.call(arguments, 1);
 
-  let requestId;
-  if (this.logger && this.logId) {
-    requestId = this.logger.log({parent_id: this.logId, type: "request", name: requestName, inputs: other_args})
-  }
+  let requestId = this.debugLog.log({parent_id: this.logId, type: "request", name: requestName, inputs: other_args});
 
   log("\nREQUEST", requestName);
   warnIfLegacy(requestName);
   if (this._events && !this._events['request:' + requestName]) {
-    if (this.logger && this.logId) {
-      this.logger.log({id: requestId, error: "no request listener for " + requestName})
-    }
+    this.debugLog.log({id: requestId, error: "no request listener for " + requestName})
     log("NO REQUEST LISTENER", requestName);
 
     if (debugEventsEnabled()) {
@@ -125,20 +127,14 @@ EmbarkEmitter.prototype.request2 = function() {
     other_args.push(
       (err, ...res) => {
         if (err) {
-          if (this.logger && this.logId) {
-            this.logger.log({id: requestId, msg: err, error: true})
-          }
+          this.debugLog.log({id: requestId, msg: err, error: true})
           return reject(err);
         }
         if (res.length && res.length > 1) {
-          if (this.logger && this.logId) {
-            this.logger.log({id: requestId, outputs: res})
-          }
+          this.debugLog.log({id: requestId, outputs: res})
           return resolve(res);
         }
-        if (this.logger && this.logId) {
-          this.logger.log({id: requestId, outputs: res[0]})
-        }
+        this.debugLog.log({id: requestId, outputs: res[0]})
         return resolve(res[0]);
       }
     );
@@ -154,9 +150,7 @@ EmbarkEmitter.prototype.request2 = function() {
       console.dir(ogStack);
     }
 
-    if (this.logger && this.logId) {
-      this.logger.log({id: requestId, error: "promise exception", stack: ogStack})
-    }
+    this.debugLog.log({id: requestId, error: "promise exception", stack: ogStack})
     log("\n======== Exception ========", requestName, "\n " + ogStack + "\n==============");
     return e;
   });
@@ -168,17 +162,12 @@ EmbarkEmitter.prototype.request = function() {
   let requestName = arguments[0];
   let other_args = [].slice.call(arguments, 1);
 
-  let requestId;
-  if (this.logger && this.logId) {
-    requestId = this.logger.log({parent_id: this.logId, type: "old_request", name: requestName, inputs: other_args})
-  }
+  let requestId = this.debugLog.log({parent_id: this.logId, type: "old_request", name: requestName, inputs: other_args})
 
   log("\nREQUEST(OLD)", requestName);
   warnIfLegacy(requestName);
   if (this._events && !this._events['request:' + requestName]) {
-    if (this.logger && this.logId) {
-      this.logger.log({id: requestId, error: "no request listener for " + requestName})
-    }
+    this.debugLog.log({id: requestId, error: "no request listener for " + requestName})
     log("NO REQUEST LISTENER", requestName);
     if (debugEventsEnabled()) {
       console.log("made request without listener: " + requestName);
@@ -207,19 +196,14 @@ EmbarkEmitter.prototype.request = function() {
 EmbarkEmitter.prototype.setCommandHandler = function(requestName, cb) {
   log("SET COMMAND HANDLER", requestName);
 
-  let requestId;
-  if (this.logger && this.logId) {
-    requestId = this.logger.log({parent_id: this.logId, type: "setCommandHandler", name: requestName})
-  }
+  let requestId = this.debugLog.log({parent_id: this.logId, type: "setCommandHandler", name: requestName})
 
   // let origin = ((new Error().stack).split("at ")[3]).trim();
   // origin = origin.split("(")[0].trim();
   let origin = getOrigin();
 
   let listener = function(_cb) {
-    if (this.logger && this.logId) {
-      this.logger.log({id: requestId, output: origin, source: origin});
-    }
+    this.debugLog.log({id: requestId, output: origin, source: origin});
     log("== REQUEST RESPONSE", requestName, origin);
     cb.call(this, ...arguments);
   };
