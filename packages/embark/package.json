@@ -108,6 +108,7 @@
     "embark-solidity": "^5.0.0-alpha.1",
     "embark-specialconfigs": "^5.0.0-alpha.1",
     "embark-storage": "^5.0.0-alpha.1",
+    "embark-structlog": "^5.0.0-alpha.1",
     "embark-swarm": "^5.0.0-alpha.1",
     "embark-test-runner": "^5.0.0-alpha.1",
     "embark-transaction-logger": "^5.0.0-alpha.1",

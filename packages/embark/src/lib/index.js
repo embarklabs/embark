@@ -2,6 +2,7 @@ let pkg = require('../../package.json');
 import { Config, Events } from 'embark-core';
 import { Logger } from 'embark-logger';
 
+// TODO: remove this file??
 class Embark {
 
   constructor(options) {

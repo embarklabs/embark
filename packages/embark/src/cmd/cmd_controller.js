@@ -25,6 +25,9 @@ class EmbarkController {
   }
 
   initConfig(env, options) {
+    let Events = require('../lib/core/events.js');
+    let Config = require('../lib/core/config.js');
+
     this.events = new Events();
     this.logger = new Logger({logLevel: Logger.logLevels.debug, events: this.events, context: this.context});
 
@@ -152,7 +155,7 @@ class EmbarkController {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
 
-        let runId = engine.logger.moduleInit("run_command")
+        let runId = engine.debugLog.moduleInit("run_command")
         let _events = Object.assign({}, engine.events, {logId: runId, logger: engine.logger});
         Object.setPrototypeOf(_events, engine.events);
         engine.events = _events;
@@ -744,10 +747,10 @@ class EmbarkController {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
 
-        let runId = engine.logger.moduleInit("test command")
-        let _events = Object.assign({}, engine.events, {logId: runId, logger: engine.logger});
-        Object.setPrototypeOf(_events, engine.events);
-        engine.events = _events;
+        // let runId = engine.logger.moduleInit("test command")
+        // let _events = Object.assign({}, engine.events, {logId: runId, logger: engine.logger});
+        // Object.setPrototypeOf(_events, engine.events);
+        // engine.events = _events;
 
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");

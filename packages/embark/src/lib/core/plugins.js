@@ -1,4 +1,5 @@
 import { dappPath, embarkPath } from 'embark-utils';
+
 const async = require('async');
 var Plugin = require('./plugin.js');
 var fs = require('../core/fs.js');
@@ -9,6 +10,7 @@ var Plugins = function(options) {
   this.plugins = [];
   // TODO: need backup 'NullLogger'
   this.logger = options.logger;
+  this.debugLog = options.debugLog;
   this.events = options.events;
   this.config = options.config;
   this.context = options.context;
@@ -51,6 +53,7 @@ Plugins.prototype.createPlugin = function(pluginName, pluginConfig) {
     pluginModule: plugin,
     pluginConfig: pluginConfig,
     logger: this.logger,
+    debugLog: this.debugLog,
     pluginPath: pluginPath,
     interceptLogs: this.interceptLogs,
     events: this.events,
@@ -78,8 +81,8 @@ Plugins.prototype.loadInternalPlugin = function(pluginName, pluginConfig, isPack
     plugin = plugin.default;
   }
 
-  let logId = this.logger.moduleInit(pluginName);
-  let events = Object.assign({}, this.events, {logId: logId, logger: this.logger});
+  let logId = this.debugLog.moduleInit(pluginName);
+  let events = Object.assign({}, this.events, {logId: logId, debugLog: this.debugLog});
   Object.setPrototypeOf(events, this.events);
 
   const pluginWrapper = new Plugin({
@@ -87,6 +90,7 @@ Plugins.prototype.loadInternalPlugin = function(pluginName, pluginConfig, isPack
     pluginModule: plugin,
     pluginConfig: pluginConfig || {},
     logger: this.logger,
+    debugLog: this.debugLog,
     logId: logId,
     pluginPath: pluginPath,
     interceptLogs: this.interceptLogs,
@@ -223,7 +227,7 @@ Plugins.prototype.runActionsForEvent = function(eventName, args, cb, logId) {
     return cb(null, args);
   }
 
-  this.logger.log({parent_id: logId, type: "trigger_action", name: eventName, source: this.events.getOrigin(true), givenLogId: logId, plugins: actionPlugins, inputs: args});
+  this.debugLog.log({parent_id: logId, type: "trigger_action", name: eventName, source: this.events.getOrigin(true), givenLogId: logId, plugins: actionPlugins, inputs: args});
 
   this.events.log("ACTION", eventName, "");
 
@@ -231,16 +235,16 @@ Plugins.prototype.runActionsForEvent = function(eventName, args, cb, logId) {
     const [plugin, pluginName] = pluginObj;
 
     self.events.log("== ACTION FOR " + eventName, plugin.name, pluginName);
-    let actionLogId = self.logger.log({module: pluginName, type: "action_run", name: (eventName + plugin.name), source: pluginName, inputs: current_args});
+    let actionLogId = self.debugLog.log({module: pluginName, type: "action_run", name: (eventName + plugin.name), source: pluginName, inputs: current_args});
 
     if (typeof (args) === 'function') {
       plugin.call(plugin, (...params) => {
-        self.logger.log({id: actionLogId, outputs: params || current_args});
+        self.debugLog.log({id: actionLogId, outputs: params || current_args});
         return nextEach(...params || current_args);
       });
     } else {
       plugin.call(plugin, args, (...params) => {
-        self.logger.log({id: actionLogId, outputs: (args, params || current_args)});
+        self.debugLog.log({id: actionLogId, outputs: (args, params || current_args)});
         return nextEach(...params || current_args);
       });
     }

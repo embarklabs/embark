@@ -8,8 +8,9 @@ import { ServicesMonitor } from './services_monitor';
 import { normalizeInput } from 'embark-utils';
 import { Logger } from 'embark-logger';
 
-// const Logger = require('embark-logger');
-const Logger = require('./superlog.js');
+const utils = require('../utils/utils');
+const Logger = require('embark-logger');
+const DebugLog = require('embark-structlog');
 
 const EMBARK_PROCESS_NAME = 'embark';
 
@@ -82,17 +83,17 @@ export class Engine {
 
   init(_options, callback) {
     callback = callback || function() {};
-
     const options = _options || {};
-    this.events = options.events || this.events || new Events();
-    this.logger = options.logger || new Logger({context: this.context, logLevel: options.logLevel || this.logLevel || 'info', events: this.events, logFile: this.logFile});
-<<<<<<< HEAD:packages/core/core/src/engine.ts
-    this.config = new Config({env: this.env, logger: this.logger, events: this.events, context: this.context, webServerConfig: this.webServerConfig, version: this.version, package: this.package});
-=======
-    this.logger.startSession();
 
-    this.config = new Config({env: this.env, logger: this.logger, events: this.events, context: this.context, webServerConfig: this.webServerConfig, version: this.version});
->>>>>>> add struct logs:packages/embark/src/lib/core/engine.js
+    this.debugLog = new DebugLog("embark");
+    // TODO: only start if there is a flag doing so
+    this.debugLog.startSession();
+
+    this.events = options.events || this.events || new Events({debugLog: this.debugLog});
+    this.logger = options.logger || new Logger({context: this.context, logLevel: options.logLevel || this.logLevel || 'info', events: this.events, logFile: this.logFile});
+
+    this.config = new Config({env: this.env, logger: this.logger, debugLog: this.debugLog, events: this.events, context: this.context, webServerConfig: this.webServerConfig, version: this.version, package: this.package});
+
     this.config.loadConfigFiles({embarkConfig: this.embarkConfig, interceptLogs: this.interceptLogs});
     this.plugins = this.config.plugins;
     this.isDev = this.config && this.config.blockchainConfig && (this.config.blockchainConfig.isDev || this.config.blockchainConfig.default);
