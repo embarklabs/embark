@@ -60,9 +60,9 @@ describe('embark.trackingFunctions', function () {
       config: {
         contractsConfig: {
           tracking: undefined
-        }
+        },
+        env: "development"
       },
-      env: "development",
       fs,
       events,
       logger,
@@ -111,9 +111,9 @@ describe('embark.trackingFunctions', function () {
         config: {
           contractsConfig: {
             tracking: undefined
-          }
+          },
+          env: "development"
         },
-        env: "development",
         fs,
         events,
         logger,
@@ -138,11 +138,14 @@ describe('embark.trackingFunctions', function () {
       expect(currentChain).to.be(null);
     });
 
-    it("should return undefined when there is no chains file", async function () {
+    it("should return a basic chain when there is no chains file", async function () {
       exists.restore();
       exists = sinon.stub(fs, 'exists').returns(false);
       const currentChain = await trackingFunctions.currentChain;
-      expect(currentChain).to.be(undefined);
+      expect(currentChain).to.eql({
+        contracts: {},
+        name: 'development'
+      });
     });
   });
 
