@@ -22,6 +22,7 @@ class SuperLog {
 
   // TODO: make this a flag depending on ENV var or constructor
   isEnabled() {
+    //return process && process.env && process.env.DEBUGLOGS;
     return true;
   }
 
@@ -40,6 +41,7 @@ class SuperLog {
   }
 
   startSession() {
+    if (!this.isEnabled()) return;
     this.session = uuid.v4();
 
     this.modules = {}
@@ -55,6 +57,7 @@ class SuperLog {
   }
 
   moduleInit(name) {
+    if (!this.isEnabled()) return;
     let id = uuid.v4();
 
     this.addRecord({
@@ -64,7 +67,8 @@ class SuperLog {
       parent_id: this.session,
       type: 'module_init',
       value: name,
-      name: name
+      name: name,
+      stack: this.getStackTrace()
     })
 
     this.modules[name] = id
@@ -72,7 +76,14 @@ class SuperLog {
     return id;
   }
 
+  getStackTrace() {
+    if (!this.isEnabled()) return;
+    return (new Error().stack).split('\n');
+  }
+
   log(values) {
+    if (!this.isEnabled()) return;
+
     if (values.id) {
       this.updateRecord(values.id, values)
       return values.id;
@@ -86,6 +97,10 @@ class SuperLog {
       values.parent_id = this.session
     }
 
+    if (!values.stack) {
+      values.stack = this.getStackTrace();
+    }
+
     this.addRecord({
       session: this.session,
       timestamp: Date.now(),
@@ -97,6 +112,7 @@ class SuperLog {
   }
 
   info() {
+    if (!this.isEnabled()) return;
     let id = uuid.v4();
     this.log({
       session: this.session,
