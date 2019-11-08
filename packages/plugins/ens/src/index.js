@@ -361,31 +361,61 @@ class ENS {
   modifyENSArguments(params, callback) {
     const self = this;
 
-    function checkArgs(argus, cb) {
-      async.map(argus, (arg, nextEachCb) => {
-        if (Array.isArray(arg)) {
-          return checkArgs(arg, nextEachCb);
-        }
-
-        if (!self.isENSName(arg)) {
-          return nextEachCb(null, arg);
-        }
-        self.ensResolve(arg,  (err, address) => {
-          if (err) {
-            return nextEachCb(err);
-          }
-          nextEachCb(null, address);
-        });
-      }, cb);
-    }
-
-    checkArgs(params.contract.args, (err, realArgs) => {
+    checkArgs(params.contract.args, (err, args) => {
       if (err) {
         return callback(err);
       }
-      params.contract.args = realArgs;
+      params.contract.args = args;
       callback(null, params);
     });
+
+    function checkArgs(args, done) {
+      if (Array.isArray(args)) {
+        async.map(args, (arg, next) => {
+          if (Array.isArray(arg)) {
+            return checkArgs(arg, next);
+          }
+
+          if (!self.isENSName(arg)) {
+            return next(null, arg);
+          }
+
+          self.ensResolve(arg,  (err, address) => {
+            if (err) {
+              return next(err);
+            }
+            next(null, address);
+          });
+        }, done);
+      } else {
+        let updatedArgs = {};
+        async.each(Object.keys(args), (key, next) => {
+          const arg = args[key];
+          if (Array.isArray(arg)) {
+            return checkArgs(arg, (err, values) => {
+              updatedArgs[key] = values;
+              next(null);
+            });
+          }
+          if (!self.isENSName(arg)) {
+            updatedArgs[key] = arg;
+            return next(null);
+          }
+          self.ensResolve(arg, (err, address) => {
+            if (err) {
+              return next(err);
+            }
+            updatedArgs[key] = address;
+            next(null);
+          });
+        }, err => {
+          if (err) {
+            return done(err);
+          }
+          done(null, updatedArgs);
+        });
+      }
+    }
   }
 
   ensResolve(name, cb) {
