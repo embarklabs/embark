@@ -92,9 +92,9 @@ Logger.prototype.registerAPICall = function (plugins) {
   );
 };
 
-Logger.prototype.writeToFile = function (txt) {
+Logger.prototype.writeToFile = function (_txt) {
   if (this.debugLog) {
-    this.debugLog.log({parent_id: this.logId, type: "log_info", name: txt});
+    this.debugLog.log({parent_id: this.logId, type: "log_info", name: Array.from(arguments).join(' ')});
   }
 
   if (!this.logFile) {
