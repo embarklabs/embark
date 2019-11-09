@@ -161,7 +161,7 @@ class Storage extends React.Component {
       <React.Fragment>
         <Alert color="warning">The node you are using does not support IPFS. If
           you haven't explicitly disabled IPFS in <code>config/storage.js</code> then
-          please ensure <a href="https://github.com/ipfs/js-ipfs-api#cors"
+          please ensure <a href="https://github.com/ipfs/js-ipfs-http-client#cors"
           target="_blank">CORS</a> is setup for the IPFS node.</Alert>
       </React.Fragment>}
 

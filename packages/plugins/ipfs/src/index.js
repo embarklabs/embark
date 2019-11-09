@@ -1,5 +1,5 @@
 import {__} from 'embark-i18n';
-const IpfsApi = require('ipfs-api');
+const IpfsHttpClient = require('ipfs-http-client');
 const StorageProcessesLauncher = require('./storageProcessesLauncher.js');
 import {buildUrlFromConfig, getJson} from 'embark-utils';
 const UploadIPFS = require('./upload.js');
@@ -39,7 +39,7 @@ class IPFS {
       return;
     }
 
-    this.setupIpfsApi();
+    this.setupIpfsHttpClient();
     this.setupEmbarkJS();
 
     this.events.request("storage:node:register", "ipfs", (readyCb) => {
@@ -82,8 +82,8 @@ class IPFS {
     });
   }
 
-  async setupIpfsApi() {
-    this.events.request("runcode:whitelist", 'ipfs-api', () => {});
+  async setupIpfsHttpClient() {
+    this.events.request("runcode:whitelist", 'ipfs-http-client', () => {});
     this.events.on("storage:started", this.registerIpfsObject.bind(this));
     this.registerIpfsObject();
     this.registerIpfsHelp();
@@ -91,7 +91,7 @@ class IPFS {
 
   async registerIpfsObject() {
     const {host, port} = this.config;
-    let ipfs = IpfsApi(host, port);
+    let ipfs = IpfsHttpClient(host, port);
     await this.events.request2("runcode:register", "ipfs", ipfs);
   }
 
