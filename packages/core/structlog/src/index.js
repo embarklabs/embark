@@ -20,6 +20,7 @@ class StructLog {
   }
 
   tagObject(ogObject, logId) {
+    if (!this.isEnabled()) return ogObject;
     let newObject = Object.assign({}, ogObject, { logId });
     Object.setPrototypeOf(newObject, ogObject);
     return newObject;
