@@ -1,9 +1,9 @@
 const async = require('async');
-import {__} from 'embark-i18n';
+import { __ } from 'embark-i18n';
 const Web3 = require('web3');
 
-const {blockchain: blockchainConstants} = require('embark-core/constants');
-import {dappPath, getAddressToContract, getTransactionParams, hexToNumber} from 'embark-utils';
+const { blockchain: blockchainConstants } = require('embark-core/constants');
+import { dappPath, getAddressToContract, getTransactionParams, hexToNumber } from 'embark-utils';
 
 
 const Transaction = require('ethereumjs-tx');
@@ -98,23 +98,23 @@ class TransactionLogger {
   }
 
   async _onLogRequest(args) {
-    const method = args.reqData.method;
+    const method = args.request.method;
     if (!this.contractsDeployed || !LISTENED_METHODS.includes(method)) {
       return;
     }
 
     if (method === blockchainConstants.transactionMethods.eth_sendTransaction) {
       // We just gather data and wait for the receipt
-      this.transactions[args.respData.result] = {
-        address: args.reqData.params[0].to,
-        data: args.reqData.params[0].data,
-        txHash: args.respData.result
+      this.transactions[args.response.result] = {
+        address: args.request.params[0].to,
+        data: args.request.params[0].data,
+        txHash: args.response.result
       };
       return;
     } else if (method === blockchainConstants.transactionMethods.eth_sendRawTransaction) {
-      const rawData = Buffer.from(ethUtil.stripHexPrefix(args.reqData.params[0]), 'hex');
+      const rawData = Buffer.from(ethUtil.stripHexPrefix(args.request.params[0]), 'hex');
       const tx = new Transaction(rawData, 'hex');
-      this.transactions[args.respData.result] = {
+      this.transactions[args.response.result] = {
         address: '0x' + tx.to.toString('hex'),
         data: '0x' + tx.data.toString('hex')
       };
@@ -123,22 +123,22 @@ class TransactionLogger {
 
     let dataObject;
     if (method === blockchainConstants.transactionMethods.eth_getTransactionReceipt) {
-      dataObject = args.respData.result;
+      dataObject = args.response.result;
       if (!dataObject) {
         return;
       }
-      if (this.transactions[args.respData.result.transactionHash]) {
+      if (this.transactions[args.response.result.transactionHash]) {
         // This is the normal case. If we don't get here, it's because we missed a TX
-        dataObject = Object.assign(dataObject, this.transactions[args.respData.result.transactionHash]);
-        delete this.transactions[args.respData.result.transactionHash]; // No longer needed
+        dataObject = Object.assign(dataObject, this.transactions[args.response.result.transactionHash]);
+        delete this.transactions[args.response.result.transactionHash]; // No longer needed
       } else {
         // Was not a eth_getTransactionReceipt in the context of a transaction
         return;
       }
     } else {
-      dataObject = args.reqData.params[0];
+      dataObject = args.request.params[0];
     }
-    const {to: address, data} = dataObject;
+    const { to: address, data } = dataObject;
     if (!address) {
       // It's a deployment
       return;
@@ -152,7 +152,7 @@ class TransactionLogger {
       });
     }
 
-    const {name, silent} = contract;
+    const { name, silent } = contract;
     if (silent && !this.outputDone) {
       return;
     }
@@ -169,12 +169,12 @@ class TransactionLogger {
     }
 
     if (method === blockchainConstants.transactionMethods.eth_call) {
-      const log = Object.assign({}, args, {name, functionName, paramString});
+      const log = Object.assign({}, args, { name, functionName, paramString });
       log.status = '0x1';
       return this.events.emit('contracts:log', log);
     }
 
-    let {transactionHash, blockNumber, gasUsed, status} = args.respData.result;
+    let { transactionHash, blockNumber, gasUsed, status } = args.response.result;
     let reason;
     if (status !== '0x0' && status !== '0x1') {
       status = !status ? '0x0' : '0x1';
@@ -192,7 +192,7 @@ class TransactionLogger {
 
     gasUsed = hexToNumber(gasUsed);
     blockNumber = hexToNumber(blockNumber);
-    const log = Object.assign({}, args, {name, functionName, paramString, gasUsed, blockNumber, reason, status, transactionHash});
+    const log = Object.assign({}, args, { name, functionName, paramString, gasUsed, blockNumber, reason, status, transactionHash });
 
     this.events.emit('contracts:log', log);
     this.logger.info(`Blockchain>`.underline + ` ${name}.${functionName}(${paramString})`.bold + ` | ${transactionHash} | gas:${gasUsed} | blk:${blockNumber} | status:${status}${reason ? ` | reason: "${reason}"` : ''}`);

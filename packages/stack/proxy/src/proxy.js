@@ -20,25 +20,42 @@ export class Proxy {
     this.vms = options.vms;
     this.app = null;
     this.endpoint = options.endpoint;
+    this.events = options.events;
+
     if (options.endpoint === constants.blockchain.vm) {
       this.endpoint = this.vms[this.vms.length - 1]();
     }
+
+    let provider = null;
+
     if (typeof this.endpoint === 'string' && this.endpoint.startsWith('ws')) {
-      this.endpoint = new Web3WsProvider(this.endpoint, {
-        headers: {Origin: constants.embarkResourceOrigin},
-        // TODO remove this when Geth fixes this: https://github.com/ethereum/go-ethereum/issues/16846
-        //  Edit: This has been fixed in Geth 1.9, but we don't support 1.9 yet and still support 1.8
-        clientConfig: {
-          fragmentationThreshold: 81920
-        }
-      });
+      provider = this._createWebSocketProvider();
+    } else {
+      provider = this.endpoint;
     }
     this.isWs = options.isWs;
     // used to service all non-long-living WS connections, including any
     // request that is not WS and any WS request that is not an `eth_subscribe`
     // RPC request
-    this.requestManager = new Web3RequestManager.Manager(this.endpoint);
+    this.requestManager = this._createWeb3RequestManager(provider);
     this.nodeSubscriptions = {};
+    this.events.setCommandHandler("proxy:websocket:subscribe", this.handleSubscribe.bind(this));
+    this.events.setCommandHandler("proxy:websocket:unsubscribe", this.handleUnsubscribe.bind(this));
+  }
+
+  _createWebSocketProvider() {
+    return new Web3WsProvider(this.endpoint, {
+      headers: { Origin: constants.embarkResourceOrigin },
+      // TODO remove this when Geth fixes this: https://github.com/ethereum/go-ethereum/issues/16846
+      //  Edit: This has been fixed in Geth 1.9, but we don't support 1.9 yet and still support 1.8
+      clientConfig: {
+        fragmentationThreshold: 81920
+      }
+    });
+  }
+
+  _createWeb3RequestManager(provider) {
+    return new Web3RequestManager.Manager(provider);
   }
 
   async nodeReady() {
@@ -63,7 +80,7 @@ export class Proxy {
     this.app.use(express.urlencoded({ extended: true }));
 
     if (this.isWs) {
-      this.app.ws('/', async (conn, _wsReq) => {
+      this.app.ws('/', async (conn, wsReq) => {
 
         conn.on('message', async (msg) => {
           try {
@@ -73,6 +90,7 @@ export class Proxy {
           catch (err) {
             const error = __('Error processing request: %s', err.message);
             this.logger.error(error);
+            this.logger.debug(`Request causing error: ${JSON.stringify(wsReq)}`);
             this.respondWs(conn, error);
           }
         });
@@ -103,9 +121,9 @@ export class Proxy {
   async processRequest(request, transport) {
     // Modify request
     let modifiedRequest;
-    const rpcRequest = request.method === "POST" ? request.body : request;
+    request = request.method === "POST" ? request.body : request;
     try {
-      modifiedRequest = await this.emitActionsForRequest(rpcRequest);
+      modifiedRequest = await this.emitActionsForRequest(request, transport);
     }
     catch (reqError) {
       const error = reqError.message || reqError;
@@ -116,97 +134,123 @@ export class Proxy {
     }
 
     // Send the possibly modified request to the Node
-    const respData = { jsonrpc: "2.0", id: modifiedRequest.reqData.id };
+    const response = { jsonrpc: "2.0", id: modifiedRequest.request.id };
     if (modifiedRequest.sendToNode !== false) {
 
-      // kill our manually created long-living connection for eth_subscribe if we have one
-      if (this.isWs && modifiedRequest.reqData.method === 'eth_unsubscribe') {
-        const id = modifiedRequest.reqData.params[0];
-        if (this.nodeSubscriptions[id] && this.nodeSubscriptions[id].provider && this.nodeSubscriptions[id].provider.disconnect) {
-          this.nodeSubscriptions[id].provider.disconnect();
-        }
-      }
-      // create a long-living WS connection to the node
-      if (this.isWs && modifiedRequest.reqData.method === 'eth_subscribe') {
-
-        // creates a new long-living connection to the node
-        const currentReqManager = new Web3RequestManager.Manager(this.endpoint);
-
-        // kill WS connetion to the node when the client connection closes
-        transport.on('close', () => currentReqManager.provider.disconnect());
-
-        // do the actual forward request to the node
-        currentReqManager.send(modifiedRequest.reqData, (error, result) => {
-          if (error) {
-            const rpcErrorObj = { "jsonrpc": "2.0", "error": { "code": -32603, "message": error }, "id": modifiedRequest.reqData.id };
-            return this.respondError(transport, rpcErrorObj);
-          }
-          // `result` contains our initial response from the node, ie
-          // subscription id. Any FUTURE data from the node that needs
-          // to be forwarded to the client connection will be handled
-          // in the `.on('data')` event below.
-          this.logger.debug(`Created subscription: ${result}`);
-          this.nodeSubscriptions[result] = currentReqManager;
-          respData.result = result;
-          // TODO: Kick off emitAcitonsForResponse here
-          this.respondWs(transport, respData);
-        });
-
-        // Watch for `eth_subscribe` subscription data coming from the node.
-        // Send the subscription data back across the originating client
-        // connection.
-        currentReqManager.provider.on('data', (result, deprecatedResult) => {
-          result = result || deprecatedResult;
-          this.logger.debug(`Subscription data received from node and forwarded to originating socket client connection: ${JSON.stringify(result)}`);
-          // TODO: Kick off emitAcitonsForResponse here
-          this.respondWs(transport, result);
-        });
-
-        return;
-      }
-
       try {
-        const result = await this.forwardRequestToNode(modifiedRequest.reqData);
-        respData.result = result;
+        const result = await this.forwardRequestToNode(modifiedRequest.request);
+        response.result = result;
       } catch (fwdReqErr) {
         // The node responded with an error. Set up the error so that it can be
         // stripped out by modifying the response (via actions for blockchain:proxy:response)
-        respData.error = fwdReqErr.message || fwdReqErr;
+        response.error = fwdReqErr.message || fwdReqErr;
       }
     }
 
     try {
-      const modifiedResp = await this.emitActionsForResponse(modifiedRequest.reqData, respData);
+      const modifiedResp = await this.emitActionsForResponse(modifiedRequest.request, response, transport);
       // Send back to the client
-      if (modifiedResp && modifiedResp.respData && modifiedResp.respData.error) {
+      if (modifiedResp && modifiedResp.response && modifiedResp.response.error) {
         // error returned from the node and it wasn't stripped by our response actions
-        const error = modifiedResp.respData.error.message || modifiedResp.respData.error;
+        const error = modifiedResp.response.error.message || modifiedResp.response.error;
         this.logger.error(__(`Error returned from the node: ${error}`));
-        const rpcErrorObj = { "jsonrpc": "2.0", "error": { "code": -32603, "message": error }, "id": modifiedResp.respData.id };
+        const rpcErrorObj = { "jsonrpc": "2.0", "error": { "code": -32603, "message": error }, "id": modifiedResp.response.id };
         return this.respondError(transport, rpcErrorObj);
       }
-      this.respondOK(transport, modifiedResp.respData);
+      this.respondOK(transport, modifiedResp.response);
     }
     catch (resError) {
       // if was an error in response actions (resError), send the error in the response
       const error = resError.message || resError;
       this.logger.error(__(`Error executing response actions: ${error}`));
-      const rpcErrorObj = { "jsonrpc": "2.0", "error": { "code": -32603, "message": error }, "id": modifiedRequest.reqData.id };
+      const rpcErrorObj = { "jsonrpc": "2.0", "error": { "code": -32603, "message": error }, "id": modifiedRequest.request.id };
       return this.respondError(transport, rpcErrorObj);
     }
-
-
-
   }
 
-  forwardRequestToNode(reqData) {
+  forwardRequestToNode(request) {
     return new Promise((resolve, reject) => {
-      this.requestManager.send(reqData, (fwdReqErr, result) => {
+      this.requestManager.send(request, (fwdReqErr, result) => {
         if (fwdReqErr) {
           return reject(fwdReqErr);
         }
         resolve(result);
       });
+    });
+  }
+
+  async handleSubscribe(clientSocket, request, response, cb) {
+    // creates a new long-living connection to the node
+    const currentReqManager = this._createWeb3RequestManager(this._createWebSocketProvider());
+
+    // kill WS connetion to the node when the client connection closes
+    clientSocket.on('close', () => currentReqManager.provider.disconnect());
+
+    // do the actual forward request to the node
+    currentReqManager.send(request, (error, result) => {
+      if (error) {
+        return cb(error);
+      }
+      // `result` contains our initial response from the node, ie
+      // subscription id. Any FUTURE data from the node that needs
+      // to be forwarded to the client connection will be handled
+      // in the `.on('data')` event below.
+      this.logger.debug(`Created subscription: ${result} for ${JSON.stringify(request.params)}`);
+      this.logger.debug(`Subscription request: ${JSON.stringify(request)} `);
+
+      // add the websocket req manager for this subscription to memory so it
+      // can be referenced later
+      this.nodeSubscriptions[result] = currentReqManager;
+
+      // send a response to the original requesting inbound client socket
+      // (ie the browser or embark) with the result of the subscription
+      // request from the node
+      response.result = result;
+      cb(null, response);
+    });
+
+    // Watch for `eth_subscribe` subscription data coming from the node.
+    // Send the subscription data back across the originating client
+    // connection.
+    currentReqManager.provider.on('data', async (result, deprecatedResult) => {
+      result = result || deprecatedResult;
+      this.logger.debug(`Subscription data received from node and forwarded to originating socket client connection: ${JSON.stringify(result)} `);
+
+      // allow modification of the node subscription data sent to the client
+      result = await this.emitActionsForResponse(result, result, clientSocket);
+      this.respondWs(clientSocket, result);
+    });
+  }
+
+  async handleUnsubscribe(request, response, cb) {
+    // kill our manually created long-living connection for eth_subscribe if we have one
+    const subscriptionId = request.params[0];
+    const currentReqManager = this.nodeSubscriptions[subscriptionId];
+
+    if (!currentReqManager) {
+      return this.logger.error(`Failed to unsubscribe from subscription '${subscriptionId}' because the proxy failed to find an active connection to the node.`);
+    }
+    // forward unsubscription request to the node
+    currentReqManager.send(request, (error, result) => {
+      if (error) {
+        return cb(error);
+      }
+      // `result` contains 'true' if the unsubscription request was successful
+      this.logger.debug(`Unsubscription result for subscription '${JSON.stringify(request.params)}': ${result} `);
+      this.logger.debug(`Unsubscription request: ${JSON.stringify(request)} `);
+
+
+      // if unsubscribe succeeded, disconnect connection and remove connection from memory
+      if (result === true) {
+        if (currentReqManager.provider && currentReqManager.provider.disconnect) {
+          currentReqManager.provider.disconnect();
+        }
+        delete this.nodeSubscriptions[subscriptionId];
+      }
+      // result should be true/false
+      response.result = result;
+
+      cb(null, response);
     });
   }
 
@@ -223,7 +267,7 @@ export class Proxy {
       2: "closing",
       3: "closed"
     };
-    this.logger.warn(`[Proxy]: Failed to send WebSocket response because the socket is ${stateMap[ws.readyState]}. Response: ${response}`);
+    this.logger.warn(`[Proxy]: Failed to send WebSocket response because the socket is ${stateMap[ws.readyState]}.Response: ${response} `);
   }
   respondHttp(res, statusCode, response) {
     res.status(statusCode).send(response);
@@ -237,22 +281,23 @@ export class Proxy {
     return this.isWs ? this.respondWs(transport, response) : this.respondHttp(transport, 200, response);
   }
 
-  emitActionsForRequest(body) {
+  emitActionsForRequest(request, transport) {
     return new Promise((resolve, reject) => {
       let calledBack = false;
+      const data = { request, isWs: this.isWs, transport };
       setTimeout(() => {
         if (calledBack) {
           return;
         }
-        this.logger.warn(__('Action for request "%s" timed out', body.method));
-        this.logger.debug(body);
+        this.logger.warn(__('Action for request "%s" timed out', request.method));
+        this.logger.debug(request);
         calledBack = true;
-        resolve({ reqData: body });
+        resolve(data);
       }, ACTION_TIMEOUT);
 
       this.plugins.emitAndRunActionsForEvent('blockchain:proxy:request',
-        { reqData: body },
-        (err, resp) => {
+        data,
+        (err, result) => {
           if (calledBack) {
             // Action timed out
             return;
@@ -261,33 +306,34 @@ export class Proxy {
             this.logger.error(__('Error parsing the request in the proxy'));
             this.logger.error(err);
             // Reset the data to the original request so that it can be used anyway
-            resp = { reqData: body };
+            result = data;
             calledBack = true;
             return reject(err);
           }
           calledBack = true;
-          resolve(resp);
+          resolve(result);
         });
     });
   }
 
-  emitActionsForResponse(reqData, respData) {
+  emitActionsForResponse(request, response, transport) {
     return new Promise((resolve, reject) => {
+      const data = { request, response, isWs: this.isWs, transport };
       let calledBack = false;
       setTimeout(() => {
         if (calledBack) {
           return;
         }
-        this.logger.warn(__('Action for response "%s" timed out', reqData.method));
-        this.logger.debug(reqData);
-        this.logger.debug(respData);
+        this.logger.warn(__('Action for response "%s" timed out', request.method));
+        this.logger.debug(request);
+        this.logger.debug(response);
         calledBack = true;
-        resolve({ respData });
+        resolve(data);
       }, ACTION_TIMEOUT);
 
       this.plugins.emitAndRunActionsForEvent('blockchain:proxy:response',
-        { respData, reqData },
-        (err, resp) => {
+        data,
+        (err, result) => {
           if (calledBack) {
             // Action timed out
             return;
@@ -296,10 +342,12 @@ export class Proxy {
             this.logger.error(__('Error parsing the response in the proxy'));
             this.logger.error(err);
             calledBack = true;
-            reject(err);
+            // Reset the data to the original response so that it can be used anyway
+            result = data;
+            return reject(err);
           }
           calledBack = true;
-          resolve(resp);
+          resolve(result);
         });
     });
   }

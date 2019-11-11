@@ -21,30 +21,30 @@ export default class EthAccounts extends RpcModifier {
   constructor(embark: Embark, rpcModifierEvents: Events) {
     super(embark, rpcModifierEvents);
 
-    this.embark.registerActionForEvent("blockchain:proxy:response", this.checkResponseFor_eth_accounts.bind(this));
+    this.embark.registerActionForEvent("blockchain:proxy:response", this.ethAccountsResponse.bind(this));
   }
 
-  private async checkResponseFor_eth_accounts(params: any, callback: Callback<any>) {
+  private async ethAccountsResponse(params: any, callback: Callback<any>) {
 
-    if (!(METHODS_TO_MODIFY.includes(params.reqData.method))) {
+    if (!(METHODS_TO_MODIFY.includes(params.request.method))) {
       return callback(null, params);
     }
 
-    this.logger.trace(__(`Modifying blockchain '${params.reqData.method}' response:`));
-    this.logger.trace(__(`Original request/response data: ${JSON.stringify(params)}`));
+    this.logger.trace(__(`Modifying blockchain '${params.request.method}' response:`));
+    this.logger.trace(__(`Original request/response data: ${JSON.stringify({ request: params.request, response: params.response })}`));
 
     try {
-      if (!arrayEqual(params.respData.result, this._nodeAccounts || [])) {
+      if (!arrayEqual(params.response.result, this._nodeAccounts || [])) {
         // reset backing variables so accounts is recalculated
-        await this.rpcModifierEvents.request2("nodeAccounts:updated", params.respData.result);
+        await this.rpcModifierEvents.request2("nodeAccounts:updated", params.response.result);
       }
       const accounts = await this.accounts;
       if (!(accounts && accounts.length)) {
         return callback(null, params);
       }
 
-      params.respData.result = accounts.map((acc) => acc.address || acc);
-      this.logger.trace(__(`Modified request/response data: ${JSON.stringify(params)}`));
+      params.response.result = accounts.map((acc) => acc.address || acc);
+      this.logger.trace(__(`Modified request/response data: ${JSON.stringify({ request: params.request, response: params.response })}`));
     } catch (err) {
       return callback(err);
     }
