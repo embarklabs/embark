@@ -1,6 +1,6 @@
 /* global global require */
 
-const Web3 = global.Web3 || require('web3');
+const Web3 = require('web3');
 const __embarkWeb3 = {};
 
 __embarkWeb3.init = function(config) {
