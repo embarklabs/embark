@@ -9,7 +9,7 @@ const {utils} = require('web3');
 const path = require('path');
 const ERROR_ACCOUNT = 'ERROR_ACCOUNT';
 
-class AccountParser {
+export default class AccountParser {
   static parseAccountsConfig(accountsConfig, web3, dappPath, logger, nodeAccounts) {
     let accounts = [];
     if (accountsConfig && accountsConfig.length) {
@@ -153,5 +153,3 @@ class AccountParser {
     return ERROR_ACCOUNT;
   }
 }
-
-module.exports = AccountParser;

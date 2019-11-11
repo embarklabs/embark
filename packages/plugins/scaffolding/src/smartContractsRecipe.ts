@@ -1,5 +1,5 @@
 import Ajv from "ajv";
-import { Logger } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Logger } from 'embark-logger';
 import { __ } from "embark-i18n";
 import { schema } from "./schema";
 const fs = require("fs");

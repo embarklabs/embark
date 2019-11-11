@@ -1,4 +1,5 @@
-import { Embark, Events, Logger } from "embark";
+import { Embark, Events } from "embark";
+import { Logger } from 'embark-logger';
 export default class BlockchainAPI {
   private embark: Embark;
   private logger: Logger;

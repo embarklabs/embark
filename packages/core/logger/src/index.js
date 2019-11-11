@@ -7,7 +7,7 @@ const util = require('util');
 const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss:SSS';
 const LOG_REGEX = new RegExp(/\[(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d:\d\d\d)\] (?:\[(\w*)\]:?)?\s?\s?(.*)/gmi);
 
-class Logger {
+export class Logger {
   constructor(options) {
     this.events = options.events || {emit: function(){}};
     this.logLevels = Object.keys(Logger.logLevels);
@@ -167,5 +167,3 @@ Logger.prototype.dir = function (txt) {
 Logger.prototype.shouldLog = function (level) {
   return (this.logLevels.indexOf(level) <= this.logLevels.indexOf(this.logLevel));
 };
-
-module.exports = Logger;

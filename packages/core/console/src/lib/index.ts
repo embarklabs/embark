@@ -50,8 +50,8 @@ class Console {
         this.executeCmd(cmd, (err: any, result: any) => {
           if (err) {
             // reformat for IPC reply
-            err = { name: "Console error", message: err, stack: err.stack };
-            return cb(err);
+            const error = { name: "Console error", message: err, stack: err.stack };
+            return cb(error);
           }
           cb(null, util.inspect(result));
         });
@@ -178,7 +178,7 @@ class Console {
       this.saveHistory(cmd);
     }
     const plugins = this.plugins.getPluginsProperty("console", "console");
-    const helpDescriptions = [];
+    const helpDescriptions: any[] = [];
     for (const plugin of plugins) {
       if (plugin.description) {
         helpDescriptions.push({

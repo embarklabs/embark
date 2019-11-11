@@ -2,7 +2,6 @@
 const { dappPath, File, Types, prepareForCompilation } = require('embark-utils');
 const path = require("path");
 const {expect} = require("chai");
-const fs = require("../../../lib/core/fs");
 const fsNode = require("fs");
 
 let file, content;

@@ -1,9 +1,8 @@
 /*global describe, it, before, beforeEach*/
 const assert = require('assert');
 const sinon = require('sinon');
-const TestLogger = require('../lib/utils/test_logger');
 const path = require('path');
-import { ProcessLauncher } from 'embark-core';
+import { ProcessLauncher, TestLogger } from 'embark-core';
 
 let logger = new TestLogger({});
 

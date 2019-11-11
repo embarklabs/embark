@@ -1,9 +1,8 @@
 /*globals describe, it, before, beforeEach*/
+import { Events, fs } from 'embark-core';
 import { File, Types } from 'embark-utils';
 const Assert = require("assert");
 const {expect} = require("chai");
-const fs = require("../lib/core/fs");
-const Events = require("../lib/core/events");
 
 let events;
 const testEventName = "testevent";

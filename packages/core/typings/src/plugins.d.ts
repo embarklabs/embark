@@ -1,4 +1,4 @@
-import {Callback} from "./callbacks";
+import {Callback} from './callbacks';
 
 export interface Plugin {
   dappGenerators: any;

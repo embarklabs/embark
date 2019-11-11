@@ -47,6 +47,7 @@
     "core-js": "3.3.5",
     "embark-i18n": "^5.0.0-alpha.1",
     "embark-utils": "^5.0.0-alpha.1",
+    "embark-logger": "^5.0.0-alpha.1",
     "handlebars": "4.2.0"
   },
   "devDependencies": {

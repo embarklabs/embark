@@ -1,20 +1,22 @@
-import {__} from 'embark-i18n';
-import {dappPath, embarkPath} from 'embark-utils';
+import { Config, Engine, Events, fs, TemplateGenerator } from 'embark-core';
+import { __ } from 'embark-i18n';
+import { dappPath, embarkPath, joinPath, setUpEnv } from 'embark-utils';
+import { Logger } from 'embark-logger';
 let async = require('async');
 const constants = require('embark-core/constants');
-const Logger = require('embark-logger');
 const {reset: embarkReset, paths: defaultResetPaths} = require('embark-reset');
-const fs = require('../lib/core/fs.js');
 const cloneDeep = require('clone-deep');
+
+setUpEnv(joinPath(__dirname, '../../'));
 
 require('colors');
 
-let version = require('../../package.json').version;
+let pkg = require('../../package.json');
 
 class EmbarkController {
 
   constructor(options) {
-    this.version = version;
+    this.version = pkg.version;
     this.options = options || {};
 
     // set a default context. should be overwritten by an action
@@ -23,12 +25,10 @@ class EmbarkController {
   }
 
   initConfig(env, options) {
-    let Events = require('../lib/core/events.js');
-    let Config = require('../lib/core/config.js');
-
     this.events = new Events();
     this.logger = new Logger({logLevel: Logger.logLevels.debug, events: this.events, context: this.context});
 
+    this.logger.info('foo');
     this.config = new Config({env: env, logger: this.logger, events: this.events, context: this.context, version: this.version});
     this.config.loadConfigFiles(options);
     this.plugins = this.config.plugins;
@@ -38,7 +38,6 @@ class EmbarkController {
     this.context = options.context || [constants.contexts.blockchain];
     const webServerConfig = {};
 
-    const Engine = require('../lib/core/engine.js');
     const engine = new Engine({
       env: options.env,
       client: options.client,
@@ -52,7 +51,8 @@ class EmbarkController {
       webServerConfig: webServerConfig,
       webpackConfigName: options.webpackConfigName,
       singleUseAuthToken: options.singleUseAuthToken,
-      ipcRole: 'server'
+      ipcRole: 'server',
+      package: pkg
     });
 
     engine.init({}, () => {
@@ -87,7 +87,6 @@ class EmbarkController {
 
   generateTemplate(templateName, destinationFolder, name, url) {
     this.context = [constants.contexts.templateGeneration];
-    let TemplateGenerator = require('../lib/utils/template_generator.js');
     let templateGenerator = new TemplateGenerator(templateName);
 
     if (url) {
@@ -119,7 +118,6 @@ class EmbarkController {
       webServerConfig.openBrowser = options.openBrowser;
     }
 
-    const Engine = require('../lib/core/engine.js');
     const engine = new Engine({
       env: options.env,
       client: options.client,
@@ -133,7 +131,8 @@ class EmbarkController {
       webServerConfig: webServerConfig,
       webpackConfigName: options.webpackConfigName,
       singleUseAuthToken: options.singleUseAuthToken,
-      ipcRole: 'server'
+      ipcRole: 'server',
+      package: pkg
     });
 
     async.waterfall([
@@ -240,7 +239,6 @@ class EmbarkController {
   build(options) {
     this.context = options.context || [constants.contexts.build];
 
-    const Engine = require('../lib/core/engine.js');
     const engine = new Engine({
       env: options.env,
       client: options.client,
@@ -253,7 +251,8 @@ class EmbarkController {
       logger: options.logger,
       config: options.config,
       context: this.context,
-      webpackConfigName: options.webpackConfigName
+      webpackConfigName: options.webpackConfigName,
+      package: pkg
     });
 
 
@@ -340,7 +339,6 @@ class EmbarkController {
   console(options) {
     this.context = options.context || [constants.contexts.run, constants.contexts.console];
     const REPL = require('./dashboard/repl.js');
-    const Engine = require('../lib/core/engine.js');
     const engine = new Engine({
       env: options.env,
       client: options.client,
@@ -351,7 +349,8 @@ class EmbarkController {
       logLevel: options.logLevel,
       context: this.context,
       singleUseAuthToken: options.singleUseAuthToken,
-      webpackConfigName: options.webpackConfigName
+      webpackConfigName: options.webpackConfigName,
+      package: pkg
     });
 
     const isSecondaryProcess = (engine) => {return engine.ipc.connected && engine.ipc.isClient();};
@@ -449,13 +448,13 @@ class EmbarkController {
     this.context = options.context || [constants.contexts.graph];
     options.onlyCompile = true;
 
-    const Engine = require('../lib/core/engine.js');
     const engine = new Engine({
       env: options.env,
       version: this.version,
       embarkConfig: options.embarkConfig || 'embark.json',
       logFile: options.logFile,
-      context: this.context
+      context: this.context,
+      package: pkg
     });
 
     async.waterfall([
@@ -545,7 +544,6 @@ class EmbarkController {
   scaffold(options) {
     this.context = options.context || [constants.contexts.scaffold];
 
-    const Engine = require('../lib/core/engine.js');
     const engine = new Engine({
       env: options.env,
       client: options.client,
@@ -560,7 +558,8 @@ class EmbarkController {
       config: options.config,
       plugins: options.plugins,
       context: this.context,
-      webpackConfigName: options.webpackConfigName
+      webpackConfigName: options.webpackConfigName,
+      package: pkg
     });
 
     async.waterfall([
@@ -617,7 +616,6 @@ class EmbarkController {
   upload(options) {
     this.context = options.context || [constants.contexts.upload, constants.contexts.build];
 
-    const Engine = require('../lib/core/engine.js');
     const engine = new Engine({
       env: options.env,
       client: options.client,
@@ -632,7 +630,8 @@ class EmbarkController {
       config: options.config,
       plugins: options.plugins,
       context: this.context,
-      webpackConfigName: options.webpackConfigName
+      webpackConfigName: options.webpackConfigName,
+      package: pkg
     });
 
     let platform;
@@ -714,7 +713,6 @@ class EmbarkController {
   runTests(options) {
     this.context = [constants.contexts.test];
 
-    const Engine = require('../lib/core/engine.js');
     const engine = new Engine({
       env: options.env,
       client: options.client,
@@ -727,7 +725,8 @@ class EmbarkController {
       useDashboard: false,
       webpackConfigName: options.webpackConfigName,
       ipcRole: 'client',
-      interceptLogs: false
+      interceptLogs: false,
+      package: pkg
     });
 
     async.waterfall([
@@ -768,6 +767,7 @@ class EmbarkController {
 module.exports = EmbarkController;
 
 async function compileAndDeploySmartContracts(engine) {
+  try {
   let contractsFiles = await engine.events.request2("config:contractsFiles");
   let compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
   let _contractsConfig = await engine.events.request2("config:contractsConfig");
@@ -776,6 +776,9 @@ async function compileAndDeploySmartContracts(engine) {
   await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
   await engine.events.request2('pipeline:generateAll');
   engine.events.emit('outputDone');
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 async function setupCargoAndWatcher(engine) {

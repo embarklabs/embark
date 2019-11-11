@@ -1,20 +1,20 @@
-import colors from "colors/safe";
-import * as i18n from "i18n";
-import * as osLocale from "os-locale";
-import * as path from "path";
+import colors from 'colors/safe';
+import * as i18n from 'i18n';
+import * as osLocale from 'os-locale';
+import * as path from 'path';
 
-import { Maybe } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Maybe } /* supplied by @types/embark in packages/embark-typings */ from 'embark';
 
 enum LocalType {
-  Specified = "specified",
-  Detected = "detected",
+  Specified = 'specified',
+  Detected = 'detected',
 }
 
 enum SupportedLanguage {
-  En = "en",
-  Pt = "pt",
-  Fr = "fr",
-  Es = "es",
+  En = 'en',
+  Pt = 'pt',
+  Fr = 'fr',
+  Es = 'es',
 }
 
 const DEFAULT_LANGUAGE = SupportedLanguage.En;
@@ -22,7 +22,7 @@ const DEFAULT_LANGUAGE = SupportedLanguage.En;
 const i18nEmbark = { __: null };
 
 i18n.configure({
-  directory: path.join(__dirname, "../", "locales"),
+  directory: path.join(__dirname, '../', 'locales'),
   locales: Object.values(SupportedLanguage),
   register: i18nEmbark,
   syncFiles: false,
