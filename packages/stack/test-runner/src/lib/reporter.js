@@ -15,7 +15,7 @@ class Reporter {
   wireGasUsage() {
     const {events} = this.embark;
     events.on('blockchain:proxy:response', (params) => {
-      const {result} = params.respData;
+      const { result } = params.response;
 
       if (!result || !result.gasUsed) {
         return;

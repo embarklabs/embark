@@ -4,6 +4,8 @@ import Web3 from "web3";
 import EthAccounts from "./eth_accounts";
 import EthSendTransaction from "./eth_sendTransaction";
 import EthSignTypedData from "./eth_signTypedData";
+import EthSubscribe from "./eth_subscribe";
+import EthUnsubscribe from "./eth_unsubscribe";
 import PersonalNewAccount from "./personal_newAccount";
 import RpcModifier from "./rpcModifier";
 
@@ -34,7 +36,14 @@ export default class RpcManager {
       }
       return this.updateAccounts(this._nodeAccounts, cb);
     });
-    this.modifiers = [PersonalNewAccount, EthAccounts, EthSendTransaction, EthSignTypedData].map((rpcModifier) => new rpcModifier(this.embark, this.rpcModifierEvents));
+    this.modifiers = [
+      PersonalNewAccount,
+      EthAccounts,
+      EthSendTransaction,
+      EthSignTypedData,
+      EthSubscribe,
+      EthUnsubscribe
+    ].map((rpcModifier) => new rpcModifier(this.embark, this.rpcModifierEvents));
   }
   private async updateAccounts(updatedNodeAccounts: any[], cb: Callback<null>) {
     for (const modifier of this.modifiers) {

@@ -35,6 +35,7 @@
     "webpackDone": "webpackDone"
   },
   "blockchain": {
+    "ethereum": "ethereum",
     "vm": "vm",
     "call": "eth_call",
     "clients": {
