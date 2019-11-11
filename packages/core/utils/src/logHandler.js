@@ -7,7 +7,7 @@ const MAX_LOGS = 1500; // TODO use constants when it's put in a package or somet
 /**
  * Serves as a central point of log handling.
  */
-class LogHandler {
+export class LogHandler {
 
   /**
    * @param {Object} options Options object containing:
@@ -97,5 +97,3 @@ class LogHandler {
     });
   }
 }
-
-module.exports = LogHandler;

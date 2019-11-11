@@ -1,5 +1,5 @@
-import async from "async";
-import { CmdLine } from "remix-debug-debugtest";
+import async from 'async';
+import { CmdLine } from 'remix-debug-debugtest';
 
 export default class DebuggerManager {
   private nodeUrl: string;
@@ -25,7 +25,7 @@ export default class DebuggerManager {
 
   private debug(txHash: string, filename: string, cb: any) {
     const cmdLine = new CmdLine();
-    cmdLine.connect("http", this.nodeUrl);
+    cmdLine.connect('http', this.nodeUrl);
     cmdLine.loadCompilationData(this.inputJson, this.outputJson);
 
     cmdLine.initDebugger(() => {
@@ -48,7 +48,7 @@ export default class DebuggerManager {
     async.waterfall([
       function initDebugger(next: any) {
         cmdLine = new CmdLine();
-        cmdLine.connect("http", self.nodeUrl);
+        cmdLine.connect('http', self.nodeUrl);
         cmdLine.loadCompilationData(self.inputJson, self.outputJson);
         cmdLine.initDebugger(() => {
           // self.isDebugging = true
@@ -57,19 +57,19 @@ export default class DebuggerManager {
       },
       function startDebug(next: any) {
         const debuggerData: any = {};
-        cmdLine.events.on("locals", (data: any) => {
+        cmdLine.events.on('locals', (data: any) => {
           debuggerData.locals = self.simplifyDebuggerVars(data);
         });
 
-        cmdLine.events.on("globals", (data: any) => {
+        cmdLine.events.on('globals', (data: any) => {
           debuggerData.contract = self.simplifyDebuggerVars(data);
         });
 
         cmdLine.startDebug(txHash, filename, () => {
-          cmdLine.events.on("source", () => {
+          cmdLine.events.on('source', () => {
             const lines: string[] = cmdLine.getSource();
             // TODO: this is a bit of a hack
-            const line: string = lines.filter((x) => x.indexOf("=>") === 0)[0];
+            const line: string = lines.filter((x) => x.indexOf('=>') === 0)[0];
             outputCb(lines, line, debuggerData);
           });
 

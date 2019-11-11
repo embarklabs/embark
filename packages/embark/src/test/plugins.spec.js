@@ -1,10 +1,10 @@
 /*global __dirname, describe, it, beforeEach, afterEach, require*/
 import * as i18n from 'embark-i18n';
+import { Plugins } from 'embark-core';
 
 const {fakeEmbark} = require('embark-testing');
 const assert = require('assert');
 const sinon = require('sinon');
-const Plugins = require('../lib/core/plugins');
 i18n.setOrDetectLocale('en');
 
 describe('embark.plugins', function() {

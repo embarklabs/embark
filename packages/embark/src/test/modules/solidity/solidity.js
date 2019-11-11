@@ -1,9 +1,7 @@
 /*global describe, it, require*/
-const fs = require('../../../lib/core/fs');
-import { IPC } from 'embark-core';
+import { fs, IPC, TestLogger } from 'embark-core';
 import { File, Types } from 'embark-utils';
 let SolidityCompiler = require('embark-solidity');
-let TestLogger = require('../../../lib/utils/test_logger');
 
 let readFile = function(file) {
   return new File({filename: file, type: Types.dappFile, path: file});

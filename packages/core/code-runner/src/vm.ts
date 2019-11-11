@@ -1,6 +1,7 @@
 import { each } from "async";
-import { Callback, Logger } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Callback } /* supplied by @types/embark in packages/embark-typings */ from "embark";
 import { compact, dappPath, isEs6Module, recursiveMerge } from "embark-utils";
+import { Logger } from 'embark-logger';
 import * as path from "path";
 import { NodeVM, NodeVMOptions } from "vm2";
 

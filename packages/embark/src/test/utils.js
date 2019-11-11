@@ -1,5 +1,4 @@
 /*global describe, it*/
-const Utils = require('../lib/utils/utils');
 import { getExternalContractUrl } from 'embark-utils';
 const assert = require('assert');
 const constants = require('embark-core/constants');

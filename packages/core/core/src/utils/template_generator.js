@@ -1,7 +1,12 @@
 import { __ } from 'embark-i18n';
-const fs = require('../core/fs.js');
+
+import decompress from 'decompress';
+import * as path from 'path';
+import shelljs from 'shelljs';
+import * as fs from '../fs';
+
 const hostedGitInfo = require('hosted-git-info');
-const utils = require('./utils.js');
+import { filesMatchingPattern } from './utils';
 import {
   embarkPath,
   downloadFile,
@@ -27,7 +32,7 @@ const REPLACEMENTS = {
   'gitlab.com/': 'gitlab:'
 };
 
-class TemplateGenerator {
+export class TemplateGenerator {
   constructor(templateName) {
     this.isInsideMonorepo = isInsideMonorepoSync();
     if (this.isInsideMonorepo) {
@@ -46,7 +51,7 @@ class TemplateGenerator {
   async download(url, tmpFilePath, browse) {
     console.log(__('Installing template from ' + browse).green);
     console.log(__('Downloading template...').green);
-    fs.mkdirpSync(utils.dirname(tmpFilePath));
+    fs.mkdirpSync(path.dirname(tmpFilePath));
     try {
       await promisify(downloadFile)(url, tmpFilePath);
     } catch (e) {
@@ -96,7 +101,7 @@ class TemplateGenerator {
   }
 
   extract(filePath, destinationFolder, cb = () => {}) {
-    utils.extractZip(
+    extractZip(
       filePath,
       destinationFolder,
       {
@@ -139,7 +144,7 @@ class TemplateGenerator {
     );
 
     execSync(`npm pack ${templateSpecifier}`, {cwd: tmpDir, stdio: 'ignore'});
-    const packed = utils.filesMatchingPattern(
+    const packed = filesMatchingPattern(
       [joinPath(tmpDir, '*.tgz')]
     )[0];
 
@@ -162,7 +167,7 @@ class TemplateGenerator {
   }
 
   installTemplate(templatePath, name, installPackages, cb) {
-    utils.cd(templatePath);
+    shelljs.cd(templatePath);
 
     const pkgJson = fs.readJSONSync('./package.json');
     if (!(/demo/).test(name)) {
@@ -260,7 +265,7 @@ class TemplateGenerator {
       let templateAndBranch = uri.split('#');
       if (templateAndBranch.length === 1) {
         fallback = true;
-        embarkVersion = semver(require('../../../package.json').version);
+        embarkVersion = semver(require(embarkPath('package.json')).version);
         templateAndBranch.push(`${embarkVersion.major}.${embarkVersion.minor}`);
       }
       templateAndBranch[0] = `embark-framework/embark-${templateAndBranch[0]}-template`;
@@ -306,4 +311,9 @@ class TemplateGenerator {
     });
   }
 }
-module.exports = TemplateGenerator;
+
+function extractZip(filename, packageDirectory, opts, cb) {
+  decompress(filename, packageDirectory, opts).then((_files) => {
+    cb();
+  });
+}

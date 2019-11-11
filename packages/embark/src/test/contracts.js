@@ -3,14 +3,9 @@ import { File, Types } from "embark-utils";
 
 let ContractsManager = require('embark-contracts-manager');
 let Compiler = require('embark-compiler');
-let Logger = require('embark-logger');
-import { IPC } from 'embark-core';
-let TestLogger = require('../lib/utils/test_logger');
-let Events = require('../lib/core/events');
-const fs = require('../lib/core/fs');
+import { Logger } from 'embark-logger';
+import { Events, fs, IPC, TestLogger, Plugins } from 'embark-core';
 let assert = require('assert');
-
-let Plugins = require('../lib/core/plugins.js');
 
 let readFile = function(file) {
   return new File({filename: file, type: Types.dappFile, path: file});

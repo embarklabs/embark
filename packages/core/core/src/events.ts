@@ -1,5 +1,5 @@
 import { __ } from 'embark-i18n';
-var EventEmitter = require('events');
+const EventEmitter = require('events');
 const cloneDeep = require('lodash.clonedeep');
 
 const fs = require('fs-extra');
@@ -8,22 +8,26 @@ function debugEventsEnabled() {
   return process && process.env && process.env.DEBUGEVENTS;
 }
 
-function warnIfLegacy(eventName) {
-  const legacyEvents = [];
+function warnIfLegacy(eventName: string) {
+  const legacyEvents: string[] = [];
   if (legacyEvents.indexOf(eventName) >= 0) {
     console.info(__("this event is deprecated and will be removed in future versions %s", eventName));
   }
 }
 
 function getOrigin() {
-  if (!(debugEventsEnabled())) return "";
-  let origin = ((new Error().stack).split("at ")[3]).trim();
-  origin = origin.split("(")[0].trim();
-  return origin;
+  if (!(debugEventsEnabled())) { return ""; }
+  const stack = new Error().stack;
+  if (stack) {
+    let origin = stack.split("at ")[3].trim();
+    origin = origin.split("(")[0].trim();
+    return origin;
+  }
+  return '';
 }
 
-function log(eventType, eventName, origin) {
-  if (!(debugEventsEnabled())) return;
+function log(eventType, eventName, origin?: string) {
+  if (!(debugEventsEnabled())) { return; }
   if (['end', 'prefinish', 'error', 'new', 'demo', 'block', 'version'].indexOf(eventName) >= 0) {
     return;
   }
@@ -32,8 +36,11 @@ function log(eventType, eventName, origin) {
   }
   // fs.appendFileSync(".embark/events.log", (new Error().stack) + "\n");
   if (!origin && origin !== "") {
-    origin = ((new Error().stack).split("at ")[3]).trim();
-    origin = origin.split("(")[0].trim();
+    const stack = new Error().stack;
+    if (stack) {
+      origin = stack.split("at ")[3].trim();
+      origin = origin.split("(")[0].trim();
+    }
     // origin = getOrigin();
   }
 
@@ -50,7 +57,7 @@ function log(eventType, eventName, origin) {
 //   cmdNames[cmdName] = origin;
 // }
 
-class EmbarkEmitter extends EventEmitter {
+export class EmbarkEmitter extends EventEmitter {
 
   emit(requestName, ...args) {
     warnIfLegacy(arguments[0]);
@@ -58,7 +65,6 @@ class EmbarkEmitter extends EventEmitter {
     return super.emit(requestName, ...args);
   }
 }
-
 
 // EmbarkEmitter.prototype.log  = log;
 EmbarkEmitter.prototype.log  = log;
@@ -98,8 +104,8 @@ EmbarkEmitter.prototype.setHandler = function(requestName, cb) {
 };
 
 EmbarkEmitter.prototype.request2 = function() {
-  let requestName = arguments[0];
-  let other_args = [].slice.call(arguments, 1);
+  const requestName = arguments[0];
+  const other_args: any[] = [].slice.call(arguments, 1);
 
   log("\nREQUEST", requestName);
   warnIfLegacy(requestName);
@@ -112,10 +118,10 @@ EmbarkEmitter.prototype.request2 = function() {
     }
   }
 
-  let promise = new Promise((resolve, reject) => {
+  const promise = new Promise((resolve, reject) => {
     other_args.push(
       (err, ...res) => {
-        if (err) return reject(err);
+        if (err) { return reject(err); }
         if (res.length && res.length > 1) {
           return resolve(res);
         }
@@ -126,7 +132,7 @@ EmbarkEmitter.prototype.request2 = function() {
     this._emit('request:' + requestName, ...other_args);
   });
 
-  let ogStack = (new Error().stack);
+  const ogStack = (new Error().stack);
 
   promise.catch((e) => {
     if (debugEventsEnabled()) {
@@ -141,8 +147,8 @@ EmbarkEmitter.prototype.request2 = function() {
 };
 
 EmbarkEmitter.prototype.request = function() {
-  let requestName = arguments[0];
-  let other_args = [].slice.call(arguments, 1);
+  const requestName = arguments[0];
+  const other_args = [].slice.call(arguments, 1);
 
   log("\nREQUEST(OLD)", requestName);
   warnIfLegacy(requestName);
@@ -160,7 +166,7 @@ EmbarkEmitter.prototype.request = function() {
   // if we don't have a command handler set for this event yet,
   // store it and fire it once a command handler is set
   if (!this.listeners(listenerName).length) {
-    if(!toFire[listenerName]) {
+    if (!toFire[listenerName]) {
       toFire[listenerName] = [];
     }
     toFire[listenerName].push(other_args);
@@ -177,9 +183,9 @@ EmbarkEmitter.prototype.setCommandHandler = function(requestName, cb) {
 
   // let origin = ((new Error().stack).split("at ")[3]).trim();
   // origin = origin.split("(")[0].trim();
-  let origin = getOrigin();
+  const origin = getOrigin();
 
-  let listener = function(_cb) {
+  const listener = function(_cb) {
     log("== REQUEST RESPONSE", requestName, origin);
     cb.call(this, ...arguments);
   };
@@ -232,5 +238,3 @@ EmbarkEmitter.prototype.setCommandHandlerOnce = function(requestName, cb) {
     cb.call(this, ...arguments);
   });
 };
-
-module.exports = EmbarkEmitter;

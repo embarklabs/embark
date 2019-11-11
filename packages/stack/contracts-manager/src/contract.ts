@@ -1,4 +1,5 @@
-import { ContractConfig, Logger } from "embark";
+import { ContractConfig } from "embark";
+import { Logger } from 'embark-logger';
 const { sha3 } = require("embark-utils");
 import { ABIDefinition } from "web3/eth/abi";
 

@@ -4,7 +4,7 @@ const fs = require('fs-extra');
 const sinon = require('sinon');
 const expect = require('expect.js');
 import {beforeEach, afterEach} from "mocha";
-import Logger from "embark-logger";
+import { Logger } from "embark-logger";
 import {dappPath} from 'embark-utils';
 require("colors");
 

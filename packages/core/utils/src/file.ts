@@ -1,23 +1,23 @@
-import { __ } from "embark-i18n";
-import * as fs from "fs-extra";
-import * as path from "path";
-import { downloadFile } from "./network";
-import { dappPath, embarkPath } from "./pathUtils";
-import { ImportRemapping, prepareForCompilation } from "./solidity/remapImports";
+import { __ } from 'embark-i18n';
+import * as fs from 'fs-extra';
+import * as path from 'path';
+import { downloadFile } from './network';
+import { dappPath, embarkPath } from './pathUtils';
+import { ImportRemapping, prepareForCompilation } from './solidity/remapImports';
 
-const HTTP_CONTRACTS_DIRECTORY = ".embark/contracts/";
+const HTTP_CONTRACTS_DIRECTORY = '.embark/contracts/';
 
 export enum Types {
-  embarkInternal = "embark_internal",
-  dappFile = "dapp_file",
-  custom = "custom",
-  http = "http",
+  embarkInternal = 'embark_internal',
+  dappFile = 'dapp_file',
+  custom = 'custom',
+  http = 'http',
 }
 
 export class File {
   public type: Types;
-  public externalUrl: string = "";
-  public path = "";
+  public externalUrl: string = '';
+  public path = '';
   public basedir: string;
   public resolver: (callback: (content: string) => void) => void;
   public pluginPath: string;
@@ -29,16 +29,16 @@ export class File {
   constructor(options: any) {
     this.type = options.type;
 
-    this.basedir = options.basedir || "";
+    this.basedir = options.basedir || '';
     this.resolver = options.resolver;
-    this.pluginPath = options.pluginPath ? options.pluginPath : "";
+    this.pluginPath = options.pluginPath ? options.pluginPath : '';
     this.storageConfig = options.storageConfig;
-    this.providerUrl = "";
-    this.originalPath = options.originalPath || "";
+    this.providerUrl = '';
+    this.originalPath = options.originalPath || '';
 
     if (this.type === Types.custom && this.pluginPath) {
-      this.path = path.join(this.pluginPath, options.path).replace(dappPath(), "");
-      if (this.path.startsWith("/")) {
+      this.path = path.join(this.pluginPath, options.path).replace(dappPath(), '');
+      if (this.path.startsWith('/')) {
         this.path = this.path.substring(1);
       }
     } else if (this.type === Types.http) {
@@ -53,8 +53,8 @@ export class File {
   }
 
   public async prepareForCompilation(isCoverage = false) {
-    if (!this.path.endsWith(".sol")) {
-      return Promise.reject(__("This method is only supported for Solidity files"));
+    if (!this.path.endsWith('.sol')) {
+      return Promise.reject(__('This method is only supported for Solidity files'));
     }
     return prepareForCompilation(this, isCoverage);
   }
@@ -63,12 +63,12 @@ export class File {
     return new Promise<string>((resolve) => {
       switch (this.type) {
         case Types.embarkInternal: {
-          const content = fs.readFileSync(embarkPath(path.join("dist", this.path)), "utf-8");
+          const content = fs.readFileSync(embarkPath(path.join('dist', this.path)), 'utf-8');
           return resolve(content);
         }
 
         case Types.dappFile: {
-          const content = fs.readFileSync(this.path, "utf-8").toString();
+          const content = fs.readFileSync(this.path, 'utf-8').toString();
           return resolve(content);
         }
 
@@ -81,7 +81,7 @@ export class File {
         case Types.http: {
           fs.ensureFileSync(this.path);
           return downloadFile(this.externalUrl, this.path, () => {
-            const content = fs.readFileSync(this.path, "utf-8");
+            const content = fs.readFileSync(this.path, 'utf-8');
             resolve(content);
           });
         }
@@ -93,20 +93,20 @@ export class File {
 
 export function getExternalContractUrl(file: string, providerUrl: string) {
   let url;
-  const RAW_URL = "https://raw.githubusercontent.com/";
-  const DEFAULT_SWARM_GATEWAY = "https://swarm-gateways.net/";
-  const MALFORMED_SWARM_ERROR = "Malformed Swarm gateway URL for ";
-  const MALFORMED_ERROR = "Malformed Github URL for ";
-  const MALFORMED_IPFS_ERROR = "Malformed IPFS URL for ";
-  const IPFS_GETURL_NOTAVAILABLE = "IPFS getUrl is not available. Please set it in your storage config. For more info: https://embark.status.im/docs/storage_configuration.html";
-  if (file.startsWith("https://github")) {
+  const RAW_URL = 'https://raw.githubusercontent.com/';
+  const DEFAULT_SWARM_GATEWAY = 'https://swarm-gateways.net/';
+  const MALFORMED_SWARM_ERROR = 'Malformed Swarm gateway URL for ';
+  const MALFORMED_ERROR = 'Malformed Github URL for ';
+  const MALFORMED_IPFS_ERROR = 'Malformed IPFS URL for ';
+  const IPFS_GETURL_NOTAVAILABLE = 'IPFS getUrl is not available. Please set it in your storage config. For more info: https://embark.status.im/docs/storage_configuration.html';
+  if (file.startsWith('https://github')) {
     const file_path = file.match(/https:\/\/github\.[a-z]+\/(.*)/);
     if (!file_path) {
       console.error(MALFORMED_ERROR + file);
       return null;
     }
-    url = `${RAW_URL}${file_path[1].replace("blob/", "")}`;
-  } else if (file.startsWith("ipfs")) {
+    url = `${RAW_URL}${file_path[1].replace('blob/', '')}`;
+  } else if (file.startsWith('ipfs')) {
     if (!providerUrl) {
       console.error(IPFS_GETURL_NOTAVAILABLE);
       return null;
@@ -121,14 +121,14 @@ export function getExternalContractUrl(file: string, providerUrl: string) {
     }
     let matchResult = file_path[1];
     if (file_path[2]) {
-      matchResult += "/" + file_path[2];
+      matchResult += '/' + file_path[2];
     }
     url = `${providerUrl}${matchResult}`;
     return {
       filePath: HTTP_CONTRACTS_DIRECTORY + matchResult,
       url,
     };
-  } else if (file.startsWith("git")) {
+  } else if (file.startsWith('git')) {
     // Match values
     // [0] entire input
     // [1] git://
@@ -145,12 +145,12 @@ export function getExternalContractUrl(file: string, providerUrl: string) {
     }
     let branch = file_path[5];
     if (!branch) {
-      branch = "master";
+      branch = 'master';
     }
     url = `${RAW_URL}${file_path[2]}/${file_path[3]}/${branch}/${file_path[4]}`;
-  } else if (file.startsWith("http")) {
+  } else if (file.startsWith('http')) {
     url = file;
-  } else if (file.startsWith("bzz")) {
+  } else if (file.startsWith('bzz')) {
     if (!providerUrl) {
       url = DEFAULT_SWARM_GATEWAY + file;
     } else {
@@ -162,7 +162,7 @@ export function getExternalContractUrl(file: string, providerUrl: string) {
           return null;
         }
       }
-      url = providerUrl + "/" + file;
+      url = providerUrl + '/' + file;
     }
   } else {
     return null;
@@ -171,7 +171,7 @@ export function getExternalContractUrl(file: string, providerUrl: string) {
     /\.[a-z]+\/([-a-zA-Z0-9@:%_+.~#?&\/=]+)/,
   );
   return {
-    filePath: HTTP_CONTRACTS_DIRECTORY + (match !== null ? match[1] : ""),
+    filePath: HTTP_CONTRACTS_DIRECTORY + (match !== null ? match[1] : ''),
     url,
   };
 }

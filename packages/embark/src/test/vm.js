@@ -1,5 +1,5 @@
 /*globals describe, it*/
-const TestLogger = require('../lib/utils/test_logger');
+import { TestLogger } from 'embark-core';
 import { VM } from 'embark-code-runner';
 const {expect} = require('chai');
 

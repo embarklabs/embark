@@ -1,5 +1,12 @@
 import { __ } from 'embark-i18n';
-const { getWindowSize } = require('../../lib/utils/utils.js');
+import windowSize from 'window-size';
+
+function getWindowSize() {
+  if (windowSize) {
+    return windowSize.get();
+  }
+  return {width: 240, height: 75};
+}
 
 let Monitor = require('./monitor.js');
 

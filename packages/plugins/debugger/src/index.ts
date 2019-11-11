@@ -1,8 +1,8 @@
-import "colors";
-import { __ } from "embark-i18n";
-import DebuggerManager from "./debugger_manager";
+import 'colors';
+import { __ } from 'embark-i18n';
+import DebuggerManager from './debugger_manager';
 
-const NO_DEBUG_SESSION = __("No debug session active. Activate one with `debug`");
+const NO_DEBUG_SESSION = __('No debug session active. Activate one with `debug`');
 
 interface Events {
   on: any;
@@ -31,28 +31,28 @@ class TransactionDebugger {
   constructor(embark: EmbarkApi, options?: any) {
     this.embark = embark;
 
-    this.debuggerManager = new DebuggerManager("http://localhost:8545");
-    embark.events.on("contracts:compile:solc", this.debuggerManager.setInputJson.bind(this.debuggerManager));
-    embark.events.on("contracts:compiled:solc", this.debuggerManager.setOutputJson.bind(this.debuggerManager));
+    this.debuggerManager = new DebuggerManager('http://localhost:8545');
+    embark.events.on('contracts:compile:solc', this.debuggerManager.setInputJson.bind(this.debuggerManager));
+    embark.events.on('contracts:compiled:solc', this.debuggerManager.setOutputJson.bind(this.debuggerManager));
 
     this.txTracker = {};
-    this.lastTx = "";
+    this.lastTx = '';
 
     this.isDebugging = false;
-    this.currentCmdTxHash = "";
+    this.currentCmdTxHash = '';
     this.listenToEvents();
     this.listenToCommands();
     this.listentoAPI();
   }
 
   private listenToEvents() {
-    this.embark.events.on("blockchain:tx", (tx: any) => {
-      this.embark.events.request("contracts:contract", tx.name, (contract: any) => {
+    this.embark.events.on('blockchain:tx', (tx: any) => {
+      this.embark.events.request('contracts:contract', tx.name, (contract: any) => {
         this.txTracker[tx.transactionHash] = {tx, contract};
         this.lastTx = tx.transactionHash;
-        if (tx.status !== "0x0") { return; }
+        if (tx.status !== '0x0') { return; }
 
-        this.embark.logger.info("Transaction failed");
+        this.embark.logger.info('Transaction failed');
 
         this.debuggerManager.getLastLine(tx.transactionHash, contract.filename, (lines: string[], line: string, knownVars: any) => {
           lines.forEach((errorLine: string) => {
@@ -60,7 +60,7 @@ class TransactionDebugger {
           });
           this.findVarsInLine(tx.transactionHash, line, knownVars, (foundVars: any) => {
             if (!foundVars) { return; }
-            this.embark.logger.info("vars:");
+            this.embark.logger.info('vars:');
             foundVars.forEach((variable: any) => {
               this.embark.logger.info(`${variable.name}: ${variable.value}`);
             });
@@ -84,7 +84,7 @@ class TransactionDebugger {
 
       for (const variable of Object.keys(knownVars.locals || {})) {
         const value: any = knownVars.locals[variable];
-        const variableName: string = variable.split(" ")[0];
+        const variableName: string = variable.split(' ')[0];
         if (line && line.indexOf(variableName) >= 0) {
           foundVars.push({name: variable, value});
         }
@@ -92,7 +92,7 @@ class TransactionDebugger {
 
       for (const variable of Object.keys(knownVars.contract || {})) {
         const value: any = knownVars.contract[variable];
-        const variableName: string = variable.split(" ")[0];
+        const variableName: string = variable.split(' ')[0];
         if (line && line.indexOf(variableName) >= 0) {
           foundVars.push({name: variable, value});
         }
@@ -106,10 +106,10 @@ class TransactionDebugger {
     this.debuggerData = {};
     this.apiDebugger = false;
 
-    this.embark.registerAPICall("post", "/embark-api/debugger/start", (req: any, res: any) => {
+    this.embark.registerAPICall('post', '/embark-api/debugger/start', (req: any, res: any) => {
       const txHash: string = req.body.params.txHash;
 
-      this.embark.events.request("contracts:contract:byTxHash", txHash, (err: any, contract: any) => {
+      this.embark.events.request('contracts:contract:byTxHash', txHash, (err: any, contract: any) => {
         if (err) {
           this.embark.logger.error(err);
           return res.send({error: err});
@@ -136,55 +136,55 @@ class TransactionDebugger {
       });
     });
 
-    this.embark.registerAPICall("post", "/embark-api/debugger/stop", (req: any, res: any) => {
+    this.embark.registerAPICall('post', '/embark-api/debugger/stop', (req: any, res: any) => {
       this.apiDebugger.unload();
-      this.apiDebugger.events.emit("stop");
+      this.apiDebugger.events.emit('stop');
       this.apiDebugger = false;
       res.send({ok: true});
     });
 
-    this.embark.registerAPICall("post", "/embark-api/debugger/JumpBack", (req: any, res: any) => {
+    this.embark.registerAPICall('post', '/embark-api/debugger/JumpBack', (req: any, res: any) => {
       this.apiDebugger.stepJumpNextBreakpoint();
       res.send({ok: true});
     });
-    this.embark.registerAPICall("post", "/embark-api/debugger/JumpForward", (req: any, res: any) => {
+    this.embark.registerAPICall('post', '/embark-api/debugger/JumpForward', (req: any, res: any) => {
       this.apiDebugger.stepJumpPreviousBreakpoint();
       res.send({ok: true});
     });
-    this.embark.registerAPICall("post", "/embark-api/debugger/StepOverForward", (req: any, res: any) => {
+    this.embark.registerAPICall('post', '/embark-api/debugger/StepOverForward', (req: any, res: any) => {
       if (this.apiDebugger.canGoNext()) {
         this.apiDebugger.stepOverForward(true);
       }
       res.send({ok: true});
     });
-    this.embark.registerAPICall("post", "/embark-api/debugger/StepOverBackward", (req: any, res: any) => {
+    this.embark.registerAPICall('post', '/embark-api/debugger/StepOverBackward', (req: any, res: any) => {
       if (this.apiDebugger.canGoPrevious()) {
         this.apiDebugger.stepOverBack(true);
       }
       res.send({ok: true});
     });
-    this.embark.registerAPICall("post", "/embark-api/debugger/StepIntoForward", (req: any, res: any) => {
+    this.embark.registerAPICall('post', '/embark-api/debugger/StepIntoForward', (req: any, res: any) => {
       if (this.apiDebugger.canGoNext()) {
         this.apiDebugger.stepIntoForward(true);
       }
       res.send({ok: true});
     });
-    this.embark.registerAPICall("post", "/embark-api/debugger/StepIntoBackward", (req: any, res: any) => {
+    this.embark.registerAPICall('post', '/embark-api/debugger/StepIntoBackward', (req: any, res: any) => {
       if (this.apiDebugger.canGoPrevious()) {
         this.apiDebugger.stepIntoBack(true);
       }
       res.send({ok: true});
     });
-    this.embark.registerAPICall("post", "/embark-api/debugger/breakpoint", (req: any, res: any) => {
+    this.embark.registerAPICall('post', '/embark-api/debugger/breakpoint', (req: any, res: any) => {
       res.send({ok: true});
     });
 
-    this.embark.registerAPICall("ws", "/embark-api/debugger", (ws: any, req: any) => {
+    this.embark.registerAPICall('ws', '/embark-api/debugger', (ws: any, req: any) => {
       if (!this.apiDebugger) { return; }
 
-      this.apiDebugger.events.on("stop", () => { ws.close(1000); });
+      this.apiDebugger.events.on('stop', () => { ws.close(1000); });
 
-      this.apiDebugger.events.on("source", (lineColumnPos: any, rawLocation: any) => {
+      this.apiDebugger.events.on('source', (lineColumnPos: any, rawLocation: any) => {
         this.debuggerData.sources = {lineColumnPos, rawLocation};
         this.debuggerData.possibleSteps = {
           canGoNext: this.apiDebugger.canGoNext(),
@@ -193,7 +193,7 @@ class TransactionDebugger {
         ws.send(JSON.stringify(this.debuggerData), () => {});
       });
 
-      this.apiDebugger.events.on("locals", (data: any) => {
+      this.apiDebugger.events.on('locals', (data: any) => {
         this.debuggerData.locals = this.simplifyDebuggerVars(data);
         this.debuggerData.possibleSteps = {
           canGoNext: this.apiDebugger.canGoNext(),
@@ -202,7 +202,7 @@ class TransactionDebugger {
         ws.send(JSON.stringify(this.debuggerData), () => {});
       });
 
-      this.apiDebugger.events.on("globals", (data: any) => {
+      this.apiDebugger.events.on('globals', (data: any) => {
         this.debuggerData.contract = this.simplifyDebuggerVars(data);
         this.debuggerData.possibleSteps = {
           canGoNext: this.apiDebugger.canGoNext(),
@@ -227,27 +227,27 @@ class TransactionDebugger {
 
   private listenToCommands() {
     this.cmdDebugger = false;
-    this.currentCmdTxHash = "";
+    this.currentCmdTxHash = '';
 
     const self = this;
     function startDebug(txHash: string, filename: string, callback: (err?: string|object, output?: string) => void) {
       self.currentCmdTxHash = txHash;
-      self.embark.logger.info("debugging tx " + txHash);
+      self.embark.logger.info('debugging tx ' + txHash);
       self.cmdDebugger = self.debuggerManager.createDebuggerSession(txHash, filename, () => {
         self.displayStepInfo(callback);
       });
     }
 
     this.embark.registerConsoleCommand({
-      description: __("Start a debugging session using, the last transaction or the transaction specified by hash"),
+      description: __('Start a debugging session using, the last transaction or the transaction specified by hash'),
       matches: (cmd: string) => {
-        const [cmdName] = cmd.split(" ");
-        return cmdName === "debug";
+        const [cmdName] = cmd.split(' ');
+        return cmdName === 'debug';
       },
       process: (cmd: string, callback: (err?: string|object, output?: string) => void) => {
-        const [_cmdName, txHash] = cmd.split(" ");
+        const [_cmdName, txHash] = cmd.split(' ');
         if (txHash) {
-          this.embark.events.request("contracts:contract:byTxHash", txHash, (err: any, contract: any) => {
+          this.embark.events.request('contracts:contract:byTxHash', txHash, (err: any, contract: any) => {
             if (err) {
               this.embark.logger.error(err);
               return callback();
@@ -257,34 +257,34 @@ class TransactionDebugger {
           });
           return;
         }
-        if (this.lastTx === "") {
-          return callback(undefined, __("No transaction to debug"));
+        if (this.lastTx === '') {
+          return callback(undefined, __('No transaction to debug'));
         }
         this.currentCmdTxHash = this.lastTx;
         const filename: string = this.txTracker[this.lastTx].contract.filename;
         startDebug(this.lastTx, filename, callback);
       },
-      usage: "debug [txHash]",
+      usage: 'debug [txHash]',
     });
 
     this.embark.registerConsoleCommand({
-      description: __("Stops the active debugging session."),
-      matches: ["sd", "stop debugger"],
+      description: __('Stops the active debugging session.'),
+      matches: ['sd', 'stop debugger'],
       process: (cmd: string, callback: (err?: string|object, output?: string) => void) => {
         if (!this.cmdDebugger) {
           this.embark.logger.warn(NO_DEBUG_SESSION);
           return callback();
         }
         this.cmdDebugger = null;
-        this.embark.logger.info(__("The debug session has been stopped"));
+        this.embark.logger.info(__('The debug session has been stopped'));
         this.cmdDebugger.unload();
       },
-      usage: "    stop debugger/sd",
+      usage: '    stop debugger/sd',
     });
 
     this.embark.registerConsoleCommand({
-      description: __("Step over forward on the current debugging session"),
-      matches: ["next", "n"],
+      description: __('Step over forward on the current debugging session'),
+      matches: ['next', 'n'],
       process: (cmd: string, callback: (err?: string|object, output?: string) => void) => {
         if (!this.cmdDebugger) {
           this.embark.logger.warn(NO_DEBUG_SESSION);
@@ -294,19 +294,19 @@ class TransactionDebugger {
           return callback();
         }
         if (!this.cmdDebugger.currentStep()) {
-          this.embark.logger.info("end of execution reached");
+          this.embark.logger.info('end of execution reached');
           this.cmdDebugger.unload();
           return callback();
         }
         this.cmdDebugger.stepOverForward(true);
         this.displayStepInfo(callback);
       },
-      usage: "    next/n",
+      usage: '    next/n',
     });
 
     this.embark.registerConsoleCommand({
-      description: __("Step over back on the current debugging session"),
-      matches: ["previous", "p"],
+      description: __('Step over back on the current debugging session'),
+      matches: ['previous', 'p'],
       process: (cmd: string, callback: (err?: string|object, output?: string) => void) => {
         if (!this.cmdDebugger) {
           this.embark.logger.warn(NO_DEBUG_SESSION);
@@ -316,54 +316,54 @@ class TransactionDebugger {
           return callback();
         }
         if (!this.cmdDebugger.currentStep()) {
-          this.embark.logger.info("end of execution reached");
+          this.embark.logger.info('end of execution reached');
           return this.cmdDebugger.unload();
         }
         this.cmdDebugger.stepOverBack(true);
         this.displayStepInfo(callback);
       },
-      usage: "    previous/p",
+      usage: '    previous/p',
     });
 
     this.embark.registerConsoleCommand({
-      description: __("Display local variables of the current debugging session"),
-      matches: ["var local", "v l", "vl"],
+      description: __('Display local variables of the current debugging session'),
+      matches: ['var local', 'v l', 'vl'],
       process: (cmd: string, callback: (err?: string|object, output?: string) => void) => {
         if (!this.cmdDebugger) {
           this.embark.logger.warn(NO_DEBUG_SESSION);
           return callback();
         }
-        this.embark.logger.info("Locals:");
+        this.embark.logger.info('Locals:');
         const debugVars = this.simplifyDebuggerVars(this.cmdDebugger.solidityLocals);
         for (const debugVar of Object.keys(debugVars)) {
           this.embark.logger.info(`${debugVar}: ` + `${debugVars[debugVar]}`.white);
         }
         callback();
       },
-      usage: "    var local/v l/vl",
+      usage: '    var local/v l/vl',
     });
 
     this.embark.registerConsoleCommand({
-      description: __("Display global variables of the current debugging session"),
-      matches: ["var global", "v g", "vg"],
+      description: __('Display global variables of the current debugging session'),
+      matches: ['var global', 'v g', 'vg'],
       process: (cmd: string, callback: (err?: string|object, output?: string) => void) => {
         if (!this.cmdDebugger) {
           this.embark.logger.warn(NO_DEBUG_SESSION);
           return callback();
         }
-        this.embark.logger.info("Globals:");
+        this.embark.logger.info('Globals:');
         const debugVars = this.simplifyDebuggerVars(this.cmdDebugger.solidityState);
         for (const debugVar of Object.keys(debugVars)) {
           this.embark.logger.info(`${debugVar}: ` + `${debugVars[debugVar]}`.white);
         }
         callback();
       },
-      usage: "    var global/v g/vg",
+      usage: '    var global/v g/vg',
     });
 
     this.embark.registerConsoleCommand({
-      description: __("Display solidity global variables of the current debugging session"),
-      matches: ["var all", "v a", "va"],
+      description: __('Display solidity global variables of the current debugging session'),
+      matches: ['var all', 'v a', 'va'],
       process: (cmd: string, callback: (err?: string|object, output?: string) => void) => {
         if (!this.cmdDebugger) {
           this.embark.logger.warn(NO_DEBUG_SESSION);
@@ -374,37 +374,37 @@ class TransactionDebugger {
             this.embark.logger.error(err);
             return callback();
           }
-          this.embark.logger.info("Solidity Global Variables:");
+          this.embark.logger.info('Solidity Global Variables:');
           for (const debugVar of Object.keys(globals)) {
             this.embark.logger.info(`${debugVar}: ` + `${globals[debugVar]}`.white);
           }
           callback();
         });
       },
-      usage: "    var all/v a/va",
+      usage: '    var all/v a/va',
     });
   }
 
   private getGlobals(txHash: string, cb: any) {
     const globals: any = {};
-    this.embark.events.request("blockchain:getTransaction", txHash, (err: any, tx: any) => {
+    this.embark.events.request('blockchain:getTransaction', txHash, (err: any, tx: any) => {
       if (err) { return cb(err); }
 
-      this.embark.events.request("blockchain:block:byHash", tx.blockHash, (errHash: any, block: any) => {
+      this.embark.events.request('blockchain:block:byHash', tx.blockHash, (errHash: any, block: any) => {
         if (errHash) { return cb(errHash); }
 
         /* tslint:disable:no-string-literal */
-        globals["block.blockHash"] = tx.blockHash;
-        globals["block.number"] = tx.blockNumber;
-        globals["block.coinbase"] = block.miner;
-        globals["block.difficulty"] = block.difficulty;
-        globals["block.gaslimit"] = block.gasLimit;
-        globals["block.timestamp"] = block.timestamp;
-        globals["msg.sender"] = tx.from;
-        globals["msg.gas"] = tx.gas;
-        globals["msg.gasPrice"] = tx.gasPrice;
-        globals["msg.value"] = tx.value;
-        globals["now"] = block.timestamp;
+        globals['block.blockHash'] = tx.blockHash;
+        globals['block.number'] = tx.blockNumber;
+        globals['block.coinbase'] = block.miner;
+        globals['block.difficulty'] = block.difficulty;
+        globals['block.gaslimit'] = block.gasLimit;
+        globals['block.timestamp'] = block.timestamp;
+        globals['msg.sender'] = tx.from;
+        globals['msg.gas'] = tx.gas;
+        globals['msg.gasPrice'] = tx.gasPrice;
+        globals['msg.value'] = tx.value;
+        globals['now'] = block.timestamp;
         /* tslint:enable:no-string-literal */
 
         cb(null, globals);
@@ -414,24 +414,24 @@ class TransactionDebugger {
 
   private displayPossibleActions() {
     const actions: string[] = [];
-    actions.push("actions: ");
+    actions.push('actions: ');
 
     if (this.cmdDebugger.canGoPrevious()) {
-      actions.push("(p)revious");
+      actions.push('(p)revious');
     }
     if (this.cmdDebugger.canGoNext()) {
-      actions.push("(n)ext");
+      actions.push('(n)ext');
     }
 
-    actions.push("(vl) var local");
-    actions.push("(vg) var global");
-    actions.push("(va) var all");
-    actions.push("(sd) stop debugger");
+    actions.push('(vl) var local');
+    actions.push('(vg) var global');
+    actions.push('(va) var all');
+    actions.push('(sd) stop debugger');
 
     if (actions.length === 1) { return; }
 
-    this.embark.logger.info("");
-    this.embark.logger.info(actions.join(" | "));
+    this.embark.logger.info('');
+    this.embark.logger.info(actions.join(' | '));
   }
 
   private displayVarsInLine(cb?: any) {
@@ -450,7 +450,7 @@ class TransactionDebugger {
       if (!foundVars) {
         return cb ? cb() : null;
       }
-      this.embark.logger.info("vars:");
+      this.embark.logger.info('vars:');
       foundVars.forEach((variable: any) => {
         this.embark.logger.info(`${variable.name}: ` + `${variable.value}`.white);
       });

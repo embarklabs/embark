@@ -1,11 +1,63 @@
-import {ProcessManager, IPC} from 'embark-core';
+import { Config } from './config';
+import { Plugins } from './plugins';
+import { EmbarkEmitter as Events } from './events';
+import { ProcessManager } from './processes/processManager';
+import { IPC } from './ipc';
+import { ServicesMonitor } from './services_monitor';
+
+import { normalizeInput } from 'embark-utils';
+import { Logger } from 'embark-logger';
 
 const EMBARK_PROCESS_NAME = 'embark';
 
-const utils = require('../utils/utils');
-const Logger = require('embark-logger');
+export class Engine {
 
-class Engine {
+  env: string;
+
+  client: string;
+
+  locale: string;
+
+  embarkConfig: any;
+
+  interceptLogs: boolean;
+
+  version: string;
+
+  logFile: string;
+
+  logLevel: string;
+
+  events: Events;
+
+  context: any;
+
+  useDashboard: boolean;
+
+  webServerConfig: any;
+
+  webpackConfigName: string;
+
+  singleUseAuthToken: boolean;
+
+  ipcRole = 'client';
+
+  logger: Logger;
+
+  config: Config | undefined;
+
+  plugins: Plugins | undefined;
+
+  ipc: IPC | undefined;
+
+  processManager: ProcessManager | undefined;
+
+  servicesMonitor: ServicesMonitor | undefined;
+
+  package: any;
+
+  isDev: boolean | undefined;
+
   constructor(options) {
     this.env = options.env;
     this.client = options.client;
@@ -21,24 +73,23 @@ class Engine {
     this.webServerConfig = options.webServerConfig;
     this.webpackConfigName = options.webpackConfigName;
     this.singleUseAuthToken = options.singleUseAuthToken;
+    this.package = options.package;
     this.ipcRole = options.ipcRole || 'client';
   }
 
   init(_options, callback) {
-    callback = callback || function () {};
-    const Events = require('./events.js');
-    const Config = require('./config.js');
+    callback = callback || function() {};
 
-    let options = _options || {};
+    const options = _options || {};
     this.events = options.events || this.events || new Events();
     this.logger = options.logger || new Logger({context: this.context, logLevel: options.logLevel || this.logLevel || 'info', events: this.events, logFile: this.logFile});
-    this.config = new Config({env: this.env, logger: this.logger, events: this.events, context: this.context, webServerConfig: this.webServerConfig, version: this.version});
+    this.config = new Config({env: this.env, logger: this.logger, events: this.events, context: this.context, webServerConfig: this.webServerConfig, version: this.version, package: this.package});
     this.config.loadConfigFiles({embarkConfig: this.embarkConfig, interceptLogs: this.interceptLogs});
     this.plugins = this.config.plugins;
     this.isDev = this.config && this.config.blockchainConfig && (this.config.blockchainConfig.isDev || this.config.blockchainConfig.default);
 
     if (this.interceptLogs || this.interceptLogs === undefined) {
-      utils.interceptLogs(console, this.logger);
+      interceptLogs(console, this.logger);
     }
 
     this.ipc = new IPC({logger: this.logger, ipcRole: this.ipcRole});
@@ -55,28 +106,36 @@ class Engine {
   }
 
   startEngine(cb) {
-    this.plugins.emitAndRunActionsForEvent("embark:engine:started", {}, (err) => {
-      if (err) {
-        console.error("error starting engine");
-        console.error(err);
-        process.exit(1);
-      }
+    if (this.plugins) {
+      this.plugins.emitAndRunActionsForEvent("embark:engine:started", {}, (err) => {
+        if (err) {
+          console.error("error starting engine");
+          console.error(err);
+          process.exit(1);
+        }
+        cb();
+      });
+    } else {
       cb();
-    });
+    }
   }
 
   registerModule(moduleName, options) {
-    this.plugins.loadInternalPlugin(moduleName, options || {});
+    if (this.plugins) {
+      this.plugins.loadInternalPlugin(moduleName, options || {});
+    }
   }
 
-  registerModulePackage(moduleName, options) {
-    return this.plugins.loadInternalPlugin(moduleName, options || {}, true);
+  registerModulePackage(moduleName, options?: any) {
+    if (this.plugins) {
+      return this.plugins.loadInternalPlugin(moduleName, options || {}, true);
+    }
   }
 
   registerModuleGroup(groupName, _options) {
-    let options = _options || {};
+    const options = _options || {};
 
-    let groups = {
+    const groups = {
       blockchain: this.blockchainComponents,
       coreComponents: this.coreComponents,
       stackComponents: this.stackComponents,
@@ -94,14 +153,14 @@ class Engine {
       cockpit: this.cockpitModules
     };
 
-    let group = groups[groupName];
+    const group = groups[groupName];
 
     if (!group) {
       throw new Error("unknown service: " + groupName);
     }
 
     // need to be careful with circular references due to passing the web3 object
-    //this.logger.trace("calling: " + serviceName + "(" + JSON.stringify(options) + ")");
+    // this.logger.trace("calling: " + serviceName + "(" + JSON.stringify(options) + ")");
     return group.apply(this, [options]);
   }
 
@@ -122,6 +181,7 @@ class Engine {
   }
 
   coreComponents() {
+
     // TODO: should be made into a component
     this.processManager = new ProcessManager({
       events: this.events,
@@ -129,17 +189,22 @@ class Engine {
       plugins: this.plugins
     });
 
-    const ServicesMonitor = require('./services_monitor.js');
     this.servicesMonitor = new ServicesMonitor({events: this.events, logger: this.logger, plugins: this.plugins});
-    this.servicesMonitor.addCheck('Embark', (cb) => {
-      return cb({name: 'Embark ' + this.version, status: 'on'});
-    }, 0);
 
-    let plugin = this.plugins.createPlugin('coreservicesplugin', {});
-    plugin.registerActionForEvent("embark:engine:started", (_params, cb) => {
-      this.servicesMonitor.startMonitor();
-      cb();
-    });
+    if (this.servicesMonitor) {
+      this.servicesMonitor.addCheck('Embark', (cb) => {
+        return cb({name: 'Embark ' + this.version, status: 'on'});
+      }, 0);
+
+      if (this.plugins) {
+        const plugin = this.plugins.createPlugin('coreservicesplugin', {});
+        plugin.registerActionForEvent("embark:engine:started", (_params, cb) => {
+          this.servicesMonitor && this.servicesMonitor.startMonitor();
+          cb();
+        });
+      }
+    }
+
     this.registerModulePackage('embark-code-runner', {ipc: this.ipc});
 
     // TODO: we shouldn't need useDashboard
@@ -236,14 +301,35 @@ class Engine {
     this.registerModulePackage('embark-ens');
   }
 
-
   cockpitModules() {
     this.registerModulePackage('embark-authenticator', {singleUseAuthToken: this.singleUseAuthToken});
     this.registerModulePackage('embark-api', {plugins: this.plugins});
     // Register logs for the cockpit console
     this.events.request('process:logs:register', {processName: EMBARK_PROCESS_NAME, eventName: "log", silent: false, alwaysAlreadyLogged: true});
   }
-
 }
 
-module.exports = Engine;
+function interceptLogs(consoleContext, logger) {
+  const context: any = {};
+  context.console = consoleContext;
+
+  context.console.log = function() {
+    logger.info(normalizeInput(arguments));
+  };
+  context.console.warn = function() {
+    logger.warn(normalizeInput(arguments));
+  };
+  context.console.info = function() {
+    logger.info(normalizeInput(arguments));
+  };
+  context.console.debug = function() {
+    // TODO: ue JSON.stringify
+    logger.debug(normalizeInput(arguments));
+  };
+  context.console.trace = function() {
+    logger.trace(normalizeInput(arguments));
+  };
+  context.console.dir = function() {
+    logger.dir(normalizeInput(arguments));
+  };
+}

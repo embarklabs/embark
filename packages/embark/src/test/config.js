@@ -1,10 +1,7 @@
 /*global describe, it*/
+import { Config, Events, Plugins, TestLogger } from 'embark-core';
 const { dappPath } = require('embark-utils');
-const Config = require('../lib/core/config.js');
-const Plugins = require('../lib/core/plugins.js');
 const assert = require('assert');
-const TestLogger = require('../lib/utils/test_logger');
-const Events = require('../lib/core/events');
 
 describe('embark.Config', function () {
   let config = new Config({
