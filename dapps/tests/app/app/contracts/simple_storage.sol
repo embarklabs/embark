@@ -4,7 +4,7 @@ contract SimpleStorage {
   uint public storedData;
   address public registar;
   address owner;
-  event EventOnSet2(bool passed, string message);
+  event EventOnSet2(bool passed, string message, uint setValue);
 
   constructor(uint initialValue) public {
     storedData = initialValue;
@@ -20,7 +20,7 @@ contract SimpleStorage {
 
   function set2(uint x) public {
     storedData = x;
-    emit EventOnSet2(true, "hi");
+    emit EventOnSet2(true, "hi", x);
   }
 
   function set3(uint x) public {

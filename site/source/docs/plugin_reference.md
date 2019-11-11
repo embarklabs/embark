@@ -477,5 +477,12 @@ embark.registerActionForEvent("deployment:contract:beforeDeploy", async (params,
 - `deployment:deployContracts:afterAll`: Called after all contracts have deployed. No params
 - `tests:contracts:compile:before`: Called before the contracts are compiled in the context of the test. Only param is `contractFiles`
 - `tests:contracts:compile:after`: Called after the contracts are compiled in the context of the test. Only param is `compiledContracts`
-- `blockchain:proxy:request`: Called before a request from Embark or the Dapp is sent to the blockchain node. You can modify or react to the payload of the request. Only param is `reqData`, an object containing the payload
-- `blockchain:proxy:response`: Called before the node response is sent back to Embark or the Dapp. You can modify or react to the payload of the response. Two params, `reqData` and `respData`, objects containing the payloads
+- `blockchain:proxy:request`: Called before a request from Embark or the Dapp is sent to the blockchain node. You can modify or react to the payload of the request. Params are:
+  - `request`: an object containing the request payload
+  - `transport`: an object containing the client's websocket connection to the proxy
+  - `isWs`: a boolean flag indicating if the request was performed using websockets
+- `blockchain:proxy:response`: Called before the node response is sent back to Embark or the Dapp. You can modify or react to the payload of the response. Params are:
+  - `request`: an object containing the request payload
+  - `response`: an object containing the response payload
+  - `transport`: an object containing the client's websocket connection to the proxy
+  - `isWs`: a boolean flag indicating if the request was performed using websockets

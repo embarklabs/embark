@@ -7,16 +7,16 @@ export default class PersonalNewAccount extends RpcModifier {
   constructor(embark: Embark, rpcModifierEvents: Events) {
     super(embark, rpcModifierEvents);
 
-    embark.registerActionForEvent("blockchain:proxy:response", this.checkResponseFor_personal_newAccount.bind(this));
+    embark.registerActionForEvent("blockchain:proxy:response", this.personalNewAccountResponse.bind(this));
   }
 
-  private async checkResponseFor_personal_newAccount(params: any, callback: Callback<any>) {
-    if (params.reqData.method !== blockchainConstants.transactionMethods.personal_newAccount) {
+  private async personalNewAccountResponse(params: any, callback: Callback<any>) {
+    if (params.request.method !== blockchainConstants.transactionMethods.personal_newAccount) {
       return callback(null, params);
     }
 
     // emit event so tx modifiers can refresh accounts
-    await this.rpcModifierEvents.request2("nodeAccounts:added", params.respData.result);
+    await this.rpcModifierEvents.request2("nodeAccounts:added", params.response.result);
 
     callback(null, params);
   }

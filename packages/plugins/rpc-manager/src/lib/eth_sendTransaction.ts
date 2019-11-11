@@ -11,7 +11,7 @@ export default class EthSendTransaction extends RpcModifier {
   constructor(embark: Embark, rpcModifierEvents: Events) {
     super(embark, rpcModifierEvents);
 
-    embark.registerActionForEvent("blockchain:proxy:request", this.checkRequestFor_eth_sendTransaction.bind(this));
+    embark.registerActionForEvent("blockchain:proxy:request", this.ethSendTransactionRequest.bind(this));
 
     // Allow to run transaction in parallel by resolving the nonce manually.
     // For each transaction, resolve the nonce by taking the max of current transaction count and the cache we keep locally.
@@ -52,8 +52,8 @@ export default class EthSendTransaction extends RpcModifier {
       callback(null, this.nonceCache[address]);
     });
   }
-  private async checkRequestFor_eth_sendTransaction(params: any, callback: Callback<any>) {
-    if (!(params.reqData.method === blockchainConstants.transactionMethods.eth_sendTransaction)) {
+  private async ethSendTransactionRequest(params: any, callback: Callback<any>) {
+    if (!(params.request.method === blockchainConstants.transactionMethods.eth_sendTransaction)) {
       return callback(null, params);
     }
     const accounts = await this.accounts;
@@ -61,26 +61,26 @@ export default class EthSendTransaction extends RpcModifier {
       return callback(null, params);
     }
 
-    this.logger.trace(__(`Modifying blockchain '${params.reqData.method}' request:`));
-    this.logger.trace(__(`Original request data: ${JSON.stringify(params)}`));
+    this.logger.trace(__(`Modifying blockchain '${params.request.method}' request:`));
+    this.logger.trace(__(`Original request data: ${JSON.stringify({ request: params.request, response: params.response })}`));
 
     try {
       // Check if we have that account in our wallet
-      const account = accounts.find((acc) => Web3.utils.toChecksumAddress(acc.address) === Web3.utils.toChecksumAddress(params.reqData.params[0].from));
+      const account = accounts.find((acc) => Web3.utils.toChecksumAddress(acc.address) === Web3.utils.toChecksumAddress(params.request.params[0].from));
       if (account && account.privateKey) {
-        return this.signTransactionQueue.push({ payload: params.reqData.params[0], account }, (err: any, newPayload: any) => {
+        return this.signTransactionQueue.push({ payload: params.request.params[0], account }, (err: any, newPayload: any) => {
           if (err) {
             return callback(err, null);
           }
-          params.reqData.method = blockchainConstants.transactionMethods.eth_sendRawTransaction;
-          params.reqData.params = [newPayload];
+          params.request.method = blockchainConstants.transactionMethods.eth_sendRawTransaction;
+          params.request.params = [newPayload];
           callback(err, params);
         });
       }
     } catch (err) {
       return callback(err);
     }
-    this.logger.trace(__(`Modified request/response data: ${JSON.stringify(params)}`));
+    this.logger.trace(__(`Modified request/response data: ${JSON.stringify({ request: params.request, response: params.response })}`));
     callback(null, params);
   }
 }
