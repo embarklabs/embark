@@ -38,7 +38,7 @@ class StructLog {
     if (!this.isEnabled()) return;
     this.session = uuid.v4();
 
-    this.modules = {}
+    this.modules = {};
 
     this.addRecord({
       session: this.session,
@@ -47,7 +47,7 @@ class StructLog {
       value: "new_session",
       type: "new_session",
       name: "new_session"
-    })
+    });
   }
 
   moduleInit(name) {
@@ -63,9 +63,9 @@ class StructLog {
       value: name,
       name: name,
       stack: this.getStackTrace()
-    })
+    });
 
-    this.modules[name] = id
+    this.modules[name] = id;
 
     return id;
   }
@@ -79,16 +79,16 @@ class StructLog {
     if (!this.isEnabled()) return;
 
     if (values.id) {
-      this.updateRecord(values.id, values)
+      this.updateRecord(values.id, values);
       return values.id;
     }
 
     let id = uuid.v4();
 
     if (values.module) {
-      values.parent_id = this.modules[values.module] || this.session
+      values.parent_id = this.modules[values.module] || this.session;
     } else if (!values.parent_id) {
-      values.parent_id = this.session
+      values.parent_id = this.session;
     }
 
     if (!values.stack) {
@@ -100,7 +100,7 @@ class StructLog {
       timestamp: Date.now(),
       id: id,
       ...values
-    }, this.db)
+    }, this.db);
 
     return id;
   }

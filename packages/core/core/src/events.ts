@@ -113,7 +113,7 @@ EmbarkEmitter.prototype.request2 = function() {
   if (this._events && !this._events['request:' + requestName]) {
 
     if (this.debugLog.isEnabled()) {
-      this.debugLog.log({ id: requestId, error: "no request listener for " + requestName})
+      this.debugLog.log({ id: requestId, error: "no request listener for " + requestName});
       // KEPT for now until api refactor separating requests from commands
       console.log("made request without listener: " + requestName);
       console.trace();
@@ -124,15 +124,15 @@ EmbarkEmitter.prototype.request2 = function() {
     other_args.push(
       (err, ...res) => {
         if (err) {
-          this.debugLog.log({id: requestId, msg: err, error: true})
+          this.debugLog.log({id: requestId, msg: err, error: true});
           return reject(err);
         }
 
         if (res.length && res.length > 1) {
-          this.debugLog.log({id: requestId, outputs: res})
+          this.debugLog.log({id: requestId, outputs: res});
           return resolve(res);
         }
-        this.debugLog.log({id: requestId, outputs: res[0]})
+        this.debugLog.log({id: requestId, outputs: res[0]});
         return resolve(res[0]);
       }
     );
@@ -148,7 +148,7 @@ EmbarkEmitter.prototype.request2 = function() {
       console.dir(ogStack);
     }
 
-    this.debugLog.log({id: requestId, error: "promise exception", outputs: ogStack, stack: ogStack})
+    this.debugLog.log({id: requestId, error: "promise exception", outputs: ogStack, stack: ogStack});
     return e;
   });
 
@@ -159,12 +159,12 @@ EmbarkEmitter.prototype.request = function() {
   const requestName = arguments[0];
   const other_args = [].slice.call(arguments, 1);
 
-  let requestId = this.debugLog.log({parent_id: this.logId, type: "old_request", name: requestName, inputs: other_args})
+  let requestId = this.debugLog.log({parent_id: this.logId, type: "old_request", name: requestName, inputs: other_args});
 
   warnIfLegacy(requestName);
   if (this._events && !this._events['request:' + requestName]) {
     if (this.debugLog.isEnabled()) {
-      this.debugLog.log({id: requestId, error: "no request listener for " + requestName})
+      this.debugLog.log({id: requestId, error: "no request listener for " + requestName});
       console.log("made request without listener: " + requestName);
       console.trace();
     }
@@ -191,7 +191,7 @@ EmbarkEmitter.prototype.request = function() {
 EmbarkEmitter.prototype.setCommandHandler = function(requestName, cb) {
   // log("SET COMMAND HANDLER", requestName);
 
-  let requestId = this.debugLog.log({parent_id: this.logId, type: "setCommandHandler", name: requestName})
+  let requestId = this.debugLog.log({parent_id: this.logId, type: "setCommandHandler", name: requestName});
   let origin = this.debugLog.getStackTrace();
 
   const listener = function(_cb) {
