@@ -2644,11 +2644,12 @@ hexo-generator-category@^1.0.0:
   dependencies:
     hexo-pagination "1.0.0"
 
-hexo-generator-feed@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/hexo-generator-feed/-/hexo-generator-feed-2.0.0.tgz#339a1483e50630096ad51602c6c4981f66cedc21"
-  integrity sha512-HlbIgKSZF+gopgmzgHd7kTxzGEDydqe7iQ7TZ6u1ojOUU9fkG+XYmE8AYklsXeol3xnSDO1FZ8ZPaAmT2o3B6A==
+hexo-generator-feed@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/hexo-generator-feed/-/hexo-generator-feed-2.1.0.tgz#656285f764f30bdb4db4b48529095f35c3d8f212"
+  integrity sha512-KunziYw7glg/ooULGqPZWDtDP/cibHoeotQ6GEoHYrncysiUdCWfBOnXrQpeGyXRTZZqhW+dpP446AJ1GQ5ACQ==
   dependencies:
+    hexo-util "^1.3.0"
     nunjucks "^3.0.0"
 
 hexo-generator-sitemap@^1.1.2:
@@ -2738,10 +2739,10 @@ hexo-util@1.0.0:
     html-entities "^1.2.1"
     striptags "^3.1.1"
 
-hexo-util@^1.0.0, hexo-util@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/hexo-util/-/hexo-util-1.4.0.tgz#73dff21e544fbe37399a9f2103704528db411e8a"
-  integrity sha512-UHvp4aZ4h1cSgGvtBZfEIYoaK2FfEC4D3K4BlnXcCYFHyYhKwftmS1wH/K91Bm5TBFEp90wK2DiwGCEDntO6MQ==
+hexo-util@^1.0.0, hexo-util@^1.3.0, hexo-util@^1.4.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/hexo-util/-/hexo-util-1.5.0.tgz#bf931c176d4d19965b9e154a4b6767cdde6e2b9c"
+  integrity sha512-AIDf3xnn4+E+2uiKh7Qk+sH6HH/CFME38Kvi4hqnMPks8BDACWvfXoMOK4mydGfjps96tsMwdLT5+AQx1xv6PQ==
   dependencies:
     bluebird "^3.5.2"
     camel-case "^3.0.0"
