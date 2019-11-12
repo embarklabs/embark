@@ -1,2 +1,5 @@
 <%- className %>Config = <%- JSON.stringify(contract) %>;
 <%- className %> = new EmbarkJS.Blockchain.Contract(<%- className %>Config);
+if (!<%- className %>.options.gas) {
+  <%- className %>.options.gas = 800000;
+}

@@ -22,7 +22,7 @@ module.exports = {
       SimpleStorage: {
         fromIndex: 0,
         args: [100],
-        onDeploy: ["SimpleStorage.methods.setRegistar('embark.eth').send({from: web3.eth.defaultAccount})"]
+        onDeploy: ["SimpleStorage.methods.setRegistar('embark.eth').send()"]
       },
       SimpleStorageTest: {
         //file: "./some_folder/test_contract.sol",
