@@ -100,9 +100,9 @@ export class Plugin {
 
   logger: Logger;
 
-  logId: any:
+  logId: any;
 
-  debugLog: any:
+  debugLog: any;
 
   constructor(options) {
     this.name = options.name;
