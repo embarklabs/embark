@@ -86,6 +86,8 @@ export class Config {
 
   dappPath = dappPath;
 
+  debugLog: any;
+
   constructor(options) {
     this.env = options.env || 'default';
     this.webServerConfig  = options.webServerConfig;
@@ -93,6 +95,7 @@ export class Config {
     this.chainsFile = options.chainsFile;
     this.plugins = options.plugins;
     this.logger = options.logger;
+    this.debugLog = options.debugLog;
     this.package = options.package;
     this.events = options.events;
     this.context = options.context || [constants.contexts.any];
@@ -174,6 +177,7 @@ export class Config {
       logger: this.logger,
       interceptLogs,
       events: this.events,
+      debugLog: this.debugLog,
       config: this,
       context: this.context,
       env: this.env,

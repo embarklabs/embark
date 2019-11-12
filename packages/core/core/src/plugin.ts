@@ -100,6 +100,10 @@ export class Plugin {
 
   logger: Logger;
 
+  logId: any:
+
+  debugLog: any:
+
   constructor(options) {
     this.name = options.name;
     this.isInternal = options.isInternal;
@@ -112,6 +116,8 @@ export class Plugin {
     this.logger = this._loggerObject; // Might get changed if we do intercept
     this.events = options.events;
     this.config = options.config;
+    this.logId = options.logId;
+    this.debugLog = options.debugLog;
     this.plugins = options.plugins;
     this.env = options.env;
     this.currentContext = options.context;
