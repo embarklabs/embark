@@ -180,7 +180,7 @@ class ENS {
       return cb();
     }
 
-    await Promise.all(Object.keys(this.config.namesystemConfig.register.subdomains).map((subDomainName) => {
+    await Promise.all(Object.keys(this.config.namesystemConfig.register.subdomains || {}).map((subDomainName) => {
       return new Promise(async (resolve, _reject) => {
         const address = this.config.namesystemConfig.register.subdomains[subDomainName];
         const directivesRegExp = new RegExp(/\$(\w+\[?\d?\]?)/g);
