@@ -10,10 +10,14 @@ class CodeRunner {
   private logger: Logger;
   private events: Events;
   private vm: VM;
+  private logId: any;
+  private debugLog: any;
 
   constructor(embark: Embark, _options: any) {
     this.logger = embark.logger;
     this.events = embark.events;
+    this.logId = embark.logId;
+    this.debugLog = embark.debugLog;
 
     this.vm = new VM({
       require: {
@@ -53,9 +57,11 @@ class CodeRunner {
   }
 
   private evalCode(code: string, cb: Callback<any>, tolerateError = false, logCode = true, logError = true) {
+    let logId = this.debugLog.log({parent_id: this.logId, type: "method", name: "evalCode", inputs: {code, cb, tolerateError, logCode, logError}});
     cb = cb || (() => { });
 
     if (!code) {
+      this.debugLog.log({id: logId, outputs: ""});
       return cb(null, "");
     }
 
@@ -63,13 +69,16 @@ class CodeRunner {
       if (err) {
         if (logCode) {
           this.logger.error(__("Error running code: %s", code));
+          this.debugLog.log({id: logId, outputs: err, error: "error running code"});
         }
         if (logError) {
           this.logger.error(err.toString());
+          this.debugLog.log({id: logId, outputs: err, error: err.toString()});
         }
         return cb(err);
       }
 
+      this.debugLog.log({id: logId, outputs: result});
       cb(null, result);
     });
   }

@@ -7,7 +7,7 @@ import { ServicesMonitor } from './services_monitor';
 
 import { normalizeInput } from 'embark-utils';
 import { Logger } from 'embark-logger';
-import { DebugLog } from 'embark-structlog';
+import DebugLog from 'embark-structlog';
 
 const EMBARK_PROCESS_NAME = 'embark';
 
