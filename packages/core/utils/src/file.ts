@@ -60,7 +60,7 @@ export class File {
   }
 
   public get content(): Promise<string> {
-    return new Promise<string>((resolve) => {
+    return new Promise<string>((resolve, reject) => {
       switch (this.type) {
         case Types.embarkInternal: {
           const content = fs.readFileSync(embarkPath(path.join('dist', this.path)), 'utf-8');
@@ -80,7 +80,10 @@ export class File {
 
         case Types.http: {
           fs.ensureFileSync(this.path);
-          return downloadFile(this.externalUrl, this.path, () => {
+          return downloadFile(this.externalUrl, this.path, err => {
+            if (err) {
+              reject(err);
+            }
             const content = fs.readFileSync(this.path, 'utf-8');
             resolve(content);
           });
