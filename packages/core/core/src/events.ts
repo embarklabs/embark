@@ -59,6 +59,12 @@ export class EmbarkEmitter extends EventEmitter {
     super();
     if (options) {
       this.debugLog = options.debugLog;
+    } else {
+      this.debugLog = {
+        log: () => {},
+        getStackTrace: () => { return ""; },
+        isEnabled: () => { return false; }
+      };
     }
   }
 

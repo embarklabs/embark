@@ -73,6 +73,7 @@ export interface Embark {
   fs: any;
   config: Config;
   currentContext: string[];
+  logId: any;
   registerActionForEvent(
     name: string,
     action: (params: any, cb: (error: any, result: any) => void) => void,

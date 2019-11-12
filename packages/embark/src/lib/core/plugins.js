@@ -17,6 +17,15 @@ var Plugins = function(options) {
   this.fs = fs;
   this.env = options.env;
   this.version = options.version;
+
+  if (!this.debugLog) {
+    this.debugLog = {
+      log: () => { },
+      moduleInit: () => { return ""; },
+      getStackTrace: () => { return ""; },
+      isEnabled: () => { return false; }
+    };
+  }
 };
 
 Plugins.deprecated = {
