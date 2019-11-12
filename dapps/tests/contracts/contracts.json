@@ -23,7 +23,8 @@
       },
       "AnotherStorage": {
         "args": [
-          "$SimpleStorage"
+          "$SimpleStorage",
+          "embark.eth"
         ]
       },
       "Token": {
