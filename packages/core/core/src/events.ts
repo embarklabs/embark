@@ -2,56 +2,12 @@ import { __ } from 'embark-i18n';
 const EventEmitter = require('events');
 const cloneDeep = require('lodash.clonedeep');
 
-const fs = require('fs-extra');
-
-function debugEventsEnabled() {
-  return process && process.env && process.env.DEBUGEVENTS;
-}
-
 function warnIfLegacy(eventName: string) {
   const legacyEvents: string[] = [];
   if (legacyEvents.indexOf(eventName) >= 0) {
     console.info(__("this event is deprecated and will be removed in future versions %s", eventName));
   }
 }
-
-function getOrigin(override) {
-  let origin = ((new Error().stack).split("at ")[3]).trim();
-  origin = origin.split("(")[0].trim();
-  return origin;
-}
-
-function log(eventType, eventName, origin?: string) {
-  if (!(debugEventsEnabled())) { return; }
-  if (['end', 'prefinish', 'error', 'new', 'demo', 'block', 'version'].indexOf(eventName) >= 0) {
-    return;
-  }
-  if (eventName.indexOf("log") >= 0) {
-    return;
-  }
-
-  // fs.appendFileSync(".embark/events.log", (new Error().stack) + "\n");
-  if (!origin && origin !== "") {
-    const stack = new Error().stack;
-    if (stack) {
-      origin = stack.split("at ")[3].trim();
-      origin = origin.split("(")[0].trim();
-    }
-    // origin = getOrigin();
-  }
-
-  fs.ensureDirSync(".embark/");
-  fs.appendFileSync(".embark/events.log", eventType + ": " + eventName + " -- (" + origin + ")\n");
-}
-
-// const cmdNames = {};
-//
-// function trackCmd(cmdName) {
-//   if (!(process && process.env && process.env.DEBUGEVENTS)) return;
-//   let origin = ((new Error().stack).split("at ")[3]).trim();
-//   origin = origin.split("(")[0].trim();
-//   cmdNames[cmdName] = origin;
-// }
 
 export class EmbarkEmitter extends EventEmitter {
 
@@ -73,10 +29,6 @@ export class EmbarkEmitter extends EventEmitter {
     return super.emit(requestName, ...args);
   }
 }
-
-// EmbarkEmitter.prototype.log  = log;
-EmbarkEmitter.prototype.log  = log;
-EmbarkEmitter.prototype.getOrigin  = getOrigin;
 
 EmbarkEmitter.prototype._maxListeners = 350;
 const _on         = EmbarkEmitter.prototype.on;
@@ -146,7 +98,7 @@ EmbarkEmitter.prototype.request2 = function() {
     this._emit('request:' + requestName, ...other_args);
   });
 
-  let ogStack = this.debugLog.getStackTrace();
+  const ogStack = this.debugLog.getStackTrace();
 
   promise.catch((e) => {
     if (this.debugLog.isEnabled()) {

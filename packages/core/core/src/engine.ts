@@ -7,10 +7,7 @@ import { ServicesMonitor } from './services_monitor';
 
 import { normalizeInput } from 'embark-utils';
 import { Logger } from 'embark-logger';
-
-const utils = require('../utils/utils');
-const Logger = require('embark-logger');
-const DebugLog = require('embark-structlog');
+import { DebugLog } from 'embark-structlog';
 
 const EMBARK_PROCESS_NAME = 'embark';
 
@@ -62,6 +59,8 @@ export class Engine {
 
   isDev: boolean | undefined;
 
+  debugLog: any;
+
   constructor(options) {
     this.env = options.env;
     this.client = options.client;
@@ -83,6 +82,7 @@ export class Engine {
 
   init(_options, callback) {
     callback = callback || function() {};
+
     const options = _options || {};
 
     this.debugLog = new DebugLog("embark");

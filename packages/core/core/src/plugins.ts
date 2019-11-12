@@ -29,6 +29,8 @@ export class Plugins {
 
   version: string;
 
+  debugLog: any;
+
   static deprecated = {
     'embarkjs-connector-web3': '4.1.0'
   };
@@ -40,6 +42,7 @@ export class Plugins {
     this.logger = options.logger;
     this.events = options.events;
     this.config = options.config;
+    this.debugLog = options.debugLog;
     this.context = options.context;
     this.fs = fs;
     this.env = options.env;
@@ -76,6 +79,7 @@ export class Plugins {
       pluginModule: plugin,
       pluginConfig,
       logger: this.logger,
+      debugLog: this.debugLog,
       pluginPath,
       interceptLogs: this.interceptLogs,
       events: this.events,
@@ -108,6 +112,7 @@ export class Plugins {
       pluginModule: plugin,
       pluginConfig: pluginConfig || {},
       logger: this.logger,
+      debugLog: this.debugLog,
       pluginPath,
       interceptLogs: this.interceptLogs,
       events: this.events,
@@ -131,11 +136,18 @@ export class Plugins {
       plugin = plugin.default;
     }
 
+    let logId = this.debugLog.moduleInit(pluginName);
+    let events = this.debugLog.tagObject(this.events, logId);
+    let logger = this.debugLog.tagObject(this.logger, logId);
+
     const pluginWrapper = new Plugin({
       name: pluginName,
       pluginModule: plugin,
       pluginConfig,
       logger: this.logger,
+      debugLog: this.debugLog,
+      logId: logId,
+      events: events,
       pluginPath,
       interceptLogs: this.interceptLogs,
       events: this.events,
@@ -230,7 +242,7 @@ export class Plugins {
   }
 
   // TODO: because this is potentially hanging, we should issue a trace warning if the event does not exists
-  runActionsForEvent(eventName, args, cb) {
+  runActionsForEvent(eventName, args, cb, logId) {
     const self = this;
     if (typeof (args) === 'function') {
       cb = args;
@@ -254,31 +266,33 @@ export class Plugins {
       return 0;
     });
 
-    this.events.log("ACTION", eventName, "");
+    this.debugLog.log({parent_id: logId, type: "trigger_action", name: eventName, givenLogId: logId, plugins: actionPlugins, inputs: args});
 
     async.reduce(actionPlugins, args, function(current_args, pluginObj: any, nextEach) {
       const [plugin, pluginName] = pluginObj;
 
-      self.events.log("== ACTION FOR " + eventName, plugin.action.name, pluginName);
+      let actionLogId = self.debugLog.log({module: pluginName, type: "action_run", name: (eventName + plugin.name), source: pluginName, inputs: current_args});
 
       if (typeof (args) === 'function') {
         plugin.action.call(plugin.action, (...params) => {
-          nextEach(...params || current_args);
+          self.debugLog.log({id: actionLogId, outputs: params || current_args});
+          return nextEach(...params || current_args);
         });
       } else {
         plugin.action.call(plugin.action, args, (...params) => {
-          nextEach(...params || current_args);
+          self.debugLog.log({id: actionLogId, outputs: (args, params || current_args)});
+          return nextEach(...params || current_args);
         });
       }
     }, cb);
   }
 
-  emitAndRunActionsForEvent(eventName, args, cb) {
+  emitAndRunActionsForEvent(eventName, args, cb, logId) {
     if (typeof (args) === 'function') {
       cb = args;
       args = [];
     }
     this.events.emit(eventName, args);
-    return this.runActionsForEvent(eventName, args, cb);
+    return this.runActionsForEvent(eventName, args, cb, logId);
   }
 }
