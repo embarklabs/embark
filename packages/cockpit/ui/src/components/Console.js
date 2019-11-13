@@ -77,6 +77,7 @@ class Console extends Component {
 
   logClassName(item) {
     return classnames('m-0', {
+      'console-text': true,
       'text-success': item.logLevel === 'info',
       'text-info': item.logLevel === 'debug',
       'text-danger': item.logLevel === 'error',

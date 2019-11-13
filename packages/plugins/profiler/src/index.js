@@ -19,7 +19,8 @@ class Profiler {
     profileObj.name = contractName;
     profileObj.methods = [];
 
-    self.events.request('contracts:contract', contractName, (contract) => {
+    self.events.request('contracts:contract', contractName, (err, contract) => {
+      if (err) return returnCb(err);
       if (!contract || !contract.deployedAddress) {
         return returnCb("--  couldn't profile " + contractName + " - it's not deployed or could be an interface");
       }

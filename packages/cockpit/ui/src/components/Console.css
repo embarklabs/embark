@@ -7,6 +7,11 @@
   text-transform: capitalize;
 }
 
+.console-text {
+  font-family: monospace;
+  white-space: pre;
+}
+
 .text__new-line, .card.warnings-card .list-group-item, .card.errors-card .list-group-item {
   white-space: pre-wrap;
   font-family: monospace;
