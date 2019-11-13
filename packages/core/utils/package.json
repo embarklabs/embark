@@ -62,7 +62,7 @@
     "globule": "1.2.1",
     "merge": "1.2.1",
     "multihashes": "0.4.14",
-    "ora": "2.1.0",
+    "ora": "4.0.3",
     "pretty-ms": "5.0.0",
     "shelljs": "0.8.3",
     "web3": "1.2.1",
