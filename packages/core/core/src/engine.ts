@@ -286,6 +286,7 @@ export class Engine {
     this.registerModulePackage('embark-specialconfigs', {plugins: this.plugins});
     this.registerModulePackage('embark-transaction-logger');
     this.registerModulePackage('embark-transaction-tracker');
+    this.registerModulePackage('embark-profiler');
   }
 
   storageComponent() {

@@ -1,5 +1,6 @@
 const async = require('async');
 const ContractFuzzer = require('./fuzzer.js');
+const Web3 = require('web3');
 
 class GasEstimator {
   constructor(embark) {
@@ -12,8 +13,10 @@ class GasEstimator {
   estimateGas(contractName, cb) {
     const self = this;
     let gasMap = {};
-    self.events.request('blockchain:object', ({ web3 }) => {
-      self.events.request('contracts:contract', contractName, (contract) => {
+    self.events.request("blockchain:client:provider", "ethereum", (err, provider) => {
+      const web3 = new Web3(provider);
+      self.events.request('contracts:contract', contractName, (err, contract) => {
+        if (err) return cb(err);
         let fuzzMap = self.fuzzer.generateFuzz(3, contract);
         let contractObj = new web3.eth.Contract(contract.abiDefinition, contract.deployedAddress);
         async.each(contract.abiDefinition.filter((x) => x.type !== "event"),
@@ -21,10 +24,10 @@ class GasEstimator {
             let name = abiMethod.name;
             if (abiMethod.type === "constructor") {
               // already provided for us
-              gasMap['constructor'] = contract.gasEstimates.creation.totalCost.toString();
+              gasMap['constructor'] = parseFloat(contract.gasEstimates.creation.totalCost.toString());
               return gasCb(null, name, abiMethod.type);
             } else if (abiMethod.type === "fallback") {
-              gasMap['fallback'] = contract.gasEstimates.external[""].toString();
+              gasMap['fallback'] = parseFloat(contract.gasEstimates.external[""].toString());
               return gasCb(null, name, abiMethod.type);
             } else if (
               (abiMethod.inputs === null || abiMethod.inputs === undefined || abiMethod.inputs.length === 0)
