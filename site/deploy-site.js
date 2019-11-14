@@ -30,7 +30,7 @@ function main() {
   }
   console.log('Deploying website...');
   process.chdir(SITE_DIR);
-  execWithOutput('npx hexo generate');
+  execWithOutput('npx hexo generate --production');
   try {
     execWithOutput('git branch -D embark-site-deploy');
   } catch (e) {
