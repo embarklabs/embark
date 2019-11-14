@@ -13,6 +13,7 @@
       };
     </script>
 
+    {% if env.args.production %}
     <!-- Fathom - simple website analytics - https://github.com/usefathom/fathom -->
     <script>
     (function(f, a, t, h, o, m){
@@ -26,6 +27,7 @@
     fathom('trackPageview');
     </script>
     <!-- / Fathom -->
+    {% endif %}
 
     <script src="/js/index.js"></script>
 
