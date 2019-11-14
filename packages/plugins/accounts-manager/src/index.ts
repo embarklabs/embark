@@ -53,11 +53,9 @@ export default class AccountsManager {
     }
     try {
       const coinbase = await web3.eth.getCoinbase();
-      const accts = accounts
-        .filter((account) => account && account.address);
 
-      async.eachLimit(accts, 1, (acct, eachCb) => {
-        fundAccount(web3, acct.address, coinbase, acct.hexBalance)
+      async.eachLimit(accounts, 1, (acct, eachCb) => {
+        fundAccount(web3, acct, coinbase)
           .then(() => {
             eachCb();
           })

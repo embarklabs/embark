@@ -30,11 +30,14 @@
     "_build": "npm run solo -- build",
     "ci": "npm run qa",
     "clean": "npm run reset",
-    "lint": "eslint src/",
-    "qa": "npm-run-all lint _build test",
+    "lint": "npm-run-all lint:*",
+    "lint:js": "eslint src/",
+    "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
+    "qa": "npm-run-all lint typecheck _build test",
     "reset": "npx rimraf .nyc_output coverage dist embark-*.tgz package",
     "solo": "embark-solo",
-    "test": "nyc --reporter=html --reporter=json mocha \"dist/test/**/*.js\" --exit --no-timeouts --require source-map-support/register"
+    "test": "nyc --reporter=html --reporter=json mocha \"dist/test/**/*.js\" --exit --no-timeouts --require source-map-support/register",
+    "typecheck": "tsc"
   },
   "eslintConfig": {
     "extends": "../../../.eslintrc.json"
@@ -54,7 +57,9 @@
     "eslint": "5.7.0",
     "mocha": "6.2.0",
     "npm-run-all": "4.1.5",
-    "rimraf": "3.0.0"
+    "rimraf": "3.0.0",
+    "tslint": "5.16.0",
+    "typescript": "3.6.3"
   },
   "engines": {
     "node": ">=10.17.0 <12.0.0",
