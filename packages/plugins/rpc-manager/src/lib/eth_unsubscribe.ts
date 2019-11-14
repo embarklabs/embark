@@ -1,12 +1,9 @@
 import { Callback, Embark, Events } /* supplied by @types/embark in packages/embark-typings */ from "embark";
-import Web3RequestManager from "web3-core-requestmanager";
 import { __ } from "embark-i18n";
-import Web3 from "web3";
 import RpcModifier from "./rpcModifier";
 
 export default class EthUnsubscribe extends RpcModifier {
 
-  private nodeSubscriptions: object = {};
   constructor(embark: Embark, rpcModifierEvents: Events) {
     super(embark, rpcModifierEvents);
 
@@ -16,7 +13,7 @@ export default class EthUnsubscribe extends RpcModifier {
 
   private async ethUnsubscribeRequest(params: any, callback: Callback<any>) {
     // check for eth_subscribe and websockets
-    if (params.isWs && params.request.method.includes("eth_unsubscribe")) {
+    if (params.isWs && params.request.method === "eth_unsubscribe") {
       // indicate that we do not want this call to go to the node
       params.sendToNode = false;
       return callback(null, params);

@@ -12,7 +12,7 @@ export default class EthSubscribe extends RpcModifier {
 
   private async ethSubscribeRequest(params: any, callback: Callback<any>) {
     // check for eth_subscribe and websockets
-    if (params.isWs && params.request.method.includes("eth_subscribe")) {
+    if (params.isWs && params.request.method === "eth_subscribe") {
       // indicate that we do not want this call to go to the node
       params.sendToNode = false;
       return callback(null, params);

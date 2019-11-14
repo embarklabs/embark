@@ -17,41 +17,35 @@ export class Proxy {
     this.timeouts = {};
     this.plugins = options.plugins;
     this.logger = options.logger;
-    this.vms = options.vms;
     this.app = null;
     this.endpoint = options.endpoint;
     this.events = options.events;
-
-    if (options.endpoint === constants.blockchain.vm) {
-      this.endpoint = this.vms[this.vms.length - 1]();
-    }
-
-    let provider = null;
-
-    if (typeof this.endpoint === 'string' && this.endpoint.startsWith('ws')) {
-      provider = this._createWebSocketProvider();
-    } else {
-      provider = this.endpoint;
-    }
     this.isWs = options.isWs;
-    // used to service all non-long-living WS connections, including any
-    // request that is not WS and any WS request that is not an `eth_subscribe`
-    // RPC request
-    this.requestManager = this._createWeb3RequestManager(provider);
+    this.clientName = options.clientName;
     this.nodeSubscriptions = {};
+    this._requestManager = null;
+
     this.events.setCommandHandler("proxy:websocket:subscribe", this.handleSubscribe.bind(this));
     this.events.setCommandHandler("proxy:websocket:unsubscribe", this.handleUnsubscribe.bind(this));
   }
 
-  _createWebSocketProvider() {
-    return new Web3WsProvider(this.endpoint, {
-      headers: { Origin: constants.embarkResourceOrigin },
-      // TODO remove this when Geth fixes this: https://github.com/ethereum/go-ethereum/issues/16846
-      //  Edit: This has been fixed in Geth 1.9, but we don't support 1.9 yet and still support 1.8
-      clientConfig: {
-        fragmentationThreshold: 81920
+  // used to service all non-long-living WS connections, including any
+  // request that is not WS and any WS request that is not an `eth_subscribe`
+  // RPC request
+  get requestManager() {
+    return (async () => {
+      if (!this._requestManager) {
+        const provider = await this._createWebSocketProvider(this.endpoint);
+        this._requestManager = this._createWeb3RequestManager(provider);
       }
-    });
+      return this._requestManager;
+    })();
+  }
+
+  async _createWebSocketProvider(endpoint) {
+    // pass in endpoint to ensure we get a provider with a connection to the node
+    // this may return a VM provider during tests, in which case endpoint will be ignored
+    return this.events.request2("blockchain:client:nodeProvider", this.clientName /* TODO: test that this returns "vm" or "ethereum" */, endpoint);
   }
 
   _createWeb3RequestManager(provider) {
@@ -60,7 +54,8 @@ export class Proxy {
 
   async nodeReady() {
     try {
-      await this.requestManager.send({ method: 'eth_accounts' });
+      const reqMgr = await this.requestManager;
+      await reqMgr.send({ method: 'eth_accounts' });
     } catch (e) {
       throw new Error(__(`Unable to connect to the blockchain endpoint on ${this.endpoint}`));
     }
@@ -169,8 +164,9 @@ export class Proxy {
   }
 
   forwardRequestToNode(request) {
-    return new Promise((resolve, reject) => {
-      this.requestManager.send(request, (fwdReqErr, result) => {
+    return new Promise(async (resolve, reject) => {
+      const reqMgr = await this.requestManager;
+      reqMgr.send(request, (fwdReqErr, result) => {
         if (fwdReqErr) {
           return reject(fwdReqErr);
         }
@@ -180,8 +176,9 @@ export class Proxy {
   }
 
   async handleSubscribe(clientSocket, request, response, cb) {
+    const provider = await this._createWebSocketProvider(this.endpoint);
     // creates a new long-living connection to the node
-    const currentReqManager = this._createWeb3RequestManager(this._createWebSocketProvider());
+    const currentReqManager = this._createWeb3RequestManager(provider);
 
     // kill WS connetion to the node when the client connection closes
     clientSocket.on('close', () => currentReqManager.provider.disconnect());

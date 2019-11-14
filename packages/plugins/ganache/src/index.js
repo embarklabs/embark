@@ -1,6 +1,6 @@
 class Ganache {
   constructor(embark) {
-    embark.events.request('proxy:vm:register', () => {
+    embark.events.request('blockchain:vm:register', () => {
       const ganache = require('ganache-cli');
       return ganache.provider();
     });

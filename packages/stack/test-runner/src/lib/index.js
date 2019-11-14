@@ -224,9 +224,9 @@ class TestRunner {
     const ogAccounts = this.simOptions.accounts;
     Object.assign(this.simOptions, {host, port, type, protocol, accounts, client: config.blockchain && config.blockchain.client});
 
-    if (!resetServices && !deepEqual(accounts, ogAccounts)) {
-      return this.plugins.emitAndRunActionsForEvent("accounts:reseted", {accounts}, cb);
-    }
+    // if (!resetServices && !deepEqual(accounts, ogAccounts)) {
+    //   return this.plugins.emitAndRunActionsForEvent("accounts:reseted", {accounts}, cb);
+    // }
 
     if (!resetServices) {
       return cb();
