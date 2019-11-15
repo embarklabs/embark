@@ -45,7 +45,7 @@ export function getContractDefaults(embarkConfigVersions) {
 
   return {
     default: {
-      versions: versions,
+      versions,
       dappConnection: [
         "$WEB3",
         "ws://localhost:8546",

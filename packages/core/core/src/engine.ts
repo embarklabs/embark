@@ -67,6 +67,7 @@ export class Engine {
     this.version = options.version;
     this.logFile = options.logFile;
     this.logLevel = options.logLevel;
+    this.logger = options.logger;
     this.events = options.events;
     this.context = options.context;
     this.useDashboard = options.useDashboard;
@@ -78,13 +79,13 @@ export class Engine {
   }
 
   init(_options, callback) {
-    callback = callback || function () { };
+    callback = callback || (() => {});
 
     const options = _options || {};
     this.events = options.events || this.events || new Events();
-    this.logger = options.logger || new Logger({ context: this.context, logLevel: options.logLevel || this.logLevel || 'info', events: this.events, logFile: this.logFile });
-    this.config = new Config({ env: this.env, logger: this.logger, events: this.events, context: this.context, webServerConfig: this.webServerConfig, version: this.version, package: this.package });
-    this.config.loadConfigFiles({ embarkConfig: this.embarkConfig, interceptLogs: this.interceptLogs });
+    this.logger = this.logger || new Logger({context: this.context, logLevel: options.logLevel || this.logLevel || 'info', events: this.events, logFile: this.logFile});
+    this.config = new Config({env: this.env, logger: this.logger, events: this.events, context: this.context, webServerConfig: this.webServerConfig, version: this.version, package: this.package});
+    this.config.loadConfigFiles({embarkConfig: this.embarkConfig, interceptLogs: this.interceptLogs});
     this.plugins = this.config.plugins;
     this.isDev = this.config && this.config.blockchainConfig && (this.config.blockchainConfig.isDev || this.config.blockchainConfig.default);
 
@@ -206,7 +207,7 @@ export class Engine {
       if (this.plugins) {
         const plugin = this.plugins.createPlugin('coreservicesplugin', {});
         plugin.registerActionForEvent("embark:engine:started", (_params, cb) => {
-          this.servicesMonitor && this.servicesMonitor.startMonitor();
+          if (this.servicesMonitor) { this.servicesMonitor.startMonitor(); }
           cb();
         });
       }
@@ -322,23 +323,23 @@ function interceptLogs(consoleContext, logger) {
   const context: any = {};
   context.console = consoleContext;
 
-  context.console.log = function () {
+  context.console.log = () => {
     logger.info(normalizeInput(arguments));
   };
-  context.console.warn = function () {
+  context.console.warn = () => {
     logger.warn(normalizeInput(arguments));
   };
-  context.console.info = function () {
+  context.console.info = () => {
     logger.info(normalizeInput(arguments));
   };
-  context.console.debug = function () {
+  context.console.debug = () => {
     // TODO: ue JSON.stringify
     logger.debug(normalizeInput(arguments));
   };
-  context.console.trace = function () {
+  context.console.trace = () => {
     logger.trace(normalizeInput(arguments));
   };
-  context.console.dir = function () {
+  context.console.dir = () => {
     logger.dir(normalizeInput(arguments));
   };
 }

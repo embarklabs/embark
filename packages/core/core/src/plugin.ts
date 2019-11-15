@@ -137,7 +137,6 @@ export class Plugin {
 
   setUpLogger() {
     this.logger = {
-      log: this._log.bind(this, 'log'),
       warn: this._log.bind(this, 'warn'),
       error: this._log.bind(this, 'error'),
       info: this._log.bind(this, 'info'),
@@ -351,7 +350,7 @@ export class Plugin {
 
   runFilePipeline() {
     return this.pipelineFiles.map(file => {
-      let obj: any = {};
+      const obj: any = {};
       obj.filename = file.file.replace('./', '');
       obj.content = this.loadPluginFile(file.file).toString();
       obj.intendedPath = file.intendedPath;
@@ -364,8 +363,8 @@ export class Plugin {
 
   runPipeline(args) {
     // TODO: should iterate the pipelines
-    let pipeline = this.pipeline[0];
-    let shouldRunPipeline = fileMatchesPattern(pipeline.matcthingFiles, args.targetFile);
+    const pipeline = this.pipeline[0];
+    const shouldRunPipeline = fileMatchesPattern(pipeline.matcthingFiles, args.targetFile);
     if (shouldRunPipeline) {
       return pipeline.cb.call(this, args);
     }

@@ -1,4 +1,4 @@
-import { Logger } from './logger';
+import { Logger } from 'embark-logger';
 import { Plugins } from './plugins';
 import { Callback } from './callbacks';
 

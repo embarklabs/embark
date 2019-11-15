@@ -150,7 +150,7 @@ class Console {
         __("The web3 object and the interfaces for the deployed contracts and their methods are also available"));
       return helpText.join("\n");
     } else if (["quit", "exit", "sair", "sortir", __("quit")].indexOf(cmd) >= 0) {
-      exit();
+      exit(0);
     }
     return false;
   }

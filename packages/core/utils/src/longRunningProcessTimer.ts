@@ -1,5 +1,5 @@
 import { red } from "colors";
-import { Logger } from 'embark-logger';
+import { Logger } from 'embark';
 import { performance, PerformanceObserver } from "perf_hooks";
 import prettyMs from "pretty-ms";
 import { last, recursiveMerge } from "./collections";
