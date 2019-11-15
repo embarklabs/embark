@@ -384,7 +384,7 @@ export class Config {
     if (this.blockchainConfig.accounts) {
       this.blockchainConfig.accounts.forEach(acc => {
         if (acc.balance && acc.balance.toString().match(unitRegex)) {
-          acc.balance = getWeiBalanceFromString(acc.balance3);
+          acc.balance = getWeiBalanceFromString(acc.balance);
         }
       });
     }
