@@ -2,13 +2,13 @@
   "compilerOptions": {
     "allowJs": true,
     "esModuleInterop": true,
-    "lib": ["ES2017", "dom"],
-    "module": "CommonJS",
+    "isolatedModules": true,
+    "moduleResolution": "Node",
     "noEmit": true,
-    "noImplicitThis": false,
     "noImplicitAny": false,
+    "noImplicitThis": false,
+    "resolveJsonModule": true,
     "strict": true,
-    "target": "ES2017",
-    "resolveJsonModule": true
+    "target": "ESNext"
   }
 }
