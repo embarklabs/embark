@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
     "allowJs": true,
+    "emitDeclarationOnly": true,
     "esModuleInterop": true,
     "isolatedModules": true,
     "moduleResolution": "Node",
-    "noEmit": true,
     "noImplicitAny": false,
     "noImplicitThis": false,
     "resolveJsonModule": true,

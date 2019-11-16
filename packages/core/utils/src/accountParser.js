@@ -35,7 +35,7 @@ export default class AccountParser {
   }
 
   /*eslint complexity: ["error", 30]*/
-  static getAccount(accountConfig, web3, dappPath, logger = console, nodeAccounts) {
+  static getAccount(accountConfig, web3, dappPath, logger, nodeAccounts) {
     const returnAddress = web3 === false;
     let hexBalance = null;
     if (accountConfig.balance && web3) {

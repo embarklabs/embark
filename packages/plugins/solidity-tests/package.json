@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.6.3",
+    "@types/async": "3.0.3",
     "async": "3.1.0",
     "core-js": "3.3.5",
     "remix-tests": "0.1.20",
@@ -49,7 +50,6 @@
     "yo-yoify": "4.3.0"
   },
   "devDependencies": {
-    "@types/async": "3.0.3",
     "embark-solo": "^5.0.0-alpha.0",
     "eslint": "5.7.0",
     "mocha": "6.2.2",

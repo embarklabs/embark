@@ -6,7 +6,7 @@ import { promisify } from "util";
 
 const { File, Types, dappPath } = require("embark-utils");
 
-class Compiler {
+export default class Compiler {
   private fs: any;
   private logger: any;
   private plugins: Plugins;
@@ -132,5 +132,3 @@ class Compiler {
     };
   }
 }
-
-module.exports = Compiler;

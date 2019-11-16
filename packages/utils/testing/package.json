@@ -42,13 +42,13 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.6.3",
+    "@types/async": "3.0.3",
     "core-js": "3.3.5",
     "refute": "1.0.2",
     "sinon": "7.4.2"
   },
   "devDependencies": {
     "@babel/core": "7.6.4",
-    "@types/async": "3.0.3",
     "babel-jest": "24.9.0",
     "embark-solo": "^5.0.0-alpha.0",
     "eslint": "5.7.0",

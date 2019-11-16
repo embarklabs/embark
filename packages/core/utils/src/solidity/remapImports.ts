@@ -30,7 +30,7 @@ const getImports = (source: string) => {
   }).filter((fileImport) => fileImport.length);
 };
 
-const prepareInitialFile = async (file: File) => {
+const prepareInitialFile = async (file: File | any) => {
   if (file.type === Types.http) {
     return await file.content;
   }

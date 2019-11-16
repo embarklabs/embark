@@ -1,4 +1,7 @@
 {
+  "compilerOptions": {
+    "declaration": true
+  },
   "extends": "../../../tsconfig.json",
   "include": ["index.d.ts"]
 }

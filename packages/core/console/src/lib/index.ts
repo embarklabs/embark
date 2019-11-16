@@ -16,7 +16,7 @@ interface HelpDescription {
   usage?: string;
 }
 
-class Console {
+export default class Console {
   private embark: Embark;
   private events: Events;
   private plugins: any;
@@ -285,5 +285,3 @@ class Console {
     }
   }
 }
-
-module.exports = Console;

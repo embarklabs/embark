@@ -49,4 +49,4 @@ export const setOrDetectLocale = (locale: Maybe<string>) => {
 
 i18n.setLocale(DEFAULT_LANGUAGE);
 
-export const __ = i18nEmbark.__;
+export const __ = (i18nEmbark.__ as unknown) as i18nAPI["__"];

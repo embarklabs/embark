@@ -487,7 +487,7 @@ export class Config {
     if (storageConfig && storageConfig.upload && storageConfig.upload.getUrl) {
       this.providerUrl = storageConfig.upload.getUrl;
     }
-    for (const contract of (Object.values(contracts) as any[])) {
+    for (const contract of Object.values(contracts) as any[]) {
       if (!contract.file) {
         continue;
       }
