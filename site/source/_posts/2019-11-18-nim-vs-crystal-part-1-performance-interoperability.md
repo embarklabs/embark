@@ -5,7 +5,6 @@ categories:
   - tutorials
 layout: blog-post
 image: '/assets/images/nim-crystal-header_blank.jpg'
-alias: news/2019/11/18/nim-vs-crystal-performance-interoperability/
 ---
 
 ![crystal vs nim](/assets/images/nim-crystal-header-img_NEW.jpg)
@@ -42,11 +41,15 @@ Nim is super easy to install.  If you're on Windows, [head over here](https://ni
 
 If you're on any other Unix-based system, you can run:
 
-`$ curl https://nim-lang.org/choosenim/init.sh -sSf | sh`
+```
+$ curl https://nim-lang.org/choosenim/init.sh -sSf | sh`
+```
 
 If you're on Mac, and with Homebrew installed, simply run:
 
-`$ brew install nim`
+```
+$ brew install nim
+```
 
 You could also consider using [choosenim](https://github.com/dom96/choosenim) to manage Nim installations in a similar way to `pyenv` and `rustup`.
 
@@ -82,7 +85,9 @@ when isMainModule:
 
 Now then, with these two *very simple* files in place, we can run:
 
-`$ nim c -r calculator.nim`
+```
+$ nim c -r calculator.nim
+```
 
 The Nim compiler will compile the `logic.c` file in addition to `calculator.nim` and link both into an executable; which outputs `10` when run.  Very sharp, in my opinion!
 
@@ -117,7 +122,9 @@ when isMainModule:
 
 Compile the Nim code to JavaScript by running:
 
-`$ nim js -o:calculator.js calculator.nim`
+```
+$ nim js -o:calculator.js calculator.nim
+```
 
 Once that's done, go ahead and open `host.html` in a browser and you should see the value `10` in the browser's console.  I think this is **REALLY** neat.  It's superb how easy it is to achieve that, too.
 
@@ -176,7 +183,9 @@ You can find all of the relevant instructions for installing Crystal, on the [ma
 
 If you are on Mac, and have Homebrew installed, you can simply run:
 
-`$ brew install crystal`
+```
+$ brew install crystal
+```
 
 **However**, if you are a Windows user, *for the time being* you are out of luck, unless you use the Windows Subsystem for Linux.  If I were in a more shocking/pedantic mood, I'd take a (not yet gained) point **away** from Crystal here, for lack of Windows support.
 
@@ -187,7 +196,9 @@ Let’s build a simple script in C that says “hi!”. We’ll then write a Cry
 
 First off, let’s create a project with Crystal’s scaffolding tool (I’ll cover this feature later). Run:
 
-`$ crystal init app sayhi_c`
+```
+$ crystal init app sayhi_c
+```
 
 Then head into the directory `sayhi_c/src/sayhi_c` and let’s create a file `sayhi.c` with the following contents:
 
@@ -201,7 +212,9 @@ void hi(const char * name){
 
 Now we need to compile our C file into an object. On Ubuntu or Mac using gcc we can run:
 
-`$ gcc -c sayhi.c -o sayhi.o`
+```
+$ gcc -c sayhi.c -o sayhi.o
+```
 
 Using the -o flags allow us to create an Object filetype. Once we’ve got our Object file, we can bind it from within our Crystal app. Open up our `sayhi_c.cr` file, and have it reflect the following:
 
@@ -425,9 +438,13 @@ puts "#{s}, #{Time.local - t}"
 
 We can again; build our Base64 test files into release packages with the respective commands below:
 
-`$ crystal build base64_test.cr --release -o base64_test_cr --no-debug`
+```
+$ crystal build base64_test.cr --release -o base64_test_cr --no-debug
+```
 
-`$ nim c -o:base64_test_nim -d:danger --cc:gcc --verbosity:0 base64_test.nim`
+```
+$ nim c -o:base64_test_nim -d:danger --cc:gcc --verbosity:0 base64_test.nim
+```
 
 As with our last test suite, we can then time & run those packages, to obtain our test results:
 
@@ -450,7 +467,7 @@ In conclusion, it seems that we have 1 point for Nim (interoperability), and 1 p
  - Part 2: Threading and Tooling
  - Part 3: Crypto, DApps and P2P
 
-These two articles will be released on the 22nd and 29th respectively, so don't forget to come back then to check them out!
+These two articles will be released over the next couple of days, so don't forget to come back then to check them out!
 
 Thanks for reading - as ever, if you have any questions, please feel free to reach out at [robin@status](mailto:robin@status.im).
 
