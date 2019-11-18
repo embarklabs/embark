@@ -1,5 +1,6 @@
 import { Logger } from './logger';
 import { Plugins } from './plugins';
+import { Callback } from './callbacks';
 
 type CommandCallback = (
   opt1?: any,
@@ -63,6 +64,8 @@ export interface Config {
   reloadConfig(): void;
 }
 
+type ActionCallback<T> = (params: any, cb: Callback<T>) => void;
+
 export interface Embark {
   env: string;
   events: Events;
@@ -73,8 +76,9 @@ export interface Embark {
   fs: any;
   config: Config;
   currentContext: string[];
-  registerActionForEvent(
+  registerActionForEvent<T>(
     name: string,
-    action: (params: any, cb: (error: any, result: any) => void) => void,
+    options?: ActionCallback<T> | { priority: number },
+    action?: ActionCallback<T>,
   ): void;
 }
