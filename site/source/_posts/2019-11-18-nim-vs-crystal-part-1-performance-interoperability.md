@@ -350,9 +350,13 @@ p z / len
 
 Building our test files into tiny release packages with the respective commands below:
 
-`$ crystal build json_test.cr --release -o json_test_cr --no-debug`
+```
+$ crystal build json_test.cr --release -o json_test_cr --no-debug
+```
 
-`$ nim c -o:json_test_nim -d:danger --cc:gcc --verbosity:0 json_test.nim`
+```
+$ nim c -o:json_test_nim -d:danger --cc:gcc --verbosity:0 json_test.nim
+```
 
 We can then time & run those packages, to obtain our test results:
 
