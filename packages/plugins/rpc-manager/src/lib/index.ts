@@ -3,6 +3,7 @@ import { Logger } from 'embark-logger';
 import Web3 from "web3";
 import EthAccounts from "./eth_accounts";
 import EthSendTransaction from "./eth_sendTransaction";
+import EthSignData from "./eth_signData";
 import EthSignTypedData from "./eth_signTypedData";
 import EthSubscribe from "./eth_subscribe";
 import EthUnsubscribe from "./eth_unsubscribe";
@@ -36,15 +37,18 @@ export default class RpcManager {
       }
       return this.updateAccounts(this._nodeAccounts, cb);
     });
+
     this.modifiers = [
       PersonalNewAccount,
       EthAccounts,
       EthSendTransaction,
       EthSignTypedData,
+      EthSignData,
       EthSubscribe,
       EthUnsubscribe
     ].map((rpcModifier) => new rpcModifier(this.embark, this.rpcModifierEvents));
   }
+
   private async updateAccounts(updatedNodeAccounts: any[], cb: Callback<null>) {
     for (const modifier of this.modifiers) {
       await (modifier.nodeAccounts = Promise.resolve(updatedNodeAccounts));
