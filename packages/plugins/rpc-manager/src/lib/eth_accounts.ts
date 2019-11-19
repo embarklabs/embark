@@ -21,7 +21,7 @@ export default class EthAccounts extends RpcModifier {
   constructor(embark: Embark, rpcModifierEvents: Events) {
     super(embark, rpcModifierEvents);
 
-    this.embark.registerActionForEvent("blockchain:proxy:response", undefined, this.checkResponseFor_eth_accounts.bind(this));
+    this.embark.registerActionForEvent("blockchain:proxy:response", this.checkResponseFor_eth_accounts.bind(this));
   }
 
   private async checkResponseFor_eth_accounts(params: any, callback: Callback<any>) {

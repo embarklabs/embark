@@ -8,8 +8,8 @@ export default class EthSignTypedData extends RpcModifier {
   constructor(embark: Embark, rpcModifierEvents: Events) {
     super(embark, rpcModifierEvents);
 
-    this.embark.registerActionForEvent("blockchain:proxy:request", undefined, this.checkRequestFor_eth_signTypedData.bind(this));
-    this.embark.registerActionForEvent("blockchain:proxy:response", undefined, this.checkResponseFor_eth_signTypedData.bind(this));
+    this.embark.registerActionForEvent("blockchain:proxy:request", this.checkRequestFor_eth_signTypedData.bind(this));
+    this.embark.registerActionForEvent("blockchain:proxy:response", this.checkResponseFor_eth_signTypedData.bind(this));
   }
 
   private async checkRequestFor_eth_signTypedData(params: any, callback: Callback<any>) {

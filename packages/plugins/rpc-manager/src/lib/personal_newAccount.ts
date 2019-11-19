@@ -7,7 +7,7 @@ export default class PersonalNewAccount extends RpcModifier {
   constructor(embark: Embark, rpcModifierEvents: Events) {
     super(embark, rpcModifierEvents);
 
-    embark.registerActionForEvent("blockchain:proxy:response", undefined, this.checkResponseFor_personal_newAccount.bind(this));
+    embark.registerActionForEvent("blockchain:proxy:response", this.checkResponseFor_personal_newAccount.bind(this));
   }
 
   private async checkResponseFor_personal_newAccount(params: any, callback: Callback<any>) {

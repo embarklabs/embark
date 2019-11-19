@@ -22,7 +22,7 @@ export default class AccountsManager {
       this._web3 = null;
     });
 
-    this.embark.registerActionForEvent("tests:config:updated", undefined, async (params, cb) => {
+    this.embark.registerActionForEvent("tests:config:updated", async (params, cb) => {
       // reset accounts backing variable as the accounts in config may have changed and
       // web.eth.getAccounts may return a different value now
       this._accounts = null;
