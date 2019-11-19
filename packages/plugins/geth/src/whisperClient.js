@@ -169,7 +169,7 @@ class WhisperGethClient {
     if (config.wsRPC) {
       cmd.push("--ws");
 
-      cmd.push(`--wsport=${communicationConfig.connection.port || config.wsPost++}`);
+      cmd.push(`--wsport=${communicationConfig.connection.port || config.wsPort++}`);
       cmd.push(`--wsaddr=${communicationConfig.connection.host || config.wsHost++}`);
 
       if (config.wsOrigins) {
