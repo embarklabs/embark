@@ -1,6 +1,5 @@
 import { __ } from 'embark-i18n';
-import {dappPath, canonicalHost, defaultHost} from 'embark-utils';
-const constants = require('embark-core/constants');
+import {canonicalHost, defaultHost} from 'embark-utils';
 const API = require('./api.js');
 
 class Whisper {
@@ -11,8 +10,6 @@ class Whisper {
     this.communicationConfig = embark.config.communicationConfig;
     this.embarkConfig = embark.config.embarkConfig;
     this.embark = embark;
-    this.webSocketsChannels = {};
-    this.modulesPath = dappPath(embark.config.embarkConfig.generationDir, constants.dappArtifacts.symlinkDir);
 
     this.api = new API(embark);
     this.whisperNodes = {};
@@ -42,7 +39,7 @@ class Whisper {
     let connection = this.communicationConfig.connection || {};
     const config = {
       server: canonicalHost(connection.host || defaultHost),
-      port: connection.port || '8546',
+      port: connection.port || '8557',
       type: connection.type || 'ws'
     };
 
