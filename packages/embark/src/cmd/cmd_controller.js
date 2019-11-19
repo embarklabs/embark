@@ -27,8 +27,6 @@ class EmbarkController {
   initConfig(env, options) {
     this.events = new Events();
     this.logger = new Logger({ logLevel: Logger.logLevels.debug, events: this.events, context: this.context });
-
-    this.logger.info('foo');
     this.config = new Config({ env: env, logger: this.logger, events: this.events, context: this.context, version: this.version });
     this.config.loadConfigFiles(options);
     this.plugins = this.config.plugins;
