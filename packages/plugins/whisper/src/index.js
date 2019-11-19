@@ -22,6 +22,11 @@ class Whisper {
     });
 
     this.events.request("communication:node:register", "whisper", (readyCb) => {
+      if (this.communicationConfig.connection.port === this.embark.config.blockchainConfig.wsPort) {
+        this.logger.warn(__('Communication connection set to open on port %s, which is the same as your blockchain node. It will probably conflict', this.communicationConfig.connection.port));
+        this.logger.warn(__('You can change that port in your communication config file as `connection.port`'));
+      }
+
       let clientName = this.communicationConfig.client || "geth";
       let registerCb = this.whisperNodes[clientName];
       if (!registerCb) return readyCb("whisper client " + clientName + " not found");
