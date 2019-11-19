@@ -462,9 +462,11 @@ Once again, to my surprise, Crystal came out on top. And did again and again for
 
 ## Conclusion
 
-The summary of this first-in-series article, is most definitely one of surprise.  I already knew that Crystal was a highly-performant language, and I have previously done my own research & testing to see how close to *C speeds* it could achieve.  That being said, I was *also* already aware that Nim **claims** close to C speeds, and that one of the language's principals was to run well on old & less-performant hardware.  
+The summary of this first-in-series article, is most definitely one of surprise.  I already knew that Crystal was a highly-performant language, and I have previously done my own research & testing to see how close to *C speeds* it could achieve.  That being said, I was *also* already aware that Nim **claims** close to C speeds, and that one of the language's principals was to run well on old & less-performant hardware.
 
-Yet, Crystal beat not only my own expectations; but beat Nim for both memory usage **AND** execution times.  I really didn't expect to see Crystal come out *this* far ahead in performance.  On the other hand, Nim came out by-far the leader when it comes to language interoperability.  **Nim makes it even easier** than Crystal when interfacing other langs – not something I thought possible, given just how easy Crystal makes the task.
+Over here at Status, we are already implementing Nim in production.  We believe that the largest successful deployment of Ethereum will reside on embedded systems: IoT devices and mobile personal devices, such as smartphones, and therefore we launched [Nimbus](https://nimbus.team/). Although Nimbus will support archival nodes, its first implementation will be as a light client, with focus on Proof of Stake and sharding.  The extensible, configurable, and modular design of Nimbus makes it production ready for Web 3.0 and will ensure that it can be supported and maintained across all goals of Ethereum 2.0.  
+
+That being said; Crystal beat not only my own expectations; but beat Nim for both memory usage **AND** execution times.  I really didn't expect to see Crystal come out *this* far ahead in performance.  On the other hand, Nim came out by-far the leader when it comes to language interoperability.  **Nim makes it even easier** than Crystal when interfacing other langs – not something I thought possible, given just how easy Crystal makes the task.
 
 In conclusion, it seems that we have 1 point for Nim (interoperability), and 1 point for Crystal (performance).  Both languages have pleasantly surprised me, and I look forward to diving into the next topics in the series:
 
