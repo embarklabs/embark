@@ -11,7 +11,7 @@ export default class EthSendTransaction extends RpcModifier {
   constructor(embark: Embark, rpcModifierEvents: Events) {
     super(embark, rpcModifierEvents);
 
-    embark.registerActionForEvent("blockchain:proxy:request", undefined, this.checkRequestFor_eth_sendTransaction.bind(this));
+    embark.registerActionForEvent("blockchain:proxy:request", this.checkRequestFor_eth_sendTransaction.bind(this));
 
     // Allow to run transaction in parallel by resolving the nonce manually.
     // For each transaction, resolve the nonce by taking the max of current transaction count and the cache we keep locally.

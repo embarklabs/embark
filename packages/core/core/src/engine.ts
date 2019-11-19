@@ -205,7 +205,7 @@ export class Engine {
 
       if (this.plugins) {
         const plugin = this.plugins.createPlugin('coreservicesplugin', {});
-        plugin.registerActionForEvent("embark:engine:started", undefined, (_params, cb) => {
+        plugin.registerActionForEvent("embark:engine:started", (_params, cb) => {
           this.servicesMonitor && this.servicesMonitor.startMonitor();
           cb();
         });
