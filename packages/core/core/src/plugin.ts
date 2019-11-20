@@ -271,13 +271,13 @@ export class Plugin {
   }
 
   generateProvider(args) {
-    return this.clientWeb3Providers.map(function (cb) {
+    return this.clientWeb3Providers.map(function(cb) {
       return cb.call(this, args);
     }).join("\n");
   }
 
   generateContracts(args) {
-    return this.contractsGenerators.map(function (cb) {
+    return this.contractsGenerators.map(function(cb) {
       return cb.call(this, args);
     }).join("\n");
   }
