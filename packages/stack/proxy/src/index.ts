@@ -1,7 +1,8 @@
-import { Embark, Events } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Embark, Events } /* supplied by @types/embark in packages/core/typings */ from "embark";
 import { __ } from "embark-i18n";
+import { Logger } from "embark-logger";
 import { buildUrl, findNextPort } from "embark-utils";
-import { Logger } from 'embark-logger';
+
 import { Proxy } from "./proxy";
 
 const constants = require("embark-core/constants");

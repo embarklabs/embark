@@ -1,6 +1,6 @@
 import { waterfall } from "async";
 import chalk from "chalk";
-import { Callback, Embark, Events } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Callback, Embark, Events } /* supplied by @types/embark in packages/core/typings */ from "embark";
 import constants from "embark-core/constants.json";
 import { __ } from "embark-i18n";
 import { dappPath, escapeHtml, exit, jsonFunctionReplacer } from "embark-utils";

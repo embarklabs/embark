@@ -1,4 +1,4 @@
-import { Contract, Embark, Events } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Contract, Embark, Events } /* supplied by @types/embark in packages/core/typings */ from "embark";
 import { fuzzySearch } from "embark-utils";
 import { suggestions as defaultSuggestions } from "../../suggestions.json";
 

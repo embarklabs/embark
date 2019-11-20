@@ -1,4 +1,4 @@
-import { Callback, Embark, Events } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Callback, Embark, Events } /* supplied by @types/embark in packages/core/typings */ from "embark";
 import { __ } from "embark-i18n";
 import { Logger } from 'embark-logger';
 import * as fs from "./fs";

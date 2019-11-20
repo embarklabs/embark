@@ -1,4 +1,4 @@
-import { Callback, Embark, Events } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Callback, Embark, Events } /* supplied by @types/embark in packages/core/typings */ from "embark";
 import Web3 from "web3";
 const { blockchain: blockchainConstants } = require("embark-core/constants");
 import { __ } from "embark-i18n";

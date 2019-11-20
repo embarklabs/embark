@@ -1,4 +1,4 @@
-import { Callback, CompilerPluginObject, Embark, Plugins /* supplied by @types/embark in packages/embark-typings */ } from "embark";
+import { Callback, CompilerPluginObject, Embark, Plugins /* supplied by @types/embark in packages/core/typings */ } from "embark";
 import { __ } from "embark-i18n";
 import * as os from "os";
 import * as path from "path";

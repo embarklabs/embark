@@ -1,4 +1,4 @@
-import { Contract, Embark } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Contract, Embark } /* supplied by @types/embark in packages/core/typings */ from "embark";
 import { CommandOptions, ContractLanguage, Framework } from "./commandOptions";
 import { SolidityBuilder } from "./contractLanguage/solidityBuilder";
 import { ReactBuilder } from "./framework/reactBuilder";

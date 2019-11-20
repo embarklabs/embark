@@ -1,4 +1,5 @@
-import { Callback, Embark, Events } from "embark-core";
+import { Callback, Embark, Events } /* supplied by @types/embark in packages/core/typings */ from "embark";
+import { Events as CoreEvents } from "embark-core";
 import { Logger } from 'embark-logger';
 import Web3 from "web3";
 import EthAccounts from "./eth_accounts";
@@ -22,7 +23,7 @@ export default class RpcManager {
   constructor(private readonly embark: Embark) {
     this.events = embark.events;
     this.logger = embark.logger;
-    this.rpcModifierEvents = new Events();
+    this.rpcModifierEvents = (new CoreEvents() as Events);
     this.init();
   }
 

@@ -1,7 +1,7 @@
 import bodyParser from "body-parser";
 import "colors";
 import cors from "cors";
-import {Embark, Plugins} /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import {Embark, Plugins} /* supplied by @types/embark in packages/core/typings */ from "embark";
 import { __ } from "embark-i18n";
 import {embarkPath, findMonorepoPackageFromRootSync, isInsideMonorepoSync, monorepoRootPathSync} from "embark-utils";
 import express, {NextFunction, Request, Response} from "express";
