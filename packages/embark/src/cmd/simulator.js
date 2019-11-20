@@ -14,7 +14,7 @@ class Simulator {
     const cmds = [];
 
     const host = (dockerHostSwap(options.host || this.blockchainConfig.rpcHost) || defaultHost);
-    const configPort = this.blockchainConfig.wsRPC ? this.blockchainConfig.rpcPort : this.blockchainConfig.wsPort;
+    const configPort = this.blockchainConfig.wsRPC ? this.blockchainConfig.wsPort : this.blockchainConfig.rpcPort;
     let port = parseInt((options.port || configPort || 8545), 10);
 
     cmds.push("-p " + port);
