@@ -1,5 +1,6 @@
 import { __ } from 'embark-i18n';
 import { dappPath, embarkPath, normalizePath, toForwardSlashes } from 'embark-utils';
+import web3 from 'web3';
 const Npm = require('./npm.js');
 const {callbackify} = require('util');
 
@@ -44,6 +45,8 @@ class LibraryManager {
     let solcVersionInConfig = this.contractsConfig.versions["solc"];
 
     this.versions['solc'] = solcVersionInConfig;
+
+    this.versions.web3 = web3.version;
 
     Object.keys(this.versions).forEach(versionKey => {
       if (!this.isVersionable(versionKey)) return;
