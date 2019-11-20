@@ -15,6 +15,7 @@ export class BlockchainProcessLauncher {
     this.isDev = options.isDev;
     this.client = options.client;
     this.embark = options.embark;
+    this.isWhisper = !!this.communicationConfig;
   }
 
   processEnded(code) {
@@ -22,7 +23,7 @@ export class BlockchainProcessLauncher {
   }
 
   startBlockchainNode(readyCb) {
-    this.logger.info(__('Starting Blockchain node in another process').cyan);
+    this.logger.info(__(`Starting ${this.isWhisper ? "Whisper" : "Blockchain"} node in another process`).cyan);
 
     this.blockchainProcess = new ProcessLauncher({
       name: 'blockchain',
@@ -47,7 +48,7 @@ export class BlockchainProcessLauncher {
     });
 
     this.blockchainProcess.once('result', constants.blockchain.blockchainReady, () => {
-      this.logger.info(__('Blockchain node is ready').cyan);
+      this.logger.info(__(`${this.isWhisper ? "Whisper" : "Blockchain"} node is ready`).cyan);
       readyCb();
       // this.events.emit(constants.blockchain.blockchainReady);
     });
