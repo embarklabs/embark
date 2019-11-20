@@ -23,7 +23,7 @@ export default class RpcManager {
   constructor(private readonly embark: Embark) {
     this.events = embark.events;
     this.logger = embark.logger;
-    this.rpcModifierEvents = (new CoreEvents() as Events);
+    this.rpcModifierEvents = new CoreEvents() as Events;
     this.init();
   }
 
