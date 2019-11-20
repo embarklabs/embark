@@ -1,6 +1,6 @@
 import EmbarkAPI from 'embark-api-client';
 
-const embarkAPI = new EmbarkAPI()
+const embarkAPI = new EmbarkAPI();
 
 export function postCommand() {
   return embarkAPI.postCommand(...arguments)

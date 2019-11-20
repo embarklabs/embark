@@ -115,6 +115,7 @@ class Console extends Component {
             </Logs>
             {process.name === "embark" &&
               <AsyncTypeahead
+                id="console-typeahead"
                 autoFocus={true}
                 emptyLabel={false}
                 labelKey="value"
