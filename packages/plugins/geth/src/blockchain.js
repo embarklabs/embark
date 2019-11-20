@@ -26,6 +26,7 @@ var Blockchain = function(userConfig, clientClass, communicationConfig) {
   this.events = userConfig.events;
   this.isStandalone = userConfig.isStandalone;
   this.certOptions = userConfig.certOptions;
+  this.isWhisper = !!communicationConfig;
 
 
   let defaultWsApi = clientClass.DEFAULTS.WS_API;
@@ -165,7 +166,7 @@ Blockchain.prototype.run = function () {
   var self = this;
   this.logger.info("===============================================================================".magenta);
   this.logger.info("===============================================================================".magenta);
-  this.logger.info(__("Embark Blockchain using %s", self.client.prettyName.underline).magenta);
+  this.logger.info(__(`Embark ${this.isWhisper ? "Whisper" : "Blockchain"} using %s`, self.client.prettyName.underline).magenta);
   this.logger.info("===============================================================================".magenta);
   this.logger.info("===============================================================================".magenta);
 
