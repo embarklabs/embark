@@ -20,7 +20,7 @@ In this article, we're going to look into the commodity that would have  changed
 
 ### Nim Parallelism Primitives
 
-Nim has two flavorus of parallelism:
+Nim has two flavours of parallelism:
 
  * Structured parallelism via the parallel statement.
  * Unstructured parallelism via the standalone spawn statement.
@@ -69,11 +69,11 @@ The definitions of "concurrency" and "parallelism" sometimes get mixed up, but t
 
 A concurrent system is one that can be in charge of many tasks, although not necessarily executing them at the same time.  A good way to think of this is driving a car – the car can accelerate, brake & change gear, but they don't happen at the exact same time, although they *do* overlap.  This is concurrency.
 
-<center>![concurrency](https://dpzbhybb2pdcj.cloudfront.net/picheta/Figures/06fig01_alt.jpg)</center>
+![concurrency](https://dpzbhybb2pdcj.cloudfront.net/picheta/Figures/06fig01_alt.jpg)
 
 The human driving the car holds the clutch in, moves the gear lever in parallel, and then eases of the clutch at the exact same time as easing on the accelerator.  This is processes running in parallel, hence parallelism.
 
-<center>![parallelism](https://dpzbhybb2pdcj.cloudfront.net/picheta/Figures/06fig02_alt.jpg)</center>
+![parallelism](https://dpzbhybb2pdcj.cloudfront.net/picheta/Figures/06fig02_alt.jpg)
 
 At the moment, Crystal has concurrency support but not parallelism: several tasks can be executed, and a bit of time will be spent on each of these, but two code paths are never executed at the same exact time.  However, recently [Parallelism was tested out](https://crystal-lang.org/2019/09/06/parallelism-in-crystal.html) and I'm sure will be fully ready to use soon!
 
@@ -136,7 +136,7 @@ Something I look for in ***ALL*** modern programming languages, and something I 
 
 We can create a new app (library/binary) by using `nimble init`:
 
-![creating nimble app](../assets/images/nimble-creating-app.png)
+![creating nimble app](/assets/images/nimble-creating-app.png)
 
 I have to admit, although a simple thing, this is one of my favourite parts of the entire Nim ecosystem!  Being able to enter your selection variables while actually creating your app package is something I think is not only tremendously useful, but awesomely novel.  
 
@@ -177,7 +177,7 @@ One of the things I like most about Crystal is the excellent built-in tooling av
 
 ### Crystal Project Packaging
 
-Much the same as the Nimble package manager, ***although not as good in my opinion,*** Crystal has it's own built-in project scaffolder & package manager. I'd recommend using this at all times to ensure sematics are followed. We can use it with the following:
+Much the same as the Nimble package manager, ***although not as good in my opinion,*** Crystal has it's own built-in project scaffolder & package manager. I'd recommend using this at all times to ensure semantics are followed. We can use it with the following:
 
 ```
 $ crystal init lib my_app
@@ -245,7 +245,7 @@ We can use this tool to unify code styles and to submit documentation improvemen
 
 ### Kemal
 
-Obviously, there ***had*** to be a web framework appear in this list, seen as that's what absolutely **every** dev seems to want to implement.  My choice hereis my buddy [Serdar's](https://twitter.com/sdogruyol) library [Kemal](https://kemalcr.com/). One feature I really like about it, is how simple it makes it to utilise JSON & create a JSON API.  For example, accepting JSON in a POST request, parsing & mapping it directly to an object:
+Obviously, there ***had*** to be a web framework appear in this list, seen as that's what absolutely **every** dev seems to want to implement.  My choice here is my buddy [Serdar's](https://twitter.com/sdogruyol) library; [Kemal](https://kemalcr.com/). One feature I really like about it, is how simple it makes it to utilise JSON & create a JSON API.  For example, accepting JSON in a POST request, parsing & mapping it directly to an object:
 
 ``` crystal
 require "kemal"
