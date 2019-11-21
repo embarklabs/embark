@@ -29,10 +29,26 @@
     }
   }
   &__body {
-    margin-top: get-spacing-stack(xl);
+    margin-top: get-spacing-stack(m);
   }
 
   &__bottom {
     margin-top: get-spacing-stack(xl);
+  }
+
+  .two-columns {
+    columns: 2;
+    -webkit-columns: 2;
+    -moz-columns: 2;
+  }
+
+  .o-grid__column--1-1 {
+    text-align: center;
+  }
+
+  @include breakpoint(s) {
+    .o-grid__column--1-1 {
+      text-align: left;
+    }
   }
 }
