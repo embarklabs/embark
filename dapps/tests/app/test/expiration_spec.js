@@ -1,11 +1,12 @@
-/*global contract, config, it, assert, increaseTime*/
+/*global contract, config, it, assert, mineAtTimestamp*/
 const Expiration = require('Embark/contracts/Expiration');
+const now = Math.floor(new Date().getTime()/1000.0); // Get unix epoch. The getTime method returns the time in milliseconds.
 
 config({
   contracts: {
     deploy: {
       "Expiration": {
-        args: [Date.now() + 5000]
+        args: [now + 1000]
       }
     }
   }
@@ -18,7 +19,7 @@ contract("Expiration", function() {
   });
 
   it("should have expired after skipping time", async function () {
-    await increaseTime(5001);
+    await mineAtTimestamp(now + 1001); // sets block.timestamp to 1001
     const isExpired = await Expiration.methods.isExpired().call();
     assert.strictEqual(isExpired, true);
   });

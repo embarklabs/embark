@@ -161,6 +161,12 @@ class TestRunner {
       await this.evmMethod("evm_increaseTime", [Number(amount)]);
       await this.evmMethod("evm_mine");
     };
+
+    // Mines a block and sets block.timestamp accordingly.
+    // See https://github.com/trufflesuite/ganache-core/pull/13 for more information
+    global.mineAtTimestamp = async (timestamp) => {
+      return this.evmMethod("evm_mine", [parseFloat(timestamp)]);
+    };
   }
 
   generateCoverageReport() {

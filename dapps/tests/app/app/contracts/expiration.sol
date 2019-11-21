@@ -1,7 +1,7 @@
 pragma solidity ^0.4.25;
 
 contract Expiration {
-  uint public expirationTime; // In milliseconds
+  uint256 public expirationTime; // Unix epoch (seconds since 1/1/1970)
   address owner;
 
   constructor(uint expiration) public {
@@ -9,8 +9,7 @@ contract Expiration {
   }
 
   function isExpired() public view returns (bool retVal) {
-//    retVal = block.timestamp;
-    retVal = expirationTime < block.timestamp * 1000;
+    retVal = block.timestamp > expirationTime;
     return retVal;
   }
 }
