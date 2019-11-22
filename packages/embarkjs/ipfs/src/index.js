@@ -10,7 +10,7 @@ __embarkIPFS.setProvider = function (options) {
     try {
       if (!options) {
         self._config = options;
-        self._ipfsConnection = IpfsHttpClient('localhost', '5001');
+        self._ipfsConnection = IpfsHttpClient({host: 'localhost', port: 5001, protocol: 'http'});
         self._getUrl = "http://localhost:8080/ipfs/";
       } else {
         const ipfsOptions = {host: options.host || options.server, protocol: 'http'};
