@@ -53,7 +53,7 @@
     "embark-utils": "^5.0.0-alpha.1",
     "embarkjs": "^5.0.0-alpha.1",
     "embarkjs-ipfs": "^5.0.0-alpha.1",
-    "ipfs-http-client": "39.0.2",
+    "ipfs-http-client": "40.0.0",
     "shelljs": "0.8.3"
   },
   "devDependencies": {

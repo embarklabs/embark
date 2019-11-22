@@ -90,8 +90,9 @@ class IPFS {
   }
 
   async registerIpfsObject() {
-    const {host, port} = this.config;
-    let ipfs = IpfsHttpClient(host, port);
+    const {host, port, protocol} = this.config;
+    const ipfsOptions = protocol ? {host, port, protocol} : {host, port, protocol: 'http'};
+    let ipfs = IpfsHttpClient(ipfsOptions);
     await this.events.request2("runcode:register", "ipfs", ipfs);
   }
 
