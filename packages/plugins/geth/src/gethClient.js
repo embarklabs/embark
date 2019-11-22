@@ -13,8 +13,8 @@ const DEFAULTS = {
   "NETWORK_TYPE": "custom",
   "NETWORK_ID": 1337,
   "RPC_API": ['eth', 'web3', 'net', 'debug', 'personal'],
-  "WS_API": ['eth', 'web3', 'net', 'shh', 'debug', 'pubsub', 'personal'],
-  "DEV_WS_API": ['eth', 'web3', 'net', 'shh', 'debug', 'pubsub', 'personal'],
+  "WS_API": ['eth', 'web3', 'net', 'debug', 'pubsub', 'personal'],
+  "DEV_WS_API": ['eth', 'web3', 'net', 'debug', 'pubsub', 'personal'],
   "TARGET_GAS_LIMIT": 8000000
 };
 
@@ -322,17 +322,6 @@ class GethClient {
         if (config.bootnodes && config.bootnodes !== "" && config.bootnodes !== []) {
           args.push("--bootnodes=" + config.bootnodes);
           return callback(null, "--bootnodes=" + config.bootnodes);
-        }
-        callback("");
-      },
-      function whisper(callback) {
-        if (config.whisper) {
-          rpc_api.push('shh');
-          if (ws_api.indexOf('shh') === -1) {
-            ws_api.push('shh');
-          }
-          args.push("--shh");
-          return callback(null, "--shh ");
         }
         callback("");
       },

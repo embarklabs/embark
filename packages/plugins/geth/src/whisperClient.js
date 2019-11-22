@@ -9,9 +9,9 @@ const DEFAULTS = {
   "VERSIONS_SUPPORTED": ">=1.9.7",
   "NETWORK_TYPE": "custom",
   "NETWORK_ID": 1337,
-  "RPC_API": ['eth', 'web3', 'net', 'debug', 'personal'],
-  "WS_API": ['eth', 'web3', 'net', 'shh', 'debug', 'pubsub', 'personal'],
-  "DEV_WS_API": ['eth', 'web3', 'net', 'shh', 'debug', 'pubsub', 'personal'],
+  "RPC_API": ['web3'],
+  "WS_API": ['web3', 'shh'],
+  "DEV_WS_API": ['web3', 'shh'],
   "TARGET_GAS_LIMIT": 8000000
 };
 
