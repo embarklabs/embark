@@ -50,7 +50,7 @@
     "embark-i18n": "^5.0.0-alpha.1",
     "embark-utils": "^5.0.0-alpha.1",
     "embarkjs": "^5.0.0-alpha.1",
-    "mocha": "6.2.0",
+    "mocha": "6.2.2",
     "web3": "1.2.1"
   },
   "devDependencies": {
