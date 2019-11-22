@@ -81,53 +81,74 @@ A Crystal program executes in a single operating system thread, except the Garba
 
 ### Crystal Concurrency Primitives
 
-In Crystal, we can use the Spawn functionality in a very similar way to Goroutines in Golang, core.async in Clojure, or the lightweight threading in Elixir/Erlang.
+In Crystal, we can use the `Spawn` functionality in a very similar way to Goroutines in Golang, core.async in Clojure, or the threading in Nim.  When a program starts, it fires up a main `Fiber` that will execute your top-level code, from which we can spawn many other `Fibers`.
+
+`Fibers` are lightweight threads of execution that are managed by the garbage collector, so you don't *really* need to worry about managing them once you've spawned them.  Because of this, you could technically spin up 100 `Fibers` to make a bunch of API requests, and then simply forget about them.
+
+You *could* do this with OS threads, but `pthread_create` and `pthread_join` (the `libc` functions that usually back threads) are expensive system calls, so you really shouldn't.
+
+We can utilise `Spawn` in Crystal like so:
 
 ``` crystal
-channel = Channel(String).new
-1000.times do
-  spawn {
-    channel.send "Hello?"
-  }
-  puts channel.receive
+require "socket"
+
+def load(id, chan)
+  puts "ID=#{id}; START"
+  (id..11).each do
+    socket = TCPSocket.new("http://robin.percy.pw", 80)
+    socket.close
+  end
+  puts "ID=#{id}; FINISH"
+  chan.send nil
 end
+
+def main
+  chan = Channel(Nil).new
+  (1..10).each{|i| spawn(load(i,chan))}
+  # Wait
+  (1..10).each{chan.receive}
+end
+
+main
 ```
 
-Running this script with the crystal command, I got the following results:
+> To support concurrency, Crystal has to be able to switch fibers when a fiber performs non-blocking IO operations.
 
+In program above, a spawned task with lower-number id repeatedly creates a TCP socket, and does this more times than a task with a higher-number id. For example; task #1 establishes a TCP socket 11 times, and task #10 creates a TCP socket just once. So even though task #1 started long before task #10, task #10 *should* finish before task #1.  As you can see in the image below; it does just that!
+
+![Crystal spawn test](/assets/images/crystal-thread-test.png)
+
+Similar to Golang, Crystal uses channels to pass messages between spawned fibers.  Take the traditional Ping Pong channels example, in Crystal it looks like the following:
+
+``` crystal
+def ping(pings, message)
+  pings.send message
+end
+
+def pong(pings, pongs)
+  message = pings.receive
+  pongs.send message
+end
+
+pings = Channel(String).new
+pongs = Channel(String).new
+spawn ping pings, "passed message"
+spawn pong pings, pongs
+puts pongs.receive # => "passed message"
 ```
-$ time crystal spawntest.cr
 
-real    0m1.129s
-user    0m0.952s
-sys 0m0.276s
-```
-
-Hmmmm, very interesting indeed! Well, seen as Crystal is a compiled language and meant to be used to build small binaries that are easily distributed, it'd be a good idea to compile this small script and use that data instead! I compiled the script using the --release flag - this tells the Crystal compiler to optimise the bytecode.
-
-```
-$ crystal build --release spawntest.cr
-
-$ time ./spawntest
-
-real    0m0.008s
-user    0m0.004s
-sys     0m0.000s
-```
-
-As you can see, this result is markedly different. Using the --release flag when building the Crystal executable cuts out a lot of bloating and optimises the executable to be as efficient as possible. Obviously, the above test is a very naïve use of the Spawn functionality, and unfortunately, I haven't had the opportunity to test in a load-heavy production environment. But soon I fully intend to, and I'll write another article benchmarking this in detail when I have a good usecase and get the chance to!
-
+Unfortunately, I personally haven't had the opportunity to test Crystal's `Fibers` or Nim's `Spawn` in a load-heavy production environment. But soon I fully intend to, and I'll write another article benchmarking this in detail when I have a good usecase and get the chance to!
 
 
 # Tooling
 
 ## Built-in Tooling in Nim
 
-Now that [Nim 1.0 has been released](https://nim-lang.org/blog/2019/09/23/version-100-released.html), Nim's in=built tooling has improved to an excellent level and is very quickly reaching maturity.
+Now that [Nim 1.0 has been released](https://nim-lang.org/blog/2019/09/23/version-100-released.html), its in-built tooling has improved to a great level, and is very quickly reaching maturity.
 
-The standard library in Nim is fantastic.. Things like in-built database support for multiple db's, without using external packages like Crystal does, makes me extremely hopeful for Nim, and I believe it is definitely a language to consider!
+The standard library in Nim is fantastic...  Things like native database support for multiple db's, without using any external packages like Crystal does, makes me extremely hopeful for Nim.  I really do believe it is language worth considering, if it matches your production needs.  That being said, I am still an advocate of 'use the right tool for the job' – so don't go implementing Nim just for the sake of it!
 
-The only thing to consider is that Nim *does* seem to be slower in growth than Crystal.  The thing is; Nim has quite a few **less** core contributors than Crystal, so slower growth is to be expected!
+The only thing to keep in mind; is that Nim *does* seem to be slower in growth than Crystal.  The thing is – Nim has quite a few **less** core contributors than Crystal, so slower growth is to be expected!
 
 
 ### Nim Project Packaging
@@ -291,7 +312,7 @@ Back in 2012 when I quit writing Python and started exploring a bunch of other a
 
 It's fantastic seeing both Nim *and* Crystal adopting the aforementioned concurrency primitives.  I guess I have to give both languages a point there!
 
-I briefly touched on the smaller number of people on the Nimbus core team above, and this is something that's pretty unfortunate.  Nim is a language and an ecosystem that has **such** great promise, I would love to see more people contributing to it and utilising it in production systems.
+I briefly touched on the smaller number of people on the Nim core team above, and this is something that's pretty unfortunate.  Nim is a language and an ecosystem that has **such** great promise, I would love to see more people contributing to it and utilising it in production systems.
 
 The final article in this series, "Crypto, DApps & P2P", will be released over the coming days, so keep checking back.
 
