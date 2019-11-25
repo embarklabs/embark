@@ -44,7 +44,7 @@
     "solo": "embark-solo"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "7.6.3",
+    "@babel/runtime-corejs3": "7.7.4",
     "core-js": "3.3.5",
     "ipfs-http-client": "40.0.0"
   },

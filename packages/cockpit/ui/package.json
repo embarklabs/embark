@@ -42,8 +42,8 @@
     "watch:test": "react-scripts test"
   },
   "devDependencies": {
-    "@babel/core": "7.6.4",
-    "@babel/runtime": "7.6.3",
+    "@babel/core": "7.7.4",
+    "@babel/runtime": "7.7.4",
     "@coreui/coreui": "2.1.16",
     "@coreui/react": "2.1.0",
     "@emotion/core": "10.0.22",

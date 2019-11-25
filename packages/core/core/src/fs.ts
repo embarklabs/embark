@@ -43,7 +43,7 @@ export function statSync(args: any) { return fs.statSync(args); }
 export function readJSONSync(args: any, args2?: any) {
   let json;
   try {
-    json = parseJson(readFileSync(args, args2));
+    json = parseJson(readFileSync(args, args2).toString());
   } catch (e) {
     console.error('error: '.red + args.green.underline + ' ' + e.message.green);
     process.exit(1);
