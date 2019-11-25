@@ -42,7 +42,7 @@
     "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "7.6.3",
+    "@babel/runtime-corejs3": "7.7.4",
     "async": "2.6.1",
     "clone-deep": "4.0.0",
     "core-js": "3.3.5",
@@ -52,7 +52,7 @@
     "embark-logger": "^5.0.0-alpha.1"
   },
   "devDependencies": {
-    "@babel/core": "7.6.4",
+    "@babel/core": "7.7.4",
     "babel-jest": "24.9.0",
     "embark-solo": "^5.0.0-alpha.0",
     "embark-testing": "^5.0.0-alpha.1",

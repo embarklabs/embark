@@ -41,7 +41,7 @@
     "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "7.6.3",
+    "@babel/runtime-corejs3": "7.7.4",
     "colors": "1.3.2",
     "core-js": "3.3.5",
     "date-and-time": "0.6.2",
