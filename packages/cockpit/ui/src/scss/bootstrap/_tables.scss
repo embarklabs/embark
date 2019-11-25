@@ -6,6 +6,7 @@
   width: 100%;
   margin-bottom: $spacer;
   background-color: $table-bg; // Reset for nesting within parents with `background-color`.
+  color: $body-color;
   font-weight: bold;
 
   th,
@@ -90,6 +91,7 @@
   tbody tr {
     @include hover {
       background-color: $table-hover-bg;
+      color: $body-color;
     }
   }
 }
