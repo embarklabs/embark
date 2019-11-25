@@ -25,6 +25,9 @@ $ embark new <YourDappName>
 ```
 
 ## Creating apps from templates
+{% notification danger 'DEPRECATION NOTICE' %}
+The `--template` option has been deprecated in v5 and support will be removed in future versions.
+{% endnotification %}
 
 Another possible scenario to start from is taking advantage of a template. Embark [comes with templates](/templates) for various environments and frameworks, but you can also use any template created by the community. In order to create a new app from a template, use the `--template` option and either specify a supported template name, or a Git host URL.
 

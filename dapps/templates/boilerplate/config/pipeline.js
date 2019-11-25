@@ -7,6 +7,7 @@
 //   https://github.com/embark-framework/embark-flow-template
 // A new DApp can be created from that template with:
 //   embark new --template flow
+// NOTE: the `--template` option is DEPRECATED in v5.
 
 module.exports = {
   typescript: false,
@@ -20,6 +21,7 @@ module.exports = {
   //   https://github.com/embark-framework/embark-typescript-template
   // A new DApp can be created from that template with:
   //   embark new --template typescript
+  // NOTE: the `--template` option is DEPRECATED in v5.
   enabled: true 
   // Setting `enabled: false` in this config will disable Embark's built-in Webpack
   // pipeline. The developer will need to use a different frontend build tool, such as 

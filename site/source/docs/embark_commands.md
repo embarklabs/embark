@@ -16,7 +16,11 @@ Option | Description
 --- | ---
 `--contracts-only` | create a barebones project meant only for contract development
 `--simple` | an alias for `--contracts-only`
-`--template` | download a template using a known name or a git host URL
+`--template` | **DEPRECATED IN v5** download a template using a known name or a git host URL
+
+{% notification danger 'DEPRECATION NOTICE' %}
+The `--template` option has been deprecated in v5 and support will be removed in future versions.
+{% endnotification %}
 
 The `--template` option supports several URL styles and shortcuts for git hosts:
 
@@ -46,8 +50,6 @@ A short name can be used for templates maintained in the Embark GitHub organizat
 ```
 $ embark new --template typescript
 ```
-
-Please see our list of [officially supported templates](/templates/).
 
 ## demo
 
