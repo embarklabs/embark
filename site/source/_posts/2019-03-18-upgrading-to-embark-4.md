@@ -88,6 +88,9 @@ embark new --template embark-react-dapp my-dapp
 cd my-dapp
 embark run
 ```
+{% notification danger 'DEPRECATION NOTICE' %}
+The `--template` option has been deprecated in v5 and support will be removed in future versions.
+{% endnotification %}
 
 Then, in another terminal,
 

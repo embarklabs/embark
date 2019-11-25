@@ -38,7 +38,7 @@ class Cmd {
 
   newApp() {
 
-    let validateName = function(value) {
+    let validateName = function (value) {
       try {
         if (value.match(/^[a-zA-Z\s-]+$/)) return value;
       } catch (e) {
@@ -52,9 +52,13 @@ class Cmd {
       .option('--simple', __('an alias for --contracts-only'))
       .option('--contracts-only', __('create a barebones project meant only for contract development'))
       .option('--locale [locale]', __('language to use (default: en)'))
-      .option('--template <name/url>', __('download a template using a known name or a git host URL'))
-      .action(function(name, options) {
+      .option('--template <name/url>', __('DEPRECATED download a template using a known name or a git host URL'))
+      .action(function (name, options) {
         setOrDetectLocale(options.locale);
+
+        if (options.template) {
+          console.warn('--template has been deprecated and will be removed in future versions.');
+        }
 
         if (options.contractsOnly && options.template) {
           console.error('invalid: --contracts-only and --template options cannot be used together'.red);
@@ -68,7 +72,7 @@ class Cmd {
           return promptly.prompt(__("Name your app (default is %s):", 'embarkDapp'), {
             default: "embarkDApp",
             validator: validateName
-          }, function(err, inputvalue) {
+          }, function (err, inputvalue) {
             if (err) {
               console.error(__('Invalid name') + ':', err.message);
               // Manually call retry
@@ -97,15 +101,16 @@ class Cmd {
     program
       .command('demo')
       .option('--locale [locale]', __('language to use (default: en)'))
-      .option('--template <name/url>', __('download a demo template using a known name or a git host URL'))
+      .option('--template <name/url>', __('[DEPRECATED] download a demo template using a known name or a git host URL'))
       .description(__('create a working dapp with a SimpleStorage contract'))
-      .action(function(options) {
+      .action(function (options) {
         setOrDetectLocale(options.locale);
-        if(options.template) {
+        if (options.template) {
           const hostedGitInfo = require('hosted-git-info');
           const hgi = hostedGitInfo.fromUrl(options.template);
-          const url = !hgi ? `embark-framework/embark-${options.template}-template#demo`:options.template;
-          const folderName = !hgi ? `embark_${options.template}_demo`:'template_demo';
+          const url = !hgi ? `embark-framework/embark-${options.template}-template#demo` : options.template;
+          const folderName = !hgi ? `embark_${options.template}_demo` : 'template_demo';
+          console.warn('--template has been deprecated and will be removed in future versions.');
           embark.generateTemplate('demo', './', folderName, url);
         } else {
           embark.generateTemplate('demo', './', 'embark_demo');
@@ -123,7 +128,7 @@ class Cmd {
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('--pipeline [pipeline]', __('webpack config to use (default: production)'))
       .description(__('deploy and build dapp at ') + 'dist/ (default: development)')
-      .action(function(env, _options) {
+      .action(function (env, _options) {
         setOrDetectLocale(_options.locale);
         _options.env = env || 'development';
         _options.logFile = _options.logfile; // fix casing
@@ -150,7 +155,7 @@ class Cmd {
       .option('--pipeline [pipeline]', __('webpack config to use (default: development)'))
       .option('--no-single-use-auth-token', __('disable the single use of token in cockpit'))
       .description(__('run dapp (default: %s)', 'development'))
-      .action(function(env, options) {
+      .action(function (env, options) {
         setOrDetectLocale(options.locale);
         embark.run({
           env: env || 'development',
@@ -179,7 +184,7 @@ class Cmd {
       .option('--pipeline [pipeline]', __('webpack config to use (default: development)'))
       .option('--no-single-use-auth-token', __('disable the single use of token in cockpit'))
       .description(__('Start the Embark console'))
-      .action(function(env, options) {
+      .action(function (env, options) {
         setOrDetectLocale(options.locale);
         embark.console({
           env: env || 'development',
@@ -209,7 +214,7 @@ class Cmd {
       .option('--pipeline [pipeline]', __('webpack config to use (default: development)'))
       .option('--no-single-use-auth-token', __('disable the single use of token in cockpit'))
       .description(__('run dapp (default: %s)', 'development'))
-      .action(function(env, options) {
+      .action(function (env, options) {
         setOrDetectLocale(options.locale);
         embark.blockchain({
           env: env || 'development',
@@ -240,7 +245,7 @@ class Cmd {
       .option('-l, --gasLimit [gasLimit]', __('custom gas limit (default: %s)', '8000000'))
       .option('--locale [locale]', __('language to use (default: en)'))
 
-      .action(function(env, options) {
+      .action(function (env, options) {
         setOrDetectLocale(options.locale);
         embark.initConfig(env || 'development', {
           embarkConfig: 'embark.json',
@@ -261,9 +266,9 @@ class Cmd {
       .command('test [file]')
       .option('-e, --env <env>', __('configuration environment to use (default: test)'))
       .option('-n , --node <node>', __('node for running the tests ["vm", "embark", <endpoint>] (default: vm)\n') +
-              '                       vm - ' + __('start and use an Ethereum simulator (ganache)') + '\n' +
-              '                       embark - ' + __('use the node of a running embark process') + '\n' +
-              '                       <endpoint> - ' + __('connect to and use the specified node'))
+        '                       vm - ' + __('start and use an Ethereum simulator (ganache)') + '\n' +
+        '                       embark - ' + __('use the node of a running embark process') + '\n' +
+        '                       <endpoint> - ' + __('connect to and use the specified node'))
       .option('--gasDetails', __('print the gas cost for each contract deployment when running the tests. Deprecated: Please use --gas-details'))
       .option('-d , --gas-details', __('print the gas cost for each contract deployment when running the tests'))
       .option('-t , --tx-details', __('print the details of the transactions that happen during tests'))
@@ -272,7 +277,7 @@ class Cmd {
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'warn')
       .option('--solc', __('run only solidity tests'))
       .description(__('run tests'))
-      .action(function(file, options) {
+      .action(function (file, options) {
         const node = options.node || 'vm';
         const urlRegexExp = /^(vm|embark|((ws|https?):\/\/([a-zA-Z0-9_.-]*):?([0-9]*)?))$/i;
         if (!urlRegexExp.test(node)) {
@@ -310,7 +315,7 @@ class Cmd {
       .option('-c, --client [client]', __('Use a specific ethereum client [%s] (default: %s)', 'geth, parity', 'geth'))
       .option('--pipeline [pipeline]', __('webpack config to use (default: production)'))
       .description(__('Upload your dapp to a decentralized storage') + '.')
-      .action(function(env, _options) {
+      .action(function (env, _options) {
         setOrDetectLocale(_options.locale);
         if (env === "ipfs" || env === "swarm") {
           console.warn(("did you mean " + "embark upload".bold + " ?").underline);
@@ -334,7 +339,7 @@ class Cmd {
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('--output [svgfile]', __('filepath to output SVG graph to (default: %s)', diagramPath()))
       .description(__('generates documentation based on the smart contracts configured'))
-      .action(function(env, options) {
+      .action(function (env, options) {
         setOrDetectLocale(options.locale);
         embark.graph({
           env: env || 'development',
@@ -354,7 +359,7 @@ class Cmd {
       .option('--contract-language <language>', 'Language used for the smart contract generation (default: solidity)')
       .option('--overwrite', 'Overwrite existing files. (default: false)')
       .description(__('Generates a contract and a function tester for you\nExample: ContractName field1:uint field2:address --contract-language solidity --framework react'))
-      .action(function(contractOrFile, fields, options) {
+      .action(function (contractOrFile, fields, options) {
         setOrDetectLocale(options.locale);
         options.env = 'development';
         options.logFile = options.logfile; // fix casing
@@ -374,7 +379,7 @@ class Cmd {
       .command('reset')
       .option('--locale [locale]', __('language to use (default: en)'))
       .description(__('resets embarks state on this dapp including clearing cache'))
-      .action(function(options) {
+      .action(function (options) {
         setOrDetectLocale(options.locale);
         embark.initConfig('development', {
           embarkConfig: 'embark.json', interceptLogs: false
@@ -390,7 +395,7 @@ class Cmd {
       .command('eject-build-config')
       .alias('eject-webpack')
       .description(__('copy the default build config into your dapp for customization'))
-      .action(function() {
+      .action(function () {
         embark.initConfig('development', {
           embarkConfig: 'embark.json',
           interceptLogs: false
@@ -403,7 +408,7 @@ class Cmd {
     program
       .command('version')
       .description(__('output the version number'))
-      .action(function() {
+      .action(function () {
         console.log(embark.version);
         process.exit(0);
       });
@@ -413,7 +418,7 @@ class Cmd {
     program
       .command('help')
       .description(__('output usage information and help information'))
-      .action(function() {
+      .action(function () {
         console.log("Documentation can be found at: ".green + "https://embark.status.im/docs/".underline.green);
         console.log("");
         console.log("Have an issue? submit it here: ".green + "https://github.com/embark-framework/embark/issues/new".underline.green);
@@ -425,7 +430,7 @@ class Cmd {
 
   otherCommands() {
     program
-      .action(function(cmd) {
+      .action(function (cmd) {
         console.log((__('unknown command') + ' "%s"').red, cmd);
 
         let suggestion;
@@ -435,7 +440,7 @@ class Cmd {
           // similar enough
           suggestion = 'build --contracts';
         } else {
-          const {proposeAlternative} = require('embark-utils');
+          const { proposeAlternative } = require('embark-utils');
           let dictionary = ['new', 'demo', 'build', 'run', 'blockchain', 'simulator', 'test', 'upload', 'version', 'console', 'eject-webpack', 'graph', 'help', 'reset'];
           suggestion = proposeAlternative(cmd, dictionary);
         }
