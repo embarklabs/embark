@@ -196,7 +196,10 @@ class EmbarkController {
           engine.events.emit("status", __("Ready").green);
         });
 
-        engine.startEngine(async () => {
+        engine.startEngine(async (err) => {
+          if (err) {
+            return callback(err);
+          }
           callback();
 
           engine.events.request("webserver:start");
@@ -229,8 +232,12 @@ class EmbarkController {
       }
     ], function (err, _result) {
       if (err) {
-        engine.logger.error(err.message);
-        engine.logger.info(err.stack);
+        if (err.message && err.stack) {
+          engine.logger.error(err.message);
+          engine.logger.info(err.stack);
+        } else {
+          engine.logger.error(err);
+        }
       } else {
         // engine.events.emit('firstDeploymentDone');
       }
