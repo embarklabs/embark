@@ -116,9 +116,7 @@ export class Engine {
     if (this.plugins) {
       this.plugins.emitAndRunActionsForEvent("embark:engine:started", {}, (err) => {
         if (err) {
-          console.error("error starting engine");
-          console.error(err);
-          process.exit(1);
+          return cb(err);
         }
         cb();
       });
