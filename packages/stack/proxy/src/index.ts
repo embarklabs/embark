@@ -93,9 +93,10 @@ export default class ProxyManager {
     this.inited = true;
 
     // setup ports
-    const port = await findNextPort(this.embark.config.blockchainConfig.rpcPort + constants.blockchain.servicePortOnProxy);
-    this.rpcPort = port;
-    this.wsPort = port + 1;
+    const rpcPort = await findNextPort(this.embark.config.blockchainConfig.rpcPort + constants.blockchain.servicePortOnProxy);
+    const wsPort = await findNextPort(this.embark.config.blockchainConfig.wsPort + constants.blockchain.servicePortOnProxy);
+    this.rpcPort = rpcPort;
+    this.wsPort = wsPort;
 
     // setup proxy details
     this.isVm = this.embark.config.blockchainConfig.client === constants.blockchain.vm;

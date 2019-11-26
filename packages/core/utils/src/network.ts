@@ -8,7 +8,7 @@ export function findNextPort(port: number) {
   return new Promise<number>((resolve) => {
     server.once("close", () => resolve(port));
     server.on("error", () => resolve(findNextPort(port + 1)));
-    server.listen(port, () => server.close());
+    server.listen(port, 'localhost', () => server.close());
   });
 }
 
