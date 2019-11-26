@@ -1,4 +1,5 @@
 variables:
+  YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
   ipfsVersion: '0.4.22'
   node10: '^10.17.0'
   pythonVersion: '2.7.x'
@@ -72,12 +73,21 @@ steps:
   condition: succeeded()
   displayName: 'Install Yarn'
 
+- task: Cache@2
+  inputs:
+    key: 'yarn | "$(Agent.OS)" | yarn.lock'
+    restoreKeys: |
+       yarn | "$(Agent.OS)"
+       yarn
+    path: $(YARN_CACHE_FOLDER)
+  displayName: 'Cache Yarn packages'
+
 - bash: |
     pushd "$PWD" &>/dev/null
     cd ../Downloads
     export PATH="${PWD}/go-ipfs:${PATH}"
     export PATH="${HOME}/.yarn/bin:${HOME}/.config/yarn/global/node_modules/.bin:${PATH}"
-    yarn config set cache-folder "${PWD}/Yarn" &>/dev/null
+    yarn config set cache-folder "${YARN_CACHE_FOLDER}" &>/dev/null
     popd &>/dev/null
     npm run ci:full
   condition: and( succeeded(), ne( variables['Agent.OS'], 'Windows_NT' ) )
@@ -88,7 +98,7 @@ steps:
     cd ..\Downloads
     $env:PATH="$($PWD.Path)\go-ipfs;$($env:PATH)"
     $env:PATH="$($env:USERPROFILE)\.yarn\bin;$($env:USERPROFILE)\.config\yarn\global\node_modules\.bin;$($env:PATH)"
-    yarn config set cache-folder "$($PWD.Path)\Yarn" | out-null
+    yarn config set cache-folder "$($YARN_CACHE_FOLDER)" | out-null
     popd
     npm run ci:full
   condition: and( succeeded(), eq( variables['Agent.OS'], 'Windows_NT' ) )
