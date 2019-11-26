@@ -10,8 +10,8 @@ module.exports = {
   // assumed to be the intended environment by `embark run`
   development: {
     connection: {
-      host: "localhost", // Host of the blockchain node
-      port: 8557, // Port of the blockchain node
+      host: "localhost", // Host of the provider node
+      port: 8547, // Port of the provider node
       type: "ws" // Type of connection (ws or rpc)
     }
   },

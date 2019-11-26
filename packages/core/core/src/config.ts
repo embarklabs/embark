@@ -569,7 +569,7 @@ export class Config {
         available_providers: ["whisper"],
         connection: {
           host: defaultHost,
-          port: 8557,
+          port: 8547,
           type: "ws"
         }
       }
