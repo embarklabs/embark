@@ -207,7 +207,7 @@ Blockchain.prototype.run = function () {
     // TOCHECK I don't understand why stderr and stdout are reverted.
     // This happens with Geth and Parity, so it does not seems a client problem
     self.child.stdout.on("data", (data) => {
-      self.logger.info(`${self.client.name} error: ${data}`);
+      self.logger.error(`${self.client.name} error: ${data}`);
     });
 
     self.child.stderr.on("data", async (data) => {

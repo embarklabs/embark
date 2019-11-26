@@ -25,7 +25,7 @@ export class BlockchainProcessLauncher {
     this.logger.info(__("Starting Whisper node in another process").cyan);
 
     this.blockchainProcess = new ProcessLauncher({
-      name: "blockchain",
+      name: "blockchainWhisper",
       modulePath: joinPath(__dirname, "./blockchainProcess.js"),
       logger: this.logger,
       events: this.events,
