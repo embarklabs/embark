@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.7.4",
-    "core-js": "3.3.5",
+    "core-js": "3.4.3",
     "web3": "1.2.1"
   },
   "devDependencies": {
