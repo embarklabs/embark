@@ -13,7 +13,183 @@ Welcome back to my series comparing the two sweethearts of the modern low-level 
 
 In [article #2](/news/2019/11/21/nim-vs-crystal-part-2-threading-tooling/); I looked at the Concurrency primitives of both languages, and explored the in-built tooling.  As I said in that article, one of the biggest factors I look at when considering adopting a new language is the tooling ecosystem that surrounds it.  This includes, but is not limited to:  A comprehensive package manager, an intuitive testing suite, a good project scaffolder, and an in-built formatter/linter to ensure my code stays semantically correct – especially if I know I will be working in Open Source repos others will contribute to.  But they're just the high-level tools.
 
-From a low-level perspective; I look for efficient technology in the Garbage Collector, threading paradigms / concurrency primitives that not only work really well making our application perform better, but are also relatively simple and intuitive to use.  I have, in my past, seen some truly shocking examples of languages I love trying to handle multi-threading \*cough* ***Ruby*** \*cough*. I also like to see a standard library that learns from previous, successful languages, and implements these much-requested features right from the beginning; (I'm looking at you, Golang with your Generics fiasco!)
+From a low-level perspective; I look for efficient use of technology in features such as in-memory storage, caching, garbage collection, and concurrency primitives that not just *markedly* improve our application performance, but that are also relatively simple and intuitive to use.  I see this as particularly important as I have, in my past, seen some truly shocking examples of trying to handle multi-threading, from languages that I love \*cough* ***Ruby*** \*cough*. I also like to see a fully-featured standard library that takes influence from previous successful languages.  However, I digress...
 
-I regret to say that this is the final article in this specific series!  It's been good fun for me; getting to the know the ins-and-outs of Nim more.  I've also re-grown a fresh appreciation for Crystal, having put it on the back-burner for quite some time...
+I regret to say that this is the final article in this series!  It's been good fun for me; getting to the know the ins-and-outs of Nim, and to re-grow a fresh appreciation of Crystal, having put it on the back-burner for quite some time.  However,  whether the final article in the series or not, it's going to be a good one!  We're going to be covering the benefits to the Cryptocurrency / DApp industries from both Crystal and Nim.  So without further ado, let's dive on in!
 
+
+# Cryptocurrency
+
+Hypothetically; if we were to build our own Cryptocurrency platform, Crystal and Nim would be good languages to consider for doing so.  (This is a blog series I'm going to write in the near future, so deciding which language to use will be heavily influenced by ***this*** blog series!)
+
+For our hypothetical Cryptocurrency, we would need to be able to build out a decent hashing system, an intelligent key manager, utilise smart algorithms, and all of this atop of a distributed, decentralised virtual machine / node manager.  Now, all of this sounds like a ***very*** tall order!  For all of these feature requirements to be met by a single programming language, means that said language is going to have to be **ONE HELL** of an impressive piece of technology.
+
+Happily, both Crystal *and* Nim would allow us this functionality.
+
+
+## In Crystal:
+
+## In Nim:
+
+
+
+# Building, Signing & Sending an Ethereum Transaction
+
+Although for the sake of this article, I didn't have time to build out a more low-level version of this action, it actually works in my favour, as I get to show off the native HTTP library for Crystal.
+
+## In Crystal:
+
+``` crystal
+require "http/client"
+
+module Ethereum
+  class Transaction
+
+    # /ethereum/create/ Create - Ethereum::Transaction.create(args)
+    def self.create(to : String, from : String, amount : UInt64, gas_price : UInt64? = nil, gas_limit : UInt64? = nil) : EthereumToSign | ErrorMessage
+
+      headers = HTTP::Headers.new
+      if ENV["ONCHAIN_API_KEY"]? != nil
+        headers.add("X-API-KEY", ENV["ONCHAIN_API_KEY"])
+      end
+
+      response = HTTP::Client.post "https://onchain.io/api/ethereum/create//?to=#{to}&from=#{from}&amount=#{amount}&gas_price=#{gas_price}&gas_limit=#{gas_limit}", headers: headers
+
+      return ErrorMessage.from_json response.body if response.status_code != 200
+
+      ethereumtosign = EthereumToSign.from_json response.body
+
+
+      return ethereumtosign
+    end
+
+    # /ethereum/sign_and_send/ Sign and send - Ethereum::Transaction.sign_and_send(args)
+    def self.sign_and_send(to : String, from : String, amount : UInt64, r : String, s : String, v : String, gas_price : UInt64? = nil, gas_limit : UInt64? = nil) : SendStatus | ErrorMessage
+
+      headers = HTTP::Headers.new
+      if ENV["ONCHAIN_API_KEY"]? != nil
+        headers.add("X-API-KEY", ENV["ONCHAIN_API_KEY"])
+      end
+
+      response = HTTP::Client.post "https://onchain.io/api/ethereum/sign_and_send//?to=#{to}&from=#{from}&amount=#{amount}&r=#{r}&s=#{s}&v=#{v}&gas_price=#{gas_price}&gas_limit=#{gas_limit}", headers: headers
+
+      return ErrorMessage.from_json response.body if response.status_code != 200
+
+      sendstatus = SendStatus.from_json response.body
+
+
+      return sendstatus
+    end
+
+  end
+end
+```
+
+Then, in our application we could simply call:
+
+```
+Ethereum::Transaction.create("0xA02378cA1c24767eCD776aAFeC02158a30dc01ac", "0xA02378cA1c24767eCD776aAFeC02158a30dc01ac", 80000)
+```
+
+And we would get a response similar to the following, ready to be signed and sent to the Ethereum network:
+
+```
+{
+  "tx": "02000000011cd5d7621e2a7c9403e54e089cb0b5430b83ed13f1b897d3e319b100ba1b059b01000000db00483045022100d7534c80bc0a42addc3d955f74e31610aa78bf15d79ec4df4c36dc98e802f5200220369cab1bccb2dbca0921444ce3fafb15129fa0494d041998be104df39b8895ec01483045022100fe48c4c1d46e163acaff6b0d2e702812d20",
+  "hash_to_sign": "955f74e31610aa78bf15d79ec4df4c36dc98e802f52002"
+}
+```
+
+
+## In Nim:
+
+From a low-level perspective, instead of using an HTTP library as in the Crystal example above, we can use Status' very own Nim-Ethereum library to build our Ethereum transaction.  Assuming we have imported `nim-eth` into our Nimble project, our Ethereum transaction can be built atop of the following:
+
+``` nim
+import
+  nim-eth/[common, rlp, keys], nimcrypto
+
+proc initTransaction*(nonce: AccountNonce, gasPrice, gasLimit: GasInt, to: EthAddress,
+  value: UInt256, payload: Blob, V: byte, R, S: UInt256, isContractCreation = false): Transaction =
+  result.accountNonce = nonce
+  result.gasPrice = gasPrice
+  result.gasLimit = gasLimit
+  result.to = to
+  result.value = value
+  result.payload = payload
+  result.V = V
+  result.R = R
+  result.S = S
+  result.isContractCreation = isContractCreation
+
+type
+  TransHashObj = object
+    accountNonce:  AccountNonce
+    gasPrice:      GasInt
+    gasLimit:      GasInt
+    to {.rlpCustomSerialization.}: EthAddress
+    value:         UInt256
+    payload:       Blob
+    mIsContractCreation {.rlpIgnore.}: bool
+
+proc read(rlp: var Rlp, t: var TransHashObj, _: type EthAddress): EthAddress {.inline.} =
+  if rlp.blobLen != 0:
+    result = rlp.read(EthAddress)
+  else:
+    t.mIsContractCreation = true
+
+proc append(rlpWriter: var RlpWriter, t: TransHashObj, a: EthAddress) {.inline.} =
+  if t.mIsContractCreation:
+    rlpWriter.append("")
+  else:
+    rlpWriter.append(a)
+
+const
+  EIP155_CHAIN_ID_OFFSET* = 35
+
+func rlpEncode*(transaction: Transaction): auto =
+  # Encode transaction without signature
+  return rlp.encode(TransHashObj(
+    accountNonce: transaction.accountNonce,
+    gasPrice: transaction.gasPrice,
+    gasLimit: transaction.gasLimit,
+    to: transaction.to,
+    value: transaction.value,
+    payload: transaction.payload,
+    mIsContractCreation: transaction.isContractCreation
+    ))
+
+func rlpEncodeEIP155*(tx: Transaction): auto =
+  let V = (tx.V.int - EIP155_CHAIN_ID_OFFSET) div 2
+  # Encode transaction without signature
+  return rlp.encode(Transaction(
+    accountNonce: tx.accountNonce,
+    gasPrice: tx.gasPrice,
+    gasLimit: tx.gasLimit,
+    to: tx.to,
+    value: tx.value,
+    payload: tx.payload,
+    isContractCreation: tx.isContractCreation,
+    V: V.byte,
+    R: 0.u256,
+    S: 0.u256
+    ))
+
+func txHashNoSignature*(tx: Transaction): Hash256 =
+  # Hash transaction without signature
+  return keccak256.digest(if tx.V.int >= EIP155_CHAIN_ID_OFFSET: tx.rlpEncodeEIP155 else: tx.rlpEncode)
+```
+
+*Note* - I do realise the above Nim code example and the Crystal examples are different - I fully intended them to be.  The Crystal example allowed me to further show off the HTTP library I touched on in the last article, and the Nim example allowed me to go to a lower-level; something I think brings the article relevancy full circle.
+
+
+[The `Eth` Common Library](https://github.com/status-im/nim-eth/) contains a whole bunch of useful Nim libraries for interacting with the Ethereum Network, including:
+
+ - [Recursive Length Prefix encoding (RLP)](https://github.com/status-im/nim-eth/blob/master/doc/rlp.md),
+ - [P2P](https://github.com/status-im/nim-eth/blob/master/doc/p2p.md),
+ - [Eth-keys](https://github.com/status-im/nim-eth/blob/master/doc/keys.md),
+ - [Eth-keyfile](https://github.com/status-im/nim-eth/blob/master/doc/keyfile.md),
+ - [Ethereum Trie structure](https://github.com/status-im/nim-eth/blob/master/doc/trie.md), and
+ - [Ethereum Bloom Filter](https://github.com/status-im/nim-eth/blob/master/doc/bloom.md).
+
+If you are going to be working in the Ethereum ecosystem using Nim, it goes without saying that these utilities are absolutely essential.  With Status & the [Nimbus](https://nimbus.team) team being such early adopters and major contributors to the Nim universe, you are more than likely to stumble across our code sooner or later! 
