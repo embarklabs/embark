@@ -48,7 +48,7 @@ class SolcW {
     const connectionTimeout = setTimeout(() => {
       cb('No compiler through IPC connection');
     }, 1000);
-    this.ipc.request('testConnection', () => {
+    this.ipc.request('testConnection', {}, () => {
       // Connection works, the compiler is available through IPC
       clearTimeout(connectionTimeout);
       cb();
@@ -93,8 +93,8 @@ class SolcW {
 
     if (this.ipc.isServer()) {
       this.ipc.on('compile', this.compile.bind(this));
-      this.ipc.on('testConnection', (cb) => {
-        cb(true);
+      this.ipc.on('testConnection', (_options, cb) => {
+        cb();
       });
     }
   }

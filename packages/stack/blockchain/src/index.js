@@ -20,6 +20,12 @@ class Blockchain {
 
     embark.registerActionForEvent("pipeline:generateAll:before", this.addArtifactFile.bind(this));
 
+    if (options.ipc.isServer()) {
+      options.ipc.on('blockchain:node', (_message, cb) => {
+        cb(null, this.blockchainConfig.endpoint);
+      });
+    }
+
     this.blockchainNodes = {};
     this.events.setCommandHandler("blockchain:node:register", (clientName, { isStartedFn, launchFn, stopFn }) => {
 
