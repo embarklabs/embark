@@ -66,7 +66,7 @@
     "embark-core": "^5.0.0-alpha.1",
     "embark-i18n": "^5.0.0-alpha.1",
     "embark-utils": "^5.0.0-alpha.1",
-    "file-loader": "4.2.0",
+    "file-loader": "5.0.2",
     "find-up": "4.1.0",
     "fs-extra": "8.1.0",
     "glob": "7.1.4",
