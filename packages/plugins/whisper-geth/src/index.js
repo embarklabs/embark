@@ -25,8 +25,8 @@ class Whisper {
     this.api = new API(embark);
     this.whisperNodes = {};
 
-    this.events.request("embarkjs:plugin:register", "messages", "whisper", "embarkjs-whisper");
-    this.events.request("embarkjs:console:register", "messages", "whisper", "embarkjs-whisper");
+    this.events.request("embarkjs:plugin:register", "messages", "whisper", "embarkjs-whisper-v6");
+    this.events.request("embarkjs:console:register", "messages", "whisper", "embarkjs-whisper-v6");
 
     this.events.request("communication:node:register", "whisper", (readyCb) => {
       this.events.request("processes:register", "communication", {

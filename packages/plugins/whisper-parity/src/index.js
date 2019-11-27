@@ -23,8 +23,17 @@ class Whisper {
     this.api = new API(embark);
     this.whisperNodes = {};
 
-    this.events.request("embarkjs:plugin:register", "messages", "whisper", "embarkjs-whisper");
-    this.events.request("embarkjs:console:register", "messages", "whisper", "embarkjs-whisper");
+    this.events.request("embarkjs:plugin:register", "messages", "whisper", "embarkjs-whisper-parity");
+    this.events.request("embarkjs:console:register", "messages", "whisper", "embarkjs-whisper-parity");
+    this.embark.registerActionForEvent("blockchain:proxy:request", (params, callback) => {
+      if (params.request.method !== "shh_subscribe") {
+        return callback(null, params);
+      }
+      if (params.request.params[0] === "messages") {
+        params.request.params = params.request.params.slice(1);
+      }
+      callback(null, params);
+    });
 
     this.events.request("communication:node:register", "whisper", (readyCb) => {
       this.events.request("processes:register", "communication", {

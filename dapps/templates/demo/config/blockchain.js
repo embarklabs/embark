@@ -4,7 +4,7 @@ module.exports = {
   // default applies to all environments
   default: {
     enabled: true,
-    client: "geth" // Can be geth or parity (default:geth)
+    client: "parity" // Can be geth or parity (default:geth)
   },
 
   development: {

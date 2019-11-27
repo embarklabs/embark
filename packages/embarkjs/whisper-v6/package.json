@@ -1,10 +1,10 @@
 {
-  "name": "embarkjs-whisper",
+  "name": "embarkjs-whisper-v6",
   "version": "5.0.0-alpha.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
-  "description": "Whisper plugin for embarkjs",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embarkjs/whisper#readme",
+  "description": "Whisper v6 plugin for embarkjs",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embarkjs/whisper-v6#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [
     "blockchain",
@@ -17,7 +17,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/embarkjs/whisper",
+    "directory": "packages/embarkjs/whisper-v6",
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },

@@ -1742,6 +1742,14 @@
     core-js "^2.6.5"
     regenerator-runtime "^0.13.2"
 
+"@babel/runtime-corejs3@7.6.3":
+  version "7.6.3"
+  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.6.3.tgz#a2b2b7ceea6ecb37ff822d293a312f1f00c29b84"
+  integrity sha512-933SXHQr7apa95F+3IqkBne8mqOnu1kDh6dnSddC07aW/R51WsOVD7MSczJ6DRpq/L8KLll7TFDxmt30pft44w==
+  dependencies:
+    core-js-pure "^3.0.0"
+    regenerator-runtime "^0.13.2"
+
 "@babel/runtime-corejs3@7.7.4":
   version "7.7.4"
   resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.7.4.tgz#f861adc1cecb9903dfd66ea97917f02ff8d79888"
@@ -7097,6 +7105,11 @@ core-js@3.2.1:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.2.1.tgz#cd41f38534da6cc59f7db050fe67307de9868b09"
   integrity sha512-Qa5XSVefSVPRxy2XfUC13WbvqkxhkwB3ve+pgCQveNgYzbM/UxZeu1dcOX/xr4UmfUd+muuvsaxilQzCyUurMw==
 
+core-js@3.3.5:
+  version "3.3.5"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.3.5.tgz#58d20f48a95a07304b62ff752742b82b56431ed8"
+  integrity sha512-0J3K+Par/ZydhKg8pEiTcK/9d65/nqJOzY62uMkjeBmt05fDOt/khUVjDdh8TpeIuGQDy1yLDDCjiWN/8pFIuw==
+
 core-js@3.4.3:
   version "3.4.3"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.4.3.tgz#09ea102412a368d5f73d24f082e41ac90c633a49"
@@ -8332,6 +8345,16 @@ embark-test-contract-1@0.0.1, embark-test-contract-1@^0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/embark-test-contract-1/-/embark-test-contract-1-0.0.1.tgz#802b84150e8038fef6681a3f23b6f4c0dc5b3e80"
   integrity sha512-yFaXMOXOMfYRNFOKEspdXrZzyovceWedtegHtbfs8RZWRzRYY+v6ZDtGm13TRJt3Qt4VZhKky0l7G/SHZMGHCA==
+
+embarkjs-whisper@^5.0.0-alpha.1:
+  version "5.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/embarkjs-whisper/-/embarkjs-whisper-5.0.0-alpha.1.tgz#a8d1d2d3d6d9ddb733386fb8625f77aca052025c"
+  integrity sha512-hSyWlVM1TBLBaFh8gro5uOU67Ffe1Kf/mS1akjAHLDARsMPirleCoVG+iMfqXc37c7iv1bOTJSkXqX6Tr5uRMA==
+  dependencies:
+    "@babel/runtime-corejs3" "7.6.3"
+    core-js "3.3.5"
+    rxjs "6.4.0"
+    web3 "1.2.1"
 
 emoji-regex@^7.0.1, emoji-regex@^7.0.2, emoji-regex@^7.0.3:
   version "7.0.3"
