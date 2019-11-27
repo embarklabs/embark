@@ -142,7 +142,6 @@
     "node-http-proxy-json": "0.1.6",
     "node-ipc": "9.1.1",
     "npmlog": "4.1.2",
-    "os-locale": "4.0.0",
     "parse-json": "4.0.0",
     "pkg-up": "2.0.0",
     "promptly": "2.2.0",
