@@ -16,9 +16,12 @@ const reports = require('istanbul-reports');
 
 const Reporter = require('./reporter');
 
+const EMBARK_OPTION = 'embark';
+
 class TestRunner {
   constructor(embark, options) {
     this.embark = embark;
+    this.ipc = options.ipc;
     this.logger = embark.logger;
     this.events = embark.events;
     this.plugins = options.plugins;
@@ -60,6 +63,25 @@ class TestRunner {
     async.waterfall([
       (next) => {
         this.events.request("config:contractsConfig:set", Object.assign(this.configObj.contractsConfig, {explicit: true, afterDeploy: null, beforeDeploy: null}), next);
+      },
+      (next) => {
+        if (options.node === EMBARK_OPTION) {
+          if (!this.ipc.connected) {
+            return next(new Error(__('Could not connect to Embark\'s IPC. Is Embark running?')));
+          }
+          return this.ipc.request('blockchain:node', {}, (err, node) => {
+            if (err) {
+              this.logger.error(err.message || err);
+              return next();
+            }
+            options.node = node;
+
+            const urlOptions = deconstructUrl(node);
+            Object.assign(this.simOptions, urlOptions);
+            next();
+          });
+        }
+        next();
       },
       (next) => {
         this.getFilesFromDir(testPath, next);
@@ -209,6 +231,7 @@ class TestRunner {
     });
   }
 
+  // eslint-disable-next-line complexity
   async checkDeploymentOptions(config, options, cb = () => {}) {
     let resetServices = false;
     const blockchainConfig = config.blockchain || {};
@@ -219,11 +242,25 @@ class TestRunner {
       return cb(__("contracts config error: unknown deployment type %s", type));
     }
 
+    let keepNode, hasNewConfig, usingNodeOptions = false;
+    if (port || type || host) {
+      hasNewConfig = true;
+    }
+    // If we have a node option and no new config from the test, we check if the old configs are the same as the node
+    if (options.node && options.node !== constants.blockchain.vm && !hasNewConfig) {
+      const nodeOptions = deconstructUrl(options.node);
+      if (nodeOptions.port === this.simOptions.port && nodeOptions.type === this.simOptions.type && nodeOptions.host === this.simOptions.host) {
+        usingNodeOptions = true;
+      }
+      // If we have the same options as the node, we just need the node as is
+      if (usingNodeOptions && !hasNewConfig) {
+        keepNode = true;
+      }
+    }
     if (!type) {
       type = constants.blockchain.vm;
     }
-
-    if (port !== this.simOptions.port || type !== this.simOptions.type || host !== this.simOptions.host) {
+    if (!keepNode && (port !== this.simOptions.port || type !== this.simOptions.type || host !== this.simOptions.host)) {
       resetServices = true;
     }
 
@@ -248,7 +285,7 @@ class TestRunner {
     if (!this.simOptions.host && (node && node === constants.blockchain.vm)) {
       this.simOptions.type = constants.blockchain.vm;
       this.simOptions.client = constants.blockchain.vm;
-    } else if (this.simOptions.host || (node && node !== constants.blockchain.vm)) {
+    } else if (this.simOptions.host || (node && node !== constants.blockchain.vm && node !== EMBARK_OPTION)) {
       let options = this.simOptions;
       if (node && node !== constants.blockchain.vm) {
         options = deconstructUrl(node);
