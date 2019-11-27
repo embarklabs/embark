@@ -20,22 +20,114 @@ I regret to say that this is the final article in this series!  It's been good f
 
 # Cryptocurrency
 
-Hypothetically; if we were to build our own Cryptocurrency platform, Crystal and Nim would be good languages to consider for doing so.  (This is a blog series I'm going to write in the near future, so deciding which language to use will be heavily influenced by ***this*** blog series!)
+Hypothetically; if we were to build our own Cryptocurrency platform, Crystal and Nim would be good languages to consider for doing so.  (That being a blog series I'm going to write in the near future, so deciding which language to use will be heavily influenced by ***this*** blog series!)
 
-For our hypothetical Cryptocurrency, we would need to be able to build out a decent hashing system, an intelligent key manager, utilise smart algorithms, and all of this atop of a distributed, decentralised virtual machine / node manager.  Now, all of this sounds like a ***very*** tall order!  For all of these feature requirements to be met by a single programming language, means that said language is going to have to be **ONE HELL** of an impressive piece of technology.
+For our Cryptocurrency, we would need to be able to build out a decent hashing system, an intelligent key manager, utilise smart algorithms, and all of this atop of a distributed, decentralised virtual machine / node manager.  Now, all of this sounds like a ***very*** tall order!  For all of these feature requirements to be met by a single programming language, it would mean that this language is going to have to be **ONE HELL** of an impressive piece of technology.
 
-Happily, both Crystal *and* Nim would allow us this functionality.
+Happily, both Crystal *and* Nim would allow us ***all*** of the above functionality.  In this hypothetical usecase, if we were to build out a fully-featured blockchain; both mining *and* hashing computations would need to be continually made, and these entail  relatively heavy computations.  As shown over the last 2 articles, we can be sure that both langs can handle the performance stresses, no problem. 
+
+As I'd like to build this topic out into a further detailed article series, I will show off 2 of the above pieces of functionality we'd require for our Crypto app:
+
+## Calculating our Transaction Hashes
+
+When building our Blockchain; we need to consider how we're going to identify and chain our transaction blocks together (blockchain).  Without going into details in *this* article on how blockchains function, for our hypothetical app, each of our block’s hashes will be a cryptographic hash of the block’s `index`, `timestamp`, `data`, and the hash of the previous block’s hash `previous_hash`.  
+
+For the sake of our hypothetical blockchain; we'll stick with the existing, and proven, SHA256 algorithm.
+
+### In Crystal:
+
+``` crystal
+require "json"
+require "openssl"
+
+module OurCryptoApp::Model
+  struct Transaction
+    include JSON::Serializable
+
+    alias TxnHash = String
+
+    property from : String
+    property to : String
+    property amount : Float32
+    getter hash : TxnHash
+    getter timestamp : Int64
+
+    def initialize(@from, @to, @amount)
+      @timestamp = Time.utc_now.to_unix
+      @hash = calc_hash
+    end
+
+    private def calc_hash : TxnHash
+      sha = OpenSSL::Digest.new("SHA256")
+      sha.update("#{@from}#{@to}#{@amount}#{@timestamp}")
+      sha.hexdigest
+    end
+  end
+end
+```
 
 
-## In Crystal:
+### In Nim:
 
-## In Nim:
+If we want to generate a similar hash in Nim, we could run the following:
+
+``` nim
+import strutils
+ 
+const SHA256Len = 32
+ 
+proc SHA256(d: cstring, n: culong, md: cstring = nil): cstring {.cdecl, dynlib: "libssl.so", importc.}
+ 
+proc SHA256(s: string): string =
+  result = ""
+  let s = SHA256(s.cstring, s.len.culong)
+  for i in 0 .. < SHA256Len:
+    result.add s[i].BiggestInt.toHex(2).toLower
+ 
+echo SHA256("Rosetta code")
+```
 
 
+<br/>
+## Releasing our Crypto App 
+
+One of the *other* biggest factors we have to consider, is the ability to distribute our crypto apps super easily.  With both being compiled languages, we're already off to a promising start – 
+
+
+### In Nim:
+
+If we wanted to build out and release our app for Android, we can run:
+
+``` 
+nim c -c --cpu:arm --os:android -d:androidNDK --noMain:on 
+```
+
+To generate the C source files we need to include in our Android Studio project.  We then simply add the generated C files to our CMake build script in our Android project.  
+
+Similarly, we could run:
+
+``` 
+nim c -c --os:ios --noMain:on 
+``` 
+
+To generate C files to include in our XCode project. Then, we can use XCode to compile, link, package and sign everything.
+
+
+### In Crystal:
+
+Crystal also allows for cross-compilation, and makes it just as easy.  For example, to build our app for Linux distributions from our Mac, we can run:
+
+``` 
+crystal build your_program.cr --cross-compile --target "x86_64-unknown-linux-gnu" 
+```
+
+***Worth noting:*** *Crystal doesn't offer the iPhone / Android cross-compilation functionality that Nim does, so building our app in Nim gets a definite thumbs-up from a distribution point-of-view!*
+
+<br/> 
 
 # Building, Signing & Sending an Ethereum Transaction
 
-Although for the sake of this article, I didn't have time to build out a more low-level version of this action, it actually works in my favour, as I get to show off the native HTTP library for Crystal.
+For the sake of this article, in Crystal, I didn't see the need to build out a more low-level version of the below action, as it *is* so similar in the Nim demo that follows.  This actually worked out in my favour, as it means I get to further show off the native HTTP library for Crystal.
 
 ## In Crystal:
 
