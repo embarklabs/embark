@@ -2,7 +2,7 @@
   "devDependencies": {
     "babel-eslint": "10.0.3",
     "chalk": "2.4.2",
-    "coveralls": "3.0.6",
+    "coveralls": "3.0.9",
     "eslint": "6.2.2",
     "find-up": "4.1.0",
     "form-data": "2.5.1",
