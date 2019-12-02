@@ -70,10 +70,12 @@ The definitions of "concurrency" and "parallelism" sometimes get mixed up, but t
 A concurrent system is one that can be in charge of many tasks, although not necessarily executing them at the same time.  A good way to think of this is driving a car – the car can accelerate, brake & change gear, but they don't happen at the exact same time, although they *do* overlap.  This is concurrency.
 
 ![concurrency](https://dpzbhybb2pdcj.cloudfront.net/picheta/Figures/06fig01_alt.jpg)
+*Source: https://livebook.manning.com/book/nim-in-action/chapter-6/13*
 
 The human driving the car holds the clutch in, moves the gear lever in parallel, and then eases of the clutch at the exact same time as easing on the accelerator.  This is processes running in parallel, hence parallelism.
 
 ![parallelism](https://dpzbhybb2pdcj.cloudfront.net/picheta/Figures/06fig02_alt.jpg)
+*Source: https://livebook.manning.com/book/nim-in-action/chapter-6/13*
 
 At the moment, Crystal has concurrency support but not parallelism: several tasks can be executed, and a bit of time will be spent on each of these, but two code paths are never executed at the same exact time.  However, recently [Parallelism was tested out](https://crystal-lang.org/2019/09/06/parallelism-in-crystal.html) and I'm sure will be fully ready to use soon!
 
