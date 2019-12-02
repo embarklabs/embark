@@ -53,7 +53,7 @@ export function stripQueryParam(location, param) {
 
 export const isDarkTheme = (theme) => theme === DARK_THEME;
 
-export function getWeiBalanceFromString(balanceString: string) {
+export function getWeiBalanceFromString(balanceString) {
   if (!balanceString) {
     return 0;
   }
