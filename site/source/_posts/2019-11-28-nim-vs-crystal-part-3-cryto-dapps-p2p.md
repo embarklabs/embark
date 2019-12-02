@@ -11,29 +11,28 @@ image: '/assets/images/nim-crystal-header_blank.jpg'
 
 Welcome back to my series comparing the two sweethearts of the modern low-level programming world.  Just to quickly recap: in [article #1](/news/2019/11/18/nim-vs-crystal-part-1-performance-interoperability/) I noted my thoughts on the interoperability capabilities of the two languages, alongside briefly reviewing the performance metrics for each (albeit with relatively simple tests).  Whether simple or not, the tests ***did*** throw up some unexpected twists in the plot - Crystal used *very-nearly* half of the memory amount executing the tests when compared to Nim, and also took *very nearly* half of the execution time in doing so.  **This seriously took me by surprise!** 
 
-In [article #2](/news/2019/11/21/nim-vs-crystal-part-2-threading-tooling/); I looked at the Concurrency primitives of each language, and explored both the in-built tooling, and external package ecosystems surrounding each language.  As I said in that article, one of the biggest factors I look at when considering adopting a new language; is its tooling ecosystem.  This includes, but is not limited to:  A comprehensive package manager, an intuitive testing suite, a good project scaffolder, and an in-built formatter/linter to ensure my code stays semantically correct – especially if I know I will be working in Open Source repos others will contribute to.  But they're just the high-level tools.
+In [article #2](/news/2019/11/21/nim-vs-crystal-part-2-threading-tooling/); I looked at the Concurrency primitives of each language, and explored both the in-built tooling, and external package ecosystems surrounding each language.  As I said in that article, one of the biggest factors I look at when considering adopting a new language; is its tooling ecosystem.  This includes, but is not limited to:  A comprehensive package manager, an intuitive testing suite, a good project scaffolder, and an in-built formatter/linter to ensure my code stays semantically correct – especially if I know I will be working in Open Source repos that others will contribute to.  But they're just the high-level tools that I look for...
 
-From a low-level perspective; I look for efficient use of technology in features such as in-memory storage, caching, garbage collection, and concurrency primitives that not just *markedly* improve our application performance, but that are also relatively simple and intuitive to use.  I see this as particularly important as I have, in my past, seen some truly shocking examples of trying to handle multi-threading, from languages that I love \*cough* ***Ruby*** \*cough*. I also like to see a fully-featured standard library that takes influence from previous successful languages.  However, I digress...
+From a low-level standpoint; I look for efficient use of technology in features such as in-memory storage, caching, garbage collection, and concurrency primitives that not just *markedly* improve our application performance, but that are also relatively simple, and intuitive to use.  I see *this* as particularly important as I have, in my past, seen some truly shocking examples of trying to handle multi-threading, from languages that I love \*cough* ***Ruby*** \*cough*. I also like to see a fully-featured standard library that takes influence from previous successful languages.  However, I digress...
 
-I regret to say that this is the final article in this series!  It's been good fun for me; getting to the know the ins-and-outs of Nim, and to re-grow a fresh appreciation of Crystal, having put it on the back-burner for quite some time.  However,  whether the final article in the series or not, it's going to be a good one!  We're going to be covering the benefits to the Cryptocurrency / DApp industries from both Crystal and Nim.  So without further ado, let's dive on in!
+I regret to say that this is the final article in this series!  It's been good fun for me; getting to the know the ins-and-outs of Nim, and to re-grow a fresh appreciation of Crystal, having put it on the back-burner for quite some time.  However,  whether the final article in the series or not, it's going to be a good one!  We're going to be covering the benefits to the Cryptocurrency / DApp industries from both Crystal and Nim.  So without further ado: 
 
+***Let's dive on in!***
 
 # Cryptocurrency
 
-Hypothetically; if we were to build our own Cryptocurrency platform, Crystal and Nim would be good languages to consider for doing so.  (That being a blog series I'm going to write in the near future, so deciding which language to use will be heavily influenced by ***this*** blog series!)
+Firstly, I'd like to talk about the possibility of using either Crystal or Nim,  (or both!) in the development of crypto apps. Hypothetically; if we had the inclination to build out our own Cryptocurrency:   Crystal and Nim have ***proven to be two of the strongest languages*** to consider for the undertaking..  (That being the *next* blog series I'm going to write – in the near future, so deciding which language to use will be heavily influenced by ***this*** blog series!)
 
-For our Cryptocurrency, we would need to be able to use an intelligent key manager, utilise smart hashing algorithms, maintain strong performance, and all of this atop of a distributed, decentralised virtual machine / node manager.  Now, all of this sounds like a ***very*** tall order!  For all of these feature requirements to be met by a single programming language, it would mean that this language is going to have to be **ONE HELL** of an impressive piece of technology.
+For our Cryptocurrency, we would need to be able to use an intelligent key manager, utilise smart hashing algorithms, maintain strong performance, and all of this atop of a distributed, decentralised virtual machine or blockchain.  Now, all of this sounds like a ***very*** tall order!  For all of these feature requirements to be met by a single programming language, it would mean that this language is going to have to be **ONE HELL** of an impressive piece of technology.
 
-Happily, both Crystal *and* Nim allow us ***all*** of the above functionality.  In our hypothetical usecase, if we were to build out a fully-featured blockchain; mining *and* hashing computations would need to be continually made, both of which entail relatively heavy computations.  As shown over the last 2 articles in the series, we can be sure that both langs can handle the performance stresses, no problem. 
+Happily, both Crystal *and* Nim allow us ***all*** of the above functionality.  In our hypothetical usecase, if we were to build out a fully-featured blockchain; mining *and* hashing functions would need to be continually made, both of which entail relatively heavy computations.  As shown over the last 2 articles in the series, we can at least be sure that both langs can handle the performance stresses, no problemo.
 
 As I'd like to write this topic out into a further detailed article series, I will show off just 2 of the above pieces of functionality we'd require for our Crypto app:
 
 
 ## Calculating our Block Hashes
 
-When building our Blockchain; we need to consider how we're going to identify and chain our transaction blocks together (blockchain).  Without going into details in *this* article on how blockchains function, for our hypothetical app, each of our block’s hashes will be a cryptographic hash of the block’s `index`, `timestamp`, `data`, and the hash of the previous block’s hash `previous_hash`.  
-
-For the sake of our hypothetical blockchain; we'll stick with the existing, and proven, SHA256 algorithm.
+When building our Blockchain; we need to consider how we're going to identify and chain our transaction blocks together (blockchain).  Without going into details in *this* article on how blockchains function, we'll stick with the existing, and proven, SHA256 algorithm.
 
 
 ### In Crystal:
@@ -93,16 +92,22 @@ echo SHA256("Hash this block, yo")
 <br/>
 ## Releasing our Crypto App 
 
-One of the *other* biggest factors we have to consider, is the ability to distribute our crypto app, once built, with great ease.  Remembering that both are *compiled* languages, we're already off to a promising start.
+Another serious factor we have to consider, is the ability to distribute our crypto app, once built, with great ease.  Remembering that both Crystal and Nim are *compiled* languages, we're already off to a promising start.  (A single executable binary is always going to be easier to distribute than something requiring its own specialist environment!)
 
-It pays rather large dividends being able to build out our Crypto app just once, and bang able to maintain just one singular repo for that app.  I already know that in my next article series, I will be exploring building using [React Native].(https://facebook.github.io/react-native/). However, if you wish to build the frontend of your cross-platform cryto app in something else, there are a variety of technologies available - all of which are able to work well with both Crystal and Nim.
+It pays rather large dividends being able to write our Crypto app just once, and having the ability to maintain one singular code repo for that app. To this end – I think it is definitely worth considering a multi-platform app framework.  I already know that in my next article series, I will be exploring building a Crypto app using [React Native](https://facebook.github.io/react-native/).
+
+However, if you wish to build the frontend of your cross-platform crypto app in something else, there are a variety of technologies available - all of which seem to work well with both Crystal and Nim:
 
  - [Ionic Framework](http://ionicframework.com/)
  - [Flutter](https://flutter.io/)
- - 
+ - [NativeScript](https://www.nativescript.org/)
+
+And if you come from a Windows background:
+ 
+ - [Xamarin](https://dotnet.microsoft.com/apps/xamarin)
 
 
-### In Nim:
+### Building & Releasing In Nim:
 
 If we wanted to build out and release our app for Android, we can run:
 
@@ -121,7 +126,7 @@ nim c -c --os:ios --noMain:on
 To generate C files to include in our XCode project. Then, we can use XCode to compile, link, package and sign everything.
 
 
-### In Crystal:
+### Building & Releasing In Crystal:
 
 Crystal also allows for cross-compilation, and makes it just as easy.  For example, to build our app for Linux distributions from our Mac, we can run:
 
@@ -129,13 +134,13 @@ Crystal also allows for cross-compilation, and makes it just as easy.  For examp
 crystal build your_program.cr --cross-compile --target "x86_64-unknown-linux-gnu" 
 ```
 
-***Worth noting:*** *Crystal doesn't offer the iPhone / Android cross-compilation functionality that Nim does, so building our app in Nim gets a definite thumbs-up from a distribution point-of-view!*
+***Worth noting:*** *Crystal doesn't offer the out-of-the-box iPhone / Android cross-compilation functionality that Nim does, so building our app in Nim gets a definite thumbs-up from a distribution point-of-view!*
 
 <br/> 
 
-# Building, Signing & Sending an Ethereum Transaction
+# Ethereum - Building, Signing & Sending a  Transaction
 
-For the sake of this article, in Crystal, I didn't see the need to build out a more low-level version of the below action, as it *is* so similar in the Nim demo that follows.  This actually worked out in my favour, as it means I get to further show off the native HTTP library for Crystal.
+For the sake of this article, in Crystal, I didn't see the need to write out a more low-level example of the below action, as it *is* so similar to the Nim demo that follows.  This actually worked out in my favour, as it means I get to further show off the native HTTP library for Crystal.
 
 ## In Crystal:
 
