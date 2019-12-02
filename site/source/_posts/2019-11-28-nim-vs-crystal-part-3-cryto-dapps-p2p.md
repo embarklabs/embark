@@ -9,7 +9,7 @@ image: '/assets/images/nim-crystal-header_blank.jpg'
 
 ![crystal vs nim](http://embark.status.im/assets/images/nim-crystal-header-img_NEW.jpg)
 
-Welcome back to my series comparing the two sweethearts of the modern low-level programming world.  Just to quickly recap: in [article #1](/news/2019/11/18/nim-vs-crystal-part-1-performance-interoperability/) I noted my thoughts on the interoperability capabilities of the two languages, alongside briefly reviewing the performance metrics for each (albeit with relatively simple tests).  Whether simple or not, the tests ***did*** throw up some unexpected twists in the plot - Crystal used *very-nearly* half of the memory amount executing the tests when compared to Nim, and also took *very nearly* half of the execution time in doing so.  **This seriously took me by surprise!** 
+Welcome back to my series comparing the two sweethearts of the modern low-level programming world.  Just to quickly recap: in [article #1](/news/2019/11/18/nim-vs-crystal-part-1-performance-interoperability/) I noted my thoughts on the interoperability capabilities of the two languages, alongside briefly reviewing the performance metrics for each (albeit with relatively simple tests).  Whether simple or not, the tests ***did*** throw up some unexpected twists in the plot.  Crystal used *very-nearly* half of the memory amount executing the tests when compared to Nim, and also took *very nearly* half of the execution time in doing so.  **This seriously took me by surprise!** 
 
 In [article #2](/news/2019/11/21/nim-vs-crystal-part-2-threading-tooling/); I looked at the Concurrency primitives of each language, and explored both the in-built tooling, and external package ecosystems surrounding each language.  As I said in that article, one of the biggest factors I look at when considering adopting a new language; is its tooling ecosystem.  This includes, but is not limited to:  A comprehensive package manager, an intuitive testing suite, a good project scaffolder, and an in-built formatter/linter to ensure my code stays semantically correct – especially if I know I will be working in Open Source repos that others will contribute to.  But they're just the high-level tools that I look for...
 
@@ -192,13 +192,13 @@ end
 
 Then, in our application we could simply call:
 
-```
+``` crystal
 Ethereum::Transaction.create("0xA02378cA1c24767eCD776aAFeC02158a30dc01ac", "0xA02378cA1c24767eCD776aAFeC02158a30dc01ac", 80000)
 ```
 
 And we would get a response similar to the following, ready to be signed and sent to the Ethereum network:
 
-```
+``` json
 {
   "tx": "02000000011cd5d7621e2a7c9403e54e089cb0b5430b83ed13f1b897d3e319b100ba1b059b01000000db00483045022100d7534c80bc0a42addc3d955f74e31610aa78bf15d79ec4df4c36dc98e802f5200220369cab1bccb2dbca0921444ce3fafb15129fa0494d041998be104df39b8895ec01483045022100fe48c4c1d46e163acaff6b0d2e702812d20",
   "hash_to_sign": "955f74e31610aa78bf15d79ec4df4c36dc98e802f52002"
@@ -208,7 +208,7 @@ And we would get a response similar to the following, ready to be signed and sen
 
 ## In Nim:
 
-From a low-level perspective, instead of using an HTTP library as in the Crystal example above, we can use Status' very own Nim-Ethereum library to build our Ethereum transaction.  Assuming we have imported `nim-eth` into our Nimble project, our Ethereum transaction can be built atop of the following:
+From a deeper, more low-level perspective; instead of using an HTTP library as in the Crystal example above, we can use Status' very own Nim-Ethereum library to build our Ethereum transaction.  Assuming we have imported `nim-eth` into our Nimble project, our Ethereum transaction can be built atop of the following protocol:
 
 ``` nim
 import
@@ -288,7 +288,7 @@ func txHashNoSignature*(tx: Transaction): Hash256 =
 *Note* - I do realise the above Nim code example and the Crystal examples are different - I fully intended them to be.  The Crystal example allowed me to further show off the HTTP library I touched on in the last article, and the Nim example allowed me to go to a lower-level; something I think brings the article relevancy full circle.
 
 
-[The `Eth` Common Library](https://github.com/status-im/nim-eth/) contains a whole bunch of useful Nim libraries for interacting with the Ethereum Network, including:
+[Status' Eth Common Library](https://github.com/status-im/nim-eth/) contains a whole bunch of useful Nim libraries for interacting with the Ethereum Network, including:
 
  - [Recursive Length Prefix encoding (RLP)](https://github.com/status-im/nim-eth/blob/master/doc/rlp.md),
  - [P2P](https://github.com/status-im/nim-eth/blob/master/doc/p2p.md),
@@ -297,10 +297,34 @@ func txHashNoSignature*(tx: Transaction): Hash256 =
  - [Ethereum Trie structure](https://github.com/status-im/nim-eth/blob/master/doc/trie.md), and
  - [Ethereum Bloom Filter](https://github.com/status-im/nim-eth/blob/master/doc/bloom.md).
 
-If you are going to be working in the Ethereum ecosystem using Nim, it goes without saying that these utilities are absolutely essential.  With Status & the [Nimbus](https://nimbus.team) team being such early adopters and major contributors to the Nim universe, you are more than likely to stumble across our code sooner or later! 
-
-
-# P2P ??
+If you are going to be working in the Ethereum ecosystem using Nim, it goes without saying that these utilities are absolutely essential.  With Status & the [Nimbus](https://nimbus.team) team being such early adopters and major contributors to the Nim/Crypto universe, you are more than likely to stumble across this code sooner or later! 
 
 
 # Conclusion
+
+Our hypothetical Crypto app has taken shape throughout this article, and I think both languages have shown off great promise, and have proven their respective abilities to power the Cryptocurrency universe.
+
+Realistically, if you were a brand-new developer looking to learn a language to break into the Crypto scene, the choice would almost definitely be **Crystal**.  This is simply because of the *much* larger ecosystem and resources surrounding it.  
+
+However, if you were an already-established developer, looking to build out a crypto app that you could develop and multi-platform release with greater ease, you'd inevitably choose **Nim**.  Crystal not only lacks the ability to be developed properly on Windows, but also lacks the interoperability and multi-release functionality, as we have seen, with Nim.
+
+Alas, this brings me on to my final points...
+
+
+# Series Conclusion
+
+It's funny – each article in this series, I've started by saying to myself "Right, Nim is going to win." And then half way through; changing my story to "Crystal is my choice, actually."
+
+But then I went and spoiled it all, by saying something stupid like "Cryptocurrency".
+
+Prior to this article, I *was swaying* towards settling on Crystal.  Not only did it impress in performance, but also seemed to have an enthusiastic ecosystem building around it.  Nim, however, refused to go down without a fight –  offering up *extremely* impressive interoperability, awesome inbuilt tooling, and great efficiency overall.
+
+I hate to do this, but I'm just going to have to say it:  for your usecase – **pick the best tool for the job**. Please ensure that you research properly into both languages, and weigh-up the pro's/con's that pertain to your specific usecase.
+
+***Cliches aside*** – if I had to pick a favourite overall language, it would have to be **Crystal**.  Frankly, this opinion is formed from my extensive use of Crystal over Nim, the fact I **much** prefer the Crystal syntax, and the fact that I am simply more comfortable coding in Crystal than I am in Nim!
+
+So, to answer the epic question – Crystal vs Nim?
+
+Personally, I choose Crystal.  But I think **you** should choose ***Nim.*** 😅
+
+[ **- @rbin**](https://twitter.com/rbin)
