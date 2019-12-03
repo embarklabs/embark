@@ -62,6 +62,32 @@ class ENS {
     })();
   }
 
+  getEnsConfig(done) {
+    async.map(
+      this.config.namesystemConfig.dappConnection || this.config.contractsConfig.dappConnection,
+      (conn, next) => {
+      if (conn === '$EMBARK') {
+        return this.events.request('proxy:endpoint:get', next);
+      }
+      next(null, conn);
+    }, (err, connections) => {
+      if (err) {
+        return done(err);
+      }
+      done(null, {
+        env: this.env,
+        registration: this.config.namesystemConfig.register,
+        registryAbi: this.ensConfig.ENSRegistry.abiDefinition,
+        registryAddress: this.ensConfig.ENSRegistry.deployedAddress,
+        registrarAbi: this.ensConfig.FIFSRegistrar.abiDefinition,
+        registrarAddress: this.ensConfig.FIFSRegistrar.deployedAddress,
+        resolverAbi: this.ensConfig.Resolver.abiDefinition,
+        resolverAddress: this.ensConfig.Resolver.deployedAddress,
+        dappConnection: connections
+      });
+    });
+  }
+
   async init(cb = () => {}) {
     if (this.initated || this.config.namesystemConfig === {} ||
       this.config.namesystemConfig.enabled !== true ||
@@ -90,19 +116,6 @@ class ENS {
     this.embark.registerActionForEvent("pipeline:generateAll:before", this.addArtifactFile.bind(this));
   }
 
-  getEnsConfig() {
-    return {
-      env: this.env,
-      registration: this.config.namesystemConfig.register,
-      registryAbi: this.ensConfig.ENSRegistry.abiDefinition,
-      registryAddress: this.ensConfig.ENSRegistry.deployedAddress,
-      registrarAbi: this.ensConfig.FIFSRegistrar.abiDefinition,
-      registrarAddress: this.ensConfig.FIFSRegistrar.deployedAddress,
-      resolverAbi: this.ensConfig.Resolver.abiDefinition,
-      resolverAddress: this.ensConfig.Resolver.deployedAddress
-    };
-  }
-
   executeCommand(command, args, cb) {
     switch (command) {
       case 'resolve': this.ensResolve(args[0], cb); break;
@@ -118,31 +131,33 @@ class ENS {
     }
   }
 
-  addArtifactFile(_params, cb) {
-    const config = this.getEnsConfig();
-    this.events.request("pipeline:register", {
-      path: [this.config.embarkConfig.generationDir, 'config'],
-      file: 'namesystem.json',
-      format: 'json',
-      content: Object.assign({}, this.embark.config.namesystemConfig, config)
-    }, cb);
+  async addArtifactFile(_params, cb) {
+    this.getEnsConfig((err, config) => {
+      this.events.request("pipeline:register", {
+        path: [this.config.embarkConfig.generationDir, 'config'],
+        file: 'namesystem.json',
+        format: 'json',
+        content: Object.assign({}, this.embark.config.namesystemConfig, config)
+      }, cb);
+    });
   }
 
   async setProviderAndRegisterDomains(cb = (() => {})) {
-    const config = this.getEnsConfig();
-    if (this.doSetENSProvider) {
-      this.setupEmbarkJS(config);
-    }
+    this.getEnsConfig(async (err, config) => {
+      if (this.doSetENSProvider) {
+        this.setupEmbarkJS(config);
+      }
 
-    const web3 = await this.web3;
-    const networkId = await web3.eth.net.getId();
-    const isKnownNetwork = Boolean(ensContractAddresses[networkId]);
-    const shouldRegisterSubdomain = this.config.namesystemConfig.register && this.config.namesystemConfig.register.subdomains && Object.keys(this.config.namesystemConfig.register.subdomains).length;
-    if (isKnownNetwork || !shouldRegisterSubdomain) {
-      return cb();
-    }
+      const web3 = await this.web3;
+      const networkId = await web3.eth.net.getId();
+      const isKnownNetwork = Boolean(ensContractAddresses[networkId]);
+      const shouldRegisterSubdomain = this.config.namesystemConfig.register && this.config.namesystemConfig.register.subdomains && Object.keys(this.config.namesystemConfig.register.subdomains).length;
+      if (isKnownNetwork || !shouldRegisterSubdomain) {
+        return cb();
+      }
 
-    this.registerConfigDomains(config, cb);
+      this.registerConfigDomains(config, cb);
+    });
   }
 
   async setupEmbarkJS(config) {
@@ -356,7 +371,7 @@ class ENS {
         }
         send();
       }
-    ], (err) => {
+    ], async (err) => {
       self.configured = true;
       if (err && err !== NO_REGISTRATION) {
         self.logger.error('Error while deploying ENS contracts');
