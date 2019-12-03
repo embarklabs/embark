@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Button,
   Card,
@@ -13,6 +13,7 @@ import {
   ListGroup,
   ListGroupItem
 } from 'reactstrap';
+import Error from "./Error";
 
 class Communication extends Component {
   constructor(props) {
@@ -61,6 +62,7 @@ class Communication extends Component {
     return (
       <Row className="justify-content-md-center">
         <Col xs="12" sm="9" lg="9">
+          {this.props.error && this.props.error.error && <Error error={this.props.error.error} />}
           <Card>
             <CardHeader>
               <strong>Listen to channel</strong>
@@ -147,7 +149,8 @@ Communication.propTypes = {
   sendMessage: PropTypes.func,
   listenToMessages: PropTypes.func,
   subscriptions: PropTypes.array,
-  channels: PropTypes.object
+  channels: PropTypes.object,
+  error: PropTypes.object
 };
 
 export default Communication;

@@ -5,7 +5,7 @@ import { Alert } from 'reactstrap';
 import {messageSend, messageListen, versions} from "../actions";
 import Communication from "../components/Communication";
 import PageHead from "../components/PageHead";
-import {getMessages, getMessageChannels, isOldWeb3, isWeb3Enabled} from "../reducers/selectors";
+import { getMessages, getMessageChannels, isOldWeb3, isWeb3Enabled, getMessagesError } from "../reducers/selectors";
 
 class CommunicationContainer extends Component {
   componentDidMount() {
@@ -37,9 +37,11 @@ class CommunicationContainer extends Component {
       <React.Fragment>
         <PageHead title="Communication" description="Interact with the decentralised communication protocols configured for Embark (ie Whisper)" />
         <Communication listenToMessages={(channel) => this.listenToChannel(channel)}
-                       sendMessage={(channel, message) => this.sendMessage(channel, message)}
-                       channels={this.props.messages}
-                       subscriptions={this.props.messageChannels}/>
+          sendMessage={(channel, message) => this.sendMessage(channel, message)}
+          channels={this.props.messages}
+          subscriptions={this.props.messageChannels}
+          error={this.props.error}
+        />
       </React.Fragment>
     );
   }
@@ -60,7 +62,8 @@ CommunicationContainer.propTypes = {
   isWeb3Enabled: PropTypes.bool,
   messages: PropTypes.object,
   messageChannels: PropTypes.array,
-  fetchVersions: PropTypes.func
+  fetchVersions: PropTypes.func,
+  error: PropTypes.object
 };
 
 function mapStateToProps(state) {
@@ -68,7 +71,8 @@ function mapStateToProps(state) {
     messages: getMessages(state),
     messageChannels: getMessageChannels(state),
     isOldWeb3: isOldWeb3(state),
-    isWeb3Enabled: isWeb3Enabled(state)
+    isWeb3Enabled: isWeb3Enabled(state),
+    error: getMessagesError(state)
   };
 }
 

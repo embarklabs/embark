@@ -1,7 +1,9 @@
 import EmbarkJS from "embarkjs";
 import EmbarkJSWhisper from "embarkjs-whisper";
 
-class API {
+export const PARITY_WHISPER_ERROR = "Parity's implementation of Whisper is not compatible with Whisper v6 (and therefore web3.js). Try changing the communication config to use '{client: \"geth\"}' instead.";
+
+export class Api {
 
   constructor(embark) {
     this.embark = embark;
@@ -25,13 +27,8 @@ class API {
     this.embark.registerAPICall(
       "post",
       "/embark-api/communication/sendMessage",
-      (req, res) => {
-        EmbarkJS.Messages.sendMessage({ topic: req.body.topic, data: req.body.message }, (err, result) => {
-          if (err) {
-            return res.status(500).send({ error: err });
-          }
-          res.send(result);
-        });
+      (_req, res) => {
+        res.status(500).send({ error: PARITY_WHISPER_ERROR });
       });
   }
 
@@ -39,13 +36,8 @@ class API {
     this.embark.registerAPICall(
       "ws",
       "/embark-api/communication/listenTo/:topic",
-      (ws, req) => {
-        EmbarkJS.Messages.listenTo({ topic: req.params.topic }).subscribe(data => {
-          ws.send(JSON.stringify(data));
-        });
+      (ws, _req) => {
+        ws.send(JSON.stringify({ error: PARITY_WHISPER_ERROR }));
       });
   }
-
 }
-
-module.exports = API;
