@@ -1,8 +1,10 @@
 /* global global require */
+import { reduce } from 'async';
 let EmbarkJS = global.EmbarkJS || require('embarkjs');
 EmbarkJS = EmbarkJS.default || EmbarkJS;
 const ENSFunctions = require('./ENSFunctions').default;
 const Web3 = require('web3');
+const { RequestManager } = require('web3-core-requestmanager');
 const namehash = require('eth-ens-namehash');
 
 const __embarkENS = {};
@@ -154,6 +156,53 @@ __embarkENS.registryAddresses = {
   "4": "0xe7410170f87102DF0055eB195163A03B7F2Bff4A"
 };
 
+function setProvider(web3, kind, endpoint) {
+  web3.setProvider(new Web3.providers[kind](endpoint));
+}
+
+function connectWebSocket(web3, endpoint, callback) {
+  setProvider(web3, 'WebsocketProvider', endpoint);
+  checkConnection(web3, callback);
+}
+
+function connectHttp(web3, endpoint, callback) {
+  setProvider(web3, 'HttpProvider', endpoint);
+  checkConnection(web3, callback);
+}
+
+async function connectWeb3(web3, callback) {
+  if (typeof window !== 'undefined' && window.ethereum) {
+    try {
+      await ethereum.enable();
+      web3.setProvider(ethereum);
+      return checkConnect(callback);
+    } catch (e) {
+      return callback(null, {
+        error: e,
+        connected: false
+      });
+    }
+  }
+  callback(null, {
+    connected: false,
+    error: new Error("web3 provider not detected")
+  });
+}
+
+function checkConnection(web3, callback) {
+  web3.eth.getAccounts(error => {
+    if (error) {
+      web3.setProvider(null);
+    }
+    callback(null, {
+      connected: !error,
+      error
+    });
+  });
+}
+
+__embarkENS.web3 = new Web3();
+
 __embarkENS.setProvider = function(config) {
   const self = this;
   const ERROR_MESSAGE = 'ENS is not available in this chain';
@@ -161,40 +210,42 @@ __embarkENS.setProvider = function(config) {
   self.env = config.env;
   self.ready = false;
 
-  // FIXME EmbarkJS.onReady doesn't work. Possibility of a race condition
-  EmbarkJS.onReady(err => {
-    if (err) {
-      throw new Error(err);
+  let connectionErrors = {};
+
+  reduce(config.dappConnection, false, (result, connectionString, next) => {
+    if (result.connected) {
+      return next(null, result);
     }
-    EmbarkJS.Blockchain.blockchainConnector.getNetworkId()
-      .then((id) => {
-        const registryAddress = self.registryAddresses[id] || config.registryAddress;
-        self._isAvailable = true;
-        self.ens = new EmbarkJS.Blockchain.Contract({
-          abi: config.registryAbi,
-          address: registryAddress,
-          web3: EmbarkJS.Blockchain.blockchainConnector.getInstance()
-        });
-        self.registrar = new EmbarkJS.Blockchain.Contract({
-          abi: config.registrarAbi,
-          address: config.registrarAddress,
-          web3: EmbarkJS.Blockchain.blockchainConnector.getInstance()
-        });
-        self.resolver = new EmbarkJS.Blockchain.Contract({
-          abi: config.resolverAbi,
-          address: config.resolverAddress,
-          web3: EmbarkJS.Blockchain.blockchainConnector.getInstance()
-        });
-        self.ready = true;
-      })
-      .catch(err => {
-        self.ready = true;
-        if (err.message.indexOf('Provider not set or invalid') > -1) {
-          console.warn(ERROR_MESSAGE);
-          return;
-        }
-        console.error(err);
-      });
+
+    if (connectionString === '$WEB3') {
+      connectWeb3(self.web3, next);
+    } else if ((/^wss?:\/\//).test(connectionString)) {
+      connectWebSocket(self.web3, connectionString, next);
+    } else {
+      connectHttp(self.web3, connectionString, next);
+    }
+  }, async (err, result) => {
+    if (!result.connected || result.error) {
+      console.error(result.error);
+    }
+    const accounts = await self.web3.eth.getAccounts();
+    self.web3.eth.defaultAccount = accounts[0];
+    try {
+      const id = await self.web3.eth.net.getId()
+      const registryAddress = self.registryAddresses[id] || config.registryAddress;
+      self._isAvailable = true;
+      self.ens = new self.web3.eth.Contract(config.registryAbi, registryAddress);
+      self.registrar = new self.web3.eth.Contract(config.registrarAbi, config.registrarAddress);
+      self.resolver = new self.web3.eth.Contract(config.resolverAbi, config.resolverAddress);
+      self.ready = true;
+    } catch (err) {
+      self.ready = true;
+      if (err.message.indexOf('Provider not set or invalid') > -1) {
+        console.warn(ERROR_MESSAGE);
+        return;
+      }
+      console.error(err);
+    };
   });
 };
 
@@ -220,7 +271,7 @@ __embarkENS.waitForProviderReady = function() {
 __embarkENS.resolve = function (name, callback) {
   const resolve = async (name) => {
     await this.waitForProviderReady();
-    if (!EmbarkJS.Blockchain.blockchainConnector.getDefaultAccount()) {
+    if (!this.web3.eth.defaultAccount) {
       throw new Error(defaultAccountNotSetError);
     }
 
@@ -231,11 +282,7 @@ __embarkENS.resolve = function (name, callback) {
       if (resolvedAddress === voidAddress) {
         throw new Error('Name not yet registered');
       }
-      const resolverContract = new EmbarkJS.Blockchain.Contract({
-        abi: this.resolverInterface,
-        address: resolvedAddress,
-        web3: EmbarkJS.Blockchain.blockchainConnector.getInstance()
-      });
+      const resolverContract = new this.web3.eth.Contract(this.resolverInterface, resolvedAddress);
       return await resolverContract.methods.addr(node).call();
     } catch (err) {
       const msg = err.message;
@@ -258,7 +305,7 @@ __embarkENS.resolve = function (name, callback) {
 __embarkENS.lookup = function (address, callback) {
   const lookup = async (address) => {
     await this.waitForProviderReady();
-    if (!EmbarkJS.Blockchain.blockchainConnector.getDefaultAccount()) {
+    if (!this.web3.eth.defaultAccount) {
       throw new Error(defaultAccountNotSetError);
     }
     if (address.startsWith("0x")) {
@@ -272,11 +319,7 @@ __embarkENS.lookup = function (address, callback) {
       if (resolverAddress === voidAddress) {
         throw new Error('Address not associated to a resolver');
       }
-      const resolverContract = new EmbarkJS.Blockchain.Contract({
-        abi: this.resolverInterface,
-        address: resolverAddress,
-        web3: EmbarkJS.Blockchain.blockchainConnector.getInstance()
-      });
+      const resolverContract = new this.web3.eth.Contract(this.resolverInterface, resolverAddress);
       return await resolverContract.methods.name(node).call();
     } catch (err) {
       const msg = err.message;
@@ -299,7 +342,7 @@ __embarkENS.lookup = function (address, callback) {
 __embarkENS.registerSubDomain = function (name, address, callback) {
   callback = callback || function () {};
 
-  if (!EmbarkJS.Blockchain.blockchainConnector.getDefaultAccount()) {
+  if (!this.web3.eth.defaultAccount) {
     return callback(defaultAccountNotSetError);
   }
 
@@ -315,11 +358,11 @@ __embarkENS.registerSubDomain = function (name, address, callback) {
 
   // Register function generated by the index
   ENSFunctions.registerSubDomain(
-    EmbarkJS.Blockchain.blockchainConnector.getInstance(),
+    this.web3,
     this.ens,
     this.registrar,
     this.resolver,
-    EmbarkJS.Blockchain.blockchainConnector.getDefaultAccount(),
+    this.web3.eth.defaultAccount,
     name,
     this.registration.rootDomain,
     namehash.hash(address.toLowerCase().substr(2) + reverseAddrSuffix),
