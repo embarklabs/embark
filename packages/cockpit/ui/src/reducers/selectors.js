@@ -150,6 +150,12 @@ export function getMessages(state) {
   return messages;
 }
 
+export function getMessagesError(state) {
+  return {
+    error: state.errorEntities.messages
+  };
+}
+
 export function getFiddleDeploy(state) {
   return {
     data: last(state.entities.fiddleDeploys),

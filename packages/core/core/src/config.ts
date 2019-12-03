@@ -567,6 +567,7 @@ export class Config {
         enabled: true,
         provider: "whisper",
         available_providers: ["whisper"],
+        client: "geth",
         connection: {
           host: defaultHost,
           port: 8547,

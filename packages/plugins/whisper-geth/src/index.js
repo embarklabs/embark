@@ -18,7 +18,7 @@ class Whisper {
     this.webSocketsChannels = {};
     this.modulesPath = dappPath(embark.config.embarkConfig.generationDir, constants.dappArtifacts.symlinkDir);
 
-    if (!this.communicationConfig.enabled || this.blockchainConfig.client !== constants.blockchain.clients.geth) {
+    if (!this.communicationConfig.enabled || this.communicationConfig.client !== constants.blockchain.clients.geth) {
       return;
     }
 

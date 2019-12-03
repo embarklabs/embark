@@ -571,7 +571,10 @@ export function *listenToMessages(action) {
   const channel = yield call(createChannel, socket);
   while (true) {
     const message = yield take(channel);
-    yield put(actions.messageListen.success([{channel: action.messageChannels[0], message: message.data, time: message.time}]));
+    if (message.error) {
+      return yield put(actions.messageListen.failure(message.error));
+    }
+    yield put(actions.messageListen.success([{ channel: action.messageChannels[0], message: message.data, time: message.time }]));
   }
 }
 
