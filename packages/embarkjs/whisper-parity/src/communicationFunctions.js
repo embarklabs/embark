@@ -2,22 +2,22 @@ const { fromEvent, merge, throwError } = require('rxjs');
 const { map, mergeMap } = require('rxjs/operators');
 
 function sendMessage(options, callback) {
-  let topics = options.topic ? [options.topic] : [];
   const data = options.data;
   const ttl = options.ttl || 100;
   const powTime = options.powTime || 3;
   // const powTarget = options.powTarget || 0.5;
   // const sig = options.sig;
   // const fromAscii = options.fromAscii;
-  // const toHex = options.toHex;
+  const toHex = options.toHex;
   // const symKeyID = options.symKeyID;
   const asymKeyID = options.asymKeyID;
   const post = options.post;
 
-  // if (topics) {
-  //   // TODO: determine if we need to limit to 10 topics
-  //   topics = toHex(topics).slice(0, 10);
-  // }
+  let topics = [];
+  if (options.topic) {
+    // TODO: determine if we need to limit to 10 topics
+    topics = [toHex(options.topic)]; // .slice(0, 10);
+  }
 
   let message = {
     // to: // Object The receiver of the message.Can be omitted for a broadcast message.Use one of the following two fields
@@ -27,7 +27,7 @@ function sendMessage(options, callback) {
     // }
     "from": null, //asymKeyID, // Data - 32 bytes - asymmetric identity to sign the message with, or null.
     "topics": topics, // [Data] - Array of topics for the message.Should be non - empty.
-    "payload": JSON.stringify(data), // Data - Message data
+    "payload": toHex(JSON.stringify(data)), // Data - Message data
     // padding: // Data - Optional padding.Up to 2 ^ 24 - 1 bytes.
     "priority": powTime, // Quantity - How many milliseconds to spend doing PoW.
     "ttl": ttl // Quantity - Time to live(in seconds) of the message before expiry
@@ -46,7 +46,7 @@ function sendMessage(options, callback) {
   // if (topics === undefined && message.symKeyID && !message.pubKey) {
   //   callback("missing option: topic");
   // } else {
-  post([message], callback);
+  post(message, callback);
   // }
 }
 

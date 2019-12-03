@@ -2,6 +2,11 @@ import { Callback, Embark, Events } /* supplied by @types/embark in packages/emb
 import { __ } from "embark-i18n";
 import RpcModifier from "./rpcModifier";
 
+const METHODS_TO_MODIFY = [
+  "eth_subscribe",
+  "shh_subscribe",
+];
+
 export default class EthSubscribe extends RpcModifier {
   constructor(embark: Embark, rpcModifierEvents: Events) {
     super(embark, rpcModifierEvents);
@@ -12,7 +17,7 @@ export default class EthSubscribe extends RpcModifier {
 
   private async ethSubscribeRequest(params: any, callback: Callback<any>) {
     // check for eth_subscribe and websockets
-    if (params.isWs && params.request.method === "eth_subscribe") {
+    if (params.isWs && METHODS_TO_MODIFY.includes(params.request.method)) {
       // indicate that we do not want this call to go to the node
       params.sendToNode = false;
       return callback(null, params);
@@ -24,7 +29,7 @@ export default class EthSubscribe extends RpcModifier {
     const { isWs, transport, request, response } = params;
 
     // check for eth_subscribe and websockets
-    if (!(isWs && request.method.includes("eth_subscribe"))) {
+    if (!(isWs && METHODS_TO_MODIFY.includes(request.method))) {
       return callback(null, params);
     }
 
