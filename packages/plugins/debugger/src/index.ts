@@ -275,9 +275,9 @@ class TransactionDebugger {
           this.embark.logger.warn(NO_DEBUG_SESSION);
           return callback();
         }
-        this.cmdDebugger = null;
-        this.embark.logger.info(__('The debug session has been stopped'));
         this.cmdDebugger.unload();
+        this.cmdDebugger = null;
+        callback(undefined, __('The debug session has been stopped'));
       },
       usage: '    stop debugger/sd',
     });

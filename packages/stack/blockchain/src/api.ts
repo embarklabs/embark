@@ -114,6 +114,11 @@ export default class BlockchainAPI {
       cb(getNetworkId);
     });
 
+    this.events.setCommandHandler("blockchain:getTransaction", async (txId, cb) => {
+      const getTransaction = this.getRequestForBlockchain(blockchainName, "getTransaction");
+      getTransaction(txId, cb);
+    });
+
     this.events.setCommandHandler("blockchain:contract:create", (params, cb) => {
       const contractObject = this.getRequestForBlockchain(blockchainName, "contractObject")(params);
       cb(contractObject);
