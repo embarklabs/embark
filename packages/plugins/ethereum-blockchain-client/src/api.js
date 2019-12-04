@@ -44,6 +44,7 @@ export default class EthereumAPI {
     this.embark.events.request("blockchain:request:register", this.blockchainName, "getBlock", this.getBlock.bind(this));
     this.embark.events.request("blockchain:request:register", this.blockchainName, "getGasPrice", this.getGasPrice.bind(this));
     this.embark.events.request("blockchain:request:register", this.blockchainName, "getNetworkId", this.getNetworkId.bind(this));
+    this.embark.events.request("blockchain:request:register", this.blockchainName, "getTransaction", this.getTransactionByHash.bind(this));
     this.embark.events.request("blockchain:request:register", this.blockchainName, "contractObject", this.contractObject.bind(this));
   }
 

@@ -162,6 +162,7 @@ class EmbarkController {
         engine.registerModuleGroup("storage");
         engine.registerModuleGroup("cockpit");
         engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins });
+        engine.registerModulePackage("embark-debugger");
 
         // load custom plugins
         engine.loadDappPlugins();
@@ -391,6 +392,7 @@ class EmbarkController {
           engine.registerModuleGroup("cockpit");
         }
         engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins });
+        engine.registerModulePackage("embark-debugger");
 
         callback();
       },
