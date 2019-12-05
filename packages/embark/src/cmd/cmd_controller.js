@@ -270,11 +270,6 @@ class EmbarkController {
         engine.init({}, callback);
       },
       callback => {
-        let pluginList = engine.plugins.listPlugins();
-        if (pluginList.length > 0) {
-          engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
-        }
-
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
 
@@ -289,6 +284,13 @@ class EmbarkController {
 
         if (!options.onlyCompile) {
           engine.registerModuleGroup("storage");
+        }
+
+        // load custom plugins
+        engine.loadDappPlugins();
+        let pluginList = engine.plugins.listPlugins();
+        if (pluginList.length > 0) {
+          engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
 
         engine.events.on('deployment:deployContracts:afterAll', () => {
@@ -369,11 +371,6 @@ class EmbarkController {
         engine.init({}, callback);
       },
       callback => {
-        let pluginList = engine.plugins.listPlugins();
-        if (pluginList.length > 0) {
-          engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
-        }
-
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
         engine.registerModuleGroup("consoleComponents");
@@ -393,6 +390,13 @@ class EmbarkController {
         }
         engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins });
         engine.registerModulePackage("embark-debugger");
+
+        // load custom plugins
+        engine.loadDappPlugins();
+        let pluginList = engine.plugins.listPlugins();
+        if (pluginList.length > 0) {
+          engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
+        }
 
         callback();
       },
@@ -472,17 +476,19 @@ class EmbarkController {
         engine.init({}, callback);
       },
       function (callback) {
-        let pluginList = engine.plugins.listPlugins();
-        if (pluginList.length > 0) {
-          engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
-        }
-
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
 
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
         engine.registerModulePackage("embark-graph");
+
+        // load custom plugins
+        engine.loadDappPlugins();
+        let pluginList = engine.plugins.listPlugins();
+        if (pluginList.length > 0) {
+          engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
+        }
 
         engine.startEngine(async () => {
           let contractsFiles = await engine.events.request2("config:contractsFiles");
@@ -662,10 +668,6 @@ class EmbarkController {
         });
       },
       function startServices(callback) {
-        let pluginList = engine.plugins.listPlugins();
-        if (pluginList.length > 0) {
-          engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
-        }
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
 
@@ -679,6 +681,13 @@ class EmbarkController {
         engine.registerModuleGroup("filewatcher");
         engine.registerModuleGroup("storage");
         engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins });
+
+        // load custom plugins
+        engine.loadDappPlugins();
+        let pluginList = engine.plugins.listPlugins();
+        if (pluginList.length > 0) {
+          engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
+        }
 
         const plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
