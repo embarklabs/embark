@@ -52,6 +52,7 @@
     "decompress": "4.2.0",
     "embark-i18n": "^5.0.0-alpha.2",
     "embark-logger": "^5.0.0-alpha.2",
+    "embark-rpc-manager": "^5.0.0-alpha.2",
     "embark-utils": "^5.0.0-alpha.2",
     "flatted": "0.2.3",
     "fs-extra": "8.1.0",
