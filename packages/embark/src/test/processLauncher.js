@@ -2,14 +2,16 @@
 const assert = require('assert');
 const sinon = require('sinon');
 const path = require('path');
-import { ProcessLauncher, TestLogger } from 'embark-core';
+import { ProcessLauncher, TestLogger, Events } from 'embark-core';
 
 let logger = new TestLogger({});
+
+const events = new Events();
 
 let embarkObj = {
   logger: logger,
   registerAPICall: () => {}
-}
+};
 
 describe('ProcessWrapper', () => {
   let processLauncher;
@@ -19,7 +21,8 @@ describe('ProcessWrapper', () => {
     processLauncher = new ProcessLauncher({
       embark: embarkObj,
       logger: logger,
-      modulePath: path.join(__dirname, 'test.js')
+      modulePath: path.join(__dirname, 'test.js'),
+      events
     });
   });
 

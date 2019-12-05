@@ -72,7 +72,7 @@ const buildNewFile = (file: File, importPath: string) => {
   // imported from node_modules, ie import "@aragon/os/contracts/acl/ACL.sol"
   if (isUnresolvedNodeModule(importPath)) {
     from = resolve(importPath);
-    to = importPath.includes(dappPath(".embark")) ? importPath : dappPath(".embark", "node_modules", importPath);
+    to = importPath.includes(dappPath(".embark")) ? importPath : dappPath(".embark", "contracts", "node_modules", importPath);
     if (from !== to) {
       fs.copySync(from, to);
     }

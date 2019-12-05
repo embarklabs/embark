@@ -16,7 +16,9 @@ let generateApiObject = function() {
 
   var TestEvents = {
     request: (cmd, cb) => {
-      cb(solcVersion);
+      if (typeof cb === "function") {
+        cb(solcVersion);
+      }
     },
     emit: (_ev, _data) => {}
   };
