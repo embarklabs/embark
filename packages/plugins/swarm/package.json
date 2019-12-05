@@ -1,6 +1,6 @@
 {
   "name": "embark-swarm",
-  "version": "5.0.0-alpha.1",
+  "version": "5.0.0-alpha.2",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Implements Swarm support in Embark",
@@ -48,16 +48,16 @@
     "async": "2.6.1",
     "colors": "1.3.2",
     "core-js": "3.4.3",
-    "embark-core": "^5.0.0-alpha.1",
-    "embark-i18n": "^5.0.0-alpha.1",
-    "embark-storage": "^5.0.0-alpha.1",
-    "embark-utils": "^5.0.0-alpha.1",
-    "embarkjs": "^5.0.0-alpha.1",
-    "embarkjs-swarm": "^5.0.0-alpha.1",
+    "embark-core": "^5.0.0-alpha.2",
+    "embark-i18n": "^5.0.0-alpha.2",
+    "embark-storage": "^5.0.0-alpha.2",
+    "embark-utils": "^5.0.0-alpha.2",
+    "embarkjs": "^5.0.0-alpha.2",
+    "embarkjs-swarm": "^5.0.0-alpha.2",
     "swarm-api": "0.1.2"
   },
   "devDependencies": {
-    "embark-solo": "^5.0.0-alpha.0",
+    "embark-solo": "^5.0.0-alpha.2",
     "eslint": "5.7.0",
     "npm-run-all": "4.1.5",
     "rimraf": "3.0.0"

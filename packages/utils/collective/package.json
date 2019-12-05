@@ -1,6 +1,6 @@
 {
   "name": "embark-collective",
-  "version": "5.0.0-alpha.0",
+  "version": "5.0.0-alpha.2",
   "author": "Michael Bradley <michaelsbradleyjr@gmail.com> (https://github.com/michaelsbradleyjr/)",
   "description": "You will be assimilated",
   "homepage": "https://github.com/embark-framework/embark/tree/master/packages/utils/collective#readme",
@@ -44,8 +44,8 @@
     "@babel/core": "7.7.4",
     "@babel/plugin-proposal-class-properties": "7.7.4",
     "@babel/plugin-proposal-decorators": "7.7.4",
-    "@babel/plugin-proposal-export-namespace-from": "7.7.4",
     "@babel/plugin-proposal-export-default-from": "7.7.4",
+    "@babel/plugin-proposal-export-namespace-from": "7.7.4",
     "@babel/plugin-proposal-nullish-coalescing-operator": "7.7.4",
     "@babel/plugin-proposal-optional-chaining": "7.7.4",
     "@babel/plugin-syntax-dynamic-import": "7.7.4",

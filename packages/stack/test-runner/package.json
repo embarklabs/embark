@@ -1,6 +1,6 @@
 {
   "name": "embark-test-runner",
-  "version": "5.0.0-alpha.1",
+  "version": "5.0.0-alpha.2",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Embark Testrunner",
@@ -49,9 +49,9 @@
     "async": "2.6.1",
     "chalk": "2.4.2",
     "core-js": "3.4.3",
-    "embark-i18n": "^5.0.0-alpha.1",
-    "embark-testing": "^5.0.0-alpha.1",
-    "embark-utils": "^5.0.0-alpha.1",
+    "embark-i18n": "^5.0.0-alpha.2",
+    "embark-testing": "^5.0.0-alpha.2",
+    "embark-utils": "^5.0.0-alpha.2",
     "fs-extra": "8.1.0",
     "istanbul-lib-coverage": "2.0.5",
     "istanbul-lib-report": "2.0.8",
@@ -61,7 +61,7 @@
     "web3": "1.2.1"
   },
   "devDependencies": {
-    "embark-solo": "^5.0.0-alpha.0",
+    "embark-solo": "^5.0.0-alpha.2",
     "eslint": "5.7.0",
     "mocha": "6.2.2",
     "npm-run-all": "4.1.5",

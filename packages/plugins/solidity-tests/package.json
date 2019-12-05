@@ -1,6 +1,6 @@
 {
   "name": "embark-solidity-tests",
-  "version": "5.0.0-alpha.1",
+  "version": "5.0.0-alpha.2",
   "description": "Plugin to run Embark solidity tests",
   "main": "dist/lib/index.js",
   "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/solidity-tests#readme",
@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@types/async": "3.0.3",
-    "embark-solo": "^5.0.0-alpha.0",
+    "embark-solo": "^5.0.0-alpha.2",
     "eslint": "5.7.0",
     "mocha": "6.2.2",
     "npm-run-all": "4.1.5",

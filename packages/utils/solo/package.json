@@ -1,7 +1,7 @@
 {
   "name": "embark-solo",
   "private": true,
-  "version": "5.0.0-alpha.0",
+  "version": "5.0.0-alpha.2",
   "author": "Michael Bradley <michaelsbradleyjr@gmail.com> (https://github.com/michaelsbradleyjr/)",
   "description": "Resistance is not futile?",
   "license": "MIT",
@@ -10,7 +10,7 @@
   "files": [],
   "scripts": {},
   "devDependencies": {
-    "embark-collective": "^5.0.0-alpha.0",
+    "embark-collective": "^5.0.0-alpha.2",
     "find-up": "4.1.0",
     "fs-extra": "8.1.0"
   },
