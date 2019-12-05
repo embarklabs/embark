@@ -19,6 +19,9 @@ class Deployment {
     });
 
     this.events.setCommandHandler('deployment:contracts:deploy', (contractsList, contractDependencies, cb) => {
+      if (!this.blockchainConfig.enabled) {
+        return cb();
+      }
       this.deployContracts(contractsList, contractDependencies, cb);
     });
   }

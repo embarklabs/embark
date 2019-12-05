@@ -43,6 +43,10 @@ class Blockchain {
     });
 
     this.events.setCommandHandler("blockchain:node:start", (blockchainConfig, cb) => {
+      if (!blockchainConfig.enabled) {
+        return cb();
+      }
+
       const clientName = blockchainConfig.client;
       const started = () => {
         this.startedClient = clientName;
@@ -108,6 +112,9 @@ class Blockchain {
   }
 
   addArtifactFile(_params, cb) {
+    if (!this.blockchainConfig.enabled) {
+      cb();
+    }
     this.events.request("config:contractsConfig", (_err, contractsConfig) => {
       async.map(contractsConfig.dappConnection, (conn, mapCb) => {
         if (conn === '$EMBARK') {
@@ -120,7 +127,7 @@ class Blockchain {
           this.logger.error(__('Error getting dapp connection'));
           return cb(err);
         }
-        let config = {
+        const config = {
           provider: contractsConfig.library || 'web3',
           dappConnection: results,
           dappAutoEnable: contractsConfig.dappAutoEnable,

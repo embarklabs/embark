@@ -12,6 +12,7 @@ class EmbarkJS {
   constructor(embark, _options) {
     this.embark = embark;
     this.embarkConfig = embark.config.embarkConfig;
+    this.blockchainConfig = embark.config.blockchainConfig;
     this.events = embark.events;
     this.logger = embark.logger;
     this.contractArtifacts = {};

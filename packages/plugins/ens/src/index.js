@@ -132,6 +132,9 @@ class ENS {
   }
 
   async addArtifactFile(_params, cb) {
+    if (!this.embark.config.blockchainConfig.enabled) {
+      return cb();
+    }
     this.getEnsConfig((err, config) => {
       this.events.request("pipeline:register", {
         path: [this.config.embarkConfig.generationDir, 'config'],
@@ -143,20 +146,29 @@ class ENS {
   }
 
   async setProviderAndRegisterDomains(cb = (() => {})) {
+    if (!this.embark.config.blockchainConfig.enabled) {
+      return cb();
+    }
     this.getEnsConfig(async (err, config) => {
+      if (err) {
+        return cb(err);
+      }
       if (this.doSetENSProvider) {
         this.setupEmbarkJS(config);
       }
 
-      const web3 = await this.web3;
-      const networkId = await web3.eth.net.getId();
-      const isKnownNetwork = Boolean(ensContractAddresses[networkId]);
-      const shouldRegisterSubdomain = this.config.namesystemConfig.register && this.config.namesystemConfig.register.subdomains && Object.keys(this.config.namesystemConfig.register.subdomains).length;
-      if (isKnownNetwork || !shouldRegisterSubdomain) {
-        return cb();
+      try {
+        const web3 = await this.web3;
+        const networkId = await web3.eth.net.getId();
+        const isKnownNetwork = Boolean(ensContractAddresses[networkId]);
+        const shouldRegisterSubdomain = this.config.namesystemConfig.register && this.config.namesystemConfig.register.subdomains && Object.keys(this.config.namesystemConfig.register.subdomains).length;
+        if (isKnownNetwork || !shouldRegisterSubdomain) {
+          return cb();
+        }
+        this.registerConfigDomains(config, cb);
+      } catch (e) {
+        cb(e);
       }
-
-      this.registerConfigDomains(config, cb);
     });
   }
 
