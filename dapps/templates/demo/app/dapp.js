@@ -27,12 +27,15 @@ class App extends React.Component {
 
   componentDidMount() {
     EmbarkJS.onReady((err) => {
-      this.setState({blockchainEnabled: true});
       if (err) {
         // If err is not null then it means something went wrong connecting to ethereum
         // you can use this to ask the user to enable metamask for e.g
         return this.setState({error: err.message || err});
       }
+
+      EmbarkJS.Blockchain.isAvailable().then(result => {
+        this.setState({blockchainEnabled: result});
+      });
 
       EmbarkJS.Messages.isAvailable().then(result => {
         this.setState({whisperEnabled: result});

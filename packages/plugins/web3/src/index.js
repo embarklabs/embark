@@ -16,7 +16,9 @@ class EmbarkWeb3 {
     this.events = embark.events;
     this.config = embark.config;
 
-    this.setupEmbarkJS();
+    if (this.config.blockchainConfig.enabled) {
+      this.setupEmbarkJS();
+    }
 
     embark.registerActionForEvent("deployment:contract:deployed", {priority: 40}, this.registerInVm.bind(this));
     embark.registerActionForEvent("deployment:contract:undeployed", this.registerInVm.bind(this));

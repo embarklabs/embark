@@ -89,6 +89,13 @@ Blockchain.setProvider = function(providerName, options) {
   provider.init(options);
 };
 
+Blockchain.isAvailable = function () {
+  if (!this.blockchainConnector) {
+    return Promise.resolve(false);
+  }
+  return this.blockchainConnector.getNetworkId().then(_ => true);
+};
+
 Blockchain.doConnect = function(connectionList, opts, doneCb) {
   const self = this;
 

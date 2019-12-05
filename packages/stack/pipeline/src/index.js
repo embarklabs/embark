@@ -24,7 +24,7 @@ class Pipeline {
   generateAll(cb) {
     async.waterfall([
       (next) => {
-        this.plugins.runActionsForEvent("pipeline:generateAll:before", {}, (err) => {
+        this.plugins.runActionsForEvent("pipeline:generateAll:before", (err) => {
           next(err);
         });
       },
