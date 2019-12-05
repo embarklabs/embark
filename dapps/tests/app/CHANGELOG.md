@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.2](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.1...v5.0.0-alpha.2) (2019-12-05)
+
+
+### Bug Fixes
+
+* **@embark/accounts-manager:** limit funding accounts to 1 at a time ([95b5ae4](https://github.com/embark-framework/embark/commit/95b5ae4))
+* **@embark/dapps:** add missing Smart Contract configurations ([92f6dd4](https://github.com/embark-framework/embark/commit/92f6dd4))
+* **@embark/ens:** don't change shape of Smart Contract args in action hooks ([b4478a9](https://github.com/embark-framework/embark/commit/b4478a9))
+* **@embark/proxy:** Fix unsubsribe handling and add new provider ([f6f4507](https://github.com/embark-framework/embark/commit/f6f4507))
+* **@embark/tests:** Improve expiration unit test ([23e94d6](https://github.com/embark-framework/embark/commit/23e94d6))
+
+
+### Build System
+
+* **deps:** bump deprecated ipfs-api@17.2.4 to ipfs-http-client@39.0.2 ([978e17d](https://github.com/embark-framework/embark/commit/978e17d)), closes [#1985](https://github.com/embark-framework/embark/issues/1985) [#2033](https://github.com/embark-framework/embark/issues/2033) [#1994](https://github.com/embark-framework/embark/issues/1994)
+
+
+### Code Refactoring
+
+* **@embark/library-manager:** restrict versionable packages to only solc ([2543aca](https://github.com/embark-framework/embark/commit/2543aca))
+
+
+### Features
+
+* **@embark/ens:** enable changing namesystem config per test ([de9e667](https://github.com/embark-framework/embark/commit/de9e667))
+
+
+### BREAKING CHANGES
+
+* **deps:** 
+* **@embark/library-manager:** Remove support for specifying the versions of `web3` and `ipfs-api` in a
+project's `embark.json`.
+
+
+
+
+
 # [5.0.0-alpha.1](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.0...v5.0.0-alpha.1) (2019-11-05)
 
 

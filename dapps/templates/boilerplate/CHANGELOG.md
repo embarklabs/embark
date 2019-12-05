@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.2](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.1...v5.0.0-alpha.2) (2019-12-05)
+
+
+### Code Refactoring
+
+* **@embark/library-manager:** restrict versionable packages to only solc ([2543aca](https://github.com/embark-framework/embark/commit/2543aca))
+
+
+### BREAKING CHANGES
+
+* **@embark/library-manager:** Remove support for specifying the versions of `web3` and `ipfs-api` in a
+project's `embark.json`.
+
+
+
+
+
 # [5.0.0-alpha.1](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.0...v5.0.0-alpha.1) (2019-11-05)
 
 

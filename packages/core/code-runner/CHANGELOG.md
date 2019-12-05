@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.2](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.1...v5.0.0-alpha.2) (2019-12-05)
+
+
+### Build System
+
+* **deps:** bump deprecated ipfs-api@17.2.4 to ipfs-http-client@39.0.2 ([978e17d](https://github.com/embark-framework/embark/commit/978e17d)), closes [#1985](https://github.com/embark-framework/embark/issues/1985) [#2033](https://github.com/embark-framework/embark/issues/2033) [#1994](https://github.com/embark-framework/embark/issues/1994)
+
+
+### BREAKING CHANGES
+
+* **deps:** 
+
+
+
+
+
 # [5.0.0-alpha.1](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.0...v5.0.0-alpha.1) (2019-11-05)
 
 **Note:** Version bump only for package embark-code-runner

@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.2](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.1...v5.0.0-alpha.2) (2019-12-05)
+
+
+### Bug Fixes
+
+* **@cockpit:** adjust table-related styling so changes in updated core-ui don't override font color ([92f6d41](https://github.com/embark-framework/embark/commit/92f6d41))
+* **@cockpit/console:** show contract names in the suggestions list ([4ee9004](https://github.com/embark-framework/embark/commit/4ee9004))
+* **@embark/accounts-manager:** limit funding accounts to 1 at a time ([95b5ae4](https://github.com/embark-framework/embark/commit/95b5ae4))
+* **@embark/core:** don't exit in Engine consumer API ([a7edca0](https://github.com/embark-framework/embark/commit/a7edca0))
+* **@embark/core:** ensure type declaration for Plugin.registerActionForEvent() is legit ([5dc4b21](https://github.com/embark-framework/embark/commit/5dc4b21)), closes [/github.com/embark-framework/embark/commit/776db1b7f71e9a78f216cf2acc6c1387c60b3604#diff-5cab125016e6d753f03b6cd0241d5ebbR267](https://github.com//github.com/embark-framework/embark/commit/776db1b7f71e9a78f216cf2acc6c1387c60b3604/issues/diff-5cab125016e6d753f03b6cd0241d5ebbR267)
+* **@embark/dapps:** add missing constructor argument in contracts config ([3f4e12a](https://github.com/embark-framework/embark/commit/3f4e12a))
+* **@embark/dapps:** add missing Smart Contract configurations ([92f6dd4](https://github.com/embark-framework/embark/commit/92f6dd4))
+* **@embark/ens:** don't break when determining contract addresses ([0d20cb5](https://github.com/embark-framework/embark/commit/0d20cb5))
+* **@embark/ens:** don't change shape of Smart Contract args in action hooks ([b4478a9](https://github.com/embark-framework/embark/commit/b4478a9))
+* **@embark/library-manager:** add web3 to versions list ([3c760c3](https://github.com/embark-framework/embark/commit/3c760c3))
+* **@embark/proxy:** Fix unsubsribe handling and add new provider ([f6f4507](https://github.com/embark-framework/embark/commit/f6f4507))
+* **@embark/rpc-manager:** implement missing RPC modifier for eth_sign ([4ebbb44](https://github.com/embark-framework/embark/commit/4ebbb44))
+* **@embark/simulator:** fix port used in simulator ([dba5f77](https://github.com/embark-framework/embark/commit/dba5f77))
+* **@embark/site:** ensure fathom script is only loaded in production environment ([7c5d662](https://github.com/embark-framework/embark/commit/7c5d662))
+* **@embark/tests:** Improve expiration unit test ([23e94d6](https://github.com/embark-framework/embark/commit/23e94d6))
+* **@embark/whisper:** fix ipc conflict on Windows with 2 Geths ([abac984](https://github.com/embark-framework/embark/commit/abac984))
+* **@embark/whisper:** fix whisper node printing twice because of duplicated name ([04a02af](https://github.com/embark-framework/embark/commit/04a02af))
+* **@embark/whisper:** show message when geth port is already taken ([23f9a8c](https://github.com/embark-framework/embark/commit/23f9a8c))
+
+
+### Build System
+
+* **deps:** bump deprecated ipfs-api@17.2.4 to ipfs-http-client@39.0.2 ([978e17d](https://github.com/embark-framework/embark/commit/978e17d)), closes [#1985](https://github.com/embark-framework/embark/issues/1985) [#2033](https://github.com/embark-framework/embark/issues/2033) [#1994](https://github.com/embark-framework/embark/issues/1994)
+
+
+### Code Refactoring
+
+* **@embark/library-manager:** restrict versionable packages to only solc ([2543aca](https://github.com/embark-framework/embark/commit/2543aca))
+
+
+### Features
+
+* **@embark/embark-rpc-manager:** Add support for `eth_signTypedData_v3` ([c7ec49a](https://github.com/embark-framework/embark/commit/c7ec49a)), closes [#1850](https://github.com/embark-framework/embark/issues/1850) [#1850](https://github.com/embark-framework/embark/issues/1850)
+* **@embark/ens:** enable changing namesystem config per test ([de9e667](https://github.com/embark-framework/embark/commit/de9e667))
+* **@embark/plugin:** add priority to regsiterActionForEvents ([776db1b](https://github.com/embark-framework/embark/commit/776db1b))
+* **@embark/plugins/geth:** bump min supported geth version from 1.8.14 to 1.9.7 ([25d0510](https://github.com/embark-framework/embark/commit/25d0510))
+* **@embark/tests:** enable comms and storage in tests ([aecb99d](https://github.com/embark-framework/embark/commit/aecb99d))
+
+
+### BREAKING CHANGES
+
+* **deps:** 
+* **@embark/library-manager:** Remove support for specifying the versions of `web3` and `ipfs-api` in a
+project's `embark.json`.
+
+
+
+
+
 # [5.0.0-alpha.1](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.0...v5.0.0-alpha.1) (2019-11-05)
 
 

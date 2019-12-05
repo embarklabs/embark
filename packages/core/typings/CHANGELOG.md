@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.2](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.1...v5.0.0-alpha.2) (2019-12-05)
+
+
+### Bug Fixes
+
+* **@embark/core:** ensure type declaration for Plugin.registerActionForEvent() is legit ([5dc4b21](https://github.com/embark-framework/embark/commit/5dc4b21)), closes [/github.com/embark-framework/embark/commit/776db1b7f71e9a78f216cf2acc6c1387c60b3604#diff-5cab125016e6d753f03b6cd0241d5ebbR267](https://github.com//github.com/embark-framework/embark/commit/776db1b7f71e9a78f216cf2acc6c1387c60b3604/issues/diff-5cab125016e6d753f03b6cd0241d5ebbR267)
+* **@embark/proxy:** Fix unsubsribe handling and add new provider ([f6f4507](https://github.com/embark-framework/embark/commit/f6f4507))
+
+
+### Features
+
+* **@embark/embark-rpc-manager:** Add support for `eth_signTypedData_v3` ([c7ec49a](https://github.com/embark-framework/embark/commit/c7ec49a)), closes [#1850](https://github.com/embark-framework/embark/issues/1850) [#1850](https://github.com/embark-framework/embark/issues/1850)
+
+
+
+
+
 # [5.0.0-alpha.1](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.0...v5.0.0-alpha.1) (2019-11-05)
 
 
