@@ -118,8 +118,6 @@
     "embark-watcher": "^5.0.0-alpha.2",
     "embark-web3": "^5.0.0-alpha.2",
     "embark-webserver": "^5.0.0-alpha.2",
-    "embark-whisper-geth": "^5.0.0-alpha.2",
-    "embark-whisper-parity": "^5.0.0-alpha.2",
     "embarkjs-ens": "^5.0.0-alpha.2",
     "embarkjs-ipfs": "^5.0.0-alpha.2",
     "embarkjs-swarm": "^5.0.0-alpha.2",

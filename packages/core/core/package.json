@@ -54,6 +54,8 @@
     "embark-logger": "^5.0.0-alpha.2",
     "embark-rpc-manager": "^5.0.0-alpha.2",
     "embark-utils": "^5.0.0-alpha.2",
+    "embark-whisper-geth": "^5.0.0-alpha.2",
+    "embark-whisper-parity": "^5.0.0-alpha.2",
     "flatted": "0.2.3",
     "fs-extra": "8.1.0",
     "globule": "1.2.1",
