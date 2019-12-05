@@ -170,8 +170,9 @@ export function getExternalContractUrl(file: string, providerUrl: string) {
   } else {
     return null;
   }
-  const match = url.match(
-    /\.[a-z]+\/([-a-zA-Z0-9@:%_+.~#?&\/=]+)/,
+  const urlToMatch = providerUrl && providerUrl.includes("localhost") ? url.replace(providerUrl, "") : url;
+  const match = urlToMatch.match(
+    /(?:\.[a-z]+|localhost:[0-9]+)\/([-a-zA-Z0-9@:%_+.~#?&\/=]+)/,
   );
   return {
     filePath: HTTP_CONTRACTS_DIRECTORY + (match !== null ? match[1] : ''),

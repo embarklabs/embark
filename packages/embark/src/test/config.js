@@ -19,6 +19,9 @@ describe('embark.Config', function () {
         "enabled": true,
         "client": "geth",
         "proxy": true,
+        "clientConfig": {
+          "miningMode": "dev"
+        },
         "datadir": ".embark/myenv/datadir",
         "rpcHost": "localhost",
         "rpcPort": 8545,
@@ -53,6 +56,9 @@ describe('embark.Config', function () {
         "enabled": true,
         "client": "geth",
         "proxy": true,
+        "clientConfig": {
+          "miningMode": "dev"
+        },
         "datadir": ".embark/unitenv/datadir",
         "rpcHost": "localhost",
         "rpcPort": 8545,
@@ -103,6 +109,9 @@ describe('embark.Config', function () {
         "enabled": true,
         "client": "geth",
         "proxy": true,
+        "clientConfig": {
+          "miningMode": "dev"
+        },
         "datadir": ".embark/unitlessenv/datadir",
         "rpcHost": "localhost",
         "rpcPort": 8545,
@@ -153,6 +162,9 @@ describe('embark.Config', function () {
         "enabled": true,
         "client": "geth",
         "proxy": true,
+        "clientConfig": {
+          "miningMode": "dev"
+        },
         "datadir": ".embark/extNetwork/datadir",
         "rpcHost": "localhost",
         "rpcPort": 8545,
@@ -172,7 +184,6 @@ describe('embark.Config', function () {
         "nodiscover": true,
         "maxpeers": 0,
         "simulatorBlocktime": 0,
-        "miningMode": "dev",
         "targetGasLimit": 8000000,
         "endpoint": "http://mynetwork.com"
       };
@@ -195,7 +206,7 @@ describe('embark.Config', function () {
       config.loadContractsConfigFile();
       let expectedConfig = {
         versions: {solc: '0.5.0'},
-        dappConnection: ['$WEB3', 'localhost:8545'],
+        dappConnection: ['$WEB3', 'ws://localhost:8546', 'localhost:8545'],
         dappAutoEnable: true,
         "gas": "400000",
         "strategy": "implicit",
@@ -217,7 +228,7 @@ describe('embark.Config', function () {
     it('should replace occurrences of `0x0` with full zero addresses', () => {
       let expectedConfig = {
         versions: {solc: '0.5.0'},
-        dappConnection: ['$WEB3', 'localhost:8545'],
+        dappConnection: ['$WEB3', 'ws://localhost:8546', 'localhost:8545'],
         dappAutoEnable: true,
         "gas": "auto",
         "strategy": "implicit",

@@ -8,7 +8,7 @@ returns the aggregated compilation result.
 
 ## API
 
-**command: `compiler:contracts`**
+**command: `compiler:contracts:compile`**
 
 arguments:
 
@@ -40,7 +40,7 @@ example:
 import { File } from 'src/lib/core/file.js';
 const contractFiles = [(new File({path: "simplestorage.sol", type: "custom", resolver: (cb) => { return cb(".. contract code...") }}))];
 
-embark.events.request("compiler:contracts", contractFiles, {}, (err, compiledObject) => {
+embark.events.request("compiler:contracts:compile", contractFiles, {}, (err, compiledObject) => {
 })
 
 ```

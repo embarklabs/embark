@@ -1,6 +1,7 @@
 const Embark = require('./embark');
 const Events = require('./events');
 const Plugins = require('./plugin');
+const HttpMockServer = require('./httpServer');
 
 const fakeEmbark = (config) => {
   const events = new Events();
@@ -17,6 +18,7 @@ module.exports = {
   Embark,
   Events,
   Plugins,
+  HttpMockServer,
 
   fakeEmbark
 };

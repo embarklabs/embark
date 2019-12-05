@@ -182,6 +182,7 @@
     "embark-solo": "^5.0.0-alpha.2",
     "embark-test-contract-0": "0.0.2",
     "embark-test-contract-1": "0.0.1",
+    "embark-testing": "^5.0.0-alpha.1",
     "eslint": "5.7.0",
     "npm-run-all": "4.1.5",
     "nyc": "13.1.0",

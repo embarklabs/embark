@@ -59,7 +59,7 @@ describe('embark.Compiler', function() {
     const compiler = new Compiler(embarkObject, {plugins: plugins});
 
     it("should return aggregated result", (done) => {
-      events.request("compiler:contracts", [
+      events.request("compiler:contracts:compile", [
         readFile('contracts/simple_storage.sol'),
         readFile('contracts/token.sol'),
         readFile('contracts/erc20.vy')
