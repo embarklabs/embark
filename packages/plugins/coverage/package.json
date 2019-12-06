@@ -1,6 +1,6 @@
 {
   "name": "embark-coverage",
-  "version": "5.0.0-alpha.2",
+  "version": "5.0.0-alpha.3",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Code coverage capabilities for Embark",
@@ -45,7 +45,7 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.7.4",
     "core-js": "3.4.3",
-    "embark-core": "^5.0.0-alpha.2",
+    "embark-core": "^5.0.0-alpha.3",
     "embark-utils": "^5.0.0-alpha.2",
     "fs-extra": "8.1.0",
     "globule": "1.2.1",

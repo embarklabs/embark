@@ -1,6 +1,6 @@
 {
   "name": "embark-web3",
-  "version": "5.0.0-alpha.2",
+  "version": "5.0.0-alpha.3",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Module to add Web3 support to Embark",
@@ -44,7 +44,7 @@
     "@babel/runtime-corejs3": "7.7.4",
     "core-js": "3.4.3",
     "ejs": "2.6.1",
-    "embark-core": "^5.0.0-alpha.2",
+    "embark-core": "^5.0.0-alpha.3",
     "embark-utils": "^5.0.0-alpha.2",
     "embarkjs-web3": "^5.0.0-alpha.2"
   },
