@@ -17,28 +17,28 @@ It goes without saying, the entire web is JS.  Look around you - JS.  View the s
 
 JavaScript, specifically Node, really is in everything we use, and that now also applies to our wonderful world of Cryptocurrencies.
 
-As I mentioned briefly in my [***last*** article](https://embark.status.im/news/2019/11/28/nim-vs-crystal-part-3-cryto-dapps-p2p/), my ***next*** article series is going to be about building your first DApp – from start to finish.  Inevitably, the frontend of our DApp needs to be able to communicate with the Ethereum Network.  This is where [Web3.js](https://web3js.readthedocs.io/en/v1.2.4/index.html) comes into the mix.  Web3.js is a collection of APIs allowing us such functionality as:  Reading & Writing data from Smart Contracts, sending and receiving Ether, encrypting / decrypting wallets & data, and *a whole bunch* of other stuff too.  Basically, *most* of the backend functionality available natively becomes available for use in the browser.
+As I mentioned briefly in my [***last*** article](https://embark.status.im/news/2019/11/28/nim-vs-crystal-part-3-cryto-dapps-p2p/), my ***next*** article series is going to be about building your first DApp – from start to finish.  Inevitably, the frontend of our DApp needs to be able to communicate with the Ethereum Network.  This is where [Web3.js](https://web3js.readthedocs.io/en/v1.2.4/index.html) comes into the mix.  `Web3.js` is a collection of APIs allowing us such functionality as:  Reading & Writing data from Smart Contracts, sending and receiving Ether, encrypting / decrypting wallets & data, and *a whole bunch* of other stuff too.  Basically, *most* of the backend functionality available on the Ethereum Network natively becomes available for use in the browser.
 
 
-This is how the web3.js library talks to the Ethereum Network:
+This is how the `web3.js` library talks to the Ethereum Network:
 
 ![Web3 JS Diagram](../assets/images/web3-js-diagram.png)
-Image credit: [iotbl](https://iotbl.blogspot.com/2017/03/ethereum-and-blockchain-2.html)
+*Image credit: [iotbl](https://iotbl.blogspot.com/2017/03/ethereum-and-blockchain-2.html)*
 
 So, now that the basics are covered, let's go over installing and using the `web3.js` library.
 
 
 # Installing Web3
 
-Installing web3.js is as simple as:
+Installing `web3.js` is as simple as:
 
 ```
 npm install web3
 ```
 
-*One thing worth noting here*; is that (coming from an anti-js background), I kept getting a `cannot find we3 module` error when trying to import web3 into a Node console.  If you, like me, aren't a big js fan, this can be solved by first running the `npm init` command to ensure there is a `package.json` file in the cwd, and *then* you can run `npm install web3`, and it will work fine.
+*One thing worth noting here*; is that (coming from an anti-js background), I kept getting a `cannot find web3 module` error when trying to import web3 into a Node console.  If you, like me, aren't a big js fan, this can be solved by first running the `npm init` command to ensure there is a `package.json` file in the cwd, and *then* you can run `npm install web3`, and it will work fine.  (I realise this is basic stuff – but actually for someone who's *tried* to avoid Node at all costs, it was initially confusing enough to have to Google.)
 
-I am working from a Mac here, but if you are working from Windows, the process can be exactly the same, assuming you have [Node & NPM installed](https://phoenixnap.com/kb/install-node-js-npm-on-windows).
+I am working from a Mac here, but if you are working from Windows, the install process *can* be exactly the same, assuming you do have [Node & NPM installed](https://phoenixnap.com/kb/install-node-js-npm-on-windows).
 
 So, with `web3.js` installed, let's do some basic interactions with the Ethereum Network, and ***dive on in!***
 
@@ -48,9 +48,11 @@ So, with `web3.js` installed, let's do some basic interactions with the Ethereum
 
 ## Wallet Interaction
 
-For this article, we're going to use [Ganache](https://www.trufflesuite.com/ganache), for simplicity, as our local Blockchain.  By using Ganache, we can spin up a local Ethereum node without having to actually write a single line of code!
+For this article, we're going to use [Ganache](https://www.trufflesuite.com/ganache), for simplicity, as our local Blockchain.  By using Ganache, we can spin up a local Ethereum node, without having to write a single line of code!
 
-If we were going deeper into Ethereum Smart Contract development, or doing anything more advanced than this intro post, I would be using [Embark](https://embark.status.im/), and even then - probably Ganache alongside it.
+***(Yes, I realise that rhymes.  No, I didn't realise until my second proof-read through of this article!)***
+
+If we were going deeper into Ethereum Smart Contract development, or doing anything more advanced than this intro post, I would be using [Embark](https://embark.status.im/), but then potentially Ganache alongside it.
 
 Anyway, to install Ganache head over to [this page](https://www.trufflesuite.com/ganache) and click on the executable there.  If you so choose; there is also a Ganache CLI available you can install by running:
 
@@ -62,7 +64,7 @@ Running the Ganache CLI will give you the same functionality as the desktop clie
 
 ![Ganache CLI](../assets/images/ganache-cli.png)
 
-Rather brilliantly; we have we have a local Ethereum Node running that we can start using the Web3 client to interact with.  In another Terminal tab, open up a `node` instance from the same working directory we ran the `npm init` command from earlier.
+Rather brilliantly; we now have a local Ethereum Node running that we can start using the Web3 client to interact with.  In another Terminal tab, open up a `node` instance from the same working directory we ran the `npm init` command from earlier.
 
 Now, in our interactive Node console, run:
 
@@ -116,27 +118,29 @@ Which will output:
 
 ## Contract Interaction
 
-Interacting with our individual wallets as above through `web3.js` is cool, but not nearly the extend to which it works.  Let's now take a brief look at the more important functionality of interacting with smart contracts through `web3.js`.
+As above; interacting with our *individual wallets* through `web3.js` is cool, but not nearly the extent to which the library works.  Let's now take a brief look at the more important functionality; of interacting with smart contracts through `web3.js`.
 
-The first thing we need to do, is to assign our `json interface` for the contract's `ABI`:
+The first thing we need to do, is to create a new contract, which we can do with the `new web3.eth.Contract` command.
+
+Before we call the `new` command, we need to assign our `json interface` for the contract's `ABI`:
 
 ```js
 const abi = [{"type":"function", "name":"foo", "inputs": [{"name":"a","type":"uint256"}], "outputs": [{"name":"b","type":"address"}] },{ "type":"event", "name":"Event", "inputs": [{"name":"a","type":"uint256","indexed":true},{"name":"b","type":"bytes32","indexed":false}], }]
 ```
 
-The `json interface` is a json object describing the Application Binary Interface (ABI) for our Ethereum smart contract.  Using this json interface; `web3.js` is able to create a js object representing our smart contract and its methods & events, using the `web3.eth.Contract` object.
+The `json interface` is a JSON object describing the *Application Binary Interface (ABI)* for our Ethereum smart contract.  Using this JSON interface; `web3.js` is able to create a JavaScript object representing our smart contract and its methods & events, using the `web3.eth.Contract` functionality.
 
-Note, the above ABI is taken directly from the [Web3 docs](https://web3js.readthedocs.io/en/v1.2.0/web3-eth-contract.html#id5).
+*Note, the above JSON interface / ABI is taken directly from the [Web3 docs](https://web3js.readthedocs.io/en/v1.2.0/web3-eth-contract.html#id5).*
 
 Now that we have our `json interface` defined, we can create our new contract instance: 
-
-*(The `from` address in this example is just random)*
 
 ```js
 var myContract = new web3.eth.Contract(abi, '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe');
 ```
 
-You could then set the contract's `data`, and other `options`, and then deploy your contract with something *like* the following:
+*(The `from` address in this example is just random, but in a real case would be the address that all transactions of the contract were sent from.)*
+
+You could then set the contract's `data`, and other `options`, and then **deploy** your contract with something *like* the following:
 
 ```js
 myContract.options.data = '0x12345...';
@@ -145,7 +149,7 @@ myContract.deploy({
     arguments: [123, 'My String']
 })
 .send({
-    from: '0x1234567890123456789012345678901234567891',
+    from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe',
     gas: 1500000,
     gasPrice: '30000000000000'
 })
@@ -154,7 +158,7 @@ myContract.deploy({
 });
 ```
 
-The above examples aren't supposed to be perfect continuous code, and should definitely *not* be copy/pasted into a production project, but they are there to show off roughly how `Web.js` works, and give an overview of the 2 main pieces of functionality, as I see them – Wallets and Contracts.
+The above examples aren't supposed to be perfect continuous code, and should definitely *not* be copy/pasted into a production project, but they are there to show off roughly how `Web.js` works, and give an overview of interacting with the 2 main pieces of functionality, as I see them – Wallets and Contracts.
 
 In my next tutorial series, we will be utilising [Embark](https://embark.status.im/docs/quick_start.html), and therefore we'll be diving deeper into `web3.js`, and showing off much more of its potential.
 
@@ -179,9 +183,9 @@ PHP - [web3.php](https://github.com/sc0Vu/web3.php)
 
 As stated at the opening of this article, we've barely even scratched the surface of `web.js` capabilities.  But I do hope that you now have a better understanding of what Web3 stands for.
 
-Personally, I am **very much** looking forward to ***diving on in*** to my next DApp tutorial series, to familiarise myself with the Ethereum Network to the fullest.
+Personally, I am **very much** looking forward to ***diving on in*** to my next DApp tutorial series, to utilise and demonstrate the Ethereum Network to its fullest.
 
-As always, if you have *any* questions regarding Web3, how Status utilises Web3, or comments on this article, feel free to reach out to me at [robin@status](mailto:robin@status.im).
+As always, if you have *any* questions regarding Web3, how Status utilises Web3, or if you have comments on this article, feel free to reach out to me at [robin@status](mailto:robin@status.im).
 
 Thanks again for reading, and check back for my DApp tutorial series, starting later this week!
 
