@@ -4,8 +4,10 @@ author: robin_percy
 categories:
   - tutorials
 layout: blog-post
-image: '/assets/images/nim-crystal-header_blank.jpg'
+image: '/assets/images/web3-article-header.png'
 ---
+
+![Web3.js](../assets/images/web3-article-header.png)
 
 *This will be a fairly brief write-up, introducing Web3 ahead of my next DApp tutorial series.*
 
