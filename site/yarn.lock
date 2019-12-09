@@ -237,6 +237,11 @@ ansi-regex@^4.1.0:
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-4.1.0.tgz#8b9f8f08cf1acb843756a839ca8c7e3168c51997"
   integrity sha512-1apePfXM1UOSqw0o9IiFAovVz9M5S1Dg+4TrDwfMewQ6p/rmMueb7tWZjQ1rx4Loy1ArBggoqGpfqqdI4rondg==
 
+ansi-regex@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-5.0.0.tgz#388539f55179bf39339c81af30a654d69f87cb75"
+  integrity sha512-bY6fj56OUQ0hU1KjFNDQuJFezqKdrAyFdIevADiqrWHwSlbmBNMHp5ak2f40Pm8JTFyM2mqxkG6ngkHO11f/lg==
+
 ansi-styles@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-2.2.1.tgz#b432dd3358b634cf75e1e4664368240533c1ddbe"
@@ -2680,34 +2685,33 @@ hexo-util@1.0.0:
     html-entities "^1.2.1"
     striptags "^3.1.1"
 
-hexo-util@^1.0.0, hexo-util@^1.3.0, hexo-util@^1.4.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/hexo-util/-/hexo-util-1.5.0.tgz#bf931c176d4d19965b9e154a4b6767cdde6e2b9c"
-  integrity sha512-AIDf3xnn4+E+2uiKh7Qk+sH6HH/CFME38Kvi4hqnMPks8BDACWvfXoMOK4mydGfjps96tsMwdLT5+AQx1xv6PQ==
+hexo-util@^1.0.0, hexo-util@^1.3.0, hexo-util@^1.4.0, hexo-util@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/hexo-util/-/hexo-util-1.6.1.tgz#7857b65b0c55aba77b3f57a3ddb327ccdf72f762"
+  integrity sha512-O1zE4rr8LLzyY64QSynwPElz8oZpPdhVFVKzTa3JUm9KnV53bSPn/UfzYXPnwA2IUNv/BRTxA8OSUKfP4g5p/A==
   dependencies:
     bluebird "^3.5.2"
     camel-case "^3.0.0"
     cross-spawn "^7.0.0"
     highlight.js "^9.13.1"
-    html-entities "^1.2.1"
     striptags "^3.1.1"
 
-hexo@4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/hexo/-/hexo-4.0.0.tgz#5b54dfd65bce3d45ba3178e2fbadddf6b5751cc2"
-  integrity sha512-woVSeutGyFDLdE3UWJsZWw18KboFSsmmcxuivuLJPQ0pqLLz4zar07BG/YQXgVaXzR1jQ7Hurbx1gGZj5Z7y2w==
+hexo@4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/hexo/-/hexo-4.1.0.tgz#9dd85184e0eb9639c88dc08d79eca128adc29c40"
+  integrity sha512-FWAsLPGvmgP6qFRdzZd0MDfv8eh+ZRzn6kkpg1qCMguzwfYvB6aInWTfOYTyhYMnSnIAK2nf/hoHZQDB7Y+n+w==
   dependencies:
     abbrev "^1.1.1"
     archy "^1.0.0"
     bluebird "^3.5.2"
-    chalk "^2.4.1"
+    chalk "^3.0.0"
     cheerio "0.22.0"
     hexo-cli "^3.0.0"
     hexo-front-matter "^1.0.0"
     hexo-fs "^2.0.0"
     hexo-i18n "^1.0.0"
     hexo-log "^1.0.0"
-    hexo-util "^1.4.0"
+    hexo-util "^1.6.1"
     js-yaml "^3.12.0"
     lodash "^4.17.11"
     micromatch "^4.0.2"
@@ -2716,7 +2720,7 @@ hexo@4.0.0:
     nunjucks "^3.1.3"
     pretty-hrtime "^1.0.3"
     resolve "^1.8.1"
-    strip-ansi "^5.0.0"
+    strip-ansi "^6.0.0"
     strip-indent "^3.0.0"
     swig-extras "0.0.1"
     swig-templates "^2.0.3"
@@ -4859,14 +4863,7 @@ resolve-url@^0.2.1:
   resolved "https://registry.yarnpkg.com/resolve-url/-/resolve-url-0.2.1.tgz#2c637fe77c893afd2a663fe21aa9080068e2052a"
   integrity sha1-LGN/53yJOv0qZj/iGqkIAGjiBSo=
 
-resolve@^1.1.6, resolve@^1.1.7, resolve@^1.10.0, resolve@^1.11.0, resolve@^1.4.0, resolve@^1.8.1:
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.12.0.tgz#3fc644a35c84a48554609ff26ec52b66fa577df6"
-  integrity sha512-B/dOmuoAik5bKcD6s6nXDCjzUKnaDvdkRyAk6rsmsKLipWj4797iothd7jmmUhWTfinVMU+wc56rYKsit2Qy4w==
-  dependencies:
-    path-parse "^1.0.6"
-
-resolve@^1.10.1:
+resolve@^1.1.6, resolve@^1.1.7, resolve@^1.10.0, resolve@^1.10.1, resolve@^1.11.0, resolve@^1.4.0, resolve@^1.8.1:
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.13.1.tgz#be0aa4c06acd53083505abb35f4d66932ab35d16"
   integrity sha512-CxqObCX8K8YtAhOBRg+lrcdn+LK+WYOS8tSjqSFbjtrI5PnS63QPhZl4+yKfrU9tdsbMu9Anr/amegT87M9Z6w==
@@ -5439,12 +5436,19 @@ strip-ansi@^4.0.0:
   dependencies:
     ansi-regex "^3.0.0"
 
-strip-ansi@^5.0.0, strip-ansi@^5.1.0, strip-ansi@^5.2.0:
+strip-ansi@^5.1.0, strip-ansi@^5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-5.2.0.tgz#8c9a536feb6afc962bdfa5b104a5091c1ad9c0ae"
   integrity sha512-DuRs1gKbBqsMKIZlrffwlug8MHkcnpjs5VPmL1PAh+mA30U0DTotfDZ0d2UUsXpPmPmMMJ6W773MaA3J+lbiWA==
   dependencies:
     ansi-regex "^4.1.0"
+
+strip-ansi@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.0.tgz#0b1571dd7669ccd4f3e06e14ef1eed26225ae532"
+  integrity sha512-AuvKTrTfQNYNIctbR1K/YGTR1756GycPsg7b9bdV9Duqur4gv6aKqHXah67Z8ImS7WEz5QVcOtlfW2rZEugt6w==
+  dependencies:
+    ansi-regex "^5.0.0"
 
 strip-bom-buf@^1.0.0:
   version "1.0.0"
