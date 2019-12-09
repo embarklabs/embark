@@ -3,6 +3,7 @@ const { normalizeInput } = require('embark-utils');
 import { BlockchainProcessLauncher } from './blockchainProcessLauncher';
 import { BlockchainClient } from './blockchain';
 import { ws, rpc } from './check.js';
+import DevTxs from "./devtxs";
 const constants = require('embark-core/constants');
 
 class Geth {
@@ -50,6 +51,19 @@ class Geth {
         cb();
       }
     });
+
+    this.setupDevTxs();
+  }
+  
+  async setupDevTxs() {
+    const devTxs = new DevTxs(this.embark);
+    await devTxs.init();
+    try {
+      await devTxs.startRegularTxs();
+      this.logger.info("Regular transactions started");
+    } catch (err) {
+      this.logger.error(`Error starting regular transactions: ${err.message}`);
+    }
   }
 
   shouldInit() {
