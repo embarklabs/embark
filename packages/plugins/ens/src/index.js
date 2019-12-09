@@ -469,10 +469,9 @@ class ENS {
     ENSFunctions.lookupAddress(address, this.ensContract, namehash, this.createResolverContract.bind(this), cb);
   }
 
-  ensRegisterSubdomain(subdomain, address, cb) {
-    this.events.request("blockchain:defaultAccount:get", (_err, defaultAccount) => {
-      this.safeRegisterSubDomain(subdomain, address, defaultAccount, cb);
-    });
+  async ensRegisterSubdomain(subdomain, address, cb) {
+    const defaultAccount = await this.web3DefaultAccount;
+    this.safeRegisterSubDomain(subdomain, address, defaultAccount, cb);
   }
 
   isENSName(name) {
