@@ -15,7 +15,7 @@ To kick this article off, I first have to reaffirm, for those that aren't aware,
 
 For years, I harboured a deep hatred of JS, and actively whinged about it at every opportunity I got; being ***forced*** to use it in my daily work life.  Now however, I do have to say; over the last few years I have *softened* to JS, and I am much more comfortable in my own skin when having to use it.
 
-It goes without saying, the entire web is JS.  Look around you - JS.  View the source of this article - JS files.  Look at your own app's dependencies - JS.  
+It goes without saying, the entire web is JS.  Look around you - JS.  View the source of this article - JS files.  Look at your own app's dependencies - JS.
 
 JavaScript, specifically Node, really is in everything we use, and that now also applies to our wonderful world of Cryptocurrencies.
 
@@ -68,7 +68,7 @@ npm install -g ganache-cli
 
 Running the Ganache CLI will give you the same functionality as the desktop client; in essence giving us a multitude of ETH-loaded wallets that we can build contracts around / interact with.
 
-![Ganache CLI](../assets/images/ganache-cli.png)
+![Ganache CLI](/assets/images/ganache-cli.png)
 
 Rather brilliantly; we now have a local Ethereum Node running that we can start using the Web3 client to interact with.  In another Terminal tab, open up a `node` instance from the same working directory we ran the `npm init` command from earlier.
 
@@ -83,7 +83,7 @@ Something to note here, is that I'm calling `new Web3` with an `http` protocol, 
 
 ``` js
 var web3 = new Web3(Web3.givenProvider || new Web3.providers.WebsocketProvider('ws://remotenode.com:8546'));
-``` 
+```
 
 To test and ensure the connection, you can get a list of the accounts made available in Ganache by running:
 
@@ -138,7 +138,7 @@ The `json interface` is a JSON object describing the *Application Binary Interfa
 
 *Note, the above JSON interface / ABI is taken directly from the [Web3 docs](https://web3js.readthedocs.io/en/v1.2.0/web3-eth-contract.html#id5).*
 
-Now that we have our `json interface` defined, we can create our new contract instance: 
+Now that we have our `json interface` defined, we can create our new contract instance:
 
 ```js
 var myContract = new web3.eth.Contract(abi, '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe');
