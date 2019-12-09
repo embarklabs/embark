@@ -7,7 +7,7 @@ layout: blog-post
 image: '/assets/images/web3-article-header.png'
 ---
 
-![Web3.js](../assets/images/web3-article-header.png)
+![Web3.js](/assets/images/web3-article-header.png)
 
 *This will be a fairly brief write-up, introducing Web3 ahead of my next DApp tutorial series.*
 
@@ -19,12 +19,12 @@ It goes without saying, the entire web is JS.  Look around you - JS.  View the s
 
 JavaScript, specifically Node, really is in everything we use, and that now also applies to our wonderful world of Cryptocurrencies.
 
-As I mentioned briefly in my [***last*** article](https://embark.status.im/news/2019/11/28/nim-vs-crystal-part-3-cryto-dapps-p2p/), my ***next*** article series is going to be about building your first DApp – from start to finish.  Inevitably, the frontend of our DApp needs to be able to communicate with the Ethereum Network.  This is where [Web3.js](https://web3js.readthedocs.io/en/v1.2.4/index.html) comes into the mix.  `Web3.js` is a collection of APIs allowing us such functionality as:  Reading & Writing data from Smart Contracts, sending and receiving Ether, encrypting / decrypting wallets & data, and *a whole bunch* of other stuff too.  Basically, *most* of the backend functionality available on the Ethereum Network natively becomes available for use in the browser.
+As I mentioned briefly in my [***last*** article](/news/2019/11/28/nim-vs-crystal-part-3-cryto-dapps-p2p/), my ***next*** article series is going to be about building your first DApp – from start to finish.  Inevitably, the frontend of our DApp needs to be able to communicate with the Ethereum Network.  This is where [Web3.js](https://web3js.readthedocs.io/en/v1.2.4/index.html) comes into the mix.  `Web3.js` is a collection of APIs allowing us such functionality as:  Reading & Writing data from Smart Contracts, sending and receiving Ether, encrypting / decrypting wallets & data, and *a whole bunch* of other stuff too.  Basically, *most* of the backend functionality available on the Ethereum Network natively becomes available for use in the browser.
 
 
 This is how the `web3.js` library talks to the Ethereum Network:
 
-![Web3 JS Diagram](../assets/images/web3-js-diagram.png)
+![Web3 JS Diagram](/assets/images/web3-js-diagram.png)
 *Image credit: [iotbl](https://iotbl.blogspot.com/2017/03/ethereum-and-blockchain-2.html)*
 
 So, now that the basics are covered, let's go over installing and using the `web3.js` library.
@@ -38,7 +38,7 @@ Installing `web3.js` is as simple as:
 npm install web3
 ```
 
-*One thing worth noting here*; is that (coming from an anti-js background), I kept getting a `cannot find web3 module` error when trying to import web3 into a Node console.  If you, like me, aren't a big js fan, this can be solved by first running the `npm init` command to ensure there is a `package.json` file in the cwd, and *then* you can run `npm install web3`, and it will work fine.  (I realise this is basic stuff – but actually for someone who's *tried* to avoid Node at all costs, it was initially confusing enough to have to Google.)
+*One thing worth noting here*; is that (coming from an anti-js background), I kept getting a `cannot find web3 module` error when trying to import web3 into a Node console.  If you, like me, aren't a big js fan, this can be solved by first running the `npm init` command to ensure there is a `package.json` file in the cwd, and *then* you can run `npm install web3`, and it will work fine.  (I realise this is basic stuff – but actually for someone who's *tried* to avoid Node at all costs, it was initially confusing enough to have to search online.)
 
 I am working from a Mac here, but if you are working from Windows, the install process *can* be exactly the same, assuming you do have [Node & NPM installed](https://phoenixnap.com/kb/install-node-js-npm-on-windows).
 
@@ -54,7 +54,11 @@ For this article, we're going to use [Ganache](https://www.trufflesuite.com/gana
 
 ***(Yes, I realise that rhymes.  No, I didn't realise until my second proof-read through of this article!)***
 
-If we were going deeper into Ethereum Smart Contract development, or doing anything more advanced than this intro post, I would be using [Embark](https://embark.status.im/), but then potentially Ganache alongside it.
+In fact, though, Embark already has Ganache inbuilt, so we could also simply run:
+
+```js
+embark simulator
+```
 
 Anyway, to install Ganache head over to [this page](https://www.trufflesuite.com/ganache) and click on the executable there.  If you so choose; there is also a Ganache CLI available you can install by running:
 
@@ -81,7 +85,7 @@ Something to note here, is that I'm calling `new Web3` with an `http` protocol, 
 var web3 = new Web3(Web3.givenProvider || new Web3.providers.WebsocketProvider('ws://remotenode.com:8546'));
 ``` 
 
-To test and ensure the connection, you can get a list of the wallets made available in Ganache by running:
+To test and ensure the connection, you can get a list of the accounts made available in Ganache by running:
 
 ``` js
 web3.eth.getAccounts().then(console.log);
@@ -102,7 +106,7 @@ Which *should* give you an output like the following:
   '0x1BC51a0edEC9FdEA3B14748e9209F4bF8Fe024b5' ]
 ```
 
-If you want to check the balance of an individual wallet from the above list, you can do so by running:
+If you want to check the balance of an individual account from the above list, you can do so by running:
 
 ```js
 const account1 = "0x7689cF9F90FAad61B8a3c9b1b2A5b4580B37358b";
@@ -120,9 +124,9 @@ Which will output:
 
 ## Contract Interaction
 
-As above; interacting with our *individual wallets* through `web3.js` is cool, but not nearly the extent to which the library works.  Let's now take a brief look at the more important functionality; of interacting with smart contracts through `web3.js`.
+As above; interacting with our *individual accounts* through `web3.js` is cool, but not nearly the extent to which the library works.  Let's now take a brief look at the more important functionality; of interacting with Smart Contracts through `web3.js`.
 
-The first thing we need to do, is to create a new contract, which we can do with the `new web3.eth.Contract` command.
+The first thing we need to do, is to create a new Smart Contract, which we can do with the `new web3.eth.Contract` command.
 
 Before we call the `new` command, we need to assign our `json interface` for the contract's `ABI`:
 
@@ -130,7 +134,7 @@ Before we call the `new` command, we need to assign our `json interface` for the
 const abi = [{"type":"function", "name":"foo", "inputs": [{"name":"a","type":"uint256"}], "outputs": [{"name":"b","type":"address"}] },{ "type":"event", "name":"Event", "inputs": [{"name":"a","type":"uint256","indexed":true},{"name":"b","type":"bytes32","indexed":false}], }]
 ```
 
-The `json interface` is a JSON object describing the *Application Binary Interface (ABI)* for our Ethereum smart contract.  Using this JSON interface; `web3.js` is able to create a JavaScript object representing our smart contract and its methods & events, using the `web3.eth.Contract` functionality.
+The `json interface` is a JSON object describing the *Application Binary Interface (ABI)* for our Smart Contract.  Using this JSON interface; `web3.js` is able to create a JavaScript object representing our Smart Contract and its methods & events, using the `web3.eth.Contract` functionality.
 
 *Note, the above JSON interface / ABI is taken directly from the [Web3 docs](https://web3js.readthedocs.io/en/v1.2.0/web3-eth-contract.html#id5).*
 
@@ -140,9 +144,9 @@ Now that we have our `json interface` defined, we can create our new contract in
 var myContract = new web3.eth.Contract(abi, '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe');
 ```
 
-*(The `from` address in this example is just random, but in a real case would be the address that all transactions of the contract were sent from.)*
+*(The `from` address is the address of the already deployed contract instance that we're aiming to talk to.)*
 
-You could then set the contract's `data`, and other `options`, and then **deploy** your contract with something *like* the following:
+You could then set the Smart Contract's `data` and other `options`, and then **deploy** your Contract with something *like* the following:
 
 ```js
 myContract.options.data = '0x12345...';
