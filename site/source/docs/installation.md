@@ -15,16 +15,10 @@ Once done, go ahead and [install Embark](#Installing-Embark).
 
 ### Node
 
-Please install [Node.js](http://nodejs.org/) in version 10.17.0 LTS or higher.
+Please install [Node.js](http://nodejs.org/) in version 10.17.0.
 
 {% notification info 'Quick Tip' %}
 We recommend installing Node using the [Node Version Manager](https://github.com/creationix/nvm/blob/master/README.md).  This is because it makes it very easy to install different versions of Node in isolated environments that don't require users to [change their permissions](https://docs.npmjs.com/getting-started/fixing-npm-permissions) when installing packages. Find instructions on how to install NVM [here](https://github.com/creationix/nvm/blob/master/README.md#install-script).
-
-Once that is done, we can install and select a specific Node version or use the `--lts` option to get the latest version with long term support like this:
-
-<pre class="highlight"><code>$ nvm install --lts
-$ nvm use --lts
-</code></pre>
 {% endnotification %}
 
 ### IPFS (Optional)
