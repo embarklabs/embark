@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declarationDir": "./dist",
+    "rootDir": "./src",
+    "tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.embark-api-client.tsbuildinfo"
+  },
+  "extends": "../../../tsconfig.base.json",
+  "include": [
+    "src/**/*"
+  ]
+}

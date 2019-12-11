@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    // "checkJs": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "moduleResolution": "Node",
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "resolveJsonModule": true,
+    "strict": true,
+    "target": "ESNext"
+  }
+}

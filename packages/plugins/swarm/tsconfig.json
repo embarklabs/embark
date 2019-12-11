@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declarationDir": "./dist",
+    "rootDir": "./src",
+    "tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.embark-swarm.tsbuildinfo"
+  },
+  "extends": "../../../tsconfig.base.json",
+  "include": [
+    "src/**/*"
+  ],
+  "references": [
+    {
+      "path": "../../core/core"
+    },
+    {
+      "path": "../../core/i18n"
+    },
+    {
+      "path": "../../core/utils"
+    },
+    {
+      "path": "../../embarkjs/embarkjs"
+    },
+    {
+      "path": "../../embarkjs/swarm"
+    },
+    {
+      "path": "../../stack/storage"
+    }
+  ]
+}

@@ -1,11 +1,12 @@
 import { __ } from 'embark-i18n';
-import { Embark, Events, Logger } from "embark";
+import { Embark, EmbarkEvents } from "embark-core";
+import { Logger } from "embark-logger";
 import Web3 from "web3";
 import constants from "embark-core/constants.json";
 export default class DevTxs {
   private embark: Embark;
   private blockchainConfig: any;
-  private events: Events;
+  private events: EmbarkEvents;
   private logger: Logger;
   private web3?: Web3;
   private regularTxsInt?: NodeJS.Timeout;

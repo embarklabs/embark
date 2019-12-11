@@ -30,12 +30,23 @@ const getImports = (source: string) => {
   }).filter((fileImport) => fileImport.length);
 };
 
-const prepareInitialFile = async (file: File) => {
+const prepareInitialFile = async (file: File | any) => {
   if (file.type === Types.http) {
     return await file.content;
   }
 
-  const to = file.path.includes(dappPath(".embark")) ? path.normalize(file.path) : dappPath(".embark", file.path);
+  let to: string;
+  if (file.path.includes(dappPath(".embark"))) {
+    to = path.normalize(file.path);
+  } else if (path.isAbsolute(file.path)) {
+    // don't want 'C:\' in calculated path on Windows
+    const relativeFrom = path.normalize('/');
+    const relativePath = path.relative(relativeFrom, file.path);
+    to = dappPath(".embark", relativePath);
+  } else {
+    to = dappPath(".embark", file.path);
+  }
+
   if (file.type === Types.dappFile || file.type === Types.custom) {
     if (file.resolver) {
       fs.mkdirpSync(path.dirname(to));

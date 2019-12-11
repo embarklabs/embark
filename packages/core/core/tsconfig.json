@@ -1,5 +1,23 @@
 {
-  "extends": "../../../tsconfig.json",
-  "include": ["src/**/*"]
+  "compilerOptions": {
+    "composite": true,
+    "declarationDir": "./dist",
+    "rootDir": "./src",
+    "tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.embark-core.tsbuildinfo"
+  },
+  "extends": "../../../tsconfig.base.json",
+  "include": [
+    "src/**/*"
+  ],
+  "references": [
+    {
+      "path": "../i18n"
+    },
+    {
+      "path": "../logger"
+    },
+    {
+      "path": "../utils"
+    }
+  ]
 }
-

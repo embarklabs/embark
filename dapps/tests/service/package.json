@@ -3,9 +3,16 @@
   "dependencies": {
     "haml": "0.4.3"
   },
+  "devDependencies": {
+    "rimraf": "3.0.0"
+  },
   "license": "MIT",
   "main": "index.js",
   "name": "embark-dapp-test-service",
   "private": true,
+  "scripts": {
+    "clean": "npm run reset",
+    "reset": "npx rimraf embark-*.tgz package"
+  },
   "version": "5.0.0-alpha.0"
 }

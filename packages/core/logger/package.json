@@ -25,15 +25,18 @@
     "url": "https://github.com/embark-framework/embark.git"
   },
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "embark-collective": {
-    "build:node": true
+    "build:node": true,
+    "typecheck": true
   },
   "scripts": {
     "_build": "npm run solo -- build",
+    "_typecheck": "npm run solo -- typecheck",
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "eslint src/",
-    "qa": "npm-run-all lint _build",
+    "qa": "npm-run-all lint _typecheck _build",
     "reset": "npx rimraf dist embark-*.tgz package",
     "solo": "embark-solo"
   },
@@ -44,8 +47,7 @@
     "@babel/runtime-corejs3": "7.7.4",
     "colors": "1.3.2",
     "core-js": "3.4.3",
-    "date-and-time": "0.6.2",
-    "embark-utils": "^5.0.0-alpha.4"
+    "date-and-time": "0.6.2"
   },
   "devDependencies": {
     "embark-solo": "^5.0.0-alpha.2",

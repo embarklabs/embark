@@ -1,6 +1,6 @@
 /*globals describe, it, beforeEach*/
 const {expect} = require('chai');
-import { getAddressToContract, getTransactionParams } from 'embark-utils';
+import { getAddressToContract, getTransactionParams } from 'embark-transaction-logger';
 require('colors');
 
 let contractsList;

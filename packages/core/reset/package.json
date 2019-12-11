@@ -13,19 +13,30 @@
     "url": "https://github.com/embark-framework/embark.git"
   },
   "bin": "./bin.js",
-  "main": "index.js",
+  "main": "./src/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
-    "bin.js"
+    "bin.js",
+    "dist",
+    "src"
   ],
-  "embark-collective": {},
+  "embark-collective": {
+    "typecheck": true
+  },
   "scripts": {
+    "_typecheck": "npm run solo -- typecheck",
+    "ci": "npm run qa",
+    "clean": "npm run reset",
+    "qa": "npm-run-all _typecheck",
+    "reset": "npx rimraf dist embark-*.tgz package",
     "solo": "embark-solo"
   },
   "dependencies": {
     "rimraf": "3.0.0"
   },
   "devDependencies": {
-    "embark-solo": "^5.0.0-alpha.2"
+    "embark-solo": "^5.0.0-alpha.2",
+    "npm-run-all": "4.1.5"
   },
   "engines": {
     "node": ">=10.17.0 <12.0.0",

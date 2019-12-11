@@ -1,5 +1,8 @@
+import { readJsonSync } from 'fs-extra';
+import { join } from "path";
 import { Events } from './eventsWrapper';
-const constants = require('../../constants');
+
+const constants = readJsonSync(join(__dirname, '../../constants.json'));
 
 export class ProcessWrapper {
 

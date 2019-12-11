@@ -1,5 +1,26 @@
 {
-    "compilerOptions": { "baseUrl": ".", "paths": { "*": ["types/*"] } },
-  "extends": "../../../tsconfig.json",
-  "include": ["src/**/*"]
+  "compilerOptions": {
+    "composite": true,
+    "declarationDir": "./dist",
+    "rootDir": "./src",
+    "tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.embark-proxy.tsbuildinfo"
+  },
+  "extends": "../../../tsconfig.base.json",
+  "include": [
+    "src/**/*"
+  ],
+  "references": [
+    {
+      "path": "../../core/core"
+    },
+    {
+      "path": "../../core/i18n"
+    },
+    {
+      "path": "../../core/logger"
+    },
+    {
+      "path": "../../core/utils"
+    }
+  ]
 }

@@ -26,39 +26,40 @@
     "url": "https://github.com/embark-framework/embark.git"
   },
   "main": "./dist/lib/index.js",
+  "types": "./dist/lib/index.d.ts",
   "embark-collective": {
-    "build:node": true
+    "build:node": true,
+    "typecheck": true
   },
   "scripts": {
     "_build": "npm run solo -- build",
+    "_typecheck": "npm run solo -- typecheck",
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
     "lint:js": "eslint src/",
     "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
-    "qa": "npm-run-all lint typecheck _build test",
+    "qa": "npm-run-all lint _typecheck _build test",
     "reset": "npx rimraf .nyc_output coverage dist embark-*.tgz package",
     "solo": "embark-solo",
-    "test": "nyc --reporter=html --reporter=json mocha \"dist/test/**/*.js\" --exit --no-timeouts --require source-map-support/register",
-    "typecheck": "tsc",
-    "watch": "run-p watch:*",
-    "watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
+    "test": "nyc --reporter=html --reporter=json mocha \"dist/test/**/*.js\" --exit --no-timeouts --require source-map-support/register"
   },
   "eslintConfig": {
     "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.7.4",
+    "@types/json-stringify-safe": "5.0.0",
     "async": "2.6.1",
     "chalk": "2.4.2",
     "core-js": "3.4.3",
     "embark-core": "^5.0.0-alpha.4",
     "embark-i18n": "^5.0.0-alpha.2",
     "embark-utils": "^5.0.0-alpha.4",
+    "fs-extra": "8.1.0",
     "json-stringify-safe": "5.0.1"
   },
   "devDependencies": {
-    "@types/json-stringify-safe": "5.0.0",
     "embark-logger": "^5.0.0-alpha.4",
     "embark-solo": "^5.0.0-alpha.2",
     "eslint": "5.7.0",
@@ -67,8 +68,8 @@
     "nyc": "13.1.0",
     "rimraf": "3.0.0",
     "source-map-support": "0.5.13",
-    "tslint": "5.16.0",
-    "typescript": "3.6.3"
+    "tslint": "5.20.1",
+    "typescript": "3.7.2"
   },
   "engines": {
     "node": ">=10.17.0 <12.0.0",

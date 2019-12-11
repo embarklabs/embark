@@ -2,7 +2,6 @@
   "name": "embark-mocha-tests",
   "version": "5.0.0-alpha.4",
   "description": "Mocha Test Runner",
-  "main": "dist/lib/index.js",
   "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/mocha-tests#readme",
   "repository": {
     "directory": "packages/plugins/mocha-tests",
@@ -24,15 +23,19 @@
   "files": [
     "dist"
   ],
+  "main": "./dist/lib/index.js",
+  "types": "./dist/lib/index.d.ts",
   "embark-collective": {
-    "build:node": true
+    "build:node": true,
+    "typecheck": true
   },
   "scripts": {
     "_build": "npm run solo -- build",
+    "_typecheck": "npm run solo -- typecheck",
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "eslint src/",
-    "qa": "npm-run-all lint _build test",
+    "qa": "npm-run-all lint _typecheck _build test",
     "reset": "npx rimraf .nyc_output dist embark-*.tgz package",
     "solo": "embark-solo",
     "test": "nyc --reporter=html --reporter=json mocha \"dist/test/**/*.js\" --exit --no-timeouts --require source-map-support/register"
@@ -45,6 +48,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.7.4",
+    "@types/async": "3.0.3",
     "async": "3.1.0",
     "core-js": "3.4.3",
     "embark-i18n": "^5.0.0-alpha.2",
@@ -54,7 +58,6 @@
     "web3": "1.2.1"
   },
   "devDependencies": {
-    "@types/async": "3.0.3",
     "embark-solo": "^5.0.0-alpha.2",
     "eslint": "5.7.0",
     "npm-run-all": "4.1.5",

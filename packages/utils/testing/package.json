@@ -4,6 +4,7 @@
   "description": "Testing",
   "homepage": "https://github.com/embark-framework/embark/tree/master/packages/utils/testing#readme",
   "main": "dist/lib/index.js",
+  "types": "./dist/lib/index.d.ts",
   "repository": {
     "directory": "packages/utils/testing",
     "type": "git",
@@ -25,28 +26,28 @@
     "dist"
   ],
   "embark-collective": {
-    "build:node": true
+    "build:node": true,
+    "typecheck": true
   },
   "scripts": {
     "_build": "npm run solo -- build",
+    "_typecheck": "npm run solo -- typecheck",
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
     "lint:js": "eslint src/",
     "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
-    "qa": "npm-run-all lint typecheck _build test",
+    "qa": "npm-run-all lint _typecheck _build test",
     "reset": "npx rimraf dist embark-*.tgz package",
     "solo": "embark-solo",
-    "typecheck": "tsc",
-    "test": "jest",
-    "watch": "run-p watch:*",
-    "watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
+    "test": "jest"
   },
   "eslintConfig": {
     "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.7.4",
+    "@types/async": "3.0.3",
     "async": "2.6.1",
     "core-js": "3.4.3",
     "refute": "1.0.2",
@@ -54,7 +55,6 @@
   },
   "devDependencies": {
     "@babel/core": "7.7.4",
-    "@types/async": "3.0.3",
     "babel-jest": "24.9.0",
     "embark-solo": "^5.0.0-alpha.2",
     "eslint": "5.7.0",
@@ -62,8 +62,8 @@
     "lodash.clonedeep": "4.5.0",
     "npm-run-all": "4.1.5",
     "rimraf": "2.6.3",
-    "tslint": "5.16.0",
-    "typescript": "3.6.3"
+    "tslint": "5.20.1",
+    "typescript": "3.7.2"
   },
   "jest": {
     "collectCoverage": true,

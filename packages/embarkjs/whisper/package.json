@@ -21,7 +21,8 @@
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },
-  "main": "dist/node/index.js",
+  "main": "./dist/node/index.js",
+  "types": "./dist/node/index.d.ts",
   "browser": "./dist/browser/index.js",
   "browserslist": [
     "last 1 version",
@@ -33,13 +34,15 @@
   ],
   "embark-collective": {
     "build:browser": true,
-    "build:node": true
+    "build:node": true,
+    "typecheck": true
   },
   "scripts": {
     "_build": "npm run solo -- build",
+    "_typecheck": "npm run solo -- typecheck",
     "ci": "npm run qa",
     "clean": "npm run reset",
-    "qa": "npm-run-all _build",
+    "qa": "npm-run-all _typecheck _build",
     "reset": "npx rimraf coverage dist embarkjs-*.tgz package",
     "solo": "embark-solo"
   },

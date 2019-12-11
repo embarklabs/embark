@@ -1,6 +1,8 @@
 import {recursiveMerge} from "embark-utils";
+import { readJsonSync } from 'fs-extra';
+import { join } from "path";
 
-const constants = require('embark-core/constants');
+const constants = readJsonSync(join(__dirname, '../constants.json'));
 
 export function getBlockchainDefaults(env) {
   const defaults = {
@@ -45,7 +47,7 @@ export function getContractDefaults(embarkConfigVersions) {
 
   return {
     default: {
-      versions: versions,
+      versions,
       dappConnection: [
         "$WEB3",
         "ws://localhost:8546",

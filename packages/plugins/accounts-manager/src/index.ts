@@ -1,5 +1,5 @@
 import async from "async";
-import { Callback, Embark, Events } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Embark, EmbarkEvents } from "embark-core";
 import { __ } from "embark-i18n";
 import { AccountParser, dappPath } from "embark-utils";
 import { Logger } from 'embark-logger';
@@ -9,7 +9,7 @@ import fundAccount from "./fundAccount";
 
 export default class AccountsManager {
   private readonly logger: Logger;
-  private readonly events: Events;
+  private readonly events: EmbarkEvents;
   private _web3: Web3 | null = null;
   private _accounts: any[] | null = null;
 

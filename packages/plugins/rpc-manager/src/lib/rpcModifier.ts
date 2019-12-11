@@ -1,14 +1,15 @@
-import { Embark, Events, Logger } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Embark, EmbarkEvents } /* supplied by @types/embark in packages/core/typings */ from "embark-core";
+import { Logger } from "embark-logger";
 import { AccountParser, dappPath } from "embark-utils";
 import Web3 from "web3";
 
 export default class RpcModifier {
-  public events: Events;
+  public events: EmbarkEvents;
   public logger: Logger;
   private _web3: Web3 | null = null;
   private _accounts: any[] | null = null;
   protected _nodeAccounts: any[] | null = null;
-  constructor(readonly embark: Embark, readonly rpcModifierEvents: Events) {
+  constructor(readonly embark: Embark, readonly rpcModifierEvents: EmbarkEvents) {
     this.events = embark.events;
     this.logger = embark.logger;
 

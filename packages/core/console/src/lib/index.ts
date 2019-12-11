@@ -1,6 +1,5 @@
-import { waterfall } from "async";
 import chalk from "chalk";
-import { Callback, Embark, Events } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Embark, EmbarkEvents } from "embark-core";
 import constants from "embark-core/constants.json";
 import { __ } from "embark-i18n";
 import { dappPath, escapeHtml, exit, jsonFunctionReplacer } from "embark-utils";
@@ -16,9 +15,9 @@ interface HelpDescription {
   usage?: string;
 }
 
-class Console {
+export default class Console {
   private embark: Embark;
-  private events: Events;
+  private events: EmbarkEvents;
   private plugins: any;
   private version: string;
   private logger: any;
@@ -150,7 +149,7 @@ class Console {
         __("The web3 object and the interfaces for the deployed contracts and their methods are also available"));
       return helpText.join("\n");
     } else if (["quit", "exit", "sair", "sortir", __("quit")].indexOf(cmd) >= 0) {
-      exit();
+      exit(0);
     }
     return false;
   }
@@ -285,5 +284,3 @@ class Console {
     }
   }
 }
-
-module.exports = Console;

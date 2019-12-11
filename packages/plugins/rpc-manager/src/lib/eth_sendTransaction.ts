@@ -1,6 +1,7 @@
 import async from "async";
-import { Callback, Embark, Events, Logger } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Callback, Embark, EmbarkEvents } from "embark-core";
 import { __ } from "embark-i18n";
+import { Logger } from "embark-logger";
 import Web3 from "web3";
 const { blockchain: blockchainConstants } = require("embark-core/constants");
 import RpcModifier from "./rpcModifier";
@@ -8,7 +9,7 @@ import RpcModifier from "./rpcModifier";
 export default class EthSendTransaction extends RpcModifier {
   private signTransactionQueue: any;
   private nonceCache: any = {};
-  constructor(embark: Embark, rpcModifierEvents: Events) {
+  constructor(embark: Embark, rpcModifierEvents: EmbarkEvents) {
     super(embark, rpcModifierEvents);
 
     embark.registerActionForEvent("blockchain:proxy:request", this.ethSendTransactionRequest.bind(this));

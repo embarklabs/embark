@@ -1,5 +1,8 @@
+import { readJsonSync } from 'fs-extra';
+import { join } from "path";
 const uuid = require('uuid/v1');
-const constants = require('../../constants');
+
+const constants = readJsonSync(join(__dirname, '../../constants.json'));
 
 export class Events {
 

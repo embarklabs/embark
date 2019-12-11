@@ -1,9 +1,9 @@
 import bodyParser from "body-parser";
 import "colors";
 import cors from "cors";
-import {Embark, Plugins} /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import {Embark, EmbarkPlugins} from "embark-core";
 import { __ } from "embark-i18n";
-import {embarkPath, findMonorepoPackageFromRootSync, isInsideMonorepoSync, monorepoRootPathSync} from "embark-utils";
+import {findMonorepoPackageFromRootSync, isInsideMonorepoSync, monorepoRootPathSync} from "embark-utils";
 import express, {NextFunction, Request, Response} from "express";
 import expressWs, { Application } from "express-ws";
 import findUp from "find-up";
@@ -24,23 +24,23 @@ interface CallDescription {
 export default class Server {
   private isInsideMonorepo: boolean;
   private monorepoRootPath: string = "";
-  private embarkUiBuildDir: string = embarkPath("node_modules/embark-ui/build");
+  // in the monorepo and other deduped installs embark-ui may be in a higher-up node_modules
+  private embarkUiBuildDir: string = path.join(findUp.sync(
+    "node_modules/embark-ui",
+    {cwd: __dirname, type: "directory"}
+  ) as string, "build");
   private expressInstance: expressWs.Instance;
   private isLogging: boolean = false;
   private server?: http.Server;
 
   private openSockets = new Set<net.Socket>();
 
-  constructor(private embark: Embark, private port: number, private hostname: string, private plugins: Plugins) {
+  constructor(private embark: Embark, private port: number, private hostname: string, private plugins: EmbarkPlugins) {
     this.isInsideMonorepo = isInsideMonorepoSync();
     if (this.isInsideMonorepo) {
       this.monorepoRootPath = monorepoRootPathSync();
     }
-    // in the monorepo and other deduped installs embark-ui may be in a higher-up node_modules
-    const foundEmbarkUi = findUp.sync("node_modules/embark-ui", {cwd: embarkPath(), type: "directory"});
-    if (foundEmbarkUi) {
-      this.embarkUiBuildDir = path.join(foundEmbarkUi, "build");
-    }
+
     this.expressInstance = this.initApp();
   }
 

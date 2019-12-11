@@ -1,6 +1,8 @@
 const child_process = require('child_process');
-const constants = require('../../constants');
+import { readJsonSync } from 'fs-extra';
 const path = require('path');
+
+const constants = readJsonSync(path.join(__dirname, '../../constants.json'));
 
 let processCount = 1;
 export class ProcessLauncher {

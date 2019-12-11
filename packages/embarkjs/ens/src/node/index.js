@@ -1,1 +1,3 @@
-module.exports = require('..').default;
+import embarkENS from '..';
+
+module.exports = embarkENS;

@@ -1,1 +1,3 @@
-module.exports = require('..').default;
+import embarkSwarm from '..';
+
+module.exports = embarkSwarm;

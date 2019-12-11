@@ -8,11 +8,15 @@
   "bin": "./bin/solo",
   "main": "index.js",
   "files": [],
-  "scripts": {},
+  "scripts": {
+    "clean": "npm run reset",
+    "reset": "npx rimraf embark-*.tgz package"
+  },
   "devDependencies": {
     "embark-collective": "^5.0.0-alpha.2",
     "find-up": "4.1.0",
-    "fs-extra": "8.1.0"
+    "fs-extra": "8.1.0",
+    "rimraf": "3.0.0"
   },
   "engines": {
     "node": ">=10.17.0 <12.0.0",

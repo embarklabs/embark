@@ -1,9 +1,9 @@
+import { Contract, Embark } from "embark-core";
 import { dappPath, File } from "embark-utils";
 import * as globule from "globule";
 import * as path from "path";
 import Web3Contract from "web3/eth/contract";
 
-import { Contract, Embark } from "embark";
 import { ContractEnhanced } from "./contractEnhanced";
 import { coverageContractsPath } from "./path";
 import { Coverage as ICoverage } from "./types";

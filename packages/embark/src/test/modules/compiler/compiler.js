@@ -4,7 +4,7 @@ import { File, Types } from "embark-utils";
 
 const assert = require('assert');
 
-const Compiler = require('embark-compiler');
+import Compiler from 'embark-compiler';
 
 const readFile = function(file) {
   return new File({filename: file, type: Types.dappFile, path: file});

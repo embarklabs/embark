@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declarationDir": "./dist",
+    "rootDir": "./src",
+    "tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.embark-plugin-cmd.tsbuildinfo"
+  },
+  "extends": "../../../tsconfig.base.json",
+  "include": [
+    "src/**/*"
+  ],
+  "references": [
+    {
+      "path": "../../core/i18n"
+    },
+    {
+      "path": "../../core/utils"
+    }
+  ]
+}

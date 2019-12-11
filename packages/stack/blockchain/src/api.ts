@@ -1,9 +1,9 @@
-import { Embark, Events } from "embark";
+import { Embark, EmbarkEvents } from "embark-core";
 import { Logger } from 'embark-logger';
 export default class BlockchainAPI {
   private embark: Embark;
   private logger: Logger;
-  private events: Events;
+  private events: EmbarkEvents;
   private apiPlugins: Map<string, Map<string, (...args: any[]) => void>> = new Map();
   private requestPlugins: Map<string, Map<string, (...args: any[]) => any>> = new Map();
   constructor(embark: Embark) {

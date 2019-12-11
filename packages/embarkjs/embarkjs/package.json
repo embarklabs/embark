@@ -22,10 +22,12 @@
     "url": "https://github.com/embark-framework/embark.git"
   },
   "main": "./dist/lib/node/index.js",
+  "types": "./dist/lib/node/index.d.ts",
   "browser": {
     "./dist/lib/node/index.js": "./dist/browser/lib/index.js",
     "./dist/browser/lib/async.js": "./dist/browser/lib/browser/async.js"
   },
+
   "browserslist": [
     "last 1 version",
     "not dead",
@@ -37,13 +39,19 @@
   ],
   "embark-collective": {
     "build:browser": true,
-    "build:node": true
+    "build:node": true,
+    "typecheck": {
+      "exclude": [
+        "src/lib/browser"
+      ]
+    }
   },
   "scripts": {
     "_build": "npm run solo -- build",
+    "_typecheck": "npm run solo -- typecheck",
     "ci": "npm run qa",
     "clean": "npm run reset",
-    "qa": "npm-run-all _build test",
+    "qa": "npm-run-all _typecheck _build test",
     "reset": "npx rimraf .nyc_output coverage dist embarkjs-*.tgz package",
     "solo": "embark-solo",
     "test": "nyc --reporter=html --reporter=json mocha \"dist/test/**/*.js\" --exit --no-timeouts --require source-map-support/register"

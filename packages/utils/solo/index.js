@@ -25,6 +25,14 @@ module.exports = function (cliArgs) {
   );
 
   const npmCmd = process.platform === 'win32' ? 'npm.cmd': 'npm';
-  process.chdir(embarkCollectivePath);
-  spawn(npmCmd, ['run', '--', ...cliArgs], {stdio: 'inherit'});
+  const subp = spawn(npmCmd, [
+    'run',
+    '--',
+    ...cliArgs
+  ], {
+    cwd: embarkCollectivePath,
+    stdio: 'inherit'
+  });
+
+  subp.on('close', code => process.exit(code));
 };

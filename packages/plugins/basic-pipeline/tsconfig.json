@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declarationDir": "./dist",
+    "rootDir": "./src",
+    "tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.embark-basic-pipeline.tsbuildinfo"
+  },
+  "exclude": [
+    "src/babel-loader-overrides.js",
+    "src/webpack.config.js"
+  ],
+  "extends": "../../../tsconfig.base.json",
+  "include": [
+    "src/**/*"
+  ],
+  "references": [
+    {
+      "path": "../../core/core"
+    },
+    {
+      "path": "../../core/i18n"
+    },
+    {
+      "path": "../../core/utils"
+    },
+    {
+      "path": "../../utils/testing"
+    }
+  ]
+}

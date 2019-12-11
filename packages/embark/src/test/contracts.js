@@ -1,8 +1,8 @@
 /*global describe, it, require*/
 import { File, Types } from "embark-utils";
 
-let ContractsManager = require('embark-contracts-manager');
-let Compiler = require('embark-compiler');
+import ContractsManager from 'embark-contracts-manager';
+import Compiler from 'embark-compiler';
 import { Logger } from 'embark-logger';
 import { Events, fs, IPC, TestLogger, Plugins } from 'embark-core';
 let assert = require('assert');

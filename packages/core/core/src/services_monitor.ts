@@ -37,7 +37,7 @@ export class ServicesMonitor {
       return false;
     }
 
-    self.events.on('check:' + checkName, function(obj) {
+    self.events.on('check:' + checkName, obj => {
       if (check && check.status === 'off' && obj.status === 'on') {
         self.events.emit('check:backOnline:' + checkName);
       }
@@ -53,14 +53,14 @@ export class ServicesMonitor {
     });
 
     if (check.interval !== 0) {
-      self.checkTimers[checkName] = setInterval(function() {
-        check.fn.call(check.fn, function(obj) {
+      self.checkTimers[checkName] = setInterval(() => {
+        check.fn.call(check.fn, obj => {
           self.events.emit('check:' + checkName, obj);
         });
       }, check.interval);
     }
 
-    check.fn.call(check.fn, function(obj) {
+    check.fn.call(check.fn, obj => {
       self.events.emit('check:' + checkName, obj);
     });
   }
@@ -87,7 +87,7 @@ export class ServicesMonitor {
     this.logger.trace('startMonitor');
 
     const servicePlugins = this.plugins.getPluginsProperty('serviceChecks', 'serviceChecks');
-    servicePlugins.forEach(function(pluginCheck) {
+    servicePlugins.forEach(pluginCheck => {
       self.addCheck(pluginCheck.checkName, pluginCheck.checkFn, pluginCheck.time);
     });
 
