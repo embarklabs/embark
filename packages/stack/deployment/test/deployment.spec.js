@@ -15,6 +15,7 @@ describe('stack/deployment', () => {
   let doneCb;
 
   beforeEach(() => {
+    embark.config.blockchainConfig = { enabled: true };
     deployment = new Deployment(embark, { plugins });
 
     beforeAllAction = sinon.spy((params, cb) => { cb(null, params); });

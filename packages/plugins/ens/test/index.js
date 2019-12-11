@@ -1,4 +1,4 @@
-const ENS = require("../dist/index");
+const ENS = require("../src/index");
 const { fakeEmbark } = require('embark-testing');
 const {Utils} = require('embarkjs');
 const secureSend = Utils.secureSend;
@@ -11,6 +11,7 @@ describe('embark-ens', () => {
 
   beforeEach(() => {
     embark.events.setCommandHandler('namesystem:node:register', () => {});
+    embark.config.blockchainConfig = { enabled: true };
     ens = new ENS(embark);
     ens.config = {
       embarkConfig: {

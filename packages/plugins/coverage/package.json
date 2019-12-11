@@ -34,7 +34,7 @@
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
     "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
-    "qa": "npm-run-all lint typecheck _build",
+    "qa": "npm-run-all lint typecheck _build test",
     "reset": "npx rimraf dist embark-*.tgz package",
     "solo": "embark-solo",
     "test": "nyc --reporter=html --reporter=json mocha \"dist/test/**/*.js\" --exit --no-timeouts --require source-map-support/register",
