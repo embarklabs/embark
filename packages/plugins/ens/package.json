@@ -53,6 +53,7 @@
     "web3": "1.2.1"
   },
   "devDependencies": {
+    "@babel/core": "7.7.4",
     "babel-eslint": "10.0.3",
     "babel-jest": "24.9.0",
     "embark-solo": "^5.0.0-alpha.2",
@@ -79,7 +80,15 @@
     "testEnvironment": "node",
     "testMatch": [
       "**/test/**/*.js"
-    ]
+    ],
+    "transform": {
+      "\\.js$": [
+        "babel-jest",
+        {
+          "rootMode": "upward"
+        }
+      ]
+    }
   },
   "engines": {
     "node": ">=10.17.0 <12.0.0",
