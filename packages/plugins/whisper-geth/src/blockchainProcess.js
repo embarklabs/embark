@@ -1,7 +1,7 @@
 import * as i18n from "embark-i18n";
 import { ProcessWrapper } from "embark-core";
 const constants = require("embark-core/constants");
-import { BlockchainClient as blockchainClient } from "./blockchain";
+import { BlockchainClient } from "./blockchain";
 
 let blockchainProcess;
 
@@ -18,7 +18,7 @@ class BlockchainProcess extends ProcessWrapper {
     i18n.setOrDetectLocale(options.locale);
 
     this.blockchainConfig.silent = true;
-    this.blockchain = blockchainClient(
+    this.blockchain = new BlockchainClient(
       this.blockchainConfig,
       {
         clientName: this.client,

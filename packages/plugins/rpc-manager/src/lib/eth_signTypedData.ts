@@ -1,11 +1,12 @@
 import { sign, transaction } from "@omisego/omg-js-util";
-import { Callback, Embark, Events, Logger } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Callback, Embark, EmbarkEvents } from "embark-core";
 import { __ } from "embark-i18n";
+import { Logger } from "embark-logger";
 import Web3 from "web3";
 import RpcModifier from "./rpcModifier";
 
 export default class EthSignTypedData extends RpcModifier {
-  constructor(embark: Embark, rpcModifierEvents: Events) {
+  constructor(embark: Embark, rpcModifierEvents: EmbarkEvents) {
     super(embark, rpcModifierEvents);
 
     this.embark.registerActionForEvent("blockchain:proxy:request", this.ethSignTypedDataRequest.bind(this));

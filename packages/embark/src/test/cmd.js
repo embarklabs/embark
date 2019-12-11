@@ -1,4 +1,4 @@
-let Embark = require('../lib/index');
+import Embark from '../lib/index';
 let Cmd = require('../cmd/cmd');
 
 // Function to send a line to stdin

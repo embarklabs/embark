@@ -3,7 +3,7 @@ const { __ } = require('embark-i18n');
 const constants = require('embark-core/constants');
 
 import BlockchainAPI from "./api";
-class Blockchain {
+export default class Blockchain {
 
   constructor(embark, options) {
     this.embark = embark;
@@ -160,5 +160,3 @@ class Blockchain {
     });
   }
 }
-
-module.exports = Blockchain;

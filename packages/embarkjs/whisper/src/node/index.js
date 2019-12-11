@@ -1,1 +1,3 @@
-module.exports = require('..').default;
+import embarkWhisper from '..';
+
+module.exports = embarkWhisper;

@@ -2,7 +2,8 @@
   "description": "Test DApp for integration testing purposes",
   "devDependencies": {
     "embark": "^5.0.0-alpha.4",
-    "embark-reset": "^5.0.0-alpha.2"
+    "embark-reset": "^5.0.0-alpha.2",
+    "rimraf": "3.0.0"
   },
   "license": "MIT",
   "name": "embark-dapp-test-contracts",
@@ -11,7 +12,7 @@
     "ci": "npm run qa",
     "clean": "npm run reset",
     "qa": "npm run test",
-    "reset": "npx embark-reset",
+    "reset": "npx embark-reset && npx rimraf embark-*.tgz package",
     "test": "npx embark test"
   },
   "version": "5.0.0-alpha.4"

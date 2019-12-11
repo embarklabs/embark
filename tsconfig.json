@@ -1,14 +1,197 @@
 {
-  "compilerOptions": {
-    "allowJs": true,
-    "esModuleInterop": true,
-    "lib": ["ES2017", "dom"],
-    "module": "CommonJS",
-    "noEmit": true,
-    "noImplicitThis": false,
-    "noImplicitAny": false,
-    "strict": true,
-    "target": "ES2017",
-    "resolveJsonModule": true
-  }
+  "files": [],
+  "references": [
+    {
+      "path": "packages/cockpit/api-client"
+    },
+    {
+      "path": "packages/core/code-runner"
+    },
+    {
+      "path": "packages/core/console"
+    },
+    {
+      "path": "packages/core/core"
+    },
+    {
+      "path": "packages/core/engine"
+    },
+    {
+      "path": "packages/core/i18n"
+    },
+    {
+      "path": "packages/core/logger"
+    },
+    {
+      "path": "packages/core/reset"
+    },
+    {
+      "path": "packages/core/utils"
+    },
+    {
+      "path": "packages/embark"
+    },
+    {
+      "path": "packages/embarkjs/embarkjs"
+    },
+    {
+      "path": "packages/embarkjs/ens"
+    },
+    {
+      "path": "packages/embarkjs/ipfs"
+    },
+    {
+      "path": "packages/embarkjs/swarm"
+    },
+    {
+      "path": "packages/embarkjs/web3"
+    },
+    {
+      "path": "packages/embarkjs/whisper"
+    },
+    {
+      "path": "packages/plugins/accounts-manager"
+    },
+    {
+      "path": "packages/plugins/basic-pipeline"
+    },
+    {
+      "path": "packages/plugins/coverage"
+    },
+    {
+      "path": "packages/plugins/debugger"
+    },
+    {
+      "path": "packages/plugins/deploy-tracker"
+    },
+    {
+      "path": "packages/plugins/ens"
+    },
+    {
+      "path": "packages/plugins/ethereum-blockchain-client"
+    },
+    {
+      "path": "packages/plugins/ganache"
+    },
+    {
+      "path": "packages/plugins/geth"
+    },
+    {
+      "path": "packages/plugins/graph"
+    },
+    {
+      "path": "packages/plugins/ipfs"
+    },
+    {
+      "path": "packages/plugins/mocha-tests"
+    },
+    {
+      "path": "packages/plugins/parity"
+    },
+    {
+      "path": "packages/plugins/plugin-cmd"
+    },
+    {
+      "path": "packages/plugins/profiler"
+    },
+    {
+      "path": "packages/plugins/rpc-manager"
+    },
+    {
+      "path": "packages/plugins/scaffolding"
+    },
+    {
+      "path": "packages/plugins/snark"
+    },
+    {
+      "path": "packages/plugins/solc"
+    },
+    {
+      "path": "packages/plugins/solidity"
+    },
+    {
+      "path": "packages/plugins/solidity-tests"
+    },
+    {
+      "path": "packages/plugins/specialconfigs"
+    },
+    {
+      "path": "packages/plugins/swarm"
+    },
+    {
+      "path": "packages/plugins/transaction-logger"
+    },
+    {
+      "path": "packages/plugins/transaction-tracker"
+    },
+    {
+      "path": "packages/plugins/vyper"
+    },
+    {
+      "path": "packages/plugins/web3"
+    },
+    {
+      "path": "packages/plugins/whisper-geth"
+    },
+    {
+      "path": "packages/plugins/whisper-parity"
+    },
+    {
+      "path": "packages/stack/api"
+    },
+    {
+      "path": "packages/stack/authenticator"
+    },
+    {
+      "path": "packages/stack/blockchain"
+    },
+    {
+      "path": "packages/stack/blockchain-client"
+    },
+    {
+      "path": "packages/stack/communication"
+    },
+    {
+      "path": "packages/stack/compiler"
+    },
+    {
+      "path": "packages/stack/contracts-manager"
+    },
+    {
+      "path": "packages/stack/deployment"
+    },
+    {
+      "path": "packages/stack/embarkjs"
+    },
+    {
+      "path": "packages/stack/library-manager"
+    },
+    {
+      "path": "packages/stack/namesystem"
+    },
+    {
+      "path": "packages/stack/pipeline"
+    },
+    {
+      "path": "packages/stack/process-logs-api-manager"
+    },
+    {
+      "path": "packages/stack/proxy"
+    },
+    {
+      "path": "packages/stack/storage"
+    },
+    {
+      "path": "packages/stack/test-runner"
+    },
+    {
+      "path": "packages/stack/watcher"
+    },
+    {
+      "path": "packages/stack/webserver"
+    },
+    {
+      "path": "packages/utils/testing"
+    }
+  ]
 }

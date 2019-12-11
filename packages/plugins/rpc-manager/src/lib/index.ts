@@ -1,4 +1,5 @@
-import { Callback, Embark, Events } from "embark-core";
+import { Callback, Embark, EmbarkEvents } from "embark-core";
+import { Events } from "embark-core";
 import { Logger } from 'embark-logger';
 import Web3 from "web3";
 import EthAccounts from "./eth_accounts";
@@ -14,15 +15,15 @@ export default class RpcManager {
 
   private modifiers: RpcModifier[] = [];
   private _web3: Web3 | null = null;
-  private rpcModifierEvents: Events;
+  private rpcModifierEvents: EmbarkEvents;
   private logger: Logger;
-  private events: Events;
+  private events: EmbarkEvents;
   public _accounts: any[] | null = null;
   public _nodeAccounts: any[] | null = null;
   constructor(private readonly embark: Embark) {
     this.events = embark.events;
     this.logger = embark.logger;
-    this.rpcModifierEvents = new Events();
+    this.rpcModifierEvents = new Events() as EmbarkEvents;
     this.init();
   }
 

@@ -1,6 +1,9 @@
-import { Contract, Embark, Events } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Contract, Embark, EmbarkEvents } from "embark-core";
 import { fuzzySearch } from "embark-utils";
-import { suggestions as defaultSuggestions } from "../../suggestions.json";
+import { readJsonSync } from "fs-extra";
+import { join } from "path";
+
+const { suggestions: defaultSuggestions } = readJsonSync(join(__dirname, "../../suggestions.json"));
 
 interface ContractsManager {
   [key: string]: any;
@@ -23,7 +26,7 @@ type SuggestionsList = Suggestion[];
 
 export default class Suggestions {
   private embark: Embark;
-  private events: Events;
+  private events: EmbarkEvents;
   private contracts: ContractsManager;
   private static readonly DEFAULT_SUGGESTIONS = defaultSuggestions;
   private _suggestions: SuggestionsList = [];

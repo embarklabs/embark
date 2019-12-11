@@ -13,6 +13,7 @@
     "react": "16.12.0",
     "react-bootstrap": "0.32.4",
     "react-dom": "16.12.0",
+    "rimraf": "3.0.0",
     "zeppelin-solidity": "1.12.0"
   },
   "license": "MIT",
@@ -22,7 +23,7 @@
     "ci": "npm run qa",
     "clean": "npm run reset",
     "qa": "npm run test",
-    "reset": "npx embark-reset",
+    "reset": "npx embark-reset && npx rimraf embark-*.tgz package",
     "test": "npx embark test"
   },
   "version": "5.0.0-alpha.4"

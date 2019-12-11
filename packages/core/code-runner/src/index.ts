@@ -1,4 +1,4 @@
-import { Callback, Embark, Events } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Callback, Embark, EmbarkEvents } from "embark-core";
 import { __ } from "embark-i18n";
 import { Logger } from 'embark-logger';
 import * as fs from "./fs";
@@ -8,7 +8,7 @@ export { fs, VM };
 
 class CodeRunner {
   private logger: Logger;
-  private events: Events;
+  private events: EmbarkEvents;
   private vm: VM;
 
   constructor(embark: Embark, _options: any) {

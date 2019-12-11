@@ -26,15 +26,18 @@
     "url": "https://github.com/embark-framework/embark.git"
   },
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "embark-collective": {
-    "build:node": true
+    "build:node": true,
+    "typecheck": true
   },
   "scripts": {
     "_build": "npm run solo -- build",
+    "_typecheck": "npm run solo -- typecheck",
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "eslint src/",
-    "qa": "npm-run-all lint _build test",
+    "qa": "npm-run-all lint _typecheck _build test",
     "reset": "npx rimraf dist embark-*.tgz package",
     "solo": "embark-solo",
     "test": "jest"
@@ -57,6 +60,7 @@
     "babel-eslint": "10.0.3",
     "babel-jest": "24.9.0",
     "embark-solo": "^5.0.0-alpha.2",
+    "embark-testing": "^5.0.0-alpha.2",
     "eslint": "5.7.0",
     "eslint-plugin-jest": "22.5.1",
     "jest": "24.9.0",

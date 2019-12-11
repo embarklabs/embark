@@ -1,1 +1,3 @@
-module.exports = require('..').default;
+import embarkWeb3 from '..';
+
+module.exports = embarkWeb3;

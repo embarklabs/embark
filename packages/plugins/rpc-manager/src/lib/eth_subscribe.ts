@@ -1,9 +1,9 @@
-import { Callback, Embark, Events } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Callback, Embark, EmbarkEvents } from "embark-core";
 import { __ } from "embark-i18n";
 import RpcModifier from "./rpcModifier";
 
 export default class EthSubscribe extends RpcModifier {
-  constructor(embark: Embark, rpcModifierEvents: Events) {
+  constructor(embark: Embark, rpcModifierEvents: EmbarkEvents) {
     super(embark, rpcModifierEvents);
 
     embark.registerActionForEvent("blockchain:proxy:request", this.ethSubscribeRequest.bind(this));

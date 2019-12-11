@@ -1,6 +1,7 @@
 .DS_Store
 .idea
 .nyc_output
+.tsconfig.collective.json
 .vscode
 @embark*.tgz
 NOTES
@@ -14,6 +15,7 @@ npm-debug.log*
 npm-shrinkwrap.json
 package
 package-lock.json
+tsconfig.tsbuildinfo
 yarn-debug.log*
 yarn-error.log*
 yarn.lock

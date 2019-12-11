@@ -1,10 +1,10 @@
-import { Callback, Embark, Events } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Callback, Embark, EmbarkEvents } from "embark-core";
 import Web3 from "web3";
 const { blockchain: blockchainConstants } = require("embark-core/constants");
 import { __ } from "embark-i18n";
 import RpcModifier from "./rpcModifier";
 export default class PersonalNewAccount extends RpcModifier {
-  constructor(embark: Embark, rpcModifierEvents: Events) {
+  constructor(embark: Embark, rpcModifierEvents: EmbarkEvents) {
     super(embark, rpcModifierEvents);
 
     embark.registerActionForEvent("blockchain:proxy:response", this.personalNewAccountResponse.bind(this));

@@ -1,16 +1,24 @@
 require('colors');
 const fs = require('fs');
 const date = require('date-and-time');
-const { escapeHtml } = require('embark-utils');
+const { escapeHtml } = require('./utils');
 const util = require('util');
 
 const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss:SSS';
 const LOG_REGEX = new RegExp(/\[(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d:\d\d\d)\] (?:\[(\w*)\]:?)?\s?\s?(.*)/gmi);
 
+export const LogLevels = {
+  error: 'error',
+  warn: 'warn',
+  info: 'info',
+  debug: 'debug',
+  trace: 'trace'
+};
+
 export class Logger {
   constructor(options) {
     this.events = options.events || {emit: function(){}};
-    this.logLevels = Object.keys(Logger.logLevels);
+    this.logLevels = Object.keys(LogLevels);
     this.logLevel = options.logLevel || 'info';
     this._logFunction = options.logFunction || console.log;
     this.logFunction = function() {
@@ -66,14 +74,6 @@ export class Logger {
     return logs;
   }
 }
-
-Logger.logLevels = {
-  error: 'error',
-  warn: 'warn',
-  info: 'info',
-  debug: 'debug',
-  trace: 'trace'
-};
 
 Logger.prototype.registerAPICall = function (plugins) {
   const self = this;

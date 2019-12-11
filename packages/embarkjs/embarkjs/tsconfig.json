@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declarationDir": "./dist",
+    "rootDir": "./src",
+    "tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.embarkjs.tsbuildinfo"
+  },
+  "exclude": [
+    "src/lib/browser"
+  ],
+  "extends": "../../../tsconfig.base.json",
+  "include": [
+    "src/lib/**/*"
+  ]
+}

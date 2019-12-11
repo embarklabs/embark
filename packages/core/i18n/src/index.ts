@@ -3,7 +3,7 @@ import * as i18n from 'i18n';
 import * as osLocale from 'os-locale';
 import * as path from 'path';
 
-import { Maybe } /* supplied by @types/embark in packages/embark-typings */ from 'embark';
+type Maybe<T> = false | 0 | undefined | null | T;
 
 enum LocalType {
   Specified = 'specified',
@@ -49,4 +49,4 @@ export const setOrDetectLocale = (locale: Maybe<string>) => {
 
 i18n.setLocale(DEFAULT_LANGUAGE);
 
-export const __ = i18nEmbark.__;
+export const __ = (i18nEmbark.__ as unknown) as i18nAPI["__"];

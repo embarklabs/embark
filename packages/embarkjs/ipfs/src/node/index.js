@@ -1,1 +1,3 @@
-module.exports = require('..').default;
+import embarkIPFS from '..';
+
+module.exports = embarkIPFS;

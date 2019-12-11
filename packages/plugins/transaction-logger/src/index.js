@@ -3,8 +3,9 @@ import { __ } from 'embark-i18n';
 const Web3 = require('web3');
 
 const { blockchain: blockchainConstants } = require('embark-core/constants');
-import { dappPath, getAddressToContract, getTransactionParams, hexToNumber } from 'embark-utils';
-
+import { dappPath, hexToNumber } from 'embark-utils';
+import { getAddressToContract, getTransactionParams } from './transactionUtils';
+export { getAddressToContract, getTransactionParams };
 
 const Transaction = require('ethereumjs-tx');
 const ethUtil = require('ethereumjs-util');
@@ -16,7 +17,7 @@ const LISTENED_METHODS = [
   blockchainConstants.transactionMethods.eth_sendRawTransaction
 ];
 
-class TransactionLogger {
+export default class TransactionLogger {
   constructor(embark, _options) {
     this.embark = embark;
     this.logger = embark.logger;
@@ -269,5 +270,3 @@ class TransactionLogger {
     }
   }
 }
-
-module.exports = TransactionLogger;

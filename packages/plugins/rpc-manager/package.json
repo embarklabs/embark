@@ -2,7 +2,6 @@
   "name": "embark-rpc-manager",
   "version": "5.0.0-alpha.4",
   "description": "Embark RPC Manager",
-  "main": "./dist/lib/index.js",
   "repository": {
     "directory": "packages/plugins/embark-rpc-manager",
     "type": "git",
@@ -23,21 +22,24 @@
   "files": [
     "dist/"
   ],
+  "main": "./dist/lib/index.js",
+  "types": "./dist/lib/index.d.ts",
   "embark-collective": {
-    "build:node": true
+    "build:node": true,
+    "typecheck": true
   },
   "scripts": {
     "_build": "npm run solo -- build",
+    "_typecheck": "npm run solo -- typecheck",
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
     "lint:js": "eslint src/",
     "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
-    "qa": "npm-run-all lint typecheck _build test",
+    "qa": "npm-run-all lint _typecheck _build test",
     "reset": "npx rimraf .nyc_output coverage dist embark-*.tgz package",
     "solo": "embark-solo",
-    "test": "nyc --reporter=html --reporter=json mocha \"dist/test/**/*.js\" --exit --no-timeouts --require source-map-support/register",
-    "typecheck": "tsc"
+    "test": "nyc --reporter=html --reporter=json mocha \"dist/test/**/*.js\" --exit --no-timeouts --require source-map-support/register"
   },
   "eslintConfig": {
     "extends": "../../../.eslintrc.json"
@@ -45,21 +47,24 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.7.4",
     "@omisego/omg-js-util": "2.0.0-v0.2",
+    "@types/async": "2.0.50",
     "async": "2.6.1",
     "embark-core": "^5.0.0-alpha.4",
     "embark-i18n": "^5.0.0-alpha.2",
+    "embark-logger": "^5.0.0-alpha.4",
     "embark-utils": "^5.0.0-alpha.4",
     "web3": "1.2.1"
   },
   "devDependencies": {
-    "@types/async": "2.0.50",
     "cross-env": "5.2.0",
+    "embark-solo": "^5.0.0-alpha.0",
     "eslint": "5.7.0",
     "mocha": "6.2.2",
     "npm-run-all": "4.1.5",
+    "nyc": "13.1.0",
     "rimraf": "3.0.0",
-    "tslint": "5.16.0",
-    "typescript": "3.6.3"
+    "tslint": "5.20.1",
+    "typescript": "3.7.2"
   },
   "engines": {
     "node": ">=10.17.0 <12.0.0",

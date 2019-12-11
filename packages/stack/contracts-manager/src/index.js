@@ -5,7 +5,7 @@ const async = require('async');
 const constants = require('embark-core/constants');
 const {dappPath, proposeAlternative, toposort} = require('embark-utils');
 
-class ContractsManager {
+export default class ContractsManager {
   constructor(embark, options) {
     this.embark = embark;
     this.logger = embark.logger;
@@ -662,5 +662,3 @@ class ContractsManager {
     return data;
   }
 }
-
-module.exports = ContractsManager;

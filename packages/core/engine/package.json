@@ -1,0 +1,110 @@
+{
+  "name": "embark-engine",
+  "version": "5.0.0-alpha.4",
+  "author": "Iuri Matias <iuri.matias@gmail.com>",
+  "contributors": [],
+  "description": "Engine library for Embark",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/core/engine#readme",
+  "bugs": "https://github.com/embark-framework/embark/issues",
+  "keywords": [
+    "blockchain",
+    "dapps",
+    "ethereum",
+    "ipfs",
+    "serverless",
+    "solc",
+    "solidity"
+  ],
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "repository": {
+    "directory": "packages/core/engine",
+    "type": "git",
+    "url": "https://github.com/embark-framework/embark.git"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "embark-collective": {
+    "build:node": true,
+    "typecheck": true
+  },
+  "scripts": {
+    "_build": "npm run solo -- build",
+    "_typecheck": "npm run solo -- typecheck",
+    "ci": "npm run qa",
+    "clean": "npm run reset",
+    "lint": "tslint -c tslint.json \"src/**/*.ts\"",
+    "qa": "npm-run-all lint _typecheck _build",
+    "reset": "npx rimraf dist embark-*.tgz package",
+    "solo": "embark-solo"
+  },
+  "eslintConfig": {
+    "extends": "../../../.eslintrc.json"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs3": "7.7.4",
+    "core-js": "3.4.3",
+    "embark-accounts-manager": "^5.0.0-alpha.4",
+    "embark-api": "^5.0.0-alpha.4",
+    "embark-authenticator": "^5.0.0-alpha.4",
+    "embark-basic-pipeline": "^5.0.0-alpha.4",
+    "embark-blockchain": "^5.0.0-alpha.4",
+    "embark-blockchain-client": "^5.0.0-alpha.2",
+    "embark-code-runner": "^5.0.0-alpha.4",
+    "embark-communication": "^5.0.0-alpha.4",
+    "embark-compiler": "^5.0.0-alpha.4",
+    "embark-console": "^5.0.0-alpha.4",
+    "embark-contracts-manager": "^5.0.0-alpha.4",
+    "embark-core": "^5.0.0-alpha.4",
+    "embark-coverage": "^5.0.0-alpha.4",
+    "embark-debugger": "^5.0.0-alpha.4",
+    "embark-deployment": "^5.0.0-alpha.4",
+    "embark-embarkjs": "^5.0.0-alpha.4",
+    "embark-ens": "^5.0.0-alpha.4",
+    "embark-ethereum-blockchain-client": "^5.0.0-alpha.4",
+    "embark-ganache": "^5.0.0-alpha.2",
+    "embark-geth": "^5.0.0-alpha.4",
+    "embark-ipfs": "^5.0.0-alpha.4",
+    "embark-library-manager": "^5.0.0-alpha.4",
+    "embark-logger": "^5.0.0-alpha.4",
+    "embark-mocha-tests": "^5.0.0-alpha.4",
+    "embark-namesystem": "^5.0.0-alpha.2",
+    "embark-parity": "^5.0.0-alpha.4",
+    "embark-pipeline": "^5.0.0-alpha.4",
+    "embark-plugin-cmd": "^5.0.0-alpha.4",
+    "embark-process-logs-api-manager": "^5.0.0-alpha.4",
+    "embark-profiler": "^5.0.0-alpha.2",
+    "embark-proxy": "^5.0.0-alpha.4",
+    "embark-rpc-manager": "^5.0.0-alpha.4",
+    "embark-scaffolding": "^5.0.0-alpha.2",
+    "embark-solidity": "^5.0.0-alpha.4",
+    "embark-solidity-tests": "^5.0.0-alpha.4",
+    "embark-specialconfigs": "^5.0.0-alpha.2",
+    "embark-storage": "^5.0.0-alpha.4",
+    "embark-swarm": "^5.0.0-alpha.4",
+    "embark-test-runner": "^5.0.0-alpha.4",
+    "embark-transaction-logger": "^5.0.0-alpha.4",
+    "embark-transaction-tracker": "^5.0.0-alpha.2",
+    "embark-utils": "^5.0.0-alpha.4",
+    "embark-vyper": "^5.0.0-alpha.2",
+    "embark-watcher": "^5.0.0-alpha.4",
+    "embark-web3": "^5.0.0-alpha.4",
+    "embark-webserver": "^5.0.0-alpha.4",
+    "embark-whisper-geth": "^5.0.0-alpha.4",
+    "embark-whisper-parity": "^5.0.0-alpha.4"
+  },
+  "devDependencies": {
+    "embark-solo": "^5.0.0-alpha.2",
+    "npm-run-all": "4.1.5",
+    "rimraf": "3.0.0",
+    "tslint": "5.20.1",
+    "typescript": "3.7.2"
+  },
+  "engines": {
+    "node": ">=10.17.0 <12.0.0",
+    "npm": ">=6.11.3",
+    "yarn": ">=1.19.1"
+  }
+}

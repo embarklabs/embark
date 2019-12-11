@@ -17,7 +17,7 @@ interface EmbarkApi {
   logger: any;
 }
 
-class TransactionDebugger {
+export default class TransactionDebugger {
   private embark: EmbarkApi;
   private lastTx: string;
   private debuggerManager: any;
@@ -468,5 +468,3 @@ class TransactionDebugger {
     });
   }
 }
-
-module.exports = TransactionDebugger;

@@ -2,9 +2,12 @@ import { fileMatchesPattern } from './utils/utils';
 import { __ } from 'embark-i18n';
 import { dappPath, embarkPath, isEs6Module, joinPath } from 'embark-utils';
 import { Logger } from 'embark-logger';
-const constants = require('embark-core/constants');
-const fs = require('fs-extra');
 const deepEqual = require('deep-equal');
+import * as fs from 'fs-extra';
+import { readFileSync, readJsonSync } from 'fs-extra';
+import { join } from "path";
+
+const constants = readJsonSync(join(__dirname, '../constants.json'));
 
 // Default priority of actions with no specified priority. 1 => Highest
 const DEFAULT_ACTION_PRIORITY = 50;
@@ -136,15 +139,7 @@ export class Plugin {
   }
 
   setUpLogger() {
-    this.logger = {
-      log: this._log.bind(this, 'log'),
-      warn: this._log.bind(this, 'warn'),
-      error: this._log.bind(this, 'error'),
-      info: this._log.bind(this, 'info'),
-      debug: this._log.bind(this, 'debug'),
-      trace: this._log.bind(this, 'trace'),
-      dir: this._log.bind(this, 'dir')
-    };
+    this.logger = new Logger({});
   }
 
   isContextValid() {
@@ -188,7 +183,7 @@ export class Plugin {
   }
 
   loadPluginFile(filename) {
-    return fs.readFileSync(this.pathToFile(filename)).toString();
+    return readFileSync(this.pathToFile(filename)).toString();
   }
 
   pathToFile(filename) {
@@ -272,13 +267,13 @@ export class Plugin {
   }
 
   generateProvider(args) {
-    return this.clientWeb3Providers.map(function (cb) {
+    return this.clientWeb3Providers.map(function(cb) {
       return cb.call(this, args);
     }).join("\n");
   }
 
   generateContracts(args) {
-    return this.contractsGenerators.map(function (cb) {
+    return this.contractsGenerators.map(function(cb) {
       return cb.call(this, args);
     }).join("\n");
   }
@@ -351,7 +346,7 @@ export class Plugin {
 
   runFilePipeline() {
     return this.pipelineFiles.map(file => {
-      let obj: any = {};
+      const obj: any = {};
       obj.filename = file.file.replace('./', '');
       obj.content = this.loadPluginFile(file.file).toString();
       obj.intendedPath = file.intendedPath;
@@ -364,8 +359,8 @@ export class Plugin {
 
   runPipeline(args) {
     // TODO: should iterate the pipelines
-    let pipeline = this.pipeline[0];
-    let shouldRunPipeline = fileMatchesPattern(pipeline.matcthingFiles, args.targetFile);
+    const pipeline = this.pipeline[0];
+    const shouldRunPipeline = fileMatchesPattern(pipeline.matcthingFiles, args.targetFile);
     if (shouldRunPipeline) {
       return pipeline.cb.call(this, args);
     }

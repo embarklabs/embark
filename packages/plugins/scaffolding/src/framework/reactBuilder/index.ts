@@ -1,4 +1,4 @@
-import { Contract, Embark } /* supplied by @types/embark in packages/embark-typings */ from "embark";
+import { Contract, Embark } from "embark-core";
 import { __ } from "embark-i18n";
 import Handlebars from "handlebars";
 import * as path from "path";

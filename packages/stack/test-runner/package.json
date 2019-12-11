@@ -25,15 +25,18 @@
     "url": "https://github.com/embark-framework/embark.git"
   },
   "main": "./dist/lib/index.js",
+  "types": "./dist/lib/index.d.ts",
   "embark-collective": {
-    "build:node": true
+    "build:node": true,
+    "typecheck": true
   },
   "scripts": {
     "_build": "npm run solo -- build",
+    "_typecheck": "npm run solo -- typecheck",
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "eslint src/",
-    "qa": "npm-run-all lint _build test",
+    "qa": "npm-run-all lint _typecheck _build test",
     "reset": "npx rimraf .nyc_output dist embark-*.tgz package",
     "solo": "embark-solo",
     "test": "nyc --reporter=html --reporter=json mocha \"dist/test/**/*.js\" --exit --no-timeouts --require source-map-support/register"
@@ -49,6 +52,7 @@
     "async": "2.6.1",
     "chalk": "2.4.2",
     "core-js": "3.4.3",
+    "deep-equal": "1.0.1",
     "embark-i18n": "^5.0.0-alpha.2",
     "embark-testing": "^5.0.0-alpha.4",
     "embark-utils": "^5.0.0-alpha.4",

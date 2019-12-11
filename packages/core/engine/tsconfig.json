@@ -1,0 +1,158 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declarationDir": "./dist",
+    "rootDir": "./src",
+    "tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.embark-engine.tsbuildinfo"
+  },
+  "extends": "../../../tsconfig.base.json",
+  "include": [
+    "src/**/*"
+  ],
+  "references": [
+    {
+      "path": "../../plugins/accounts-manager"
+    },
+    {
+      "path": "../../plugins/basic-pipeline"
+    },
+    {
+      "path": "../../plugins/coverage"
+    },
+    {
+      "path": "../../plugins/debugger"
+    },
+    {
+      "path": "../../plugins/ens"
+    },
+    {
+      "path": "../../plugins/ethereum-blockchain-client"
+    },
+    {
+      "path": "../../plugins/ganache"
+    },
+    {
+      "path": "../../plugins/geth"
+    },
+    {
+      "path": "../../plugins/ipfs"
+    },
+    {
+      "path": "../../plugins/mocha-tests"
+    },
+    {
+      "path": "../../plugins/parity"
+    },
+    {
+      "path": "../../plugins/plugin-cmd"
+    },
+    {
+      "path": "../../plugins/profiler"
+    },
+    {
+      "path": "../../plugins/rpc-manager"
+    },
+    {
+      "path": "../../plugins/scaffolding"
+    },
+    {
+      "path": "../../plugins/solidity"
+    },
+    {
+      "path": "../../plugins/solidity-tests"
+    },
+    {
+      "path": "../../plugins/specialconfigs"
+    },
+    {
+      "path": "../../plugins/swarm"
+    },
+    {
+      "path": "../../plugins/transaction-logger"
+    },
+    {
+      "path": "../../plugins/transaction-tracker"
+    },
+    {
+      "path": "../../plugins/vyper"
+    },
+    {
+      "path": "../../plugins/web3"
+    },
+    {
+      "path": "../../plugins/whisper-geth"
+    },
+    {
+      "path": "../../plugins/whisper-parity"
+    },
+    {
+      "path": "../../stack/api"
+    },
+    {
+      "path": "../../stack/authenticator"
+    },
+    {
+      "path": "../../stack/blockchain"
+    },
+    {
+      "path": "../../stack/blockchain-client"
+    },
+    {
+      "path": "../../stack/communication"
+    },
+    {
+      "path": "../../stack/compiler"
+    },
+    {
+      "path": "../../stack/contracts-manager"
+    },
+    {
+      "path": "../../stack/deployment"
+    },
+    {
+      "path": "../../stack/embarkjs"
+    },
+    {
+      "path": "../../stack/library-manager"
+    },
+    {
+      "path": "../../stack/namesystem"
+    },
+    {
+      "path": "../../stack/pipeline"
+    },
+    {
+      "path": "../../stack/process-logs-api-manager"
+    },
+    {
+      "path": "../../stack/proxy"
+    },
+    {
+      "path": "../../stack/storage"
+    },
+    {
+      "path": "../../stack/test-runner"
+    },
+    {
+      "path": "../../stack/watcher"
+    },
+    {
+      "path": "../../stack/webserver"
+    },
+    {
+      "path": "../code-runner"
+    },
+    {
+      "path": "../console"
+    },
+    {
+      "path": "../core"
+    },
+    {
+      "path": "../logger"
+    },
+    {
+      "path": "../utils"
+    }
+  ]
+}

@@ -6,7 +6,6 @@ import { filesMatchingPattern, fileMatchesPattern } from './utils/utils';
 const path = require('path');
 const deepEqual = require('deep-equal');
 const web3 = require('web3');
-const constants = require('embark-core/constants');
 import { __ } from 'embark-i18n';
 import {
   buildUrlFromConfig,
@@ -24,10 +23,13 @@ import {
   getExternalContractUrl
 } from 'embark-utils';
 import { Logger } from 'embark-logger';
+import { readJsonSync } from 'fs-extra';
 const cloneDeep = require('lodash.clonedeep');
 const { replaceZeroAddressShorthand } = AddressUtils;
 
 import { getBlockchainDefaults, getContractDefaults } from './configDefaults';
+
+const constants = readJsonSync(path.join(__dirname, '../constants.json'));
 
 const DEFAULT_CONFIG_PATH = 'config/';
 
@@ -79,7 +81,7 @@ export class Config {
 
   corsParts: string[] = [];
 
-  providerUrl = null;
+  providerUrl = '';
 
   contractDirectories: string[] = [];
 
@@ -133,8 +135,8 @@ export class Config {
 
     // TODO: refactor this so reading the file can be done with a normal resolver or something that takes advantage of the plugin api
     this.events.setCommandHandler("config:contractsFiles:add", (filename, resolver) => {
-      resolver = resolver || function (callback) { callback(fs.readFileSync(filename).toString()); };
-      this.contractsFiles.push(new File({ path: filename, originalPath: filename, type: Types.custom, resolver }));
+      resolver = resolver || (callback => { callback(fs.readFileSync(filename).toString()); });
+      this.contractsFiles.push(new File({path: filename, originalPath: filename, type: Types.custom, resolver}));
     });
 
     this.events.setCommandHandler("config:contractsFiles:reset", (cb) => {
@@ -375,17 +377,17 @@ export class Config {
     }
 
     if (this.blockchainConfig.targetGasLimit && this.blockchainConfig.targetGasLimit.toString().match(unitRegex)) {
-      this.blockchainConfig.targetGasLimit = getWeiBalanceFromString(this.blockchainConfig.targetGasLimit, web3);
+      this.blockchainConfig.targetGasLimit = getWeiBalanceFromString(this.blockchainConfig.targetGasLimit);
     }
 
     if (this.blockchainConfig.gasPrice && this.blockchainConfig.gasPrice.toString().match(unitRegex)) {
-      this.blockchainConfig.gasPrice = getWeiBalanceFromString(this.blockchainConfig.gasPrice, web3);
+      this.blockchainConfig.gasPrice = getWeiBalanceFromString(this.blockchainConfig.gasPrice);
     }
 
     if (this.blockchainConfig.accounts) {
       this.blockchainConfig.accounts.forEach(acc => {
         if (acc.balance && acc.balance.toString().match(unitRegex)) {
-          acc.balance = getWeiBalanceFromString(acc.balance, web3);
+          acc.balance = getWeiBalanceFromString(acc.balance);
         }
       });
     }
@@ -460,7 +462,7 @@ export class Config {
     let configObject = getContractDefaults(this.embarkConfig.versions);
 
     const contractsConfigs = this.plugins.getPluginsProperty('contractsConfig', 'contractsConfigs');
-    contractsConfigs.forEach(function (pluginConfig) {
+    contractsConfigs.forEach(pluginConfig => {
       configObject = recursiveMerge(configObject, pluginConfig);
     });
 
@@ -475,7 +477,7 @@ export class Config {
       process.exit(1);
     }
     if (newContractsConfig.gas.match(unitRegex)) {
-      newContractsConfig.gas = getWeiBalanceFromString(newContractsConfig.gas, web3);
+      newContractsConfig.gas = getWeiBalanceFromString(newContractsConfig.gas);
     }
 
     newContractsConfig = prepareContractsConfig(newContractsConfig);
@@ -499,9 +501,7 @@ export class Config {
     if (storageConfig && storageConfig.upload && storageConfig.upload.getUrl) {
       this.providerUrl = storageConfig.upload.getUrl;
     }
-    for (const contractName in contracts) {
-      const contract = contracts[contractName];
-
+    for (const contract of Object.values(contracts) as any[]) {
       if (!contract.file) {
         continue;
       }
@@ -711,27 +711,28 @@ export class Config {
     const readFiles: File[] = [];
     const storageConfig = self.storageConfig;
 
-    originalFiles.filter(function (file) {
+    originalFiles.filter(file => {
       return (file[0] === '$' || file.indexOf('.') >= 0);
-    }).filter(function (file) {
+    }).filter(file => {
       const basedir = findMatchingExpression(file, files);
       readFiles.push(new File({ path: file, originalPath: file, type: Types.dappFile, basedir, storageConfig }));
     });
 
-    const filesFromPlugins: File[] = [];
+    type _File = File & { intendedPath?: string, file?: string };
+    const filesFromPlugins: _File[] = [];
     const filePlugins = self.plugins.getPluginsFor('pipelineFiles');
     filePlugins.forEach((plugin: Plugin) => {
       try {
         const fileObjects = plugin.runFilePipeline();
-        for (let i = 0; i < fileObjects.length; i++) {
-          const fileObject = fileObjects[i];
+        for (const fileObject of fileObjects) {
           filesFromPlugins.push(fileObject);
         }
       } catch (err) {
         self.logger.error(err.message);
       }
     });
-    filesFromPlugins.filter(function (file) {
+
+    filesFromPlugins.filter(file => {
       if ((file.intendedPath && fileMatchesPattern(files, file.intendedPath)) || fileMatchesPattern(files, file.file)) {
         readFiles.push(file);
       }

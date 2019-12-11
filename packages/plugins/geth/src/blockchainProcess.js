@@ -18,7 +18,7 @@ class BlockchainProcess extends ProcessWrapper {
     i18n.setOrDetectLocale(options.locale);
 
     this.blockchainConfig.silent = true;
-    this.blockchain = BlockchainClient(
+    this.blockchain = new BlockchainClient(
       this.blockchainConfig,
       {
         clientName: this.client,

@@ -6,6 +6,8 @@ import { Config } from './config';
 import * as async from 'async';
 import { dappPath, embarkPath } from 'embark-utils';
 import { Logger } from 'embark-logger';
+import findUp from 'find-up';
+import { dirname } from 'path';
 
 export class Plugins {
 
@@ -90,7 +92,8 @@ export class Plugins {
   }
 
   loadInternalPlugin(pluginName, pluginConfig, isPackage?: boolean) {
-    let pluginPath, plugin;
+    let pluginPath;
+    let plugin;
     if (isPackage) {
       pluginPath = pluginName;
       plugin = require(pluginName);
@@ -124,7 +127,9 @@ export class Plugins {
   }
 
   loadPlugin(pluginName, pluginConfig) {
-    const pluginPath = dappPath('node_modules', pluginName);
+    const pluginPath = dirname(findUp.sync('package.json', {
+      cwd: dirname(require.resolve(pluginName, {paths: [dappPath()]}))
+    }) as string);
     let plugin = require(pluginPath);
 
     if (plugin.default) {
@@ -151,13 +156,13 @@ export class Plugins {
   }
 
   getPluginsFor(pluginType) {
-    return this.plugins.filter(function(plugin) {
+    return this.plugins.filter(plugin => {
       return plugin.has(pluginType);
     });
   }
 
   getPluginsProperty(pluginType, property, sub_property?: any) {
-    const matchingPlugins = this.plugins.filter(function(plugin) {
+    const matchingPlugins = this.plugins.filter(plugin => {
       return plugin.has(pluginType);
     });
 
@@ -180,7 +185,7 @@ export class Plugins {
     });
 
     // Remove empty properties
-    matchingProperties = matchingProperties.filter((property) => property);
+    matchingProperties = matchingProperties.filter(prop => prop);
 
     // return flattened list
     if (matchingProperties.length === 0) { return []; }
@@ -188,7 +193,7 @@ export class Plugins {
   }
 
   getPluginsPropertyAndPluginName(pluginType, property, sub_property) {
-    const matchingPlugins = this.plugins.filter(function(plugin) {
+    const matchingPlugins = this.plugins.filter(plugin => {
       return plugin.has(pluginType);
     });
 
@@ -204,24 +209,21 @@ export class Plugins {
     });
 
     let matchingProperties: any[] = [];
-    matchingPlugins.map((plugin) => {
+    matchingPlugins.forEach(plugin => {
       if (sub_property) {
-        const newList = [];
         for (const kall of (plugin[property][sub_property] || [])) {
           matchingProperties.push([kall, plugin.name]);
         }
-        return newList;
+        return;
       }
 
-      const newList = [];
       for (const kall of (plugin[property] || [])) {
         matchingProperties.push([kall, plugin.name]);
       }
-      return newList;
     });
 
     // Remove empty properties
-    matchingProperties = matchingProperties.filter((property) => property[0]);
+    matchingProperties = matchingProperties.filter(prop => prop[0]);
 
     // return flattened list
     if (matchingProperties.length === 0) { return []; }
@@ -256,7 +258,7 @@ export class Plugins {
 
     this.events.log("ACTION", eventName, "");
 
-    async.reduce(actionPlugins, args, function(current_args, pluginObj: any, nextEach) {
+    async.reduce(actionPlugins, args, (current_args, pluginObj: any, nextEach) => {
       const [plugin, pluginName] = pluginObj;
 
       self.events.log("== ACTION FOR " + eventName, plugin.action.name, pluginName);

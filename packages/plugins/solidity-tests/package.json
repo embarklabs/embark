@@ -2,7 +2,6 @@
   "name": "embark-solidity-tests",
   "version": "5.0.0-alpha.4",
   "description": "Plugin to run Embark solidity tests",
-  "main": "dist/lib/index.js",
   "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/solidity-tests#readme",
   "repository": {
     "directory": "packages/plugins/solidity-tests",
@@ -24,15 +23,19 @@
   "files": [
     "dist"
   ],
+  "main": "./dist/lib/index.js",
+  "types": "./dist/lib/index.d.ts",
   "embark-collective": {
-    "build:node": true
+    "build:node": true,
+    "typecheck": true
   },
   "scripts": {
     "_build": "npm run solo -- build",
+    "_typecheck": "npm run solo -- typecheck",
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "eslint src/",
-    "qa": "npm-run-all lint _build test",
+    "qa": "npm-run-all lint _typecheck _build test",
     "reset": "npx rimraf .nyc_output dist embark-*.tgz package",
     "solo": "embark-solo",
     "test": "nyc --reporter=html --reporter=json mocha \"dist/test/**/*.js\" --exit --no-timeouts --require source-map-support/register"
@@ -45,6 +48,7 @@
     "@types/async": "3.0.3",
     "async": "3.1.0",
     "core-js": "3.4.3",
+    "embark-utils": "^5.0.0-alpha.2",
     "remix-tests": "0.1.20",
     "web3": "1.2.1",
     "yo-yoify": "4.3.0"

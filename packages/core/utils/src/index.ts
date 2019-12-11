@@ -27,7 +27,6 @@ export {
   soliditySha3,
   toChecksumAddress
 } from './web3Utils';
-export { getAddressToContract, getTransactionParams } from './transactionUtils';
 import LongRunningProcessTimer from './longRunningProcessTimer';
 export { LongRunningProcessTimer };
 import AccountParser from './accountParser';
