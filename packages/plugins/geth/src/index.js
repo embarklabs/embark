@@ -42,6 +42,7 @@ class Geth {
           if (err) {
             this.logger.error(`Error launching blockchain process: ${err.message || err}`);
           }
+          this.setupDevTxs();
           readyCb();
         });
         this.registerServiceCheck();
@@ -51,8 +52,6 @@ class Geth {
         cb();
       }
     });
-
-    this.setupDevTxs();
   }
   
   async setupDevTxs() {

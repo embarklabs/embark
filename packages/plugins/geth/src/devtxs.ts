@@ -4,23 +4,33 @@ import Web3 from "web3";
 import constants from "embark-core/constants.json";
 export default class DevTxs {
   private embark: Embark;
+  private blockchainConfig: any;
   private events: Events;
   private logger: Logger;
   private web3?: Web3;
   private regularTxsInt?: NodeJS.Timeout;
   constructor(embark: Embark) {
     this.embark = embark;
+    this.blockchainConfig = this.embark.config.blockchainConfig;
     this.logger = embark.logger;
     this.events = embark.events;
   }
+
   public async init() {
-    const provider = await this.events.request2("blockchain:client:provider", "ethereum");
+    if (!this.shouldStartDevTxs()) {
+      return;
+    }
+    const provider = await this.events.request2("blockchain:client:provider", "ethereum", this.blockchainConfig.endpoint);
     this.web3 = new Web3(provider);
 
     const accounts = await this.web3.eth.getAccounts();
     this.web3.eth.defaultAccount = accounts[0];
 
     this.registerConsoleCommands();
+  }
+
+  private shouldStartDevTxs() {
+    return (this.blockchainConfig.enabled && this.blockchainConfig.clientConfig && this.blockchainConfig.clientConfig.miningMode === 'dev');
   }
 
   private registerConsoleCommands() {
@@ -68,12 +78,16 @@ export default class DevTxs {
   }
 
   public async startRegularTxs() {
-    if (this.regularTxsInt) {
-      throw new Error("Regular txs already started.");
+    if (!this.shouldStartDevTxs()) {
+      return;
     }
     if (!this.web3) {
       return;
     }
+    if (this.regularTxsInt) {
+      throw new Error("Regular txs already started.");
+    }
+
     const networkId = await this.web3.eth.net.getId();
     if (networkId !== constants.blockchain.networkIds.development) {
       return;
