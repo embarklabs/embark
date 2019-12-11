@@ -19,7 +19,8 @@ describe('embark-ens', () => {
       namesystemConfig: {
         register: {
           rootDomain: 'root.eth'
-        }
+        },
+        dappConnection: []
       }
     };
   });
@@ -29,17 +30,18 @@ describe('embark-ens', () => {
   });
 
   it("should register the right artifact", (done) => {
-    const pipelineRegisterHandler = jest.fn((args, cb) => {
-      expect(args).toEqual({
-        path: ['test-dir', 'config'],
-        file: 'namesystem.json',
-        format: 'json',
-        content: Object.assign({}, embark.config.namesystemConfig, ens.getEnsConfig())
+    const pipelineRegisterHandler = jest.fn(async (args, cb) => {
+      ens.getEnsConfig((err, config) => {
+        expect(args).toEqual({
+          path: ['test-dir', 'config'],
+          file: 'namesystem.json',
+          format: 'json',
+          content: Object.assign({}, embark.config.namesystemConfig, config)
+        });
+        cb();
+        done();
       });
-      cb();
-      done();
     });
-    ens.getEnsConfig = jest.fn();
 
     embark.events.setCommandHandler('pipeline:register', pipelineRegisterHandler);
 

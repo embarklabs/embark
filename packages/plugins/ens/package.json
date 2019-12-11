@@ -34,7 +34,7 @@
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "eslint src/",
-    "qa": "npm-run-all lint _build",
+    "qa": "npm-run-all lint _build test",
     "reset": "npx rimraf dist embark-*.tgz package",
     "solo": "embark-solo",
     "test": "jest"
