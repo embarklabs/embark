@@ -27,11 +27,9 @@ const startRPCMockServer = (options = {}, callback) => {
     req.on('end', () => {
       const request = JSON.parse(body);
       const accountsResponse = JSON.stringify({
-        "jsonrpc": "2.0",
-        "id": request.id,
-        "result": [
-          "0x7c67d951b7338a96168f259a16b7ba25e7a30315"
-        ]
+        jsonrpc: "2.0",
+        id: request.id,
+        result: 1337
       });
 
       res.writeHead(200, {
