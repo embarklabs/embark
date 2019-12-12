@@ -3,7 +3,7 @@ import { dappPath, canonicalHost, defaultHost } from "embark-utils";
 const constants = require("embark-core/constants");
 const API = require("./api.js");
 import { BlockchainProcessLauncher } from "./blockchainProcessLauncher";
-import { ws, rpc } from "./check.js";
+import { ws, rpcWithEndpoint } from "./check.js";
 const { normalizeInput } = require("embark-utils");
 
 class Whisper {
@@ -64,12 +64,10 @@ class Whisper {
 
   registerServiceCheck() {
     this.events.request("services:register", "Whisper", (cb) => {
-      const { host, port, type } = this.communicationConfig.connection;
-      if (type === "ws") {
-        return ws(host, port, (err, version) => this._getNodeState(err, version, cb));
+      if (this.blockchainConfig.endpoint.startsWith('ws')) {
+        return ws(this.blockchainConfig.endpoint, (err, version) => this._getNodeState(err, version, cb));
       }
-      rpc(host, port, (err, version) => this._getNodeState(err, version, cb));
-
+      rpcWithEndpoint(this.blockchainConfig.endpoint, (err, version) => this._getNodeState(err, version, cb));
     }, 5000, "off");
   }
 

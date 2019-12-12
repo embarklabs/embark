@@ -10,6 +10,7 @@ const constants = require('embark-core/constants');
 import { __ } from 'embark-i18n';
 import {
   buildUrlFromConfig,
+  deconstructUrl,
   canonicalHost,
   dappPath,
   defaultHost,
@@ -389,16 +390,27 @@ export class Config {
       });
     }
 
-    if (!this.blockchainConfig.endpoint) {
+    if (this.blockchainConfig.endpoint) {
+      const {type, host, port} = deconstructUrl(this.blockchainConfig.endpoint);
+      if (type === 'ws') {
+        this.blockchainConfig.wsHost = host;
+        this.blockchainConfig.wsPort = port;
+        this.blockchainConfig.wsRPC = true;
+      } else {
+        this.blockchainConfig.rpcHost = host;
+        this.blockchainConfig.rpcPort = port;
+        this.blockchainConfig.wsRPC = false;
+      }
+    } else {
       const urlConfig = (this.blockchainConfig.wsHost) ? {
         host: this.blockchainConfig.wsHost,
         port: this.blockchainConfig.wsPort,
         type: 'ws'
       } : {
-          host: this.blockchainConfig.rpcHost,
-          port: this.blockchainConfig.rpcPort,
-          type: 'rpc'
-        };
+        host: this.blockchainConfig.rpcHost,
+        port: this.blockchainConfig.rpcPort,
+        type: 'rpc'
+      };
       this.blockchainConfig.endpoint = buildUrlFromConfig(urlConfig);
       this.blockchainConfig.isAutoEndpoint = true;
     }

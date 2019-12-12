@@ -2,7 +2,7 @@ import { __ } from 'embark-i18n';
 import {BlockchainClient} from "./blockchain";
 const {normalizeInput} = require('embark-utils');
 import {BlockchainProcessLauncher} from './blockchainProcessLauncher';
-import {ws, rpc} from './check.js';
+import {ws, rpcWithEndpoint} from './check.js';
 const constants = require('embark-core/constants');
 
 class Parity {
@@ -70,11 +70,10 @@ class Parity {
   }
 
   _doCheck(cb) {
-    const { rpcHost, rpcPort, wsRPC, wsHost, wsPort } = this.blockchainConfig;
-    if (wsRPC) {
-      return ws(wsHost, wsPort, (err, version) => this._getNodeState(err, version, cb));
+    if (this.blockchainConfig.endpoint.startsWith('ws')) {
+      return ws(this.blockchainConfig.endpoint, (err, version) => this._getNodeState(err, version, cb));
     }
-    rpc(rpcHost, rpcPort, (err, version) => this._getNodeState(err, version, cb));
+    rpcWithEndpoint(this.blockchainConfig.endpoint, (err, version) => this._getNodeState(err, version, cb));
   }
 
   // TODO: need to get correct port taking into account the proxy

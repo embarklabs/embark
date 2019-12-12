@@ -1,5 +1,6 @@
 const WebSocket = require("ws");
 const http = require("http");
+const https = require("https");
 
 const LIVENESS_CHECK = JSON.stringify({
   jsonrpc:'2.0',
@@ -25,10 +26,8 @@ const parseAndRespond = (data, cb) => {
   cb(null, resp.result);
 };
 
-const rpc = (host, port, cb) => {
+const rpcWithEndpoint = (endpoint, cb) => {
   const options = {
-    hostname: host, // TODO(andremedeiros): get from config
-    port, // TODO(andremedeiros): get from config
     method: "POST",
     timeout: 1000,
     headers: {
@@ -37,9 +36,14 @@ const rpc = (host, port, cb) => {
     }
   };
 
-  const req = http.request(options, (res) => {
+  let obj = http;
+  if (endpoint.startsWith('https')) {
+    obj = https;
+  }
+
+  const req = obj.request(endpoint, options, (res) => {
     let data = "";
-    res.on("data", (chunk) => { data += chunk; });
+    res.on("data", chunk => { data += chunk; });
     res.on("end", () => parseAndRespond(data, cb));
   });
   req.on("error", (e) => cb(e));
@@ -47,8 +51,8 @@ const rpc = (host, port, cb) => {
   req.end();
 };
 
-const ws = (host, port, cb) => {
-  const conn = new WebSocket("ws://" + host + ":" + port);
+const ws = (endpoint, cb) => {
+  const conn = new WebSocket(endpoint);
   conn.on("message", (data) => {
     parseAndRespond(data, cb);
     conn.close();
@@ -59,5 +63,5 @@ const ws = (host, port, cb) => {
 
 module.exports = {
   ws,
-  rpc
+  rpcWithEndpoint
 };
