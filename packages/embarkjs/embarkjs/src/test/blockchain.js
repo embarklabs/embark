@@ -1,4 +1,4 @@
-/* global before describe it require */
+/* global before describe it */
 
 const {startRPCMockServer, TestProvider} = require('./helpers/blockchain');
 const {assert} = require('chai');
@@ -50,7 +50,8 @@ describe('Blockchain', () => {
         await new Promise((resolve, reject) => {
           Blockchain.connect({dappConnection}, err => {
             try {
-              assert(scenario.error ? err : !err);
+              assert(scenario.error ? err : !err,
+                scenario.error ? 'There should have been an error, but there was none' : 'There should not have been an error, but there was one');
               servers.forEach((server, idx) => {
                 assert.strictEqual(server.visited, scenario.visited[idx]);
               });

@@ -100,18 +100,23 @@ Blockchain.doConnect = function(connectionList, opts, doneCb) {
   const self = this;
 
   const checkConnect = (next) => {
-    this.blockchainConnector.getAccounts((error, _a) => {
-      const provider = self.blockchainConnector.getCurrentProvider();
-      const connectionString = provider.host;
-
-      if (error) this.blockchainConnector.setProvider(null);
-
-      return next(null, {
-        connectionString,
-        error,
-        connected: !error
+    const provider = self.blockchainConnector.getCurrentProvider();
+    const connectionString = provider.host;
+    this.blockchainConnector.getNetworkId()
+      .then(_id => {
+        next(null, {
+          connectionString,
+          error: null,
+          connected: true
+        });
+      })
+      .catch(error => {
+        next(null, {
+          connectionString,
+          error,
+          connected: false
+        });
       });
-    });
   };
 
   const connectWeb3 = async (next) => {
@@ -171,10 +176,7 @@ Blockchain.doConnect = function(connectionList, opts, doneCb) {
       return doneCb(new BlockchainConnectionError(connectionErrs));
     }
 
-    self.blockchainConnector.getAccounts(async (err, accounts) => {
-      if (err) {
-        return doneCb(err);
-      }
+    self.blockchainConnector.getAccounts(async (_err, accounts) => {
       const currentProv = self.blockchainConnector.getCurrentProvider();
       if (opts.warnAboutMetamask) {
         // if we are using metamask, ask embark to turn on dev_funds
