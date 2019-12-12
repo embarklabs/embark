@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.4](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.3...v5.0.0-alpha.4) (2019-12-12)
+
+
+### Bug Fixes
+
+* **@embark/debugger:** Re-enable debugger ([8e0f8b4](https://github.com/embark-framework/embark/commit/8e0f8b4))
+* **@embark/tests:** Tests exiting early ([acd1d72](https://github.com/embark-framework/embark/commit/acd1d72))
+
+
+
+
+
 # [5.0.0-alpha.3](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.2...v5.0.0-alpha.3) (2019-12-06)
 
 **Note:** Version bump only for package embark

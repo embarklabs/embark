@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.4](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.3...v5.0.0-alpha.4) (2019-12-12)
+
+
+### Bug Fixes
+
+* **@cockpit/ens:** ensure default account is set when registering subdomains ([9839e92](https://github.com/embark-framework/embark/commit/9839e92))
+* **@embark/blockchain:** make disabling blockchain feature work ([446197b](https://github.com/embark-framework/embark/commit/446197b))
+* **@embark/debugger:** Re-enable debugger ([8e0f8b4](https://github.com/embark-framework/embark/commit/8e0f8b4))
+* **@embark/ens:** fix broken test due to async API ([9df2430](https://github.com/embark-framework/embark/commit/9df2430))
+* **@embark/geth:** only register console command if in dev mode; use endpoint; use dev account for regular txs that fix geths stuck tx issue ([5d53847](https://github.com/embark-framework/embark/commit/5d53847))
+* **@embark/proxy:** fix conflict for WS port in the proxy ([eae97de](https://github.com/embark-framework/embark/commit/eae97de))
+* **@embark/test:** fix using --node option in tests ([b82a240](https://github.com/embark-framework/embark/commit/b82a240))
+* **@embark/tests:** Tests exiting early ([acd1d72](https://github.com/embark-framework/embark/commit/acd1d72))
+
+
+### Features
+
+* **@embark/whisper:** Add Whisper client config ([bd4b110](https://github.com/embark-framework/embark/commit/bd4b110))
+* **@embarkjs/ens:** Introduce `dappConnection` configuration for namesystem ([2ae4664](https://github.com/embark-framework/embark/commit/2ae4664))
+
+
+
+
+
 # [5.0.0-alpha.3](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.2...v5.0.0-alpha.3) (2019-12-06)
 
 

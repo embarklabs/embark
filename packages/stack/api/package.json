@@ -1,6 +1,6 @@
 {
   "name": "embark-api",
-  "version": "5.0.0-alpha.2",
+  "version": "5.0.0-alpha.4",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Embark api module",
@@ -48,7 +48,7 @@
     "core-js": "3.4.3",
     "cors": "2.8.5",
     "embark-i18n": "^5.0.0-alpha.2",
-    "embark-utils": "^5.0.0-alpha.2",
+    "embark-utils": "^5.0.0-alpha.4",
     "express": "4.17.1",
     "express-ws": "4.0.0",
     "find-up": "4.1.0",

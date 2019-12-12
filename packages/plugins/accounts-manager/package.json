@@ -1,6 +1,6 @@
 {
   "name": "embark-accounts-manager",
-  "version": "5.0.0-alpha.3",
+  "version": "5.0.0-alpha.4",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Embark account manager. Takes the blockchain config and, along with the proxy, makes sure to send back the correct accounts",
@@ -48,10 +48,10 @@
     "@babel/runtime-corejs3": "7.7.4",
     "async": "2.6.1",
     "core-js": "3.4.3",
-    "embark-core": "^5.0.0-alpha.3",
+    "embark-core": "^5.0.0-alpha.4",
     "embark-i18n": "^5.0.0-alpha.2",
-    "embark-logger": "^5.0.0-alpha.2",
-    "embark-utils": "^5.0.0-alpha.2",
+    "embark-logger": "^5.0.0-alpha.4",
+    "embark-utils": "^5.0.0-alpha.4",
     "web3": "1.2.1"
   },
   "devDependencies": {

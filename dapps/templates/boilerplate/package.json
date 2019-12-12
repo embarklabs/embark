@@ -1,6 +1,6 @@
 {
   "name": "embark-dapp-template-boilerplate",
-  "version": "5.0.0-alpha.3",
+  "version": "5.0.0-alpha.4",
   "description": "Basic DApp template for Embark",
   "homepage": "https://github.com/embark-framework/embark/tree/master/dapps/templates/boilerplate#readme",
   "bugs": "https://github.com/embark-framework/embark/issues",
@@ -32,7 +32,7 @@
     "url": "https://github.com/embark-framework/embark.git"
   },
   "devDependencies": {
-    "embark": "^5.0.0-alpha.3",
+    "embark": "^5.0.0-alpha.4",
     "embark-reset": "^5.0.0-alpha.2",
     "rimraf": "3.0.0"
   }

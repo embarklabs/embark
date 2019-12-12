@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.4](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.3...v5.0.0-alpha.4) (2019-12-12)
+
+
+### Bug Fixes
+
+* **@embark/blockchain:** make disabling blockchain feature work ([446197b](https://github.com/embark-framework/embark/commit/446197b))
+
+
+### Features
+
+* **@embark/whisper:** Add Whisper client config ([bd4b110](https://github.com/embark-framework/embark/commit/bd4b110))
+
+
+
+
+
 # [5.0.0-alpha.3](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.2...v5.0.0-alpha.3) (2019-12-06)
 
 **Note:** Version bump only for package embark-dapp-template-demo

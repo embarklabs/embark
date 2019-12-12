@@ -1,6 +1,6 @@
 {
   "name": "embark-debugger",
-  "version": "5.0.0-alpha.2",
+  "version": "5.0.0-alpha.4",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Debugger component for Embark",

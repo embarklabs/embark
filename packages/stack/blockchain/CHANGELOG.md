@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.4](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.3...v5.0.0-alpha.4) (2019-12-12)
+
+
+### Bug Fixes
+
+* **@embark/blockchain:** make disabling blockchain feature work ([446197b](https://github.com/embark-framework/embark/commit/446197b))
+* **@embark/debugger:** Re-enable debugger ([8e0f8b4](https://github.com/embark-framework/embark/commit/8e0f8b4))
+* **@embark/test:** fix using --node option in tests ([b82a240](https://github.com/embark-framework/embark/commit/b82a240))
+
+
+
+
+
 # [5.0.0-alpha.3](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.2...v5.0.0-alpha.3) (2019-12-06)
 
 **Note:** Version bump only for package embark-blockchain

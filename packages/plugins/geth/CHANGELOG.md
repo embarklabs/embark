@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.4](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.3...v5.0.0-alpha.4) (2019-12-12)
+
+
+### Bug Fixes
+
+* **@embark/geth:** only register console command if in dev mode; use endpoint; use dev account for regular txs that fix geths stuck tx issue ([5d53847](https://github.com/embark-framework/embark/commit/5d53847))
+
+
+
+
+
 # [5.0.0-alpha.3](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.2...v5.0.0-alpha.3) (2019-12-06)
 
 **Note:** Version bump only for package embark-geth
