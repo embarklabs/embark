@@ -1,8 +1,8 @@
 import { __ } from 'embark-i18n';
-const { normalizeInput } = require('embark-utils');
+const {normalizeInput} = require('embark-utils');
 import { BlockchainProcessLauncher } from './blockchainProcessLauncher';
 import { BlockchainClient } from './blockchain';
-import { ws, rpc } from './check.js';
+import { ws, rpcWithEndpoint } from './check.js';
 import DevTxs from "./devtxs";
 const constants = require('embark-core/constants');
 
@@ -53,7 +53,7 @@ class Geth {
       }
     });
   }
-  
+
   async setupDevTxs() {
     const devTxs = new DevTxs(this.embark);
     await devTxs.init();
@@ -82,21 +82,16 @@ class Geth {
   }
 
   _doCheck(cb) {
-    const { rpcHost, rpcPort, wsRPC, wsHost, wsPort } = this.blockchainConfig;
-    if (wsRPC) {
-      return ws(wsHost, wsPort, (err, version) => this._getNodeState(err, version, cb));
+    if (this.blockchainConfig.endpoint.startsWith('ws')) {
+      return ws(this.blockchainConfig.endpoint, (err, version) => this._getNodeState(err, version, cb));
     }
-    rpc(rpcHost, rpcPort, (err, version) => this._getNodeState(err, version, cb));
+    rpcWithEndpoint(this.blockchainConfig.endpoint, (err, version) => this._getNodeState(err, version, cb));
   }
 
   // TODO: need to get correct port taking into account the proxy
   registerServiceCheck() {
     this.events.request("services:register", 'Ethereum', (cb) => {
-      const { rpcHost, rpcPort, wsRPC, wsHost, wsPort } = this.blockchainConfig;
-      if (wsRPC) {
-        return ws(wsHost, wsPort, (err, version) => this._getNodeState(err, version, cb));
-      }
-      rpc(rpcHost, rpcPort, (err, version) => this._getNodeState(err, version, cb));
+      this._doCheck(cb);
     }, 5000, 'off');
   }
 
