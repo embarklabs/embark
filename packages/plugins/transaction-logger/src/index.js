@@ -36,11 +36,12 @@ class TransactionLogger {
     this.events.on('outputDone', () => {
       this.outputDone = true;
     });
-    this.events.on("contractsDeployed", () => {
-      this.contractsDeployed = true;
 
+    this.embark.registerActionForEvent("deployment:deployContracts:afterAll", { priority: 38 }, (params, cb) => {
+      this.contractsDeployed = true;
       this._getContractsList((contractsList) => {
         this.addressToContract = getAddressToContract(contractsList, this.addressToContract);
+        cb(null, params);
       });
     });
 
@@ -67,6 +68,16 @@ class TransactionLogger {
         this._web3 = new Web3(provider);
       }
       return this._web3;
+    })();
+  }
+
+  get web3Accounts() {
+    return (async () => {
+      if (!this._web3Accounts) {
+        const web3 = await this.web3;
+        this._web3Accounts = await web3.eth.getAccounts();
+      }
+      return this._web3Accounts;
     })();
   }
 
@@ -98,6 +109,7 @@ class TransactionLogger {
   }
 
   async _onLogRequest(args) {
+    /*eslint complexity: ["error", 22]*/
     const method = args.request.method;
     if (!this.contractsDeployed || !LISTENED_METHODS.includes(method)) {
       return;
@@ -108,6 +120,7 @@ class TransactionLogger {
       this.transactions[args.response.result] = {
         address: args.request.params[0].to,
         data: args.request.params[0].data,
+        value: args.request.params[0].value,
         txHash: args.response.result
       };
       return;
@@ -143,8 +156,16 @@ class TransactionLogger {
       // It's a deployment
       return;
     }
-    const contract = this.addressToContract[address];
 
+    const accounts = await this.web3Accounts;
+
+    if (accounts.map(account => account.toLowerCase()).includes(address.toLowerCase())) {
+      const web3 = await this.web3;
+      const value = web3.utils.fromWei(web3.utils.hexToNumberString(dataObject.value));
+      return this.logger.info(`Blockchain>`.underline + ` transferring ${value} ETH from ${dataObject.from} to ${address}`.bold);
+    }
+
+    const contract = this.addressToContract[address];
     if (!contract) {
       this.logger.info(`Contract log for unknown contract: ${JSON.stringify(args)}`);
       return this._getContractsList((contractsList) => {
