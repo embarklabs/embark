@@ -44,7 +44,7 @@ export default class RpcModifier {
   public set nodeAccounts(nodeAccounts: Promise<any[]>) {
     (async () => {
       this._nodeAccounts = await nodeAccounts;
-      // reset accounts backing variable as it neesd to be recalculated
+      // reset accounts backing variable as it needs to be recalculated
       this._accounts = null;
     })();
   }
