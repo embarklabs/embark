@@ -166,13 +166,13 @@ describe('embark.Config', function () {
           "miningMode": "dev"
         },
         "datadir": ".embark/extNetwork/datadir",
-        "rpcHost": "localhost",
-        "rpcPort": 8545,
+        "rpcHost": "mynetwork.com",
+        "rpcPort": undefined,
         "rpcCorsDomain": {
           "auto": true,
           "additionalCors": []
         },
-        "wsRPC": true,
+        "wsRPC": false,
         "wsOrigins": {
           "auto": true,
           "additionalCors": []
