@@ -1,5 +1,5 @@
 import Handlebars from "handlebars";
-import { ABIDefinition } from "web3/eth/abi";
+import { AbiItem } from "web3-utils";
 
 Handlebars.registerHelper("capitalize", (word: string) => {
   return word.charAt(0).toUpperCase() + word.slice(1);
@@ -53,7 +53,7 @@ Handlebars.registerHelper("trim", (name: string) => {
   return name.replace("[]", "");
 });
 
-Handlebars.registerHelper("methodname", (abiDefinition: ABIDefinition[], functionName: string, inputs: any[]) => {
+Handlebars.registerHelper("methodname", (abiDefinition: AbiItem[], functionName: string, inputs: any[]) => {
   const funCount = abiDefinition.filter((x) => x.name === functionName).length;
   if (funCount === 1) {
     return "." + functionName;

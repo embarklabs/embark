@@ -51,7 +51,7 @@
     "embark-core": "^4.1.1",
     "embark-process-logs-api": "^4.1.1",
     "embark-utils": "^4.1.1",
-    "web3": "1.2.1"
+    "web3": "1.2.4"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",

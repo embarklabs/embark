@@ -55,8 +55,8 @@ describe('embark.Contracts', function() {
       registerAPICall: () => {},
       events: events,
       fs: {
-        existsSync: () => { return false },
-        dappPath: () => { return "ok" }
+        existsSync: () => { return false; },
+        dappPath: () => { return "ok"; }
       },
       logger: plugins.logger,
       embarkConfig: {
@@ -89,7 +89,7 @@ describe('embark.Contracts', function() {
 
     contractsConfig = {
       "versions": {
-        "web3": "1.2.1",
+        "web3": "1.2.4",
         "solc": "0.4.17"
       },
       "deployment": {
@@ -104,14 +104,10 @@ describe('embark.Contracts', function() {
       "gas": "auto",
       "contracts": {
         "Token": {
-          "args": [
-            100
-          ]
+          "args": [100]
         },
         "SimpleStorage": {
-          "args": [
-            200
-          ]
+          "args": [200]
         }
       }
     };
@@ -119,8 +115,8 @@ describe('embark.Contracts', function() {
     let embarkObj = {
       registerAPICall: () => {},
       fs: {
-        existsSync: () => { return false },
-        dappPath: () => { return "ok" }
+        existsSync: () => { return false; },
+        dappPath: () => { return "ok"; }
       },
       logger: new Logger({}),
       events: events
@@ -213,7 +209,7 @@ describe('embark.Contracts', function() {
 
     contractsConfig = {
       "versions": {
-        "web3": "1.2.1",
+        "web3": "1.2.4",
         "solc": "0.4.17"
       },
       "deployment": {
@@ -235,14 +231,10 @@ describe('embark.Contracts', function() {
         },
         "MySimpleStorage": {
           "instanceOf": "SimpleStorage",
-          "args": [
-            300
-          ]
+          "args": [300]
         },
         "SimpleStorage": {
-          "args": [
-            200
-          ]
+          "args": [200]
         },
         "AnotherSimpleStorage": {
           "instanceOf": "SimpleStorage"
@@ -253,8 +245,8 @@ describe('embark.Contracts', function() {
     let embarkObj = {
       registerAPICall: () => {},
       fs: {
-        existsSync: () => { return false },
-        dappPath: () => { return "ok" }
+        existsSync: () => { return false; },
+        dappPath: () => { return "ok"; }
       },
       logger: new Logger({}),
       events: events

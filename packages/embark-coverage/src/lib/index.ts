@@ -1,7 +1,7 @@
 import { dappPath, File } from "embark-utils";
 import * as globule from "globule";
 import * as path from "path";
-import Web3Contract from "web3/eth/contract";
+import { Contract as Web3Contract } from "web3-eth-contract";
 
 import { Contract, Embark } from "embark";
 import { ContractEnhanced } from "./contractEnhanced";
