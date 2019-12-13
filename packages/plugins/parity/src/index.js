@@ -83,7 +83,7 @@ class Parity {
 
   startBlockchainNode(callback) {
     if (this.blockchainConfig.isStandalone) {
-      return BlockchainClient(this.blockchainConfig, {
+      return new BlockchainClient(this.blockchainConfig, {
         clientName: 'parity',
         env: this.embark.env,
         certOptions: this.embark.config.webServerConfig.certOptions,
