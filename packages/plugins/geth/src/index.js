@@ -97,7 +97,7 @@ class Geth {
 
   startBlockchainNode(callback) {
     if (this.blockchainConfig.isStandalone) {
-      return BlockchainClient(this.blockchainConfig, {
+      return new BlockchainClient(this.blockchainConfig, {
         clientName: 'geth',
         env: this.embark.env,
         certOptions: this.embark.config.webServerConfig.certOptions,
