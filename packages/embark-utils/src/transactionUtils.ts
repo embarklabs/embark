@@ -1,5 +1,5 @@
 import { Contract } /* supplied by @types/embark in packages/embark-typings */ from "embark";
-import { ABIDefinition } from "web3/eth/abi";
+import { AbiItem } from "web3-utils";
 import { decodeParams, sha3 } from "./web3Utils";
 
 interface AddressToContract {
@@ -13,7 +13,7 @@ interface AddressToContractArray {
 }
 
 interface FunctionSignature {
-  abi: ABIDefinition;
+  abi: AbiItem;
   functionName?: string;
   name: string;
 }
@@ -33,8 +33,8 @@ export function getAddressToContract(contractsList: Contract[], addressToContrac
     }
     const funcSignatures: { [name: string]: FunctionSignature } = {};
     contract.abiDefinition
-      .filter((func: ABIDefinition) => func.type === "function")
-      .map((func: ABIDefinition) => {
+      .filter((func: AbiItem) => func.type === "function")
+      .map((func: AbiItem) => {
         const name = `${func.name}(${func.inputs ? func.inputs.map((input) => input.type).join(",") : ""})`;
         funcSignatures[sha3(name).substring(0, 10)] = {
           abi: func,

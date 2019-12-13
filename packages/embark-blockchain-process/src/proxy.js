@@ -10,8 +10,8 @@ const http = require('http');
 const httpProxy = require('http-proxy');
 const {parser: jsonParser} = require('stream-json');
 const pump = require('pump');
-const WsParser = require('simples/lib/parsers/ws');
-const WsWrapper = require('simples/lib/ws/wrapper');
+const WsParser = require('simples/lib/parsers/ws-parser');
+const WsFrame = require('simples/lib/ws/frame');
 const modifyResponse = require('node-http-proxy-json');
 const Transaction = require('ethereumjs-tx');
 const ethUtil = require('ethereumjs-util');
@@ -258,19 +258,17 @@ export class Proxy {
       },
       ws: ws,
       createWsServerTransformStream: (_req, _proxyReq, _proxyRes) => {
-        const parser = new WsParser(0, true);
-        parser.on('frame', ({data: buffer}) => {
+        const parser = new WsParser(true, null, true);
+        parser.on('message', ({data: buffer}) => {
           let object = parseJsonMaybe(buffer.toString());
           if (object) {
             object = modifyPayload(this.toModifyPayloads, object, accounts);
             // track the modified response
             this.trackResponse(object);
             // send the modified response
-            WsWrapper.wrap(
-              {connection: dupl, masked: 0},
-              Buffer.from(JSON.stringify(object)),
-              () => {}
-            );
+            WsFrame.wrap(JSON.stringify(object), 0, (data) => {
+              dupl.push(data);
+            });
           }
         });
         const dupl = new Duplex({
@@ -325,7 +323,7 @@ export class Proxy {
 
       proxy.on('proxyReqWs', (_proxyReq, req, socket) => {
         // messages TO the target
-        pump(socket, new WsParser(0, false)).on('frame', ({data: buffer}) => {
+        pump(socket, new WsParser(false, null, true)).on('message', ({data: buffer}) => {
           const object = parseJsonMaybe(buffer.toString());
           this.trackRequest({ ws: true, data: object });
         });
