@@ -4,7 +4,7 @@ const constants = require("embark-core/constants");
 const API = require("./api.js");
 import { BlockchainProcessLauncher } from "./blockchainProcessLauncher";
 import { ws, rpcWithEndpoint } from "./check.js";
-const { normalizeInput } = require("embark-utils");
+const { normalizeInput, buildUrlFromConfig } = require("embark-utils");
 
 class Whisper {
   constructor(embark, _options) {
@@ -64,10 +64,11 @@ class Whisper {
 
   registerServiceCheck() {
     this.events.request("services:register", "Whisper", (cb) => {
-      if (this.blockchainConfig.endpoint.startsWith('ws')) {
-        return ws(this.blockchainConfig.endpoint, (err, version) => this._getNodeState(err, version, cb));
+      const endpoint = buildUrlFromConfig(this.communicationConfig.connection);
+      if (endpoint.startsWith('ws')) {
+        return ws(endpoint, (err, version) => this._getNodeState(err, version, cb));
       }
-      rpcWithEndpoint(this.blockchainConfig.endpoint, (err, version) => this._getNodeState(err, version, cb));
+      rpcWithEndpoint(endpoint, (err, version) => this._getNodeState(err, version, cb));
     }, 5000, "off");
   }
 
