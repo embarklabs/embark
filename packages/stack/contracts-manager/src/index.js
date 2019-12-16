@@ -83,7 +83,7 @@ export default class ContractsManager {
     });
 
     this.events.setCommandHandler('setDashboardState', () => {
-      self.events.emit('contractsState', self.contractsState());
+      self.events.emit('contracts:state', self.contractsState());
     });
   }
 
@@ -200,7 +200,7 @@ export default class ContractsManager {
         this.events.on('contractsDeployed', () => {
           ws.send(JSON.stringify(this._contractsForApi()), () => undefined);
         });
-        this.events.on('contractsState', () => {
+        this.events.on('contracts:state', () => {
           ws.send(JSON.stringify(this._contractsForApi()), () => undefined);
         });
       }
