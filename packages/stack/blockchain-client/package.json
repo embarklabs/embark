@@ -1,6 +1,6 @@
 {
   "name": "embark-blockchain-client",
-  "version": "5.0.0-alpha.2",
+  "version": "5.0.0-alpha.5",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Provides ability to register a blockchain technology in Embark, ie Ethereum.",
@@ -49,7 +49,7 @@
     "web3": "1.2.1"
   },
   "devDependencies": {
-    "embark-solo": "^5.0.0-alpha.2",
+    "embark-solo": "^5.0.0-alpha.5",
     "eslint": "5.7.0",
     "npm-run-all": "4.1.5",
     "rimraf": "3.0.0"

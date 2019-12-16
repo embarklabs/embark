@@ -1,6 +1,6 @@
 {
   "name": "embark-compiler",
-  "version": "5.0.0-alpha.4",
+  "version": "5.0.0-alpha.5",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Embark compiler module",
@@ -45,17 +45,17 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.7.4",
     "core-js": "3.4.3",
-    "embark-core": "^5.0.0-alpha.3",
-    "embark-i18n": "^5.0.0-alpha.2",
-    "embark-utils": "^5.0.0-alpha.4"
+    "embark-core": "^5.0.0-alpha.5",
+    "embark-i18n": "^5.0.0-alpha.5",
+    "embark-utils": "^5.0.0-alpha.5"
   },
   "devDependencies": {
     "@babel/core": "7.7.4",
     "babel-jest": "24.9.0",
     "clone-deep": "4.0.0",
     "cross-env": "5.2.0",
-    "embark-solo": "^5.0.0-alpha.2",
-    "embark-testing": "^5.0.0-alpha.4",
+    "embark-solo": "^5.0.0-alpha.5",
+    "embark-testing": "^5.0.0-alpha.5",
     "jest": "24.9.0",
     "npm-run-all": "4.1.5",
     "rimraf": "3.0.0",

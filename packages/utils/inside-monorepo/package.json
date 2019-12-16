@@ -1,7 +1,7 @@
 {
   "name": "embark-inside-monorepo",
   "private": true,
-  "version": "5.0.0-alpha.0",
+  "version": "5.0.0-alpha.5",
   "author": "Michael Bradley <michaelsbradleyjr@gmail.com> (https://github.com/michaelsbradleyjr/)",
   "description": "If a package from the monorepo can resolve this package then the first package is inside the monorepo",
   "license": "MIT",

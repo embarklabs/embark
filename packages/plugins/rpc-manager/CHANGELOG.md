@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.5](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.4...v5.0.0-alpha.5) (2019-12-16)
+
+
+### Bug Fixes
+
+* **@embarkrpc-manager:** fix infinite loop in eth_accounts modifier ([7e70761](https://github.com/embark-framework/embark/commit/7e70761))
+
+
+
+
+
 # [5.0.0-alpha.4](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.3...v5.0.0-alpha.4) (2019-12-12)
 
 **Note:** Version bump only for package embark-rpc-manager

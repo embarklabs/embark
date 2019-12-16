@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.5](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.4...v5.0.0-alpha.5) (2019-12-16)
+
+
+### Bug Fixes
+
+* **@embark/transaction-logger:** handle non-contract transactions ([1a7fc66](https://github.com/embark-framework/embark/commit/1a7fc66)), closes [/github.com/status-im/status-teller-network/blob/a5ab4d4b26afccf15ac7472a18728385dd8b2461/embarkConfig/data.js#L100-L110](https://github.com//github.com/status-im/status-teller-network/blob/a5ab4d4b26afccf15ac7472a18728385dd8b2461/embarkConfig/data.js/issues/L100-L110)
+
+
+
+
+
 # [5.0.0-alpha.4](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.3...v5.0.0-alpha.4) (2019-12-12)
 
 **Note:** Version bump only for package embark-transaction-logger

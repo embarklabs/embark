@@ -1,6 +1,6 @@
 {
   "name": "embark-collective",
-  "version": "5.0.0-alpha.2",
+  "version": "5.0.0-alpha.5",
   "author": "Michael Bradley <michaelsbradleyjr@gmail.com> (https://github.com/michaelsbradleyjr/)",
   "description": "You will be assimilated",
   "homepage": "https://github.com/embark-framework/embark/tree/master/packages/utils/collective#readme",
@@ -56,7 +56,7 @@
     "@lerna/filter-packages": "3.16.0",
     "babel-plugin-dynamic-import-node": "2.3.0",
     "babel-plugin-macros": "2.7.1",
-    "embark-inside-monorepo": "^5.0.0-alpha.0",
+    "embark-inside-monorepo": "^5.0.0-alpha.5",
     "find-up": "4.1.0",
     "fs-extra": "8.1.0",
     "glob": "7.1.4",
