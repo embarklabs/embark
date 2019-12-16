@@ -140,3 +140,85 @@ $(document).ready(function() {
   });
 });
 
+// ===========================
+// Namesystem (ENS) example
+// ===========================
+$(document).ready(function () {
+  EmbarkJS.onReady(async () => {
+    $("#namesystem .error").hide();
+    let error = null, isAvailable = false;
+    try {
+      if (!EmbarkJS.Names.currentNameSystems) {
+        throw new Error("Please set a provider using e.g. 'EmbarkJS.Names.setProvider(\"ens\")'");
+      }
+      addToLog("#namesystem", "EmbarkJS.Names.setProvider('ens')");
+      await EmbarkJS.Names.currentNameSystems.waitForProviderReady();
+      isAvailable = EmbarkJS.Names.isAvailable();
+    } catch (err) {
+      error = err;
+    }
+    finally {
+      if (error || !isAvailable) {
+        $("#namesystem .not-enabled").show();
+        $("#namesystem .error").text(error).show();
+        $("#namesystem-controls").hide();
+        $("#status-namesystem").addClass('status-offline');
+      } else {
+        $("#status-namesystem").addClass('status-online');
+        $("#namesystem .not-enabled").hide();
+
+        $("#namesystem .resolve .error").hide();
+        $("#namesystem .resolve .success").hide();
+        $("#namesystem .resolve input").val(EmbarkJS.Names.currentNameSystems.registration.rootDomain);
+
+        $("#namesystem .lookup .error").hide();
+        $("#namesystem .lookup .success").hide();
+        $("#namesystem .lookup input").val(web3.eth.defaultAccount);
+
+        $("#namesystem .register .error").hide();
+        $("#namesystem .register .success").hide();
+        $("#namesystem .register input.address").val(web3.eth.defaultAccount);
+      }
+    }
+
+    $("#namesystem .resolve button").click(function () {
+      $("#namesystem .resolve .error").hide();
+      $("#namesystem .resolve .success").hide();
+      var resolveName = $("#namesystem .resolve input").val();
+      EmbarkJS.Names.resolve(resolveName, (err, result) => {
+        if (err) {
+          return $("#namesystem .resolve .error").text(err).show();
+        }
+        $("#namesystem .resolve .success").text(result).show();
+      });
+      addToLog("#namesystem", `EmbarkJS.Names.resolve('${resolveName}', console.log)`);
+    });
+
+    $("#namesystem .lookup button").click(function () {
+      $("#namesystem .lookup .error").hide();
+      $("#namesystem .lookup .success").hide();
+      var lookupName = $("#namesystem .lookup input").val();
+      EmbarkJS.Names.lookup(lookupName, (err, result) => {
+        if (err) {
+          return $("#namesystem .lookup .error").text(err).show();
+        }
+        $("#namesystem .lookup .success").text(result).show();
+      });
+      addToLog("#namesystem", `EmbarkJS.Names.lookup('${lookupName}', console.log)`);
+    });
+
+    $("#namesystem .register button").click(function () {
+      $("#namesystem .register .error").hide();
+      $("#namesystem .register .success").hide();
+      var registerName = $("#namesystem .register input.name").val();
+      var registerAddress = $("#namesystem .register input.address").val();
+      EmbarkJS.Names.registerSubDomain(registerName, registerAddress, (err, transaction) => {
+        if (err) {
+          return $("#namesystem .register .error").text(err).show();
+        }
+        $("#namesystem .register .success").text(`Successfully registered "${registerAddress}" with ${transaction.gasUsed} gas`).show();
+      });
+      addToLog("#namesystem", `EmbarkJS.Names.registerSubDomain('${registerName}', '${registerAddress}', console.log)`);
+    });
+  });
+});

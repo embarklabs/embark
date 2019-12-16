@@ -176,7 +176,7 @@ export function getEnsErrors(state) {
 }
 
 export function isEnsEnabled(state) {
-  return Boolean(state.entities.plugins.find((plugin) => plugin.name === 'embark-ens'));
+  return Boolean(state.errorEntities.ensRecords !== "Request failed with status code 404");
 }
 
 export function getFiles(state) {
@@ -266,4 +266,8 @@ export function getPreviewUrl(state) {
 
 export function getEditorOperationStatus(state) {
   return state.editorOperationStatus;
+}
+
+export function isLoading(state) {
+  return state.loading;
 }
