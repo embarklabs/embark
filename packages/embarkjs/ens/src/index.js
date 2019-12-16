@@ -228,9 +228,9 @@ __embarkENS.setProvider = function(config) {
     if (!result.connected || result.error) {
       console.error(result.error);
     }
-    const accounts = await self.web3.eth.getAccounts();
-    self.web3.eth.defaultAccount = accounts[0];
     try {
+      const accounts = await self.web3.eth.getAccounts();
+      self.web3.eth.defaultAccount = accounts[0];
       const id = await self.web3.eth.net.getId()
       const registryAddress = self.registryAddresses[id] || config.registryAddress;
       self._isAvailable = true;
