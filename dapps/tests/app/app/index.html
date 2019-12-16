@@ -15,6 +15,7 @@
       <li role="presentation" class="active"><a href="#blockchain" aria-controls="blockchain" role="tab" data-toggle="tab">Blockchain</a></li>
       <li role="presentation"><a href="#storage" aria-controls="storage" role="tab" data-toggle="tab">Decentralized Storage (IPFS)<span class="pull-right" id="status-storage"></a></li>
       <li role="presentation"><a href="#communication" aria-controls="communication" role="tab" data-toggle="tab">P2P communication (Whisper/Orbit)<span class="pull-right" id="status-communication"></span></a></li>
+      <li role="presentation"><a href="#namesystem" aria-controls="namesystem" role="tab" data-toggle="tab">Namesystem (ENS)<span class="pull-right" id="status-namesystem"></span></a></li>
     </ul>
 
     <div class="tab-content">
@@ -104,6 +105,43 @@
           <br> EmbarkJS.Messages.setProvider('whisper')
         </div>
       </div>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="namesystem">
+      <div class="alert alert-danger not-enabled" role="alert">ENS is not enabled</div>
+      <div id="namesystem-controls">
+        <div class="resolve">
+          <h3>Resolve a name</h3>
+          <div class="error alert alert-danger" role="alert"></div>
+          <div class="success alert alert-success" role="alert"></div>
+          <div class="inline-input-btn form-group form-inline">
+            <input type="text" class="form-control" value="eth" size="60">
+            <button id="resolve" type="button" class="btn btn-primary">Resolve name</button>
+          </div>
+        </div>
+        <div class="lookup">
+          <h3>Lookup an address</h3>
+          <div class="error alert alert-danger" role="alert"></div>
+          <div class="success alert alert-success" role="alert"></div>
+          <div class="inline-input-btn form-group form-inline">
+            <input type="text" class="form-control" size="60">
+            <button id="lookup" type="button" class="btn btn-primary">Lookup address</button>
+          </div>
+        </div>
+        <div class="register">
+          <h3>Register subdomain</h3>
+          <div class="error alert alert-danger" role="alert"></div>
+          <div class="success alert alert-success" role="alert"></div>
+          <div class="form-group">
+            <input type="text" class="small-input float-left form-control name" size="60" placeholder="subdomain (ie 'test' resulting in 'test.embark.eth' assuming the root domain is 'embark.eth')">
+            <input type="text" class="form-control address" size="60" placeholder="subdomain address">
+            <button id="register" type="button" class="btn btn-primary">Register subdomain</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <h3>Embark Calls </h3>
+          <p>Javascript calls being made: </p>
+          <div class="logs"></div>
+        </div>
       </div>
     </div>
 
