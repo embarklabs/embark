@@ -75,6 +75,18 @@ class MochaTestRunner {
               next();
             });
           },
+
+          (next) => {
+            this.web3.eth.getAccounts((err, accts) => {
+              if (err) {
+                return next(err);
+              }
+              accounts = accts;
+              this.web3.eth.defaultAccount = accts[0];
+              global.web3.eth.defaultAccount = accts[0];
+              next();
+            });
+          },
           (next) => {
           // Remove contracts that are not in the configs
             const realContracts = {};
@@ -117,16 +129,12 @@ class MochaTestRunner {
               if (!compiledContracts[contract.className]) {
                 compiledContracts[contract.className] = {};
               }
+              instance.options.from = accounts[0];
+              instance.options.gas = 900000;
               Object.setPrototypeOf(compiledContracts[contract.className], instance);
             }
 
             next();
-          },
-          (next) => {
-            this.web3.eth.getAccounts((err, accts) => {
-              accounts = accts;
-              next(err);
-            });
           }
         ], (err) => {
           // Reset the gas accumulator so that we don't show deployment gas on the
