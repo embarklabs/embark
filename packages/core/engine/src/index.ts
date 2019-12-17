@@ -323,23 +323,25 @@ function interceptLogs(consoleContext, logger) {
   const context: any = {};
   context.console = consoleContext;
 
-  context.console.log = () => {
+  /* tslint:disable:only-arrow-functions */
+  context.console.log = function() {
     logger.info(normalizeInput(arguments));
   };
-  context.console.warn = () => {
+  context.console.warn = function() {
     logger.warn(normalizeInput(arguments));
   };
-  context.console.info = () => {
+  context.console.info = function() {
     logger.info(normalizeInput(arguments));
   };
-  context.console.debug = () => {
+  context.console.debug = function() {
     // TODO: ue JSON.stringify
     logger.debug(normalizeInput(arguments));
   };
-  context.console.trace = () => {
+  context.console.trace = function() {
     logger.trace(normalizeInput(arguments));
   };
-  context.console.dir = () => {
+  context.console.dir = function() {
     logger.dir(normalizeInput(arguments));
   };
+  /* tslint:enable:only-arrow-functions */
 }
