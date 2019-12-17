@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.6](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.5...v5.0.0-alpha.6) (2019-12-17)
+
+
+### Bug Fixes
+
+* **@embark/ens:** Show ENS controls for Test DApp ([aea2b6f](https://github.com/embark-framework/embark/commit/aea2b6f))
+
+
+
+
+
 # [5.0.0-alpha.5](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.4...v5.0.0-alpha.5) (2019-12-16)
 
 **Note:** Version bump only for package embark-ui

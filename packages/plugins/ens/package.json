@@ -1,6 +1,6 @@
 {
   "name": "embark-ens",
-  "version": "5.0.0-alpha.5",
+  "version": "5.0.0-alpha.6",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Implements ENS support in Embark",
@@ -50,7 +50,7 @@
     "embark-i18n": "^5.0.0-alpha.5",
     "embark-utils": "^5.0.0-alpha.5",
     "embarkjs": "^5.0.0-alpha.5",
-    "embarkjs-ens": "^5.0.0-alpha.5",
+    "embarkjs-ens": "^5.0.0-alpha.6",
     "eth-ens-namehash": "2.0.8",
     "lodash.clonedeep": "4.5.0",
     "web3": "1.2.1"
