@@ -24,19 +24,19 @@ export default class EthSendTransaction extends RpcModifier {
         }
         payload.nonce = newNonce;
         const web3 = await this.web3;
-        web3.eth.accounts.signTransaction(payload, account.privateKey, (signingError: any, result: any) => {
-          if (signingError) {
-            return callback(signingError, null);
-          }
+        try {
+          const result = await web3.eth.accounts.signTransaction(payload, account.privateKey);
           callback(null, result.rawTransaction);
-        });
+        } catch (err) {
+          callback(err);
+        }
       });
     }, 1);
   }
 
   private async getNonce(address: string, callback: Callback<any>) {
     const web3 = await this.web3;
-    web3.eth.getTransactionCount(address, undefined, (error: any, transactionCount: number) => {
+    web3.eth.getTransactionCount(address, (error: any, transactionCount: number) => {
       if (error) {
         return callback(error, null);
       }

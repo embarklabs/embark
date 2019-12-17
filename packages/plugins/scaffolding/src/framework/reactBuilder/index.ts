@@ -2,7 +2,7 @@ import { Contract, Embark } from "embark-core";
 import { __ } from "embark-i18n";
 import Handlebars from "handlebars";
 import * as path from "path";
-import { ABIDefinition } from "web3/eth/abi";
+import { AbiItem } from "web3-utils";
 import { Builder } from "../../builder";
 import { CommandOptions } from "../../commandOptions";
 import { SmartContractsRecipe } from "../../smartContractsRecipe";
@@ -10,7 +10,7 @@ import { SmartContractsRecipe } from "../../smartContractsRecipe";
 const utils = require("embark-utils");
 require("../../handlebarHelpers");
 
-interface ABIDefinitionDecorated extends ABIDefinition {
+interface AbiItemDecorated extends AbiItem {
   isIpfsText?: boolean;
   isIpfsFile?: boolean;
   isStandard?: boolean;
@@ -82,7 +82,7 @@ export class ReactBuilder implements Builder {
     const ipfsAttributes = this.description.ipfsAttributes(contract.className);
 
     return contract.abiDefinition.filter((entry) => entry.type === "function").map((entry) => {
-      const decorated: ABIDefinitionDecorated = entry;
+      const decorated: AbiItemDecorated = entry;
       const inputName = entry.inputs && entry.inputs.length > 1 ? entry.inputs[1].name.substring(1, entry.inputs[1].name.length) : "";
       const functionName = entry.name || "";
 

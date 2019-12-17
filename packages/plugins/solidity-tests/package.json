@@ -27,7 +27,11 @@
   "types": "./dist/lib/index.d.ts",
   "embark-collective": {
     "build:node": true,
-    "typecheck": true
+    "typecheck": {
+      "compilerOptions": {
+        "skipLibCheck": true
+      }
+    }
   },
   "scripts": {
     "_build": "npm run solo -- build",
@@ -50,7 +54,7 @@
     "core-js": "3.4.3",
     "embark-utils": "^5.0.0-alpha.8",
     "remix-tests": "0.1.20",
-    "web3": "1.2.1",
+    "web3": "1.2.4",
     "yo-yoify": "4.3.0"
   },
   "devDependencies": {

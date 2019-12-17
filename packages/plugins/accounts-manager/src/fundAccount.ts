@@ -9,8 +9,7 @@ export default async function fundAccount(web3: Web3, accountAddress: string, co
   const targetBalance = web3.utils.toBN(hexBalance);
 
   // check if account is already funded
-  let accountBalance = await web3.eth.getBalance(accountAddress);
-  accountBalance = web3.utils.toBN(accountBalance);
+  const accountBalance = web3.utils.toBN(await web3.eth.getBalance(accountAddress));
   if (accountBalance.gte(targetBalance)) {
     return;
   }

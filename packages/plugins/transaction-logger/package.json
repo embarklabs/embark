@@ -47,7 +47,6 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.7.4",
-    "@types/web3": "1.0.12",
     "async": "2.6.1",
     "core-js": "3.4.3",
     "embark-core": "^5.0.0-alpha.8",
@@ -55,7 +54,8 @@
     "embark-utils": "^5.0.0-alpha.8",
     "ethereumjs-tx": "1.3.7",
     "ethereumjs-util": "6.0.0",
-    "web3": "1.2.1"
+    "web3": "1.2.4",
+    "web3-utils": "1.2.4"
   },
   "devDependencies": {
     "embark-solo": "^5.0.0-alpha.5",

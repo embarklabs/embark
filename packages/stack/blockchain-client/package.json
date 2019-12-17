@@ -46,7 +46,7 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.7.4",
     "core-js": "3.4.3",
-    "web3": "1.2.1"
+    "web3": "1.2.4"
   },
   "devDependencies": {
     "embark-solo": "^5.0.0-alpha.5",

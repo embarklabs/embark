@@ -58,7 +58,7 @@
     "fs-extra": "8.1.0",
     "parse-json": "4.0.0",
     "vm2": "3.6.4",
-    "web3": "1.2.1"
+    "web3": "1.2.4"
   },
   "devDependencies": {
     "embark-solo": "^5.0.0-alpha.5",

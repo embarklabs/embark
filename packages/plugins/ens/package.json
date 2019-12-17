@@ -53,7 +53,7 @@
     "embarkjs-ens": "^5.0.0-alpha.6",
     "eth-ens-namehash": "2.0.8",
     "lodash.clonedeep": "4.5.0",
-    "web3": "1.2.1"
+    "web3": "1.2.4"
   },
   "devDependencies": {
     "@babel/core": "7.7.4",

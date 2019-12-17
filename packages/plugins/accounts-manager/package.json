@@ -52,7 +52,7 @@
     "embark-i18n": "^5.0.0-alpha.5",
     "embark-logger": "^5.0.0-alpha.5",
     "embark-utils": "^5.0.0-alpha.8",
-    "web3": "1.2.1"
+    "web3": "1.2.4"
   },
   "devDependencies": {
     "embark-solo": "^5.0.0-alpha.5",
