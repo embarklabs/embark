@@ -1,11 +1,11 @@
 import { ContractConfig } from "embark-core";
 import { Logger } from 'embark-logger';
-const { sha3 } = require("embark-utils");
-import { ABIDefinition } from "web3/eth/abi";
+import { sha3 } from "embark-utils";
+import { AbiItem } from "web3-utils";
 
 export default class Contract {
   private logger: Logger;
-  public abiDefinition?: ABIDefinition[];
+  public abiDefinition?: AbiItem[];
   public deployedAddress?: string;
   public className: string = "";
   public address?: string;

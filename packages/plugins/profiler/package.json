@@ -48,8 +48,8 @@
     "ascii-table": "0.0.9",
     "async": "2.6.1",
     "core-js": "3.4.3",
-    "web3": "1.2.1",
-    "web3-utils": "1.2.1"
+    "web3": "1.2.4",
+    "web3-utils": "1.2.4"
   },
   "devDependencies": {
     "embark-solo": "^5.0.0-alpha.5",

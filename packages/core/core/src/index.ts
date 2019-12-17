@@ -2,10 +2,10 @@ export type Callback<Tv> = (err?: Error | null, val?: Tv) => void;
 
 export type Maybe<T> = false | 0 | undefined | null | T;
 
-import { ABIDefinition } from 'web3/eth/abi';
+import { AbiItem } from "web3-utils";
 
 export interface Contract {
-  abiDefinition: ABIDefinition[];
+  abiDefinition: AbiItem[];
   deployedAddress: string;
   className: string;
   silent?: boolean;

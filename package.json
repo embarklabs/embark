@@ -1,6 +1,7 @@
 {
   "devDependencies": {
     "babel-eslint": "10.0.3",
+    "bignumber.js": "5.0.0",
     "chalk": "2.4.2",
     "coveralls": "3.0.9",
     "eslint": "6.2.2",
@@ -82,6 +83,7 @@
       "embark-dapp-template-demo/bootstrap",
       "embark-dapp-test-app/embark-dapp-test-service",
       "embark-dapp-test-app/zeppelin-solidity",
+      "embark-ui/bignumber.js",
       "embark-ui/react-scripts",
       "embark-ui/react-scripts/**",
       "embark/embark-test-contract-0",

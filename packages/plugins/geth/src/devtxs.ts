@@ -75,7 +75,9 @@ export default class DevTxs {
     if (!this.web3) {
       return;
     }
-    return this.web3.eth.sendTransaction({ value: "0", to: this.web3.eth.defaultAccount, from: this.web3.eth.defaultAccount });
+    const to = this.web3.eth.defaultAccount || undefined;
+    const from = this.web3.eth.defaultAccount || undefined;
+    return this.web3.eth.sendTransaction({ value: "0", to, from });
   }
 
   public async startRegularTxs() {

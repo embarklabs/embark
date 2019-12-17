@@ -52,8 +52,8 @@
     "embark-utils": "^5.0.0-alpha.8",
     "embarkjs": "^5.0.0-alpha.5",
     "ethereumjs-util": "6.0.0",
-    "web3": "1.2.1",
-    "web3-core-requestmanager": "1.2.1"
+    "web3": "1.2.4",
+    "web3-core-requestmanager": "1.2.4"
   },
   "devDependencies": {
     "embark-solo": "^5.0.0-alpha.5",

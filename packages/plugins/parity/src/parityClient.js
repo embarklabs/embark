@@ -9,7 +9,7 @@ const constants = require('embark-core/constants');
 
 const DEFAULTS = {
   "BIN": "parity",
-  "VERSIONS_SUPPORTED": ">=2.0.0",
+  "VERSIONS_SUPPORTED": ">=2.2.1",
   "NETWORK_TYPE": "dev",
   "NETWORK_ID": 17,
   "RPC_API": ["web3", "eth", "pubsub", "net", "parity", "private", "parity_pubsub", "traces", "rpc", "shh", "shh_pubsub"],

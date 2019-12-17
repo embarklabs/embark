@@ -60,7 +60,7 @@ In the case of the Smart Contract config `dappConnection`, the one that is used 
   - This let's you use you own accounts, as set up in your Blockchain config's `accounts` section
     - If you don't use custom accounts, using `$EMBARK` is still useful, because it connects to the node more easily for you and uses the unlocked accounts on the node, like when using the `dev` `miningMode`
   - Also, Embark gets to see the transactions processed and logs them back to you in a human readable manner
-  
+
 If you want, you can also put a valid node URL in the `dappConnection` array. In that case, EmbarkJS will connect directly to the node, without using Embark's proxy.
 It is, however, not recommended as you lose some of Embark's features, like the transaction logger.
 
@@ -101,7 +101,7 @@ try {
 
 This guide only touched on getting started with EmbarkJS. There are many more APIs to explore, depending on what we're achieving to build. Have a look at the dedicated guides to learn more:
 
-* [EmbarkJS.Contract](contracts_javascript.html) - To interact with smart contracts. Typically Embark automatically initializes all your deployed contracts with this. uses web3.js 1.2.1
+* [EmbarkJS.Contract](contracts_javascript.html) - To interact with smart contracts. Typically Embark automatically initializes all your deployed contracts with this. uses web3.js 1.2.4
 * [EmbarkJS.Storage](storage_javascript.html) - To interact with the configured decentralized storage. Includes bindings to save & retrieve data, upload & download files, etc..
 * [EmbarkJS.Communication](messages_javascript.html) - To interact with the configured decentralized messages system. Includes bindings to listen to topics and send messages.
 * [EmbarkJS.Names](naming_javascript.html) - To interact with the configured decentralized naming system such as ENS. Includes bindings to look up the address of a domain name as well as retrieve a domain name given an address.

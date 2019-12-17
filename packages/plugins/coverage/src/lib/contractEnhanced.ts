@@ -2,7 +2,7 @@ import {File} from "embark-utils";
 import * as fs from "fs-extra";
 import * as path from "path";
 import parser, {LineColumn, Location, SourceUnit} from "solidity-parser-antlr";
-import {EventLog} from "web3/types";
+import {EventLog} from "web3-core";
 
 import {decrypt} from "./eventId";
 import {Injector} from "./injector";
