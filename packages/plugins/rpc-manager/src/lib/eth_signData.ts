@@ -12,18 +12,25 @@ export default class EthSignData extends RpcModifier {
   }
 
   private async ethSignDataRequest(params: any, callback: Callback<any>) {
-    if (params.request.method === "eth_sign") {
-      try {
-        const nodeAccounts = await this.nodeAccounts;
-        const [fromAddr] = params.request.params;
-        if (!nodeAccounts.includes(fromAddr)) {
-          params.sendToNode = false;
-        }
-      } catch (err) {
-        return callback(err);
-      }
+    if (params.request.method !== "eth_sign") {
+      return callback(null, params);
     }
 
+    try {
+      const nodeAccounts = await this.nodeAccounts;
+      const [fromAddr] = params.request.params;
+
+      const account = nodeAccounts.find(acc => (
+        Web3.utils.toChecksumAddress(acc) ===
+        Web3.utils.toChecksumAddress(fromAddr)
+      ));
+
+      if (!account) {
+        params.sendToNode = false;
+      }
+    } catch (err) {
+      return callback(err);
+    }
     callback(null, params);
   }
 
@@ -37,7 +44,11 @@ export default class EthSignData extends RpcModifier {
       const nodeAccounts = await this.nodeAccounts;
       const [fromAddr, data] = params.request.params;
 
-      if (nodeAccounts.includes(fromAddr)) {
+      const nodeAccount = nodeAccounts.find(acc => (
+        Web3.utils.toChecksumAddress(acc) ===
+        Web3.utils.toChecksumAddress(fromAddr)
+      ));
+      if (nodeAccount) {
         return callback(null, params);
       }
 
