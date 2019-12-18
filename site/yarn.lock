@@ -1565,10 +1565,10 @@ escape-string-regexp@^2.0.0:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-2.0.0.tgz#a30304e99daa32e23b2fd20f51babd07cffca344"
   integrity sha512-UpzcLCXolUWcNu5HtVMHYdXJjArjsF9C0aNnquZYY4uW/Vu0miy5YoWvbV345HauVvcAUnpRuhMMcqTcGOY2+w==
 
-eslint-config-hexo@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-hexo/-/eslint-config-hexo-4.0.0.tgz#f22efde7aeb3393f9f99d8c3f5313911caf5ff43"
-  integrity sha512-X5g5EAEeY80XmeEB4Dnb+9UbibyP+QmaIU8g4E0kxwzisv/iXEvgmbg9fZnVqGwolPiiAyVVLOS/vQUA6wp7Yw==
+eslint-config-hexo@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-hexo/-/eslint-config-hexo-4.1.0.tgz#296b233f5b01f1a8fe76eac85ebf22b36a7e5cd3"
+  integrity sha512-8palBd59gsXT2bBF1MsZMzEzxbBmA+BoWNbaFTceeWASLxN/IAA3GhvL7Xe5DbawYe2sV38n8NNMmI/UkP4tDA==
   dependencies:
     eslint-plugin-node "^10.0.0"
 
