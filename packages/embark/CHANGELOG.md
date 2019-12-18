@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.7](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.6...v5.0.0-alpha.7) (2019-12-18)
+
+**Note:** Version bump only for package embark
+
+
+
+
+
 # [5.0.0-alpha.6](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.5...v5.0.0-alpha.6) (2019-12-17)
 
 

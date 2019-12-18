@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.7](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.6...v5.0.0-alpha.7) (2019-12-18)
+
+
+### Bug Fixes
+
+* **@embark/mocha-tests:** set accounts correctly on each contracts ([1331212](https://github.com/embark-framework/embark/commit/1331212))
+
+
+
+
+
 # [5.0.0-alpha.5](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.4...v5.0.0-alpha.5) (2019-12-16)
 
 **Note:** Version bump only for package embark-mocha-tests

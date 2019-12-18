@@ -1,6 +1,6 @@
 {
   "name": "embark-mocha-tests",
-  "version": "5.0.0-alpha.5",
+  "version": "5.0.0-alpha.7",
   "description": "Mocha Test Runner",
   "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/mocha-tests#readme",
   "repository": {
