@@ -26,7 +26,8 @@ export default class EthAccounts extends RpcModifier {
   }
 
   private async init() {
-    await this.nodeAccounts;
+    const nodeAccounts = await this.nodeAccounts;
+    this.rpcModifierEvents.request2("nodeAccounts:updated", nodeAccounts);
 
     this.embark.registerActionForEvent("blockchain:proxy:response", this.ethAccountsResponse.bind(this));
   }

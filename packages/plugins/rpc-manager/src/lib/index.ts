@@ -51,6 +51,7 @@ export default class RpcManager {
   }
 
   private async updateAccounts(updatedNodeAccounts: any[], cb: Callback<null>) {
+    this._nodeAccounts = updatedNodeAccounts;
     for (const modifier of this.modifiers) {
       await (modifier.nodeAccounts = Promise.resolve(updatedNodeAccounts));
     }
