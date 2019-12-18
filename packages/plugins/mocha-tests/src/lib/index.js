@@ -7,6 +7,7 @@ const Web3 = require('web3');
 
 const Reporter = require('./reporter');
 
+const GAS_LIMIT = 6000000;
 const JAVASCRIPT_TEST_MATCH = /^.+\.js$/i;
 const TEST_TIMEOUT = 15000; // 15 seconds in milliseconds
 
@@ -130,7 +131,7 @@ class MochaTestRunner {
                 compiledContracts[contract.className] = {};
               }
               instance.options.from = accounts[0];
-              instance.options.gas = 900000;
+              instance.options.gas = GAS_LIMIT;
               Object.setPrototypeOf(compiledContracts[contract.className], instance);
             }
 
