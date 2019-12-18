@@ -6,20 +6,20 @@ The website for Embark.
 
 Install dependencies:
 
-``` bash
-$ git clone https://github.com/status-im/embark-site.git
-$ cd embark-site
+```bash
+$ git clone https://github.com/embark-framework/embark.git
+$ cd embark/site
 $ npm install
 ```
 
 Generate:
 
-``` bash
+```bash
 $ hexo generate
 ```
 
 Run server:
 
-``` bash
+```bash
 $ hexo server
 ```
