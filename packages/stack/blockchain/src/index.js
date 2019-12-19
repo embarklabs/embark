@@ -151,6 +151,12 @@ export default class Blockchain {
         return cb(`Error getting provider: ${err.message || err}`);
       }
     });
+    this.events.setCommandHandler("blockchain:started", (cb) => {
+      if (this.startedClient) {
+        return cb(null, this.startedClient);
+      }
+      this.events.on("blockchain:started", (clientName) => { cb(null, clientName); });
+    });
     this.blockchainApi.registerAPIs("ethereum");
     this.blockchainApi.registerRequests("ethereum");
 

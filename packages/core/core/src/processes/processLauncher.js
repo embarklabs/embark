@@ -1,6 +1,7 @@
 const child_process = require('child_process');
 import { readJsonSync } from 'fs-extra';
 const path = require('path');
+import { isDebug } from 'embark-utils';
 
 const constants = readJsonSync(path.join(__dirname, '../../constants.json'));
 
@@ -18,7 +19,7 @@ export class ProcessLauncher {
   constructor(options) {
     this.name = options.name || path.basename(options.modulePath);
 
-    if (this._isDebug()) {
+    if (isDebug()) {
       const childOptions = {stdio: 'pipe', execArgv: ['--inspect-brk=' + (60000 + processCount)]};
       processCount++;
       this.process = child_process.fork(options.modulePath, [], childOptions);
@@ -43,11 +44,6 @@ export class ProcessLauncher {
     }
     this.silent = value;
     this.events.request('process:logs:register', {processName: this.name, eventName: `process:${this.name}:log`, silent: this.silent});
-  }
-
-  _isDebug() {
-    const argvString= process.execArgv.join();
-    return argvString.includes('--debug') || argvString.includes('--inspect');
   }
 
   // Subscribes to messages from the child process and delegates to the right methods

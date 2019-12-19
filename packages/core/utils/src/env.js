@@ -49,3 +49,8 @@ export function setUpEnv(defaultEmbarkPath) {
     (process.env[NODE_PATH] ? delimiter : '') +
     (process.env[NODE_PATH] || '');
 }
+
+export function isDebug() {
+  const argvString= process.execArgv.join();
+  return argvString.includes('--debug') || argvString.includes('--inspect');
+}

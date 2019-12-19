@@ -325,7 +325,8 @@ class Cmd {
           txDetails: options.txDetails,
           node: options.node,
           coverage: options.coverage,
-          env: options.env || 'test'
+          env: options.env || 'test',
+          sol: options.solc
         });
       });
   }

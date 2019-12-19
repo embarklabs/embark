@@ -57,7 +57,7 @@ export {
   normalizePath,
   toForwardSlashes
 } from './pathUtils';
-export { setUpEnv } from './env';
+export { setUpEnv, isDebug } from './env';
 
 import {
   dappPath

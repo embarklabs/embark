@@ -84,6 +84,10 @@ export interface Configuration {
     wsRPC: boolean;
     isDev: boolean;
     client: string;
+    enabled: boolean;
+    clientConfig: {
+      miningMode: string
+    }
   };
   webServerConfig: {
     certOptions: {

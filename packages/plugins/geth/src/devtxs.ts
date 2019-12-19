@@ -1,12 +1,12 @@
 import { __ } from 'embark-i18n';
-import { Embark, EmbarkEvents } from "embark-core";
+import { Embark, EmbarkEvents, Configuration } from "embark-core";
 import { Logger } from "embark-logger";
 import Web3 from "web3";
 import { TransactionReceipt } from "web3-eth";
 import constants from "embark-core/constants.json";
 export default class DevTxs {
   private embark: Embark;
-  private blockchainConfig: any;
+  private blockchainConfig: Configuration["blockchainConfig"];
   private events: EmbarkEvents;
   private logger: Logger;
   private web3?: Web3;
