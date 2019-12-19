@@ -1,13 +1,12 @@
 import { sign, transaction } from "@omisego/omg-js-util";
 import { Callback, Embark, EmbarkEvents } from "embark-core";
 import { __ } from "embark-i18n";
-import { Logger } from "embark-logger";
 import Web3 from "web3";
 import RpcModifier from "./rpcModifier";
 
 export default class EthSignTypedData extends RpcModifier {
-  constructor(embark: Embark, rpcModifierEvents: EmbarkEvents) {
-    super(embark, rpcModifierEvents);
+  constructor(embark: Embark, rpcModifierEvents: EmbarkEvents, public nodeAccounts: string[], public accounts: any[], protected web3: Web3) {
+    super(embark, rpcModifierEvents, nodeAccounts, accounts, web3);
 
     this.embark.registerActionForEvent("blockchain:proxy:request", this.ethSignTypedDataRequest.bind(this));
     this.embark.registerActionForEvent("blockchain:proxy:response", this.ethSignTypedDataResponse.bind(this));
@@ -41,9 +40,8 @@ export default class EthSignTypedData extends RpcModifier {
     this.logger.trace(__(`Original request/response data: ${JSON.stringify({ request: params.request, response: params.response })}`));
 
     try {
-      const accounts = await this.accounts;
       const [fromAddr, typedData] = params.request.params;
-      const account = accounts.find((acc) => Web3.utils.toChecksumAddress(acc.address) === Web3.utils.toChecksumAddress(fromAddr));
+      const account = this.accounts.find((acc) => Web3.utils.toChecksumAddress(acc.address) === Web3.utils.toChecksumAddress(fromAddr));
       if (!(account && account.privateKey)) {
         return callback(
           new Error(__("Could not sign transaction because Embark does not have a private key associated with '%s'. " +

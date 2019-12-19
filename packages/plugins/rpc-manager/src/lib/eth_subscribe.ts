@@ -1,10 +1,11 @@
 import { Callback, Embark, EmbarkEvents } from "embark-core";
 import { __ } from "embark-i18n";
 import RpcModifier from "./rpcModifier";
+import Web3 from "web3";
 
 export default class EthSubscribe extends RpcModifier {
-  constructor(embark: Embark, rpcModifierEvents: EmbarkEvents) {
-    super(embark, rpcModifierEvents);
+  constructor(embark: Embark, rpcModifierEvents: EmbarkEvents, public nodeAccounts: string[], public accounts: any[], protected web3: Web3) {
+    super(embark, rpcModifierEvents, nodeAccounts, accounts, web3);
 
     embark.registerActionForEvent("blockchain:proxy:request", this.ethSubscribeRequest.bind(this));
     embark.registerActionForEvent("blockchain:proxy:response", this.ethSubscribeResponse.bind(this));

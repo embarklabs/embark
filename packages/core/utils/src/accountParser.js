@@ -13,7 +13,9 @@ export default class AccountParser {
   static parseAccountsConfig(accountsConfig, web3, dappPath, logger, nodeAccounts) {
     let accounts = [];
     if (!(accountsConfig && accountsConfig.length)) {
-      return nodeAccounts;
+      return nodeAccounts.map(account => {
+        return (typeof account === 'string') ? { address: account } : account;
+      });
     }
     if (accountsConfig && accountsConfig.length) {
       accountsConfig.forEach(accountConfig => {

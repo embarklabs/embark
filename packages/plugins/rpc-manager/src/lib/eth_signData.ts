@@ -4,8 +4,8 @@ import Web3 from "web3";
 import RpcModifier from "./rpcModifier";
 
 export default class EthSignData extends RpcModifier {
-  constructor(embark: Embark, rpcModifierEvents: EmbarkEvents) {
-    super(embark, rpcModifierEvents);
+  constructor(embark: Embark, rpcModifierEvents: EmbarkEvents, public nodeAccounts: string[], public accounts: any[], protected web3: Web3) {
+    super(embark, rpcModifierEvents, nodeAccounts, accounts, web3);
 
     this.embark.registerActionForEvent("blockchain:proxy:request", this.ethSignDataRequest.bind(this));
     this.embark.registerActionForEvent("blockchain:proxy:response", this.ethSignDataResponse.bind(this));
@@ -17,10 +17,9 @@ export default class EthSignData extends RpcModifier {
     }
 
     try {
-      const nodeAccounts = await this.nodeAccounts;
       const [fromAddr] = params.request.params;
 
-      const account = nodeAccounts.find(acc => (
+      const account = this.nodeAccounts.find(acc => (
         Web3.utils.toChecksumAddress(acc) ===
         Web3.utils.toChecksumAddress(fromAddr)
       ));
@@ -40,11 +39,9 @@ export default class EthSignData extends RpcModifier {
     }
 
     try {
-      const accounts = await this.accounts;
-      const nodeAccounts = await this.nodeAccounts;
       const [fromAddr, data] = params.request.params;
 
-      const nodeAccount = nodeAccounts.find(acc => (
+      const nodeAccount = this.nodeAccounts.find(acc => (
         Web3.utils.toChecksumAddress(acc) ===
         Web3.utils.toChecksumAddress(fromAddr)
       ));
@@ -55,7 +52,7 @@ export default class EthSignData extends RpcModifier {
       this.logger.trace(__(`Modifying blockchain '${params.request.method}' response:`));
       this.logger.trace(__(`Original request/response data: ${JSON.stringify(params)}`));
 
-      const account = accounts.find(acc => (
+      const account = this.accounts.find(acc => (
         Web3.utils.toChecksumAddress(acc.address) ===
           Web3.utils.toChecksumAddress(fromAddr)
       ));

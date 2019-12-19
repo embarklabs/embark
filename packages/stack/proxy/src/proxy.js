@@ -2,9 +2,10 @@ import { __ } from 'embark-i18n';
 import express from 'express';
 import expressWs from 'express-ws';
 import cors from 'cors';
+import { isDebug } from 'embark-utils';
 const Web3RequestManager = require('web3-core-requestmanager');
 
-const ACTION_TIMEOUT = 5000;
+const ACTION_TIMEOUT = isDebug() ? 20000 : 5000;
 
 export class Proxy {
   constructor(options) {
