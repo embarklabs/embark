@@ -6,16 +6,15 @@ import {ensRecord, ensRecords} from "../actions";
 import EnsRegister from "../components/EnsRegister";
 import EnsLookup from "../components/EnsLookup";
 import EnsResolve from "../components/EnsResolve";
-import Loading from "../components/Loading";
 import PageHead from "../components/PageHead";
-import {getEnsRecords, isEnsEnabled, getEnsErrors, isLoading} from "../reducers/selectors";
+import {getEnsRecords, isEnsEnabled, getEnsErrors} from "../reducers/selectors";
 
 class EnsContainer extends Component {
 
   componentDidMount() {
     // Fire off resolve to determine if ENS api endpoints have been registered.
     // This will tell us if ENS is enabled or not.
-    this.props.resolve();
+    this.props.resolve("embark.eth");
   }
 
   showEns() {
@@ -40,8 +39,7 @@ class EnsContainer extends Component {
   render() {
     return (
       <React.Fragment>
-        {this.props.isLoading && <Loading></Loading>}
-        {!this.props.isLoading && this.props.isEnsEnabled ? this.showEns() : this.showWarning()}
+        {this.props.isEnsEnabled ? this.showEns() : this.showWarning()}
       </React.Fragment>
     );
   }
@@ -53,16 +51,14 @@ EnsContainer.propTypes = {
   lookup: PropTypes.func,
   register: PropTypes.func,
   isEnsEnabled: PropTypes.bool,
-  ensErrors: PropTypes.string,
-  isLoading: PropTypes.bool
+  ensErrors: PropTypes.string
 };
 
 function mapStateToProps(state) {
   return {
     ensRecords: getEnsRecords(state),
     ensErrors: getEnsErrors(state),
-    isEnsEnabled: isEnsEnabled(state),
-    isLoading: isLoading(state)
+    isEnsEnabled: isEnsEnabled(state)
   };
 }
 
