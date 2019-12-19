@@ -1,6 +1,6 @@
 {
   "name": "embark-transaction-logger",
-  "version": "5.0.0-alpha.5",
+  "version": "5.0.0-alpha.8",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Transaction listener and logger for Embark",
@@ -50,9 +50,9 @@
     "@types/web3": "1.0.12",
     "async": "2.6.1",
     "core-js": "3.4.3",
-    "embark-core": "^5.0.0-alpha.5",
+    "embark-core": "^5.0.0-alpha.8",
     "embark-i18n": "^5.0.0-alpha.5",
-    "embark-utils": "^5.0.0-alpha.5",
+    "embark-utils": "^5.0.0-alpha.8",
     "ethereumjs-tx": "1.3.7",
     "ethereumjs-util": "6.0.0",
     "web3": "1.2.1"

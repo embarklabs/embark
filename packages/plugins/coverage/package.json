@@ -1,6 +1,6 @@
 {
   "name": "embark-coverage",
-  "version": "5.0.0-alpha.5",
+  "version": "5.0.0-alpha.8",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Code coverage capabilities for Embark",
@@ -51,8 +51,8 @@
     "@types/semver": "5.5.0",
     "@types/web3": "1.0.12",
     "core-js": "3.4.3",
-    "embark-core": "^5.0.0-alpha.5",
-    "embark-utils": "^5.0.0-alpha.5",
+    "embark-core": "^5.0.0-alpha.8",
+    "embark-utils": "^5.0.0-alpha.8",
     "fs-extra": "8.1.0",
     "globule": "1.2.1",
     "prettier-plugin-solidity": "1.0.0-alpha.25",

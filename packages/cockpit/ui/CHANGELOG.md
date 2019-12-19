@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.8](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.7...v5.0.0-alpha.8) (2019-12-19)
+
+
+### Bug Fixes
+
+* **@embark/cockpit:** Remove loading from ENS util ([6f49992](https://github.com/embark-framework/embark/commit/6f49992))
+
+
+
+
+
 # [5.0.0-alpha.6](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.5...v5.0.0-alpha.6) (2019-12-17)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "embark-watcher",
-  "version": "5.0.0-alpha.5",
+  "version": "5.0.0-alpha.8",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Watches changes in the file system",
@@ -48,7 +48,7 @@
     "chokidar": "2.1.6",
     "core-js": "3.4.3",
     "embark-i18n": "^5.0.0-alpha.5",
-    "embark-utils": "^5.0.0-alpha.5"
+    "embark-utils": "^5.0.0-alpha.8"
   },
   "devDependencies": {
     "embark-solo": "^5.0.0-alpha.5",
