@@ -7,6 +7,7 @@ let async = require('async');
 const constants = require('embark-core/constants');
 const { reset: embarkReset, paths: defaultResetPaths } = require('embark-reset');
 const cloneDeep = require('clone-deep');
+import findUp from 'find-up';
 import { readJsonSync } from 'fs-extra';
 import { join } from 'path';
 
@@ -548,12 +549,18 @@ class EmbarkController {
   }
 
   ejectWebpack() {
-    const embarkConfig = embarkPath("dist/lib/modules/basic-pipeline/webpack.config.js");
+    const embarkConfig = findUp.sync(
+      'node_modules/embark-basic-pipeline/dist/webpack.config.js',
+      {cwd: __dirname}
+    );
     const dappConfig = dappPath('webpack.config.js');
     fs.copyPreserve(embarkConfig, dappConfig);
     console.log(__('webpack config ejected to:').dim.yellow);
     console.log(`${dappConfig}`.green);
-    const embarkOverrides = embarkPath("dist/lib/modules/basic-pipeline/babel-loader-overrides.js");
+    const embarkOverrides = findUp.sync(
+      'node_modules/embark-basic-pipeline/dist/babel-loader-overrides.js',
+      {cwd: __dirname}
+    );
     const dappOverrides = dappPath('babel-loader-overrides.js');
     fs.copyPreserve(embarkOverrides, dappOverrides);
     console.log(__('webpack overrides ejected to:').dim.yellow);
