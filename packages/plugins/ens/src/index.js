@@ -276,24 +276,27 @@ class ENS {
     if (self.configured) {
       return cb();
     }
-    const registration = this.config.namesystemConfig.register;
     const web3 = await this.web3;
-
+    
     const networkId = await web3.eth.net.getId();
-
+    
+    
     if (ensContractAddresses[networkId]) {
+      if (this.config.namesystemConfig.register && this.config.namesystemConfig.register.rootDomain) {
+        this.logger.warn(__("Cannot register subdomains on this network, because we do not own the ENS contracts. Are you on testnet or mainnet?"));
+      }
+      this.config.namesystemConfig.register = false; // force subdomains from being registered
       this.ensConfig = recursiveMerge(this.ensConfig, ensContractAddresses[networkId]);
     }
-
+    
+    const registration = this.config.namesystemConfig.register;
     const doRegister = registration && registration.rootDomain;
 
-    if (doRegister) {
-      this.ensConfig.ENSRegistry = await this.events.request2('contracts:add', this.ensConfig.ENSRegistry);
-      await this.events.request2('deployment:contract:deploy', this.ensConfig.ENSRegistry);
-      this.ensConfig.Resolver.args = [this.ensConfig.ENSRegistry.deployedAddress];
-      this.ensConfig.Resolver = await this.events.request2('contracts:add', this.ensConfig.Resolver);
-      await this.events.request2('deployment:contract:deploy', this.ensConfig.Resolver);
-    }
+    this.ensConfig.ENSRegistry = await this.events.request2('contracts:add', this.ensConfig.ENSRegistry);
+    await this.events.request2('deployment:contract:deploy', this.ensConfig.ENSRegistry);
+    this.ensConfig.Resolver.args = [this.ensConfig.ENSRegistry.deployedAddress];
+    this.ensConfig.Resolver = await this.events.request2('contracts:add', this.ensConfig.Resolver);
+    await this.events.request2('deployment:contract:deploy', this.ensConfig.Resolver);
 
     async.waterfall([
       function checkRootNode(next) {
