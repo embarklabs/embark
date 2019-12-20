@@ -235,10 +235,11 @@ class MochaTestRunner {
         async.series(fns, next);
       }
     ], (err) => {
-      events.emit('tests:finished');
+      this.embark.config.plugins.runActionsForEvent('tests:finished', () => {
+        Module.prototype.require = originalRequire;
+        cb(err);
+      });
 
-      Module.prototype.require = originalRequire;
-      cb(err);
     });
   }
 }
