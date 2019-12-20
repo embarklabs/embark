@@ -768,7 +768,12 @@ class EmbarkController {
 
         engine.registerModuleGroup("blockchain");
         engine.registerModuleGroup("compiler");
-        engine.registerModuleGroup("contracts");
+        engine.registerModulePackage('embark-ganache');
+        engine.registerModulePackage('embark-ethereum-blockchain-client');
+        engine.registerModulePackage('embark-web3');
+        engine.registerModulePackage('embark-accounts-manager');
+        engine.registerModulePackage('embark-rpc-manager');
+        engine.registerModulePackage('embark-specialconfigs', { plugins: engine.plugins });
         engine.registerModuleGroup("pipeline");
         engine.registerModuleGroup("tests", options);
         engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins, trackContracts: false });

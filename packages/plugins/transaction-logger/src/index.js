@@ -47,6 +47,7 @@ export default class TransactionLogger {
     });
 
     this.writeLogFile = async.cargo((tasks, callback) => {
+      // TODO change this to only read once then use memory, because it slows things down a lot to read on each TX
       const data = this._readLogs();
 
       tasks.forEach(task => {
