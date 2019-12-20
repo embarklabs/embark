@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.9](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.8...v5.0.0-alpha.9) (2019-12-20)
+
+
+### Build System
+
+* **deps:** bump web3[-*] from 1.2.1 to 1.2.4 ([7e550f0](https://github.com/embark-framework/embark/commit/7e550f0))
+
+
+### BREAKING CHANGES
+
+* **deps:** bump embark's minimum supported version of parity from
+`>=2.0.0` to `>=2.2.1`. This is necessary since web3 1.2.4 makes use of the
+`eth_chainId` RPC method (EIP 695) and that parity version is the earliest one
+to implement it.
+
+[bug]: https://github.com/ethereum/web3.js/issues/3283
+
+
+
+
+
 # [5.0.0-alpha.5](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.4...v5.0.0-alpha.5) (2019-12-16)
 
 **Note:** Version bump only for package embarkjs-whisper

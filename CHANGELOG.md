@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.9](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.8...v5.0.0-alpha.9) (2019-12-20)
+
+
+### Bug Fixes
+
+* **@embark/cli:** find ejectable webpack files within embark-basic-pipeline ([09e2dbe](https://github.com/embark-framework/embark/commit/09e2dbe))
+* **@embark/coverage:** ensure handlers for 'tests:finished' are run as actions ([765e889](https://github.com/embark-framework/embark/commit/765e889))
+* **@embark/tests:** fix slow embark test because of the tx-logger ([1e9b8d8](https://github.com/embark-framework/embark/commit/1e9b8d8))
+
+
+### Build System
+
+* **deps:** bump web3[-*] from 1.2.1 to 1.2.4 ([7e550f0](https://github.com/embark-framework/embark/commit/7e550f0))
+
+
+### BREAKING CHANGES
+
+* **deps:** bump embark's minimum supported version of parity from
+`>=2.0.0` to `>=2.2.1`. This is necessary since web3 1.2.4 makes use of the
+`eth_chainId` RPC method (EIP 695) and that parity version is the earliest one
+to implement it.
+
+[bug]: https://github.com/ethereum/web3.js/issues/3283
+
+
+
+
+
 # [5.0.0-alpha.8](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.7...v5.0.0-alpha.8) (2019-12-19)
 
 

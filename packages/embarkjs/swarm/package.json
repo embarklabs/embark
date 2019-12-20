@@ -1,6 +1,6 @@
 {
   "name": "embarkjs-swarm",
-  "version": "5.0.0-alpha.5",
+  "version": "5.0.0-alpha.9",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Swarm plugin for embarkjs",

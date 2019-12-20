@@ -1,6 +1,6 @@
 {
   "name": "embark-rpc-manager",
-  "version": "5.0.0-alpha.8",
+  "version": "5.0.0-alpha.9",
   "description": "Embark RPC Manager",
   "repository": {
     "directory": "packages/plugins/embark-rpc-manager",
@@ -49,10 +49,10 @@
     "@omisego/omg-js-util": "2.0.0-v0.2",
     "@types/async": "2.0.50",
     "async": "2.6.1",
-    "embark-core": "^5.0.0-alpha.8",
+    "embark-core": "^5.0.0-alpha.9",
     "embark-i18n": "^5.0.0-alpha.5",
     "embark-logger": "^5.0.0-alpha.5",
-    "embark-utils": "^5.0.0-alpha.8",
+    "embark-utils": "^5.0.0-alpha.9",
     "web3": "1.2.4"
   },
   "devDependencies": {

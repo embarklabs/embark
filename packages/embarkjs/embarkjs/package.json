@@ -1,6 +1,6 @@
 {
   "name": "embarkjs",
-  "version": "5.0.0-alpha.5",
+  "version": "5.0.0-alpha.9",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "JavaScript library for easily interacting with web3 technologies",

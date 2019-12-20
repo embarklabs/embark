@@ -1,6 +1,6 @@
 {
   "name": "embark-test-runner",
-  "version": "5.0.0-alpha.8",
+  "version": "5.0.0-alpha.9",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Embark Testrunner",
@@ -55,7 +55,7 @@
     "deep-equal": "1.0.1",
     "embark-i18n": "^5.0.0-alpha.5",
     "embark-testing": "^5.0.0-alpha.5",
-    "embark-utils": "^5.0.0-alpha.8",
+    "embark-utils": "^5.0.0-alpha.9",
     "fs-extra": "8.1.0",
     "istanbul-lib-coverage": "2.0.5",
     "istanbul-lib-report": "2.0.8",
