@@ -4,6 +4,12 @@
     "haml": "0.4.3"
   },
   "devDependencies": {
+    "embarkjs": "^5.0.0-alpha.5",
+    "embarkjs-ens": "^5.0.0-alpha.6",
+    "embarkjs-ipfs": "^5.0.0-alpha.5",
+    "embarkjs-swarm": "^5.0.0-alpha.5",
+    "embarkjs-web3": "^5.0.0-alpha.5",
+    "embarkjs-whisper": "^5.0.0-alpha.5",
     "rimraf": "3.0.0"
   },
   "license": "MIT",
