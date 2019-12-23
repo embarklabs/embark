@@ -84,7 +84,6 @@
     "embark-i18n": "^5.0.0-alpha.5",
     "embark-logger": "^5.0.0-alpha.5",
     "embark-reset": "^5.0.0-alpha.5",
-    "embark-scaffolding": "^5.0.0-alpha.9",
     "embark-utils": "^5.0.0-alpha.9",
     "eth-ens-namehash": "2.0.8",
     "ethereumjs-wallet": "0.6.3",

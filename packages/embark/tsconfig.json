@@ -40,9 +40,6 @@
       "path": "../plugins/graph"
     },
     {
-      "path": "../plugins/scaffolding"
-    },
-    {
       "path": "../plugins/solidity"
     },
     {

@@ -575,7 +575,7 @@ class EmbarkController {
       client: options.client,
       locale: options.locale,
       version: this.version,
-      embarkConfig: 'embark.json',
+      embarkConfig: options.embarkConfig || 'embark.json',
       interceptLogs: false,
       logFile: options.logFile,
       logLevel: options.logLevel,
@@ -593,47 +593,66 @@ class EmbarkController {
         engine.init({}, callback);
       },
       function (callback) {
-        engine.startService("libraryManager").installAll((err) => callback(err ? err : null));
-      },
-      function startServices(callback) {
-        engine.startService("scaffolding");
-        callback();
-      },
-      function generateContract(callback) {
-        engine.events.request('scaffolding:generate:contract', options, function (files) {
-          files.forEach(file => engine.events.request('config:contractsFiles:add', file));
-          callback();
-        });
-      },
-      function initEngineServices(callback) {
+        engine.registerModuleGroup("coreComponents");
+        engine.registerModuleGroup("stackComponents");
+
+        engine.registerModuleGroup("compiler");
+        engine.registerModuleGroup("contracts");
+        engine.registerModulePackage("embark-scaffolding");
+
+        // load custom plugins
+        engine.loadDappPlugins();
         let pluginList = engine.plugins.listPlugins();
         if (pluginList.length > 0) {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
-        engine.startService("web3");
-        engine.startService("processManager");
-        engine.startService("codeRunner");
-        engine.startService("deployment", { onlyCompile: true });
 
-        callback();
+        engine.startEngine(async () => {
+          callback();
+       });
       },
-      function deploy(callback) {
-        engine.events.request('deploy:contracts', function (err) {
-          callback(err);
-        });
-      },
-      function generateUI(callback) {
-        engine.events.request("scaffolding:generate:ui", options, () => {
+      function generateContract(callback) {
+        engine.logger.info(__("generating contract"));
+        engine.events.request('scaffolding:generate:contract', options, function (err, files) {
+          if (err) return callback(err);
+          files.forEach(file => engine.events.request('config:contractsFiles:add', file));
           callback();
         });
+      },
+      function buildContracts(callback) {
+        (async () => {
+          try {
+            const contractsFiles = await engine.events.request2("config:contractsFiles");
+            const compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
+            const contractsConfig = await engine.events.request2("config:contractsConfig");
+            await engine.events.request2("contracts:build", cloneDeep(contractsConfig), compiledContracts);
+          } catch (e) {
+            return callback(e);
+          }
+          callback();
+        })()
+      },
+      function generateUI(callback) {
+        if (engine.config.embarkConfig.app) {
+          engine.logger.info(__("generating ui"));
+          return engine.events.request("scaffolding:generate:ui", options, (err, _files) => {
+            if (err) return callback(err);
+            callback();
+          });
+        }
+        callback();
       }
     ], function (err) {
       if (err) {
-        engine.logger.error(__("Error generating the UI: "));
+        engine.logger.error(__("Error generating the scaffold: "));
         engine.logger.error(err.message || err);
       }
-      engine.logger.info(__("finished generating the UI").underline);
-      engine.logger.info(__("To see the result, execute {{cmd}} and go to /{{contract}}.html", { cmd: 'embark run'.underline, contract: options.contract }));
+      if (engine.config.embarkConfig.app) {
+        engine.logger.info(__("finished generating the contracts and UI").underline);
+        engine.logger.info(__("To see the result, execute {{cmd}} and go to /{{contract}}.html", { cmd: 'embark run'.underline, contract: options.contractOrFile }));
+      } else {
+        engine.logger.info(__("finished generating the contracts").underline);
+      }
 
       process.exit(err ? 1 : 0);
     });
