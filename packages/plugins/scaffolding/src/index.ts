@@ -1,4 +1,4 @@
-import { Contract, Embark } from "embark-core";
+import { Callback, Contract, Embark } from "embark-core";
 import { CommandOptions, ContractLanguage, Framework } from "./commandOptions";
 import { SolidityBuilder } from "./contractLanguage/solidityBuilder";
 import { ReactBuilder } from "./framework/reactBuilder";
@@ -7,13 +7,23 @@ import { SmartContractsRecipe } from "./smartContractsRecipe";
 export default class Scaffolding {
 
   constructor(private embark: Embark, private options: any) {
-    this.embark.events.setCommandHandler("scaffolding:generate:contract", (cmdLineOptions: any,  cb: (files: Array<(string|undefined)>) => void) => {
-      this.generateContract(cmdLineOptions).then(cb);
-    });
+    this.embark.events.setCommandHandler(
+      "scaffolding:generate:contract",
+      (cmdLineOptions: any,  cb: Callback<Array<(string|undefined)>>) => {
+        this.generateContract(cmdLineOptions)
+          .then(files => cb(null, files))
+          .catch(cb);
+      }
+    );
 
-    this.embark.events.setCommandHandler("scaffolding:generate:ui", (cmdLineOptions: any,  cb: (files: string[]) => void) => {
-      this.generateUi(cmdLineOptions).then(cb);
-    });
+    this.embark.events.setCommandHandler(
+      "scaffolding:generate:ui",
+      (cmdLineOptions: any,  cb: Callback<string[]>) => {
+        this.generateUi(cmdLineOptions)
+          .then(files => cb(null, files))
+          .catch(cb);
+      }
+    );
   }
 
   private contractLanguageStrategy(recipe: SmartContractsRecipe, options: CommandOptions) {
@@ -53,10 +63,6 @@ export default class Scaffolding {
   }
 
   private getContracts() {
-    return new Promise<Contract[]>((resolve) => {
-      this.embark.events.request("contracts:list", (_: null, contracts: Contract[]) => {
-        resolve(contracts);
-      });
-    });
+    return this.embark.events.request2("contracts:list") as Promise<Contract[]>;
   }
 }

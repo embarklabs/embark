@@ -47,7 +47,7 @@ export class ReactBuilder implements Builder {
   private updateEmbarkJson(contractName: string, files: string[]) {
     const embarkJsonPath = path.join(utils.dappPath(), "embark.json");
     const embarkJson = this.embark.fs.readJSONSync(embarkJsonPath);
-    embarkJson.app[`js/${contractName}.js`] = `app/${contractName}.js`;
+    embarkJson.app[`${contractName}.js`] = `app/${contractName}.js`;
     embarkJson.app[`${contractName}.html`] = `app/${contractName}.html`;
 
     this.embark.fs.writeFileSync(embarkJsonPath, JSON.stringify(embarkJson, null, 2));
@@ -61,7 +61,7 @@ export class ReactBuilder implements Builder {
     const dappTemplate = Handlebars.compile(dappSource);
 
     const indexData = {
-      filename: contractName.toLowerCase(),
+      filename: contractName,
       title: contractName,
     };
 
@@ -70,9 +70,15 @@ export class ReactBuilder implements Builder {
       return [];
     }
 
+    const relativeGenerationDir = path.relative(
+      utils.dappPath('app'),
+      utils.dappPath(this.embark.config.embarkConfig.generationDir)
+    );
+
     const dappData = {
       contractName,
       functions: this.getFunctions(contract),
+      relativeGenerationDir
     };
 
     return [indexTemplate(indexData), dappTemplate(dappData)];
@@ -115,7 +121,11 @@ export class ReactBuilder implements Builder {
   }
 
   private installDependencies() {
-    const cmd = "npm install react react-bootstrap react-dom";
+    let pkgManager = 'npm install';
+    if (this.embark.fs.existsSync(utils.dappPath('yarn.lock'))) {
+      pkgManager = 'yarn add';
+    }
+    const cmd = `${pkgManager} react react-bootstrap@^0.33.1 react-dom`;
     return new Promise<void>((resolve, reject) => {
       utils.runCmd(cmd, null, (error: string) => {
         if (error) {
