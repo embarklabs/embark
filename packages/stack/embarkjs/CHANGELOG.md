@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.10](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.9...v5.0.0-alpha.10) (2019-12-24)
+
+
+### Bug Fixes
+
+* **@embark/embarkjs:** Fix event name misspelling ([8f9f631](https://github.com/embark-framework/embark/commit/8f9f631))
+
+
+
+
+
 # [5.0.0-alpha.9](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.8...v5.0.0-alpha.9) (2019-12-20)
 
 **Note:** Version bump only for package embark-embarkjs

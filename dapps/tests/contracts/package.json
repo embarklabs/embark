@@ -1,7 +1,7 @@
 {
   "description": "Test DApp for integration testing purposes",
   "devDependencies": {
-    "embark": "^5.0.0-alpha.9",
+    "embark": "^5.0.0-alpha.10",
     "embark-reset": "^5.0.0-alpha.5",
     "embarkjs": "^5.0.0-alpha.9",
     "embarkjs-ens": "^5.0.0-alpha.9",
@@ -21,5 +21,5 @@
     "reset": "npx embark-reset && npx rimraf embark-*.tgz package",
     "test": "npx embark test"
   },
-  "version": "5.0.0-alpha.9"
+  "version": "5.0.0-alpha.10"
 }

@@ -1,6 +1,6 @@
 {
   "name": "embark-ens",
-  "version": "5.0.0-alpha.9",
+  "version": "5.0.0-alpha.10",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Implements ENS support in Embark",
