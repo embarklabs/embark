@@ -6447,10 +6447,10 @@ cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-circom@0.0.31:
-  version "0.0.31"
-  resolved "https://registry.yarnpkg.com/circom/-/circom-0.0.31.tgz#c4cd5ab6a82611bb5753e635173c1ff52cbea6c7"
-  integrity sha512-KtMgJ3fkUGelR9SijMBJUjLAkPC1/dAmaLUdunKaYZEVks5hupLwQ8dtdCbpwOGfiwvBnPLYqM2wyWrgmIAbbw==
+circom@0.0.35:
+  version "0.0.35"
+  resolved "https://registry.yarnpkg.com/circom/-/circom-0.0.35.tgz#3178c9db4e37538e65342f3795c0f7ec222863cb"
+  integrity sha512-MWsJPYPH+s9wN2I5abEHUIAyFVsgTCy+UzJh///WnflXfh3c1tlbv8zt1VV+YHHREpyS+WF5ZBr7TujpaVFu5g==
   dependencies:
     big-integer "^1.6.32"
     optimist "^0.6.1"
@@ -19473,10 +19473,10 @@ snapdragon@^0.8.1:
     source-map-resolve "^0.5.0"
     use "^3.1.0"
 
-snarkjs@0.1.19:
-  version "0.1.19"
-  resolved "https://registry.yarnpkg.com/snarkjs/-/snarkjs-0.1.19.tgz#1c89215cc7cf2844c887348b3208d3e170a80813"
-  integrity sha512-HcrLUWTSX8XEzIdbfZS/GABGaTsa+fN2nuniUku/voCfuAEu5kFgDTIbw879zwD2Uxqy56wiWwzUzwifCfi8mA==
+snarkjs@0.1.20:
+  version "0.1.20"
+  resolved "https://registry.yarnpkg.com/snarkjs/-/snarkjs-0.1.20.tgz#4284217e823e71d9c7ded01eb439ace5190b90e1"
+  integrity sha512-tYmWiVm1sZiB44aIh5w/3HUaTntTUC4fv+CWs4rR0gfkt2KbHTpArOqZW++/Lxujrn9IypXVhdKVUr/eE6Hxfg==
   dependencies:
     big-integer "^1.6.43"
     chai "^4.2.0"
