@@ -37,7 +37,7 @@ class EmbarkJS {
       this.registerEmbarkJSPlugin(stackName, pluginName, packageName, cb || (() => {}));
     });
 
-    this.events.setCommandHandler("embarkjs:console:regsiter:custom", (stackName, pluginName, packageName, options, cb) => {
+    this.events.setCommandHandler("embarkjs:console:register:custom", (stackName, pluginName, packageName, options, cb) => {
       this.events.request("runcode:whitelist", packageName, () => {});
       this.registerCustomEmbarkJSPluginInVm(stackName, pluginName, packageName, options, cb || (() => {}));
     });
