@@ -69,15 +69,15 @@ export default class Compiler {
   }
 
   private async compileContracts(contractFiles: any[], cb: Callback<any>) {
-    if (!contractFiles.length) {
-      return cb(null, {});
-    }
-
     const compiledObject: { [index: string]: any } = {};
     const compilerOptions = {};
 
     try {
       contractFiles = this.checkContractFiles(await this.runBeforeActions(contractFiles));
+
+      if (!contractFiles.length) {
+        return cb(null, {});
+      }
 
       await Promise.all(
         Object.entries(this.getAvailableCompilers()).map(async ([extension, compilers]: [string, any]) => {

@@ -50,11 +50,11 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.7.4",
-    "circom": "0.0.31",
+    "circom": "0.0.35",
     "core-js": "3.4.3",
     "find-up": "4.1.0",
     "glob": "7.1.4",
-    "snarkjs": "0.1.19"
+    "snarkjs": "0.1.20"
   },
   "devDependencies": {
     "@babel/core": "7.7.4",
