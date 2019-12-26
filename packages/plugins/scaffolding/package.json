@@ -49,7 +49,7 @@
     "embark-i18n": "^5.0.0-alpha.5",
     "embark-logger": "^5.0.0-alpha.5",
     "embark-utils": "^5.0.0-alpha.9",
-    "handlebars": "4.2.0",
+    "handlebars": "4.3.0",
     "web3-utils": "1.2.4"
   },
   "devDependencies": {
