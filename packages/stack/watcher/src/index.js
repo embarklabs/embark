@@ -7,13 +7,11 @@ const DAPP_PIPELINE_CONFIG_FILE = 'pipeline.js';
 const DAPP_WEBPACK_CONFIG_FILE = 'webpack.config.js';
 const DAPP_BABEL_LOADER_OVERRIDES_CONFIG_FILE = 'babel-loader-overrides.js';
 
-// TODO: this should be receiving the config object not re-reading the
-// embark.json file
-
 // TODO: rename file events to comply with naming convention
 
 class Watcher {
   constructor(embark) {
+    this.embarkConfig = embark.config.embarkConfig;
     this.logger = embark.logger;
     this.events = embark.events;
     this.fs = embark.fs;
@@ -26,29 +24,24 @@ class Watcher {
 
   // TODO: it needs to be more agnostic, the files to watch should be registered through the plugin api
   start(cb) {
-    let self = this;
-    // TODO: should come from the config object instead of reading the file
-    // directly
-    let embarkConfig = this.fs.readJSONSync("embark.json");
-
-    this.watchAssets(embarkConfig, function () {
-      self.logger.trace('ready to watch asset changes');
+    this.watchAssets(this.embarkConfig, () => {
+      this.logger.trace('ready to watch asset changes');
     });
 
-    this.watchContracts(embarkConfig, function () {
-      self.logger.trace('ready to watch contract changes');
+    this.watchContracts(this.embarkConfig, () => {
+      this.logger.trace('ready to watch contract changes');
     });
 
-    this.watchContractConfig(embarkConfig, function () {
-      self.logger.trace('ready to watch contract config changes');
+    this.watchContractConfig(this.embarkConfig, () => {
+      this.logger.trace('ready to watch contract config changes');
     });
 
-    this.watchPipelineConfig(embarkConfig, function () {
-      self.logger.trace('ready to watch pipeline config changes');
+    this.watchPipelineConfig(this.embarkConfig, () => {
+      this.logger.trace('ready to watch pipeline config changes');
     });
 
-    this.watchWebserverConfig(embarkConfig, function () {
-      self.logger.trace('ready to watch webserver config changes');
+    this.watchWebserverConfig(this.embarkConfig, () => {
+      this.logger.trace('ready to watch webserver config changes');
     });
 
     this.logger.info(__("ready to watch file changes"));
@@ -69,7 +62,6 @@ class Watcher {
   }
 
   watchAssets(embarkConfig, callback) {
-    let self = this;
     let appConfig = embarkConfig.app;
     let filesToWatch = [];
 
@@ -92,34 +84,32 @@ class Watcher {
 
     this.watchFiles(
       filesToWatch,
-      function (eventName, path) {
-        self.logger.info(`${eventName}: ${path}`);
-        self.events.emit('file-' + eventName, 'asset', path);
-        self.events.emit('file-event', {fileType: 'asset', path});
+      (eventName, path) => {
+        this.logger.info(`${eventName}: ${path}`);
+        this.events.emit('file-' + eventName, 'asset', path);
+        this.events.emit('file-event', {fileType: 'asset', path});
       },
-      function () {
+      () => {
         callback();
       }
     );
   }
 
   watchContracts(embarkConfig, callback) {
-    let self = this;
     this.watchFiles(
       [embarkConfig.contracts],
-      function (eventName, path) {
-        self.logger.info(`${eventName}: ${path}`);
-        self.events.emit('file-' + eventName, 'contract', path);
-        self.events.emit('file-event', {fileType: 'contract', path});
+      (eventName, path) => {
+        this.logger.info(`${eventName}: ${path}`);
+        this.events.emit('file-' + eventName, 'contract', path);
+        this.events.emit('file-event', {fileType: 'contract', path});
       },
-      function () {
+      () => {
         callback();
       }
     );
   }
 
   watchWebserverConfig(embarkConfig, callback) {
-    let self = this;
     let webserverConfig;
     if (typeof embarkConfig.config === 'object') {
       if (!embarkConfig.config.webserver) {
@@ -134,18 +124,17 @@ class Watcher {
       webserverConfig = [`${contractsFolder}**/webserver.json`, `${contractsFolder}**/webserver.js`];
     }
     this.watchFiles(webserverConfig,
-      function (eventName, path) {
-        self.logger.info(`${eventName}: ${path}`);
-        self.events.emit('webserver:config:change', 'config', path);
+      (eventName, path) => {
+        this.logger.info(`${eventName}: ${path}`);
+        this.events.emit('webserver:config:change', 'config', path);
       },
-      function () {
+      () => {
         callback();
       }
     );
   }
 
   watchContractConfig(embarkConfig, callback) {
-    let self = this;
     let contractConfig;
     if (typeof embarkConfig.config === 'object' || embarkConfig.config.contracts) {
       contractConfig = embarkConfig.config.contracts;
@@ -157,12 +146,12 @@ class Watcher {
       contractConfig = [`${contractsFolder}**/contracts.json`, `${contractsFolder}**/contracts.js`];
     }
     this.watchFiles(contractConfig,
-      function (eventName, path) {
-        self.logger.info(`${eventName}: ${path}`);
-        self.events.emit('file-' + eventName, 'config', path);
-        self.events.emit('file-event', {fileType: 'config', path});
+      (eventName, path) => {
+        this.logger.info(`${eventName}: ${path}`);
+        this.events.emit('file-' + eventName, 'config', path);
+        this.events.emit('file-event', {fileType: 'config', path});
       },
-      function () {
+      () => {
         callback();
       }
     );
@@ -191,11 +180,13 @@ class Watcher {
     this.logger.trace('watchFiles');
     this.logger.trace(files);
 
+    // FIXME this should be handled by the nim-compiler plugin somehow
+    //  panicoverride.nim is a file added by nimplay when compiling but then removed
+    //  If we don't ignore that file, we start an inifite loop of compilation
+    const ignored = new RegExp(`[\\/\\\\]\\.|tmp_|panicoverride\.nim|${path.basename(this.embarkConfig.generationDir)}`);
+
     let configWatcher = chokidar.watch(files, {
-      // FIXME this should be handled by the nim-compiler plugin somehow
-      //  panicoverride.nim is a file added by nimplay when compiling but then removed
-      //  If we don't ignore that file, we start an inifite loop of compilation
-      ignored: /[\/\\]\.|tmp_|panicoverride\.nim/, persistent: true, ignoreInitial: true, followSymlinks: true
+      ignored, persistent: true, ignoreInitial: true, followSymlinks: true
     });
     this.fileWatchers.push(configWatcher);
 
