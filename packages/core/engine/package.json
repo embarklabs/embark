@@ -1,6 +1,6 @@
 {
   "name": "embark-engine",
-  "version": "5.0.0-alpha.10",
+  "version": "5.0.0-beta.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Engine library for Embark",
@@ -54,7 +54,7 @@
     "embark-blockchain-client": "^5.0.0-alpha.9",
     "embark-code-runner": "^5.0.0-alpha.9",
     "embark-communication": "^5.0.0-alpha.9",
-    "embark-compiler": "^5.0.0-alpha.9",
+    "embark-compiler": "^5.0.0-beta.0",
     "embark-console": "^5.0.0-alpha.9",
     "embark-contracts-manager": "^5.0.0-alpha.9",
     "embark-core": "^5.0.0-alpha.9",

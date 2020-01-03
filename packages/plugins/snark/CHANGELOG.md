@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-beta.0](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.10...v5.0.0-beta.0) (2020-01-03)
+
+
+### Bug Fixes
+
+* **@embark/snark:** Allow dapp to have no contracts ([2295f94](https://github.com/embark-framework/embark/commit/2295f94))
+
+
+
+
+
 # [5.0.0-alpha.5](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.4...v5.0.0-alpha.5) (2019-12-16)
 
 **Note:** Version bump only for package embark-snark
