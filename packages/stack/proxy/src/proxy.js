@@ -152,7 +152,7 @@ export class Proxy {
       if (modifiedResp && modifiedResp.response && modifiedResp.response.error) {
         // error returned from the node and it wasn't stripped by our response actions
         const error = modifiedResp.response.error.message || modifiedResp.response.error;
-        this.logger.error(__(`Error returned from the node: ${error}`));
+        this.logger.debug(__(`Error returned from the node: ${error}`));
         const rpcErrorObj = { "jsonrpc": "2.0", "error": { "code": -32603, "message": error }, "id": modifiedResp.response.id };
         return this.respondError(transport, rpcErrorObj);
       }

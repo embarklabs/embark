@@ -128,7 +128,7 @@ export default class ProxyManager {
         isWs: false,
         logger: this.logger,
         plugins: this.plugins,
-        isVm: this.isVm
+        isVm: this.isVm,
       })
         .serve(
           this.host,
@@ -143,7 +143,7 @@ export default class ProxyManager {
         isWs: true,
         logger: this.logger,
         plugins: this.plugins,
-        isVm: this.isVm
+        isVm: this.isVm,
       })
         .serve(
           this.host,
