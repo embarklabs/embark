@@ -78,7 +78,7 @@
     <div class="c-footer__bottom">
       <p class="u-text-light">
         <a href="https://status.im/privacy-policy.html" title="{{__('footer.privacy_policy')}}" target="_blank" class="u-text-light">{{__('footer.privacy_policy')}}</a>
-        / © 2019 Embark
+        / © 2020 Embark
       </p>
     </div>
   </div>
