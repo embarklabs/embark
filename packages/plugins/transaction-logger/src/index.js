@@ -1,6 +1,7 @@
 const async = require('async');
 import { __ } from 'embark-i18n';
 const Web3 = require('web3');
+const util = require('util');
 
 const { blockchain: blockchainConstants } = require('embark-core/constants');
 import { dappPath, hexToNumber } from 'embark-utils';
@@ -169,7 +170,7 @@ export default class TransactionLogger {
 
     const contract = this.addressToContract[address];
     if (!contract) {
-      this.logger.info(`Contract log for unknown contract: ${JSON.stringify(args)}`);
+      this.logger.debug(`Contract log for unknown contract: ${util.inspect(args)}`);
       return this._getContractsList((contractsList) => {
         this.addressToContract = getAddressToContract(contractsList, this.addressToContract);
       });
