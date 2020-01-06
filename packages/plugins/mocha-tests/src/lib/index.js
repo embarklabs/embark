@@ -155,6 +155,7 @@ class MochaTestRunner {
     const provider = await this.events.request2("tests:blockchain:start", this.options);
     this.web3 = new Web3(provider);
     accounts = await this.web3.eth.getAccounts();
+
     await events.request2("contracts:reset");
     let contractFiles = await events.request2("config:contractsFiles");
 
