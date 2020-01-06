@@ -48,6 +48,7 @@ export default class TransactionDebugger {
   private listenToEvents() {
     this.embark.events.on('blockchain:tx', (tx: any) => {
       this.embark.events.request('contracts:contract', tx.name, (contract: any) => {
+        if (!(contract && contract.filename)) { return; }
         this.txTracker[tx.transactionHash] = {tx, contract};
         this.lastTx = tx.transactionHash;
         if (tx.status !== '0x0') { return; }
