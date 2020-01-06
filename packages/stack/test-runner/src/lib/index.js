@@ -17,6 +17,7 @@ const reports = require('istanbul-reports');
 const Reporter = require('./reporter');
 
 const EMBARK_OPTION = 'embark';
+const GANACHE_CLIENT_VERSION_NAME = "EthereumJS TestRPC";
 
 class TestRunner {
   constructor(embark, options) {
@@ -137,6 +138,7 @@ class TestRunner {
   }
 
   setupGlobalVariables() {
+
     assert.reverts = async function(method, params = {}, message) {
       if (typeof params === 'string') {
         message = params;
@@ -175,11 +177,19 @@ class TestRunner {
       }
     };
 
-    global.assert = assert;
+    global.getEvmVersion = async () => {
+      return this.evmMethod('web3_clientVersion');
+    };
 
+    global.assert = assert;
     global.embark = this.embark;
 
     global.increaseTime = async (amount) => {
+      const evmVersion = await global.getEvmVersion();
+
+      if (evmVersion.indexOf(GANACHE_CLIENT_VERSION_NAME) === -1) {
+        this.logger.warn('WARNING: global.increaseTime uses RPC APIs that are only provided by a simulator (Ganache) and might cause a timeout');
+      }
       await this.evmMethod("evm_increaseTime", [Number(amount)]);
       await this.evmMethod("evm_mine");
     };
@@ -187,6 +197,10 @@ class TestRunner {
     // Mines a block and sets block.timestamp accordingly.
     // See https://github.com/trufflesuite/ganache-core/pull/13 for more information
     global.mineAtTimestamp = async (timestamp) => {
+      const evmVersion = await global.getEvmVersion();
+      if (evmVersion.indexOf(GANACHE_CLIENT_VERSION_NAME) === -1) {
+        this.logger.warn('WARNING: global.mineAtTimestamp uses RPC APIs that are only provided by a simulator (Ganache) and might cause a timeout');
+      }
       return this.evmMethod("evm_mine", [parseFloat(timestamp)]);
     };
   }

@@ -19,6 +19,12 @@ contract("Expiration", function() {
   });
 
   it("should have expired after skipping time", async function () {
+    const client = await getEvmVersion();
+
+    if (client.indexOf('EthereumJS TestRPC') === -1) {
+      console.info(`Skipping test because it requires the use of Ganache. Current blockchain client: ${client}`);
+      return assert.ok(true);
+    }
     await mineAtTimestamp(now + 1001); // sets block.timestamp to 1001
     const isExpired = await Expiration.methods.isExpired().call();
     assert.strictEqual(isExpired, true);
