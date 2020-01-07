@@ -246,14 +246,14 @@ export default class TransactionLogger {
     this.embark.registerAPICall(
       'get',
       apiRoute,
-      (req, res) => {
-        res.send(JSON.stringify(this._getLogs()));
+      async (req, res) => {
+        res.send(JSON.stringify(await this._getLogs()));
       }
     );
   }
 
-  _getLogs() {
-    const data = this._readLogs();
+  async _getLogs() {
+    const data = await this._readLogs();
     return Object.values(data).reverse();
   }
 
@@ -261,22 +261,29 @@ export default class TransactionLogger {
     this.writeLogFile.push(log);
   }
 
-  _readLogs() {
-    this.fs.ensureFileSync(this.logFile);
-    try {
-      let data = this.fs.readFileSync(this.logFile).toString();
+  async _readLogs() {
+    return new Promise(async resolve => {
+      try {
+        await this.fs.ensureFile(this.logFile);
+        this.fs.readFile(this.logFile, (err, data) => {
+          if (err) {
+            throw (new Error(err));
+          }
+          data = data.toString();
+          if (!data) {
+            return resolve({});
+          }
 
-      if (!data) {
-        return {};
+          // remove last comma and add braces around
+          data = `{${data.substring(0, data.length - 2)}}`;
+
+          resolve(JSON.parse(data));
+        });
+      } catch (error) {
+        this.logger.error('Error reading contract log file', error.message);
+        this.logger.trace(error);
+        resolve({});
       }
-
-      // remove last comma and add braces around
-      data = `{${data.substring(0, data.length - 2)}}`;
-      return JSON.parse(data);
-    } catch (error) {
-      this.logger.error('Error reading contract log file', error.message);
-      this.logger.trace(error);
-      return {};
-    }
+    });
   }
 }
