@@ -87,8 +87,6 @@ In Crystal, we can use the `Spawn` functionality in a very similar way to Gorout
 
 `Fibers` are lightweight threads of execution that are managed by the garbage collector, so you don't *really* need to worry about managing them once you've spawned them.  Because of this, you could technically spin up 100 `Fibers` to make a bunch of API requests, and then simply forget about them.
 
-You *could* do this with OS threads, but `pthread_create` and `pthread_join` (the `libc` functions that usually back threads) are expensive system calls, so you really shouldn't.
-
 We can utilise `Spawn` in Crystal like so:
 
 ``` crystal
