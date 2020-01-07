@@ -4,11 +4,12 @@ import Web3 from "web3";
 require("colors");
 
 export default class DeploymentChecks {
-  constructor({trackingFunctions, events, logger}) {
+  constructor({trackingFunctions, events, logger, contractsConfig}) {
     this.trackingFunctions = trackingFunctions;
     this.events = events;
     this.logger = logger;
     this._web3 = null;
+    this.contractsConfig = contractsConfig || {};
 
     this.events.on("blockchain:started", () => {
       this._web3 = null;
@@ -31,6 +32,13 @@ export default class DeploymentChecks {
     // previous event action check
     if (!params.shouldDeploy) {
       return cb(null, params);
+    }
+
+    const isInterface = this.contractsConfig.interfaces && this.contractsConfig.interfaces.includes(contract.className);
+    const isLibrary = this.contractsConfig.libraries && this.contractsConfig.libraries.includes(contract.className);
+
+    if (isInterface || isLibrary) {
+      contract.deploy = false;
     }
 
     // check if contract set to not deploy in the config

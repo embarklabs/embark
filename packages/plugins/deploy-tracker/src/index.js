@@ -8,7 +8,7 @@ class DeployTracker {
     this.embark = embark;
 
     const trackingFunctions = new TrackingFunctions({config, fs, logger, events, trackContracts});
-    const deploymentChecks = new DeploymentChecks({trackingFunctions, logger, events, plugins});
+    const deploymentChecks = new DeploymentChecks({trackingFunctions, logger, events, plugins, contractsConfig: config.contractsConfig});
 
     this.embark.registerActionForEvent("deployment:contract:deployed", trackingFunctions.trackAndSaveContract.bind(trackingFunctions));
     this.embark.registerActionForEvent("deployment:contract:shouldDeploy", deploymentChecks.checkContractConfig.bind(deploymentChecks));
