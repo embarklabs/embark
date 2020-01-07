@@ -27,7 +27,7 @@ export default class TransactionLogger {
     this.contractsConfig = embark.config.contractsConfig;
     this.contractsDeployed = false;
     this.outputDone = false;
-    this.logFile = dappPath(".embark", "contractLogs.json");
+    this.logFile = dappPath(".embark", "contractLogs.json.txt");
     this.transactions = {};
 
     this._listenForLogRequests();
@@ -47,16 +47,14 @@ export default class TransactionLogger {
     });
 
     this.writeLogFile = async.cargo((tasks, callback) => {
-      // TODO change this to only read once then use memory, because it slows things down a lot to read on each TX
-      const data = this._readLogs();
-
+      let appendThis = '';
       tasks.forEach(task => {
-        data[new Date().getTime()] = task;
+        appendThis += `"${new Date().getTime()}":${JSON.stringify(task)},\n`;
       });
-
-      this.fs.writeJson(this.logFile, data, err => {
+      this.fs.appendFile(this.logFile, appendThis, (err) => {
         if (err) {
-          console.error(err);
+          this.logger.error('Error writing to the log file', err.message);
+          this.logger.trace(err);
         }
         callback();
       });
@@ -265,8 +263,18 @@ export default class TransactionLogger {
   _readLogs() {
     this.fs.ensureFileSync(this.logFile);
     try {
-      return JSON.parse(this.fs.readFileSync(this.logFile));
-    } catch (_error) {
+      let data = this.fs.readFileSync(this.logFile).toString();
+
+      if (!data) {
+        return {};
+      }
+
+      // remove last comma and add braces around
+      data = `{${data.substring(0, data.length - 2)}}`;
+      return JSON.parse(data);
+    } catch (error) {
+      this.logger.error('Error reading contract log file', error.message);
+      this.logger.trace(error);
       return {};
     }
   }
