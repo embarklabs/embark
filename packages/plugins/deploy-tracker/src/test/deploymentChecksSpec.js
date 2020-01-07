@@ -77,7 +77,7 @@ describe('embark.deploymentChecks', function () {
       }
     };
     trackingFunctions._web3 = _web3;
-    deploymentChecks = new DeploymentChecks({trackingFunctions, events, logger});
+    deploymentChecks = new DeploymentChecks({trackingFunctions, events, logger, contractsConfig: {}});
     deploymentChecks._web3 = _web3;
   });
   afterEach(() => {

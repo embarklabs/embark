@@ -11,10 +11,8 @@ module.exports = {
       console.log("before deploying contracts");
       console.log("==========================");
     },
+    interfaces: ['Ownable'],
     deploy: {
-      Ownable: {
-        deploy: false
-      },
       Token: {
         deploy: false,
         args: [1000]

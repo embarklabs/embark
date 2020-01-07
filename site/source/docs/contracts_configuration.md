@@ -127,6 +127,26 @@ production: {
 ...
 ```
 
+## Defining interfaces
+
+There are scenarios in which certain Smart Contract sources are used for inheritance or as interfaces. While their source has to be compiled,
+we don't actually want to deploy them. To prevent such Smart Contracts from deploying, we can either take advantage of the `deploy: false`
+propery discussed above, or use the more semantic `interfaces` and `libraries` configurations.
+
+Both of them are simple lists of Smart Contract names that should be treated as interfaces and libraries respectively. The following example
+show how the `Ownable` Smart Contract is configured as interface and therefore won't be deployed:
+
+```json
+...
+development:
+  interfaces: ['Ownable'],
+  deploy: {
+    InheritsOwnable: {}
+  }
+}
+...
+```
+
 ## Deployment strategies
 
 In order to give users full control over which Smart Contracts should be deployed, Embark comes with a configuration feature called "deployment strategies". Deployment strategies tell Embark whether it should deploy all of the user's Smart Contracts (and its (3rd-party) dependencies, or just deploy individual Smart Contracts.
