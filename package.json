@@ -12,7 +12,8 @@
     "minimist": "1.2.0",
     "npm-run-all": "4.1.5",
     "nyc": "13.1.0",
-    "rimraf": "3.0.0"
+    "rimraf": "3.0.0",
+    "semver": "5.6.0"
   },
   "engines": {
     "node": ">=10.17.0 <12.0.0",
@@ -52,6 +53,8 @@
     "reboot": "npm run clean",
     "reboot:full": "npm run clean:full",
     "release": "node scripts/release",
+    "release:nightly": "node scripts/nightly-release",
+    "release:stable": "node scripts/stable-release",
     "reset": "node scripts/monorun --stream reset && npm-run-all reset:*",
     "reset:top": "npx rimraf .tsconfig.collective.json .nyc_output coverage",
     "reset:tsbuildinfo": "npx lerna exec --parallel -- npx rimraf node_modules/.cache/tsc",

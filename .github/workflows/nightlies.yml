@@ -1,0 +1,80 @@
+name: Nightlies
+on:
+  # This workflow is triggered once daily at midnight (UTC)
+  # See: https://crontab.guru/#0_0_*_*_*
+  schedule:
+    - cron:  '0 0 * * *'
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        # Credentials for pushing commits and tags are persisted by actions/checkout@v2 by default
+        # See: https://github.com/actions/checkout#usage
+        with:
+          ref: master
+          # Fetch full history for the master branch
+          # See: https://github.com/actions/checkout#usage
+          fetch-depth: 0
+          # EMBARKBOT_GITHUB_TOKEN should correspond to https://github.com/embarkbot
+          token: ${{ secrets.EMBARKBOT_GITHUB_TOKEN }}
+      - name: Fetch all tags
+        # See: https://github.com/actions/checkout#fetch-all-tags
+        run: |
+          git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '^10.17.0'
+      - name: Update npm
+        run: |
+          npm i -g npm
+      - name: Update yarn
+        run: |
+          curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version $(npm show yarn@${YARN_VERSION} version --json | npx json -- -1 2>/dev/null)
+        env:
+          YARN_VERSION: '^1.19.1'
+      - name: Install dependencies
+        run: |
+          export PATH="${HOME}/.yarn/bin:${HOME}/.config/yarn/global/node_modules/.bin:${PATH}"
+          echo Node.js is $(node --version)
+          echo npm is v$(npm --version)
+          echo yarn is v$(yarn --version); echo
+          yarn install
+          npm run cwtree
+      - name: Build
+        # Run typecheck in addition to build since both tsc and babel generate files into packages' dist/ directories
+        run: |
+          export PATH="${HOME}/.yarn/bin:${HOME}/.config/yarn/global/node_modules/.bin:${PATH}"
+          echo Node.js is $(node --version)
+          echo npm is v$(npm --version)
+          echo yarn is v$(yarn --version); echo
+          npm run typecheck
+          npm run build
+          npm run cwtree
+      - name: Release
+        run: |
+          export PATH="${HOME}/.yarn/bin:${HOME}/.config/yarn/global/node_modules/.bin:${PATH}"
+          echo Node.js is $(node --version)
+          echo npm is v$(npm --version)
+          echo yarn is v$(yarn --version); echo
+          git config user.name 'EmbarkBot'
+          git config user.email '<59620708+embarkbot@users.noreply.github.com>'
+          npm config set //registry.npmjs.org/:_authToken=${NPM_TOKEN}
+          npm whoami 1>/dev/null
+          echo Logged into NPM as user $(npm whoami); echo
+          npm run release:nightly
+          npm run cwtree
+        env:
+          # GH_TOKEN is the env variable referenced by `lerna version|publish` for authenticating via GitHub token in order to create a release
+          # See: https://github.com/lerna/lerna/tree/master/commands/version#--create-release-type
+          # EMBARKBOT_GITHUB_TOKEN should correspond to https://github.com/embarkbot
+          GH_TOKEN: ${{ secrets.EMBARKBOT_GITHUB_TOKEN }}
+          IS_GITHUB_ACTIONS_WORKFLOW: 't'
+          # EMBARKBOT_NPM_TOKEN should correspond to https://www.npmjs.com/~embarkbot
+          NPM_TOKEN: ${{ secrets.EMBARKBOT_NPM_TOKEN }}
+      - name: Remove NPM credentials
+        # Delete .npmrc instead of running `npm logout` because the logout command permanently invalidates the current token
+        run: |
+          rm ${HOME}/.npmrc
