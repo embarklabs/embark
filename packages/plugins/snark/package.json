@@ -1,6 +1,6 @@
 {
   "name": "embark-snark",
-  "version": "5.0.0-beta.0",
+  "version": "5.0.0",
   "author": "Anthony Laibe",
   "contributors": [
     "Michael Bradley <michaelsbradleyjr@gmail.com> (https://github.com/michaelsbradleyjr/)"
@@ -60,7 +60,7 @@
     "@babel/core": "7.7.4",
     "babel-eslint": "10.0.3",
     "babel-jest": "24.9.0",
-    "embark-solo": "^5.0.0-alpha.5",
+    "embark-solo": "^5.0.0",
     "eslint": "6.2.2",
     "eslint-config-prettier": "6.1.0",
     "eslint-plugin-jest": "22.5.1",

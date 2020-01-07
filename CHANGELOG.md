@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0](https://github.com/embark-framework/embark/compare/v5.0.0-beta.0...v5.0.0) (2020-01-07)
+
+
+### Bug Fixes
+
+* **@embark/watcher:** endless loop when artifacts are put in src ([c8f86e5](https://github.com/embark-framework/embark/commit/c8f86e5))
+
+
+
+
+
 # [5.0.0-beta.0](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.10...v5.0.0-beta.0) (2020-01-03)
 
 

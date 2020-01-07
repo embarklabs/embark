@@ -1,6 +1,6 @@
 {
   "name": "embark-ethereum-blockchain-client",
-  "version": "5.0.0-alpha.9",
+  "version": "5.0.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Ethereum-specific blockchain APIs and contract deployment functions for Embark",
@@ -47,16 +47,16 @@
     "@babel/runtime-corejs3": "7.7.4",
     "async": "2.6.1",
     "core-js": "3.4.3",
-    "embark-core": "^5.0.0-alpha.9",
-    "embark-i18n": "^5.0.0-alpha.5",
-    "embark-utils": "^5.0.0-alpha.9",
-    "embarkjs": "^5.0.0-alpha.9",
+    "embark-core": "^5.0.0",
+    "embark-i18n": "^5.0.0",
+    "embark-utils": "^5.0.0",
+    "embarkjs": "^5.0.0",
     "ethereumjs-util": "6.0.0",
     "web3": "1.2.4",
     "web3-core-requestmanager": "1.2.4"
   },
   "devDependencies": {
-    "embark-solo": "^5.0.0-alpha.5",
+    "embark-solo": "^5.0.0",
     "eslint": "5.7.0",
     "npm-run-all": "4.1.5",
     "rimraf": "3.0.0"
