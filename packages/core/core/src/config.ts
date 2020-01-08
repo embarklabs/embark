@@ -77,6 +77,8 @@ export class Config {
 
   version: string;
 
+  locale: string;
+
   shownNoAccountConfigMsg = false; // flag to ensure "no account config" message is only displayed once to the user
 
   corsParts: string[] = [];
@@ -95,6 +97,7 @@ export class Config {
     this.configDir = options.configDir || DEFAULT_CONFIG_PATH;
     this.chainsFile = options.chainsFile;
     this.plugins = options.plugins;
+    this.locale = options.locale || 'en';
     this.logger = options.logger;
     this.package = options.package;
     this.events = options.events;

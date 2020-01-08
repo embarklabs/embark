@@ -86,6 +86,9 @@
       "path": "packages/plugins/mocha-tests"
     },
     {
+      "path": "packages/plugins/nethermind"
+    },
+    {
       "path": "packages/plugins/parity"
     },
     {

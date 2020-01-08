@@ -138,10 +138,6 @@ export class Plugin {
     this._loggerObject[type](this.name + ':', ...[].slice.call(arguments, 1));
   }
 
-  setUpLogger() {
-    this.logger = new Logger({});
-  }
-
   isContextValid() {
     if (this.currentContext.includes(constants.contexts.any) || this.acceptedContext.includes(constants.contexts.any)) {
       return true;
@@ -161,9 +157,6 @@ export class Plugin {
       return false;
     }
     this.loaded = true;
-    if (this.shouldInterceptLogs) {
-      this.setUpLogger();
-    }
     if (isEs6Module(this.pluginModule)) {
       if (this.pluginModule.default) {
         this.pluginModule = this.pluginModule.default;

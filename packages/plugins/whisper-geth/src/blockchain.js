@@ -33,7 +33,7 @@ class Blockchain {
     this.config = {
       silent: this.userConfig.silent,
       client: this.userConfig.client,
-      ethereumClientBin: this.userConfig.ethereumClientBin || this.userConfig.client,
+      ethereumClientBin: this.userConfig.ethereumClientBin,
       networkType: this.userConfig.networkType || clientClass.DEFAULTS.NETWORK_TYPE,
       networkId: this.userConfig.networkId || clientClass.DEFAULTS.NETWORK_ID,
       genesisBlock: this.userConfig.genesisBlock || false,

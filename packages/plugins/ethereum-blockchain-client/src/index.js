@@ -64,7 +64,7 @@ class EthereumBlockchainClient {
       const code = contract.code.substring(0, 2) === '0x' ? contract.code : "0x" + contract.code;
       const contractObject = contractObj.deploy({arguments: (contract.args || []), data: code});
       if (contract.gas === 'auto' || !contract.gas) {
-        const gasValue = await contractObject.estimateGas();
+        const gasValue = await contractObject.estimateGas({value: 0, from: account});
         const increase_per = 1 + (Math.random() / 10.0);
         contract.gas = Math.floor(gasValue * increase_per);
       }

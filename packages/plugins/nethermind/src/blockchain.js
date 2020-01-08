@@ -1,15 +1,12 @@
 import {__} from 'embark-i18n';
-const fs = require('fs-extra');
 const async = require('async');
 const {spawn, exec} = require('child_process');
 const path = require('path');
 const constants = require('embark-core/constants');
-const ParityClient = require('./parityClient.js');
-// const ParityClient = require('./parityClient.js');
-// import { Proxy } from './proxy';
+const NethermindClient = require('./nethermindClient.js');
 import {IPC} from 'embark-core';
 
-import {compact, dappPath, defaultHost, dockerHostSwap, embarkPath/*, AccountParser*/} from 'embark-utils';
+import {compact, dappPath, defaultHost, dockerHostSwap, embarkPath} from 'embark-utils';
 import { Logger } from 'embark-logger';
 
 // time between IPC connection attempts (in ms)
@@ -25,10 +22,8 @@ class Blockchain {
     this.onExitCallback = userConfig.onExitCallback;
     this.logger = userConfig.logger || new Logger({logLevel: 'debug', context: constants.contexts.blockchain}); // do not pass in events as we don't want any log events emitted
     this.events = userConfig.events;
-    this.proxyIpc = null;
     this.isStandalone = userConfig.isStandalone;
     this.certOptions = userConfig.certOptions;
-
 
     let defaultWsApi = clientClass.DEFAULTS.WS_API;
     if (this.isDev) defaultWsApi = clientClass.DEFAULTS.DEV_WS_API;
@@ -66,8 +61,6 @@ class Blockchain {
       customOptions: this.userConfig.customOptions
     };
 
-    this.devFunds = null;
-
     if (this.userConfig.accounts) {
       const nodeAccounts = this.userConfig.accounts.find(account => account.nodeAccounts);
       if (nodeAccounts) {
@@ -79,7 +72,8 @@ class Blockchain {
       }
     }
 
-    if (this.userConfig === {} || this.userConfig.default || JSON.stringify(this.userConfig) === '{"client":"parity"}') {
+    // TODO I think we all do this in config.ts now
+    if (this.userConfig.default || JSON.stringify(this.userConfig) === '{"client":"nethermind"}') {
       if (this.env === 'development') {
         this.isDev = true;
       } else {
@@ -105,7 +99,7 @@ class Blockchain {
       this.logger.error(__(spaceMessage, 'genesisBlock'));
       process.exit(1);
     }
-    this.client = new clientClass({config: this.config, env: this.env, isDev: this.isDev});
+    this.client = new clientClass({config: this.config, env: this.env, isDev: this.isDev, logger: this.logger});
 
     this.initStandaloneProcess();
   }
@@ -119,61 +113,42 @@ class Blockchain {
    * @returns {void}
    */
   initStandaloneProcess() {
-    if (this.isStandalone) {
-      let logQueue = [];
-
-      // on every log logged in logger (say that 3x fast), send the log
-      // to the IPC serve listening (only if we're connected of course)
-      this.logger.events.on('log', (logLevel, message) => {
-        if (this.ipc.connected) {
-          this.ipc.request('blockchain:log', {logLevel, message});
-        } else {
-          logQueue.push({logLevel, message});
-        }
-      });
-
-      this.ipc = new IPC({ipcRole: 'client'});
-
-      // Wait for an IPC server to start (ie `embark run`) by polling `.connect()`.
-      // Do not kill this interval as the IPC server may restart (ie restart
-      // `embark run` without restarting `embark blockchain`)
-      setInterval(() => {
-        if (!this.ipc.connected) {
-          this.ipc.connect(() => {
-            if (this.ipc.connected) {
-              logQueue.forEach(message => { this.ipc.request('blockchain:log', message); });
-              logQueue = [];
-              this.ipc.client.on('process:blockchain:stop', () => {
-                this.kill();
-                process.exit(0);
-              });
-            }
-          });
-        }
-      }, IPC_CONNECT_INTERVAL);
+    if (!this.isStandalone) {
+      return;
     }
-  }
+    let logQueue = [];
 
-  async setupProxy() {
-    // if (!this.proxyIpc) this.proxyIpc = new IPC({ipcRole: 'client'});
+    // on every log logged in logger (say that 3x fast), send the log
+    // to the IPC serve listening (only if we're connected of course)
+    this.logger.events.on('log', (logLevel, message) => {
+      if (this.ipc.connected) {
+        this.ipc.request('blockchain:log', {logLevel, message});
+      } else {
+        logQueue.push({logLevel, message});
+      }
+    });
 
-    // const addresses = AccountParser.parseAccountsConfig(this.userConfig.accounts, false, dappPath(), this.logger);
+    this.ipc = new IPC({ipcRole: 'client'});
 
-    // let wsProxy;
-    // if (this.config.wsRPC) {
-    //   wsProxy = new Proxy(this.proxyIpc).serve(this.config.wsHost, this.config.wsPort, true, this.config.wsOrigins, addresses, this.certOptions);
-    // }
-
-    // [this.rpcProxy, this.wsProxy] = await Promise.all([new Proxy(this.proxyIpc).serve(this.config.rpcHost, this.config.rpcPort, false, null, addresses, this.certOptions), wsProxy]);
-  }
-
-  shutdownProxy() {
-    // if (!this.config.proxy) {
-    //   return;
-    // }
-
-    // if (this.rpcProxy) this.rpcProxy.close();
-    // if (this.wsProxy) this.wsProxy.close();
+    // Wait for an IPC server to start (ie `embark run`) by polling `.connect()`.
+    // Do not kill this interval as the IPC server may restart (ie restart
+    // `embark run` without restarting `embark blockchain`)
+    setInterval(() => {
+      if (!this.ipc.connected) {
+        this.ipc.connect(() => {
+          if (this.ipc.connected) {
+            logQueue.forEach(message => {
+              this.ipc.request('blockchain:log', message);
+            });
+            logQueue = [];
+            this.ipc.client.on('process:blockchain:stop', () => {
+              this.kill();
+              process.exit(0);
+            });
+          }
+        });
+      }
+    }, IPC_CONNECT_INTERVAL);
   }
 
   runCommand(cmd, options, callback) {
@@ -202,19 +177,8 @@ class Blockchain {
           next();
         });
       },
-      function init(next) {
-        if (self.isDev) {
-          return self.initDevChain((err) => {
-            next(err);
-          });
-        }
-        return self.initChainAndGetAddress((err, addr) => {
-          address = addr;
-          next(err);
-        });
-      },
       function getMainCommand(next) {
-        self.client.mainCommand(address, function (cmd, args) {
+        self.client.mainCommand(address, (cmd, args) => {
           next(null, cmd, args);
         }, true);
       }
@@ -239,19 +203,14 @@ class Blockchain {
         }
       });
 
-      // TOCHECK I don't understand why stderr and stdout are reverted.
-      // This happens with Geth and Parity, so it does not seems a client problem
-      self.child.stdout.on('data', (data) => {
+      self.child.stderr.on('data', (data) => {
         self.logger.info(`${self.client.name} error: ${data}`);
       });
 
-      self.child.stderr.on('data', async (data) => {
+      self.child.stdout.on('data', async (data) => {
         data = data.toString();
         if (!self.readyCalled && self.client.isReady(data)) {
           self.readyCalled = true;
-          // if (self.config.proxy) {
-          // await self.setupProxy();
-          // }
           self.readyCallback();
         }
         self.logger.info(`${self.client.name}: ${data}`);
@@ -283,9 +242,6 @@ class Blockchain {
     if (this.onReadyCallback) {
       this.onReadyCallback();
     }
-    if (this.config.mineWhenNeeded && !this.isDev) {
-      this.miner = this.client.getMiner();
-    }
   }
 
   kill() {
@@ -311,130 +267,11 @@ class Blockchain {
       callback();
     });
   }
-
-  initDevChain(callback) {
-    const self = this;
-    const ACCOUNTS_ALREADY_PRESENT = 'accounts_already_present';
-    // Init the dev chain
-    self.client.initDevChain(self.config.datadir, (err) => {
-      if (err) {
-        return callback(err);
-      }
-
-      const accountsToCreate = self.config.account && self.config.account.numAccounts;
-      if (!accountsToCreate) return callback();
-
-      // Create other accounts
-      async.waterfall([
-        function listAccounts(next) {
-          self.runCommand(self.client.listAccountsCommand(), {}, (err, stdout, _stderr) => {
-            if (err || stdout === undefined || stdout.indexOf("Fatal") >= 0) {
-              console.log(__("no accounts found").green);
-              return next();
-            }
-            // List current addresses
-            self.config.unlockAddressList = self.client.parseListAccountsCommandResultToAddressList(stdout);
-            // Count current addresses and remove the default account from the count (because password can be different)
-            let addressCount = self.config.unlockAddressList.length;
-            if (addressCount < accountsToCreate) {
-              next(null, accountsToCreate - addressCount);
-            } else {
-              next(ACCOUNTS_ALREADY_PRESENT);
-            }
-          });
-        },
-        function newAccounts(accountsToCreate, next) {
-          var accountNumber = 0;
-          async.whilst(
-            function () {
-              return accountNumber < accountsToCreate;
-            },
-            function (callback) {
-              accountNumber++;
-              self.runCommand(self.client.newAccountCommand(), {}, (err, stdout, _stderr) => {
-                if (err) {
-                  return callback(err, accountNumber);
-                }
-                self.config.unlockAddressList.push(self.client.parseNewAccountCommandResultToAddress(stdout));
-                callback(null, accountNumber);
-              });
-            },
-            function (err) {
-              next(err);
-            }
-          );
-        }
-      ], (err) => {
-        if (err && err !== ACCOUNTS_ALREADY_PRESENT) {
-          console.log(err);
-          return callback(err);
-        }
-        callback();
-      });
-    });
-  }
-
-  initChainAndGetAddress(callback) {
-    const self = this;
-    let address = null;
-    const ALREADY_INITIALIZED = 'already';
-
-    // ensure datadir exists, bypassing the interactive liabilities prompt.
-    self.datadir = self.config.datadir;
-
-    async.waterfall([
-      function makeDir(next) {
-        fs.mkdirp(self.datadir, (err, _result) => {
-          next(err);
-        });
-      },
-      function listAccounts(next) {
-        self.runCommand(self.client.listAccountsCommand(), {}, (err, stdout, _stderr) => {
-          if (err || stdout === undefined || stdout.indexOf("Fatal") >= 0) {
-            self.logger.info(__("no accounts found").green);
-            return next();
-          }
-          let firstAccountFound = self.client.parseListAccountsCommandResultToAddress(stdout);
-          if (firstAccountFound === undefined || firstAccountFound === "") {
-            console.log(__("no accounts found").green);
-            return next();
-          }
-          self.logger.info(__("already initialized").green);
-          address = firstAccountFound;
-          next(ALREADY_INITIALIZED);
-        });
-      },
-      function genesisBlock(next) {
-        //There's no genesis init with Parity. Custom network are set in the chain property at startup
-        if (!self.config.genesisBlock || self.client.name === constants.blockchain.clients.parity) {
-          return next();
-        }
-        self.logger.info(__("initializing genesis block").green);
-        self.runCommand(self.client.initGenesisCommmand(), {}, (err, _stdout, _stderr) => {
-          next(err);
-        });
-      },
-      function newAccount(next) {
-        self.runCommand(self.client.newAccountCommand(), {}, (err, stdout, _stderr) => {
-          if (err) {
-            return next(err);
-          }
-          address = self.client.parseNewAccountCommandResultToAddress(stdout);
-          next();
-        });
-      }
-    ], (err) => {
-      if (err === ALREADY_INITIALIZED) {
-        err = null;
-      }
-      callback(err, address);
-    });
-  }
 }
 
 export class BlockchainClient extends Blockchain {
   constructor(userConfig, options) {
-    if ((userConfig === {} || JSON.stringify(userConfig) === '{"enabled":true}') && options.env !== 'development') {
+    if (JSON.stringify(userConfig) === '{"enabled":true}' && options.env !== 'development') {
       options.logger.info("===> " + __("warning: running default config on a non-development environment"));
     }
     // if client is not set in preferences, default is parity
@@ -444,13 +281,9 @@ export class BlockchainClient extends Blockchain {
     // Choose correct client instance based on clientName
     let clientClass;
     switch (userConfig.client) {
-      case constants.blockchain.clients.parity:
-        clientClass = ParityClient;
+      case 'nethermind':
+        clientClass = NethermindClient;
         break;
-
-        // case constants.blockchain.clients.parity:
-        // clientClass = ParityClient;
-        // break;
       default:
         console.error(__('Unknown client "%s". Please use one of the following: %s', userConfig.client, Object.keys(constants.blockchain.clients).join(', ')));
         process.exit(1);

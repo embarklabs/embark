@@ -12,6 +12,7 @@ class Geth {
     this.embarkConfig = embark.config.embarkConfig;
     this.blockchainConfig = embark.config.blockchainConfig;
     this.communicationConfig = embark.config.communicationConfig;
+    // TODO get options from config instead of options
     this.locale = options.locale;
     this.logger = embark.logger;
     this.client = options.client;
