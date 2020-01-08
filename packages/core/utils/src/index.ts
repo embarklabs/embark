@@ -6,6 +6,7 @@ const clipboardy = require('clipboardy');
 import { canonicalHost } from './host';
 export { canonicalHost, defaultCorsHost, defaultHost, dockerHostSwap, isDocker } from './host';
 export { downloadFile, findNextPort, getJson, httpGet, httpsGet, httpGetJson, httpsGetJson, pingEndpoint } from './network';
+export { testRpcWithEndpoint, testWsEndpoint } from './check';
 const logUtils = require('./log-utils');
 export const escapeHtml = logUtils.escapeHtml;
 export const normalizeInput = logUtils.normalizeInput;

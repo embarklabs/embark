@@ -1,32 +1,29 @@
 import { __ } from 'embark-i18n';
 import {BlockchainClient} from "./blockchain";
-const {normalizeInput} = require('embark-utils');
+const {normalizeInput, testRpcWithEndpoint, testWsEndpoint} = require('embark-utils');
 import {BlockchainProcessLauncher} from './blockchainProcessLauncher';
-import {ws, rpcWithEndpoint} from './check.js';
-const constants = require('embark-core/constants');
 
-class Parity {
+export const NETHERMIND_NAME = 'nethermind';
 
-  constructor(embark, options) {
+class Nethermind {
+  constructor(embark) {
     this.embark = embark;
     this.embarkConfig = embark.config.embarkConfig;
     this.blockchainConfig = embark.config.blockchainConfig;
-    // TODO get options from config instead of options
-    this.locale = options.locale;
+    this.locale = embark.config.locale;
     this.logger = embark.logger;
-    this.client = options.client;
-    this.isDev = options.isDev;
+    this.client = embark.config.blockchainConfig.client;
+    this.isDev = embark.config.blockchainConfig.isDev;
     this.events = embark.events;
-    this.plugins = options.plugins;
-    // let plugin = this.plugins.createPlugin('gethplugin', {});
 
     if (!this.shouldInit()) {
       return;
     }
 
-    this.events.request("blockchain:node:register", constants.blockchain.clients.parity, {
+    this.events.request("blockchain:node:register", NETHERMIND_NAME, {
       isStartedFn: (isStartedCb) => {
         this._doCheck((state) => {
+          console.log('Started?', JSON.stringify(state));
           return isStartedCb(null, state.status === "on");
         });
       },
@@ -56,7 +53,7 @@ class Parity {
 
   shouldInit() {
     return (
-      this.blockchainConfig.client === constants.blockchain.clients.parity &&
+      this.blockchainConfig.client === NETHERMIND_NAME &&
       this.blockchainConfig.enabled
     );
   }
@@ -64,20 +61,16 @@ class Parity {
   _getNodeState(err, version, cb) {
     if (err) return cb({ name: "Ethereum node not found", status: 'off' });
 
-    let nodeName = "parity";
-    let versionNumber = version.split("-")[0];
-    let name = nodeName + " " + versionNumber + " (Ethereum)";
-    return cb({ name, status: 'on' });
+    return cb({ name: `${NETHERMIND_NAME} (Ethereum)`, status: 'on' });
   }
 
   _doCheck(cb) {
     if (this.blockchainConfig.endpoint.startsWith('ws')) {
-      return ws(this.blockchainConfig.endpoint, (err, version) => this._getNodeState(err, version, cb));
+      return testWsEndpoint(this.blockchainConfig.endpoint, (err, version) => this._getNodeState(err, version, cb));
     }
-    rpcWithEndpoint(this.blockchainConfig.endpoint, (err, version) => this._getNodeState(err, version, cb));
+    testRpcWithEndpoint(this.blockchainConfig.endpoint, (err, version) => this._getNodeState(err, version, cb));
   }
 
-  // TODO: need to get correct port taking into account the proxy
   registerServiceCheck() {
     this.events.request("services:register", 'Ethereum', this._doCheck.bind(this), 5000, 'off');
   }
@@ -85,8 +78,8 @@ class Parity {
   startBlockchainNode(callback) {
     if (this.blockchainConfig.isStandalone) {
       return new BlockchainClient(this.blockchainConfig, {
-        clientName: 'parity',
-        env: this.embark.env,
+        clientName: NETHERMIND_NAME,
+        env: this.embark.config.env,
         certOptions: this.embark.config.webServerConfig.certOptions,
         logger: this.logger,
         events: this.events,
@@ -97,6 +90,7 @@ class Parity {
 
     this.blockchainProcess = new BlockchainProcessLauncher({
       events: this.events,
+      env: this.embark.config.env,
       logger: this.logger,
       normalizeInput,
       blockchainConfig: this.blockchainConfig,
@@ -124,4 +118,4 @@ class Parity {
 
 }
 
-module.exports = Parity;
+module.exports = Nethermind;

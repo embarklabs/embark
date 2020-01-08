@@ -167,7 +167,7 @@ describe('embark.Config', function () {
         },
         "datadir": ".embark/extNetwork/datadir",
         "rpcHost": "mynetwork.com",
-        "rpcPort": undefined,
+        "rpcPort": false,
         "rpcCorsDomain": {
           "auto": true,
           "additionalCors": []
