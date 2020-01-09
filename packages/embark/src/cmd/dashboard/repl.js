@@ -107,7 +107,7 @@ class REPL {
       this.ipc.client.on('console:history:save', this.addHistory.bind(this));
     }
 
-    this.events.request("runcode:getContext", (context) => {
+    this.events.request("runcode:getContext", (err, context) => {
       this.replServer.context = context;
     });
 
