@@ -3,6 +3,10 @@ iuri_matias:
   twitter: 'iurimatias'
   image: 'https://pbs.twimg.com/profile_images/928272512181563392/iDJdvy2k_400x400.jpg'
 
+graham_mcbain:
+  name: 'Graham McBain'
+  image: 'https://avatars2.githubusercontent.com/u/36456059?s=460&v=4'
+
 pascal_precht:
   name: 'Pascal Precht'
   twitter: 'pascalprecht'
