@@ -38,7 +38,7 @@ class CodeRunner {
 
   private registerCommands() {
     this.events.setCommandHandler("runcode:getContext", (cb) => {
-      cb(this.vm.options.sandbox);
+      cb(null, this.vm.options.sandbox);
     });
     this.events.setCommandHandler("runcode:eval", this.evalCode.bind(this));
   }
