@@ -113,7 +113,7 @@ For more information on blockchain configuration, head over to the [official doc
 
 ## Accounts configuration moved to blockchain config
 
-Prior to Embark v5 it was possible to specify and configure various different accounts for deployment and interaction inside the Smart Contract configuration, as well as the blockchain configuration. This caused a lot of confusion as it wasn't really clear which accounts belonged to what action. To aid against this confusion, we've moved the accounts configuration entirely to the blockchain configuration as well, making it much more straight forward to find the right place when setting up custom accounts.
+Prior to Embark 5 it was possible to specify and configure various accounts for deployment and interaction both inside the Smart Contract configuration and the blockchain configuration. This caused a lot of confusion because it wasn't really clear which accounts belonged to what action. To eliminate confusion, we've moved the accounts configuration entirely to the blockchain configuration, making it much more straightforward to find the right place when setting up custom accounts.
 
 Just like before, accounts can be defined using different configuration settings, depending on the use case:
 
