@@ -85,7 +85,7 @@ The following configuration properties have been renamed:
 - `mineWhenNeeded` is now `miningMode: 'auto'`
 - `ethereumClientName` is now `client`
 
-We've also remove several endpoint related settings such as `host`, `port` etc. and replaced them with a single `endpoint` property. Here's what the new defaults look like:
+We've also removed several endpoint-related settings, such as `host` and `port`, and replaced them with a single `endpoint` property. Here's what the new defaults look like:
 
 ```js
 module.exports = {
