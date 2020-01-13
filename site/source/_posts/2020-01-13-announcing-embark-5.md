@@ -39,7 +39,7 @@ deployment: {
 ...
 ```
 
-There's no equivalent for this configuration inside the Smart Contract configuration file anymore, so this section can just be entirely (re)moved.
+There's no equivalent for this configuration inside the Smart Contract configuration in Embark 5, so this section can be entirely (re)moved.
 
 ### `contracts` property has been renamed to `deploy`
 
