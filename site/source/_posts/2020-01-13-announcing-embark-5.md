@@ -77,7 +77,7 @@ deploy: {
 
 ## Polished blockchain configuration API
 
-One of the most conplex APIs has been Embark's blockchain configuration API. That's why we've put a lot of effort into streamlining the settings and properties and removing the ones that happened to be redundant. On top of that, Embark not defines most of them as defaults, resulting in significantly smaller and less complex configuration files.
+One of the most complex APIs has been Embark's Blockchain configuration API. That's why we've put a lot of effort into streamlining the settings and properties and removing the ones that happened to be redundant. On top of that, Embark now defines most of them as defaults, resulting in significantly smaller and less complex configuration files.
 
 The following configuration properties have been renamed:
 
