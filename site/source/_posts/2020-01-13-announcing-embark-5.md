@@ -14,7 +14,7 @@ Let's first talk about the few breaking changes we've introduced to improve the 
 
 ## NodeJS support
 
-Due to some modules and packages that Embark depends on, we can't upgrade to Node's latest stable version (13.x) or latest LTS version (12.x). Embark runs with any node version `>= 10.17.0` and `<12.0.0`. This also includes to have at least `npm v6.11.3`, which comes with node `10.17.0`.
+Due to some package dependencies, Embark doesn't yet support Node's [*Current* version](https://nodejs.org/en/about/releases/) version (13.x) or latest LTS version (12.x). Embark 5 runs with any node version `>= 10.17.0` and `< 12.0.0`. It also requires npm `>= 6.11.3` (bundled with Node `10.17.0`) or yarn `>= 1.19.1`.
 
 ## New Smart Contract configuration API
 
