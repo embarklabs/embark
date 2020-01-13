@@ -18,7 +18,7 @@ Due to some package dependencies, Embark doesn't yet support Node's [*Current* v
 
 ## New Smart Contract configuration API
 
-Embark's Smart Contract configuration has been very declarative from the very first day on. Configuring different deployment options and settings for various scenarios is a very descriptive process when using Embark. However, we felt there was still room for improvement. Especially because Embark handles not only Smart Contract configurations, but also configurations for things like the blockchain client in use. This sometimes caused confusion for our users as there weren't sure where certain configurations should go.
+Embark's Smart Contract configuration has been highly declarative from day one. Configuring different deployment options and settings for various scenarios is a largely descriptive process when using Embark. However, we felt there was still room for improvement. Especially because Embark handles not only Smart Contract configurations, but also configurations for elements such as the user's choice of blockchain client. This sometimes caused confusion for our users since they weren't sure where certain configurations should go.
 
 That's why we've made the following changes:
 
