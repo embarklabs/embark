@@ -43,7 +43,7 @@ There's no equivalent for this configuration inside the Smart Contract configura
 
 ### `contracts` property has been renamed to `deploy`
 
-When configuring Smart Contracts, there are a few deployment hooks that can be specified, such as `beforeDeploy` and `afterDeploy`. To make the API a bit more descriptive and clarifying the intentions, the `contracts` property has been renamed to `deploy`, aligning wonderfully with the deployment hooks counterparts.
+When configuring Smart Contracts, there are a few deployment hooks that can be specified, such as `beforeDeploy` and `afterDeploy`. To make the API a bit more descriptive and to clarify intent, the `contracts` property has been renamed to `deploy`, aligning wonderfully with its deployment hooks counterparts.
 
 Before:
 
