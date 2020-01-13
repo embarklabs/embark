@@ -1,0 +1,165 @@
+title: Introducing Embark 5
+author: pascal_precht
+summary: "About half a year after our last stable release, we've now published Embark version 5 with lots of features, improvements and fixes. Read on for more information!"
+categories:
+  - announcements
+layout: blog-post
+---
+
+If you've been following the development of Embark you're probably aware that we regularly put out alpha and beta releases for upcoming major or feature versions of Embark. In the past ~6 months since the release of Embark 4, we've published 10 alpha releases and one beta release for Embark 5 and today we're happy to announce the Embark 5 stable release!
+
+In this post we'll be looking at some of the main changes and features to get up and running with v5.
+
+Let's first talk about the few breaking changes we've introduced to improve the overall developer experience. It's worth noting that we try to keep breaking changes at a minimum and if it's indeed unavoidable, we put lots of effort into keeping the necessary changes as small as possible.
+
+## NodeJS support
+
+Due to some modules and packages that Embark depends on, we can't upgrade to Node's latest stable version (13.x) or latest LTS version (12.x). Embark runs with any node version `>= 10.17.0` and `<12.0.0`. This also includes to have at least `npm v6.11.3`, which comes with node `10.17.0`.
+
+## New Smart Contract configuration API
+
+Embark's Smart Contract configuration has been very declarative from the very first day on. Configuring different deployment options and settings for various scenarios is a very descriptive process when using Embark. However, we felt there was still room for improvement. Especially because Embark handles not only Smart Contract configurations, but also configurations for things like the blockchain client in use. This sometimes caused confusion for our users as there weren't sure where certain configurations should go.
+
+That's why we've made the following changes:
+
+### Deployment section moved to blockchain config
+
+The `deployment` section of the Smart Contract configuration has been completely moved to the blockchain configuration as discussed in a moment. This section was primarily used to specify things like the `host`, `port` and `protocol` being used to connect to a node to which you Smart Contracts will be deployed, as well as the accounts configuration.
+
+Here's what such a config looked like prior to v5:
+
+```js
+...
+deployment: {
+  host: "localhost", // Host of the blockchain node
+  port: 8546, // Port of the blockchain node
+  type: "ws" // Type of connection (ws or rpc),
+  accounts: [...]
+},
+...
+```
+
+There's no equivalent for this configuration inside the Smart Contract configuration file anymore, so this section can just be entirely (re)moved.
+
+### `contracts` property has been renamed to `deploy`
+
+When configuring Smart Contracts, there are a few deployment hooks that can be specified, such as `beforeDeploy` and `afterDeploy`. To make the API a bit more descriptive and clarifying the intentions, the `contracts` property has been renamed to `deploy`, aligning wonderfully with the deployment hooks counterparts.
+
+Before:
+
+```js
+...
+contracts: {
+  SimpleStorage: {
+    fromIndex: 0,
+    args: [100],
+    onDeploy: async () => { ... },
+    deployIf: async () => { ... }
+  }
+}
+...
+```
+
+After:
+
+```js
+...
+deploy: {
+  SimpleStorage: {
+    fromIndex: 0,
+    args: [100],
+    onDeploy: async () => { ... },
+    deployIf: async () => { ... }
+  }
+}
+...
+```
+
+## Polished blockchain configuration API
+
+One of the most conplex APIs has been Embark's blockchain configuration API. That's why we've put a lot of effort into streamlining the settings and properties and removing the ones that happened to be redundant. On top of that, Embark not defines most of them as defaults, resulting in significantly smaller and less complex configuration files.
+
+The following configuration properties have been renamed:
+
+- `isDev` is now `miningMode: 'dev'`
+- `mineWhenNeeded` is now `miningMode: 'auto'`
+- `ethereumClientName` is now `client`
+
+We've also remove several endpoint related settings such as `host`, `port` etc. and replaced them with a single `endpoint` property. Here's what the new defaults look like:
+
+```js
+module.exports = {
+  default: {
+    enabled: true,
+    client: "geth"
+  },
+  development: {
+    clientConfig: {
+      miningMode: 'dev'
+    }
+  },
+  testnet: {
+    endpoint: "https://external-node.com",
+    accounts: [
+      {
+        mnemonic: "12 word mnemonic"
+      }
+    ]
+  }
+}
+```
+
+For a more information on the blockchain configuration, head over to the [official docs](/docs/blockchain_configuration.html).
+
+## Accounts configuration moved to blockchain config
+
+Prior to Embark v5 it was possible to specify and configure various different accounts for deployment and interaction inside the Smart Contract configuration, as well as the blockchain configuration. This caused a lot of confusion as it wasn't really clear which accounts belonged to what action. To aid against this confusion, we've moved the accounts configuration entirely to the blockchain configuration as well, making it much more straight forward to find the right place when setting up custom accounts.
+
+Just like before, accounts can be defined using different configuration settings, depending on the use case:
+
+```js
+...
+accounts: [
+  {
+    nodeAccounts: true,
+    numAddresses: "1",
+    password: "config/development/devpassword"
+  },
+  {
+    privateKey: process.env.MyPrivateKey
+  },
+  {
+    privateKeyFile: "path/to/file",
+    password: process.env.MyKeyStorePassword
+  },
+  {
+    mnemonic: process.env.My12WordsMnemonic,
+    addressIndex: "0",
+    numAddresses: "1",
+    hdpath: "m/44'/60'/0'/0/"
+  }
+]
+...
+```
+
+Check out the documentation on [accounts configuration](/docs/blockchain_accounts_configuration.html) for more information.
+
+## Configuring tests
+
+All the configuration changes discussed above have been ported and made available inside the test runner as well. In other words, when using Embark's `config()` function inside test suites, the same configuration APi applies:
+
+```javascript
+config({
+  contracts: {
+    deploy: {
+      SomeContract: {} // options as discussed in Smart Contract configuration guide
+    }
+  }
+});
+```
+
+Testing is covered in-depth in our [testing guide](/docs/contracts_testing.html).
+
+To see any of the new APIs in action, have a look at our [template](https://github.com/embark-framework/embark/tree/ba0d6d17f30018d8258c65d85f17bea100c3ad0a/dapps/templates) and [test dapps](https://github.com/embark-framework/embark/tree/ba0d6d17f30018d8258c65d85f17bea100c3ad0a/dapps/tests) in the official Embark repository. Obviously we've worked on many more things as part of the v5 release. For a full list of features and bug fixes, head over to our [changelog](https://github.com/embark-framework/embark/blob/master/CHANGELOG.md#500-2020-01-07).
+
+As always, we encourage our users to install the latest version of Embark and giving it a spin. Feedback is very welcome and we can't wait to see the great apps you'll be building with it!
