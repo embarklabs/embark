@@ -152,7 +152,7 @@ All the configuration changes discussed above have been ported and made availabl
 config({
   contracts: {
     deploy: {
-      SomeContract: {} // options as discussed in Smart Contract configuration guide
+      SomeContract: {} // options as discussed in the Smart Contract configuration guide
     }
   }
 });
