@@ -109,7 +109,7 @@ module.exports = {
 }
 ```
 
-For a more information on the blockchain configuration, head over to the [official docs](/docs/blockchain_configuration.html).
+For more information on blockchain configuration, head over to the [official docs](/docs/blockchain_configuration.html).
 
 ## Accounts configuration moved to blockchain config
 
