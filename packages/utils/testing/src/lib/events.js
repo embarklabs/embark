@@ -40,7 +40,18 @@ class Events {
 
   request2(cmd, ...args) {
     assert(this.commandHandlers[cmd], `command handler for ${cmd} not registered`);
-    this.commandHandlers[cmd](...args);
+    return new Promise((resolve, reject) => {
+      args.push((err, ...res) => {
+        if (err) {
+          return reject(err);
+        }
+        if (res.length && res.length > 1) {
+          return resolve(res);
+        }
+        return resolve(res[0]);
+      });
+      this.commandHandlers[cmd](...args);
+    });
   }
 }
 
