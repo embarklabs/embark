@@ -18,6 +18,19 @@ const LISTENED_METHODS = [
   blockchainConstants.transactionMethods.eth_sendRawTransaction
 ];
 
+const getCircularReplacer = () => {
+  const seen = new WeakSet();
+  return (key, value) => {
+    if (typeof value === "object" && value !== null) {
+      if (seen.has(value)) {
+        return;
+      }
+      seen.add(value);
+    }
+    return value;
+  };
+};
+
 export default class TransactionLogger {
   constructor(embark, _options) {
     this.embark = embark;
@@ -50,7 +63,7 @@ export default class TransactionLogger {
     this.writeLogFile = async.cargo((tasks, callback) => {
       let appendThis = '';
       tasks.forEach(task => {
-        appendThis += `"${new Date().getTime()}":${JSON.stringify(task)},\n`;
+        appendThis += `"${new Date().getTime()}":${JSON.stringify(task, getCircularReplacer())},\n`;
       });
       this.fs.appendFile(this.logFile, appendThis, (err) => {
         if (err) {
@@ -262,28 +275,24 @@ export default class TransactionLogger {
   }
 
   async _readLogs() {
-    return new Promise(async resolve => {
-      try {
-        await this.fs.ensureFile(this.logFile);
-        this.fs.readFile(this.logFile, (err, data) => {
-          if (err) {
-            throw (new Error(err));
-          }
-          data = data.toString();
-          if (!data) {
-            return resolve({});
-          }
+    try {
+      await this.fs.ensureFile(this.logFile);
+      let data = await this.fs.readFile(this.logFile);
 
-          // remove last comma and add braces around
-          data = `{${data.substring(0, data.length - 2)}}`;
+      data = data.toString();
 
-          resolve(JSON.parse(data));
-        });
-      } catch (error) {
-        this.logger.error('Error reading contract log file', error.message);
-        this.logger.trace(error);
-        resolve({});
+      if (!data) {
+        return {};
       }
-    });
+
+      // remove last comma and add braces around
+      data = `{${data.substring(0, data.length - 2)}}`;
+
+      return JSON.parse(data);
+    } catch (error) {
+      this.logger.error('Error reading contract log file', error.message);
+      this.logger.trace(error.trace);
+      return {};
+    }
   }
 }
