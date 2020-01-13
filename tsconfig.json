@@ -41,6 +41,9 @@
       "path": "packages/embarkjs/ipfs"
     },
     {
+      "path": "packages/embarkjs/snark"
+    },
+    {
       "path": "packages/embarkjs/swarm"
     },
     {

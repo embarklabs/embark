@@ -28,13 +28,17 @@ class EmbarkJS {
 
     this.embarkJSPlugins = {};
     this.customEmbarkJSPlugins = {};
-    this.events.setCommandHandler("embarkjs:plugin:register", (stackName, pluginName, packageName) => {
+    this.events.setCommandHandler("embarkjs:plugin:register", (stackName, pluginName, packageName, cb) => {
       this.embarkJSPlugins[stackName] = this.embarkJSPlugins[stackName] || {};
       this.embarkJSPlugins[stackName][pluginName] = packageName;
+      if (typeof cb === "function") {
+        cb();
+      }
     });
-    this.events.setCommandHandler("embarkjs:plugin:register:custom", (stackName, pluginName, packageName) => {
+    this.events.setCommandHandler("embarkjs:plugin:register:custom", (stackName, pluginName, code, cb) => {
       this.customEmbarkJSPlugins[stackName] = this.customEmbarkJSPlugins[stackName] || {};
-      this.customEmbarkJSPlugins[stackName][pluginName] = packageName;
+      this.customEmbarkJSPlugins[stackName][pluginName] = code;
+      cb();
     });
 
     this.events.setCommandHandler("embarkjs:console:register", (stackName, pluginName, packageName, cb) => {
@@ -141,7 +145,9 @@ class EmbarkJS {
       __embark${pluginName} = __embark${pluginName}.default || __embark${pluginName};
       const customPluginOptions = ${JSON.stringify(options)};
       EmbarkJS.${stackName} = new __embark${pluginName}({pluginConfig: customPluginOptions});
-      EmbarkJS.${stackName}.init();
+      if (typeof EmbarkJS.${stackName}.init === "function") {
+        EmbarkJS.${stackName}.init();
+      }
     `;
 
     await this.events.request2('runcode:eval', customPluginCode);

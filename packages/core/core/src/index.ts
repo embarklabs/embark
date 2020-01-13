@@ -10,6 +10,7 @@ export interface Contract {
   deployedAddress: string;
   className: string;
   silent?: boolean;
+  methods: any;
 }
 
 export interface ContractConfig {
@@ -100,6 +101,8 @@ export interface Configuration {
   };
   plugins: EmbarkPlugins;
   reloadConfig(): void;
+
+  dappPath(...args: string[]): string;
 }
 
 type ActionCallback<T> = (params: any, cb: Callback<T>) => void;
@@ -108,6 +111,7 @@ import { Logger } from 'embark-logger';
 
 export interface Embark {
   env: string;
+  pluginConfig: any;
   events: EmbarkEvents;
   plugins: EmbarkPlugins;
   registerAPICall(method: string, endpoint: string, cb: (...args: any[]) => void): void;
@@ -118,7 +122,7 @@ export interface Embark {
   currentContext: string[];
   registerActionForEvent<T>(
     name: string,
-    options?: ActionCallback<T> | { priority: number },
+    options?: ActionCallback<T> | { priority: number; },
     action?: ActionCallback<T>,
   ): void;
 }
