@@ -2,8 +2,9 @@
   "compilerOptions": {
     "composite": true,
     "declarationDir": "./dist",
+    "module": "ESNext",
     "rootDir": "./src",
-    "tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.embark-snark.tsbuildinfo"
+    "tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.embarkjs-snark.tsbuildinfo"
   },
   "extends": "../../../tsconfig.base.json",
   "include": [
@@ -14,13 +15,7 @@
       "path": "../../core/core"
     },
     {
-      "path": "../../core/logger"
-    },
-    {
-      "path": "../../core/utils"
-    },
-    {
-      "path": "../../embarkjs/snark"
+      "path": "../embarkjs"
     }
   ]
 }

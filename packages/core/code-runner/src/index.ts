@@ -46,6 +46,7 @@ class CodeRunner {
   private whitelistVar(varName: string, cb = () => { }) {
     // @ts-ignore
     this.vm._options.require.external.push(varName); // @ts-ignore
+    cb();
   }
 
   private registerVar(varName: string, code: any, cb = () => { }) {

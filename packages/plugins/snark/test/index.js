@@ -27,30 +27,15 @@ describe('embark-snark', () => {
     describe('bigInt patching', () => {
       it("should patch the prototype of snarkjs' bigInt constructor with a toJSON method", () => {
         expect(snarkjs.bigInt.prototype.toJSON).toBeUndefined();
-        ({ Snarks, default: plugin } = require('../src/index.js'));
+        ({ Snarks, default: plugin } = require('../dist/index.js'));
         expect(new snarkjs.bigInt().toJSON()).toBe(someString);
       });
-    });
-  });
-
-  describe('plugin', () => {
-    let dappPath, embark;
-
-    beforeAll(() => {
-      dappPath = jest.fn(() => {});
-      embark = { config: { dappPath } };
-    });
-
-    it('should call the implementation (Snarks class) with its argument', () => {
-      plugin(embark);
-      expect(dappPath).toHaveBeenCalled();
     });
   });
 
   describe('Snarks class', () => {
     describe('static properties', () => {
       it('should have the expected static properties', () => {
-        expect(Snarks.circomBinary).toBe(somePath);
         expect(Snarks.snarkjsBinary).toBe(somePath);
       });
     });
@@ -60,7 +45,9 @@ describe('embark-snark', () => {
 
       beforeAll(() => {
         dappPath = jest.fn(() => somePath);
-        fs = {};
+        fs = {
+          ensureDirSync: jest.fn(() => {})
+        };
         logger = {};
         pluginConfig = {};
 
@@ -83,6 +70,11 @@ describe('embark-snark', () => {
 
       afterAll(() => {
         Snarks.prototype.registerEvents.mockRestore();
+      });
+
+      it('should call the implementation (Snarks class) with its argument', () => {
+        plugin(embark);
+        expect(dappPath).toHaveBeenCalled();
       });
 
       it('should setup the expected instance properties', () => {
