@@ -81,6 +81,8 @@ class SolidityTestRunner {
     const contractFiles = this.files.map(f => new File({path: f, originalPath: f, type: Types.custom, resolver: resolverFn(f)}));
     contractFiles.unshift(ASSERT_LIB);
 
+    let allCompiledContracts = {};
+
     async.waterfall([
       (next) => {
         // write the remix_tests file where it will be found.
@@ -105,6 +107,7 @@ class SolidityTestRunner {
       },
       */
       (compiledContracts, next) => {
+        allCompiledContracts = compiledContracts;
         // TODO: fetch config and use it here
         events.request("contracts:build", { contracts: {} }, compiledContracts, next);
       },
@@ -152,7 +155,24 @@ class SolidityTestRunner {
             evm: { methodIdentifiers: instance.functionHashes }
           };
 
-          remixTests.runTest(contract, contractObj, details, {accounts}, reporter.report.bind(reporter), cb);
+          const ast = allCompiledContracts[instance.className].ast;
+
+          // TODO: temporary fix until this is fixed in remix-tests, remove this snippet when it is
+          /*eslint max-depth: ["error", 5]*/
+          if (ast.nodes && ast.nodes.length > 0) {
+            for (let node of ast.nodes) {
+              if (node.nodeType === 'ContractDefinition') {
+                for (let subnode of node.nodes) {
+                  if (subnode.nodeType === 'FunctionDefinition') {
+                    subnode.kind = 'function';
+                  }
+                }
+              }
+            }
+          }
+          // TODO: temporary fix until this is fixed in remix-tests, remove this snippet when it is
+
+          remixTests.runTest(contract, contractObj, details, ast, {accounts}, reporter.report.bind(reporter), cb);
         }, next);
       }
     ], cb);

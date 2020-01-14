@@ -15,8 +15,10 @@ class Reporter {
       case 'testFailure':
         this.reporter.report(`${this.contract} ${payload.value}`, payload.time, false, payload.errMsg);
         break;
+      case 'accountsList':
+        break;
       default:
-        console.log('dont know how to handle');
+        console.log('Reporter warning: dont know how to handle the following payload');
         console.dir(payload);
     }
   }
