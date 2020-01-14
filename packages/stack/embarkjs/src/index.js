@@ -117,13 +117,18 @@ class EmbarkJS {
     let code = "";
     if (stackName === 'storage') {
       code = `EmbarkJS.${moduleName}.setProviders(${JSON.stringify(config)});`;
-    } else if (stackName === 'blockchain') {
+    } else if (stackName === 'blockchain' || stackName === 'names') {
       const endpoint = await this.events.request2("proxy:endpoint:get");
       const dappConnectionConfig = {
         dappConnection: [endpoint]
       };
-      code = `EmbarkJS.${moduleName}.setProvider('${pluginName}', ${config});
+      if (stackName === 'blockchain') {
+        code = `EmbarkJS.${moduleName}.setProvider('${pluginName}', ${config});
               EmbarkJS.Blockchain.connect(${JSON.stringify(dappConnectionConfig)}, (err) => {if (err) { console.error(err); } });`;
+      } else {
+        code = `EmbarkJS.${moduleName}.setProvider('${pluginName}', ${JSON.stringify(Object.assign(config, dappConnectionConfig))});`;
+      }
+
     } else {
       code = `EmbarkJS.${moduleName}.setProvider('${pluginName}', ${JSON.stringify(config)});`;
     }
