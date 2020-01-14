@@ -89,7 +89,7 @@ class ENS {
   }
 
   async init(cb = () => {}) {
-    if (this.initated || this.config.namesystemConfig === {} ||
+    if (this.initated ||
       this.config.namesystemConfig.enabled !== true ||
       !this.config.namesystemConfig.available_providers ||
       this.config.namesystemConfig.available_providers.indexOf('ens') < 0) {
@@ -277,10 +277,9 @@ class ENS {
       return cb();
     }
     const web3 = await this.web3;
-    
+
     const networkId = await web3.eth.net.getId();
-    
-    
+
     if (ensContractAddresses[networkId]) {
       if (this.config.namesystemConfig.register && this.config.namesystemConfig.register.rootDomain) {
         this.logger.warn(__("Cannot register subdomains on this network, because we do not own the ENS contracts. Are you on testnet or mainnet?"));
@@ -288,7 +287,7 @@ class ENS {
       this.config.namesystemConfig.register = false; // force subdomains from being registered
       this.ensConfig = recursiveMerge(this.ensConfig, ensContractAddresses[networkId]);
     }
-    
+
     const registration = this.config.namesystemConfig.register;
     const doRegister = registration && registration.rootDomain;
 
@@ -297,6 +296,16 @@ class ENS {
     this.ensConfig.Resolver.args = [this.ensConfig.ENSRegistry.deployedAddress];
     this.ensConfig.Resolver = await this.events.request2('contracts:add', this.ensConfig.Resolver);
     await this.events.request2('deployment:contract:deploy', this.ensConfig.Resolver);
+
+    const config = {
+      registryAbi: self.ensConfig.ENSRegistry.abiDefinition,
+      registryAddress: self.ensConfig.ENSRegistry.deployedAddress,
+      resolverAbi: self.ensConfig.Resolver.abiDefinition,
+      resolverAddress: self.ensConfig.Resolver.deployedAddress
+    };
+
+    self.ensContract = new web3.eth.Contract(config.registryAbi, config.registryAddress);
+    self.resolverContract = new web3.eth.Contract(config.resolverAbi, config.resolverAddress);
 
     async.waterfall([
       function checkRootNode(next) {
@@ -317,25 +326,15 @@ class ENS {
         self.events.request('contracts:add', self.ensConfig.FIFSRegistrar, (_err, contract) => {
           self.ensConfig.FIFSRegistrar = contract;
           self.events.request('deployment:contract:deploy', self.ensConfig.FIFSRegistrar, (err) => {
+            config.registrarAbi = self.ensConfig.FIFSRegistrar.abiDefinition;
+            config.registrarAddress = self.ensConfig.FIFSRegistrar.deployedAddress;
+            self.registrarContract = new web3.eth.Contract(config.registrarAbi, config.registrarAddress);
             return next(err);
           });
         });
       },
       function registerRoot(next) {
-        let config = {
-          registryAbi: self.ensConfig.ENSRegistry.abiDefinition,
-          registryAddress: self.ensConfig.ENSRegistry.deployedAddress,
-          registrarAbi: self.ensConfig.FIFSRegistrar.abiDefinition,
-          registrarAddress: self.ensConfig.FIFSRegistrar.deployedAddress,
-          resolverAbi: self.ensConfig.Resolver.abiDefinition,
-          resolverAddress: self.ensConfig.Resolver.deployedAddress
-        };
-
         async function send() {
-          self.ensContract = new web3.eth.Contract(config.registryAbi, config.registryAddress);
-          self.registrarContract = new web3.eth.Contract(config.registrarAbi, config.registrarAddress);
-          self.resolverContract = new web3.eth.Contract(config.resolverAbi, config.resolverAddress);
-
           const defaultAccount = await self.web3DefaultAccount;
 
           const rootNode = namehash.hash(registration.rootDomain);

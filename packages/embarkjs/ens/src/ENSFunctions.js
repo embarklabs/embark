@@ -1,4 +1,3 @@
-/* global require */
 const namehash = require('eth-ens-namehash');
 
 // Price of ENS registration contract functions

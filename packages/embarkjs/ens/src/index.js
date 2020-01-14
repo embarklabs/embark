@@ -1,10 +1,9 @@
-/* global global require */
+/* global ethereum*/
 import { reduce } from 'async';
 let EmbarkJS = global.EmbarkJS || require('embarkjs');
 EmbarkJS = EmbarkJS.default || EmbarkJS;
 const ENSFunctions = require('./ENSFunctions').default;
 const Web3 = require('web3');
-const { RequestManager } = require('web3-core-requestmanager');
 const namehash = require('eth-ens-namehash');
 
 const __embarkENS = {};
@@ -175,7 +174,7 @@ async function connectWeb3(web3, callback) {
     try {
       await ethereum.enable();
       web3.setProvider(ethereum);
-      return checkConnect(callback);
+      return checkConnection(callback);
     } catch (e) {
       return callback(null, {
         error: e,
@@ -204,13 +203,10 @@ function checkConnection(web3, callback) {
 __embarkENS.web3 = new Web3();
 
 __embarkENS.setProvider = function(config) {
-  const self = this;
   const ERROR_MESSAGE = 'ENS is not available in this chain';
-  self.registration = config.registration;
-  self.env = config.env;
-  self.ready = false;
-
-  let connectionErrors = {};
+  this.registration = config.registration;
+  this.env = config.env;
+  this.ready = false;
 
   reduce(config.dappConnection, false, (result, connectionString, next) => {
     if (result.connected) {
@@ -218,34 +214,34 @@ __embarkENS.setProvider = function(config) {
     }
 
     if (connectionString === '$WEB3') {
-      connectWeb3(self.web3, next);
+      connectWeb3(this.web3, next);
     } else if ((/^wss?:\/\//).test(connectionString)) {
-      connectWebSocket(self.web3, connectionString, next);
+      connectWebSocket(this.web3, connectionString, next);
     } else {
-      connectHttp(self.web3, connectionString, next);
+      connectHttp(this.web3, connectionString, next);
     }
   }, async (err, result) => {
-    if (!result.connected || result.error) {
+    if (result.error) {
       console.error(result.error);
     }
     try {
-      const accounts = await self.web3.eth.getAccounts();
-      self.web3.eth.defaultAccount = accounts[0];
-      const id = await self.web3.eth.net.getId()
-      const registryAddress = self.registryAddresses[id] || config.registryAddress;
-      self._isAvailable = true;
-      self.ens = new self.web3.eth.Contract(config.registryAbi, registryAddress);
-      self.registrar = new self.web3.eth.Contract(config.registrarAbi, config.registrarAddress);
-      self.resolver = new self.web3.eth.Contract(config.resolverAbi, config.resolverAddress);
-      self.ready = true;
-    } catch (err) {
-      self.ready = true;
-      if (err.message.indexOf('Provider not set or invalid') > -1) {
+      const accounts = await this.web3.eth.getAccounts();
+      this.web3.eth.defaultAccount = accounts[0];
+      const id = await this.web3.eth.net.getId();
+      const registryAddress = this.registryAddresses[id] || config.registryAddress;
+      this._isAvailable = true;
+      this.ens = new this.web3.eth.Contract(config.registryAbi, registryAddress);
+      this.registrar = new this.web3.eth.Contract(config.registrarAbi, config.registrarAddress);
+      this.resolver = new this.web3.eth.Contract(config.resolverAbi, config.resolverAddress);
+      this.ready = true;
+    } catch (e) {
+      this.ready = true;
+      if (e.message.indexOf('Provider not set or invalid') > -1) {
         console.warn(ERROR_MESSAGE);
         return;
       }
-      console.error(err);
-    };
+      console.error(e);
+    }
   });
 };
 
