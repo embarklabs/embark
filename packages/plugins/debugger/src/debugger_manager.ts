@@ -1,5 +1,5 @@
 import async from 'async';
-import { CmdLine } from 'remix-debug-debugtest';
+import { CmdLine } from 'remix-debug';
 
 export default class DebuggerManager {
   private nodeUrl: string;
