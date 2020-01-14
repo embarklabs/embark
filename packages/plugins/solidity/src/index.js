@@ -157,6 +157,7 @@ class Solidity {
             compiled_object[className].functionHashes = contract.evm.methodIdentifiers;
             compiled_object[className].abiDefinition = contract.abi;
             compiled_object[className].userdoc = contract.userdoc;
+            compiled_object[className].ast = output.sources[contractFile].ast;
             compiled_object[className].filename = filename;
             const normalized = path.normalize(filename);
             compiled_object[className].originalFilename = Object.values(originalFilepaths).find(ogFilePath => normalized.indexOf(ogFilePath) > -1);
