@@ -1,7 +1,7 @@
 import { Config, Events, fs, TemplateGenerator } from 'embark-core';
 import { Engine } from 'embark-engine';
 import { __ } from 'embark-i18n';
-import { dappPath, embarkPath, joinPath, setUpEnv } from 'embark-utils';
+import { dappPath, joinPath, setUpEnv } from 'embark-utils';
 import { Logger, LogLevels } from 'embark-logger';
 let async = require('async');
 const constants = require('embark-core/constants');
@@ -297,12 +297,6 @@ class EmbarkController {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
         }
 
-        engine.events.on('deployment:deployContracts:afterAll', () => {
-          engine.events.request('pipeline:generateAll', () => {
-            engine.events.emit('outputDone');
-          });
-        });
-
         let plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
         plugin.registerActionForEvent("embark:engine:started", async (_, cb) => {
           try {
@@ -319,31 +313,25 @@ class EmbarkController {
 
         engine.startEngine(async () => {
           try {
-            await compileAndDeploySmartContracts(engine);
+            if (options.onlyCompile) {
+              await compileSmartContracts(engine);
+              engine.logger.info("Finished compiling".underline);
+            } else {
+              await compileAndDeploySmartContracts(engine);
+              engine.logger.info("Finished deploying".underline);
+            }
           } catch (e) {
             return callback(e);
           }
           callback();
         });
-      },
-      function waitForWriteFinish(callback) {
-        if (options.onlyCompile) {
-          engine.logger.info("Finished compiling".underline);
-          return callback(null, true);
-        }
-        engine.logger.info("Finished deploying".underline);
-        engine.events.on('outputDone', (err) => {
-          engine.logger.info(__("Finished building").underline);
-          callback(err, true);
-        });
-
       }
-    ], function (err, canExit) {
+    ], function(err) {
       if (err) {
         engine.logger.error(err.message || err);
       }
       // TODO: this should be moved out and determined somewhere else
-      if (canExit || !engine.config.contractsConfig.afterDeploy || !engine.config.contractsConfig.afterDeploy.length) {
+      if (!engine.config.contractsConfig.afterDeploy || !engine.config.contractsConfig.afterDeploy.length) {
         process.exit(err ? 1 : 0);
       }
       engine.logger.info(__('Waiting for after deploy to finish...'));
@@ -630,7 +618,7 @@ class EmbarkController {
             return callback(e);
           }
           callback();
-        })()
+        })();
       },
       function generateUI(callback) {
         if (engine.config.embarkConfig.app) {
@@ -838,13 +826,17 @@ class EmbarkController {
 
 module.exports = EmbarkController;
 
+async function compileSmartContracts(engine) {
+  const contractsFiles = await engine.events.request2("config:contractsFiles");
+  const compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
+  const _contractsConfig = await engine.events.request2("config:contractsConfig");
+  const contractsConfig = cloneDeep(_contractsConfig);
+  return engine.events.request2("contracts:build", contractsConfig, compiledContracts);
+}
+
 async function compileAndDeploySmartContracts(engine) {
   try {
-    let contractsFiles = await engine.events.request2("config:contractsFiles");
-    let compiledContracts = await engine.events.request2("compiler:contracts:compile", contractsFiles);
-    let _contractsConfig = await engine.events.request2("config:contractsConfig");
-    let contractsConfig = cloneDeep(_contractsConfig);
-    let [contractsList, contractDependencies] = await engine.events.request2("contracts:build", contractsConfig, compiledContracts);
+    const [contractsList, contractDependencies] = await compileSmartContracts(engine);
     await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
     await engine.events.request2('pipeline:generateAll');
     engine.events.emit('outputDone');
