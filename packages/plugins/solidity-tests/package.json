@@ -53,7 +53,7 @@
     "async": "3.1.0",
     "core-js": "3.4.3",
     "embark-utils": "^5.0.0",
-    "remix-tests": "0.1.20",
+    "remix-tests": "0.1.24",
     "web3": "1.2.4",
     "yo-yoify": "4.3.0"
   },
