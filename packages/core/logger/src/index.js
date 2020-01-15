@@ -33,7 +33,6 @@ export class Logger {
       }));
     };
     this.logFile = options.logFile;
-    this.context = options.context;
   }
 
   /**
