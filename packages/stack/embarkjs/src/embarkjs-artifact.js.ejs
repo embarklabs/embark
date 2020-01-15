@@ -1,23 +1,35 @@
 import EmbarkJS from 'embarkjs';
 
 <% for (let pluginName in (plugins['messages'] || [])) { %>
+try {
 const __embark<%- pluginName %> = require('<%- plugins['messages'][pluginName] %>');
 EmbarkJS.Messages.registerProvider('<%- pluginName %>', __embark<%- pluginName %>.default || __embark<%- pluginName %>);
+} catch (e) {
+}
 <% } %>
 
 <% for (let pluginName in (plugins['storage'] || [])) { %>
+try {
 const __embark<%- pluginName %> = require('<%- plugins['storage'][pluginName] %>');
 EmbarkJS.Storage.registerProvider('<%- pluginName %>', __embark<%- pluginName %>.default || __embark<%- pluginName %>);
+} catch (e) {
+}
 <% } %>
 
 <% for (let pluginName in (plugins['blockchain'] || [])) { %>
+try {
 const __embark<%- pluginName %> = require('<%- plugins['blockchain'][pluginName] %>');
 EmbarkJS.Blockchain.registerProvider('<%- pluginName %>', __embark<%- pluginName %>.default || __embark<%- pluginName %>);
+} catch (e) {
+}
 <% } %>
 
 <% for (let pluginName in (plugins['names'] || [])) { %>
+try {
 const __embark<%- pluginName %> = require('<%- plugins['names'][pluginName] %>');
 EmbarkJS.Names.registerProvider('<%- pluginName %>', __embark<%- pluginName %>.default || __embark<%- pluginName %>);
+} catch (e) {
+}
 <% } %>
 
 <% if (plugins['messages'] && Object.values(plugins['messages']).length > 0) { %>
