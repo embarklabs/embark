@@ -86,7 +86,6 @@
     "embark-reset": "^5.0.0",
     "embark-utils": "^5.0.0",
     "eth-ens-namehash": "2.0.8",
-    "ethereumjs-wallet": "0.6.3",
     "find-up": "2.1.0",
     "flatted": "0.2.3",
     "fs-extra": "8.1.0",

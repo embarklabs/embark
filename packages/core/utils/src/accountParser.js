@@ -1,7 +1,7 @@
 import { __ } from 'embark-i18n';
 const bip39 = require("bip39");
-const hdkey = require('ethereumjs-wallet/hdkey');
-const ethereumjsWallet = require('ethereumjs-wallet');
+const hdkey = require('@embarklabs/ethereumjs-wallet/hdkey');
+const ethereumjsWallet = require('@embarklabs/ethereumjs-wallet');
 const fs = require('fs');
 import {getHexBalanceFromString, toChecksumAddress} from './web3Utils';
 const {utils} = require('web3');
