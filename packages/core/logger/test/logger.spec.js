@@ -27,7 +27,7 @@ describe('core/logger', () => {
     sinon.restore();
   });
 
-  test('it should should use custom log function for logging', () => {
+  test('it should use custom log function for logging', () => {
     logger.info('Hello world');
     assert(testLogFn.calledOnce);
   });
