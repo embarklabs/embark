@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.7.4",
+    "@embarklabs/ethereumjs-wallet": "0.6.4",
     "@types/follow-redirects": "1.5.0",
     "@types/fs-extra": "7.0.0",
     "@types/node": "12.7.8",
@@ -57,7 +58,6 @@
     "core-js": "3.4.3",
     "embark-i18n": "^5.0.0",
     "embark-logger": "^5.0.0",
-    "ethereumjs-wallet": "0.6.3",
     "find-up": "2.1.0",
     "follow-redirects": "1.8.0",
     "fs-extra": "8.1.0",
