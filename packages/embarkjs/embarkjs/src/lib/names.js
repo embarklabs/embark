@@ -11,7 +11,10 @@ Names.setProvider = function(providerName, options) {
   let provider = this.Providers[providerName];
 
   if (!provider) {
-    throw new Error('Unknown name system provider');
+    if (providerName === 'ens') {
+      console.log("the embarkjs-ens package might be missing from your project dependencies");
+    }
+    throw new Error('Unknown name system provider: ' + providerName);
   }
 
   this.currentProviderName = providerName;
