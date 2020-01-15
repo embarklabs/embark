@@ -56,7 +56,13 @@ Storage.setProvider = function (providerName, options) {
   let provider = this.Providers[providerName];
 
   if (!provider) {
-    throw new Error('Unknown storage provider');
+    if (providerName === 'ipfs') {
+      console.log("the embarkjs-ipfs package might be missing from your project dependencies");
+    }
+    if (providerName === 'swarm') {
+      console.log("the embarkjs-swarm package might be missing from your project dependencies");
+    }
+    throw new Error('Unknown storage provider: ' + providerName);
   }
 
   this.currentProviderName = providerName;

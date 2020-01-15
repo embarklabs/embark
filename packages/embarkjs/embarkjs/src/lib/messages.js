@@ -10,7 +10,10 @@ Messages.setProvider = function (providerName, options) {
   let provider = this.Providers[providerName];
 
   if (!provider) {
-    throw new Error('Unknown messages provider');
+    if (providerName === 'whisper') {
+      console.log("the embarkjs-whisper package might be missing from your project dependencies");
+    }
+    throw new Error('Unknown messages provider: ' + providerName);
   }
 
   this.currentProviderName = providerName;

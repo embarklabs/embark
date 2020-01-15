@@ -78,6 +78,10 @@ Blockchain.setProvider = function(providerName, options) {
   let provider = this.Providers[providerName];
 
   if (!provider) {
+    if (providerName === 'web3') {
+      console.log("the embarkjs-web3 package might be missing from your project dependencies");
+    }
+
     throw new Error([
       'Unknown blockchain provider. Make sure to register it first using',
       'EmbarkJS.Blockchain.registerProvider(providerName, providerObject)'
