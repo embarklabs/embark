@@ -14,7 +14,7 @@ Hopefully you've read [the first](/news/2019/02/04/building-a-decentralized-redd
 
 We'll be using React as a client-side JavaScript library to build our application. However, we can use any framework of our choice, so feel free to follow along while using your favourite framework equivalents!
 
-**The code for this tutorial can be found in [this repository](https://github.com/embark-framework/dreddit-tutorial)**.
+**The code for this tutorial can be found in [this repository](https://github.com/embarklabs/dreddit-tutorial)**.
 
 ## Rendering our first component
 
@@ -871,5 +871,5 @@ Congratulations! You've completed the tutorial on building a simple decentralize
 
 We hope you've learned that it's not too hard to build a DApp that uses IPFS and talks to Smart Contracts, and also how Embark can help you doing all of these things.
 
-**We've recorded every single step of this tutorial [in this repository](https://github.com/embark-framework/dreddit-tutorial)**, so feel free to go ahead, clone it, play with it, compare it with your work or change it to your needs. There will be more tutorials of this kind in the future, so make sure to [follow us on Twitter](https://twitter.com/EmbarkProject) as well for updates!
+**We've recorded every single step of this tutorial [in this repository](https://github.com/embarklabs/dreddit-tutorial)**, so feel free to go ahead, clone it, play with it, compare it with your work or change it to your needs. There will be more tutorials of this kind in the future, so make sure to [follow us on Twitter](https://twitter.com/EmbarkProject) as well for updates!
 

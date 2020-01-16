@@ -6,8 +6,8 @@
     "Michael Bradley <michaelsbradleyjr@gmail.com> (https://github.com/michaelsbradleyjr/)"
   ],
   "description": "Snark plugin for Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/snark#readme",
-  "bugs": "https://github.com/embark-framework/embark/issues",
+  "homepage": "https://github.com/embarklabs/embark/tree/master/packages/plugins/snark#readme",
+  "bugs": "https://github.com/embarklabs/embark/issues",
   "keywords": [
     "blockchain",
     "circom",
@@ -26,7 +26,7 @@
   "repository": {
     "directory": "packages/plugins/snark",
     "type": "git",
-    "url": "https://github.com/embark-framework/embark.git"
+    "url": "https://github.com/embarklabs/embark.git"
   },
   "files": [
     "dist"

@@ -12,7 +12,7 @@ In [the first part of this tutorial](/news/2019/02/04/building-a-decentralized-r
 - [**Part 1** - Setting up the project and implementing a Smart Contract](/news/2019/02/04/building-a-decentralized-reddit-with-embark-part-1/)
 - [**Part 3** - Building a simple front-end using React](/news/2019/02/18/building-a-decentralized-reddit-with-embark-part-3/)
 
-**The code for this tutorial can be found in [this repository](https://github.com/embark-framework/dreddit-tutorial)**.
+**The code for this tutorial can be found in [this repository](https://github.com/embarklabs/dreddit-tutorial)**.
 
 And off we go!
 
@@ -216,4 +216,4 @@ Compiling contracts
  > All tests passed
 ```
 
- Awesome! If you run into any issues, check out the repository with all steps recorded [here](https://github.com/embark-framework/dreddit-tutorial). In [the next and last part of this series](/news/2019/02/18/building-a-decentralized-reddit-with-embark-part-3/), we'll be building a front-end for our DReddit app using React. Until then, feel free to add more tests as you like!
+ Awesome! If you run into any issues, check out the repository with all steps recorded [here](https://github.com/embarklabs/dreddit-tutorial). In [the next and last part of this series](/news/2019/02/18/building-a-decentralized-reddit-with-embark-part-3/), we'll be building a front-end for our DReddit app using React. Until then, feel free to add more tests as you like!

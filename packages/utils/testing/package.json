@@ -2,17 +2,17 @@
   "name": "embark-testing",
   "version": "5.0.0",
   "description": "Testing",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/utils/testing#readme",
+  "homepage": "https://github.com/embarklabs/embark/tree/master/packages/utils/testing#readme",
   "main": "dist/lib/index.js",
   "types": "./dist/lib/index.d.ts",
   "repository": {
     "directory": "packages/utils/testing",
     "type": "git",
-    "url": "https://github.com/embark-framework/embark/"
+    "url": "https://github.com/embarklabs/embark/"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "license": "MIT",
-  "bugs": "https://github.com/embark-framework/embark/issues",
+  "bugs": "https://github.com/embarklabs/embark/issues",
   "keywords": [
     "blockchain",
     "dapps",

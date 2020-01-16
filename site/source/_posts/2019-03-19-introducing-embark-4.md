@@ -72,5 +72,5 @@ Embark 4.0 is a great companion for those embarking into the ether! From brand n
 Check out the [Quick Start guide](/docs/quick_start.html) or dive right into the [documentation](/docs).
 
 Chat with us in [Gitter](https://gitter.im/embark-framework/Lobby)
-Star the repo on [GitHub](https://github.com/embark-framework/embark)
+Star the repo on [GitHub](https://github.com/embarklabs/embark)
 Follow us on [Twitter](https://twitter.com/EmbarkProject)

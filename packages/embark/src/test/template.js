@@ -29,127 +29,127 @@ describe('TemplateGenerator', function () {
         let result = await templateGenerator.getExternalProject("typescript");
         let embarkVersion = semver(require('../../package.json').version);
         let branch = `${embarkVersion.major}.${embarkVersion.minor}`;
-        assert.strictEqual(result.url, `https://codeload.github.com/embark-framework/embark-typescript-template/tar.gz/${branch}`);
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), `.embark/templates/embark-framework/embark-typescript-template/${branch}/archive.zip`);
-        assert.strictEqual(result.browse, `https://github.com/embark-framework/embark-typescript-template/tree/${branch}`);
+        assert.strictEqual(result.url, `https://codeload.github.com/embarklabs/embark-typescript-template/tar.gz/${branch}`);
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), `.embark/templates/embarklabs/embark-typescript-template/${branch}/archive.zip`);
+        assert.strictEqual(result.browse, `https://github.com/embarklabs/embark-typescript-template/tree/${branch}`);
 
         result = await templateGenerator.getExternalProject("typescript#features/branch");
-        assert.strictEqual(result.url, "https://codeload.github.com/embark-framework/embark-typescript-template/tar.gz/features%2Fbranch");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark-typescript-template/features/branch/archive.zip");
-        assert.strictEqual(result.browse, "https://github.com/embark-framework/embark-typescript-template/tree/features/branch");
+        assert.strictEqual(result.url, "https://codeload.github.com/embarklabs/embark-typescript-template/tar.gz/features%2Fbranch");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark-typescript-template/features/branch/archive.zip");
+        assert.strictEqual(result.browse, "https://github.com/embarklabs/embark-typescript-template/tree/features/branch");
       });
     });
 
     describe('with git host URL', function () {
 
       it('returns correct info for GitHub URL', async function () {
-        let result = await templateGenerator.getExternalProject("https://github.com/embark-framework/embark");
-        assert.strictEqual(result.url, "https://codeload.github.com/embark-framework/embark/tar.gz/master");
+        let result = await templateGenerator.getExternalProject("https://github.com/embarklabs/embark");
+        assert.strictEqual(result.url, "https://codeload.github.com/embarklabs/embark/tar.gz/master");
 
-        result = await templateGenerator.getExternalProject("https://github.com/embark-framework/embark");
-        assert.strictEqual(result.url, "https://codeload.github.com/embark-framework/embark/tar.gz/master");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/master/archive.zip");
-        assert.strictEqual(result.browse, "https://github.com/embark-framework/embark");
+        result = await templateGenerator.getExternalProject("https://github.com/embarklabs/embark");
+        assert.strictEqual(result.url, "https://codeload.github.com/embarklabs/embark/tar.gz/master");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/master/archive.zip");
+        assert.strictEqual(result.browse, "https://github.com/embarklabs/embark");
 
-        result = await templateGenerator.getExternalProject("https://github.com/embark-framework/embark#features/branch");
-        assert.strictEqual(result.url, "https://codeload.github.com/embark-framework/embark/tar.gz/features%2Fbranch");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/features/branch/archive.zip");
-        assert.strictEqual(result.browse, "https://github.com/embark-framework/embark/tree/features/branch");
+        result = await templateGenerator.getExternalProject("https://github.com/embarklabs/embark#features/branch");
+        assert.strictEqual(result.url, "https://codeload.github.com/embarklabs/embark/tar.gz/features%2Fbranch");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/features/branch/archive.zip");
+        assert.strictEqual(result.browse, "https://github.com/embarklabs/embark/tree/features/branch");
       });
 
       it('returns correct info for Bitbucket URL', async function () {
-        let result = await templateGenerator.getExternalProject("https://bitbucket.org/embark-framework/embark");
-        assert.strictEqual(result.url, "https://bitbucket.org/embark-framework/embark/get/master.tar.gz");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/master/archive.zip");
-        assert.strictEqual(result.browse, "https://bitbucket.org/embark-framework/embark");
+        let result = await templateGenerator.getExternalProject("https://bitbucket.org/embarklabs/embark");
+        assert.strictEqual(result.url, "https://bitbucket.org/embarklabs/embark/get/master.tar.gz");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/master/archive.zip");
+        assert.strictEqual(result.browse, "https://bitbucket.org/embarklabs/embark");
 
-        result = await templateGenerator.getExternalProject("https://bitbucket.org/embark-framework/embark#features/branch");
-        assert.strictEqual(result.url, "https://bitbucket.org/embark-framework/embark/get/features%2Fbranch.tar.gz");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/features/branch/archive.zip");
-        assert.strictEqual(result.browse, "https://bitbucket.org/embark-framework/embark/src/features/branch");
+        result = await templateGenerator.getExternalProject("https://bitbucket.org/embarklabs/embark#features/branch");
+        assert.strictEqual(result.url, "https://bitbucket.org/embarklabs/embark/get/features%2Fbranch.tar.gz");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/features/branch/archive.zip");
+        assert.strictEqual(result.browse, "https://bitbucket.org/embarklabs/embark/src/features/branch");
       });
 
       it('returns correct info for GitLab URL', async function () {
-        let result = await templateGenerator.getExternalProject("https://gitlab.com/embark-framework/embark");
-        assert.strictEqual(result.url, "https://gitlab.com/embark-framework/embark/repository/archive.tar.gz?ref=master");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/master/archive.zip");
-        assert.strictEqual(result.browse, "https://gitlab.com/embark-framework/embark");
+        let result = await templateGenerator.getExternalProject("https://gitlab.com/embarklabs/embark");
+        assert.strictEqual(result.url, "https://gitlab.com/embarklabs/embark/repository/archive.tar.gz?ref=master");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/master/archive.zip");
+        assert.strictEqual(result.browse, "https://gitlab.com/embarklabs/embark");
 
-        result = await templateGenerator.getExternalProject("https://gitlab.com/embark-framework/embark#features/branch");
-        assert.strictEqual(result.url, "https://gitlab.com/embark-framework/embark/repository/archive.tar.gz?ref=features%2Fbranch");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/features/branch/archive.zip");
-        assert.strictEqual(result.browse, "https://gitlab.com/embark-framework/embark/tree/features/branch");
+        result = await templateGenerator.getExternalProject("https://gitlab.com/embarklabs/embark#features/branch");
+        assert.strictEqual(result.url, "https://gitlab.com/embarklabs/embark/repository/archive.tar.gz?ref=features%2Fbranch");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/features/branch/archive.zip");
+        assert.strictEqual(result.browse, "https://gitlab.com/embarklabs/embark/tree/features/branch");
       });
     });
 
     describe('with git host shortcut', function () {
       it('returns correct info for GitHub shortcut', async function () {
-        let result = await templateGenerator.getExternalProject("github:embark-framework/embark");
-        assert.strictEqual(result.url, "https://codeload.github.com/embark-framework/embark/tar.gz/master");
+        let result = await templateGenerator.getExternalProject("github:embarklabs/embark");
+        assert.strictEqual(result.url, "https://codeload.github.com/embarklabs/embark/tar.gz/master");
 
-        result = await templateGenerator.getExternalProject("embark-framework/embark");
-        assert.strictEqual(result.url, "https://codeload.github.com/embark-framework/embark/tar.gz/master");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/master/archive.zip");
-        assert.strictEqual(result.browse, "https://github.com/embark-framework/embark");
+        result = await templateGenerator.getExternalProject("embarklabs/embark");
+        assert.strictEqual(result.url, "https://codeload.github.com/embarklabs/embark/tar.gz/master");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/master/archive.zip");
+        assert.strictEqual(result.browse, "https://github.com/embarklabs/embark");
 
-        result = await templateGenerator.getExternalProject("embark-framework/embark#features/branch");
-        assert.strictEqual(result.url, "https://codeload.github.com/embark-framework/embark/tar.gz/features%2Fbranch");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/features/branch/archive.zip");
-        assert.strictEqual(result.browse, "https://github.com/embark-framework/embark/tree/features/branch");
+        result = await templateGenerator.getExternalProject("embarklabs/embark#features/branch");
+        assert.strictEqual(result.url, "https://codeload.github.com/embarklabs/embark/tar.gz/features%2Fbranch");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/features/branch/archive.zip");
+        assert.strictEqual(result.browse, "https://github.com/embarklabs/embark/tree/features/branch");
 
-        result = await templateGenerator.getExternalProject("github.com/embark-framework/embark");
-        assert.strictEqual(result.url, "https://codeload.github.com/embark-framework/embark/tar.gz/master");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/master/archive.zip");
-        assert.strictEqual(result.browse, "https://github.com/embark-framework/embark");
+        result = await templateGenerator.getExternalProject("github.com/embarklabs/embark");
+        assert.strictEqual(result.url, "https://codeload.github.com/embarklabs/embark/tar.gz/master");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/master/archive.zip");
+        assert.strictEqual(result.browse, "https://github.com/embarklabs/embark");
 
-        result = await templateGenerator.getExternalProject("github.com/embark-framework/embark#features/branch");
-        assert.strictEqual(result.url, "https://codeload.github.com/embark-framework/embark/tar.gz/features%2Fbranch");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/features/branch/archive.zip");
-        assert.strictEqual(result.browse, "https://github.com/embark-framework/embark/tree/features/branch");
+        result = await templateGenerator.getExternalProject("github.com/embarklabs/embark#features/branch");
+        assert.strictEqual(result.url, "https://codeload.github.com/embarklabs/embark/tar.gz/features%2Fbranch");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/features/branch/archive.zip");
+        assert.strictEqual(result.browse, "https://github.com/embarklabs/embark/tree/features/branch");
       });
 
       it('returns correct info for Bitbucket shortcut', async function () {
-        let result = await templateGenerator.getExternalProject("bitbucket:embark-framework/embark");
-        assert.strictEqual(result.url, "https://bitbucket.org/embark-framework/embark/get/master.tar.gz");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/master/archive.zip");
-        assert.strictEqual(result.browse, "https://bitbucket.org/embark-framework/embark");
+        let result = await templateGenerator.getExternalProject("bitbucket:embarklabs/embark");
+        assert.strictEqual(result.url, "https://bitbucket.org/embarklabs/embark/get/master.tar.gz");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/master/archive.zip");
+        assert.strictEqual(result.browse, "https://bitbucket.org/embarklabs/embark");
 
-        result = await templateGenerator.getExternalProject("bitbucket:embark-framework/embark#features/branch");
-        assert.strictEqual(result.url, "https://bitbucket.org/embark-framework/embark/get/features%2Fbranch.tar.gz");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/features/branch/archive.zip");
-        assert.strictEqual(result.browse, "https://bitbucket.org/embark-framework/embark/src/features/branch");
+        result = await templateGenerator.getExternalProject("bitbucket:embarklabs/embark#features/branch");
+        assert.strictEqual(result.url, "https://bitbucket.org/embarklabs/embark/get/features%2Fbranch.tar.gz");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/features/branch/archive.zip");
+        assert.strictEqual(result.browse, "https://bitbucket.org/embarklabs/embark/src/features/branch");
 
-        result = await templateGenerator.getExternalProject("bitbucket.org/embark-framework/embark");
-        assert.strictEqual(result.url, "https://bitbucket.org/embark-framework/embark/get/master.tar.gz");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/master/archive.zip");
-        assert.strictEqual(result.browse, "https://bitbucket.org/embark-framework/embark");
+        result = await templateGenerator.getExternalProject("bitbucket.org/embarklabs/embark");
+        assert.strictEqual(result.url, "https://bitbucket.org/embarklabs/embark/get/master.tar.gz");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/master/archive.zip");
+        assert.strictEqual(result.browse, "https://bitbucket.org/embarklabs/embark");
 
-        result = await templateGenerator.getExternalProject("bitbucket.org/embark-framework/embark#features/branch");
-        assert.strictEqual(result.url, "https://bitbucket.org/embark-framework/embark/get/features%2Fbranch.tar.gz");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/features/branch/archive.zip");
-        assert.strictEqual(result.browse, "https://bitbucket.org/embark-framework/embark/src/features/branch");
+        result = await templateGenerator.getExternalProject("bitbucket.org/embarklabs/embark#features/branch");
+        assert.strictEqual(result.url, "https://bitbucket.org/embarklabs/embark/get/features%2Fbranch.tar.gz");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/features/branch/archive.zip");
+        assert.strictEqual(result.browse, "https://bitbucket.org/embarklabs/embark/src/features/branch");
       });
 
       it('returns correct info for GitLab shortcut', async function () {
-        let result = await templateGenerator.getExternalProject("gitlab:embark-framework/embark");
-        assert.strictEqual(result.url, "https://gitlab.com/embark-framework/embark/repository/archive.tar.gz?ref=master");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/master/archive.zip");
-        assert.strictEqual(result.browse, "https://gitlab.com/embark-framework/embark");
+        let result = await templateGenerator.getExternalProject("gitlab:embarklabs/embark");
+        assert.strictEqual(result.url, "https://gitlab.com/embarklabs/embark/repository/archive.tar.gz?ref=master");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/master/archive.zip");
+        assert.strictEqual(result.browse, "https://gitlab.com/embarklabs/embark");
 
-        result = await templateGenerator.getExternalProject("gitlab:embark-framework/embark#features/branch");
-        assert.strictEqual(result.url, "https://gitlab.com/embark-framework/embark/repository/archive.tar.gz?ref=features%2Fbranch");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/features/branch/archive.zip");
-        assert.strictEqual(result.browse, "https://gitlab.com/embark-framework/embark/tree/features/branch");
+        result = await templateGenerator.getExternalProject("gitlab:embarklabs/embark#features/branch");
+        assert.strictEqual(result.url, "https://gitlab.com/embarklabs/embark/repository/archive.tar.gz?ref=features%2Fbranch");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/features/branch/archive.zip");
+        assert.strictEqual(result.browse, "https://gitlab.com/embarklabs/embark/tree/features/branch");
 
-        result = await templateGenerator.getExternalProject("gitlab.com/embark-framework/embark");
-        assert.strictEqual(result.url, "https://gitlab.com/embark-framework/embark/repository/archive.tar.gz?ref=master");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/master/archive.zip");
-        assert.strictEqual(result.browse, "https://gitlab.com/embark-framework/embark");
+        result = await templateGenerator.getExternalProject("gitlab.com/embarklabs/embark");
+        assert.strictEqual(result.url, "https://gitlab.com/embarklabs/embark/repository/archive.tar.gz?ref=master");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/master/archive.zip");
+        assert.strictEqual(result.browse, "https://gitlab.com/embarklabs/embark");
 
-        result = await templateGenerator.getExternalProject("gitlab.com/embark-framework/embark#features/branch");
-        assert.strictEqual(result.url, "https://gitlab.com/embark-framework/embark/repository/archive.tar.gz?ref=features%2Fbranch");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/features/branch/archive.zip");
-        assert.strictEqual(result.browse, "https://gitlab.com/embark-framework/embark/tree/features/branch");
+        result = await templateGenerator.getExternalProject("gitlab.com/embarklabs/embark#features/branch");
+        assert.strictEqual(result.url, "https://gitlab.com/embarklabs/embark/repository/archive.tar.gz?ref=features%2Fbranch");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/features/branch/archive.zip");
+        assert.strictEqual(result.browse, "https://gitlab.com/embarklabs/embark/tree/features/branch");
       });
     });
 
@@ -169,39 +169,39 @@ describe('TemplateGenerator', function () {
 
     describe('with SSH URL', function () {
       it('returns correct info for GitHub SSH repo', async function () {
-        let result = await templateGenerator.getExternalProject("git@github.com/embark-framework/embark");
-        assert.strictEqual(result.url, "https://codeload.github.com/embark-framework/embark/tar.gz/master");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/master/archive.zip");
-        assert.strictEqual(result.browse, "https://github.com/embark-framework/embark");
+        let result = await templateGenerator.getExternalProject("git@github.com/embarklabs/embark");
+        assert.strictEqual(result.url, "https://codeload.github.com/embarklabs/embark/tar.gz/master");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/master/archive.zip");
+        assert.strictEqual(result.browse, "https://github.com/embarklabs/embark");
 
-        result = await templateGenerator.getExternalProject("git@github.com/embark-framework/embark#features/branch");
-        assert.strictEqual(result.url, "https://codeload.github.com/embark-framework/embark/tar.gz/features%2Fbranch");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/features/branch/archive.zip");
-        assert.strictEqual(result.browse, "https://github.com/embark-framework/embark/tree/features/branch");
+        result = await templateGenerator.getExternalProject("git@github.com/embarklabs/embark#features/branch");
+        assert.strictEqual(result.url, "https://codeload.github.com/embarklabs/embark/tar.gz/features%2Fbranch");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/features/branch/archive.zip");
+        assert.strictEqual(result.browse, "https://github.com/embarklabs/embark/tree/features/branch");
       });
 
       it('returns correct info for BitBucket SSH repo', async function () {
-        let result = await templateGenerator.getExternalProject("git@bitbucket.org/embark-framework/embark");
-        assert.strictEqual(result.url, "https://bitbucket.org/embark-framework/embark/get/master.tar.gz");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/master/archive.zip");
-        assert.strictEqual(result.browse, "https://bitbucket.org/embark-framework/embark");
+        let result = await templateGenerator.getExternalProject("git@bitbucket.org/embarklabs/embark");
+        assert.strictEqual(result.url, "https://bitbucket.org/embarklabs/embark/get/master.tar.gz");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/master/archive.zip");
+        assert.strictEqual(result.browse, "https://bitbucket.org/embarklabs/embark");
 
-        result = await templateGenerator.getExternalProject("git@bitbucket.org/embark-framework/embark#features/branch");
-        assert.strictEqual(result.url, "https://bitbucket.org/embark-framework/embark/get/features%2Fbranch.tar.gz");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/features/branch/archive.zip");
-        assert.strictEqual(result.browse, "https://bitbucket.org/embark-framework/embark/src/features/branch");
+        result = await templateGenerator.getExternalProject("git@bitbucket.org/embarklabs/embark#features/branch");
+        assert.strictEqual(result.url, "https://bitbucket.org/embarklabs/embark/get/features%2Fbranch.tar.gz");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/features/branch/archive.zip");
+        assert.strictEqual(result.browse, "https://bitbucket.org/embarklabs/embark/src/features/branch");
       });
 
       it('returns correct info for GitLab SSH repo', async function () {
-        let result = await templateGenerator.getExternalProject("git@gitlab.com/embark-framework/embark");
-        assert.strictEqual(result.url, "https://gitlab.com/embark-framework/embark/repository/archive.tar.gz?ref=master");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/master/archive.zip");
-        assert.strictEqual(result.browse, "https://gitlab.com/embark-framework/embark");
+        let result = await templateGenerator.getExternalProject("git@gitlab.com/embarklabs/embark");
+        assert.strictEqual(result.url, "https://gitlab.com/embarklabs/embark/repository/archive.tar.gz?ref=master");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/master/archive.zip");
+        assert.strictEqual(result.browse, "https://gitlab.com/embarklabs/embark");
 
-        result = await templateGenerator.getExternalProject("git@gitlab.com/embark-framework/embark#features/branch");
-        assert.strictEqual(result.url, "https://gitlab.com/embark-framework/embark/repository/archive.tar.gz?ref=features%2Fbranch");
-        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embark-framework/embark/features/branch/archive.zip");
-        assert.strictEqual(result.browse, "https://gitlab.com/embark-framework/embark/tree/features/branch");
+        result = await templateGenerator.getExternalProject("git@gitlab.com/embarklabs/embark#features/branch");
+        assert.strictEqual(result.url, "https://gitlab.com/embarklabs/embark/repository/archive.tar.gz?ref=features%2Fbranch");
+        assert.strictEqual(result.filePath.replace(/\\/g, '/'), ".embark/templates/embarklabs/embark/features/branch/archive.zip");
+        assert.strictEqual(result.browse, "https://gitlab.com/embarklabs/embark/tree/features/branch");
       });
     });
 

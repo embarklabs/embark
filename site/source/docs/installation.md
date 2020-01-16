@@ -64,7 +64,7 @@ GOROOT=/Users/travis/.gimme/versions/go1.10.4.darwin.amd64
 
 ## Installing Embark
 
-Alright, let's install Embark so we can build our first application. As mentioned earlier, if anything is unclear or you run into problems, make sure to reach out to us on our dedicated channels, [submit an issue on  GitHub](https://github.com/embark-framework/embark/issues), or take a look at our [troubleshooting guide](troubleshooting.html).
+Alright, let's install Embark so we can build our first application. As mentioned earlier, if anything is unclear or you run into problems, make sure to reach out to us on our dedicated channels, [submit an issue on  GitHub](https://github.com/embarklabs/embark/issues), or take a look at our [troubleshooting guide](troubleshooting.html).
 
 We can install Embark using the Node Package Manager (no worries, that one comes with Node), like this:
 

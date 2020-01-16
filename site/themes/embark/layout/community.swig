@@ -29,7 +29,7 @@
               icon: 'app-window-search-text',
               link: {
                 text: __('community_page.spotbox.link'),
-                href: 'https://github.com/embark-framework/embark'
+                href: 'https://github.com/embarklabs/embark'
               }
             })
           }}

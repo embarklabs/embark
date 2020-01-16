@@ -37,7 +37,7 @@
         <div class="o-flex__item">
           <ul class="o-flex o-flex-center">
             <li class="o-flex__item">
-              <a href="https://github.com/embark-framework/embark" title="Github" target="_blank" class="u-link-ghost">
+              <a href="https://github.com/embarklabs/embark" title="Github" target="_blank" class="u-link-ghost">
                 <svg class="c-icon"><use xlink:href="{{url_for('../assets/icons/symbols.svg#icon-github')}}"></use></svg>
               </a>
             </li>
@@ -80,7 +80,7 @@
       {% endif %}
       {% if showGitHubStars %}
       <div class="o-distance-l">
-        <a class="github-button" href="https://github.com/embark-framework/embark" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star embark-framework/embark on GitHub">Star</a>
+        <a class="github-button" href="https://github.com/embarklabs/embark" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star embarklabs/embark on GitHub">Star</a>
       </div>
       {% endif %}
     </div>

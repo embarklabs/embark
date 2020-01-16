@@ -5,7 +5,7 @@ const args = require('minimist')(process.argv.slice(2));
 
 const execWithOutput = (cmd) => execSync(cmd, { stdio: 'inherit' });
 
-const DEPLOY_REPOSITORY = 'https://github.com/embark-framework/embark-site';
+const DEPLOY_REPOSITORY = 'https://github.com/embarklabs/embark-site';
 const DEPLOY_REMOTE = 'embark-site';
 
 const TMP_DEPLOY_BRANCH = 'embark-site-deploy';

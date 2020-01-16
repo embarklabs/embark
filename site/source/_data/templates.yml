@@ -2,7 +2,7 @@
   description: Template to demonstrate the use of the Vyper contracts
   install: embark new AppName --template vyper
   thumbnail: vyper.png
-  link: https://github.com/embark-framework/embark-vyper-template
+  link: https://github.com/embarklabs/embark-vyper-template
   tags:
     - vyper
     - contracts
@@ -22,7 +22,7 @@
   description: Template with Typescript support pre-configured
   thumbnail: typescript.png
   install: embark new AppName --template typescript
-  link: https://github.com/embark-framework/embark-typescript-template
+  link: https://github.com/embarklabs/embark-typescript-template
   tags:
     - typescript
     - frontend
@@ -31,7 +31,7 @@
   description: Ready to use Template for using Embark with vue.js
   thumbnail: vuejs.png
   install: embark new AppName --template vue
-  link: https://github.com/embark-framework/embark-vue-template
+  link: https://github.com/embarklabs/embark-vue-template
   tags:
     - vue.js
     - frontend
@@ -40,7 +40,7 @@
 #  description: Ready to use Template for using Embark with angular.js
 #  thumbnail: angular.png
 #  install: embark new AppName --template angular
-#  link: https://github.com/embark-framework/embark-angular-template
+#  link: https://github.com/embarklabs/embark-angular-template
 #  tags:
 #    - angular.js
 #    - frontend
@@ -57,7 +57,7 @@
   description: Template to demonstrate use of the Bamboo contracts
   install: embark new AppName --template bamboo
   thumbnail: bamboo.png
-  link: https://github.com/embark-framework/embark-bamboo-template
+  link: https://github.com/embarklabs/embark-bamboo-template
   tags:
     - bamboo
     - contracts
@@ -65,8 +65,8 @@
 - name: Solidity Gas Golfing
   description: Boilerplate and tests for the first Solidity Gas Golfing Contest
   thumbnail: sggc.png
-  install: embark new AppName --template embark-framework/sggc
-  link: https://github.com/embark-framework/sggc
+  install: embark new AppName --template embarklabs/sggc
+  link: https://github.com/embarklabs/sggc
   tags:
     - solidity
     - tests

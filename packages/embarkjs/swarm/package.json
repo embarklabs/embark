@@ -4,8 +4,8 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Swarm plugin for embarkjs",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embarkjs/swarm#readme",
-  "bugs": "https://github.com/embark-framework/embark/issues",
+  "homepage": "https://github.com/embarklabs/embark/tree/master/packages/embarkjs/swarm#readme",
+  "bugs": "https://github.com/embarklabs/embark/issues",
   "keywords": [
     "blockchain",
     "dapps",
@@ -19,7 +19,7 @@
   "repository": {
     "directory": "packages/embarkjs/swarm",
     "type": "git",
-    "url": "https://github.com/embark-framework/embark.git"
+    "url": "https://github.com/embarklabs/embark.git"
   },
   "main": "./dist/node/index.js",
   "types": "./dist/node/index.d.ts",

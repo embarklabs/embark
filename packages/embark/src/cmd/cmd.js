@@ -108,7 +108,7 @@ class Cmd {
         if (options.template) {
           const hostedGitInfo = require('hosted-git-info');
           const hgi = hostedGitInfo.fromUrl(options.template);
-          const url = !hgi ? `embark-framework/embark-${options.template}-template#demo` : options.template;
+          const url = !hgi ? `embarklabs/embark-${options.template}-template#demo` : options.template;
           const folderName = !hgi ? `embark_${options.template}_demo` : 'template_demo';
           console.warn('--template has been deprecated and will be removed in future versions.');
           embark.generateTemplate('demo', './', folderName, url);
@@ -421,7 +421,7 @@ class Cmd {
       .action(function () {
         console.log("Documentation can be found at: ".green + "https://embark.status.im/docs/".underline.green);
         console.log("");
-        console.log("Have an issue? submit it here: ".green + "https://github.com/embark-framework/embark/issues/new".underline.green);
+        console.log("Have an issue? submit it here: ".green + "https://github.com/embarklabs/embark/issues/new".underline.green);
         console.log("or chat with us directly at: ".green + "https://gitter.im/embark-framework/Lobby".underline.green);
         program.help();
         process.exit(0);

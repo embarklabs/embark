@@ -2,8 +2,8 @@
   "name": "embark-dapp-template-demo",
   "version": "5.0.0",
   "description": "Demo DApp for Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/dapps/templates/demo#readme",
-  "bugs": "https://github.com/embark-framework/embark/issues",
+  "homepage": "https://github.com/embarklabs/embark/tree/master/dapps/templates/demo#readme",
+  "bugs": "https://github.com/embarklabs/embark/issues",
   "files": [
     "app",
     "config/*.js",
@@ -29,7 +29,7 @@
   "repository": {
     "directory": "dapps/templates/demo",
     "type": "git",
-    "url": "https://github.com/embark-framework/embark.git"
+    "url": "https://github.com/embarklabs/embark.git"
   },
   "devDependencies": {
     "bootstrap": "4.3.1",

@@ -7,18 +7,18 @@ describe('embark.utils', function () {
   describe('#getExternalContractUrl', function () {
     it('should get the right url for a https://github file', function () {
       const fileObj = getExternalContractUrl(
-        'https://github.com/embark-framework/embark/blob/master/dapps/templates/demo/contracts/simple_storage.sol'
+        'https://github.com/embarklabs/embark/blob/master/dapps/templates/demo/contracts/simple_storage.sol'
       );
       assert.deepEqual(fileObj,
         {
-          filePath: constants.httpContractsDirectory + 'embark-framework/embark/master/dapps/templates/demo/contracts/simple_storage.sol',
-          url: 'https://raw.githubusercontent.com/embark-framework/embark/master/dapps/templates/demo/contracts/simple_storage.sol'
+          filePath: constants.httpContractsDirectory + 'embarklabs/embark/master/dapps/templates/demo/contracts/simple_storage.sol',
+          url: 'https://raw.githubusercontent.com/embarklabs/embark/master/dapps/templates/demo/contracts/simple_storage.sol'
         });
     });
 
     it('should fail for a malformed https://github file', function () {
       const fileObj = getExternalContractUrl(
-        'https://github/embark-framework/embark/blob/master/dapps/templates/demo/contracts/simple_storage.sol'
+        'https://github/embarklabs/embark/blob/master/dapps/templates/demo/contracts/simple_storage.sol'
       );
       assert.strictEqual(fileObj, null);
     });

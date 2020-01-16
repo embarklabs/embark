@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [5.0.0](https://github.com/embark-framework/embark/compare/v5.0.0-beta.0...v5.0.0) (2020-01-07)
+# [5.0.0](https://github.com/embarklabs/embark/compare/v5.0.0-beta.0...v5.0.0) (2020-01-07)
 
 **Note:** Version bump only for package embark-proxy
 
@@ -11,12 +11,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.9](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.8...v5.0.0-alpha.9) (2019-12-20)
+# [5.0.0-alpha.9](https://github.com/embarklabs/embark/compare/v5.0.0-alpha.8...v5.0.0-alpha.9) (2019-12-20)
 
 
 ### Build System
 
-* **deps:** bump web3[-*] from 1.2.1 to 1.2.4 ([7e550f0](https://github.com/embark-framework/embark/commit/7e550f0))
+* **deps:** bump web3[-*] from 1.2.1 to 1.2.4 ([7e550f0](https://github.com/embarklabs/embark/commit/7e550f0))
 
 
 ### BREAKING CHANGES
@@ -32,7 +32,7 @@ to implement it.
 
 
 
-# [5.0.0-alpha.8](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.7...v5.0.0-alpha.8) (2019-12-19)
+# [5.0.0-alpha.8](https://github.com/embarklabs/embark/compare/v5.0.0-alpha.7...v5.0.0-alpha.8) (2019-12-19)
 
 **Note:** Version bump only for package embark-proxy
 
@@ -40,30 +40,30 @@ to implement it.
 
 
 
-# [5.0.0-alpha.5](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.4...v5.0.0-alpha.5) (2019-12-16)
+# [5.0.0-alpha.5](https://github.com/embarklabs/embark/compare/v5.0.0-alpha.4...v5.0.0-alpha.5) (2019-12-16)
 
 
 ### Bug Fixes
 
-* fix node connection test to use the endpoints correctly ([0503bb2](https://github.com/embark-framework/embark/commit/0503bb2))
+* fix node connection test to use the endpoints correctly ([0503bb2](https://github.com/embarklabs/embark/commit/0503bb2))
 
 
 
 
 
-# [5.0.0-alpha.4](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.3...v5.0.0-alpha.4) (2019-12-12)
+# [5.0.0-alpha.4](https://github.com/embarklabs/embark/compare/v5.0.0-alpha.3...v5.0.0-alpha.4) (2019-12-12)
 
 
 ### Bug Fixes
 
-* **@embark/proxy:** fix conflict for WS port in the proxy ([eae97de](https://github.com/embark-framework/embark/commit/eae97de))
-* **@embark/test:** fix using --node option in tests ([b82a240](https://github.com/embark-framework/embark/commit/b82a240))
+* **@embark/proxy:** fix conflict for WS port in the proxy ([eae97de](https://github.com/embarklabs/embark/commit/eae97de))
+* **@embark/test:** fix using --node option in tests ([b82a240](https://github.com/embarklabs/embark/commit/b82a240))
 
 
 
 
 
-# [5.0.0-alpha.3](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.2...v5.0.0-alpha.3) (2019-12-06)
+# [5.0.0-alpha.3](https://github.com/embarklabs/embark/compare/v5.0.0-alpha.2...v5.0.0-alpha.3) (2019-12-06)
 
 **Note:** Version bump only for package embark-proxy
 
@@ -71,53 +71,53 @@ to implement it.
 
 
 
-# [5.0.0-alpha.2](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.1...v5.0.0-alpha.2) (2019-12-05)
+# [5.0.0-alpha.2](https://github.com/embarklabs/embark/compare/v5.0.0-alpha.1...v5.0.0-alpha.2) (2019-12-05)
 
 
 ### Bug Fixes
 
-* **@embark/proxy:** Fix unsubsribe handling and add new provider ([f6f4507](https://github.com/embark-framework/embark/commit/f6f4507))
+* **@embark/proxy:** Fix unsubsribe handling and add new provider ([f6f4507](https://github.com/embarklabs/embark/commit/f6f4507))
 
 
 ### Features
 
-* **@embark/embark-rpc-manager:** Add support for `eth_signTypedData_v3` ([c7ec49a](https://github.com/embark-framework/embark/commit/c7ec49a)), closes [#1850](https://github.com/embark-framework/embark/issues/1850) [#1850](https://github.com/embark-framework/embark/issues/1850)
+* **@embark/embark-rpc-manager:** Add support for `eth_signTypedData_v3` ([c7ec49a](https://github.com/embarklabs/embark/commit/c7ec49a)), closes [#1850](https://github.com/embarklabs/embark/issues/1850) [#1850](https://github.com/embarklabs/embark/issues/1850)
 
 
 
 
 
-# [5.0.0-alpha.1](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.0...v5.0.0-alpha.1) (2019-11-05)
-
-
-### Bug Fixes
-
-* **@embark/proxy:** Fix contract event subscriptions ([f9ad486](https://github.com/embark-framework/embark/commit/f9ad486))
-* fix ws providers to have the patch for a bigger threshold ([#2017](https://github.com/embark-framework/embark/issues/2017)) ([9e654c5](https://github.com/embark-framework/embark/commit/9e654c5))
-
-
-
-
-
-# [5.0.0-alpha.0](https://github.com/embark-framework/embark/compare/v4.1.1...v5.0.0-alpha.0) (2019-10-28)
+# [5.0.0-alpha.1](https://github.com/embarklabs/embark/compare/v5.0.0-alpha.0...v5.0.0-alpha.1) (2019-11-05)
 
 
 ### Bug Fixes
 
-* fix error logs in the cockpit due from negative blocks numbers ([#1967](https://github.com/embark-framework/embark/issues/1967)) ([4b947bb](https://github.com/embark-framework/embark/commit/4b947bb))
-* **@embark/proxy:** Check if WebSocket open before sending ([#1978](https://github.com/embark-framework/embark/issues/1978)) ([db71a93](https://github.com/embark-framework/embark/commit/db71a93))
-* **@embark/proxy:** Fix contract event subscriptions ([173d53d](https://github.com/embark-framework/embark/commit/173d53d))
+* **@embark/proxy:** Fix contract event subscriptions ([f9ad486](https://github.com/embarklabs/embark/commit/f9ad486))
+* fix ws providers to have the patch for a bigger threshold ([#2017](https://github.com/embarklabs/embark/issues/2017)) ([9e654c5](https://github.com/embarklabs/embark/commit/9e654c5))
+
+
+
+
+
+# [5.0.0-alpha.0](https://github.com/embarklabs/embark/compare/v4.1.1...v5.0.0-alpha.0) (2019-10-28)
+
+
+### Bug Fixes
+
+* fix error logs in the cockpit due from negative blocks numbers ([#1967](https://github.com/embarklabs/embark/issues/1967)) ([4b947bb](https://github.com/embarklabs/embark/commit/4b947bb))
+* **@embark/proxy:** Check if WebSocket open before sending ([#1978](https://github.com/embarklabs/embark/issues/1978)) ([db71a93](https://github.com/embarklabs/embark/commit/db71a93))
+* **@embark/proxy:** Fix contract event subscriptions ([173d53d](https://github.com/embarklabs/embark/commit/173d53d))
 
 
 ### Build System
 
-* bump all packages' engines settings ([#1985](https://github.com/embark-framework/embark/issues/1985)) ([ed02cc8](https://github.com/embark-framework/embark/commit/ed02cc8))
+* bump all packages' engines settings ([#1985](https://github.com/embarklabs/embark/issues/1985)) ([ed02cc8](https://github.com/embarklabs/embark/commit/ed02cc8))
 
 
 ### Features
 
-* **@embark/test-runner:** make vm default node ([#1846](https://github.com/embark-framework/embark/issues/1846)) ([f54fbf0](https://github.com/embark-framework/embark/commit/f54fbf0))
-* call action before starting the blockchain node ([c54b8d9](https://github.com/embark-framework/embark/commit/c54b8d9))
+* **@embark/test-runner:** make vm default node ([#1846](https://github.com/embarklabs/embark/issues/1846)) ([f54fbf0](https://github.com/embarklabs/embark/commit/f54fbf0))
+* call action before starting the blockchain node ([c54b8d9](https://github.com/embarklabs/embark/commit/c54b8d9))
 
 
 ### BREAKING CHANGES

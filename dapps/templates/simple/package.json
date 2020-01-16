@@ -2,8 +2,8 @@
   "name": "embark-dapp-template-simple",
   "version": "5.0.0",
   "description": "Contracts-only DApp template for Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/dapps/templates/simple#readme",
-  "bugs": "https://github.com/embark-framework/embark/issues",
+  "homepage": "https://github.com/embarklabs/embark/tree/master/dapps/templates/simple#readme",
+  "bugs": "https://github.com/embarklabs/embark/issues",
   "files": [
     "contracts",
     "contracts.js",
@@ -25,7 +25,7 @@
   "repository": {
     "directory": "dapps/templates/simple",
     "type": "git",
-    "url": "https://github.com/embark-framework/embark.git"
+    "url": "https://github.com/embarklabs/embark.git"
   },
   "devDependencies": {
     "embark": "^5.0.0",

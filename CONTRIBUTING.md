@@ -30,7 +30,7 @@ If you would like to chat about the question in real-time, you can reach out via
 
 ## <a name="issue"></a> Found a Bug?
 If you find a bug in the source code, you can help us by
-[submitting an issue](#submit-issue) to our [GitHub Repository](https://github.com/embark-framework/embark/). Even better, you can
+[submitting an issue](#submit-issue) to our [GitHub Repository](https://github.com/embarklabs/embark/). Even better, you can
 [submit a Pull Request](#submit-pr) with a fix.
 
 ## <a name="feature"></a> Missing a Feature?
@@ -52,14 +52,14 @@ Before you submit an issue, please search the issue tracker, maybe an issue for 
 
 We want to fix all the issues as soon as possible, but before fixing a bug we need to reproduce and confirm it. In order to reproduce bugs, we will systematically ask you to provide steps to reproduce your issue.
 
-You can file new issues by filling out our [new issue form](https://github.com/embark-framework/embark/issues/new/choose).
+You can file new issues by filling out our [new issue form](https://github.com/embarklabs/embark/issues/new/choose).
 
 ### <a name="submit-pr"></a> Submitting a Pull Request (PR)
 Before you submit your Pull Request (PR) consider the following guidelines:
 
-1. Search [GitHub](https://github.com/embark-framework/embark/pulls) for an open or closed PR
+1. Search [GitHub](https://github.com/embarklabs/embark/pulls) for an open or closed PR
   that relates to your submission. You don't want to duplicate effort.
-1. Fork the embark-framework/embark repo.
+1. Fork the embarklabs/embark repo.
 1. Make your changes in a new git branch:
 
      ```shell

@@ -7,7 +7,7 @@ layout: blog-post
 alias: news/2019/07/22/whats-new-in-embark-4.1/
 ---
 
-After four months of development we're happy to tell you that we've released Embark 4.1 which comes with tons of bug fixes and a lot of new features. In this post we'll take a closer look at some of these features, however as always, we recommend having a look at our [change log](https://github.com/embark-framework/embark/blob/master/CHANGELOG.md) to get a more detailed overview of what has landed in Embark's latest release. Let's get right to it!
+After four months of development we're happy to tell you that we've released Embark 4.1 which comes with tons of bug fixes and a lot of new features. In this post we'll take a closer look at some of these features, however as always, we recommend having a look at our [change log](https://github.com/embarklabs/embark/blob/master/CHANGELOG.md) to get a more detailed overview of what has landed in Embark's latest release. Let's get right to it!
 
 ## New `beforeDeploy` hook
 
@@ -113,7 +113,7 @@ Instead of managing an `accounts` variable yourself, you can just ask for it now
 
 ## Several improvements inside Cockpit
 
-Cockpit has got a lot of new things as well. This includes [draggable tabs]() inside the code editor, pagination support for [Smart Contracts](https://github.com/embark-framework/embark/commit/d71352b) and the [accounts explorer](https://github.com/embark-framework/embark/commit/745edaf), alphabetically [sorted Smart Contracts](https://github.com/embark-framework/embark/commit/0e9a4a1), and the ability to [send ETH to payable Smart Contract methods](https://github.com/embark-framework/embark/pull/1649) via the Cockpit UI.
+Cockpit has got a lot of new things as well. This includes [draggable tabs]() inside the code editor, pagination support for [Smart Contracts](https://github.com/embarklabs/embark/commit/d71352b) and the [accounts explorer](https://github.com/embarklabs/embark/commit/745edaf), alphabetically [sorted Smart Contracts](https://github.com/embarklabs/embark/commit/0e9a4a1), and the ability to [send ETH to payable Smart Contract methods](https://github.com/embarklabs/embark/pull/1649) via the Cockpit UI.
 
 
 ## What's next?
@@ -123,4 +123,4 @@ We've spent a lot of time fixing bugs and revisiting existing, user-facing APIs 
 That's why our next step is to work on v5, where we'll be focussing on making Embark's accounts configuration less confusing and more unified (no more multiple places to define accounts!), as well as a bunch of internal refactor.
 
 
-Stay tuned with latest changes happening in Embark by [watching our GitHub repository](https://github.com/embark-framework/embark) and following us on [Twitter](https://twitter.com/EmbarkProject)!
+Stay tuned with latest changes happening in Embark by [watching our GitHub repository](https://github.com/embarklabs/embark) and following us on [Twitter](https://twitter.com/EmbarkProject)!

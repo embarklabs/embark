@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [5.0.0](https://github.com/embark-framework/embark/compare/v5.0.0-beta.0...v5.0.0) (2020-01-07)
+# [5.0.0](https://github.com/embarklabs/embark/compare/v5.0.0-beta.0...v5.0.0) (2020-01-07)
 
 **Note:** Version bump only for package embark-namesystem
 
@@ -11,7 +11,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.5](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.4...v5.0.0-alpha.5) (2019-12-16)
+# [5.0.0-alpha.5](https://github.com/embarklabs/embark/compare/v5.0.0-alpha.4...v5.0.0-alpha.5) (2019-12-16)
 
 **Note:** Version bump only for package embark-namesystem
 
@@ -19,19 +19,19 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.2](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.1...v5.0.0-alpha.2) (2019-12-05)
+# [5.0.0-alpha.2](https://github.com/embarklabs/embark/compare/v5.0.0-alpha.1...v5.0.0-alpha.2) (2019-12-05)
 
 
 ### Features
 
-* **@embark/ens:** enable changing namesystem config per test ([de9e667](https://github.com/embark-framework/embark/commit/de9e667))
-* **@embark/tests:** enable comms and storage in tests ([aecb99d](https://github.com/embark-framework/embark/commit/aecb99d))
+* **@embark/ens:** enable changing namesystem config per test ([de9e667](https://github.com/embarklabs/embark/commit/de9e667))
+* **@embark/tests:** enable comms and storage in tests ([aecb99d](https://github.com/embarklabs/embark/commit/aecb99d))
 
 
 
 
 
-# [5.0.0-alpha.1](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.0...v5.0.0-alpha.1) (2019-11-05)
+# [5.0.0-alpha.1](https://github.com/embarklabs/embark/compare/v5.0.0-alpha.0...v5.0.0-alpha.1) (2019-11-05)
 
 **Note:** Version bump only for package embark-namesystem
 
@@ -39,18 +39,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.0](https://github.com/embark-framework/embark/compare/v4.1.1...v5.0.0-alpha.0) (2019-10-28)
+# [5.0.0-alpha.0](https://github.com/embarklabs/embark/compare/v4.1.1...v5.0.0-alpha.0) (2019-10-28)
 
 
 ### Bug Fixes
 
-* do not start modules if they are disabled ([d6bf5c2](https://github.com/embark-framework/embark/commit/d6bf5c2))
-* fix test-app, contracts index file and reload on change ([#1892](https://github.com/embark-framework/embark/issues/1892)) ([ee634c8](https://github.com/embark-framework/embark/commit/ee634c8))
+* do not start modules if they are disabled ([d6bf5c2](https://github.com/embarklabs/embark/commit/d6bf5c2))
+* fix test-app, contracts index file and reload on change ([#1892](https://github.com/embarklabs/embark/issues/1892)) ([ee634c8](https://github.com/embarklabs/embark/commit/ee634c8))
 
 
 ### Build System
 
-* bump all packages' engines settings ([#1985](https://github.com/embark-framework/embark/issues/1985)) ([ed02cc8](https://github.com/embark-framework/embark/commit/ed02cc8))
+* bump all packages' engines settings ([#1985](https://github.com/embarklabs/embark/issues/1985)) ([ed02cc8](https://github.com/embarklabs/embark/commit/ed02cc8))
 
 
 ### BREAKING CHANGES

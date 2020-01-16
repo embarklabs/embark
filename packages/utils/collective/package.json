@@ -3,11 +3,11 @@
   "version": "5.0.0",
   "author": "Michael Bradley <michaelsbradleyjr@gmail.com> (https://github.com/michaelsbradleyjr/)",
   "description": "You will be assimilated",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/utils/collective#readme",
+  "homepage": "https://github.com/embarklabs/embark/tree/master/packages/utils/collective#readme",
   "repository": {
     "directory": "packages/utils/collective",
     "type": "git",
-    "url": "https://github.com/embark-framework/embark.git"
+    "url": "https://github.com/embarklabs/embark.git"
   },
   "keywords": [],
   "license": "MIT",

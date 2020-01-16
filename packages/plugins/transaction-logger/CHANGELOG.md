@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [5.0.0](https://github.com/embark-framework/embark/compare/v5.0.0-beta.0...v5.0.0) (2020-01-07)
+# [5.0.0](https://github.com/embarklabs/embark/compare/v5.0.0-beta.0...v5.0.0) (2020-01-07)
 
 **Note:** Version bump only for package embark-transaction-logger
 
@@ -11,17 +11,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.9](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.8...v5.0.0-alpha.9) (2019-12-20)
+# [5.0.0-alpha.9](https://github.com/embarklabs/embark/compare/v5.0.0-alpha.8...v5.0.0-alpha.9) (2019-12-20)
 
 
 ### Bug Fixes
 
-* **@embark/tests:** fix slow embark test because of the tx-logger ([1e9b8d8](https://github.com/embark-framework/embark/commit/1e9b8d8))
+* **@embark/tests:** fix slow embark test because of the tx-logger ([1e9b8d8](https://github.com/embarklabs/embark/commit/1e9b8d8))
 
 
 ### Build System
 
-* **deps:** bump web3[-*] from 1.2.1 to 1.2.4 ([7e550f0](https://github.com/embark-framework/embark/commit/7e550f0))
+* **deps:** bump web3[-*] from 1.2.1 to 1.2.4 ([7e550f0](https://github.com/embarklabs/embark/commit/7e550f0))
 
 
 ### BREAKING CHANGES
@@ -37,7 +37,7 @@ to implement it.
 
 
 
-# [5.0.0-alpha.8](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.7...v5.0.0-alpha.8) (2019-12-19)
+# [5.0.0-alpha.8](https://github.com/embarklabs/embark/compare/v5.0.0-alpha.7...v5.0.0-alpha.8) (2019-12-19)
 
 **Note:** Version bump only for package embark-transaction-logger
 
@@ -45,26 +45,18 @@ to implement it.
 
 
 
-# [5.0.0-alpha.5](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.4...v5.0.0-alpha.5) (2019-12-16)
+# [5.0.0-alpha.5](https://github.com/embarklabs/embark/compare/v5.0.0-alpha.4...v5.0.0-alpha.5) (2019-12-16)
 
 
 ### Bug Fixes
 
-* **@embark/transaction-logger:** handle non-contract transactions ([1a7fc66](https://github.com/embark-framework/embark/commit/1a7fc66)), closes [/github.com/status-im/status-teller-network/blob/a5ab4d4b26afccf15ac7472a18728385dd8b2461/embarkConfig/data.js#L100-L110](https://github.com//github.com/status-im/status-teller-network/blob/a5ab4d4b26afccf15ac7472a18728385dd8b2461/embarkConfig/data.js/issues/L100-L110)
+* **@embark/transaction-logger:** handle non-contract transactions ([1a7fc66](https://github.com/embarklabs/embark/commit/1a7fc66)), closes [/github.com/status-im/status-teller-network/blob/a5ab4d4b26afccf15ac7472a18728385dd8b2461/embarkConfig/data.js#L100-L110](https://github.com//github.com/status-im/status-teller-network/blob/a5ab4d4b26afccf15ac7472a18728385dd8b2461/embarkConfig/data.js/issues/L100-L110)
 
 
 
 
 
-# [5.0.0-alpha.4](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.3...v5.0.0-alpha.4) (2019-12-12)
-
-**Note:** Version bump only for package embark-transaction-logger
-
-
-
-
-
-# [5.0.0-alpha.3](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.2...v5.0.0-alpha.3) (2019-12-06)
+# [5.0.0-alpha.4](https://github.com/embarklabs/embark/compare/v5.0.0-alpha.3...v5.0.0-alpha.4) (2019-12-12)
 
 **Note:** Version bump only for package embark-transaction-logger
 
@@ -72,18 +64,26 @@ to implement it.
 
 
 
-# [5.0.0-alpha.2](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.1...v5.0.0-alpha.2) (2019-12-05)
+# [5.0.0-alpha.3](https://github.com/embarklabs/embark/compare/v5.0.0-alpha.2...v5.0.0-alpha.3) (2019-12-06)
+
+**Note:** Version bump only for package embark-transaction-logger
+
+
+
+
+
+# [5.0.0-alpha.2](https://github.com/embarklabs/embark/compare/v5.0.0-alpha.1...v5.0.0-alpha.2) (2019-12-05)
 
 
 ### Bug Fixes
 
-* **@embark/proxy:** Fix unsubsribe handling and add new provider ([f6f4507](https://github.com/embark-framework/embark/commit/f6f4507))
+* **@embark/proxy:** Fix unsubsribe handling and add new provider ([f6f4507](https://github.com/embarklabs/embark/commit/f6f4507))
 
 
 
 
 
-# [5.0.0-alpha.1](https://github.com/embark-framework/embark/compare/v5.0.0-alpha.0...v5.0.0-alpha.1) (2019-11-05)
+# [5.0.0-alpha.1](https://github.com/embarklabs/embark/compare/v5.0.0-alpha.0...v5.0.0-alpha.1) (2019-11-05)
 
 **Note:** Version bump only for package embark-transaction-logger
 
@@ -91,17 +91,17 @@ to implement it.
 
 
 
-# [5.0.0-alpha.0](https://github.com/embark-framework/embark/compare/v4.1.1...v5.0.0-alpha.0) (2019-10-28)
+# [5.0.0-alpha.0](https://github.com/embarklabs/embark/compare/v4.1.1...v5.0.0-alpha.0) (2019-10-28)
 
 
 ### Bug Fixes
 
-* **@embark/transaction-logger:** don't show logs for stray receipts ([395ae83](https://github.com/embark-framework/embark/commit/395ae83))
+* **@embark/transaction-logger:** don't show logs for stray receipts ([395ae83](https://github.com/embarklabs/embark/commit/395ae83))
 
 
 ### Build System
 
-* bump all packages' engines settings ([#1985](https://github.com/embark-framework/embark/issues/1985)) ([ed02cc8](https://github.com/embark-framework/embark/commit/ed02cc8))
+* bump all packages' engines settings ([#1985](https://github.com/embarklabs/embark/issues/1985)) ([ed02cc8](https://github.com/embarklabs/embark/commit/ed02cc8))
 
 
 ### BREAKING CHANGES
@@ -125,7 +125,7 @@ released.
 
 
 
-## [4.1.1](https://github.com/embark-framework/embark/compare/v4.1.0...v4.1.1) (2019-08-28)
+## [4.1.1](https://github.com/embarklabs/embark/compare/v4.1.0...v4.1.1) (2019-08-28)
 
 **Note:** Version bump only for package embark-console-listener
 
@@ -133,7 +133,7 @@ released.
 
 
 
-# [4.1.0](https://github.com/embark-framework/embark/compare/v4.1.0-beta.6...v4.1.0) (2019-08-12)
+# [4.1.0](https://github.com/embarklabs/embark/compare/v4.1.0-beta.6...v4.1.0) (2019-08-12)
 
 **Note:** Version bump only for package embark-console-listener
 
@@ -141,7 +141,7 @@ released.
 
 
 
-# [4.1.0-beta.6](https://github.com/embark-framework/embark/compare/v4.1.0-beta.5...v4.1.0-beta.6) (2019-08-09)
+# [4.1.0-beta.6](https://github.com/embarklabs/embark/compare/v4.1.0-beta.5...v4.1.0-beta.6) (2019-08-09)
 
 **Note:** Version bump only for package embark-console-listener
 
@@ -149,7 +149,7 @@ released.
 
 
 
-# [4.1.0-beta.5](https://github.com/embark-framework/embark/compare/v4.1.0-beta.4...v4.1.0-beta.5) (2019-07-10)
+# [4.1.0-beta.5](https://github.com/embarklabs/embark/compare/v4.1.0-beta.4...v4.1.0-beta.5) (2019-07-10)
 
 **Note:** Version bump only for package embark-console-listener
 
@@ -157,7 +157,7 @@ released.
 
 
 
-# [4.1.0-beta.4](https://github.com/embark-framework/embark/compare/v4.1.0-beta.3...v4.1.0-beta.4) (2019-06-27)
+# [4.1.0-beta.4](https://github.com/embarklabs/embark/compare/v4.1.0-beta.3...v4.1.0-beta.4) (2019-06-27)
 
 **Note:** Version bump only for package embark-console-listener
 
@@ -165,7 +165,7 @@ released.
 
 
 
-# [4.1.0-beta.3](https://github.com/embark-framework/embark/compare/v4.1.0-beta.2...v4.1.0-beta.3) (2019-06-07)
+# [4.1.0-beta.3](https://github.com/embarklabs/embark/compare/v4.1.0-beta.2...v4.1.0-beta.3) (2019-06-07)
 
 **Note:** Version bump only for package embark-console-listener
 
@@ -173,7 +173,7 @@ released.
 
 
 
-# [4.1.0-beta.2](https://github.com/embark-framework/embark/compare/v4.1.0-beta.1...v4.1.0-beta.2) (2019-05-22)
+# [4.1.0-beta.2](https://github.com/embarklabs/embark/compare/v4.1.0-beta.1...v4.1.0-beta.2) (2019-05-22)
 
 **Note:** Version bump only for package embark-console-listener
 
@@ -181,6 +181,6 @@ released.
 
 
 
-# [4.1.0-beta.1](https://github.com/embark-framework/embark/compare/v4.1.0-beta.0...v4.1.0-beta.1) (2019-05-15)
+# [4.1.0-beta.1](https://github.com/embarklabs/embark/compare/v4.1.0-beta.0...v4.1.0-beta.1) (2019-05-15)
 
 **Note:** Version bump only for package embark-console-listener

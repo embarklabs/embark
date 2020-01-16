@@ -213,7 +213,7 @@ class Layout extends React.Component {
         </NavItem>
         <NavItem>
           <NavLink id="open-github"
-                   href="https://github.com/embark-framework"
+                   href="https://github.com/embarklabs"
                    title="Github"
                    rel="noopener noreferrer"
                    target="_blank">

@@ -31,24 +31,24 @@ The `--template` option has been deprecated in v5 and support will be removed in
 
 Another possible scenario to start from is taking advantage of a template. Embark [comes with templates](/templates) for various environments and frameworks, but you can also use any template created by the community. In order to create a new app from a template, use the `--template` option and either specify a supported template name, or a Git host URL.
 
-The following example creates a new application from [Embark's TypeScript template](https://github.com/embark-framework/embark-typescript-template):
+The following example creates a new application from [Embark's TypeScript template](https://github.com/embarklabs/embark-typescript-template):
 
 ```
 $ embark new <YourDAppName> --template typescript
 ```
 
-To learn more about supported templates, head over to our [templates](/templates) or look out for `embark-[template_name]-template` [repositories](https://github.com/embark-framework?utf8=%E2%9C%93&q=template&type=&language=).
+To learn more about supported templates, head over to our [templates](/templates) or look out for `embark-[template_name]-template` [repositories](https://github.com/embarklabs?utf8=%E2%9C%93&q=template&type=&language=).
 
 Templates can also be fetched from external resources as long as they can be referred to via Git host URLs. The following example fetches a template from a GitHub repository and uses that to create that app:
 
 ```
-$ embark new <YourDAppName> --template https://github.com/embark-framework/embark-vue-template
+$ embark new <YourDAppName> --template https://github.com/embarklabs/embark-vue-template
 ```
 
 In fact, in case of GitHub, the same can be done with the username/repository shortcut:
 
 ```
-$ embark new <YourDAppName> --template embark-framework/embark-vue-template
+$ embark new <YourDAppName> --template embarklabs/embark-vue-template
 ```
 
 It is even possible to specify the branch by appending a `#` and the branch name you're interested in:

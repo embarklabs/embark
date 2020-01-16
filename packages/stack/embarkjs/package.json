@@ -4,8 +4,8 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "EmbarkJS APIs for Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/stack/embarkjs#readme",
-  "bugs": "https://github.com/embark-framework/embark/issues",
+  "homepage": "https://github.com/embarklabs/embark/tree/master/packages/stack/embarkjs#readme",
+  "bugs": "https://github.com/embarklabs/embark/issues",
   "keywords": [
     "blockchain",
     "dapps",
@@ -22,7 +22,7 @@
   "repository": {
     "directory": "packages/stack/embarkjs",
     "type": "git",
-    "url": "https://github.com/embark-framework/embark.git"
+    "url": "https://github.com/embarklabs/embark.git"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
