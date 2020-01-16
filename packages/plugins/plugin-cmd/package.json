@@ -4,13 +4,13 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Plugin installation utility for Embark",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/plugin-cmd#readme",
-  "bugs": "https://github.com/embark-framework/embark/issues",
+  "homepage": "https://github.com/embarklabs/embark/tree/master/packages/plugins/plugin-cmd#readme",
+  "bugs": "https://github.com/embarklabs/embark/issues",
   "license": "MIT",
   "repository": {
     "directory": "packages/plugins/plugin-cmd",
     "type": "git",
-    "url": "https://github.com/embark-framework/embark.git"
+    "url": "https://github.com/embarklabs/embark.git"
   },
   "files": [
     "dist"

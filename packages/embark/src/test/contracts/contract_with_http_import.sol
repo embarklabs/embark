@@ -1,6 +1,6 @@
 pragma solidity ^0.5.0;
 
-import "https://github.com/embark-framework/embark/blob/master/dapps/tests/contracts/contracts/contract_args.sol";
+import "https://github.com/embarklabs/embark/blob/master/dapps/tests/contracts/contracts/contract_args.sol";
 
 contract SimpleStorage {
   uint public storedData;

@@ -2,15 +2,15 @@
   "name": "embark-mocha-tests",
   "version": "5.0.0",
   "description": "Mocha Test Runner",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/mocha-tests#readme",
+  "homepage": "https://github.com/embarklabs/embark/tree/master/packages/plugins/mocha-tests#readme",
   "repository": {
     "directory": "packages/plugins/mocha-tests",
     "type": "git",
-    "url": "https://github.com/embark-framework/embark/"
+    "url": "https://github.com/embarklabs/embark/"
   },
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "license": "MIT",
-  "bugs": "https://github.com/embark-framework/embark/issues",
+  "bugs": "https://github.com/embarklabs/embark/issues",
   "keywords": [
     "blockchain",
     "dapps",

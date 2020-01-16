@@ -17,4 +17,4 @@ Even though Nethermind supports Websocket connections, it does not support `eth_
 Also, please note that you will need to change the `endpoint` in the blockchain configuration to `ws://localhost:8545/ws/json-rpc` when working in local. Do change the port or the  host to whatever you need.
 
 Visit [embark.status.im](https://embark.status.im/) to get started with
-[Embark](https://github.com/embark-framework/embark).
+[Embark](https://github.com/embarklabs/embark).

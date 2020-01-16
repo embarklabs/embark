@@ -207,8 +207,8 @@ config({
 
 Testing is covered in-depth in our [testing guide](/docs/contracts_testing.html).
 
-To see any of the new APIs in action, have a look at our [template](https://github.com/embark-framework/embark/tree/ba0d6d17f30018d8258c65d85f17bea100c3ad0a/dapps/templates) and [test dapps](https://github.com/embark-framework/embark/tree/ba0d6d17f30018d8258c65d85f17bea100c3ad0a/dapps/tests) in the official Embark repository.
+To see any of the new APIs in action, have a look at our [template](https://github.com/embarklabs/embark/tree/ba0d6d17f30018d8258c65d85f17bea100c3ad0a/dapps/templates) and [test dapps](https://github.com/embarklabs/embark/tree/ba0d6d17f30018d8258c65d85f17bea100c3ad0a/dapps/tests) in the official Embark repository.
 
-Obviously we've worked on many more things as part of the v5 release. For a full list of features and bug fixes, head over to our [changelog](https://github.com/embark-framework/embark/blob/master/CHANGELOG.md#500-2020-01-07).
+Obviously we've worked on many more things as part of the v5 release. For a full list of features and bug fixes, head over to our [changelog](https://github.com/embarklabs/embark/blob/master/CHANGELOG.md#500-2020-01-07).
 
 As always, we encourage our users to install the latest version of Embark and give it a spin. Feedback is very welcome and we can't wait to see the great apps you'll be building with it!

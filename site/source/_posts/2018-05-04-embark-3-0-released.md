@@ -15,7 +15,7 @@ Embark has a new website and up to date documentation which can be found at http
 
 ## More Smart Contract Languages
 
-Besides Solidity, Embark now also supports [Vyper](https://github.com/ethereum/vyper/) out of the box, as well as [Bamboo](https://github.com/pirapira/bamboo) through an embark [plugin](https://github.com/embark-framework/embark-bamboo)
+Besides Solidity, Embark now also supports [Vyper](https://github.com/ethereum/vyper/) out of the box, as well as [Bamboo](https://github.com/pirapira/bamboo) through an embark [plugin](https://github.com/embarklabs/embark-bamboo)
 You can use these languages side by side, and take advantage of Embark's features such as contract testing just like you would with Solidity.
 
 ## DApp Imports
@@ -193,7 +193,7 @@ Swarm is now completely integrated on-par with IPFS. You can use interact with S
 
 ## Misc Bugfixes and Improvements
 
-For a complete list please refer to the [release notes in github](https://github.com/embark-framework/embark/releases/tag/3.0.0)
+For a complete list please refer to the [release notes in github](https://github.com/embarklabs/embark/releases/tag/3.0.0)
 
 ## Chatroom
 

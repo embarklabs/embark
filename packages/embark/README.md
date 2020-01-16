@@ -1,13 +1,13 @@
-![Embark](https://github.com/embark-framework/embark/raw/master/header.jpg)
+![Embark](https://github.com/embarklabs/embark/raw/master/header.jpg)
 
 [![npm](https://img.shields.io/npm/dm/embark.svg)](https://npmjs.com/package/embark)
 [![Gitter](https://img.shields.io/gitter/room/embark-framework/Lobby.svg)](https://gitter.im/embark-framework/Lobby)
-[![Build Status](https://dev.azure.com/embark-framework/Embark/_apis/build/status/embark-framework.embark?branchName=master)](https://dev.azure.com/embark-framework/Embark/_build/latest?definitionId=1&branchName=master)
-![Open PRs](https://img.shields.io/github/issues-pr-raw/embark-framework/embark.svg)
-![Closed PRs](https://img.shields.io/github/issues-pr-closed-raw/embark-framework/embark.svg)
-![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/y/embark-framework/embark.svg)
-[![Coverage Status](https://coveralls.io/repos/github/embark-framework/embark/badge.svg)](https://coveralls.io/github/embark-framework/embark)
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=embark-framework/embark)](https://dependabot.com)
+[![Build Status](https://dev.azure.com/embarklabs/Embark/_apis/build/status/embark-framework.embark?branchName=master)](https://dev.azure.com/embarklabs/Embark/_build/latest?definitionId=1&branchName=master)
+![Open PRs](https://img.shields.io/github/issues-pr-raw/embarklabs/embark.svg)
+![Closed PRs](https://img.shields.io/github/issues-pr-closed-raw/embarklabs/embark.svg)
+![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/y/embarklabs/embark.svg)
+[![Coverage Status](https://coveralls.io/repos/github/embarklabs/embark/badge.svg)](https://coveralls.io/github/embarklabs/embark)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=embarklabs/embark)](https://dependabot.com)
 
 What is Embark
 ======

@@ -4,7 +4,7 @@
 // performed during builds.
 
 // To enable Flow type checking refer to the preconfigured template:
-//   https://github.com/embark-framework/embark-flow-template
+//   https://github.com/embarklabs/embark-flow-template
 // A new DApp can be created from that template with:
 //   embark new --template flow
 // NOTE: the `--template` option is DEPRECATED in v5.
@@ -18,7 +18,7 @@ module.exports = {
   // builds.
 
   // To enable TypeScript type checking refer to the preconfigured template:
-  //   https://github.com/embark-framework/embark-typescript-template
+  //   https://github.com/embarklabs/embark-typescript-template
   // A new DApp can be created from that template with:
   //   embark new --template typescript
   // NOTE: the `--template` option is DEPRECATED in v5.

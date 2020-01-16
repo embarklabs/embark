@@ -15,7 +15,7 @@ This tutorial is split up into three parts, so every individual part can get our
 - [**Part 2** - Testing the Smart Contract through EmbarkJS](/news/2019/02/11/building-a-decentralized-reddit-with-embark-part-2/)
 - [**Part 3** - Building a simple front-end using React](/news/2019/02/18/building-a-decentralized-reddit-with-embark-part-3/)
 
-**The code for this tutorial can be found in [this repository](https://github.com/embark-framework/dreddit-tutorial)**.
+**The code for this tutorial can be found in [this repository](https://github.com/embarklabs/dreddit-tutorial)**.
 
 Let's get right to it!
 
@@ -215,7 +215,7 @@ function getVote(uint _postId) public view returns (uint8) {
 
 And with that, our Smart Contract is pretty much done! Just to make sure that everything is compiling smoothly, we can execute `embark build --contracts` in case there's no existing Embark instance watching our work already.
 
-Here's the complete Smart Contract code (you can also find it in [this repository](https://github.com/embark-framework/dreddit-tutorial):
+Here's the complete Smart Contract code (you can also find it in [this repository](https://github.com/embarklabs/dreddit-tutorial):
 
 {% code_block copyBtn:true %}
 pragma solidity ^0.5.0;

@@ -29,7 +29,7 @@ algolia:
     apiKey: 439d8dc2add18007a2f31be4a9c0ed70
     indexName: embark
 twitter: EmbarkProject
-github: embark-framework/embark
+github: embarklabs/embark
 autoprefixer:
   enable: true
   browsers:

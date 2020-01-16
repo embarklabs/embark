@@ -268,7 +268,7 @@ export class TemplateGenerator {
         embarkVersion = semver(require(embarkPath('package.json')).version);
         templateAndBranch.push(`${embarkVersion.major}.${embarkVersion.minor}`);
       }
-      templateAndBranch[0] = `embark-framework/embark-${templateAndBranch[0]}-template`;
+      templateAndBranch[0] = `embarklabs/embark-${templateAndBranch[0]}-template`;
       hgi = hostedGitInfo.fromUrl(templateAndBranch.join('#'));
       if (fallback) {
         hgi_fallback = hostedGitInfo.fromUrl(templateAndBranch[0]);

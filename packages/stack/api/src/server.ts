@@ -237,7 +237,7 @@ export default class Server {
         `;
         let notice = `
           <p>this distribution of <code>embark-ui</code> appears to be broken,
-            please <a href="https://github.com/embark-framework/embark/issues">
+            please <a href="https://github.com/embarklabs/embark/issues">
               file an issue</a></p>
         `;
         if (this.isInsideMonorepo) {

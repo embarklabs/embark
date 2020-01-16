@@ -4,8 +4,8 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "JavaScript library for easily interacting with web3 technologies",
-  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/embarkjs/embarkjs#readme",
-  "bugs": "https://github.com/embark-framework/embark/issues",
+  "homepage": "https://github.com/embarklabs/embark/tree/master/packages/embarkjs/embarkjs#readme",
+  "bugs": "https://github.com/embarklabs/embark/issues",
   "keywords": [
     "blockchain",
     "dapps",
@@ -19,7 +19,7 @@
   "repository": {
     "directory": "packages/embarkjs/embarkjs",
     "type": "git",
-    "url": "https://github.com/embark-framework/embark.git"
+    "url": "https://github.com/embarklabs/embark.git"
   },
   "main": "./dist/lib/node/index.js",
   "types": "./dist/lib/node/index.d.ts",

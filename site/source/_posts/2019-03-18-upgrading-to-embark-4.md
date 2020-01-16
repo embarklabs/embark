@@ -79,7 +79,7 @@ Starting a new Dapp from scratch is easy, we have two options.
 
 #### Embark's create-react-dapp template
 
-The easiest option is to use our [new Embark CRA template](https://github.com/embark-framework/embark-create-react-dapp-template). It sets up a simple Embark project with all of the familiar files present in an Embark 3.x Dapp, with one minor difference: the config files are located in an `embarkConfig/` folder in the root of the Dapp to make sure they don't clash with CRA's config folder/files.
+The easiest option is to use our [new Embark CRA template](https://github.com/embarklabs/embark-create-react-dapp-template). It sets up a simple Embark project with all of the familiar files present in an Embark 3.x Dapp, with one minor difference: the config files are located in an `embarkConfig/` folder in the root of the Dapp to make sure they don't clash with CRA's config folder/files.
 
 To get started with Embark's CRA template,
 

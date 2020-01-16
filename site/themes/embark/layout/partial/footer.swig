@@ -37,10 +37,10 @@
               <a href="https://gitter.im/embark-framework/Lobby" class="u-link-ghost" title="Gitter">Gitter</a>
             </li>
             <li class="o-list-bare__item">
-              <a href="https://github.com/embark-framework/embark/issues" class="u-link-ghost" title="{{__('footer.section_help.issues')}}">{{__('footer.section_help.issues')}}</a>
+              <a href="https://github.com/embarklabs/embark/issues" class="u-link-ghost" title="{{__('footer.section_help.issues')}}">{{__('footer.section_help.issues')}}</a>
             </li>
             <li class="o-list-bare__item">
-              <a href="https://github.com/embark-framework/embark/blob/master/CODE_OF_CONDUCT.md" class="u-link-ghost" title="{{__('footer.section_help.coc')}}">{{__('footer.section_help.coc')}}</a>
+              <a href="https://github.com/embarklabs/embark/blob/master/CODE_OF_CONDUCT.md" class="u-link-ghost" title="{{__('footer.section_help.coc')}}">{{__('footer.section_help.coc')}}</a>
             </li>
           </ul>
         </div>
@@ -48,7 +48,7 @@
           <p class="c-category-title u-text-light">Community</p>
           <ul class="o-list-bare">
             <li class="o-list-bare__item">
-              <a href="https://github.com/embark-framework" class="u-link-ghost" title="Github">Github</a>
+              <a href="https://github.com/embarklabs" class="u-link-ghost" title="Github">Github</a>
             </li>
             <li class="o-list-bare__item">
               <a href="https://twitter.com/EmbarkProject" class="u-link-ghost" title="Twitter">Twitter</a>
