@@ -6,7 +6,6 @@ import { dappPath, escapeHtml, exit, jsonFunctionReplacer } from "embark-utils";
 import stringify from "json-stringify-safe";
 import { dirname } from "path";
 import util from "util";
-import Suggestions from "./suggestions";
 
 type MatchFunction = (cmd: string) => boolean;
 interface HelpDescription {
@@ -26,7 +25,6 @@ export default class Console {
   private config: any;
   private history: string[];
   private cmdHistoryFile: string;
-  private suggestions?: Suggestions;
   // private providerReady: boolean;
   private helpCmds: any;
 
@@ -82,8 +80,6 @@ export default class Console {
       return;
     }
     this.registerApi();
-
-    this.suggestions = new Suggestions(embark, options);
   }
 
   private get isEmbarkConsole() {

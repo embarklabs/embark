@@ -119,6 +119,9 @@
       "path": "packages/plugins/specialconfigs"
     },
     {
+      "path": "packages/plugins/suggestions"
+    },
+    {
       "path": "packages/plugins/swarm"
     },
     {

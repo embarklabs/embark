@@ -3,7 +3,7 @@ import { fuzzySearch } from "embark-utils";
 import { readJsonSync } from "fs-extra";
 import { join } from "path";
 
-const { suggestions: defaultSuggestions } = readJsonSync(join(__dirname, "../../suggestions.json"));
+const { suggestions: defaultSuggestions } = readJsonSync(join(__dirname, "../suggestions.json"));
 
 interface ContractsManager {
   [key: string]: any;
@@ -17,13 +17,6 @@ interface Suggestion {
 
 type SuggestionsList = Suggestion[];
 
-// =============================================
-// =============================================
-// TODO: this should be moved to its own module
-// it's a plugin not a core module
-// =============================================
-// =============================================
-
 export default class Suggestions {
   private embark: Embark;
   private events: EmbarkEvents;
@@ -35,7 +28,6 @@ export default class Suggestions {
     this.embark = embark;
     this.events = embark.events;
     this.contracts = {};
-
     this.registerApi();
     this.listenToEvents();
   }

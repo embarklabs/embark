@@ -84,6 +84,7 @@
     "embark-i18n": "^5.1.0-nightly.0",
     "embark-logger": "^5.1.0-nightly.0",
     "embark-reset": "^5.1.0-nightly.0",
+    "embark-suggestions": "^5.1.0-nightly.0",
     "embark-utils": "^5.1.0-nightly.0",
     "eth-ens-namehash": "2.0.8",
     "find-up": "2.1.0",
