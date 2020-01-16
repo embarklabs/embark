@@ -8,6 +8,12 @@ const Test = require('Embark/contracts/Test');
 const SomeContract = require('Embark/contracts/SomeContract');
 
 config({
+  namesystem: {
+    enabled: true,
+    register: {
+      rootDomain: "embark.eth"
+    }
+  },
   contracts: {
     deploy: {
       ZAMyLib: {},
