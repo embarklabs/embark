@@ -43,6 +43,9 @@
       "path": "../plugins/solidity"
     },
     {
+      "path": "../plugins/suggestions"
+    },
+    {
       "path": "../plugins/transaction-logger"
     },
     {

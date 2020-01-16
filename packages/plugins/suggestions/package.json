@@ -1,0 +1,76 @@
+{
+  "name": "embark-suggestions",
+  "version": "5.1.0-nightly.0",
+  "author": "Iuri Matias <iuri.matias@gmail.com>",
+  "contributors": [],
+  "description": "Suggestions plugin for Embark",
+  "homepage": "https://github.com/embark-framework/embark/tree/master/packages/plugins/suggestions#readme",
+  "bugs": "https://github.com/embark-framework/embark/issues",
+  "keywords": [],
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "repository": {
+    "directory": "packages/plugins/suggestions",
+    "type": "git",
+    "url": "https://github.com/embark-framework/embark.git"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "embark-collective": {
+    "build:node": true,
+    "typecheck": true
+  },
+  "scripts": {
+    "_build": "npm run solo -- build",
+    "_typecheck": "npm run solo -- typecheck",
+    "ci": "npm run qa",
+    "clean": "npm run reset",
+    "lint": "npm-run-all lint:*",
+    "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
+    "qa": "npm-run-all lint _typecheck _build test",
+    "reset": "npx rimraf dist embark-*.tgz package",
+    "solo": "embark-solo",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs3": "7.7.4",
+    "core-js": "3.4.3",
+    "embark-core": "^5.1.0-nightly.0",
+    "embark-utils": "^5.1.0-nightly.0",
+    "fs-extra": "8.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.7.4",
+    "babel-jest": "24.9.0",
+    "embark-solo": "^5.1.0-nightly.0",
+    "embark-testing": "^5.1.0-nightly.0",
+    "eslint": "5.7.0",
+    "npm-run-all": "4.1.5",
+    "rimraf": "3.0.0",
+    "tslint": "5.20.1",
+    "typescript": "3.7.2"
+  },
+  "engines": {
+    "node": ">=10.17.0 <12.0.0",
+    "npm": ">=6.11.3",
+    "yarn": ">=1.19.1"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/test/**/*.js"
+    ],
+    "transform": {
+      "\\.(js|ts)$": [
+        "babel-jest",
+        {
+          "rootMode": "upward"
+        }
+      ]
+    }
+  }
+}
+
