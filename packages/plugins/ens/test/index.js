@@ -4,7 +4,7 @@ const {Utils} = require('embarkjs');
 const secureSend = Utils.secureSend;
 
 describe('embark-ens', () => {
-  let ens, doneCb;
+  let ens;
 
   const { embark } = fakeEmbark();
 
@@ -22,8 +22,9 @@ describe('embark-ens', () => {
           rootDomain: 'root.eth'
         },
         dappConnection: []
-      }
-    };
+      },
+      contractsConfig: {dappAutoEnable: true}
+    }
   });
 
   afterEach(() => {
@@ -37,6 +38,7 @@ describe('embark-ens', () => {
           path: ['test-dir', 'config'],
           file: 'namesystem.json',
           format: 'json',
+          dappAutoEnable: true,
           content: Object.assign({}, embark.config.namesystemConfig, config)
         });
         cb();
