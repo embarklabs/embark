@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.1.0-nightly.0](https://github.com/embarklabs/embark/compare/v5.0.0...v5.1.0-nightly.0) (2020-01-17)
+
+
+### Bug Fixes
+
+* **@embark/cmd_controller:** fix build command to escape on finish ([e2767c2](https://github.com/embarklabs/embark/commit/e2767c2))
+* **@embark/debugger:** Prevent error if contract not tracked by Embark ([1e1172e](https://github.com/embarklabs/embark/commit/1e1172e))
+* **@embark/ens:** fix Infura connection and testnet use of ENS ([42bd3b7](https://github.com/embarklabs/embark/commit/42bd3b7))
+* **@embark/test-dapp:** fix test_dapp broken for ENS resolve ([f5849e0](https://github.com/embarklabs/embark/commit/f5849e0))
+* **@embark/tests:** Fix failing test with `—node=embark` ([81af3af](https://github.com/embarklabs/embark/commit/81af3af))
+* **@embark/transaction-logger:** Circular JSON log and unknown contract log level ([5843a8e](https://github.com/embarklabs/embark/commit/5843a8e))
+* **@embark/utils:** fix deconstruct url to return port as an integer ([4190d5e](https://github.com/embarklabs/embark/commit/4190d5e))
+* **transaction-logger:** fix circular dep issue with util.inspect ([6f239f4](https://github.com/embarklabs/embark/commit/6f239f4))
+
+
+### Features
+
+* **@embark/deployment:** introduce `interfaces` and `libraries` configuration ([73d0443](https://github.com/embarklabs/embark/commit/73d0443))
+* **@embark/nethermind:** add Nethermind blockchain client plugin ([6db8d87](https://github.com/embarklabs/embark/commit/6db8d87))
+* **@embark/test-runner:** expose evmClientVersion for conditional tests ([e37d3f7](https://github.com/embarklabs/embark/commit/e37d3f7))
+* **@embark/testing:** introduce proper request2 api for async/await ([c947517](https://github.com/embarklabs/embark/commit/c947517))
+
+
+
+
+
 # [5.0.0](https://github.com/embarklabs/embark/compare/v5.0.0-beta.0...v5.0.0) (2020-01-07)
 
 

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.1.0-nightly.0](https://github.com/embarklabs/embark/compare/v5.0.0...v5.1.0-nightly.0) (2020-01-17)
+
+
+### Bug Fixes
+
+* **@embark/transaction-logger:** Circular JSON log and unknown contract log level ([5843a8e](https://github.com/embarklabs/embark/commit/5843a8e))
+* **transaction-logger:** fix circular dep issue with util.inspect ([6f239f4](https://github.com/embarklabs/embark/commit/6f239f4))
+
+
+
+
+
 # [5.0.0](https://github.com/embarklabs/embark/compare/v5.0.0-beta.0...v5.0.0) (2020-01-07)
 
 **Note:** Version bump only for package embark-transaction-logger

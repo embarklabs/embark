@@ -1,6 +1,6 @@
 {
   "name": "embark-solc",
-  "version": "5.0.0",
+  "version": "5.1.0-nightly.0",
   "author": "Richard Ramos",
   "contributors": [],
   "description": "Solc plugin for Embark",
@@ -51,7 +51,7 @@
     "shelljs": "0.8.3"
   },
   "devDependencies": {
-    "embark-solo": "^5.0.0",
+    "embark-solo": "^5.1.0-nightly.0",
     "eslint": "5.7.0",
     "npm-run-all": "4.1.5",
     "rimraf": "3.0.0"

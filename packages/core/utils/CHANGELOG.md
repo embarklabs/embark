@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.1.0-nightly.0](https://github.com/embarklabs/embark/compare/v5.0.0...v5.1.0-nightly.0) (2020-01-17)
+
+
+### Bug Fixes
+
+* **@embark/utils:** fix deconstruct url to return port as an integer ([4190d5e](https://github.com/embarklabs/embark/commit/4190d5e))
+
+
+### Features
+
+* **@embark/nethermind:** add Nethermind blockchain client plugin ([6db8d87](https://github.com/embarklabs/embark/commit/6db8d87))
+
+
+
+
+
 # [5.0.0](https://github.com/embarklabs/embark/compare/v5.0.0-beta.0...v5.0.0) (2020-01-07)
 
 **Note:** Version bump only for package embark-utils

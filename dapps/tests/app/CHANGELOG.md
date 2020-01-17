@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.1.0-nightly.0](https://github.com/embarklabs/embark/compare/v5.0.0...v5.1.0-nightly.0) (2020-01-17)
+
+
+### Bug Fixes
+
+* **@embark/test-dapp:** fix test_dapp broken for ENS resolve ([f5849e0](https://github.com/embarklabs/embark/commit/f5849e0))
+* **@embark/tests:** Fix failing test with `—node=embark` ([81af3af](https://github.com/embarklabs/embark/commit/81af3af))
+
+
+### Features
+
+* **@embark/deployment:** introduce `interfaces` and `libraries` configuration ([73d0443](https://github.com/embarklabs/embark/commit/73d0443))
+* **@embark/test-runner:** expose evmClientVersion for conditional tests ([e37d3f7](https://github.com/embarklabs/embark/commit/e37d3f7))
+
+
+
+
+
 # [5.0.0](https://github.com/embarklabs/embark/compare/v5.0.0-beta.0...v5.0.0) (2020-01-07)
 
 **Note:** Version bump only for package embark-dapp-test-app

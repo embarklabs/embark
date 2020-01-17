@@ -1,6 +1,6 @@
 {
   "name": "embark-console",
-  "version": "5.0.0",
+  "version": "5.1.0-nightly.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Console component for Embark",
@@ -53,15 +53,15 @@
     "async": "2.6.1",
     "chalk": "2.4.2",
     "core-js": "3.4.3",
-    "embark-core": "^5.0.0",
-    "embark-i18n": "^5.0.0",
-    "embark-utils": "^5.0.0",
+    "embark-core": "^5.1.0-nightly.0",
+    "embark-i18n": "^5.1.0-nightly.0",
+    "embark-utils": "^5.1.0-nightly.0",
     "fs-extra": "8.1.0",
     "json-stringify-safe": "5.0.1"
   },
   "devDependencies": {
-    "embark-logger": "^5.0.0",
-    "embark-solo": "^5.0.0",
+    "embark-logger": "^5.1.0-nightly.0",
+    "embark-solo": "^5.1.0-nightly.0",
     "eslint": "5.7.0",
     "mocha": "6.2.2",
     "npm-run-all": "4.1.5",
