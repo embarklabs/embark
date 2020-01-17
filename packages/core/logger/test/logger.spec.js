@@ -11,14 +11,27 @@ describe('core/logger', () => {
 
   let logger, testLogFn, logFile;
 
+  const fsMock = {
+    logs: {},
+    appendFile: (file, content, callback) => {
+      if (!fsMock.logs[file]) {
+        fsMock.logs[file] = [];
+      }
+      fsMock.logs[file].push(content);
+      callback();
+    }
+  };
+
   beforeEach(() => {
     logFile = tmp.fileSync();
+    fsMock[logFile.name] = [];
 
     testLogFn = sinon.fake();
     logger = new Logger({
       events: embark.events,
       logFunction: testLogFn,
-      logFile: logFile.name
+      logFile: logFile.name,
+      fs: fsMock
     });
   });
 
@@ -41,10 +54,16 @@ describe('core/logger', () => {
     assert(testLogFn.calledWith('\u001b[31mHello world\u001b[39m'));
   });
 
-  test('it should write logs to log file', () => {
-    logger.info('Some test log');
-    const logs = fs.readFileSync(logFile.name, 'utf8')
-    assert.ok(logs.indexOf('[info]:  Some test log') > -1);
+  test('it should write logs to log file', (done) => {
+    const stats = fs.statSync(logFile.name);
+    logger.info('Some test log', () => {
+      fsMock.logs[logFile.name].forEach(entry => {
+        if (entry.indexOf('[info]:  Some test log') > -1) {
+          assert.ok(true);
+        }
+      });
+      done();
+    });
   });
 
   test('it should not log if log method level is higher than configured log level', () => {

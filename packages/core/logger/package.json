@@ -45,6 +45,7 @@
     "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
+    "async": "2.6.1",
     "@babel/runtime-corejs3": "7.8.3",
     "colors": "1.4.0",
     "core-js": "3.6.4",
