@@ -23,7 +23,7 @@
     "hexo-server": "^1.0.0",
     "lodash": "^4.17.13",
     "lunr": "^2.3.8",
-    "uuid": "^3.3.3"
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
     "del": "^5.1.0",
