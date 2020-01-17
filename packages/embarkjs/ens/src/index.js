@@ -172,7 +172,9 @@ function connectHttp(web3, endpoint, callback) {
 async function connectWeb3(web3, callback) {
   if (typeof window !== 'undefined' && window.ethereum) {
     try {
-      await ethereum.enable();
+      if (this.dappAutoEnable) {
+        await ethereum.enable();
+      }
       web3.setProvider(ethereum);
       return checkConnection(callback);
     } catch (e) {
@@ -207,6 +209,7 @@ __embarkENS.setProvider = function(config) {
   this.registration = config.registration;
   this.env = config.env;
   this.ready = false;
+  this.dappAutoEnable = config.dappAutoEnable;
 
   reduce(config.dappConnection, false, (result, connectionString, next) => {
     if (result.connected) {

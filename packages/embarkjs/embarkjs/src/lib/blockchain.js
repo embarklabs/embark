@@ -306,7 +306,7 @@ function Contract(options) {
   });
 
   return ContractClass;
-};
+}
 
 Contract.prototype.deploy = function(args, _options) {
   var self = this;

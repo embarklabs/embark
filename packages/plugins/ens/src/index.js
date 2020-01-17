@@ -140,6 +140,7 @@ class ENS {
         path: [this.config.embarkConfig.generationDir, 'config'],
         file: 'namesystem.json',
         format: 'json',
+        dappAutoEnable: this.config.contractsConfig.dappAutoEnable,
         content: Object.assign({}, this.embark.config.namesystemConfig, config)
       }, cb);
     });
