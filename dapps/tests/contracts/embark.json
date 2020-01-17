@@ -12,7 +12,7 @@
     "namesystem": "ens.json"
   },
   "versions": {
-    "solc": "0.4.24"
+    "solc": "0.4.26"
   },
   "plugins": {
   }

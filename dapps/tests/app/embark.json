@@ -15,7 +15,7 @@
   "buildDir": "dist/",
   "config": "config/",
   "versions": {
-    "solc": "0.4.25"
+    "solc": "0.4.26"
   },
   "plugins": {
     "embark-dapp-test-service": {}

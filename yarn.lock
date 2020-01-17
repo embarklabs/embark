@@ -19082,9 +19082,9 @@ sha.js@^2.4.0, sha.js@^2.4.8:
     safe-buffer "^5.0.1"
 
 sha3@^1.2.2:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/sha3/-/sha3-1.2.3.tgz#ed5958fa8331df1b1b8529ca9fdf225a340c5418"
-  integrity sha512-sOWDZi8cDBRkLfWOw18wvJyNblXDHzwMGnRWut8zNNeIeLnmMRO17bjpLc7OzMuj1ASUgx2IyohzUCAl+Kx5vA==
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/sha3/-/sha3-1.2.6.tgz#102aa3e47dc793e2357902c3cce8760822f9e905"
+  integrity sha512-KgLGmJGrmNB4JWVsAV11Yk6KbvsAiygWJc7t5IebWva/0NukNrjJqhtKhzy3Eiv2AKuGvhZZt7dt1mDo7HkoiQ==
   dependencies:
     nan "2.13.2"
 
