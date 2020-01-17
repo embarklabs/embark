@@ -5,6 +5,8 @@ variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
   ipfsVersion: '0.4.22'
   node10: '^10.17.0'
+  node12: '^12.0.0'
+  node13: '^13.0.0'
   pythonVersion: '2.7.x'
   yarnVersion: '1.19.1'
 
@@ -18,6 +20,24 @@ strategy:
       imageName: 'macos-10.14'
     Node 10 / Windows:
       nodeVersion: $(node10)
+      imageName: 'vs2017-win2016'
+    Node 12 / Linux:
+      nodeVersion: $(node12)
+      imageName: 'ubuntu-18.04'
+    Node 12 / macOS:
+      nodeVersion: $(node12)
+      imageName: 'macos-10.14'
+    Node 12 / Windows:
+      nodeVersion: $(node12)
+      imageName: 'vs2017-win2016'
+    Node 13 / Linux:
+      nodeVersion: $(node13)
+      imageName: 'ubuntu-18.04'
+    Node 13 / macOS:
+      nodeVersion: $(node13)
+      imageName: 'macos-10.14'
+    Node 13 / Windows:
+      nodeVersion: $(node13)
       imageName: 'vs2017-win2016'
 
 pool:
