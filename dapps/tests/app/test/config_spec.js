@@ -10,7 +10,7 @@ config({
   blockchain: {
     accounts: [
       // you can configure custom accounts with a custom balance
-      // see https://embark.status.im/docs/contracts_testing.html#Configuring-accounts
+      // see https://framework.embarklabs.io/docs/contracts_testing.html#Configuring-accounts
       {
         privateKey: "random",
         balance: "10 ether"

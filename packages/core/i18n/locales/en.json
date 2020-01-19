@@ -140,7 +140,7 @@
   "Webserver is offline": "Webserver is offline",
   "DApp path length is too long: \"": "DApp path length is too long: \"",
   "This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less.": "This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less.",
-  "For more info go to http://embark.status.im": "For more info go to http://embark.status.im",
+  "For more info go to http://framework.embarklabs.io": "For more info go to http://framework.embarklabs.io",
   "Cannot upload: {{platform}} node is not running on {{protocol}}://{{host}}{{port}}.": "Cannot upload: {{platform}} node is not running on {{protocol}}://{{host}}{{port}}.",
   "DApp path length is too long: ": "DApp path length is too long: ",
   "WARNING! DApp path length is too long: ": "WARNING! DApp path length is too long: ",

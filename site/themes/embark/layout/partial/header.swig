@@ -25,7 +25,7 @@
               <a href="/community" class="c-navigation__anchor {% if is_current('/community') %}is-active{% endif %}" title="{{__('navigation.community')}}">{{__('navigation.community')}}</a>
             </li>
             <li class="c-navigation__item">
-              <a href="/news" class="c-navigation__anchor {% if is_current('/news') %}is-active{% endif %}" title="{{__('navigation.blog')}}">{{__('navigation.blog')}}</a>
+              <a href="https://blog.embarklabs.io" class="c-navigation__anchor {% if is_current('/news') %}is-active{% endif %}" title="{{__('navigation.blog')}}">{{__('navigation.blog')}}</a>
             </li>
           </ul>
         </div>

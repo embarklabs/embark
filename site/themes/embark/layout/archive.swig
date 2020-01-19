@@ -44,7 +44,7 @@
     {% endfor %}
   </section>
   <div class="o-container o-distance o-center">
-    <a href="/news" class="c-button" title="{{__('archives.back_to_blog_link.title')}}">{{__('archives.back_to_blog_link.label')}}</a>
+    <a href="https://blog.embarklabs.io" class="c-button" title="{{__('archives.back_to_blog_link.title')}}">{{__('archives.back_to_blog_link.label')}}</a>
   </div>
 </main>
 

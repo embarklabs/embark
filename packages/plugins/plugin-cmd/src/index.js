@@ -60,7 +60,7 @@ class PluginCommand {
     ], (err) => {
       if (err) {
         self.embark.logger.error(__('Error installing npm package %s. Please visit ' +
-          'https://embark.status.im/plugins/ for all supported plugins', npmPackage));
+          'https://framework.embarklabs.io/plugins/ for all supported plugins', npmPackage));
         return callback(__('Error occurred'));
       }
       callback(null, __('NPM package %s successfully installed as a plugin', npmPackage));

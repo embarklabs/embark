@@ -1,5 +1,5 @@
 // This file contains only the basic configuration you need to run Embark's node
-// For additional configurations, see: https://embark.status.im/docs/blockchain_configuration.html
+// For additional configurations, see: https://framework.embarklabs.io/docs/blockchain_configuration.html
 module.exports = {
   // default applies to all environments
   default: {
@@ -16,7 +16,7 @@ module.exports = {
   privatenet: {
     // Accounts to use as node accounts
     // The order here corresponds to the order of `web3.eth.getAccounts`, so the first one is the `defaultAccount`
-    // For more account configurations, see: https://embark.status.im/docs/blockchain_accounts_configuration.html
+    // For more account configurations, see: https://framework.embarklabs.io/docs/blockchain_accounts_configuration.html
     accounts: [
       {
         nodeAccounts: true, // Accounts use for the node

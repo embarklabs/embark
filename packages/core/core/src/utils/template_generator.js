@@ -62,7 +62,7 @@ export class TemplateGenerator {
 
   downloadFailed() {
     console.error('Does the template really exist?'.red);
-    console.error(`Embark's supported templates: https://embark.status.im/templates/`.green);
+    console.error(`Embark's supported templates: https://framework.embarklabs.io/templates/`.green);
     process.exit(1);
   }
 
@@ -159,7 +159,7 @@ export class TemplateGenerator {
             console.log(__('Next steps:').green);
             console.log(('-> ' + ('cd ' + fspath).bold.cyan).green);
             console.log('-> '.green + 'embark run'.bold.cyan);
-            console.log(__('For more info go to http://embark.status.im').green);
+            console.log(__('For more info go to http://framework.embarklabs.io').green);
           }
         }
       );

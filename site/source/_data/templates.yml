@@ -11,7 +11,7 @@
   description: A React Application showcasing Embark's functionality
   install: embark demo
   thumbnail: react.png
-  link: https://embark.status.im/docs/create_project.html#Creating-a-Demo-Project
+  link: https://framework.embarklabs.io/docs/create_project.html#Creating-a-Demo-Project
   tags:
     - react
     - contracts

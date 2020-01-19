@@ -33,7 +33,7 @@ const constants = readJsonSync(path.join(__dirname, '../constants.json'));
 
 const DEFAULT_CONFIG_PATH = 'config/';
 
-const embark5ChangesUrl = 'https://embark.status.im/docs/migrating_from_3.x.html#Updating-to-v5';
+const embark5ChangesUrl = 'https://framework.embarklabs.io/docs/migrating_from_3.x.html#Updating-to-v5';
 
 export class Config {
 
@@ -445,7 +445,7 @@ export class Config {
       this.shownNoAccountConfigMsg = true;
     }
 
-    const accountDocsMessage = __('For more info, check the docs: %s', 'https://embark.status.im/docs/blockchain_accounts_configuration.html'.underline);
+    const accountDocsMessage = __('For more info, check the docs: %s', 'https://framework.embarklabs.io/docs/blockchain_accounts_configuration.html'.underline);
     if (this.blockchainConfig.account) {
       this.logger.error(__('The `account` config for the blockchain was removed. Please use `accounts` instead.'));
       this.logger.error(accountDocsMessage);

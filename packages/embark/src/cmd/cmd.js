@@ -419,7 +419,7 @@ class Cmd {
       .command('help')
       .description(__('output usage information and help information'))
       .action(function () {
-        console.log("Documentation can be found at: ".green + "https://embark.status.im/docs/".underline.green);
+        console.log("Documentation can be found at: ".green + "https://framework.embarklabs.io/docs/".underline.green);
         console.log("");
         console.log("Have an issue? submit it here: ".green + "https://github.com/embarklabs/embark/issues/new".underline.green);
         console.log("or chat with us directly at: ".green + "https://gitter.im/embark-framework/Lobby".underline.green);

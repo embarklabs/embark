@@ -92,7 +92,7 @@
     </div>
   </section>
   <div class="o-container o-distance o-center">
-    <a href="/archives" class="c-button" title="{{__('blog.view_all_link')}}">{{__('blog.view_all_link')}}</a>
+    <a href="https://blog.embarklabs.io/archives" class="c-button" title="{{__('blog.view_all_link')}}">{{__('blog.view_all_link')}}</a>
   </div>
 </main>
 

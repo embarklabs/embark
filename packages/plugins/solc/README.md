@@ -29,5 +29,5 @@ Then add embark-solc to the plugins section in `embark.json`:
 - [Embark](https://www.npmjs.com/package/embark) 4.0.0 or higher
 - [Solc](https://github.com/ethereum/solidity/releases) installed and available globally on your machine (h)
 
-Visit [embark.status.im](https://embark.status.im/) to get started with
+Visit [framework.embarklabs.io](https://framework.embarklabs.io/) to get started with
 [Embark](https://github.com/embarklabs/embark).

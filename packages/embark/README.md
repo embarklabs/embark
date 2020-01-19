@@ -45,4 +45,4 @@ With Embark you can:
 $ npm -g install embark
 ```
 
-See [Complete Documentation](https://embark.status.im/docs/).
+See [Complete Documentation](https://framework.embarklabs.io/docs/).

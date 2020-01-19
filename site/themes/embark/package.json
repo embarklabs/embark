@@ -1,6 +1,6 @@
 {
   "name": "Embark",
-  "description": "embark.status.im",
+  "description": "framework.embarklabs.io",
   "version": "0.0.0",
   "dependencies": {
     "browser-sync": "^2.26.3",

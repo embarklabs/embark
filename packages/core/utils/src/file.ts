@@ -101,7 +101,7 @@ export function getExternalContractUrl(file: string, providerUrl: string) {
   const MALFORMED_SWARM_ERROR = 'Malformed Swarm gateway URL for ';
   const MALFORMED_ERROR = 'Malformed Github URL for ';
   const MALFORMED_IPFS_ERROR = 'Malformed IPFS URL for ';
-  const IPFS_GETURL_NOTAVAILABLE = 'IPFS getUrl is not available. Please set it in your storage config. For more info: https://embark.status.im/docs/storage_configuration.html';
+  const IPFS_GETURL_NOTAVAILABLE = 'IPFS getUrl is not available. Please set it in your storage config. For more info: https://framework.embarklabs.io/docs/storage_configuration.html';
   if (file.startsWith('https://github')) {
     const file_path = file.match(/https:\/\/github\.[a-z]+\/(.*)/);
     if (!file_path) {

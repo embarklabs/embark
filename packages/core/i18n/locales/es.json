@@ -93,7 +93,7 @@
    "App ready at ": "Aplicación lista en ",
    "Next steps:": "Próximos pasos:",
    "open another console in the same directory and run": "abrir otra consola en el mismo directorio y ejecutar",
-   "For more info go to http://embark.status.im": "Para mayor información ir a http://embark.status.im",
+   "For more info go to http://framework.embarklabs.io": "Para mayor información ir a http://framework.embarklabs.io",
    "%s : instanceOf is set to itself": "%s : instanceOf se establece a sí mismo",
    "{{className}} has code associated to it but it's configured as an instanceOf {{parentContractName}}": "{{className}} tiene código asociado pero está configurado como una instancia de {{parentContractName}}",
    "Error Compiling/Building contracts: ": "Error Compilando/Construyendo los contratos: ",
