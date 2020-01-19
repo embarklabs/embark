@@ -1,3 +1,6 @@
+# no PR triggers
+pr: none
+
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
   ipfsVersion: '0.4.22'
