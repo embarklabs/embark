@@ -25,14 +25,14 @@ class IPFS {
 
     if (this.enabled && this.config === {}) {
       console.warn('\n===== IPFS module will not be loaded =====');
-      console.warn(`IPFS is enabled in the config, however the config is not setup to provide a URL for IPFS and therefore the IPFS module will not be loaded. Please either change the ${'config/storage > upload'.bold} setting to IPFS or add the IPFS config to the ${'config/storage > dappConnection'.bold} array. Please see ${'https://embark.status.im/docs/storage_configuration.html'.underline} for more information.\n`);
+      console.warn(`IPFS is enabled in the config, however the config is not setup to provide a URL for IPFS and therefore the IPFS module will not be loaded. Please either change the ${'config/storage > upload'.bold} setting to IPFS or add the IPFS config to the ${'config/storage > dappConnection'.bold} array. Please see ${'https://framework.embarklabs.io/docs/storage_configuration.html'.underline} for more information.\n`);
       return;
     }
     if (!this.enabled) {
       this.embark.registerConsoleCommand({
         matches: cmd => cmd === "ipfs" || cmd.indexOf('ipfs ') === 0,
         process: (_cmd, cb) => {
-          console.warn(__(`IPFS is disabled or not configured. Please see %s for more information.`, 'https://embark.status.im/docs/storage_configuration.html'.underline));
+          console.warn(__(`IPFS is disabled or not configured. Please see %s for more information.`, 'https://framework.embarklabs.io/docs/storage_configuration.html'.underline));
           cb();
         }
       });

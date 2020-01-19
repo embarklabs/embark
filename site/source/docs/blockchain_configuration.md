@@ -34,7 +34,7 @@ module.exports = {
 }
 ```
 
-Similar to [configuring Smart Contracts](/docs/contracts_configuration.html), this config contains environments that help configuring certain parameters differently depending of the environment. You can read more about [environments here](https://embark.status.im/docs/environments.html).
+Similar to [configuring Smart Contracts](/docs/contracts_configuration.html), this config contains environments that help configuring certain parameters differently depending of the environment. You can read more about [environments here](https://framework.embarklabs.io/docs/environments.html).
 
 ### Parameter descriptions
 

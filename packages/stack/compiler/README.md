@@ -47,7 +47,7 @@ embark.events.request("compiler:contracts:compile", contractFiles, {}, (err, com
 
 ## Plugins
 
-This module enables the `registerCompiler` plugin API. see [documentation](https://embark.status.im/docs/plugin_reference.html#embark-registerCompiler-extension-callback-contractFiles-doneCallback)
+This module enables the `registerCompiler` plugin API. see [documentation](https://framework.embarklabs.io/docs/plugin_reference.html#embark-registerCompiler-extension-callback-contractFiles-doneCallback)
 
 ***embark.registerCompiler***
 
@@ -58,5 +58,5 @@ arguments:
   * `contractFiles`: filenames matching the extension
   * `callback(error, compiledObject)`
 
-Visit [embark.status.im](https://embark.status.im/) to get started with
+Visit [framework.embarklabs.io](https://framework.embarklabs.io/) to get started with
 [Embark](https://github.com/embarklabs/embark).

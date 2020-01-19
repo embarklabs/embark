@@ -165,7 +165,7 @@ export default class AccountParser {
       return null;
     }
     logger.error(__('Unsupported account configuration: %s' ,JSON.stringify(accountConfig)));
-    logger.error(__('Check the docs at %s', 'https://embark.status.im/docs/contracts_deployment.html#Using-accounts-in-a-wallet'.underline));
+    logger.error(__('Check the docs at %s', 'https://framework.embarklabs.io/docs/contracts_deployment.html#Using-accounts-in-a-wallet'.underline));
     return ERROR_ACCOUNT;
   }
 }

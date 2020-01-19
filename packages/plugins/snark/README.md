@@ -50,5 +50,5 @@ verify the proof as well as deploy it.
 
 - Embark 5.0.0-alpha.0 or later
 
-Visit [embark.status.im](https://embark.status.im/) to get started with
+Visit [framework.embarklabs.io](https://framework.embarklabs.io/) to get started with
 [Embark](https://github.com/embarklabs/embark).

@@ -238,7 +238,7 @@ export class Plugin {
   registerConsoleCommand(optionsOrCb) {
     if (typeof optionsOrCb === 'function') {
       this.logger.warn(__('Registering console commands with function syntax is deprecated and will likely be removed in future versions of Embark'));
-      this.logger.info(__('You can find the new API documentation here: %s', 'https://embark.status.im/docs/plugin_reference.html#registerConsoleCommand-options'.underline));
+      this.logger.info(__('You can find the new API documentation here: %s', 'https://framework.embarklabs.io/docs/plugin_reference.html#registerConsoleCommand-options'.underline));
     }
     this.console.push(optionsOrCb);
     this.addPluginType('console');

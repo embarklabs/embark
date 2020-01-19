@@ -17,7 +17,7 @@
               <a href="/docs" class="u-link-ghost" title="{{__('footer.section_resources.documentation')}}">{{__('footer.section_resources.documentation')}}</a>
             </li>
             <li class="o-list-bare__item">
-              <a href="/news" class="u-link-ghost" title="{{__('footer.section_resources.blog')}}">{{__('footer.section_resources.blog')}}</a>
+              <a href="https://blog.embarklabs.io" class="u-link-ghost" title="{{__('footer.section_resources.blog')}}">{{__('footer.section_resources.blog')}}</a>
             </li>
             <li class="o-list-bare__item">
               <a href="/docs/faq.html" class="u-link-ghost" title="{{__('footer.section_resources.faq')}}">{{__('footer.section_resources.faq')}}</a>
@@ -70,7 +70,7 @@
             <li class="o-list-bare__item"><a class="u-link-ghost" href="https://dap.ps/" target="_blank">dap.ps</a></li>
             <li class="o-list-bare__item"><a class="u-link-ghost" href="https://teller.exchange/" target="_blank">Teller</a></li>
             <li class="o-list-bare__item"><a class="u-link-ghost" href="https://assemble.fund/" target="_blank">Assemble</a></li>
-            <li class="o-list-bare__item"><a class="u-link-ghost" href="https://subspace.status.im/" target="_blank">Subspace</a></li>
+            <li class="o-list-bare__item"><a class="u-link-ghost" href="https://subspace.embarklabs.io/" target="_blank">Subspace</a></li>
             <li class="o-list-bare__item"><a class="u-link-ghost" href="https://vac.dev/" target="_blank">Vac</a></li>
             <li class="o-list-bare__item"><a class="u-link-ghost" href="https://nimbus.team/" target="_blank">Nimbus</a></li>
           </ul>

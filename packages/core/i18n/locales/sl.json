@@ -140,7 +140,7 @@
   "Webserver is offline": "Spletni strežnik ni dosegljiv",
   "DApp path length is too long: \"": "DApp pot je predolga: \"",
   "This is known to cause issues with some applications, please consider reducing your DApp path's length to 66 characters or less.": "To bo povzročilo težave z nekaterimi aplikacijami. Zmanjšajte DApp pot na največ 66 znakov.",
-  "For more info go to http://embark.status.im": "Za več informacij obiščite http://embark.status.im",
+  "For more info go to http://framework.embarklabs.io": "Za več informacij obiščite http://framework.embarklabs.io",
   "Cannot upload: {{platform}} node is not running on {{protocol}}://{{host}}{{port}}.": "Napaka pri nalaganju: {{platform}} node ni zagnan na {{protocol}}://{{host}}{{port}}.",
   "DApp path length is too long: ": "DApp pot je predolga: ",
   "WARNING! DApp path length is too long: ": "OPOZORILO! DApp pot je predolga: ",

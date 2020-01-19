@@ -16,5 +16,5 @@ Note: The dev mode of Netherminds is called `ndm` and the config file is `ndm_co
 Even though Nethermind supports Websocket connections, it does not support `eth_subscribe`, so you will not be able to use contract events.
 Also, please note that you will need to change the `endpoint` in the blockchain configuration to `ws://localhost:8545/ws/json-rpc` when working in local. Do change the port or the  host to whatever you need.
 
-Visit [embark.status.im](https://embark.status.im/) to get started with
+Visit [framework.embarklabs.io](https://framework.embarklabs.io/) to get started with
 [Embark](https://github.com/embarklabs/embark).

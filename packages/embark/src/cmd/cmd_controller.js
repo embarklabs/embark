@@ -206,7 +206,7 @@ class EmbarkController {
         });
 
         engine.events.on('outputDone', function () {
-          engine.logger.info((__("Looking for documentation? You can find it at") + " ").cyan + "http://embark.status.im/docs/".green.underline + ".".cyan);
+          engine.logger.info((__("Looking for documentation? You can find it at") + " ").cyan + "http://framework.embarklabs.io/docs/".green.underline + ".".cyan);
           engine.logger.info(__("Ready").underline);
           engine.events.emit("status", __("Ready").green);
         });
@@ -425,7 +425,7 @@ class EmbarkController {
         });
 
         engine.events.on('outputDone', function () {
-          engine.logger.info((__("Looking for documentation? You can find it at") + " ").cyan + "http://embark.status.im/docs/".green.underline + ".".cyan);
+          engine.logger.info((__("Looking for documentation? You can find it at") + " ").cyan + "http://framework.embarklabs.io/docs/".green.underline + ".".cyan);
           engine.logger.info(__("Ready").underline);
           engine.events.emit("status", __("Ready").green);
         });

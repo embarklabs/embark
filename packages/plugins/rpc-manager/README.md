@@ -5,5 +5,5 @@ embark-rpc-manager
 
 Modifies RPC calls to/from Embark (to/from `embark-proxy`).
 
-Visit [embark.status.im](https://embark.status.im/) to get started with
+Visit [framework.embarklabs.io](https://framework.embarklabs.io/) to get started with
 [Embark](https://github.com/embarklabs/embark).

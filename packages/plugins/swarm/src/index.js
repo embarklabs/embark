@@ -25,7 +25,7 @@ class Swarm {
 
     if (this.enabled && this.config === {}) {
       console.warn('\n===== Swarm module will not be loaded =====');
-      console.warn(`Swarm is enabled in the config, however the config is not setup to provide a URL for swarm and therefore the Swarm module will not be loaded. Please either change the ${'config/storage > upload'.bold} setting to Swarm or add the Swarm config to the ${'config/storage > dappConnection'.bold} array. Please see ${'https://embark.status.im/docs/storage_configuration.html'.underline} for more information.\n`);
+      console.warn(`Swarm is enabled in the config, however the config is not setup to provide a URL for swarm and therefore the Swarm module will not be loaded. Please either change the ${'config/storage > upload'.bold} setting to Swarm or add the Swarm config to the ${'config/storage > dappConnection'.bold} array. Please see ${'https://framework.embarklabs.io/docs/storage_configuration.html'.underline} for more information.\n`);
       this.events.emit("swarm:process:started", null, false);
       return;
     }
@@ -33,7 +33,7 @@ class Swarm {
       this.embark.registerConsoleCommand({
         matches: cmd => cmd === "swarm" || cmd.indexOf('swarm ') === 0,
         process: (_cmd, cb) => {
-          console.warn(__(`Swarm is disabled or not configured. Please see %s for more information.`, 'https://embark.status.im/docs/storage_configuration.html'.underline));
+          console.warn(__(`Swarm is disabled or not configured. Please see %s for more information.`, 'https://framework.embarklabs.io/docs/storage_configuration.html'.underline));
           cb();
         }
       });

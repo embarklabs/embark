@@ -373,7 +373,7 @@ export default class ContractsManager {
         }
         if (showInterfaceMessageTrace || showInterfaceMessageWarn) {
           let logFunction = showInterfaceMessageWarn ? self.logger.warn : self.logger.trace;
-          logFunction.call(self.logger, __('To get more details on interface Smart contracts, go here: %s', 'https://embark.status.im/docs/troubleshooting.html#Assuming-Contract-to-be-an-interface'.underline));
+          logFunction.call(self.logger, __('To get more details on interface Smart contracts, go here: %s', 'https://framework.embarklabs.io/docs/troubleshooting.html#Assuming-Contract-to-be-an-interface'.underline));
 
         }
         callback();
