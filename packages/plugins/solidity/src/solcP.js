@@ -21,7 +21,10 @@ class SolcProcess extends ProcessWrapper {
     // TODO: only available in 0.4.11; need to make versions warn about this
     try {
       let func = this.solc.compileStandardWrapper;
-      if (semver.gte(this.solc.version(), '0.5.0')) {
+      const solcVersion = this.solc.version();
+      if (semver.gte(solcVersion, '0.6.0')) {
+        func = (json, importCb) => this.solc.compile(json, {import: importCb});
+      } else if (semver.gte(solcVersion, '0.5.0')) {
         func = this.solc.compile;
       }
       let output = func(JSON.stringify(jsonObj), this.findImports.bind(this));

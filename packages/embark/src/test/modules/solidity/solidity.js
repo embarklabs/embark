@@ -8,11 +8,11 @@ let readFile = function(file) {
 };
 
 let ipcObject = new IPC({
-  ipcRole: 'none',
+  ipcRole: 'none'
 });
 
 let generateApiObject = function() {
-  var solcVersion = "0.5.0";
+  var solcVersion = "0.6.1";
 
   var TestEvents = {
     request: (cmd, cb) => {

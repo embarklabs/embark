@@ -1,6 +1,7 @@
 import { __ } from 'embark-i18n';
 import { ProcessLauncher } from 'embark-core';
 import { dappPath, joinPath, toForwardSlashes } from 'embark-utils';
+import findUp from "find-up";
 const semver = require('semver');
 const uuid = require('uuid/v1');
 
@@ -78,7 +79,8 @@ class SolcW {
             'problems running on Windows with Node.js v12.x and newer.'
           ].join(' '));
         }
-        if (solcVersion === this.embark.config.package.dependencies.solc) {
+        // will need refactor if we some day switch back to specifying version ranges
+        if (solcVersion === require(findUp.sync('package.json', {cwd: __dirname})).dependencies.solc) {
           return this.solcProcess.send({action: 'loadCompiler', requirePath: 'solc'});
         }
         this.events.request("version:getPackageLocation", "solc", solcVersion, (err, location) => {
