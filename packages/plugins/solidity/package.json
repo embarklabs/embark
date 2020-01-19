@@ -52,7 +52,7 @@
     "embark-utils": "^5.1.0-nightly.0",
     "fs-extra": "8.1.0",
     "semver": "5.6.0",
-    "solc": "0.5.0",
+    "solc": "0.6.1",
     "uuid": "3.3.2"
   },
   "devDependencies": {
