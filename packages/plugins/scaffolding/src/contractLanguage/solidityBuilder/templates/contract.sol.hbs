@@ -1,4 +1,4 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.6.0;
 
 {{#each associations}}
 import "./{{@key}}.sol";
@@ -48,12 +48,13 @@ contract {{contractName}} {
     }
 
     function add({{#each attributes}}{{this}}{{#ifstring this}} memory{{/ifstring}} _{{@key}}{{#unless @last}}, {{/unless}}{{/each}}) public {
-        uint id = items.length++;
-        items[id] = {{structName}}({
+        uint id = items.length;
+
+        items.push({{structName}}({
         {{#each attributes}}
             {{@key}}: _{{@key}}{{#unless @last}},{{/unless}}
         {{/each}}
-        });
+        }));
 
         {{#each associations}}
         {{#ifeq this 'hasMany'}}

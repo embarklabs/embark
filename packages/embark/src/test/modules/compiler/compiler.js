@@ -1,6 +1,7 @@
 /*global describe, it, require*/
 import { Events, Plugins, TestLogger } from 'embark-core';
 import { File, Types } from "embark-utils";
+import findUp from 'find-up';
 
 const assert = require('assert');
 
@@ -10,7 +11,11 @@ const readFile = function(file) {
   return new File({filename: file, type: Types.dappFile, path: file});
 };
 
-const currentSolcVersion = require('../../../../package.json').dependencies.solc;
+// will need refactor if we some day switch back to specifying version ranges
+const currentSolcVersion = require(findUp.sync(
+  'node_modules/embark-solidity/package.json',
+  {cwd: __dirname}
+)).dependencies.solc;
 const TestEvents = {
   request: (cmd, cb) => {
     cb(currentSolcVersion);

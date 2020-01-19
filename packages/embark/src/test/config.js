@@ -205,7 +205,7 @@ describe('embark.Config', function () {
     it('should load contract config correctly', function () {
       config.loadContractsConfigFile();
       let expectedConfig = {
-        versions: {solc: '0.5.0'},
+        versions: {solc: '0.6.1'},
         dappConnection: ['$WEB3', 'ws://localhost:8546', 'localhost:8545'],
         dappAutoEnable: true,
         "gas": "400000",
@@ -227,7 +227,7 @@ describe('embark.Config', function () {
 
     it('should replace occurrences of `0x0` with full zero addresses', () => {
       let expectedConfig = {
-        versions: {solc: '0.5.0'},
+        versions: {solc: '0.6.1'},
         dappConnection: ['$WEB3', 'ws://localhost:8546', 'localhost:8545'],
         dappAutoEnable: true,
         "gas": "auto",

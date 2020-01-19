@@ -5,13 +5,18 @@ import ContractsManager from 'embark-contracts-manager';
 import Compiler from 'embark-compiler';
 import { Logger } from 'embark-logger';
 import { Events, fs, IPC, TestLogger, Plugins } from 'embark-core';
+import findUp from 'find-up';
 let assert = require('assert');
 
 let readFile = function(file) {
   return new File({filename: file, type: Types.dappFile, path: file});
 };
 
-const currentSolcVersion = require('../../package.json').dependencies.solc;
+// will need refactor if we some day switch back to specifying version ranges
+const currentSolcVersion = require(findUp.sync(
+  'node_modules/embark-solidity/package.json',
+  {cwd: __dirname}
+)).dependencies.solc;
 const TestEvents = {
   request: (cmd, cb) => {
     cb(currentSolcVersion);
@@ -50,8 +55,8 @@ describe('embark.Contracts', function() {
       registerAPICall: () => {},
       events: events,
       fs: {
-        existsSync: () => { return false },
-        dappPath: () => { return "ok" }
+        existsSync: () => { return false; },
+        dappPath: () => { return "ok"; }
       },
       logger: plugins.logger,
       embarkConfig: {
@@ -99,14 +104,10 @@ describe('embark.Contracts', function() {
       "gas": "auto",
       "contracts": {
         "Token": {
-          "args": [
-            100
-          ]
+          "args": [100]
         },
         "SimpleStorage": {
-          "args": [
-            200
-          ]
+          "args": [200]
         }
       }
     };
@@ -114,8 +115,8 @@ describe('embark.Contracts', function() {
     let embarkObj = {
       registerAPICall: () => {},
       fs: {
-        existsSync: () => { return false },
-        dappPath: () => { return "ok" }
+        existsSync: () => { return false; },
+        dappPath: () => { return "ok"; }
       },
       logger: new Logger({}),
       events: events
@@ -234,14 +235,10 @@ describe('embark.Contracts', function() {
         },
         "MySimpleStorage": {
           "instanceOf": "SimpleStorage",
-          "args": [
-            300
-          ]
+          "args": [300]
         },
         "SimpleStorage": {
-          "args": [
-            200
-          ]
+          "args": [200]
         },
         "AnotherSimpleStorage": {
           "instanceOf": "SimpleStorage"
@@ -252,8 +249,8 @@ describe('embark.Contracts', function() {
     let embarkObj = {
       registerAPICall: () => {},
       fs: {
-        existsSync: () => { return false },
-        dappPath: () => { return "ok" }
+        existsSync: () => { return false; },
+        dappPath: () => { return "ok"; }
       },
       logger: new Logger({}),
       events: events

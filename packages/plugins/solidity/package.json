@@ -50,9 +50,10 @@
     "embark-core": "^5.1.0-nightly.4",
     "embark-i18n": "^5.1.0-nightly.1",
     "embark-utils": "^5.1.0-nightly.4",
+    "find-up": "4.1.0",
     "fs-extra": "8.1.0",
     "semver": "5.6.0",
-    "solc": "0.5.0",
+    "solc": "0.6.1",
     "uuid": "3.3.2"
   },
   "devDependencies": {

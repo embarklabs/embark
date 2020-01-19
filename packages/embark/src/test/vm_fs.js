@@ -6,7 +6,7 @@ const os = require('os');
 const path = require('path');
 const underlyingFs = require('fs-extra');
 
-describe('fs', () => {
+describe('embark.vm fs', () => {
   let fsMethods = {};
   let oldConsoleError;
   let oldDappPath;
