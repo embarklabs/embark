@@ -11,6 +11,9 @@
   ],
   "references": [
     {
+      "path": "../../utils/testing"
+    },
+    {
       "path": "../core"
     },
     {
