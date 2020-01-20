@@ -75,6 +75,7 @@ jobs:
           # EMBARKBOT_NPM_TOKEN should correspond to https://www.npmjs.com/~embarkbot
           NPM_TOKEN: ${{ secrets.EMBARKBOT_NPM_TOKEN }}
       - name: Remove NPM credentials
+        if: always()
         # Delete .npmrc instead of running `npm logout` because the logout command permanently invalidates the current token
         run: |
-          rm ${HOME}/.npmrc
+          rm -f ${HOME}/.npmrc
