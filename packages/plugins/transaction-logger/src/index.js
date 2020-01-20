@@ -63,7 +63,9 @@ export default class TransactionLogger {
     this.writeLogFile = async.cargo((tasks, callback) => {
       let appendThis = '';
       tasks.forEach(task => {
-        appendThis += `"${new Date().getTime()}":${JSON.stringify(task, getCircularReplacer())},\n`;
+        // Write each line to a JSON string. The replacer is to avoid circular dependencies
+        // Add a comma at the end to be able to make an array off of it when reading
+        appendThis += `${JSON.stringify(task, getCircularReplacer())},\n`;
       });
       this.fs.appendFile(this.logFile, appendThis, (err) => {
         if (err) {
@@ -250,8 +252,7 @@ export default class TransactionLogger {
       apiRoute,
       (ws, _req) => {
         this.events.on('contracts:log', (log) => {
-          ws.send(JSON.stringify(log), () => {
-          });
+          ws.send(JSON.stringify(log), () => {});
         });
       }
     );
@@ -260,21 +261,16 @@ export default class TransactionLogger {
       'get',
       apiRoute,
       async (req, res) => {
-        res.send(JSON.stringify(await this._getLogs()));
+        res.send(await this._readLogs(true));
       }
     );
-  }
-
-  async _getLogs() {
-    const data = await this._readLogs();
-    return Object.values(data).reverse();
   }
 
   _saveLog(log) {
     this.writeLogFile.push(log);
   }
 
-  async _readLogs() {
+  async _readLogs(asString = false) {
     try {
       await this.fs.ensureFile(this.logFile);
       let data = await this.fs.readFile(this.logFile);
@@ -282,17 +278,20 @@ export default class TransactionLogger {
       data = data.toString();
 
       if (!data) {
-        return {};
+        return asString ? '[]' : [];
       }
 
-      // remove last comma and add braces around
-      data = `{${data.substring(0, data.length - 2)}}`;
+      // remove last comma and add brackets around to make it an array of object logs
+      data = `[${data.substring(0, data.length - 2)}]`;
+      if (asString) {
+        return data;
+      }
 
       return JSON.parse(data);
     } catch (error) {
       this.logger.error('Error reading contract log file', error.message);
       this.logger.trace(error.trace);
-      return {};
+      return asString ? '[]' : [];
     }
   }
 }
