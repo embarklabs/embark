@@ -27,6 +27,10 @@ class Plugins {
     this.plugin.registerActionForEvent(name, cb);
   }
 
+  registerConsoleCommand(options) {
+    this.plugin.registerConsoleCommand(options);
+  }
+
   teardown() {
     this.plugin.listeners = {};
     this.plugins.forEach(plugin => plugin.teardown());
@@ -49,6 +53,7 @@ class Plugin {
   constructor() {
     this.listeners = {};
     this.pluginTypes = [];
+    this.console = [];
     this.compilers = [];
   }
 
@@ -75,6 +80,15 @@ class Plugin {
   registerCompiler(extension, cb) {
     this.compilers.push({extension: extension, cb: cb});
     this.addPluginType('compilers');
+  }
+
+  registerAPICall(_method, _endpoint, _callback) {
+
+  }
+
+  registerConsoleCommand(options) {
+    this.console.push(options);
+    this.addPluginType('console');
   }
 
   teardown() {
