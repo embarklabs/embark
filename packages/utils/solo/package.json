@@ -1,7 +1,7 @@
 {
   "name": "embark-solo",
   "private": true,
-  "version": "5.1.0-nightly.0",
+  "version": "5.1.0-nightly.1",
   "author": "Michael Bradley <michaelsbradleyjr@gmail.com> (https://github.com/michaelsbradleyjr/)",
   "description": "Resistance is not futile?",
   "license": "MIT",
@@ -13,7 +13,7 @@
     "reset": "npx rimraf embark-*.tgz package"
   },
   "devDependencies": {
-    "embark-collective": "^5.1.0-nightly.0",
+    "embark-collective": "^5.1.0-nightly.1",
     "find-up": "4.1.0",
     "fs-extra": "8.1.0",
     "rimraf": "3.0.0"
