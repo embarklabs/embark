@@ -1,4 +1,5 @@
 const sinon = require('sinon');
+import fs from 'fs-extra';
 
 class Embark {
   constructor(events, plugins, config) {
@@ -6,6 +7,7 @@ class Embark {
     this.plugins = plugins;
     this.config = config || {};
     this.assert = new EmbarkAssert(this);
+    this.fs = fs;
 
     this.logger = {
       debug: sinon.fake(),
@@ -17,6 +19,10 @@ class Embark {
 
   registerActionForEvent(name, cb) {
     this.plugins.registerActionForEvent(name, cb);
+  }
+
+  registerConsoleCommand(options) {
+    this.plugins.registerConsoleCommand(options);
   }
 
   teardown() {
