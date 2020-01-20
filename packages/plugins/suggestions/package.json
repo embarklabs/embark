@@ -8,7 +8,8 @@
   "bugs": "https://github.com/embark-framework/embark/issues",
   "keywords": [],
   "files": [
-    "dist"
+    "dist",
+    "suggestions.json"
   ],
   "license": "MIT",
   "repository": {
