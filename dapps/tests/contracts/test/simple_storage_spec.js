@@ -13,14 +13,13 @@ config({
 });
 
 contract("SimpleStorage", function () {
-  this.timeout(0);
-
   it("should set constructor value", async function () {
     let result = await SimpleStorage.methods.storedData().call();
     assert.strictEqual(parseInt(result, 10), 100);
   });
 
   it("set storage value", async function () {
+    this.timeout(0);
     const toSend = SimpleStorage.methods.set(150);
     const gas = await toSend.estimateGas();
     await toSend.send({gas});

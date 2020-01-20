@@ -90,7 +90,7 @@
     "find-up": "2.1.0",
     "flatted": "0.2.3",
     "fs-extra": "8.1.0",
-    "ganache-cli": "6.7.0",
+    "ganache-cli": "6.8.2",
     "glob": "7.1.4",
     "globule": "1.2.1",
     "hosted-git-info": "2.7.1",
