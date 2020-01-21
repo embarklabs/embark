@@ -7,7 +7,7 @@ const Web3 = require('web3');
 
 const Reporter = require('./reporter');
 
-const GAS_LIMIT = 6000000;
+const GAS_LIMIT = 8000000;
 const JAVASCRIPT_TEST_MATCH = /^.+\.js$/i;
 const TEST_TIMEOUT = 15000; // 15 seconds in milliseconds
 
