@@ -70,8 +70,7 @@ class EthereumBlockchainClient {
       }
 
       if (!contract.gasPrice) {
-        const gasPrice = await web3.eth.getGasPrice();
-        contract.gasPrice = contract.gasPrice || gasPrice;
+        contract.gasPrice = await web3.eth.getGasPrice();
       }
 
       embarkJsUtils.secureSend(web3, contractObject, {
