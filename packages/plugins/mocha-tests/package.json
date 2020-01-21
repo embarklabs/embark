@@ -1,6 +1,6 @@
 {
   "name": "embark-mocha-tests",
-  "version": "5.1.0-nightly.1",
+  "version": "5.1.0-nightly.2",
   "description": "Mocha Test Runner",
   "homepage": "https://github.com/embarklabs/embark/tree/master/packages/plugins/mocha-tests#readme",
   "repository": {
@@ -53,7 +53,7 @@
     "core-js": "3.4.3",
     "embark-i18n": "^5.1.0-nightly.1",
     "embark-utils": "^5.1.0-nightly.1",
-    "embarkjs": "^5.1.0-nightly.1",
+    "embarkjs": "^5.1.0-nightly.2",
     "mocha": "6.2.2",
     "web3": "1.2.4"
   },

@@ -1,6 +1,6 @@
 {
   "name": "embark-code-runner",
-  "version": "5.1.0-nightly.1",
+  "version": "5.1.0-nightly.2",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Code execution VM for Embark",
@@ -55,7 +55,7 @@
     "embark-core": "^5.1.0-nightly.1",
     "embark-logger": "^5.1.0-nightly.1",
     "embark-utils": "^5.1.0-nightly.1",
-    "embarkjs": "^5.1.0-nightly.1",
+    "embarkjs": "^5.1.0-nightly.2",
     "fs-extra": "8.1.0",
     "parse-json": "5.0.0",
     "vm2": "3.8.4",

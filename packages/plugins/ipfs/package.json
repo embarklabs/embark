@@ -1,6 +1,6 @@
 {
   "name": "embark-ipfs",
-  "version": "5.1.0-nightly.1",
+  "version": "5.1.0-nightly.2",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Implements IPFS support in Embark",
@@ -54,7 +54,7 @@
     "embark-i18n": "^5.1.0-nightly.1",
     "embark-storage": "^5.1.0-nightly.1",
     "embark-utils": "^5.1.0-nightly.1",
-    "embarkjs": "^5.1.0-nightly.1",
+    "embarkjs": "^5.1.0-nightly.2",
     "embarkjs-ipfs": "^5.1.0-nightly.1",
     "ipfs-http-client": "40.0.0",
     "shelljs": "0.8.3"
