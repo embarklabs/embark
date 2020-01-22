@@ -3134,10 +3134,10 @@
     npmlog "^4.1.2"
     write-file-atomic "^2.3.0"
 
-"@monaco-editor/react@1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@monaco-editor/react/-/react-1.2.1.tgz#8fc824dedcec21464738e7cbc0c5c989933b1c05"
-  integrity sha512-BGCFs+GUTbnNA1lH0l+ZYGvqyV1z+DB1uXEv9kXlgOQFNlLySOJE87yyutBfrr5jfRNrwcl8Co4GXztpGm0u4g==
+"@monaco-editor/react@3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@monaco-editor/react/-/react-3.0.1.tgz#98fcfb1a5ccf7cc1f376132ffcec66df2a4588cc"
+  integrity sha512-RRe4OkO7jTgPTtgJMFWUNxI+hFci/6Et6mpN9Tu2i+Ev8A1uPNoQVHix9mQPn9TWUkv+cgGacuKZyVt6wG6SZA==
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
