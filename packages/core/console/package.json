@@ -24,8 +24,8 @@
     "type": "git",
     "url": "https://github.com/embarklabs/embark.git"
   },
-  "main": "./dist/lib/index.js",
-  "types": "./dist/lib/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "embark-collective": {
     "build:node": true,
     "typecheck": true

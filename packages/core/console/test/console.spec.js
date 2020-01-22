@@ -1,7 +1,7 @@
 /*globals describe, it*/
 import assert from 'assert';
 import { fakeEmbark } from 'embark-testing';
-import Console from '../src/lib';
+import Console from '../src';
 import { version }  from '../package.json';
 
 // Due to our `DAPP_PATH` dependency in `embark-utils` `dappPath()`, we need to
