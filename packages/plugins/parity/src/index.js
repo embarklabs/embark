@@ -7,18 +7,16 @@ const constants = require('embark-core/constants');
 
 class Parity {
 
-  constructor(embark, options) {
+  constructor(embark) {
     this.embark = embark;
     this.embarkConfig = embark.config.embarkConfig;
     this.blockchainConfig = embark.config.blockchainConfig;
     // TODO get options from config instead of options
-    this.locale = options.locale;
+    this.locale = embark.config.locale;
     this.logger = embark.logger;
-    this.client = options.client;
-    this.isDev = options.isDev;
+    this.client = embark.client;
     this.events = embark.events;
-    this.plugins = options.plugins;
-    // let plugin = this.plugins.createPlugin('gethplugin', {});
+    this.isDev = (this.blockchainConfig.isDev || this.blockchainConfig.default);
 
     if (!this.shouldInit()) {
       return;

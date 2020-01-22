@@ -1,4 +1,5 @@
 import async from 'async';
+import { warnIfPackageNotDefinedLocally } from 'embark-utils';
 const { __ } = require('embark-i18n');
 const constants = require('embark-core/constants');
 
@@ -109,6 +110,13 @@ export default class Blockchain {
     });
     this.blockchainApi.registerAPIs("ethereum");
     this.blockchainApi.registerRequests("ethereum");
+
+    if (this.blockchainConfig.enabled && this.blockchainConfig.client === "geth") {
+      warnIfPackageNotDefinedLocally("embark-geth", this.embark.logger.warn.bind(this.embark.logger));
+    }
+    if (this.blockchainConfig.enabled && this.blockchainConfig.client === "parity") {
+      warnIfPackageNotDefinedLocally("embark-parity", this.embark.logger.warn.bind(this.embark.logger));
+    }
   }
 
   addArtifactFile(_params, cb) {

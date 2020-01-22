@@ -1,3 +1,5 @@
+import { warnIfPackageNotDefinedLocally } from 'embark-utils';
+
 const async = require('async');
 const Viz = require('viz.js');
 
@@ -7,6 +9,7 @@ class GraphGenerator {
     this.events = embark.events;
 
     this.events.setCommandHandler("graph:create", this.generate.bind(this));
+    warnIfPackageNotDefinedLocally("embark-graph", this.embark.logger.warn.bind(this.embark.logger));
   }
 
   /*eslint complexity: ["error", 21]*/

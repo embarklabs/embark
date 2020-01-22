@@ -1,5 +1,5 @@
 import { __ } from 'embark-i18n';
-import {canonicalHost, defaultHost} from 'embark-utils';
+import {canonicalHost, defaultHost, warnIfPackageNotDefinedLocally} from 'embark-utils';
 
 class Communication {
   constructor(embark, _options){
@@ -30,6 +30,10 @@ class Communication {
 
       client.apply(client, [onStart]);
     });
+
+    if (this.communicationConfig.enabled && this.communicationConfig.available_providers.includes("whisper")) {
+      warnIfPackageNotDefinedLocally("embark-whisper-geth", this.embark.logger.warn.bind(this.embark.logger));
+    }
   }
 
   addArtifactFile(_params, cb) {
