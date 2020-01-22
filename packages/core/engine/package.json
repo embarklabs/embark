@@ -1,6 +1,6 @@
 {
   "name": "embark-engine",
-  "version": "5.1.0-nightly.2",
+  "version": "5.1.0-nightly.3",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Engine library for Embark",
@@ -64,7 +64,7 @@
     "embark-embarkjs": "^5.1.0-nightly.1",
     "embark-ens": "^5.1.0-nightly.2",
     "embark-ethereum-blockchain-client": "^5.1.0-nightly.2",
-    "embark-ganache": "^5.1.0-nightly.1",
+    "embark-ganache": "^5.1.0-nightly.3",
     "embark-geth": "^5.1.0-nightly.1",
     "embark-ipfs": "^5.1.0-nightly.2",
     "embark-library-manager": "^5.1.0-nightly.1",
