@@ -7,18 +7,17 @@ import DevTxs from "./devtxs";
 const constants = require('embark-core/constants');
 
 class Geth {
-  constructor(embark, options) {
+  constructor(embark) {
     this.embark = embark;
     this.embarkConfig = embark.config.embarkConfig;
     this.blockchainConfig = embark.config.blockchainConfig;
     this.communicationConfig = embark.config.communicationConfig;
     // TODO get options from config instead of options
-    this.locale = options.locale;
+    this.locale = embark.locale;
     this.logger = embark.logger;
-    this.client = options.client;
-    this.isDev = options.isDev;
+    this.client = embark.client;
     this.events = embark.events;
-    this.plugins = options.plugins;
+    this.isDev = (this.blockchainConfig.isDev || this.blockchainConfig.default);
 
     if (!this.shouldInit()) {
       return;

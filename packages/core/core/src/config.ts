@@ -89,6 +89,8 @@ export class Config {
 
   buildDir: any;
 
+  client: string;
+
   dappPath = dappPath;
 
   constructor(options) {
@@ -103,6 +105,7 @@ export class Config {
     this.events = options.events;
     this.context = options.context || [constants.contexts.any];
     this.version = options.version;
+    this.client = options.client;
 
     this.registerEvents();
   }
@@ -183,7 +186,9 @@ export class Config {
       config: this,
       context: this.context,
       env: this.env,
-      version: this.version
+      version: this.version,
+      client: this.client,
+      locale: this.locale
     });
 
     this.loadEmbarkConfigFile();
