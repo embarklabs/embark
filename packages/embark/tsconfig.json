@@ -37,9 +37,6 @@
       "path": "../plugins/deploy-tracker"
     },
     {
-      "path": "../plugins/graph"
-    },
-    {
       "path": "../plugins/solidity"
     },
     {

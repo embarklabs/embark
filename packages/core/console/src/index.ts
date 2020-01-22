@@ -2,7 +2,7 @@ import chalk from "chalk";
 import { Embark, EmbarkEvents } from "embark-core";
 import constants from "embark-core/constants.json";
 import { __ } from "embark-i18n";
-import { dappPath, escapeHtml, exit, jsonFunctionReplacer } from "embark-utils";
+import { dappPath, escapeHtml, exit, jsonFunctionReplacer, warnIfPackageNotDefinedLocally } from "embark-utils";
 import stringify from "json-stringify-safe";
 import { dirname } from "path";
 import util from "util";
@@ -169,6 +169,9 @@ export default class Console {
       return this.ipc.request("console:executeCmd", cmd, callback);
     }
 
+    if (cmd.indexOf("profile") === 0 && warnIfPackageNotDefinedLocally("embark-profiler", this.embark.logger.warn) !== true) {
+      return callback(null, "please install embark-profiler plugin");
+    }
     if (!(cmd.split(" ")[0] === "history" || cmd === __("history"))) {
       this.saveHistory(cmd);
     }
