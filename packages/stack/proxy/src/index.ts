@@ -92,10 +92,15 @@ export default class ProxyManager {
       return;
     }
     this.inited = true;
-
-    let port = this.embark.config.blockchainConfig.rpcPort;
-    if (!port && port !== 0) {
-      port = 8545;
+    const rpcConfigPort = this.embark.config.blockchainConfig.rpcPort;
+    let port: number = 0;
+    try {
+      port = typeof rpcConfigPort === "string" ? parseInt(rpcConfigPort, 10) : rpcConfigPort;
+      if (!port && port !== 0) {
+        port = 8545;
+      }
+    } catch (err) {
+      this.logger.error(`Blockchain config 'rpcPort' contains an invalid value: '${rpcConfigPort}'`);
     }
 
     // setup ports
