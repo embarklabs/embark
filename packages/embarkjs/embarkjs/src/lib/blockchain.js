@@ -208,17 +208,23 @@ Blockchain.doConnect = function(connectionList, opts, doneCb) {
   });
 };
 
-Blockchain.enableEthereum = function() {
-  if (typeof window !== 'undefined' && window.ethereum) {
-    return ethereum.enable().then((accounts) => {
-      this.blockchainConnector.setProvider(ethereum);
-      this.blockchainConnector.setDefaultAccount(accounts[0]);
-      contracts.forEach(contract => {
-        contract.options.from = this.blockchainConnector.getDefaultAccount();
-      });
-      return accounts;
-    });
+// See https://eips.ethereum.org/EIPS/eip-1102
+Blockchain.enableEthereum = async function() {
+  if (typeof window === 'undefined' || !window.ethereum) {
+    throw new Error('ethereum not available in this browser');
   }
+
+  await ethereum.enable();
+  this.blockchainConnector.setProvider(ethereum);
+
+  const accounts = await this.blockchainConnector.getAccounts();
+  this.blockchainConnector.setDefaultAccount(accounts[0]);
+
+  contracts.forEach(contract => {
+    contract.options.from = this.blockchainConnector.getDefaultAccount();
+  });
+
+  return accounts;
 };
 
 Blockchain.execWhenReady = function(cb) {
