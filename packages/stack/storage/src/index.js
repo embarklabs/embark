@@ -1,4 +1,5 @@
 import {__} from 'embark-i18n';
+import { warnIfPackageNotDefinedLocally } from 'embark-utils';
 
 class Storage {
   constructor(embark, options) {
@@ -41,6 +42,13 @@ class Storage {
       if (!client) return cb("upload client for  " + clientName + " not found");
       client.apply(client, [cb]);
     });
+
+    if (this.storageConfig.enabled && this.storageConfig.available_providers.includes("ipfs")) {
+      warnIfPackageNotDefinedLocally("embark-ipfs", this.embark.logger.warn.bind(this.embark.logger));
+    }
+    if (this.storageConfig.enabled && this.storageConfig.available_providers.includes("swarm")) {
+      warnIfPackageNotDefinedLocally("embark-swarm", this.embark.logger.warn.bind(this.embark.logger));
+    }
   }
 
   addArtifactFile(_params, cb) {

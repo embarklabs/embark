@@ -2,6 +2,7 @@ import * as fs from './fs';
 import { Plugin } from './plugin';
 import { EmbarkEmitter as Events } from './events';
 import { Config } from './config';
+import { IPC } from './ipc';
 
 import * as async from 'async';
 import { dappPath, embarkPath } from 'embark-utils';
@@ -31,6 +32,8 @@ export class Plugins {
 
   version: string;
 
+  client: string;
+
   static deprecated = {
     'embarkjs-connector-web3': '4.1.0'
   };
@@ -46,6 +49,7 @@ export class Plugins {
     this.fs = fs;
     this.env = options.env;
     this.version = options.version;
+    this.client = options.client;
   }
 
   loadPlugins() {
@@ -85,7 +89,8 @@ export class Plugins {
       plugins: this.plugins,
       fs: this.fs,
       isInternal: true,
-      context: this.context
+      context: this.context,
+      client: this.client
     });
     this.plugins.push(pluginWrapper);
     return pluginWrapper;
@@ -119,7 +124,8 @@ export class Plugins {
       fs: this.fs,
       isInternal: true,
       context: this.context,
-      env: this.env
+      env: this.env,
+      client: this.client
     });
     const pluginInstance = pluginWrapper.loadInternalPlugin();
     this.plugins.push(pluginWrapper);
@@ -149,7 +155,8 @@ export class Plugins {
       fs: this.fs,
       isInternal: false,
       context: this.context,
-      version: this.version
+      version: this.version,
+      client: this.client
     });
     pluginWrapper.loadPlugin();
     this.plugins.push(pluginWrapper);

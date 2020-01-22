@@ -15,5 +15,9 @@
     "solc": "0.4.26"
   },
   "plugins": {
+    "embark-geth": {},
+    "embark-parity": {},
+    "embark-profiler": {},
+    "embark-graph": {}
   }
 }

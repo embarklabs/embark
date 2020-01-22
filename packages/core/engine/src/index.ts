@@ -57,8 +57,6 @@ export class Engine {
 
   package: any;
 
-  isDev: boolean | undefined;
-
   constructor(options) {
     this.env = options.env;
     this.client = options.client;
@@ -85,6 +83,9 @@ export class Engine {
     const options = _options || {};
     this.events = options.events || this.events || new Events();
     this.logger = this.logger || new Logger({context: this.context, logLevel: options.logLevel || this.logLevel || 'info', events: this.events, logFile: this.logFile});
+
+    this.ipc = new IPC({ logger: this.logger, ipcRole: this.ipcRole });
+
     this.config = new Config({
       env: this.env,
       logger: this.logger,
@@ -93,17 +94,17 @@ export class Engine {
       webServerConfig: this.webServerConfig,
       version: this.version,
       package: this.package,
-      locale: this.locale
+      locale: this.locale,
+      client: this.client,
+      ipc: this.ipc
     });
     this.config.loadConfigFiles({embarkConfig: this.embarkConfig, interceptLogs: this.interceptLogs});
     this.plugins = this.config.plugins;
-    this.isDev = this.config && this.config.blockchainConfig && (this.config.blockchainConfig.isDev || this.config.blockchainConfig.default);
 
     if (this.interceptLogs || this.interceptLogs === undefined) {
       interceptLogs(console, this.logger);
     }
 
-    this.ipc = new IPC({ logger: this.logger, ipcRole: this.ipcRole });
     if (this.ipc.isClient()) {
       return this.ipc.connect((_err) => {
         callback();
@@ -268,20 +269,8 @@ export class Engine {
 
   blockchainComponents() {
     // plugins
-    this.registerModulePackage('embark-geth', {
-      client: this.client,
-      locale: this.locale,
-      isDev: this.isDev,
-      plugins: this.plugins,
-      ipc: this.ipc
-    });
-    this.registerModulePackage('embark-parity', {
-      client: this.client,
-      locale: this.locale,
-      isDev: this.isDev,
-      plugins: this.plugins,
-      ipc: this.ipc
-    });
+    this.registerModulePackage('embark-geth');
+    this.registerModulePackage('embark-parity');
   }
 
   testComponents(options) {

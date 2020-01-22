@@ -5,7 +5,11 @@ const clipboardy = require('clipboardy');
 
 import * as Serialize from './serialize';
 export { Serialize };
+import { __ } from 'embark-i18n';
+
 import { canonicalHost } from './host';
+import * as findUp from 'find-up';
+import * as fs from 'fs-extra';
 export { canonicalHost, defaultCorsHost, defaultHost, dockerHostSwap, isDocker } from './host';
 export { downloadFile, findNextPort, getJson, httpGet, httpsGet, httpGetJson, httpsGetJson, pingEndpoint } from './network';
 export { testRpcWithEndpoint, testWsEndpoint } from './check';
@@ -54,6 +58,10 @@ export {
   toForwardSlashes
 } from './pathUtils';
 export { setUpEnv } from './env';
+
+import {
+  dappPath
+} from './pathUtils';
 
 const { extendZeroAddressShorthand, replaceZeroAddressShorthand } = AddressUtils;
 
@@ -299,4 +307,26 @@ export function isConstructor(obj) {
 
 export function isEs6Module(module) {
   return (typeof module === 'function' && isConstructor(module)) || (typeof module === 'object' && typeof module.default === 'function' && module.__esModule);
+}
+
+export function warnIfPackageNotDefinedLocally(packageName, warnFunc) {
+  const packageIsResolvable = findUp.sync("node_modules/" + packageName, {cwd: dappPath()});
+  if (!packageIsResolvable) {
+    return warnFunc("== WARNING: "  + packageName + " could not be resolved; ensure it is defined in your dapp's package.json dependencies and then run npm or yarn install; in future versions of embark this package should be a local dependency and configured as a plugin");
+  }
+
+  const dappPackage = fs.readJSONSync(dappPath("package.json"));
+  const { dependencies, devDependencies } = dappPackage;
+  if (!((dependencies && dependencies[packageName]) || (devDependencies && devDependencies[packageName]))) {
+    return warnFunc("== WARNING: it seems "  + packageName + " is not defined in your dapp's package.json dependencies; In future versions of embark this package should be a local dependency and configured as a plugin");
+  }
+
+  const embarkConfig = fs.readJSONSync(dappPath("embark.json"));
+  if (!embarkConfig.plugins[packageName]) {
+    return warnFunc(
+      __("== WARNING: it seems %s is not defined in your Dapp's embark.json plugins;\nIn future versions of Embark, this package should be a local dependency and configured as a plugin", packageName)
+    );
+  }
+
+  return true;
 }
