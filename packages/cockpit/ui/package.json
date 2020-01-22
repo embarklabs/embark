@@ -48,7 +48,7 @@
     "@coreui/react": "2.1.0",
     "@emotion/core": "10.0.22",
     "@emotion/styled": "10.0.23",
-    "@monaco-editor/react": "1.2.1",
+    "@monaco-editor/react": "3.0.1",
     "@storybook/addon-actions": "5.2.7",
     "@storybook/addon-info": "5.2.7",
     "@storybook/addon-knobs": "5.2.7",
