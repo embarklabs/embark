@@ -35,19 +35,10 @@
       "path": "../../plugins/geth"
     },
     {
-      "path": "../../plugins/ipfs"
-    },
-    {
       "path": "../../plugins/mocha-tests"
     },
     {
-      "path": "../../plugins/parity"
-    },
-    {
       "path": "../../plugins/plugin-cmd"
-    },
-    {
-      "path": "../../plugins/profiler"
     },
     {
       "path": "../../plugins/rpc-manager"
@@ -65,9 +56,6 @@
       "path": "../../plugins/specialconfigs"
     },
     {
-      "path": "../../plugins/swarm"
-    },
-    {
       "path": "../../plugins/transaction-logger"
     },
     {
@@ -78,12 +66,6 @@
     },
     {
       "path": "../../plugins/web3"
-    },
-    {
-      "path": "../../plugins/whisper-geth"
-    },
-    {
-      "path": "../../plugins/whisper-parity"
     },
     {
       "path": "../../stack/api"

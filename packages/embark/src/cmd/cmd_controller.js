@@ -1,7 +1,7 @@
 import { Config, Events, fs, TemplateGenerator } from 'embark-core';
 import { Engine } from 'embark-engine';
 import { __ } from 'embark-i18n';
-import { dappPath, joinPath, setUpEnv } from 'embark-utils';
+import { dappPath, joinPath, setUpEnv, warnIfPackageNotDefinedLocally } from 'embark-utils';
 import { Logger, LogLevels } from 'embark-logger';
 let async = require('async');
 const constants = require('embark-core/constants');
@@ -63,7 +63,6 @@ class EmbarkController {
       engine.registerModuleGroup("coreComponents");
       engine.registerModuleGroup("serviceMonitor");
       engine.registerModuleGroup("blockchainStackComponents");
-      engine.registerModuleGroup("blockchain");
 
       // load custom plugins
       engine.loadDappPlugins();
@@ -167,14 +166,11 @@ class EmbarkController {
 
         // TODO: replace with individual plugins
         engine.registerModuleGroup("namesystem");
-        engine.registerModuleGroup("communication");
-        engine.registerModuleGroup("blockchain");
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
         engine.registerModuleGroup("pipeline");
         engine.registerModuleGroup("webserver");
         engine.registerModuleGroup("filewatcher");
-        engine.registerModuleGroup("storage");
         engine.registerModuleGroup("cockpit");
         engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins });
         engine.registerModulePackage("embark-debugger");
@@ -293,11 +289,11 @@ class EmbarkController {
         engine.registerModuleGroup("contracts");
 
         if (!options.onlyCompile) {
-          engine.registerModuleGroup("blockchain");
-          engine.registerModuleGroup("namesystem");
-          engine.registerModuleGroup("storage");
-          engine.registerModuleGroup("communication");
+          // engine.registerModuleGroup("blockchain");
+          // engine.registerModuleGroup("storage");
+          // engine.registerModuleGroup("communication");
           engine.registerModuleGroup("pipeline");
+          engine.registerModuleGroup("namesystem");
           engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins });
         }
 
@@ -423,14 +419,11 @@ class EmbarkController {
 
         // TODO: replace with individual plugins
         engine.registerModuleGroup("namesystem");
-        engine.registerModuleGroup("communication");
-        engine.registerModuleGroup("blockchain");
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
         engine.registerModuleGroup("pipeline");
         engine.registerModuleGroup("webserver");
         engine.registerModuleGroup("filewatcher");
-        engine.registerModuleGroup("storage");
         if (!isSecondaryProcess(engine)) {
           engine.registerModuleGroup("cockpit");
         }
@@ -528,13 +521,16 @@ class EmbarkController {
 
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
-        engine.registerModulePackage("embark-graph");
 
         // load custom plugins
         engine.loadDappPlugins();
         let pluginList = engine.plugins.listPlugins();
         if (pluginList.length > 0) {
           engine.logger.info(__("loaded plugins") + ": " + pluginList.join(", "));
+        }
+
+        if (warnIfPackageNotDefinedLocally("embark-graph", engine.logger.error) !== true) {
+          process.exit(1);
         }
 
         engine.startEngine(async () => {
@@ -744,14 +740,11 @@ class EmbarkController {
         engine.registerModuleGroup("stackComponents");
 
         engine.registerModuleGroup("namesystem");
-        engine.registerModuleGroup("communication");
-        engine.registerModuleGroup("blockchain");
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
         engine.registerModuleGroup("pipeline");
         engine.registerModuleGroup("webserver");
         engine.registerModuleGroup("filewatcher");
-        engine.registerModuleGroup("storage");
         engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins });
 
         // load custom plugins
@@ -828,7 +821,6 @@ class EmbarkController {
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
 
-        engine.registerModuleGroup("blockchain");
         engine.registerModuleGroup("compiler");
         engine.registerModulePackage('embark-ganache');
         engine.registerModulePackage('embark-ethereum-blockchain-client');
@@ -840,8 +832,6 @@ class EmbarkController {
         engine.registerModuleGroup("tests", options);
         engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins, trackContracts: false });
         engine.registerModuleGroup("namesystem");
-        engine.registerModuleGroup("storage");
-        engine.registerModuleGroup("communication");
         next();
       },
       function loadDappPlugins(next) {

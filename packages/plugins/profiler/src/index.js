@@ -1,5 +1,3 @@
-import { warnIfPackageNotDefinedLocally } from 'embark-utils';
-
 const asciiTable = require('ascii-table');
 import { GasEstimator, GAS_ERROR, EVENT_NO_GAS } from './gasEstimator';
 
@@ -12,7 +10,6 @@ class Profiler {
 
     this.registerConsoleCommand();
     this.registerApi();
-    warnIfPackageNotDefinedLocally("embark-profiler", this.embark.logger.warn.bind(this.embark.logger));
   }
 
   profileJSON(contractName, returnCb) {
