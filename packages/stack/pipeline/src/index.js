@@ -30,14 +30,12 @@ class Pipeline {
       },
       (next) => {
         // TODO: make this async
-        for (let fileParams of Object.values(this.files)) {
+        async.each(Object.values(this.files), (fileParams, eachCb) => {
           if (fileParams.format === 'json') {
-            this.writeJSONFile(fileParams);
-          } else {
-            this.writeFile(fileParams);
+            return this.writeJSONFile(fileParams, eachCb);
           }
-        }
-        next();
+          this.writeFile(fileParams, eachCb);
+        }, next);
       },
       (next) => {
         this.plugins.runActionsForEvent("pipeline:generateAll:after", {}, (err) => {
@@ -49,7 +47,7 @@ class Pipeline {
     });
   }
 
-  writeJSONFile(params) {
+  writeJSONFile(params, cb) {
     const self = this;
     const dir = dappPath(...params.path);
     const filename = dappPath(...params.path, params.file);
@@ -60,14 +58,13 @@ class Pipeline {
         self.fs.mkdirp(dir, err => next(err));
       },
       function writeContractsJSON(next) {
-        self.fs.writeJson(filename, content, { spaces: 2 }, () => { next(); });
+        self.fs.writeJson(filename, content, { spaces: 2 }, (e) => { next(e); });
       }
-    ], () => {
-    });
+    ], cb);
   }
 
   // TODO: can be refactored by joining with method above
-  writeFile(params) {
+  writeFile(params, cb) {
     const self = this;
     const dir = dappPath(...params.path);
     const filename = dappPath(...params.path, params.file);
@@ -78,10 +75,9 @@ class Pipeline {
         self.fs.mkdirp(dir, err => next(err));
       },
       function writeFile(next) {
-        self.fs.writeFile(filename, content, (err) => { next(err, true); });
+        self.fs.writeFile(filename, content, (err) => { next(err); });
       }
-    ], () => {
-    });
+    ], cb);
   }
 
 }
