@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.1.0-nightly.4](https://github.com/embarklabs/embark/compare/v5.1.0-nightly.3...v5.1.0-nightly.4) (2020-01-23)
+
+
+### Bug Fixes
+
+* **@embark/proxy:** Parse `rpcPort` from config as integer ([9f7c682](https://github.com/embarklabs/embark/commit/9f7c682))
+
+
+
+
+
 # [5.1.0-nightly.1](https://github.com/embarklabs/embark/compare/v5.1.0-nightly.0...v5.1.0-nightly.1) (2020-01-20)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "embark-swarm",
-  "version": "5.1.0-nightly.2",
+  "version": "5.1.0-nightly.4",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Implements Swarm support in Embark",
@@ -51,10 +51,10 @@
     "async": "2.6.1",
     "colors": "1.3.2",
     "core-js": "3.4.3",
-    "embark-core": "^5.1.0-nightly.1",
+    "embark-core": "^5.1.0-nightly.4",
     "embark-i18n": "^5.1.0-nightly.1",
-    "embark-storage": "^5.1.0-nightly.1",
-    "embark-utils": "^5.1.0-nightly.1",
+    "embark-storage": "^5.1.0-nightly.4",
+    "embark-utils": "^5.1.0-nightly.4",
     "embarkjs": "^5.1.0-nightly.2",
     "embarkjs-swarm": "^5.1.0-nightly.1",
     "swarm-api": "0.1.2"

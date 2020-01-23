@@ -1,6 +1,6 @@
 {
   "name": "embark-library-manager",
-  "version": "5.1.0-nightly.1",
+  "version": "5.1.0-nightly.4",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Module for downloading and managing libraries",
@@ -48,7 +48,7 @@
     "colors": "1.3.2",
     "core-js": "3.4.3",
     "embark-i18n": "^5.1.0-nightly.1",
-    "embark-utils": "^5.1.0-nightly.1",
+    "embark-utils": "^5.1.0-nightly.4",
     "fs-extra": "8.1.0",
     "rimraf": "3.0.0"
   },

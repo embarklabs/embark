@@ -1,6 +1,6 @@
 {
   "name": "embark-process-logs-api-manager",
-  "version": "5.1.0-nightly.1",
+  "version": "5.1.0-nightly.4",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Manages and registers APIs for Embark process logs",
@@ -46,7 +46,7 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.7.4",
     "core-js": "3.4.3",
-    "embark-utils": "^5.1.0-nightly.1"
+    "embark-utils": "^5.1.0-nightly.4"
   },
   "devDependencies": {
     "embark-solo": "^5.1.0-nightly.1",
