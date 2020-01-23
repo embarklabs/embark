@@ -14843,10 +14843,10 @@ node-gyp@^5.0.2:
     tar "^4.4.8"
     which "1"
 
-node-http-proxy-json@0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/node-http-proxy-json/-/node-http-proxy-json-0.1.6.tgz#4b554befd04e607f3726092d67b60bf888906849"
-  integrity sha1-S1VL79BOYH83JgktZ7YL+IiQaEk=
+node-http-proxy-json@0.1.9:
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/node-http-proxy-json/-/node-http-proxy-json-0.1.9.tgz#5e744138c189ebd7e0105fe92d035a5486478cd4"
+  integrity sha512-WrKAR/y09BWaz5WqgbxuE6D/XsdhQFkLkSdnRk0a5uBKSINtApMV085MN7JMh+stiyBBltvgSR9SYVIZIpKKKQ==
   dependencies:
     bufferhelper "^0.2.1"
     concat-stream "^1.5.1"
