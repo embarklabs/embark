@@ -28,7 +28,7 @@
     "build:no-ui": "npm run build -- --ignore embark-ui",
     "ci": "node scripts/monorun --ignore embark-dapp-* --stream ci",
     "ci:dapps": "lerna run --concurrency=1 --scope embark-dapp-* --stream ci",
-    "ci:full": "npm-run-all cwtree \"ci -- --concurrency={1}\" ci:dapps cwtree -- 1",
+    "ci:full": "npm-run-all cwtree typecheck \"lint -- --concurrency={1}\" build:no-ui \"test -- --concurrency={1}\" ci:dapps cwtree -- 1",
     "clean": "node scripts/monorun --stream clean",
     "clean:full": "npx npm-run-all clean clean:top",
     "clean:top": "npm run reset:top && npx rimraf node_modules",
