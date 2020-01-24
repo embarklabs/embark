@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.1.0-nightly.5](https://github.com/embarklabs/embark/compare/v5.1.0-nightly.4...v5.1.0-nightly.5) (2020-01-24)
+
+
+### Features
+
+* **@embark/testing:** add missing APIs to register console commands and API calls ([bef582d](https://github.com/embarklabs/embark/commit/bef582d))
+
+
+
+
+
 # [5.1.0-nightly.1](https://github.com/embarklabs/embark/compare/v5.1.0-nightly.0...v5.1.0-nightly.1) (2020-01-20)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "embark-coverage",
-  "version": "5.1.0-nightly.4",
+  "version": "5.1.0-nightly.5",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Code coverage capabilities for Embark",
@@ -50,7 +50,7 @@
     "@types/prettier": "1.16.4",
     "@types/semver": "5.5.0",
     "core-js": "3.4.3",
-    "embark-core": "^5.1.0-nightly.4",
+    "embark-core": "^5.1.0-nightly.5",
     "embark-utils": "^5.1.0-nightly.4",
     "fs-extra": "8.1.0",
     "globule": "1.2.1",

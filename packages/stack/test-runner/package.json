@@ -1,6 +1,6 @@
 {
   "name": "embark-test-runner",
-  "version": "5.1.0-nightly.4",
+  "version": "5.1.0-nightly.5",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Embark Testrunner",
@@ -54,7 +54,7 @@
     "core-js": "3.4.3",
     "deep-equal": "1.0.1",
     "embark-i18n": "^5.1.0-nightly.1",
-    "embark-testing": "^5.1.0-nightly.1",
+    "embark-testing": "^5.1.0-nightly.5",
     "embark-utils": "^5.1.0-nightly.4",
     "fs-extra": "8.1.0",
     "istanbul-lib-coverage": "2.0.5",

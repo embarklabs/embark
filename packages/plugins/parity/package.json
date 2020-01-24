@@ -1,6 +1,6 @@
 {
   "name": "embark-parity",
-  "version": "5.1.0-nightly.4",
+  "version": "5.1.0-nightly.5",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Implementation of the Parity blockchain for Embark",
@@ -47,7 +47,7 @@
     "@babel/runtime-corejs3": "7.7.4",
     "async": "2.6.1",
     "core-js": "3.4.3",
-    "embark-core": "^5.1.0-nightly.4",
+    "embark-core": "^5.1.0-nightly.5",
     "embark-i18n": "^5.1.0-nightly.1",
     "embark-utils": "^5.1.0-nightly.4",
     "fs-extra": "8.1.0",

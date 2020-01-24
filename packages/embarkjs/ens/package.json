@@ -1,6 +1,6 @@
 {
   "name": "embarkjs-ens",
-  "version": "5.1.0-nightly.2",
+  "version": "5.1.0-nightly.5",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Ens plugin for embarkjs",
@@ -49,7 +49,7 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.7.4",
     "core-js": "3.4.3",
-    "embarkjs": "^5.1.0-nightly.2",
+    "embarkjs": "^5.1.0-nightly.5",
     "eth-ens-namehash": "2.0.8",
     "web3": "1.2.4"
   },
