@@ -1,7 +1,7 @@
-/*global contract, config, it, web3*/
+/*global artifacts, contract, config, it, web3*/
 const assert = require('assert');
-const SomeContract = require('Embark/contracts/SomeContract');
-const MyToken2 = require('Embark/contracts/MyToken2');
+const SomeContract = artifacts.require('SomeContract');
+const MyToken2 = artifacts.require('MyToken2');
 
 config({
   contracts: {
@@ -38,4 +38,3 @@ contract("SomeContract", function() {
   });
 
 });
-

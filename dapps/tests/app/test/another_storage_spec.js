@@ -1,7 +1,7 @@
-/*global contract, config, it, web3*/
+/*global artifacts, contract, config, it, web3*/
 const assert = require('assert');
-const AnotherStorage = require('Embark/contracts/AnotherStorage');
-const SimpleStorage = require('Embark/contracts/SimpleStorage');
+const AnotherStorage = artifacts.require('AnotherStorage');
+const SimpleStorage = artifacts.require('SimpleStorage');
 
 let accounts, defaultAccount;
 const numAddresses = 10;

@@ -50,6 +50,7 @@
     "@babel/runtime-corejs3": "7.7.4",
     "@types/async": "3.0.3",
     "async": "3.1.0",
+    "colors": "1.4.0",
     "core-js": "3.4.3",
     "embark-i18n": "^5.1.1",
     "embark-utils": "^5.2.0-nightly.1",

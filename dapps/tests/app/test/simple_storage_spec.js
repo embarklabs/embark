@@ -1,7 +1,7 @@
 /*global contract, config, it, assert, web3*/
-const SimpleStorage = require('Embark/contracts/SimpleStorage');
+const SimpleStorage = artifacts.require('SimpleStorage');
 let accounts;
-const {Utils} = require('Embark/EmbarkJS');
+const {Utils} = artifacts.require('EmbarkJS');
 
 config({
   contracts: {

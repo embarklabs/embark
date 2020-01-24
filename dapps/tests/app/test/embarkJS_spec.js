@@ -1,7 +1,7 @@
-/*global describe, it, web3, config*/
+/*global artifacts, describe, it, web3, config*/
 const assert = require('assert');
-const SimpleStorage = require('Embark/contracts/SimpleStorage');
-const EmbarkJS = require('Embark/EmbarkJS');
+const SimpleStorage = artifacts.require('SimpleStorage');
+const EmbarkJS = artifacts.require('EmbarkJS');
 
 config({
   namesystem: {
@@ -58,4 +58,3 @@ describe("EmbarkJS functions", function() {
     assert.strictEqual(parseInt(result, 10), 100);
   });
 });
-

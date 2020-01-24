@@ -1,11 +1,11 @@
-/*global describe, config, it, web3*/
+/*global artifacts, describe, config, it, web3*/
 const assert = require('assert');
-const Token = require('Embark/contracts/Token');
-const MyToken = require('Embark/contracts/MyToken');
-const MyToken2 = require('Embark/contracts/MyToken2');
-const AlreadyDeployedToken = require('Embark/contracts/AlreadyDeployedToken');
-const Test = require('Embark/contracts/Test');
-const SomeContract = require('Embark/contracts/SomeContract');
+const Token = artifacts.require('Token');
+const MyToken = artifacts.require('MyToken');
+const MyToken2 = artifacts.require('MyToken2');
+const AlreadyDeployedToken = artifacts.require('AlreadyDeployedToken');
+const Test = artifacts.require('Test');
+const SomeContract = artifacts.require('SomeContract');
 
 config({
   namesystem: {
