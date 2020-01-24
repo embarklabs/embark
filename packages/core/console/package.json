@@ -16,7 +16,7 @@
     "solidity"
   ],
   "files": [
-    "dist/lib"
+    "dist"
   ],
   "license": "MIT",
   "repository": {
