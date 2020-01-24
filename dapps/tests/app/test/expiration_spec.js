@@ -1,5 +1,5 @@
-/*global contract, config, it, assert, mineAtTimestamp*/
-const Expiration = require('Embark/contracts/Expiration');
+/*global artifacts, contract, config, it, assert, mineAtTimestamp*/
+const Expiration = artifacts.require('Expiration');
 const now = Math.floor(new Date().getTime()/1000.0); // Get unix epoch. The getTime method returns the time in milliseconds.
 
 config({

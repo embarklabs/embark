@@ -1,7 +1,7 @@
-/*global contract, config, it*/
+/*global artifacts, contract, config, it*/
 const assert = require('assert');
-const AnotherStorage = require('Embark/contracts/AnotherStorage');
-const SimpleStorage = require('Embark/contracts/SimpleStorage');
+const AnotherStorage = artifacts.require('AnotherStorage');
+const SimpleStorage = artifacts.require('SimpleStorage');
 let accounts;
 
 config({

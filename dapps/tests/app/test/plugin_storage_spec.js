@@ -1,7 +1,7 @@
-/*global contract, config, it*/
+/*global artifacts, contract, config, it*/
 const assert = require('assert');
-const PluginStorage = require('Embark/contracts/PluginStorage');
-const SimpleStorage = require('Embark/contracts/SimpleStorage');
+const PluginStorage = artifacts.require('PluginStorage');
+const SimpleStorage = artifacts.require('SimpleStorage');
 
 config({
   contracts: {

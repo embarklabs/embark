@@ -1,6 +1,6 @@
-/*global contract, config, it*/
+/*global artifacts, contract, config, it*/
 const assert = require('assert');
-const AnotherStorage = require('Embark/contracts/AnotherStorage');
+const AnotherStorage = artifacts.require('AnotherStorage');
 
 // FIXME this doesn't work and no idea how it ever worked because ERC20 is not defined anywhere
 // config({
@@ -22,4 +22,3 @@ contract("AnotherStorageWithInterface", function() {
     assert.strictEqual(result.toString(), '0x0000000000000000000000000000000000000000');
   });
 });
-

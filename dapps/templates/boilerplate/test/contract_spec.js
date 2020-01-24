@@ -1,6 +1,6 @@
-/*global contract, it*/
+/*global artifacts, contract, it*/
 /*
-const SimpleStorage = require('Embark/contracts/SimpleStorage');
+const SimpleStorage = artifacts.require('SimpleStorage');
 
 let accounts;
 

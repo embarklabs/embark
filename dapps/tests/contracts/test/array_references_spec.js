@@ -1,8 +1,8 @@
-/*global contract, config, it*/
+/*global artifacts, contract, config, it*/
 const assert = require('assert');
-const SomeContract = require('Embark/contracts/SomeContract');
-const SimpleStorage = require('Embark/contracts/SimpleStorage');
-const MyToken2 = require('Embark/contracts/MyToken2');
+const SomeContract = artifacts.require('SomeContract');
+const SimpleStorage = artifacts.require('SimpleStorage');
+const MyToken2 = artifacts.require('MyToken2');
 
 config({
   contracts: {
@@ -42,4 +42,3 @@ contract("SomeContract", function() {
   });
 
 });
-

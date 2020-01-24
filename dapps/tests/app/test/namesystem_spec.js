@@ -1,8 +1,8 @@
-/*global describe, it, config*/
+/*global artifacts, describe, it, config*/
 const assert = require('assert');
-const MyToken = require('Embark/contracts/MyToken');
-const MyToken2 = require('Embark/contracts/MyToken2');
-const EmbarkJS = require('Embark/EmbarkJS');
+const MyToken = artifacts.require('MyToken');
+const MyToken2 = artifacts.require('MyToken2');
+const EmbarkJS = artifacts.require('EmbarkJS');
 
 let accounts;
 
@@ -55,4 +55,3 @@ describe("ENS functions", function() {
     assert.strictEqual(myToken2Name, 'MyToken2.embark.eth');
   });
 });
-

@@ -1,6 +1,6 @@
-/*global contract, config, it*/
+/*global artifacts, contract, config, it*/
 const assert = require('assert');
-const Test2 = require('Embark/contracts/Test2');
+const Test2 = artifacts.require('Test2');
 
 config({
   contracts: {
