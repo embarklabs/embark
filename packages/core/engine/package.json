@@ -1,6 +1,6 @@
 {
   "name": "embark-engine",
-  "version": "5.1.0-nightly.5",
+  "version": "5.1.0-nightly.6",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Engine library for Embark",
@@ -55,7 +55,7 @@
     "embark-code-runner": "^5.1.0-nightly.5",
     "embark-communication": "^5.1.0-nightly.5",
     "embark-compiler": "^5.1.0-nightly.5",
-    "embark-console": "^5.1.0-nightly.5",
+    "embark-console": "^5.1.0-nightly.6",
     "embark-contracts-manager": "^5.1.0-nightly.5",
     "embark-core": "^5.1.0-nightly.5",
     "embark-coverage": "^5.1.0-nightly.5",
