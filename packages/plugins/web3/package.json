@@ -1,6 +1,6 @@
 {
   "name": "embark-web3",
-  "version": "5.1.0-nightly.5",
+  "version": "5.1.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Module to add Web3 support to Embark",
@@ -47,12 +47,12 @@
     "@babel/runtime-corejs3": "7.7.4",
     "core-js": "3.4.3",
     "ejs": "2.6.1",
-    "embark-core": "^5.1.0-nightly.5",
-    "embark-utils": "^5.1.0-nightly.4",
-    "embarkjs-web3": "^5.1.0-nightly.1"
+    "embark-core": "^5.1.0",
+    "embark-utils": "^5.1.0",
+    "embarkjs-web3": "^5.1.0"
   },
   "devDependencies": {
-    "embark-solo": "^5.1.0-nightly.1",
+    "embark-solo": "^5.1.0",
     "eslint": "5.7.0",
     "fs-extra": "8.1.0",
     "glob": "7.1.4",

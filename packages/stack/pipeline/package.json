@@ -1,6 +1,6 @@
 {
   "name": "embark-pipeline",
-  "version": "5.1.0-nightly.5",
+  "version": "5.1.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Build pipeline module for Embark",
@@ -48,14 +48,14 @@
     "async": "2.6.1",
     "colors": "1.3.2",
     "core-js": "3.4.3",
-    "embark-core": "^5.1.0-nightly.5",
-    "embark-i18n": "^5.1.0-nightly.1",
-    "embark-utils": "^5.1.0-nightly.4",
+    "embark-core": "^5.1.0",
+    "embark-i18n": "^5.1.0",
+    "embark-utils": "^5.1.0",
     "find-up": "2.1.0",
     "fs-extra": "8.1.0"
   },
   "devDependencies": {
-    "embark-solo": "^5.1.0-nightly.1",
+    "embark-solo": "^5.1.0",
     "eslint": "5.7.0",
     "npm-run-all": "4.1.5",
     "rimraf": "3.0.0"
