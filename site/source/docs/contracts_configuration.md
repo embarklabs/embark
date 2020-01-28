@@ -440,8 +440,8 @@ We can specify a condition that decides whether a contract should be deployed by
 ...
 deploy: {
   ERC20: {
-    deployIf: async (dependencies) => {
-      return await dependencies.contracts.Manager.methods.isUpdateApproved().call();
+    deployIf: async ({contracts, web3, logger}) => {
+      return await contracts.Manager.methods.isUpdateApproved().call();
     },
     deps: ['Manager']
   },
@@ -450,18 +450,7 @@ deploy: {
 ...
 ```
 
-Notice how `dependencies.contracts` gives access to the `Manager` contract instance. This however, is only possible because `Manager` has been defined as dependency of `ERC20` using the `deps` property. If we're using a Node version that doesn't support async/await, the same can be achieved using promises like this (web3 APIs already return promises):
-
-```
-...
-ERC20: {
-  deployIf: (dependencies) => {
-    return dependencies.contracts.Manager.methods.isUpdateApproved().call();
-  },
-  deps: ['Manager']
-},
-...
-```
+Notice how `contracts` gives access to the `Manager` contract instance. This however, is only possible because `Manager` has been defined as dependency of `ERC20` using the `deps` property.
 
 ### `beforeDeploy` hook
 
@@ -495,8 +484,8 @@ We can specify the `onDeploy` hook to execute code, right after a contract has b
 deploy: {
   SimpleStorage: {
     args: [100],
-    onDeploy: async (dependencies) => {
-      await dependencies.contracts.SimpleStorage.methods.set(150).send({from: dependencies.web3.eth.defaultAccount});
+    onDeploy: async ({contracts, web3, logger}) => {
+      await contracts.SimpleStorage.methods.set(150).send({from: web3.eth.defaultAccount});
     }
   }
 }
@@ -511,8 +500,8 @@ Also, as mentioned above, every deployment hook works with plain promises as wel
 ...
 SimpleStorage: {
   args: [100],
-  onDeploy: (dependencies) => {
-    return dependencies.contracts.SimpleStorage.methods.set(150).send();
+  onDeploy: ({contracts, web3, logger}) => {
+    return contracts.SimpleStorage.methods.set(150).send();
   }
 }
 ...
@@ -529,8 +518,8 @@ deploy: {
     args: [100]
   },
 },
-afterDeploy: (dependencies) => {
-  dependencies.contracts.SimpleStorage.methods.set(150).send({from: dependencies.web3.eth.defaultAccount});
+afterDeploy: ({contracts, web3, logger}) => {
+  contracts.SimpleStorage.methods.set(150).send({from: web3.eth.defaultAccount});
 }
 ...
 ```
@@ -540,9 +529,9 @@ afterDeploy: (dependencies) => {
 Since we use functions for these deployment hooks, we have to manage errors ourselves. We skipped that step in the above examples to save space, but here is an easy example on how you can do it:
 
 ```
-onDeploy: async (dependencies) => {
+onDeploy: async ({contracts, web3, logger}) => {
   try {
-    await dependencies.contracts.SimpleStorage.methods.set(85).send({from: dependencies.web3.eth.defaultAccount});
+    await contracts.SimpleStorage.methods.set(85).send({from: web3.eth.defaultAccount});
   } catch (e) {
     console.error('Error during onDeploy', e);
   }
@@ -577,8 +566,8 @@ The `logger` is injected as part of the `dependencies` object, so we can use it 
 ```
 deploy: {
   SimpleStorage: {
-    onDeploy: async (dependencies) => {
-      dependencies.logger.info('Hello from onDeploy!');
+    onDeploy: async ({contracts, web3, logger}) => {
+      logger.info('Hello from onDeploy!');
     }
   }
 }
