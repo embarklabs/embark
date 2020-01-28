@@ -66,26 +66,26 @@ class ENS {
     async.map(
       this.config.namesystemConfig.dappConnection || this.config.contractsConfig.dappConnection,
       (conn, next) => {
-      if (conn === '$EMBARK') {
-        return this.events.request('proxy:endpoint:get', next);
-      }
-      next(null, conn);
-    }, (err, connections) => {
-      if (err) {
-        return done(err);
-      }
-      done(null, {
-        env: this.env,
-        registration: this.config.namesystemConfig.register,
-        registryAbi: this.ensConfig.ENSRegistry.abiDefinition,
-        registryAddress: this.ensConfig.ENSRegistry.deployedAddress,
-        registrarAbi: this.ensConfig.FIFSRegistrar.abiDefinition,
-        registrarAddress: this.ensConfig.FIFSRegistrar.deployedAddress,
-        resolverAbi: this.ensConfig.Resolver.abiDefinition,
-        resolverAddress: this.ensConfig.Resolver.deployedAddress,
-        dappConnection: connections
+        if (conn === '$EMBARK') {
+          return this.events.request('proxy:endpoint:get', next);
+        }
+        next(null, conn);
+      }, (err, connections) => {
+        if (err) {
+          return done(err);
+        }
+        done(null, {
+          env: this.env,
+          registration: this.config.namesystemConfig.register,
+          registryAbi: this.ensConfig.ENSRegistry.abiDefinition,
+          registryAddress: this.ensConfig.ENSRegistry.deployedAddress,
+          registrarAbi: this.ensConfig.FIFSRegistrar.abiDefinition,
+          registrarAddress: this.ensConfig.FIFSRegistrar.deployedAddress,
+          resolverAbi: this.ensConfig.Resolver.abiDefinition,
+          resolverAddress: this.ensConfig.Resolver.deployedAddress,
+          dappConnection: connections
+        });
       });
-    });
   }
 
   async init(cb = () => {}) {
@@ -110,6 +110,7 @@ class ENS {
       return;
     }
     this.actionsRegistered = true;
+    this.embark.registerActionForEvent("contracts:build:before", this.beforeContractBuild.bind(this));
     this.embark.registerActionForEvent("deployment:deployContracts:beforeAll", this.configureContractsAndRegister.bind(this));
     this.embark.registerActionForEvent('deployment:contract:beforeDeploy', this.modifyENSArguments.bind(this));
     this.embark.registerActionForEvent("deployment:deployContracts:afterAll", this.associateContractAddresses.bind(this));
@@ -271,6 +272,17 @@ class ENS {
     });
   }
 
+  async beforeContractBuild(_options, cb) {
+    if (this.configured) {
+      return cb();
+    }
+    // Add contracts to contract manager so that they can be resolved as dependencies
+    this.ensConfig.ENSRegistry = await this.events.request2('contracts:add', this.ensConfig.ENSRegistry);
+    this.ensConfig.Resolver = await this.events.request2('contracts:add', this.ensConfig.Resolver);
+    this.ensConfig.FIFSRegistrar = await this.events.request2('contracts:add', this.ensConfig.FIFSRegistrar);
+    cb();
+  }
+
   async configureContractsAndRegister(_options, cb) {
     const NO_REGISTRATION = 'NO_REGISTRATION';
     const self = this;
@@ -292,8 +304,8 @@ class ENS {
     const registration = this.config.namesystemConfig.register;
     const doRegister = registration && registration.rootDomain;
 
-    this.ensConfig.ENSRegistry = await this.events.request2('contracts:add', this.ensConfig.ENSRegistry);
     await this.events.request2('deployment:contract:deploy', this.ensConfig.ENSRegistry);
+    // Add Resolver to contract manager again but this time with correct arguments (Registry address)
     this.ensConfig.Resolver.args = [this.ensConfig.ENSRegistry.deployedAddress];
     this.ensConfig.Resolver = await this.events.request2('contracts:add', this.ensConfig.Resolver);
     await this.events.request2('deployment:contract:deploy', this.ensConfig.Resolver);

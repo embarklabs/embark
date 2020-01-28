@@ -263,7 +263,10 @@ export default class ContractsManager {
     const self = this;
 
     async.waterfall([
-      function prepareContractsFromConfig(callback) {
+      function beforeBuild(callback) {
+        self.plugins.emitAndRunActionsForEvent('contracts:build:before', callback);
+      },
+      function prepareContractsFromConfig(_options, callback) {
         self.events.emit("status", __("Building..."));
 
         if (contractsConfig.contracts.deploy) {
