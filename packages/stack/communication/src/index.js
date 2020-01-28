@@ -32,7 +32,7 @@ class Communication {
     });
 
     if (this.communicationConfig.enabled && this.communicationConfig.available_providers.includes("whisper")) {
-      warnIfPackageNotDefinedLocally("embark-whisper-geth", this.embark.logger.info.bind(this.embark.logger));
+      warnIfPackageNotDefinedLocally("embark-whisper-geth", this.embark.logger.warn.bind(this.embark.logger));
     }
   }
 

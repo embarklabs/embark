@@ -9,6 +9,13 @@
     "embarkjs-swarm": "^5.1.0",
     "embarkjs-web3": "^5.1.0",
     "embarkjs-whisper": "^5.1.0",
+    "embark-ipfs": "^5.1.0",
+    "embark-swarm": "^5.1.0",
+    "embark-whisper-geth": "^5.1.0",
+    "embark-geth": "^5.1.0",
+    "embark-parity": "^5.1.0",
+    "embark-profiler": "^5.1.0",
+    "embark-graph": "^5.1.0",
     "rimraf": "3.0.0"
   },
   "license": "MIT",

@@ -9,7 +9,7 @@ class GraphGenerator {
     this.events = embark.events;
 
     this.events.setCommandHandler("graph:create", this.generate.bind(this));
-    warnIfPackageNotDefinedLocally("embark-graph", this.embark.logger.info.bind(this.embark.logger));
+    warnIfPackageNotDefinedLocally("embark-graph", this.embark.logger.warn.bind(this.embark.logger));
   }
 
   /*eslint complexity: ["error", 21]*/

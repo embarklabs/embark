@@ -34,8 +34,6 @@ export class Plugins {
 
   client: string;
 
-  locale: string;
-
   static deprecated = {
     'embarkjs-connector-web3': '4.1.0'
   };
@@ -52,7 +50,6 @@ export class Plugins {
     this.env = options.env;
     this.version = options.version;
     this.client = options.client;
-    this.locale = options.locale;
   }
 
   loadPlugins() {
@@ -93,8 +90,7 @@ export class Plugins {
       fs: this.fs,
       isInternal: true,
       context: this.context,
-      client: this.client,
-      locale: this.locale
+      client: this.client
     });
     this.plugins.push(pluginWrapper);
     return pluginWrapper;
@@ -129,8 +125,7 @@ export class Plugins {
       isInternal: true,
       context: this.context,
       env: this.env,
-      client: this.client,
-      locale: this.locale
+      client: this.client
     });
     const pluginInstance = pluginWrapper.loadInternalPlugin();
     this.plugins.push(pluginWrapper);
@@ -161,8 +156,7 @@ export class Plugins {
       isInternal: false,
       context: this.context,
       version: this.version,
-      client: this.client,
-      locale: this.locale
+      client: this.client
     });
     pluginWrapper.loadPlugin();
     this.plugins.push(pluginWrapper);

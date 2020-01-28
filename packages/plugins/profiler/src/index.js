@@ -12,7 +12,7 @@ class Profiler {
 
     this.registerConsoleCommand();
     this.registerApi();
-    warnIfPackageNotDefinedLocally("embark-profiler", this.embark.logger.info.bind(this.embark.logger));
+    warnIfPackageNotDefinedLocally("embark-profiler", this.embark.logger.warn.bind(this.embark.logger));
   }
 
   profileJSON(contractName, returnCb) {

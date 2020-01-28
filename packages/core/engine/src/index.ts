@@ -97,7 +97,6 @@ export class Engine {
       locale: this.locale,
 
       client: this.client,
-      // plugins: this.plugins,
       ipc: this.ipc
     });
     this.config.loadConfigFiles({embarkConfig: this.embarkConfig, interceptLogs: this.interceptLogs});

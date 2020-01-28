@@ -187,8 +187,7 @@ export class Config {
       context: this.context,
       env: this.env,
       version: this.version,
-      client: this.client,
-      locale: this.locale
+      client: this.client
     });
 
     this.loadEmbarkConfigFile();

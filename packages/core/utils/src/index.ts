@@ -308,18 +308,18 @@ export function isEs6Module(module) {
 export function warnIfPackageNotDefinedLocally(packageName, warnFunc) {
   const packageIsResolvable = findUp.sync("node_modules/" + packageName, {cwd: dappPath()});
   if (!packageIsResolvable) {
-    return warnFunc("== WARNING: it seems "  + packageName + " is not defined in your dapp package.json; In future versions of embark this package should be a local dependency and configured as a plugin");
+    return warnFunc("== WARNING: "  + packageName + " could not be resolved. ensure that is defined in your dapp's package.json and npm or yarn install was done; In future versions of embark this package should be a local dependency and configured as a plugin");
   }
 
   const dappPackage = fs.readJSONSync(dappPath("package.json"));
   const { dependencies, devDependencies } = dappPackage;
   if (!((dependencies && dependencies[packageName]) || (devDependencies && devDependencies[packageName]))) {
-    return warnFunc("== WARNING: it seems "  + packageName + " is not defined in your dapp package.json dependencies; In future versions of embark this package should be a local dependency and configured as a plugin");
+    return warnFunc("== WARNING: it seems "  + packageName + " is not defined in your dapp's package.json dependencies; In future versions of embark this package should be a local dependency and configured as a plugin");
   }
 
   const embarkConfig = fs.readJSONSync(dappPath("embark.json"));
   if (!embarkConfig.plugins[packageName]) {
-    return warnFunc("== WARNING: it seems "  + packageName + " is not defined in your dapp embark.json plugins; In future versions of embark this package should be a local dependency and configured as a plugin");
+    return warnFunc("== WARNING: it seems "  + packageName + " is not defined in your dapp's embark.json plugins; In future versions of embark this package should be a local dependency and configured as a plugin");
   }
 
   return true;
