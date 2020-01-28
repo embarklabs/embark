@@ -154,7 +154,6 @@ export class Engine {
     const options = _options || {};
 
     const groups = {
-      blockchain: this.blockchainComponents,
       coreComponents: this.coreComponents,
       stackComponents: this.stackComponents,
       consoleComponents: this.consoleComponents,
@@ -163,8 +162,6 @@ export class Engine {
       contracts: this.contractsComponents,
       pipeline: this.pipelineService,
       webserver: this.webserverService,
-      storage: this.storageComponent,
-      communication: this.communicationComponents,
       namesystem: this.namesystemComponents,
       filewatcher: this.filewatcherService,
       tests: this.testComponents,
@@ -265,12 +262,6 @@ export class Engine {
     this.registerModulePackage('embark-embarkjs', { plugins: this.plugins });
   }
 
-  blockchainComponents() {
-    // plugins
-    this.registerModulePackage('embark-geth');
-    this.registerModulePackage('embark-parity');
-  }
-
   testComponents(options) {
     this.registerModulePackage('embark-test-runner', { plugins: this.plugins, ipc: this.ipc });
     this.registerModulePackage('embark-coverage', { plugins: this.plugins, coverage: options.coverage });
@@ -293,17 +284,6 @@ export class Engine {
     this.registerModulePackage('embark-specialconfigs', { plugins: this.plugins });
     this.registerModulePackage('embark-transaction-logger');
     this.registerModulePackage('embark-transaction-tracker');
-    this.registerModulePackage('embark-profiler');
-  }
-
-  storageComponent() {
-    this.registerModulePackage('embark-ipfs');
-    this.registerModulePackage('embark-swarm');
-  }
-
-  communicationComponents() {
-    this.registerModulePackage('embark-whisper-geth');
-    this.registerModulePackage('embark-whisper-parity');
   }
 
   namesystemComponents() {
