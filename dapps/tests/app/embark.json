@@ -25,7 +25,8 @@
     "embark-parity": {},
     "embark-profiler": {},
     "embark-graph": {},
-    "embark-dapp-test-service": {}
+    "embark-dapp-test-service": {},
+    "embark-basic-pipeline": {}
   },
   "options": {
     "solc": {

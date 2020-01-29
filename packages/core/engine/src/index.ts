@@ -39,8 +39,6 @@ export class Engine {
 
   webServerConfig: any;
 
-  webpackConfigName: string;
-
   singleUseAuthToken: boolean;
 
   ipcRole = 'client';
@@ -73,7 +71,6 @@ export class Engine {
     this.context = options.context;
     this.useDashboard = options.useDashboard;
     this.webServerConfig = options.webServerConfig;
-    this.webpackConfigName = options.webpackConfigName;
     this.singleUseAuthToken = options.singleUseAuthToken;
     this.package = options.package;
     this.ipcRole = options.ipcRole || 'client';
@@ -170,7 +167,6 @@ export class Engine {
       blockchainStackComponents: this.blockchainStackComponents,
       compiler: this.compilerComponents,
       contracts: this.contractsComponents,
-      pipeline: this.pipelineService,
       webserver: this.webserverService,
       namesystem: this.namesystemComponents,
       filewatcher: this.filewatcherService,
@@ -195,14 +191,6 @@ export class Engine {
 
   filewatcherService(_options) {
     this.registerModulePackage('embark-watcher');
-  }
-
-  pipelineService(_options) {
-    this.registerModulePackage('embark-basic-pipeline', {
-      plugins: this.plugins,
-      webpackConfigName: this.webpackConfigName,
-      useDashboard: this.useDashboard
-    });
   }
 
   serviceMonitor() {

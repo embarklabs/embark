@@ -183,7 +183,6 @@ class EmbarkController {
         engine.registerModuleGroup("namesystem");
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
-        engine.registerModuleGroup("pipeline");
         engine.registerModuleGroup("webserver");
         engine.registerModuleGroup("filewatcher");
         engine.registerModuleGroup("cockpit");
@@ -435,7 +434,6 @@ class EmbarkController {
         engine.registerModuleGroup("namesystem");
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
-        engine.registerModuleGroup("pipeline");
         engine.registerModuleGroup("webserver");
         engine.registerModuleGroup("filewatcher");
         if (!isSecondaryProcess(engine)) {
@@ -756,10 +754,10 @@ class EmbarkController {
         engine.registerModuleGroup("stackComponents");
 
         engine.registerModulePackage('embark-ganache');
+
         engine.registerModuleGroup("namesystem");
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
-        engine.registerModuleGroup("pipeline");
         engine.registerModuleGroup("webserver");
         engine.registerModuleGroup("filewatcher");
         engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins });
@@ -838,6 +836,7 @@ class EmbarkController {
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
 
+        engine.registerModuleGroup("compiler");
         engine.registerModulePackage('embark-ganache');
         engine.registerModuleGroup("compiler");
         engine.registerModulePackage('embark-ethereum-blockchain-client');
@@ -845,7 +844,6 @@ class EmbarkController {
         engine.registerModulePackage('embark-accounts-manager');
         engine.registerModulePackage('embark-rpc-manager');
         engine.registerModulePackage('embark-specialconfigs', { plugins: engine.plugins });
-        engine.registerModuleGroup("pipeline");
         engine.registerModuleGroup("tests", options);
         engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins, trackContracts: false });
         engine.registerModuleGroup("namesystem");

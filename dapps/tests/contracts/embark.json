@@ -18,6 +18,7 @@
     "embark-geth": {},
     "embark-parity": {},
     "embark-profiler": {},
-    "embark-graph": {}
+    "embark-graph": {},
+    "embark-basic-pipeline": {}
   }
 }
