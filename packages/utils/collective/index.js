@@ -153,7 +153,7 @@ function labeler(label) {
 function build(babelEnv, outDir, cliArgs, pkgJsonDict) {
   const rootPath = monorepoRootPath();
   const babelCmd = process.platform === 'win32' ? 'babel.cmd': 'babel';
-  const babelBinPath = join(__dirname, 'node_modules', '.bin', babelCmd);
+  const babelBinPath = join(rootPath, 'node_modules', '.bin', babelCmd);
   const babelConfigPath = join(rootPath, 'babel.config.js');
 
   const sources = Object.values(pkgJsonDict).map(
