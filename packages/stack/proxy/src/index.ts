@@ -4,6 +4,7 @@ import { Logger } from "embark-logger";
 import { buildUrl, findNextPort } from "embark-utils";
 
 import { Proxy } from "./proxy";
+import {hasOwnProperty} from "tslint/lib/utils";
 
 const constants = require("embark-core/constants");
 
@@ -111,7 +112,7 @@ export default class ProxyManager {
     this.wsPort = wsPort;
 
     // setup proxy details
-    this.isWs = (/wss?/).test(this.embark.config.blockchainConfig.endpoint);
+    this.isWs = this.embark.config.blockchainConfig.endpoint ? (/wss?/).test(this.embark.config.blockchainConfig.endpoint) : true;
   }
 
   private async setupProxy(clientName: string) {
@@ -126,7 +127,6 @@ export default class ProxyManager {
     const endpoint = this.embark.config.blockchainConfig.endpoint;
 
     // HTTP
-    // TODO disable HTTP for VM?
     this.httpProxy = await new Proxy({
       endpoint,
       events: this.events,
@@ -153,7 +153,6 @@ export default class ProxyManager {
           this.host,
           this.wsPort,
         );
-      // TODO fix endpoint
       this.logger.info(`WS Proxy for node endpoint ${endpoint} listening on ${buildUrl("ws", this.host, this.wsPort, "ws")}`);
     }
   }

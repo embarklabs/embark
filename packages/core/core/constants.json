@@ -40,7 +40,8 @@
     "call": "eth_call",
     "clients": {
       "geth": "geth",
-      "parity": "parity"
+      "parity": "parity",
+      "ganache": "ganache-cli"
     },
     "blockchainReady": "blockchainReady",
     "blockchainExit": "blockchainExit",

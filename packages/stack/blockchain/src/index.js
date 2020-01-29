@@ -1,6 +1,5 @@
 import async from 'async';
 const { __ } = require('embark-i18n');
-const constants = require('embark-core/constants');
 
 import BlockchainAPI from "./api";
 export default class Blockchain {
@@ -52,11 +51,6 @@ export default class Blockchain {
         this.startedClient = clientName;
         this.events.emit("blockchain:started", clientName);
       };
-      // TODO remove VM once tests are refactored
-      if (clientName === constants.blockchain.vm) {
-        started();
-        return cb();
-      }
       try {
         const isVM = await this.events.request2('blockchain:client:vmProvider', clientName);
         if (isVM) {
@@ -104,7 +98,7 @@ export default class Blockchain {
 
       try {
         const isVM = await this.events.request2('blockchain:client:vmProvider', clientName);
-        if (clientName === constants.blockchain.vm || isVM) {
+        if (isVM) {
           this.startedClient = null;
           this.events.emit("blockchain:stopped", clientName);
           return cb();
