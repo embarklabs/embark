@@ -49,7 +49,8 @@
     "@babel/runtime-corejs3": "7.8.3",
     "colors": "1.4.0",
     "core-js": "3.6.4",
-    "date-and-time": "0.12.0"
+    "date-and-time": "0.12.0",
+    "fs-extra": "8.1.0"
   },
   "devDependencies": {
     "@babel/core": "7.7.7",
@@ -59,8 +60,7 @@
     "eslint": "6.8.0",
     "jest": "24.9.0",
     "npm-run-all": "4.1.5",
-    "rimraf": "3.0.0",
-    "tmp": "0.1.0"
+    "rimraf": "3.0.0"
   },
   "engines": {
     "node": ">=10.17.0",
