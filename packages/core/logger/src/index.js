@@ -1,11 +1,12 @@
 const async = require('async');
 require('colors');
-const fs = require('fs');
+const fs = require('fs-extra');
 const date = require('date-and-time');
 const { escapeHtml } = require('./utils');
 const util = require('util');
 
 const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss:SSS';
+const DELIM = '  ';
 
 export const LogLevels = {
   error: 'error',
@@ -21,28 +22,45 @@ export class Logger {
     this.logLevel = options.logLevel || 'info';
     this._logFunction = options.logFunction || console.log;
     this.fs = options.fs || fs;
-    this.logFunction = function(...args) {
-      const color = args[args.length - 1];
-      args.splice(args.length - 1, 1);
-      this._logFunction(...args.filter(arg => arg ?? false).map(arg => {
-        if (color) {
-          return typeof arg === 'object' ? util.inspect(arg, 2)[color] : arg[color];
-        }
-        return typeof arg === 'object' ? util.inspect(arg, 2) : arg;
-      }));
-    };
-    this.logFile = options.logFile;
 
-    this.writeToFile = async.cargo((tasks, callback) => {
+    this.logFunction = function(args, color) {
+      args  = Array.isArray(args) ? args : [args];
+      this._logFunction(...(args.filter(arg => arg ?? false).map(arg => {
+        if (typeof arg === 'object') arg = util.inspect(arg, 2);
+        return color ? arg[color] : arg;
+      })));
+    };
+
+    this.logFile = options.logFile;
+    if (this.logFile) {
+      this.fs.ensureFileSync(this.logFile);
+    }
+
+    const isDebugOrTrace = ['debug', 'trace'].includes(this.logLevel);
+    this.isDebugOrTrace = isDebugOrTrace;
+
+    const noop = () => {};
+    this.writeToFile = async.cargo((tasks, callback = noop) => {
       if (!this.logFile) {
         return callback();
       }
       let logs = '';
-      let origin = "[" + ((new Error().stack).split("at ")[3]).trim() + "]";
       tasks.forEach(task => {
-        logs += `[${date.format(new Date(), DATE_FORMAT)}] ${task.prefix} ${task.args}\n`;
+        let message = [].concat(task.args).join(' ').trim();
+        if (!message) return;
+        const dts = `[${date.format(new Date(), DATE_FORMAT)}]`;
+        message = message.replace(/\s+/g, ' ');
+        let origin = '';
+        if (isDebugOrTrace) origin = `${DELIM}${task.origin.match(/^at\s+.*(\(.*\))/)[1] || '(unknown)'}`;
+        const prefix = task.prefix;
+        logs += `${dts}${DELIM}${prefix}${DELIM}${message}${origin}\n`;
       });
-      this.fs.appendFile(this.logFile, `\n${origin} ${logs}`, err => {
+
+      if (!logs) {
+        callback();
+      }
+
+      this.fs.appendFile(this.logFile, logs.stripColors, err => {
         if (err) {
           this.logFunction(`There was an error writing to the log file: ${err}`, 'red');
           return callback(err);
@@ -71,15 +89,18 @@ export class Logger {
       return;
     }
 
-    let callback = () => {};
-    if (typeof args[args.length - 1] === 'function') {
-      callback = args[args.length - 1];
-      args.splice(args.length - 1, 1);
-    }
-
     this.events.emit("log", "error", args);
-    this.logFunction(...args, 'red');
-    this.writeToFile.push({ prefix: "[error]: ", args }, callback);
+    this.logFunction(args, 'red');
+
+    let origin;
+    if (this.isDebugOrTrace) {
+      try {
+        const stack = new Error().stack;
+        origin = stack.split('\n')[2].trim();
+      // eslint-disable-next-line no-empty
+      } catch (e) {}
+    }
+    this.writeToFile.push({ args, origin, prefix: "[error]" });
   }
 
   warn(...args) {
@@ -87,15 +108,18 @@ export class Logger {
       return;
     }
 
-    let callback = () => {};
-    if (typeof args[args.length - 1] === 'function') {
-      callback = args[args.length - 1];
-      args.splice(args.length - 1, 1);
-    }
-
     this.events.emit("log", "warn", args);
-    this.logFunction(...args, 'yellow');
-    this.writeToFile.push({ prefix: "[warning]: ", args }, callback);
+    this.logFunction(args, 'yellow');
+
+    let origin;
+    if (this.isDebugOrTrace) {
+      try {
+        const stack = new Error().stack;
+        origin = stack.split('\n')[2].trim();
+      // eslint-disable-next-line no-empty
+      } catch (e) {}
+    }
+    this.writeToFile.push({ args, origin, prefix: "[warn]" });
   }
 
   info(...args) {
@@ -103,15 +127,18 @@ export class Logger {
       return;
     }
 
-    let callback = () => {};
-    if (typeof args[args.length - 1] === 'function') {
-      callback = args[args.length - 1];
-      args.splice(args.length - 1, 1);
-    }
-
     this.events.emit("log", "info", args);
-    this.logFunction(...args, 'green');
-    this.writeToFile.push({ prefix: "[info]: ", args }, callback);
+    this.logFunction(args, 'green');
+
+    let origin;
+    if (this.isDebugOrTrace) {
+      try {
+        const stack = new Error().stack;
+        origin = stack.split('\n')[2].trim();
+      // eslint-disable-next-line no-empty
+      } catch (e) {}
+    }
+    this.writeToFile.push({ args, origin, prefix: "[info]" });
   }
 
   consoleOnly(...args) {
@@ -119,14 +146,17 @@ export class Logger {
       return;
     }
 
-    let callback = () => {};
-    if (typeof args[args.length - 1] === 'function') {
-      callback = args[args.length - 1];
-      args.splice(args.length - 1, 1);
-    }
+    this.logFunction(args, 'green');
 
-    this.logFunction(...args, 'green');
-    this.writeToFile.push({prefix: "[consoleOnly]: ", args }, callback);
+    let origin;
+    if (this.isDebugOrTrace) {
+      try {
+        const stack = new Error().stack;
+        origin = stack.split('\n')[2].trim();
+      // eslint-disable-next-line no-empty
+      } catch (e) {}
+    }
+    this.writeToFile.push({ args, origin, prefix: "[consoleOnly]" });
   }
 
   debug(...args) {
@@ -134,15 +164,18 @@ export class Logger {
       return;
     }
 
-    let callback = () => {};
-    if (typeof args[args.length - 1] === 'function') {
-      callback = args[args.length - 1];
-      args.splice(args.length - 1, 1);
-    }
-
     this.events.emit("log", "debug", args);
-    this.logFunction(...args, null);
-    this.writeToFile.push({ prefix: "[debug]: ", args }, callback);
+    this.logFunction(args, null);
+
+    let origin;
+    if (this.isDebugOrTrace) {
+      try {
+        const stack = new Error().stack;
+        origin = stack.split('\n')[2].trim();
+      // eslint-disable-next-line no-empty
+      } catch (e) {}
+    }
+    this.writeToFile.push({ args, origin, prefix: "[debug]" });
   }
 
   trace(...args) {
@@ -150,32 +183,37 @@ export class Logger {
       return;
     }
 
-    let callback = () => {};
-    if (typeof args[args.length - 1] === 'function') {
-      callback = args[args.length - 1];
-      args.splice(args.length - 1, 1);
-    }
-
     this.events.emit("log", "trace", args);
-    this.logFunction(...args, null);
-    this.writeToFile.push({ prefix: "[trace]: ", args }, callback);
+    this.logFunction(args, null);
+
+    let origin;
+    if (this.isDebugOrTrace) {
+      try {
+        const stack = new Error().stack;
+        origin = stack.split('\n')[2].trim();
+      // eslint-disable-next-line no-empty
+      } catch (e) {}
+    }
+    this.writeToFile.push({ args, origin, prefix: "[trace]" });
   }
 
-  dir(...args) {
-    const txt = args[0];
-    if (!txt || !(this.shouldLog('info'))) {
+  dir(obj) {
+    if (!obj || !(this.shouldLog('info'))) {
       return;
     }
 
-    let callback = () => {};
-    if (typeof args[args.length - 1] === 'function') {
-      callback = args[args.length - 1];
-      args.splice(args.length - 1, 1);
-    }
+    this.events.emit("log", "dir", obj);
+    this.logFunction(obj, null);
 
-    this.events.emit("log", "dir", txt);
-    this.logFunction(txt, null);
-    this.writeToFile({ prefix: "[dir]: ", args }, callback);
+    let origin;
+    if (this.isDebugOrTrace) {
+      try {
+        const stack = new Error().stack;
+        origin = stack.split('\n')[2].trim();
+      // eslint-disable-next-line no-empty
+      } catch (e) {}
+    }
+    this.writeToFile({ args: obj, origin, prefix: "[dir]" });
   }
 
   shouldLog(level) {
@@ -183,4 +221,3 @@ export class Logger {
     return (logLevels.indexOf(level) <= logLevels.indexOf(this.logLevel));
   }
 }
-
