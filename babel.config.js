@@ -1,9 +1,11 @@
 /* global module require */
 
 /*
- * dependencies of this config should be specified in
- * `utils/collective/package.json` relative to this config file, with reliance
- * on yarn-workspace hoisting for those packages to be resolvable from the
+ * dependencies of this config should be specified in `./package.json` relative
+ * to this config file (which should be in the root of the monorepo);
+ * yarn-workspace hoisting re: dev/Deps specified in
+ * `packages/utils/collective/package.json` is not reliable re: dependencies of
+ * this root-level config being resolvable (with correct versions) from the
  * monorepo root
  */
 
