@@ -207,7 +207,6 @@ __embarkENS.web3 = new Web3();
 __embarkENS.setProvider = function(config) {
   const ERROR_MESSAGE = 'ENS is not available in this chain';
   this.registration = config.registration;
-  this.env = config.env;
   this.ready = false;
   this.dappAutoEnable = config.dappAutoEnable;
 
@@ -231,6 +230,7 @@ __embarkENS.setProvider = function(config) {
       const accounts = await this.web3.eth.getAccounts();
       this.web3.eth.defaultAccount = accounts[0];
       const id = await this.web3.eth.net.getId();
+      this.isKnownNetwork = !!this.registryAddresses[id];
       const registryAddress = this.registryAddresses[id] || config.registryAddress;
       this._isAvailable = true;
       this.ens = new this.web3.eth.Contract(config.registryAbi, registryAddress);
@@ -345,7 +345,7 @@ __embarkENS.registerSubDomain = function (name, address, callback) {
     return callback(defaultAccountNotSetError);
   }
 
-  if (this.env !== 'development' && this.env !== 'privatenet') {
+  if (this.isKnownNetwork) {
     return callback('Sub-domain registration is only available in development or privatenet mode');
   }
   if (!this.registration || !this.registration.rootDomain) {
