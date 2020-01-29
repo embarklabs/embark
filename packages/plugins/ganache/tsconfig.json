@@ -8,5 +8,10 @@
   "extends": "../../../tsconfig.base.json",
   "include": [
     "src/**/*"
+  ],
+  "references": [
+    {
+      "path": "../../core/utils"
+    }
   ]
 }

@@ -13,12 +13,14 @@ export class Proxy {
     this.transactions = {};
     this.plugins = options.plugins;
     this.logger = options.logger;
+    this.config = options.config;
     this.app = null;
     this.endpoint = options.endpoint;
     this.events = options.events;
     this.isWs = options.isWs;
     this.nodeSubscriptions = {};
     this._requestManager = null;
+    this.isVm = false;
 
     this.clientName = constants.blockchain.ethereum;
 
@@ -40,9 +42,20 @@ export class Proxy {
   }
 
   async _createWebSocketProvider(endpoint) {
+    const blockchainClientName = this.config.blockchainConfig.client;
+    try {
+      const vm = await this.events.request2('blockchain:client:vmProvider', blockchainClientName);
+      if (vm) {
+        this.isVm = true;
+        // Client is a VM
+        return vm;
+      }
+    } catch (_e) {
+      // Not a VM, let's use normal provider
+      this.isVm = false;
+    }
     // pass in endpoint to ensure we get a provider with a connection to the node
-    const prov =  await this.events.request2("blockchain:client:provider", this.clientName, endpoint);
-    return prov;
+    return this.events.request2("blockchain:client:provider", this.clientName, endpoint);
   }
 
   _createWeb3RequestManager(provider) {
@@ -173,13 +186,14 @@ export class Proxy {
 
   async handleSubscribe(clientSocket, request, response, cb) {
     let currentReqManager = await this.requestManager;
-    // TODO check if this creates issues
-    const provider = await this._createWebSocketProvider(this.endpoint);
-    // creates a new long-living connection to the node
-    currentReqManager = this._createWeb3RequestManager(provider);
+    if (!this.isVm) {
+      const provider = await this._createWebSocketProvider(this.endpoint);
+      // creates a new long-living connection to the node
+      currentReqManager = this._createWeb3RequestManager(provider);
 
-    // kill WS connetion to the node when the client connection closes
-    clientSocket.on('close', () => currentReqManager.provider.disconnect());
+      // kill WS connetion to the node when the client connection closes
+      clientSocket.on('close', () => currentReqManager.provider.disconnect());
+    }
 
     // do the actual forward request to the node
     currentReqManager.send(request, (error, subscriptionId) => {
@@ -249,8 +263,7 @@ export class Proxy {
 
       // if unsubscribe succeeded, disconnect connection and remove connection from memory
       if (result === true) {
-        // TODO check here too for issues
-        if (currentReqManager.provider && currentReqManager.provider.disconnect) {
+        if (currentReqManager.provider && currentReqManager.provider.disconnect && !this.isVm) {
           currentReqManager.provider.disconnect();
         }
         delete this.nodeSubscriptions[subscriptionId];

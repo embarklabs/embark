@@ -48,7 +48,6 @@ export default class Blockchain {
       }
 
       const clientName = blockchainConfig.client;
-      console.log('STArting client', clientName);
       const started = () => {
         this.startedClient = clientName;
         this.events.emit("blockchain:started", clientName);
@@ -62,7 +61,6 @@ export default class Blockchain {
         const isVM = await this.events.request2('blockchain:client:vmProvider', clientName);
         if (isVM) {
           // The client is a vm
-          console.log('IS A VM');
           started();
           return cb();
         }
@@ -72,7 +70,10 @@ export default class Blockchain {
 
       const client = this.blockchainNodes[clientName];
 
-      if (!client) return cb(`Blockchain client '${clientName}' not found, please register this node using 'blockchain:node:register'.`);
+      if (!client) {
+        return cb(`Blockchain client '${clientName}' not found, please register this node using 'blockchain:node:register'.
+        \nIf ${clientName} is a VM, no need to use \`embark blockchain\`, Embark will connect to the VM directly during its run.`);
+      }
 
       // check if we should should start
       client.isStartedFn.call(client, (err, isStarted) => {

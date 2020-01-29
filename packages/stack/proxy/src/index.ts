@@ -1,4 +1,4 @@
-import { Embark, EmbarkEvents } from "embark-core";
+import { Embark, EmbarkEvents, EmbarkConfig } from "embark-core";
 import { __ } from "embark-i18n";
 import { Logger } from "embark-logger";
 import { buildUrl, findNextPort } from "embark-utils";
@@ -13,6 +13,7 @@ export default class ProxyManager {
   private wsProxy: any;
   private httpProxy: any;
   private plugins: any;
+  private config: EmbarkConfig;
   private readonly host: string;
   private rpcPort = 0;
   private wsPort = 0;
@@ -25,6 +26,7 @@ export default class ProxyManager {
     this.logger = embark.logger;
     this.events = embark.events;
     this.plugins = options.plugins;
+    this.config = embark.config;
 
     this.host = "localhost";
 
@@ -131,6 +133,7 @@ export default class ProxyManager {
       isWs: false,
       logger: this.logger,
       plugins: this.plugins,
+      config: this.config,
     })
       .serve(
         this.host,
@@ -144,6 +147,7 @@ export default class ProxyManager {
         isWs: true,
         logger: this.logger,
         plugins: this.plugins,
+        config: this.config,
       })
         .serve(
           this.host,

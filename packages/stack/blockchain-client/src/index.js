@@ -60,13 +60,6 @@ class BlockchainClient {
   }
 
   async _getProvider(clientName, endpoint) {
-    const blockchainClientName = this.config.blockchainConfig.client;
-    if (endpoint && this.getVmClient(blockchainClientName)) {
-      // TODO find a fix to detect if it 's the proxy
-      // Currently using a VM instead of a Node
-      const vm = await this.events.request2('blockchain:client:vmProvider', blockchainClientName);
-      return vm;
-    }
     // Passing in an endpoint allows us to customise which URL the provider connects to.
     // If no endpoint is provided, the provider will connect to the proxy.
     // Explicity setting an endpoint is useful for cases where we want to connect directly
