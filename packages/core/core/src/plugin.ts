@@ -89,6 +89,8 @@ export class Plugin {
 
   plugins: any;
 
+  pluginsAPI: any;
+
   env: any;
 
   loaded = false;
@@ -121,6 +123,7 @@ export class Plugin {
     this.acceptedContext = options.pluginConfig.context || [constants.contexts.any];
     this.version = options.version;
     this.constants = constants;
+    this.pluginsAPI = options.pluginsAPI;
 
     if (!Array.isArray(this.currentContext)) {
       this.currentContext = [this.currentContext];

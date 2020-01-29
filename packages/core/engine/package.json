@@ -50,7 +50,6 @@
     "embark-accounts-manager": "^5.3.0-nightly.9",
     "embark-api": "^5.3.0-nightly.9",
     "embark-authenticator": "^5.3.0-nightly.7",
-    "embark-basic-pipeline": "^5.3.0-nightly.9",
     "embark-blockchain": "^5.3.0-nightly.9",
     "embark-code-runner": "^5.3.0-nightly.9",
     "embark-communication": "^5.3.0-nightly.7",

@@ -8,15 +8,16 @@ require('./env');
 
 class BasicPipeline {
 
-  constructor(embark, options) {
+  constructor(embark) {
     this.embark = embark;
     this.assetFiles = embark.config.assetFiles;
     this.isFirstBuild = true;
     this.embarkConfig = embark.config.embarkConfig;
     // TODO: why god why
-    this.useDashboard = options.useDashboard;
+    // this.useDashboard = options.useDashboard;
+    this.useDashboard = true;
     this.fs = embark.fs;
-    this.webpackConfigName = options.webpackConfigName;
+    this.webpackConfigName = embark.config.webpackConfigName;
     this.env = embark.config.env;
     this.buildDir = embark.config.buildDir;
     this.contractsFiles = embark.config.contractsFiles;
@@ -24,7 +25,7 @@ class BasicPipeline {
 
     this.logger = embark.logger;
     this.events = embark.events;
-    this.plugins = options.plugins;
+    this.plugins = embark.pluginsAPI;
     this.pipelinePlugins = this.plugins.getPluginsFor('pipeline');
     this.pipelineConfig = embark.config.pipelineConfig;
     let plugin = this.plugins.createPlugin('basic-pipeline', {});
