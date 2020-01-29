@@ -1,6 +1,6 @@
 {
   "name": "embark-plugin-cmd",
-  "version": "5.1.0",
+  "version": "5.1.1-nightly.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Plugin installation utility for Embark",
@@ -38,8 +38,8 @@
     "@babel/runtime-corejs3": "7.7.4",
     "async": "2.6.1",
     "core-js": "3.4.3",
-    "embark-i18n": "^5.1.0",
-    "embark-utils": "^5.1.0"
+    "embark-i18n": "^5.1.1-nightly.0",
+    "embark-utils": "^5.1.1-nightly.0"
   },
   "devDependencies": {
     "embark-solo": "^5.1.0",

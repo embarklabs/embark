@@ -1,6 +1,6 @@
 {
   "name": "embark-communication",
-  "version": "5.1.0",
+  "version": "5.1.1-nightly.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Communication APIs for Embark",
@@ -47,8 +47,8 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.8.3",
     "core-js": "3.6.4",
-    "embark-i18n": "^5.1.0",
-    "embark-utils": "^5.1.0"
+    "embark-i18n": "^5.1.1-nightly.0",
+    "embark-utils": "^5.1.1-nightly.0"
   },
   "devDependencies": {
     "@babel/core": "7.8.3",
