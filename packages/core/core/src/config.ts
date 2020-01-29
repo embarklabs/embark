@@ -91,6 +91,8 @@ export class Config {
 
   client: string;
 
+  webpackConfigName: string;
+
   dappPath = dappPath;
 
   constructor(options) {
@@ -106,6 +108,7 @@ export class Config {
     this.context = options.context || [constants.contexts.any];
     this.version = options.version;
     this.client = options.client;
+    this.webpackConfigName = options.webpackConfigName;
 
     this.registerEvents();
   }
@@ -187,7 +190,8 @@ export class Config {
       context: this.context,
       env: this.env,
       version: this.version,
-      client: this.client
+      client: this.client,
+      webpackConfigName: this.webpackConfigName
     });
 
     this.loadEmbarkConfigFile();

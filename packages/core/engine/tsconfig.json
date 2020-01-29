@@ -14,9 +14,6 @@
       "path": "../../plugins/accounts-manager"
     },
     {
-      "path": "../../plugins/basic-pipeline"
-    },
-    {
       "path": "../../plugins/coverage"
     },
     {

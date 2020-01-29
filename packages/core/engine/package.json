@@ -49,7 +49,6 @@
     "embark-accounts-manager": "^5.1.0",
     "embark-api": "^5.1.0",
     "embark-authenticator": "^5.1.0",
-    "embark-basic-pipeline": "^5.1.0",
     "embark-blockchain": "^5.1.0",
     "embark-blockchain-client": "^5.1.0",
     "embark-code-runner": "^5.1.0",

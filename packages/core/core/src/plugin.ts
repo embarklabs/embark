@@ -89,6 +89,8 @@ export class Plugin {
 
   plugins: any;
 
+  pluginsAPI: any;
+
   env: any;
 
   loaded = false;
@@ -102,6 +104,8 @@ export class Plugin {
   constants: any;
 
   logger: Logger;
+
+  webpackConfigName: string;
 
   constructor(options) {
     this.name = options.name;
@@ -121,6 +125,8 @@ export class Plugin {
     this.acceptedContext = options.pluginConfig.context || [constants.contexts.any];
     this.version = options.version;
     this.constants = constants;
+    this.webpackConfigName = options.webpackConfigName;
+    this.pluginsAPI = options.pluginsAPI;
 
     if (!Array.isArray(this.currentContext)) {
       this.currentContext = [this.currentContext];

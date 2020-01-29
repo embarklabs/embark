@@ -162,11 +162,12 @@ class EmbarkController {
         engine.registerModuleGroup("stackComponents");
         engine.registerModuleGroup("consoleComponents");
 
+        checkPipelinePlugin(engine);
+
         // TODO: replace with individual plugins
         engine.registerModuleGroup("namesystem");
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
-        engine.registerModuleGroup("pipeline");
         engine.registerModuleGroup("webserver");
         engine.registerModuleGroup("filewatcher");
         engine.registerModuleGroup("cockpit");
@@ -283,9 +284,10 @@ class EmbarkController {
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
 
+        checkPipelinePlugin(engine);
+
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
-        engine.registerModuleGroup("pipeline");
         engine.registerModuleGroup("namesystem");
         engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins });
 
@@ -366,11 +368,12 @@ class EmbarkController {
         engine.registerModuleGroup("stackComponents");
         engine.registerModuleGroup("consoleComponents");
 
+        checkPipelinePlugin(engine);
+
         // TODO: replace with individual plugins
         engine.registerModuleGroup("namesystem");
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
-        engine.registerModuleGroup("pipeline");
         engine.registerModuleGroup("webserver");
         engine.registerModuleGroup("filewatcher");
         if (!isSecondaryProcess(engine)) {
@@ -537,6 +540,7 @@ class EmbarkController {
   }
 
   ejectWebpack() {
+    checkPipelinePlugin(engine);
     const embarkConfig = findUp.sync(
       'node_modules/embark-basic-pipeline/dist/webpack.config.js',
       {cwd: __dirname}
@@ -688,10 +692,11 @@ class EmbarkController {
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
 
+        checkPipelinePlugin(engine);
+
         engine.registerModuleGroup("namesystem");
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
-        engine.registerModuleGroup("pipeline");
         engine.registerModuleGroup("webserver");
         engine.registerModuleGroup("filewatcher");
         engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins });
@@ -770,6 +775,8 @@ class EmbarkController {
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
 
+        checkPipelinePlugin(engine);
+
         engine.registerModuleGroup("compiler");
         engine.registerModulePackage('embark-ganache');
         engine.registerModulePackage('embark-ethereum-blockchain-client');
@@ -777,7 +784,6 @@ class EmbarkController {
         engine.registerModulePackage('embark-accounts-manager');
         engine.registerModulePackage('embark-rpc-manager');
         engine.registerModulePackage('embark-specialconfigs', { plugins: engine.plugins });
-        engine.registerModuleGroup("pipeline");
         engine.registerModuleGroup("tests", options);
         engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins, trackContracts: false });
         engine.registerModuleGroup("namesystem");
@@ -864,4 +870,11 @@ async function setupCargoAndWatcher(engine) {
   });
 
   await engine.events.request2("watcher:start");
+}
+
+function checkPipelinePlugin(engine) {
+  if (!engine.embarkConfig.app) return;
+  if (warnIfPackageNotDefinedLocally("embark-basic-pipeline", engine.logger.error) !== true) {
+    process.exit(1)
+  }
 }

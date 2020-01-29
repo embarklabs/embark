@@ -20,6 +20,7 @@
     "embark-parity": "^5.1.0",
     "embark-profiler": "^5.1.0",
     "embark-graph": "^5.1.0",
+    "embark-basic-pipeline": "^5.1.0",
     "fs-extra": "8.1.0",
     "haml": "0.4.3",
     "jquery": "3.4.0",

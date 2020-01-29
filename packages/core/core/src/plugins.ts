@@ -34,6 +34,8 @@ export class Plugins {
 
   client: string;
 
+  webpackConfigName: string;
+
   static deprecated = {
     'embarkjs-connector-web3': '4.1.0'
   };
@@ -50,6 +52,7 @@ export class Plugins {
     this.env = options.env;
     this.version = options.version;
     this.client = options.client;
+    this.webpackConfigName = options.webpackConfigName;
   }
 
   loadPlugins() {
@@ -87,10 +90,12 @@ export class Plugins {
       events: this.events,
       config: this.config,
       plugins: this.plugins,
+      pluginsAPI: this,
       fs: this.fs,
       isInternal: true,
       context: this.context,
-      client: this.client
+      client: this.client,
+      webpackConfigName: this.webpackConfigName
     });
     this.plugins.push(pluginWrapper);
     return pluginWrapper;
@@ -121,11 +126,13 @@ export class Plugins {
       events: this.events,
       config: this.config,
       plugins: this.plugins,
+      pluginsAPI: this,
       fs: this.fs,
       isInternal: true,
       context: this.context,
       env: this.env,
-      client: this.client
+      client: this.client,
+      webpackConfigName: this.webpackConfigName
     });
     const pluginInstance = pluginWrapper.loadInternalPlugin();
     this.plugins.push(pluginWrapper);
@@ -152,11 +159,13 @@ export class Plugins {
       events: this.events,
       config: this.config,
       plugins: this.plugins,
+      pluginsAPI: this,
       fs: this.fs,
       isInternal: false,
       context: this.context,
       version: this.version,
-      client: this.client
+      client: this.client,
+      webpackConfigName: this.webpackConfigName
     });
     pluginWrapper.loadPlugin();
     this.plugins.push(pluginWrapper);

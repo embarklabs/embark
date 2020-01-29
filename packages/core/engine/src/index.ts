@@ -95,9 +95,9 @@ export class Engine {
       version: this.version,
       package: this.package,
       locale: this.locale,
-
       client: this.client,
-      ipc: this.ipc
+      ipc: this.ipc,
+      webpackConfigName: this.webpackConfigName
     });
     this.config.loadConfigFiles({embarkConfig: this.embarkConfig, interceptLogs: this.interceptLogs});
     this.plugins = this.config.plugins;
@@ -160,7 +160,6 @@ export class Engine {
       blockchainStackComponents: this.blockchainStackComponents,
       compiler: this.compilerComponents,
       contracts: this.contractsComponents,
-      pipeline: this.pipelineService,
       webserver: this.webserverService,
       namesystem: this.namesystemComponents,
       filewatcher: this.filewatcherService,
@@ -185,14 +184,6 @@ export class Engine {
 
   filewatcherService(_options) {
     this.registerModulePackage('embark-watcher');
-  }
-
-  pipelineService(_options) {
-    this.registerModulePackage('embark-basic-pipeline', {
-      plugins: this.plugins,
-      webpackConfigName: this.webpackConfigName,
-      useDashboard: this.useDashboard
-    });
   }
 
   coreComponents() {
