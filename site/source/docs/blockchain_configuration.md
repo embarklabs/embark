@@ -16,9 +16,9 @@ If you want more configuration options, you can find them [here](/docs/blockchai
 module.exports = {
   default: {
     enabled: true,
-    client: "geth"
+    client: "ganache-cli"
   },
-  development: {  
+  development: {
     clientConfig: {
       miningMode: 'dev'
     }
@@ -41,7 +41,7 @@ Similar to [configuring Smart Contracts](/docs/contracts_configuration.html), th
 Most of the options are self-explanatory, still, here are some brief descriptions:
 
 Option | Type: `default` | Value
---- | --- | --- 
+--- | --- | ---
 `enabled` | boolean: `true` | Whether or not to spawn an Ethereum node
 `client` | string: `geth` |  Client to use for the Ethereum node. Currently supported: `geth` and `parity`
 `miningMode` | string: `dev` |  The mining mode to use for the node.<br/>`dev`: This is a special mode where the node uses a development account as defaultAccount. This account is already funded and transactions are faster.<br/>`auto`: Uses a mining script to mine only when needed.<br/>`always`: Miner is always on.<br/>`off`: Turns off the miner
@@ -54,8 +54,8 @@ Here are all the parameters you can use to customize your node. Note that they a
 
 We recommend putting those inside the `clientConfig` object a better structure.
 
-Option | Type: `default` | Value         
---- | --- | --- 
+Option | Type: `default` | Value
+--- | --- | ---
 `rpcHost` | string: `localhost` | Host the RPC server listens to
 `rpcPort` | number: `8545` | Port the RPC server listens to
 `rpcCorsDomain` | object | The CORS domains the node accepts
@@ -112,8 +112,8 @@ Note that we can always use the parameters we saw in the [Common parameters sect
 
 ### Parameter descriptions
 
-Option | Type: `value` | Description         
---- | --- | --- 
+Option | Type: `value` | Description
+--- | --- | ---
 `miningMode` | string: `auto` | You need to set `miningMode` to `auto` or `always` so you don't use the development mode
 `genesisBlock` | string |  File to start the chain in a clean state for your private network
 `accounts` | array |  Array of accounts to connect to. Go to the [Accounts configuration](/docs/blockchain_accounts_configuration.html) page to learn more on accounts
@@ -143,8 +143,8 @@ Here are the necessary parameters. Again, we can add more to override as you see
 
 ### Parameter descriptions
 
-Option | Type: `default` | Value         
---- | --- | --- 
+Option | Type: `default` | Value
+--- | --- | ---
 `networkType` | string: `testnet` | Again, used to specify the network. `testnet` here represents Ropsten. You can change the network by using a `networkId` by changing `networkType` to `custom`
 `syncMode` | string |  Blockchain sync mode
 `syncMode = 'light' `| |  Light clients synchronize a bare minimum of data and fetch necessary data on-demand from the network. Much lower in storage, potentially higher in bandwidth

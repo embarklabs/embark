@@ -143,7 +143,7 @@ Here is an example of how simple your Blockchain configuration can look now:
 module.exports = {
   default: {
     enabled: true,
-    client: "geth"
+    client: "ganache-cli"
   },
 
   development: {
