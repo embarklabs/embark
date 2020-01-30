@@ -155,6 +155,7 @@ export class Engine {
       blockchain: this.blockchainComponents,
       coreComponents: this.coreComponents,
       stackComponents: this.stackComponents,
+      serviceMonitor: this.serviceMonitor,
       consoleComponents: this.consoleComponents,
       blockchainStackComponents: this.blockchainStackComponents,
       compiler: this.compilerComponents,
@@ -196,15 +197,7 @@ export class Engine {
     });
   }
 
-  coreComponents() {
-
-    // TODO: should be made into a component
-    this.processManager = new ProcessManager({
-      events: this.events,
-      logger: this.logger,
-      plugins: this.plugins
-    });
-
+  serviceMonitor(options) {
     this.servicesMonitor = new ServicesMonitor({ events: this.events, logger: this.logger, plugins: this.plugins });
 
     if (this.servicesMonitor) {
@@ -220,6 +213,16 @@ export class Engine {
         });
       }
     }
+  }
+
+  coreComponents(options) {
+
+    // TODO: should be made into a component
+    this.processManager = new ProcessManager({
+      events: this.events,
+      logger: this.logger,
+      plugins: this.plugins
+    });
 
     this.registerModulePackage('embark-code-runner', { ipc: this.ipc });
 

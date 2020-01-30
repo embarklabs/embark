@@ -61,6 +61,7 @@ class EmbarkController {
       Object.assign(engine.config.blockchainConfig, { isStandalone: true });
 
       engine.registerModuleGroup("coreComponents");
+      engine.registerModuleGroup("serviceMonitor");
       engine.registerModuleGroup("blockchainStackComponents");
       engine.registerModuleGroup("blockchain");
 
@@ -160,6 +161,7 @@ class EmbarkController {
       function (callback) {
 
         engine.registerModuleGroup("coreComponents");
+        engine.registerModuleGroup("serviceMonitor");
         engine.registerModuleGroup("stackComponents");
         engine.registerModuleGroup("consoleComponents");
 
@@ -375,6 +377,7 @@ class EmbarkController {
       },
       callback => {
         engine.registerModuleGroup("coreComponents");
+        engine.registerModuleGroup("serviceMonitor");
         engine.registerModuleGroup("stackComponents");
         engine.registerModuleGroup("consoleComponents");
 
