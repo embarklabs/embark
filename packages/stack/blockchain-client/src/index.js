@@ -3,7 +3,6 @@ const { __ } = require('embark-i18n');
 const constants = require('embark-core/constants');
 
 class BlockchainClient {
-
   constructor(embark, _options) {
     this.embark = embark;
     this.events = embark.events;

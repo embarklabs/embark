@@ -29,6 +29,18 @@ class VMClient {
       }
       return cb(null, this.vms[this.vms.length - 1].handler);
     });
+
+    embark.registerActionForEvent("blockchain:node:start", (params, cb) => {
+      if (params.started) {
+        return cb(null, params);
+      }
+      const clientName = params.blockchainConfig.client;
+      const isVM = this.getVmClient(clientName);
+      if (isVM) {
+        params.started = true;
+      }
+      return cb(null, params);
+    });
   }
 
   getVmClient(vmName) {

@@ -41,32 +41,17 @@ export default class Blockchain {
       this.blockchainNodes[clientName] = { isStartedFn, launchFn, stopFn };
     });
 
-    this.events.setCommandHandler("blockchain:node:start", async (blockchainConfig, cb) => {
-      if (!blockchainConfig.enabled) {
-        return cb();
+    embark.registerActionForEvent("blockchain:node:start", async (params, cb) => {
+      const blockchainConfig = params.blockchainConfig;
+      if (params.started || !blockchainConfig.enabled) {
+        return cb(null, params);
       }
 
       const clientName = blockchainConfig.client;
-      const started = () => {
-        this.startedClient = clientName;
-        this.events.emit("blockchain:started", clientName);
-      };
-      try {
-        const isVM = await this.events.request2('blockchain:client:vmProvider', clientName);
-        if (isVM) {
-          // The client is a vm
-          started();
-          return cb();
-        }
-      } catch (_e) {
-        // It means it's not a VM. It's fine
-      }
-
       const client = this.blockchainNodes[clientName];
 
       if (!client) {
-        return cb(`Blockchain client '${clientName}' not found, please register this node using 'blockchain:node:register'.
-        \nIf ${clientName} is a VM, no need to use \`embark blockchain\`, Embark will connect to the VM directly during its run.`);
+        return cb(null, params);
       }
 
       // check if we should should start
@@ -74,15 +59,16 @@ export default class Blockchain {
         if (err) {
           return cb(err);
         }
+        this.startedClient = clientName;
         if (isStarted) {
           // Node may already be started
-          started();
-          return cb(null, true);
+          params.started = true;
+          return cb(null, params);
         }
         // start node
         client.launchFn.call(client, () => {
-          started();
-          cb();
+          params.started = true;
+          cb(null, params);
         });
       });
     });

@@ -186,18 +186,30 @@ class EmbarkController {
         }
 
         const plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
-        plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
-          try {
-            await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig);
-            await Promise.all([
-              engine.events.request2("storage:node:start", engine.config.storageConfig),
-              engine.events.request2("communication:node:start", engine.config.communicationConfig),
-              engine.events.request2("namesystem:node:start", engine.config.namesystemConfig)
-            ]);
-          } catch (e) {
-            return cb(e);
-          }
-          cb();
+        plugin.registerActionForEvent("embark:engine:started", (_params, cb) => {
+          engine.plugins.emitAndRunActionsForEvent('blockchain:node:start', {
+            started: false,
+            blockchainConfig: engine.config.blockchainConfig
+          }, async (err, params) => {
+            if (err) {
+              return cb(err);
+            }
+            const clientName = engine.config.blockchainConfig.client;
+            if (!params.started) {
+              return cb(`Blockchain client '${clientName}' not found, please register this node using 'blockchain:node:register' or 'blockchain:vm:register' for a VM.`);
+            }
+            engine.events.emit("blockchain:started", clientName);
+              try {
+              await Promise.all([
+                engine.events.request2("storage:node:start", engine.config.storageConfig),
+                engine.events.request2("communication:node:start", engine.config.communicationConfig),
+                engine.events.request2("namesystem:node:start", engine.config.namesystemConfig)
+              ]);
+            } catch (e) {
+              return cb(e);
+            }
+            cb();
+          });
         });
 
         engine.events.on('check:backOnline:Ethereum', function () {
