@@ -1,6 +1,6 @@
 {
   "name": "embark-contracts-manager",
-  "version": "5.1.1-nightly.0",
+  "version": "5.1.1-nightly.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Smart contracts manager for Embark",

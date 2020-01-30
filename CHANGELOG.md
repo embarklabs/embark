@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.1-nightly.1](https://github.com/embarklabs/embark/compare/v5.1.1-nightly.0...v5.1.1-nightly.1) (2020-01-30)
+
+
+### Bug Fixes
+
+* **@embark/contracts:** fix ENS contracts not being resolved as deps ([2f5c16b](https://github.com/embarklabs/embark/commit/2f5c16b))
+* **@embark/ens:** fix registerSubDomain in tests and add test ([3ceac53](https://github.com/embarklabs/embark/commit/3ceac53))
+
+
+
+
+
 ## [5.1.1-nightly.0](https://github.com/embarklabs/embark/compare/v5.1.0...v5.1.1-nightly.0) (2020-01-29)
 
 **Note:** Version bump only for package root
