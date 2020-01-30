@@ -267,6 +267,7 @@ export class Engine {
 
   blockchainComponents() {
     // plugins
+    this.registerModulePackage('embark-ganache');
     this.registerModulePackage('embark-geth', {
       client: this.client,
       locale: this.locale,
@@ -297,7 +298,6 @@ export class Engine {
   }
 
   contractsComponents(_options) {
-    this.registerModulePackage('embark-ganache');
     this.registerModulePackage('embark-ethereum-blockchain-client');
     this.registerModulePackage('embark-web3');
     this.registerModulePackage('embark-accounts-manager');

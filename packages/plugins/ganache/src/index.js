@@ -10,15 +10,17 @@ class Ganache {
 
       const hasAccounts = blockchainConfig.accounts && blockchainConfig.accounts.length;
 
+      const isTest = embark.currentContext.includes('test');
+
       return ganache.provider({
         // Default to 8000000, which is the server default
         // Somehow, the provider default is 6721975
         gasLimit: blockchainConfig.targetGasLimit || '0x7A1200',
         blockTime: blockchainConfig.simulatorBlocktime,
         network_id:  blockchainConfig.networkId || 1337,
-        db_path: blockchainConfig.datadir,
-        default_balance_ether: hasAccounts ? null : '99999',
-        mnemonic: hasAccounts ? null : 'example exile argue silk regular smile grass bomb merge arm assist farm'
+        db_path: isTest ? '' : blockchainConfig.datadir,
+        default_balance_ether: '99999',
+        mnemonic: hasAccounts || isTest ? '' : 'example exile argue silk regular smile grass bomb merge arm assist farm'
       });
     });
   }

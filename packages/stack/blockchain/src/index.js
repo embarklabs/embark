@@ -63,6 +63,7 @@ export default class Blockchain {
         if (isStarted) {
           // Node may already be started
           params.started = true;
+          params.alreadyStarted = true;
           return cb(null, params);
         }
         // start node

@@ -38,6 +38,7 @@ class VMClient {
       const isVM = this.getVmClient(clientName);
       if (isVM) {
         params.started = true;
+        params.isVM = true;
       }
       return cb(null, params);
     });

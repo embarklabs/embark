@@ -73,9 +73,13 @@ class EmbarkController {
 
       engine.startEngine(async () => {
         try {
-          const alreadyStarted = await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig);
+          const {alreadyStarted, isVM} = await startBlockchain(engine);
           if (alreadyStarted) {
             engine.logger.warn(__('Blockchain process already started. No need to run `embark blockchain`'));
+            process.exit(0);
+          }
+          if (isVM) {
+            engine.logger.warn(__(`${engine.config.blockchainConfig.client} is a VM, no need to use \`embark blockchain\`, Embark will connect to the VM directly during its run.`));
             process.exit(0);
           }
         } catch (e) {
@@ -186,30 +190,18 @@ class EmbarkController {
         }
 
         const plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
-        plugin.registerActionForEvent("embark:engine:started", (_params, cb) => {
-          engine.plugins.emitAndRunActionsForEvent('blockchain:node:start', {
-            started: false,
-            blockchainConfig: engine.config.blockchainConfig
-          }, async (err, params) => {
-            if (err) {
-              return cb(err);
-            }
-            const clientName = engine.config.blockchainConfig.client;
-            if (!params.started) {
-              return cb(`Blockchain client '${clientName}' not found, please register this node using 'blockchain:node:register' or 'blockchain:vm:register' for a VM.`);
-            }
-            engine.events.emit("blockchain:started", clientName);
-              try {
-              await Promise.all([
-                engine.events.request2("storage:node:start", engine.config.storageConfig),
-                engine.events.request2("communication:node:start", engine.config.communicationConfig),
-                engine.events.request2("namesystem:node:start", engine.config.namesystemConfig)
-              ]);
-            } catch (e) {
-              return cb(e);
-            }
-            cb();
-          });
+        plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
+          await startBlockchain(engine);
+          try {
+            await Promise.all([
+              engine.events.request2("storage:node:start", engine.config.storageConfig),
+              engine.events.request2("communication:node:start", engine.config.communicationConfig),
+              engine.events.request2("namesystem:node:start", engine.config.namesystemConfig)
+            ]);
+          } catch (e) {
+            return cb(e);
+          }
+          cb();
         });
 
         engine.events.on('check:backOnline:Ethereum', function () {
@@ -323,7 +315,7 @@ class EmbarkController {
         plugin.registerActionForEvent("embark:engine:started", async (_, cb) => {
           try {
             await Promise.all([
-              engine.events.request2("blockchain:node:start", engine.config.blockchainConfig),
+              startBlockchain(engine),
               engine.events.request2("communication:node:start", engine.config.communicationConfig),
               engine.events.request2("namesystem:node:start", engine.config.namesystemConfig)
             ]);
@@ -423,7 +415,7 @@ class EmbarkController {
         let plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
 
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
-          await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig);
+          await startBlockchain(engine);
           try {
             await Promise.all([
               engine.events.request2("storage:node:start", engine.config.storageConfig),
@@ -732,7 +724,7 @@ class EmbarkController {
         const plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
         plugin.registerActionForEvent("embark:engine:started", async (_params, cb) => {
           try {
-            await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig);
+            await startBlockchain(engine);
             await Promise.all([
               engine.events.request2("storage:node:start", engine.config.storageConfig),
               engine.events.request2("communication:node:start", engine.config.communicationConfig),
@@ -848,6 +840,28 @@ class EmbarkController {
 }
 
 module.exports = EmbarkController;
+
+
+function startBlockchain(engine) {
+  return new Promise((resolve, reject) => {
+    engine.plugins.emitAndRunActionsForEvent('blockchain:node:start', {
+      started: false,
+      alreadyStarted: false,
+      isVM: false,
+      blockchainConfig: engine.config.blockchainConfig
+    }, async (err, params) => {
+      if (err) {
+        return reject(err);
+      }
+      const clientName = engine.config.blockchainConfig.client;
+      if (!params.started) {
+        return reject(new Error(`Blockchain client '${clientName}' not found, please register this node using 'blockchain:node:register' or 'blockchain:vm:register' for a VM.`));
+      }
+      engine.events.emit("blockchain:started", clientName);
+      resolve(params);
+    });
+  });
+}
 
 async function compileSmartContracts(engine) {
   const contractsFiles = await engine.events.request2("config:contractsFiles");
