@@ -1,10 +1,9 @@
-const async = require('async');
 import { __ } from 'embark-i18n';
 const Web3 = require('web3');
 const util = require('util');
 
 const { blockchain: blockchainConstants } = require('embark-core/constants');
-import { dappPath, hexToNumber } from 'embark-utils';
+import { dappPath, hexToNumber, getAppendLogFileCargo, readAppendedLogs } from 'embark-utils';
 import { getAddressToContract, getTransactionParams } from './transactionUtils';
 export { getAddressToContract, getTransactionParams };
 
@@ -17,19 +16,6 @@ const LISTENED_METHODS = [
   blockchainConstants.transactionMethods.eth_sendTransaction,
   blockchainConstants.transactionMethods.eth_sendRawTransaction
 ];
-
-const getCircularReplacer = () => {
-  const seen = new WeakSet();
-  return (key, value) => {
-    if (typeof value === "object" && value !== null) {
-      if (seen.has(value)) {
-        return;
-      }
-      seen.add(value);
-    }
-    return value;
-  };
-};
 
 export default class TransactionLogger {
   constructor(embark, _options) {
@@ -60,21 +46,7 @@ export default class TransactionLogger {
       });
     });
 
-    this.writeLogFile = async.cargo((tasks, callback) => {
-      let appendThis = '';
-      tasks.forEach(task => {
-        // Write each line to a JSON string. The replacer is to avoid circular dependencies
-        // Add a comma at the end to be able to make an array off of it when reading
-        appendThis += `${JSON.stringify(task, getCircularReplacer())},\n`;
-      });
-      this.fs.appendFile(this.logFile, appendThis, (err) => {
-        if (err) {
-          this.logger.error('Error writing to the log file', err.message);
-          this.logger.trace(err);
-        }
-        callback();
-      });
-    });
+    this.writeLogFile = getAppendLogFileCargo(this.logFile, this.logger);
   }
 
   get web3() {
@@ -272,25 +244,10 @@ export default class TransactionLogger {
 
   async _readLogs(asString = false) {
     try {
-      await this.fs.ensureFile(this.logFile);
-      let data = await this.fs.readFile(this.logFile);
-
-      data = data.toString();
-
-      if (!data) {
-        return asString ? '[]' : [];
-      }
-
-      // remove last comma and add brackets around to make it an array of object logs
-      data = `[${data.substring(0, data.length - 2)}]`;
-      if (asString) {
-        return data;
-      }
-
-      return JSON.parse(data);
-    } catch (error) {
-      this.logger.error('Error reading contract log file', error.message);
-      this.logger.trace(error.trace);
+      return readAppendedLogs(this.logFile, asString);
+    } catch (e) {
+      this.logger.error('Error reading contract log file', e.message);
+      this.logger.trace(e.trace);
       return asString ? '[]' : [];
     }
   }

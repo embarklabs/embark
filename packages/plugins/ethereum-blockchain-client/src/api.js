@@ -1,5 +1,5 @@
 import async from "async";
-import {dappPath} from 'embark-utils';
+import {dappPath, getAppendLogFileCargo, readAppendedLogs} from 'embark-utils';
 const embarkJsUtils = require('embarkjs').Utils;
 const {bigNumberify} = require('ethers/utils/bignumber');
 const RLP = require('ethers/utils/rlp');
@@ -11,11 +11,20 @@ const BLOCK_LIMIT = 100;
 export default class EthereumAPI {
   constructor(embark, web3, blockchainName) {
     this.embark = embark;
+    this.events = embark.events;
+    this.logger = embark.logger;
     this.blockchainName = blockchainName;
     this.web3 = web3;
     this.requestManager = new Manager(web3.currentProvider);
     this.fs = embark.fs;
-    this.logFile = dappPath(".embark", "contractEvents.json");
+    this.logFile = dappPath(".embark", "contractEvents.json.txt");
+    this.contractsSubscriptions = [];
+    this.contractsEvents = [];
+
+    this.writeLogFile = getAppendLogFileCargo(this.logFile, this.logger);
+    this.events.on('contractsDeployed', () => {
+      this.subscribeToContractEvents();
+    });
   }
 
   registerAPIs() {
@@ -26,7 +35,7 @@ export default class EthereumAPI {
     this.embark.events.request("blockchain:api:register", this.blockchainName, "getTransactions", this.getTransactions.bind(this));
     this.embark.events.request("blockchain:api:register", this.blockchainName, "getTransactionByHash", this.getTransactionByHash.bind(this));
     this.embark.events.request("blockchain:api:register", this.blockchainName, "getTransactionByRawTransactionHash", this.getTransactionByRawTransactionHash.bind(this));
-    this.embark.events.request("blockchain:api:register", this.blockchainName, "getEvents", this.getEvents.bind(this));
+    this.embark.events.request("blockchain:api:register", this.blockchainName, "getEvents", this.readEvents.bind(this));
     this.embark.events.request("blockchain:api:register", this.blockchainName, "signMessage", this.signMessage.bind(this));
     this.embark.events.request("blockchain:api:register", this.blockchainName, "verifyMessage", this.verifyMessage.bind(this));
   }
@@ -356,7 +365,7 @@ export default class EthereumAPI {
       });
   }
 
-  subscribeToContractEvents(callback) {
+  subscribeToContractEvents() {
     this.contractsSubscriptions.forEach((eventEmitter) => {
       const reqMgr = eventEmitter.options.requestManager;
       // attempting an eth_unsubscribe when not connected throws an
@@ -378,28 +387,24 @@ export default class EthereumAPI {
         eventEmitter.on('data', (data) => {
           const dataWithName = Object.assign(data, {name: contractObject.className});
           this.contractsEvents.push(dataWithName);
+          this.saveEvent(dataWithName);
           this.events.emit('blockchain:contracts:event', dataWithName);
         });
       });
-      callback();
     });
-  }
-
-  getEvents() {
-    const data = this.readEvents();
-    return Object.values(data).reverse();
   }
 
   saveEvent(event) {
     this.writeLogFile.push(event);
   }
 
-  readEvents() {
-    this.fs.ensureFileSync(this.logFile);
+  async readEvents(asString) {
     try {
-      return JSON.parse(this.fs.readFileSync(this.logFile));
-    } catch (_error) {
-      return {};
+      return readAppendedLogs(this.logFile, asString);
+    } catch (e) {
+      this.logger.error('Error reading contract log file', e.message);
+      this.logger.trace(e.trace);
+      return asString ? '[]' : [];
     }
   }
 

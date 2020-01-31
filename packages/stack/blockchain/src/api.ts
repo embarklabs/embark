@@ -248,10 +248,10 @@ export default class BlockchainAPI {
     this.embark.registerAPICall(
       "get",
       "/embark-api/blockchain/contracts/events",
-      (_req, res) => {
+      async (_req, res) => {
         try {
           const getEvents = this.getCallForBlockchain(blockchainName, "getEvents");
-          res.send(JSON.stringify(getEvents()));
+          res.send(await getEvents(true));
         } catch (error) {
           res.status(500).send({ error });
         }

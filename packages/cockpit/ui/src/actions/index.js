@@ -180,7 +180,7 @@ export const contractLogs = {
 export const CONTRACT_EVENTS = createRequestTypes('CONTRACT_EVENTS');
 export const contractEvents = {
   request: () => action(CONTRACT_EVENTS[REQUEST]),
-  success: (contractEvents) => action(CONTRACT_EVENTS[SUCCESS], {contractEvents}),
+  success: (contractEvents) => action(CONTRACT_EVENTS[SUCCESS], {contractEvents: contractEvents ? contractEvents.reverse() : []}),
   failure: (error) => action(CONTRACT_EVENTS[FAILURE], {error, name: 'contractEvents'})
 };
 

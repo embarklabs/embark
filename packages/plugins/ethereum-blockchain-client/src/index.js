@@ -15,8 +15,6 @@ class EthereumBlockchainClient {
     this.events = embark.events;
     this.logger = embark.logger;
     this.fs = embark.fs;
-    this.contractsSubscriptions = [];
-    this.contractsEvents = [];
 
     this.logFile = dappPath(".embark", "contractEvents.json");
 
