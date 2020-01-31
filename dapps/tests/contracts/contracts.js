@@ -1,4 +1,4 @@
-{
+module.exports = {
   "default": {
     "versions": {
       "solc": "0.4.26"
@@ -18,9 +18,7 @@
       },
       "SimpleStorage": {
         "fromIndex": 0,
-        "args": [
-          100
-        ]
+        "args": [100]
       },
       "AnotherStorage": {
         "args": [
@@ -33,9 +31,7 @@
         "args": [1000]
       },
       "Test": {
-        "onDeploy": [
-          "Test.methods.changeAddress('$MyToken')"
-        ]
+        "onDeploy": ["Test.methods.changeAddress('$MyToken')"]
       },
       "MyToken": {
         "instanceOf": "Token"
@@ -64,10 +60,11 @@
         ]
       }
     },
-    "afterDeploy": [
-      "Test.methods.changeAddress('$MyToken')",
-      "web3.eth.getAccounts((err, accounts) => Test.methods.changeAddress(accounts[0]))"
-    ]
+    afterDeploy: async ({contracts, web3}) => {
+      await contracts.Test.methods.changeAddress(contracts.MyToken.options.address).send();
+      const accounts = await web3.eth.getAccounts();
+      await contracts.Test.methods.changeAddress(accounts[0]).send();
+    }
   },
   "development": {
     "deploy": {
@@ -77,4 +74,4 @@
       }
     }
   }
-}
+};

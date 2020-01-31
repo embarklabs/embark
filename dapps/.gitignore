@@ -3,3 +3,4 @@
 **/config/livenet/password
 **/config/production/password
 **/embarkArtifacts
+**/build
