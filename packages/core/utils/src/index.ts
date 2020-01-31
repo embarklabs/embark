@@ -59,7 +59,7 @@ const { extendZeroAddressShorthand, replaceZeroAddressShorthand } = AddressUtils
 
 export { compact, last, recursiveMerge, groupBy } from './collections';
 export { prepareForCompilation } from './solidity/remapImports';
-export { File, getExternalContractUrl, Types } from './file';
+export { File, getExternalContractUrl, Types, getAppendLogFileCargo, getCircularReplacer, readAppendedLogs } from './file';
 
 export {
   findMonorepoPackageFromRoot,
