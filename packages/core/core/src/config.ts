@@ -79,8 +79,6 @@ export class Config {
 
   locale: string;
 
-  shownNoAccountConfigMsg = false; // flag to ensure "no account config" message is only displayed once to the user
-
   corsParts: string[] = [];
 
   providerUrl = '';
@@ -418,31 +416,6 @@ export class Config {
       };
       this.blockchainConfig.endpoint = buildUrlFromConfig(urlConfig);
       this.blockchainConfig.isAutoEndpoint = true;
-    }
-
-    if (
-      !this.shownNoAccountConfigMsg &&
-      (/rinkeby|testnet|livenet/).test(this.blockchainConfig.networkType) &&
-      !(this.blockchainConfig.accounts && this.blockchainConfig.accounts.find(acc => acc.password)) &&
-      !this.blockchainConfig.isDev &&
-      this.env !== 'development' && this.env !== 'test') {
-      this.logger.warn((
-        '\n=== ' + __('Cannot unlock account - account config missing').bold + ' ===\n' +
-        __('Geth is configured to sync to a testnet/livenet and needs to unlock an account ' +
-          'to allow your dApp to interact with geth, however, the address and password must ' +
-          'be specified in your blockchain config. Please update your blockchain config with ' +
-          'a valid address and password: \n') +
-        ` - config/blockchain.js > ${this.env} > account\n\n`.italic +
-        __('Please also make sure the keystore file for the account is located at: ') +
-        '\n - Mac: ' + `~/Library/Ethereum/${this.env}/keystore`.italic +
-        '\n - Linux: ' + `~/.ethereum/${this.env}/keystore`.italic +
-        '\n - Windows: ' + `%APPDATA%\\Ethereum\\${this.env}\\keystore`.italic) +
-        __('\n\nAlternatively, you could change ' +
-          `config/blockchain.js > ${this.env} > networkType`.italic +
-          __(' to ') +
-          '"custom"\n'.italic).yellow
-      );
-      this.shownNoAccountConfigMsg = true;
     }
 
     const accountDocsMessage = __('For more info, check the docs: %s', 'https://framework.embarklabs.io/docs/blockchain_accounts_configuration.html'.underline);

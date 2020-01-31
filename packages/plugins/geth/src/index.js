@@ -19,6 +19,7 @@ class Geth {
     this.isDev = options.isDev;
     this.events = embark.events;
     this.plugins = options.plugins;
+    this.shownNoAccountConfigMsg = false; // flag to ensure "no account config" message is only displayed once to the user
 
     if (!this.shouldInit()) {
       return;
@@ -33,6 +34,28 @@ class Geth {
       launchFn: (readyCb) => {
         this.events.request('processes:register', 'blockchain', {
           launchFn: (cb) => {
+            if (!this.shownNoAccountConfigMsg &&
+              (/rinkeby|testnet|livenet/).test(this.blockchainConfig.networkType) &&
+              !(this.blockchainConfig.accounts && this.blockchainConfig.accounts.find(acc => acc.password)) &&
+              !this.blockchainConfig.isDev && this.embark.env !== 'development' && this.embark.env !== 'test') {
+              this.logger.warn((
+                '\n=== ' + __('Cannot unlock account - account config missing').bold + ' ===\n' +
+                __('Geth is configured to sync to a testnet/livenet and needs to unlock an account ' +
+                  'to allow your dApp to interact with geth, however, the address and password must ' +
+                  'be specified in your blockchain config. Please update your blockchain config with ' +
+                  'a valid address and password: \n') +
+                ` - config/blockchain.js > ${this.embark.env} > account\n\n`.italic +
+                __('Please also make sure the keystore file for the account is located at: ') +
+                '\n - Mac: ' + `~/Library/Ethereum/${this.embark.env}/keystore`.italic +
+                '\n - Linux: ' + `~/.ethereum/${this.embark.env}/keystore`.italic +
+                '\n - Windows: ' + `%APPDATA%\\Ethereum\\${this.embark.env}\\keystore`.italic) +
+                __('\n\nAlternatively, you could change ' +
+                  `config/blockchain.js > ${this.embark.env} > networkType`.italic +
+                  __(' to ') +
+                  '"custom"\n'.italic).yellow
+              );
+              this.shownNoAccountConfigMsg = true;
+            }
             this.startBlockchainNode(cb);
           },
           stopFn: (cb) => {
