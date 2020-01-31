@@ -4,7 +4,7 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Provides ability to register a blockchain technology in Embark, ie Ethereum.",
-  "homepage": "https://github.com/embarklabs/embark/blob/master/packages/stack/blockchain-client#readme",
+  "homepage": "https://github.com/embarklabs/embark/tree/master/packages/stack/blockchain-client#readme",
   "bugs": "https://github.com/embarklabs/embark/issues",
   "keywords": [
     "blockchain",

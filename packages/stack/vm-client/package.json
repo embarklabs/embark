@@ -4,7 +4,7 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Provides ability to register a VM technology in Embark, ie Ganache",
-  "homepage": "https://github.com/embarklabs/embark/blob/master/packages/stack/vm-client#readme",
+  "homepage": "https://github.com/embarklabs/embark/tree/master/packages/stack/vm-client#readme",
   "bugs": "https://github.com/embarklabs/embark/issues",
   "keywords": [
     "blockchain",
