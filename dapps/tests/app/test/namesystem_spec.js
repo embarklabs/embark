@@ -4,6 +4,8 @@ const MyToken = require('Embark/contracts/MyToken');
 const MyToken2 = require('Embark/contracts/MyToken2');
 const EmbarkJS = require('Embark/EmbarkJS');
 
+let accounts;
+
 config({
   namesystem: {
     enabled: true,
@@ -11,7 +13,8 @@ config({
       "rootDomain": "embark.eth",
       "subdomains": {
         "mytoken": "$MyToken",
-        "MyToken2": "$MyToken2"
+        "MyToken2": "$MyToken2",
+        "account": "$accounts[0]"
       }
     }
   },
@@ -30,15 +33,20 @@ config({
       }
     }
   }
+}, (_err, web3_accounts) => {
+  accounts = web3_accounts;
 });
 
 describe("ENS functions", function() {
   it('should allow directives in ENS subdomains', async function() {
     const myTokenAddress = await EmbarkJS.Names.resolve('mytoken.embark.eth');
-    assert.strictEqual(MyToken.options.address, myTokenAddress);
+    assert.strictEqual(myTokenAddress, MyToken.options.address);
 
     const myToken2Address = await EmbarkJS.Names.resolve('MyToken2.embark.eth');
-    assert.strictEqual(MyToken2.options.address, myToken2Address);
+    assert.strictEqual(myToken2Address, MyToken2.options.address);
+
+    const accountAddress = await EmbarkJS.Names.resolve('account.embark.eth');
+    assert.strictEqual(accountAddress, accounts[0]);
 
     const myTokenName = await EmbarkJS.Names.lookup(MyToken.options.address.toLowerCase());
     assert.strictEqual(myTokenName, 'mytoken.embark.eth');
