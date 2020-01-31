@@ -88,6 +88,7 @@
     "embark-transaction-logger": "^5.1.1-nightly.2",
     "embark-transaction-tracker": "^5.1.1-nightly.2",
     "embark-utils": "^5.1.1-nightly.2",
+    "embark-vm-client": "^5.1.1-nightly.0",
     "embark-vyper": "^5.1.1-nightly.2",
     "embark-watcher": "^5.1.1-nightly.2",
     "embark-web3": "^5.1.1-nightly.2",

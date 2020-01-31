@@ -134,6 +134,9 @@
       "path": "../../stack/test-runner"
     },
     {
+      "path": "../../stack/vm-client"
+    },
+    {
       "path": "../../stack/watcher"
     },
     {

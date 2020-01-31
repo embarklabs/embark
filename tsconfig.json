@@ -191,6 +191,9 @@
       "path": "packages/stack/test-runner"
     },
     {
+      "path": "packages/stack/vm-client"
+    },
+    {
       "path": "packages/stack/watcher"
     },
     {
