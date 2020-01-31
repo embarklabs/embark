@@ -181,20 +181,35 @@ class ENS {
   }
 
   async registerConfigDomains(config, cb) {
-    const defaultAccount = await this.web3DefaultAccount;
     if (!this.config.namesystemConfig.register) {
       return cb();
     }
+    const defaultAccount = await this.web3DefaultAccount;
+    const web3 = await this.web3;
 
     async.each(Object.keys(this.config.namesystemConfig.register.subdomains), (subDomainName, eachCb) => {
-      const address = this.config.namesystemConfig.register.subdomains[subDomainName];
+      let address = this.config.namesystemConfig.register.subdomains[subDomainName];
       const directivesRegExp = new RegExp(/\$(\w+\[?\d?\]?)/g);
 
-      const directives = directivesRegExp.exec(address);
-      if (directives && directives.length) {
-        return eachCb();
-      }
-      this.safeRegisterSubDomain(subDomainName, address, defaultAccount, eachCb);
+      // Using an anonymous function here because setting an async.js function as `async` creates issues
+      (async () => {
+        const directives = directivesRegExp.exec(address);
+        if (directives && directives.length) {
+          if (!directives[0].includes('accounts')) {
+            return eachCb();
+          }
+
+          const match = address.match(/\$accounts\[([0-9]+)]/);
+          const accountIndex = match[1];
+          const accounts = await web3.eth.getAccounts();
+
+          if (!accounts[accountIndex]) {
+            return eachCb(__('No corresponding account at index %d', match[1]));
+          }
+          address = accounts[accountIndex];
+        }
+        this.safeRegisterSubDomain(subDomainName, address, defaultAccount, eachCb);
+      })();
     }, cb);
   }
 
@@ -215,7 +230,7 @@ class ENS {
         const directivesRegExp = new RegExp(/\$(\w+\[?\d?\]?)/g);
 
         const directives = directivesRegExp.exec(address);
-        if (!directives || !directives.length) {
+        if (!directives || !directives.length || directives[0].includes('accounts')) {
           return resolve();
         }
 
