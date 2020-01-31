@@ -29,7 +29,6 @@ class Blockchain extends React.Component {
 
   async setValue(e) {
     e.preventDefault();
-    await EmbarkJS.enableEthereum();
     var value = parseInt(this.state.valueSet, 10);
 
     SimpleStorage.methods.set(value).send();
