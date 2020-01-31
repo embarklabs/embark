@@ -340,11 +340,12 @@ class EmbarkController {
       if (err) {
         engine.logger.error(err.message || err);
       }
-      // TODO: this should be moved out and determined somewhere else
-      if (!engine.config.contractsConfig.afterDeploy || !engine.config.contractsConfig.afterDeploy.length) {
+      if (!engine.config.contractsConfig.afterDeploy || !engine.config.contractsConfig.afterDeploy.length || !Array.isArray(engine.config.contractsConfig.afterDeploy)) {
         process.exit(err ? 1 : 0);
       }
       engine.logger.info(__('Waiting for after deploy to finish...'));
+      engine.logger.info(__('Embark would exit automatically if you were using the function syntax in your afterDeploy instead of the Array syntax.'));
+      engine.logger.info(__('Find more information here: %s', 'https://framework.embarklabs.io/docs/contracts_configuration.html#afterDeploy-hook'.underline));
       engine.logger.info(__('You can exit with CTRL+C when after deploy completes'));
     });
   }

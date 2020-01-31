@@ -5,7 +5,7 @@
   "app": {},
   "buildDir": "build/",
   "config": {
-    "contracts": "contracts.json",
+    "contracts": "contracts.js",
     "storage": false,
     "communication": false,
     "webserver": false,
