@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.1-nightly.2](https://github.com/embarklabs/embark/compare/v5.1.1-nightly.1...v5.1.1-nightly.2) (2020-01-31)
+
+**Note:** Version bump only for package embark-core
+
+
+
+
+
 ## [5.1.1-nightly.0](https://github.com/embarklabs/embark/compare/v5.1.0...v5.1.1-nightly.0) (2020-01-29)
 
 **Note:** Version bump only for package embark-core

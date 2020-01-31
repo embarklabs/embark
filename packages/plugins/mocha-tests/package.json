@@ -1,6 +1,6 @@
 {
   "name": "embark-mocha-tests",
-  "version": "5.1.1-nightly.0",
+  "version": "5.1.1-nightly.2",
   "description": "Mocha Test Runner",
   "homepage": "https://github.com/embarklabs/embark/tree/master/packages/plugins/mocha-tests#readme",
   "repository": {
@@ -51,14 +51,14 @@
     "@types/async": "3.0.3",
     "async": "3.1.0",
     "core-js": "3.4.3",
-    "embark-i18n": "^5.1.1-nightly.0",
-    "embark-utils": "^5.1.1-nightly.0",
-    "embarkjs": "^5.1.1-nightly.0",
+    "embark-i18n": "^5.1.1-nightly.2",
+    "embark-utils": "^5.1.1-nightly.2",
+    "embarkjs": "^5.1.1-nightly.2",
     "mocha": "6.2.2",
     "web3": "1.2.4"
   },
   "devDependencies": {
-    "embark-solo": "^5.1.0",
+    "embark-solo": "^5.1.1-nightly.2",
     "eslint": "5.7.0",
     "npm-run-all": "4.1.5",
     "nyc": "13.1.0",
