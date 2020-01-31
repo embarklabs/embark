@@ -6,7 +6,7 @@ Testing is a crucial part of developing robust and high-quality software. That's
 
 ## Creating tests
 
-Test files resides in a project's `test` folder. Any JavaScript file within `test/` is considered a spec file and will be executed by Embark as such. A spec file contains test specs which are grouped in `contract()` functions. A single spec is written using `it()` blocks. 
+Test files resides in a project's `test` folder. Any JavaScript file within `test/` is considered a spec file and will be executed by Embark as such. A spec file contains test specs which are grouped in `contract()` functions. A single spec is written using `it()` blocks.
 
 Here's what such a test could look like:
 
@@ -140,7 +140,7 @@ Smart Contract references imported from EmbarkJS are empty until the Smart Contr
 
 ## Configuring accounts
 
-Accounts within the testing environment can be configured [just like we're used to](/docs/contracts_deployment.html). The same rules apply here, and [configuring an Ether balance](/docs/contracts_deployment.html#Configuring-account-balance-for-development) is supported as well. Configuring custom accounts in tests is especially useful if we want to use a specific account for our tests. 
+Accounts within the testing environment can be configured [just like we're used to](/docs/contracts_deployment.html). The same rules apply here, and [configuring an Ether balance](/docs/contracts_deployment.html#Configuring-account-balance-for-development) is supported as well. Configuring custom accounts in tests is especially useful if we want to use a specific account for our tests.
 
 ```
 config({
@@ -248,7 +248,7 @@ contract('SimpleStorage Deploy', () => {
 Using `assert.reverts`, you can easily assert that your transaction reverts.
 
 ```javascript
-await assert.reverts(contractMethodAndArguments[, options][, message])
+await assert.reverts(contractMethodAndArguments[, options][, message]);
 ```
 
 - `contractMethodAndArguments`: [Function] Contract method to call `send` on, including the arguments
@@ -259,9 +259,9 @@ Returns a promise that you can wait for with `await`.
 
 ```javascript
 it("should revert with a value lower than 5", async function() {
-    await assert.reverts(SimpleStorage.methods.setHigher5(2), {from: web3.eth.defaultAccount},
-      'Returned error: VM Exception while processing transaction: revert Value needs to be higher than 5');
-  });
+  await assert.reverts(SimpleStorage.methods.setHigher5(2), {from: web3.eth.defaultAccount},
+    'Returned error: VM Exception while processing transaction: revert Value needs to be higher than 5');
+});
 ```
 
 ### assert.eventEmitted
@@ -269,19 +269,19 @@ it("should revert with a value lower than 5", async function() {
 Using `eventEmitted`, you can assert that a transaction has emitted an event. You can also check for the returned values.
 
 ```javascript
-assert.eventEmitted(transaction, event[, values])
+assert.eventEmitted(transaction, event[, values]);
 ```
 
-- `transaction`: [Object] Transaction object returns by a `send` call
+- `transaction`: [Object] Transaction object returned by a `send` call
 - `event`: [String] Name of the event being emitted
 - `values`: [Array or Object] Optional array or object of the returned values of the event.
     - Using array: The order of the values put in the array need to match the order in which the values are returned by the event
     - Using object: The object needs to have the right key/value pair(s)
-    
+
 ```javascript
 it('asserts that the event was triggered', async function() {
- const transaction = await SimpleStorage.methods.set(100).send();
- assert.eventEmitted(transaction, 'EventOnSet', {value: "100", success: true});
+  const transaction = await SimpleStorage.methods.set(100).send();
+  assert.eventEmitted(transaction, 'EventOnSet', {value: "100", success: true});
 });
 ```
 
@@ -297,11 +297,33 @@ await increaseTime(amount);
 
 ```javascript
 it("should have expired after increasing time", async function () {
-    await increaseTime(5001);
-    const isExpired = await Expiration.methods.isExpired().call();
-    assert.strictEqual(isExpired, true);
+  await increaseTime(5001);
+  const isExpired = await Expiration.methods.isExpired().call();
+  assert.strictEqual(isExpired, true);
 });
 ```
+
+### mineAtTimestamp
+
+This function mines a block and sets its `block.timestamp` accordingly. It let's you mine in the future.
+
+```javascript
+await mineAtTimestamp(timestamp);
+```
+
+`timestamp`: [Number] Timestamp when to mine the block
+
+### getEvmVersion
+
+`getEvmVersion` returns the version and type of EVM.
+
+It is useful if you want to make sure the EVM has the sufficient version to support an RPC call or if you want to make sure that you are using a VM like Ganache-CLI before making a call that only a VM supports.
+
+```javascript
+await getEvmVersion();
+```
+
+Returns a string, eg: `EthereumJS TestRPC/v2.9.2/ethereum-js`
 
 ## Code coverage
 
