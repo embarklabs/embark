@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.1-nightly.3](https://github.com/embarklabs/embark/compare/v5.1.1-nightly.2...v5.1.1-nightly.3) (2020-02-01)
+
+
+### Bug Fixes
+
+* **@embark/demo:** fix ethereum not available in browser in the demo ([39919f2](https://github.com/embarklabs/embark/commit/39919f2))
+
+
+
+
+
 ## [5.1.1-nightly.2](https://github.com/embarklabs/embark/compare/v5.1.1-nightly.1...v5.1.1-nightly.2) (2020-01-31)
 
 **Note:** Version bump only for package embark-dapp-template-demo
