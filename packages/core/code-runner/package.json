@@ -59,7 +59,7 @@
     "fs-extra": "8.1.0",
     "parse-json": "5.0.0",
     "vm2": "3.8.4",
-    "web3": "1.2.4"
+    "web3": "1.2.6"
   },
   "devDependencies": {
     "@babel/core": "7.7.7",

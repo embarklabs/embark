@@ -52,7 +52,7 @@
     "embark-i18n": "^5.1.1-nightly.2",
     "embark-logger": "^5.1.1-nightly.2",
     "embark-utils": "^5.1.1-nightly.2",
-    "web3": "1.2.4"
+    "web3": "1.2.6"
   },
   "devDependencies": {
     "embark-solo": "^5.1.1-nightly.2",

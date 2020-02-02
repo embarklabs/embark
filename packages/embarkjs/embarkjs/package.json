@@ -79,7 +79,7 @@
     "nyc": "13.1.0",
     "rimraf": "3.0.0",
     "source-map-support": "0.5.13",
-    "web3": "1.2.4"
+    "web3": "1.2.6"
   },
   "engines": {
     "node": ">=10.17.0",

@@ -51,7 +51,7 @@
     "core-js": "3.4.3",
     "embarkjs": "^5.1.1-nightly.2",
     "eth-ens-namehash": "2.0.8",
-    "web3": "1.2.4"
+    "web3": "1.2.6"
   },
   "devDependencies": {
     "ajv": "6.10.2",

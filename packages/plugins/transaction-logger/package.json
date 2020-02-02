@@ -54,8 +54,8 @@
     "embark-utils": "^5.1.1-nightly.2",
     "ethereumjs-tx": "1.3.7",
     "ethereumjs-util": "6.0.0",
-    "web3": "1.2.4",
-    "web3-utils": "1.2.4"
+    "web3": "1.2.6",
+    "web3-utils": "1.2.6"
   },
   "devDependencies": {
     "embark-solo": "^5.1.1-nightly.2",

@@ -104,7 +104,7 @@
     "typescript": "3.7.2",
     "uuid": "3.3.2",
     "velocity-react": "1.4.3",
-    "web3": "1.2.4",
+    "web3": "1.2.6",
     "webpack": "4.41.2"
   },
   "eslintConfig": {

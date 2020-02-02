@@ -69,9 +69,9 @@
     "ora": "4.0.3",
     "pretty-ms": "5.1.0",
     "shelljs": "0.8.3",
-    "web3": "1.2.4",
-    "web3-eth": "1.2.4",
-    "web3-eth-abi": "1.2.4",
+    "web3": "1.2.6",
+    "web3-eth": "1.2.6",
+    "web3-eth-abi": "1.2.6",
     "ws": "7.1.2"
   },
   "devDependencies": {

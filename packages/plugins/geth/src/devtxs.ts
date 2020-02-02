@@ -2,6 +2,7 @@ import { __ } from 'embark-i18n';
 import { Embark, EmbarkEvents } from "embark-core";
 import { Logger } from "embark-logger";
 import Web3 from "web3";
+import { TransactionReceipt } from "web3-eth";
 import constants from "embark-core/constants.json";
 export default class DevTxs {
   private embark: Embark;
@@ -65,7 +66,7 @@ export default class DevTxs {
       matches: ["senddevtx"],
       process: async (_cmd, callback) => {
         this.logger.info(__("Sending a tx from the dev account..."));
-        const receipt = await this.sendTx();
+        const receipt = (await this.sendTx()) as TransactionReceipt;
         callback(null, __("Transaction sent. Tx hash: ") + `\n${JSON.stringify(receipt && receipt.transactionHash)}`);
       }
     });
