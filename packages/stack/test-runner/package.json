@@ -58,8 +58,8 @@
     "embark-utils": "^5.1.1-nightly.2",
     "fs-extra": "8.1.0",
     "istanbul-lib-coverage": "3.0.0",
-    "istanbul-lib-report": "2.0.8",
-    "istanbul-reports": "2.2.4",
+    "istanbul-lib-report": "3.0.0",
+    "istanbul-reports": "3.0.0",
     "mocha": "6.2.2",
     "open": "6.4.0",
     "web3": "1.2.4"
