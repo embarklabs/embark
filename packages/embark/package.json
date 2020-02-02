@@ -100,7 +100,6 @@
     "lodash.clonedeep": "4.5.0",
     "mocha": "6.2.2",
     "neo-blessed": "0.2.0",
-    "node-http-proxy-json": "0.1.6",
     "node-ipc": "9.1.1",
     "npmlog": "4.1.2",
     "parse-json": "4.0.0",
