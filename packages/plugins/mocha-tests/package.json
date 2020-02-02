@@ -55,7 +55,7 @@
     "embark-utils": "^5.1.1-nightly.2",
     "embarkjs": "^5.1.1-nightly.2",
     "mocha": "6.2.2",
-    "web3": "1.2.4"
+    "web3": "1.2.6"
   },
   "devDependencies": {
     "embark-solo": "^5.1.1-nightly.2",

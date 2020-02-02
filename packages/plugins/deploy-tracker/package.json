@@ -49,7 +49,7 @@
     "embark-logger": "^5.1.1-nightly.2",
     "embark-utils": "^5.1.1-nightly.2",
     "fs-extra": "8.1.0",
-    "web3": "1.2.4"
+    "web3": "1.2.6"
   },
   "devDependencies": {
     "embark-solo": "^5.1.1-nightly.2",

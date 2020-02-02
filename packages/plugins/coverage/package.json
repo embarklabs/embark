@@ -57,8 +57,8 @@
     "prettier-plugin-solidity": "1.0.0-alpha.25",
     "semver": "5.6.0",
     "solidity-parser-antlr": "0.4.5",
-    "web3-core": "1.2.4",
-    "web3-eth-contract": "1.2.4"
+    "web3-core": "1.2.6",
+    "web3-eth-contract": "1.2.6"
   },
   "devDependencies": {
     "@babel/cli": "7.7.4",

@@ -50,7 +50,7 @@
     "@babel/runtime-corejs3": "7.7.4",
     "core-js": "3.4.3",
     "rxjs": "6.4.0",
-    "web3": "1.2.4"
+    "web3": "1.2.6"
   },
   "devDependencies": {
     "ajv": "6.10.2",

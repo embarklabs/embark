@@ -3,7 +3,6 @@
     "composite": true,
     "declarationDir": "./dist",
     "rootDir": "./src",
-    "skipLibCheck": true,
     "tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.embark-solidity-tests.tsbuildinfo"
   },
   "extends": "../../../tsconfig.base.json",

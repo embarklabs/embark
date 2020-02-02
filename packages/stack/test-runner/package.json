@@ -62,7 +62,7 @@
     "istanbul-reports": "2.2.4",
     "mocha": "6.2.2",
     "open": "6.4.0",
-    "web3": "1.2.4"
+    "web3": "1.2.6"
   },
   "devDependencies": {
     "embark-solo": "^5.1.1-nightly.2",
