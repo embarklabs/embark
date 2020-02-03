@@ -3,6 +3,8 @@ const https = require('follow-redirects').https;
 const shelljs = require('shelljs');
 const clipboardy = require('clipboardy');
 
+import * as Serialize from './serialize';
+export { Serialize };
 import { canonicalHost } from './host';
 export { canonicalHost, defaultCorsHost, defaultHost, dockerHostSwap, isDocker } from './host';
 export { downloadFile, findNextPort, getJson, httpGet, httpsGet, httpGetJson, httpsGetJson, pingEndpoint } from './network';

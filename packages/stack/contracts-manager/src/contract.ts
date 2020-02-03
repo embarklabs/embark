@@ -1,9 +1,11 @@
 import { ContractConfig } from "embark-core";
 import { Logger } from 'embark-logger';
-import { sha3 } from "embark-utils";
+import { sha3, Serialize } from "embark-utils";
 import { AbiItem } from "web3-utils";
 
+@Serialize.Serializable
 export default class Contract {
+  @Serialize.Ignore
   private logger: Logger;
   public abiDefinition?: AbiItem[];
   public deployedAddress?: string;
