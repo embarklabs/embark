@@ -1,6 +1,6 @@
 {
   "name": "embark",
-  "version": "5.1.1-nightly.2",
+  "version": "5.1.1-nightly.4",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Embark is a framework that allows you to easily develop and deploy DApps",
@@ -79,7 +79,7 @@
     "decompress": "4.2.0",
     "embark-core": "^5.1.1-nightly.2",
     "embark-deploy-tracker": "^5.1.1-nightly.2",
-    "embark-engine": "^5.1.1-nightly.2",
+    "embark-engine": "^5.1.1-nightly.4",
     "embark-graph": "^5.1.1-nightly.2",
     "embark-i18n": "^5.1.1-nightly.2",
     "embark-logger": "^5.1.1-nightly.2",
