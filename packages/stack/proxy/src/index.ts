@@ -4,7 +4,6 @@ import { Logger } from "embark-logger";
 import { buildUrl, findNextPort } from "embark-utils";
 
 import { Proxy } from "./proxy";
-import {hasOwnProperty} from "tslint/lib/utils";
 
 const constants = require("embark-core/constants");
 
