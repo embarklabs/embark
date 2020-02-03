@@ -1,4 +1,5 @@
 const Web3 = require('web3');
+const { __ } = require('embark-i18n');
 const constants = require('embark-core/constants');
 
 class BlockchainClient {
@@ -6,25 +7,38 @@ class BlockchainClient {
   constructor(embark, _options) {
     this.embark = embark;
     this.events = embark.events;
+    this.config = embark.config;
+
+    this.vms = [];
+    this.events.setCommandHandler("blockchain:vm:register", (name, handler) => {
+      this.vms.push({name, handler: handler()});
+    });
+
+    this.events.setCommandHandler("blockchain:client:vmProvider", async (vmName, cb) => {
+      if (typeof vmName === 'function') {
+        cb = vmName;
+        vmName = '';
+      }
+      if (!this.vms.length) {
+        return cb(`Failed to get the VM provider. Please register one using 'blockchain:vm:register', or by ensuring the 'embark-ganache' package is registered.`);
+      }
+      if (vmName) {
+        const vm = this.getVmClient(vmName);
+        if (!vm) {
+          return cb(__("No VM of name %s registered. Please register it using using 'blockchain:vm:register'", vmName));
+        }
+        return cb(null, vm.handler);
+      }
+      return cb(null, this.vms[this.vms.length - 1].handler);
+    });
 
     this.blockchainClients = {};
     this.client = null;
-    this.vms = [];
     this.events.setCommandHandler("blockchain:client:register", (clientName, blockchainClient) => {
       this.blockchainClients[clientName] = blockchainClient;
       this.client = blockchainClient;
     });
-    this.events.setCommandHandler("blockchain:vm:register", (handler) => {
-      this.vms.push(handler());
-    });
 
-    // TODO: unclear currently if this belongs here so it's a bit hardcoded for now
-    this.events.setCommandHandler("blockchain:client:vmProvider", async (cb) => {
-      if (!this.vms.length) {
-        return cb(`Failed to get the VM provider. Please register one using 'blockchain:vm:register', or by ensuring the 'embark-ganache' package is registered.`);
-      }
-      return cb(null, this.vms[this.vms.length - 1]);
-    });
     this.events.setCommandHandler("blockchain:client:provider", async (clientName, endpoint, cb) => {
       if (!cb && typeof endpoint === "function") {
         cb = endpoint;
@@ -39,19 +53,20 @@ class BlockchainClient {
       }
       cb(null, provider);
     });
-
-    // TODO: maybe not the ideal event to listen to?
-    // for e.g, could wait for all stack components to be ready
-    // TODO: probably better to have 2 stages in engine, services start, then connections, etc..
-    this.events.on("blockchain:started", (_clientName) => {
-      // make connections
-      // this.client.initAndConnect(); // and config options
-      // should do stuff like
-      // connect to endpoint given
-      // set default account
-    });
   }
+
+  getVmClient(vmName) {
+    return this.vms.find(vm => vm.name === vmName);
+  }
+
   async _getProvider(clientName, endpoint) {
+    const blockchainClientName = this.config.blockchainConfig.client;
+    if (endpoint && this.getVmClient(blockchainClientName)) {
+      // TODO find a fix to detect if it 's the proxy
+      // Currently using a VM instead of a Node
+      const vm = await this.events.request2('blockchain:client:vmProvider', blockchainClientName);
+      return vm;
+    }
     // Passing in an endpoint allows us to customise which URL the provider connects to.
     // If no endpoint is provided, the provider will connect to the proxy.
     // Explicity setting an endpoint is useful for cases where we want to connect directly

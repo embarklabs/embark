@@ -42,19 +42,32 @@ export default class Blockchain {
       this.blockchainNodes[clientName] = { isStartedFn, launchFn, stopFn };
     });
 
-    this.events.setCommandHandler("blockchain:node:start", (blockchainConfig, cb) => {
+    this.events.setCommandHandler("blockchain:node:start", async (blockchainConfig, cb) => {
       if (!blockchainConfig.enabled) {
         return cb();
       }
 
       const clientName = blockchainConfig.client;
+      console.log('STArting client', clientName);
       const started = () => {
         this.startedClient = clientName;
         this.events.emit("blockchain:started", clientName);
       };
+      // TODO remove VM once tests are refactored
       if (clientName === constants.blockchain.vm) {
         started();
         return cb();
+      }
+      try {
+        const isVM = await this.events.request2('blockchain:client:vmProvider', clientName);
+        if (isVM) {
+          // The client is a vm
+          console.log('IS A VM');
+          started();
+          return cb();
+        }
+      } catch (_e) {
+        // It means it's not a VM. It's fine
       }
 
       const client = this.blockchainNodes[clientName];
@@ -79,7 +92,7 @@ export default class Blockchain {
       });
     });
 
-    this.events.setCommandHandler("blockchain:node:stop", (clientName, cb) => {
+    this.events.setCommandHandler("blockchain:node:stop", async (clientName, cb) => {
       if (typeof clientName === 'function') {
         cb = clientName;
         clientName = this.startedClient;
@@ -88,11 +101,17 @@ export default class Blockchain {
         }
       }
 
-      if (clientName === constants.blockchain.vm) {
-        this.startedClient = null;
-        this.events.emit("blockchain:stopped", clientName);
-        return cb();
+      try {
+        const isVM = await this.events.request2('blockchain:client:vmProvider', clientName);
+        if (clientName === constants.blockchain.vm || isVM) {
+          this.startedClient = null;
+          this.events.emit("blockchain:stopped", clientName);
+          return cb();
+        }
+      } catch (_e) {
+        // It means it's not a VM. It's fine
       }
+
 
       const clientFunctions = this.blockchainNodes[clientName];
       if (!clientFunctions) {

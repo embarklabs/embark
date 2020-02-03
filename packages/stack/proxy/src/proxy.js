@@ -10,21 +10,17 @@ const ACTION_TIMEOUT = 5000;
 
 export class Proxy {
   constructor(options) {
-    this.commList = {};
-    this.receipts = {};
     this.transactions = {};
-    this.timeouts = {};
     this.plugins = options.plugins;
     this.logger = options.logger;
     this.app = null;
     this.endpoint = options.endpoint;
     this.events = options.events;
     this.isWs = options.isWs;
-    this.isVm = options.isVm;
     this.nodeSubscriptions = {};
     this._requestManager = null;
 
-    this.clientName = options.isVm ? constants.blockchain.vm : constants.blockchain.ethereum;
+    this.clientName = constants.blockchain.ethereum;
 
     this.events.setCommandHandler("proxy:websocket:subscribe", this.handleSubscribe.bind(this));
     this.events.setCommandHandler("proxy:websocket:unsubscribe", this.handleUnsubscribe.bind(this));
@@ -44,12 +40,9 @@ export class Proxy {
   }
 
   async _createWebSocketProvider(endpoint) {
-    // if we are using a VM (ie for tests), then try to get the VM provider
-    if (this.isVm) {
-      return this.events.request2("blockchain:client:vmProvider");
-    }
     // pass in endpoint to ensure we get a provider with a connection to the node
-    return this.events.request2("blockchain:client:provider", this.clientName, endpoint);
+    const prov =  await this.events.request2("blockchain:client:provider", this.clientName, endpoint);
+    return prov;
   }
 
   _createWeb3RequestManager(provider) {
@@ -137,8 +130,7 @@ export class Proxy {
     if (modifiedRequest.sendToNode !== false) {
 
       try {
-        const result = await this.forwardRequestToNode(modifiedRequest.request);
-        response.result = result;
+        response.result = await this.forwardRequestToNode(modifiedRequest.request);
       } catch (fwdReqErr) {
         // The node responded with an error. Set up the error so that it can be
         // stripped out by modifying the response (via actions for blockchain:proxy:response)
@@ -181,15 +173,13 @@ export class Proxy {
 
   async handleSubscribe(clientSocket, request, response, cb) {
     let currentReqManager = await this.requestManager;
-    if (!this.isVm) {
-      const provider = await this._createWebSocketProvider(this.endpoint);
-      // creates a new long-living connection to the node
-      currentReqManager = this._createWeb3RequestManager(provider);
+    // TODO check if this creates issues
+    const provider = await this._createWebSocketProvider(this.endpoint);
+    // creates a new long-living connection to the node
+    currentReqManager = this._createWeb3RequestManager(provider);
 
-      // kill WS connetion to the node when the client connection closes
-      clientSocket.on('close', () => currentReqManager.provider.disconnect());
-    }
-
+    // kill WS connetion to the node when the client connection closes
+    clientSocket.on('close', () => currentReqManager.provider.disconnect());
 
     // do the actual forward request to the node
     currentReqManager.send(request, (error, subscriptionId) => {
@@ -236,7 +226,7 @@ export class Proxy {
       cb(null, response);
     });
 
-    
+
   }
 
   async handleUnsubscribe(request, response, cb) {
@@ -259,7 +249,8 @@ export class Proxy {
 
       // if unsubscribe succeeded, disconnect connection and remove connection from memory
       if (result === true) {
-        if (currentReqManager.provider && currentReqManager.provider.disconnect && !this.isVm) {
+        // TODO check here too for issues
+        if (currentReqManager.provider && currentReqManager.provider.disconnect) {
           currentReqManager.provider.disconnect();
         }
         delete this.nodeSubscriptions[subscriptionId];
@@ -322,8 +313,6 @@ export class Proxy {
           if (err) {
             this.logger.error(__('Error parsing the request in the proxy'));
             this.logger.error(err);
-            // Reset the data to the original request so that it can be used anyway
-            result = data;
             calledBack = true;
             return reject(err);
           }
@@ -359,7 +348,6 @@ export class Proxy {
             this.logger.error(__('Error parsing the response in the proxy'));
             this.logger.error(err);
             calledBack = true;
-            // Reset the data to the original response so that it can be used anyway
             result = data;
             return reject(err);
           }
@@ -376,9 +364,6 @@ export class Proxy {
     this.server.close();
     this.server = null;
     this.app = null;
-    this.commList = {};
-    this.receipts = {};
     this.transactions = {};
-    this.timeouts = {};
   }
 }

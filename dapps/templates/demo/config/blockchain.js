@@ -4,7 +4,7 @@ module.exports = {
   // default applies to all environments
   default: {
     enabled: true,
-    client: "geth" // Can be geth or parity (default:geth)
+    client: "ganache-cli" // Can be ganache-cli, geth or parity (default: ganache-cli)
   },
 
   development: {
@@ -14,6 +14,7 @@ module.exports = {
   },
 
   privatenet: {
+    client: 'geth',
     // Accounts to use as node accounts
     // The order here corresponds to the order of `web3.eth.getAccounts`, so the first one is the `defaultAccount`
     // For more account configurations, see: https://framework.embarklabs.io/docs/blockchain_accounts_configuration.html

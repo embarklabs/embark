@@ -18,7 +18,6 @@ export default class ProxyManager {
   private wsPort = 0;
   private ready = false;
   private isWs = false;
-  private isVm = false;
   private _endpoint: string = "";
   private inited: boolean = false;
 
@@ -110,8 +109,7 @@ export default class ProxyManager {
     this.wsPort = wsPort;
 
     // setup proxy details
-    this.isVm = this.embark.config.blockchainConfig.client === constants.blockchain.vm;
-    this.isWs = this.isVm || (/wss?/).test(this.embark.config.blockchainConfig.endpoint);
+    this.isWs = (/wss?/).test(this.embark.config.blockchainConfig.endpoint);
   }
 
   private async setupProxy(clientName: string) {
@@ -126,21 +124,19 @@ export default class ProxyManager {
     const endpoint = this.embark.config.blockchainConfig.endpoint;
 
     // HTTP
-    if (!this.isVm) {
-      this.httpProxy = await new Proxy({
-        endpoint,
-        events: this.events,
-        isWs: false,
-        logger: this.logger,
-        plugins: this.plugins,
-        isVm: this.isVm,
-      })
-        .serve(
-          this.host,
-          this.rpcPort,
-        );
-      this.logger.info(`HTTP Proxy for node endpoint ${endpoint} listening on ${buildUrl("http", this.host, this.rpcPort, "rpc")}`);
-    }
+    // TODO disable HTTP for VM?
+    this.httpProxy = await new Proxy({
+      endpoint,
+      events: this.events,
+      isWs: false,
+      logger: this.logger,
+      plugins: this.plugins,
+    })
+      .serve(
+        this.host,
+        this.rpcPort,
+      );
+    this.logger.info(`HTTP Proxy for node endpoint ${endpoint} listening on ${buildUrl("http", this.host, this.rpcPort, "rpc")}`);
     if (this.isWs) {
       this.wsProxy = await new Proxy({
         endpoint,
@@ -148,13 +144,13 @@ export default class ProxyManager {
         isWs: true,
         logger: this.logger,
         plugins: this.plugins,
-        isVm: this.isVm,
       })
         .serve(
           this.host,
           this.wsPort,
         );
-      this.logger.info(`WS Proxy for node endpoint ${this.isVm ? 'vm' : endpoint} listening on ${buildUrl("ws", this.host, this.wsPort, "ws")}`);
+      // TODO fix endpoint
+      this.logger.info(`WS Proxy for node endpoint ${endpoint} listening on ${buildUrl("ws", this.host, this.wsPort, "ws")}`);
     }
   }
   private stopProxy() {
