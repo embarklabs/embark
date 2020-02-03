@@ -211,13 +211,19 @@ const runCommand = (cmd, inherit = true, display) => {
     }
   }
 
+  // The `--all` option is not supplied below because `lerna changed` is being
+  // used to calculate which packages should be tagged via:
+  // `npm dist-tag add [pkg]@[newStableVersion] nightly`
+  // Private packages are never tagged because dist-tags only pertain to
+  // packages published to the NPM registry. By tagging every newly released
+  // stable version of public packages as `nightly` (in addition to tagging as
+  // `latest`) we avoid version drift in nightly releases
   const lernaChanged = [
     `lerna`,
     `changed`,
     (!forcePublish && `--conventional-graduate`) || ``,
     (forcePublish && `--force-publish`) || ``,
-    `--json`,
-    `--all`
+    `--json`
   ].filter(str => !!str).join(` `);
 
   let pkgsToTag;
