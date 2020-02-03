@@ -1,6 +1,6 @@
 {
   "name": "embark-core",
-  "version": "5.1.1-nightly.2",
+  "version": "5.1.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Core library for Embark",
@@ -54,9 +54,9 @@
     "core-js": "3.4.3",
     "decompress": "4.2.0",
     "deep-equal": "1.0.1",
-    "embark-i18n": "^5.1.1-nightly.2",
-    "embark-logger": "^5.1.1-nightly.2",
-    "embark-utils": "^5.1.1-nightly.2",
+    "embark-i18n": "^5.1.1",
+    "embark-logger": "^5.1.1",
+    "embark-utils": "^5.1.1",
     "find-up": "4.1.0",
     "flatted": "0.2.3",
     "fs-extra": "8.1.0",
@@ -71,7 +71,7 @@
     "window-size": "1.1.1"
   },
   "devDependencies": {
-    "embark-solo": "^5.1.1-nightly.2",
+    "embark-solo": "^5.1.1",
     "eslint": "5.7.0",
     "npm-run-all": "4.1.5",
     "rimraf": "3.0.0",

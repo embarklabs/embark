@@ -1,6 +1,6 @@
 {
   "name": "embark-vyper",
-  "version": "5.1.1-nightly.2",
+  "version": "5.1.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Embark wrapper for the Vyper compiler",
@@ -47,11 +47,11 @@
     "@babel/runtime-corejs3": "7.7.4",
     "async": "2.6.1",
     "core-js": "3.4.3",
-    "embark-i18n": "^5.1.1-nightly.2",
+    "embark-i18n": "^5.1.1",
     "shelljs": "0.8.3"
   },
   "devDependencies": {
-    "embark-solo": "^5.1.1-nightly.2",
+    "embark-solo": "^5.1.1",
     "eslint": "5.7.0",
     "npm-run-all": "4.1.5",
     "rimraf": "3.0.0"

@@ -1,6 +1,6 @@
 {
   "name": "embark-dapp-template-boilerplate",
-  "version": "5.1.1-nightly.4",
+  "version": "5.1.1",
   "description": "Basic DApp template for Embark",
   "homepage": "https://github.com/embarklabs/embark/tree/master/dapps/templates/boilerplate#readme",
   "bugs": "https://github.com/embarklabs/embark/issues",
@@ -32,14 +32,14 @@
     "url": "https://github.com/embarklabs/embark.git"
   },
   "devDependencies": {
-    "embark": "^5.1.1-nightly.4",
-    "embark-reset": "^5.1.1-nightly.2",
-    "embarkjs": "^5.1.1-nightly.2",
-    "embarkjs-ens": "^5.1.1-nightly.2",
-    "embarkjs-ipfs": "^5.1.1-nightly.2",
-    "embarkjs-swarm": "^5.1.1-nightly.2",
-    "embarkjs-web3": "^5.1.1-nightly.2",
-    "embarkjs-whisper": "^5.1.1-nightly.2",
+    "embark": "^5.1.1",
+    "embark-reset": "^5.1.1",
+    "embarkjs": "^5.1.1",
+    "embarkjs-ens": "^5.1.1",
+    "embarkjs-ipfs": "^5.1.1",
+    "embarkjs-swarm": "^5.1.1",
+    "embarkjs-web3": "^5.1.1",
+    "embarkjs-whisper": "^5.1.1",
     "rimraf": "3.0.0"
   }
 }
