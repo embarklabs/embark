@@ -63,7 +63,7 @@
     "preqa:full": "yarn install",
     "qa": "node scripts/monorun --ignore embark-dapp-* --stream qa",
     "qa:dapps": "lerna run --concurrency=1 --scope embark-dapp-* --stream qa",
-    "qa:full": "npm-run-all cwtree reboot:full cwtree \"qa -- --concurrency={1}\" qa:dapps cwtree -- 1",
+    "qa:full": "npm-run-all cwtree reboot:full cwtree typecheck \"lint -- --concurrency={1}\" build \"test -- --concurrency={1}\" qa:dapps cwtree -- 1",
     "reboot": "npm run clean",
     "reboot:full": "npm run clean:full",
     "release": "node scripts/release",
