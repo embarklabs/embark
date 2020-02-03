@@ -6,6 +6,7 @@
     "declarationMap": true,
     "emitDeclarationOnly": true,
     "esModuleInterop": true,
+    "experimentalDecorators": true,
     "isolatedModules": true,
     "moduleResolution": "Node",
     "noImplicitAny": false,
