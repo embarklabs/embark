@@ -294,7 +294,7 @@ class ENS {
     // Add contracts to contract manager so that they can be resolved as dependencies
     this.ensConfig.ENSRegistry = await this.events.request2('contracts:add', this.ensConfig.ENSRegistry);
     this.ensConfig.Resolver = await this.events.request2('contracts:add', this.ensConfig.Resolver);
-    this.ensConfig.FIFSRegistrar = await this.events.request2('contracts:add', this.ensConfig.FIFSRegistrar);
+    this.ensConfig.FIFSRegistrar = await this.events.request2('contracts:add', Object.assign({}, this.ensConfig.FIFSRegistrar, {deploy: false}));
     cb();
   }
 
