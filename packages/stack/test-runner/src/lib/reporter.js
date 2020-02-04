@@ -1,4 +1,5 @@
 const chalk = require('chalk');
+const { blockchain: blockchainConstants } = require('embark-core/constants');
 
 class Reporter {
   constructor(embark, options) {
@@ -9,17 +10,32 @@ class Reporter {
     this.fails = 0;
     this.gasAccumulator = 0;
 
+    // Keep track of TXs because otherwise, we can intercept random receipts
+    this.transactionsHashes = [];
+
     this.wireGasUsage();
   }
 
   wireGasUsage() {
     const {events} = this.embark;
     events.on('blockchain:proxy:response', (params) => {
-      const { result } = params.response;
+      if (params.request.method === blockchainConstants.transactionMethods.eth_sendTransaction) {
+        // We just gather data and wait for the receipt
+        return this.transactionsHashes.push(params.response.result);
+      } else if (params.request.method === blockchainConstants.transactionMethods.eth_sendRawTransaction) {
+        return this.transactionsHashes.push(params.response.result);
+      }
 
+      const {result} = params.response;
       if (!result || !result.gasUsed) {
         return;
       }
+      const hashIndex = this.transactionsHashes.indexOf(result.transactionHash);
+      if (hashIndex === -1) {
+        // Probably just a normal receipt
+        return;
+      }
+      this.transactionsHashes.splice(hashIndex, 1);
 
       const gas = parseInt(result.gasUsed, 16);
       this.gasAccumulator += gas;
