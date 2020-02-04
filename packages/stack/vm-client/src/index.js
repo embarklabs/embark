@@ -42,6 +42,19 @@ class VMClient {
       }
       return cb(null, params);
     });
+
+    embark.registerActionForEvent("blockchain:node:stop", (params, cb) => {
+      if (params.stopped) {
+        return cb(null, params);
+      }
+      const clientName = params.clientName;
+      const isVM = this.getVmClient(clientName);
+      if (isVM) {
+        params.stopped = true;
+        params.isVM = true;
+      }
+      return cb(null, params);
+    });
   }
 
   getVmClient(vmName) {

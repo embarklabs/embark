@@ -74,36 +74,29 @@ export default class Blockchain {
       });
     });
 
-    this.events.setCommandHandler("blockchain:node:stop", async (clientName, cb) => {
-      if (typeof clientName === 'function') {
-        cb = clientName;
+
+    embark.registerActionForEvent("blockchain:node:stop", async (params, cb) => {
+      if (params.stopped) {
+        return cb(null, params);
+      }
+      let clientName = params.clientName;
+      if (!clientName) {
         clientName = this.startedClient;
         if (!this.startedClient) {
-          return cb(__('No blockchain client is currently started'));
+          return cb(null, params);
         }
       }
-
-      try {
-        const isVM = await this.events.request2('blockchain:client:vmProvider', clientName);
-        if (isVM) {
-          this.startedClient = null;
-          this.events.emit("blockchain:stopped", clientName);
-          return cb();
-        }
-      } catch (_e) {
-        // It means it's not a VM. It's fine
-      }
-
 
       const clientFunctions = this.blockchainNodes[clientName];
       if (!clientFunctions) {
-        return cb(__("Client %s not found in registered plugins", clientName));
+        return cb(null, params);
       }
 
       clientFunctions.stopFn.apply(clientFunctions, [
         () => {
           this.events.emit("blockchain:stopped", clientName);
-          cb();
+          params.stopped = true;
+          cb(null, params);
         }
       ]);
       this.startedClient = null;

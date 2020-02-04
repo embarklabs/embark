@@ -312,6 +312,8 @@ class TestRunner {
       node = null;
     }
 
+    const oldClient = this.configObj.blockchainConfig.client;
+
     this.configObj.blockchainConfig = recursiveMerge({}, this.originalConfigObj.blockchainConfig, {
       endpoint: this.simOptions.host ? buildUrl(this.simOptions.protocol, this.simOptions.host, this.simOptions.port, this.simOptions.type) : null,
       type: this.simOptions.type,
@@ -324,31 +326,27 @@ class TestRunner {
     this.logger.trace('Setting blockchain configs:', this.configObj.blockchainConfig);
     await this.events.request2('config:blockchainConfig:set', this.configObj.blockchainConfig);
 
-    try {
-      await this.events.request2("blockchain:node:stop");
-    } catch (e) {
-      // Nothing to do here, the node probably wasn't even started
-    }
-
     return new Promise((resolve, reject) => {
-      this.plugins.emitAndRunActionsForEvent('blockchain:node:start', {
-        started: false,
-        alreadyStarted: false,
-        blockchainConfig: this.configObj.blockchainConfig
-      }, async (err, params) => {
-        if (err) {
-          cb(err);
-          return reject(err);
-        }
-        if (!params.started) {
-          const msg = `Blockchain client '${this.configObj.blockchainConfig.client}' not found, please register this node using 'blockchain:node:register' or 'blockchain:vm:register' for a VM.`;
-          cb(msg);
-          return reject(new Error(msg));
-        }
-        this.events.emit("blockchain:started", this.configObj.blockchainConfig.client);
-        const provider = await this.events.request2("blockchain:client:provider", "ethereum");
-        cb(null, provider);
-        resolve(provider);
+      this.plugins.emitAndRunActionsForEvent('blockchain:node:stop', {stopped: false, clientName: oldClient}, () => {
+        this.plugins.emitAndRunActionsForEvent('blockchain:node:start', {
+          started: false,
+          alreadyStarted: false,
+          blockchainConfig: this.configObj.blockchainConfig
+        }, async (err, params) => {
+          if (err) {
+            cb(err);
+            return reject(err);
+          }
+          if (!params.started) {
+            const msg = `Blockchain client '${this.configObj.blockchainConfig.client}' not found, please register this node using 'blockchain:node:register' or 'blockchain:vm:register' for a VM.`;
+            cb(msg);
+            return reject(new Error(msg));
+          }
+          this.events.emit("blockchain:started", this.configObj.blockchainConfig.client);
+          const provider = await this.events.request2("blockchain:client:provider", "ethereum");
+          cb(null, provider);
+          resolve(provider);
+        });
       });
     });
   }
