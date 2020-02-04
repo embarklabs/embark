@@ -352,6 +352,44 @@ class EmbarkController {
     });
   }
 
+  exec(options, callback) {
+
+    const engine = new Engine({
+      env: options.env,
+      embarkConfig: options.embarkConfig || 'embark.json'
+    });
+
+    engine.init({}, () => {
+      engine.registerModuleGroup("coreComponents", {
+        disableServiceMonitor: true
+      });
+      engine.registerModuleGroup("stackComponents");
+      engine.registerModuleGroup("blockchain");
+      engine.registerModuleGroup("compiler");
+      engine.registerModuleGroup("contracts");
+      engine.registerModulePackage('embark-deploy-tracker', {
+        plugins: engine.plugins
+      });
+      engine.registerModulePackage('embark-scripts-runner');
+
+      engine.startEngine(async (err) => {
+        if (err) {
+          return callback(err);
+        }
+        try {
+          await engine.events.request2("blockchain:node:start", engine.config.blockchainConfig);
+          const [contractsList, contractDependencies] = await compileSmartContracts(engine);
+          await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
+          await engine.events.request2('scripts-runner:initialize');
+          await engine.events.request2('scripts-runner:execute', options.target, options.forceTracking);
+        } catch (err) {
+          return callback(err);
+        }
+        callback();
+      });
+    });
+  }
+
   console(options) {
     this.context = options.context || [constants.contexts.run, constants.contexts.console];
     const REPL = require('./dashboard/repl.js');

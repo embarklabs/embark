@@ -27,7 +27,7 @@ import { readJsonSync } from 'fs-extra';
 const cloneDeep = require('lodash.clonedeep');
 const { replaceZeroAddressShorthand } = AddressUtils;
 
-import { getBlockchainDefaults, getContractDefaults } from './configDefaults';
+import { getBlockchainDefaults, getContractDefaults, embarkConfigDefaults } from './configDefaults';
 
 const constants = readJsonSync(path.join(__dirname, '../constants.json'));
 
@@ -45,6 +45,7 @@ export interface EmbarkConfig {
   generationDir?: string;
   plugins?: any;
   buildDir?: string;
+  migrations: string;
 }
 
 export class Config {
@@ -83,7 +84,7 @@ export class Config {
 
   events: Events;
 
-  embarkConfig: any = {};
+  embarkConfig: EmbarkConfig = embarkConfigDefaults;
 
   context: any;
 
@@ -629,17 +630,7 @@ export class Config {
   }
 
   loadEmbarkConfigFile() {
-    const configObject = {
-      options: {
-        solc: {
-          "optimize": true,
-          "optimize-runs": 200
-        }
-      },
-      generationDir: "embarkArtifacts"
-    };
-
-    this.embarkConfig = recursiveMerge(configObject, this.embarkConfig);
+    this.embarkConfig = recursiveMerge(embarkConfigDefaults, this.embarkConfig);
 
     const contracts = this.embarkConfig.contracts;
     // determine contract 'root' directories
