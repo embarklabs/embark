@@ -104,16 +104,12 @@ class Monitor {
     this.screen.render();
   }
 
-  logEntry() {
-    const args = Array.from(arguments);
-    const color = args[args.length - 1];
-    args.splice(args.length - 1, 1);
-    this.logText.log(...args.filter(arg => arg !== undefined && arg !== null).map(arg => {
-      if (color) {
-        return typeof arg === 'object' ? util.inspect(arg, 2)[color] : arg[color];
-      }
-      return typeof arg === 'object' ? util.inspect(arg, 2) : arg;
-    }));
+  logEntry(args, color) {
+    args  = Array.isArray(args) ? args : [args];
+    this.logText.log(...(args.filter(arg => arg ?? false).map(arg => {
+      if (typeof arg === 'object') arg = util.inspect(arg, 2);
+      return color ? arg[color] : arg;
+    })));
     this.screen.render();
   }
 
