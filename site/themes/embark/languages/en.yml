@@ -288,6 +288,7 @@ sidebar:
     installation: Installation
     faq: FAQ
     creating_project: Creating apps
+    executing_migration_scripts: Executing Scripts
     structure: App structure
     running_apps: Running apps
     dashboard: Using the dashboard

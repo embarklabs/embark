@@ -13,6 +13,7 @@ docs:
     environments: environments.html
     configuration: configuration.html
     pipeline_and_webpack: pipeline_and_webpack.html
+    executing_migration_scripts: executing_scripts.html
     # setting_up_storages: foo.html
     # uploading_data: foo.html
     # configuring_whisper: foo.html

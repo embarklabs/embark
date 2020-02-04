@@ -45,6 +45,7 @@ export interface EmbarkConfig {
   generationDir?: string;
   plugins?: any;
   buildDir?: string;
+  migrations: string;
 }
 
 export class Config {
@@ -83,7 +84,15 @@ export class Config {
 
   events: Events;
 
-  embarkConfig: any = {};
+  embarkConfig: EmbarkConfig = {
+    contracts: [],
+    config: '',
+    versions: {
+      solc: ''
+    },
+    generationDir: '',
+    migrations: ''
+  };
 
   context: any;
 
@@ -184,6 +193,7 @@ export class Config {
 
     this.embarkConfig = fs.readJSONSync(options.embarkConfig);
     this.embarkConfig.plugins = this.embarkConfig.plugins || {};
+    this.embarkConfig.migrations = this.embarkConfig.migrations || constants.defaultMigrationsDir;
 
     this.plugins = new Plugins({
       plugins: this.embarkConfig.plugins,

@@ -108,5 +108,6 @@
   },
   "environments": {
     "development": "development"
-  }
+  },
+  "defaultMigrationsDir": "migrations"
 }

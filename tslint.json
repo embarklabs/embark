@@ -18,7 +18,8 @@
     "ordered-imports": false,
     "quotemark": [false, "single"],
     "trailing-comma": false,
-    "no-irregular-whitespace": false
+    "no-irregular-whitespace": false,
+    "max-classes-per-file": false
   },
   "rulesDirectory": []
 }

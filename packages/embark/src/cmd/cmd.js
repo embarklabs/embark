@@ -15,6 +15,7 @@ class Cmd {
     this.demo();
     this.build();
     this.run();
+    this.exec();
     this.console();
     this.blockchain();
     this.simulator();
@@ -170,6 +171,30 @@ class Cmd {
           webpackConfigName: options.pipeline || 'development',
           openBrowser: !options.nobrowser ? null : false,
           singleUseAuthToken: options.singleUseAuthToken
+        });
+      });
+  }
+
+  exec() {
+    program
+      .command('exec [environment] [script|directory]')
+      .option('-t, --track', __('Force tracking of migration script', false))
+      .description(__("Executes specified scripts or all scripts in 'directory'"))
+      .action((env, target, options) => {
+        embark.exec({
+          env,
+          target,
+          forceTracking: options.track
+        }, (err) => {
+          if (err) {
+            console.error(err.message ? err.message : err);
+            process.exit(1);
+          }
+          console.log('Done.');
+          // TODO(pascal): Ideally this shouldn't be needed.
+          // Seems like there's a pending child process at this point that needs
+          // to be stopped.
+          process.exit(0);
         });
       });
   }

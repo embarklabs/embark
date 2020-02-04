@@ -91,6 +91,9 @@ export interface Configuration {
       cert: string;
     };
   };
+  contractsConfig: {
+    tracking?: boolean | string;
+  };
   plugins: EmbarkPlugins;
   reloadConfig(): void;
 }

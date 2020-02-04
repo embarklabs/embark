@@ -104,6 +104,9 @@
       "path": "packages/plugins/scaffolding"
     },
     {
+      "path": "packages/plugins/scripts-runner"
+    },
+    {
       "path": "packages/plugins/snark"
     },
     {

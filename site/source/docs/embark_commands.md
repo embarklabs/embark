@@ -151,6 +151,16 @@ $ embark reset
 
 Resets embarks state on this dapp including clearing cache.
 
+## exec
+
+```
+$ embark exec [environment] [file|directory]
+```
+
+Executes a given (migration) script to perform complex after deployment operations.
+
+It's required to specifiy the `environment` in which the script(s) will be executed in. In addition it's possible to specificy a directory in which multiple script live in. Embark will execute them one by one.
+
 ## upload
 
 ```
