@@ -313,6 +313,9 @@ export default class ContractsManager {
             contract = new Contract(self.logger, contractConfig);
             contract.className = className;
             contract.args = [];
+            if (contractsConfig.strategy === constants.deploymentStrategy.explicit) {
+              contract.deploy = false;
+            }
           }
 
           contract.code = compiledContract.code;
@@ -353,14 +356,15 @@ export default class ContractsManager {
 
         for (className in self.contracts) {
           contract = self.contracts[className];
-          contract.deploy = (contract.deploy === undefined) || contract.deploy;
           if (self.deployOnlyOnConfig && !contractsConfig.contracts[className]) {
             contract.deploy = false;
           }
 
-          if (!contractsConfig.contracts[className] && contractsConfig.strategy === constants.deploymentStrategy.explicit) {
+          if (contract.deploy !== true && !contractsConfig.contracts[className] && contractsConfig.strategy === constants.deploymentStrategy.explicit) {
             contract.deploy = false;
           }
+
+          contract.deploy = contract.deploy ?? true;
 
           if (contract.code === "") {
             const message = __("assuming %s to be an interface", className);
