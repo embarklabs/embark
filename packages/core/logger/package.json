@@ -1,6 +1,6 @@
 {
   "name": "embark-logger",
-  "version": "5.1.1",
+  "version": "5.1.2-nightly.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Logging utilities for Embark",
@@ -45,8 +45,8 @@
     "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
-    "async": "2.6.1",
     "@babel/runtime-corejs3": "7.8.3",
+    "async": "2.6.1",
     "colors": "1.4.0",
     "core-js": "3.6.4",
     "date-and-time": "0.12.0",

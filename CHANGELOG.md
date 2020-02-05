@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.2-nightly.0](https://github.com/embarklabs/embark/compare/v5.1.1...v5.1.2-nightly.0) (2020-02-05)
+
+
+### Bug Fixes
+
+* only show account warning when Geth will actually start ([f502650](https://github.com/embarklabs/embark/commit/f502650))
+* **@embark/cmd-controller:** exit build if afterDeploy is not array ([5359cc6](https://github.com/embarklabs/embark/commit/5359cc6))
+* **@embark/dashboard:** update dashboard's `logEntry` to match core/logger's `logFunction` ([63831f6](https://github.com/embarklabs/embark/commit/63831f6)), closes [#2184](https://github.com/embarklabs/embark/issues/2184)
+
+
+
+
+
 ## [5.1.1](https://github.com/embarklabs/embark/compare/v5.1.1-nightly.4...v5.1.1) (2020-02-03)
 
 **Note:** Version bump only for package root

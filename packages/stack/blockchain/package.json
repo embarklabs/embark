@@ -1,6 +1,6 @@
 {
   "name": "embark-blockchain",
-  "version": "5.1.1",
+  "version": "5.1.2-nightly.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Blockchain APIs for Embark",
@@ -51,10 +51,10 @@
     "async": "2.6.1",
     "clone-deep": "4.0.0",
     "core-js": "3.4.3",
-    "embark-core": "^5.1.1",
+    "embark-core": "^5.1.2-nightly.0",
     "embark-i18n": "^5.1.1",
-    "embark-logger": "^5.1.1",
-    "embark-utils": "^5.1.1"
+    "embark-logger": "^5.1.2-nightly.0",
+    "embark-utils": "^5.1.2-nightly.0"
   },
   "devDependencies": {
     "@babel/core": "7.7.4",
