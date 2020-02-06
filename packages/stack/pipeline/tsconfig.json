@@ -11,12 +11,6 @@
   ],
   "references": [
     {
-      "path": "../../core/core"
-    },
-    {
-      "path": "../../core/i18n"
-    },
-    {
       "path": "../../core/utils"
     }
   ]

@@ -6,6 +6,7 @@ class Embark {
     this.events = events;
     this.plugins = plugins;
     this.config = config || {};
+    this.config.plugins = plugins;
     this.assert = new EmbarkAssert(this);
     this.fs = fs;
 
@@ -17,6 +18,10 @@ class Embark {
     };
   }
 
+  registerAPICall(method, endpoint, callback) {
+    this.plugins.plugin.registerAPICall(method, endpoint, callback);
+  }
+
   registerActionForEvent(name, cb) {
     this.plugins.registerActionForEvent(name, cb);
   }
@@ -26,12 +31,12 @@ class Embark {
   }
 
   teardown() {
-    this.config = {};
+    this.config = { plugins: this.plugins };
     this.plugins.teardown();
   }
 
   setConfig(config) {
-    this.config = config;
+    this.config = { ...config, plugins: this.plugins };
   }
 }
 

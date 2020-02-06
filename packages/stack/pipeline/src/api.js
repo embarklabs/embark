@@ -4,13 +4,13 @@ import { dappPath, fileTreeSort } from 'embark-utils';
 class API {
 
   constructor(embark, _options) {
+    this.embark = embark;
     this.plugins = embark.config.plugins;
     this.fs = embark.fs;
   }
 
   registerAPIs() {
-    let plugin = this.plugins.createPlugin('deployment', {});
-    plugin.registerAPICall(
+    this.embark.registerAPICall(
       'get',
       '/embark-api/file',
       (req, res) => {
@@ -26,7 +26,7 @@ class API {
       }
     );
 
-    plugin.registerAPICall(
+    this.embark.registerAPICall(
       'post',
       '/embark-api/folders',
       (req, res) => {
@@ -42,7 +42,7 @@ class API {
       }
     );
 
-    plugin.registerAPICall(
+    this.embark.registerAPICall(
       'post',
       '/embark-api/files',
       (req, res) => {
@@ -58,7 +58,7 @@ class API {
       }
     );
 
-    plugin.registerAPICall(
+    this.embark.registerAPICall(
       'delete',
       '/embark-api/file',
       (req, res) => {
@@ -72,7 +72,7 @@ class API {
       }
     );
 
-    plugin.registerAPICall(
+    this.embark.registerAPICall(
       'get',
       '/embark-api/files',
       (req, res) => {

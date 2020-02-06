@@ -1,7 +1,12 @@
+const assert = require('assert');
+const sinon = require('sinon');
+
 class Plugins {
   constructor() {
     this.plugin = new Plugin();
     this.plugins = [];
+    this.assert = new PluginsAssert(this);
+    this.mock = new PluginsMock(this);
   }
 
   createPlugin(name) {
@@ -17,7 +22,7 @@ class Plugins {
   runActionsForEvent(name, options, callback) {
     const listeners = this.plugin.getListeners(name);
     if (listeners) {
-      listeners.forEach(fn => fn(options, callback));
+      listeners.forEach(fn => fn.spy(options, callback));
     } else {
       callback(null, options);
     }
@@ -52,6 +57,7 @@ class Plugins {
 class Plugin {
   constructor() {
     this.listeners = {};
+    this.apiCalls = {};
     this.pluginTypes = [];
     this.console = [];
     this.compilers = [];
@@ -65,7 +71,7 @@ class Plugin {
     if (!this.listeners[name]) {
       this.listeners[name] = [];
     }
-    this.listeners[name].push(action);
+    this.listeners[name].push({ raw: action, spy: sinon.spy(action) });
   }
 
   has(pluginType) {
@@ -82,8 +88,9 @@ class Plugin {
     this.addPluginType('compilers');
   }
 
-  registerAPICall(_method, _endpoint, _callback) {
-
+  registerAPICall(method, endpoint, callback) {
+    const index = (method + endpoint).toLowerCase();
+    this.apiCalls[index] = callback;
   }
 
   registerConsoleCommand(options) {
@@ -93,6 +100,60 @@ class Plugin {
 
   teardown() {
     this.compilers = [];
+  }
+}
+
+class PluginsAssert {
+  constructor(plugins) {
+    this.plugins = plugins;
+  }
+  actionForEventRegistered(name, action) {
+    assert(this.plugins.plugin.listeners[name] && this.plugins.plugin.listeners[name].some(registered => registered.raw === action), `action for ${name} wanted, but not registered`);
+  }
+  actionForEventCalled(name, action) {
+    this.actionForEventRegistered(name, action);
+    const registered = this.plugins.plugin.listeners[name].find(registered => registered.raw === action);
+    sinon.assert.called(registered.spy);
+  }
+
+  actionForEventCalledWith(name, action, ...args) {
+    this.actionForEventRegistered(name, action);
+    const registered = this.plugins.plugin.listeners[name].find(registered => registered.raw === action);
+    sinon.assert.calledWith(registered.spy, ...args);
+  }
+
+  apiCallRegistered(method, endpoint) {
+    const index = (method + endpoint).toLowerCase();
+    assert(this.plugins.plugin.apiCalls[index], `API call for '${method} ${endpoint}' wanted, but not registered`);
+  }
+}
+
+class PluginsMock {
+  constructor(plugins) {
+    this.plugins = plugins;
+  }
+
+  apiCall(method, endpoint, params) {
+    const index = (method + endpoint).toLowerCase();
+    const apiFn = this.plugins.plugin.apiCalls[index];
+    assert(apiFn, `API call for '${method} ${endpoint}' wanted, but not registered`);
+
+    let req;
+    if (["GET", "DELETE"].includes(method.toUpperCase())) {
+      req = {
+        query: params
+      };
+    } else {
+      req = {
+        body: params
+      };
+    }
+    const resp = {
+      send: sinon.spy(),
+      status: sinon.spy()
+    };
+    apiFn(req, resp);
+    return resp;
   }
 }
 
