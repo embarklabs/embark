@@ -1,4 +1,5 @@
 import {__} from 'embark-i18n';
+import Web3 from 'web3';
 
 require('ejs');
 const Templates = {
@@ -9,17 +10,21 @@ const Templates = {
 
 class EmbarkJS {
 
-  constructor(embark, _options) {
+  constructor(embark) {
     this.embark = embark;
     this.embarkConfig = embark.config.embarkConfig;
     this.blockchainConfig = embark.config.blockchainConfig;
     this.events = embark.events;
     this.logger = embark.logger;
+    this.config = embark.config;
     this.contractArtifacts = {};
+    this.enabled = true;
 
-    this.events.request("runcode:whitelist", 'embarkjs', () => {
-      this.registerEmbarkJS();
-    });
+    // note: since other plugins like ens currently expect these command handlers to exist
+    // we used a condition instead just returning immediatly so that the handlers still exist
+    if (!this.config.blockchainConfig.enabled || this.config.contractsConfig.library !== 'embarkjs') {
+      this.enabled = false;
+    }
 
     this.embarkJSPlugins = {};
     this.customEmbarkJSPlugins = {};
@@ -46,11 +51,61 @@ class EmbarkJS {
     this.events.setCommandHandler("embarkjs:contract:generate", this.addContractArtifact.bind(this));
     this.events.setCommandHandler("embarkjs:contract:runInVm", this.runInVm.bind(this));
 
+    if (!this.enabled) return;
+
+    this.events.request("runcode:whitelist", 'embarkjs', () => {
+      this.registerEmbarkJS();
+    });
+
     embark.registerActionForEvent("pipeline:generateAll:before", this.addEmbarkJSArtifact.bind(this));
     embark.registerActionForEvent("pipeline:generateAll:before", this.addContractIndexArtifact.bind(this));
+
+    this.setupEmbarkJS();
+
+    embark.registerActionForEvent("deployment:contract:deployed", {priority: 40}, this.registerInVm.bind(this));
+    embark.registerActionForEvent("deployment:contract:undeployed", this.registerInVm.bind(this));
+    embark.registerActionForEvent("deployment:contract:deployed", this.registerArtifact.bind(this));
+    embark.registerActionForEvent("deployment:contract:undeployed", this.registerArtifact.bind(this));
+  }
+
+  async setupEmbarkJS() {
+    this.events.on("blockchain:started", async () => {
+      await this.registerWeb3Object();
+      this.events.request("embarkjs:console:setProvider", 'blockchain', 'web3', '{web3}');
+    });
+    this.events.request("embarkjs:plugin:register", 'blockchain', 'web3', 'embarkjs-web3');
+    await this.events.request2("embarkjs:console:register", 'blockchain', 'web3', 'embarkjs-web3');
+  }
+
+  async registerWeb3Object() {
+    if (!this.enabled) return;
+    const provider = await this.events.request2("blockchain:client:provider", "ethereum");
+    const web3 = new Web3(provider);
+    this.events.request("runcode:whitelist", 'web3', () => {});
+    await this.events.request2("runcode:register", 'web3', web3);
+    const accounts = await web3.eth.getAccounts();
+    if (accounts.length) {
+      await this.events.request2('runcode:eval', `web3.eth.defaultAccount = '${accounts[0]}'`);
+    }
+
+    this.events.request('console:register:helpCmd', {
+      cmdName: "web3",
+      cmdHelp: __("instantiated web3.js object configured to the current environment")
+    }, () => {});
+  }
+
+  async registerInVm(params, cb) {
+    if (!this.enabled) return;
+    this.events.request("embarkjs:contract:runInVm", params.contract, cb);
+  }
+
+  registerArtifact(params, cb) {
+    if (!this.enabled) return;
+    this.events.request("embarkjs:contract:generate", params.contract, cb);
   }
 
   async registerEmbarkJS() {
+    if (!this.enabled) return;
     const checkEmbarkJS = `return (typeof EmbarkJS === 'undefined');`;
     const embarkJSNotDefined = await this.events.request2('runcode:eval', checkEmbarkJS);
 
@@ -59,6 +114,7 @@ class EmbarkJS {
   }
 
   async registerEmbarkJSPlugin(stackName, pluginName, packageName, cb) {
+    if (!this.enabled) return cb();
     await this.registerEmbarkJS();
 
     let moduleName = stackName;
@@ -77,6 +133,7 @@ class EmbarkJS {
   }
 
   async registerCustomEmbarkJSPluginInVm(stackName, pluginName, packageName, options, cb) {
+    if (!this.enabled) return cb();
     await this.registerEmbarkJS();
 
     const customPluginCode = `
@@ -92,6 +149,7 @@ class EmbarkJS {
   }
 
   addEmbarkJSArtifact(_params, cb) {
+    if (!this.enabled) return cb();
     const embarkjsCode = Templates.embarkjs_artifact({
       plugins: this.embarkJSPlugins,
       hasWebserver: this.embark.config.webServerConfig.enabled,
@@ -108,6 +166,7 @@ class EmbarkJS {
   }
 
   async setProvider(stackName, pluginName, config) {
+    if (!this.enabled) return;
     let moduleName = stackName;
     if (moduleName === 'messages') moduleName = 'Messages';
     if (moduleName === 'storage') moduleName = 'Storage';
@@ -136,6 +195,7 @@ class EmbarkJS {
   }
 
   async addContractArtifact(contract, cb) {
+    if (!this.enabled) return cb();
     const abi = JSON.stringify(contract.abiDefinition);
     const gasLimit = 6000000;
     this.contractArtifacts[contract.className] = contract.className + '.js';
@@ -151,6 +211,7 @@ class EmbarkJS {
   }
 
   async addContractIndexArtifact(_options, cb) {
+    if (!this.enabled) return cb();
     let indexCode = 'module.exports = {';
     Object.keys(this.contractArtifacts).forEach(className => {
       indexCode += `\n"${className}": require('./${this.contractArtifacts[className]}').default,`;
@@ -166,6 +227,7 @@ class EmbarkJS {
   }
 
   async runInVm(contract, cb) {
+    if (!this.enabled) return cb();
     const abi = contract.abiDefinition;
     const gasLimit = 6000000;
     const provider = await this.events.request2("blockchain:client:provider", "ethereum");

@@ -1,4 +1,4 @@
-const web3 = require("./web3_init.js").default
+const web3 = require("../web3.js").default
 
 let <%- className %>Abi = <%- abi %>;
 let <%- className %> = new web3.eth.Contract(<%- className %>Abi);
@@ -6,7 +6,7 @@ let <%- className %> = new web3.eth.Contract(<%- className %>Abi);
 <%- className %>.address = '<%- contract.deployedAddress %>';
 <%- className %>.options.from = web3.eth.defaultAccount;
 
-web3.execWhenReady(() => {
+web3.onReady(() => {
   <%- className %>.options.from = web3.eth.defaultAccount;
   if (!<%- className %>.currentProvider) {
     <%- className %>.setProvider(web3.currentProvider);

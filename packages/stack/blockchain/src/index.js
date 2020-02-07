@@ -198,7 +198,8 @@ export default class Blockchain {
             return cb(err);
           }
           const config = {
-            provider: contractsConfig.library || 'web3',
+            provider: 'web3',
+            library: contractsConfig.library || 'embarkjs',
             dappConnection: results,
             dappAutoEnable: contractsConfig.dappAutoEnable,
             warnIfMetamask: this.blockchainConfig.isDev,

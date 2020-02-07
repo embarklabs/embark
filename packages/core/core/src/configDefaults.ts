@@ -47,6 +47,7 @@ export function getContractDefaults(embarkConfigVersions) {
 
   return {
     default: {
+      library: "embarkjs",
       versions,
       dappConnection: [
         "$WEB3",

@@ -23,6 +23,9 @@
       "path": "../../plugins/debugger"
     },
     {
+      "path": "../../plugins/embarkjs"
+    },
+    {
       "path": "../../plugins/ens"
     },
     {
@@ -87,9 +90,6 @@
     },
     {
       "path": "../../stack/deployment"
-    },
-    {
-      "path": "../../stack/embarkjs"
     },
     {
       "path": "../../stack/library-manager"
