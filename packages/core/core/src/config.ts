@@ -35,6 +35,18 @@ const DEFAULT_CONFIG_PATH = 'config/';
 
 const embark5ChangesUrl = 'https://framework.embarklabs.io/docs/migrating_from_3.x.html#Updating-to-v5';
 
+export interface EmbarkConfig {
+  app?: any;
+  contracts: string[];
+  config: string;
+  versions: {
+    solc: string;
+  };
+  generationDir?: string;
+  plugins?: any;
+  buildDir?: string;
+}
+
 export class Config {
 
   env = 'default';

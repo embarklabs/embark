@@ -3,6 +3,7 @@ export type Callback<Tv> = (err?: Error | null, val?: Tv) => void;
 export type Maybe<T> = false | 0 | undefined | null | T;
 
 import { AbiItem } from "web3-utils";
+import { EmbarkConfig as _EmbarkConfig } from './config';
 
 export interface Contract {
   abiDefinition: AbiItem[];
@@ -67,18 +68,9 @@ export interface EmbarkEvents {
   ): void;
 }
 
-export interface EmbarkConfig {
+export interface Configuration {
   contractsFiles: any[];
-  embarkConfig: {
-    contracts: string[] | string;
-    config: {
-      contracts: string;
-    };
-    versions: {
-      solc: string;
-    };
-    generationDir: string;
-  };
+  embarkConfig: _EmbarkConfig;
   blockchainConfig: {
     endpoint: string;
     accounts: any[];
@@ -115,7 +107,7 @@ export interface Embark {
   registerConsoleCommand: any;
   logger: Logger;
   fs: any;
-  config: EmbarkConfig;
+  config: Configuration;
   currentContext: string[];
   registerActionForEvent<T>(
     name: string,
@@ -128,6 +120,7 @@ export { ProcessLauncher } from './processes/processLauncher';
 export { ProcessWrapper } from './processes/processWrapper';
 
 export { Config } from './config';
+export type EmbarkConfig = _EmbarkConfig;
 export { IPC } from './ipc';
 import { EmbarkEmitter as Events } from './events';
 export { Events };
