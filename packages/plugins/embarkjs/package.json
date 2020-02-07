@@ -4,7 +4,7 @@
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "EmbarkJS APIs for Embark",
-  "homepage": "https://github.com/embarklabs/embark/tree/master/packages/stack/embarkjs#readme",
+  "homepage": "https://github.com/embarklabs/embark/tree/master/packages/plugins/embarkjs#readme",
   "bugs": "https://github.com/embarklabs/embark/issues",
   "keywords": [
     "blockchain",
@@ -21,7 +21,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/stack/embarkjs",
+    "directory": "packages/plugins/embarkjs",
     "type": "git",
     "url": "https://github.com/embarklabs/embark.git"
   },
@@ -50,7 +50,8 @@
     "ejs": "2.6.1",
     "embark-core": "^5.3.0-nightly.7",
     "embark-i18n": "^5.3.0-nightly.5",
-    "embarkjs": "^5.3.0-nightly.6"
+    "embarkjs": "^5.3.0-nightly.6",
+    "web3": "1.2.6"
   },
   "devDependencies": {
     "embark-solo": "^5.2.3",

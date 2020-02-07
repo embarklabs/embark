@@ -5,7 +5,7 @@ let web3 = new Web3();
 let todo = [];
 let done = false;
 
-web3.execWhenReady = function(cb) {
+web3.onReady = function(cb) {
   if (done) {
     return cb();
   }
@@ -46,7 +46,7 @@ let doConnect = function(connectionList, opts, doneCb) {
 
     if (typeof window !== 'undefined' && window.ethereum) {
       try {
-        if (Blockchain.autoEnable) {
+        if (opts.autoEnable) {
           await ethereum.enable();
         }
         blockchainConnector.setProvider(ethereum);
@@ -138,6 +138,7 @@ __whenEnvIsLoaded(() => {
   let connectList = [<%- connectionList.map(x => "'" + x + "'").join(",") %>];
 
   doConnect(connectList, {
+    autoEnable: <%- autoEnable %>,
     warnAboutMetamask: false, // TODO: can/should be part as the code generation instead...
   }, () => {
     todo.forEach((x) => x.apply(x))

@@ -212,6 +212,7 @@ describe('embark.Config', function () {
         dappConnection: ['$WEB3', 'ws://localhost:8546', 'localhost:8545'],
         dappAutoEnable: true,
         "gas": "400000",
+        "library": "embarkjs",
         "strategy": "implicit",
         "contracts": {
           "SimpleStorage": {
@@ -234,6 +235,7 @@ describe('embark.Config', function () {
         dappConnection: ['$WEB3', 'ws://localhost:8546', 'localhost:8545'],
         dappAutoEnable: true,
         "gas": "auto",
+        "library": "embarkjs",
         "strategy": "implicit",
         "contracts": {
           "SimpleStorage": {
