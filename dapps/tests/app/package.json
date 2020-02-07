@@ -3,7 +3,7 @@
   "devDependencies": {
     "@babel/code-frame": "7.5.5",
     "bootstrap": "3.4.1",
-    "embark": "^5.1.2-nightly.1",
+    "embark": "^5.2.0-nightly.0",
     "embark-dapp-test-service": "^5.0.0",
     "embark-i18n": "^5.1.1",
     "embark-reset": "^5.1.1",
@@ -32,5 +32,5 @@
     "reset": "npx embark-reset && npx rimraf embark-*.tgz package",
     "test": "npx embark test"
   },
-  "version": "5.1.2-nightly.1"
+  "version": "5.2.0-nightly.0"
 }

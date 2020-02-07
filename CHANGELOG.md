@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0-nightly.0](https://github.com/embarklabs/embark/compare/v5.1.2-nightly.1...v5.2.0-nightly.0) (2020-02-07)
+
+
+### Bug Fixes
+
+* **@embark/contracts-manager:** Remove `logger` from serialized contract ([d529420](https://github.com/embarklabs/embark/commit/d529420))
+* **@embark/ens:** fix tests erroring on FIFS contract deploy ([78fc7b6](https://github.com/embarklabs/embark/commit/78fc7b6))
+
+
+### Features
+
+* **@mbark/ens:** enable the use of $accounts in registrations ([de01022](https://github.com/embarklabs/embark/commit/de01022))
+
+
+
+
+
 ## [5.1.2-nightly.1](https://github.com/embarklabs/embark/compare/v5.1.2-nightly.0...v5.1.2-nightly.1) (2020-02-06)
 
 **Note:** Version bump only for package root
