@@ -65,6 +65,9 @@
       "path": "packages/plugins/deploy-tracker"
     },
     {
+      "path": "packages/plugins/embarkjs"
+    },
+    {
       "path": "packages/plugins/ens"
     },
     {
@@ -161,13 +164,13 @@
       "path": "packages/stack/compiler"
     },
     {
+      "path": "packages/stack/contracts-generator"
+    },
+    {
       "path": "packages/stack/contracts-manager"
     },
     {
       "path": "packages/stack/deployment"
-    },
-    {
-      "path": "packages/stack/embarkjs"
     },
     {
       "path": "packages/stack/library-manager"

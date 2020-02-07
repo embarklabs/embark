@@ -1,4 +1,6 @@
 import {__} from 'embark-i18n';
+const Web3 = require('web3');
+// TODO: add to package.json
 
 require('ejs');
 const Templates = {
@@ -9,13 +11,18 @@ const Templates = {
 
 class EmbarkJS {
 
-  constructor(embark, _options) {
+  constructor(embark) {
     this.embark = embark;
     this.embarkConfig = embark.config.embarkConfig;
     this.blockchainConfig = embark.config.blockchainConfig;
     this.events = embark.events;
     this.logger = embark.logger;
+    this.config = embark.config;
     this.contractArtifacts = {};
+
+    if (!this.config.blockchainConfig.enabled || this.config.contractsConfig.library !== 'embarkjs') {
+      return;
+    }
 
     this.events.request("runcode:whitelist", 'embarkjs', () => {
       this.registerEmbarkJS();
@@ -48,6 +55,50 @@ class EmbarkJS {
 
     embark.registerActionForEvent("pipeline:generateAll:before", this.addEmbarkJSArtifact.bind(this));
     embark.registerActionForEvent("pipeline:generateAll:before", this.addContractIndexArtifact.bind(this));
+
+    if (this.config.blockchainConfig.enabled) {
+      this.setupEmbarkJS();
+    }
+
+    embark.registerActionForEvent("deployment:contract:deployed", {priority: 40}, this.registerInVm.bind(this));
+    embark.registerActionForEvent("deployment:contract:undeployed", this.registerInVm.bind(this));
+    embark.registerActionForEvent("deployment:contract:deployed", this.registerArtifact.bind(this));
+    embark.registerActionForEvent("deployment:contract:undeployed", this.registerArtifact.bind(this));
+  }
+
+
+
+  async setupEmbarkJS() {
+    this.events.on("blockchain:started", async () => {
+      await this.registerWeb3Object();
+      this.events.request("embarkjs:console:setProvider", 'blockchain', 'web3', '{web3}');
+    });
+    this.events.request("embarkjs:plugin:register", 'blockchain', 'web3', 'embarkjs-web3');
+    await this.events.request2("embarkjs:console:register", 'blockchain', 'web3', 'embarkjs-web3');
+  }
+
+  async registerWeb3Object() {
+    const provider = await this.events.request2("blockchain:client:provider", "ethereum");
+    const web3 = new Web3(provider);
+    this.events.request("runcode:whitelist", 'web3', () => {});
+    await this.events.request2("runcode:register", 'web3', web3);
+    const accounts = await web3.eth.getAccounts();
+    if (accounts.length) {
+      await this.events.request2('runcode:eval', `web3.eth.defaultAccount = '${accounts[0]}'`);
+    }
+
+    this.events.request('console:register:helpCmd', {
+      cmdName: "web3",
+      cmdHelp: __("instantiated web3.js object configured to the current environment")
+    }, () => {});
+  }
+
+  async registerInVm(params, cb) {
+    this.events.request("embarkjs:contract:runInVm", params.contract, cb);
+  }
+
+  registerArtifact(params, cb) {
+    this.events.request("embarkjs:contract:generate", params.contract, cb);
   }
 
   async registerEmbarkJS() {

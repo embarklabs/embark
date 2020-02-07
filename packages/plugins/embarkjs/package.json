@@ -20,7 +20,7 @@
   ],
   "license": "MIT",
   "repository": {
-    "directory": "packages/stack/embarkjs",
+    "directory": "packages/plugins/embarkjs",
     "type": "git",
     "url": "https://github.com/embarklabs/embark.git"
   },

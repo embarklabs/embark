@@ -1,6 +1,9 @@
 module.exports = {
   // default applies to all environments
   default: {
+    // library: 'embarkjs',  // can be 'web3'
+    library: 'web3',  // can be 'web3'
+
     // order of connections the dapp should connect to
     dappConnection: [
       "$EMBARK",

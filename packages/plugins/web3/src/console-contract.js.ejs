@@ -1,4 +1,5 @@
-<%- className %>Abi = <%- abi %>;
+<%- className %>Config = <%- JSON.stringify(contract) %>;
+<%- className %>Abi = <%- JSON.stringify(abi) %>;
 <%- className %> = new web3.eth.Contract(<%- className %>Abi);
 <%- className %>.options.address = '<%- contract.deployedAddress %>';
 <%- className %>.address = '<%- contract.deployedAddress %>';
