@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0-nightly.1](https://github.com/embarklabs/embark/compare/v5.2.0-nightly.0...v5.2.0-nightly.1) (2020-02-08)
+
+
+### Bug Fixes
+
+* **@embark/blockchain-api:** add back contract event listen and log ([5592753](https://github.com/embarklabs/embark/commit/5592753))
+* **@embark/contracts-manager:** always deploy contracts with deploy: true ([87a04cd](https://github.com/embarklabs/embark/commit/87a04cd))
+* **@embark/test-runner:** fix reporter to only catch gas for txs ([0e30bf3](https://github.com/embarklabs/embark/commit/0e30bf3))
+
+
+
+
+
 # [5.2.0-nightly.0](https://github.com/embarklabs/embark/compare/v5.1.2-nightly.1...v5.2.0-nightly.0) (2020-02-07)
 
 

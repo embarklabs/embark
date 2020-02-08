@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0-nightly.1](https://github.com/embarklabs/embark/compare/v5.2.0-nightly.0...v5.2.0-nightly.1) (2020-02-08)
+
+
+### Bug Fixes
+
+* **@embark/contracts-manager:** always deploy contracts with deploy: true ([87a04cd](https://github.com/embarklabs/embark/commit/87a04cd))
+
+
+
+
+
 # [5.2.0-nightly.0](https://github.com/embarklabs/embark/compare/v5.1.2-nightly.1...v5.2.0-nightly.0) (2020-02-07)
 
 
