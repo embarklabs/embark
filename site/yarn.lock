@@ -2429,12 +2429,12 @@ gulp-uglify@^3.0.2:
     uglify-js "^3.0.5"
     vinyl-sourcemaps-apply "^0.2.0"
 
-gulp-unique-files@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/gulp-unique-files/-/gulp-unique-files-0.1.2.tgz#bda75af41870d61ce1cb00496c76a17598f40675"
-  integrity sha1-vada9Bhw1hzhywBJbHahdZj0BnU=
+gulp-unique-files@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/gulp-unique-files/-/gulp-unique-files-0.2.0.tgz#177602e5829dcc5c47e318d5105480749e25062b"
+  integrity sha512-P4KyaOi2A6NmAlpNzjo6b4bSmEu0//zVq0UDO7FMznLHdX9Yv59P/QHeDLYr/fwyOobPtw2smIi436Yq/W1crw==
   dependencies:
-    lodash "^3.6.0"
+    lodash "^4.17.15"
     through2 "^0.6.3"
 
 gulp-useref@^4.0.1:
@@ -3508,11 +3508,6 @@ lodash.some@^4.4.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.some/-/lodash.some-4.6.0.tgz#1bb9f314ef6b8baded13b549169b2a945eb68e4d"
   integrity sha1-G7nzFO9ri63tE7VJFpsqlF62jk0=
-
-lodash@^3.6.0:
-  version "3.10.1"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
-  integrity sha1-W/Rejkm6QYnhfUgnid/RW9FAt7Y=
 
 lodash@^4.0.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.4, lodash@~4.17.10:
   version "4.17.15"
