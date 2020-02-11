@@ -338,7 +338,7 @@ export default class ContractsManager {
 
           if (contract.address && typeof contract.address === 'function') {
             contract.addressHandler = contract.address;
-            delete contract.addres;
+            delete contract.address;
           } else if (contract.address && typeof contract.address === 'string') {
             contract.deployedAddress = contract.address;
           }
@@ -385,7 +385,7 @@ export default class ContractsManager {
         }
         callback();
       },
-      /*eslint complexity: ["error", 11]*/
+      // eslint-disable-next-line complexity
       function dealWithSpecialConfigs(callback) {
         let className, contract, parentContractName, parentContract;
         let dictionary = Object.keys(self.contracts);
@@ -393,56 +393,55 @@ export default class ContractsManager {
         for (className in self.contracts) {
           contract = self.contracts[className];
 
-          if (contract.instanceOf === undefined) {
+          if (!contract.instanceOf && !contract.proxyFor) {
             continue;
           }
 
-          parentContractName = contract.instanceOf;
-          parentContract = self.contracts[parentContractName];
-
-          if (parentContract === className) {
-            self.logger.error(__("%s : instanceOf is set to itself", className));
-            continue;
-          }
-
-          if (parentContract === undefined) {
-            self.logger.error(__("{{className}}: couldn't find instanceOf contract {{parentContractName}}", {
-              className: className,
-              parentContractName: parentContractName
-            }));
-            let suggestion = proposeAlternative(parentContractName, dictionary, [className, parentContractName]);
-            if (suggestion) {
-              self.logger.warn(__('did you mean "%s"?', suggestion));
+          if (contract.instanceOf) {
+            parentContractName = contract.instanceOf;
+            parentContract = self.contracts[parentContractName];
+            if (!self._isParentContractDependencyCorrect(className, parentContract, 'instanceOf', dictionary)) {
+              continue;
             }
-            continue;
+
+            // If the contract has no args and the parent has them, use the parent's args in its place
+            if (parentContract.args?.length > 0 && contract.args?.length === 0) {
+              contract.args = parentContract.args;
+            }
+
+            if (!contract.code) {
+              self.logger.error(__("{{className}} has code associated to it but it's configured as an instanceOf {{parentContractName}}", {
+                className,
+                parentContractName
+              }));
+            }
+
+            contract.path = parentContract.path;
+            contract.originalFilename = parentContract.originalFilename;
+            contract.filename = parentContract.filename;
+            contract.code = parentContract.code;
+            contract.runtimeBytecode = parentContract.runtimeBytecode;
+            contract.realRuntimeBytecode = (parentContract.realRuntimeBytecode || parentContract.runtimeBytecode);
+            contract.gasEstimates = parentContract.gasEstimates;
+            contract.functionHashes = parentContract.functionHashes;
+            contract.abiDefinition = parentContract.abiDefinition;
+            contract.linkReferences = parentContract.linkReferences;
+
+            contract.gas = contract.gas || parentContract.gas;
+            contract.gasPrice = contract.gasPrice || parentContract.gasPrice;
+            contract.type = 'instance';
           }
 
-          if (parentContract.args && parentContract.args.length > 0 && ((contract.args && contract.args.length === 0) || contract.args === undefined)) {
-            contract.args = parentContract.args;
+          if (contract.proxyFor) {
+            parentContractName = contract.proxyFor;
+            parentContract = self.contracts[parentContractName];
+            if (!self._isParentContractDependencyCorrect(className, parentContract, 'proxyFor', dictionary)) {
+              continue;
+            }
+
+            // Merge ABI of contract and proxy so that the contract shares both ABIs, but remove the constructor
+            contract.abiDefinition = contract.abiDefinition.concat(parentContract.abiDefinition.filter(def => def.type !== 'constructor'));
           }
-
-          if (contract.code !== undefined) {
-            self.logger.error(__("{{className}} has code associated to it but it's configured as an instanceOf {{parentContractName}}", {
-              className: className,
-              parentContractName: parentContractName
-            }));
-          }
-
-          contract.path = parentContract.path;
-          contract.originalFilename = parentContract.originalFilename;
-          contract.filename = parentContract.filename;
-          contract.code = parentContract.code;
-          contract.runtimeBytecode = parentContract.runtimeBytecode;
-          contract.realRuntimeBytecode = (parentContract.realRuntimeBytecode || parentContract.runtimeBytecode);
-          contract.gasEstimates = parentContract.gasEstimates;
-          contract.functionHashes = parentContract.functionHashes;
-          contract.abiDefinition = parentContract.abiDefinition;
-          contract.linkReferences = parentContract.linkReferences;
-
-          contract.gas = contract.gas || parentContract.gas;
-          contract.gasPrice = contract.gasPrice || parentContract.gasPrice;
-          contract.type = 'instance';
-
         }
         callback();
       },
@@ -550,6 +549,28 @@ export default class ContractsManager {
 
       done(err, self.contracts, self.contractDependencies);
     });
+  }
+
+  _isParentContractDependencyCorrect(className, parentContract, typeOfInheritance, dictionary) {
+    const parentContractName = parentContract.className;
+    if (parentContract === className) {
+      this.logger.error(__("{{className}} : {{typeOfInheritance}} is set to itself", {className, typeOfInheritance}));
+      return false;
+    }
+
+    if (parentContract === undefined) {
+      this.logger.error(__("{{className}}: couldn't find {{typeOfInheritance}} contract {{parentContractName}}", {
+        className,
+        parentContractName,
+        typeOfInheritance
+      }));
+      let suggestion = proposeAlternative(parentContractName, dictionary, [className, parentContractName]);
+      if (suggestion) {
+        this.logger.warn(__('did you mean "%s"?', suggestion));
+      }
+      return false;
+    }
+    return true;
   }
 
   _contractsForApi() {
