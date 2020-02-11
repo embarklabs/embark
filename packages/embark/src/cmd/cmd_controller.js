@@ -370,9 +370,7 @@ class EmbarkController {
       engine.registerModulePackage('embark-deploy-tracker', {
         plugins: engine.plugins
       });
-      engine.registerModulePackage('embark-scripts-runner', {
-        plugins: engine.plugins
-      });
+      engine.registerModulePackage('embark-scripts-runner');
 
       engine.startEngine(async (err) => {
         if (err) {

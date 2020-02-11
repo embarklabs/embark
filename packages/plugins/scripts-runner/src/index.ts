@@ -92,22 +92,6 @@ export default class ScriptsRunnerPlugin {
     })();
   }
 
-  get block() {
-    return (async () => {
-      if (this._block) {
-        return this._block;
-      }
-      const web3 = await this.web3;
-      try {
-        this._block = await web3.eth.getBlock(0, true);
-      } catch (err) {
-        // Retry with block 1 (Block 0 fails with Ganache-cli using the --fork option)
-        this._block = await web3.eth.getBlock(1, true);
-      }
-      return this._block;
-    })();
-  }
-
   private async execute(target: string, forceTracking = false, callback: Callback<any>) {
     const targetPath = !path.isAbsolute(target) ? dappPath(target) : target;
     try {
