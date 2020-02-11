@@ -22,13 +22,8 @@
         </div>
         <div class="c-guide__body">
           <nav role="navigation">
-            <select id="version-select">
-              {% for version in Object.keys(site.data.versions) %}
-              <option value="{{ version }}">{{ site.data.versions[version].label }}</option>
-              {% endfor %}
-            </select>
             {% for section in Object.keys(site.data.sidebar['docs']) %}
-              <div class="o-distance-{% if !loop.first %}xl{%else%}l{% endif %}">
+              <div class="{% if !loop.first %}o-distance-xl{% endif %}">
                 <h3 class="c-category-title">{{__('sidebar.docs.' + section)}}</h3>
                 <ul class="o-list-bare">
                   {% for guide in Object.keys(site.data.sidebar['docs'][section]) %}
