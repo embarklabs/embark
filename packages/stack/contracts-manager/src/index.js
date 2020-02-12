@@ -325,7 +325,7 @@ export default class ContractsManager {
           contract.swarmHash = compiledContract.swarmHash;
           contract.gasEstimates = compiledContract.gasEstimates;
           contract.functionHashes = compiledContract.functionHashes;
-          contract.abiDefinition = compiledContract.abiDefinition;
+          contract.abiDefinition = contractConfig?.abiDefinition ?? compiledContract.abiDefinition;
           contract.filename = compiledContract.filename;
           contract.originalFilename = compiledContract.originalFilename || ("contracts/" + contract.filename);
           contract.path = dappPath(contract.originalFilename);
