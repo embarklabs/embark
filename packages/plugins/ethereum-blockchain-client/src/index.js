@@ -59,6 +59,16 @@ class EthereumBlockchainClient {
       const web3 = await this.web3;
       const [account] = await web3.eth.getAccounts();
       const contractObj = new web3.eth.Contract(contract.abiDefinition, contract.address);
+      contractObj._jsonInterface.find(obj => {
+        if (obj.type === 'constructor') {
+          if (!obj.name) {
+            // Add constructor as the name of the method, because if there is an error, it prints `undefined` otherwise
+            obj.name = 'constructor';
+          }
+          return true;
+        }
+        return false;
+      });
       const code = contract.code.substring(0, 2) === '0x' ? contract.code : "0x" + contract.code;
       const contractObject = contractObj.deploy({arguments: (contract.args || []), data: code});
       if (contract.gas === 'auto' || !contract.gas) {
