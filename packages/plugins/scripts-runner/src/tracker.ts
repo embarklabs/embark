@@ -1,4 +1,6 @@
+import { Embark } from 'embark-core';
 import * as fs from 'fs-extra';
+import { dappPath } from 'embark-utils';
 import { BlockTransactionObject } from 'web3-eth';
 import Web3 from "web3";
 
@@ -16,47 +18,62 @@ export interface TrackConfig {
 }
 
 export interface ScriptsTracker {
-  ensureTrackingFile(hash: string): Promise<void>;
+  ensureTrackingFile(): Promise<void>;
   track(trackConfig: TrackConfig): Promise<void>;
   isTracked(scriptName: string): Promise<boolean>;
-  setWeb3(web3: Web3);
 }
+
+const DEFAULT_TRACKING_FILE_PATH = '.embark/chains.json';
 
 export class FileSystemTracker implements ScriptsTracker {
 
   private _block: BlockTransactionObject | null = null;
 
-  private web3: Web3 | null = null;
+  private _web3: Web3 | null = null;
 
-  constructor(private trackingFilePath: string, private migrationsDirectory: string) {}
+  private migrationsDirectory: string;
+
+  private trackingFilePath: string;
+
+  constructor(private embark: Embark) {
+    this.trackingFilePath = dappPath(embark.config.contractsConfig?.tracking || DEFAULT_TRACKING_FILE_PATH);
+    this.migrationsDirectory = embark.config.embarkConfig.migrations;
+  }
+
+  private get web3() {
+    return (async () => {
+      if (!this._web3) {
+        const provider = await this.embark.events.request2('blockchain:client:provider', 'ethereum');
+        this._web3 = new Web3(provider);
+      }
+      return this._web3;
+    })();
+  }
 
   get block() {
     return (async () => {
       if (this._block) {
         return this._block;
       }
+      const web3 = await this.web3;
       try {
-        this._block = await this.web3?.eth.getBlock(0, true) || null;
+        this._block = await web3.eth.getBlock(0, true);
       } catch (err) {
         // Retry with block 1 (Block 0 fails with Ganache-cli using the --fork option)
-        this._block = await this.web3?.eth.getBlock(1, true) || null;
+        this._block = await web3.eth.getBlock(1, true);
       }
       return this._block;
     })();
   }
 
-  setWeb3(web3: Web3) {
-    this.web3 = web3;
-  }
-
-  async ensureTrackingFile(env: string) {
+  async ensureTrackingFile() {
     const fstat = await fs.stat(this.trackingFilePath);
     if (!fstat.isFile()) {
       const block = await this.block;
       if (block) {
         await fs.outputJSON(this.trackingFilePath, {
           [block.hash]: {
-            name: env,
+            name: this.embark.env,
             migrations: []
           }
         });

@@ -9,14 +9,13 @@ import { FileSystemTracker, ScriptsTracker, TrackingData } from './tracker';
 
 import AsyncIterator from 'core-js-pure/features/async-iterator';
 import { Embark, Callback } from 'embark-core';
+import { __ } from 'embark-i18n';
 import { Logger } from 'embark-logger';
 import { dappPath } from 'embark-utils';
 import * as fs from 'fs-extra';
 import path from 'path';
 import Web3 from "web3";
 import { BlockTransactionObject } from 'web3-eth';
-
-const DEFAULT_TRACKING_FILE_PATH = '.embark/chains.json';
 
 export enum ScriptsRunnerCommand {
   Initialize = 'scripts-runner:initialize',
@@ -54,9 +53,7 @@ export default class ScriptsRunnerPlugin {
   private tracker: ScriptsTracker;
 
   constructor(private embark: Embark, options?: ScriptsRunnerPluginOptions) {
-    const trackingFilePath = dappPath(embark.config.contractsConfig?.tracking || DEFAULT_TRACKING_FILE_PATH);
-
-    this.tracker = options?.tracker ? options.tracker : new FileSystemTracker(trackingFilePath, embark.config.embarkConfig.migrations);
+    this.tracker = options?.tracker ? options.tracker : new FileSystemTracker(embark);
     this.trackingEnabled = embark.config.contractsConfig.tracking !== false;
 
     // TODO: it'd be wonderful if Embark called `registerCommandHandlers()` for us
@@ -73,9 +70,7 @@ export default class ScriptsRunnerPlugin {
       return callback();
     }
     try {
-      const web3 = await this.web3;
-      this.tracker.setWeb3(web3);
-      await this.tracker.ensureTrackingFile(this.embark.env);
+      await this.tracker.ensureTrackingFile();
       callback();
     } catch (e) {
       callback(new InitializationError(e));
@@ -99,14 +94,14 @@ export default class ScriptsRunnerPlugin {
       if (fstat.isDirectory()) {
         const dependencies = await this.getScriptDependencies();
         const results = await this.executeAll({ target: targetPath, dependencies, forceTracking });
-        callback(null, results);
-      } else if (fstat.isFile()) {
+        return callback(null, results);
+      }
+      if (fstat.isFile()) {
         const dependencies = await this.getScriptDependencies();
         const result = await this.executeSingle({ target: targetPath, dependencies, forceTracking });
-        callback(null, result);
-      } else {
-        callback(new UnsupportedTargetError(fstat));
+        return callback(null, result);
       }
+      callback(new UnsupportedTargetError(fstat));
     } catch (e) {
       callback(e);
     }
@@ -119,11 +114,11 @@ export default class ScriptsRunnerPlugin {
     const scriptTracked = await this.tracker.isTracked(scriptName);
 
     if (scriptTracked && (scriptDirectory === this.embark.config.embarkConfig.migrations || forceTracking)) {
-      this.embark.logger.info(`  ✓ ${scriptName} already done`);
+      this.embark.logger.info(__('  ✓ %s already done', scriptName));
       return;
     }
 
-    this.embark.logger.info(`  ${scriptName} running....`);
+    this.embark.logger.info(__('  %s running....', scriptName));
     const scriptToRun = require(options.target);
 
     let result;
@@ -135,7 +130,7 @@ export default class ScriptsRunnerPlugin {
       throw new ScriptExecutionError(options.target, error);
     }
 
-    this.embark.logger.info(`  ✓ finished.`);
+    this.embark.logger.info(__('  ✓ finished.'));
 
     if (!this.trackingEnabled) {
       return result;
