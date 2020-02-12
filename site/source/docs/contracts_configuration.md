@@ -334,6 +334,56 @@ deploy: {
 ...
 </code></pre>
 
+## Proxy Contract Support
+
+Proxy contracts are powerful tools usually used in more complex Dapps. They can be used for contracts that can be upgraded or to alleviate the deploy cost of multiple instances of a contract.
+
+However, interacting with Proxy contracts is usually difficult, because you have to point the Base contract to the address of the Proxy for it to work.
+
+Not anymore! Embark now supports a contract configuration named `forProxy`.
+
+With it, you can specify that a Proxy contract is, well, a proxy *for* another one. Here's an example:
+
+```javascript
+deploy: {
+  Proxy: {
+    deploy: false
+  },
+  BaseContract: {
+    args: ["whatever the base contract needs"]
+  },
+  ContractInstance: {
+    instanceOf: "Proxy",
+    proxyFor: "BaseContract",
+    args: ["0x", "$BaseContract"]
+  }
+}
+```
+
+With this configuration, our `ContractInstance` is an `instanceOf` `Proxy` and  a `proxyFor` `BaseContract`.
+This is why we point to `BaseContract` in the `ContractInstance` arguments.
+The arguments themselves depend on the implementations of your `BaseContract` and `Proxy` contract.
+
+Note that you could have used `Proxy` itself as a `proxyFor` `BaseContract`, but it's usually more intuitive to use `instanceOf` and then resolve the contract instance with the new name you gave it (`ContractInstance` in this case).
+
+Once the contracts are deployed, all you have to do is:
+
+```
+import ContractInstance from 'path/to/artifacts/contracts/ContractInstance';
+```
+
+Here is what it looked **before**:
+
+```Javascript
+import BaseContract from 'path/to/artifacts/contracts/BaseContract';
+import ContractProxy from 'path/to/artifacts/contracts/ContractProxy';
+
+BaseContract.options.address = ContractProxy.options.address;
+// Then  you could actually interact with the BaseContract
+```
+
+Now, no need to import or use `BaseContract`, like above, since `ContractInstance` contains both the ABI of `BaseContract` and `Proxy`.
+
 ## Deployment tracking
 
 Embark's Smart Contract deployment mechanism prevents the deployment of Smart Contracts that have already been deployed. This turns out to be a powerful feature as you don't have to worry about keeping track of it. The way this works is that, by default, Embark creates a file `./.embark/chains.json` in which it stores the name and address of the deployed Smart Contracts. That information is then mapped to the hash of the block in which the Smart Contract have been deployed:
