@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0-nightly.2](https://github.com/embarklabs/embark/compare/v5.2.0-nightly.1...v5.2.0-nightly.2) (2020-02-13)
+
+
+### Bug Fixes
+
+* set helper methods on contracts ([7031335](https://github.com/embarklabs/embark/commit/7031335))
+
+
+### Features
+
+* **@embark/test-runner:** introduce artifacts.require API ([b021689](https://github.com/embarklabs/embark/commit/b021689))
+
+
+
+
+
 # [5.2.0-nightly.1](https://github.com/embarklabs/embark/compare/v5.2.0-nightly.0...v5.2.0-nightly.1) (2020-02-08)
 
 **Note:** Version bump only for package embark-dapp-test-app

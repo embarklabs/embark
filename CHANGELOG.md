@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0-nightly.2](https://github.com/embarklabs/embark/compare/v5.2.0-nightly.1...v5.2.0-nightly.2) (2020-02-13)
+
+
+### Bug Fixes
+
+* set helper methods on contracts ([7031335](https://github.com/embarklabs/embark/commit/7031335))
+* **core/config:** Fix `EmbarkConfig` type ([0f59e0c](https://github.com/embarklabs/embark/commit/0f59e0c))
+
+
+### Features
+
+* **@embark/test-runner:** introduce artifacts.require API ([b021689](https://github.com/embarklabs/embark/commit/b021689))
+* **plugins/scripts-runner:** introduce exec command to run scripts ([40c3d98](https://github.com/embarklabs/embark/commit/40c3d98))
+
+
+
+
+
 # [5.2.0-nightly.1](https://github.com/embarklabs/embark/compare/v5.2.0-nightly.0...v5.2.0-nightly.1) (2020-02-08)
 
 

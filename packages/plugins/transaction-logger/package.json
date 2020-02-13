@@ -1,6 +1,6 @@
 {
   "name": "embark-transaction-logger",
-  "version": "5.2.0-nightly.1",
+  "version": "5.2.0-nightly.2",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Transaction listener and logger for Embark",
@@ -49,7 +49,7 @@
     "@babel/runtime-corejs3": "7.7.4",
     "async": "2.6.1",
     "core-js": "3.4.3",
-    "embark-core": "^5.2.0-nightly.1",
+    "embark-core": "^5.2.0-nightly.2",
     "embark-i18n": "^5.1.1",
     "embark-utils": "^5.2.0-nightly.1",
     "ethereumjs-tx": "1.3.7",
