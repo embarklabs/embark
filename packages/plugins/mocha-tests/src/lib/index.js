@@ -203,8 +203,8 @@ class MochaTestRunner {
 
             this.fs.readFile(file, (err, data) => {
               if (err) {
-                self.logger.error(__('Error reading file %s', file));
-                self.logger.error(err);
+                this.logger.error(__('Error reading file %s', file));
+                this.logger.error(err);
                 seriesCb(null, 1);
               }
               if (data.toString().search(/contract\(|describe\(/) === -1) {
