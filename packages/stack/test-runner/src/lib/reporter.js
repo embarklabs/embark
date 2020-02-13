@@ -60,7 +60,7 @@ class Reporter {
     }
   }
 
-  report(test, time, passed, message) {
+  report(test, time, passed, message, stack) {
     let timeFormat = 'green';
     if (time > 0.7) {
       timeFormat = 'yellow';
@@ -76,6 +76,7 @@ class Reporter {
     } else {
       this.fails++;
       this.stdout.write(chalk`{bgRed.white.bold ${' FAIL '}} {underline ${test}} {bold >} {${timeFormat} ${time}s} {bold >} {bold ${formattedGas} gas} > {red ${message || 'no error message'}}\n`);
+      this.stdout.write(chalk`{red ${stack}}\n`);
     }
 
     this.resetGas();

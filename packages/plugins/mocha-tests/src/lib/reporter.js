@@ -26,7 +26,7 @@ class Reporter {
       })
       .on(EVENT_TEST_FAIL, (test, err) => {
         const duration = (Date.now() - startTime) / 1000.0;
-        this.reporter.report(test.fullTitle(), duration, false, err.message);
+        this.reporter.report(test.fullTitle(), duration, false, err.message, err.stack);
       });
   }
 }
