@@ -1,0 +1,23 @@
+{
+  "contracts": ["contracts/**"],
+  "app": {},
+  "buildDir": "build/",
+  "config": {
+    "contracts": "contracts.js",
+    "blockchain": false,
+    "storage": false,
+    "communication": false,
+    "webserver": false
+  },
+  "versions": {
+    "solc": "0.5.16"
+  },
+  "plugins": {
+  },
+  "options": {
+    "solc": {
+      "optimize": true,
+      "optimize-runs": 200
+    }
+  }
+}
