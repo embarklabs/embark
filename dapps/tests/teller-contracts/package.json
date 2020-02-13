@@ -1,0 +1,20 @@
+{
+  "name": "embark-dapp-test-teller-contracts",
+  "description": "Test Teller contracts for integration testing purposes",
+  "version": "5.2.0-nightly.1",
+  "scripts": {
+    "ci": "npm run qa",
+    "clean": "npm run reset",
+    "qa": "npm run test",
+    "reset": "npx embark-reset && npx rimraf embark-*.tgz package",
+    "test": "npx embark test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "embark": "^5.2.0-nightly.3",
+    "embark-reset": "^5.1.1",
+    "rimraf": "3.0.0"
+  }
+}
