@@ -204,16 +204,6 @@ export class Logger {
 
     this.events.emit("log", "dir", obj);
     this.logFunction(obj, null);
-
-    let origin;
-    if (this.isDebugOrTrace) {
-      try {
-        const stack = new Error().stack;
-        origin = stack.split('\n')[2].trim();
-      // eslint-disable-next-line no-empty
-      } catch (e) {}
-    }
-    this.writeToFile({ args: obj, origin, prefix: "[dir]" });
   }
 
   shouldLog(level) {
