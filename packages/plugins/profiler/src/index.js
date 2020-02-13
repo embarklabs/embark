@@ -1,7 +1,7 @@
 import { warnIfPackageNotDefinedLocally } from 'embark-utils';
 
 const asciiTable = require('ascii-table');
-const GasEstimator = require('./gasEstimator.js');
+import { GasEstimator, GAS_ERROR, EVENT_NO_GAS } from './gasEstimator';
 
 class Profiler {
   constructor(embark, _options) {
@@ -60,10 +60,19 @@ class Profiler {
 
       let table = new asciiTable(contractName);
       table.setHeading('Function', 'Payable', 'Mutability', 'Inputs', 'Outputs', 'Gas Estimates');
+      table.setAlign(5, asciiTable.RIGHT);
       profileObj.methods.forEach((method) => {
         table.addRow(method.name, method.payable, method.mutability, self.formatParams(method.inputs), self.formatParams(method.outputs), method.gasEstimates);
       });
-      return returnCb(null, table.toString());
+      const strTable = table.toString();
+      let result = [strTable];
+      if (strTable.includes(GAS_ERROR)) {
+        result.push(`${GAS_ERROR} indicates there was an error during gas estimation (see console for details).`);
+      }
+      if (strTable.includes(EVENT_NO_GAS)) {
+        result.push(`${EVENT_NO_GAS} indicates the method is an event, and therefore no gas was estimated.`);
+      }
+      return returnCb(null, result.join('\n'), false);
     });
   }
 
