@@ -50,7 +50,7 @@ export default class Console {
             const error = { name: "Console error", message: err, stack: err.stack };
             return cb(error);
           }
-          cb(null, util.inspect(result));
+          cb(null, typeof result !== "string" ? util.inspect(result) : result);
         });
       });
       this.ipc.on("console:executePartial", (cmd: string, cb: any) => {
@@ -93,18 +93,18 @@ export default class Console {
   private registerApi() {
     const plugin = this.plugins.createPlugin("consoleApi", {});
     plugin.registerAPICall("post", "/embark-api/command", (req: any, res: any) => {
-      this.executeCmd(req.body.command, (err: any, result: any) => {
+      this.executeCmd(req.body.command, (err: any, result: any, shouldEscapeHtml = true) => {
         if (err) {
           return res.send({ result: err.message || err });
         }
         let response = result;
         if (typeof result !== "string") {
           response = stringify(result, jsonFunctionReplacer, 2);
-        } else {
+        } else if (shouldEscapeHtml) {
           // Avoid HTML injection in the Cockpit
           response = escapeHtml(response);
         }
-        const jsonResponse = {result: response};
+        const jsonResponse = { result: response };
         if (res.headersSent) {
           return res.end(jsonResponse);
         }

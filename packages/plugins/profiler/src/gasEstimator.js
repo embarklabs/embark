@@ -2,12 +2,23 @@ const async = require('async');
 const ContractFuzzer = require('./fuzzer.js');
 const Web3 = require('web3');
 
-class GasEstimator {
+export const GAS_ERROR = '   -ERROR-   ';
+export const EVENT_NO_GAS = '   -EVENT-   ';
+
+export class GasEstimator {
   constructor(embark) {
     this.embark = embark;
     this.logger = embark.logger;
     this.events = embark.events;
     this.fuzzer = new ContractFuzzer(embark);
+  }
+
+  printError(message, name, values = []) {
+    this.logger.error(`Error getting gas estimate for "${name}(${Object.values(values).join(",")})"`, message);
+    if (message.includes('always failing transaction')) {
+      this.logger.error(`This may mean function assertions (revert, assert, require) are preventing the estimate from completing. Gas will be listed as "${GAS_ERROR}" in the profile.`);
+    }
+    this.logger.error(''); // new line to separate likely many lines
   }
 
   estimateGas(contractName, cb) {
@@ -19,12 +30,15 @@ class GasEstimator {
         if (err) return cb(err);
         let fuzzMap = self.fuzzer.generateFuzz(3, contract);
         let contractObj = new web3.eth.Contract(contract.abiDefinition, contract.deployedAddress);
-        async.each(contract.abiDefinition.filter((x) => x.type !== "event"),
+        async.each(contract.abiDefinition,
           (abiMethod, gasCb) => {
             let name = abiMethod.name;
             if (abiMethod.type === "constructor") {
               // already provided for us
               gasMap['constructor'] = parseFloat(contract.gasEstimates.creation.totalCost.toString());
+              return gasCb(null, name, abiMethod.type);
+            } else if (abiMethod.type === "event") {
+              gasMap[name] = EVENT_NO_GAS;
               return gasCb(null, name, abiMethod.type);
             } else if (abiMethod.type === "fallback") {
               gasMap['fallback'] = parseFloat(contract.gasEstimates.external[""].toString());
@@ -35,9 +49,9 @@ class GasEstimator {
               // just run it and register it
               contractObj.methods[name]
               .apply(contractObj.methods[name], [])
-              .estimateGas((err, gasAmount) => {
+                .estimateGas({ from: web3.eth.defaultAccount }, (err, gasAmount) => {
                 if (err) {
-                  self.logger.error(`Error getting gas estimate for "${name}"`, err.message || err);
+                  self.printError(err.message || err, name);
                   return gasCb(null, name, abiMethod.type);
                 }
                 gasMap[name] = gasAmount;
@@ -49,13 +63,13 @@ class GasEstimator {
                 contractObj.methods[name].apply(contractObj.methods[name], values)
                   .estimateGas((err, gasAmount) => {
                     if (err) {
-                      self.logger.error(`Error getting gas estimate for "${name}"`, err.message || err);
+                      self.printError(err.message || err, name, values);
                     }
                     getVarianceCb(null, gasAmount);
                   });
                 }, (err, variance) => {
                   if (variance.every(v => v === variance[0])) {
-                    gasMap[name] = variance[0];
+                    gasMap[name] = variance[0] ?? GAS_ERROR;
                   } else {
                     // get average
                     let sum = variance.reduce(function(memo, num) { return memo + num; });
@@ -77,5 +91,3 @@ class GasEstimator {
     });
   }
 }
-
-module.exports = GasEstimator;
