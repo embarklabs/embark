@@ -4,7 +4,7 @@ import { BlockchainProcessLauncher } from './blockchainProcessLauncher';
 import { BlockchainClient } from './blockchain';
 import { ws, rpcWithEndpoint } from './check.js';
 import DevTxs from "./devtxs";
-const constants = require('embark-core/constants');
+import constants from 'embark-core/constants';
 
 class Geth {
   constructor(embark) {
@@ -66,8 +66,8 @@ class Geth {
           if (err) {
             this.logger.error(`Error launching blockchain process: ${err.message || err}`);
           }
-          this.setupDevTxs();
           readyCb();
+          this.setupDevTxs();
         });
         this.registerServiceCheck();
       },
@@ -112,7 +112,6 @@ class Geth {
     rpcWithEndpoint(this.blockchainConfig.endpoint, (err, version) => this._getNodeState(err, version, cb));
   }
 
-  // TODO: need to get correct port taking into account the proxy
   registerServiceCheck() {
     this.events.request("services:register", 'Ethereum', (cb) => {
       this._doCheck(cb);

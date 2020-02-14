@@ -18,7 +18,6 @@ export default class ProxyManager {
   private wsPort = 0;
   private ready = false;
   private isWs = false;
-  private isVm = false;
   private _endpoint: string = "";
   private inited: boolean = false;
 
@@ -29,6 +28,15 @@ export default class ProxyManager {
 
     this.host = "localhost";
 
+    if (!this.embark.config.blockchainConfig.proxy) {
+      this.logger.warn(__("The proxy has been disabled -- some Embark features will not work."));
+      this.logger.warn(__("Configured wallet accounts will be ignored and cannot be used in the DApp, and transactions will not be logged."));
+    }
+
+    this.setupEvents();
+  }
+
+  setupEvents() {
     this.events.on("blockchain:started", async (clientName: string) => {
       try {
         await this.setupProxy(clientName);
@@ -40,18 +48,13 @@ export default class ProxyManager {
         this.logger.debug(`Error during proxy setup:\n${error.stack}`);
       }
     });
+
     this.events.on("blockchain:stopped", async (clientName: string, node?: string) => {
       this.ready = false;
       await this.stopProxy();
     });
 
-    if (!this.embark.config.blockchainConfig.proxy) {
-      this.logger.warn(__("The proxy has been disabled -- some Embark features will not work."));
-      this.logger.warn(__("Configured wallet accounts will be ignored and cannot be used in the DApp, and transactions will not be logged."));
-    }
-
     this.events.setCommandHandler("proxy:endpoint:get", async (cb) => {
-      await this.onReady();
       cb(null, (await this.endpoint));
     });
   }
@@ -65,6 +68,7 @@ export default class ProxyManager {
         this._endpoint = this.embark.config.blockchainConfig.endpoint;
         return this._endpoint;
       }
+      await this.onReady();
       await this.init();
       // TODO Check if the proxy can support HTTPS, though it probably doesn't matter since it's local
       if (this.isWs) {
@@ -109,9 +113,8 @@ export default class ProxyManager {
     this.rpcPort = rpcPort;
     this.wsPort = wsPort;
 
-    // setup proxy details
-    this.isVm = this.embark.config.blockchainConfig.client === constants.blockchain.vm;
-    this.isWs = this.isVm || (/wss?/).test(this.embark.config.blockchainConfig.endpoint);
+    // setup proxy details - default to WS if no endpoint
+    this.isWs = this.embark.config.blockchainConfig.endpoint ? (/wss?/).test(this.embark.config.blockchainConfig.endpoint) : true;
   }
 
   private async setupProxy(clientName: string) {
@@ -126,35 +129,30 @@ export default class ProxyManager {
     const endpoint = this.embark.config.blockchainConfig.endpoint;
 
     // HTTP
-    if (!this.isVm) {
-      this.httpProxy = await new Proxy({
-        endpoint,
-        events: this.events,
-        isWs: false,
-        logger: this.logger,
-        plugins: this.plugins,
-        isVm: this.isVm,
-      })
-        .serve(
-          this.host,
-          this.rpcPort,
-        );
-      this.logger.info(`HTTP Proxy for node endpoint ${endpoint} listening on ${buildUrl("http", this.host, this.rpcPort, "rpc")}`);
-    }
+    this.httpProxy = await new Proxy({
+      endpoint,
+      events: this.events,
+      isWs: false,
+      logger: this.logger,
+      plugins: this.plugins
+    })
+      .serve(
+        this.host,
+        this.rpcPort,
+      );
+    this.logger.info(`HTTP Proxy for node endpoint ${endpoint} listening on ${buildUrl("http", this.host, this.rpcPort, "rpc")}`);
     if (this.isWs) {
       this.wsProxy = await new Proxy({
-        endpoint,
         events: this.events,
         isWs: true,
         logger: this.logger,
-        plugins: this.plugins,
-        isVm: this.isVm,
+        plugins: this.plugins
       })
         .serve(
           this.host,
           this.wsPort,
         );
-      this.logger.info(`WS Proxy for node endpoint ${this.isVm ? 'vm' : endpoint} listening on ${buildUrl("ws", this.host, this.wsPort, "ws")}`);
+      this.logger.info(`WS Proxy for node endpoint ${endpoint} listening on ${buildUrl("ws", this.host, this.wsPort, "ws")}`);
     }
   }
   private stopProxy() {

@@ -4,27 +4,19 @@ import express from 'express';
 import expressWs from 'express-ws';
 import cors from 'cors';
 const Web3RequestManager = require('web3-core-requestmanager');
-const constants = require("embark-core/constants");
 
 const ACTION_TIMEOUT = 5000;
 
 export class Proxy {
   constructor(options) {
-    this.commList = {};
-    this.receipts = {};
     this.transactions = {};
-    this.timeouts = {};
     this.plugins = options.plugins;
     this.logger = options.logger;
     this.app = null;
-    this.endpoint = options.endpoint;
     this.events = options.events;
     this.isWs = options.isWs;
-    this.isVm = options.isVm;
     this.nodeSubscriptions = {};
     this._requestManager = null;
-
-    this.clientName = options.isVm ? constants.blockchain.vm : constants.blockchain.ethereum;
 
     this.events.setCommandHandler("proxy:websocket:subscribe", this.handleSubscribe.bind(this));
     this.events.setCommandHandler("proxy:websocket:unsubscribe", this.handleUnsubscribe.bind(this));
@@ -36,20 +28,15 @@ export class Proxy {
   get requestManager() {
     return (async () => {
       if (!this._requestManager) {
-        const provider = await this._createWebSocketProvider(this.endpoint);
+        const provider = await this._createWebSocketProvider();
         this._requestManager = this._createWeb3RequestManager(provider);
       }
       return this._requestManager;
     })();
   }
 
-  async _createWebSocketProvider(endpoint) {
-    // if we are using a VM (ie for tests), then try to get the VM provider
-    if (this.isVm) {
-      return this.events.request2("blockchain:client:vmProvider");
-    }
-    // pass in endpoint to ensure we get a provider with a connection to the node
-    return this.events.request2("blockchain:client:provider", this.clientName, endpoint);
+  async _createWebSocketProvider() {
+    return this.events.request2("blockchain:node:provider");
   }
 
   _createWeb3RequestManager(provider) {
@@ -59,9 +46,10 @@ export class Proxy {
   async nodeReady() {
     try {
       const reqMgr = await this.requestManager;
-      await reqMgr.send({ method: 'eth_accounts' });
+      // Using net_version instead of eth_accounts, because eth_accounts can fail if EIP1102 is not approved first
+      await reqMgr.send({ method: 'net_version' });
     } catch (e) {
-      throw new Error(__(`Unable to connect to the blockchain endpoint on ${this.endpoint}`));
+      throw new Error(__(`Unable to connect to the blockchain endpoint`));
     }
   }
 
@@ -137,8 +125,7 @@ export class Proxy {
     if (modifiedRequest.sendToNode !== false) {
 
       try {
-        const result = await this.forwardRequestToNode(modifiedRequest.request);
-        response.result = result;
+        response.result = await this.forwardRequestToNode(modifiedRequest.request);
       } catch (fwdReqErr) {
         // The node responded with an error. Set up the error so that it can be
         // stripped out by modifying the response (via actions for blockchain:proxy:response)
@@ -181,16 +168,7 @@ export class Proxy {
 
   async handleSubscribe(clientSocket, request, response, cb) {
     let currentReqManager = await this.requestManager;
-    if (!this.isVm) {
-      const provider = await this._createWebSocketProvider(this.endpoint);
-      // creates a new long-living connection to the node
-      currentReqManager = this._createWeb3RequestManager(provider);
-
-      // kill WS connetion to the node when the client connection closes
-      clientSocket.on('close', () => currentReqManager.provider.disconnect());
-    }
-
-
+    
     // do the actual forward request to the node
     currentReqManager.send(request, (error, subscriptionId) => {
       if (error) {
@@ -203,14 +181,10 @@ export class Proxy {
       this.logger.debug(`Created subscription: ${subscriptionId} for ${JSON.stringify(request.params)}`);
       this.logger.debug(`Subscription request: ${JSON.stringify(request)} `);
 
-      // add the websocket req manager for this subscription to memory so it
-      // can be referenced later
-      this.nodeSubscriptions[subscriptionId] = currentReqManager;
-
       // Watch for `eth_subscribe` subscription data coming from the node.
       // Send the subscription data back across the originating client
       // connection.
-      currentReqManager.provider.on('data', async (subscriptionResponse, deprecatedResponse) => {
+      const onWsData = async (subscriptionResponse, deprecatedResponse) => {
         subscriptionResponse = subscriptionResponse || deprecatedResponse;
 
         // filter out any subscription data that is not meant to be passed back to the client
@@ -227,7 +201,12 @@ export class Proxy {
         // allow modification of the node subscription data sent to the client
         subscriptionResponse = await this.emitActionsForResponse(subscriptionResponse, subscriptionResponse, clientSocket);
         this.respondWs(clientSocket, subscriptionResponse.response);
-      });
+      };
+
+      // when the node sends subscription message, we can forward that to originating socket
+      currentReqManager.provider.on('data', onWsData);
+      // kill WS connetion to the node when the client connection closes
+      clientSocket.on('close', () => currentReqManager.provider.removeListener('data', onWsData));
 
       // send a response to the original requesting inbound client socket
       // (ie the browser or embark) with the result of the subscription
@@ -236,17 +215,12 @@ export class Proxy {
       cb(null, response);
     });
 
-    
+
   }
 
   async handleUnsubscribe(request, response, cb) {
-    // kill our manually created long-living connection for eth_subscribe if we have one
-    const subscriptionId = request.params[0];
-    const currentReqManager = this.nodeSubscriptions[subscriptionId];
+    const currentReqManager = await this.requestManager;
 
-    if (!currentReqManager) {
-      return this.logger.error(`Failed to unsubscribe from subscription '${subscriptionId}' because the proxy failed to find an active connection to the node.`);
-    }
     // forward unsubscription request to the node
     currentReqManager.send(request, (error, result) => {
       if (error) {
@@ -256,14 +230,6 @@ export class Proxy {
       this.logger.debug(`Unsubscription result for subscription '${JSON.stringify(request.params)}': ${result} `);
       this.logger.debug(`Unsubscription request: ${JSON.stringify(request)} `);
 
-
-      // if unsubscribe succeeded, disconnect connection and remove connection from memory
-      if (result === true) {
-        if (currentReqManager.provider && currentReqManager.provider.disconnect && !this.isVm) {
-          currentReqManager.provider.disconnect();
-        }
-        delete this.nodeSubscriptions[subscriptionId];
-      }
       // result should be true/false
       response.result = result;
 
@@ -323,7 +289,6 @@ export class Proxy {
             this.logger.error(__('Error parsing the request in the proxy'));
             this.logger.error(err);
             // Reset the data to the original request so that it can be used anyway
-            result = data;
             calledBack = true;
             return reject(err);
           }
@@ -360,7 +325,6 @@ export class Proxy {
             this.logger.error(err);
             calledBack = true;
             // Reset the data to the original response so that it can be used anyway
-            result = data;
             return reject(err);
           }
           calledBack = true;
@@ -376,9 +340,6 @@ export class Proxy {
     this.server.close();
     this.server = null;
     this.app = null;
-    this.commList = {};
-    this.receipts = {};
     this.transactions = {};
-    this.timeouts = {};
   }
 }

@@ -246,7 +246,6 @@ export class Engine {
 
   blockchainStackComponents() {
     this.registerModulePackage('embark-blockchain', { plugins: this.plugins, ipc: this.ipc });
-    this.registerModulePackage('embark-blockchain-client');
     this.registerModulePackage('embark-process-logs-api-manager');
   }
 
@@ -259,7 +258,6 @@ export class Engine {
     this.registerModulePackage('embark-compiler', { plugins: this.plugins, isCoverage: options.isCoverage });
     this.registerModulePackage('embark-contracts-manager', { plugins: this.plugins, compileOnceOnly: options.compileOnceOnly });
     this.registerModulePackage('embark-deployment', { plugins: this.plugins, onlyCompile: options.onlyCompile });
-    this.registerModulePackage('embark-blockchain-client');
     this.registerModulePackage('embark-storage');
     this.registerModulePackage('embark-communication');
     this.registerModulePackage('embark-namesystem');
@@ -269,6 +267,7 @@ export class Engine {
 
   blockchainComponents() {
     // plugins
+    this.registerModulePackage('embark-ganache');
     this.registerModulePackage('embark-geth');
     this.registerModulePackage('embark-parity');
   }
@@ -287,7 +286,6 @@ export class Engine {
   }
 
   contractsComponents(_options) {
-    this.registerModulePackage('embark-ganache');
     this.registerModulePackage('embark-ethereum-blockchain-client');
     this.registerModulePackage('embark-web3');
     this.registerModulePackage('embark-accounts-manager');

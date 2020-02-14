@@ -17,7 +17,7 @@ describe('embark.Config', function () {
       config.loadBlockchainConfigFile();
       let expectedConfig = {
         "enabled": true,
-        "client": "geth",
+        "client": "ganache-cli",
         "proxy": true,
         "clientConfig": {
           "miningMode": "dev"
@@ -54,7 +54,7 @@ describe('embark.Config', function () {
     it('should convert Ether units', function () {
       let expectedConfig = {
         "enabled": true,
-        "client": "geth",
+        "client": "ganache-cli",
         "proxy": true,
         "clientConfig": {
           "miningMode": "dev"
@@ -107,7 +107,7 @@ describe('embark.Config', function () {
     it('should accept unitless gas values', function () {
       let expectedConfig = {
         "enabled": true,
-        "client": "geth",
+        "client": "ganache-cli",
         "proxy": true,
         "clientConfig": {
           "miningMode": "dev"
@@ -160,7 +160,7 @@ describe('embark.Config', function () {
     it('should use the specified endpoint', () => {
       let expectedConfig = {
         "enabled": true,
-        "client": "geth",
+        "client": "ganache-cli",
         "proxy": true,
         "clientConfig": {
           "miningMode": "dev"

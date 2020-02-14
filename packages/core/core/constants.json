@@ -40,8 +40,10 @@
     "call": "eth_call",
     "clients": {
       "geth": "geth",
-      "parity": "parity"
+      "parity": "parity",
+      "ganache": "ganache-cli"
     },
+    "defaultMnemonic": "example exile argue silk regular smile grass bomb merge arm assist farm",
     "blockchainReady": "blockchainReady",
     "blockchainExit": "blockchainExit",
     "defaults": {

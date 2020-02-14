@@ -12,6 +12,7 @@ config({
       {
         "mnemonic": "example exile argue silk regular smile grass bomb merge arm assist farm",
         balance: "5ether",
+        hdpath: "m/44'/1'/0'/0/",
         numAddresses: 10
       }
     ]
@@ -49,7 +50,6 @@ contract("AnotherStorage", function() {
 
     for (let i = 1; i < numAddresses - 3; i++) {
       balance = await web3.eth.getBalance(accounts[i]);
-      console.log('Account', i , balance);
       assert.strictEqual(parseInt(balance, 10), 5000000000000000000, `Account ${i} doesn't have the balance set`);
     }
   });

@@ -51,7 +51,6 @@
     "embark-authenticator": "^5.2.0-nightly.3",
     "embark-basic-pipeline": "^5.2.0-nightly.3",
     "embark-blockchain": "^5.2.0-nightly.3",
-    "embark-blockchain-client": "^5.1.1",
     "embark-code-runner": "^5.2.0-nightly.3",
     "embark-communication": "^5.2.0-nightly.3",
     "embark-compiler": "^5.2.0-nightly.3",
