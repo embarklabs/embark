@@ -45,13 +45,7 @@ export default class Blockchain {
       if (!provider) {
         // Set default provider function
         clientFunctions.provider = async () => {
-          if (this.blockchainConfig.endpoint.startsWith('ws')) {
-            return new Web3.providers.WebsocketProvider(this.blockchainConfig.endpoint, {
-              headers: { Origin: constants.embarkResourceOrigin }
-            });
-          }
-          const web3 = new Web3(this.blockchainConfig.endpoint);
-          return web3.currentProvider;
+          return this.getProviderFromTemplate(this.blockchainConfig.endpoint);
         };
       }
 
@@ -137,6 +131,10 @@ export default class Blockchain {
       }
     });
 
+    this.events.setCommandHandler('blockchain:node:provider:template', (cb) => {
+      cb(null, this.getProviderFromTemplate(this.blockchainConfig.endpoint));
+    });
+
     this.events.setCommandHandler("blockchain:client:register", (clientName, getProviderFunction) => {
       this.blockchainClients[clientName] = getProviderFunction;
     });
@@ -162,6 +160,16 @@ export default class Blockchain {
     if (this.blockchainConfig.enabled && this.blockchainConfig.client === "parity") {
       warnIfPackageNotDefinedLocally("embark-parity", this.embark.logger.warn.bind(this.embark.logger));
     }
+  }
+
+  getProviderFromTemplate(endpoint) {
+    if (endpoint.startsWith('ws')) {
+      return new Web3.providers.WebsocketProvider(endpoint, {
+        headers: { Origin: constants.embarkResourceOrigin }
+      });
+    }
+    const web3 = new Web3(endpoint);
+    return web3.currentProvider;
   }
 
   addArtifactFile(_params, cb) {

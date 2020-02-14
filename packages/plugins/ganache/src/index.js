@@ -1,4 +1,5 @@
 import {__} from 'embark-i18n';
+const {testRpcWithEndpoint, testWsEndpoint} = require('embark-utils');
 const constants = require('embark-core/constants');
 
 class Ganache {
@@ -8,7 +9,12 @@ class Ganache {
 
     this.embark.events.request("blockchain:node:register", constants.blockchain.clients.ganache, {
       isStartedFn: (cb) => {
-        cb(null, !!this.currentProvider); // Always assume it's started, because it's just a provider (nothing to start)
+        if (this.currentProvider) {
+          return cb(null, true);
+        }
+        this._doCheck((err, started) => {
+          cb(err,started);
+        });
       },
       launchFn: (cb) => {
         this._getProvider(); // No need to return anything, we just want to populate currentProvider
@@ -19,8 +25,18 @@ class Ganache {
         this.currentProvider = null;
         cb();
       },
-      provider: async (_endpoint) => {
-        return this._getProvider();
+      provider: (_endpoint) => {
+        if (this.currentProvider) {
+          return this.currentProvider;
+        }
+        return new Promise(resolve => {
+          this._doCheck(async (_err, started) => {
+            if (_err || !started) {
+              return resolve(this._getProvider());
+            }
+            resolve(await this.embark.events.request2('blockchain:node:provider:template'));
+          });
+        });
       }
     });
 
@@ -76,6 +92,17 @@ class Ganache {
           cb({name: `Ganache - ${versionParts[1] || ''}`, status: 'on'});
         });
     });
+  }
+
+  _doCheck(cb) {
+    const endpoint = this.embark.config.blockchainConfig.endpoint;
+    if (!endpoint) {
+      return cb(null, false);
+    }
+    if (endpoint.startsWith('ws')) {
+      return testWsEndpoint(endpoint, (err) => cb(null, !err));
+    }
+    testRpcWithEndpoint(endpoint, (err) => cb(null, !err));
   }
 }
 
