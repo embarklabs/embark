@@ -48,6 +48,7 @@
     "core-js": "3.4.3",
     "embark-core": "^5.2.0-nightly.4",
     "embark-i18n": "^5.1.1",
+    "embark-utils": "^5.2.0-nightly.3",
     "ganache-cli": "6.8.2"
   },
   "devDependencies": {
