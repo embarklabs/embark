@@ -26,7 +26,7 @@ export function getBlockchainDefaults(env) {
       miningMode: 'dev' // Mode in which the node mines. Options: dev, auto, always, off
     },
     enabled: true,
-    client: constants.blockchain.clients.geth,
+    client: constants.blockchain.clients.ganache,
     proxy: true,
     datadir: `.embark/${env}/datadir`,
     rpcHost: "localhost",

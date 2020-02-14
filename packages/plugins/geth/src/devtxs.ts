@@ -22,7 +22,7 @@ export default class DevTxs {
     if (!this.shouldStartDevTxs()) {
       return;
     }
-    const provider = await this.events.request2("blockchain:client:provider", "ethereum", this.blockchainConfig.endpoint);
+    const provider = await this.events.request2("blockchain:node:provider", "ethereum");
     this.web3 = new Web3(provider);
 
     const accounts = await this.web3.eth.getAccounts();

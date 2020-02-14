@@ -8,5 +8,13 @@
   "extends": "../../../tsconfig.base.json",
   "include": [
     "src/**/*"
+  ],
+  "references": [
+    {
+      "path": "../../core/core"
+    },
+    {
+      "path": "../../core/i18n"
+    }
   ]
 }

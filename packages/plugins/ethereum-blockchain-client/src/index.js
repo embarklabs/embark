@@ -6,7 +6,7 @@ const embarkJsUtils = require('embarkjs').Utils;
 import checkContractSize from "./checkContractSize";
 const {ZERO_ADDRESS} = AddressUtils;
 import EthereumAPI from "./api";
-
+import constants from "embark-core/constants";
 
 class EthereumBlockchainClient {
 
@@ -24,7 +24,7 @@ class EthereumBlockchainClient {
     this.embark.registerActionForEvent('deployment:contract:beforeDeploy', this.doLinking.bind(this));
     this.embark.registerActionForEvent('deployment:contract:beforeDeploy', checkContractSize.bind(this));
     this.embark.registerActionForEvent('deployment:contract:beforeDeploy', this.determineAccounts.bind(this));
-    this.events.request("blockchain:client:register", "ethereum", this.getClient.bind(this));
+    this.events.request("blockchain:client:register", "ethereum", this.getEthereumClient.bind(this));
     this.events.request("deployment:deployer:register", "ethereum", this.deployer.bind(this));
 
     this.events.on("blockchain:started", () => {
@@ -50,8 +50,14 @@ class EthereumBlockchainClient {
     ethereumApi.registerAPIs();
   }
 
-  getClient() {
-    return {};
+  getEthereumClient(endpoint) {
+    if (endpoint.startsWith('ws')) {
+      return new Web3.providers.WebsocketProvider(endpoint, {
+        headers: { Origin: constants.embarkResourceOrigin }
+      });
+    }
+    const web3 = new Web3(endpoint);
+    return web3.currentProvider;
   }
 
   async deployer(contract, done) {

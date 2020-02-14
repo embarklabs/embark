@@ -1,9 +1,10 @@
 import async from 'async';
 import { warnIfPackageNotDefinedLocally } from 'embark-utils';
 const { __ } = require('embark-i18n');
-const constants = require('embark-core/constants');
 
 import BlockchainAPI from "./api";
+import Web3 from "web3";
+import constants from "embark-core/constants";
 export default class Blockchain {
 
   constructor(embark, options) {
@@ -16,6 +17,7 @@ export default class Blockchain {
     this.blockchainApi = new BlockchainAPI(embark);
     this.startedClient = null;
     this.plugins = options.plugins;
+    this.blockchainClients = {};
 
     this.registerConsoleCommands();
 
@@ -28,7 +30,8 @@ export default class Blockchain {
     }
 
     this.blockchainNodes = {};
-    this.events.setCommandHandler("blockchain:node:register", (clientName, { isStartedFn, launchFn, stopFn }) => {
+    this.events.setCommandHandler("blockchain:node:register", (clientName, clientFunctions) => {
+      const {isStartedFn, launchFn, stopFn, provider} = clientFunctions;
 
       if (!isStartedFn) {
         throw new Error(`Blockchain client '${clientName}' must be registered with an 'isStarted' function, client not registered.`);
@@ -39,8 +42,20 @@ export default class Blockchain {
       if (!stopFn) {
         throw new Error(`Blockchain client '${clientName}' must be registered with a 'stopFn' function, client not registered.`);
       }
+      if (!provider) {
+        // Set default provider function
+        clientFunctions.provider = async () => {
+          if (this.blockchainConfig.endpoint.startsWith('ws')) {
+            return new Web3.providers.WebsocketProvider(this.blockchainConfig.endpoint, {
+              headers: { Origin: constants.embarkResourceOrigin }
+            });
+          }
+          const web3 = new Web3(this.blockchainConfig.endpoint);
+          return web3.currentProvider;
+        };
+      }
 
-      this.blockchainNodes[clientName] = { isStartedFn, launchFn, stopFn };
+      this.blockchainNodes[clientName] = clientFunctions;
     });
 
     this.events.setCommandHandler("blockchain:node:start", (blockchainConfig, cb) => {
@@ -53,10 +68,6 @@ export default class Blockchain {
         this.startedClient = clientName;
         this.events.emit("blockchain:started", clientName);
       };
-      if (clientName === constants.blockchain.vm) {
-        started();
-        return cb();
-      }
 
       const client = this.blockchainNodes[clientName];
 
@@ -80,24 +91,20 @@ export default class Blockchain {
       });
     });
 
+    const noStartedClientMsg = __('No blockchain client is currently started');
+    const noClientFoundMsgFunction = (clientName) => __("Client %s not found in registered plugins", clientName);
     this.events.setCommandHandler("blockchain:node:stop", (clientName, cb) => {
       if (typeof clientName === 'function') {
         cb = clientName;
         clientName = this.startedClient;
         if (!this.startedClient) {
-          return cb(__('No blockchain client is currently started'));
+          return cb(noStartedClientMsg);
         }
-      }
-
-      if (clientName === constants.blockchain.vm) {
-        this.startedClient = null;
-        this.events.emit("blockchain:stopped", clientName);
-        return cb();
       }
 
       const clientFunctions = this.blockchainNodes[clientName];
       if (!clientFunctions) {
-        return cb(__("Client %s not found in registered plugins", clientName));
+        return cb(noClientFoundMsgFunction(clientName));
       }
 
       clientFunctions.stopFn.apply(clientFunctions, [
@@ -107,6 +114,44 @@ export default class Blockchain {
         }
       ]);
       this.startedClient = null;
+    });
+    // Returns the provider of the node, hence having a connection directly with the node
+    this.events.setCommandHandler('blockchain:node:provider', async (clientName, cb) => {
+      if (typeof clientName === 'function') {
+        cb = clientName;
+        clientName = this.startedClient;
+        if (!this.startedClient) {
+          return cb(noStartedClientMsg);
+        }
+      }
+      const clientFunctions = this.blockchainNodes[this.startedClient];
+      if (!clientFunctions) {
+        return cb(__(noClientFoundMsgFunction(clientName)));
+      }
+
+      try {
+        const provider = await clientFunctions.provider.apply(clientFunctions);
+        cb(null, provider);
+      } catch (e) {
+        cb(e);
+      }
+    });
+
+    this.events.setCommandHandler("blockchain:client:register", (clientName, getProviderFunction) => {
+      this.blockchainClients[clientName] = getProviderFunction;
+    });
+
+    this.events.setCommandHandler("blockchain:client:provider", async (clientName, cb) => {
+      try {
+        if (!this.blockchainClients[clientName]) {
+          throw new Error(__('No registered client of the name %s.\nRegister one using the `blockchain:client:register` request', clientName));
+        }
+        const endpoint = await this.events.request2('proxy:endpoint:get');
+        const provider = this.blockchainClients[clientName](endpoint);
+        cb(null, provider);
+      } catch (err) {
+        return cb(`Error getting provider: ${err.message || err}`);
+      }
     });
     this.blockchainApi.registerAPIs("ethereum");
     this.blockchainApi.registerRequests("ethereum");

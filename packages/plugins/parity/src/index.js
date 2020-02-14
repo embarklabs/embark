@@ -3,7 +3,7 @@ import {BlockchainClient} from "./blockchain";
 const {normalizeInput} = require('embark-utils');
 import {BlockchainProcessLauncher} from './blockchainProcessLauncher';
 import {ws, rpcWithEndpoint} from './check.js';
-const constants = require('embark-core/constants');
+import constants from 'embark-core/constants';
 
 class Parity {
 

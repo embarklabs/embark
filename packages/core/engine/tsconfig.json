@@ -95,9 +95,6 @@
       "path": "../../stack/blockchain"
     },
     {
-      "path": "../../stack/blockchain-client"
-    },
-    {
       "path": "../../stack/communication"
     },
     {

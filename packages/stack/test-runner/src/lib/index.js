@@ -298,7 +298,7 @@ class TestRunner {
     let node = options.node;
     if (!this.simOptions.host && (node && node === constants.blockchain.vm)) {
       this.simOptions.type = constants.blockchain.vm;
-      this.simOptions.client = constants.blockchain.vm;
+      this.simOptions.client = constants.blockchain.clients.ganache;
     } else if (this.simOptions.host || (node && node !== constants.blockchain.vm && node !== EMBARK_OPTION)) {
       let options = this.simOptions;
       if (node && node !== constants.blockchain.vm) {

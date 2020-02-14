@@ -155,9 +155,6 @@
       "path": "packages/stack/blockchain"
     },
     {
-      "path": "packages/stack/blockchain-client"
-    },
-    {
       "path": "packages/stack/communication"
     },
     {

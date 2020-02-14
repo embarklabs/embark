@@ -4,10 +4,11 @@ module.exports = {
   // default applies to all environments
   default: {
     enabled: true,
-    client: "geth" // Can be geth or parity (default:geth)
+    client: "geth" // Can be ganache-cli, geth or parity (default: geth)
   },
 
   development: {
+    client: 'ganache-cli',
     clientConfig: {
       miningMode: 'dev' // Mode in which the node mines. Options: dev, auto, always, off
     }
