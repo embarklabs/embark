@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0-nightly.3](https://github.com/embarklabs/embark/compare/v5.2.0-nightly.2...v5.2.0-nightly.3) (2020-02-14)
+
+
+### Features
+
+* warn about packages not configured as plugins; make geth/parity full plugins ([d14e93c](https://github.com/embarklabs/embark/commit/d14e93c))
+
+
+
+
+
 ## [5.1.1](https://github.com/embarklabs/embark/compare/v5.1.1-nightly.4...v5.1.1) (2020-02-03)
 
 **Note:** Version bump only for package embark-graph

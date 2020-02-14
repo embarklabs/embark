@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0-nightly.3](https://github.com/embarklabs/embark/compare/v5.2.0-nightly.2...v5.2.0-nightly.3) (2020-02-14)
+
+
+### Bug Fixes
+
+* **@embark/logger:** Remove `writeToFile` for logger `dir` ([e9be40c](https://github.com/embarklabs/embark/commit/e9be40c))
+
+
+
+
+
 ## [5.1.2-nightly.0](https://github.com/embarklabs/embark/compare/v5.1.1...v5.1.2-nightly.0) (2020-02-05)
 
 **Note:** Version bump only for package embark-logger

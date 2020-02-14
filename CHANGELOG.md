@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0-nightly.3](https://github.com/embarklabs/embark/compare/v5.2.0-nightly.2...v5.2.0-nightly.3) (2020-02-14)
+
+
+### Bug Fixes
+
+* **@embark/deployment:** fix undefined in nb arguments in deploy ([0016581](https://github.com/embarklabs/embark/commit/0016581))
+* **@embark/logger:** Remove `writeToFile` for logger `dir` ([e9be40c](https://github.com/embarklabs/embark/commit/e9be40c))
+* **stack/contracts-manager:** ensure custom `abiDefinition` is set properly if provided ([b4b4848](https://github.com/embarklabs/embark/commit/b4b4848))
+
+
+### Features
+
+* warn about packages not configured as plugins; make geth/parity full plugins ([d14e93c](https://github.com/embarklabs/embark/commit/d14e93c))
+
+
+
+
+
 # [5.2.0-nightly.2](https://github.com/embarklabs/embark/compare/v5.2.0-nightly.1...v5.2.0-nightly.2) (2020-02-13)
 
 

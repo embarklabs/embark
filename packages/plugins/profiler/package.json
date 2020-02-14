@@ -1,6 +1,6 @@
 {
   "name": "embark-profiler",
-  "version": "5.1.1",
+  "version": "5.2.0-nightly.3",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Smart contract profiler for Embark DApps",
@@ -48,7 +48,7 @@
     "ascii-table": "0.0.9",
     "async": "2.6.1",
     "core-js": "3.4.3",
-    "embark-utils": "^5.2.0-nightly.1",
+    "embark-utils": "^5.2.0-nightly.3",
     "web3": "1.2.6",
     "web3-utils": "1.2.6"
   },
