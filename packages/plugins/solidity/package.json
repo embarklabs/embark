@@ -1,6 +1,6 @@
 {
   "name": "embark-solidity",
-  "version": "5.2.0-nightly.3",
+  "version": "5.2.0-nightly.4",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Solidity Compiler APIs for Embark",
@@ -47,7 +47,7 @@
     "@babel/runtime-corejs3": "7.7.4",
     "async": "2.6.1",
     "core-js": "3.4.3",
-    "embark-core": "^5.2.0-nightly.3",
+    "embark-core": "^5.2.0-nightly.4",
     "embark-i18n": "^5.1.1",
     "embark-utils": "^5.2.0-nightly.3",
     "find-up": "4.1.0",

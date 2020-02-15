@@ -1,6 +1,6 @@
 {
   "name": "embark-geth",
-  "version": "5.2.0-nightly.3",
+  "version": "5.2.0-nightly.4",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Implementation of the Go-Ethereum blockchain for Embark",
@@ -49,7 +49,7 @@
     "@babel/runtime-corejs3": "7.7.4",
     "async": "2.6.1",
     "core-js": "3.4.3",
-    "embark-core": "^5.2.0-nightly.3",
+    "embark-core": "^5.2.0-nightly.4",
     "embark-i18n": "^5.1.1",
     "embark-logger": "^5.2.0-nightly.3",
     "embark-utils": "^5.2.0-nightly.3",

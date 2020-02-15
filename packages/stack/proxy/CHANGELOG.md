@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0-nightly.4](https://github.com/embarklabs/embark/compare/v5.2.0-nightly.3...v5.2.0-nightly.4) (2020-02-15)
+
+
+### Features
+
+* **@embark/blockchain:** make GanacheCLI the default dev blockchain ([cd934f8](https://github.com/embarklabs/embark/commit/cd934f8))
+
+
+
+
+
 # [5.2.0-nightly.3](https://github.com/embarklabs/embark/compare/v5.2.0-nightly.2...v5.2.0-nightly.3) (2020-02-14)
 
 **Note:** Version bump only for package embark-proxy
