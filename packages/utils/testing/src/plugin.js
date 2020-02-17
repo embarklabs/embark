@@ -142,7 +142,7 @@ class PluginsMock {
     this.plugins = plugins;
   }
 
-  apiCall(method, endpoint, params) {
+  async apiCall(method, endpoint, params) {
     const index = (method + endpoint).toLowerCase();
     const apiFn = this.plugins.plugin.apiCalls[index];
     assert(apiFn, `API call for '${method} ${endpoint}' wanted, but not registered`);
@@ -163,6 +163,7 @@ class PluginsMock {
     };
 
     resp.status = sinon.fake.returns(resp);
+    await apiFn(req, resp);
     return resp;
   }
 }
