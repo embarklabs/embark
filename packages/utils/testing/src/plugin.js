@@ -147,21 +147,22 @@ class PluginsMock {
     const apiFn = this.plugins.plugin.apiCalls[index];
     assert(apiFn, `API call for '${method} ${endpoint}' wanted, but not registered`);
 
-    let req;
+    let req = {};
     if (["GET", "DELETE"].includes(method.toUpperCase())) {
-      req = {
-        query: params
-      };
+      if (params && params.params) {
+        req.params = params.params;
+      }
+      req.query = params;
     } else {
       req = {
         body: params
       };
     }
     const resp = {
-      send: sinon.spy(),
-      status: sinon.spy()
+      send: sinon.spy()
     };
-    apiFn(req, resp);
+
+    resp.status = sinon.fake.returns(resp);
     return resp;
   }
 }
