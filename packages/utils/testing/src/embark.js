@@ -14,7 +14,8 @@ class Embark {
       debug: sinon.fake(),
       info: sinon.fake(),
       warn: sinon.fake(),
-      error: sinon.fake()
+      error: sinon.fake(),
+      trace: sinon.fake()
     };
   }
 
