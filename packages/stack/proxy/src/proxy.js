@@ -40,7 +40,11 @@ export class Proxy {
   }
 
   _createWeb3RequestManager(provider) {
-    return new Web3RequestManager.Manager(provider);
+    const manager =  new Web3RequestManager.Manager(provider);
+    // Up max listener because the default 10 limit is too low for all the events the proxy handles
+    // Warning mostly appeared in tests
+    manager.provider.setMaxListeners(100);
+    return manager;
   }
 
   async nodeReady() {
@@ -69,6 +73,9 @@ export class Proxy {
     if (this.isWs) {
       this.app.ws('/', async (conn, wsReq) => {
 
+        // Up max listener because the default 10 limit is too low for all the events the proxy handles
+        // Warning mostly appeared in tests
+        conn.setMaxListeners(100);
         conn.on('message', async (msg) => {
           try {
             const jsonMsg = JSON.parse(msg);
@@ -168,7 +175,7 @@ export class Proxy {
 
   async handleSubscribe(clientSocket, request, response, cb) {
     let currentReqManager = await this.requestManager;
-    
+
     // do the actual forward request to the node
     currentReqManager.send(request, (error, subscriptionId) => {
       if (error) {
@@ -205,7 +212,7 @@ export class Proxy {
 
       // when the node sends subscription message, we can forward that to originating socket
       currentReqManager.provider.on('data', onWsData);
-      // kill WS connetion to the node when the client connection closes
+      // kill WS connection to the node when the client connection closes
       clientSocket.on('close', () => currentReqManager.provider.removeListener('data', onWsData));
 
       // send a response to the original requesting inbound client socket

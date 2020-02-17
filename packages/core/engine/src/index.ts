@@ -8,7 +8,6 @@ import {
 } from 'embark-core';
 import { normalizeInput } from 'embark-utils';
 import { Logger } from 'embark-logger';
-
 const EMBARK_PROCESS_NAME = 'embark';
 
 export class Engine {
@@ -198,7 +197,7 @@ export class Engine {
     });
   }
 
-  serviceMonitor(options) {
+  serviceMonitor(_options) {
     this.servicesMonitor = new ServicesMonitor({ events: this.events, logger: this.logger, plugins: this.plugins });
 
     if (this.servicesMonitor) {
@@ -216,8 +215,7 @@ export class Engine {
     }
   }
 
-  coreComponents(options) {
-
+  coreComponents(_options) {
     // TODO: should be made into a component
     this.processManager = new ProcessManager({
       events: this.events,
