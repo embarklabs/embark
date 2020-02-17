@@ -62,6 +62,10 @@ export default class ContractsManager {
     })();
   }
 
+  set web3(val) {
+    this._web3 = val;
+  }
+
   registerCommands() {
     const self = this;
 
