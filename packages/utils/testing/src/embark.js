@@ -20,7 +20,7 @@ class Embark {
   }
 
   registerAPICall(method, endpoint, callback) {
-    this.plugins.plugin.registerAPICall(method, endpoint, callback);
+    this.plugins.registerAPICall(method, endpoint, callback);
   }
 
   registerActionForEvent(name, cb) {

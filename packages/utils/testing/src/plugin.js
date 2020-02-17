@@ -32,6 +32,10 @@ class Plugins {
     this.plugin.registerActionForEvent(name, cb);
   }
 
+  registerAPICall(method, endpoint, callback) {
+    this.plugin.registerAPICall(method, endpoint, callback);
+  }
+
   registerConsoleCommand(options) {
     this.plugin.registerConsoleCommand(options);
   }
