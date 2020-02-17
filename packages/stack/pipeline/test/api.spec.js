@@ -77,15 +77,15 @@ describe('stack/pipeline/api', () => {
         test(`it should register ${method} ${endpoint}`, () => {
           pipelineApi.plugins.assert.apiCallRegistered(method, endpoint);
         });
-        test('it should throw error when guarding bad files', () => {
+        test('it should throw error when guarding bad files', async () => {
           const error = "testing error";
           pipelineApi.apiGuardBadFile = sinon.stub().throws(new Error(error));
-          const resp = pipelineApi.plugins.mock.apiCall(method, endpoint, req);
+          const resp = await pipelineApi.plugins.mock.apiCall(method, endpoint, req);
           assert(resp.send.calledWith({ error }));
         });
-        test('it should return a file', () => {
+        test('it should return a file', async () => {
           pipelineApi.apiGuardBadFile = sinon.stub().returns();
-          const resp = pipelineApi.plugins.mock.apiCall(method, endpoint, req);
+          const resp = await pipelineApi.plugins.mock.apiCall(method, endpoint, req);
           assert(readFileSync.calledWith(filepath, 'utf8'));
           assert(resp.send.calledWith({ name: "file", content: "content", path: filepath }));
         });
@@ -107,15 +107,15 @@ describe('stack/pipeline/api', () => {
         test(`it should register ${method} ${endpoint}`, () => {
           pipelineApi.plugins.assert.apiCallRegistered(method, endpoint);
         });
-        test('it should throw error when guarding bad files', () => {
+        test('it should throw error when guarding bad files', async () => {
           const error = "testing error";
           pipelineApi.apiGuardBadFile = sinon.stub().throws(new Error(error));
-          const resp = pipelineApi.plugins.mock.apiCall(method, endpoint, req);
+          const resp = await pipelineApi.plugins.mock.apiCall(method, endpoint, req);
           assert(resp.send.calledWith({ error }));
         });
-        test('it should create a folder', () => {
+        test('it should create a folder', async () => {
           pipelineApi.apiGuardBadFile = sinon.stub().returns();
-          const resp = pipelineApi.plugins.mock.apiCall(method, endpoint, req);
+          const resp = await pipelineApi.plugins.mock.apiCall(method, endpoint, req);
           assert(mkdirpSync.calledWith(filepath));
           assert(resp.send.calledWith({ name: "folder", path: filepath }));
         });
@@ -137,15 +137,15 @@ describe('stack/pipeline/api', () => {
         test(`it should register ${method} ${endpoint}`, () => {
           pipelineApi.plugins.assert.apiCallRegistered(method, endpoint);
         });
-        test('it should throw error when guarding bad files', () => {
+        test('it should throw error when guarding bad files', async () => {
           const error = "testing error";
           pipelineApi.apiGuardBadFile = sinon.stub().throws(new Error(error));
-          const resp = pipelineApi.plugins.mock.apiCall(method, endpoint, req);
+          const resp = await pipelineApi.plugins.mock.apiCall(method, endpoint, req);
           assert(resp.send.calledWith({ error }));
         });
-        test('it should write a file to the filesystem', () => {
+        test('it should write a file to the filesystem', async () => {
           pipelineApi.apiGuardBadFile = sinon.stub().returns();
-          const resp = pipelineApi.plugins.mock.apiCall(method, endpoint, req);
+          const resp = await pipelineApi.plugins.mock.apiCall(method, endpoint, req);
           assert(writeFileSync.calledWith(req.path, req.content, { encoding: 'utf8' }));
           assert(resp.send.calledWith({ name: "file", ...req }));
         });
@@ -167,15 +167,15 @@ describe('stack/pipeline/api', () => {
         test(`it should register ${method} ${endpoint}`, () => {
           pipelineApi.plugins.assert.apiCallRegistered(method, endpoint);
         });
-        test('it should throw error when guarding bad files', () => {
+        test('it should throw error when guarding bad files', async () => {
           const error = "testing error";
           pipelineApi.apiGuardBadFile = sinon.stub().throws(new Error(error));
-          const resp = pipelineApi.plugins.mock.apiCall(method, endpoint, req);
+          const resp = await pipelineApi.plugins.mock.apiCall(method, endpoint, req);
           assert(resp.send.calledWith({ error }));
         });
-        test('it should delete a file from the filesystem', () => {
+        test('it should delete a file from the filesystem', async () => {
           pipelineApi.apiGuardBadFile = sinon.stub().returns();
-          const resp = pipelineApi.plugins.mock.apiCall(method, endpoint, req);
+          const resp = await pipelineApi.plugins.mock.apiCall(method, endpoint, req);
           assert(removeSync.calledWith(req.path));
           assert(resp.send.called);
         });
@@ -211,8 +211,8 @@ describe('stack/pipeline/api', () => {
         test(`it should register ${method} ${endpoint}`, () => {
           pipelineApi.plugins.assert.apiCallRegistered(method, endpoint);
         });
-        test('it should return a tree of file objects for the dapp', () => {
-          const resp = pipelineApi.plugins.mock.apiCall(method, endpoint, req);
+        test('it should return a tree of file objects for the dapp', async () => {
+          const resp = await pipelineApi.plugins.mock.apiCall(method, endpoint, req);
           const expectedValue = [
             {
               isRoot: true,
