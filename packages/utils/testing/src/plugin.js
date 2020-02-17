@@ -20,6 +20,11 @@ class Plugins {
   }
 
   runActionsForEvent(name, options, callback) {
+    if (typeof options === 'function') {
+      callback = options;
+      options = {};
+    }
+
     const listeners = this.plugin.getListeners(name);
     if (listeners) {
       listeners.forEach(fn => fn.spy(options, callback));
