@@ -15,6 +15,9 @@
     },
     {
       "path": "../../core/i18n"
+    },
+    {
+      "path": "../../core/utils"
     }
   ]
 }
