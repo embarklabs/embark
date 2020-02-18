@@ -325,6 +325,22 @@ await getEvmVersion();
 
 Returns a string, eg: `EthereumJS TestRPC/v2.9.2/ethereum-js`
 
+### evmMethod
+
+If you ever have other EVM methods that you'd like to call, Embark exposes the global function `evmMethod` that let's you do just that.
+
+```javascript
+ const signature = await evmMethod("eth_signTypedData", [
+  accounts[0],
+  data
+]);
+```
+
+The function is quite simple, but you need to know the RPC API of the wanted method.
+
+The first parameter is the method name.
+The second one are the params. It is optional and comes as an array.
+
 ## Code coverage
 
 Embark allows you to generate a coverage report for your Solidity Smart Contracts by passing the `--coverage` option on the `embark test` command.
