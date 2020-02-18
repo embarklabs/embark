@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0](https://github.com/embarklabs/embark/compare/v5.2.0-nightly.5...v5.2.0) (2020-02-18)
+
+
+### Bug Fixes
+
+* **@embark/proxy:** only up event listeners on available providers ([caae922](https://github.com/embarklabs/embark/commit/caae922))
+
+
+
+
+
 # [5.2.0-nightly.5](https://github.com/embarklabs/embark/compare/v5.2.0-nightly.4...v5.2.0-nightly.5) (2020-02-18)
 
 

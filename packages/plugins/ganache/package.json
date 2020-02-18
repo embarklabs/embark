@@ -1,6 +1,6 @@
 {
   "name": "embark-ganache",
-  "version": "5.2.0-nightly.5",
+  "version": "5.2.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Implementation of the Ganache simulator for Embark",
@@ -46,9 +46,9 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.7.4",
     "core-js": "3.4.3",
-    "embark-core": "^5.2.0-nightly.4",
+    "embark-core": "^5.2.0",
     "embark-i18n": "^5.1.1",
-    "embark-utils": "^5.2.0-nightly.3",
+    "embark-utils": "^5.2.0",
     "ganache-cli": "6.8.2"
   },
   "devDependencies": {
