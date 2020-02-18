@@ -78,9 +78,22 @@ class FunctionConfigs {
     }
   }
 
+  async determineSmartContractArgs(params, cb) {
+    const contract = params.contract;
+    const argsFn = contract.args;
+    try {
+      const logger = Utils.createLoggerWithPrefix(this.logger, 'determineArgs >');
+      const dependencies = await this.getDependenciesObject(logger);
+      const args = await argsFn(dependencies);
+      params.contract.args = args;
+      cb();
+    } catch (e) {
+      cb(new Error(`Error running args function for ${contract.className}: ${e.message || e}`));
+    }
+  }
+
   async getDependenciesObject(logger) {
     let contracts = await this.events.request2("contracts:list");
-
     let args = { contracts: {}, logger};
     for (let contract of contracts) {
       // TODO: for this to work correctly we need to add a default from address to the contract

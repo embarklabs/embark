@@ -59,6 +59,33 @@ development: {
 ...
 ```
 
+### Calculating constructor parameters lazily
+
+Another way to configure arguments for Smart Contract constructors is to calculate them lazily using an asynchronous function. This is especially useful if the Smart Contract's arguments depend on other runtime dependencies, such as already deployed Smart Contracts. To calculate arguments, all you have to do is define `args` as an (async) function and resolve with either a list of arguments or an object where each member maps to an individual constructor argument:
+
+```
+...
+development: {
+  deploy: {
+    SimpleStorage: {
+      args: async ({ contracts, web3, logger}) => {
+        // do something with `contracts` and `web3` to determine
+        // arguments
+        let someValue = await ...;
+        return [someValue];
+
+        // or
+        return {
+          initialValue: someValue
+        };
+      }
+    }
+  }
+}
+...
+```
+
+
 ### Configuring gas and gas price
 
 Both, `gas` and `gasPrice` can be configured for each Smart Contract. If we don't want to configure that for every single contract, we can also specify `gas: auto` in the environment, like this:

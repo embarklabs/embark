@@ -15,6 +15,11 @@ class ContractDeployer {
   deployContract(contract, callback) {
     async.waterfall([
       (next) => {
+        this.plugins.emitAndRunActionsForEvent('deployment:contract:determineArgs', { contract }, (err) => {
+          next(err);
+        });
+      },
+      (next) => {
         this.plugins.emitAndRunActionsForEvent('deployment:contract:beforeDeploy', {contract: contract}, (err, _params) => {
           // TODO: confirm this really works and shouldn't be next(err, params)
           next(err);

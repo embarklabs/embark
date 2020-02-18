@@ -438,6 +438,9 @@ class ENS {
     });
 
     function checkArgs(args, done) {
+      if (typeof args === 'function') {
+        return done(null, args);
+      }
       if (Array.isArray(args)) {
         async.map(args, (arg, next) => {
           if (Array.isArray(arg)) {

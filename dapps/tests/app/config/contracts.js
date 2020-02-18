@@ -22,6 +22,12 @@ module.exports = {
         args: [100],
         onDeploy: ["SimpleStorage.methods.setRegistar('embark.eth').send()"]
       },
+      SimpleStorageArgsFn: {
+        instanceOf: 'SimpleStorage',
+        args: async ({ contracts, web3, logger }) => {
+          return [5000];
+        }
+      },
       SimpleStorageTest: {
         //file: "./some_folder/test_contract.sol",
         args: [1000, 'embark.eth']
