@@ -1,6 +1,6 @@
 {
   "name": "embark-proxy",
-  "version": "5.2.0-nightly.4",
+  "version": "5.2.0-nightly.5",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Proxy to listen to blockchain requests and responses",

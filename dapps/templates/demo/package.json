@@ -1,6 +1,6 @@
 {
   "name": "embark-dapp-template-demo",
-  "version": "5.2.0-nightly.4",
+  "version": "5.2.0-nightly.5",
   "description": "Demo DApp for Embark",
   "homepage": "https://github.com/embarklabs/embark/tree/master/dapps/templates/demo#readme",
   "bugs": "https://github.com/embarklabs/embark/issues",
@@ -34,7 +34,7 @@
   "devDependencies": {
     "bootstrap": "4.3.1",
     "classnames": "2.2.6",
-    "embark": "^5.2.0-nightly.4",
+    "embark": "^5.2.0-nightly.5",
     "embark-geth": "^5.2.0-nightly.4",
     "embark-graph": "^5.2.0-nightly.3",
     "embark-ipfs": "^5.2.0-nightly.4",

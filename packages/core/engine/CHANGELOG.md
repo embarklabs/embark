@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0-nightly.5](https://github.com/embarklabs/embark/compare/v5.2.0-nightly.4...v5.2.0-nightly.5) (2020-02-18)
+
+
+### Bug Fixes
+
+* **@embark/proxy:** up max listener for proxy request manager ([9c8837d](https://github.com/embarklabs/embark/commit/9c8837d))
+
+
+
+
+
 # [5.2.0-nightly.4](https://github.com/embarklabs/embark/compare/v5.2.0-nightly.3...v5.2.0-nightly.4) (2020-02-15)
 
 
