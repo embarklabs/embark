@@ -2,11 +2,13 @@ const sinon = require('sinon');
 import fs from 'fs-extra';
 
 class Embark {
-  constructor(events, plugins, config) {
+  constructor(events, plugins, config = {}, ipc) {
     this.events = events;
     this.plugins = plugins;
     this.config = config || {};
     this.config.plugins = plugins;
+    this.ipc = ipc;
+    this.config.ipc = ipc;
     this.assert = new EmbarkAssert(this);
     this.fs = fs;
 
@@ -32,12 +34,14 @@ class Embark {
   }
 
   teardown() {
-    this.config = { plugins: this.plugins };
+    this.config = { plugins: this.plugins, ipc: this.ipc };
     this.plugins.teardown();
+    this.ipc.teardown();
+    this.events.teardown();
   }
 
   setConfig(config) {
-    this.config = { ...config, plugins: this.plugins };
+    this.config = { ...config, plugins: this.plugins, ipc: this.ipc };
   }
 }
 

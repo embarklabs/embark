@@ -5,6 +5,7 @@ class Events {
   constructor() {
     this.commandHandlers = {};
     this.handlers = {};
+    this.emissions = {};
 
     this.assert = new EventsAssert(this);
   }
@@ -18,14 +19,13 @@ class Events {
       this.handlers[ev] = [];
     }
 
-    this.handlers[ev].push(cb);
+    this.handlers[ev].push(sinon.spy(cb));
   }
 
-  emit() {
+  emit(ev, ...args) {
 
-  }
+    this.emissions[ev] = args;
 
-  trigger(ev, ...args) {
     if (!this.handlers[ev]) {
       return;
     }
@@ -34,12 +34,12 @@ class Events {
   }
 
   request(cmd, ...args) {
-    assert(this.commandHandlers[cmd], `command handler for ${cmd} not registered`);
+    assert(this.commandHandlers[cmd], `command handler for '${cmd}' not registered`);
     Promise.resolve(this.commandHandlers[cmd](...args));
   }
 
   request2(cmd, ...args) {
-    assert(this.commandHandlers[cmd], `command handler for ${cmd} not registered`);
+    assert(this.commandHandlers[cmd], `command handler for '${cmd}' not registered`);
     return new Promise((resolve, reject) => {
       args.push((err, ...res) => {
         if (err) {
@@ -53,6 +53,12 @@ class Events {
       this.commandHandlers[cmd](...args);
     });
   }
+
+  teardown() {
+    this.commandHandlers = {};
+    this.handlers = {};
+    this.emissions = {};
+  }
 }
 
 class EventsAssert {
@@ -61,17 +67,38 @@ class EventsAssert {
   }
 
   commandHandlerRegistered(cmd) {
-    assert(this.events.commandHandlers[cmd], `command handler for ${cmd} wanted, but not registered`);
+    assert(this.events.commandHandlers[cmd], `command handler for '${cmd}' wanted, but not registered`);
   }
 
   commandHandlerCalled(cmd) {
     this.commandHandlerRegistered(cmd);
     sinon.assert.called(this.events.commandHandlers[cmd]);
   }
+  
+  commandHandlerNotCalled(cmd) {
+    this.commandHandlerRegistered(cmd);
+    assert(!this.events.commandHandlers[cmd].called);
+  }
 
   commandHandlerCalledWith(cmd, ...args) {
     this.commandHandlerRegistered(cmd);
     sinon.assert.calledWith(this.events.commandHandlers[cmd], ...args);
+  }
+
+  listenerRegistered(name) {
+    assert(this.events.handlers[name], `event listener for '${name}' wanted, but not registered`);
+  }
+
+  emitted(name) {
+    assert(this.events.emissions[name]);
+  }
+
+  notEmitted(name) {
+    assert(!Object.keys(this.events.emissions).includes(name));
+  }
+
+  emittedWith(name, ...args) {
+    assert.equal(this.events.emissions[name], ...args);
   }
 
 }
