@@ -35,7 +35,22 @@ Every application [created with Embark](create_project.html) comes with an `emba
 }
 ```
 
-Let's look at the different options and learn what they do and mean.
+Alternatively, it's also possible to use a `embark.config.js` file instead, which exports a function that calculates the embark configuration object. This is particularly useful when the configuration needs to be built based on asynchronous operations. To make use of `embark.config.js`, simply create the file in your DApp and make sure it exports an (async) function which resolves with a config object like this:
+
+```js
+// embark.config.js
+
+module.exports = async function () {
+  const secrets = await getSecrets();
+  return {
+    // Embark configuration goes here
+  };
+};
+```
+
+Embark will import and run the exported function inside an `async/await` context. It's also possible to return the configuration object wrapped inside a`Promise`.
+
+Let's look at the different configuration options and learn what they do and mean.
 
 ### contracts
 

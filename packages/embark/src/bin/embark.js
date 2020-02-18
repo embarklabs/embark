@@ -4,43 +4,48 @@
 // on babel to achieve the same goal.
 // See: https://node.green/
 
-function main() {
+async function main() {
   if (whenNoShim()) return;
-  var invoked = thisEmbark();
-  var embarkJson = findEmbarkJson();
-  var dappPath = embarkJson.dirname;
-  process.chdir(dappPath);
-  process.env.DAPP_PATH = dappPath;
-  process.env.PWD = dappPath;
+  const invoked = await thisEmbark();
 
-  /* attempt to find a "local" embark in or above but not below dappPath
+  try {
+    const embarkJson = await findEmbarkJson();
+    const dappPath = embarkJson.dirname;
+    process.chdir(dappPath);
+    process.env.DAPP_PATH = dappPath;
+    process.env.PWD = dappPath;
 
-     let `dappPath/(([../])*)bin/embark` be a "containing" embark
+    /* attempt to find a "local" embark in or above but not below dappPath
 
-     let `dappPath/(([../])*)node_modules/embark/bin/embark` be an "installed"
-     embark
+      let `dappPath/(([../])*)bin/embark` be a "containing" embark
 
-     if containing and installed embarks are both found, and if containing
-     embark is higher in the dir structure than installed embark, then
-     containing embark will be selected
+      let `dappPath/(([../])*)node_modules/embark/bin/embark` be an "installed"
+      embark
 
-     according to the rule above: if an installed embark is found within a
-     containing embark's own node_modules (that would be odd), installed embark
-     will be selected
+      if containing and installed embarks are both found, and if containing
+      embark is higher in the dir structure than installed embark, then
+      containing embark will be selected
 
-     invoked embark may find itself as local embark, but that is detected by
-     comparing `binrealpath` props to avoid double-checking and infinite loops
+      according to the rule above: if an installed embark is found within a
+      containing embark's own node_modules (that would be odd), installed embark
+      will be selected
 
-     if no local embark is found then cmd execution will use invoked embark */
+      invoked embark may find itself as local embark, but that is detected by
+      comparing `binrealpath` props to avoid double-checking and infinite loops
 
-  var containing = findBinContaining(dappPath, invoked);
-  var installed = findBinInstalled(dappPath, invoked);
-  var local = selectLocal(containing, installed, invoked);
-  var pkgJson = findPkgJson(dappPath, embarkJson, local);
-  process.env.PKG_PATH = pkgJson.dirname;
-  var embark = select(invoked, local);
-  process.env.EMBARK_PATH = embark.pkgDir;
-  embark.exec(embarkJson);
+      if no local embark is found then cmd execution will use invoked embark */
+
+    const containing = await findBinContaining(dappPath, invoked);
+    const installed = await findBinInstalled(dappPath, invoked);
+    const local = selectLocal(containing, installed, invoked);
+    const pkgJson = findPkgJson(dappPath, embarkJson, local);
+    process.env.PKG_PATH = pkgJson.dirname;
+    const embark = select(invoked, local);
+    process.env.EMBARK_PATH = embark.pkgDir;
+    embark.exec(embarkJson);
+  } catch (e) {
+    console.error(`Couldn't execute Embark: ${e}`);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -78,8 +83,8 @@ EmbarkBin.prototype.exec = function (embarkJson) {
   cli.process(process.argv);
 };
 
-EmbarkBin.prototype.handle = function () {
-  this.setup();
+EmbarkBin.prototype.handle = async function () {
+  await this.setup();
   this.log();
   return this;
 };
@@ -113,7 +118,7 @@ EmbarkBin.prototype.setPkgDir = function () {
   }
 };
 
-EmbarkBin.prototype.setPkgJson = function () {
+EmbarkBin.prototype.setPkgJson = async function () {
   if (this.binrealpath) {
     this.pkgJson = (
       new PkgJsonEmbark(
@@ -128,14 +133,14 @@ EmbarkBin.prototype.setPkgJson = function () {
     this.pkgJson.noCheck = (
       upNodeModules ? subdir(upNodeModules, this.binrealpath) : false
     );
-    this.pkgJson.setup();
+    await this.pkgJson.setup();
   }
 };
 
-EmbarkBin.prototype.setup = function () {
+EmbarkBin.prototype.setup = async function () {
   this.setBinrealpath();
   this.setPkgDir();
-  this.setPkgJson();
+  await this.setPkgJson();
   return this;
 };
 
@@ -171,11 +176,11 @@ EmbarkBinLocal.prototype.logSwitching = function () {
   );
 };
 
-EmbarkBinLocal.prototype.setup = function () {
+EmbarkBinLocal.prototype.setup = async function () {
   this.setBinrealpath();
   this.setPkgDir();
   if (this.binrealpath !== this.invokedEmbark.binrealpath) {
-    this.setPkgJson();
+    await this.setPkgJson();
   }
   return this;
 };
@@ -187,7 +192,7 @@ function EmbarkBinLocalContaining(binpath, invokedEmbark) {
 }
 setupProto(EmbarkBinLocalContaining, EmbarkBinLocal);
 
-EmbarkBinLocalContaining.prototype.setPkgJson = function () {
+EmbarkBinLocalContaining.prototype.setPkgJson = async function () {
   if (this.binrealpath) {
     this.pkgJson = (
       new PkgJsonEmbark(
@@ -196,7 +201,7 @@ EmbarkBinLocalContaining.prototype.setPkgJson = function () {
       )
     );
     this.pkgJson.noCheck = false;
-    this.pkgJson.setup();
+    await this.pkgJson.setup();
   }
 };
 
@@ -212,43 +217,31 @@ EmbarkBinLocalInstalled.prototype.log = function () {
   this.pkgJsonLocalExpected.log();
 };
 
-EmbarkBinLocalInstalled.prototype.setPkgJson = function () {
+EmbarkBinLocalInstalled.prototype.setPkgJson = async function () {
   if (this.binrealpath) {
-    this.pkgJson = (
-      new PkgJsonEmbark(
-        path.join(this.pkgDir, 'package.json'),
-        this.kind
-      )
-    ).setup();
+    this.pkgJson = await new PkgJsonEmbark(path.join(this.pkgDir, 'package.json'), this.kind).setup();
   }
 };
 
-EmbarkBinLocalInstalled.prototype.setPkgJsonLocalExpected = function () {
+EmbarkBinLocalInstalled.prototype.setPkgJsonLocalExpected = async function () {
   if (this.binrealpath) {
-    this.pkgJsonLocalExpected = (
-      new PkgJsonLocalExpected(path.join(this.pkgDir, '../../package.json'))
-    ).setup();
+    this.pkgJsonLocalExpected = await new PkgJsonLocalExpected(path.join(this.pkgDir, '../../package.json')).setup();
   }
 };
 
-EmbarkBinLocalInstalled.prototype.setup = function () {
-  EmbarkBinLocal.prototype.setup.call(this);
-  this.setPkgJsonLocalExpected();
+EmbarkBinLocalInstalled.prototype.setup = async function () {
+  await EmbarkBinLocal.prototype.setup.call(this);
+  await this.setPkgJsonLocalExpected();
   return this;
 };
 
 // -- finders ------------------------------------------------------------------
 
-function findBin(dappPath, find, invoked, Kind) {
-  return (
-    new Kind(
-      findUp.sync(find, {cwd: dappPath}),
-      invoked
-    )
-  ).setup();
+async function findBin(dappPath, find, invoked, Kind) {
+  return new Kind(findUp.sync(find, {cwd: dappPath}), invoked).setup();
 }
 
-function findBinContaining(dappPath, invoked) {
+async function findBinContaining(dappPath, invoked) {
   return findBin(
     dappPath,
     'bin/embark',
@@ -257,7 +250,7 @@ function findBinContaining(dappPath, invoked) {
   );
 }
 
-function findBinInstalled(dappPath, invoked) {
+async function findBinInstalled(dappPath, invoked) {
   return findBin(
     dappPath,
     'node_modules/embark/bin/embark',
@@ -266,21 +259,21 @@ function findBinInstalled(dappPath, invoked) {
   );
 }
 
-function findEmbarkJson() {
+async function findEmbarkJson() {
   // findUp search begins in process.cwd() by default, but embark.json could
   // be in a subdir if embark was invoked via `npm run` (which changes cwd to
   // package.json's dir) and the package.json is in a dir above the top-level
   // DApp dir; so start at INIT_CWD if that has been set (by npm, presumably)
   // See: https://docs.npmjs.com/cli/run-script
   var startDir = initCwd();
-  return (new EmbarkJson(
-    findUp.sync('embark.json', {cwd: startDir}) ||
-      path.join(startDir, 'embark.json'),
-    process.argv[2]
-  )).handle();
+  const embarkJSONConfigFile = findUp.sync('embark.json', {cwd: startDir}) || path.join(startDir, 'embark.json');
+  const embarkConfigJSFile = findUp.sync('embark.config.js', {cwd: startDir}) || path.join(startDir, 'embark.config.js');
+  const configFile = fs.existsSync(embarkConfigJSFile) ? embarkConfigJSFile : embarkJSONConfigFile;
+
+  return new EmbarkJson(configFile, process.argv[2]).handle();
 }
 
-function findPkgJson(dappPath, embarkJson, local) {
+async function findPkgJson(dappPath, embarkJson, local) {
   var skipDirs = [];
   if (local) {
     if (local instanceof EmbarkBinLocalContaining) {
@@ -308,20 +301,23 @@ function findPkgJson(dappPath, embarkJson, local) {
     }
     return stop;
   }
+
+  let pkgJsons = [];
   while (!stop()) {
     if (skipDirs.indexOf(dir) === -1) {
-      (new PkgJsonLocal(found)).handle();
+      pkgJsons.push(new PkgJsonLocal(found).handle());
     }
   }
+
+  await Promise.all(pkgJsons);
+
   if (isDappCmd(embarkJson.cmd) && !closest) {
     var loglevel = 'error';
     reportMissingFile(path.join(dappPath, 'package.json'), loglevel);
     reportMissingFile_DappJson(embarkJson.cmd, loglevel, 'package', 'in or above');
     exitWithError();
   }
-  return (
-    closest || (new PkgJsonLocal(path.join(startDir, 'package.json'))).setup()
-  );
+  return closest || new PkgJsonLocal(path.join(startDir, 'package.json')).setup();
 }
 
 // -- json files ---------------------------------------------------------------
@@ -333,8 +329,8 @@ function Json(filepath) {
   this.realpath = undefined;
 }
 
-Json.prototype.handle = function () {
-  this.setup();
+Json.prototype.handle = async function () {
+  await this.setup();
   this.log();
   return this;
 };
@@ -375,9 +371,15 @@ Json.prototype.setDirname = function () {
   }
 };
 
-Json.prototype.setJson = function () {
+Json.prototype.setJson = async function() {
   if (this.realpath) {
-    this.json = parseJson(this.filepath);
+    if (path.extname(this.realpath) === '.js') {
+      const configFn = require(this.filepath);
+      const config = await configFn();
+      this.json = config;
+    } else {
+      this.json = parseJson(this.filepath);
+    }
   }
 };
 
@@ -387,10 +389,10 @@ Json.prototype.setRealpath = function () {
   }
 };
 
-Json.prototype.setup = function () {
+Json.prototype.setup = async function () {
   this.setDirname();
   this.setRealpath();
-  this.setJson();
+  await this.setJson();
   return this;
 };
 
@@ -563,8 +565,8 @@ PkgJsonEmbark.prototype.setVersion = function () {
   }
 };
 
-PkgJsonEmbark.prototype.setup = function () {
-  PkgJson.prototype.setup.call(this);
+PkgJsonEmbark.prototype.setup = async function () {
+  await PkgJson.prototype.setup.call(this);
   this.setVersion();
   this.setPkg();
   this.setNodeRange();
@@ -639,8 +641,8 @@ PkgJsonLocalExpected.prototype.setEmbarkDep = function () {
   }
 };
 
-PkgJsonLocalExpected.prototype.setup = function () {
-  PkgJsonLocal.prototype.setup.call(this);
+PkgJsonLocalExpected.prototype.setup = async function () {
+  await PkgJsonLocal.prototype.setup.call(this);
   this.setEmbarkDep();
   return this;
 };
@@ -725,8 +727,8 @@ function realpath(filepath) {
   }
 }
 
-function thisEmbark() {
-  return (new EmbarkBin(path.join(__dirname, '../../bin/embark'))).handle();
+async function thisEmbark() {
+  return new EmbarkBin(path.join(__dirname, '../../bin/embark')).handle();
 }
 
 function whenNoShim() {

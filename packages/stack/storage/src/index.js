@@ -44,10 +44,10 @@ class Storage {
     });
 
     if (this.storageConfig.enabled && this.storageConfig.available_providers.includes("ipfs")) {
-      warnIfPackageNotDefinedLocally("embark-ipfs", this.embark.logger.warn.bind(this.embark.logger));
+      warnIfPackageNotDefinedLocally("embark-ipfs", this.embark.logger.warn.bind(this.embark.logger), this.embark.config.embarkConfig);
     }
     if (this.storageConfig.enabled && this.storageConfig.available_providers.includes("swarm")) {
-      warnIfPackageNotDefinedLocally("embark-swarm", this.embark.logger.warn.bind(this.embark.logger));
+      warnIfPackageNotDefinedLocally("embark-swarm", this.embark.logger.warn.bind(this.embark.logger), this.embark.config.embarkConfig);
     }
   }
 
