@@ -177,6 +177,8 @@ class TestRunner {
       }
     };
 
+    global.evmMethod = this.evmMethod.bind(this);
+
     global.getEvmVersion = async () => {
       return this.evmMethod('web3_clientVersion');
     };
@@ -381,6 +383,9 @@ class TestRunner {
       (error, res) => {
         if (error) {
           return reject(error);
+        }
+        if (res.error) {
+          return reject(new Error(res.error));
         }
         resolve(res.result);
       }
