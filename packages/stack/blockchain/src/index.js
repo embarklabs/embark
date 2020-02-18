@@ -18,6 +18,8 @@ export default class Blockchain {
     this.startedClient = null;
     this.plugins = options.plugins;
     this.blockchainClients = {};
+    this.warnIfPackageNotDefinedLocally = options.warnIfPackageNotDefinedLocally ?? warnIfPackageNotDefinedLocally;
+    this.Web3 = options.Web3 ?? Web3;
 
     this.registerConsoleCommands();
 
@@ -30,17 +32,17 @@ export default class Blockchain {
     }
 
     this.blockchainNodes = {};
-    this.events.setCommandHandler("blockchain:node:register", (clientName, clientFunctions) => {
+    this.events.setCommandHandler("blockchain:node:register", (clientName, clientFunctions, cb = () => {}) => {
       const {isStartedFn, launchFn, stopFn, provider} = clientFunctions;
 
       if (!isStartedFn) {
-        throw new Error(`Blockchain client '${clientName}' must be registered with an 'isStarted' function, client not registered.`);
+        return cb(`Blockchain client '${clientName}' must be registered with an 'isStarted' function, client not registered.`);
       }
       if (!launchFn) {
-        throw new Error(`Blockchain client '${clientName}' must be registered with a 'launchFn' function, client not registered.`);
+        return cb(`Blockchain client '${clientName}' must be registered with a 'launchFn' function, client not registered.`);
       }
       if (!stopFn) {
-        throw new Error(`Blockchain client '${clientName}' must be registered with a 'stopFn' function, client not registered.`);
+        return cb(`Blockchain client '${clientName}' must be registered with a 'stopFn' function, client not registered.`);
       }
       if (!provider) {
         // Set default provider function
@@ -50,6 +52,7 @@ export default class Blockchain {
       }
 
       this.blockchainNodes[clientName] = clientFunctions;
+      cb();
     });
 
     this.events.setCommandHandler("blockchain:node:start", (blockchainConfig, cb) => {
@@ -135,8 +138,9 @@ export default class Blockchain {
       cb(null, this.getProviderFromTemplate(this.blockchainConfig.endpoint));
     });
 
-    this.events.setCommandHandler("blockchain:client:register", (clientName, getProviderFunction) => {
+    this.events.setCommandHandler("blockchain:client:register", (clientName, getProviderFunction, cb = () => {}) => {
       this.blockchainClients[clientName] = getProviderFunction;
+      cb();
     });
 
     this.events.setCommandHandler("blockchain:client:provider", async (clientName, cb) => {
@@ -161,26 +165,26 @@ export default class Blockchain {
     this.blockchainApi.registerRequests("ethereum");
 
     if (this.blockchainConfig.enabled && this.blockchainConfig.client === "geth") {
-      warnIfPackageNotDefinedLocally("embark-geth", this.embark.logger.warn.bind(this.embark.logger), this.embark.config.embarkConfig);
+      this.warnIfPackageNotDefinedLocally("embark-geth", this.embark.logger.warn.bind(this.embark.logger), this.embark.config.embarkConfig);
     }
     if (this.blockchainConfig.enabled && this.blockchainConfig.client === "parity") {
-      warnIfPackageNotDefinedLocally("embark-parity", this.embark.logger.warn.bind(this.embark.logger), this.embark.config.embarkConfig);
+      this.warnIfPackageNotDefinedLocally("embark-parity", this.embark.logger.warn.bind(this.embark.logger), this.embark.config.embarkConfig);
     }
   }
 
   getProviderFromTemplate(endpoint) {
     if (endpoint.startsWith('ws')) {
-      return new Web3.providers.WebsocketProvider(endpoint, {
+      return new this.Web3.providers.WebsocketProvider(endpoint, {
         headers: { Origin: constants.embarkResourceOrigin }
       });
     }
-    const web3 = new Web3(endpoint);
+    const web3 = new this.Web3(endpoint);
     return web3.currentProvider;
   }
 
   async addArtifactFile(_params, cb) {
     if (!this.blockchainConfig.enabled) {
-      cb();
+      return cb();
     }
 
     try {
