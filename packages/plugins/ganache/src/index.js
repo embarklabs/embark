@@ -17,6 +17,7 @@ class Ganache {
         });
       },
       launchFn: (cb) => {
+        this._registerStatusCheck();
         this._getProvider(); // No need to return anything, we just want to populate currentProvider
         this.embark.logger.info(__('Blockchain node is ready').cyan);
         cb();
@@ -39,8 +40,6 @@ class Ganache {
         });
       }
     });
-
-    this._registerStatusCheck();
   }
 
   _getProvider() {
