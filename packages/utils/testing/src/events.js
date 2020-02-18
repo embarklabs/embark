@@ -74,7 +74,7 @@ class EventsAssert {
     this.commandHandlerRegistered(cmd);
     sinon.assert.called(this.events.commandHandlers[cmd]);
   }
-  
+
   commandHandlerNotCalled(cmd) {
     this.commandHandlerRegistered(cmd);
     assert(!this.events.commandHandlers[cmd].called);

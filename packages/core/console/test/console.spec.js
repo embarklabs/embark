@@ -16,7 +16,7 @@ describe('core/console', () => {
 
   beforeEach(() => {
     console = new Console(embark, {
-      ipc: embark.config.ipc,
+      ipc: embark.ipc,
       events: embark.events,
       plugins: embark.plugins,
       logger: embark.logger,
