@@ -213,7 +213,11 @@ export function prepareContractsConfig(config) {
       config.contracts[contractName].address = extendZeroAddressShorthand(address);
     }
 
-    if (args && args.length) {
+    if (typeof args === 'function') {
+      config.contracts[contractName].args = args;
+    }
+
+    if (args && Array.isArray(args)) {
       config.contracts[contractName].args = args.map((val) => {
         if (typeof val === "string") {
           return extendZeroAddressShorthand(val);

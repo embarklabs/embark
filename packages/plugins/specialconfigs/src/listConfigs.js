@@ -74,10 +74,6 @@ class ListConfigs {
     });
   }
 
-  async beforeDeployAction(_params, cb) {
-    return cb();
-  }
-
   runOnDeployCode(onDeployCode, callback, silent) {
     const logFunction = silent ? this.logger.trace.bind(this.logger) : this.logger.info.bind(this.logger);
     async.each(onDeployCode, (cmd, eachCb) => {
