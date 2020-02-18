@@ -1,0 +1,70 @@
+{
+  "name": "@embarklabs/create-react-dapp",
+  "version": "5.2.1",
+  "author": "Michael Bradley <michaelsbradleyjr@gmail.com> (https://github.com/michaelsbradleyjr/)",
+  "description": "DApp creator utility that uses Create React App",
+  "homepage": "https://github.com/embarklabs/embark/tree/master/dapps/creators/react#readme",
+  "repository": {
+    "directory": "dapps/creators/react",
+    "type": "git",
+    "url": "https://github.com/embarklabs/embark.git"
+  },
+  "keywords": [
+    "blockchain",
+    "create-react-app",
+    "dapps",
+    "ethereum",
+    "ipfs",
+    "react",
+    "serverless",
+    "solc",
+    "solidity"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": "./bin/create",
+  "main": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "embark-collective": {
+    "build:node": true
+  },
+  "scripts": {
+    "_build": "npm run solo -- build",
+    "ci": "npm run qa",
+    "clean": "npm run reset",
+    "lint": "eslint bin/create src/",
+    "qa": "npm-run-all lint _build",
+    "reset": "npx rimraf dist embark-*.tgz package",
+    "solo": "embark-solo"
+  },
+  "dependencies": {
+    "embark-i18n": "^5.1.1",
+    "embark-init": "^5.2.1",
+    "lodash.clonedeep": "4.5.0",
+    "source-map-support": "0.5.13"
+  },
+  "eslintConfig": {
+    "extends": "../../../.eslintrc.json"
+  },
+  "devDependencies": {
+    "@babel/runtime-corejs3": "7.7.4",
+    "embark-solo": "^5.1.1",
+    "eslint": "5.7.0",
+    "npm-run-all": "4.1.5",
+    "rimraf": "3.0.0"
+  },
+  "indirect": {
+    "dependencies": {
+      "create-react-app": "^3.3.1"
+    }
+  },
+  "engines": {
+    "node": ">=10.17.0",
+    "npm": ">=6.11.3",
+    "yarn": ">=1.19.1"
+  }
+}

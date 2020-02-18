@@ -992,6 +992,7 @@ function isDappCmd(cmd) {
     '--help',
     'new',
     'demo',
+    'init',
     'version',
     'help'
   ].indexOf(cmd) === -1;

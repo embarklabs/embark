@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+
+/* global process require */
+
+require('source-map-support/register');
+require('..').main()
+  .then(code => {
+    process.exit(code ? code : 0);
+  })
+  .catch(error => {
+    console.error(error.stack);
+    process.exit(1);
+  });

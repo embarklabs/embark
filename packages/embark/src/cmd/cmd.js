@@ -1,4 +1,5 @@
 import { __, setOrDetectLocale } from 'embark-i18n';
+import { cli as initCli } from 'embark-init';
 import { diagramPath } from 'embark-utils';
 const program = require('commander');
 const EmbarkController = require('./cmd_controller.js');
@@ -13,6 +14,7 @@ class Cmd {
   process(args) {
     this.newApp();
     this.demo();
+    this.init();
     this.build();
     this.run();
     this.exec();
@@ -437,6 +439,19 @@ class Cmd {
         console.log(embark.version);
         process.exit(0);
       });
+  }
+
+  async init() {
+    let reject, resolve;
+    let promise = new Promise((res, rej) => { resolve = res; reject = rej; });
+    initCli(program.command('init'), { reject, resolve });
+    try {
+      const code = await promise;
+      process.exit(code ?? 0);
+    } catch (error) {
+      console.error(error.stack);
+      process.exit(1);
+    }
   }
 
   helpCmd() {

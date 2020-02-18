@@ -10,6 +10,11 @@ const embarkBinPath = path.resolve(
 );
 if (!fs.existsSync(embarkBinPath)) process.exit(1);
 
+const embarkInitBinPath = path.resolve(
+  path.join(__dirname, '../packages/utils/init/bin/init')
+);
+if (!fs.existsSync(embarkInitBinPath)) process.exit(1);
+
 const getStdout = (cmd) => {
   let out;
   try {
@@ -30,8 +35,16 @@ if (process.platform === 'win32') {
     path.join(npmGlobalBin, 'embark.cmd'),
     `@node "${embarkBinPath}" %*${EOL}`
   );
+  fs.writeFileSync(
+    path.join(npmGlobalBin, 'embark-init.cmd'),
+    `@node "${embarkInitBinPath}" %*${EOL}`
+  );
 } else {
-  const linkPath = path.join(npmGlobalBin, 'embark');
+  let linkPath = path.join(npmGlobalBin, 'embark');
   if (fs.existsSync(linkPath)) fs.unlinkSync(linkPath);
   fs.symlinkSync(embarkBinPath, linkPath);
+
+  linkPath = path.join(npmGlobalBin, 'embark-init');
+  if (fs.existsSync(linkPath)) fs.unlinkSync(linkPath);
+  fs.symlinkSync(embarkInitBinPath, linkPath);
 }
