@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.1](https://github.com/embarklabs/embark/compare/v5.2.0...v5.2.1) (2020-02-18)
+
+
+### Bug Fixes
+
+* **@embark/ganache:** fix status when ganache is not the client ([37fbc80](https://github.com/embarklabs/embark/commit/37fbc80))
+
+
+
+
+
 # [5.2.0](https://github.com/embarklabs/embark/compare/v5.2.0-nightly.5...v5.2.0) (2020-02-18)
 
 **Note:** Version bump only for package embark-ganache

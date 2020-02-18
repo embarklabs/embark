@@ -1,6 +1,6 @@
 {
   "name": "embark-ganache",
-  "version": "5.2.0",
+  "version": "5.2.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Implementation of the Ganache simulator for Embark",

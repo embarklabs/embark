@@ -1,6 +1,6 @@
 {
   "name": "embark-engine",
-  "version": "5.2.0",
+  "version": "5.2.1",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Engine library for Embark",
@@ -63,7 +63,7 @@
     "embark-embarkjs": "^5.2.0",
     "embark-ens": "^5.2.0",
     "embark-ethereum-blockchain-client": "^5.2.0",
-    "embark-ganache": "^5.2.0",
+    "embark-ganache": "^5.2.1",
     "embark-geth": "^5.2.0",
     "embark-ipfs": "^5.2.0",
     "embark-library-manager": "^5.2.0",
