@@ -46,7 +46,7 @@ class Plugins {
   }
 
   teardown() {
-    this.plugin.listeners = {};
+    this.plugin.teardown();
     this.plugins.forEach(plugin => plugin.teardown());
   }
 
@@ -108,6 +108,10 @@ class Plugin {
   }
 
   teardown() {
+    this.listeners = {};
+    this.apiCalls = {};
+    this.pluginTypes = [];
+    this.console = [];
     this.compilers = [];
   }
 }
@@ -135,11 +139,59 @@ class PluginsAssert {
     const index = (method + endpoint).toLowerCase();
     assert(this.plugins.plugin.apiCalls[index], `API call for '${method} ${endpoint}' wanted, but not registered`);
   }
+  
+  consoleCommandRegistered(command) {
+    const registered = this.plugins.plugin.console.some(cmd => {
+      if (!cmd.matches) {
+        return false;
+      }
+      if (Array.isArray(cmd.matches)) {
+        return cmd.matches.some(matches => matches.includes(command));
+      }
+      if (typeof cmd.matches === 'function') {
+        return cmd.matches(command);
+      }
+      return false;
+    });
+    assert(registered);
+  }
 }
 
 class PluginsMock {
   constructor(plugins) {
     this.plugins = plugins;
+  }
+
+  consoleCommand(cmd) {
+    const command = this.plugins.plugin.console.find(c => {
+      if (!c.matches) {
+        return;
+      }
+      if (Array.isArray(c.matches) && c.matches.some(matches => matches.includes(cmd))) {
+        return c;
+      }
+      if (typeof c.matches === 'function' && c.matches(cmd)) {
+        return c;
+      }
+      return;
+    });
+    assert(command, `Console command for '${cmd}' wanted, but not registered`);
+    const cb = sinon.fake();
+
+    return new Promise((resolve, reject) => {
+      command.process(cmd, (err, ...res) => {
+        if (err) {
+          return reject(err);
+        }
+        if (res.length && res.length > 1) {
+          cb(res);
+          return resolve(cb);
+        }
+        cb(res[0]);
+        return resolve(cb);
+      });
+      resolve(cb);
+    });
   }
 
   async apiCall(method, endpoint, params) {
