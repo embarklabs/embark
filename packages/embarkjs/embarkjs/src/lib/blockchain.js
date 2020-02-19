@@ -313,7 +313,7 @@ function Contract(options) {
   });
 
   // Assign helpers too
-  for(const method of ["deploy", "new", "at", "send", "deployed"]) {
+  for(const method of ["new", "at", "send", "deployed"]) {
     // Make sure we don't override original methods here.
     if (originalMethods.includes(method)) {
       console.log(method + " is a reserved word and will not be aliased as a helper");
@@ -328,7 +328,7 @@ function Contract(options) {
   return ContractClass;
 }
 
-Contract.prototype.deploy = function(args, _options, _txOptions) {
+Contract.prototype.new = function(args, _options, _txOptions) {
   const self = this;
   const options = Object.assign({
     arguments: args || [],
@@ -357,8 +357,6 @@ Contract.prototype.deploy = function(args, _options, _txOptions) {
 
   return this._deployPromise;
 };
-
-Contract.prototype.new = Contract.prototype.deploy;
 
 Contract.prototype.at = function(address) {
   return new Contract({abi: this.abi, code: this.code, address: address});

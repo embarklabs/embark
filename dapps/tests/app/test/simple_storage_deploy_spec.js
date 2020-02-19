@@ -5,7 +5,18 @@ const {Utils} = artifacts.require('EmbarkJS');
 contract("SimpleStorage Deploy", function () {
   let simpleStorageInstance;
   before(async () => {
-    simpleStorageInstance = await SimpleStorage.deploy([150]);
+    return new Promise(async (resolve, reject) => {
+      const gas = await SimpleStorage.deploy({arguments: [150]}).estimateGas();
+
+      Utils.secureSend(web3, SimpleStorage.deploy({arguments: [150]}), {gas, from: web3.eth.defaultAccount}, true, function(err, receipt) {
+        if(err) {
+          return reject(err);
+        }
+        simpleStorageInstance = SimpleStorage;
+        simpleStorageInstance.options.address = receipt.contractAddress;
+        resolve();
+      });
+    });
   });
 
   it("should set constructor value", async function () {
