@@ -178,7 +178,6 @@ export class TemplateGenerator {
       pkgJson.version = '0.0.1';
     }
     if (pkgJson.devDependencies) {
-      delete pkgJson.devDependencies['embark'];
       delete pkgJson.devDependencies['embark-reset'];
       delete pkgJson.devDependencies['npm-run-all'];
       delete pkgJson.devDependencies['rimraf'];
