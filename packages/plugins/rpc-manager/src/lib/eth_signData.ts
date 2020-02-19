@@ -24,6 +24,7 @@ export default class EthSignData extends RpcModifier {
         Web3.utils.toChecksumAddress(fromAddr)
       ));
 
+      // If it's not a node account, we don't send it to the Node as it won't understand it
       if (!account) {
         params.sendToNode = false;
       }

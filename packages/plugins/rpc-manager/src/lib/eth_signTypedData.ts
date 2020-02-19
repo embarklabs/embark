@@ -18,13 +18,28 @@ export default class EthSignTypedData extends RpcModifier {
     // - eth_signTypedData_v3
     // - eth_signTypedData_v4
     // - personal_signTypedData (parity)
-    if (params.request.method.includes("signTypedData")) {
-      // indicate that we do not want this call to go to the node
-      params.sendToNode = false;
+    if (!params.request.method.includes("signTypedData")) {
       return callback(null, params);
+    }
+
+    try {
+      const [fromAddr] = params.request.params;
+
+      const account = this.nodeAccounts.find(acc => (
+        Web3.utils.toChecksumAddress(acc) ===
+        Web3.utils.toChecksumAddress(fromAddr)
+      ));
+
+      // If it's not a node account, we don't send it to the Node as it won't understand it
+      if (!account) {
+        params.sendToNode = false;
+      }
+    } catch (err) {
+      return callback(err);
     }
     callback(null, params);
   }
+
   private async ethSignTypedDataResponse(params: any, callback: Callback<any>) {
 
     // check for:
@@ -41,6 +56,16 @@ export default class EthSignTypedData extends RpcModifier {
 
     try {
       const [fromAddr, typedData] = params.request.params;
+
+      const nodeAccount = this.nodeAccounts.find(acc => (
+        Web3.utils.toChecksumAddress(acc) ===
+        Web3.utils.toChecksumAddress(fromAddr)
+      ));
+      if (nodeAccount) {
+        // If it's a node account, we send the result because it should already be signed
+        return callback(null, params);
+      }
+
       const account = this.accounts.find((acc) => Web3.utils.toChecksumAddress(acc.address) === Web3.utils.toChecksumAddress(fromAddr));
       if (!(account && account.privateKey)) {
         return callback(
