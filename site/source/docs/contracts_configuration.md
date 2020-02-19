@@ -336,13 +336,13 @@ deploy: {
 
 ## Proxy Contract Support
 
-Proxy contracts are powerful tools usually used in more complex Dapps. They can be used for contracts that can be upgraded or to alleviate the deploy cost of multiple instances of a contract.
+Proxy smart contracts are powerful tools usually used in more complex Dapps. They can be used for smart contracts that can be upgraded or to alleviate the deploy cost of multiple instances of a contract.
 
 However, interacting with Proxy contracts is usually difficult, because you have to point the Base contract to the address of the Proxy for it to work.
 
-Not anymore! Embark now supports a contract configuration named `forProxy`.
+Not anymore! Embark now supports a smart contract configuration named `proxyFor`.
 
-With it, you can specify that a Proxy contract is, well, a proxy *for* another one. Here's an example:
+With it, you can specify that a Proxy smart contract is, well, a proxy *for* another one. Here's an example:
 
 ```javascript
 deploy: {
@@ -362,11 +362,11 @@ deploy: {
 
 With this configuration, our `ContractInstance` is an `instanceOf` `Proxy` and  a `proxyFor` `BaseContract`.
 This is why we point to `BaseContract` in the `ContractInstance` arguments.
-The arguments themselves depend on the implementations of your `BaseContract` and `Proxy` contract.
+The arguments themselves depend on the implementations of your `BaseContract` and `Proxy` smart contracts.
 
-Note that you could have used `Proxy` itself as a `proxyFor` `BaseContract`, but it's usually more intuitive to use `instanceOf` and then resolve the contract instance with the new name you gave it (`ContractInstance` in this case).
+Note that you could have used `Proxy` itself as a `proxyFor` `BaseContract`, but it's usually more intuitive to use `instanceOf` and then resolve the smart contract instance with the new name you gave it (`ContractInstance` in this case).
 
-Once the contracts are deployed, all you have to do is:
+Once the smart contracts are deployed, all you have to do is:
 
 ```
 import ContractInstance from 'path/to/artifacts/contracts/ContractInstance';
