@@ -2,6 +2,7 @@ import { Callback, Embark, EmbarkEvents } from "embark-core";
 import { __ } from "embark-i18n";
 import Web3 from "web3";
 import RpcModifier from "./rpcModifier";
+import {handleSignRequest} from './utils/signUtils';
 
 export default class EthSignData extends RpcModifier {
   constructor(embark: Embark, rpcModifierEvents: EmbarkEvents, public nodeAccounts: string[], public accounts: any[], protected web3: Web3) {
@@ -16,21 +17,7 @@ export default class EthSignData extends RpcModifier {
       return callback(null, params);
     }
 
-    try {
-      const [fromAddr] = params.request.params;
-
-      const account = this.nodeAccounts.find(acc => (
-        Web3.utils.toChecksumAddress(acc) ===
-        Web3.utils.toChecksumAddress(fromAddr)
-      ));
-
-      if (!account) {
-        params.sendToNode = false;
-      }
-    } catch (err) {
-      return callback(err);
-    }
-    callback(null, params);
+    handleSignRequest(this.nodeAccounts, params, callback);
   }
 
   private async ethSignDataResponse(params: any, callback: Callback<any>) {
