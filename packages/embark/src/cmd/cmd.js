@@ -444,8 +444,8 @@ class Cmd {
   async init() {
     let reject, resolve;
     let promise = new Promise((res, rej) => { resolve = res; reject = rej; });
-    initCli(program.command('init'), { reject, resolve });
     try {
+      initCli(program.command('init'), { reject, resolve });
       const code = await promise;
       process.exit(code ?? 0);
     } catch (error) {

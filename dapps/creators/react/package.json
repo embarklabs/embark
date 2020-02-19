@@ -1,6 +1,6 @@
 {
   "name": "@embarklabs/create-react-dapp",
-  "version": "5.2.1",
+  "version": "5.2.2",
   "author": "Michael Bradley <michaelsbradleyjr@gmail.com> (https://github.com/michaelsbradleyjr/)",
   "description": "DApp creator utility that uses Create React App",
   "homepage": "https://github.com/embarklabs/embark/tree/master/dapps/creators/react#readme",
@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "embark-i18n": "^5.1.1",
-    "embark-init": "^5.2.1",
+    "embark-init": "^5.2.2",
     "lodash.clonedeep": "4.5.0",
     "source-map-support": "0.5.13"
   },

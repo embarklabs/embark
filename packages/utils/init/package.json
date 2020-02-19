@@ -1,6 +1,6 @@
 {
   "name": "embark-init",
-  "version": "5.2.1",
+  "version": "5.2.2",
   "author": "Michael Bradley <michaelsbradleyjr@gmail.com> (https://github.com/michaelsbradleyjr/)",
   "description": "DApp initializer utility",
   "homepage": "https://github.com/embarklabs/embark/tree/master/packages/utils/init#readme",

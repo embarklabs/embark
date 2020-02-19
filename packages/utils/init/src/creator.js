@@ -6,7 +6,7 @@ import { __, setOrDetectLocale } from 'embark-i18n';
 import minimist from 'minimist';
 
 import { creatorDefaults } from './defaults';
-import { main as initMain } from './index';
+import { handleCliOptions as initHandleCliOptions } from './index';
 import { makeCreatorCommanderOptions, replaceTokens, runCommand } from './util';
 
 export { creatorDefaults };
@@ -14,25 +14,20 @@ export { creatorDefaults };
 const procArgv = process.argv.slice();
 
 export function makeCreatorMain(creator = creatorDefaults) {
-  if (!Array.isArray(creator.subcreator.command)) {
-    creator.subcreator.command = [creator.subcreator.command];
-  }
-
   async function handleCliOptions(
     cliOptions,
-    { argv, promise, reject, resolve } = {}
+    { argv, program, promise, reject, resolve } = {}
   ) {
     setOrDetectLocale(cliOptions.locale);
 
     const npxCmd = process.platform === 'win32' ? 'npx.cmd': 'npx';
 
+    console.log();
     console.log('hi from handleCliOptions in creator.js');
+    console.log();
 
-    // let error = new Error('bad stuff happened in creator.js');
-    // if (reject) return reject(error);
-    // throw error;
-    if (resolve) return resolve(19);
-    return 19;
+    if (resolve) return resolve(11);
+    return 11;
 
     // should display command/s that will be run, similar to what the release
     // script does, so it's easier to figure out what's happening and how
@@ -60,6 +55,10 @@ export function makeCreatorMain(creator = creatorDefaults) {
     // ^ should probably have an --init-prompts for the creator that can
     // combine with `--yes` and `--`
 
+    // if (!Array.isArray(creator.subcreator.command)) {
+    //   creator.subcreator.command = [creator.subcreator.command];
+    // }
+
     // let subp = spawn(npxCmd, [
     //   ...creator.subcreator.command,
     //   ...creator.subcreator.options
@@ -86,10 +85,13 @@ export function makeCreatorMain(creator = creatorDefaults) {
 
     // process init.options and build an array that combines/overrides re:
     // matching options spec'd in the creator's cli
-    const initCliArgs = [];
+    const initCliOptions = [];
 
-    // should report what final options get forwarded to embark-init
-    return initMain(null, initCliArgs, {promise, reject, resolve});
+    // report what final options get forwarded to embark-init
+    initHandleCliOptions(
+      initCliOptions,
+      { argv, init: creator.init, program, promise, reject, resolve }
+    );
   }
 
   function cli(
@@ -105,19 +107,12 @@ export function makeCreatorMain(creator = creatorDefaults) {
       program = new Command();
       program.version(creator.version);
     }
-    program.description(
-      `Creates a new Embark dapp using ${creator.subcreator.name}`
-    );
+    program.description(`Creates a new Embark dapp using ${creator.subcreator.name}`);
     program.usage(`[options] [-- [${creator.subcreator.abbrev}-options]]`);
-    // console.log('before replace:', require('util').inspect(creator, {depth: null}));
     creator = replaceTokens(creator);
-    // console.log('after replace:', require('util').inspect(creator, {depth: null}));
-    makeCreatorCommanderOptions(creator).forEach(opt => {
-      program.option(...opt);
-    });
-    program.action((...args) => handleCliOptions(
-      args, { argv, promise, reject, resolve }
-    ));
+    makeCreatorCommanderOptions(creator).forEach(opt => { program.option(...opt); });
+    program.action((...args) => handleCliOptions(args, { argv, program, promise, reject, resolve }));
+    program.on('--help', () => { if (creator.extraHelp) console.log('\n' + creator.extraHelp); });
     return program;
   }
 

@@ -16,21 +16,24 @@ const pkgJsonPath = join(__dirname, "..", "package.json");
 const pkgJson = require(pkgJsonPath);
 const version = pkgJson.version;
 
-async function handleCliOptions(
+export async function handleCliOptions(
   cliOptions,
-  { argv, init, promise, reject, resolve } = {}
+  { argv, init, program, promise, reject, resolve } = {}
 ) {
   setOrDetectLocale(cliOptions.locale);
 
   const npxCmd = process.platform === 'win32' ? 'npx.cmd': 'npx';
 
+  console.log();
   console.log('hi from handleCliOptions in embark-init');
+  console.log();
 
-  // let error = new Error('bad stuff happened in embark-init');
-  // if (reject) return reject(error);
-  // throw error;
-  // if (resolve) return resolve(19);
-  // return 19;
+  // console.log(require('util').inspect(cliOptions, {depth: null}));
+  // console.log();
+  console.log(require('util').inspect(cliOptions, {depth: null}));
+
+  if (resolve) return resolve(17);
+  return 17;
 
   // should display command/s that will be run, similar to what the release
   // script does, so it's easier to figure out what's happening and how options
@@ -83,57 +86,11 @@ export function cli(
   }
   program.description('Initializes a project as an Embark dapp');
   program.usage('[options] [creator] [creator-options] [-- [extra-options]]');
-  ({init} = replaceTokens({init}));
+  init.embarkInit = program.parent ? 'embark init' : 'embark-init';
+  ({ init } = replaceTokens({ init }));
   makeInitCommanderOptions(init).forEach(opt => { program.option(...opt); });
-  program.action((...args) => handleCliOptions(
-    args, { argv, init, promise, reject, resolve }
-  ));
-  program.on('--help', () => {
-    let embarkInit = 'embark-init';
-    if (program.parent) embarkInit = 'embark init';
-
-    console.log('');
-    console.log('SIMPLE USAGE:');
-    console.log('');
-    console.log('    ', `${embarkInit} [options]`);
-    console.log('');
-    console.log(
-      'Initialization is performed in the current working directory;',
-      'will first run \`npm init\` if no package.json is present.'
-    );
-
-    console.log('');
-    console.log('WITH CREATOR:');
-    console.log('');
-    console.log('    ', `${embarkInit} [creator] [options] [-- [extra-options]]`);
-    console.log('');
-    console.log(
-      'A creator is a name such as "react-dapp".',
-      'Options to the left of the creator are ignored.',
-      'Any options to the right of "--" are passed to the underlying tool,',
-      'e.g. create-react-app, and will override conflicting options computed by the creator.'
-    );
-    console.log('');
-    console.log(
-      'Creator names are resolved to packages by prepending "@embarklabs/create-", then trying with "embark-", and finally using the bare name.'
-    );
-    console.log('');
-    console.log(
-      'Example: "react-dapp" resolves to "@embarklabs/create-react-dapp", and the following are equivalent:'
-    );
-    console.log('');
-    console.log('    ', `${embarkInit} react-dapp mydapp [options] [-- [extra-options]]`);
-    console.log('');
-    console.log('    ', `npx @embarklabs/crete-react-dapp mydapp [options] [-- [extra-options]]`);
-    console.log('');
-    console.log('To see the help output of a creator do:');
-    console.log('');
-    console.log('    ', `${embarkInit} [creator] --help`);
-    console.log('');
-    console.log('To see the help output of a creator\'s underlying tool do:');
-    console.log('');
-    console.log('    ', `${embarkInit} [creator] -- --help`);
-  });
+  program.action((...args) => handleCliOptions(args, { argv, init, program, promise, reject, resolve }));
+  program.on('--help', () => { if (init.extraHelp) console.log('\n' + init.extraHelp); });
   return program;
 }
 
