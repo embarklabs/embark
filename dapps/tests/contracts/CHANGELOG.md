@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.2](https://github.com/embarklabs/embark/compare/v5.2.1...v5.2.2) (2020-02-19)
+
+**Note:** Version bump only for package embark-dapp-test-contracts
+
+
+
+
+
 ## [5.2.1](https://github.com/embarklabs/embark/compare/v5.2.0...v5.2.1) (2020-02-18)
 
 **Note:** Version bump only for package embark-dapp-test-contracts
