@@ -1,6 +1,6 @@
 {
   "name": "embark-dapp-template-simple",
-  "version": "5.2.2",
+  "version": "5.2.3-nightly.0",
   "description": "Contracts-only DApp template for Embark",
   "homepage": "https://github.com/embarklabs/embark/tree/master/dapps/templates/simple#readme",
   "bugs": "https://github.com/embarklabs/embark/issues",
@@ -28,14 +28,14 @@
     "url": "https://github.com/embarklabs/embark.git"
   },
   "devDependencies": {
-    "embark": "^5.2.2",
+    "embark": "^5.2.3-nightly.0",
     "embark-geth": "^5.2.2",
     "embark-graph": "^5.2.0",
     "embark-parity": "^5.2.2",
     "embark-profiler": "^5.2.0",
     "embark-reset": "^5.1.1",
-    "embarkjs": "^5.2.0",
-    "embarkjs-ens": "^5.2.0",
+    "embarkjs": "^5.2.3-nightly.0",
+    "embarkjs-ens": "^5.2.3-nightly.0",
     "embarkjs-web3": "^5.2.0",
     "rimraf": "3.0.0"
   }

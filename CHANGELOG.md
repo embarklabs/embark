@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.3-nightly.0](https://github.com/embarklabs/embark/compare/v5.2.2...v5.2.3-nightly.0) (2020-02-20)
+
+
+### Bug Fixes
+
+* **@embar/site:** fix proxyFor docs ([0461fa0](https://github.com/embarklabs/embark/commit/0461fa0))
+* revert custom `deploy()` API for `EmbarkJS.Contract` ([d3200e3](https://github.com/embarklabs/embark/commit/d3200e3))
+
+
+
+
+
 ## [5.2.2](https://github.com/embarklabs/embark/compare/v5.2.1...v5.2.2) (2020-02-19)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "embark-ethereum-blockchain-client",
-  "version": "5.2.2",
+  "version": "5.2.3-nightly.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Ethereum-specific blockchain APIs and contract deployment functions for Embark",
@@ -50,7 +50,7 @@
     "embark-core": "^5.2.2",
     "embark-i18n": "^5.1.1",
     "embark-utils": "^5.2.0",
-    "embarkjs": "^5.2.0",
+    "embarkjs": "^5.2.3-nightly.0",
     "ethereumjs-util": "6.0.0",
     "web3": "1.2.6",
     "web3-core-requestmanager": "1.2.6"
