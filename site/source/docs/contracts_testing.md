@@ -293,7 +293,7 @@ This function lets you increase the time of the EVM. It is useful in the case wh
 await increaseTime(amount);
 ```
 
-`amount`: [Number] Number of seconds to increase
+- `amount`: [Number] Number of seconds to increase
 
 ```javascript
 it("should have expired after increasing time", async function () {
@@ -327,7 +327,16 @@ Returns a string, eg: `EthereumJS TestRPC/v2.9.2/ethereum-js`
 
 ### evmMethod
 
-If you ever have other EVM methods that you'd like to call, Embark exposes the global function `evmMethod` that let's you do just that.
+If there are EVM methods that are not supported by the web3 library you use, Embark exposes the global function `evmMethod` that lets you call the RPC method directly.
+
+#### Syntax
+`evmMethod(rpcMethodName, parameters)`
+
+ - `rpcMethodName`: [string] Name of the RPC method to call.
+ - `parameters`: [Array<any>] Optional array of parameters, as specified by the RPC method API.
+
+#### Usage
+For example, let's say you are using `web3.js` in your tests, but would like to call the `eth_signTypedData` RPC method. Because `web3.js` does not support this method, it won't be possible to use `web3.js` for this call. Instead, we can call the `eth_signTypedData` RPC method in our tests using the global `evmMethod` function:
 
 ```javascript
  const signature = await evmMethod("eth_signTypedData", [
@@ -335,11 +344,6 @@ If you ever have other EVM methods that you'd like to call, Embark exposes the g
   data
 ]);
 ```
-
-The function is quite simple, but you need to know the RPC API of the wanted method.
-
-The first parameter is the method name.
-The second one are the params. It is optional and comes as an array.
 
 ## Code coverage
 
