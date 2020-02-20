@@ -6,7 +6,6 @@ import Web3 from "web3";
 import EthAccounts from "./eth_accounts";
 import EthSendTransaction from "./eth_sendTransaction";
 import EthSignData from "./eth_signData";
-import EthSignTypedData from "./eth_signTypedData";
 import EthSubscribe from "./eth_subscribe";
 import EthUnsubscribe from "./eth_unsubscribe";
 import PersonalNewAccount from "./personal_newAccount";
@@ -82,7 +81,6 @@ export default class RpcManager {
       PersonalNewAccount,
       EthAccounts,
       EthSendTransaction,
-      EthSignTypedData,
       EthSignData,
       EthSubscribe,
       EthUnsubscribe
