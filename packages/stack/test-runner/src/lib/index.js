@@ -366,25 +366,26 @@ class TestRunner {
     })();
   }
 
-  evmMethod(method, params = []) {
-    return new Promise(async (resolve, reject) => {
-      const web3 = await this.web3;
-      const sendMethod = (web3.currentProvider.sendAsync) ? web3.currentProvider.sendAsync.bind(web3.currentProvider) : web3.currentProvider.send.bind(web3.currentProvider);
-      sendMethod(
-        {
-          jsonrpc: '2.0',
-          method,
-          params,
-          id: Date.now().toString().substring(9)
-        },
-        (error, res) => {
-          if (error) {
-            return reject(error);
-          }
-          resolve(res.result);
+  async evmMethod(method, params = []) {
+    const web3 = await this.web3;
+    const sendMethod = (web3.currentProvider.sendAsync) ? web3.currentProvider.sendAsync.bind(web3.currentProvider) : web3.currentProvider.send.bind(web3.currentProvider);
+    let resolve, reject;
+    const promise = new Promise((res, rej) => { resolve = res; reject = rej; });
+    sendMethod(
+      {
+        jsonrpc: '2.0',
+        method,
+        params,
+        id: Date.now().toString().substring(9)
+      },
+      (error, res) => {
+        if (error) {
+          return reject(error);
         }
-      );
-    });
+        resolve(res.result);
+      }
+    );
+    return promise;
   }
 }
 

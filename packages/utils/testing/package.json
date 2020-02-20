@@ -3,8 +3,8 @@
   "version": "5.2.0",
   "description": "Testing",
   "homepage": "https://github.com/embarklabs/embark/tree/master/packages/utils/testing#readme",
-  "main": "dist/lib/index.js",
-  "types": "./dist/lib/index.d.ts",
+  "main": "./index.js",
+  "types": "./dist/index.d.ts",
   "repository": {
     "directory": "packages/utils/testing",
     "type": "git",
@@ -23,7 +23,8 @@
     "solidity"
   ],
   "files": [
-    "dist"
+    "dist",
+    "index.js"
   ],
   "embark-collective": {
     "build:node": true,
@@ -35,7 +36,7 @@
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
-    "lint:js": "eslint src/",
+    "lint:js": "eslint src/ test/",
     "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
     "qa": "npm-run-all lint _typecheck _build test",
     "reset": "npx rimraf dist embark-*.tgz package",
@@ -43,7 +44,11 @@
     "test": "jest"
   },
   "eslintConfig": {
-    "extends": "../../../.eslintrc.json"
+    "extends": [
+      "../../../.eslintrc.json",
+      "plugin:jest/recommended",
+      "plugin:jest/style"
+    ]
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.7.4",
@@ -58,7 +63,8 @@
     "@babel/core": "7.7.4",
     "babel-jest": "24.9.0",
     "embark-solo": "^5.1.1",
-    "eslint": "5.7.0",
+    "eslint": "6.8.0",
+    "eslint-plugin-jest": "22.5.1",
     "jest": "24.9.0",
     "lodash.clonedeep": "4.5.0",
     "npm-run-all": "4.1.5",

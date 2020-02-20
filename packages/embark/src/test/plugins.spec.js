@@ -1,4 +1,5 @@
-/*global __dirname, describe, it, beforeEach, afterEach, require*/
+/* global describe it beforeEach afterEach */
+
 import * as i18n from 'embark-i18n';
 import { Plugins } from 'embark-core';
 

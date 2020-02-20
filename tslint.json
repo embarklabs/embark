@@ -7,19 +7,20 @@
   "rules": {
     "arrow-parens": false,
     "interface-name": [true, "never-prefix"],
+    "max-classes-per-file": false,
     "max-line-length": [true, 200],
     "member-ordering": [false],
     "member-access": false,
     "no-empty": false,
     "no-console": false,
+    "no-implicit-dependencies": true,
+    "no-irregular-whitespace": false,
     "no-var-requires": false,
-    "variable-name": ["allow-leading-underscore"],
     "object-literal-sort-keys": false,
     "ordered-imports": false,
     "quotemark": [false, "single"],
     "trailing-comma": false,
-    "no-irregular-whitespace": false,
-    "max-classes-per-file": false
+    "variable-name": ["allow-leading-underscore"]
   },
   "rulesDirectory": []
 }

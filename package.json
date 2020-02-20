@@ -12,12 +12,14 @@
     "@babel/plugin-transform-runtime": "7.7.4",
     "@babel/preset-env": "7.7.4",
     "@babel/preset-typescript": "7.7.4",
+    "@typescript-eslint/parser": "2.20.0",
     "babel-eslint": "10.0.3",
     "babel-plugin-dynamic-import-node": "2.3.0",
     "babel-plugin-macros": "2.7.1",
     "chalk": "2.4.2",
     "coveralls": "3.0.9",
-    "eslint": "6.2.2",
+    "eslint": "6.8.0",
+    "eslint-plugin-import": "2.18.2",
     "find-up": "4.1.0",
     "form-data": "2.5.1",
     "fs-extra": "8.1.0",
@@ -27,7 +29,8 @@
     "npm-run-all": "4.1.5",
     "nyc": "13.1.0",
     "rimraf": "3.0.0",
-    "semver": "5.6.0"
+    "semver": "5.6.0",
+    "typescript": "3.7.2"
   },
   "engines": {
     "node": ">=10.17.0",
@@ -42,7 +45,7 @@
     "build:no-ui": "npm run build -- --ignore embark-ui",
     "ci": "node scripts/monorun --ignore embark-dapp-* --stream ci",
     "ci:dapps": "lerna run --concurrency=1 --scope embark-dapp-* --stream ci",
-    "ci:full": "npm-run-all cwtree typecheck \"lint -- --concurrency={1}\" build:no-ui \"test -- --concurrency={1}\" ci:dapps cwtree -- 1",
+    "ci:full": "npm-run-all cylock cwtree typecheck lint build:no-ui \"test -- --concurrency={1}\" ci:dapps cwtree -- 1",
     "clean": "node scripts/monorun --stream clean",
     "clean:full": "npx npm-run-all clean clean:top",
     "clean:top": "npm run reset:top && npx rimraf node_modules",
@@ -52,9 +55,12 @@
     "coverage:report": "node scripts/coverage-report",
     "coveralls": "npm-run-all coverage:collect coverage:coveralls",
     "cwtree": "node scripts/check-working-tree",
+    "cylock": "node scripts/check-yarn-lock",
     "deploy:site": "node site/deploy-site",
     "globalize": "node scripts/globalize",
-    "lint": "node scripts/monorun --parallel lint",
+    "lint": "npm-run-all lint:*",
+    "lint:packages": "node scripts/monorun --parallel lint",
+    "lint:top": "eslint *.js scripts/",
     "package": "lerna exec --concurrency=1 --no-private --stream -- npm pack",
     "postclean": "npx lerna clean --yes",
     "postreboot": "yarn install",
@@ -63,7 +69,7 @@
     "preqa:full": "yarn install",
     "qa": "node scripts/monorun --ignore embark-dapp-* --stream qa",
     "qa:dapps": "lerna run --concurrency=1 --scope embark-dapp-* --stream qa",
-    "qa:full": "npm-run-all cwtree reboot:full cwtree typecheck \"lint -- --concurrency={1}\" build \"test -- --concurrency={1}\" qa:dapps cwtree -- 1",
+    "qa:full": "npm-run-all cylock cwtree reboot:full cwtree typecheck lint build \"test -- --concurrency={1}\" qa:dapps cwtree -- 1",
     "reboot": "npm run clean",
     "reboot:full": "npm run clean:full",
     "release": "node scripts/release",
@@ -83,6 +89,9 @@
     "watch:lint": "node scripts/monorun --parallel watch:lint",
     "watch:test": "node scripts/monorun --ignore embark-dapp-* --parallel watch:test",
     "watch:typecheck": "node scripts/monorun --parallel watch:typecheck"
+  },
+  "eslintConfig": {
+    "extends": "./.eslintrc.json"
   },
   "workspaces": {
     "packages": [

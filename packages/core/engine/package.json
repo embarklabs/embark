@@ -16,7 +16,8 @@
     "solidity"
   ],
   "files": [
-    "dist"
+    "dist",
+    "index.js"
   ],
   "license": "MIT",
   "repository": {
@@ -24,7 +25,7 @@
     "type": "git",
     "url": "https://github.com/embarklabs/embark.git"
   },
-  "main": "./dist/index.js",
+  "main": "./index.js",
   "types": "./dist/index.d.ts",
   "embark-collective": {
     "build:node": true,

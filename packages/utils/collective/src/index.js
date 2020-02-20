@@ -1,7 +1,5 @@
-/* global Buffer __dirname module process require */
-
 const filterPackages = require('@lerna/filter-packages');
-const {fork, spawn} = require('child_process');
+const {spawn} = require('child_process');
 const {sync: findUp} = require('find-up');
 const {existsSync, readJsonSync, writeJsonSync} = require('fs-extra');
 const {sync: glob} = require('glob');
@@ -213,7 +211,7 @@ function typecheck(cliArgs, filteredPkgJsonDict, allPkgJsonDict, solo) {
   const baseTsConfigPath = join(rootPath, 'tsconfig.base.json');
   const collectiveTsConfigPath = join(rootPath, '.tsconfig.collective.json');
   const typecheckCmd = process.platform === 'win32' ? 'tsc.cmd': 'tsc';
-  const typecheckBinPath = join(__dirname, 'node_modules', '.bin', typecheckCmd);
+  const typecheckBinPath = join(__dirname, '..', 'node_modules', '.bin', typecheckCmd);
 
   const allPkgNames = new Set(Object.keys(allPkgJsonDict));
   const seen = {};
@@ -242,18 +240,23 @@ function typecheck(cliArgs, filteredPkgJsonDict, allPkgJsonDict, solo) {
       };
 
       pkgTsConfig.compilerOptions.rootDir = './src';
-      if (basename(dirname(_pkgJson.main)) === 'lib' ||
-          basename(dirname(dirname(_pkgJson.main))) === 'lib') {
+      if (_pkgJson.main &&
+          (basename(dirname(_pkgJson.main)) === 'lib' ||
+           basename(dirname(dirname(_pkgJson.main))) === 'lib')) {
         pkgTsConfig.include.push('src/lib/**/*');
       } else {
         pkgTsConfig.include.push('src/**/*');
       }
 
       let refs;
-      for (const pkgName of [...new Set([
-        ...Object.keys(_pkgJson.dependencies),
-        ...Object.keys(_pkgJson.devDependencies)
-      ])].filter(n => n !== 'embark-solo')) {
+      for (const pkgName of [
+        ...new Set(
+          [
+            ...Object.keys(_pkgJson.dependencies),
+            ...Object.keys(_pkgJson.devDependencies)
+          ]
+        )
+      ].filter(n => n !== 'embark-solo')) {
         if (allPkgNames.has(pkgName)) {
           if (!refs) {
             refs = true;
@@ -262,7 +265,7 @@ function typecheck(cliArgs, filteredPkgJsonDict, allPkgJsonDict, solo) {
 
           const depPkgJson = allPkgJsonDict[pkgName];
           const depPkgJsonTsConfig = (depPkgJson[EMBARK_COLLECTIVE] &&
-                                   depPkgJson[EMBARK_COLLECTIVE].typecheck);
+                                      depPkgJson[EMBARK_COLLECTIVE].typecheck);
 
           if (depPkgJsonTsConfig) {
             pkgTsConfig.references.push({
@@ -272,6 +275,7 @@ function typecheck(cliArgs, filteredPkgJsonDict, allPkgJsonDict, solo) {
               ).replace(/\\/g, '/')
             });
 
+            // eslint-disable-next-line max-depth
             if (!seen[pkgName]) {
               packages.push(depPkgJson);
             }
@@ -333,7 +337,11 @@ function typecheck(cliArgs, filteredPkgJsonDict, allPkgJsonDict, solo) {
   }
 
   if (solo) {
-    const packagePath = dirname(Object.values(filteredPkgJsonDict)[0]._path);
+    let packagePath = Object.values(filteredPkgJsonDict)[0];
+    packagePath = packagePath && dirname(packagePath._path);
+    if (!packagePath) {
+      process.exit(0);
+    }
 
     const doSolo = () => {
       const subp = spawn(typecheckBinPath, [
@@ -429,9 +437,8 @@ function refPathSort({path: pathA}, {path: pathB}) {
     return -1;
   } else if (pathA > pathB) {
     return 1;
-  } else {
-    return 0;
   }
+  return 0;
 }
 
 const embarkInsidePkg = 'embark-inside-monorepo';

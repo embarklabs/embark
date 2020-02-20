@@ -21,7 +21,7 @@
     "type": "git",
     "url": "https://github.com/embarklabs/embark.git"
   },
-  "main": "./dist/lib/node/index.js",
+  "main": "./index.js",
   "types": "./dist/lib/node/index.d.ts",
   "browser": {
     "./dist/lib/node/index.js": "./dist/browser/lib/index.js",
@@ -34,7 +34,8 @@
   ],
   "files": [
     "dist/browser",
-    "dist/lib"
+    "dist/lib",
+    "index.js"
   ],
   "embark-collective": {
     "build:browser": true,
@@ -42,6 +43,9 @@
     "typecheck": {
       "exclude": [
         "src/lib/browser"
+      ],
+      "include": [
+        "src/lib/**/*"
       ]
     }
   },
@@ -50,10 +54,14 @@
     "_typecheck": "npm run solo -- typecheck",
     "ci": "npm run qa",
     "clean": "npm run reset",
-    "qa": "npm-run-all _typecheck _build test",
+    "lint": "eslint --ignore-pattern '!.*.js' .babelrc.js src/",
+    "qa": "npm-run-all lint _typecheck _build test",
     "reset": "npx rimraf .nyc_output coverage dist embarkjs-*.tgz package",
     "solo": "embark-solo",
     "test": "nyc --reporter=html --reporter=json mocha \"dist/test/**/*.js\" --exit --no-timeouts --require source-map-support/register"
+  },
+  "eslintConfig": {
+    "extends": "../../../.eslintrc.json"
   },
   "nyc": {
     "exclude": [
@@ -73,6 +81,7 @@
     "ajv": "6.10.2",
     "chai": "4.2.0",
     "embark-solo": "^5.1.1",
+    "eslint": "6.8.0",
     "lodash.clonedeep": "4.5.0",
     "mocha": "6.2.2",
     "npm-run-all": "4.1.5",

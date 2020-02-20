@@ -1,5 +1,3 @@
-/* global module process require */
-
 const ipc = require('node-ipc');
 const {parse, stringify} = require('flatted/cjs');
 const path = require('path');

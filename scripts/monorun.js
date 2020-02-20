@@ -1,5 +1,3 @@
-/* global process require */
-
 // there seems to be a bug in yarn whereby forwarding arguments with -- like so:
 //   $ yarn monorun [...] -- --foo
 // results in [...] being stripped away; can workaround with:

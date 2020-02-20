@@ -1,5 +1,3 @@
-/* global __dirname process require */
-
 const findUp = require('find-up');
 const {copy, ensureDir} = require('fs-extra');
 const path = require('path');

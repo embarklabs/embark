@@ -1,10 +1,10 @@
-/*global describe, it, require*/
+/* global describe it */
+
 import { File, Types } from "embark-utils";
 
 import ContractsManager from 'embark-contracts-manager';
-import Compiler from 'embark-compiler';
 import { Logger } from 'embark-logger';
-import { Events, fs, IPC, TestLogger, Plugins } from 'embark-core';
+import { Events, IPC, TestLogger, Plugins } from 'embark-core';
 import findUp from 'find-up';
 let assert = require('assert');
 
@@ -51,25 +51,6 @@ describe('embark.Contracts', function() {
     plugins.loadInternalPlugin('embark-solidity', {ipc: ipcObject}, true);
 
     let events = new Events();
-    let embarkObject = {
-      registerAPICall: () => {},
-      events: events,
-      fs: {
-        existsSync: () => { return false; },
-        dappPath: () => { return "ok"; }
-      },
-      logger: plugins.logger,
-      embarkConfig: {
-        options: {
-          solc: {
-            "optimize": true,
-            "optimize-runs": 200
-          }
-        }
-      }
-    };
-
-    let compiler = new Compiler(embarkObject, {plugins: plugins});
     let contractsConfig;
 
     events.setCommandHandler("config:contractsConfig", function(cb) {
@@ -134,7 +115,7 @@ describe('embark.Contracts', function() {
 
     describe('#build', function() {
       it('generate contracts', function(done) {
-        contractsManager.buildContracts(contractsConfig, compiledContracts, function(err, result) {
+        contractsManager.buildContracts(contractsConfig, compiledContracts, function(err, _result) {
           if (err) {
             throw err;
           }
@@ -194,7 +175,6 @@ describe('embark.Contracts', function() {
     plugins.loadInternalPlugin('embark-solidity', {ipc: ipcObject}, true);
 
     let events = new Events();
-    let compiler = new Compiler({events: events, logger: plugins.logger}, {plugins: plugins});
     let contractsConfig;
 
     events.setCommandHandler("config:contractsConfig", function(cb) {
@@ -268,7 +248,7 @@ describe('embark.Contracts', function() {
 
     describe('#build', function() {
       it('generate contracts', function(done) {
-        contractsManager.buildContracts(contractsConfig, compiledContracts, function(err, result) {
+        contractsManager.buildContracts(contractsConfig, compiledContracts, function(err, _result) {
           if (err) {
             throw err;
           }

@@ -1,10 +1,9 @@
 import { Callback, CompilerPluginObject, Embark, EmbarkPlugins } from "embark-core";
 import { __ } from "embark-i18n";
+import { File, Types, dappPath } from "embark-utils";
 import * as os from "os";
 import * as path from "path";
 import { promisify } from "util";
-
-const { File, Types, dappPath } = require("embark-utils");
 
 export default class Compiler {
   private fs: any;

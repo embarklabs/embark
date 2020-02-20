@@ -1,4 +1,5 @@
-/*global after, before, describe, it, require, process*/
+/* global after before describe it */
+
 import { fs } from 'embark-code-runner';
 const { embarkPath } = require('embark-utils');
 const {assert} = require('chai');

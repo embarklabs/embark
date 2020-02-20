@@ -1,5 +1,3 @@
-/* global __dirname require */
-
 const fs = require('fs-extra');
 const {execSync} = require('child_process');
 const path = require('path');

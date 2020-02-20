@@ -224,33 +224,34 @@ class ENS {
       return cb();
     }
 
-    await Promise.all(Object.keys(this.config.namesystemConfig.register.subdomains || {}).map((subDomainName) => {
-      return new Promise(async (resolve, _reject) => {
-        const address = this.config.namesystemConfig.register.subdomains[subDomainName];
-        const directivesRegExp = new RegExp(/\$(\w+\[?\d?\]?)/g);
+    await Promise.all(Object.keys(this.config.namesystemConfig.register.subdomains || {}).map(async (subDomainName) => {
+      const address = this.config.namesystemConfig.register.subdomains[subDomainName];
+      const directivesRegExp = new RegExp(/\$(\w+\[?\d?\]?)/g);
 
-        const directives = directivesRegExp.exec(address);
-        if (!directives || !directives.length || directives[0].includes('accounts')) {
-          return resolve();
-        }
+      const directives = directivesRegExp.exec(address);
+      if (!directives || !directives.length || directives[0].includes('accounts')) {
+        return;
+      }
 
-        const contract = await this.events.request2("contracts:contract", directives[1]);
-        if (!contract) {
-          // if the contract is not registered in the config, it will be undefined here
-          this.logger.error(__('Tried to register the subdomain "{{subdomain}}" as contract "{{contractName}}", ' +
-            'but "{{contractName}}" does not exist. Is it configured in your contract configuration?', {
-            contractName: directives[1],
-            subdomain: subDomainName
-          }));
-          return resolve();
+      const contract = await this.events.request2("contracts:contract", directives[1]);
+      if (!contract) {
+        // if the contract is not registered in the config, it will be undefined here
+        this.logger.error(__('Tried to register the subdomain "{{subdomain}}" as contract "{{contractName}}", ' +
+          'but "{{contractName}}" does not exist. Is it configured in your contract configuration?', {
+          contractName: directives[1],
+          subdomain: subDomainName
+        }));
+        return;
+      }
+      let resolve;
+      const promise = new Promise(res => { resolve = res; });
+      this.safeRegisterSubDomain(subDomainName, contract.deployedAddress, defaultAccount, (err) => {
+        if (err) {
+          this.logger.error(err);
         }
-        this.safeRegisterSubDomain(subDomainName, contract.deployedAddress, defaultAccount, (err) => {
-          if (err) {
-            this.logger.error(err);
-          }
-          resolve();
-        });
+        resolve();
       });
+      return promise;
     }));
 
     cb();

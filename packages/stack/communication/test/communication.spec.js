@@ -1,10 +1,11 @@
 import sinon from 'sinon';
 import assert from 'assert';
-import { fakeEmbark, Plugins } from 'embark-testing';
+import { fakeEmbark } from 'embark-testing';
 import Communication from '../src/';
 
 describe('stack/communication', () => {
 
+  // eslint-disable-next-line no-unused-vars
   let communication, communicationNodeLaunchFn, doneCb;
 
   const { embark } = fakeEmbark();
@@ -13,7 +14,7 @@ describe('stack/communication', () => {
     embark.setConfig({
       communicationConfig: {
         connection: {
-          host: 'localhost',
+          host: 'localhost'
         }
       },
       embarkConfig: {}
@@ -24,10 +25,10 @@ describe('stack/communication', () => {
     communicationNodeLaunchFn = sinon.spy(done => {
       embark.events.request('processes:register', 'communication', {
         launchFn: cb => cb(),
-        stopFn: cb => cb(),
+        stopFn: cb => cb()
       });
 
-      embark.events.request('processes:launch', 'communication', err => {
+      embark.events.request('processes:launch', 'communication', _err => {
         done();
       });
     });
@@ -46,8 +47,8 @@ describe('stack/communication', () => {
       enabled: true
     };
 
-    const processRegisterHandler = sinon.spy((name, fns) => {});
-    const processLaunchHandler = sinon.spy((name, fn) => fn());
+    const processRegisterHandler = sinon.spy((_name, _fns) => {});
+    const processLaunchHandler = sinon.spy((_name, fn) => fn());
 
     embark.events.setCommandHandler('processes:register', processRegisterHandler);
     embark.events.setCommandHandler('processes:launch', processLaunchHandler);

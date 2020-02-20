@@ -1,5 +1,3 @@
-/* global exports process require */
-
 const {join} = require('path');
 const {promisify} = require('util');
 const rimraf = promisify(require('rimraf'));

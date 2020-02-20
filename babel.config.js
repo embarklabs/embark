@@ -1,5 +1,3 @@
-/* global module require */
-
 /*
  * dependencies of this config should be specified in `./package.json` relative
  * to this config file (which should be in the root of the monorepo);
@@ -21,20 +19,26 @@ module.exports = (api) => {
     ],
     plugins: [
       'babel-plugin-macros',
-      ['@babel/plugin-proposal-decorators', {
-        legacy: true
-      }],
+      [
+        '@babel/plugin-proposal-decorators', {
+          legacy: true
+        }
+      ],
       '@babel/plugin-proposal-export-namespace-from',
       '@babel/plugin-proposal-export-default-from',
       '@babel/plugin-syntax-dynamic-import',
-      ['@babel/plugin-proposal-class-properties', {
-        loose: true
-      }],
+      [
+        '@babel/plugin-proposal-class-properties', {
+          loose: true
+        }
+      ],
       '@babel/plugin-proposal-nullish-coalescing-operator',
       '@babel/plugin-proposal-optional-chaining',
-      ['@babel/plugin-transform-runtime', {
-        corejs: 3
-      }]
+      [
+        '@babel/plugin-transform-runtime', {
+          corejs: 3
+        }
+      ]
     ],
     presets: [
       '@babel/preset-env',
@@ -48,13 +52,15 @@ module.exports = (api) => {
 
   const browser = cloneDeep(base);
   browser.plugins[browser.plugins.length - 1][1].useESModules = true;
-  browser.presets[0] = [browser.presets[0], {
-    corejs: 3,
-    modules: false,
-    shippedProposals: true,
-    targets: {browsers: ['last 1 version', 'not dead', '> 0.2%']},
-    useBuiltIns: 'usage'
-  }];
+  browser.presets[0] = [
+    browser.presets[0], {
+      corejs: 3,
+      modules: false,
+      shippedProposals: true,
+      targets: {browsers: ['last 1 version', 'not dead', '> 0.2%']},
+      useBuiltIns: 'usage'
+    }
+  ];
 
   if (env === 'browser' || env.startsWith('browser:')) {
     return browser;
@@ -66,12 +72,14 @@ module.exports = (api) => {
     0,
     'babel-plugin-dynamic-import-node'
   );
-  node.presets[0] = [node.presets[0], {
-    corejs: 3,
-    shippedProposals: true,
-    targets: {node: '10.17.0'},
-    useBuiltIns: 'usage'
-  }];
+  node.presets[0] = [
+    node.presets[0], {
+      corejs: 3,
+      shippedProposals: true,
+      targets: {node: '10.17.0'},
+      useBuiltIns: 'usage'
+    }
+  ];
 
   if (env === 'node' || env.startsWith('node:')) {
     return node;

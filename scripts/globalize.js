@@ -1,5 +1,3 @@
-/* global __dirname process require */
-
 const {execSync} = require('child_process');
 const fs = require('fs');
 const {EOL} = require('os');
@@ -15,7 +13,7 @@ const getStdout = (cmd) => {
   try {
     out = execSync(
       cmd,
-      {stdio: ['ignore', 'pipe', 'ignore']},
+      {stdio: ['ignore', 'pipe', 'ignore']}
     ).toString().trim();
   } catch (e) {
     process.exit(1);

@@ -1,5 +1,6 @@
-/*global describe, it, require*/
-import { fs, IPC, TestLogger } from 'embark-core';
+/* global describe it */
+
+import { IPC, TestLogger } from 'embark-core';
 import { File, Types } from 'embark-utils';
 let SolidityCompiler = require('embark-solidity');
 
@@ -84,7 +85,7 @@ describe('embark.Solidity', function() {
       compiler.compile_solidity([
         readFile('modules/solidity/contracts/simple_storage.sol'),
         readFile('modules/solidity/contracts/token.sol')
-      ], {}, function(err, compiledContracts) {
+      ], {}, function(_err, _compiledContracts) {
         //assert.deepEqual(compiledContracts, expectedObject);
         done();
       });
@@ -127,7 +128,7 @@ describe('embark.Solidity', function() {
       compiler.compile_solidity([
         readFile('modules/solidity/contracts/simple_storage.sol'),
         readFile('modules/solidity/contracts/token.sol')
-      ], {}, function(err, compiledContracts) {
+      ], {}, function(_err, _compiledContracts) {
         //assert.deepEqual(compiledContracts, expectedObject);
         done();
       });

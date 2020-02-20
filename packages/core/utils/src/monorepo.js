@@ -1,5 +1,3 @@
-/* global __dirname module require */
-
 const findUp = require('find-up');
 const {readJson, readJsonSync} = require('fs-extra');
 

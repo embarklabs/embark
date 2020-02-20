@@ -20,6 +20,9 @@
       "path": "../core"
     },
     {
+      "path": "../i18n"
+    },
+    {
       "path": "../logger"
     },
     {

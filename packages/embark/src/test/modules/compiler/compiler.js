@@ -1,4 +1,5 @@
-/*global describe, it, require*/
+/* global describe it */
+
 import { Events, Plugins, TestLogger } from 'embark-core';
 import { File, Types } from "embark-utils";
 import findUp from 'find-up';
@@ -61,6 +62,7 @@ describe('embark.Compiler', function() {
       }
     };
 
+    // eslint-disable-next-line no-unused-vars
     const compiler = new Compiler(embarkObject, {plugins: plugins});
 
     it("should return aggregated result", (done) => {

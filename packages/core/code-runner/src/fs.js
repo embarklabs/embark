@@ -1,4 +1,3 @@
-/* global module process require */
 const fs = require('fs-extra');
 const os = require('os');
 const parseJson = require('parse-json');

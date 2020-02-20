@@ -1,5 +1,3 @@
-/* global process require */
-
 const {execSync} = require('child_process');
 
 let branchName = execSync('git name-rev --name-only HEAD').toString().trim();

@@ -1,5 +1,3 @@
-/* global __dirname process require */
-
 const chalk = require('chalk');
 const {execSync} = require('child_process');
 const minimist = require('minimist');
@@ -40,6 +38,7 @@ const runCommand = (cmd, inherit = true, display) => {
   return out;
 };
 
+// eslint-disable-next-line complexity
 (async () => {
   if (!process.env.GH_TOKEN) {
     logError(

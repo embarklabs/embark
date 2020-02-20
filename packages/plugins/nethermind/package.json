@@ -14,7 +14,8 @@
     "nethermind"
   ],
   "files": [
-    "dist"
+    "dist",
+    "index.js"
   ],
   "license": "MIT",
   "repository": {
@@ -22,7 +23,7 @@
     "type": "git",
     "url": "https://github.com/embarklabs/embark.git"
   },
-  "main": "./dist/index.js",
+  "main": "./index.js",
   "types": "./dist/index.d.ts",
   "embark-collective": {
     "build:node": true,
@@ -47,6 +48,7 @@
     "core-js": "3.4.3",
     "embark-core": "^5.2.2",
     "embark-i18n": "^5.1.1",
+    "embark-logger": "^5.2.0",
     "embark-utils": "^5.2.0",
     "fs-extra": "8.1.0",
     "netcat": "1.3.5",
@@ -55,7 +57,7 @@
   },
   "devDependencies": {
     "embark-solo": "^5.1.1",
-    "eslint": "5.7.0",
+    "eslint": "6.8.0",
     "npm-run-all": "4.1.5",
     "rimraf": "3.0.0"
   },

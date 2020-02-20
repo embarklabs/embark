@@ -1,5 +1,3 @@
-/* global __dirname process require */
-
 const {sync: findUp} = require('find-up');
 const {delimiter, dirname, join} = require('path');
 

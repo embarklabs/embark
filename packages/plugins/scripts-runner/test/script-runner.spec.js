@@ -2,7 +2,7 @@ import sinon from 'sinon';
 import assert from 'assert';
 import path from 'path';
 import { fakeEmbark } from 'embark-testing';
-import ScriptsRunnerPlugin, { ScriptsRunnerCommand, ScriptsRunnerEvent } from '../src/';
+import ScriptsRunnerPlugin, { ScriptsRunnerCommand } from '../src/';
 import { file as tmpFile, dir as tmpDir } from 'tmp-promise';
 import { promises } from 'fs';
 
@@ -18,19 +18,19 @@ async function prepareScriptFile(content, dir) {
 
 const web3Mock = {
   eth: {
-    getBlock: sinon.spy((number, flag) => { hash: 'testhash'})
+    getBlock: sinon.spy((_number, _flag) => 'testhash')
   }
-}
+};
 
 describe('plugins/scripts-runner', () => {
 
+  // eslint-disable-next-line no-unused-vars
   let scriptRunner,
       testTracker,
       runCodeCommandHandler,
       blockchainClientProviderCommandHandler,
       contractsListCommandHandler,
-      embark,
-      plugins;
+      embark;
 
   beforeEach(async () => {
     const testBed = fakeEmbark({
@@ -43,15 +43,15 @@ describe('plugins/scripts-runner', () => {
 
     testTracker = {
       web3: web3Mock,
-      ensureTrackingFile: sinon.spy((hash, env) => {}),
-      track: sinon.spy(config => {}),
+      ensureTrackingFile: sinon.spy((_hash, _env) => {}),
+      track: sinon.spy(_config => {}),
       isTracked: sinon.spy(() => false),
-      setWeb3: sinon.spy(web3 => {})
+      setWeb3: sinon.spy(_web3 => {})
     };
 
 
     embark = testBed.embark;
-    scriptRunner = new ScriptsRunnerPlugin(embark, { tracker: testTracker })
+    scriptRunner = new ScriptsRunnerPlugin(embark, { tracker: testTracker });
 
     runCodeCommandHandler = sinon.spy((code, cb) => {
       // `ScriptsRunnerPlugin` requests code evaluation two times.
@@ -72,7 +72,7 @@ describe('plugins/scripts-runner', () => {
         { className: 'SimpleStorage' },
         { className: 'AnotherOne' },
         { className: 'Foo' }
-      ])
+      ]);
     });
 
     embark.events.setCommandHandler('contracts:list', contractsListCommandHandler);
@@ -99,11 +99,13 @@ describe('plugins/scripts-runner', () => {
   it('should execute all scripts in a directory', async (done) => {
     const scriptsDir = await tmpDir();
 
+    // eslint-disable-next-line no-unused-vars
     const scriptFile1 = await prepareScriptFile(
       `module.exports = () => { return 'done' }`,
       scriptsDir.path
     );
 
+    // eslint-disable-next-line no-unused-vars
     const scriptFile2 = await prepareScriptFile(
       `module.exports = () => { return 'done2' }`,
       scriptsDir.path
@@ -123,7 +125,7 @@ describe('plugins/scripts-runner', () => {
     const expectedResult = {
       scriptName: path.basename(scriptFile.path),
       scriptDirectory: path.basename(path.dirname(scriptFile.path)),
-      forceTracking: true,
+      forceTracking: true
     };
 
     embark.events.request(ScriptsRunnerCommand.Execute, scriptFile.path, true, (err, result) => {
@@ -137,7 +139,7 @@ describe('plugins/scripts-runner', () => {
 
   it('should track automatically if script directory equals migrations directory', async (done) => {
     const scriptsDir = await tmpDir();
-    const migrationsDir = path.join(scriptsDir.path, embark.config.embarkConfig.migrations)
+    const migrationsDir = path.join(scriptsDir.path, embark.config.embarkConfig.migrations);
 
     await promises.mkdir(migrationsDir);
 
@@ -149,7 +151,7 @@ describe('plugins/scripts-runner', () => {
     const expectedResult = {
       scriptName: path.basename(scriptFile.path),
       scriptDirectory: path.basename(migrationsDir),
-      forceTracking: false,
+      forceTracking: false
     };
 
     embark.events.request(ScriptsRunnerCommand.Execute, scriptFile.path, false, (err, result) => {

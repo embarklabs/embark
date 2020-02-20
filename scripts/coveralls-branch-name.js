@@ -1,5 +1,3 @@
-/* global process require */
-
 const {execSync} = require('child_process');
 
 const nameRevCmd = 'git name-rev --name-only HEAD';

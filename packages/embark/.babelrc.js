@@ -1,5 +1,3 @@
-/* global __dirname module require */
-
 const cloneDeep = require('lodash.clonedeep');
 const {copySync, ensureDirSync} = require('fs-extra');
 const glob = require('glob');

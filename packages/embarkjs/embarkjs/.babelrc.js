@@ -1,5 +1,3 @@
-/* global module require */
-
 const cloneDeep = require('lodash.clonedeep');
 
 module.exports = (api) => {
@@ -18,9 +16,7 @@ module.exports = (api) => {
 
   const node = cloneDeep(base);
   Object.assign(node, {
-    ignore: [
-      'src/lib/browser'
-    ]
+    ignore: ['src/lib/browser']
   });
 
   const test = cloneDeep(node);

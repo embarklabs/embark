@@ -1,4 +1,5 @@
-/*global __dirname, describe, it, before, after, require*/
+/* global describe it before after */
+
 import { TestLogger } from 'embark-core';
 import * as i18n from 'embark-i18n';
 const assert = require('assert');
@@ -8,12 +9,9 @@ import {
   dappPath,
   getWeiBalanceFromString,
   getHexBalanceFromString,
-  AccountParser,
-  joinPath,
-  setUpEnv
+  AccountParser
 } from 'embark-utils';
 
-/* setUpEnv(joinPath(__dirname, '../../')); */
 i18n.setOrDetectLocale('en');
 
 describe('embark.AccountParser', function () {
