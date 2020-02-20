@@ -1,5 +1,3 @@
-/* global __dirname module process require */
-
 const fs = require('fs');
 const path = require('path');
 

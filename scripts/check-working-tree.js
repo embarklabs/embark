@@ -1,5 +1,3 @@
-/* global process require */
-
 const {execSync} = require('child_process');
 
 try {

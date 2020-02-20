@@ -1,5 +1,3 @@
-import { string } from "prop-types";
-
 import http from "http";
 import net from "net";
 import { waterfall } from "async";

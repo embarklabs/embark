@@ -16,7 +16,8 @@
     "solidity"
   ],
   "files": [
-    "dist"
+    "dist",
+    "index.js"
   ],
   "license": "MIT",
   "repository": {
@@ -24,7 +25,7 @@
     "type": "git",
     "url": "https://github.com/embarklabs/embark.git"
   },
-  "main": "./dist/index.js",
+  "main": "./index.js",
   "types": "./dist/index.d.ts",
   "embark-collective": {
     "build:node": true,
@@ -36,6 +37,7 @@
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
+    "lint:js": "eslint test/",
     "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
     "qa": "npm-run-all lint _typecheck _build test",
     "reset": "npx rimraf .nyc_output coverage dist embark-*.tgz package",
@@ -43,7 +45,11 @@
     "test": "jest"
   },
   "eslintConfig": {
-    "extends": "../../../.eslintrc.json"
+    "extends": [
+      "../../../.eslintrc.json",
+      "plugin:jest/recommended",
+      "plugin:jest/style"
+    ]
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.7.4",
@@ -62,6 +68,8 @@
     "embark-logger": "^5.2.0",
     "embark-solo": "^5.1.1",
     "embark-testing": "^5.2.0",
+    "eslint": "6.8.0",
+    "eslint-plugin-jest": "22.5.1",
     "jest": "24.9.0",
     "npm-run-all": "4.1.5",
     "rimraf": "3.0.0",

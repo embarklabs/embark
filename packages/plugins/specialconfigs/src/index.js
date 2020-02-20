@@ -1,5 +1,3 @@
-/* global module require */
-
 import {__} from 'embark-i18n';
 const ListConfigs = require('./listConfigs.js');
 const FunctionConfigs = require('./functionConfigs.js');

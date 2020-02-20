@@ -12,7 +12,8 @@ process.env.DAPP_PATH = 'something';
 
 describe('stack/compiler', () => {
 
-  let compiler, doneCb;
+  // eslint-disable-next-line no-unused-vars
+  let compiler;
 
   beforeEach(() => {
     compiler = new Compiler(embark, { plugins });
@@ -27,7 +28,7 @@ describe('stack/compiler', () => {
     const fooCompiler = sinon.spy((files, options, cb) => cb(null, {
       contractA: 'someResultA',
       contractB: 'someResultB',
-      contractC: 'someResultC',
+      contractC: 'someResultC'
     }));
 
     embark.plugins.createPlugin('fooCompiler').registerCompiler('.foo', fooCompiler);
@@ -35,7 +36,7 @@ describe('stack/compiler', () => {
     embark.events.request('compiler:contracts:compile', [
       new File({filename: 'foo.foo', type: Types.dappFile, path: 'foo.foo'}),
       new File({filename: 'foo2.foo', type: Types.dappFile, path: 'foo2.foo'}),
-      new File({filename: 'foo3.foo', type: Types.dappFile, path: 'foo3.foo'}),
+      new File({filename: 'foo3.foo', type: Types.dappFile, path: 'foo3.foo'})
     ], () => {
       assert(fooCompiler.called);
       done();
@@ -43,15 +44,13 @@ describe('stack/compiler', () => {
   });
 
   test('it should iterate over available compilers to find a match for a given source file', done => {
-    const fooCompiler = sinon.spy((files, options, cb) => cb(null, { fooContract: 'foo', }));
-    const barCompiler = sinon.spy((files, options, cb) => cb(null, { barContract: 'bar', }));
+    const fooCompiler = sinon.spy((files, options, cb) => cb(null, { fooContract: 'foo' }));
+    const barCompiler = sinon.spy((files, options, cb) => cb(null, { barContract: 'bar' }));
 
     embark.plugins.createPlugin('fooCompiler').registerCompiler('.foo', fooCompiler);
     embark.plugins.createPlugin('barCompiler').registerCompiler('.bar', barCompiler);
 
-    embark.events.request('compiler:contracts:compile', [
-      new File({filename: 'foo.bar', type: Types.dappFile, path: 'foo.bar'}),
-    ], () => {
+    embark.events.request('compiler:contracts:compile', [new File({filename: 'foo.bar', type: Types.dappFile, path: 'foo.bar'})], () => {
       assert(fooCompiler.notCalled);
       assert(barCompiler.called);
       done();
@@ -59,12 +58,10 @@ describe('stack/compiler', () => {
   });
 
   test('it should not compile source files if there is no matching compiler', done => {
-    const fooCompiler = sinon.spy((files, options, cb) => cb(null, { fooContract: 'foo', }));
+    const fooCompiler = sinon.spy((files, options, cb) => cb(null, { fooContract: 'foo' }));
     embark.plugins.createPlugin('fooCompiler').registerCompiler('.foo', fooCompiler);
 
-    const files = [
-      new File({filename: 'foo.bar', type: Types.dappFile, path: 'foo.bar'})
-    ];
+    const files = [new File({filename: 'foo.bar', type: Types.dappFile, path: 'foo.bar'})];
 
     embark.events.request('compiler:contracts:compile', files, () => {
       files.forEach(file => assert(!file.compiled));

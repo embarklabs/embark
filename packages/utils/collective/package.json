@@ -12,9 +12,10 @@
   "keywords": [],
   "license": "MIT",
   "bin": "./bin/collective",
-  "main": "index.js",
+  "main": "./src/index.js",
   "files": [],
   "scripts": {
+    "_lint": "eslint bin/collective src/",
     "build": "run-p build:node build:browser",
     "build:browser": "node bin/collective build:browser",
     "build:browser:watch": "node bin/collective build:browser --verbose --watch",
@@ -40,9 +41,13 @@
     "// watch:test": "npm run test -- --watch",
     "watch:typecheck": "npm run typecheck -- --preserveWatchOutput --watch"
   },
+  "eslintConfig": {
+    "extends": "../../../.eslintrc.json"
+  },
   "devDependencies": {
     "@lerna/filter-packages": "3.16.0",
     "embark-inside-monorepo": "^5.1.0",
+    "eslint": "6.8.0",
     "find-up": "4.1.0",
     "fs-extra": "8.1.0",
     "glob": "7.1.4",

@@ -1,5 +1,3 @@
-/* global __dirname process require */
-
 const chalk = require('chalk');
 const {execSync} = require('child_process');
 const path = require('path');

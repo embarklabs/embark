@@ -1,5 +1,3 @@
-/* global __dirname process require */
-
 // This script doesn't use JS syntax, packages, or APIs *un*supported by any
 // node version >=4.0.0, so unsupported versions from v4.0.0+ will get the
 // intended error messages. A future version of this script could instead rely

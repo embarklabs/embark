@@ -21,10 +21,11 @@
     "type": "git",
     "url": "https://github.com/embarklabs/embark.git"
   },
-  "main": "./dist/index.js",
+  "main": "./index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "index.js"
   ],
   "embark-collective": {
     "build:node": true,
@@ -59,7 +60,8 @@
     "express": "4.17.1",
     "express-ws": "4.0.0",
     "find-up": "4.1.0",
-    "helmet": "3.13.0"
+    "helmet": "3.13.0",
+    "ws": "7.1.2"
   },
   "devDependencies": {
     "embark-solo": "^5.1.1",

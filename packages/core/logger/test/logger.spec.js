@@ -1,11 +1,10 @@
 import assert from 'assert';
 import sinon from 'sinon';
-import * as fs from 'fs';
 import { fakeEmbark } from 'embark-testing';
 
 describe('core/logger', () => {
 
-  const { embark, plugins } = fakeEmbark();
+  const { embark } = fakeEmbark();
 
   let logger, testLogFn, resolve;
   const logFile = 'embark.log';

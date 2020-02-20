@@ -1,4 +1,3 @@
-/*globals describe, it*/
 import assert from 'assert';
 import { fakeEmbark } from 'embark-testing';
 import Console from '../src';
@@ -10,7 +9,7 @@ process.env.DAPP_PATH = 'something';
 
 describe('core/console', () => {
 
-  const { embark, plugins } = fakeEmbark();
+  const { embark } = fakeEmbark();
 
 
   let console;

@@ -1,5 +1,3 @@
-/* global module require */
-
 const {fromEvent, merge, throwError} = require('rxjs');
 const {map, mergeMap} = require('rxjs/operators');
 

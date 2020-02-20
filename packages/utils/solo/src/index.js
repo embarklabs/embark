@@ -1,9 +1,6 @@
-/* global __dirname module process require */
-
 const {spawn} = require('child_process');
 const {sync: findUp} = require('find-up');
 const {readJsonSync, realpathSync} = require('fs-extra');
-const {join} = require('path');
 
 module.exports = function (cliArgs) {
   process.env.EMBARK_SOLO='t';
@@ -19,10 +16,6 @@ module.exports = function (cliArgs) {
   const embarkCollectivePath = realpathSync(findUp(
     'node_modules/embark-collective', {cwd: __dirname, type: 'directory'}
   ));
-
-  const embarkCollectivePkgJson = readJsonSync(
-    join(embarkCollectivePath, 'package.json')
-  );
 
   const npmCmd = process.platform === 'win32' ? 'npm.cmd': 'npm';
   const subp = spawn(npmCmd, [

@@ -16,7 +16,8 @@
     "solidity"
   ],
   "files": [
-    "dist"
+    "dist",
+    "index.js"
   ],
   "license": "MIT",
   "repository": {
@@ -24,7 +25,7 @@
     "type": "git",
     "url": "https://github.com/embarklabs/embark.git"
   },
-  "main": "./dist/index.js",
+  "main": "./index.js",
   "types": "./dist/index.d.ts",
   "embark-collective": {
     "build:node": true,
@@ -49,13 +50,17 @@
     "core-js": "3.4.3",
     "embark-core": "^5.2.2",
     "embark-i18n": "^5.1.1",
+    "embark-logger": "^5.2.0",
     "embark-utils": "^5.2.0",
+    "embarkjs": "^5.2.3-nightly.0",
     "embarkjs-whisper": "^5.1.1",
-    "rxjs": "6.4.0"
+    "rxjs": "6.4.0",
+    "semver": "5.6.0",
+    "ws": "7.1.2"
   },
   "devDependencies": {
     "embark-solo": "^5.1.1",
-    "eslint": "5.7.0",
+    "eslint": "6.8.0",
     "npm-run-all": "4.1.5",
     "rimraf": "3.0.0",
     "web3": "1.2.6"

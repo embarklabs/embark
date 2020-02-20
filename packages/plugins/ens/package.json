@@ -17,7 +17,8 @@
     "ens"
   ],
   "files": [
-    "dist"
+    "dist",
+    "index.js"
   ],
   "license": "MIT",
   "repository": {
@@ -25,7 +26,7 @@
     "type": "git",
     "url": "https://github.com/embarklabs/embark.git"
   },
-  "main": "./dist/index.js",
+  "main": "./index.js",
   "types": "./dist/index.d.ts",
   "embark-collective": {
     "build:node": true,
@@ -36,7 +37,7 @@
     "_typecheck": "npm run solo -- typecheck",
     "ci": "npm run qa",
     "clean": "npm run reset",
-    "lint": "eslint src/",
+    "lint": "eslint src/ test/",
     "qa": "npm-run-all lint _typecheck _build test",
     "reset": "npx rimraf dist embark-*.tgz package",
     "solo": "embark-solo",
@@ -61,7 +62,7 @@
     "babel-jest": "24.9.0",
     "embark-solo": "^5.1.1",
     "embark-testing": "^5.2.0",
-    "eslint": "5.7.0",
+    "eslint": "6.8.0",
     "eslint-plugin-jest": "22.5.1",
     "jest": "24.9.0",
     "npm-run-all": "4.1.5",

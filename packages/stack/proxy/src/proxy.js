@@ -1,4 +1,3 @@
-/* global Buffer exports require */
 import { __ } from 'embark-i18n';
 import express from 'express';
 import expressWs from 'express-ws';
@@ -163,16 +162,17 @@ export class Proxy {
     }
   }
 
-  forwardRequestToNode(request) {
-    return new Promise(async (resolve, reject) => {
-      const reqMgr = await this.requestManager;
-      reqMgr.send(request, (fwdReqErr, result) => {
-        if (fwdReqErr) {
-          return reject(fwdReqErr);
-        }
-        resolve(result);
-      });
+  async forwardRequestToNode(request) {
+    const reqMgr = await this.requestManager;
+    let reject, resolve;
+    const promise = new Promise((res, rej) => { resolve = res; reject = rej; });
+    reqMgr.send(request, (fwdReqErr, result) => {
+      if (fwdReqErr) {
+        return reject(fwdReqErr);
+      }
+      resolve(result);
     });
+    return promise;
   }
 
   async handleSubscribe(clientSocket, request, response, cb) {

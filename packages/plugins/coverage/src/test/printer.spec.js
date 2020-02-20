@@ -1,8 +1,9 @@
+/* global describe it */
+
 import assert from "assert";
 import fs from "fs";
-import { describe, it } from "mocha";
 import path from "path";
-import parser, { SourceUnit } from "solidity-parser-antlr";
+import parser from "solidity-parser-antlr";
 
 import { Printer } from "../lib/printer";
 
@@ -13,7 +14,7 @@ const FIXTURES = fs.readdirSync(FIXTURE_PATH).map((f) => {
   return {
     basename: f,
     path: fp,
-    source: fs.readFileSync(fp, "utf8"),
+    source: fs.readFileSync(fp, "utf8")
   };
 });
 
@@ -22,11 +23,11 @@ describe("Printer", () => {
     describe("prints equivalent code", () => {
       for (const fixture of FIXTURES) {
         it(fixture.basename, () => {
-          const astBefore = parser.parse(fixture.source, {loc: false, range: false}) as SourceUnit;
+          const astBefore = parser.parse(fixture.source, {loc: false, range: false});
           const printer = new Printer(astBefore);
 
           const source = printer.print();
-          const astAfter = parser.parse(source, {loc: false, range: false}) as SourceUnit;
+          const astAfter = parser.parse(source, {loc: false, range: false});
 
           // Remove .tokens from the AST as it gets walked and processed by
           // prettier. This is not consequential for anything else. Also, the

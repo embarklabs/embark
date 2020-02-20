@@ -20,6 +20,9 @@
       "path": "../../core/utils"
     },
     {
+      "path": "../../embarkjs/embarkjs"
+    },
+    {
       "path": "../../embarkjs/whisper"
     }
   ]

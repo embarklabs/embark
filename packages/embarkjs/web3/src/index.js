@@ -1,5 +1,3 @@
-/* global global require */
-
 const Web3 = require('web3');
 const __embarkWeb3 = {};
 

@@ -1,4 +1,3 @@
-/* global EmbarkJS Web3 listenTo sendMessage */
 let Web3 = require('web3');
 let { Manager } = require('web3-core-requestmanager');
 

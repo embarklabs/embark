@@ -1,5 +1,3 @@
-/* global Buffer global module require */
-
 const async = require('async');
 const http = require('http');
 const net = require('net');

@@ -12,9 +12,10 @@
   "bugs": "https://github.com/embarklabs/embark/issues",
   "keywords": [],
   "files": [
-    "dist/"
+    "dist",
+    "index.js"
   ],
-  "main": "./dist/index.js",
+  "main": "./index.js",
   "types": "./dist/index.d.ts",
   "embark-collective": {
     "build:node": true,
@@ -26,11 +27,19 @@
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
+    "lint:js": "eslint test/",
     "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
     "qa": "npm-run-all lint _typecheck _build test",
     "reset": "npx rimraf dist embark-*.tgz package",
     "solo": "embark-solo",
     "test": "jest"
+  },
+  "eslintConfig": {
+    "extends": [
+      "../../../.eslintrc.json",
+      "plugin:jest/recommended",
+      "plugin:jest/style"
+    ]
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.7.4",
@@ -41,7 +50,8 @@
     "embark-logger": "^5.2.0",
     "embark-utils": "^5.2.0",
     "fs-extra": "8.1.0",
-    "web3": "1.2.4"
+    "web3": "1.2.6",
+    "web3-eth": "1.2.6"
   },
   "devDependencies": {
     "@babel/core": "7.7.4",
@@ -49,10 +59,15 @@
     "babel-jest": "24.9.0",
     "embark-solo": "^5.1.1-nightly.2",
     "embark-testing": "^5.2.0",
+    "eslint": "6.8.0",
+    "eslint-plugin-jest": "22.5.1",
     "jest": "24.9.0",
     "npm-run-all": "4.1.5",
     "rimraf": "3.0.0",
-    "tmp-promise": "1.1.0"
+    "sinon": "7.4.2",
+    "tmp-promise": "1.1.0",
+    "tslint": "5.20.1",
+    "typescript": "3.7.2"
   },
   "engines": {
     "node": ">=10.17.0",

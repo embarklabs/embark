@@ -29,9 +29,10 @@
     "url": "https://github.com/embarklabs/embark.git"
   },
   "files": [
-    "dist"
+    "dist",
+    "index.js"
   ],
-  "main": "./dist/index.js",
+  "main": "./index.js",
   "types": "./dist/index.d.ts",
   "embark-collective": {
     "build:node": true,
@@ -58,15 +59,16 @@
   },
   "devDependencies": {
     "@babel/core": "7.7.4",
+    "@typescript-eslint/parser": "2.20.0",
     "babel-eslint": "10.0.3",
     "babel-jest": "24.9.0",
     "embark-solo": "^5.1.1",
-    "eslint": "6.2.2",
+    "eslint": "6.8.0",
     "eslint-config-prettier": "6.1.0",
+    "eslint-plugin-import": "2.18.2",
     "eslint-plugin-jest": "22.5.1",
     "eslint-plugin-prettier": "3.1.0",
     "jest": "24.9.0",
-    "lodash.clonedeep": "4.5.0",
     "npm-run-all": "4.1.5",
     "prettier": "1.18.2",
     "rimraf": "3.0.0"
@@ -78,11 +80,19 @@
     },
     "extends": [
       "eslint:recommended",
+      "plugin:import/typescript",
       "plugin:jest/recommended",
       "plugin:jest/style",
       "plugin:prettier/recommended"
     ],
-    "parser": "babel-eslint"
+    "parser": "babel-eslint",
+    "plugins": [
+      "import"
+    ],
+    "rules": {
+      "import/no-extraneous-dependencies": "error",
+      "import/no-unresolved": [2, { "commonjs": true }]
+    }
   },
   "jest": {
     "collectCoverage": true,

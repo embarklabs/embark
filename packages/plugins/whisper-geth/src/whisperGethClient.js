@@ -67,7 +67,6 @@ class WhisperGethClient {
     try {
       let v = semver(parsedVersion);
       v = `${v.major}.${v.minor}.${v.patch}`;
-      // eslint-disable-next-line no-cap
       test = semver.Range(this.versSupported).test(semver(v));
       if (typeof test !== "boolean") {
         // eslint-disable-next-line no-undefined

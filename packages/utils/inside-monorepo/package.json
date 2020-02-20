@@ -5,12 +5,19 @@
   "author": "Michael Bradley <michaelsbradleyjr@gmail.com> (https://github.com/michaelsbradleyjr/)",
   "description": "If a package from the monorepo can resolve this package then the first package is inside the monorepo",
   "license": "MIT",
-  "main": "index.js",
+  "main": "./src/index.js",
   "scripts": {
+    "ci": "npm run qa",
     "clean": "npm run reset",
+    "lint": "eslint src/",
+    "qa": "npm-run-all lint",
     "reset": "npx rimraf embark-*.tgz package"
   },
+  "eslintConfig": {
+    "extends": "../../../.eslintrc.json"
+  },
   "devDependencies": {
+    "eslint": "6.8.0",
     "rimraf": "3.0.0"
   },
   "engines": {

@@ -29,7 +29,7 @@
     "build-storybook": "build-storybook -s public",
     "ci": "npm-run-all lint test",
     "clean": "npm run reset",
-    "lint": "eslint src/",
+    "lint": "eslint scripts/ src/",
     "prebuild": "node scripts/copy-monaco-to-public",
     "prestart": "node scripts/copy-monaco-to-public dev",
     "qa": "npm-run-all lint test build",

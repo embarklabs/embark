@@ -1,4 +1,3 @@
-/*global require, module*/
 const Compiler = require("./lib/Compiler");
 const semver = require('semver');
 

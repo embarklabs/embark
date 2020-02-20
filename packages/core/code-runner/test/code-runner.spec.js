@@ -9,13 +9,13 @@ process.env.DAPP_PATH = 'something';
 
 describe('core/code-runner', () => {
 
-  const { embark, plugins } = fakeEmbark();
+  const { embark } = fakeEmbark();
 
-  let codeRunner, doneCb;
+  // eslint-disable-next-line no-unused-vars
+  let codeRunner;
 
   beforeEach(() => {
     codeRunner = new CodeRunner(embark);
-    doneCb = sinon.fake();
   });
 
   afterEach(() => {
@@ -42,4 +42,3 @@ describe('core/code-runner', () => {
     await embark.events.request2('runcode:eval', `testVar.foo = 'bar';`);
   });
 });
-

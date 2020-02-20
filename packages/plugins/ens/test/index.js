@@ -24,7 +24,7 @@ describe('embark-ens', () => {
         dappConnection: []
       },
       contractsConfig: {dappAutoEnable: true}
-    }
+    };
   });
 
   afterEach(() => {
@@ -53,7 +53,7 @@ describe('embark-ens', () => {
 
   describe('safeRegisterSubDomain', () => {
     it('should register if the name is not registered', (done) => {
-      ens.ensResolve = jest.fn((name, cb) => {cb(null, null)});
+      ens.ensResolve = jest.fn((name, cb) => { cb(null, null); });
       ens.registerSubDomain = jest.fn((defaultAccount, subDomainName, reverseNode, address, secureSend, callback) => callback());
 
       ens.safeRegisterSubDomain('test.eth', '0x0123', '0x4321',  () => {
@@ -63,7 +63,7 @@ describe('embark-ens', () => {
     });
 
     it('should not register if the name is already registered', (done) => {
-      ens.ensResolve = jest.fn((name, cb) => {cb(null, '0x0123')});
+      ens.ensResolve = jest.fn((name, cb) => { cb(null, '0x0123'); });
       ens.registerSubDomain = jest.fn((defaultAccount, subDomainName, reverseNode, address, secureSend, callback) => callback());
 
       ens.safeRegisterSubDomain('test.eth', '0x0123', '0x4321', () => {

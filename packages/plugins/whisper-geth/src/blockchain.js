@@ -1,6 +1,5 @@
 import { __ } from "embark-i18n";
 const async = require("async");
-// eslint-disable-next-line security/detect-child-process
 const {spawn, exec} = require("child_process");
 const path = require("path");
 const constants = require("embark-core/constants");

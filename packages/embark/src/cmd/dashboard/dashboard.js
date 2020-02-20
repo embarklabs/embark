@@ -54,7 +54,7 @@ class Dashboard {
 
     this.events.on("deployment:contract:error", (_contract) => {
       this.events.request("contracts:state", (err, contracts) => {
-        monitor.setContracts(contracts)
+        monitor.setContracts(contracts);
       });
     });
 
@@ -68,7 +68,7 @@ class Dashboard {
     this.events.on("deployment:contract:undeployed", (_contract) => {
       this.events.request("contracts:state", (err, contracts) => {
         this.events.emit('contracts:state', contracts);
-        monitor.setContracts(contracts)
+        monitor.setContracts(contracts);
       });
     });
 

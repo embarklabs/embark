@@ -1,5 +1,3 @@
-/* global module process require */
-
 /**
  * This source code was adapted from:
  * https://github.com/mgol/check-dependencies/blob/1.1.0/lib/check-dependencies.js
