@@ -2,9 +2,7 @@ import { Callback, Embark, EmbarkEvents } from "embark-core";
 import { __ } from "embark-i18n";
 import Web3 from "web3";
 import RpcModifier from "./rpcModifier";
-import { sign, transaction } from "@omisego/omg-js-util";
 
-// This class handles both eth_signData and eth_signTypedData
 export default class EthSignData extends RpcModifier {
   constructor(embark: Embark, rpcModifierEvents: EmbarkEvents, public nodeAccounts: string[], public accounts: any[], protected web3: Web3) {
     super(embark, rpcModifierEvents, nodeAccounts, accounts, web3);
@@ -13,13 +11,8 @@ export default class EthSignData extends RpcModifier {
     this.embark.registerActionForEvent("blockchain:proxy:response", this.ethSignDataResponse.bind(this));
   }
 
-  private async ethSignDataRequest(params: any, callback: Callback<any>) {// check for:
-    // - eth_sign
-    // - eth_signTypedData
-    // - eth_signTypedData_v3
-    // - eth_signTypedData_v4
-    // - personal_signTypedData (parity)
-    if (params.request.method !== "eth_sign" && !params.request.method.includes("signTypedData")) {
+  private async ethSignDataRequest(params: any, callback: Callback<any>) {
+    if (params.request.method !== "eth_sign") {
       return callback(null, params);
     }
 
@@ -42,18 +35,8 @@ export default class EthSignData extends RpcModifier {
   }
 
   private async ethSignDataResponse(params: any, callback: Callback<any>) {
-    // check for:
-    // - eth_sign
-    // - eth_signTypedData
-    // - eth_signTypedData_v3
-    // - eth_signTypedData_v4
-    // - personal_signTypedData (parity)
-    let isTypedData = false;
     if (params.request.method !== "eth_sign") {
-      if (!params.request.method.includes("signTypedData")) {
-        return callback(null, params);
-      }
-      isTypedData = true;
+      return callback(null, params);
     }
 
     try {
@@ -64,7 +47,6 @@ export default class EthSignData extends RpcModifier {
         Web3.utils.toChecksumAddress(fromAddr)
       ));
       if (nodeAccount) {
-        // If it's a node account, we send the result because it should already be signed
         return callback(null, params);
       }
 
@@ -82,14 +64,8 @@ export default class EthSignData extends RpcModifier {
                        "Please ensure you have configured your account(s) to use a mnemonic, privateKey, or privateKeyFile.", fromAddr)));
       }
 
-      if (isTypedData) {
-        const toSign = transaction.getToSignHash(typeof data === "string" ? JSON.parse(data) : data);
-        const signature = sign(toSign, [account.privateKey]);
-
-        params.response.result = signature[0];
-      } else {
-        params.response.result = new Web3().eth.accounts.privateKeyToAccount(account.privateKey).sign(data).signature;
-      }
+      const signature = new Web3().eth.accounts.privateKeyToAccount(account.privateKey).sign(data).signature;
+      params.response.result = signature;
 
       this.logger.trace(__(`Modified request/response data: ${JSON.stringify(params)}`));
     } catch (err) {
