@@ -12,6 +12,9 @@
   "references": [
     {
       "path": "../../core/i18n"
+    },
+    {
+      "path": "../../utils/testing"
     }
   ]
 }
