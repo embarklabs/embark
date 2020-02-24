@@ -291,15 +291,14 @@ class EmbarkController {
 
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
-        engine.registerModuleGroup("pipeline");
-        engine.registerModuleGroup("communication");
-        engine.registerModuleGroup("namesystem");
-        engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins });
-
-        engine.registerModuleGroup("blockchain");
 
         if (!options.onlyCompile) {
+          engine.registerModuleGroup("blockchain");
+          engine.registerModuleGroup("namesystem");
           engine.registerModuleGroup("storage");
+          engine.registerModuleGroup("communication");
+          engine.registerModuleGroup("pipeline");
+          engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins });
         }
 
         // load custom plugins
@@ -311,6 +310,9 @@ class EmbarkController {
 
         let plugin = engine.plugins.createPlugin('cmdcontrollerplugin', {});
         plugin.registerActionForEvent("embark:engine:started", async (_, cb) => {
+          if (options.onlyCompile) {
+            return cb();
+          }
           try {
             await Promise.all([
               engine.events.request2("blockchain:node:start", engine.config.blockchainConfig),
@@ -382,8 +384,8 @@ class EmbarkController {
           await engine.events.request2("deployment:contracts:deploy", contractsList, contractDependencies);
           await engine.events.request2('scripts-runner:initialize');
           await engine.events.request2('scripts-runner:execute', options.target, options.forceTracking);
-        } catch (err) {
-          return callback(err);
+        } catch (e) {
+          return callback(e);
         }
         callback();
       });
