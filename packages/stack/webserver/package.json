@@ -1,6 +1,6 @@
 {
   "name": "embark-webserver",
-  "version": "5.2.0",
+  "version": "5.2.3",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Webserver for Embark",
@@ -49,15 +49,15 @@
     "async": "2.6.1",
     "core-js": "3.4.3",
     "ejs": "2.6.1",
-    "embark-i18n": "^5.1.1",
-    "embark-utils": "^5.2.0",
+    "embark-i18n": "^5.2.3",
+    "embark-utils": "^5.2.3",
     "express": "4.17.1",
     "express-ws": "4.0.0",
     "open": "6.4.0",
     "serve-static": "1.13.2"
   },
   "devDependencies": {
-    "embark-solo": "^5.1.1",
+    "embark-solo": "^5.2.3",
     "eslint": "6.8.0",
     "fs-extra": "8.1.0",
     "glob": "7.1.4",

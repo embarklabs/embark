@@ -1,6 +1,6 @@
 {
   "name": "embark-scripts-runner",
-  "version": "5.2.2",
+  "version": "5.2.3",
   "description": "Embark Scripts Runner",
   "repository": {
     "directory": "packages/plugins/scripts-runner",
@@ -45,10 +45,10 @@
     "@babel/runtime-corejs3": "7.7.4",
     "async": "2.6.1",
     "core-js-pure": "3.6.4",
-    "embark-core": "^5.2.2",
-    "embark-i18n": "^5.1.1",
-    "embark-logger": "^5.2.0",
-    "embark-utils": "^5.2.0",
+    "embark-core": "^5.2.3",
+    "embark-i18n": "^5.2.3",
+    "embark-logger": "^5.2.3",
+    "embark-utils": "^5.2.3",
     "fs-extra": "8.1.0",
     "web3": "1.2.6",
     "web3-eth": "1.2.6"
@@ -57,8 +57,8 @@
     "@babel/core": "7.7.4",
     "@types/node": "^10.5.3",
     "babel-jest": "24.9.0",
-    "embark-solo": "^5.1.1-nightly.2",
-    "embark-testing": "^5.2.0",
+    "embark-solo": "^5.2.3",
+    "embark-testing": "^5.2.3",
     "eslint": "6.8.0",
     "eslint-plugin-jest": "22.5.1",
     "jest": "24.9.0",

@@ -1,6 +1,6 @@
 {
   "name": "embark-collective",
-  "version": "5.1.1",
+  "version": "5.2.3",
   "author": "Michael Bradley <michaelsbradleyjr@gmail.com> (https://github.com/michaelsbradleyjr/)",
   "description": "You will be assimilated",
   "homepage": "https://github.com/embarklabs/embark/tree/master/packages/utils/collective#readme",
@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@lerna/filter-packages": "3.16.0",
-    "embark-inside-monorepo": "^5.1.0",
+    "embark-inside-monorepo": "^5.2.3",
     "eslint": "6.8.0",
     "find-up": "4.1.0",
     "fs-extra": "8.1.0",

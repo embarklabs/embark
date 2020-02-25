@@ -1,6 +1,6 @@
 {
   "name": "embark-snark",
-  "version": "5.1.1",
+  "version": "5.2.3",
   "author": "Anthony Laibe",
   "contributors": [
     "Michael Bradley <michaelsbradleyjr@gmail.com> (https://github.com/michaelsbradleyjr/)"
@@ -62,7 +62,7 @@
     "@typescript-eslint/parser": "2.20.0",
     "babel-eslint": "10.0.3",
     "babel-jest": "24.9.0",
-    "embark-solo": "^5.1.1",
+    "embark-solo": "^5.2.3",
     "eslint": "6.8.0",
     "eslint-config-prettier": "6.1.0",
     "eslint-plugin-import": "2.18.2",
@@ -91,7 +91,12 @@
     ],
     "rules": {
       "import/no-extraneous-dependencies": "error",
-      "import/no-unresolved": [2, { "commonjs": true }]
+      "import/no-unresolved": [
+        2,
+        {
+          "commonjs": true
+        }
+      ]
     }
   },
   "jest": {

@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.3](https://github.com/embarklabs/embark/compare/v5.2.3-nightly.1...v5.2.3) (2020-02-25)
+
+**Note:** Version bump only for package embark-dapp-test-contracts
+
+
+
+
+
 ## [5.2.3-nightly.1](https://github.com/embarklabs/embark/compare/v5.2.3-nightly.0...v5.2.3-nightly.1) (2020-02-25)
 
 **Note:** Version bump only for package embark-dapp-test-contracts

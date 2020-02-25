@@ -1,6 +1,6 @@
 {
   "name": "embark-testing",
-  "version": "5.2.0",
+  "version": "5.2.3",
   "description": "Testing",
   "homepage": "https://github.com/embarklabs/embark/tree/master/packages/utils/testing#readme",
   "main": "./index.js",
@@ -62,7 +62,7 @@
   "devDependencies": {
     "@babel/core": "7.7.4",
     "babel-jest": "24.9.0",
-    "embark-solo": "^5.1.1",
+    "embark-solo": "^5.2.3",
     "eslint": "6.8.0",
     "eslint-plugin-jest": "22.5.1",
     "jest": "24.9.0",
