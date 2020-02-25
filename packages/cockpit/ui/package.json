@@ -67,7 +67,7 @@
     "connected-react-router": "4.5.0",
     "date-fns": "2.3.0",
     "embark-api-client": "^5.2.3",
-    "eslint-plugin-import": "2.18.2",
+    "eslint-plugin-import": "2.20.1",
     "ethereumjs-units": "0.2.0",
     "find-up": "4.1.0",
     "font-awesome": "4.7.0",
