@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.3-nightly.1](https://github.com/embarklabs/embark/compare/v5.2.3-nightly.0...v5.2.3-nightly.1) (2020-02-25)
+
+
+### Bug Fixes
+
+* **cmd-controller:** fix build --contracts command starting comm node ([e99a328](https://github.com/embarklabs/embark/commit/e99a328))
+
+
+
+
+
 ## [5.2.3-nightly.0](https://github.com/embarklabs/embark/compare/v5.2.2...v5.2.3-nightly.0) (2020-02-20)
 
 

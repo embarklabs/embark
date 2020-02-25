@@ -1,7 +1,7 @@
 {
   "description": "Test DApp for integration testing purposes",
   "devDependencies": {
-    "embark": "^5.2.3-nightly.0",
+    "embark": "^5.2.3-nightly.1",
     "embark-geth": "^5.2.2",
     "embark-graph": "^5.2.0",
     "embark-ipfs": "^5.2.3-nightly.0",
@@ -28,5 +28,5 @@
     "reset": "npx embark-reset && npx rimraf embark-*.tgz package",
     "test": "npx embark test"
   },
-  "version": "5.2.3-nightly.0"
+  "version": "5.2.3-nightly.1"
 }
