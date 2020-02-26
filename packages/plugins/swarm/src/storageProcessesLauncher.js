@@ -87,7 +87,7 @@ class StorageProcessesLauncher {
     }
     if (this.restartCalled) {
       this.restartCalled = false;
-      return this.launchProcess(storageName, () => {});
+      return;
     }
     this.logger.error(__(`Storage process for {{storageName}} ended before the end of this process. Code: {{code}}`, {storageName, code}));
   }
@@ -150,6 +150,7 @@ class StorageProcessesLauncher {
       self.logger.info(__(`Restarting ${storageName} process...`).cyan);
       self.processes[storageName].kill();
       delete this.processes[storageName];
+      self.launchProcess(storageName, callback);
     });
 
     self.processes[storageName].on('result', constants.storage.exit, ({error}) => {
