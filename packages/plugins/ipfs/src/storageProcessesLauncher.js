@@ -151,6 +151,7 @@ class StorageProcessesLauncher {
       self.logger.info(__(`Restarting ${storageName} process...`).cyan);
       self.processes[storageName].kill();
       delete this.processes[storageName];
+      self.launchProcess(storageName, callback);
     });
 
     self.processes[storageName].on('result', constants.storage.exit, ({error}) => {
