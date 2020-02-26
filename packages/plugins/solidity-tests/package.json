@@ -1,6 +1,6 @@
 {
   "name": "embark-solidity-tests",
-  "version": "5.2.3",
+  "version": "5.2.4-nightly.0",
   "description": "Plugin to run Embark solidity tests",
   "homepage": "https://github.com/embarklabs/embark/tree/master/packages/plugins/solidity-tests#readme",
   "repository": {
@@ -53,7 +53,7 @@
     "@types/async": "3.0.3",
     "async": "3.1.0",
     "core-js": "3.4.3",
-    "embark-utils": "^5.2.3",
+    "embark-utils": "^5.2.4-nightly.0",
     "remix-tests": "0.1.24",
     "web3": "1.2.6",
     "yo-yoify": "4.3.0"

@@ -1,6 +1,6 @@
 {
   "name": "embark-plugin-cmd",
-  "version": "5.2.3",
+  "version": "5.2.4-nightly.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Plugin installation utility for Embark",
@@ -40,7 +40,7 @@
     "async": "2.6.1",
     "core-js": "3.4.3",
     "embark-i18n": "^5.2.3",
-    "embark-utils": "^5.2.3"
+    "embark-utils": "^5.2.4-nightly.0"
   },
   "devDependencies": {
     "embark-solo": "^5.2.3",

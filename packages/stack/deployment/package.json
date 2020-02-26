@@ -1,6 +1,6 @@
 {
   "name": "embark-deployment",
-  "version": "5.2.3",
+  "version": "5.2.4-nightly.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Deployment APIs for Embark",
@@ -54,15 +54,15 @@
     "async": "2.6.1",
     "clone-deep": "4.0.0",
     "core-js": "3.4.3",
-    "embark-core": "^5.2.3",
+    "embark-core": "^5.2.4-nightly.0",
     "embark-i18n": "^5.2.3",
-    "embark-utils": "^5.2.3"
+    "embark-utils": "^5.2.4-nightly.0"
   },
   "devDependencies": {
     "@babel/core": "7.8.3",
     "babel-jest": "25.1.0",
     "embark-solo": "^5.2.3",
-    "embark-testing": "^5.2.3",
+    "embark-testing": "^5.2.4-nightly.0",
     "eslint": "6.8.0",
     "eslint-plugin-jest": "22.5.1",
     "jest": "25.1.0",
