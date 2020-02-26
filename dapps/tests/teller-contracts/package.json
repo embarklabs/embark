@@ -13,8 +13,8 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "embark": "^5.2.0-nightly.3",
-    "embark-reset": "^5.1.1",
+    "embark": "^5.2.4-nightly.0",
+    "embark-reset": "^5.2.3",
     "rimraf": "3.0.0"
   }
 }
