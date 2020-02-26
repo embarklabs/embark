@@ -61,7 +61,7 @@
   "devDependencies": {
     "babel-jest": "24.9.0",
     "embark-solo": "^5.2.3",
-    "embark-testing": "^5.2.0-nightly.3",
+    "embark-testing": "^5.2.4-nightly.0",
     "eslint": "6.8.0",
     "jest": "24.9.0",
     "npm-run-all": "4.1.5",
