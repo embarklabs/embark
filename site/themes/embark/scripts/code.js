@@ -1,12 +1,12 @@
 const nunjucks = require('nunjucks');
 const path = require('path');
-const uuidv1 = require('uuid/v1');
+const { v1: uuidv1 } = require('uuid');
 
 hexo.extend.tag.register('code_block', (args, content) => {
 
   return new Promise((resolve, reject) => {
     let context = {}
-    
+
     args.forEach(arg => {
       let [key, value] = arg.split(':');
       context[key] = value;
