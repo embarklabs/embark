@@ -7,7 +7,10 @@ describe('embark.Config', function () {
   let config = new Config({
     env: 'myenv',
     configDir: 'test1/config/',
-    events: new Events()
+    events: new Events(),
+    embarkConfig: {
+      versions: {}
+    }
   });
   config.plugins = new Plugins({plugins: {}});
   config.logger = new TestLogger({});
@@ -247,7 +250,10 @@ describe('embark.Config', function () {
       let zeroAddressconfig = new Config({
         env: 'zeroaddress',
         configDir: 'test1/config/',
-        events: new Events()
+        events: new Events(),
+        embarkConfig: {
+          versions: {}
+        }
       });
       zeroAddressconfig.plugins = new Plugins({plugins: {}});
       zeroAddressconfig.logger = new TestLogger({});

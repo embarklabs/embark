@@ -8,6 +8,7 @@ import {
 } from 'embark-core';
 import { normalizeInput } from 'embark-utils';
 import { Logger } from 'embark-logger';
+import defaultEmbarkJson from './defaultEmbarkJson';
 const EMBARK_PROCESS_NAME = 'embark';
 
 export class Engine {
@@ -60,7 +61,7 @@ export class Engine {
     this.env = options.env;
     this.client = options.client;
     this.locale = options.locale;
-    this.embarkConfig = options.embarkConfig;
+    this.embarkConfig = options.embarkConfig || defaultEmbarkJson;
     this.interceptLogs = options.interceptLogs;
     this.version = options.version;
     this.logFile = options.logFile;
@@ -90,6 +91,7 @@ export class Engine {
       logger: this.logger,
       events: this.events,
       context: this.context,
+      embarkConfig: this.embarkConfig,
       webServerConfig: this.webServerConfig,
       version: this.version,
       package: this.package,
@@ -97,7 +99,7 @@ export class Engine {
       client: this.client,
       ipc: this.ipc
     });
-    this.config.loadConfigFiles({embarkConfig: this.embarkConfig, interceptLogs: this.interceptLogs});
+    this.config.loadConfigFiles({interceptLogs: this.interceptLogs});
     this.plugins = this.config.plugins;
 
     if (this.interceptLogs || this.interceptLogs === undefined) {
@@ -194,7 +196,7 @@ export class Engine {
     });
   }
 
-  serviceMonitor(_options) {
+  serviceMonitor() {
     this.servicesMonitor = new ServicesMonitor({ events: this.events, logger: this.logger, plugins: this.plugins });
 
     if (this.servicesMonitor) {
@@ -212,7 +214,7 @@ export class Engine {
     }
   }
 
-  coreComponents(_options) {
+  coreComponents() {
     // TODO: should be made into a component
     this.processManager = new ProcessManager({
       events: this.events,

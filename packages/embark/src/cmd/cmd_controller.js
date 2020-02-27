@@ -20,8 +20,11 @@ const pkg = readJsonSync(join(__dirname, '../../package.json'));
 class EmbarkController {
 
   constructor(options) {
+    if (!options.embarkConfig) {
+      throw new Error('No embarkConfig found in options');
+    }
+    this.embarkConfig = options.embarkConfig;
     this.version = pkg.version;
-    this.options = options || {};
 
     // set a default context. should be overwritten by an action
     // method before being used
@@ -31,7 +34,7 @@ class EmbarkController {
   initConfig(env, options) {
     this.events = new Events();
     this.logger = new Logger({ logLevel: LogLevels.debug, events: this.events, context: this.context });
-    this.config = new Config({ env: env, logger: this.logger, events: this.events, context: this.context, version: this.version });
+    this.config = new Config({ env: env, logger: this.logger, events: this.events, context: this.context, version: this.version, embarkConfig: this.embarkConfig });
     this.config.loadConfigFiles(options);
     this.plugins = this.config.plugins;
   }
@@ -45,7 +48,7 @@ class EmbarkController {
       client: options.client,
       locale: options.locale,
       version: this.version,
-      embarkConfig: options.embarkConfig || 'embark.json',
+      embarkConfig: this.embarkConfig,
       logFile: options.logFile,
       logLevel: options.logLevel,
       context: this.context,
@@ -134,7 +137,7 @@ class EmbarkController {
       client: options.client,
       locale: options.locale,
       version: this.version,
-      embarkConfig: options.embarkConfig || 'embark.json',
+      embarkConfig: this.embarkConfig,
       logFile: options.logFile,
       logLevel: options.logLevel,
       context: self.context,
@@ -265,7 +268,7 @@ class EmbarkController {
       client: options.client,
       locale: options.locale,
       version: this.version,
-      embarkConfig: options.embarkConfig || 'embark.json',
+      embarkConfig: this.embarkConfig,
       interceptLogs: false,
       logFile: options.logFile,
       logLevel: options.logLevel,
@@ -396,7 +399,7 @@ class EmbarkController {
       client: options.client,
       locale: options.locale,
       version: this.version,
-      embarkConfig: options.embarkConfig || 'embark.json',
+      embarkConfig: this.embarkConfig,
       logFile: options.logFile,
       logLevel: options.logLevel,
       context: this.context,
@@ -505,7 +508,7 @@ class EmbarkController {
     const engine = new Engine({
       env: options.env,
       version: this.version,
-      embarkConfig: options.embarkConfig || 'embark.json',
+      embarkConfig: this.embarkConfig,
       logFile: options.logFile,
       context: this.context,
       package: pkg
@@ -558,8 +561,8 @@ class EmbarkController {
 
   }
 
-  async reset(options) {
-    const embarkConfig = require(dappPath(options.embarkConfig || 'embark.json'));
+  async reset() {
+    const embarkConfig = this.embarkConfig;
 
     let removePaths = [];
     let defaultPaths = [...defaultResetPaths];
@@ -614,7 +617,7 @@ class EmbarkController {
       client: options.client,
       locale: options.locale,
       version: this.version,
-      embarkConfig: options.embarkConfig || 'embark.json',
+      embarkConfig: this.embarkConfig,
       interceptLogs: false,
       logFile: options.logFile,
       logLevel: options.logLevel,
@@ -705,7 +708,7 @@ class EmbarkController {
       client: options.client,
       locale: options.locale,
       version: this.version,
-      embarkConfig: 'embark.json',
+      embarkConfig: this.embarkConfig,
       interceptLogs: false,
       logFile: options.logFile,
       logLevel: options.logLevel,
@@ -802,7 +805,7 @@ class EmbarkController {
       client: options.client,
       locale: options.locale,
       version: this.version,
-      embarkConfig: options.embarkConfig || 'embark.json',
+      embarkConfig: this.embarkConfig,
       logFile: options.logFile,
       logLevel: options.logLevel || LogLevels.warn,
       context: this.context,

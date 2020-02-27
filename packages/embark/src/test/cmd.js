@@ -24,7 +24,7 @@ describe('embark.Cmd', function () {
 
   describe('#new', function () {
     it('it should create an app with a name', function (done) {
-      let cmd = new Cmd();
+      let cmd = new Cmd({embarkConfig: {}});
       let pl = passingLines();
       let appname = 'deleteapp';
       cmd.newApp(appname, function (output) {
@@ -39,7 +39,7 @@ describe('embark.Cmd', function () {
     });
 
     it('it should prompt when given an empty app name', function (done) {
-      let cmd = new Cmd();
+      let cmd = new Cmd({embarkConfig: {}});
       let pl = passingLines();
       let appname = 'deleteapp';
 
