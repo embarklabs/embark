@@ -5,7 +5,6 @@ import { EmbarkEmitter as Events } from './events';
 import { filesMatchingPattern, fileMatchesPattern } from './utils/utils';
 const path = require('path');
 const deepEqual = require('deep-equal');
-const web3 = require('web3');
 import { __ } from 'embark-i18n';
 import {
   buildUrlFromConfig,
@@ -23,13 +22,12 @@ import {
   getExternalContractUrl
 } from 'embark-utils';
 import { Logger } from 'embark-logger';
-import { readJsonSync } from 'fs-extra';
 const cloneDeep = require('lodash.clonedeep');
 const { replaceZeroAddressShorthand } = AddressUtils;
 
-import { getBlockchainDefaults, getContractDefaults, embarkConfigDefaults } from './configDefaults';
+import { getBlockchainDefaults, getContractDefaults } from './configDefaults';
 
-const constants = readJsonSync(path.join(__dirname, '../constants.json'));
+const constants = require('../constants.json');
 
 const DEFAULT_CONFIG_PATH = 'config/';
 
@@ -84,7 +82,7 @@ export class Config {
 
   events: Events;
 
-  embarkConfig: EmbarkConfig = embarkConfigDefaults;
+  embarkConfig: EmbarkConfig = constants.defaultEmbarkConfig;
 
   context: any;
 
@@ -629,7 +627,7 @@ export class Config {
   }
 
   loadEmbarkConfigFile() {
-    this.embarkConfig = recursiveMerge(embarkConfigDefaults, this.embarkConfig);
+    this.embarkConfig = recursiveMerge(constants.defaultEmbarkConfig, this.embarkConfig);
 
     const contracts = this.embarkConfig.contracts;
     // determine contract 'root' directories

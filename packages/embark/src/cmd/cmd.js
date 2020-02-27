@@ -11,6 +11,7 @@ class Cmd {
   }
 
   process(args) {
+    this.init();
     this.newApp();
     this.demo();
     this.build();
@@ -35,6 +36,15 @@ class Cmd {
     }
 
     program.parse(args);
+  }
+
+  init() {
+    program
+      .command('init')
+      .description(__('Creates a basic embark.json file'))
+      .action(() => {
+        this.embark.embarkInit();
+      });
   }
 
   newApp() {
@@ -181,7 +191,7 @@ class Cmd {
       .option('-t, --track', __('Force tracking of migration script', false))
       .description(__("Executes specified scripts or all scripts in 'directory'"))
       .action((env, target, options) => {
-        embark.exec({
+        this.embark.exec({
           env,
           target,
           forceTracking: options.track

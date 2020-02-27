@@ -20,9 +20,6 @@ const pkg = readJsonSync(join(__dirname, '../../package.json'));
 class EmbarkController {
 
   constructor(options) {
-    if (!options.embarkConfig) {
-      throw new Error('No embarkConfig found in options');
-    }
     this.embarkConfig = options.embarkConfig;
     this.version = pkg.version;
 
@@ -37,6 +34,19 @@ class EmbarkController {
     this.config = new Config({ env: env, logger: this.logger, events: this.events, context: this.context, version: this.version, embarkConfig: this.embarkConfig });
     this.config.loadConfigFiles(options);
     this.plugins = this.config.plugins;
+  }
+
+  async embarkInit() {
+    const engine = new Engine({});
+    try {
+      await engine.generateEmbarkJSON();
+    } catch (e) {
+      console.error(__('Error generating embark.json file'));
+      console.error(e.message);
+      process.exit(1);
+    }
+    console.info(__('embark.json generated. You can now run all Embark commands.').green);
+    process.exit();
   }
 
   blockchain(options) {

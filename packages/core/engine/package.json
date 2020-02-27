@@ -66,6 +66,7 @@
     "embark-ethereum-blockchain-client": "^5.3.0-nightly.0",
     "embark-ganache": "^5.3.0-nightly.0",
     "embark-geth": "^5.3.0-nightly.0",
+    "embark-i18n": "^5.2.3",
     "embark-library-manager": "^5.3.0-nightly.0",
     "embark-logger": "^5.3.0-nightly.0",
     "embark-mocha-tests": "^5.3.0-nightly.0",
@@ -87,7 +88,8 @@
     "embark-vyper": "^5.2.3",
     "embark-watcher": "^5.3.0-nightly.0",
     "embark-web3": "^5.3.0-nightly.0",
-    "embark-webserver": "^5.3.0-nightly.0"
+    "embark-webserver": "^5.3.0-nightly.0",
+    "fs-extra": "8.1.0"
   },
   "devDependencies": {
     "embark-solo": "^5.2.3",
