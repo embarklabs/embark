@@ -411,11 +411,9 @@ EmbarkJson.prototype.log = function () {
 
 EmbarkJson.prototype.logMissingFile = function () {
   if (Json.prototype.logMissingFile.call(this, false)) {
-    // Use default embark.json
     if (isDappCmd(this.cmd)) {
-      // TODO add message about embark init once it's available
-      embarklog['warn']('No embark.json file found.\n' +
-        'You can find a basic embark.json file here: https://github.com/embarklabs/embark/blob/master/dapps/templates/boilerplate/embark.json');
+      embarklog['error']('No embark.json file found.\n' +
+        'Run `embark init` to generate one automatically.');
       exitWithError();
     }
   }
@@ -993,6 +991,7 @@ function isDappCmd(cmd) {
     '-h',
     '--help',
     'new',
+    'init',
     'demo',
     'version',
     'help'

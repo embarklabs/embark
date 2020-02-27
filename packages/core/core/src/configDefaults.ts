@@ -4,22 +4,6 @@ import { join } from "path";
 
 const constants = readJsonSync(join(__dirname, '../constants.json'));
 
-export const embarkConfigDefaults = {
-  contracts: [],
-  config: '',
-  migrations: 'migrations',
-  versions: {
-    solc: "0.6.1"
-  },
-  options: {
-    solc: {
-      "optimize": true,
-      "optimize-runs": 200
-    }
-  },
-  generationDir: "embarkArtifacts"
-};
-
 export function getBlockchainDefaults(env) {
   const defaults = {
     clientConfig: {
