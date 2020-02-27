@@ -52,7 +52,13 @@ const HardSourceWebpackPlugin = requireFromEmbark('hard-source-webpack-plugin');
 
 const embarkAliases = require(path.join(dappPath, '.embark/embark-aliases.json'));
 const embarkAssets = require(path.join(dappPath, '.embark/embark-assets.json'));
-const embarkJson = require(path.join(dappPath, 'embark.json'));
+let embarkJson;
+try {
+  embarkJson = require(path.join(dappPath, 'embark.json'));
+}catch (e) {
+  throw new Error('embark.json not found. To build your app, please add an embark.json file with a `buildDir` field');
+}
+
 const embarkPipeline = require(path.join(dappPath, '.embark/embark-pipeline.json'));
 
 const buildDir = path.join(dappPath, embarkJson.buildDir);

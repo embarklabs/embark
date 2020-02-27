@@ -46,7 +46,12 @@ export class ReactBuilder implements Builder {
 
   private updateEmbarkJson(contractName: string, files: string[]) {
     const embarkJsonPath = path.join(utils.dappPath(), "embark.json");
-    const embarkJson = this.embark.fs.readJSONSync(embarkJsonPath);
+    let embarkJson;
+    try {
+      embarkJson = this.embark.fs.readJSONSync(embarkJsonPath);
+    } catch (e) {
+      throw new Error('No embark.json file found. Add an embark.json file to use the scaffold command.');
+    }
     embarkJson.app[`${contractName}.js`] = `app/${contractName}.js`;
     embarkJson.app[`${contractName}.html`] = `app/${contractName}.html`;
 
