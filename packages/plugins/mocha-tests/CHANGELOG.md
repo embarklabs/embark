@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0-nightly.0](https://github.com/embarklabs/embark/compare/v5.2.4-nightly.0...v5.3.0-nightly.0) (2020-02-27)
+
+
+### Bug Fixes
+
+* **@embark/mocha-tests:** change `self` to `this` in mocha-tests ([c07ac55](https://github.com/embarklabs/embark/commit/c07ac55))
+* **@embark/reporter:** show stack trace in the reporter on errors ([e389ccc](https://github.com/embarklabs/embark/commit/e389ccc))
+
+
+
+
+
 ## [5.2.4-nightly.0](https://github.com/embarklabs/embark/compare/v5.2.3...v5.2.4-nightly.0) (2020-02-26)
 
 **Note:** Version bump only for package embark-mocha-tests

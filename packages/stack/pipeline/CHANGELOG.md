@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0-nightly.0](https://github.com/embarklabs/embark/compare/v5.2.4-nightly.0...v5.3.0-nightly.0) (2020-02-27)
+
+
+### Features
+
+* **utils/testing:** make mock apiCall() async ([4106a49](https://github.com/embarklabs/embark/commit/4106a49))
+
+
+
+
+
 ## [5.2.4-nightly.0](https://github.com/embarklabs/embark/compare/v5.2.3...v5.2.4-nightly.0) (2020-02-26)
 
 **Note:** Version bump only for package embark-pipeline

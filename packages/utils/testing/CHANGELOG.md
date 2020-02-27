@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0-nightly.0](https://github.com/embarklabs/embark/compare/v5.2.4-nightly.0...v5.3.0-nightly.0) (2020-02-27)
+
+
+### Bug Fixes
+
+* **utils/testing:** add missing trace() API logger in testbed ([0ba8d86](https://github.com/embarklabs/embark/commit/0ba8d86))
+* **utils/testing:** ensure API mock works with `req.params` and method chaining ([1a56d5f](https://github.com/embarklabs/embark/commit/1a56d5f))
+* **utils/testing:** ensure runActionsForEvent() works without params object ([62a2291](https://github.com/embarklabs/embark/commit/62a2291))
+
+
+### Features
+
+* **utils/testing:** make mock apiCall() async ([4106a49](https://github.com/embarklabs/embark/commit/4106a49))
+
+
+
+
+
 ## [5.2.4-nightly.0](https://github.com/embarklabs/embark/compare/v5.2.3...v5.2.4-nightly.0) (2020-02-26)
 
 **Note:** Version bump only for package embark-testing
