@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0-nightly.1](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.0...v5.3.0-nightly.1) (2020-02-29)
+
+
+### Features
+
+* remove optional plugins from coming as default ([db10064](https://github.com/embarklabs/embark/commit/db10064))
+
+
+
+
+
 # [5.3.0-nightly.0](https://github.com/embarklabs/embark/compare/v5.2.4-nightly.0...v5.3.0-nightly.0) (2020-02-27)
 
 

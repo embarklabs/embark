@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0-nightly.1](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.0...v5.3.0-nightly.1) (2020-02-29)
+
+
+### Features
+
+* **@embark/cmd:** enable using engine with no embark.json ([382a0b5](https://github.com/embarklabs/embark/commit/382a0b5))
+
+
+
+
+
 # [5.3.0-nightly.0](https://github.com/embarklabs/embark/compare/v5.2.4-nightly.0...v5.3.0-nightly.0) (2020-02-27)
 
 **Note:** Version bump only for package embark-scaffolding
