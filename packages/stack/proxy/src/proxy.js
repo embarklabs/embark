@@ -5,7 +5,7 @@ import cors from 'cors';
 import { isDebug } from 'embark-utils';
 const Web3RequestManager = require('web3-core-requestmanager');
 
-const ACTION_TIMEOUT = isDebug() ? 20000 : 5000;
+const ACTION_TIMEOUT = isDebug() ? 30000 : 10000;
 
 export class Proxy {
   constructor(options) {
@@ -143,7 +143,7 @@ export class Proxy {
     }
 
     try {
-      const modifiedResp = await this.emitActionsForResponse(modifiedRequest.request, response, transport);
+      const modifiedResp = await this.emitActionsForResponse(modifiedRequest, response, transport);
       // Send back to the client
       if (modifiedResp && modifiedResp.response && modifiedResp.response.error) {
         // error returned from the node and it wasn't stripped by our response actions
@@ -209,7 +209,7 @@ export class Proxy {
         this.logger.debug(`Subscription data received from node and forwarded to originating socket client connection: ${JSON.stringify(subscriptionResponse)} `);
 
         // allow modification of the node subscription data sent to the client
-        subscriptionResponse = await this.emitActionsForResponse(subscriptionResponse, subscriptionResponse, clientSocket);
+        subscriptionResponse = await this.emitActionsForResponse({request: subscriptionResponse}, subscriptionResponse, clientSocket);
         this.respondWs(clientSocket, subscriptionResponse.response);
       };
 
@@ -308,9 +308,9 @@ export class Proxy {
     });
   }
 
-  emitActionsForResponse(request, response, transport) {
+  emitActionsForResponse({originalRequest, request}, response, transport) {
     return new Promise((resolve, reject) => {
-      const data = { request, response, isWs: this.isWs, transport };
+      const data = { originalRequest, request, response, isWs: this.isWs, transport };
       let calledBack = false;
       setTimeout(() => {
         if (calledBack) {

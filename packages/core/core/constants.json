@@ -41,7 +41,9 @@
     "clients": {
       "geth": "geth",
       "parity": "parity",
-      "ganache": "ganache-cli"
+      "ganache": "ganache-cli",
+      "nethermind": "nethermind",
+      "quorum": "quorum"
     },
     "defaultMnemonic": "example exile argue silk regular smile grass bomb merge arm assist farm",
     "blockchainReady": "blockchainReady",

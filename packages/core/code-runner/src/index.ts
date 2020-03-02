@@ -11,7 +11,7 @@ class CodeRunner {
   private events: EmbarkEvents;
   private vm: VM;
 
-  constructor(embark: Embark, _options: any) {
+  constructor(private embark: Embark, _options: any) {
     this.logger = embark.logger;
     this.events = embark.events;
 
@@ -48,8 +48,13 @@ class CodeRunner {
     this.vm._options.require.external.push(varName); // @ts-ignore
   }
 
-  private registerVar(varName: string, code: any, cb = () => { }) {
-    this.vm.registerVar(varName, code, cb);
+  private registerVar(varName: string, code: any, cb = (...args) => { }) {
+    this.embark.config.plugins.emitAndRunActionsForEvent<any>(`runcode:register:${varName}`, code, (err, updated) => {
+      if (err) {
+        return cb(err);
+      }
+      this.vm.registerVar(varName, updated, cb);
+    });
   }
 
   private evalCode(code: string, cb: Callback<any>, tolerateError = false, logCode = true, logError = true) {

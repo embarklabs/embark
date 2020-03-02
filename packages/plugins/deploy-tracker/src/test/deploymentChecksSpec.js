@@ -22,6 +22,7 @@ describe('embark.deploymentChecks', function () {
   let readJSON;
   let writeJSON;
   let _web3;
+  let contractsConfig;
 
   beforeEach(() => {
     params = {
@@ -77,7 +78,8 @@ describe('embark.deploymentChecks', function () {
       }
     };
     trackingFunctions._web3 = _web3;
-    deploymentChecks = new DeploymentChecks({trackingFunctions, events, logger, contractsConfig: {}});
+    contractsConfig = {};
+    deploymentChecks = new DeploymentChecks({ trackingFunctions, events, logger, contractsConfig });
     deploymentChecks._web3 = _web3;
   });
   afterEach(() => {
@@ -169,6 +171,20 @@ describe('embark.deploymentChecks', function () {
     it("should not deploy if contract is tracked, but bytecode exists on chain", async function () {
       trackingFunctions._web3.eth.getCode = () => "0x0123";
       params.contract.runtimeBytecode = '0123';
+      return deploymentChecks.checkIfAlreadyDeployed(params, (err, params) => {
+        expect(err).to.be(null);
+        expect(params.shouldDeploy).to.be(false);
+        expect(params.contract.deployedAddress).to.be("0xbe474fb88709f99Ee83901eE09927005388Ab2F1");
+      });
+    });
+    it("should not deploy if contract is tracked and bytecode check is skipped", async function () {
+      deploymentChecks.contractsConfig = {
+        contracts: {
+          TestContract: {
+            skipBytecodeCheck: true
+          }
+        }
+      };
       return deploymentChecks.checkIfAlreadyDeployed(params, (err, params) => {
         expect(err).to.be(null);
         expect(params.shouldDeploy).to.be(false);

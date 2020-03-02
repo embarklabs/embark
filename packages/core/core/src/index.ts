@@ -14,13 +14,14 @@ export interface Contract {
 
 export interface ContractConfig {
   address?: string;
-  args?: any[];
+  args?: any;
   instanceOf?: string;
   gas?: number;
   gasPrice?: number;
   silent?: boolean;
   track?: boolean;
   deploy?: boolean;
+  skipBytecodeCheck?: boolean;
 }
 
 export interface Plugin {
@@ -34,6 +35,11 @@ export interface EmbarkPlugins {
   getPluginsProperty(pluginType: string, property: string, sub_property?: string): any[];
   plugins: Plugin[];
   runActionsForEvent(event: string, args: any, cb: Callback<any>): void;
+  emitAndRunActionsForEvent<T>(
+    name: string,
+    params: any,
+    cb: Callback<T>
+  ): void;
 }
 
 export interface CompilerPluginObject {
@@ -68,6 +74,14 @@ export interface EmbarkEvents {
   ): void;
 }
 
+export interface ClientConfig {
+  miningMode?: "dev" | "auto" | "always" | "off";
+}
+
+export interface ContractsConfig {
+  [key: string]: ContractConfig;
+}
+
 export interface Configuration {
   contractsFiles: any[];
   embarkConfig: _EmbarkConfig;
@@ -85,9 +99,7 @@ export interface Configuration {
     isDev: boolean;
     client: string;
     enabled: boolean;
-    clientConfig: {
-      miningMode: string
-    }
+    clientConfig?: ClientConfig;
   };
   webServerConfig: {
     certOptions: {
@@ -97,6 +109,7 @@ export interface Configuration {
   };
   contractsConfig: {
     tracking?: boolean | string;
+    contracts: ContractsConfig;
   };
   plugins: EmbarkPlugins;
   reloadConfig(): void;
@@ -118,7 +131,7 @@ export interface Embark {
   currentContext: string[];
   registerActionForEvent<T>(
     name: string,
-    options?: ActionCallback<T> | { priority: number },
+    options?: ActionCallback<T> | { priority: number; },
     action?: ActionCallback<T>,
   ): void;
 }

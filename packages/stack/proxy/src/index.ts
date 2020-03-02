@@ -57,6 +57,12 @@ export default class ProxyManager {
     this.events.setCommandHandler("proxy:endpoint:get", async (cb) => {
       cb(null, (await this.endpoint));
     });
+    this.events.setCommandHandler("proxy:endpoint:ws:get", async (cb) => {
+      cb(null, buildUrl("ws", this.host, this.wsPort, "ws"));
+    });
+    this.events.setCommandHandler("proxy:endpoint:http:get", async (cb) => {
+      cb(null, buildUrl("http", this.host, this.rpcPort, "rpc"));
+    });
   }
 
   private get endpoint() {

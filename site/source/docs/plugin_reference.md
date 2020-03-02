@@ -355,6 +355,9 @@ This call is used to request a certain resource from Embark
      * (`compiler:contracts`, contractFiles) - requests embark to compile a list of files, will return a compiled object in the callback
      * (`services:register`, serviceName, checkCallback) - requests embark to register a service, it will execute checkCallback every 5 seconds, the callback should return an object containing the service name and status (See embark.registerServiceCheck)
      * (`console:command`, cmd) - execute a command in the console
+     * (`proxy:endpoint:get`, endpoint) - retrieves the endpoint of Embark's proxy. This is the endpoint that should be used to connect to the blockchain node. The resulting protocol (HTTP or WS) is determined by the dApp's blockchain config.
+     * (`proxy:endpoint:ws:get`, endpoint) - retrieves the endpoint of Embark's WebSockets proxy, regardless of the configuration settings in the blockchain config.
+     * (`proxy:endpoint:http:get`, endpoint) - retrieves the endpoint of Embark's HTTP proxy, regardless of the configuration settings in the blockchain config.
 
 ```
 module.exports = function(embark) {
@@ -486,3 +489,8 @@ embark.registerActionForEvent("deployment:contract:beforeDeploy", async (params,
   - `response`: an object containing the response payload
   - `transport`: an object containing the client's websocket connection to the proxy
   - `isWs`: a boolean flag indicating if the request was performed using websockets
+- `runcode:register:<variable>`: when variables are registered in the console using `runcode:register`, actions with the name of the variable (ie `runcode:register:web3`) will be run *before* the variable is actually registered in the console. This allows a variable to be modified by plugins before being registered in the console. Params are:
+  - `<variable>`: an object containing the variable registered in the console
+  - `callback`: callback to be called once the variable has been modified. Pass the following parameters to the callback:
+    - `error`: Any error that ocurred during the action
+    - `<variable>`: The modified variable to be registered in the console.
