@@ -5,6 +5,7 @@ import { AccountParser, dappPath } from "embark-utils";
 import Web3 from "web3";
 import EthAccounts from "./eth_accounts";
 import EthSendTransaction from "./eth_sendTransaction";
+import EthSendRawTransaction from "./eth_sendRawTransaction";
 import EthSignData from "./eth_signData";
 import EthSignTypedData from "./eth_signTypedData";
 import EthSubscribe from "./eth_subscribe";
@@ -82,6 +83,7 @@ export default class RpcManager {
       PersonalNewAccount,
       EthAccounts,
       EthSendTransaction,
+      EthSendRawTransaction,
       EthSignTypedData,
       EthSignData,
       EthSubscribe,

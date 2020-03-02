@@ -149,7 +149,7 @@ export default class TransactionLogger {
 
     if (accounts.map(account => account.toLowerCase()).includes(address.toLowerCase())) {
       const web3 = await this.web3;
-      const value = web3.utils.fromWei(web3.utils.hexToNumberString(dataObject.value));
+      const value = dataObject.value ? web3.utils.fromWei(web3.utils.hexToNumberString(dataObject.value)) : 0;
       return this.logger.info(`Blockchain>`.underline + ` transferring ${value} ETH from ${dataObject.from} to ${address}`.bold);
     }
 

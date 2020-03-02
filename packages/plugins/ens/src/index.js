@@ -320,11 +320,21 @@ class ENS {
     const registration = this.config.namesystemConfig.register;
     const doRegister = registration && registration.rootDomain;
 
-    await this.events.request2('deployment:contract:deploy', this.ensConfig.ENSRegistry);
+    try {
+      await this.events.request2('deployment:contract:deploy', this.ensConfig.ENSRegistry);
+    } catch (err) {
+      this.logger.error(__(`Error deploying the ENS Registry contract: ${err.message}`));
+      this.logger.debug(err.stack);
+    }
     // Add Resolver to contract manager again but this time with correct arguments (Registry address)
     this.ensConfig.Resolver.args = [this.ensConfig.ENSRegistry.deployedAddress];
     this.ensConfig.Resolver = await this.events.request2('contracts:add', this.ensConfig.Resolver);
-    await this.events.request2('deployment:contract:deploy', this.ensConfig.Resolver);
+    try {
+      await this.events.request2('deployment:contract:deploy', this.ensConfig.Resolver);
+    } catch (err) {
+      this.logger.error(__(`Error deploying the ENS Resolver contract: ${err.message}`));
+      this.logger.debug(err.stack);
+    }
 
     const config = {
       registryAbi: self.ensConfig.ENSRegistry.abiDefinition,

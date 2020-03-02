@@ -483,6 +483,25 @@ tracking: 'path/to/some/file'
 
 Having the file referenced above under version control ensures that other users of our project don't redeploy the Smart Contracts on different platforms.
 
+### Skipping bytecode check
+By default, before deploying a contract, Embark will check if the bytecode for the contract already exists on-chain at the address that is tracked by Embark. If the bytecode does not exist, or is different, Embark will deploy the contract for you. We can skip a bytecode check, to ensure that Embark relies on the deployment tracker to determine if the contract has already been deployed or not. 
+
+```
+environment: {
+  deploy: {
+    SimpleStorage: {
+      skipBytecodeCheck: true
+    }
+  }
+},
+```
+
+This becomes useful in cases of private multi-node environments, where we do not want Embark to deploy contracts to the current node when another node on the chain may already have the contract deployed to it. 
+
+More to the point, when using Embark's Quorum plugin in a private multi-node private setup (ie using the [7nodes example](https://github.com/jpmorganchase/quorum-examples/tree/master/examples/7nodes)), we might want to deploy a contract privately between Node 1 and Node 7, for example. In this case, we deploy the contract by connecting Embark to the Node 1 environment we have set up in our blockchain config. Connecting to our Node 7 environment set up in our blockchain config, we should see values for our contracts. However, connecting to other Node environments in our blockchain config (ie Nodes 2 - 6), those contract values should not exist on the node. The only way to ensure that we do not deploy our contracts to Nodes 2 - 6 when they're not meant to exist there, is by setting the `skipBytecodeCheck: true` setting for the contract in the contracts config.
+
+The downside of this, is that if we perform an `embark reset` (effectively deleting our `chains.json`, and therefore losing track of which contracts we've previously deployed), we have no way to check if our chain has already deployed our contract or not. In this case, Embark will deploy the contracts to the current environment regardless.
+
 
 ### Reducing contract size
 

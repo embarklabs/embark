@@ -2,8 +2,7 @@ import { __ } from 'embark-i18n';
 import {BlockchainClient} from "./blockchain";
 const {normalizeInput, testRpcWithEndpoint, testWsEndpoint} = require('embark-utils');
 import {BlockchainProcessLauncher} from './blockchainProcessLauncher';
-
-export const NETHERMIND_NAME = 'nethermind';
+import constants from "embark-core/constants";
 
 class Nethermind {
   constructor(embark) {
@@ -20,7 +19,7 @@ class Nethermind {
       return;
     }
 
-    this.events.request("blockchain:node:register", NETHERMIND_NAME, {
+    this.events.request("blockchain:node:register", constants.blockchain.clients.nethermind, {
       isStartedFn: (isStartedCb) => {
         this._doCheck((state) => {
           console.log('Started?', JSON.stringify(state));
@@ -53,7 +52,7 @@ class Nethermind {
 
   shouldInit() {
     return (
-      this.blockchainConfig.client === NETHERMIND_NAME &&
+      this.blockchainConfig.client === constants.blockchain.clients.nethermind &&
       this.blockchainConfig.enabled
     );
   }
@@ -61,7 +60,7 @@ class Nethermind {
   _getNodeState(err, version, cb) {
     if (err) return cb({ name: "Ethereum node not found", status: 'off' });
 
-    return cb({ name: `${NETHERMIND_NAME} (Ethereum)`, status: 'on' });
+    return cb({ name: `${constants.blockchain.clients.nethermind} (Ethereum)`, status: 'on' });
   }
 
   _doCheck(cb) {
@@ -78,7 +77,7 @@ class Nethermind {
   startBlockchainNode(callback) {
     if (this.blockchainConfig.isStandalone) {
       return new BlockchainClient(this.blockchainConfig, {
-        clientName: NETHERMIND_NAME,
+        clientName: constants.blockchain.clients.nethermind,
         env: this.embark.config.env,
         certOptions: this.embark.config.webServerConfig.certOptions,
         logger: this.logger,

@@ -333,9 +333,7 @@ export default class ContractsManager {
           contract.filename = compiledContract.filename;
           contract.originalFilename = compiledContract.originalFilename || ("contracts/" + contract.filename);
           contract.path = dappPath(contract.originalFilename);
-
           contract.gas = (contractConfig && contractConfig.gas) || contractsConfig.gas || 'auto';
-
           contract.gasPrice = contract.gasPrice || gasPrice;
           contract.type = 'file';
           contract.className = className;

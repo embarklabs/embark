@@ -27,7 +27,7 @@ describe('stack/deployment', () => {
     deployedAction = sinon.spy((params, cb) => { cb(null, params); });
     afterAllAction = sinon.spy((params, cb) => { cb(null, params); });
 
-    deployFn = sinon.spy((contract, done) => {
+    deployFn = sinon.spy((contract, addlDeployParams, done) => {
       deployedContracts.push(contract);
       done(null, {}); // deployer needs to finish with a receipt object
     });
