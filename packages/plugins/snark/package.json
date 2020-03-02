@@ -58,7 +58,7 @@
     "snarkjs": "0.1.20"
   },
   "devDependencies": {
-    "@babel/core": "7.7.4",
+    "@babel/core": "7.8.6",
     "@typescript-eslint/parser": "2.20.0",
     "babel-eslint": "10.0.3",
     "babel-jest": "24.9.0",

@@ -54,7 +54,7 @@
     "viz.js": "1.8.2"
   },
   "devDependencies": {
-    "@babel/core": "7.8.3",
+    "@babel/core": "7.8.6",
     "babel-jest": "25.1.0",
     "embark-solo": "^5.2.3",
     "embark-testing": "^5.3.0-nightly.0",
