@@ -60,7 +60,7 @@ class EthereumBlockchainClient {
     return web3.currentProvider;
   }
 
-  async deployer(contract, done) {
+  async deployer(contract, additionalDeployParams, done) {
     try {
       const web3 = await this.web3;
       const [account] = await web3.eth.getAccounts();
@@ -88,7 +88,7 @@ class EthereumBlockchainClient {
       }
 
       embarkJsUtils.secureSend(web3, contractObject, {
-        from: account, gas: contract.gas
+        from: account, gas: contract.gas, ...additionalDeployParams
       }, true, (err, receipt) => {
         if (err) {
           return done(err);
@@ -199,7 +199,7 @@ class EthereumBlockchainClient {
         if (Array.isArray(arg)) {
           return checkArgs(arg, nextEachCb);
         }
-        if (arg[0] === "$") {
+        if (arg && arg[0] === "$") {
           return parseArg(arg, nextEachCb);
         }
         nextEachCb(null, arg);

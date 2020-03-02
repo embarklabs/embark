@@ -43,7 +43,7 @@ Most of the options are self-explanatory, still, here are some brief description
 Option | Type: `default` | Value
 --- | --- | --- 
 `enabled` | boolean: `true` | Whether or not to spawn an Ethereum node
-`client` | string: `geth` |  Client to use for the Ethereum node. Currently supported: `geth` and `parity`
+`client` | string: `geth` |  Client to use for the Ethereum node. Currently supported: `geth`,  `parity`, `nethermind`, and `quorum`. Note: the corresponding plugin package must be installed in your dApp (ie `embark-quorum`) and the plugin must be enabled in your dApp's `embark.json`, ie `plugins: {  embark-quorum: {} }`
 `miningMode` | string: `dev` |  The mining mode to use for the node.<br/>`dev`: This is a special mode where the node uses a development account as defaultAccount. This account is already funded and transactions are faster.<br/>`auto`: Uses a mining script to mine only when needed.<br/>`always`: Miner is always on.<br/>`off`: Turns off the miner
 `endpoint` | string |  Endpoint to connect to. Works for external endpoints (like Infura) and local ones too (only for nodes started by `embark run`)
 `accounts` | array |  Accounts array for the node and to deploy. When no account is given, defaults to one node account. For more details, go [here](/docs/blockchain_accounts_configuration.html)
@@ -74,6 +74,7 @@ Option | Type: `default` | Value
 `proxy` | boolean: `true` | Whether or not Embark should use a proxy to add functionalities. This proxy is used by Embark to see the different transactions that go through, for example, and shows them to you.
 `targetGasLimit` | number |  Artificial target gas floor for the blocks to mine
 `genesisBlock` | string |  The genesis file to use to create the network. This file is used when creating the network. It tells the client the parameters to initiate the node with. You can read more on [genesis blocks here](https://arvanaghi.com/blog/explaining-the-genesis-block-in-ethereum/)
+`tesseraPrivateUrl` | string: `http://localhost:9081` | Endpoint of the Tessera private transaction manager when using `embark-quorum` as the dApp blockchain (`client: 'quorum'` must be set).
 
 {% notification info 'Using Parity and Metamask' %}
 

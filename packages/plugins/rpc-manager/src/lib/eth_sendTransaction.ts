@@ -1,18 +1,23 @@
 import async from "async";
-import { Callback, Embark, EmbarkEvents } from "embark-core";
+import { Callback, Embark, EmbarkEvents, EmbarkPlugins } from "embark-core";
 import { __ } from "embark-i18n";
 import Web3 from "web3";
 const { blockchain: blockchainConstants } = require("embark-core/constants");
 import RpcModifier from "./rpcModifier";
+import cloneDeep from "lodash.clonedeep";
 
 export default class EthSendTransaction extends RpcModifier {
   private signTransactionQueue: any;
   private nonceCache: any = {};
+  private plugins: EmbarkPlugins;
   constructor(embark: Embark, rpcModifierEvents: EmbarkEvents, public nodeAccounts: string[], public accounts: any[], protected web3: Web3) {
     super(embark, rpcModifierEvents, nodeAccounts, accounts, web3);
 
+    this.plugins = embark.config.plugins;
+
     embark.registerActionForEvent("blockchain:proxy:request", this.ethSendTransactionRequest.bind(this));
 
+    // TODO: pull this out in to rpc-manager/utils once https://github.com/embarklabs/embark/pull/2150 is merged.
     // Allow to run transaction in parallel by resolving the nonce manually.
     // For each transaction, resolve the nonce by taking the max of current transaction count and the cache we keep locally.
     // Update the nonce and sign it
@@ -23,7 +28,7 @@ export default class EthSendTransaction extends RpcModifier {
         }
         payload.nonce = newNonce;
         try {
-          const result = await this.web3.eth.accounts.signTransaction(payload, account.privateKey);
+          const result = await web3.eth.accounts.signTransaction(payload, account.privateKey);
           callback(null, result.rawTransaction);
         } catch (err) {
           callback(err);
@@ -32,8 +37,10 @@ export default class EthSendTransaction extends RpcModifier {
     }, 1);
   }
 
+  // TODO: pull this out in to rpc-manager/utils once https://github.com/embarklabs/embark/pull/2150 is merged.
   private async getNonce(address: string, callback: Callback<any>) {
-    this.web3.eth.getTransactionCount(address, (error: any, transactionCount: number) => {
+    const web3 = await this.web3;
+    web3.eth.getTransactionCount(address, (error: any, transactionCount: number) => {
       if (error) {
         return callback(error, null);
       }
@@ -69,9 +76,11 @@ export default class EthSendTransaction extends RpcModifier {
           if (err) {
             return callback(err, null);
           }
+          params.originalRequest = cloneDeep(params.request);
           params.request.method = blockchainConstants.transactionMethods.eth_sendRawTransaction;
           params.request.params = [newPayload];
-          callback(err, params);
+          // allow for any mods to eth_sendRawTransaction
+          this.plugins.runActionsForEvent('blockchain:proxy:request', params, callback);
         });
       }
     } catch (err) {
