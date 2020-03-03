@@ -161,10 +161,10 @@ export default class Blockchain {
     this.blockchainApi.registerRequests("ethereum");
 
     if (this.blockchainConfig.enabled && this.blockchainConfig.client === "geth") {
-      warnIfPackageNotDefinedLocally("embark-geth", this.embark.logger.warn.bind(this.embark.logger));
+      warnIfPackageNotDefinedLocally("embark-geth", this.embark.logger.warn.bind(this.embark.logger), this.embark.config.embarkConfig);
     }
     if (this.blockchainConfig.enabled && this.blockchainConfig.client === "parity") {
-      warnIfPackageNotDefinedLocally("embark-parity", this.embark.logger.warn.bind(this.embark.logger));
+      warnIfPackageNotDefinedLocally("embark-parity", this.embark.logger.warn.bind(this.embark.logger), this.embark.config.embarkConfig);
     }
   }
 

@@ -121,8 +121,8 @@ export class Engine {
   }
 
   async generateEmbarkJSON() {
-    if (fs.existsSync('embark.json')) {
-      throw new Error(__('embark.json already there. Will not overwrite'));
+    if (fs.existsSync('embark.json') || fs.existsSync('embark.config.js')) {
+      throw new Error(__('embark.json or embark.config.js already exist. Will not overwrite'));
     }
     return fs.writeFile('embark.json', JSON.stringify(constants.defaultEmbarkConfig, null, 2));
   }
