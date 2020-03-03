@@ -117,7 +117,8 @@ class BasicPipeline {
           options: {
             webpackConfigName: self.webpackConfigName,
             pipelineConfig: self.pipelineConfig,
-            fs: self.embark.fs
+            fs: self.embark.fs,
+            embarkConfig: self.embark.config.embarkConfig
           }
         });
         webpackProcess.send({action: constants.pipeline.build, assets: self.assetFiles, importsList});

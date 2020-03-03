@@ -4,11 +4,18 @@
 // on babel to achieve the same goal.
 // See: https://node.green/
 
+// KEY ASSUMPTION: for a DApp to be valid, from embark's cli's perspective, it
+// must have an importable embark.config.js file or a parsable embark.json file
+// in its top-level directory; if that requirement changes in the future then
+// this script must be revised. Hypothetical example of such a change: embark
+// config info may be included in package.json under `{"embark": {...}}` -or-
+// stored in a config file.
+
 function main() {
   if (whenNoShim()) return;
   var invoked = thisEmbark();
-  var embarkJson = findEmbarkJson();
-  var dappPath = embarkJson.dirname;
+  var embarkConfig = findEmbarkConfig();
+  var dappPath = embarkConfig.dirname;
   process.chdir(dappPath);
   process.env.DAPP_PATH = dappPath;
   process.env.PWD = dappPath;
@@ -36,11 +43,11 @@ function main() {
   var containing = findBinContaining(dappPath, invoked);
   var installed = findBinInstalled(dappPath, invoked);
   var local = selectLocal(containing, installed, invoked);
-  var pkgJson = findPkgJson(dappPath, embarkJson, local);
+  var pkgJson = findPkgJson(dappPath, embarkConfig, local);
   process.env.PKG_PATH = pkgJson.dirname;
   var embark = select(invoked, local);
   process.env.EMBARK_PATH = embark.pkgDir;
-  embark.exec(embarkJson);
+  embark.exec(embarkConfig);
 }
 
 // -----------------------------------------------------------------------------
@@ -71,11 +78,31 @@ function EmbarkBin(binpath, kind) {
   this.pkgJson = undefined;
 }
 
-EmbarkBin.prototype.exec = function (embarkJson) {
+EmbarkBin.prototype.exec = function (embarkConfig) {
+  if (!embarkConfig) {
+    embarkConfig = findEmbarkConfig();
+    var dappPath = embarkConfig.dirname;
+    process.chdir(dappPath);
+    process.env.DAPP_PATH = dappPath;
+    process.env.PWD = dappPath;
+  }
   var Cmd = require('../cmd/cmd');
-  var cli = new Cmd({embarkConfig: embarkJson.json});
-  if(_logged) { console[this.loglevel](); }
-  cli.process(process.argv);
+  var embarkBin = this;
+  Promise.resolve(embarkConfig.contents)
+    .then(function (embarkConfig) {
+      try {
+        var cli = new Cmd({embarkConfig});
+        if(_logged) { console[embarkBin.loglevel](); }
+        cli.process(process.argv);
+      } catch (e) {
+        reportUnhandledCliException(e);
+        exitWithError();
+      }
+    })
+    .catch(function (e) {
+      reportConfigRejected(embarkConfig.filepath, e);
+      exitWithError();
+    });
 };
 
 EmbarkBin.prototype.handle = function () {
@@ -266,21 +293,39 @@ function findBinInstalled(dappPath, invoked) {
   );
 }
 
-function findEmbarkJson() {
-  // findUp search begins in process.cwd() by default, but embark.json could
-  // be in a subdir if embark was invoked via `npm run` (which changes cwd to
+function findEmbarkConfig() {
+  // findUp search begins in process.cwd() by default, but the config could be
+  // in a subdir if embark was invoked via `npm run` (which changes cwd to
   // package.json's dir) and the package.json is in a dir above the top-level
   // DApp dir; so start at INIT_CWD if that has been set (by npm, presumably)
   // See: https://docs.npmjs.com/cli/run-script
+  var cmd = process.argv[2];
+  var embarkConfig, embarkConfigJsPath, embarkJsonPath;
   var startDir = initCwd();
-  return (new EmbarkJson(
-    findUp.sync('embark.json', {cwd: startDir}) ||
-      path.join(startDir, 'embark.json'),
-    process.argv[2]
-  )).handle();
+  embarkConfigJsPath = findUp.sync('embark.config.js', {cwd: startDir});
+  if (embarkConfigJsPath) {
+    embarkConfig = new EmbarkConfig(
+      (new EmbarkConfigJs(embarkConfigJsPath, cmd)).handle()
+    );
+  } else {
+    embarkJsonPath = findUp.sync('embark.json', {cwd: startDir});
+    if (embarkJsonPath) {
+      embarkConfig = new EmbarkConfig(
+        (new EmbarkJson(embarkJsonPath, cmd)).handle()
+      );
+    }
+  }
+  if (!embarkConfig) {
+    embarkConfig = new EmbarkConfig(
+      (new EmbarkConfigJs(
+        path.join(startDir, 'embark.config.js'), cmd)
+      ).handle()
+    );
+  }
+  return embarkConfig.handle();
 }
 
-function findPkgJson(dappPath, embarkJson, local) {
+function findPkgJson(dappPath, embarkConfig, local) {
   var skipDirs = [];
   if (local) {
     if (local instanceof EmbarkBinLocalContaining) {
@@ -302,7 +347,7 @@ function findPkgJson(dappPath, embarkJson, local) {
       closest = found;
     }
     dir = found ? path.dirname(found) : found;
-    var stop = !dir || !isDappCmd(embarkJson.cmd);
+    var stop = !dir || !isDappCmd(embarkConfig.cmd);
     if (!stop) {
       startDir = path.join(dir, '..');
     }
@@ -313,16 +358,138 @@ function findPkgJson(dappPath, embarkJson, local) {
       (new PkgJsonLocal(found)).handle();
     }
   }
-  if (isDappCmd(embarkJson.cmd) && !closest) {
+  if (isDappCmd(embarkConfig.cmd) && !closest) {
     var loglevel = 'error';
     reportMissingFile(path.join(dappPath, 'package.json'), loglevel);
-    reportMissingFile_DappJson(embarkJson.cmd, loglevel, 'package', 'in or above');
+    reportMissingFile_DappJson(embarkConfig.cmd, loglevel, 'package', 'in or above');
     exitWithError();
   }
   return (
     closest || (new PkgJsonLocal(path.join(startDir, 'package.json'))).setup()
   );
 }
+
+// -- generic config -----------------------------------------------------------
+
+function EmbarkConfig(configFile) {
+  this.configFile = configFile;
+  this.filepath = configFile.filepath;
+  this.cmd = configFile.cmd;
+  this.dirname = configFile.dirname;
+  this.realpath = configFile.realpath;
+  this.callError = undefined;
+  this.contents = undefined;
+}
+
+EmbarkConfig.prototype.handle = function () {
+  this.setup();
+  this.log();
+  return this;
+};
+
+EmbarkConfig.prototype.log = function () {
+  this.logMissingConfig();
+  this.logCallFailed();
+};
+
+EmbarkConfig.prototype.loglevel = 'error';
+
+EmbarkConfig.prototype.logCallFailed = function () {
+  if (isDappCmd(this.cmd) && this.realpath && this.callError) {
+    reportCallFailed(this.filepath, this.callError, this.loglevel);
+    exitWithError();
+  }
+};
+
+EmbarkConfig.prototype.logMissingConfig = function () {
+  if (isDappCmd(this.cmd) && !this.realpath) {
+    reportMissingConfig(this.cmd, this.loglevel);
+    exitWithError();
+  }
+};
+
+EmbarkConfig.prototype.setContents = function () {
+  if (isDappCmd(this.cmd) && this.realpath) {
+    if (this.configFile instanceof EmbarkConfigJs) {
+      this.contents = this.configFile.exports;
+      if (typeof this.contents === 'function') {
+        try {
+          this.contents = this.contents();
+        } catch (e) {
+          this.contents = undefined;
+          this.callError = e;
+        }
+      }
+    } else if (this.configFile instanceof EmbarkJson) {
+      this.contents = this.configFile.json;
+    }
+  }
+};
+
+EmbarkConfig.prototype.setup = function () {
+  this.setContents();
+  return this;
+};
+
+// -- js config file -----------------------------------------------------------
+
+function EmbarkConfigJs(filepath, cmd) {
+  this.filepath = filepath;
+  this.cmd = cmd;
+  this.dirname = undefined;
+  this.exports = undefined;
+  this.importError = undefined;
+  this.realpath = undefined;
+}
+
+EmbarkConfigJs.prototype.handle = function () {
+  this.setup();
+  this.log();
+  return this;
+};
+
+EmbarkConfigJs.prototype.log = function () {
+  this.logUnimportable();
+};
+
+EmbarkConfigJs.prototype.loglevel = 'error';
+
+EmbarkConfigJs.prototype.logUnimportable = function () {
+  if (isDappCmd(this.cmd) && this.realpath && this.importError) {
+    reportUnimportable(this.filepath, this.importError, this.loglevel);
+    exitWithError();
+  }
+};
+
+EmbarkConfigJs.prototype.setDirname = function () {
+  if (this.filepath) {
+    this.dirname = path.dirname(this.filepath);
+  }
+};
+
+EmbarkConfigJs.prototype.setExports = function () {
+  if (isDappCmd(this.cmd) && this.realpath) {
+    try {
+      this.exports = require(this.filepath);
+    } catch (e) {
+      this.exports = undefined;
+      this.importError = e;
+    }
+  }
+};
+
+EmbarkConfigJs.prototype.setRealpath = function () {
+  if (this.filepath) {
+    this.realpath = realpath(this.filepath);
+  }
+};
+
+EmbarkConfigJs.prototype.setup = function () {
+  this.setDirname();
+  this.setRealpath();
+  this.setExports();
+  return this;
+};
 
 // -- json files ---------------------------------------------------------------
 
@@ -346,16 +513,11 @@ Json.prototype.log = function () {
 
 Json.prototype.loglevel = 'warn';
 
-Json.prototype.logMissingFile = function (doReport) {
-  if (doReport === undefined) {
-    doReport = true;
-  }
+Json.prototype.logMissingFile = function () {
   var missing;
   if (!this.realpath) {
     missing = true;
-    if (doReport) {
-      reportMissingFile(this.filepath, this.loglevel);
-    }
+    reportMissingFile(this.filepath, this.loglevel);
   }
   return missing;
 };
@@ -405,18 +567,7 @@ setupProto(EmbarkJson, Json);
 EmbarkJson.prototype.loglevel = 'error';
 
 EmbarkJson.prototype.log = function () {
-  this.logMissingFile();
   this.logUnparsable();
-};
-
-EmbarkJson.prototype.logMissingFile = function () {
-  if (Json.prototype.logMissingFile.call(this, false)) {
-    if (isDappCmd(this.cmd)) {
-      embarklog['error']('No embark.json file found.\n' +
-        'Run `embark init` to generate one automatically.');
-      exitWithError();
-    }
-  }
 };
 
 EmbarkJson.prototype.logUnparsable = function () {
@@ -737,6 +888,43 @@ function whenNoShim() {
 
 // -- reporters ----------------------------------------------------------------
 
+function reportCallFailed(filepath, error, loglevel) {
+  var basename = path.basename(filepath);
+  blankLineMaybe(loglevel);
+  embarklog[loglevel]('file', filepath);
+  if (error.code) embarklog[loglevel]('code', error.code);
+  embarklog[loglevel](
+    'exports',
+    `An exception was thrown when calling the function exported by ${basename}`
+  );
+  embarklog[loglevel]('', error.stack);
+}
+
+function reportConfigRejected(filepath, error, loglevel) {
+  if (!loglevel) loglevel = 'error';
+  var basename = path.basename(filepath);
+  blankLineMaybe(loglevel);
+  embarklog[loglevel]('file', filepath);
+  if (error.code) embarklog[loglevel]('code', error.code);
+  embarklog[loglevel](
+    'exports',
+    `Promise rejection when resolving the configuration from ${basename}`
+  );
+  embarklog[loglevel]('', error.stack);
+}
+
+function reportMissingConfig(cmd, loglevel) {
+  blankLineMaybe(loglevel);
+  embarklog[loglevel](
+    '',
+    `Could not locate your DApp's embark.config.js or embark.json file`
+  );
+  embarklog[loglevel](
+    '',
+    'Run `embark init` to generate an embark.json file automatically'
+  );
+}
+
 function reportMissingEmbarkDep(filepath, dirname, loglevel) {
   blankLineMaybe(loglevel);
   embarklog[loglevel]('file', filepath);
@@ -868,6 +1056,21 @@ function reportSwitching(binpathFrom, binpathTo, loglevel, pkgFrom, pkgTo) {
     '',
     `Switching from ${pkgFrom} to ${pkgTo}`
   );
+}
+
+function reportUnhandledCliException(error, loglevel) {
+  if (!loglevel) loglevel = 'error';
+  blankLineMaybe(loglevel);
+  embarklog[loglevel]('', 'Unhandled exception in the command-line interface');
+  embarklog[loglevel]('', error.stack);
+}
+
+function reportUnimportable(filepath, error, loglevel) {
+  blankLineMaybe(loglevel);
+  embarklog[loglevel]('file', filepath);
+  if (error.code) embarklog[loglevel]('code', error.code);
+  embarklog[loglevel]('require', `Failed to import module`);
+  embarklog[loglevel]('', error.stack);
 }
 
 function reportUnparsable(filepath, loglevel) {

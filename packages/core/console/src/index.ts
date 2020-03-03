@@ -169,7 +169,7 @@ export default class Console {
       return this.ipc.request("console:executeCmd", cmd, callback);
     }
 
-    if (cmd.indexOf("profile") === 0 && warnIfPackageNotDefinedLocally("embark-profiler", this.embark.logger.warn) !== true) {
+    if (cmd.indexOf("profile") === 0 && warnIfPackageNotDefinedLocally("embark-profiler", this.embark.logger.warn, this.embark.config.embarkConfig) !== true) {
       return callback(null, "please install embark-profiler plugin");
     }
     if (!(cmd.split(" ")[0] === "history" || cmd === __("history"))) {

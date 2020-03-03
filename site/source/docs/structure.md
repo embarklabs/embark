@@ -74,6 +74,10 @@ This file is used to keep track of the deployed contracts in each chain. This is
 
 In order to provide as much flexibility for our users as possible, Embark comes with an `embark.json` file that lets us configure our own directory structure. This file is also used to specify Embark plugins and other configurations. More information on how to use this configuration file, can be found in [configuring embark.json](configuration.html).
 
+### embark.config.js
+
+If we need more control over how our `embark.json` configuration object should be composed, `embark.config.js` can be used as a module that exports either a configuration object or a function that returns a configuration object. That way, we can perform any calculations needed. For more information, checkout the [embark.config.js section](configuration.html#embark.config.js).
+
 ## Smart Contracts only template structure
 
 When creating a project using the `--contracts-only` option, the resulting structure is a little bit simpler. Let's take quick look:

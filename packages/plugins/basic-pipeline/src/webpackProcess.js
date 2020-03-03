@@ -13,6 +13,7 @@ class WebpackProcess extends ProcessWrapper {
     super(options);
     this.webpackConfigName = options.webpackConfigName;
     this.pipelineConfig = options.pipelineConfig;
+    this.embarkConfig = options.embarkConfig;
   }
 
   async build(assets, importsList, callback) {
@@ -25,6 +26,10 @@ class WebpackProcess extends ProcessWrapper {
 
   async webpackRun(assets, importsList, callback) {
     try {
+      await writeFile(
+        dappPath('.embark/embark.json'),
+        JSON.stringify(this.embarkConfig)
+      );
       await writeFile(
         dappPath('.embark/embark-aliases.json'),
         JSON.stringify(importsList)
