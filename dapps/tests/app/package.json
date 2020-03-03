@@ -3,17 +3,17 @@
   "devDependencies": {
     "@babel/code-frame": "7.5.5",
     "bootstrap": "3.4.1",
-    "embark": "^5.3.0-nightly.1",
+    "embark": "^5.3.0-nightly.2",
     "embark-dapp-test-service": "^5.2.3",
-    "embark-geth": "^5.3.0-nightly.1",
-    "embark-graph": "^5.3.0-nightly.1",
+    "embark-geth": "^5.3.0-nightly.2",
+    "embark-graph": "^5.3.0-nightly.2",
     "embark-i18n": "^5.2.3",
-    "embark-ipfs": "^5.3.0-nightly.1",
-    "embark-parity": "^5.3.0-nightly.1",
-    "embark-profiler": "^5.3.0-nightly.1",
+    "embark-ipfs": "^5.3.0-nightly.2",
+    "embark-parity": "^5.3.0-nightly.2",
+    "embark-profiler": "^5.3.0-nightly.2",
     "embark-reset": "^5.2.3",
-    "embark-swarm": "^5.3.0-nightly.1",
-    "embark-whisper-geth": "^5.3.0-nightly.1",
+    "embark-swarm": "^5.3.0-nightly.2",
+    "embark-whisper-geth": "^5.3.0-nightly.2",
     "embarkjs": "^5.2.3",
     "embarkjs-ens": "^5.2.3",
     "embarkjs-ipfs": "^5.2.3",
@@ -39,5 +39,5 @@
     "reset": "npx embark-reset && npx rimraf embark-*.tgz package",
     "test": "npx embark test"
   },
-  "version": "5.3.0-nightly.1"
+  "version": "5.3.0-nightly.2"
 }

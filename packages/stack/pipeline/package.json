@@ -1,6 +1,6 @@
 {
   "name": "embark-pipeline",
-  "version": "5.3.0-nightly.0",
+  "version": "5.3.0-nightly.2",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Build pipeline module for Embark",
@@ -49,12 +49,12 @@
     "@babel/runtime-corejs3": "7.7.4",
     "async": "2.6.1",
     "core-js": "3.4.3",
-    "embark-utils": "^5.3.0-nightly.0"
+    "embark-utils": "^5.3.0-nightly.2"
   },
   "devDependencies": {
     "babel-jest": "24.9.0",
     "embark-solo": "^5.2.3",
-    "embark-testing": "^5.3.0-nightly.0",
+    "embark-testing": "^5.3.0-nightly.2",
     "eslint": "6.8.0",
     "jest": "25.1.0",
     "npm-run-all": "4.1.5",
