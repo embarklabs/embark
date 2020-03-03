@@ -58,7 +58,7 @@
     "@storybook/core": "5.3.14",
     "@storybook/preset-create-react-app": "1.5.2",
     "@storybook/react": "5.3.14",
-    "ansi-to-html": "0.6.11",
+    "ansi-to-html": "0.6.14",
     "array-move": "2.0.0",
     "autoscroll-react": "3.2.0",
     "babel-loader": "8.0.6",
