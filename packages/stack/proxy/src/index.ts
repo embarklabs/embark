@@ -135,11 +135,12 @@ export default class ProxyManager {
       isWs: false,
       logger: this.logger,
       plugins: this.plugins
-    })
-      .serve(
-        this.host,
-        this.rpcPort,
-      );
+    });
+
+    this.httpProxy.serve(
+      this.host,
+      this.rpcPort,
+    );
     this.logger.info(`HTTP Proxy for node endpoint ${endpoint} listening on ${buildUrl("http", this.host, this.rpcPort, "rpc")}`);
     if (this.isWs) {
       this.wsProxy = await new Proxy({
@@ -147,22 +148,25 @@ export default class ProxyManager {
         isWs: true,
         logger: this.logger,
         plugins: this.plugins
-      })
-        .serve(
-          this.host,
-          this.wsPort,
-        );
+      });
+
+      this.wsProxy.serve(
+        this.host,
+        this.wsPort,
+      );
       this.logger.info(`WS Proxy for node endpoint ${endpoint} listening on ${buildUrl("ws", this.host, this.wsPort, "ws")}`);
     }
   }
   private stopProxy() {
-    if (this.wsProxy) {
-      this.wsProxy.stop();
-      this.wsProxy = null;
-    }
-    if (this.httpProxy) {
-      this.httpProxy.stop();
-      this.httpProxy = null;
-    }
+    return new Promise(resolve => {
+      if (this.wsProxy) {
+        this.wsProxy.stop(resolve);
+        this.wsProxy = null;
+      }
+      if (this.httpProxy) {
+        this.httpProxy.stop(resolve);
+        this.httpProxy = null;
+      }
+    });
   }
 }
