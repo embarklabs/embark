@@ -47,7 +47,7 @@
     "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "7.7.4",
+    "@babel/runtime-corejs3": "7.8.4",
     "@embarklabs/ethereumjs-wallet": "0.6.4",
     "@types/follow-redirects": "1.5.0",
     "@types/fs-extra": "7.0.0",

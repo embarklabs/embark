@@ -52,7 +52,7 @@
     ]
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "7.7.7",
+    "@babel/runtime-corejs3": "7.8.4",
     "@types/async": "3.0.3",
     "async": "3.1.0",
     "colors": "1.4.0",

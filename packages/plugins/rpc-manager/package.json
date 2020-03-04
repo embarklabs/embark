@@ -50,7 +50,7 @@
     "extends": "../../../.eslintrc.json"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "7.7.4",
+    "@babel/runtime-corejs3": "7.8.4",
     "@omisego/omg-js-util": "2.0.0-v0.2",
     "@types/async": "2.0.50",
     "async": "2.6.1",
