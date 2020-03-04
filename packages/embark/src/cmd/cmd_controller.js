@@ -76,6 +76,7 @@ class EmbarkController {
       engine.registerModuleGroup("coreComponents");
       engine.registerModuleGroup("serviceMonitor");
       engine.registerModuleGroup("blockchainStackComponents");
+      engine.registerModulePackage('embark-ganache');
 
       // load custom plugins
       engine.loadDappPlugins();
@@ -178,6 +179,7 @@ class EmbarkController {
         engine.registerModuleGroup("consoleComponents");
 
         // TODO: replace with individual plugins
+        engine.registerModulePackage('embark-ganache');
         engine.registerModuleGroup("namesystem");
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
@@ -302,9 +304,7 @@ class EmbarkController {
         engine.registerModuleGroup("contracts");
 
         if (!options.onlyCompile) {
-          // engine.registerModuleGroup("blockchain");
-          // engine.registerModuleGroup("storage");
-          // engine.registerModuleGroup("communication");
+          engine.registerModulePackage('embark-ganache');
           engine.registerModuleGroup("pipeline");
           engine.registerModuleGroup("namesystem");
           engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins });
@@ -429,6 +429,7 @@ class EmbarkController {
         engine.registerModuleGroup("serviceMonitor");
         engine.registerModuleGroup("stackComponents");
         engine.registerModuleGroup("consoleComponents");
+        engine.registerModulePackage('embark-ganache');
 
         // TODO: replace with individual plugins
         engine.registerModuleGroup("namesystem");
@@ -532,6 +533,7 @@ class EmbarkController {
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
 
+        engine.registerModulePackage('embark-ganache');
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
 
@@ -752,6 +754,7 @@ class EmbarkController {
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
 
+        engine.registerModulePackage('embark-ganache');
         engine.registerModuleGroup("namesystem");
         engine.registerModuleGroup("compiler");
         engine.registerModuleGroup("contracts");
@@ -834,8 +837,8 @@ class EmbarkController {
         engine.registerModuleGroup("coreComponents");
         engine.registerModuleGroup("stackComponents");
 
-        engine.registerModuleGroup("compiler");
         engine.registerModulePackage('embark-ganache');
+        engine.registerModuleGroup("compiler");
         engine.registerModulePackage('embark-ethereum-blockchain-client');
         engine.registerModulePackage('embark-web3');
         engine.registerModulePackage('embark-accounts-manager');
