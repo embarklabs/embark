@@ -95,7 +95,7 @@
     "istanbul": "0.4.5",
     "json-parse-better-errors": "1.0.2",
     "lodash.clonedeep": "4.5.0",
-    "mocha": "6.2.2",
+    "mocha": "7.1.0",
     "neo-blessed": "0.2.0",
     "node-ipc": "9.1.1",
     "npmlog": "4.1.2",
