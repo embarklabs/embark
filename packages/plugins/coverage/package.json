@@ -49,7 +49,7 @@
     "test": "nyc --reporter=html --reporter=json mocha \"dist/test/**/*.js\" --exit --no-timeouts --require source-map-support/register"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "7.7.4",
+    "@babel/runtime-corejs3": "7.8.4",
     "@types/fs-extra": "7.0.0",
     "@types/globule": "1.1.3",
     "@types/mocha": "5.2.7",
