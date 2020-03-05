@@ -3,6 +3,8 @@ import assert from 'assert';
 import { fakeEmbark } from 'embark-testing';
 import Deployment from '../src/';
 
+/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["assert", "expect"] }] */
+
 describe('stack/deployment', () => {
 
   const { embark, plugins } = fakeEmbark();

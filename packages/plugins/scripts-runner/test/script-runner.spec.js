@@ -6,6 +6,8 @@ import ScriptsRunnerPlugin, { ScriptsRunnerCommand } from '../src/';
 import { file as tmpFile, dir as tmpDir } from 'tmp-promise';
 import { promises } from 'fs';
 
+/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["assert", "expect"] }] */
+
 // Due to our `DAPP_PATH` dependency in `embark-utils` `dappPath()`, we need to
 // ensure that this environment variable is defined.
 process.env.DAPP_PATH = 'something';
@@ -86,17 +88,19 @@ describe('plugins/scripts-runner', () => {
     sinon.restore();
   });
 
-  it('should execute script', async (done) => {
+  it('should execute script', async () => {
     const scriptFile = await prepareScriptFile(`module.exports = () => { return 'done'; }`);
 
-    embark.events.request(ScriptsRunnerCommand.Execute, scriptFile.path, false, (err, result) => {
-      assert.equal(result, 'done');
-      scriptFile.cleanup();
-      done();
+    return new Promise(done => {
+      embark.events.request(ScriptsRunnerCommand.Execute, scriptFile.path, false, (err, result) => {
+        assert.equal(result, 'done');
+        scriptFile.cleanup();
+        done();
+      });
     });
   });
 
-  it('should execute all scripts in a directory', async (done) => {
+  it('should execute all scripts in a directory', async () => {
     const scriptsDir = await tmpDir();
 
     // eslint-disable-next-line no-unused-vars
@@ -111,15 +115,17 @@ describe('plugins/scripts-runner', () => {
       scriptsDir.path
     );
 
-    embark.events.request(ScriptsRunnerCommand.Execute, scriptsDir.path, false, (err, result) => {
-      assert.ok(result.includes('done'));
-      assert.ok(result.includes('done2'));
-      scriptsDir.cleanup();
-      done();
+    return new Promise(done => {
+      embark.events.request(ScriptsRunnerCommand.Execute, scriptsDir.path, false, (err, result) => {
+        assert.ok(result.includes('done'));
+        assert.ok(result.includes('done2'));
+        scriptsDir.cleanup();
+        done();
+      });
     });
   });
 
-  it('should force track scripts if --track option is applied', async (done) => {
+  it('should force track scripts if --track option is applied', async () => {
     const scriptFile = await prepareScriptFile(`module.exports = () => { return 'done'; }`);
 
     const expectedResult = {
@@ -128,16 +134,18 @@ describe('plugins/scripts-runner', () => {
       forceTracking: true
     };
 
-    embark.events.request(ScriptsRunnerCommand.Execute, scriptFile.path, true, (err, result) => {
-      assert.equal(result, 'done');
-      assert(testTracker.track.calledOnce);
-      assert(testTracker.track.calledWith(expectedResult));
-      scriptFile.cleanup();
-      done();
+    return new Promise(done => {
+      embark.events.request(ScriptsRunnerCommand.Execute, scriptFile.path, true, (err, result) => {
+        assert.equal(result, 'done');
+        assert(testTracker.track.calledOnce);
+        assert(testTracker.track.calledWith(expectedResult));
+        scriptFile.cleanup();
+        done();
+      });
     });
   });
 
-  it('should track automatically if script directory equals migrations directory', async (done) => {
+  it('should track automatically if script directory equals migrations directory', async () => {
     const scriptsDir = await tmpDir();
     const migrationsDir = path.join(scriptsDir.path, embark.config.embarkConfig.migrations);
 
@@ -154,20 +162,24 @@ describe('plugins/scripts-runner', () => {
       forceTracking: false
     };
 
-    embark.events.request(ScriptsRunnerCommand.Execute, scriptFile.path, false, (err, result) => {
-      assert.equal(result, 'done');
-      assert(testTracker.track.calledOnce);
-      assert(testTracker.track.calledWith(expectedResult));
-      done();
+    return new Promise(done => {
+      embark.events.request(ScriptsRunnerCommand.Execute, scriptFile.path, false, (err, result) => {
+        assert.equal(result, 'done');
+        assert(testTracker.track.calledOnce);
+        assert(testTracker.track.calledWith(expectedResult));
+        done();
+      });
     });
   });
 
-  it('should not execute script if it was tracked', async(done) => {
+  it('should not execute script if it was tracked', async() => {
     const scriptFile = await prepareScriptFile(`module.exports = () => { return 'done'; }`);
 
-    embark.events.request(ScriptsRunnerCommand.Execute, scriptFile.path, true, (err, result) => {
-      assert.equal(result, undefined);
-      done();
+    return new Promise(done => {
+      embark.events.request(ScriptsRunnerCommand.Execute, scriptFile.path, true, (err, result) => {
+        assert.equal(result, undefined);
+        done();
+      });
     });
   });
 });

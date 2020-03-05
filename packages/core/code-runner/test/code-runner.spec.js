@@ -3,6 +3,8 @@ import sinon from 'sinon';
 import { fakeEmbark } from 'embark-testing';
 import CodeRunner from '../src/';
 
+/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["assert", "expect"] }] */
+
 // Due to our `DAPP_PATH` dependency in `embark-utils` `dappPath()`, we need to
 // ensure that this environment variable is defined.
 process.env.DAPP_PATH = 'something';
@@ -40,5 +42,6 @@ describe('core/code-runner', () => {
     // `runcode:eval` throws a `ReferenceError` if `testVar` wasn't registered
     // in the VM.
     await embark.events.request2('runcode:eval', `testVar.foo = 'bar';`);
+    assert(true);
   });
 });

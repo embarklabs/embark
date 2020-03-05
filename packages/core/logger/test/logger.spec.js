@@ -2,6 +2,8 @@ import assert from 'assert';
 import sinon from 'sinon';
 import { fakeEmbark } from 'embark-testing';
 
+/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["assert", "expect"] }] */
+
 describe('core/logger', () => {
 
   const { embark } = fakeEmbark();
