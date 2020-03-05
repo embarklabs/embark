@@ -157,14 +157,18 @@ export default class ProxyManager {
       this.logger.info(`WS Proxy for node endpoint ${endpoint} listening on ${buildUrl("ws", this.host, this.wsPort, "ws")}`);
     }
   }
+
   private stopProxy() {
+    const promises: any[] = [];
     if (this.wsProxy) {
-      this.wsProxy.stop();
+      promises.push(new Promise(resolve => this.wsProxy.stop(resolve)));
       this.wsProxy = null;
     }
     if (this.httpProxy) {
-      this.httpProxy.stop();
+      promises.push(new Promise(resolve => this.httpProxy.stop(resolve)));
       this.httpProxy = null;
     }
+
+    return promises.length ? Promise.all(promises) : Promise.resolve();
   }
 }

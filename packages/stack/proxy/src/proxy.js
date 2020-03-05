@@ -343,11 +343,11 @@ export class Proxy {
     });
   }
 
-  stop() {
+  stop(cb) {
     if (!this.server) {
-      return;
+      return cb();
     }
-    this.server.close();
+    this.server.close(cb);
     this.server = null;
     this.app = null;
     this.transactions = {};
