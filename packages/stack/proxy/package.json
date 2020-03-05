@@ -37,14 +37,22 @@
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "npm-run-all lint:*",
-    "lint:js": "eslint src/",
+    "lint:js": "eslint src/ test/",
     "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
     "qa": "npm-run-all lint _typecheck _build",
     "reset": "npx rimraf dist embark-*.tgz package",
-    "solo": "embark-solo"
+    "solo": "embark-solo",
+    "test": "jest"
   },
   "eslintConfig": {
-    "extends": "../../../.eslintrc.json"
+    "extends": [
+      "../../../.eslintrc.json",
+      "plugin:jest/recommended",
+      "plugin:jest/style"
+    ],
+    "rules": {
+      "jest/expect-expect": "off"
+    }
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.8.4",
@@ -63,10 +71,15 @@
     "web3-providers-ws": "1.2.6"
   },
   "devDependencies": {
+    "@babel/core": "7.8.3",
+    "babel-jest": "25.1.0",
     "embark-solo": "^5.2.3",
+    "embark-testing": "^5.3.0-nightly.12",
     "eslint": "6.8.0",
+    "eslint-plugin-jest": "22.5.1",
     "npm-run-all": "4.1.5",
     "rimraf": "3.0.0",
+    "sinon": "7.4.2",
     "tslint": "5.20.1",
     "typescript": "3.7.2"
   },
@@ -74,5 +87,20 @@
     "node": ">=10.17.0",
     "npm": ">=6.11.3",
     "yarn": ">=1.19.1"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/test/**/*.js"
+    ],
+    "transform": {
+      "\\.(js|ts)$": [
+        "babel-jest",
+        {
+          "rootMode": "upward"
+        }
+      ]
+    }
   }
 }
