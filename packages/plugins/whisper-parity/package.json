@@ -1,6 +1,6 @@
 {
   "name": "embark-whisper-parity",
-  "version": "5.3.0-nightly.3",
+  "version": "5.3.0-nightly.4",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Module to add Whisper support to Embark",
@@ -48,11 +48,11 @@
     "@babel/runtime-corejs3": "7.8.4",
     "async": "2.6.1",
     "core-js": "3.4.3",
-    "embark-core": "^5.3.0-nightly.3",
-    "embark-i18n": "^5.2.3",
-    "embark-utils": "^5.3.0-nightly.3",
-    "embarkjs": "^5.2.3",
-    "embarkjs-whisper": "^5.2.3",
+    "embark-core": "^5.3.0-nightly.4",
+    "embark-i18n": "^5.3.0-nightly.4",
+    "embark-utils": "^5.3.0-nightly.4",
+    "embarkjs": "^5.3.0-nightly.4",
+    "embarkjs-whisper": "^5.3.0-nightly.4",
     "rxjs": "6.4.0"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 {
   "name": "embark-ui",
-  "version": "5.3.0-nightly.2",
+  "version": "5.3.0-nightly.4",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Web frontend for interactive DApp development with Embark",
@@ -66,7 +66,7 @@
     "classnames": "2.2.6",
     "connected-react-router": "4.5.0",
     "date-fns": "2.3.0",
-    "embark-api-client": "^5.2.3",
+    "embark-api-client": "^5.3.0-nightly.4",
     "ethereumjs-units": "0.2.0",
     "find-up": "4.1.0",
     "font-awesome": "4.7.0",
