@@ -3,6 +3,8 @@ import assert from 'assert';
 import { fakeEmbark } from 'embark-testing';
 import Communication from '../src/';
 
+/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["assert", "expect"] }] */
+
 describe('stack/communication', () => {
 
   // eslint-disable-next-line no-unused-vars
