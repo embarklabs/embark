@@ -78,9 +78,9 @@ export default class Blockchain {
           return cb(null, true);
         }
         // start node
-        client.launchFn.call(client, () => {
+        client.launchFn.call(client, (_err, isVM) => {
           started();
-          cb();
+          cb(null, isVM);
         });
       });
     });
