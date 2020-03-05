@@ -130,7 +130,6 @@ export default class ProxyManager {
 
     // HTTP
     this.httpProxy = await new Proxy({
-      endpoint,
       events: this.events,
       isWs: false,
       logger: this.logger,
