@@ -22,15 +22,21 @@ class Events {
     this.handlers[ev].push(sinon.spy(cb));
   }
 
-  emit(ev, ...args) {
-
+  async emit(ev, ...args) {
     this.emissions[ev] = args;
+    return this.trigger(ev);
+  }
 
+  once(name, cb) {
+    cb();
+  }
+
+  async trigger(ev, ...args) {
     if (!this.handlers[ev]) {
       return;
     }
 
-    this.handlers[ev].forEach(h => h(...args));
+    await Promise.all(this.handlers[ev].map(async h => h(args)));
   }
 
   request(cmd, ...args) {
