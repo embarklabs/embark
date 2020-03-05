@@ -16,7 +16,7 @@ export class Proxy {
     this.events = options.events;
     this.isWs = options.isWs;
     this.nodeSubscriptions = {};
-    this._requestManager = null;
+    this._requestManager = options.requestManager || null;
 
     this.events.setCommandHandler("proxy:websocket:subscribe", this.handleSubscribe.bind(this));
     this.events.setCommandHandler("proxy:websocket:unsubscribe", this.handleUnsubscribe.bind(this));
@@ -60,9 +60,7 @@ export class Proxy {
   }
 
   async serve(localHost, localPort) {
-
     await this.nodeReady();
-
     this.app = express();
     if (this.isWs) {
       expressWs(this.app);
@@ -132,7 +130,6 @@ export class Proxy {
     // Send the possibly modified request to the Node
     const response = { jsonrpc: "2.0", id: modifiedRequest.request.id };
     if (modifiedRequest.sendToNode !== false) {
-
       try {
         response.result = await this.forwardRequestToNode(modifiedRequest.request);
       } catch (fwdReqErr) {
@@ -278,7 +275,7 @@ export class Proxy {
     return new Promise((resolve, reject) => {
       let calledBack = false;
       const data = { request, isWs: this.isWs, transport };
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         if (calledBack) {
           return;
         }
@@ -303,6 +300,7 @@ export class Proxy {
             return reject(err);
           }
           calledBack = true;
+          clearTimeout(timeoutId);
           resolve(result);
         });
     });
@@ -312,7 +310,7 @@ export class Proxy {
     return new Promise((resolve, reject) => {
       const data = { originalRequest, request, response, isWs: this.isWs, transport };
       let calledBack = false;
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         if (calledBack) {
           return;
         }
@@ -338,6 +336,7 @@ export class Proxy {
             return reject(err);
           }
           calledBack = true;
+          clearTimeout(timeoutId);
           resolve(result);
         });
     });

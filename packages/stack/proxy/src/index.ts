@@ -20,11 +20,13 @@ export default class ProxyManager {
   private isWs = false;
   private _endpoint: string = "";
   private inited: boolean = false;
+  private requestManager: any = null;
 
   constructor(private embark: Embark, options: any) {
     this.logger = embark.logger;
     this.events = embark.events;
     this.plugins = options.plugins;
+    this.requestManager = options.requestManager;
 
     this.host = "localhost";
 
@@ -139,10 +141,10 @@ export default class ProxyManager {
       events: this.events,
       isWs: false,
       logger: this.logger,
-      plugins: this.plugins
+      plugins: this.plugins,
+      requestManager: this.requestManager
     });
-
-    this.httpProxy.serve(this.host, this.rpcPort);
+    await this.httpProxy.serve(this.host, this.rpcPort);
     this.logger.info(`HTTP Proxy for node endpoint ${endpoint} listening on ${buildUrl("http", this.host, this.rpcPort, "rpc")}`);
 
     if (this.isWs) {
@@ -150,10 +152,11 @@ export default class ProxyManager {
         events: this.events,
         isWs: true,
         logger: this.logger,
-        plugins: this.plugins
+        plugins: this.plugins,
+        requestManager: this.requestManager
       });
 
-      this.wsProxy.serve(this.host, this.wsPort);
+      await this.wsProxy.serve(this.host, this.wsPort);
       this.logger.info(`WS Proxy for node endpoint ${endpoint} listening on ${buildUrl("ws", this.host, this.wsPort, "ws")}`);
     }
   }
