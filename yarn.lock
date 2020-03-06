@@ -5955,12 +5955,10 @@ async-each@^1.0.1:
   resolved "https://registry.yarnpkg.com/async-each/-/async-each-1.0.3.tgz#b727dbf87d7651602f06f4d4ac387f47d91b0cbf"
   integrity sha512-z/WhQ5FPySLdvREByI2vZiTWwCnF0moMJ1hK9YQwDTHKh6I7/uSckMetoRGb5UBZPC1z0jlw+n/XCgjeH7y1AQ==
 
-async-es@2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/async-es/-/async-es-2.6.1.tgz#72e763072a4bb536e6834b4481d965617b528fc3"
-  integrity sha512-3TRUpnT+8BEgZagVqDstkJTEAw45paBCfNG5W5WX2eimZSXt+K5RnjjB2KlYfx1rgn/fu7wPMq1BlQmwg8yeWQ==
-  dependencies:
-    lodash-es "^4.17.10"
+async-es@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/async-es/-/async-es-3.2.0.tgz#8837aa12f675de80fac56b94a4b4cef515343de3"
+  integrity sha512-dMWVIUBi/ejt+QERtMdIin2rlzSNK7GAfEwIyaOGDy536s0OqH+aUNkj9MQ01hq2rB1f7x6w7RJchtthCk0IDA==
 
 async-eventemitter@^0.2.2:
   version "0.2.4"
@@ -15316,11 +15314,6 @@ locate-path@^5.0.0:
   integrity sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==
   dependencies:
     p-locate "^4.1.0"
-
-lodash-es@^4.17.10:
-  version "4.17.15"
-  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.15.tgz#21bd96839354412f23d7a10340e5eac6ee455d78"
-  integrity sha512-rlrc3yU3+JNOpZ9zj5pQtxnx2THmvRykwL4Xlxoa8I9lHBlVbbyPhgyPMioxVZ4NqyxaVVtaJnzsyOidQIhyyQ==
 
 lodash._reinterpolate@^3.0.0:
   version "3.0.0"
