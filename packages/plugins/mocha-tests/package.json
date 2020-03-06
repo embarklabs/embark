@@ -71,7 +71,7 @@
     "refute": "1.0.2",
     "rimraf": "3.0.0",
     "sinon": "7.4.2",
-    "source-map-support": "0.5.13"
+    "source-map-support": "0.5.16"
   },
   "engines": {
     "node": ">=10.17.0",
