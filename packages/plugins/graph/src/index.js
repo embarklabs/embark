@@ -2,6 +2,7 @@ import { warnIfPackageNotDefinedLocally } from 'embark-utils';
 
 const async = require('async');
 const Viz = require('viz.js');
+const { Module, render } = require('viz.js/full.render.js');
 
 class GraphGenerator {
   constructor(embark, _options) {
@@ -123,7 +124,7 @@ class GraphGenerator {
         next();
       },
       function (next) {
-        let dot = `
+        const dot = `
         digraph Contracts {
             node[shape=record,style=filled]
             edge[dir=back, arrowtail=empty]
@@ -131,14 +132,13 @@ class GraphGenerator {
             ${relationshipString}
         }`;
 
-        let svg = Viz(dot);
-
-        self.embark.fs.writeFileSync(options.output, svg, (err) => {
-          if (err) throw err;
-          next();
-        });
+        const viz = new Viz({ Module, render });
+        viz.renderString(dot)
+          .then(svg => self.embark.fs.writeFile(options.output, svg, next))
+          .catch(next);
       }
-    ], function(_err, _result) {
+    ], function(err) {
+      if (err) return cb(err);
       cb();
     });
   }
