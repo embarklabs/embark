@@ -101,7 +101,7 @@ SignAndVerify.propTypes = {
   accounts: PropTypes.array,
   signMessage: PropTypes.func,
   signatureError: PropTypes.string,
-  signaturePending: PropTypes.func,
+  signaturePending: PropTypes.bool,
   signedMessage: PropTypes.string,
   verificationError: PropTypes.string,
   verificationPending: PropTypes.bool,
