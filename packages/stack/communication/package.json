@@ -1,6 +1,6 @@
 {
   "name": "embark-communication",
-  "version": "5.3.0-nightly.4",
+  "version": "5.3.0-nightly.5",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Communication APIs for Embark",
@@ -52,14 +52,14 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.8.4",
     "core-js": "3.6.4",
-    "embark-i18n": "^5.3.0-nightly.4",
-    "embark-utils": "^5.3.0-nightly.4"
+    "embark-i18n": "^5.3.0-nightly.5",
+    "embark-utils": "^5.3.0-nightly.5"
   },
   "devDependencies": {
     "@babel/core": "7.8.6",
     "babel-jest": "25.1.0",
     "embark-solo": "^5.2.3",
-    "embark-testing": "^5.3.0-nightly.4",
+    "embark-testing": "^5.3.0-nightly.5",
     "eslint": "6.8.0",
     "eslint-plugin-jest": "23.8.1",
     "jest": "25.1.0",
