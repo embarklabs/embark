@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0-nightly.6](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.5...v5.3.0-nightly.6) (2020-03-07)
+
+
+### Features
+
+* add support for `embark.config.js` ([e0f7913](https://github.com/embarklabs/embark/commit/e0f7913))
+
+
+
+
+
 # [5.3.0-nightly.5](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.4...v5.3.0-nightly.5) (2020-03-06)
 
 **Note:** Version bump only for package embark-storage

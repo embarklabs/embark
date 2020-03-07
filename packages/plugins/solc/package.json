@@ -1,6 +1,6 @@
 {
   "name": "embark-solc",
-  "version": "5.3.0-nightly.4",
+  "version": "5.3.0-nightly.6",
   "author": "Richard Ramos",
   "contributors": [],
   "description": "Solc plugin for Embark",

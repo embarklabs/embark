@@ -1,6 +1,6 @@
 {
   "name": "embark-core",
-  "version": "5.3.0-nightly.5",
+  "version": "5.3.0-nightly.6",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Core library for Embark",
@@ -57,8 +57,8 @@
     "decompress": "4.2.0",
     "deep-equal": "1.0.1",
     "embark-i18n": "^5.3.0-nightly.5",
-    "embark-logger": "^5.3.0-nightly.5",
-    "embark-utils": "^5.3.0-nightly.5",
+    "embark-logger": "^5.3.0-nightly.6",
+    "embark-utils": "^5.3.0-nightly.6",
     "find-up": "4.1.0",
     "flatted": "0.2.3",
     "fs-extra": "8.1.0",

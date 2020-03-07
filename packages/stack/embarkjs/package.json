@@ -1,6 +1,6 @@
 {
   "name": "embark-embarkjs",
-  "version": "5.3.0-nightly.5",
+  "version": "5.3.0-nightly.6",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "EmbarkJS APIs for Embark",
@@ -48,9 +48,9 @@
     "@babel/runtime-corejs3": "7.8.4",
     "core-js": "3.4.3",
     "ejs": "2.6.1",
-    "embark-core": "^5.3.0-nightly.5",
+    "embark-core": "^5.3.0-nightly.6",
     "embark-i18n": "^5.3.0-nightly.5",
-    "embarkjs": "^5.3.0-nightly.4"
+    "embarkjs": "^5.3.0-nightly.6"
   },
   "devDependencies": {
     "embark-solo": "^5.2.3",
