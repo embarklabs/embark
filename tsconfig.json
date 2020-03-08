@@ -101,7 +101,7 @@
       "path": "packages/plugins/quorum"
     },
     {
-      "path": "packages/plugins/rpc-manager"
+      "path": "packages/plugins/rpc-mutations"
     },
     {
       "path": "packages/plugins/scaffolding"

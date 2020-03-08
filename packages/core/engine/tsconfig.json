@@ -41,7 +41,7 @@
       "path": "../../plugins/plugin-cmd"
     },
     {
-      "path": "../../plugins/rpc-manager"
+      "path": "../../plugins/rpc-mutations"
     },
     {
       "path": "../../plugins/scaffolding"

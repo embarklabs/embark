@@ -288,7 +288,7 @@ export class Engine {
     this.registerModulePackage('embark-ethereum-blockchain-client');
     this.registerModulePackage('embark-web3');
     this.registerModulePackage('embark-accounts-manager');
-    this.registerModulePackage('embark-rpc-manager');
+    this.registerModulePackage('embark-rpc-mutations');
     this.registerModulePackage('embark-specialconfigs', { plugins: this.plugins });
     this.registerModulePackage('embark-transaction-logger');
     this.registerModulePackage('embark-transaction-tracker');

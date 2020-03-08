@@ -75,7 +75,7 @@
     "embark-plugin-cmd": "^5.3.0-nightly.5",
     "embark-process-logs-api-manager": "^5.3.0-nightly.5",
     "embark-proxy": "^5.3.0-nightly.5",
-    "embark-rpc-manager": "^5.3.0-nightly.5",
+    "embark-rpc-mutations": "^5.3.0-nightly.5",
     "embark-scaffolding": "^5.3.0-nightly.5",
     "embark-solidity": "^5.3.0-nightly.5",
     "embark-solidity-tests": "^5.3.0-nightly.5",

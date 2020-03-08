@@ -1,11 +1,10 @@
-import { __ } from 'embark-i18n';
 import Web3 from 'web3';
 import { Embark, EmbarkEvents, ContractsConfig } from 'embark-core';
 
 declare module "embark-core" {
   interface ContractConfig {
-    privateFor: string[];
-    privateFrom: string;
+    privateFor?: string[];
+    privateFrom?: string;
   }
 }
 

@@ -3,7 +3,7 @@ import express from 'express';
 import expressWs from 'express-ws';
 import cors from 'cors';
 import { isDebug } from 'embark-utils';
-const Web3RequestManager = require('web3-core-requestmanager');
+const { Web3RequestManager } = 'web3';
 
 const ACTION_TIMEOUT = isDebug() ? 30000 : 10000;
 
