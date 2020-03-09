@@ -23,7 +23,6 @@ export class File {
   public basedir: string;
   public resolver: (callback: (content: string) => void) => void;
   public pluginPath: string;
-  public storageConfig: any;
   public providerUrl: string;
   public importRemappings: ImportRemapping[] = [];
   public originalPath: string;
@@ -34,7 +33,6 @@ export class File {
     this.basedir = options.basedir || '';
     this.resolver = options.resolver;
     this.pluginPath = options.pluginPath ? options.pluginPath : '';
-    this.storageConfig = options.storageConfig;
     this.providerUrl = '';
     this.originalPath = options.originalPath || '';
 

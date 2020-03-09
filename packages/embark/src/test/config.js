@@ -288,7 +288,6 @@ describe('embark.Config', function () {
           "basedir": "",
           "importRemappings": [],
           "resolver": undefined,
-          "storageConfig": undefined,
           "providerUrl": ""
         },
         {
@@ -300,7 +299,6 @@ describe('embark.Config', function () {
           "basedir": "",
           "importRemappings": [],
           "resolver": undefined,
-          "storageConfig": undefined,
           "providerUrl": ""
         },
         {
@@ -312,7 +310,6 @@ describe('embark.Config', function () {
           "basedir": "",
           "importRemappings": [],
           "resolver": undefined,
-          "storageConfig": undefined,
           "providerUrl": ""
         }
       ];
