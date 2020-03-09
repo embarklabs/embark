@@ -75,7 +75,7 @@
     "web3": "1.2.6",
     "web3-eth": "1.2.6",
     "web3-eth-abi": "1.2.6",
-    "ws": "7.1.2"
+    "ws": "7.2.2"
   },
   "devDependencies": {
     "embark-inside-monorepo": "^5.2.3",
