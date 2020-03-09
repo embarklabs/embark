@@ -61,7 +61,7 @@
     "express-ws": "4.0.0",
     "find-up": "4.1.0",
     "helmet": "3.13.0",
-    "ws": "7.1.2"
+    "ws": "7.2.2"
   },
   "devDependencies": {
     "embark-solo": "^5.2.3",
