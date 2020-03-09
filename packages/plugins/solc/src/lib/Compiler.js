@@ -3,8 +3,11 @@ const shelljs = require('shelljs');
 const fs = require('fs');
 const path = require('path');
 
+const isWin = process.platform === "win32";
+
 function compileSolcContract(logger, compileSettings, allowedDirectories, callback) {
-  const command = `solc --standard-json --allow-paths ${allowedDirectories.join(',')}`;
+  const binary = isWin ? 'solc.exe' : 'solc';
+  const command = `${binary} --standard-json --allow-paths ${allowedDirectories.join(',')}`;
 
   shelljs.ShellString(JSON.stringify(compileSettings)).exec(command, {silent: true}, (code, stdout, stderr) => {
     if (stderr) {
@@ -48,7 +51,7 @@ function compileSolc(embark, contractFiles, contractDirectories, options, callba
   }
 
   const logger = embark.logger;
-  const outputBinary = embark.pluginConfig.outputBinary;
+  const outputBinary = embark.config.pluginConfig.outputBinary;
   const outputDir = embark.config.buildDir + embark.config.contractDirectories[0];
   const solcConfig = embark.config.embarkConfig.options.solc;
 
@@ -188,12 +191,12 @@ function compileSolc(embark, contractFiles, contractDirectories, options, callba
           compiledObject[className].filename = filename;
           const normalized = path.normalize(filename);
           const origContract = contractFiles.find(contractFile => normalized.includes(path.normalize(contractFile.originalPath)));
+
           if (origContract) {
             compiledObject[className].originalFilename = path.normalize(origContract.originalPath);
           }
         }
       }
-
       next(null, compiledObject);
     }
 
