@@ -1,6 +1,6 @@
 {
   "name": "embark-compiler",
-  "version": "5.3.0-nightly.6",
+  "version": "5.3.0-nightly.7",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Embark compiler module",
@@ -54,9 +54,9 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.8.4",
     "core-js": "3.4.3",
-    "embark-core": "^5.3.0-nightly.6",
+    "embark-core": "^5.3.0-nightly.7",
     "embark-i18n": "^5.3.0-nightly.5",
-    "embark-utils": "^5.3.0-nightly.6"
+    "embark-utils": "^5.3.0-nightly.7"
   },
   "devDependencies": {
     "@babel/core": "7.8.6",
