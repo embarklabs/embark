@@ -178,38 +178,45 @@ export default class Blockchain {
     return web3.currentProvider;
   }
 
-  addArtifactFile(_params, cb) {
+  async addArtifactFile(_params, cb) {
     if (!this.blockchainConfig.enabled) {
       cb();
     }
-    this.events.request("config:contractsConfig", (_err, contractsConfig) => {
-      async.map(contractsConfig.dappConnection, (conn, mapCb) => {
-        if (conn === '$EMBARK') {
-          // Connect to Embark's endpoint (proxy)
-          return this.events.request("proxy:endpoint:get", mapCb);
-        }
-        mapCb(null, conn);
-      }, (err, results) => {
-        if (err) {
-          this.logger.error(__('Error getting dapp connection'));
-          return cb(err);
-        }
-        const config = {
-          provider: contractsConfig.library || 'web3',
-          dappConnection: results,
-          dappAutoEnable: contractsConfig.dappAutoEnable,
-          warnIfMetamask: this.blockchainConfig.isDev,
-          blockchainClient: this.blockchainConfig.client
-        };
 
-        this.events.request("pipeline:register", {
-          path: [this.embarkConfig.generationDir, 'config'],
-          file: 'blockchain.json',
-          format: 'json',
-          content: config
-        }, cb);
+    try {
+      const networkId = await this.events.request2('blockchain:networkId');
+      this.events.request("config:contractsConfig", (_err, contractsConfig) => {
+        async.map(contractsConfig.dappConnection, (conn, mapCb) => {
+          if (conn === '$EMBARK') {
+            // Connect to Embark's endpoint (proxy)
+            return this.events.request("proxy:endpoint:get", mapCb);
+          }
+          mapCb(null, conn);
+        }, (err, results) => {
+          if (err) {
+            this.logger.error(__('Error getting dapp connection'));
+            return cb(err);
+          }
+          const config = {
+            provider: contractsConfig.library || 'web3',
+            dappConnection: results,
+            dappAutoEnable: contractsConfig.dappAutoEnable,
+            warnIfMetamask: this.blockchainConfig.isDev,
+            blockchainClient: this.blockchainConfig.client,
+            networkId
+          };
+
+          this.events.request("pipeline:register", {
+            path: [this.embarkConfig.generationDir, 'config'],
+            file: 'blockchain.json',
+            format: 'json',
+            content: config
+          }, cb);
+        });
       });
-    });
+    } catch (e) {
+      cb(e);
+    }
   }
 
   registerConsoleCommands() {

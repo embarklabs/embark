@@ -109,9 +109,9 @@ export default class BlockchainAPI {
       getGasPrice(cb);
     });
 
-    this.events.setCommandHandler("blockchain:networkId", async (cb) => {
-      const getNetworkId = await this.getRequestForBlockchain(blockchainName, "getNetworkId");
-      cb(getNetworkId);
+    this.events.setCommandHandler("blockchain:networkId", (cb) => {
+      const getNetworkId = this.getRequestForBlockchain(blockchainName, "getNetworkId");
+      getNetworkId(cb);
     });
 
     this.events.setCommandHandler("blockchain:getTransaction", async (txId, cb) => {

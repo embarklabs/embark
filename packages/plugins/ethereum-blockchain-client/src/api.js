@@ -293,8 +293,8 @@ export default class EthereumAPI {
     this.requestManager.send({method: 'web3_clientVersion', params: []}, cb);
   }
 
-  getNetworkId() {
-    return this.web3.eth.net.getId();
+  getNetworkId(cb) {
+    return this.web3.eth.net.getId(cb);
   }
 
   getTransaction(hash, cb) {
