@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0-nightly.8](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.7...v5.3.0-nightly.8) (2020-03-11)
+
+
+### Bug Fixes
+
+* **@embark/ganache:** make embark blockchain exit when using Ganache ([53dc751](https://github.com/embarklabs/embark/commit/53dc751))
+
+
+### Features
+
+* **stack/blockchain:** expose networkId in generated artifact ([c624582](https://github.com/embarklabs/embark/commit/c624582)), closes [#2220](https://github.com/embarklabs/embark/issues/2220)
+
+
+
+
+
 # [5.3.0-nightly.7](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.6...v5.3.0-nightly.7) (2020-03-10)
 
 **Note:** Version bump only for package root

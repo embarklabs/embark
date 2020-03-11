@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0-nightly.8](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.7...v5.3.0-nightly.8) (2020-03-11)
+
+**Note:** Version bump only for package embark-dapp-template-boilerplate
+
+
+
+
+
 # [5.3.0-nightly.7](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.6...v5.3.0-nightly.7) (2020-03-10)
 
 **Note:** Version bump only for package embark-dapp-template-boilerplate
