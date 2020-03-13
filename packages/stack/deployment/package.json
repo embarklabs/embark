@@ -1,6 +1,6 @@
 {
   "name": "embark-deployment",
-  "version": "5.3.0-nightly.7",
+  "version": "5.3.0-nightly.9",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Deployment APIs for Embark",
@@ -54,7 +54,7 @@
     "async": "3.2.0",
     "clone-deep": "4.0.0",
     "core-js": "3.4.3",
-    "embark-core": "^5.3.0-nightly.7",
+    "embark-core": "^5.3.0-nightly.9",
     "embark-i18n": "^5.3.0-nightly.5",
     "embark-utils": "^5.3.0-nightly.7"
   },

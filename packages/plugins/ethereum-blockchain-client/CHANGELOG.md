@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0-nightly.9](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.8...v5.3.0-nightly.9) (2020-03-13)
+
+**Note:** Version bump only for package embark-ethereum-blockchain-client
+
+
+
+
+
 # [5.3.0-nightly.8](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.7...v5.3.0-nightly.8) (2020-03-11)
 
 
