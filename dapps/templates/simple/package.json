@@ -5,8 +5,8 @@
   "homepage": "https://github.com/embarklabs/embark/tree/master/dapps/templates/simple#readme",
   "bugs": "https://github.com/embarklabs/embark/issues",
   "files": [
+    "config/*",
     "contracts",
-    "contracts.js",
     "dot.gitignore",
     "dot.npmrc",
     "embark.json",
