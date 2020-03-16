@@ -31,7 +31,7 @@
     "eslint-config-hexo": "^4.1.0",
     "gulp": "^4.0.2",
     "gulp-cheerio": "^1.0.0",
-    "gulp-clean-css": "^4.2.0",
+    "gulp-clean-css": "^4.3.0",
     "gulp-if": "^3.0.0",
     "gulp-responsive": "^3.0.1",
     "gulp-rev": "^9.0.0",
