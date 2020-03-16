@@ -1,10 +1,12 @@
 {
-  "contracts": ["contracts/**"],
+  "contracts": [
+    "contracts/**"
+  ],
   "app": {},
   "buildDir": "build/",
   "config": {
-    "contracts": "contracts.js",
-    "blockchain": false,
+    "contracts": "config/contracts.js",
+    "blockchain": "config/blockchain.js",
     "storage": false,
     "communication": false,
     "webserver": false
