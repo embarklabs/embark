@@ -53,8 +53,6 @@ class Ganache {
     // => https://github.com/trufflesuite/ganache-cli/issues/558
     this.embark.fs.ensureDirSync(blockchainConfig.datadir);
 
-    const hasAccounts = blockchainConfig.accounts && blockchainConfig.accounts.length;
-
     const isTest = this.embark.currentContext.includes('test');
 
     this.currentProvider = ganache.provider({
@@ -65,7 +63,7 @@ class Ganache {
       network_id: blockchainConfig.networkId || 1337,
       db_path: isTest ? '' : blockchainConfig.datadir,
       default_balance_ether: '99999',
-      mnemonic: hasAccounts || isTest ? '' : constants.blockchain.defaultMnemonic
+      mnemonic: isTest ? '' : constants.blockchain.defaultMnemonic
     });
     return this.currentProvider;
   }
