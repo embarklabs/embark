@@ -22,7 +22,6 @@ class Cmd {
     this.simulator();
     this.test();
     this.reset();
-    this.ejectWebpack();
     this.graph();
     this.scaffold();
     this.upload();
@@ -137,7 +136,6 @@ class Cmd {
       .option('-c, --client [client]', __('Use a specific ethereum client [%s] (default: %s)', 'geth, parity', 'geth'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'info')
       .option('--locale [locale]', __('language to use (default: en)'))
-      .option('--pipeline [pipeline]', __('webpack config to use (default: production)'))
       .description(__('deploy and build dapp at ') + 'dist/ (default: development)')
       .action((env, _options) => {
         setOrDetectLocale(_options.locale);
@@ -145,7 +143,6 @@ class Cmd {
         _options.logFile = _options.logfile; // fix casing
         _options.logLevel = _options.loglevel; // fix casing
         _options.onlyCompile = _options.contracts;
-        _options.webpackConfigName = _options.pipeline || 'production';
         this.embark.build(_options);
       });
   }
@@ -163,7 +160,6 @@ class Cmd {
       .option('--logfile [logfile]', __('filename to output logs (default: %s)', 'none'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'info')
       .option('--locale [locale]', __('language to use (default: en)'))
-      .option('--pipeline [pipeline]', __('webpack config to use (default: development)'))
       .option('--no-single-use-auth-token', __('disable the single use of token in cockpit'))
       .description(__('run dapp (default: %s)', 'development'))
       .action((env, options) => {
@@ -178,7 +174,6 @@ class Cmd {
           useDashboard: !options.nodashboard,
           logFile: options.logfile,
           logLevel: options.loglevel,
-          webpackConfigName: options.pipeline || 'development',
           openBrowser: !options.nobrowser ? null : false,
           singleUseAuthToken: options.singleUseAuthToken
         });
@@ -216,7 +211,6 @@ class Cmd {
       .option('--logfile [logfile]', __('filename to output logs (default: %s)', 'none'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'info')
       .option('--locale [locale]', __('language to use (default: en)'))
-      .option('--pipeline [pipeline]', __('webpack config to use (default: development)'))
       .option('--no-single-use-auth-token', __('disable the single use of token in cockpit'))
       .description(__('Start the Embark console'))
       .action((env, options) => {
@@ -227,8 +221,7 @@ class Cmd {
           locale: options.locale,
           logFile: options.logfile,
           logLevel: options.loglevel,
-          singleUseAuthToken: options.singleUseAuthToken,
-          webpackConfigName: options.pipeline || 'development'
+          singleUseAuthToken: options.singleUseAuthToken
         });
       });
   }
@@ -246,7 +239,6 @@ class Cmd {
       .option('--logfile [logfile]', __('filename to output logs (default: %s)', 'none'))
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'info')
       .option('--locale [locale]', __('language to use (default: en)'))
-      .option('--pipeline [pipeline]', __('webpack config to use (default: development)'))
       .option('--no-single-use-auth-token', __('disable the single use of token in cockpit'))
       .description(__('run dapp (default: %s)', 'development'))
       .action((env, options) => {
@@ -261,7 +253,6 @@ class Cmd {
           useDashboard: !options.nodashboard,
           logFile: options.logfile,
           logLevel: options.loglevel,
-          webpackConfigName: options.pipeline || 'development',
           openBrowser: !options.nobrowser ? null : false,
           singleUseAuthToken: options.singleUseAuthToken
         });
@@ -346,7 +337,6 @@ class Cmd {
       .option('--loglevel [loglevel]', __('level of logging to display') + ' ["error", "warn", "info", "debug", "trace"]', /^(error|warn|info|debug|trace)$/i, 'info')
       .option('--locale [locale]', __('language to use (default: en)'))
       .option('-c, --client [client]', __('Use a specific ethereum client [%s] (default: %s)', 'geth, parity', 'geth'))
-      .option('--pipeline [pipeline]', __('webpack config to use (default: production)'))
       .description(__('Upload your dapp to a decentralized storage') + '.')
       .action((env, _options) => {
         setOrDetectLocale(_options.locale);
@@ -358,7 +348,6 @@ class Cmd {
         _options.ensDomain = _options.ens;
         _options.logFile = _options.logfile; // fix casing
         _options.logLevel = _options.loglevel; // fix casing
-        _options.webpackConfigName = _options.pipeline || 'production';
         this.embark.upload(_options);
       });
   }
@@ -399,7 +388,6 @@ class Cmd {
         options.logLevel = options.loglevel; // fix casing
         options.onlyCompile = options.contracts;
         options.client = options.client || 'geth';
-        options.webpackConfigName = options.pipeline || 'development';
         options.contractOrFile = contractOrFile;
         options.fields = fields;
 
@@ -416,17 +404,6 @@ class Cmd {
         setOrDetectLocale(options.locale);
         this.embark.initConfig('development', {interceptLogs: false});
         this.embark.reset();
-      });
-  }
-
-  ejectWebpack() {
-    program
-      .command('eject-build-config')
-      .alias('eject-webpack')
-      .description(__('copy the default build config into your dapp for customization'))
-      .action(() => {
-        this.embark.initConfig('development', {interceptLogs: false});
-        this.embark.ejectWebpack();
       });
   }
 
@@ -467,7 +444,7 @@ class Cmd {
           suggestion = 'build --contracts';
         } else {
           const { proposeAlternative } = require('embark-utils');
-          let dictionary = ['new', 'demo', 'build', 'run', 'blockchain', 'simulator', 'test', 'upload', 'version', 'console', 'eject-webpack', 'graph', 'help', 'reset'];
+          let dictionary = ['new', 'demo', 'build', 'run', 'blockchain', 'simulator', 'test', 'upload', 'version', 'console', 'graph', 'help', 'reset'];
           suggestion = proposeAlternative(cmd, dictionary);
         }
         if (suggestion) {
