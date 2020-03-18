@@ -303,7 +303,6 @@ class EmbarkController {
 
         if (!options.onlyCompile) {
           engine.registerModulePackage('embark-ganache');
-          engine.registerModuleGroup("pipeline");
           engine.registerModuleGroup("namesystem");
           engine.registerModulePackage('embark-deploy-tracker', { plugins: engine.plugins });
         }
