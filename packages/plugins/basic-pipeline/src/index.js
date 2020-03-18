@@ -17,7 +17,6 @@ class BasicPipeline {
     // this.useDashboard = options.useDashboard;
     this.useDashboard = true;
     this.fs = embark.fs;
-    this.webpackConfigName = embark.config.webpackConfigName;
     this.env = embark.config.env;
     this.buildDir = embark.config.buildDir;
     this.contractsFiles = embark.config.contractsFiles;
@@ -28,6 +27,10 @@ class BasicPipeline {
     this.plugins = embark.pluginsAPI;
     this.pipelinePlugins = this.plugins.getPluginsFor('pipeline');
     this.pipelineConfig = embark.config.pipelineConfig;
+
+    const env = embark.config.env;
+    this.webpackConfigName = embark.pluginConfig[env]?.webpackConfigName ?? 'development';
+
     let plugin = this.plugins.createPlugin('basic-pipeline', {});
 
     plugin.registerActionForEvent("pipeline:generateAll:after", this.webpackAssets.bind(this));

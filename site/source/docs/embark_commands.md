@@ -85,14 +85,6 @@ Option | Description
 `--no-color` | no colors in case it's needed for compatbility purposes
 `--logfile` | `filename` to output logs (default: none)
 
-## eject-build-config
-
-```
-$ embark eject-build-config
-```
-
-Copies Embark's default `webpack.config.js` file into your DApp so that you can customize it. If a file named `webpack.config.js` is present in your top-level DApp directory, Embark will use your webpack config file instead of its own.
-
 ## blockchain
 
 ```
