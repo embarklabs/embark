@@ -1,5 +1,5 @@
 import { Embark, EmbarkEvents } from 'embark-core';
-import { File, Types as FileTypes } from 'embark-utils';
+import { dappPath, File, Types as FileTypes } from 'embark-utils';
 import { Logger } from 'embark-logger';
 import { exec } from 'child_process';
 import { sync as findUp } from 'find-up';
@@ -17,7 +17,7 @@ const STACK_NAME = "Snarks";
 const MODULE_NAME = "zk";
 
 // tslint:disable-next-line: space-before-function-paren
-zkSnark.bigInt.prototype.toJSON = function () {
+zkSnark.bigInt.prototype.toJSON = function() {
   return this.toString();
 };
 
@@ -32,10 +32,10 @@ export class Snarks {
   private buildDir: string;
   private contractsBuildDir: string;
   constructor(private embark: Embark) {
-    this.outputPath = embark.config.dappPath(".embark", "snarks");
+    this.outputPath = dappPath(".embark", "snarks");
     this.config = embark.pluginConfig;
-    this.buildDir = embark.config.dappPath(this.config.buildDir) || this.outputPath;
-    this.contractsBuildDir = embark.config.dappPath(this.config.contractsBuildDir) || this.outputPath;
+    this.buildDir = dappPath(this.config.buildDir) || this.outputPath;
+    this.contractsBuildDir = dappPath(this.config.contractsBuildDir) || this.outputPath;
     this.fs = embark.fs;
     this.logger = embark.logger;
     this.events = embark.events;
@@ -180,7 +180,7 @@ export class Snarks {
   }
 
   makeRelative(filepath): string {
-    return filepath.replace(`${this.embark.config.dappPath()}/`, "");
+    return filepath.replace(`${dappPath()}/`, "");
   }
 
   async generateSetup(name: string, config: CircuitConfig, compiledCircuit: any): Promise<{ vkPath: string, pkPath: string; }> {

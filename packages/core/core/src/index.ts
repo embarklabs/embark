@@ -87,8 +87,8 @@ export interface Configuration {
     client: string;
     enabled: boolean;
     clientConfig: {
-      miningMode: string
-    }
+      miningMode: string;
+    };
   };
   webServerConfig: {
     certOptions: {
@@ -101,8 +101,7 @@ export interface Configuration {
   };
   plugins: EmbarkPlugins;
   reloadConfig(): void;
-
-  dappPath(...args: string[]): string;
+  dappPath: (...args: string[]) => string;
 }
 
 type ActionCallback<T> = (params: any, cb: Callback<T>) => void;
