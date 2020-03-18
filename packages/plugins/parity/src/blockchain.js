@@ -346,8 +346,8 @@ class Blockchain {
         function newAccounts(accountsToCreate, next) {
           var accountNumber = 0;
           async.whilst(
-            function () {
-              return accountNumber < accountsToCreate;
+            function (cb) {
+              cb(null, accountNumber < accountsToCreate);
             },
             function (callback) {
               accountNumber++;
