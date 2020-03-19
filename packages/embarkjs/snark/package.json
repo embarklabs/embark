@@ -22,7 +22,7 @@
     "type": "git",
     "url": "https://github.com/embark-framework/embark.git"
   },
-  "main": "./dist/node/index.js",
+  "main": "./index.js",
   "types": "./dist/index.d.ts",
   "browser": {
     "./dist/node/index.js": "./dist/browser/index.js",
