@@ -60,8 +60,8 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.8.4",
     "core-js": "3.6.4",
-    "embark-core": "^5.1.1-nightly.2",
-    "embarkjs": "^5.1.1-nightly.2",
+    "embark-core": "^5.3.0-nightly.10",
+    "embarkjs": "^5.3.0-nightly.6",
     "fs-extra": "8.1.0",
     "snarkjs": "0.1.20"
   },
