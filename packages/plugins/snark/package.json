@@ -50,7 +50,7 @@
     "qa": "npm-run-all lint _typecheck _build test",
     "reset": "npx rimraf coverage dist embark-*.tgz package",
     "solo": "embark-solo",
-    "// test": "jest"
+    "test": "jest"
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.8.4",
@@ -115,7 +115,7 @@
       "**/test/**/*.js"
     ],
     "transform": {
-      "\\.js$": [
+      "\\.(js|ts)$": [
         "babel-jest",
         {
           "rootMode": "upward"
