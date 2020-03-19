@@ -44,7 +44,7 @@
     "ci": "npm run qa",
     "clean": "npm run reset",
     "lint": "eslint --ignore-pattern '!.*.js' .babelrc.js src/",
-    "qa": "npm-run-all _typecheck _build",
+    "qa": "npm-run-all lint _typecheck _build",
     "reset": "npx rimraf coverage dist embarkjs-*.tgz package",
     "solo": "embark-solo"
   },
