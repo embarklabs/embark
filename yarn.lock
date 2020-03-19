@@ -1301,22 +1301,6 @@
     core-js "^2.6.5"
     regenerator-runtime "^0.13.2"
 
-"@babel/runtime-corejs3@7.7.4":
-  version "7.7.4"
-  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.7.4.tgz#f861adc1cecb9903dfd66ea97917f02ff8d79888"
-  integrity sha512-BBIEhzk8McXDcB3IbOi8zQPzzINUp4zcLesVlBSOcyGhzPUU8Xezk5GAG7Sy5GVhGmAO0zGd2qRSeY2g4Obqxw==
-  dependencies:
-    core-js-pure "^3.0.0"
-    regenerator-runtime "^0.13.2"
-
-"@babel/runtime-corejs3@7.8.3":
-  version "7.8.3"
-  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.8.3.tgz#a2445836d0699e5ba77eea2c790ad9ea51e2cd27"
-  integrity sha512-lrIU4aVbmlM/wQPzhEvzvNJskKyYptuXb0fGC0lTQTupTOYtR2Vqbu6/jf8vTr4M8Wt1nIzxVrSvPI5qESa/xA==
-  dependencies:
-    core-js-pure "^3.0.0"
-    regenerator-runtime "^0.13.2"
-
 "@babel/runtime-corejs3@7.8.4":
   version "7.8.4"
   resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.8.4.tgz#ccc4e042e2fae419c67fa709567e5d2179ed3940"
@@ -3783,11 +3767,6 @@
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.3.tgz#856c99cdc1551d22c22b18b5402719affec9839a"
   integrity sha512-cS5owqtwzLN5kY+l+KgKdRJ/Cee8tlmQoGQuIE9tWnSmS3JMKzmxo2HIAk2wODMifGwO20d62xZQLYz+RLfXmw==
 
-"@types/i18n@0.8.3":
-  version "0.8.3"
-  resolved "https://registry.yarnpkg.com/@types/i18n/-/i18n-0.8.3.tgz#f602164f2fae486ea87590f6be5d6dd5db1664e6"
-  integrity sha512-JyNZyqamS3jfJ/qTXkAIAtBKlapN5OrEVosdde6LT41Gf209NzXppDVoNkn1pABGZbSnT8dgEgiuTFBIgxweIQ==
-
 "@types/i18n@0.8.6":
   version "0.8.6"
   resolved "https://registry.yarnpkg.com/@types/i18n/-/i18n-0.8.6.tgz#10f9761fbdfe077fca57d979e8e8a97eac028485"
@@ -4989,13 +4968,6 @@ async-each@^1.0.1:
   resolved "https://registry.yarnpkg.com/async-each/-/async-each-1.0.3.tgz#b727dbf87d7651602f06f4d4ac387f47d91b0cbf"
   integrity sha512-z/WhQ5FPySLdvREByI2vZiTWwCnF0moMJ1hK9YQwDTHKh6I7/uSckMetoRGb5UBZPC1z0jlw+n/XCgjeH7y1AQ==
 
-async-es@2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/async-es/-/async-es-2.6.1.tgz#72e763072a4bb536e6834b4481d965617b528fc3"
-  integrity sha512-3TRUpnT+8BEgZagVqDstkJTEAw45paBCfNG5W5WX2eimZSXt+K5RnjjB2KlYfx1rgn/fu7wPMq1BlQmwg8yeWQ==
-  dependencies:
-    lodash-es "^4.17.10"
-
 async-es@3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/async-es/-/async-es-3.2.0.tgz#8837aa12f675de80fac56b94a4b4cef515343de3"
@@ -5026,7 +4998,7 @@ async-iterator-to-pull-stream@^1.3.0:
     get-iterator "^1.0.2"
     pull-stream-to-async-iterator "^1.0.1"
 
-async-limiter@^1.0.0, async-limiter@~1.0.0:
+async-limiter@~1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/async-limiter/-/async-limiter-1.0.1.tgz#dd379e94f0db8310b08291f9d64c3209766617fd"
   integrity sha512-csOlWGAcRFJaI6m+F2WKdnMKr4HhdhFVBk0H/QbJFMCr+uO2kwohwXQPxw/9OCxp05r5ghVBFSyioixx3gfkNQ==
@@ -5042,13 +5014,6 @@ async@1.x, async@^1.4.2, async@~1.5.2:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
   integrity sha1-7GphrlZIDAw8skHJVhjiCJL5Zyo=
-
-async@2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/async/-/async-2.6.1.tgz#b245a23ca71930044ec53fa46aa00a3e87c6a610"
-  integrity sha512-fNEiL2+AZt6AlAw/29Cr0UDe4sRAHCpEHh54WMz+Bb7QfNcFw4h3loofyJpLeQs4Yx7yuqu/2dLgM5hKOs6HlQ==
-  dependencies:
-    lodash "^4.17.10"
 
 async@3.2.0, async@^3.1.0:
   version "3.2.0"
@@ -8520,61 +8485,6 @@ elliptic@^6.0.0, elliptic@^6.4.0, elliptic@^6.4.1:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
-embark-core@^5.1.1-nightly.2:
-  version "5.2.3"
-  resolved "https://registry.yarnpkg.com/embark-core/-/embark-core-5.2.3.tgz#bbf03bf43eb61a2f83fbc0841a167bf0dc59fbef"
-  integrity sha512-/q5SWxyg8VRKHjAeO3cdHfH2GDPClAcy/zExvX/88N4R348uXFaHV+1Ts4BAsrIgjuCkj2OlRyCvOR42GgXJyA==
-  dependencies:
-    "@babel/runtime-corejs3" "7.7.4"
-    "@types/deep-equal" "1.0.1"
-    async "2.6.1"
-    colors "1.3.2"
-    core-js "3.4.3"
-    decompress "4.2.0"
-    deep-equal "1.0.1"
-    embark-i18n "^5.2.3"
-    embark-logger "^5.2.3"
-    embark-utils "^5.2.3"
-    find-up "4.1.0"
-    flatted "0.2.3"
-    fs-extra "8.1.0"
-    globule "1.2.1"
-    hosted-git-info "2.8.4"
-    lodash.clonedeep "4.5.0"
-    node-ipc "9.1.1"
-    parse-json "4.0.0"
-    request "2.88.0"
-    semver "5.6.0"
-    shelljs "0.8.3"
-    uuid "3.3.2"
-    web3 "1.2.6"
-    web3-utils "1.2.6"
-    window-size "1.1.1"
-
-embark-i18n@^5.2.3:
-  version "5.2.3"
-  resolved "https://registry.yarnpkg.com/embark-i18n/-/embark-i18n-5.2.3.tgz#f944e9821fdc67d3a3cf7d15cd19796ace4d95df"
-  integrity sha512-qC2cRR8IohWs2OS1XWRILwn+j7yOS0TT8vrup/F0ns9ynP11V0trPPc8YQRmIofaJo51PPOQmPqAbu/H4ayraw==
-  dependencies:
-    "@babel/runtime-corejs3" "7.7.4"
-    "@types/i18n" "0.8.3"
-    colors "1.3.2"
-    core-js "3.4.3"
-    i18n "0.8.3"
-    os-locale "4.0.0"
-
-embark-logger@^5.1.1-nightly.2, embark-logger@^5.2.3:
-  version "5.2.3"
-  resolved "https://registry.yarnpkg.com/embark-logger/-/embark-logger-5.2.3.tgz#94109293bd734289032a53cd31cd438387eca84c"
-  integrity sha512-rx7U3Nl3DqvWrDtR5mcvsF2iB8oxlhlzuO7CpDgHAMw0pexR3vB+hUxdB4daE3akouFpI3SR9XSm6LLIOmjhhA==
-  dependencies:
-    "@babel/runtime-corejs3" "7.8.3"
-    async "2.6.1"
-    colors "1.4.0"
-    core-js "3.6.4"
-    date-and-time "0.12.0"
-    fs-extra "8.1.0"
-
 embark-test-contract-0@0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/embark-test-contract-0/-/embark-test-contract-0-0.0.2.tgz#53913fb40e3df4b816a7bef9f00a5f78fa3d56b4"
@@ -8586,52 +8496,6 @@ embark-test-contract-1@0.0.1, embark-test-contract-1@^0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/embark-test-contract-1/-/embark-test-contract-1-0.0.1.tgz#802b84150e8038fef6681a3f23b6f4c0dc5b3e80"
   integrity sha512-yFaXMOXOMfYRNFOKEspdXrZzyovceWedtegHtbfs8RZWRzRYY+v6ZDtGm13TRJt3Qt4VZhKky0l7G/SHZMGHCA==
-
-embark-utils@^5.1.1-nightly.2, embark-utils@^5.2.3:
-  version "5.2.3"
-  resolved "https://registry.yarnpkg.com/embark-utils/-/embark-utils-5.2.3.tgz#e227f7a16bb7adfba56bd8f87222614a47e67ebf"
-  integrity sha512-ogKbimjf2ZgaJCnrkZ4p6rRXlvarDK1juPrSwT5xRbYIuAbJTOVa+6pRmVDoWJqVOkSmZRtM333sZbPtAgu7Iw==
-  dependencies:
-    "@babel/runtime-corejs3" "7.7.4"
-    "@embarklabs/ethereumjs-wallet" "0.6.4"
-    "@types/follow-redirects" "1.5.0"
-    "@types/fs-extra" "7.0.0"
-    "@types/node" "12.7.8"
-    "@types/pretty-ms" "5.0.1"
-    async "2.6.1"
-    bip39 "3.0.2"
-    clipboardy "1.2.3"
-    colors "1.3.2"
-    core-js "3.4.3"
-    embark-i18n "^5.2.3"
-    embark-logger "^5.2.3"
-    find-up "2.1.0"
-    follow-redirects "1.9.0"
-    fs-extra "8.1.0"
-    fuzzy "0.1.3"
-    glob "7.1.4"
-    globule "1.2.1"
-    merge "1.2.1"
-    multihashes "0.4.14"
-    ora "4.0.3"
-    pretty-ms "5.1.0"
-    propose "0.0.5"
-    shelljs "0.8.3"
-    web3 "1.2.6"
-    web3-eth "1.2.6"
-    web3-eth-abi "1.2.6"
-    ws "7.1.2"
-
-embarkjs@^5.1.1-nightly.2:
-  version "5.2.3"
-  resolved "https://registry.yarnpkg.com/embarkjs/-/embarkjs-5.2.3.tgz#70dfb779e1537e5174fb0062e802d98c6f1e1bd6"
-  integrity sha512-T95mThp95BCDzmTSad0v+kxreLxVPDFn6lf0unjBpkyCWpySg7LX9GjoW36Dhb0SE+sDLvyuqJNjigp05zlXjw==
-  dependencies:
-    "@babel/runtime-corejs3" "7.7.4"
-    async "2.6.1"
-    async-es "2.6.1"
-    colors "1.3.2"
-    core-js "3.4.3"
 
 emoji-regex@^7.0.1, emoji-regex@^7.0.2, emoji-regex@^7.0.3:
   version "7.0.3"
@@ -14475,11 +14339,6 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
-lodash-es@^4.17.10:
-  version "4.17.15"
-  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.15.tgz#21bd96839354412f23d7a10340e5eac6ee455d78"
-  integrity sha512-rlrc3yU3+JNOpZ9zj5pQtxnx2THmvRykwL4Xlxoa8I9lHBlVbbyPhgyPMioxVZ4NqyxaVVtaJnzsyOidQIhyyQ==
-
 lodash._reinterpolate@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/lodash._reinterpolate/-/lodash._reinterpolate-3.0.0.tgz#0ccf2d89166af03b3663c796538b75ac6e114d9d"
@@ -14595,7 +14454,7 @@ lodash.uniq@^4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
-"lodash@>=3.5 <5", lodash@^4.0.0, lodash@^4.0.1, lodash@^4.15.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.2, lodash@^4.17.5, lodash@^4.2.1, lodash@^4.3.0, lodash@~4.17.10:
+"lodash@>=3.5 <5", lodash@^4.0.0, lodash@^4.0.1, lodash@^4.15.0, lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.2, lodash@^4.17.5, lodash@^4.2.1, lodash@^4.3.0, lodash@~4.17.10:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
@@ -23743,13 +23602,6 @@ write@^0.2.1:
   integrity sha1-X8A4KOJkzqP+kUVUdvejxWbLB1c=
   dependencies:
     mkdirp "^0.5.1"
-
-ws@7.1.2:
-  version "7.1.2"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-7.1.2.tgz#c672d1629de8bb27a9699eb599be47aeeedd8f73"
-  integrity sha512-gftXq3XI81cJCgkUiAVixA0raD9IVmXqsylCrjRygw4+UOOGzPoxnQ6r/CnVL9i+mDncJo94tSkyrtuuQVBmrg==
-  dependencies:
-    async-limiter "^1.0.0"
 
 ws@7.2.2, ws@^7.0.0:
   version "7.2.2"
