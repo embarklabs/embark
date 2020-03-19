@@ -50,10 +50,8 @@
     "_typecheck": "npm run solo -- typecheck",
     "ci": "npm run qa",
     "clean": "npm run reset",
-    "lint": "npm-run-all lint:*",
-    "// lint:js": "eslint test/",
-    "lint:ts": "tslint -c tslint.json \"src/**/*.ts\"",
-    "qa": "npm-run-all _typecheck _build",
+    "lint": "tslint -c tslint.json \"src/**/*.ts\"",
+    "qa": "npm-run-all lint _typecheck _build",
     "reset": "npx rimraf coverage dist embarkjs-*.tgz package",
     "solo": "embark-solo"
   },
