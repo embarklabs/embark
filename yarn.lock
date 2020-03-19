@@ -3724,10 +3724,10 @@
     "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
 
-"@types/follow-redirects@1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@types/follow-redirects/-/follow-redirects-1.5.0.tgz#c50084d51be6655ca02ecd887f56e0e0aab192be"
-  integrity sha512-JTwBuXMSZCeyGqBavqWKNL+LltLrtyHXJAqksR0xez8S4/09nf18m1FxtK/C0eGWsr1qLdFZAd9ifiYpxq/ntQ==
+"@types/follow-redirects@1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@types/follow-redirects/-/follow-redirects-1.8.0.tgz#a6f47222546aee59d9a09aaea1146bc1a6726ec7"
+  integrity sha512-xFTn5zG9x9clBXhiTlmVrHDkBPEiYGmAoKr9dQdy8lZUoXcr01xVhXQW/MmUiYZZu2c1SpOleM90B7mN+CuXhA==
   dependencies:
     "@types/node" "*"
 
