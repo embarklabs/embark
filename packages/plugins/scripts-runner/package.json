@@ -1,6 +1,6 @@
 {
   "name": "embark-scripts-runner",
-  "version": "5.3.0-nightly.10",
+  "version": "5.3.0-nightly.11",
   "description": "Embark Scripts Runner",
   "repository": {
     "directory": "packages/plugins/scripts-runner",
@@ -45,7 +45,7 @@
     "@babel/runtime-corejs3": "7.8.4",
     "async": "3.2.0",
     "core-js-pure": "3.6.4",
-    "embark-core": "^5.3.0-nightly.10",
+    "embark-core": "^5.3.0-nightly.11",
     "embark-i18n": "^5.3.0-nightly.5",
     "embark-logger": "^5.3.0-nightly.6",
     "embark-utils": "^5.3.0-nightly.7",

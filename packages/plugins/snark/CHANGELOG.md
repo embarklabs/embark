@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0-nightly.11](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.10...v5.3.0-nightly.11) (2020-03-20)
+
+
+### Features
+
+* **@embark/snarks:** Allow embark-snark to be used in the dapp ([c1129dc](https://github.com/embarklabs/embark/commit/c1129dc))
+
+
+
+
+
 # [5.3.0-nightly.5](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.4...v5.3.0-nightly.5) (2020-03-06)
 
 **Note:** Version bump only for package embark-snark
