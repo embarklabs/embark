@@ -57,6 +57,7 @@
     "cwtree": "node scripts/check-working-tree",
     "cylock": "node scripts/check-yarn-lock",
     "deploy:site": "node site/deploy-site",
+    "fix-versions": "node scripts/fix-versions",
     "globalize": "node scripts/globalize",
     "lint": "npm-run-all lint:*",
     "lint:packages": "node scripts/monorun --parallel lint",
