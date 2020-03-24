@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0-nightly.13](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.12...v5.3.0-nightly.13) (2020-03-24)
+
+
+### Bug Fixes
+
+* **@embark-ganache:** fix ganache having different node accounts ([897aa3f](https://github.com/embarklabs/embark/commit/897aa3f))
+* **@embark/blockchain:** fix blockchain plugins' use of async whilst ([fde1eeb](https://github.com/embarklabs/embark/commit/fde1eeb))
+* **@embark/cmd_controller:** don't try to load pipeline module group in build cmd ([0c9b917](https://github.com/embarklabs/embark/commit/0c9b917))
+* **@embark/storage:** Fix hang when changing environments ([edf4347](https://github.com/embarklabs/embark/commit/edf4347))
+* **plugins/basic-pipeline:** ensure correct webpack config is loaded ([031ebe8](https://github.com/embarklabs/embark/commit/031ebe8))
+
+
+### Features
+
+* **@embark/accounts-manager:** Get alternative coinbase address ([72e609a](https://github.com/embarklabs/embark/commit/72e609a))
+* **@embark/core:** Support minimum truffle projects ([a454ae8](https://github.com/embarklabs/embark/commit/a454ae8))
+* **@embark/dapps:** Add blockchain config to simple template ([5fe318b](https://github.com/embarklabs/embark/commit/5fe318b))
+* **@embark/quorum:** Add support for Quorum blockchains ([095bd0b](https://github.com/embarklabs/embark/commit/095bd0b))
+
+
+
+
+
 # [5.3.0-nightly.12](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.11...v5.3.0-nightly.12) (2020-03-21)
 
 **Note:** Version bump only for package root
