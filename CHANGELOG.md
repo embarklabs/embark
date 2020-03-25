@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0-nightly.14](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.13...v5.3.0-nightly.14) (2020-03-25)
+
+
+### Bug Fixes
+
+* **stack/proxy:** ensure wsProxy and httpProxy have correct type ([d9c8109](https://github.com/embarklabs/embark/commit/d9c8109))
+* **stack/proxy:** have proxy.stop() receive callback ([ec134b9](https://github.com/embarklabs/embark/commit/ec134b9))
+
+
+### Features
+
+* **utils/testing:** introduce async/await for actions in tests ([0e32cc0](https://github.com/embarklabs/embark/commit/0e32cc0))
+
+
+
+
+
 # [5.3.0-nightly.13](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.12...v5.3.0-nightly.13) (2020-03-24)
 
 
