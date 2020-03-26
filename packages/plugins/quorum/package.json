@@ -1,6 +1,6 @@
 {
   "name": "embark-quorum",
-  "version": "5.3.0-nightly.14",
+  "version": "5.3.0-nightly.15",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Quorum blockchain client plugin for Embark",
@@ -44,9 +44,9 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.8.4",
     "core-js": "3.4.3",
-    "embark-core": "^5.3.0-nightly.14",
+    "embark-core": "^5.3.0-nightly.15",
     "embark-i18n": "^5.3.0-nightly.4",
-    "embark-utils": "^5.3.0-nightly.14",
+    "embark-utils": "^5.3.0-nightly.15",
     "ethers": "4.0.40",
     "quorum-js": "0.3.4",
     "web3": "1.2.6"

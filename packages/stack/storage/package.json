@@ -1,6 +1,6 @@
 {
   "name": "embark-storage",
-  "version": "5.3.0-nightly.14",
+  "version": "5.3.0-nightly.15",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Storage provider abstraction module for Embark",
@@ -53,9 +53,9 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.8.4",
     "core-js": "3.4.3",
-    "embark-core": "^5.3.0-nightly.14",
+    "embark-core": "^5.3.0-nightly.15",
     "embark-i18n": "^5.3.0-nightly.5",
-    "embark-utils": "^5.3.0-nightly.14",
+    "embark-utils": "^5.3.0-nightly.15",
     "lodash.clonedeep": "4.5.0",
     "shelljs": "0.8.3"
   },
