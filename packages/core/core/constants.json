@@ -71,6 +71,7 @@
       "eth_getTransactionReceipt": "eth_getTransactionReceipt",
       "eth_call": "eth_call",
       "eth_accounts": "eth_accounts",
+      "eth_sign": "eth_sign",
       "eth_signTypedData": "eth_signTypedData",
       "personal_listAccounts": "personal_listAccounts",
       "personal_newAccount": "personal_newAccount"
@@ -114,8 +115,10 @@
     "development": "development"
   },
   "defaultMigrationsDir": "migrations",
-  "defaultEmbarkConfig":  {
-    "contracts": ["contracts/**"],
+  "defaultEmbarkConfig": {
+    "contracts": [
+      "contracts/**"
+    ],
     "app": {},
     "buildDir": "dist/",
     "config": "config/",
@@ -123,8 +126,7 @@
     "versions": {
       "solc": "0.6.1"
     },
-    "plugins": {
-    },
+    "plugins": {},
     "options": {
       "solc": {
         "optimize": true,

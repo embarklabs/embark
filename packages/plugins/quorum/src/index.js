@@ -3,6 +3,7 @@ import {testRpcWithEndpoint, testWsEndpoint} from "embark-utils";
 import constants from "embark-core/constants";
 import { QuorumWeb3Extensions } from "./quorumWeb3Extensions";
 import QuorumDeployer from "./deployer";
+import EthSendRawTransaction from "./eth_sendRawTransaction";
 export { getBlock, getTransaction, getTransactionReceipt, decodeParameters } from "./quorumWeb3Extensions";
 
 class Quorum {
@@ -51,6 +52,9 @@ class Quorum {
 
     const deployer = new QuorumDeployer(this.embark);
     await deployer.registerDeployer();
+
+    const ethSendRawTransaction = new EthSendRawTransaction(this.embark);
+    await ethSendRawTransaction.registerRpcInterceptors();
   }
 
   shouldInit() {

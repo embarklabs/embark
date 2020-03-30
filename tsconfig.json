@@ -107,7 +107,7 @@
       "path": "packages/plugins/quorum"
     },
     {
-      "path": "packages/plugins/rpc-manager"
+      "path": "packages/plugins/rpc-interceptors"
     },
     {
       "path": "packages/plugins/scaffolding"

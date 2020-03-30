@@ -143,7 +143,7 @@ class PluginsAssert {
     const index = (method + endpoint).toLowerCase();
     assert(this.plugins.plugin.apiCalls[index], `API call for '${method} ${endpoint}' wanted, but not registered`);
   }
-  
+
   consoleCommandRegistered(command) {
     const registered = this.plugins.plugin.console.some(cmd => {
       if (!cmd.matches) {

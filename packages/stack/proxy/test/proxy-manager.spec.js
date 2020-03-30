@@ -27,6 +27,7 @@ describe('stack/proxy', () => {
     });
 
     embark = testBed.embark;
+
     proxyManager = new ProxyManager(embark, {
       plugins: testBed.embark,
       requestManager: mockRequestManager
