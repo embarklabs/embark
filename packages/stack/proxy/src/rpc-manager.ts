@@ -75,14 +75,24 @@ export default class RpcManager {
     callback(null, params);
   }
 
-  private registerRequestInterceptor<TRequest>(filter: string | RegExp, interceptor: RpcRequestInterceptor<TRequest>, options: RegistrationOptions = { priority: 50 }, callback?: Callback<null>) {
+  private registerRequestInterceptor<TRequest>(
+    filter: string | RegExp,
+    interceptor: RpcRequestInterceptor<TRequest>,
+    options: RegistrationOptions = { priority: 50 },
+    callback?: Callback<null>
+  ) {
     this.requestInterceptors.push({ filter, options, interceptor });
     if (callback) {
       callback();
     }
   }
 
-  private registerResponseInterceptor<TRequest, TResponse>(filter: string | RegExp, interceptor: RpcResponseInterceptor<TRequest, TResponse>, options: RegistrationOptions = { priority: 50 }, callback?: Callback<null>) {
+  private registerResponseInterceptor<TRequest, TResponse>(
+    filter: string | RegExp,
+    interceptor: RpcResponseInterceptor<TRequest, TResponse>,
+    options: RegistrationOptions = { priority: 50 },
+    callback?: Callback<null>
+  ) {
     this.responseInterceptors.push({ filter, options, interceptor });
     if (callback) {
       callback();
