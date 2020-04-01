@@ -51,7 +51,7 @@ function compileSolc(embark, contractFiles, contractDirectories, options, callba
   }
 
   const logger = embark.logger;
-  const outputBinary = embark.config.pluginConfig.outputBinary;
+  const outputBinary = embark.pluginConfig.outputBinary;
   const outputDir = embark.config.buildDir + embark.config.contractDirectories[0];
   const solcConfig = embark.config.embarkConfig.options.solc;
 
