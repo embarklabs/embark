@@ -7,6 +7,7 @@ class Embark {
     this.plugins = plugins;
     this.config = config || {};
     this.config.plugins = plugins;
+    this.pluginConfig = config.pluginConfig || {};
     this.ipc = ipc;
     this.config.ipc = ipc;
     this.assert = new EmbarkAssert(this);
