@@ -16,11 +16,26 @@ const convert = new Convert({newline: true, escapeXML: true});
 class Console extends Component {
   constructor(props) {
     super(props);
-    // Add embark to the start of the list
-    this.processes = [...props.processes];
-    this.processes.unshift({name: 'embark', state: 'running'});
 
-    this.state = {value: '', isLoading: true, options: [], activeTab: EMBARK_PROCESS_NAME};
+    this.state = {
+      value: '',
+      isLoading: true,
+      options: [],
+      activeTab: EMBARK_PROCESS_NAME,
+      processes: this.getProcesses()
+    };
+  }
+
+  getProcesses() {
+    const processes = [...this.props.processes];
+    processes.unshift({name: 'embark', state: 'running'});
+    return processes;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.processes.length !== this.props.processes.length) {
+      this.setState({ processes: this.getProcesses() });
+    }
   }
 
   handleSubmit(event) {
@@ -52,7 +67,7 @@ class Console extends Component {
   renderNav() {
     return (
       <Nav tabs>
-        {this.processes.map((process) => (
+        {this.state.processes.map((process) => (
           <NavItem key={process.name}>
             <NavLink
               className={classnames({ active: this.state.activeTab === process.name })}
@@ -90,7 +105,7 @@ class Console extends Component {
 
     return (
       <TabContent activeTab={this.state.activeTab}>
-        {this.processes.map(process => (
+        {this.state.processes.map(process => (
           <TabPane key={process.name} tabId={process.name}>
             <Logs>
               {processLogs
