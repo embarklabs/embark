@@ -150,7 +150,7 @@ export function *watchFetchProcesses() {
 }
 
 export function *watchFetchServices() {
-  yield takeLatest(actions.PROCESSES[actions.REQUEST], fetchServices);
+  yield takeLatest(actions.SERVICES[actions.REQUEST], fetchServices);
 }
 
 export function *watchPostCommand() {
