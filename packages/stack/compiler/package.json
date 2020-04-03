@@ -1,6 +1,6 @@
 {
   "name": "embark-compiler",
-  "version": "5.3.0-nightly.15",
+  "version": "5.3.0-nightly.16",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Embark compiler module",
@@ -54,9 +54,9 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.8.4",
     "core-js": "3.4.3",
-    "embark-core": "^5.3.0-nightly.15",
+    "embark-core": "^5.3.0-nightly.16",
     "embark-i18n": "^5.3.0-nightly.5",
-    "embark-utils": "^5.3.0-nightly.15"
+    "embark-utils": "^5.3.0-nightly.16"
   },
   "devDependencies": {
     "@babel/core": "7.8.6",
@@ -64,7 +64,7 @@
     "clone-deep": "4.0.0",
     "cross-env": "5.2.0",
     "embark-solo": "^5.2.3",
-    "embark-testing": "^5.3.0-nightly.14",
+    "embark-testing": "^5.3.0-nightly.16",
     "eslint": "6.8.0",
     "eslint-plugin-jest": "23.8.1",
     "jest": "25.1.0",

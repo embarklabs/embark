@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0-nightly.16](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.15...v5.3.0-nightly.16) (2020-04-03)
+
+**Note:** Version bump only for package embark-swarm
+
+
+
+
+
 # [5.3.0-nightly.15](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.14...v5.3.0-nightly.15) (2020-03-26)
 
 **Note:** Version bump only for package embark-swarm

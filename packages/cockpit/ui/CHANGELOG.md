@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0-nightly.16](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.15...v5.3.0-nightly.16) (2020-04-03)
+
+
+### Bug Fixes
+
+* **cockpit/console:** ensure console for processes is rendered ([3ce666b](https://github.com/embarklabs/embark/commit/3ce666b))
+
+
+
+
+
 # [5.3.0-nightly.7](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.6...v5.3.0-nightly.7) (2020-03-10)
 
 **Note:** Version bump only for package embark-ui
