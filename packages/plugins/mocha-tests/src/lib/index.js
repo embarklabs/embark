@@ -114,6 +114,10 @@ class MochaTestRunner {
             });
           },
           (next) => {
+          // Reset contract config to make sure we don't deploy old contracts or worse, call old onDeploys
+            events.request("contracts:reset", next);
+          },
+          (next) => {
           // Remove contracts that are not in the configs
             const realContracts = {};
             const deployKeys = Object.keys(cfg.contracts.deploy);
