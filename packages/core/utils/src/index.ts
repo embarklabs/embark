@@ -181,6 +181,9 @@ export function toposort(graph) {
 
 export function deconstructUrl(endpoint) {
   const matches = endpoint.match(/(wss?|https?):\/\/([a-zA-Z0-9_.\/-]*):?([0-9]*)?/);
+  if (!matches) {
+    throw new Error(`Couldn't deconstruct blockchain endpoint which needs to be a URL. Got '${endpoint}`);
+  }
   return {
     protocol: matches[1],
     host: matches[2],
