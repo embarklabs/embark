@@ -328,7 +328,7 @@ export function warnIfPackageNotDefinedLocally(packageName, warnFunc, embarkConf
     return warnFunc("== WARNING: it seems "  + packageName + " is not defined in your dapp's package.json dependencies; In future versions of embark this package should be a local dependency and configured as a plugin");
   }
 
-  if (!embarkConfig.plugins[packageName]) {
+  if (!embarkConfig.plugins || !embarkConfig.plugins[packageName]) {
     return warnFunc(
       __("== WARNING: it seems %s is not defined in your Dapp's embark.json plugins;\nIn future versions of Embark, this package should be a local dependency and configured as a plugin", packageName)
     );
