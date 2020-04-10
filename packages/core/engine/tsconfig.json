@@ -41,9 +41,6 @@
       "path": "../../plugins/plugin-cmd"
     },
     {
-      "path": "../../plugins/rpc-manager"
-    },
-    {
       "path": "../../plugins/scaffolding"
     },
     {

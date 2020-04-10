@@ -4,8 +4,29 @@ import { Logger } from "embark-logger";
 import { buildUrl, findNextPort } from "embark-utils";
 
 import { Proxy } from "./proxy";
+import { RpcRequest, RpcResponse } from './json-rpc';
+import { WebsocketMethod } from "express-ws";
+import { Response } from "express";
+import RpcManager from "./rpc-manager";
 
 const constants = require("embark-core/constants");
+
+export interface ProxyParams<T> {
+  sendToNode?: boolean;
+  originalRequest?: RpcRequest<T>;
+  request: RpcRequest<T>;
+  isWs: boolean;
+  transport: WebsocketMethod<T> | Response;
+}
+
+export interface ProxyRequestParams<T> extends ProxyParams<T> { }
+
+export interface ProxyResponseParams<T, R> extends ProxyRequestParams<T> {
+  response: RpcResponse<R>;
+}
+
+export * from "./rpc-manager";
+export * from "./json-rpc";
 
 export default class ProxyManager {
   private readonly logger: Logger;
@@ -34,6 +55,8 @@ export default class ProxyManager {
       this.logger.warn(__("The proxy has been disabled -- some Embark features will not work."));
       this.logger.warn(__("Configured wallet accounts will be ignored and cannot be used in the DApp, and transactions will not be logged."));
     }
+    const rpcManager = new RpcManager(embark);
+    rpcManager.init();
 
     this.setupEvents();
   }

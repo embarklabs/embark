@@ -8506,6 +8506,23 @@ elliptic@^6.0.0, elliptic@^6.4.0, elliptic@^6.4.1:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
+embark-rpc-manager@^5.3.0-nightly.16:
+  version "5.3.0-nightly.16"
+  resolved "https://registry.yarnpkg.com/embark-rpc-manager/-/embark-rpc-manager-5.3.0-nightly.16.tgz#c80b7e7c280d3b3171fb45199ed4d497a99e4db9"
+  integrity sha512-oZZFXkPtScLqIr1QjzwI06ty/uUN4QaUiOXyGOfJVAOYy28IwSsD50G3hty3hA/lpcMWeNcIWqzJvpGCy3uGgQ==
+  dependencies:
+    "@babel/runtime-corejs3" "7.8.4"
+    "@omisego/omg-js-util" "2.0.0-v0.2"
+    "@types/async" "2.0.50"
+    async "3.2.0"
+    embark-core "^5.3.0-nightly.16"
+    embark-i18n "^5.3.0-nightly.5"
+    embark-logger "^5.3.0-nightly.16"
+    embark-utils "^5.3.0-nightly.16"
+    lodash.clonedeep "4.5.0"
+    quorum-js "0.3.4"
+    web3 "1.2.6"
+
 embark-test-contract-0@0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/embark-test-contract-0/-/embark-test-contract-0-0.0.2.tgz#53913fb40e3df4b816a7bef9f00a5f78fa3d56b4"

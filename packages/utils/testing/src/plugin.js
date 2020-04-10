@@ -33,8 +33,8 @@ class Plugins {
     }
   }
 
-  registerActionForEvent(name, cb) {
-    this.plugin.registerActionForEvent(name, cb);
+  registerActionForEvent(name, options, cb) {
+    this.plugin.registerActionForEvent(name, options, cb);
   }
 
   registerAPICall(method, endpoint, callback) {
@@ -76,7 +76,11 @@ class Plugin {
     return this.listeners[name];
   }
 
-  registerActionForEvent(name, action) {
+  registerActionForEvent(name, options, action) {
+    if (typeof options === 'function') {
+      action = options;
+    }
+
     if (!this.listeners[name]) {
       this.listeners[name] = [];
     }
@@ -139,7 +143,7 @@ class PluginsAssert {
     const index = (method + endpoint).toLowerCase();
     assert(this.plugins.plugin.apiCalls[index], `API call for '${method} ${endpoint}' wanted, but not registered`);
   }
-  
+
   consoleCommandRegistered(command) {
     const registered = this.plugins.plugin.console.some(cmd => {
       if (!cmd.matches) {

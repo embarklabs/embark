@@ -5,6 +5,11 @@ export type Maybe<T> = false | 0 | undefined | null | T;
 import { AbiItem } from "web3-utils";
 import { EmbarkConfig as _EmbarkConfig } from './config';
 
+export interface Account {
+  address: string;
+  privateKey: string;
+}
+
 export interface Contract {
   abiDefinition: AbiItem[];
   deployedAddress: string;

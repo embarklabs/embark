@@ -3,7 +3,7 @@
     "composite": true,
     "declarationDir": "./dist",
     "rootDir": "./src",
-    "tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.embark-rpc-manager.tsbuildinfo"
+    "tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.embark-rpc-interceptors.tsbuildinfo"
   },
   "extends": "../../../tsconfig.base.json",
   "include": [
@@ -21,6 +21,9 @@
     },
     {
       "path": "../../core/utils"
+    },
+    {
+      "path": "../../stack/proxy"
     }
   ]
 }

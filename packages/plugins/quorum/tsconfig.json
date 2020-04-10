@@ -18,6 +18,9 @@
     },
     {
       "path": "../../core/utils"
+    },
+    {
+      "path": "../../stack/proxy"
     }
   ]
 }

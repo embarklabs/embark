@@ -26,8 +26,8 @@ class Embark {
     this.plugins.registerAPICall(method, endpoint, callback);
   }
 
-  registerActionForEvent(name, cb) {
-    this.plugins.registerActionForEvent(name, cb);
+  registerActionForEvent(name, options, cb) {
+    this.plugins.registerActionForEvent(name, options, cb);
   }
 
   registerConsoleCommand(options) {
