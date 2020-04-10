@@ -16,7 +16,6 @@ import {
   stopProcessLogs
 } from "../actions";
 
-import DataWrapper from "../components/DataWrapper";
 import Console from '../components/Console';
 import {EMBARK_PROCESS_NAME, LOG_LIMIT} from '../constants';
 import PageHead from '../components/PageHead';
