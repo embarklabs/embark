@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0-nightly.17](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.16...v5.3.0-nightly.17) (2020-04-11)
+
+
+### Bug Fixes
+
+* **@embark/storage:** Allow upload when storage is disabled ([ec99cf6](https://github.com/embarklabs/embark/commit/ec99cf6))
+
+
+
+
+
 # [5.3.0-nightly.16](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.15...v5.3.0-nightly.16) (2020-04-03)
 
 **Note:** Version bump only for package embark

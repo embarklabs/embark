@@ -1,6 +1,6 @@
 {
   "name": "embark-graph",
-  "version": "5.3.0-nightly.16",
+  "version": "5.3.0-nightly.17",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Smart contract documentation generator for Embark DApps",
@@ -48,7 +48,7 @@
     "@babel/runtime-corejs3": "7.8.4",
     "async": "3.2.0",
     "core-js": "3.4.3",
-    "embark-utils": "^5.3.0-nightly.16",
+    "embark-utils": "^5.3.0-nightly.17",
     "viz.js": "2.1.2"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 {
   "name": "embark-webserver",
-  "version": "5.3.0-nightly.16",
+  "version": "5.3.0-nightly.17",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Webserver for Embark",
@@ -50,7 +50,7 @@
     "core-js": "3.4.3",
     "ejs": "2.6.1",
     "embark-i18n": "^5.3.0-nightly.5",
-    "embark-utils": "^5.3.0-nightly.16",
+    "embark-utils": "^5.3.0-nightly.17",
     "express": "4.17.1",
     "express-ws": "4.0.0",
     "open": "6.4.0",

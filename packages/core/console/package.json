@@ -1,6 +1,6 @@
 {
   "name": "embark-console",
-  "version": "5.3.0-nightly.16",
+  "version": "5.3.0-nightly.17",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Console component for Embark",
@@ -56,9 +56,9 @@
     "@types/json-stringify-safe": "5.0.0",
     "chalk": "2.4.2",
     "core-js": "3.4.3",
-    "embark-core": "^5.3.0-nightly.16",
+    "embark-core": "^5.3.0-nightly.17",
     "embark-i18n": "^5.3.0-nightly.5",
-    "embark-utils": "^5.3.0-nightly.16",
+    "embark-utils": "^5.3.0-nightly.17",
     "fs-extra": "8.1.0",
     "json-stringify-safe": "5.0.1"
   },

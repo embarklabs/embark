@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0-nightly.17](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.16...v5.3.0-nightly.17) (2020-04-11)
+
+
+### Bug Fixes
+
+* **@embark/mocha:** reset contracts before each test file ([deb682c](https://github.com/embarklabs/embark/commit/deb682c))
+* **@embark/storage:** Allow upload when storage is disabled ([ec99cf6](https://github.com/embarklabs/embark/commit/ec99cf6))
+* **core/utils:** shortcut `embarkConfig.plugins` in case it doesn't exist ([d83ad01](https://github.com/embarklabs/embark/commit/d83ad01))
+
+
+
+
+
 # [5.3.0-nightly.16](https://github.com/embarklabs/embark/compare/v5.3.0-nightly.15...v5.3.0-nightly.16) (2020-04-03)
 
 

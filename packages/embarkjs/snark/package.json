@@ -1,6 +1,6 @@
 {
   "name": "embarkjs-snark",
-  "version": "5.3.0-nightly.16",
+  "version": "5.3.0-nightly.17",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [
     "Eric Mastro <eric.mastro@gmail.com> (https://github.com/emizzle/)"
@@ -58,7 +58,7 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.8.4",
     "core-js": "3.6.4",
-    "embark-core": "^5.3.0-nightly.16",
+    "embark-core": "^5.3.0-nightly.17",
     "embarkjs": "^5.3.0-nightly.6",
     "fs-extra": "8.1.0",
     "snarkjs": "0.1.20"
