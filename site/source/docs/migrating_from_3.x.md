@@ -83,6 +83,13 @@ However, we did introduce some small breaking changes. We removed:
 
 ## Updating to v5
 
+- [Better Smart Contract configuration](#Better-Smart-Contract-configuration)
+- [Simplified Blockchain configuration](#Simplified-Blockchain-configuration)
+- [Communication configuration](#Communication-configuration)
+- [Embark Plugins](#Embark-Plugins)
+- [Tests](#Tests)
+- [Library and Version updates](#Library-and-Version-updates)
+
 Embark's 5th version is full of improvements, especially in the configurations, all to make your life easier.
 
 In this guide, we'll go through the different breaking changes introduced in Embark 5, that will let you upgrade from Embark 4.0.
@@ -192,6 +199,41 @@ module.exports = {
       type: "ws"
     }
   }
+}
+```
+
+### Embark Plugins
+
+A lot of functionality of Embark has been extracted into plugins and those need to be installed explicitly when upgrading from v4. This includes things like `embark-geth` to spin up a blockchain, `embark-profiler` and `embark-graph`. Notice that these are entirely optional though.
+
+To make this work, add the needed plugins as dependencies to your project's `package.json`:
+
+
+```json
+{
+  ...
+  "devDependencies": {
+    ...
+    "embark-geth": "^5.2.3",
+    "embark-ipfs": "^5.2.3",
+    "embark-swarm": "^5.2.3",
+    "embark-whisper-geth": "^5.2.3",
+  }
+}
+```
+
+Once these are installed, list them inside of your project's `embark.json` so Embark knows which ones to load when booting up:
+
+```json
+{
+  ...
+   "plugins": {
+    "embark-ipfs": {},
+    "embark-whisper-geth": {},
+    "embark-geth": {},
+    ...
+  },
+  ...
 }
 ```
 
