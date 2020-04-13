@@ -99,7 +99,7 @@ class EthereumBlockchainClient {
         done(err, receipt);
       }, (hash) => {
         const estimatedCost = contract.gas * contract.gasPrice;
-        contract.log(`${__("Deploying")} ${contract.className.bold.cyan} ${__("with").green} ${contract.gas} ${__("gas at the price of").green} ${contract.gasPrice} ${__("Wei. Estimated cost:").green} ${estimatedCost} ${"Wei".green}  (txHash: ${hash.bold.cyan})`);
+        contract.log(`${__("Deploying")} ${contract.className.bold.cyan} ${__("with").green} ${contract.gas} ${__("gas at the price of").green} ${Web3.utils.fromWei(contract.gasPrice, 'gwei')} ${__("Gwei. Estimated cost:").green} ${Web3.utils.fromWei(estimatedCost.toString())} ${"ether".green}  (txHash: ${hash.bold.cyan})`);
       });
     } catch (e) {
       this.logger.error(__('Error deploying contract %s', contract.className.underline));
