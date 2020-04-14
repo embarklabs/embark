@@ -1,7 +1,7 @@
 {
   "name": "embark-dapp-test-teller-contracts",
   "description": "Test Teller contracts for integration testing purposes",
-  "version": "5.3.0-nightly.17",
+  "version": "5.3.0-nightly.18",
   "scripts": {
     "ci": "npm run qa",
     "clean": "npm run reset",
@@ -13,7 +13,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "embark": "^5.3.0-nightly.17",
+    "embark": "^5.3.0-nightly.18",
     "embark-reset": "^5.2.3",
     "rimraf": "3.0.0"
   }
