@@ -1,6 +1,6 @@
 {
   "name": "embark-snark",
-  "version": "5.3.0-nightly.17",
+  "version": "5.3.0",
   "author": "Anthony Laibe",
   "contributors": [
     "Michael Bradley <michaelsbradleyjr@gmail.com> (https://github.com/michaelsbradleyjr/)",
@@ -56,10 +56,10 @@
     "@babel/runtime-corejs3": "7.8.4",
     "circom": "0.0.35",
     "core-js": "3.4.3",
-    "embark-core": "^5.3.0-nightly.17",
-    "embark-logger": "^5.3.0-nightly.16",
-    "embark-utils": "^5.3.0-nightly.17",
-    "embarkjs-snark": "^5.3.0-nightly.17",
+    "embark-core": "^5.3.0",
+    "embark-logger": "^5.3.0",
+    "embark-utils": "^5.3.0",
+    "embarkjs-snark": "^5.3.0",
     "find-up": "4.1.0",
     "glob": "7.1.4",
     "node-object-hash": "2.0.0",
