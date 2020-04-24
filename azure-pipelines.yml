@@ -6,7 +6,7 @@ variables:
   ipfsVersion: '0.4.22'
   node10: '^10.17.0'
   node12: '^12.0.0'
-  node13: '^13.0.0'
+  node14: '^14.0.0'
   pythonVersion: '2.7.x'
   yarnVersion: '1.19.1'
 
@@ -30,14 +30,14 @@ strategy:
     Node 12 / Windows:
       nodeVersion: $(node12)
       imageName: 'vs2017-win2016'
-    Node 13 / Linux:
-      nodeVersion: $(node13)
+    Node 14 / Linux:
+      nodeVersion: $(node14)
       imageName: 'ubuntu-18.04'
-    Node 13 / macOS:
-      nodeVersion: $(node13)
+    Node 14 / macOS:
+      nodeVersion: $(node14)
       imageName: 'macos-10.14'
-    Node 13 / Windows:
-      nodeVersion: $(node13)
+    Node 14 / Windows:
+      nodeVersion: $(node14)
       imageName: 'vs2017-win2016'
 
 pool:
