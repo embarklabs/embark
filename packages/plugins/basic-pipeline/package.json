@@ -1,6 +1,6 @@
 {
   "name": "embark-basic-pipeline",
-  "version": "5.3.0",
+  "version": "5.3.1-nightly.0",
   "author": "Iuri Matias <iuri.matias@gmail.com>",
   "contributors": [],
   "description": "Basic pipeline for Embark that builds a DApp's frontend assets using webpack",

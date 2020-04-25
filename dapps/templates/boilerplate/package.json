@@ -1,6 +1,6 @@
 {
   "name": "embark-dapp-template-boilerplate",
-  "version": "5.3.0",
+  "version": "5.3.1-nightly.0",
   "description": "Basic DApp template for Embark",
   "homepage": "https://github.com/embarklabs/embark/tree/master/dapps/templates/boilerplate#readme",
   "bugs": "https://github.com/embarklabs/embark/issues",
@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "embark": "^5.3.0",
-    "embark-basic-pipeline": "^5.3.0",
+    "embark-basic-pipeline": "^5.3.1-nightly.0",
     "embark-geth": "^5.3.0",
     "embark-graph": "^5.3.0",
     "embark-ipfs": "^5.3.0",
