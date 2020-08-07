@@ -337,6 +337,7 @@ class GethClient {
         if (self.isDev && self.config.unlockAddressList) {
           // The first address is the dev account, that is automatically unlocked by the client using blank password
           args.push("--unlock=" + self.config.unlockAddressList.slice(1));
+          args.push("--allow-insecure-unlock");
           return callback(null, "--unlock=" + self.config.unlockAddressList.slice(1));
         }
         let accountAddress = "";
@@ -353,6 +354,7 @@ class GethClient {
             }));
           }
           args.push("--unlock=" + accountAddress);
+          args.push("--allow-insecure-unlock");
           return callback(null, "--unlock=" + accountAddress);
         }
         callback(null, "");
