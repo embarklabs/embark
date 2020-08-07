@@ -4,7 +4,8 @@ module.exports = {
     enabled: true,
     provider: "whisper", // Communication provider. Currently, Embark only supports whisper
     available_providers: ["whisper"], // Array of available providers
-    client: "geth"
+    client: "geth",
+    port: 30304 // Whisper P2P port
   },
 
   // default environment, merges with the settings in default
