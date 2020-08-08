@@ -22,7 +22,7 @@
     "embarkjs-whisper": "^6.0.0",
     "fs-extra": "8.1.0",
     "haml": "0.4.3",
-    "jquery": "3.4.0",
+    "jquery": "3.5.1",
     "react": "16.12.0",
     "react-bootstrap": "0.32.4",
     "react-dom": "16.12.0",
