@@ -156,7 +156,7 @@ class WhisperGethClient {
     let rpcApi = this.config.rpcApi;
     let wsApi = this.config.wsApi;
     let args = ['--ipcdisable']; // Add --ipcdisable as ipc is not needed for Whisper and it conflicts on Windows with the blockchain node
-    args.push("--port=30304");
+    args.push(`--port="${this.communicationConfig.connection.port || 30304}"`);
     async.series([
       function commonOptions(callback) {
         let cmd = self.commonOptions();
