@@ -91,7 +91,7 @@
     "glob": "7.1.4",
     "globule": "1.2.1",
     "hosted-git-info": "2.8.4",
-    "http-proxy": "1.17.0",
+    "http-proxy": "1.18.1",
     "istanbul": "0.4.5",
     "json-parse-better-errors": "1.0.2",
     "lodash.clonedeep": "4.5.0",
