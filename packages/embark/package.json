@@ -74,7 +74,7 @@
     "commander": "2.18.0",
     "core-js": "3.4.3",
     "date-and-time": "0.6.2",
-    "decompress": "4.2.0",
+    "decompress": "4.2.1",
     "embark-core": "^6.0.0",
     "embark-deploy-tracker": "^6.0.0",
     "embark-engine": "^6.0.1-nightly.0",
