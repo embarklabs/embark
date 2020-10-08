@@ -35,7 +35,7 @@
   "scripts": {
     "ci": "npm run qa",
     "clean": "npm run reset",
-    "qa": "npm run test",
+    "qa": "npm run test -- --coverage",
     "reset": "npx embark-reset && npx rimraf embark-*.tgz package",
     "test": "npx embark test"
   },
