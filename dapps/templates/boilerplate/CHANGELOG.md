@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.1-nightly.1](https://github.com/embarklabs/embark/compare/v6.0.1-nightly.0...v6.0.1-nightly.1) (2020-10-08)
+
+
+### Bug Fixes
+
+* **@embark/dapps:** use utf-8 in html script tag ([cfa43bc](https://github.com/embarklabs/embark/commit/cfa43bc))
+
+
+
+
+
 ## [6.0.1-nightly.0](https://github.com/embarklabs/embark/compare/v6.0.0...v6.0.1-nightly.0) (2020-08-08)
 
 **Note:** Version bump only for package embark-dapp-template-boilerplate
