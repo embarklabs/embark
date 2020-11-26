@@ -3916,10 +3916,10 @@
     "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
 
-"@types/follow-redirects@1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@types/follow-redirects/-/follow-redirects-1.5.0.tgz#c50084d51be6655ca02ecd887f56e0e0aab192be"
-  integrity sha512-JTwBuXMSZCeyGqBavqWKNL+LltLrtyHXJAqksR0xez8S4/09nf18m1FxtK/C0eGWsr1qLdFZAd9ifiYpxq/ntQ==
+"@types/follow-redirects@1.13.0":
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/@types/follow-redirects/-/follow-redirects-1.13.0.tgz#82d3767050314ddb44606576e6bf4fcfee5f4d05"
+  integrity sha512-VPGDD77WMB+da4l1vdfGYM1k9ZjtPyY8EHisvc33QUcwCf/stt/5M1P/ZOPhpnjPgBwJX/xuo3X3wFVp0rutTA==
   dependencies:
     "@types/node" "*"
 
