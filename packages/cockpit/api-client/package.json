@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.8.4",
-    "axios": "0.19.0",
+    "axios": "0.21.1",
     "core-js": "3.4.3",
     "keccakjs": "0.2.3"
   },
