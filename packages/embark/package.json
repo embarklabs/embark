@@ -88,7 +88,7 @@
     "flatted": "0.2.3",
     "fs-extra": "8.1.0",
     "ganache-cli": "6.8.2",
-    "glob": "7.1.4",
+    "glob": "7.1.6",
     "globule": "1.2.1",
     "hosted-git-info": "2.8.4",
     "http-proxy": "1.17.0",

@@ -82,7 +82,7 @@
     "file-loader": "5.0.2",
     "find-up": "4.1.0",
     "fs-extra": "8.1.0",
-    "glob": "7.1.4",
+    "glob": "7.1.6",
     "hard-source-webpack-plugin": "0.13.1",
     "lodash.clonedeep": "4.5.0",
     "node-sass": "4.13.0",
