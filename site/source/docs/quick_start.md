@@ -16,7 +16,7 @@ Let's get started!
 
 ## Installing Embark
 
-First things first, we'll have to install Embark on our local machines. This is easily done buy using a package manager of your choice. The following command installs the Embark CLI as a global command using npm:
+First things first, we'll have to install Embark on our local machines. This is easily done by using a package manager of your choice. The following command installs the Embark CLI as a global command using npm:
 
 ```
 $ npm install -g embark
