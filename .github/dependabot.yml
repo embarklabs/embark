@@ -1,0 +1,29 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+- package-ecosystem: npm
+  directory: "/site"
+  schedule:
+    interval: daily
+  ignore:
+  - dependency-name: eslint
+    versions:
+    - 7.18.0
+    - 7.19.0
+    - 7.20.0
+    - 7.21.0
+    - 7.22.0
+    - 7.23.0
+    - 7.24.0
+  - dependency-name: hexo
+    versions:
+    - 5.3.0
+  - dependency-name: hexo-renderer-marked
+    versions:
+    - 3.3.0
+  - dependency-name: lodash
+    versions:
+    - 4.17.20
