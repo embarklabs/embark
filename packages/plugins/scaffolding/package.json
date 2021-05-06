@@ -50,7 +50,7 @@
     "embark-i18n": "^6.0.0",
     "embark-logger": "^6.0.0",
     "embark-utils": "^6.0.0",
-    "handlebars": "4.3.0",
+    "handlebars": "4.7.7",
     "web3-utils": "1.2.6"
   },
   "devDependencies": {
