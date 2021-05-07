@@ -63,7 +63,7 @@
     "flatted": "0.2.3",
     "fs-extra": "8.1.0",
     "globule": "1.2.1",
-    "hosted-git-info": "2.8.4",
+    "hosted-git-info": "3.0.8",
     "lodash.clonedeep": "4.5.0",
     "node-ipc": "9.1.1",
     "parse-json": "4.0.0",
