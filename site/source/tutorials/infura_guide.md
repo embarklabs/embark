@@ -9,7 +9,7 @@ They offer nodes for the most popular testnets like Ropsten, Kovan and Rinkeby a
 
 ### Registration
 
-To start you will need to first register with Infura. Go to [https://infura.io/register](https://infura.io/register) and register.
+To start you will need to first register with a node provider like Infura or Alchemy. Go to [https://infura.io/register](https://infura.io/register) or [https://www.alchemy.com/](https://www.alchemy.com/) register.
 
 Afterwards, you will get an API KEY by email. Save this key, you will need it to configure Infura. Careful, it is private.
 
@@ -17,7 +17,7 @@ Afterwards, you will get an API KEY by email. Save this key, you will need it to
 
 ### Account Configuration
 
-To deploy to Infura, we need to configure Embark with an account containing funds.
+To deploy to Infura or Alchemy, we need to configure Embark with an account containing funds.
 
 In this example we will use a mnemonic.
 It is also possible to use a private key (the documentation for the accounts functionality can be found [here](/docs/contracts.html#Using-accounts-in-a-wallet)).
