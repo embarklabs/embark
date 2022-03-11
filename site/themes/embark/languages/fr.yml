@@ -1,0 +1,381 @@
+navigation:
+  quick_start: Démarrage rapide
+  learn: Apprendre
+  plugins: Les Plugins
+  community: Communauté
+  blog: Blog
+  search: Rechercher
+
+start_page:
+  header:
+    title: Embarkez dans l'Ether.
+    tagline: La plate-forme de développement tout-en-un pour créer et déployer des applications décentralisées.
+    link: Commencer
+
+  intro_section:
+    heading:
+      title: <span class="u-text-light">Plus qu'un </span>framework.
+      referal: Embark est une plateforme qui facilite le développement et le déploiement d'applications décentralisées.
+      link: Rejoignez la communauté
+    box_1:
+      title: Gestion des Smart Contract
+      text: Créez, testez et déployez vos Smart Contracts sans tracas. Embark s'occupe du travail préparatoire, surveille les changements et déploie votre application si nécessaire.
+      link: Apprendre encore plus
+    box_2:
+      title: Débogueur et tests faciles à utiliser
+      text: Les tests ne doivent pas être une réflexion après coup. Embark fait du débogage et des tests des citoyens de première classe de votre workflow de développement.
+      link: Apprendre encore plus
+    box_3:
+      title: Développement DApp de bout en bout
+      text: Allez au-delà des Smart Contracts si vous le souhaitez. Embark offre d'excellentes intégrations avec des services décentralisés tels que IPFS et Whisper.
+      link: Apprendre encore plus
+
+  cli_section:
+    heading:
+      title: Interface de ligne de commande puissante
+      referal: L'interface de ligne de commande d'Embark est livrée avec un tableau de bord riche pour que <strong>vous</strong> gardiez le contrôle.
+    checklist:
+      item_1: Surveillance des services
+      item_2: REPL interactif
+      item_3: Déploiement en temps réel
+    link:
+      label: Commencer
+      title: Création d'applications à l'aide de la CLI
+
+  modular_section:
+    heading:
+      title: <span class="u-text-light">Modulaire par </span>conception
+      referal: Choisissez les fonctionnalités, plugins et outils que vous souhaitez intégrer. Embark est construit avec la modularité à l'esprit.
+    checklist:
+      item_1: Uniquement des Smart Contract ou des DApps à part entière
+      item_2: Intégration avec les outils existants
+      item_3: Étendez-le à vos besoins
+    link_1:
+      title: Plugins
+      label: Voir les plugins
+    link_2:
+      title: Créer des plugins
+      label: Crée le tien!
+
+  cockpit_section:
+    heading:
+      title: Contrôle de mission avec <span class="u-text-ghost">Cockpit.</span>
+      referal: Une interface Web pour créer, déboguer et déployer des applications décentralisées.
+
+    box_1:
+      title: Web UI & Tableau de bord
+      text: Donne un aperçu de tous les processus contrôlés par Embark. Il est également livré avec une console interactive et des commandes prédictives.
+      link:
+        label: Apprendre encore plus &rarr;
+        title: Tableau de bord de Cockpit
+
+    box_2:
+      title: Explorer
+      text: L'explorateur de Cockpit vous permet de consulter facilement toutes les transactions, les contrats intelligents et les comptes.
+      link:
+        label: Apprendre encore plus &rarr;
+        title: Cockpit Explorer
+
+    box_3:
+      title: Déploiement
+      text: Avec Cockpit, vous pouvez déployer de manière itérative et sélective vos contrats intelligents, en éliminant les maux de tête associés aux applications complexes.
+      link:
+        label: Apprendre encore plus &rarr;
+        title: Déploiement de Cockpit
+
+    box_4:
+      title: Éditeur de Code
+      text: Modifiez vos fichiers source directement dans Cockpit pour des mises à jour rapides et faciles.
+      link:
+        title: Éditeur Cockpit
+        label: Apprendre encore plus &rarr;
+
+  outro_section:
+    heading:
+      title: <span class="u-text-light">Pour les développeurs</span>, par les développeurs
+      referal: Embark est entièrement open source. Impliquez-vous et faites partis du voyage.
+      link: Rejoignez la communauté
+
+  newsletter_section:
+    heading:
+      title: Inscrivez-vous pour les mises à jour
+      text: Inscrivez-vous à notre newsletter et recevez des mises à jour sur Embark et nos progrès de développement en premier!
+    button:
+      label: S'abonner
+
+community_page:
+  header:
+    title: Rejoignez la communauté grandissante
+    tagline: Obtenez de l'aide, aider les autres et aidez à construire Embark.
+    link: Rejoindre la conversation
+
+  spotbox:
+    title: Découvrez les dépôts GitHub
+    text: Recherchez les problèmes avec des balises spécifiques qui pourraient vous intéresser.
+    link: Voir les dépôts
+
+  contribute_section:
+    heading:
+      title: <span class="u-text-light">Comment</span> contribuer
+      referal: Il existe plusieurs façons de contribuer et de s'impliquer, de la soumission d'une pull request à la croissance de la communauté.
+
+  not_just_code_section:
+    heading:
+      title: Ce n'est pas que du <span class='u-text-light'>code</span>
+      referal: Nous pensons que les contributions vont bien au-delà du travail sur notre base de code. Aidez-nous à rédiger des documents, à créer un didacticiel ou parlez-nous simplement sur nos canaux.
+      link: Rejoignez-nous à Gitter
+
+    box_1:
+      title: Aidez à améliorer les docs
+      text: Vous n'avez pas besoin de coder pour contribuer, nous sommes heureux de toute amélioration de notre documentation.
+
+    box_2:
+      title: Créer un tutoriel
+      text: Enregistrez une vidéo d'un tutoriel simple et partagez-la avec la communauté.
+
+    box_3:
+      title: Aidez à répondre aux questions
+      text: Aidez les nouveaux arrivants avec des questions dans notre canal Gitter ou Stack Overflow.
+
+    box_4:
+      title: Créer un plugin
+      text: Embark s'intègre bien avec d'autres outils. Créez un plugin pour obtenir de l'aide pour l'outil de votre choix.
+
+    box_5:
+      title: Signaler un bug
+      text: Si vous trouvez un bug, faites-le nous savoir et nous travaillerons pour le corriger.
+
+    box_6:
+      title: Travailler sur de nouvelles fonctionnalités
+      text: Collaborez avec vos pairs sur les nouvelles fonctionnalités que vous souhaitez voir dans Embark.
+
+  team_section:
+    heading:
+      title: Rencontrer <span class="u-text-ghost">l'équipe</span>.
+
+    job_team_lead: Créateur et chef d'équipe
+    job_engineer: Ingénieur logiciel
+
+plugins_page:
+  header:
+    title: Plugins
+    tagline: Étendez Embark à vos besoins.
+
+  intro_section:
+    heading:
+      referal: Les plugins étendent Embark et fournissent une intégration avec d'autres outils et technologies.
+      link: Construit le tien!
+
+  learn_more_link: Apprendre encore plus
+
+  plugins:
+    bamboo:
+      desc: Plugin pour ajouter le support Bamboo à Embark
+    solc:
+      desc: Utilise la ligne de commande Solidity Compiler pour des temps de compilation à la vitesse de la lumière
+    solium:
+      desc: Le plugin Solium officiel pour le framework Embark
+    verifier:
+      desc: Plugin pour Embark pour aplatir et vérifier les contrats sur Etherscan
+    status:
+      desc: Plugin de statut pour interagir avec Embark
+    remix:
+      desc: Plugin pour démarrer Remix directement avec Embark
+    slither:
+      desc: Plugin pour analyser le code source solidité avec Slither
+    snark:
+      desc: Plugin pour compiler des circuits Circom et générer une preuve Solidity
+    fortune:
+      desc: Affiche un message de fortune après chaque construction
+    pug:
+      desc: Embarquez le plugin pour prendre en charge les modèles carlin / jade
+    haml:
+      desc: Embarquer le plugin pour prendre en charge les modèles haml
+    mythx:
+      desc: Ajoute des commandes de console pour exécuter l'analyse de sécurité MythX à partir de la console Embark
+
+docs_landing_page:
+  header:
+    title: Construire avec Embark
+    tagline: Découvrez comment <strong class="u-text-ghost">vous</strong> pouvez utiliser Embark pour créer vos applications.
+    link: Démarrage rapide &rarr;
+
+  intro_section:
+    heading:
+      title: <span class="u-text-light">Démarrer</span> ici.
+      referal: Il existe de nombreuses façons de travailler avec Embark. Voici quelques bons points de départ.
+
+    box_1:
+      title: Documentation
+      text: Allez directement à la documentation et explorez ce qu'Embark a à offrir!
+      link: Apprendre encore plus
+
+    box_2:
+      title: Utilisation de la CLI
+      text: Apprenez à utiliser l'interface de ligne de commande d'Embark pour développer vos applications.
+      link: Apprendre encore plus
+
+    box_3:
+      title: Développement de Smart Contract
+      text: Embark offre une grande flexibilité en ce qui concerne la configuration, la compilation et le déploiement de vos Smart Contract.
+      link: Apprendre encore plus
+
+    box_4:
+      title: Créer un plugin
+      text: Prolongez Embark selon vos besoins ! Apprenez à créer un plugin qui intègre vos outils préférés avec Embark.
+      link: Apprendre encore plus
+
+    link:
+      label: Emmenez-moi aux docs &rarr;
+      title: Présentation des documents
+
+blog:
+  header:
+    title: Blog
+    tagline: Nouvelles et mises à jour par l'équipe Embark
+
+  view_all_link: Voir tout
+
+archives:
+  header:
+    title: Tous les messages
+    link: &larr; Retour au blog
+
+  article_box:
+    read_more_link: Lire la suite
+
+  back_to_blog_link:
+    label: &larr; Retour au blog
+    title: Retour au blog
+
+footer:
+  text: Embark fait partie de Status Network
+  section_resources:
+    title: Ressources
+    quick_start: Démarrage rapide
+    documentation: Documentation
+    blog: Blog
+    faq: FAQ
+    troubleshooting: Dépannage
+  section_help:
+    issues: Signaler des problèmes
+    coc: Code de conduite
+  section_community:
+    contribute: Contribuer
+    team: Équipe
+  privacy_policy: Politique de confidentialité
+
+paginator:
+  prev:
+    label: Précédent
+    title: Article précédent
+  next:
+    label: Suivant
+    title: Article Suivant
+
+page:
+  contents: Contenu
+  back_to_top: Retour au haut
+  improve: Améliorez ce document
+  prev: Précédent
+  next: Suivant
+  last_updated: "Dernière mise à jour: %s"
+
+sidebar:
+  docs:
+    getting_started: Commencer
+    overview: Aperçu
+    installation: Installation
+    faq: FAQ
+    creating_project: Création d'une apps
+    executing_migration_scripts: Exécuter des scripts
+    structure: Structure de l'App
+    running_apps: Faire fonctionner son application
+    dashboard: Utilisation du tableau de bord
+    using_the_console: Utilisation de la console
+    what_is_dapp: Qu'est-ce qu'une DApp
+    quick_start: Démarrage rapide
+    tutorials_&_guides: Tutoriels & Guides
+    basic_usage: Utilisation de base
+    smart_contracts: Développement de Smart Contract
+    storage: Stockage (IPFS/Swarm)
+    messages: Messages (Whisper)
+    testing: Tests
+    configuration: Configuration
+    pipeline_and_webpack: Construire et compiler
+    distributing: Distribution de votre DApp
+    deploying: Déploiement sur IPFS/Swarm
+    plugins: Plugins
+    installing_a_plugin: Installer un plugins
+    creating_a_plugin: Créer un plugins
+    plugin_reference: Plugin pour APIs
+    advanced_topis: Sujets avancés
+    webpack: Webpack
+    reference: Référence
+    console_commands: Commandes Console
+    embark_commands: Commandes CLI
+    web3js: Web3.js
+    solidity: Solidity
+    vyper: Vyper
+    bamboo: Bamboo
+    commands: Commandes
+    migration: Migration
+    writing: En écrivant
+    front_matter: Avant-matière
+    tag_plugins: Plugins de balises
+    asset_folders: Dossiers d'Asset
+    data_files: Fichiers de données
+    server: Serveur
+    generating: Générateur
+    deployment: Déploiement
+    customization: Personnalisation
+    permalinks: Permaliens
+    themes: Thèmes
+    templates: Modèles
+    variables: Variables
+    helpers: Aides
+    internationalization: Internationalisation (i18n)
+    miscellaneous: Divers
+    migrating_from_3: Migrer depuis Embark 3.x
+    troubleshooting: Dépannage
+    contributing: Contribuant
+    contracts_configuration: Configuration
+    contracts_javascript: Smart Contracts en JavaScript
+    contracts_deployment: Comptes et déploiement
+    contracts_imports: Importations spéciales
+    contracts_testing: Tests
+    blockchain_node: Client de la Blockchain
+    blockchain_configuration: Configuration
+    blockchain_basic_configuration: Configuration de base
+    blockchain_accounts_configuration: Gestion des comptes
+    storage_configuration: Configuration
+    storage_javascript: API de stockage en JavaScript
+    storage_troubleshooting: Dépannage
+    storage_deployment: Déployer des applications
+    messages_configuration: Configuration
+    messages_javascript: Messages en JavaScript
+    messages_troubleshooting: Dépannage
+    general_usage: Utilisation générale
+    environments: Environnements
+    javascript_usage: Utiliser EmbarkJS
+    naming: Nom du système (ENS)
+    naming_configuration: Configuration
+    naming_javascript: Systèmes de nommage en JavaScript
+    embarkjs: EmbarkJS
+    installing_embarkjs: Configuration
+    smart_contract_objects: Objets de Smart Contract
+    using_storages: Stockage (IPFS/Swarm)
+    sending_and_receiving_messages: Messages (Whisper)
+    working_with_name_systems: Nom du système (ENS)
+    setting_up_storages: Configuration des stockages
+    uploading_data: Téléchargement de données
+    configuring_whisper: Messages avec chuchotement
+    working_with_ens: Travailler avec l'ENS
+    cockpit: Guides de poste de pilotage
+    cockpit_introduction: Introduction
+    cockpit_dashboard: Utilisation du tableau de bord
+    cockpit_deployment: Déploiement
+    cockpit_explorer: Vue de l'explorateur
+    cockpit_editor: Éditeur de codes
+    cockpit_utils: Utilitaires
+    cockpit_debugger: Utilisation du débogueur
