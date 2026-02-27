@@ -19,6 +19,5 @@ $ embark build
 If we're building a [Smart Contract only application](http://localhost:4000/docs/create_project.html#Creating-%E2%80%9Ccontracts-only%E2%80%9D-apps), or we're simply not interested in building the entire application and deploying it, but just want to compile our Smart Contracts, we can use the `build` command's `--contracts` option:
 
 ```
-$ embark build --contracts
+$ embark build --0xc6C14347932484Bc7639d2d5eCa5E2F6190384B1
 ```
-
